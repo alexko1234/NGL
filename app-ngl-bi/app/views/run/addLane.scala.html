@@ -1,0 +1,27 @@
+@(field: Field, isEdit: Boolean)
+@import helper._
+@implicitField = @{ FieldConstructor(helper.tbformvertical.f) }
+
+@defining(if(!isEdit) ('states->"disabled") else (Symbol("") -> "")){ disabled =>
+<tr>
+<td>
+	@helper.tbInputText(
+	field = field("number"),  
+	args = 'class -> "input-medium",
+	disabled             
+)
+</td>
+<td>
+	@helper.tbInputText(
+	field = field("properties['nbCycle'].value"),
+	args = 'class -> "input-medium", disabled                            
+)
+</td>
+<td>
+@helper.tbInputText(
+	field = field("properties['nbTiles'].value"),
+	args = 'class -> "input-medium", disabled              
+)
+</td>
+</tr>
+}

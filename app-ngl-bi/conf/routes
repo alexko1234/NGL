@@ -1,0 +1,41 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+# Home page
+GET     /                           controllers.Application.index(id:java.lang.String ?="")
+
+#ngs-rs api
+GET		/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
+GET		/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experiments()
+GET		/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: String)
+
+#run
+GET	   /runs/home								controllers.run.Runs.home()
+GET    /runs                					controllers.run.Runs.list()
+GET    /runs/add             					controllers.run.Runs.add()
+POST   /runs									controllers.run.Runs.createOrUpdate(format: java.lang.String ?= "html")
+GET	   /runs/:code								controllers.run.Runs.show(code: java.lang.String, format: java.lang.String ?= "html")
+GET	   /runs/:code/edit							controllers.run.Runs.edit(code: java.lang.String, format: java.lang.String ?= "html")
+
+#run lane
+GET	   /runs/:code/:laneNumber					controllers.run.Lanes.show(code: java.lang.String, laneNumber:java.lang.Integer,format: java.lang.String ?= "html")
+POST   /runs/:code								controllers.run.Lanes.createOrUpdate(code: java.lang.String, format: java.lang.String ?= "html")
+
+#run readset
+GET	   /runs/:code/:laneNumber/:readSetCode		controllers.run.ReadSets.show(code: java.lang.String, laneNumber:java.lang.Integer, readSetCode:java.lang.String, format: java.lang.String ?= "html")
+POST   /runs/:code/:laneNumber					controllers.run.ReadSets.createOrUpdate(code: java.lang.String, laneNumber:java.lang.Integer, format: java.lang.String ?= "html")
+
+#readset
+PUT	   /readsets/:readSetCode/archive		controllers.run.ReadSets.updateArchive(readSetCode:java.lang.String,format: java.lang.String ?= "html")
+GET	   /readsets/needarchive				controllers.run.ReadSets.needArchive(format: java.lang.String ?= "html")
+GET	   /readsets/:readSetCode				controllers.run.ReadSets.showWithReadsetCode(readSetCode:java.lang.String, format: java.lang.String ?= "html")
+PUT    /readsets/:readSetCode				controllers.run.ReadSets.update(readSetCode:java.lang.String, format: java.lang.String ?= "html")
+
+
+# Javascript routing
+GET    /assets/javascripts/routes      controllers.Application.javascriptRoutes()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
