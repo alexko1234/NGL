@@ -1,0 +1,64 @@
+@(field: Field, isEdit: Boolean)
+@import helper._
+@import models.description.common.PropertyDefinition
+@implicitField = @{ FieldConstructor(helper.tbformvertical.f) }
+
+@defining(if(!isEdit) ('states->"disabled") else (Symbol("") -> "")){ disabled =>
+<tr>
+<td>
+@field("id").value
+<input type="hidden" value="@field("id").value" name="@field("id").name" />
+<input type="hidden" value="@field("version").value" name="@field("version").name" />
+</td>
+<td>
+	@helper.tbInputText(
+	field = field("code"),  
+	args = 'class -> "input-medium",
+	disabled             
+)
+</td>
+<td>
+	@helper.tbInputText(
+	field = field("name"),
+	args = 'class -> "input-medium", disabled                            
+)
+</td>
+<td>
+@helper.tbCheckBox(
+	field = field("required"),
+	args = 'class -> "input-medium", disabled             
+)
+</td>
+<td>
+@helper.tbCheckBox(
+	field = field("active"),
+	args = disabled                             
+)
+</td>
+<td>
+@helper.tbCheckBox(
+	field = field("choiseInList"),
+	args = disabled                             
+)
+</td>
+<td>
+@helper.tbSelect(
+     field = field("type"), Nil,
+     options = PropertyDefinition.options.toMap,
+     args = '_default -> "-- Choose a type --", 'class -> "input-medium", disabled             
+)
+</td>
+<td>
+@helper.tbInputText(
+	field = field("displayFormat"),
+	args = 'class -> "input-medium", disabled              
+)
+</td>
+<td>
+@helper.tbInputText(
+	field = field("displayOrder"),
+	args = 'class -> "input-medium", disabled                              
+)
+</td>
+</tr>
+}

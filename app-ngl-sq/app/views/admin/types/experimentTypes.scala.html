@@ -1,0 +1,25 @@
+@(dataFormCommon: Form[models.description.common.CommonInfoType], experimentTypeForm: Form[models.description.experiment.ExperimentType], isEdit: Boolean)
+@import helper._
+@import models.description.common.ObjectType
+@import models.description.experiment._
+
+@implicitField = @{ FieldConstructor(helper.tbformhorizontal.f) }
+@typeInfo(dataFormCommon, 
+	controllers.admin.types.routes.ExperimentTypes.createOrUpdate(experimentTypeForm("id").value,experimentTypeForm("version").value), "Create Experiment Type", "experimentTypes",isEdit){
+	@defining(if(isEdit) ('states->"enabled") else ('states->"disabled")){ (disabled) =>		
+		@if(experimentTypeForm("nextExperimentTypes").value == null) {
+ 			@views.html.helper.tbMultipleCheckBox(experimentTypeForm("nextExperimentTypes"),Nil,ExperimentType.getMapExperimentTypes().toMap,"id",disabled)
+  	 	} else {
+	 		@views.html.helper.tbMultipleCheckBox(experimentTypeForm("nextExperimentTypes"),experimentTypeForm.get.nextExperimentTypes.map(v=>v.id.toString()).toList,ExperimentType.getMapExperimentTypes(experimentTypeForm.get.id).toMap,"id",disabled)
+   		}
+		
+		@if(experimentTypeForm("instrumentTypes").value == null) {
+ 			@views.html.helper.tbMultipleCheckBox(experimentTypeForm("instrumentTypes"),Nil,InstrumentUsedType.getMapInstrumentTypes().toMap,"id", disabled)
+  	 	} else {
+	 		@views.html.helper.tbMultipleCheckBox(experimentTypeForm("instrumentTypes"),experimentTypeForm.get.instrumentTypes.map(v=>v.id.toString()).toList,InstrumentUsedType.getMapInstrumentTypes().toMap,"id",disabled)
+   		}
+	}	
+}
+
+		
+

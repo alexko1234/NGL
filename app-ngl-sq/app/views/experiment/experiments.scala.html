@@ -1,0 +1,208 @@
+@(dataForm: Form[utils.DataTableForm])
+
+
+@import helper._
+@import models.description.experiment._
+@implicitField = @{ FieldConstructor(helper.tbformvertical.f) }
+	
+
+@searchForm(handler: FieldConstructor, lang : Lang = implicitly[Lang]) = {
+	
+ 	@helper.form(action = controllers.experiment.routes.Experiments.home(), args = 'class -> "well form-search") {		
+		@tbSelect(
+                dataForm("search_2"), Nil,
+                ExperimentType.options.toMap, 
+                '_default -> "-- Choose a type --",
+                '_showConstraints -> false
+            )(handler = handler, lang)
+		
+	 @helper.tbInputText(
+				field = dataForm("search_1"), 
+                args = 'placeholder -> "Name",
+                'class -> "search-query",
+                '_label -> "Name", 
+                '_help -> "Please choose a valid name.",
+                '_error -> dataForm.globalError   
+            )(handler = handler, lang)
+            
+       @helper.tbInputText(
+				field = dataForm("search_3"), 
+                args = 'placeholder -> "P1",
+                'class -> "search-query",
+                '_label -> "P1", 
+                '_help -> "Please choose a valid name.",
+                '_error -> dataForm.globalError   
+            )(handler = handler, lang)                       				
+	}
+
+
+}
+
+@resultForm() = {
+	<table id="table_id" class="table table-bordered table-condensed table-hover">
+    <thead id="head_id">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Type</th>
+
+            
+        </tr>
+    </thead>
+    
+</table>    
+}
+
+@scripts() = {
+<script type="text/javascript">
+
+var typeFields = [
+		["Id","Name","Type","P1","P2","P3"],
+		["Id","Name","Type","P8","P9","P13","P89"],
+		["Id","Name","Type","P17","P42"],
+		["Id","Name","Type","P1","P2","P3","P1","P2","P3"],
+		["Id","Name","Type","P1","P2","P3"],
+		["Id","Name","Type","P1","P2","P3"],
+		["Id","Name","Type","P1","P2","P3"],
+		["Id","Name","Type","P1","P2","P3"],
+		["Id","Name","Type","P1","P2","P3"],
+		["Id","Name","Type","P1","P2","P3"],
+		["Id","Name","Type","P1","P2","P3"],
+		["Id","Name","Type","P1","P2","P3"]
+]; 
+
+function alertsuper(){
+	alert("super super !!");
+	}
+
+
+$(document).ready( function () {
+    var myDatatable = $('#table_id').dataTable({
+         "sDom":'Trtip',
+    	 "bFilter": true,
+    	 "bLengthChange": false,
+         "bProcessing": true,
+         "bServerSide": true,
+         "sAjaxSource": "@controllers.experiment.routes.Experiments.list()",
+         "sServerMethod": "GET",
+         "aoColumnDefs": [
+                  { "mDataProp": "id","aTargets": [ 0 ], "sTitle":"Id"},
+                  { "mDataProp": "name","aTargets": [ 1 ], "sTitle":"Name"},
+                  { "mDataProp": "type","aTargets": [ 2 ], "sTitle":"Type"}
+         ],
+         "oTableTools": {	
+        	"sRowSelect": "multi",
+        	"sSelectedClass": "row_selected",		
+			"aButtons": [
+			                {
+			                    "sExtends":    "text",
+			                    "sButtonText": "New",
+			                    "sButtonClass" : "btn btn-primary",
+			                    "fnClick": function ( nButton, oConfig, oFlash ) {
+			                    	$('#myModal').attr('data-href','@controllers.experiment.routes.Experiments.add()');
+			                    	$('#myModal').modal('show');
+			                    }    
+			                },
+			                {
+			                    "sExtends":    "text",
+			                    "sButtonText": "Save",
+			                    "sButtonClass" : "btn btn-primary",			                      
+			                },
+			                {
+			                    "sExtends":    "text",
+			                    "sButtonText": "Edit",
+			                    "sButtonClass" : "btn btn-primary",			                      
+			                },
+			                {
+			                    "sExtends":    "text",
+			                    "sButtonText": "Show",
+			                    "sButtonClass" : "btn btn-primary",			                    
+			                    "fnClick": function ( nButton, oConfig, oFlash ) {
+			                    	var oTT = TableTools.fnGetInstance( 'table_id' );
+			                    	var aDatas = oTT.fnGetSelectedData();
+			                    	if(aDatas){
+				                    	for(var i = 0; i < aDatas.length; i++){	
+				                    	    var aData = aDatas[i];
+				                    	    var id = aData.name + '_id';
+				                    		if($('#'+id).length == 0){
+				                    			//see ngl.js to see the custom tab event
+					                    	    $('#searchTab').append('<li><a id="'+id+'" data-toggle="pilldyn" data-target="#onelement" data-href="/experiments/'+id+'">'+aData.name+'</a></li>');					                    		
+				                    		}
+				                    	}
+			                    	}			                    				                    			                    
+			                    }
+			                },
+			                {
+			                    "sExtends":    "text",
+			                    "sButtonText": "Delete",
+			                    "sButtonClass" : "btn btn-danger",			                      
+			                }
+			            ]
+		            	 
+        },
+        "fnDrawCallback": function( oSettings ) {
+        	myDatatable.$('td').dblclick( function () {
+                var sData = myDatatable.fnGetData( this );
+                alert( 'The cell clicked on had the value of '+sData );
+            });
+          }
+    });
+
+    $("#search_1").keyup( function () {
+    	myDatatable.fnFilter( $(this).val(), 1 );
+    	 testfunction($(this).val())
+    } );
+    $("#search_2").change( function () {
+
+    	myDatatable.fnFilter( $(this).val(), 2 );
+    	  
+/*		$('#head_id tr th').remove();
+		var length = typeFields[$(this).val()].length;
+		for(var i = 0; i < length; i++){
+			$('#head_id tr').append('<th>'+typeFields[$(this).val()][i]+'</th>');
+		}
+		myDatatable.fnFilter( $(this).val(), 2 );*/     	
+    	
+    } );
+
+    $('#myModal').bind('show', function() {
+		$(this).load($(this).attr('data-href')); //load an url 
+	});
+    $('#myModal').bind('hidden', function() {
+		$(this).empty(); //remove all html
+		myDatatable.fnFilter(); //reload data after save may be. 
+	});
+
+    $("#experimentTypeRef_refId").change(function(event) {
+		var url = "@controllers.experiment.routes.Experiments.property("#")"; 
+		url = url.replace("#", $(this).val());
+		$.ajax({
+      	  url: url,
+      	  type: 'GET'
+        }).done(function( msg ) {
+      	    $("#propertiesId").html(msg);
+        }).fail(function( msg ){
+      	  //replace all the page by the error
+      	  if(msg.status == 400){
+      		  $(this).replaceWith(msg.responseText);
+      	  }else{
+      		  $("html").html(msg.responseText);
+      	  }
+        }).always(function(msg){
+        });				
+
+	});		
+
+	
+});
+
+
+
+
+</script>
+<div class="modal hide fade" id="myModal" style="display: none;"></div>
+
+}
+
+@search("Experiments", "experiments", scripts)(searchForm(implicitField))(resultForm)
+

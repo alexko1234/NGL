@@ -1,0 +1,57 @@
+@(dataFormCommon: Form[models.description.common.CommonInfoType], isEdit: Boolean)
+
+@import helper._
+@import scala.collection.JavaConversions._
+@import models.description.common._
+
+@implicitField = @{ FieldConstructor(helper.tbformhorizontal.f) }
+
+@defining(if(isEdit) ('states->"enabled") else ('states->"disabled")){ (disabled) =>
+		<input type="hidden" value="@dataFormCommon("id").value" name="@dataFormCommon("id").name" />
+		<input type="hidden" value="@dataFormCommon("version").value" name="@dataFormCommon("version").name" />
+	@views.html.helper.tbInputText(dataFormCommon("id"), 'states->"disabled")
+	
+	@views.html.helper.tbInputText(dataFormCommon("name"), disabled)
+	
+	@views.html.helper.tbInputText(dataFormCommon("code"), disabled)
+	
+	@views.html.helper.tbInputText(dataFormCommon("collectionName"), disabled)
+  
+   @if(dataFormCommon("variableStates").value == null) {
+ 	@views.html.helper.tbMultipleCheckBox(dataFormCommon("variableStates"),Nil,State.getMapPossibleStates().toMap,"id", disabled)
+   } else {
+	 @views.html.helper.tbMultipleCheckBox(dataFormCommon("variableStates"),dataFormCommon.get.variableStates.map(v=>v.id.toString()).toList,State.getMapPossibleStates().toMap,"id", disabled)
+   }
+  		<div class="control-group">
+			<label class="control-label">
+			Properties
+				@if(isEdit){
+				<div>  
+				<a href="#" class="btn btn-mini btn-primary" id="addPropertyElement" data-toggle="add-content" 
+				data-href="rowTable1"
+				data-target="tbody_properties_id_@dataFormCommon("id").value()" data-index="@nbElements(dataFormCommon("propertiesDefinition"))" title="add a property"><i class="icon-plus icon-white"></i></a>
+				</div>
+				}
+
+			</label>
+				<div class="controls">
+					<table id="propertiesId" class="table table-bordered table-condensed">
+            		<thead>
+            		<tr>
+            		<th>#ID</th><th>Key Code</th><th>Key Name</th><th>is Required</th><th>is Active</th><th>is choice in a list</th><th>Type</th><th>Display Format</th><th>Display Order</th>
+            		</tr>
+            		</thead>
+					<tbody id="tbody_properties_id_@dataFormCommon("id").value()">
+            	
+            		@repeat(dataFormCommon("propertiesDefinition"), min = 0) { propertyDef => 
+    					@addPropertyDefinition(propertyDef, isEdit)
+					}
+            	
+            		</tbody>
+            		</table>
+				</div>
+		</div>
+	}
+<script type="text/html" id="rowTable1">
+	@addPropertyDefinition(dataFormCommon("propertiesDefinition[valueIndex]"), isEdit)
+</script>

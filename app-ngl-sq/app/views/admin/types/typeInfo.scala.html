@@ -1,0 +1,50 @@
+@(dataFormCommon: Form[models.description.common.CommonInfoType], 
+	actionForm: play.api.mvc.Call, title: String, nav: String, isEdit: Boolean)(content: Html= Html(""))
+@import helper._
+@import models.description.common.ObjectType
+@main(title,nav){
+
+
+@helper.form(action = actionForm, args = 'class -> "form-horizontal", Symbol("data-toggle") -> "ajax") {
+<div class="accordion" id="accordion2">
+	<div class="accordion-group">
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+				Common Info Type
+			</a>
+		</div>
+	<div id="collapseOne" class="accordion-body collapse in">
+		<div class="accordion-inner">
+		@commonType(dataFormCommon,isEdit)
+		</div>
+	</div>
+</div>
+<div class="accordion-group">
+	<div class="accordion-heading">
+		<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+		Info @title
+		</a>
+	</div>
+	<div id="collapseTwo" class="accordion-body collapse">
+		<div class="accordion-inner">
+		@content
+		</div>
+	</div>
+</div>
+
+</div>
+
+<div class="form-actions">
+	@if(isEdit){
+    	<button class="btn btn-primary" type="submit">Save</button>
+    	@if(null != dataFormCommon("id").value()){
+        		<a class="btn" href="#" data-toggle="pilldyn" data-target="#onelement" data-href="@controllers.admin.types.routes.GenericTypes.show(Long.valueOf(dataFormCommon("id").value()))">Cancel</a>
+        }
+    }   else {
+            	<a class="btn btn-primary" href="#" data-toggle="pilldyn" data-target="#onelement" data-href="@controllers.admin.types.routes.GenericTypes.edit(dataFormCommon.get().id)" >Edit</a>
+            }           			
+</div>
+
+}
+
+}

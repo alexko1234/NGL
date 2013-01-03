@@ -1,0 +1,37 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index(id:java.lang.String ?="")
+
+GET		/experiments/home			controllers.experiment.Experiments.home()
+GET		/experiments				controllers.experiment.Experiments.list()
+GET     /experiments/add            controllers.experiment.Experiments.add()
+GET		/experiments/:id			controllers.experiment.Experiments.show(id: java.lang.String)
+POST   	/experiments				controllers.experiment.Experiments.createOrUpdate(format: java.lang.String ?= "html")
+
+
+
+GET		/admin/types/experimentTypes		controllers.admin.types.ExperimentTypes.home()
+POST	/admin/types/experimentTypes/:id/:version		controllers.admin.types.ExperimentTypes.createOrUpdate(id:java.lang.String, version:java.lang.String)
+POST	/admin/types/instrumentUsedTypes	controllers.admin.types.InstrumentUsedTypes.createOrUpdate()
+GET	   /admin/types/home					controllers.admin.types.GenericTypes.home()
+GET    /admin/types                			controllers.admin.types.GenericTypes.list()
+POST   /admin/types							controllers.admin.types.GenericTypes.createOrUpdate(format: java.lang.String ?= "html")
+GET	   /admin/types/:id						controllers.admin.types.GenericTypes.show(id: Long)
+GET	   /admin/types/:id/edit				controllers.admin.types.GenericTypes.edit(id: Long)
+GET    /admin/types/:id/add             	controllers.admin.types.GenericTypes.add(id: Long)
+GET	   /admin/types/pdefs/add/:index		controllers.admin.types.GenericTypes.addPropertyDefinition(index: java.lang.Integer)
+
+GET	   /logout								controllers.administration.authentication.User.logOut()
+
+# Home page
+
+# Javascript routing
+GET    /assets/javascripts/routes      controllers.Application.javascriptRoutes()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+GET	/property/:value			controllers.experiment.Experiments.property(value:String)

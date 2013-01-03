@@ -1,0 +1,181 @@
+@(dataForm: Form[utils.DataTableForm], tableForm: Form[models.description.common.CommonInfoType])
+
+@import helper._
+@import models.description.common.ObjectType
+@implicitField = @{ FieldConstructor(helper.tbformvertical.f) }
+	
+
+@searchForm(handler: FieldConstructor, lang : Lang = implicitly[Lang]) = {
+	
+	@helper.form(action = controllers.admin.types.routes.GenericTypes.list(), args = 'class -> "well form-search") {		
+		@helper.tbSelect(
+                dataForm("search_2"), Nil,
+                ObjectType.options.toMap, 
+                '_default -> "-- Choose a type --"
+            )(handler = handler, lang)
+		
+		@helper.tbInputText(
+				field = dataForm("search_1"), 
+                args = 'placeholder -> "Name",
+                'class -> "search-query",
+                '_label -> "Name"  
+            )(handler = handler, lang)                  				
+	}
+}
+
+@scripts(handler: FieldConstructor, lang : Lang = implicitly[Lang]) = {
+  <script type="text/javascript">
+$(document).ready( function () {
+    var myDatatable = $('#table_id').dataTable({
+         "sDom":"Trti",
+         "sPaginationType": "bootstrap",
+    	 "bFilter": true,
+    	 "bDeferRender": true,
+    	 "bLengthChange": false,    	 
+         "bProcessing": true,
+         "bServerSide": true,
+         "sAjaxSource": "@controllers.admin.types.routes.GenericTypes.list()",
+         "sServerMethod": "GET",
+         "aoColumnDefs": [
+                  { "sTitle": "#ID", "mData": "id","aTargets": [ 0 ] },
+                  { "sTitle": "Name", "mData": "name","aTargets": [ 1 ], 
+                	  "mRender": function ( data, type, full ) {if(type==='edit'){return getEdit("edit1",data);}else{return data;}}},
+                  { "sTitle": "Code", "mData": "code","aTargets": [ 2 ], 
+                      "mRender": function ( data, type, full ) {if(type==='edit'){return getEdit("edit2",data);}else{return data;}}},
+                  { "sTitle": "Type", "mData": "objectType.type","aTargets": [ 3 ]},
+                  { "sTitle": "Collection Name", "mData": "collectionName","aTargets": [ 4 ], 
+                       "mRender": function ( data, type, full ) {if(type==='edit'){return getEdit("edit4",data);}else{return data;}}}
+         ],
+         "oTableTools": {	
+        	"sRowSelect": "multi",
+        	"sSelectedClass": "row_selected",
+        	"aButtons": [
+							{
+								 "sExtends":    "btngroup",
+								 "aButtons":    [
+									{
+									    "sExtends":    "text",
+									    "sButtonText": "New",
+									    "sButtonClass" : "btn-primary",			                    
+									    "fnClick": function ( nButton, oConfig, oFlash ) {
+									    	if($('#newelt').length == 0){
+									        	//see ngl.js to see the custom tab event
+									        	var urlSelect = jsRoutes.controllers.admin.types.GenericTypes.add($("#search_2").val()).url;
+									           $('#searchTab').append('<li><a id="newelt" href="#" data-toggle="pilldyn" data-target="#newelement" data-href="'+urlSelect+'">New<button class="close" data-dismiss="pilldyn">&times;</button></a></li>');					                    		
+									        }	
+									    	$('#newelt').click();
+									    }
+									},
+									{
+									    "sExtends":    "text",
+									    "sButtonText": "Show",
+									    "sButtonClass" : "btn-primary",			                    
+									    "fnClick": function ( nButton, oConfig, oFlash ) {
+									    	var oTT = TableTools.fnGetInstance( 'table_id' );
+									    	var aDatas = oTT.fnGetSelectedData();
+									    	if(aDatas){
+									        	for(var i = 0; i < aDatas.length; i++){	
+									        	    var aData = aDatas[i];
+									        	    var id = 'dyn_'+aData.id + '_id';
+									        		if($('#'+id).length == 0){
+									        			//see ngl.js to see the custom tab event
+									        			var url = jsRoutes.controllers.admin.types.GenericTypes.show(aData.id).url;
+									            	    $('#searchTab').append('<li><a id="'+id+'" href="#" data-toggle="pilldyn" data-target="#onelement" data-href="'+url+'">'+aData.code+'<button class="close" data-dismiss="pilldyn">&times;</button></a></li>');					                    		
+									        		}
+									        	}
+									        	if(aDatas.length == 1){
+									        		var id = 'dyn_'+aDatas[0].id + '_id';
+									        		$('#'+id).click();
+									        	}
+									    	}			                    				                    			                    
+									    }
+									}
+								]
+							}			                
+			                ,
+			                {
+			                    "sExtends":    "btngroup",
+			                    "sButtonText": "Edit",
+			                    "sDropdown":	true,
+			                    "mainButton":	"edit",
+			                    "aButtons":	[{
+			                    	"sExtends":    "edit",
+			                    	"aTargets": 1,
+			                    	"sButtonText":  "Name",
+			                    	},
+			                   	 	{
+				                    	"sExtends":    "edit",
+				                    	"aTargets": 2, 
+				                    	"sEditId": "edit2",
+				                    	"sButtonText":  "Code"
+			                   	 	}			                    
+			                    ]
+			                    
+			                },
+			                {
+			                	 "sExtends":    "btngroup",
+			                	 "aButtons":    [ {
+			                		 "sExtends":    "save",
+			                		 "playJSRoute":jsRoutes.controllers.admin.types.GenericTypes.createOrUpdate("json")
+			                		 },
+			                		 "cancel","select_all" ]
+			                }/*,
+			                {
+			                    "sExtends":    "text",
+			                    "sButtonText": "Delete",
+			                    "sButtonClass" : "btn btn-danger",			                      
+			                }*/
+			            ]
+		            	 
+        }
+    });
+
+    $("#search_1").keyup( function () {
+        myDatatable.fnFilter( $(this).val(), 1 );
+        
+    } );
+    $("#search_2").change( function () {
+    	myDatatable.fnFilter( $(this).val(), 2 );    	
+    } );
+    
+    function getEdit(id, value){
+    	var html = $($('#'+id).html()).clone();
+    	if(value !== undefined){
+	    	if(html.children("input, select").size() > 0){
+	    		html.children("input, select").val(value);
+	    	}else{
+	    		html.val(value);
+	    	}
+    	}
+    	return html;
+    }
+    
+    //myDatatable.dataTablEditable();
+    
+} );
+
+
+</script>
+<script type="text/html" id="edit1">
+<div class="control-group control-group-datatable">
+@helper.inputText(field = dataForm("name"), args = 'class -> "input-medium", 'placeholder -> "Name")(handler = handler, lang)
+</div>
+</script>
+<script type="text/html" id="edit2">
+<div class="control-group control-group-datatable">
+@helper.inputText(field = dataForm("code"), args = 'class -> "input-medium", 'placeholder -> "Code")(handler = handler, lang)
+</div>
+</script>
+<script type="text/html" id="edit4">
+<div class="control-group control-group-datatable">
+@helper.inputText(field = dataForm("collectionName"), args = 'class -> "input-medium", 'placeholder -> "Collection Name")(handler = handler, lang)
+</div>
+</script>
+}
+
+@search("Search a type", "types", scripts(implicitField))(searchForm(implicitField)){
+	<form class="form-inline">
+		<table id="table_id" class="table table-bordered table-condensed table-hover"></table>   
+	</form> 
+}
+

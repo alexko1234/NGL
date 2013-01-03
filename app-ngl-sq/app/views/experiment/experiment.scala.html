@@ -1,0 +1,51 @@
+@(dataForm:Form[models.instance.experiment.Experiment], isEdit:Boolean)
+
+@import helper._
+@import models.description.experiment.ExperimentType
+@import models.description.common.CommonInfoType
+@implicitField = @{ FieldConstructor(helper.tbformhorizontal.f) }
+
+
+
+@defining(if(!isEdit) ('states->"disabled") else (Symbol("") -> "")){ (disabled) =>
+
+@helper.form(action = controllers.experiment.routes.Experiments.createOrUpdate(), args = 'class -> "form-horizontal", Symbol("data-toggle") -> "ajax") {
+<legend>Set your Experiment</legend>         		
+<fieldset>
+		  <input type="hidden" value="@dataForm("id").value" name="@dataForm("id").name" /> 
+		  
+		   @helper.tbInputUneditable(
+				field = dataForm("id"), 
+                args = '_label -> "#ID",
+                '_showConstraints -> false,
+				'hidden->"yes"
+				
+            )		  
+		  @tbSelect(
+                field = dataForm("experimentTypeRef.refId"),Nil, 
+                options = ExperimentType.options.toMap, 
+                args = '_default -> "-- Choose a type --",
+                '_label -> "Type",
+				disabled
+            )	
+            
+            @helper.tbInputText(
+				field = dataForm("TraceInformation.createUser"), 
+                args = '_label -> "Type Name",
+                '_showConstraints -> false,
+				disabled  
+            )
+
+		
+
+            <div class="control-group">
+			
+				<div id="propertiesId" class="controls"></div>
+			</div>
+            
+          <input type="submit" value="Save">	
+        </fieldset>
+
+}
+
+}
