@@ -4,7 +4,7 @@ import PlayProject._
 
 object ApplicationBuild extends Build {
 
-    val appName         = "NGL-BI"
+    val appName         = "ngl-bi"
     val appVersion      = "1.0-SNAPSHOT"
 
     val appDependencies = Seq(
@@ -16,10 +16,10 @@ object ApplicationBuild extends Build {
       "mysql" % "mysql-connector-java" % "5.1.18",
       "postgresql" % "postgresql" % "8.3-603.jdbc4",
       "net.sourceforge.jtds" % "jtds" % "1.2.4",      	
-      "fr.cea.ig" %% "playtbforms" % "1.0-SNAPSHOT",
+      "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
       "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
       "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
-      "fr.cea.ig" %% "ngl-common" % "1.0-SNAPSHOT",
+      "fr.cea.ig.ngl" %% "ngl-common" % "1.0-SNAPSHOT",
       "commons-collections" % "commons-collections" % "3.2.1",
       "org.apache.commons" % "commons-lang3" % "3.1"
     )
