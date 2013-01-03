@@ -5,7 +5,7 @@ import com.typesafe.sbteclipse.core.EclipsePlugin.EclipseKeys
 
 object ApplicationBuild extends Build {
 
-    val appName         = "NGL"
+    val appName         = "ngl-sq"
     val appVersion      = "1.0-SNAPSHOT"
 
      override def settings = super.settings ++ Seq(
@@ -19,10 +19,10 @@ object ApplicationBuild extends Build {
       "net.sourceforge.jtds" % "jtds" % "1.2.4",
       "org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
       "mysql" % "mysql-connector-java" % "5.1.18",
-      "fr.cea.ig" %% "playtbforms" % "1.0-SNAPSHOT",
+      "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
       "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
       "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
-      "fr.cea.ig" %% "ngl-common" % "1.0-SNAPSHOT"
+      "fr.cea.ig.ngl" %% "ngl-common" % "1.0-SNAPSHOT"
     )
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
