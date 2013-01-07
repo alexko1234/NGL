@@ -33,22 +33,13 @@ import static play.test.Helpers.*;
 
 public class LanesTests extends AbstractTests {
 
-	public Map<String,String> fakeConfiguration(){
-		Map<String,String> config = new HashMap<String,String>();
-		config.put("mongodb.database", "NGL-BI");
-		config.put("mongodb.credentials", "ngl-bi:NglBiPassW");
-		config.put("mongodb.servers", "gsphere.genoscope.cns.fr:27017");
-		return config;
-		
-	}
+
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
 	}
 	 @Test
 	public void testLanes(){
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
 		Run runDelete = MongoDBDAO.findOne("cng.run.illuminaYann2",Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
 		if(runDelete!=null){
 			MongoDBDAO.delete("cng.run.illuminaYann2", Run.class, runDelete._id);
@@ -75,13 +66,11 @@ public class LanesTests extends AbstractTests {
 	    assertThat(status(result)).isEqualTo(OK);
         assertThat(contentType(result)).isEqualTo("application/json");
         assertThat(charset(result)).isEqualTo("utf-8");
-		       }});
 	}
 	 
 	 @Test
 		public void testLanesOnRun(){
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
+		
 			Lane lane = RunMockHelper.newLane(2);
 			ReadSet readset = RunMockHelper.newReadSet("ReadSetLanes2");
 			List<ReadSet> readsets = new ArrayList<ReadSet>();
@@ -96,14 +85,13 @@ public class LanesTests extends AbstractTests {
 		    assertThat(status(result)).isEqualTo(OK);
 	        assertThat(contentType(result)).isEqualTo("application/json");
 	        assertThat(charset(result)).isEqualTo("utf-8");
-		       }});
+	
 		}
 	 
 	 
 	 @Test
 	public void testLanesOnRunSameReadSet(){
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
+		
 		Lane lane = RunMockHelper.newLane(2);
 		ReadSet readset = RunMockHelper.newReadSet("ReadSetLanes");
 		List<ReadSet> readsets = new ArrayList<ReadSet>();
@@ -118,7 +106,6 @@ public class LanesTests extends AbstractTests {
 	    assertThat(status(result)).isEqualTo(BAD_REQUEST);
         assertThat(contentType(result)).isEqualTo("application/json");
         assertThat(charset(result)).isEqualTo("utf-8");
-		       }});
 	}
 
 }
