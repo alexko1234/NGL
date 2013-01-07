@@ -24,6 +24,7 @@ public class MongoTests extends AbstractTests {
 		return config;
 		
 	}
+	
 	@Override
 	public void init() {
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
