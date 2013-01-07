@@ -76,7 +76,7 @@ public class MongoTests extends AbstractTests {
 		MongoDBDAO.save("test.mongotests", run1);
 		MongoDBDAO.save("test.mongotests", run2);
 		MongoDBDAO.save("test.mongotests", run3);
-		       }});
+		}});
 	}
 	
 	
