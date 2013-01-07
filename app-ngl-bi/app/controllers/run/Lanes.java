@@ -14,7 +14,6 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.DataTableForm;
-import utils.Mongo;
 import fr.cea.ig.MongoDBDAO;
 
 public class Lanes extends Controller{
@@ -35,7 +34,7 @@ public class Lanes extends Controller{
 			BusinessValidationHelper.validateLane(filledForm.errors(), run,laneValue, Constants.CNG_RUN_ILLUMINA, null);
 			if(!filledForm.hasErrors()) {
 				System.out.println("insert OK :"+laneValue.number);
-				Mongo.createOrUpdateInArray(Constants.CNG_RUN_ILLUMINA,Run.class,"code" , code, "lanes", "number", laneValue.number,laneValue);
+				MongoDBDAO.createOrUpdateInArray(Constants.CNG_RUN_ILLUMINA,Run.class,"code" , code, "lanes", "number", laneValue.number,laneValue);
 				filledForm = filledForm.fill(laneValue);
 			}
 		}
