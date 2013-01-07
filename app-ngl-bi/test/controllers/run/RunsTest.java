@@ -36,7 +36,6 @@ import play.libs.WS;
 import play.mvc.Result;
 import play.test.TestBrowser;
 import utils.AbstractTests;
-import utils.Mongo;
 import utils.RunMockHelper;
 import utils.RunMockHelperOld;
 
