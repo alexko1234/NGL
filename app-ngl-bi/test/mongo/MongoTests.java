@@ -1,6 +1,8 @@
 package mongo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -9,12 +11,23 @@ import models.instance.run.ReadSet;
 import models.instance.run.Run;
 import fr.cea.ig.MongoDBDAO;
 import utils.AbstractTests;
+import static play.test.Helpers.fakeApplication;
+import static play.test.Helpers.running;
 import static utils.RunMockHelper.*;
 
 public class MongoTests extends AbstractTests {
-	
+	public Map<String,String> fakeConfiguration(){
+		Map<String,String> config = new HashMap<String,String>();
+		config.put("mongodb.database", "NGL-BI");
+		config.put("mongodb.credentials", "ngl-bi:NglBiPassW");
+		config.put("mongodb.servers", "gsphere.genoscope.cns.fr:27017");
+		return config;
+		
+	}
 	@Override
 	public void init() {
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 		Run run1 = newRun("TEST1");
 		run1.dispatch = Boolean.TRUE;
 		
@@ -63,12 +76,7 @@ public class MongoTests extends AbstractTests {
 		MongoDBDAO.save("test.mongotests", run1);
 		MongoDBDAO.save("test.mongotests", run2);
 		MongoDBDAO.save("test.mongotests", run3);
-		
-	}
-	
-	@Test
-	public void testSearchArchive(){
-		
+		       }});
 	}
 	
 	
