@@ -1,6 +1,7 @@
 package models.instances.validation;
 
 import static play.test.Helpers.fakeApplication;
+import static play.test.Helpers.running;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -36,29 +37,45 @@ public class RunValidationTest extends AbstractTests{
 		// TODO Auto-generated method stub
 		
 	}
-	
+	public Map<String,String> fakeConfiguration(){
+		Map<String,String> config = new HashMap<String,String>();
+		config.put("mongodb.database", "NGL-BI");
+		config.put("mongodb.credentials", "ngl-bi:NglBiPassW");
+		config.put("mongodb.servers", "gsphere.genoscope.cns.fr:27017");
+		return config;
+		
+	}
 	 @Test
 	 public void testRunValidationOk() {
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 		 Map<String, List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 		 Run run = getRun();
 		 BusinessValidationHelper.validateRun(errors, run, "test.run");
 		 assertThat(errors).hasSize(0);
+		       }});
 	 }
 	 
 	 @Test
 	 public void testLaneValidationOk(){
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 		 Map<String, List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 		 Lane lane = getLane();
 		 BusinessValidationHelper.validateLane(errors, new Run(),lane, "test.run", null);
 		 assertThat(errors).hasSize(0);
+		       }});
 	 }
 	 
 	 @Test
 	 public void testReadSetValidationOk(){
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 		 Map<String, List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 		 ReadSet readset = getReadSet();
 		 BusinessValidationHelper.validateReadSet(errors, new Run(),-1,readset, "test.run", null);
 		 assertThat(errors).hasSize(0);
+		       }});
 	 }
 	 
 	 
