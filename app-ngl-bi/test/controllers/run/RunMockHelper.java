@@ -1,8 +1,13 @@
 package controllers.run;
 
+import static play.test.Helpers.fakeApplication;
+import static play.test.Helpers.running;
+
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import models.instance.common.PropertyValue;
 import models.instance.instrument.InstrumentUsed;
@@ -20,6 +25,15 @@ public class RunMockHelper {
 	public static final String RUN_CODE = "YANN_TEST1";
 	public static final int LANE_CODE = 1;
 	public static final String READSET_CODE = "READSET_TEST1";
+	
+	public static Map<String,String> fakeConfiguration(){
+		Map<String,String> config = new HashMap<String,String>();
+		config.put("mongodb.database", "NGL-BI");
+		config.put("mongodb.credentials", "ngl-bi:NglBiPassW");
+		config.put("mongodb.servers", "gsphere.genoscope.cns.fr:27017");
+		return config;
+		
+	}
 	
 	public static JsonNode getJsonRun(String code) {
 		return Json.toJson(getRun(code));
@@ -57,7 +71,10 @@ public class RunMockHelper {
 	
 	
 	public static JsonNode getJsonRunUpdate() {//Ok
-		Run run = MongoDBDAO.findByCode(Constants.CNG_RUN_ILLUMINA,Run.class, RUN_CODE);
+		Run run = null;
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+		Run run = MongoDBDAO.findByCode("cng.run.illuminaYann2",Run.class, RUN_CODE);
 		run.dispatch = true;
 		run.transfertEndDate = new Date();
 		run.properties.clear();
@@ -73,7 +90,7 @@ public class RunMockHelper {
 		run.instrumentUsed = new InstrumentUsed();
 		run.instrumentUsed.categoryCode = "HISEQ2000";
 		run.instrumentUsed.code = "HS7";
-		
+		       }});
 		return Json.toJson(run);
 	}
 	

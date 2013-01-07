@@ -50,11 +50,26 @@ public class RunsTest extends AbstractTests {
 		// TODO Auto-generated method stub
 	}
 	
+	public Map<String,String> fakeConfiguration(){
+		Map<String,String> config = new HashMap<String,String>();
+		config.put("mongodb.database", "NGL-BI");
+		config.put("mongodb.credentials", "ngl-bi:NglBiPassW");
+		config.put("mongodb.servers", "gsphere.genoscope.cns.fr:27017");
+		return config;
+		
+	}
+	
 	@Test
 	public void testRuns() {
+		  running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 			Run runDelete = MongoDBDAO.findOne("cng.run.illuminaYann2",Run.class,DBQuery.is("code","YANN_TEST1"));
 			if(runDelete!=null){
+				System.out.println("EXIST");
 				MongoDBDAO.delete("cng.run.illuminaYann2", Run.class, runDelete._id);
+			}else {
+				System.out.println("NOTEXIST");
+				
 			}
 		
 			Run run = RunMockHelper.newRun("YANN_TEST1");
@@ -75,10 +90,13 @@ public class RunsTest extends AbstractTests {
 	        assertThat(status(result)).isEqualTo(OK);
 	        assertThat(contentType(result)).isEqualTo("application/json");
 	        assertThat(charset(result)).isEqualTo("utf-8");
+		       }});
     }
 	
 	@Test
 	public void testRunsUpdate() {
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 			Run run = MongoDBDAO.findOne("cng.run.illuminaYann2",Run.class,DBQuery.is("code","YANN_TEST1"));
 			
 			run.dispatch=true;
@@ -90,10 +108,13 @@ public class RunsTest extends AbstractTests {
 	        assertThat(status(result)).isEqualTo(OK);
 	        assertThat(contentType(result)).isEqualTo("application/json");
 	        assertThat(charset(result)).isEqualTo("utf-8");
+		       }});
 	}
 	
 	@Test
 	public void testRunsUpdateWithSameReadSet() {
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 			Run run = RunMockHelper.newRun("YANN_TEST2");
 			Lane lane = RunMockHelper.newLane(1);
 			List<Lane> lanes = new ArrayList<Lane>();
@@ -111,10 +132,13 @@ public class RunsTest extends AbstractTests {
 	        assertThat(status(result)).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);
 	        assertThat(contentType(result)).isEqualTo("application/json");
 	        assertThat(charset(result)).isEqualTo("utf-8");
+		       }});
 	}
 	
 	@Test
 	public void testLanesUpdateByRun() {
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 			Run run = MongoDBDAO.findOne("cng.run.illuminaYann2",Run.class,DBQuery.is("code","YANN_TEST1"));
 			
 			run.lanes.get(0).properties.remove("nbCycleRead1");
@@ -128,10 +152,13 @@ public class RunsTest extends AbstractTests {
 	        assertThat(contentType(result)).isEqualTo("application/json");
 	        assertThat(contentAsString(result).contains("NewPropertyTestUpdateLane"));
 	        assertThat(charset(result)).isEqualTo("utf-8");
+		       }});
 	}
 	
 	@Test
 	public void testReadSetUpdateByRun() {
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 			Run run = MongoDBDAO.findOne("cng.run.illuminaYann2",Run.class,DBQuery.is("code","YANN_TEST1"));
 			
 			run.lanes.get(0).readsets.get(0).properties.remove("score");
@@ -144,6 +171,7 @@ public class RunsTest extends AbstractTests {
 	        assertThat(contentType(result)).isEqualTo("application/json");
 	        assertThat(contentAsString(result).contains("NewPropertyTestUpdateReadSet"));
 	        assertThat(charset(result)).isEqualTo("utf-8");
+		       }});
 	}
 
 }
