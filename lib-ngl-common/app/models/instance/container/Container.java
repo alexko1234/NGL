@@ -65,9 +65,16 @@ public class Container extends DBObject {
 	// For search optimisation
 	public List<String> projetCodes; // getProjets
 	public List<String> sampleCodes; // getSamples
+	// ExperimentType must be an internal or external experiment ( origine )
+	// List for pool experimentType
 	public List<String> fromExperimentTypeCodes; // getExperimentType
-	//public List<String> fromPurifingTypeCodes;
-	//public List<String> fromExtractionTypeCodes;
+	
+	// Propager au container de purif ??
+	//public String fromExperimentCode; ??
+	//public String fromPurifingCode;
+	//public String fromExtractionTypeCode;
+	//public List<String> fromQCCodes;
+	
 
 	
 	@JsonIgnore

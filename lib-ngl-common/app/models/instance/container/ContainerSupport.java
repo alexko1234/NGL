@@ -25,9 +25,6 @@ public class ContainerSupport {
 	public String name;
 	public String barCode;
 	
-	
-	// Delete ContainerSupportCategoryRef
-	//
 	public String categoryCode;
 
 	// Position

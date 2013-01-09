@@ -5,12 +5,12 @@ import java.util.Map;
 import models.description.content.SampleCategory;
 import models.description.content.SampleType;
 import models.instance.common.PropertyValue;
+import models.instance.common.Valid;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import utils.refobject.ObjectSGBDReference;
-
 import fr.cea.ig.DBObject;
 
 /**
@@ -34,7 +34,10 @@ public class Sample extends DBObject{
 	public String name;
 	public String referenceCollab; 
 	public Map<String,PropertyValue> properties;
-	//public List<CollaboratorInvolve> collaborators;	
+	// Valid taxon
+	public Valid valid;
+	//public List<CollaboratorInvolve> collaborators;
+	
 	
 	@JsonIgnore
 	public SampleType getSampleType(){

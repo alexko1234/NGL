@@ -10,7 +10,6 @@ import models.description.experiment.Protocol;
 import models.instance.common.Comment;
 import models.instance.common.PropertyValue;
 import models.instance.common.TraceInformation;
-import models.instance.common.Valid;
 import models.instance.container.Sample;
 import models.instance.instrument.InstrumentUsed;
 import models.instance.project.Project;
@@ -50,8 +49,6 @@ public class Experiment extends DBObject {
 	// States
 	public String stateCode;
 	public String resolutionCode;
-	public Valid valid;
-	
 	
 	// For search optimisation
 	//Projects ref
