@@ -44,6 +44,7 @@ public class LimsRunServices implements ILimsRunServices {
 		exp.instrument = new Instrument();
 		exp.instrument.code = limsExp.code;
 		exp.instrument.categoryCode = limsExp.categoryCode;	
+		exp.nbCycles = limsExp.nbCycles;
 		Logger.debug(limsExp.toString());		
 		return exp;
 	}
@@ -74,6 +75,7 @@ public class LimsRunServices implements ILimsRunServices {
 				lib.tagSequence = lrs.indexSequence;
 				lib.projectCode = lrs.projectCode;
 				lib.insertLength = lrs.insertLength;
+				lib.typeCode = lrs.experimentTypeCode;
 				if(null != lrs.indexName)lib.isIndex = Boolean.TRUE;
 				currentLane.librairies.add(lib);
 			}

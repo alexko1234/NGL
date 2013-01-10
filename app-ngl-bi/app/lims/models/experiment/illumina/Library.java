@@ -8,4 +8,5 @@ public class Library {
 	public String projectCode;
 	public String insertLength;
 	public Boolean isIndex;
+	public String typeCode;
 }

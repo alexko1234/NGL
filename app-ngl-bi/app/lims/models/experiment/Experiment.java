@@ -2,6 +2,7 @@ package lims.models.experiment;
 
 import java.util.Date;
 
+import lims.cng.dao.LimsExperiment;
 import lims.models.instrument.Instrument;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -15,5 +16,7 @@ public class Experiment {
 	public String containerSupportCode;
 	
 	public Date date;
-	public Instrument instrument;	
+	public Instrument instrument;
+
+	public Integer nbCycles;	
 }

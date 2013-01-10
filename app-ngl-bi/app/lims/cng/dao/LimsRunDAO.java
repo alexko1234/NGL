@@ -35,7 +35,7 @@ public class LimsRunDAO {
     
     public LimsExperiment getExperiments(Experiment experiment){
     	if(null != experiment.date){
-	    	String sql = "SELECT m.pc_name as code, w.start_date as date, 'HISEQ2000' as categoryCode" //, mt.type as seq_type, m.model as seq_model
+	    	String sql = "SELECT m.pc_name as code, w.start_date as date, 'HISEQ2000' as categoryCode, f.nb_cycles" //, mt.type as seq_type, m.model as seq_model
 	    				+" FROM t_flowcell f"
 	    				+" JOIN t_workflow w on w.flowcell_id=f.id"
 	    				+" JOIN t_stage s on w.stage_id=s.id and ( s.workflow='SEQ' and s.name='Read1')"
@@ -46,7 +46,7 @@ public class LimsRunDAO {
 	    	return this.jdbcTemplate.queryForObject(sql, mapper, experiment.containerSupportCode, minus(experiment.date,5), add(experiment.date,5));    	
 	    	
     	}else{
-    		String sql = "SELECT m.pc_name as code, w.start_date as date, 'HISEQ2000' as categoryCode" //, mt.type as seq_type, m.model as seq_model
+    		String sql = "SELECT m.pc_name as code, w.start_date as date, 'HISEQ2000' as categoryCode, f.nb_cycles" //, mt.type as seq_type, m.model as seq_model
     				+" FROM t_flowcell f"
     				+" JOIN t_workflow w on w.flowcell_id=f.id"
     				+" JOIN t_stage s on w.stage_id=s.id and ( s.workflow='SEQ' and s.name='Read1')"

@@ -8,6 +8,8 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Before;
 
+import com.gargoylesoftware.htmlunit.DownloadedContent.InMemory;
+
 import play.test.FakeApplication;
 import play.test.Helpers;
 
