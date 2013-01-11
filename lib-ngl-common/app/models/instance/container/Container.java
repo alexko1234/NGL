@@ -57,6 +57,10 @@ public class Container extends DBObject {
 	
 	//Embedded content with values;
 	public List<Content> contents;
+
+	// Embedded QC result, this data are copying from collection QC
+	public List<QualityControlResult> qualityControlResults;
+
 	
 	//Stock management 
 	public List<Volume> mesuredVolume;
@@ -73,7 +77,6 @@ public class Container extends DBObject {
 	//public String fromExperimentCode; ??
 	//public String fromPurifingCode;
 	//public String fromExtractionTypeCode;
-	//public List<String> fromQCCodes;
 	
 
 	
