@@ -2,6 +2,6 @@ package controllers.run;
 
 public interface Constants {
 	
-	public static final String CNG_RUN_ILLUMINA = "run.illumina";
+	public static final String RUN_ILLUMINA_COLL_NAME = "run.illumina";
 
 }

@@ -1,8 +1,5 @@
 package utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import models.instance.common.PropertyValue;
 import models.instance.instrument.InstrumentUsed;
 import models.instance.run.Lane;
@@ -12,7 +9,6 @@ import models.instance.run.Run;
 import org.codehaus.jackson.JsonNode;
 
 import play.libs.Json;
-import fr.cea.ig.MongoDBDAO;
 
 public class RunMockHelper {
 	
@@ -84,5 +80,13 @@ public class RunMockHelper {
 		r.properties.put("nbRead",  new PropertyValue("1500000"));
 		return r;
 	}
+	
+	public static JsonNode getArchiveJson(String archiveId){
+		 System.out.println( Json.newObject().textNode("arichiveId:"+archiveId));
+		 //System.out.println("parsed::"+Json.parse("[{\"archiveId\":\""+archiveId+"\"}]"));
+		 return Json.parse("{\"archiveId\":\""+archiveId+"\"}");
+		 
+	 }
+	 
 		
 }

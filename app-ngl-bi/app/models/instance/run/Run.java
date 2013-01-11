@@ -4,11 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.Valid;
-
-
-import play.data.validation.Constraints.Required;
-
 import models.instance.Utils;
 import models.instance.common.PropertyValue;
 import models.instance.common.TBoolean;

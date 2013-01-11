@@ -1,6 +1,8 @@
 package controllers.run;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static play.mvc.Http.Status.BAD_REQUEST;
+import static play.mvc.Http.Status.NOT_FOUND;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.charset;
@@ -19,24 +21,18 @@ import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.Test;
 
-import fr.cea.ig.MongoDBDAO;
 import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
-import utils.RunMockHelperOld;
-
-
-import static org.fest.assertions.Assertions.assertThat;
-import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.*;
+import fr.cea.ig.MongoDBDAO;
 
 public class ReadSetsTests extends AbstractTests {
 	
 	@Test
 	 public void testReasetCreate() {
-		Run runDelete = MongoDBDAO.findOne("cng.run.illuminaYann2",Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
+		Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
 		if(runDelete!=null){
-			MongoDBDAO.delete("cng.run.illuminaYann2", Run.class, runDelete._id);
+			MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 		}
 	
 		Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET");
@@ -99,10 +95,10 @@ public class ReadSetsTests extends AbstractTests {
 	 
 	 @Test
 	 public void testArchiveReadSet(){
-		 Result result = callAction(controllers.run.routes.ref.ReadSets.updateArchive("ReadSetTEST","json"),fakeRequest().withJsonBody(RunMockHelperOld.getArchiveJson("codeTestArchive")));
+		 Result result = callAction(controllers.run.routes.ref.ReadSets.updateArchive("ReadSetTEST","json"),fakeRequest().withJsonBody(RunMockHelper.getArchiveJson("codeTestArchive")));
          assertThat(status(result)).isEqualTo(OK);
     	 
-         result = callAction(controllers.run.routes.ref.ReadSets.updateArchive("ReadSetTESTNOTEXIT","json"),fakeRequest().withJsonBody(RunMockHelperOld.getArchiveJson("codeTestArchive")));
+         result = callAction(controllers.run.routes.ref.ReadSets.updateArchive("ReadSetTESTNOTEXIT","json"),fakeRequest().withJsonBody(RunMockHelper.getArchiveJson("codeTestArchive")));
          assertThat(status(result)).isEqualTo(NOT_FOUND);
 	 }
 	 

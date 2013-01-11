@@ -10,16 +10,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.JacksonDBCollection;
-import net.vz.mongodb.jackson.DBQuery.Query;
-
 import models.instance.common.TraceInformation;
 import models.instance.instrument.InstrumentUsed;
 import models.instance.run.File;
 import models.instance.run.Lane;
 import models.instance.run.ReadSet;
 import models.instance.run.Run;
+import net.vz.mongodb.jackson.DBQuery;
 import play.data.validation.ValidationError;
 
 import com.mongodb.MongoException;

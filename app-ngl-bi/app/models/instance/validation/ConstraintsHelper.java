@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import models.description.common.PropertyDefinition;
 import models.description.common.Value;
 import models.instance.common.PropertyValue;

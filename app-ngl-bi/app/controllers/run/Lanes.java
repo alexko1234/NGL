@@ -26,15 +26,15 @@ public class Lanes extends Controller{
 		filledForm = getFilledForm(format);
 		
 		if(!filledForm.hasErrors()) {
-			Run run = MongoDBDAO.findByCode(Constants.CNG_RUN_ILLUMINA, Run.class, code);
+			Run run = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 			if(run == null){
 				return notFound();
 			}
 			Lane laneValue = filledForm.get();
-			BusinessValidationHelper.validateLane(filledForm.errors(), run,laneValue, Constants.CNG_RUN_ILLUMINA, null);
+			BusinessValidationHelper.validateLane(filledForm.errors(), run,laneValue, Constants.RUN_ILLUMINA_COLL_NAME, null);
 			if(!filledForm.hasErrors()) {
 				System.out.println("insert OK :"+laneValue.number);
-				MongoDBDAO.createOrUpdateInArray(Constants.CNG_RUN_ILLUMINA,Run.class,"code" , code, "lanes", "number", laneValue.number,laneValue);
+				MongoDBDAO.createOrUpdateInArray(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,"code" , code, "lanes", "number", laneValue.number,laneValue);
 				filledForm = filledForm.fill(laneValue);
 			}
 		}
@@ -61,7 +61,7 @@ public class Lanes extends Controller{
 	public static Result list(){
 		Form<DataTableForm> filledForm = datatableForm.bindFromRequest();
 	
-		List<Run> runs = MongoDBDAO.all(Constants.CNG_RUN_ILLUMINA, Run.class);
+		List<Run> runs = MongoDBDAO.all(Constants.RUN_ILLUMINA_COLL_NAME, Run.class);
 		ObjectNode result = Json.newObject();
 		result.put("iTotalRecords", runs.size());
 		result.put("iTotalDisplayRecords", runs.size());
@@ -72,7 +72,7 @@ public class Lanes extends Controller{
 	}
 	
 	public static Result show(String code,Integer laneNumber, String format){
-		Run runValue = MongoDBDAO.findByCode(Constants.CNG_RUN_ILLUMINA, Run.class, code);
+		Run runValue = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		Lane laneValue = null;
 		for(Lane lane:runValue.lanes) {
 			if(lane.number.equals(laneNumber)){

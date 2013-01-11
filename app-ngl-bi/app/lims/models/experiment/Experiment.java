@@ -2,7 +2,6 @@ package lims.models.experiment;
 
 import java.util.Date;
 
-import lims.cng.dao.LimsExperiment;
 import lims.models.instrument.Instrument;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;

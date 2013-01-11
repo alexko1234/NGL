@@ -1,35 +1,30 @@
 package controllers.run;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.charset;
+import static play.test.Helpers.contentAsString;
 import static play.test.Helpers.contentType;
-import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.fakeRequest;
-import static play.test.Helpers.running;
 import static play.test.Helpers.status;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.junit.Test;
 
 import models.instance.common.TBoolean;
 import models.instance.run.Lane;
 import models.instance.run.ReadSet;
 import models.instance.run.Run;
 import net.vz.mongodb.jackson.DBQuery;
+
+import org.junit.Test;
+
 import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
 import fr.cea.ig.MongoDBDAO;
-
-import static org.fest.assertions.Assertions.assertThat;
-import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.*;
 
 public class LanesTests extends AbstractTests {
 
@@ -40,9 +35,9 @@ public class LanesTests extends AbstractTests {
 	}
 	 @Test
 	public void testLanes(){
-		Run runDelete = MongoDBDAO.findOne("cng.run.illuminaYann2",Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
+		Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
 		if(runDelete!=null){
-			MongoDBDAO.delete("cng.run.illuminaYann2", Run.class, runDelete._id);
+			MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 		}
 	
 		Run run = RunMockHelper.newRun("YANN_TEST1FORLANES");

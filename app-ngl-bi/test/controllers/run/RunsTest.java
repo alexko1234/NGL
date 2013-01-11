@@ -1,47 +1,29 @@
 package controllers.run;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static org.fest.assertions.Assertions.assertThat;
+import static play.mvc.Http.Status.OK;
+import static play.test.Helpers.callAction;
+import static play.test.Helpers.charset;
+import static play.test.Helpers.contentAsString;
+import static play.test.Helpers.contentType;
+import static play.test.Helpers.fakeRequest;
+import static play.test.Helpers.status;
 
-import models.description.common.PropertyDefinition;
+import java.util.ArrayList;
+import java.util.List;
+
 import models.instance.common.PropertyValue;
-import models.instance.common.TraceInformation;
-import models.instance.instrument.InstrumentUsed;
 import models.instance.run.Lane;
 import models.instance.run.ReadSet;
 import models.instance.run.Run;
-import models.instance.validation.RunPropertyDefinitionHelper;
 import net.vz.mongodb.jackson.DBQuery;
 
-import org.codehaus.jackson.JsonNode;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import play.Logger;
-import play.test.FakeApplication;
-import play.test.Helpers;
-
-import org.junit.Test;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-
-import fr.cea.ig.MongoDBDAO;
-import play.libs.F;
-import play.libs.Json;
-import play.libs.WS;
 import play.mvc.Result;
-import play.test.TestBrowser;
 import utils.AbstractTests;
 import utils.RunMockHelper;
-import utils.RunMockHelperOld;
-
-import static org.fest.assertions.Assertions.assertThat;
-import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.*;
+import fr.cea.ig.MongoDBDAO;
 
 public class RunsTest extends AbstractTests {
 	
@@ -52,10 +34,10 @@ public class RunsTest extends AbstractTests {
 	
 	@Test
 	public void testRuns() {
-			Run runDelete = MongoDBDAO.findOne("cng.run.illuminaYann2",Run.class,DBQuery.is("code","YANN_TEST1"));
+			Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1"));
 			if(runDelete!=null){
 				System.out.println("EXIST");
-				MongoDBDAO.delete("cng.run.illuminaYann2", Run.class, runDelete._id);
+				MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 			}else {
 				System.out.println("NOTEXIST");
 				
@@ -84,7 +66,7 @@ public class RunsTest extends AbstractTests {
 	
 	@Test
 	public void testRunsUpdate() {
-			Run run = MongoDBDAO.findOne("cng.run.illuminaYann2",Run.class,DBQuery.is("code","YANN_TEST1"));
+			Run run = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1"));
 			
 			run.dispatch=true;
 			
@@ -120,7 +102,7 @@ public class RunsTest extends AbstractTests {
 	
 	@Test
 	public void testLanesUpdateByRun() {
-			Run run = MongoDBDAO.findOne("cng.run.illuminaYann2",Run.class,DBQuery.is("code","YANN_TEST1"));
+			Run run = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1"));
 			
 			run.lanes.get(0).properties.remove("nbCycleRead1");
 			run.lanes.get(0).properties.put("nbCycleRead1",new PropertyValue("42"));
@@ -137,7 +119,7 @@ public class RunsTest extends AbstractTests {
 	
 	@Test
 	public void testReadSetUpdateByRun() {
-			Run run = MongoDBDAO.findOne("cng.run.illuminaYann2",Run.class,DBQuery.is("code","YANN_TEST1"));
+			Run run = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1"));
 			
 			run.lanes.get(0).readsets.get(0).properties.remove("score");
 			run.lanes.get(0).readsets.get(0).properties.put("score",  new PropertyValue("42"));

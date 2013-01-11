@@ -1,9 +1,9 @@
 package models.instances.validation;
 
+import static org.fest.assertions.Assertions.assertThat;
 import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.running;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,35 +17,20 @@ import models.instance.run.ReadSet;
 import models.instance.run.Run;
 import models.instance.validation.BusinessValidationHelper;
 
-import org.codehaus.jackson.JsonNode;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import play.data.validation.ValidationError;
-import play.libs.Json;
-import play.test.FakeApplication;
-import play.test.Helpers;
 import utils.AbstractTests;
-import static org.fest.assertions.Assertions.*;
-import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.*;
 public class RunValidationTest extends AbstractTests{
 	
-	@Override
+	
+	 @Override
 	public void init() {
 		// TODO Auto-generated method stub
 		
 	}
-	public Map<String,String> fakeConfiguration(){
-		Map<String,String> config = new HashMap<String,String>();
-		config.put("mongodb.database", "NGL-BI");
-		config.put("mongodb.credentials", "ngl-bi:NglBiPassW");
-		config.put("mongodb.servers", "gsphere.genoscope.cns.fr:27017");
-		return config;
-		
-	}
-	 @Test
+
+	@Test
 	 public void testRunValidationOk() {
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {

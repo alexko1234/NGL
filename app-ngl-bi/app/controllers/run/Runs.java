@@ -2,18 +2,20 @@ package controllers.run;
 
 import java.util.List;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ObjectNode;
-
 import models.instance.common.TraceInformation;
 import models.instance.run.Run;
 import models.instance.validation.BusinessValidationHelper;
+
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.node.ObjectNode;
+
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.DataTableForm;
-import views.html.run.*;
+import views.html.run.run;
+import views.html.run.runs;
 import fr.cea.ig.MongoDBDAO;
 /**
  * Controller around Run object
@@ -33,7 +35,7 @@ public class Runs extends Controller {
 	public static Result list(){
 		Form<DataTableForm> filledForm = datatableForm.bindFromRequest();
 	
-		List<Run> runs = MongoDBDAO.all(Constants.CNG_RUN_ILLUMINA, Run.class);
+		List<Run> runs = MongoDBDAO.all(Constants.RUN_ILLUMINA_COLL_NAME, Run.class);
 		ObjectNode result = Json.newObject();
 		result.put("iTotalRecords", runs.size());
 		result.put("iTotalDisplayRecords", runs.size());
@@ -49,7 +51,7 @@ public class Runs extends Controller {
 	}
 	
 	public static Result show(String code, String format){
-		Run runValue = MongoDBDAO.findByCode(Constants.CNG_RUN_ILLUMINA, Run.class, code);		
+		Run runValue = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);		
 		if(runValue != null){
 			if("json".equals(format)){
 				return ok(Json.toJson(runValue));
@@ -63,7 +65,7 @@ public class Runs extends Controller {
 	}
 	
 	public static Result edit(String code, String format){
-		Run runValue = MongoDBDAO.findByCode(Constants.CNG_RUN_ILLUMINA, Run.class, code);		
+		Run runValue = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);		
 		if(runValue != null){
 			if("json".equals(format)){
 				return ok(Json.toJson(runValue));
@@ -89,9 +91,9 @@ public class Runs extends Controller {
 			}else{
 				runValue.traceInformation.setTraceInformation("ngsrg");
 			}			
-			BusinessValidationHelper.validateRun(filledForm.errors(), runValue, Constants.CNG_RUN_ILLUMINA);			
+			BusinessValidationHelper.validateRun(filledForm.errors(), runValue, Constants.RUN_ILLUMINA_COLL_NAME);			
 			if(!filledForm.hasErrors()) {
-				runValue = MongoDBDAO.save(Constants.CNG_RUN_ILLUMINA, runValue);
+				runValue = MongoDBDAO.save(Constants.RUN_ILLUMINA_COLL_NAME, runValue);
 				filledForm = filledForm.fill(runValue);
 			}
 		}

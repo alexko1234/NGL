@@ -1,12 +1,10 @@
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-
-import play.*;
+import play.Application;
+import play.GlobalSettings;
+import play.Logger;
 import play.data.format.Formatters;
 
 

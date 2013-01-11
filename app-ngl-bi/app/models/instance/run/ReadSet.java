@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import models.instance.Utils;
 import models.instance.common.PropertyValue;
 import models.instance.common.TBoolean;
-
 import play.data.validation.Constraints.Required;
 
 public class ReadSet {

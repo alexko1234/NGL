@@ -2,8 +2,6 @@ package models.instance.run;
 
 import java.util.Map;
 
-import play.data.validation.Constraints.Required;
-
 import models.instance.Utils;
 import models.instance.common.PropertyValue;
 

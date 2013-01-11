@@ -6,23 +6,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.instance.run.Archive;
+import models.instance.run.Lane;
+import models.instance.run.ReadSet;
+import models.instance.run.Run;
+import models.instance.validation.BusinessValidationHelper;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
-import fr.cea.ig.MongoDBDAO;
-import models.instance.run.Archive;
-import models.instance.run.Lane;
-import models.instance.run.ReadSet;
-import models.instance.run.Run;
-import models.instance.validation.BusinessValidationHelper;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import utils.DataTableForm;
+import fr.cea.ig.MongoDBDAO;
 
 public class ReadSets extends Controller{
 
@@ -34,12 +34,12 @@ public class ReadSets extends Controller{
 		Form<ReadSet> filledForm = getFilledForm(format);
 		
 		if(!filledForm.hasErrors()) {
-			Run run = MongoDBDAO.findOne(Constants.CNG_RUN_ILLUMINA, Run.class, DBQuery.is("code", code).is("lanes.number", laneNumber));	
+			Run run = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", code).is("lanes.number", laneNumber));	
 			if(null == run){
 				return notFound();
 			}
 			ReadSet readsetValue = filledForm.get();			
-			BusinessValidationHelper.validateReadSet(filledForm.errors(),run, laneNumber, readsetValue, Constants.CNG_RUN_ILLUMINA, null);
+			BusinessValidationHelper.validateReadSet(filledForm.errors(),run, laneNumber, readsetValue, Constants.RUN_ILLUMINA_COLL_NAME, null);
 			
 			if(!filledForm.hasErrors()) {
 				for(int i = 0; i < run.lanes.size(); i++){
@@ -54,7 +54,7 @@ public class ReadSets extends Controller{
 						}
 						Map<String,Object> map = new HashMap<String,Object>();
 						map.put("lanes."+i+".readsets."+j, readsetValue);
-						MongoDBDAO.update(Constants.CNG_RUN_ILLUMINA, run, map);
+						MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME, run, map);
 						break;
 					}
 				}				
@@ -86,13 +86,13 @@ public class ReadSets extends Controller{
 			ReadSet readsetValue = filledForm.get();
 		
 			if(readsetValue.code.equals(readSetCode)){
-				Run run = MongoDBDAO.findOne(Constants.CNG_RUN_ILLUMINA, Run.class, DBQuery.is("lanes.readsets.code", readSetCode));
+				Run run = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("lanes.readsets.code", readSetCode));
 				
 				if(null == run) {
 					return notFound();
 				} 
 				
-				BusinessValidationHelper.validateReadSet(filledForm.errors(), run,-1, readsetValue, Constants.CNG_RUN_ILLUMINA,null);
+				BusinessValidationHelper.validateReadSet(filledForm.errors(), run,-1, readsetValue, Constants.RUN_ILLUMINA_COLL_NAME,null);
 				
 				boolean flagReadSet = false;
 				if(!filledForm.hasErrors()) {
@@ -103,7 +103,7 @@ public class ReadSets extends Controller{
 								flagReadSet = true;
 								Map<String,Object> map = new HashMap<String,Object>();
 								map.put("lanes."+i+".readsets."+j, readsetValue); //Update
-								MongoDBDAO.update(Constants.CNG_RUN_ILLUMINA, run, map);
+								MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME, run, map);
 							}
 						}
 					}								
@@ -132,7 +132,7 @@ public class ReadSets extends Controller{
 	public static Result list(){
 		Form<DataTableForm> filledForm = datatableForm.bindFromRequest();
 	
-		List<Run> runs = MongoDBDAO.all(Constants.CNG_RUN_ILLUMINA, Run.class);
+		List<Run> runs = MongoDBDAO.all(Constants.RUN_ILLUMINA_COLL_NAME, Run.class);
 		ObjectNode result = Json.newObject();
 		result.put("iTotalRecords", runs.size());
 		result.put("iTotalDisplayRecords", runs.size());
@@ -143,7 +143,7 @@ public class ReadSets extends Controller{
 	}
 	
 	public static Result show(String code,Integer laneNumber,String readSetCode,String format){
-		Run runValue = MongoDBDAO.findByCode(Constants.CNG_RUN_ILLUMINA, Run.class, code);
+		Run runValue = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		Lane laneValue = null;
 		ReadSet readset = null;
 		for(Lane lane:runValue.lanes) {
@@ -175,7 +175,7 @@ public class ReadSets extends Controller{
 	
 	public static Result showWithReadsetCode(String readSetCode,String format){
 		Query object = DBQuery.is("lanes.readsets.code", readSetCode);
-		Run run =  MongoDBDAO.findOne(Constants.CNG_RUN_ILLUMINA, Run.class, object);		
+		Run run =  MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, object);		
 		if(run == null) {
 			return notFound();
 		} 		
@@ -208,7 +208,7 @@ public class ReadSets extends Controller{
 	public static Result needArchive(String format){
 		List<Archive> archives = new ArrayList<Archive>();
 		Query object = DBQuery.is("dispatch", true).or(DBQuery.elemMatch("lanes.readsets", DBQuery.is("archiveId",null))).or(DBQuery.elemMatch("lanes.readsets", DBQuery.notEquals("archiveDate", null)).and(DBQuery.notEquals("transfertEndDate", null).and(DBQuery.where("lanes.readsets.archiveDate<transfertEndDate"))));
-		List<Run> runs = MongoDBDAO.find(Constants.CNG_RUN_ILLUMINA, Run.class, object);
+		List<Run> runs = MongoDBDAO.find(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, object);
 		for(Run run:runs){
 			for(Lane lane:run.lanes){
 				for(ReadSet readset:lane.readsets){
@@ -235,7 +235,7 @@ public class ReadSets extends Controller{
 		
 		if(archiveId != null){
 			Query object = DBQuery.is("lanes.readsets.code",readSetCode);
-			Run run = MongoDBDAO.findOne(Constants.CNG_RUN_ILLUMINA, Run.class, object);
+			Run run = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, object);
 			
 			if(run == null) {
 				return notFound();
@@ -246,7 +246,7 @@ public class ReadSets extends Controller{
 						Map<String,Object> map = new HashMap<String,Object>();
 						map.put("lanes."+i+".readsets."+j+".archiveId", archiveId); //Update
 						map.put("lanes."+i+".readsets."+j+".archiveDate", new Date());
-						MongoDBDAO.update(Constants.CNG_RUN_ILLUMINA, run, map);
+						MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME, run, map);
 						return ok();
 					}
 				}
