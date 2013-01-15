@@ -8,7 +8,6 @@
 
 @defining(if(isEdit) ('states->"enabled") else ('states->"disabled")){ (disabled) =>
 		<input type="hidden" value="@dataFormCommon("id").value" name="@dataFormCommon("id").name" />
-		<input type="hidden" value="@dataFormCommon("version").value" name="@dataFormCommon("version").name" />
 	@views.html.helper.tbInputText(dataFormCommon("id"), 'states->"disabled")
 	
 	@views.html.helper.tbInputText(dataFormCommon("name"), disabled)
@@ -38,7 +37,7 @@
 					<table id="propertiesId" class="table table-bordered table-condensed">
             		<thead>
             		<tr>
-            		<th>#ID</th><th>Key Code</th><th>Key Name</th><th>is Required</th><th>is Active</th><th>is choice in a list</th><th>Type</th><th>Display Format</th><th>Display Order</th>
+            		<th>#ID</th><th>Key Code</th><th>Key Name</th><th>is Required</th><th>is Active</th><th>Level</th><th>Type</th><th>Display Format</th><th>Display Order</th>
             		</tr>
             		</thead>
 					<tbody id="tbody_properties_id_@dataFormCommon("id").value()">

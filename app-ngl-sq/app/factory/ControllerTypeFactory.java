@@ -17,7 +17,7 @@ public class ControllerTypeFactory {
 	
 	public static IGenericCreateTypes getInstance(Long idObjectType)
 	{
-		ObjectType ot = ObjectType.find.byId(idObjectType);
+		ObjectType ot = ObjectType.findById(idObjectType);
 		if(ot.type.equals(ControllerTypeFactory.typeExperiment)){
 			return new ExperimentTypes();
 		}else if(ot.type.equals(ControllerTypeFactory.typeInstrumentUsed)){

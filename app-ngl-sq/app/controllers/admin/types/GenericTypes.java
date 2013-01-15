@@ -10,6 +10,7 @@ import models.description.IDynamicType;
 import models.description.common.CommonInfoType;
 import models.description.common.ObjectType;
 import models.description.common.State;
+import models.description.experiment.ExperimentType;
 
 import org.codehaus.jackson.node.ObjectNode;
 
@@ -36,11 +37,11 @@ import factory.ControllerTypeFactory;
  */
 public class GenericTypes extends Controller {
 
-    /**
-     * Defines a form wrapping the User class.
-     */ 
-    final static Form<DataTableForm> datatableForm = form(DataTableForm.class);
-    final static Form<CommonInfoType> commonInfoTypeForm = form(CommonInfoType.class);
+	/**
+	 * Defines a form wrapping the User class.
+	 */ 
+	final static Form<DataTableForm> datatableForm = form(DataTableForm.class);
+	final static Form<CommonInfoType> commonInfoTypeForm = form(CommonInfoType.class);
 	private static final String Log = null;
 
 	public static Result home() {
@@ -53,19 +54,24 @@ public class GenericTypes extends Controller {
 	 */
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result list() {
-		
+
 		Form<DataTableForm> filledForm = datatableForm.bindFromRequest();
 		ObjectNode result = Json.newObject();
-		Page<CommonInfoType> p = CommonInfoType.page(0, 10, "name", "asc", filledForm.get().sSearch.get(1), 
-				(!filledForm.get().sSearch.get(2).isEmpty()) ? Long.valueOf(filledForm.get().sSearch.get(2)):null);
+		List<CommonInfoType> commonInfoTypes = CommonInfoType.findByNameAndType(filledForm.get().sSearch.get(1),(!filledForm.get().sSearch.get(2).isEmpty()) ? Long.valueOf(filledForm.get().sSearch.get(2)):null);
 		
+		
+		/*Page<CommonInfoType> p = CommonInfoType.page(0, 10, "name", "asc", filledForm.get().sSearch.get(1), 
+				(!filledForm.get().sSearch.get(2).isEmpty()) ? Long.valueOf(filledForm.get().sSearch.get(2)):null);
+
 		result.put("iTotalRecords", p.getTotalRowCount());
-		result.put("iTotalDisplayRecords", p.getTotalRowCount());
+		result.put("iTotalDisplayRecords", p.getTotalRowCount());*/
+		result.put("iTotalRecords", commonInfoTypes.size());
+		result.put("iTotalDisplayRecords", commonInfoTypes.size());
 		result.put("sEcho", filledForm.get().sEcho);
-		result.put("aaData", Json.toJson(p.getList()));
+		result.put("aaData", Json.toJson(commonInfoTypes));
 		return ok(result);
 	}
-	
+
 	/**
 	 * Generic service to create or update commonInfoType
 	 * Used in table view
@@ -82,11 +88,12 @@ public class GenericTypes extends Controller {
 				//return badRequest(genericType.render(filledForm,true));
 				return badRequest();
 			}
-			
+
 		} else {
-			CommonInfoType bean = filledForm.get();			
+			CommonInfoType bean = filledForm.get();
+			//TODO
 			if(bean.id == null){
-				bean.save();
+				bean.add();
 			}else{
 				bean.update();
 			}						
@@ -98,29 +105,29 @@ public class GenericTypes extends Controller {
 				//return ok(genericType.render(filledForm,true));
 				return ok();
 			}
-			
-			
-			
+
+
+
 		}		
 	}
-	
+
 	public static Result addPropertyDefinition(Integer index){
 		Form<CommonInfoType> defaultForm = commonInfoTypeForm.fill(new CommonInfoType()); //put default value
 		return ok(addPropertyDefinition.render(PlayMagicForJava.javaFieldtoScalaField(defaultForm.field("propertiesDefinition["+index+"]")), Boolean.TRUE));	
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static CommonInfoType getBeanFromRequest(String typeName)
 	{
 		Form<CommonInfoType> formCIT = commonInfoTypeForm.bindFromRequest();
 		CommonInfoType beanCIT = formCIT.get();
-		ObjectType objectType = ObjectType.find.where().eq("type", typeName).findUnique();
+		ObjectType objectType = ObjectType.findByType(typeName);
 		beanCIT.objectType=objectType;
 		//TODO a revoir
 		beanCIT.variableStates = (List<State>) getListTypeFromDB(beanCIT.variableStates);
 		return beanCIT;
 	}
-	
+
 	/**
 	 * Service to retrieve from database the list of entities from a view list
 	 * @param listToTransform
@@ -135,7 +142,7 @@ public class GenericTypes extends Controller {
 		}
 		return newList;
 	}
-	
+
 	/**
 	 * Get specific action type controller to add view 
 	 * @param id
@@ -144,7 +151,7 @@ public class GenericTypes extends Controller {
 	public static Result add(Long id){
 		return ControllerTypeFactory.getInstance(id).add();
 	}
-	
+
 	/**
 	 * Get specific action type controller to show view 
 	 * @param id
@@ -152,10 +159,10 @@ public class GenericTypes extends Controller {
 	 */
 	public static Result show(Long id)
 	{
-		CommonInfoType cit = CommonInfoType.find.byId(id);
+		CommonInfoType cit = CommonInfoType.findById(id);
 		return ControllerTypeFactory.getInstance(cit.objectType.id).show(cit.id);
 	}
-	
+
 	/**
 	 * Get specific action type controller to edit view 
 	 * @param id
@@ -163,7 +170,7 @@ public class GenericTypes extends Controller {
 	 */
 	public static Result edit(Long id)
 	{
-		CommonInfoType cit = CommonInfoType.find.byId(id);
+		CommonInfoType cit = CommonInfoType.findById(id);
 		return ControllerTypeFactory.getInstance(cit.objectType.id).edit(cit.id);
 	}
 }

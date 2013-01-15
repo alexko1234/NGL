@@ -36,10 +36,12 @@
 )
 </td>
 <td>
-@helper.tbCheckBox(
-	field = field("choiseInList"),
-	args = disabled                             
+@helper.tbSelect(
+     field = field("level"), Nil,
+     options = PropertyDefinition.optionsLevel.toMap,
+     args = '_default -> "-- Choose a level --", 'class -> "input-medium", disabled             
 )
+
 </td>
 <td>
 @helper.tbSelect(

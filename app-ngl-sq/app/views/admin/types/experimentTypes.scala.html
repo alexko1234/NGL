@@ -5,7 +5,7 @@
 
 @implicitField = @{ FieldConstructor(helper.tbformhorizontal.f) }
 @typeInfo(dataFormCommon, 
-	controllers.admin.types.routes.ExperimentTypes.createOrUpdate(experimentTypeForm("id").value,experimentTypeForm("version").value), "Create Experiment Type", "experimentTypes",isEdit){
+	controllers.admin.types.routes.ExperimentTypes.createOrUpdate(experimentTypeForm("id").value), "Create Experiment Type", "experimentTypes",isEdit){
 	@defining(if(isEdit) ('states->"enabled") else ('states->"disabled")){ (disabled) =>		
 		@if(experimentTypeForm("nextExperimentTypes").value == null) {
  			@views.html.helper.tbMultipleCheckBox(experimentTypeForm("nextExperimentTypes"),Nil,ExperimentType.getMapExperimentTypes().toMap,"id",disabled)

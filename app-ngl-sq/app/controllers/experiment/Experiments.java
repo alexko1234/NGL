@@ -40,7 +40,7 @@ public class Experiments extends Controller {
 		
 		if(filledForm.get().sSearch.get(2).trim().length() > 0){
 			System.out.println("Collection :"+filledForm.get().sSearch.get(2).trim());
-			List<Experiment> listExp=MongoDBDAO.all(ExperimentType.find.byId(Long.valueOf(filledForm.get().sSearch.get(2).trim())).commonInfoType.collectionName, Experiment.class);
+			List<Experiment> listExp=MongoDBDAO.all(ExperimentType.findExpTypeById(Long.valueOf(filledForm.get().sSearch.get(2).trim())).getCommonInfoType().getCollectionName(), Experiment.class);
 			
 			for (int i = 0; i < listExp.size(); i++) {
 				Map<String,String> r= new HashMap<String, String>();
@@ -109,7 +109,7 @@ public class Experiments extends Controller {
 			
 				
 				if(exp.experimentTypeCode!=null){
-					comm=CommonInfoType.find.where().eq("code",exp.experimentTypeCode).findUnique();
+					comm=CommonInfoType.findByCode(exp.experimentTypeCode);
 					exp.experimentTypeCode=comm.code;
 				}
 				
@@ -142,7 +142,7 @@ public class Experiments extends Controller {
 
 	//Display properties input
 	public static Result property(String value){
-		CommonInfoType commonInfoType =CommonInfoType.find.byId(Long.valueOf(value));
+		CommonInfoType commonInfoType =CommonInfoType.findById(Long.valueOf(value));
 		
 		
 		Experiment exp=new Experiment();
