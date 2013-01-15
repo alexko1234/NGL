@@ -1,41 +1,35 @@
 package models.description.common;
 
-import java.util.List;
+public class MeasureValue {
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Version;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
-
-import play.db.ebean.Model;
-@Entity
-public class MeasureValue extends Model {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5653508299965193830L;
-	@Version
-	public Long version;
-	
-	@Id
 	public Long id;
-	@Column(nullable=false)
-	public String value;   
-	@Column(nullable=false)
-    public Boolean defaultValue = Boolean.FALSE;
-  	
-	@JsonIgnore
-	@ManyToOne
-	public MeasureCategory measureCategory;
 	
-	@JsonIgnore
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	public List<PropertyDefinition> propertyDefinitions;
+	public String value;   
+	
+	public Boolean defaultValue = Boolean.FALSE;
+  	
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public Boolean getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(Boolean defaultValue) {
+		this.defaultValue = defaultValue;
+	}
 	
 }

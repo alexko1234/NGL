@@ -13,7 +13,7 @@ import com.avaje.ebean.Ebean;
  * @author galbini
  *
  */
-public class ObjectSGBDReference<T extends Model> implements IFetch<T>{
+public class ObjectSGBDReference<T> implements IFetch<T>{
 	
 	@JsonIgnore
 	private Class<T> className;

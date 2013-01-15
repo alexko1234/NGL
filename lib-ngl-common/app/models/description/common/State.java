@@ -1,25 +1,11 @@
 package models.description.common;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Version;
-
 import models.description.IDynamicType;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
-
-import play.db.ebean.Model;
+import models.description.common.dao.StateDAO;
+import play.modules.spring.Spring;
 
 /**
  * Value of the possible state of type
@@ -27,44 +13,35 @@ import play.db.ebean.Model;
  * @author ejacoby
  *
  */
-@Entity
-public class State extends Model implements IDynamicType{
+public class State implements IDynamicType{
 
-	private static final long serialVersionUID = 1L;
-
-	@Version
-	public Long version;
-	
-	@Id @GeneratedValue
-	@Column(name="id", nullable=false)
 	public Long id;
 	
-	@Column(nullable=false)
 	public String name;
 	
-	@Column(nullable=false,unique=true)
 	public String code;
 	
-	@Column(nullable=false)
 	public boolean active;
 	
 	public Integer priority;
 	
-	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	@JoinTable(
-			name="common_info_type_state",
-			joinColumns=@JoinColumn(name="fk_state"),
-			inverseJoinColumns=@JoinColumn(name="fk_common_info_type")
-			)
-	@JsonIgnore
-	public List<CommonInfoType> commonInfoTypes;
-	
-	public static Model.Finder<Long,State> find = new Model.Finder<Long,State>(Long.class, State.class);
-	
+	public State() {
+		super();
+	}
+
+	public State(String name, String code, boolean active, Integer priority) {
+		super();
+		this.name = name;
+		this.code = code;
+		this.active = active;
+		this.priority = priority;
+	}
+
 	public static Map<String, String> getMapPossibleStates()
 	{
 		Map<String, String> mapPossibleStates = new HashMap<String, String>();
-		for(State possibleState : State.find.all()){
+		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
+		for(State possibleState : stateDAO.findAll()){
 			mapPossibleStates.put(possibleState.id.toString(), possibleState.name);
 		}
 		return mapPossibleStates;
@@ -78,13 +55,79 @@ public class State extends Model implements IDynamicType{
 
 	@Override
 	public long getIdType() {
-		// TODO Auto-generated method stub
-		return 0;
+		return id;
 	}
 
 	@Override
 	public IDynamicType findById(long id) {
-		return State.find.byId(id);
+		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
+		return stateDAO.findById(id);
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public boolean getActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		State other = (State) obj;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		return true;
+	}
+
 	
 }

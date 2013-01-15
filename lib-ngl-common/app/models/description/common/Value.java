@@ -1,31 +1,37 @@
 package models.description.common;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Version;
+public class Value {
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
-import play.db.ebean.Model;
-@Entity
-public class Value extends Model {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5653508299965193830L;
-	@Version
-	public Long version;
-	
-	@Id
 	public Long id;
-	@Column(nullable=false)
+	
 	public String value;   
-	@Column(nullable=false)
-    public Boolean defaultValue = Boolean.FALSE;
-  	
-	@JsonIgnore
-	@ManyToOne
-	public PropertyDefinition propertyDefinition;
+	
+	public Boolean defaultValue = Boolean.FALSE;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public Boolean getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(Boolean defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+
+	
+    
 }

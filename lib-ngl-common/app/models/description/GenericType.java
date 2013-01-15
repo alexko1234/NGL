@@ -28,7 +28,7 @@ public class GenericType implements IDynamicType{
 
 	@Override
 	public long getIdType() {
-		return commonInfoType.id;
+		return commonInfoType.getId();
 	}
 
 	@Override
@@ -36,6 +36,7 @@ public class GenericType implements IDynamicType{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	
 	
 }

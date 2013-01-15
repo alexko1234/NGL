@@ -1,28 +1,68 @@
 package models.description.content;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Version;
 
-import play.db.ebean.Model;
+public class ContainerSupportCategory{
 
-@Entity
-public class ContainerSupportCategory extends Model{
-
-	private static final long serialVersionUID = 2310777645398931182L;
-
-	@Version
-	public Long version;
-	
-	@Id @GeneratedValue
-	@Column(name="id", nullable=false)
 	public Long id;
 	
-	@Column(nullable=false)
 	public String name;
 	
-	@Column(nullable=false,unique=true)
 	public String code;
+	
+	public int nbUsableContainer;
+	
+	public int nbLine;
+	
+	public int nbColumn;
+	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public int getNbUsableContainer() {
+		return nbUsableContainer;
+	}
+
+	public void setNbUsableContainer(int nbUsableContainer) {
+		this.nbUsableContainer = nbUsableContainer;
+	}
+
+	public int getNbLine() {
+		return nbLine;
+	}
+
+	public void setNbLine(int nbLine) {
+		this.nbLine = nbLine;
+	}
+
+	public int getNbColumn() {
+		return nbColumn;
+	}
+
+	public void setNbColumn(int nbColumn) {
+		this.nbColumn = nbColumn;
+	}
+	
+	
 }

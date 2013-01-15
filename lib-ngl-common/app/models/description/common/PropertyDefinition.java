@@ -2,28 +2,13 @@ package models.description.common;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Version;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import play.data.validation.Constraints.Required;
-import play.db.ebean.Model;
 
-@Entity
-public class PropertyDefinition extends Model {
+public class PropertyDefinition {
 
-	private static final long serialVersionUID = 1L;
 	private static LinkedHashMap<String,String> options;
 	{
 	    options = new LinkedHashMap<String,String>();
@@ -34,59 +19,210 @@ public class PropertyDefinition extends Model {
 	    options.put(Double.class.getName(), "Double");
 	    options.put(Date.class.getName(), "Date");	
 	    options.put(Boolean.class.getName(), "Boolean");	
+	    
 	}
 	
-	@Id
-	@GeneratedValue
-	@Column(name = "id", nullable = false)
+	private static LinkedHashMap<String,String> optionsLevel;
+	{
+		optionsLevel = new LinkedHashMap<String,String>();
+		optionsLevel.put("current", "current");
+		optionsLevel.put("content", "content");        
+		optionsLevel.put("containing", "containing");   
+	}
+	
 	public Long id;
 	
-	@Version
-	public Long version;
-	
 	@Required
-	@Column(nullable = false)
 	public String code;
 	
 	@Required	
-	@Column(nullable = false)
 	public String name;
 
-	@Column(nullable = false)
+	public String description;
+	
 	public Boolean required = Boolean.FALSE;
 
-	@Column(nullable = false)
 	public Boolean active = Boolean.TRUE;
 
-	@Column(nullable = false)
-	public Boolean choiceInList = Boolean.FALSE;
-	
 	@Required	
-	@Column(nullable = false)
 	public String type;
 	public String displayFormat;
 	public Integer displayOrder;
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	public Set<Value> possibleValues;
+	public String level;
+	public boolean propagation;
+	public String inOut;
+	
+	public List<Value> possibleValues;
 
 	public String defaultValue;
 	
-	@ManyToOne
 	public MeasureCategory measureCategory;
 	
-	@ManyToOne
 	public MeasureValue measureValue;
-	
-	@JsonIgnore
-	@ManyToOne
-	public CommonInfoType commonInfoType; 
-	//obligation de mettre des relation bidirectionnel sinon la sauvegarde ne marge pas avec update.
-	//De plus pour eviter une recursivité dans la transformation en Json de l'objet CommonInfoType il faut mettre JsonIgnore.
 	
 	public static Map<String,String> options() {
         return options;
     }
 	
+	public static Map<String,String> optionsLevel() {
+        return optionsLevel;
+    }
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Boolean getRequired() {
+		return required;
+	}
+
+	public void setRequired(Boolean required) {
+		this.required = required;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getDisplayFormat() {
+		return displayFormat;
+	}
+
+	public void setDisplayFormat(String displayFormat) {
+		this.displayFormat = displayFormat;
+	}
+
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
+	}
+
+	public List<Value> getPossibleValues() {
+		return possibleValues;
+	}
+
+	public void setPossibleValues(List<Value> possibleValues) {
+		this.possibleValues = possibleValues;
+	}
+
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+
+	public MeasureCategory getMeasureCategory() {
+		return measureCategory;
+	}
+
+	public void setMeasureCategory(MeasureCategory measureCategory) {
+		this.measureCategory = measureCategory;
+	}
+
+	public MeasureValue getMeasureValue() {
+		return measureValue;
+	}
+
+	public void setMeasureValue(MeasureValue measureValue) {
+		this.measureValue = measureValue;
+	}
+
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
+	}
+
+	public boolean getPropagation() {
+		return propagation;
+	}
+
+	public void setPropagation(boolean propagation) {
+		this.propagation = propagation;
+	}
+
+	public String getInOut() {
+		return inOut;
+	}
+
+	public void setInOut(String inOut) {
+		this.inOut = inOut;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PropertyDefinition other = (PropertyDefinition) obj;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		return true;
+	}
+	
+	
 }

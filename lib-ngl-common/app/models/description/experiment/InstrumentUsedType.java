@@ -4,25 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Version;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import models.description.IDynamicType;
 import models.description.common.CommonInfoType;
-import play.db.ebean.Model;
+import models.description.experiment.dao.InstrumentUsedTypeDAO;
+import play.modules.spring.Spring;
 
 
 /**
@@ -30,45 +15,21 @@ import play.db.ebean.Model;
  * @author ejacoby
  *
  */
-@Entity
-public class InstrumentUsedType extends Model implements IDynamicType{
+public class InstrumentUsedType implements IDynamicType{
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2838156267681157498L;
-
-	@Version
-	public Long version;
-	
-	@Id @GeneratedValue
-	@Column(name="id", nullable=false)
 	public Long id;
 	
-	@JsonIgnore
-	@ManyToMany(fetch=FetchType.EAGER)
-	@JoinTable(
-			name="experiment_type_instrument_type",
-			joinColumns=@JoinColumn(name="FK_instrument_type"),
-			inverseJoinColumns=@JoinColumn(name="FK_experiment_type")
-			)
-	public List<ExperimentType> experimentTypes;
-	
-	@OneToOne(optional=false, cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	@JoinColumn(name="fk_common_info_type")
 	public CommonInfoType commonInfoType;
 
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	public List<Instrument> instruments;
+	
+	public InstrumentCategory instrumentCategory;
 	
 	@Override
 	public CommonInfoType getInformations() {		
 		return commonInfoType;
 	}
 	
-	public static Model.Finder<Long,InstrumentUsedType> find = new Model.Finder<Long,InstrumentUsedType>(Long.class, InstrumentUsedType.class);
-	//public static FinderType find = new FinderType(Long.class, InstrumentType.class);
-
 	@Override
 	public long getIdType() {
 		return id;
@@ -77,20 +38,71 @@ public class InstrumentUsedType extends Model implements IDynamicType{
 	public static Map<String, String> getMapInstrumentTypes()
 	{
 		Map<String, String> mapInstrumentTypes = new HashMap<String, String>();
-		for(InstrumentUsedType instType : InstrumentUsedType.find.fetch("commonInfoType").findList()){
-			mapInstrumentTypes.put(instType.id.toString(), instType.commonInfoType.name);
+		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
+		for(InstrumentUsedType instType : instrumentUsedTypeDAO.findAll()){
+			mapInstrumentTypes.put(instType.getId().toString(), instType.getCommonInfoType().getName());
 		}
 		return mapInstrumentTypes;
 	}
 	public IDynamicType findById(long id)
 	{
-		return InstrumentUsedType.find.byId(id);
+		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
+		return instrumentUsedTypeDAO.findById(id);
 	}
 
 	public static InstrumentUsedType findByCommonInfoType(Long idCommonInfoType)
 	{
-		return InstrumentUsedType.find.where().eq("commonInfoType.id", idCommonInfoType).findUnique();
+		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
+		return instrumentUsedTypeDAO.findByCommonInfoType(idCommonInfoType);
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public CommonInfoType getCommonInfoType() {
+		return commonInfoType;
+	}
+
+	public void setCommonInfoType(CommonInfoType commonInfoType) {
+		this.commonInfoType = commonInfoType;
+	}
+
+	public List<Instrument> getInstruments() {
+		return instruments;
+	}
+
+	public void setInstruments(List<Instrument> instruments) {
+		this.instruments = instruments;
 	}
 
 	
+	public InstrumentCategory getInstrumentCategory() {
+		return instrumentCategory;
+	}
+
+	public void setInstrumentCategory(InstrumentCategory instrumentCategory) {
+		this.instrumentCategory = instrumentCategory;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		InstrumentUsedType other = (InstrumentUsedType) obj;
+		if (commonInfoType.getCode() == null) {
+			if (other.getCommonInfoType().getCode() != null)
+				return false;
+		} else if (!commonInfoType.getCode().equals(other.getCommonInfoType().getCode()))
+			return false;
+		return true;
+	}
 }

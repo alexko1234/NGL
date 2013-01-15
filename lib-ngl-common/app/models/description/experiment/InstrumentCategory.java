@@ -1,28 +1,85 @@
 package models.description.experiment;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Version;
+import java.util.List;
 
-import play.db.ebean.Model;
+import models.description.content.ContainerSupportCategory;
 
-@Entity
-public class InstrumentCategory extends Model{
 
-	private static final long serialVersionUID = -7100165963375776740L;
-	
-	@Version
-	public Long version;
-	
-	@Id @GeneratedValue
-	@Column(name="id", nullable=false)
+public class InstrumentCategory{
+
 	public Long id;
 	
-	@Column(nullable=false)
 	public String name;
 	
-	@Column(nullable=false,unique=true)
 	public String code;
+	
+	public List<ContainerSupportCategory> inContainerSupportCategories;
+	
+	public int nbInContainerSupportCategories;
+	
+	public List<ContainerSupportCategory> outContainerSupportCategories;
+
+	public int nbOutContainerSupportCategories;
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public List<ContainerSupportCategory> getInContainerSupportCategories() {
+		return inContainerSupportCategories;
+	}
+
+	public void setInContainerSupportCategories(
+			List<ContainerSupportCategory> inContainerSupportCategories) {
+		this.inContainerSupportCategories = inContainerSupportCategories;
+	}
+
+	public int getNbInContainerSupportCategories() {
+		return nbInContainerSupportCategories;
+	}
+
+	public void setNbInContainerSupportCategories(int nbInContainerSupportCategories) {
+		this.nbInContainerSupportCategories = nbInContainerSupportCategories;
+	}
+
+	public List<ContainerSupportCategory> getOutContainerSupportCategories() {
+		return outContainerSupportCategories;
+	}
+
+	public void setOutContainerSupportCategories(
+			List<ContainerSupportCategory> outContainerSupportCategories) {
+		this.outContainerSupportCategories = outContainerSupportCategories;
+	}
+
+	public int getNbOutContainerSupportCategories() {
+		return nbOutContainerSupportCategories;
+	}
+
+	public void setNbOutContainerSupportCategories(
+			int nbOutContainerSupportCategories) {
+		this.nbOutContainerSupportCategories = nbOutContainerSupportCategories;
+	}
+	
+	
+	
 }

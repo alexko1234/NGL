@@ -3,42 +3,60 @@ package models.description.common;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Version;
+import models.description.common.dao.ObjectTypeDAO;
+import play.modules.spring.Spring;
 
-
-
-import play.db.ebean.Model;
-
-@Entity
-public class ObjectType extends Model {
+public class ObjectType{
 	
-	
-	private static final long serialVersionUID = 1L;
-
-	@Version
-	public Long version;
-	
-	@Id @GeneratedValue
-	@Column(name="id", nullable=false)
 	public Long id;
 	
-	@Column(nullable=false)
 	public String type;
 	
-	@Column(nullable=false)	
 	public Boolean generic;
-	
-	public static Model.Finder<Long,ObjectType> find = new Model.Finder<Long,ObjectType>(Long.class, ObjectType.class);
 	
 	public static Map<String,String> options() {
         LinkedHashMap<String,String> options = new LinkedHashMap<String,String>();
-        for(ObjectType c: ObjectType.find.orderBy("type").findList()) {
+        ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
+        for(ObjectType c: objectTypeDAO.findAll()) {
             options.put(c.id.toString(), c.type);
         }
         return options;
     }
+
+	public static ObjectType findByType(String type)
+	{
+		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
+		return objectTypeDAO.find(type);
+	}
+	
+	public static ObjectType findById(long id)
+	{
+		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
+		return objectTypeDAO.findById(id);
+	}
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Boolean getGeneric() {
+		return generic;
+	}
+
+	public void setGeneric(Boolean generic) {
+		this.generic = generic;
+	}
+	
+	
 }
