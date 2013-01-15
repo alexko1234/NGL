@@ -11,17 +11,17 @@ public class PropertyDefinition {
 
 	private static LinkedHashMap<String,String> options;
 	{
-	    options = new LinkedHashMap<String,String>();
-	    options.put(String.class.getName(), "String");
-	    options.put(Integer.class.getName(), "Integer");        
-	    options.put(Long.class.getName(), "Long");
-	    options.put(Float.class.getName(), "Float");
-	    options.put(Double.class.getName(), "Double");
-	    options.put(Date.class.getName(), "Date");	
-	    options.put(Boolean.class.getName(), "Boolean");	
-	    
+		options = new LinkedHashMap<String,String>();
+		options.put(String.class.getName(), "String");
+		options.put(Integer.class.getName(), "Integer");        
+		options.put(Long.class.getName(), "Long");
+		options.put(Float.class.getName(), "Float");
+		options.put(Double.class.getName(), "Double");
+		options.put(Date.class.getName(), "Date");	
+		options.put(Boolean.class.getName(), "Boolean");	
+
 	}
-	
+
 	private static LinkedHashMap<String,String> optionsLevel;
 	{
 		optionsLevel = new LinkedHashMap<String,String>();
@@ -29,45 +29,47 @@ public class PropertyDefinition {
 		optionsLevel.put("content", "content");        
 		optionsLevel.put("containing", "containing");   
 	}
-	
+
 	public Long id;
-	
+
 	@Required
 	public String code;
-	
+
 	@Required	
 	public String name;
 
 	public String description;
-	
+
 	public Boolean required = Boolean.FALSE;
 
 	public Boolean active = Boolean.TRUE;
-
+	public Boolean choiceInList = Boolean.FALSE;
+	
 	@Required	
 	public String type;
 	public String displayFormat;
 	public Integer displayOrder;
-	
+
 	public String level;
 	public boolean propagation;
 	public String inOut;
-	
+
+
 	public List<Value> possibleValues;
 
 	public String defaultValue;
-	
+
 	public MeasureCategory measureCategory;
-	
+
 	public MeasureValue measureValue;
-	
+
 	public static Map<String,String> options() {
-        return options;
-    }
-	
+		return options;
+	}
+
 	public static Map<String,String> optionsLevel() {
-        return optionsLevel;
-    }
+		return optionsLevel;
+	}
 
 	public Long getId() {
 		return id;
@@ -165,7 +167,7 @@ public class PropertyDefinition {
 		this.measureValue = measureValue;
 	}
 
-	
+
 	public String getDescription() {
 		return description;
 	}
@@ -174,7 +176,7 @@ public class PropertyDefinition {
 		this.description = description;
 	}
 
-	
+
 	public String getLevel() {
 		return level;
 	}
@@ -197,6 +199,15 @@ public class PropertyDefinition {
 
 	public void setInOut(String inOut) {
 		this.inOut = inOut;
+	}
+
+	
+	public Boolean getChoiceInList() {
+		return choiceInList;
+	}
+
+	public void setChoiceInList(Boolean choiceInList) {
+		this.choiceInList = choiceInList;
 	}
 
 	@Override
@@ -223,6 +234,6 @@ public class PropertyDefinition {
 			return false;
 		return true;
 	}
-	
-	
+
+
 }

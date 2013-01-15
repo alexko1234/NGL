@@ -37,6 +37,7 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 		propertyDefinition.setDescription(rs.getString("description"));
 		propertyDefinition.setRequired(rs.getBoolean("required"));
 		propertyDefinition.setActive(rs.getBoolean("active"));
+		propertyDefinition.setChoiceInList(rs.getBoolean("choice_in_list"));
 		propertyDefinition.setType(rs.getString("type"));
 		propertyDefinition.setDisplayFormat(rs.getString("display_format"));
 		propertyDefinition.setDisplayOrder(rs.getInt("display_order"));

@@ -22,7 +22,7 @@ public class PropertyDefinitionDAO {
 	private DataSource dataSource;
 	private SimpleJdbcTemplate jdbcTemplate;
 	private SimpleJdbcInsert jdbcInsert;
-	private String sqlCommon="SELECT p.id as pId,p.name as pName,p.code as pCode, description, required,active,type,display_format,display_order,p.default_value as pDefaultValue, level, in_out,propagation, mc.id as mcId,mc.name as mcName,mc.code as mcCode,mv.id as mvId,value,mv.default_value as mvDefaultValue "+
+	private String sqlCommon="SELECT p.id as pId,p.name as pName,p.code as pCode, description, required,active,choice_in_list, type,display_format,display_order,p.default_value as pDefaultValue, level, in_out,propagation, mc.id as mcId,mc.name as mcName,mc.code as mcCode,mv.id as mvId,value,mv.default_value as mvDefaultValue "+
 			"FROM property_definition as p "+
 			"LEFT OUTER JOIN measure_category as mc ON  measure_category_id=mc.id "+
 			"LEFT OUTER JOIN measure_value as mv ON measure_value_id=mv.id ";
@@ -58,6 +58,7 @@ public class PropertyDefinitionDAO {
 		parameters.put("description", propertyDefinition.getDescription());
 		parameters.put("required", propertyDefinition.getRequired());
 		parameters.put("active", propertyDefinition.getActive());
+		parameters.put("choice_in_list", propertyDefinition.getChoiceInList());
 		parameters.put("type", propertyDefinition.getType());
 		parameters.put("display_format", propertyDefinition.getDisplayFormat());
 		parameters.put("display_order", propertyDefinition.getDisplayOrder());
@@ -106,8 +107,8 @@ public class PropertyDefinitionDAO {
 	public void update(PropertyDefinition propertyDefinition)
 	{
 		PropertyDefinition propertyDefinitionDB = findById(propertyDefinition.getId());
-		String sql = "UPDATE property_definition SET name=?, description=?, required=?, active=?, type=?, display_format=?, display_order=?, default_value=?, level=?, in_out=?, propagation=? WHERE id=?";
-		jdbcTemplate.update(sql, propertyDefinition.getName(), propertyDefinition.getDescription(), propertyDefinition.getRequired(), propertyDefinition.getActive(), propertyDefinition.getType(), propertyDefinition.getDisplayFormat(), propertyDefinition.getDisplayOrder(), propertyDefinition.getDefaultValue(), propertyDefinition.getLevel(), propertyDefinition.getInOut(), propertyDefinition.getPropagation(), propertyDefinition.getId());
+		String sql = "UPDATE property_definition SET name=?, description=?, required=?, active=?,choice_in_list=?, type=?, display_format=?, display_order=?, default_value=?, level=?, in_out=?, propagation=? WHERE id=?";
+		jdbcTemplate.update(sql, propertyDefinition.getName(), propertyDefinition.getDescription(), propertyDefinition.getRequired(), propertyDefinition.getActive(), propertyDefinition.getChoiceInList(), propertyDefinition.getType(), propertyDefinition.getDisplayFormat(), propertyDefinition.getDisplayOrder(), propertyDefinition.getDefaultValue(), propertyDefinition.getLevel(), propertyDefinition.getInOut(), propertyDefinition.getPropagation(), propertyDefinition.getId());
 
 		//Update values list (add new)
 		List<Value> values = propertyDefinition.getPossibleValues();
