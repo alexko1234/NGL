@@ -40,7 +40,7 @@ object ApplicationBuild extends Build {
 
 	object Dependencies {
 		val nglcommonDependencies = Seq(
-				"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
+				"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
 				"play" %% "spring" % "2.0",
 				"org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
 				"mysql" % "mysql-connector-java" % "5.1.18"
@@ -58,12 +58,10 @@ object ApplicationBuild extends Build {
 						"fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
 						"fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
 						"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
+				)
 
-						)
-
-						val nglsqDependencies = Seq(
+				val nglsqDependencies = Seq(
 								// Add your project dependencies here,
-								)
 								"net.vz.mongodb.jackson" %% "play-mongo-jackson-mapper" % "1.0.0", 
 								"play" %% "spring" % "2.0",
 								"net.sourceforge.jtds" % "jtds" % "1.2.4",
