@@ -37,7 +37,7 @@ public abstract class AbstractTests {
 		config.put("mongodb.servers", "gsphere.genoscope.cns.fr:27017");
 		
 		config.put("db.lims.driver", "org.postgresql.Driver");
-		config.put("db.lims.url", "jdbc:postgresql://db.cng.fr/solexatest");
+		config.put("db.lims.url", "jdbc:postgresql://db.cng.fr/solexaprod");
 		config.put("db.lims.user", "ngl_bi");
 		config.put("db.lims.password", "N3wG3nLim5");
 		config.put("db.lims.jndiName", "lims");
