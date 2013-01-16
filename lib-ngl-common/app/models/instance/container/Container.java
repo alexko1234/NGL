@@ -75,7 +75,7 @@ public class Container extends DBObject {
 	
 	// Propager au container de purif ??
 	//public String fromExperimentCode; ??
-	//public String fromPurifingCode;
+	public String fromPurifingCode;
 	//public String fromExtractionTypeCode;
 	
 

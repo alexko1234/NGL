@@ -37,7 +37,7 @@ public class Sample extends DBObject{
 	// Valid taxon
 	public Valid valid;
 	//public List<CollaboratorInvolve> collaborators;
-	
+	public String taxonCode;
 	
 	@JsonIgnore
 	public SampleType getSampleType(){

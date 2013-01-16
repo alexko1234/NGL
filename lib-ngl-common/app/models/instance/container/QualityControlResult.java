@@ -13,6 +13,7 @@ import models.instance.common.PropertyValue;
 public class QualityControlResult {
 	
 	public String QualityControleCode;
+	public String QualityControleTypeCode;
 	public Map<String,PropertyValue> properties;
 	
 
