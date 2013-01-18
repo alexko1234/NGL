@@ -44,6 +44,9 @@ public class LimsInformations  extends Controller {
 				return badRequest(inputExpForm.errorsAsJson());					
 		} else {
 				Experiment exp = limsRunServices.getExperiments(inputExpForm.get());
+				if(null == exp){
+					return notFound();
+				}
 				//System.out.println("SIZE = "+type+" "+barcode);
 				return ok(Json.toJson(exp));
 		}
