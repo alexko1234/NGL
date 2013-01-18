@@ -78,6 +78,10 @@ public class RunMockHelper {
 		r.properties.put("nbUsableBase",  new PropertyValue("1500000"));
 		r.properties.put("nbUsableCluster",  new PropertyValue("150000"));
 		r.properties.put("nbRead",  new PropertyValue("1500000"));
+		r.properties.put("nbBaseInternalAndIlluminaFilter",new PropertyValue("1056"));
+		r.properties.put("nbClusterInternalAndIlluminaFilter",new PropertyValue("1056"));
+		r.properties.put("fraction",new PropertyValue("0.2"));
+		
 		return r;
 	}
 	

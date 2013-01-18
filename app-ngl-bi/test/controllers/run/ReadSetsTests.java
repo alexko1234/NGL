@@ -43,31 +43,46 @@ public class ReadSetsTests extends AbstractTests {
 		lanes.add(lane);
 		lanes.add(lane2);
 		run.lanes = lanes;
-	
+		
 		ReadSet readset = RunMockHelper.newReadSet("ReadSetBasicWithRun");
-		ReadSet readset2 = RunMockHelper.newReadSet("ReadSetBasicWithRun2");
-		List<ReadSet> readsets = new ArrayList<ReadSet>();
-		List<ReadSet> readsets2 = new ArrayList<ReadSet>();
-		readsets.add(readset);
-		readsets2.add(readset2);
-		
-		
-		run.lanes.get(0).readsets = readsets;
-		run.lanes.get(1).readsets = readsets2;
-		 
 		 
 		callAction(controllers.run.routes.ref.Runs.createOrUpdate("json"),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 		
 		readset = RunMockHelper.newReadSet("ReadSetTEST");
 		
 		Result result = callAction(controllers.run.routes.ref.ReadSets.createOrUpdate("YANN_TEST1FORREADSET",1,"json"),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
-	        
+		     
 	 	//System.out.println(contentAsString(result));
         assertThat(status(result)).isEqualTo(OK);
         assertThat(contentType(result)).isEqualTo("application/json");
         assertThat(charset(result)).isEqualTo("utf-8");
 	 }
 	 
+	@Test
+	 public void testReasetAdd() {
+				
+		ReadSet readset2 = RunMockHelper.newReadSet("ReadSetBasicWithRun2");
+		ReadSet readset3 = RunMockHelper.newReadSet("ReadSetBasicWithRun3");
+		
+		
+		/*
+		run.lanes.get(0).readsets = readsets;
+		run.lanes.get(1).readsets = readsets2;
+		*/ 
+		
+		
+		Result result = callAction(controllers.run.routes.ref.ReadSets.createOrUpdate("YANN_TEST1FORREADSET",2,"json"),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset2)));
+		assertThat(status(result)).isEqualTo(OK);
+	    assertThat(contentType(result)).isEqualTo("application/json");
+	    assertThat(charset(result)).isEqualTo("utf-8");
+		result = callAction(controllers.run.routes.ref.ReadSets.createOrUpdate("YANN_TEST1FORREADSET",2,"json"),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset3)));
+	       
+	 	//System.out.println(contentAsString(result));
+       assertThat(status(result)).isEqualTo(OK);
+       assertThat(contentType(result)).isEqualTo("application/json");
+       assertThat(charset(result)).isEqualTo("utf-8");
+	 }
+	
 	 @Test	 
 	 public void testReasetUpdate() {
 		ReadSet readset = RunMockHelper.newReadSet("ReadSetTEST");
