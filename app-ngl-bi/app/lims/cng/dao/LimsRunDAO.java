@@ -33,7 +33,7 @@ public class LimsRunDAO {
     	return this.jdbcTemplate.query(sql, mapper);
     }
     
-    public LimsExperiment getExperiments(Experiment experiment){
+    public List<LimsExperiment> getExperiments(Experiment experiment){
     	if(null != experiment.date){
 	    	String sql = "SELECT m.pc_name as code, w.start_date as date, 'HISEQ2000' as categoryCode, f.nb_cycles" //, mt.type as seq_type, m.model as seq_model
 	    				+" FROM t_flowcell f"
@@ -43,7 +43,7 @@ public class LimsRunDAO {
 	    				+" JOIN t_machine_type mt on m.type_id=mt.id"
 	    				+" WHERE f.barcode=? and w.start_date between ? and ?";
 	    	BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<LimsExperiment>(LimsExperiment.class);
-	    	return this.jdbcTemplate.queryForObject(sql, mapper, experiment.containerSupportCode, minus(experiment.date,5), add(experiment.date,5));    	
+	    	return this.jdbcTemplate.query(sql, mapper, experiment.containerSupportCode, minus(experiment.date,5), add(experiment.date,5));    	
 	    	
     	}else{
     		String sql = "SELECT m.pc_name as code, w.start_date as date, 'HISEQ2000' as categoryCode, f.nb_cycles" //, mt.type as seq_type, m.model as seq_model
@@ -54,7 +54,7 @@ public class LimsRunDAO {
     				+" JOIN t_machine_type mt on m.type_id=mt.id"
     				+" WHERE f.barcode=?";
     		BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<LimsExperiment>(LimsExperiment.class);
-        	return this.jdbcTemplate.queryForObject(sql, mapper, experiment.containerSupportCode);    	
+        	return this.jdbcTemplate.query(sql, mapper, experiment.containerSupportCode);    	
     	}
     	
     }
