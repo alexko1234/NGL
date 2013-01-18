@@ -46,16 +46,18 @@ public class ReadSets extends Controller{
 					Lane l = run.lanes.get(i);
 					if(l.number.equals(laneNumber)){ 
 						int j = 0;
-						for(; j < l.readsets.size() ; j++){
+						boolean isFind = false;
+						for(; l.readsets != null && j < l.readsets.size() ; j++){
 							ReadSet r = l.readsets.get(j);
-							if(readsetValue.code.equals(r.code)){								
+							if(readsetValue.code.equals(r.code)){	
+								MongoDBDAO.updateSet(Constants.RUN_ILLUMINA_COLL_NAME, run, "lanes."+i+".readsets."+j, readsetValue);
+								isFind = true;
 								break;
 							}
 						}
-						Map<String,Object> map = new HashMap<String,Object>();
-						map.put("lanes."+i+".readsets."+j, readsetValue);
-						MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME, run, map);
+						if(!isFind){MongoDBDAO.updatePush(Constants.RUN_ILLUMINA_COLL_NAME, run, "lanes."+i+".readsets", readsetValue);}
 						break;
+						
 					}
 				}				
 			}
@@ -100,10 +102,8 @@ public class ReadSets extends Controller{
 						for(int j=0;j<run.lanes.get(i).readsets.size() && !flagReadSet;j++) {
 							if(run.lanes.get(i).readsets.get(j).code.equals(readsetValue.code)){
 								//ReadSet find
-								flagReadSet = true;
-								Map<String,Object> map = new HashMap<String,Object>();
-								map.put("lanes."+i+".readsets."+j, readsetValue); //Update
-								MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME, run, map);
+								flagReadSet = true;								
+								MongoDBDAO.updateSet(Constants.RUN_ILLUMINA_COLL_NAME, run, "lanes."+i+".readsets."+j, readsetValue);
 							}
 						}
 					}								
