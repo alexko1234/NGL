@@ -37,16 +37,21 @@ public class LimsRunServices implements ILimsRunServices {
 
 	@Override
 	public Experiment getExperiments(Experiment experiment) {
-		LimsExperiment limsExp = dao.getExperiments(experiment);
-		Experiment exp = new Experiment();
-		exp.date = limsExp.date;
-		exp.containerSupportCode = experiment.containerSupportCode;
-		exp.instrument = new Instrument();
-		exp.instrument.code = limsExp.code;
-		exp.instrument.categoryCode = limsExp.categoryCode;	
-		exp.nbCycles = limsExp.nbCycles;
-		Logger.debug(limsExp.toString());		
-		return exp;
+		List<LimsExperiment> limsExps = dao.getExperiments(experiment);
+		if(limsExps.size() == 1){
+			LimsExperiment limsExp = limsExps.get(0);
+			Experiment exp = new Experiment();
+			exp.date = limsExp.date;
+			exp.containerSupportCode = experiment.containerSupportCode;
+			exp.instrument = new Instrument();
+			exp.instrument.code = limsExp.code;
+			exp.instrument.categoryCode = limsExp.categoryCode;	
+			exp.nbCycles = limsExp.nbCycles;
+			Logger.debug(limsExp.toString());		
+			return exp;
+		}else{
+			return null;
+		}
 	}
 
 	@Override
