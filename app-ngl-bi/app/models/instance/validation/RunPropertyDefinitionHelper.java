@@ -82,14 +82,23 @@ properties.percentClusterIlluminaFilter
 	
 	public static List<PropertyDefinition> getReadSetPropertyDefinitions(){
 		/*
+		
+			properties.nbClusterInternalAndIlluminaFilter
+			properties.nbBaseInternalandIlluminaFilter
+			properties.fraction
 			properties.insertLength
 			properties.nbUsableBase
 			properties.nbUsableCluster
 			properties.q30
 			properties.score
+			properties.nbRead
+
 
 		 */
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(getPropertyDefinition("nbClusterInternalAndIlluminaFilter","nbClusterInternalAndIlluminaFilter",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
+		propertyDefinitions.add(getPropertyDefinition("nbBaseInternalAndIlluminaFilter","nbBaseInternalAndIlluminaFilter",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
+		propertyDefinitions.add(getPropertyDefinition("fraction","fraction",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Float.class));		
 		propertyDefinitions.add(getPropertyDefinition("insertLength","insertLength",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Integer.class));
 		propertyDefinitions.add(getPropertyDefinition("nbUsableBase","nbUsableBase",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
 		propertyDefinitions.add(getPropertyDefinition("nbUsableCluster","nbUsableCluster",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));

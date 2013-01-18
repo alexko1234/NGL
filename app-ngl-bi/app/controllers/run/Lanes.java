@@ -9,6 +9,7 @@ import models.instance.validation.BusinessValidationHelper;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import play.api.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -47,7 +48,7 @@ public class Lanes extends Controller{
 				return ok(); //TODO must be complete
 			}
 		} else {
-			if ("json".equals(format)) {
+			if ("json".equals(format)) {				
 				return badRequest(filledForm.errorsAsJson());
 				
 			} else {
