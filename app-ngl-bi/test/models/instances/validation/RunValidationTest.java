@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
+import utils.RunMockHelper;
 public class RunValidationTest extends AbstractTests{
 	
 	
@@ -57,8 +58,9 @@ public class RunValidationTest extends AbstractTests{
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
 		 Map<String, List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
-		 ReadSet readset = getReadSet();
+		 ReadSet readset = RunMockHelper.newReadSet("CORE_R1");
 		 BusinessValidationHelper.validateReadSet(errors, new Run(),-1,readset, "test.run", null);
+		 System.out.println("error READSET: "+errors.toString());
 		 assertThat(errors).hasSize(0);
 		       }});
 	 }

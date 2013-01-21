@@ -14,6 +14,8 @@ import static play.test.Helpers.status;
 import java.util.ArrayList;
 import java.util.List;
 
+import controllers.*;
+
 import models.instance.run.Lane;
 import models.instance.run.ReadSet;
 import models.instance.run.Run;
