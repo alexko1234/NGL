@@ -35,7 +35,7 @@ object ApplicationBuild extends Build {
         val nexusig = "Nexus repository" at "https://gsphere.genoscope.cns.fr/nexus/content/groups/public/" 
         val nexusigrelease = "releases"  at "https://gsphere.genoscope.cns.fr/nexus/content/repositories/releases"
         val nexusigsnapshot = "snapshots" at "https://gsphere.genoscope.cns.fr/nexus/content/repositories/snapshots"
-	val nexusigpublish = if (buildVersion.endsWith("SNAPSHOT")) nexusigsnapshot else nexusigrelease				
+        val nexusigpublish = if (buildVersion.endsWith("SNAPSHOT")) nexusigsnapshot else nexusigrelease				
     } 
  
    object Dependencies {
@@ -59,7 +59,6 @@ object ApplicationBuild extends Build {
 	        "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
 	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
 	        "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
-	       
     	)
     	
     	val nglsqDependencies = Seq(
@@ -84,13 +83,13 @@ object ApplicationBuild extends Build {
  
    val nglcommon = PlayProject(appName + "-common", appVersion, nglcommonDependencies, mainLang = JAVA, path = file("lib-ngl-common"),settings = buildSettings).settings(
        // Add your own project settings here      
-       resolvers += nexusig,
+       resolvers := Seq(nexusig),
        publishTo := Some(nexusigpublish)       
     )
    
    val nglbi = PlayProject(appName + "-bi", appVersion, nglbiDependencies, mainLang = JAVA, path = file("app-ngl-bi"),settings = buildSettings).settings(
        // Add your own project settings here      
-       resolvers += nexusig,
+       resolvers := Seq(nexusig),
        publishArtifact := false,
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish) 
@@ -99,7 +98,7 @@ object ApplicationBuild extends Build {
    
    val nglsq = PlayProject(appName + "-sq", appVersion, nglsqDependencies, mainLang = JAVA, path = file("app-ngl-sq"),settings = buildSettings).settings(
           // Add your own project settings here      
-          resolvers += nexusig,
+          resolvers := Seq(nexusig),
           publishArtifact := false,
           publishArtifact in makePom := false,
           publishTo := Some(nexusigpublish) 
@@ -109,7 +108,7 @@ object ApplicationBuild extends Build {
    
    val nglauth = PlayProject(appName + "-authorization", appVersion, nglauthDependencies, mainLang = JAVA, path = file("app-ngl-authorization"),settings = buildSettings).settings(
              // Add your own project settings here      
-             resolvers += nexusig,
+             resolvers := Seq(nexusig),
              publishArtifact := false,
              publishArtifact in makePom := false,
              publishTo := Some(nexusigpublish) 
@@ -118,7 +117,7 @@ object ApplicationBuild extends Build {
    
    val nglasset = PlayProject(appName + "-asset", appVersion, mainLang = JAVA, path = file("app-ngl-asset"),settings = buildSettings).settings(
                 // Add your own project settings here      
-                resolvers += nexusig,
+                resolvers := Seq(nexusig),
                 publishArtifact := false,
                 publishArtifact in makePom := false,
                 publishTo := Some(nexusigpublish) 
@@ -128,7 +127,7 @@ object ApplicationBuild extends Build {
    
    val main = PlayProject(appName, appVersion, settings = buildSettings).settings(
       // Add your own project settings here      
-      resolvers += nexusig,
+      resolvers := Seq(nexusig),
       publishArtifact := false,
       publishArtifact in makePom := false,
       publishTo := Some(nexusigpublish)
