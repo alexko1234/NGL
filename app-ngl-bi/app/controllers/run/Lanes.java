@@ -35,7 +35,19 @@ public class Lanes extends Controller{
 			BusinessValidationHelper.validateLane(filledForm.errors(), run,laneValue, Constants.RUN_ILLUMINA_COLL_NAME, null);
 			if(!filledForm.hasErrors()) {
 				System.out.println("insert OK :"+laneValue.number);
-				MongoDBDAO.createOrUpdateInArray(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,"code" , code, "lanes", "number", laneValue.number,laneValue);
+				//MongoDBDAO.createOrUpdateInArray(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,"code" , code, "lanes", "number", laneValue.number,laneValue);
+				int laneNumber = laneValue.number;
+				boolean isFind = false;
+				for(int i = 0;run.lanes != null &&  i < run.lanes.size(); i++){
+					Lane l = run.lanes.get(i);
+					if(l.number.equals(laneNumber)){ 
+						isFind = true;
+						MongoDBDAO.updateSet(Constants.RUN_ILLUMINA_COLL_NAME, run, "lanes."+i, laneValue);
+						break;
+					}
+				}
+				if(!isFind){MongoDBDAO.updatePush(Constants.RUN_ILLUMINA_COLL_NAME, run, "lanes", laneValue);}
+				
 				filledForm = filledForm.fill(laneValue);
 			}
 		}
