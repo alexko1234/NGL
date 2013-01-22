@@ -1,13 +1,14 @@
 package controllers.resources;
-/**											Plugin Play Resource Server
-*
-*@author ydeshayes
-*
-*Variables in application.conf:
-*								devResourceServerUrl = "url of the dev resource server"
-*								prodResourceServerUrl = "uurl of the prod resource server"
-*							    modeResourceServer = "prod" or "debug"
-*/
+/**											
+ * Plugin Play Resource Server
+ *
+ * @author ydeshayes
+ *
+ * Variables in application.conf:
+ *		devResourceServerUrl = "url of the dev resource server"
+ *		prodResourceServerUrl = "uurl of the prod resource server"
+ *	    modeResourceServer = "prod" or "debug"
+ */
 
 
 import play.Application;
@@ -16,15 +17,15 @@ import play.Plugin;
 
 public class AssetPlugin extends Plugin {
 
-	private static final String DEV_RESOURCE_SERVER = "devResourceServerUrl";
-	private static final String PROD_RESOURCE_SERVER = "prodResourceServerUrl";
-	private static final String MODE_RESOURCE_SERVER = "modeResourceServer";
+	private static final String DEV_RESOURCE_SERVER = "asset.url.dev";
+	private static final String PROD_RESOURCE_SERVER = "asset.url.prod";
+	private static final String MODE_RESOURCE_SERVER = "asset.mode";
 	
 	private Application app;
 
 	public static String urlDev;
 	public static String urlProd;
-	public static String mode = "debug";
+	public static String mode = "dev";
 	
 	public static boolean loadOk = false;
 	public static String errorMessage = "";
@@ -40,13 +41,16 @@ public class AssetPlugin extends Plugin {
 	 public void onStart() {
 		 if(pluginVarVerif() == true)
 		 {
+			 
 			urlDev = app.configuration().getString(DEV_RESOURCE_SERVER);
 			urlProd = app.configuration().getString(PROD_RESOURCE_SERVER);
-			if(mode == null)
+			if(mode != app.configuration().getString(MODE_RESOURCE_SERVER)){
 			 	mode  = app.configuration().getString(MODE_RESOURCE_SERVER);
+			}
+			Logger.info("Asset URL = "+((mode.equalsIgnoreCase("dev"))?urlDev:urlProd));
 		 }
 		 else
-			Logger.error(errorMessage);
+			Logger.error("Asset Error "+mode.toUpperCase()+" = "+errorMessage);
 	 }
 
 
