@@ -8,7 +8,7 @@ import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import models.administration.authorisation.Permission;
-import utils.DataTableForm;
+import controllers.utils.DataTableForm;
 import views.html.administration.authorisation.addPermission;
 import views.html.administration.authorisation.adminPermissions;
 

@@ -10,7 +10,7 @@ import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
-import utils.DataTableForm;
+import controllers.utils.DataTableForm;
 import models.administration.authorisation.Team;
 import views.html.administration.authorisation.addTeam;
 import views.html.administration.authorisation.adminTeams;

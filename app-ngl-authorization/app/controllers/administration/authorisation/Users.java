@@ -9,7 +9,7 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
-import utils.DataTableForm;
+import controllers.utils.DataTableForm;
 import models.administration.authorisation.User;
 import  views.html.administration.authorisation.addUser;
 import  views.html.administration.authorisation.adminUsers;
