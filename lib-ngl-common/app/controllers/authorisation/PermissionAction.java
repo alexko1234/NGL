@@ -1,10 +1,11 @@
 package controllers.authorisation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import play.mvc.Action;
 import play.mvc.Http.Context;
 import play.mvc.Result;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class PermissionAction extends Action<Permission> {
 	

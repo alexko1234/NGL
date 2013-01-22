@@ -10,6 +10,7 @@ package models.history;
  */
 
 import java.util.Date;
+
 import fr.cea.ig.DBObject;
 
 public class UserAction extends DBObject{

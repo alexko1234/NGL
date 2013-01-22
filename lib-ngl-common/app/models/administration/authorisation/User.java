@@ -1,5 +1,6 @@
 package models.administration.authorisation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,13 +12,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import com.avaje.ebean.Page;
-
 import play.data.validation.Constraints.Required;
+import play.data.validation.ValidationError;
 import play.db.ebean.Model;
 
-import play.data.validation.ValidationError;
-import java.util.ArrayList;
+import com.avaje.ebean.Page;
 
 @Entity
 public class User extends Model{

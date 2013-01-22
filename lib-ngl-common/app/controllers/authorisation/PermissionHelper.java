@@ -12,13 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.avaje.ebean.Query;
-
 import models.administration.authorisation.Permission;
 import models.administration.authorisation.Role;
 import models.administration.authorisation.Team;
 import models.administration.authorisation.User;
 import play.mvc.Http.Session;
+
+import com.avaje.ebean.Query;
 
 public class PermissionHelper {
 	/**

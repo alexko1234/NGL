@@ -4,12 +4,9 @@ package controllers.administration.authentication;
  * 
  * @author ydeshayes
  */
-import play.Logger;
-import play.data.DynamicForm;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.mvc.Http.Context;
 
 public class User extends Controller{
 	  

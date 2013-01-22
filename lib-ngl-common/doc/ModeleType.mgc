@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ClassDiagram>
-    <Class name="models.description.project.ProjectType" x="-131" y="479">
+    <Class name="models.laboratory.project.description.ProjectType" x="-131" y="479">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -12,7 +12,7 @@
             destinationClassName="models.description.common.CommonInfoType"
             endpointName="commonInfoType" kind="Simple"/>
         <Association
-            destinationClassName="models.description.project.ProjectCategory"
+            destinationClassName="models.laboratory.project.description.ProjectCategory"
             endpointName="projectCategory" kind="Simple"/>
     </Class>
     <Class name="models.description.common.CommonInfoType" x="646" y="170">
@@ -36,7 +36,7 @@
             destinationClassName="models.description.common.ObjectType"
             endpointName="objectType" kind="Simple"/>
     </Class>
-    <Class name="models.description.experiment.ProcessType" x="26" y="364">
+    <Class name="models.laboratory.processus.description.ProcessType" x="26" y="364">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -45,7 +45,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Association
-            destinationClassName="models.description.experiment.ProcessCategory"
+            destinationClassName="models.laboratory.processus.description.ProcessCategory"
             endpointName="processCategory" kind="Simple"/>
         <Association
             destinationClassName="models.description.common.CommonInfoType"
@@ -69,7 +69,7 @@
             destinationClassName="models.description.common.MeasureValue"
             endpointName="measureValue" kind="Simple"/>
     </Class>
-    <Class name="models.description.experiment.InstrumentUsedType"
+    <Class name="models.laboratory.instrument.description.InstrumentUsedType"
         x="546" y="679">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
@@ -79,17 +79,17 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Association
-            destinationClassName="models.description.experiment.InstrumentCategory"
+            destinationClassName="models.laboratory.instrument.description.InstrumentCategory"
             endpointName="instrumentCategory" kind="Simple"/>
         <Association
             destinationClassName="models.description.common.CommonInfoType"
             endpointName="commonInfoType" kind="Simple"/>
         <Association
-            destinationClassName="models.description.experiment.Instrument"
+            destinationClassName="models.laboratory.instrument.description.Instrument"
             endpointName="instruments" kind="Simple"/>
         <Communication destinationClassName="models.description.common.CommonInfoType"/>
     </Class>
-    <Class name="models.description.content.SampleType" x="294" y="201">
+    <Class name="models.laboratory.sample.description.SampleType" x="294" y="201">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -98,13 +98,13 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Association
-            destinationClassName="models.description.content.SampleCategory"
+            destinationClassName="models.laboratory.sample.description.SampleCategory"
             endpointName="sampleCategory" kind="Simple"/>
         <Association
             destinationClassName="models.description.common.CommonInfoType"
             endpointName="commonInfoType" kind="Simple"/>
     </Class>
-    <Class name="models.description.content.ContainerSupportCategory"
+    <Class name="models.laboratory.container.description.ContainerSupportCategory"
         x="-208" y="642">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
@@ -114,7 +114,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="models.description.content.ContainerCategory" x="15" y="36">
+    <Class name="models.laboratory.container.description.ContainerCategory" x="15" y="36">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -123,7 +123,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="models.description.experiment.ProtocolCategory"
+    <Class name="models.laboratory.experiment.description.ProtocolCategory"
         x="1186" y="560">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
@@ -133,7 +133,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="models.description.experiment.ProcessCategory" x="-6" y="241">
+    <Class name="models.laboratory.processus.description.ProcessCategory" x="-6" y="241">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -142,7 +142,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="models.description.experiment.PurificationMethodType"
+    <Class name="models.laboratory.experiment.description.PurificationMethodType"
         x="517" y="388">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
@@ -152,13 +152,13 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Association
-            destinationClassName="models.description.experiment.Protocol"
+            destinationClassName="models.laboratory.experiment.description.Protocol"
             endpointName="protocols" kind="Simple"/>
         <Association
             destinationClassName="models.description.common.CommonInfoType"
             endpointName="commonInfoType" kind="Simple"/>
         <Association
-            destinationClassName="models.description.experiment.InstrumentUsedType"
+            destinationClassName="models.laboratory.instrument.description.InstrumentUsedType"
             endpointName="instrumentTypes" kind="Simple"/>
     </Class>
     <Class name="models.description.common.MeasureValue" x="1292" y="143">
@@ -182,7 +182,7 @@
             destinationClassName="models.description.common.MeasureValue"
             endpointName="measurePossibleValues" kind="Simple"/>
     </Class>
-    <Class name="models.description.content.SampleCategory" x="1" y="125">
+    <Class name="models.laboratory.sample.description.SampleCategory" x="1" y="125">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -200,7 +200,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="models.description.experiment.Protocol" x="815" y="631">
+    <Class name="models.laboratory.experiment.description.Protocol" x="815" y="631">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -209,10 +209,10 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Association
-            destinationClassName="models.description.experiment.ProtocolCategory"
+            destinationClassName="models.laboratory.experiment.description.ProtocolCategory"
             endpointName="protocolCategory" kind="Simple"/>
         <Association
-            destinationClassName="models.description.experiment.ReagentType"
+            destinationClassName="models.laboratory.experiment.description.ReagentType"
             endpointName="reagentTypes" kind="Simple"/>
     </Class>
     <Class name="models.description.common.Resolution" x="531" y="16">
@@ -224,7 +224,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="models.description.experiment.QualityControlType"
+    <Class name="models.laboratory.experiment.description.QualityControlType"
         x="347" y="394">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
@@ -234,16 +234,16 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Association
-            destinationClassName="models.description.experiment.Protocol"
+            destinationClassName="models.laboratory.experiment.description.Protocol"
             endpointName="protocols" kind="Simple"/>
         <Association
             destinationClassName="models.description.common.CommonInfoType"
             endpointName="commonInfoType" kind="Simple"/>
         <Association
-            destinationClassName="models.description.experiment.InstrumentUsedType"
+            destinationClassName="models.laboratory.instrument.description.InstrumentUsedType"
             endpointName="instrumentTypes" kind="Simple"/>
     </Class>
-    <Class name="models.description.experiment.Instrument" x="176" y="506">
+    <Class name="models.laboratory.instrument.description.Instrument" x="176" y="506">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -252,7 +252,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="models.description.experiment.ReagentType" x="1033" y="456">
+    <Class name="models.laboratory.experiment.description.ReagentType" x="1033" y="456">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -265,7 +265,7 @@
             endpointName="commonInfoType" kind="Simple"/>
         <Communication destinationClassName="models.description.common.CommonInfoType"/>
     </Class>
-    <Class name="models.description.experiment.TransferMethodType"
+    <Class name="models.laboratory.experiment.description.TransferMethodType"
         x="194" y="406">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
@@ -275,16 +275,16 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Association
-            destinationClassName="models.description.experiment.Protocol"
+            destinationClassName="models.laboratory.experiment.description.Protocol"
             endpointName="protocols" kind="Simple"/>
         <Association
             destinationClassName="models.description.common.CommonInfoType"
             endpointName="commonInfoType" kind="Simple"/>
         <Association
-            destinationClassName="models.description.experiment.InstrumentUsedType"
+            destinationClassName="models.laboratory.instrument.description.InstrumentUsedType"
             endpointName="instrumentTypes" kind="Simple"/>
     </Class>
-    <Class name="models.description.project.ProjectCategory" x="-171" y="333">
+    <Class name="models.laboratory.project.description.ProjectCategory" x="-171" y="333">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -293,7 +293,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="models.description.experiment.InstrumentCategory"
+    <Class name="models.laboratory.instrument.description.InstrumentCategory"
         x="154" y="671">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
@@ -303,17 +303,17 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Association
-            destinationClassName="models.description.content.ContainerSupportCategory"
+            destinationClassName="models.laboratory.container.description.ContainerSupportCategory"
             endpointName="outContainerSupportCategories" kind="Simple">
             <Point x="109" y="608"/>
         </Association>
         <Association
-            destinationClassName="models.description.content.ContainerSupportCategory"
+            destinationClassName="models.laboratory.container.description.ContainerSupportCategory"
             endpointName="inContainerSupportCategories" kind="Simple">
             <Point x="128" y="637"/>
         </Association>
     </Class>
-    <Class name="models.description.experiment.ExperimentType" x="736" y="397">
+    <Class name="models.laboratory.experiment.description.ExperimentType" x="736" y="397">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -322,15 +322,15 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Association
-            destinationClassName="models.description.experiment.Protocol"
+            destinationClassName="models.laboratory.experiment.description.Protocol"
             endpointName="protocols" kind="Simple"/>
         <Association
-            destinationClassName="models.description.experiment.ExperimentType"
+            destinationClassName="models.laboratory.experiment.description.ExperimentType"
             endpointName="nextExperimentTypes" kind="Simple">
             <Point x="856" y="362"/>
         </Association>
         <Association
-            destinationClassName="models.description.experiment.InstrumentUsedType"
+            destinationClassName="models.laboratory.instrument.description.InstrumentUsedType"
             endpointName="instrumentTypes" kind="Simple"/>
         <Association
             destinationClassName="models.description.common.CommonInfoType"

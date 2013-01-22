@@ -1,19 +1,13 @@
 package models.administration.authorisation;
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.CascadeType;
-
-
-import com.avaje.ebean.Page;
 
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
-import play.db.ebean.Model.Finder;
+
+import com.avaje.ebean.Page;
 
 @Entity
 public class Team extends Model {

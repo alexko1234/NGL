@@ -10,10 +10,9 @@ package controllers.resources;
 */
 
 
-import play.Play;
-import play.Plugin;
 import play.Application;
 import play.Logger;
+import play.Plugin;
 
 public class AssetPlugin extends Plugin {
 

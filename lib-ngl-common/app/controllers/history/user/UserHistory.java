@@ -8,8 +8,6 @@ package controllers.history.user;
  *This class handle the request of the user and write the action to database
  *@author ydeshayes
  */
-import java.util.List;
-
 import models.history.UserAction;
 import play.data.DynamicForm;
 import play.mvc.Action;
