@@ -6,11 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.instance.run.Archive;
-import models.instance.run.Lane;
-import models.instance.run.ReadSet;
-import models.instance.run.Run;
-import models.instance.validation.BusinessValidationHelper;
+import models.laboratory.run.instance.Archive;
+import models.laboratory.run.instance.Lane;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
 
@@ -21,7 +20,8 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import utils.DataTableForm;
+import validation.BusinessValidationHelper;
+import controllers.utils.DataTableForm;
 import fr.cea.ig.MongoDBDAO;
 
 public class ReadSets extends Controller{

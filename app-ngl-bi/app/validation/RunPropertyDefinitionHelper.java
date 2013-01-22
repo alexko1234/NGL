@@ -1,9 +1,9 @@
-package models.instance.validation;
+package validation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import models.description.common.PropertyDefinition;
+import models.laboratory.common.description.PropertyDefinition;
 
 public class RunPropertyDefinitionHelper {
 	

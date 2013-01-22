@@ -14,11 +14,9 @@ import static play.test.Helpers.status;
 import java.util.ArrayList;
 import java.util.List;
 
-import controllers.*;
-
-import models.instance.run.Lane;
-import models.instance.run.ReadSet;
-import models.instance.run.Run;
+import models.laboratory.run.instance.Lane;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.Test;

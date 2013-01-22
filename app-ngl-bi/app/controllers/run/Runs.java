@@ -2,9 +2,8 @@ package controllers.run;
 
 import java.util.List;
 
-import models.instance.common.TraceInformation;
-import models.instance.run.Run;
-import models.instance.validation.BusinessValidationHelper;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.run.instance.Run;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
@@ -13,9 +12,10 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import utils.DataTableForm;
+import validation.BusinessValidationHelper;
 import views.html.run.run;
 import views.html.run.runs;
+import controllers.utils.DataTableForm;
 import fr.cea.ig.MongoDBDAO;
 /**
  * Controller around Run object

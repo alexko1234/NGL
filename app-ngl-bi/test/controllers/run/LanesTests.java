@@ -1,7 +1,6 @@
 package controllers.run;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.charset;
@@ -13,10 +12,10 @@ import static play.test.Helpers.status;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.instance.common.TBoolean;
-import models.instance.run.Lane;
-import models.instance.run.ReadSet;
-import models.instance.run.Run;
+import models.laboratory.common.instance.TBoolean;
+import models.laboratory.run.instance.Lane;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.Test;

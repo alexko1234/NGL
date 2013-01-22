@@ -8,20 +8,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.instance.common.PropertyValue;
-import models.instance.common.TraceInformation;
-import models.instance.instrument.InstrumentUsed;
-import models.instance.run.File;
-import models.instance.run.Lane;
-import models.instance.run.ReadSet;
-import models.instance.run.Run;
-import models.instance.validation.BusinessValidationHelper;
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.instrument.instance.InstrumentUsed;
+import models.laboratory.run.instance.File;
+import models.laboratory.run.instance.Lane;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
 
 import org.junit.Test;
 
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
 import utils.RunMockHelper;
+import validation.BusinessValidationHelper;
 public class RunValidationTest extends AbstractTests{
 	
 	

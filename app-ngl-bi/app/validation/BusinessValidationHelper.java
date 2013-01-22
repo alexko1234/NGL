@@ -1,21 +1,21 @@
-package models.instance.validation;
+package validation;
 
-import static models.instance.validation.ConstraintsHelper.addErrors;
-import static models.instance.validation.ConstraintsHelper.getKey;
-import static models.instance.validation.ConstraintsHelper.required;
-import static models.instance.validation.ConstraintsHelper.validateProperties;
+import static validation.utils.ConstraintsHelper.addErrors;
+import static validation.utils.ConstraintsHelper.getKey;
+import static validation.utils.ConstraintsHelper.required;
+import static validation.utils.ConstraintsHelper.validateProperties;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import models.instance.common.TraceInformation;
-import models.instance.instrument.InstrumentUsed;
-import models.instance.run.File;
-import models.instance.run.Lane;
-import models.instance.run.ReadSet;
-import models.instance.run.Run;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.instrument.instance.InstrumentUsed;
+import models.laboratory.run.instance.File;
+import models.laboratory.run.instance.Lane;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
 import net.vz.mongodb.jackson.DBQuery;
 import play.data.validation.ValidationError;
 

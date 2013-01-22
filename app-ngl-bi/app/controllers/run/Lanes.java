@@ -2,19 +2,18 @@ package controllers.run;
 
 import java.util.List;
 
-import models.instance.run.Lane;
-import models.instance.run.Run;
-import models.instance.validation.BusinessValidationHelper;
+import models.laboratory.run.instance.Lane;
+import models.laboratory.run.instance.Run;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
-import play.api.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import utils.DataTableForm;
+import validation.BusinessValidationHelper;
+import controllers.utils.DataTableForm;
 import fr.cea.ig.MongoDBDAO;
 
 public class Lanes extends Controller{

@@ -1,10 +1,10 @@
 package utils;
 
-import models.instance.common.PropertyValue;
-import models.instance.instrument.InstrumentUsed;
-import models.instance.run.Lane;
-import models.instance.run.ReadSet;
-import models.instance.run.Run;
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.instrument.instance.InstrumentUsed;
+import models.laboratory.run.instance.Lane;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
 
 import org.codehaus.jackson.JsonNode;
 
