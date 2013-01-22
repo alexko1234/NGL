@@ -3,7 +3,7 @@ package models.laboratory.sample.instance;
 import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.Valid;
+import models.laboratory.common.instance.TBoolean;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.ObjectSGBDReference;
@@ -35,7 +35,7 @@ public class Sample extends DBObject{
 	public String referenceCollab; 
 	public Map<String,PropertyValue> properties;
 	// Valid taxon
-	public Valid valid;
+	public TBoolean valid;
 	//public List<CollaboratorInvolve> collaborators;
 	public String taxonCode;
 	

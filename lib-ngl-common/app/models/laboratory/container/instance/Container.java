@@ -8,8 +8,9 @@ import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Valid;
+
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.project.instance.Project;
@@ -43,7 +44,7 @@ public class Container extends DBObject {
 	
 	// State Ref
 	public String stateCode;
-	public Valid valid;
+	public TBoolean valid;
 	// Resolution Ref
 	public String resolutionCode; //used to classify the final state (ex : ) 
 	

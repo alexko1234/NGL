@@ -5,8 +5,8 @@ import java.util.Map;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Valid;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
@@ -27,7 +27,7 @@ public class Processus extends DBObject {
 
 	public String name;
 	public String status;
-	public Valid valid;
+	public TBoolean valid;
 	public TraceInformation traceinformation;
 	public List<Comment> comments;
 
