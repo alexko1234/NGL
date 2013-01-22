@@ -1,7 +1,7 @@
 package controllers.admin.types;
 
-import models.description.common.CommonInfoType;
-import models.description.experiment.InstrumentUsedType;
+import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.instrument.description.InstrumentUsedType;
 import play.data.Form;
 import play.mvc.Result;
 import views.html.admin.types.instrumentUsedTypes;

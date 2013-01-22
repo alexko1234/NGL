@@ -14,7 +14,7 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 
 
     <context:annotation-config />
-    <context:component-scan base-package="models.description" />
+    <context:component-scan base-package="models" />
     <jee:jndi-lookup id="dataSource" jndi-name="model"/>
     
     

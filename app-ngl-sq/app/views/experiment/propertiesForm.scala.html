@@ -1,7 +1,7 @@
-@(common:models.description.common.CommonInfoType,dataForm:Form[models.instance.experiment.Experiment])
+@(common:models.laboratory.common.description.CommonInfoType,dataForm:Form[models.laboratory.experiment.instance.Experiment])
 
 @import scala.collection.immutable._
-@import models.description.common.PropertyDefinition
+@import models.laboratory.common.description.PropertyDefinition
 
 <h1>Propertiesliste </h1>
 @helper.repeat(dataForm("propertieslist"),min=0){ property =>

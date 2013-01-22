@@ -1,7 +1,8 @@
-@(dataFormCommon: Form[models.description.common.CommonInfoType], experimentTypeForm: Form[models.description.experiment.ExperimentType], isEdit: Boolean)
+@(dataFormCommon: Form[models.laboratory.common.description.CommonInfoType], experimentTypeForm: Form[models.laboratory.experiment.description.ExperimentType], isEdit: Boolean)
 @import helper._
-@import models.description.common.ObjectType
-@import models.description.experiment._
+@import models.laboratory.common.description.ObjectType
+@import models.laboratory.experiment.description._
+@import models.laboratory.instrument.description._
 
 @implicitField = @{ FieldConstructor(helper.tbformhorizontal.f) }
 @typeInfo(dataFormCommon, 

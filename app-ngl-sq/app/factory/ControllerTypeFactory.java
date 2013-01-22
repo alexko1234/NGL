@@ -1,7 +1,7 @@
 package factory;
 
 
-import models.description.common.ObjectType;
+import models.laboratory.common.description.ObjectType;
 import controllers.admin.types.ExperimentTypes;
 import controllers.admin.types.IGenericCreateTypes;
 import controllers.admin.types.InstrumentUsedTypes;

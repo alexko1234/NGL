@@ -1,6 +1,6 @@
 @(field: Field, isEdit: Boolean)
 @import helper._
-@import models.description.common.PropertyDefinition
+@import models.laboratory.common.description.PropertyDefinition
 @implicitField = @{ FieldConstructor(helper.tbformvertical.f) }
 
 @defining(if(!isEdit) ('states->"disabled") else (Symbol("") -> "")){ disabled =>

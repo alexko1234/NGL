@@ -5,18 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.description.common.CommonInfoType;
-import models.description.experiment.ExperimentType;
-import models.instance.experiment.Experiment;
+import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.instance.Experiment;
 
 import org.codehaus.jackson.node.ObjectNode;
+
+import controllers.utils.DataTableForm;
 
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
-import utils.DataTableForm;
 import fr.cea.ig.MongoDBDAO;
 
 

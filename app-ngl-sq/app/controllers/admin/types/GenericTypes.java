@@ -6,11 +6,10 @@ package controllers.admin.types;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.description.IDynamicType;
-import models.description.common.CommonInfoType;
-import models.description.common.ObjectType;
-import models.description.common.State;
-import models.description.experiment.ExperimentType;
+import models.laboratory.IDynamicType;
+import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.description.State;
 
 import org.codehaus.jackson.node.ObjectNode;
 
@@ -20,13 +19,10 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
-import utils.DataTableForm;
-import views.html.admin.types.addPropertyDefinition;
 import views.html.admin.types.genericTypes;
-
-import com.avaje.ebean.Page;
-
+import controllers.utils.DataTableForm;
 import factory.ControllerTypeFactory;
+import views.html.admin.types.*;
 
 
 /**
