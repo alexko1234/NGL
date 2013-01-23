@@ -47,10 +47,10 @@ public class Files extends Controller{
 									File f = r.files.get(k);
 									if(f.fullname.equals(file.fullname)){
 										MongoDBDAO.updateSet(Constants.RUN_ILLUMINA_COLL_NAME, run, "lanes."+i+".readsets."+j+".files."+k, file);
+										break;
 									}
 								}
 							}
-							isFind = true;
 							break;
 						}
 					}
