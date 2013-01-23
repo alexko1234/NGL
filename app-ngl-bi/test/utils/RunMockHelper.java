@@ -2,6 +2,7 @@ package utils;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.instrument.instance.InstrumentUsed;
+import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -23,6 +24,11 @@ public class RunMockHelper {
 	public static JsonNode getJsonReadSet(ReadSet readSet) {
 		return Json.toJson(readSet);
 	}
+	
+	public static JsonNode getJsonFile(File file) {
+		return Json.toJson(file);
+	}
+	
 	
 	public static Run newRun(String code){
 		Run run = new Run();
@@ -92,5 +98,15 @@ public class RunMockHelper {
 		 
 	 }
 	 
+	public static File newFile(String code){
+		File file = new File();
+		file.fullname = "testfile";
+		file.extension = ".exe";
+		file.typeCode = "42";
+		file.usable = true;
+		
+		return file;
+		
+	}
 		
 }
