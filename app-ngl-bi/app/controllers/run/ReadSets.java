@@ -210,10 +210,14 @@ public class ReadSets extends Controller{
 		Query object = DBQuery.is("dispatch", true).or(DBQuery.elemMatch("lanes.readsets", DBQuery.is("archiveId",null))).or(DBQuery.elemMatch("lanes.readsets", DBQuery.notEquals("archiveDate", null)).and(DBQuery.notEquals("transfertEndDate", null).and(DBQuery.where("lanes.readsets.archiveDate<transfertEndDate"))));
 		List<Run> runs = MongoDBDAO.find(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, object);
 		for(Run run:runs){
-			for(Lane lane:run.lanes){
-				for(ReadSet readset:lane.readsets){
-					if((readset.archiveId == null) || (run.transfertEndDate!=null && readset.archiveDate!=null && run.transfertEndDate.after(readset.archiveDate)))
-						archives.add(new Archive(readset.code,readset.path));
+			if(run.lanes != null){
+				for(Lane lane:run.lanes){
+					if(lane.readsets != null){
+						for(ReadSet readset:lane.readsets){
+							if((readset.archiveId == null) || (run.transfertEndDate!=null && readset.archiveDate!=null && run.transfertEndDate.after(readset.archiveDate)))
+								archives.add(new Archive(readset.code,readset.path));
+						}
+					}
 				}
 			}
 		}
