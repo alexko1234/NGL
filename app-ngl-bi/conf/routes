@@ -34,7 +34,7 @@ GET	   /readsets/:readSetCode				controllers.run.ReadSets.showWithReadsetCode(re
 PUT    /readsets/:readSetCode				controllers.run.ReadSets.update(readSetCode:java.lang.String, format: java.lang.String ?= "html")
 
 GET   /readsets/:code/files/:fullname		controllers.run.Files.show(code: java.lang.String,fullname: java.lang.String, format: java.lang.String ?= "html")
-POST   /readsets/:code/files				controllers.run.Files.createOrUpdate(code: java.lang.String, format: java.lang.String ?= "html")
+POST  /readsets/:code/files					controllers.run.Files.createOrUpdate(code: java.lang.String, format: java.lang.String ?= "html")
 
 
 # Javascript routing
