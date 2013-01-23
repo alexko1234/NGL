@@ -35,21 +35,23 @@ public class Files extends Controller{
 			if(!filledForm.hasErrors()) {
 				for(int i = 0; i < run.lanes.size(); i++){
 					Lane l = run.lanes.get(i);
-					int j = 0;
-					boolean isFind = false;
-					for(; l.readsets != null && j < l.readsets.size() ; j++){
+					for(int j = 0; l.readsets != null && j < l.readsets.size() ; j++){
 						ReadSet r = l.readsets.get(j);
 						if(readsetCode.equals(r.code)){
 							if(r.files == null){
 								MongoDBDAO.updatePush(Constants.RUN_ILLUMINA_COLL_NAME, run, "lanes."+i+".readsets."+j+".files", file);
 							}else{
+								boolean isFind = false;
 								for(int k=0;k<r.files.size();k++){
 									File f = r.files.get(k);
 									if(f.fullname.equals(file.fullname)){
+										isFind = true;
 										MongoDBDAO.updateSet(Constants.RUN_ILLUMINA_COLL_NAME, run, "lanes."+i+".readsets."+j+".files."+k, file);
 										break;
 									}
 								}
+								if(!isFind){MongoDBDAO.updatePush(Constants.RUN_ILLUMINA_COLL_NAME, run, "lanes."+i+".readsets."+j+".files", file);}
+							
 							}
 							break;
 						}
