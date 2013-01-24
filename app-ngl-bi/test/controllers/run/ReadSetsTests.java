@@ -126,12 +126,6 @@ public class ReadSetsTests extends AbstractTests {
       	 assertThat(contentAsString(result)).isNotEqualTo("[]").contains("ReadSetBasicWithRun").doesNotContain("ReadSetTEST");
 	 }
 
-	@Override
-	public void init() {
-		// TODO Auto-generated method stub
-		
-	}
-	 
 	
 
 }

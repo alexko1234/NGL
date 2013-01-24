@@ -29,11 +29,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class FilesTest extends AbstractTests{
 
-	@Override
-	public void init() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 	
 	@Test
 	 public void testFileCreate() {
@@ -60,9 +56,9 @@ public class FilesTest extends AbstractTests{
 		
 		result = callAction(controllers.run.routes.ref.Files.createOrUpdate("test1","json"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(RunMockHelper.newFile("newfiletest"))));
 	 	//System.out.println(contentAsString(result));
-       assertThat(status(result)).isEqualTo(OK);
-       assertThat(contentType(result)).isEqualTo("application/json");
-       assertThat(charset(result)).isEqualTo("utf-8");
+        assertThat(status(result)).isEqualTo(OK);
+        assertThat(contentType(result)).isEqualTo("application/json");
+        assertThat(charset(result)).isEqualTo("utf-8");
 	 }
 	
 	 @Test

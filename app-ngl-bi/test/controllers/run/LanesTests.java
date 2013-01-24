@@ -28,10 +28,7 @@ import fr.cea.ig.MongoDBDAO;
 public class LanesTests extends AbstractTests {
 
 
-	@Override
-	public void init() {
-		// TODO Auto-generated method stub
-	}
+	
 	 @Test
 	public void testLanes(){
 		Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));

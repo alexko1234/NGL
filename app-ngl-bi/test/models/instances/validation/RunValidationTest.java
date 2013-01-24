@@ -25,12 +25,7 @@ import validation.BusinessValidationHelper;
 public class RunValidationTest extends AbstractTests{
 	
 	
-	 @Override
-	public void init() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Test
 	 public void testRunValidationOk() {
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {

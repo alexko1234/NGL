@@ -1,5 +1,7 @@
 package utils;
 
+
+
 import static play.test.Helpers.fakeApplication;
 
 import java.util.HashMap;
@@ -11,13 +13,15 @@ import org.junit.Before;
 import play.test.FakeApplication;
 import play.test.Helpers;
 
+
+
 public abstract class AbstractTests {
+	
 	FakeApplication app;
 	@Before
 	public void start(){
 		 app = getFakeApplication();
 		 Helpers.start(app);
-		 init();
 	}
 	
 	@After
@@ -45,5 +49,5 @@ public abstract class AbstractTests {
 		
 	}
 	
-	public abstract void init();
+	
 }
