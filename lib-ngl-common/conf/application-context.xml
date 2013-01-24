@@ -14,8 +14,8 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 
 
     <context:annotation-config />
-    <context:component-scan base-package="models.description" />
-    <jee:jndi-lookup id="dataSource" jndi-name="model"/>
+    <context:component-scan base-package="models" />
+    <jee:jndi-lookup id="dataSource" jndi-name="ngl"/>
     
     
  <!-- bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
