@@ -74,8 +74,8 @@ object ApplicationBuild extends Build {
     	
     	val nglauthDependencies = Seq(
 	        "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
-		"fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
-		"mysql" % "mysql-connector-java" % "5.1.18"
+	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
+	        "mysql" % "mysql-connector-java" % "5.1.18"
     	)
    }
    
