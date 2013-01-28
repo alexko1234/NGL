@@ -12,5 +12,17 @@ public class MeasureCategory{
 	
 	public List<MeasureValue> measurePossibleValues;
 
+	public MeasureCategory() {
+		super();
+	}
+
+	public MeasureCategory(String name, String code,
+			List<MeasureValue> measurePossibleValues) {
+		super();
+		this.name = name;
+		this.code = code;
+		this.measurePossibleValues = measurePossibleValues;
+	}
+
 	
 }

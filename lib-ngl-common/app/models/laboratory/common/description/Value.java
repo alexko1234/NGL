@@ -9,6 +9,19 @@ public class Value {
 	public Boolean defaultValue = Boolean.FALSE;
 
 	
+	public Value() {
+		super();
+	}
+
+
+	public Value(String value, Boolean defaultValue) {
+		super();
+		this.value = value;
+		this.defaultValue = defaultValue;
+	}
+
+	
+	
 	
     
 }

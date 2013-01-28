@@ -10,4 +10,19 @@ public class MeasureValue {
   	
 	public Long measureCateroryId;
 
+	
+	
+	public MeasureValue() {
+		super();
+	}
+
+
+
+	public MeasureValue(String value, Boolean defaultValue) {
+		super();
+		this.value = value;
+		this.defaultValue = defaultValue;
+	}
+
+	
 }

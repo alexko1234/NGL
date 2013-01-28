@@ -12,7 +12,7 @@ import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import play.modules.spring.Spring;
 
-public class ExperimentType implements IDynamicType{
+public class ExperimentType extends CommonInfoType implements IDynamicType{
 
 	public Long id;
 	
@@ -22,11 +22,21 @@ public class ExperimentType implements IDynamicType{
 	
 	public List<InstrumentUsedType> instrumentTypes;
 	
-	public CommonInfoType commonInfoType;
+	public ExperimentType() {
+		super();
+	}
+
+	public ExperimentType(List<ExperimentType> nextExperimentTypes,
+			List<Protocol> protocols, List<InstrumentUsedType> instrumentTypes) {
+		super();
+		this.nextExperimentTypes = nextExperimentTypes;
+		this.protocols = protocols;
+		this.instrumentTypes = instrumentTypes;
+	}
 
 	@Override
 	public CommonInfoType getInformations() {		
-		return commonInfoType;
+		return this;
 	}
 	
 	public static Map<String,String> options() {
@@ -43,7 +53,7 @@ public class ExperimentType implements IDynamicType{
 		Map<String, String> mapExperimentTypes = new HashMap<String, String>();
 		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		for(ExperimentType expType : experimentTypeDAO.findAll()){
-			mapExperimentTypes.put(expType.id.toString(), expType.commonInfoType.name);
+			mapExperimentTypes.put(expType.id.toString(), expType.name);
 		}
 		return mapExperimentTypes;
 	}
@@ -54,7 +64,7 @@ public class ExperimentType implements IDynamicType{
 		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		for(ExperimentType expType : experimentTypeDAO.findAll()){
 			if(!expType.id.equals(filterId))
-				mapExperimentTypes.put(expType.id.toString(), expType.commonInfoType.name);
+				mapExperimentTypes.put(expType.id.toString(), expType.name);
 		}
 		return mapExperimentTypes;
 	}
@@ -97,36 +107,7 @@ public class ExperimentType implements IDynamicType{
 	{
 		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		return experimentTypeDAO.findById(id);
-	}
-
-	
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ExperimentType other = (ExperimentType) obj;
-		if (commonInfoType.code == null) {
-			if (other.commonInfoType.code != null)
-				return false;
-		} else if (!commonInfoType.code.equals(other.commonInfoType.code))
-			return false;
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-
-	
+	}	
 	
 	
 }

@@ -53,13 +53,9 @@ public class SampleTypeDAO {
 	public SampleType add(SampleType sampleType)
 	{
 		//Add commonInfoType
-		if(sampleType.commonInfoType!=null && sampleType.commonInfoType.id==null)
-		{
-			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType cit = commonInfoTypeDAO.add(sampleType.commonInfoType);
-			sampleType.commonInfoType = cit;
-		}
-
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		CommonInfoType cit = commonInfoTypeDAO.add(sampleType);
+		sampleType.setCommonInfoType(cit);
 		//Add sampleCategory
 		if(sampleType.sampleCategory!=null && sampleType.sampleCategory.id==null)
 		{
@@ -70,7 +66,7 @@ public class SampleTypeDAO {
 
 		//Create sampleType 
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fk_common_info_type", sampleType.commonInfoType.id);
+		parameters.put("fk_common_info_type", sampleType.getIdCommonInfoType());
 		parameters.put("fk_sample_category", sampleType.sampleCategory.id);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		sampleType.id = newId;

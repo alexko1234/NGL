@@ -15,19 +15,17 @@ import play.modules.spring.Spring;
  * @author ejacoby
  *
  */
-public class InstrumentUsedType implements IDynamicType{
+public class InstrumentUsedType extends CommonInfoType implements IDynamicType{
 	
 	public Long id;
 	
-	public CommonInfoType commonInfoType;
-
 	public List<Instrument> instruments;
 	
 	public InstrumentCategory instrumentCategory;
 	
 	@Override
 	public CommonInfoType getInformations() {		
-		return commonInfoType;
+		return this;
 	}
 	
 	@Override
@@ -40,7 +38,7 @@ public class InstrumentUsedType implements IDynamicType{
 		Map<String, String> mapInstrumentTypes = new HashMap<String, String>();
 		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
 		for(InstrumentUsedType instType : instrumentUsedTypeDAO.findAll()){
-			mapInstrumentTypes.put(instType.id.toString(), instType.commonInfoType.name);
+			mapInstrumentTypes.put(instType.id.toString(), instType.name);
 		}
 		return mapInstrumentTypes;
 	}
@@ -54,24 +52,5 @@ public class InstrumentUsedType implements IDynamicType{
 	{
 		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
 		return instrumentUsedTypeDAO.findByCommonInfoType(idCommonInfoType);
-	}
-
-	
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		InstrumentUsedType other = (InstrumentUsedType) obj;
-		if (commonInfoType.code == null) {
-			if (other.commonInfoType.code != null)
-				return false;
-		} else if (!commonInfoType.code.equals(other.commonInfoType.code))
-			return false;
-		return true;
 	}
 }

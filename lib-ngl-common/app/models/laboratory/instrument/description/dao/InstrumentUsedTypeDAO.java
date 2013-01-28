@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.instrument.description.Instrument;
+import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,24 +64,20 @@ public class InstrumentUsedTypeDAO {
 
 	public InstrumentUsedType add(InstrumentUsedType instrumentUsedType)
 	{
-		//Check if commonInfoType exist
-		if(instrumentUsedType.commonInfoType!=null && instrumentUsedType.commonInfoType.id==null)
-		{
-			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType cit = commonInfoTypeDAO.add(instrumentUsedType.commonInfoType);
-			instrumentUsedType.commonInfoType = cit;
-		}
+		//Add commonInfoType
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		CommonInfoType cit = commonInfoTypeDAO.add(instrumentUsedType);
+		instrumentUsedType.setCommonInfoType(cit);
 		//Check if instrumentCategory exist
 		if(instrumentUsedType.instrumentCategory!=null && instrumentUsedType.instrumentCategory.id==null)
 		{
-			
-			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType cit = commonInfoTypeDAO.add(instrumentUsedType.commonInfoType);
-			instrumentUsedType.commonInfoType = cit;
+			InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
+			InstrumentCategory instrumentCategory = instrumentCategoryDAO.add(instrumentUsedType.instrumentCategory);
+			instrumentUsedType.instrumentCategory = instrumentCategory;
 		}
 		//Create new InstrumentUsedType
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fk_common_info_type", instrumentUsedType.commonInfoType.id);
+		parameters.put("fk_common_info_type", instrumentUsedType.getIdCommonInfoType());
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		instrumentUsedType.id = newId;
 
@@ -101,14 +98,15 @@ public class InstrumentUsedTypeDAO {
 
 		//Update commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		commonInfoTypeDAO.update(instrumentUsedType.commonInfoType);
+		commonInfoTypeDAO.update(instrumentUsedType);
 
 		//Update instrument list
 		List<Instrument> instruments = instrumentUsedType.instruments;
 		if(instruments!=null && instruments.size()>0){
 			InstrumentDAO instrumentDAO = Spring.getBeanOfType(InstrumentDAO.class);
 			for(Instrument instrument : instruments){
-				if(instrumentUsedTypeDB==null || (instrumentUsedTypeDB!=null && !instrumentUsedTypeDB.instruments.contains(instrument))){
+				if(instrumentUsedTypeDB!=null && !instrumentUsedTypeDB.instruments.contains(instrument)){
+					instrumentDAO.add(instrument, instrumentUsedType.id);
 				}
 			}
 		}

@@ -37,7 +37,7 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		CommonInfoType commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
-		experimentType.commonInfoType = commonInfoType;
+		experimentType.setCommonInfoType(commonInfoType);
 		//Get nextExperimentType
 		ExperimentTypeDAO expTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		List<ExperimentType> nextExpTypes = expTypeDAO.findNextExperiments(experimentType.id);

@@ -94,8 +94,7 @@ public class ProtocolDAO {
 			String sqlReagent = "INSERT INTO protocol_reagent_type (fk_protocol,fk_reagent_type) VALUES(?,?)";
 			for(ReagentType reagentType : reagentTypes){
 				if(protoDB.reagentTypes==null || (protoDB.reagentTypes!=null && !protoDB.reagentTypes.contains(reagentType))){
-					if(reagentType.commonInfoType==null)
-						reagentType = reagentTypeDAO.add(reagentType);
+					reagentType = reagentTypeDAO.add(reagentType);
 					jdbcTemplate.update(sqlReagent, protoDB.id, reagentType.id);
 				}
 			}

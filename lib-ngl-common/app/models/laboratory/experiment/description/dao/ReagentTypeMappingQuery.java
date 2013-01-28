@@ -36,7 +36,7 @@ public class ReagentTypeMappingQuery extends MappingSqlQuery<ReagentType>{
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		CommonInfoType commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
-		reagentType.commonInfoType = commonInfoType;
+		reagentType.setCommonInfoType(commonInfoType);
 		return reagentType;
 	}
 

@@ -82,15 +82,12 @@ public class ExperimentTypeDAO {
 	public ExperimentType add(ExperimentType experimentType)
 	{
 		//Add commonInfoType
-		if(experimentType.commonInfoType!=null && experimentType.commonInfoType.id==null)
-		{
-			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType cit = commonInfoTypeDAO.add(experimentType.commonInfoType);
-			experimentType.commonInfoType = cit;
-		}
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		CommonInfoType cit = commonInfoTypeDAO.add(experimentType);
+		experimentType.setCommonInfoType(cit);
 		//Create experimentType 
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fk_common_info_type", experimentType.commonInfoType.id);
+		parameters.put("fk_common_info_type", cit.id);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		experimentType.id = newId;
 		//Add nextExperimentTypes list
@@ -108,7 +105,7 @@ public class ExperimentTypeDAO {
 			for(Protocol protocol : protocols){
 				protocolDAO.add(protocol, experimentType.id);
 			}
-			
+
 		}
 		//Add InstrumentUsedTypes list
 		List<InstrumentUsedType> instrumentUsedTypes = experimentType.instrumentTypes;
@@ -123,15 +120,15 @@ public class ExperimentTypeDAO {
 		}
 		return experimentType;
 	}
-	
+
 	public void update(ExperimentType experimentType)
 	{
 		ExperimentType expTypeDB = findById(experimentType.id);
-		
+
 		//Update commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		commonInfoTypeDAO.update(experimentType.commonInfoType);
-		
+		commonInfoTypeDAO.update(experimentType);
+
 		//Update nexExperiment list (add new)
 		List<ExperimentType> nextExpTypes = experimentType.nextExperimentTypes;
 		System.out.println("Next experiment db "+expTypeDB.nextExperimentTypes);

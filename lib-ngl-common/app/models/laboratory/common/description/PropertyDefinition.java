@@ -63,6 +63,37 @@ public class PropertyDefinition {
 
 	public MeasureValue measureValue;
 
+	
+	
+	public PropertyDefinition() {
+		super();
+	}
+
+	public PropertyDefinition(String code, String name, String description,
+			Boolean required, Boolean active, Boolean choiceInList,
+			String type, String displayFormat, Integer displayOrder,
+			String level, boolean propagation, String inOut,
+			List<Value> possibleValues, String defaultValue,
+			MeasureCategory measureCategory, MeasureValue measureValue) {
+		super();
+		this.code = code;
+		this.name = name;
+		this.description = description;
+		this.required = required;
+		this.active = active;
+		this.choiceInList = choiceInList;
+		this.type = type;
+		this.displayFormat = displayFormat;
+		this.displayOrder = displayOrder;
+		this.level = level;
+		this.propagation = propagation;
+		this.inOut = inOut;
+		this.possibleValues = possibleValues;
+		this.defaultValue = defaultValue;
+		this.measureCategory = measureCategory;
+		this.measureValue = measureValue;
+	}
+
 	public static Map<String,String> options() {
 		return options;
 	}

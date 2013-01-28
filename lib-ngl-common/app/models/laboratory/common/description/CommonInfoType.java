@@ -12,7 +12,7 @@ import play.data.validation.Constraints.Required;
 import play.modules.spring.Spring;
 
 public class CommonInfoType{
-
+	
 	public Long id;
 	@Required
 	@MaxLength(10)
@@ -33,16 +33,31 @@ public class CommonInfoType{
 	public List<PropertyDefinition> propertiesDefinition=new ArrayList<PropertyDefinition>();
 
 	public ObjectType objectType;
+
 	
-	/*public CommonInfoType(Class<CommonInfoTypeDAO> dao) {
-		super(dao);
-	}*/
-	
-	public static CommonInfoType findById(long id)
+	public CommonInfoType() {
+		super();
+	}
+
+	public CommonInfoType(String name, String code,
+			String collectionName, List<State> variableStates,
+			List<Resolution> resolutions,
+			List<PropertyDefinition> propertiesDefinition, ObjectType objectType) {
+		super();
+		this.name = name;
+		this.code = code;
+		this.collectionName = collectionName;
+		this.variableStates = variableStates;
+		this.resolutions = resolutions;
+		this.propertiesDefinition = propertiesDefinition;
+		this.objectType = objectType;
+	}
+
+	/*public static CommonInfoType findById(long id)
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		return commonInfoTypeDAO.findById(id);
-	}
+	}*/
 	
 	public static List<CommonInfoType> findAll()
 	{
@@ -64,6 +79,7 @@ public class CommonInfoType{
 		else 
 			return commonInfoTypeDAO.findByTypeNameAndType(name, idObjectType);
 	}
+	
 	public CommonInfoType add()
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
@@ -85,6 +101,23 @@ public class CommonInfoType{
 	public void setPropertiesDefinition(
 			List<PropertyDefinition> propertiesDefinition) {
 		this.propertiesDefinition = propertiesDefinition;
+	}
+	
+	public void setCommonInfoType(CommonInfoType commonInfoType)
+	{
+		this.id=commonInfoType.id;
+		this.name=commonInfoType.name;
+		this.code=commonInfoType.code;
+		this.collectionName=commonInfoType.collectionName;
+		this.variableStates=commonInfoType.variableStates;
+		this.resolutions=commonInfoType.resolutions;
+		this.propertiesDefinition=commonInfoType.propertiesDefinition;
+		this.objectType=commonInfoType.objectType;
+	}
+	
+	public long getIdCommonInfoType()
+	{
+		return this.id;
 	}
 	
 }

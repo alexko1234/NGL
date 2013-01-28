@@ -25,7 +25,7 @@ public class ProjectTypeDAO {
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.projectTypeMappingQuery = new ProjectTypeMappingQuery(dataSource);
-		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("project_type");
+		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("project_type").usingGeneratedKeyColumns("id");
 	}
 
 	public ProjectType findById(long id)
@@ -35,13 +35,10 @@ public class ProjectTypeDAO {
 
 	public ProjectType add(ProjectType projectType)
 	{
-		//Check if commonInfoType exist
-		if(projectType.commonInfoType!=null && projectType.commonInfoType.id==null)
-		{
-			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType cit = commonInfoTypeDAO.add(projectType.commonInfoType);
-			projectType.commonInfoType = cit;
-		}
+		//Add commonInfoType
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		CommonInfoType cit = commonInfoTypeDAO.add(projectType);
+		projectType.setCommonInfoType(cit);
 		//Check if category exist
 		if(projectType.projectCategory!=null && projectType.projectCategory.id==null)
 		{
@@ -49,18 +46,18 @@ public class ProjectTypeDAO {
 			ProjectCategory pc = projectCategoryDAO.add(projectType.projectCategory);
 			projectType.projectCategory = pc;
 		}
-		//Create new reagentType
+		//Create new projectType
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fk_common_info_type", projectType.commonInfoType.id);
+		parameters.put("fk_common_info_type", projectType.getIdCommonInfoType());
 		parameters.put("fk_project_category", projectType.projectCategory.id);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		projectType.id = newId;
 		return projectType;
 	}
-	
+
 	public void update(ProjectType projectType)
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		commonInfoTypeDAO.update(projectType.commonInfoType);
+		commonInfoTypeDAO.update(projectType);
 	}
 }

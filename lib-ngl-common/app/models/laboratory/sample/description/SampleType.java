@@ -5,17 +5,15 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.sample.description.dao.SampleTypeDAO;
 import play.modules.spring.Spring;
 
-public class SampleType implements IDynamicType{
+public class SampleType extends CommonInfoType implements IDynamicType{
 
 	public Long id;
-	
-	public CommonInfoType commonInfoType;
 	
 	public SampleCategory sampleCategory;
 
 	@Override
 	public CommonInfoType getInformations() {		
-		return commonInfoType;
+		return this;
 	}
 	
 	@Override

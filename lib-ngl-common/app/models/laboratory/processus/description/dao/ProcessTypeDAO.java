@@ -35,13 +35,10 @@ public class ProcessTypeDAO {
 
 	public ProcessType add(ProcessType processType)
 	{
-		//Check if commonInfoType exist
-		if(processType.commonInfoType!=null && processType.commonInfoType.id==null)
-		{
-			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType cit = commonInfoTypeDAO.add(processType.commonInfoType);
-			processType.commonInfoType = cit;
-		}
+		//Add commonInfoType
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		CommonInfoType cit = commonInfoTypeDAO.add(processType);
+		processType.setCommonInfoType(cit);
 		//Check if category exist
 		if(processType.processCategory!=null && processType.processCategory.id==null)
 		{
@@ -52,7 +49,7 @@ public class ProcessTypeDAO {
 
 		//Create new reagentType
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fk_common_info_type", processType.commonInfoType.id);
+		parameters.put("fk_common_info_type", processType.getIdCommonInfoType());
 		parameters.put("fk_process_category", processType.processCategory.id);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		processType.id = newId;
@@ -62,6 +59,6 @@ public class ProcessTypeDAO {
 	public void update(ProcessType processType)
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		commonInfoTypeDAO.update(processType.commonInfoType);
+		commonInfoTypeDAO.update(processType);
 	}
 }
