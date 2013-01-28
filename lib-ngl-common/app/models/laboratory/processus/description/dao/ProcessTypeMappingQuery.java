@@ -36,7 +36,7 @@ public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType>{
 		long idProjectCategory = rs.getLong("fk_process_category");
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType commonInfoType = commonInfoTypeDAO.find(idCommonInfoType);
+		CommonInfoType commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
 		processType.commonInfoType = commonInfoType;
 		//Get category
 		ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);

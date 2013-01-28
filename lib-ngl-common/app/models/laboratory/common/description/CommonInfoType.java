@@ -7,6 +7,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.utils.Model;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import play.modules.spring.Spring;
@@ -33,11 +34,15 @@ public class CommonInfoType{
 	public List<PropertyDefinition> propertiesDefinition=new ArrayList<PropertyDefinition>();
 
 	public ObjectType objectType;
-
+	
+	/*public CommonInfoType(Class<CommonInfoTypeDAO> dao) {
+		super(dao);
+	}*/
+	
 	public static CommonInfoType findById(long id)
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		return commonInfoTypeDAO.find(id);
+		return commonInfoTypeDAO.findById(id);
 	}
 	
 	public static List<CommonInfoType> findAll()

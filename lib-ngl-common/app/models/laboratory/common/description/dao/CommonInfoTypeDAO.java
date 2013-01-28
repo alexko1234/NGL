@@ -23,8 +23,9 @@ import org.springframework.stereotype.Repository;
 import play.modules.spring.Spring;
 
 @Repository
-public class CommonInfoTypeDAO {
+public class CommonInfoTypeDAO{
 
+	
 	private DataSource dataSource;
 	private String sqlCommon = "SELECT c.id as cId, c.name, c.code , c.collection_name, o.id as oId, o.type, o.generic "+
 			"FROM common_info_type as c "+
@@ -32,6 +33,8 @@ public class CommonInfoTypeDAO {
 	private SimpleJdbcInsert jdbcInsert;
 	private SimpleJdbcTemplate jdbcTemplate;
 
+	
+	
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource=dataSource;
@@ -39,7 +42,7 @@ public class CommonInfoTypeDAO {
 		this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);       
 	}
 
-	public CommonInfoType find(long id)
+	public CommonInfoType findById(Long id)
 	{
 		String sql = sqlCommon+
 				"WHERE c.id = ? ";
@@ -134,9 +137,9 @@ public class CommonInfoTypeDAO {
 		return cit;
 	}
 
-	public void update(CommonInfoType cit)
+	public CommonInfoType update(CommonInfoType cit)
 	{
-		CommonInfoType citDB = find(cit.id);
+		CommonInfoType citDB = findById(cit.id);
 
 		String sql = "UPDATE common_info_type SET name=?, code=?, collection_name=?, fk_object_type=? WHERE id=?";
 		jdbcTemplate.update(sql, cit.name, cit.code, cit.collectionName, cit.objectType.id, cit.id);
@@ -176,6 +179,7 @@ public class CommonInfoTypeDAO {
 				}
 			}
 		}
+		return citDB;
 	}
 
 }
