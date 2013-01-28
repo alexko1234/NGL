@@ -113,6 +113,21 @@ public class Runs extends Controller {
 		}
 	}
 
+	public static Result dispatch(String code, String format){
+		Run run = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);		
+		if(run != null){
+			JsonNode json = request().body().asJson();
+			System.out.println(json);
+			System.out.println("VALUE= "+json.get("dispatch"));
+			boolean dispatch = json.get("dispatch").asBoolean();
+			MongoDBDAO.updateSet(Constants.RUN_ILLUMINA_COLL_NAME, run, "dispatch", dispatch);
+		}else{
+			return badRequest();
+		}
+		
+		return ok();	
+	}
+	
 	//necessite une double gestion avec et sans json pour pouvoir faire fonctionner les 2 ensemble
 	//ceci est du à la gestion des Map qui est différente entre json et spring binder			
 	private static Form<Run> getFilledForm(String format) {
