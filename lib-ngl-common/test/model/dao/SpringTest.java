@@ -93,7 +93,7 @@ public class SpringTest extends AbstractTests{
 	public void testCommonInfo()
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType cit = commonInfoTypeDAO.find(idCommonInfoType);
+		CommonInfoType cit = commonInfoTypeDAO.findById(idCommonInfoType);
 		checkCommonInfo(cit);
 	}
 	
