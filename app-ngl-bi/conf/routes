@@ -19,6 +19,10 @@ POST   /runs									controllers.run.Runs.createOrUpdate(format: java.lang.Strin
 GET	   /runs/:code								controllers.run.Runs.show(code: java.lang.String, format: java.lang.String ?= "html")
 GET	   /runs/:code/edit							controllers.run.Runs.edit(code: java.lang.String, format: java.lang.String ?= "html")
 
+#run dispatch
+POST /runs/:code/dispatch						controllers.run.Runs.dispatch(code: java.lang.String, format: java.lang.String ?= "html")
+
+
 #run lane
 GET	   /runs/:code/:laneNumber					controllers.run.Lanes.show(code: java.lang.String, laneNumber:java.lang.Integer,format: java.lang.String ?= "html")
 POST   /runs/:code								controllers.run.Lanes.createOrUpdate(code: java.lang.String, format: java.lang.String ?= "html")
