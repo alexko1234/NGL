@@ -39,16 +39,16 @@ public class ResolutionDAO {
 	public Resolution add(Resolution resolution)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("name", resolution.getName());
-        parameters.put("code", resolution.getCode());
+        parameters.put("name", resolution.name);
+        parameters.put("code", resolution.code);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        resolution.setId(newId);
+        resolution.id = newId;
         return resolution;
 	}
 	
 	public void update(Resolution resolution)
 	{
 		String sql = "UPDATE resolution SET name=? WHERE id=?";
-		jdbcTemplate.update(sql, resolution.getName(), resolution.getId());
+		jdbcTemplate.update(sql, resolution.name, resolution.id);
 	}
 }

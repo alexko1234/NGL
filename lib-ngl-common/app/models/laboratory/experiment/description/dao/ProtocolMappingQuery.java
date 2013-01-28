@@ -28,19 +28,19 @@ public class ProtocolMappingQuery extends MappingSqlQuery<Protocol>{
 	@Override
 	protected Protocol mapRow(ResultSet rs, int rowNumber) throws SQLException {
 		Protocol protocol = new Protocol();
-		protocol.setId(rs.getLong("id"));
-		protocol.setName(rs.getString("name"));
-		protocol.setFilePath(rs.getString("file_path"));
-		protocol.setVersion(rs.getString("version"));
+		protocol.id = rs.getLong("id");
+		protocol.name = rs.getString("name");
+		protocol.filePath = rs.getString("file_path");
+		protocol.version = rs.getString("version");
 		long idProtocolCategory = rs.getLong("fk_protocol_category");
 		//Add reagent type
 		ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
-		List<ReagentType> reagentTypes = reagentTypeDAO.findByProtocol(protocol.getId());
-		protocol.setReagentTypes(reagentTypes);
+		List<ReagentType> reagentTypes = reagentTypeDAO.findByProtocol(protocol.id);
+		protocol.reagentTypes = reagentTypes;
 		//Get protocol category
 		ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
 		ProtocolCategory protocolCategory = protocolCategoryDAO.findById(idProtocolCategory);
-		protocol.setProtocolCategory(protocolCategory);
+		protocol.protocolCategory = protocolCategory;
 		return protocol;
 	}
 

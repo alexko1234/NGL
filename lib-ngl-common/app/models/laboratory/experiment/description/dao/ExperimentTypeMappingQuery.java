@@ -32,24 +32,24 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 			throws SQLException {
 		ExperimentType experimentType = new ExperimentType();
 		play.Logger.debug("Experiment type "+experimentType);
-		experimentType.setId(rs.getLong("id"));
+		experimentType.id = rs.getLong("id");
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		CommonInfoType commonInfoType = commonInfoTypeDAO.find(idCommonInfoType);
-		experimentType.setCommonInfoType(commonInfoType);
+		experimentType.commonInfoType = commonInfoType;
 		//Get nextExperimentType
 		ExperimentTypeDAO expTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-		List<ExperimentType> nextExpTypes = expTypeDAO.findNextExperiments(experimentType.getId());
-		experimentType.setNextExperimentTypes(nextExpTypes);
+		List<ExperimentType> nextExpTypes = expTypeDAO.findNextExperiments(experimentType.id);
+		experimentType.nextExperimentTypes = nextExpTypes;
 		//Get protocol
 		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
-		List<Protocol> protocols = protocolDAO.findByExperimentType(experimentType.getId());
-		experimentType.setProtocols(protocols);
+		List<Protocol> protocols = protocolDAO.findByExperimentType(experimentType.id);
+		experimentType.protocols = protocols;
 		//Get instrumentUsedType
 		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		List<InstrumentUsedType> instrumentUsedTypes = instrumentUsedTypeDAO.findByExperimentType(experimentType.getId());
-		experimentType.setInstrumentTypes(instrumentUsedTypes);
+		List<InstrumentUsedType> instrumentUsedTypes = instrumentUsedTypeDAO.findByExperimentType(experimentType.id);
+		experimentType.instrumentTypes = instrumentUsedTypes;
 		return experimentType;
 	}
 

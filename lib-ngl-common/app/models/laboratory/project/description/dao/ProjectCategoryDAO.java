@@ -37,10 +37,10 @@ public class ProjectCategoryDAO {
 	public ProjectCategory add(ProjectCategory projectCategory)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("name", projectCategory.getName());
-        parameters.put("code", projectCategory.getCode());
+        parameters.put("name", projectCategory.name);
+        parameters.put("code", projectCategory.code);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        projectCategory.setId(newId);
+        projectCategory.id = newId;
         return projectCategory;
 	}
 }

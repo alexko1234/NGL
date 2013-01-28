@@ -36,23 +36,23 @@ public class ReagentTypeDAO {
 	public ReagentType add(ReagentType reagentType)
 	{
 		//Check if commonInfoType exist
-		if(reagentType.getCommonInfoType()!=null && reagentType.getCommonInfoType().getId()==null)
+		if(reagentType.commonInfoType!=null && reagentType.commonInfoType.id==null)
 		{
 			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType cit = commonInfoTypeDAO.add(reagentType.getCommonInfoType());
-			reagentType.setCommonInfoType(cit);
+			CommonInfoType cit = commonInfoTypeDAO.add(reagentType.commonInfoType);
+			reagentType.commonInfoType = cit;
 		}
 		//Create new reagentType
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fk_common_info_type", reagentType.getCommonInfoType().getId());
+		parameters.put("fk_common_info_type", reagentType.commonInfoType.id);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-		reagentType.setId(newId);
+		reagentType.id = newId;
 		return reagentType;
 	}
 	
 	public void update(ReagentType reagentType)
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		commonInfoTypeDAO.update(reagentType.getCommonInfoType());
+		commonInfoTypeDAO.update(reagentType.commonInfoType);
 	}
 }

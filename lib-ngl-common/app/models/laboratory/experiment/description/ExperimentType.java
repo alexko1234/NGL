@@ -33,7 +33,7 @@ public class ExperimentType implements IDynamicType{
         LinkedHashMap<String,String> options = new LinkedHashMap<String,String>();
         ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
         for(ExperimentType c: experimentTypeDAO.findAll()) {
-            options.put(c.getInformations().getId().toString(), c.getInformations().getName());
+            options.put(c.getInformations().id.toString(), c.getInformations().name);
         }
         return options;
     }
@@ -43,7 +43,7 @@ public class ExperimentType implements IDynamicType{
 		Map<String, String> mapExperimentTypes = new HashMap<String, String>();
 		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		for(ExperimentType expType : experimentTypeDAO.findAll()){
-			mapExperimentTypes.put(expType.getId().toString(), expType.getCommonInfoType().getName());
+			mapExperimentTypes.put(expType.id.toString(), expType.commonInfoType.name);
 		}
 		return mapExperimentTypes;
 	}
@@ -53,8 +53,8 @@ public class ExperimentType implements IDynamicType{
 		Map<String, String> mapExperimentTypes = new HashMap<String, String>();
 		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		for(ExperimentType expType : experimentTypeDAO.findAll()){
-			if(expType.getId()!=filterId)
-				mapExperimentTypes.put(expType.getId().toString(), expType.getCommonInfoType().getName());
+			if(!expType.id.equals(filterId))
+				mapExperimentTypes.put(expType.id.toString(), expType.commonInfoType.name);
 		}
 		return mapExperimentTypes;
 	}
@@ -99,45 +99,7 @@ public class ExperimentType implements IDynamicType{
 		return experimentTypeDAO.findById(id);
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public List<ExperimentType> getNextExperimentTypes() {
-		return nextExperimentTypes;
-	}
-
-	public void setNextExperimentTypes(List<ExperimentType> nextExperimentTypes) {
-		this.nextExperimentTypes = nextExperimentTypes;
-	}
-
-	public List<Protocol> getProtocols() {
-		return protocols;
-	}
-
-	public void setProtocols(List<Protocol> protocols) {
-		this.protocols = protocols;
-	}
-
-	public List<InstrumentUsedType> getInstrumentTypes() {
-		return instrumentTypes;
-	}
-
-	public void setInstrumentTypes(List<InstrumentUsedType> instrumentTypes) {
-		this.instrumentTypes = instrumentTypes;
-	}
-
-	public CommonInfoType getCommonInfoType() {
-		return commonInfoType;
-	}
-
-	public void setCommonInfoType(CommonInfoType commonInfoType) {
-		this.commonInfoType = commonInfoType;
-	}
+	
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -148,10 +110,10 @@ public class ExperimentType implements IDynamicType{
 		if (getClass() != obj.getClass())
 			return false;
 		ExperimentType other = (ExperimentType) obj;
-		if (commonInfoType.getCode() == null) {
-			if (other.getCommonInfoType().getCode() != null)
+		if (commonInfoType.code == null) {
+			if (other.commonInfoType.code != null)
 				return false;
-		} else if (!commonInfoType.getCode().equals(other.getCommonInfoType().getCode()))
+		} else if (!commonInfoType.code.equals(other.commonInfoType.code))
 			return false;
 		return true;
 	}

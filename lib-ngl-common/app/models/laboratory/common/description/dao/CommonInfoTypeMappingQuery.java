@@ -30,30 +30,30 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 	protected CommonInfoType mapRow(ResultSet rs, int rowNumber)
 			throws SQLException {
 		CommonInfoType commonInfoType = new CommonInfoType();
-		commonInfoType.setId(rs.getLong("cId"));
-		commonInfoType.setName(rs.getString("name"));
-		commonInfoType.setCode(rs.getString("code"));
-		commonInfoType.setCollectionName(rs.getString("collection_name"));
+		commonInfoType.id = rs.getLong("cId");
+		commonInfoType.name = rs.getString("name");
+		commonInfoType.code = rs.getString("code");
+		commonInfoType.collectionName = rs.getString("collection_name");
 		//Get object Type
 		ObjectType objectType = new ObjectType();
-		objectType.setId(rs.getLong("oId"));
-		objectType.setType(rs.getString("type"));
-		objectType.setGeneric(rs.getBoolean("generic"));
-		commonInfoType.setObjectType(objectType);
+		objectType.id = rs.getLong("oId");
+		objectType.type = rs.getString("type");
+		objectType.generic =rs.getBoolean("generic");
+		commonInfoType.objectType = objectType;
 
 		//Get variables State
 		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		List<State> states = stateDAO.findByCommonInfoType(commonInfoType.getId());
-		commonInfoType.setVariableStates(states);
+		List<State> states = stateDAO.findByCommonInfoType(commonInfoType.id);
+		commonInfoType.variableStates = states;
 
 		//Get Resolutions
 		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		List<Resolution> resolutions = resolutionDAO.findByCommonInfoType(commonInfoType.getId());
-		commonInfoType.setResolutions(resolutions);
+		List<Resolution> resolutions = resolutionDAO.findByCommonInfoType(commonInfoType.id);
+		commonInfoType.resolutions = resolutions;
 
 		//Get properties
 		PropertyDefinitionDAO propertyDefinitionDAO = Spring.getBeanOfType(PropertyDefinitionDAO.class);
-		List<PropertyDefinition> properties = propertyDefinitionDAO.findByCommonInfoType(commonInfoType.getId());
+		List<PropertyDefinition> properties = propertyDefinitionDAO.findByCommonInfoType(commonInfoType.id);
 		commonInfoType.setPropertiesDefinition(properties);
 		return commonInfoType;
 	}

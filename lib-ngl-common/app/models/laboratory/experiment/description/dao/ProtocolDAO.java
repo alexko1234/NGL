@@ -50,31 +50,31 @@ public class ProtocolDAO {
 	public Protocol add(Protocol protocol, long idExpType)
 	{
 		//Check if category exist
-		if(protocol.getProtocolCategory()!=null && protocol.getProtocolCategory().getId()==null)
+		if(protocol.protocolCategory!=null && protocol.protocolCategory.id==null)
 		{
 			ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
-			ProtocolCategory pc = protocolCategoryDAO.add(protocol.getProtocolCategory());
-			protocol.setProtocolCategory(pc);
+			ProtocolCategory pc = protocolCategoryDAO.add(protocol.protocolCategory);
+			protocol.protocolCategory = pc;
 		}
 
 		//Create new Protocol
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("name", protocol.getName());
-		parameters.put("file_path", protocol.getFilePath());
-		parameters.put("version", protocol.getVersion());
+		parameters.put("name", protocol.name);
+		parameters.put("file_path", protocol.filePath);
+		parameters.put("version", protocol.version);
 		parameters.put("fk_experiment_type", idExpType);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-		protocol.setId(newId);
+		protocol.id = newId;
 
 		//Add reagent type list
-		List<ReagentType> reagentTypes = protocol.getReagentTypes();
+		List<ReagentType> reagentTypes = protocol.reagentTypes;
 		if(reagentTypes!=null && reagentTypes.size()>0){
 			ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
 			String sql = "INSERT INTO protocol_reagent_type (fk_protocol,fk_reagent_type) VALUES(?,?)";
 			for(ReagentType reagentType : reagentTypes){
-				if(reagentType.getId()==null)
+				if(reagentType.id==null)
 					reagentType = reagentTypeDAO.add(reagentType);
-				jdbcTemplate.update(sql, newId,reagentType.getId());
+				jdbcTemplate.update(sql, newId,reagentType.id);
 			}
 		}
 		return protocol;
@@ -82,21 +82,21 @@ public class ProtocolDAO {
 
 	public void update(Protocol protocol)
 	{
-		Protocol protoDB = findById(protocol.getId());
+		Protocol protoDB = findById(protocol.id);
 
 		String sql = "UPDATE protocol SET name=?, file_path=?, version=? WHERE id=?";
-		jdbcTemplate.update(sql, protocol.getName(), protocol.getFilePath(), protocol.getVersion(), protocol.getId());
+		jdbcTemplate.update(sql, protocol.name, protocol.filePath, protocol.version, protocol.id);
 
 		//Update reagentTypes list
-		List<ReagentType> reagentTypes = protocol.getReagentTypes();
+		List<ReagentType> reagentTypes = protocol.reagentTypes;
 		if(reagentTypes!=null && reagentTypes.size()>0){
 			ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
 			String sqlReagent = "INSERT INTO protocol_reagent_type (fk_protocol,fk_reagent_type) VALUES(?,?)";
 			for(ReagentType reagentType : reagentTypes){
-				if(protoDB.getReagentTypes()==null || (protoDB.getReagentTypes()!=null && !protoDB.getReagentTypes().contains(reagentType))){
-					if(reagentType.getCommonInfoType()==null)
+				if(protoDB.reagentTypes==null || (protoDB.reagentTypes!=null && !protoDB.reagentTypes.contains(reagentType))){
+					if(reagentType.commonInfoType==null)
 						reagentType = reagentTypeDAO.add(reagentType);
-					jdbcTemplate.update(sqlReagent, protoDB.getId(), reagentType.getId());
+					jdbcTemplate.update(sqlReagent, protoDB.id, reagentType.id);
 				}
 			}
 

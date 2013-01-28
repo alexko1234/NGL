@@ -36,17 +36,17 @@ public class InstrumentDAO {
 	public Instrument add(Instrument instrument, long idInstrumentUsedType)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("name", instrument.getName());
-        parameters.put("code", instrument.getCode());
+        parameters.put("name", instrument.name);
+        parameters.put("code", instrument.code);
         parameters.put("instrument_used_type_id", idInstrumentUsedType);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        instrument.setId(newId);
+        instrument.id = newId;
         return instrument;
 	}
 	
 	public void update(Instrument instrument)
 	{
 		String sql = "UPDATE instrument SET name=? WHERE id=?";
-		jdbcTemplate.update(sql, instrument.getName(), instrument.getId());
+		jdbcTemplate.update(sql, instrument.name, instrument.id);
 	}
 }

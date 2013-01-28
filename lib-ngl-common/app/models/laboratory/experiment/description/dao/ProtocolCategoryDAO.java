@@ -37,10 +37,10 @@ public class ProtocolCategoryDAO {
 	public ProtocolCategory add(ProtocolCategory protocolCategory)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("name", protocolCategory.getName());
-        parameters.put("code", protocolCategory.getCode());
+        parameters.put("name", protocolCategory.name);
+        parameters.put("code", protocolCategory.code);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        protocolCategory.setId(newId);
+        protocolCategory.id = newId;
         return protocolCategory;
 	}
 }

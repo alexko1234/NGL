@@ -56,12 +56,12 @@ public class StateDAO {
 	public State add(State state)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("name", state.getName());
-        parameters.put("code", state.getCode());
-        parameters.put("active", state.getActive());
-        parameters.put("priority", state.getPriority());
+        parameters.put("name", state.name);
+        parameters.put("code", state.code);
+        parameters.put("active", state.active);
+        parameters.put("priority", state.priority);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        state.setId(newId);
+        state.id = newId;
         return state;
 	}
 	
@@ -73,6 +73,6 @@ public class StateDAO {
 	public void update(State state)
 	{
 		String sql = "UPDATE state SET name=?, active=?, priority=? WHERE id=?";
-		jdbcTemplate.update(sql, state.getName(), state.getActive(), state.getPriority(), state.getId());
+		jdbcTemplate.update(sql, state.name, state.active, state.priority, state.id);
 	}
 }

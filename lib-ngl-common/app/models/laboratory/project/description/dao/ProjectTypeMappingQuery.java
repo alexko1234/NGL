@@ -31,17 +31,17 @@ public class ProjectTypeMappingQuery extends MappingSqlQuery<ProjectType>{
 	@Override
 	protected ProjectType mapRow(ResultSet rs, int rowNum) throws SQLException {
 		ProjectType projectType = new ProjectType();
-		projectType.setId(rs.getLong("id"));
+		projectType.id = rs.getLong("id");
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		long idProjectCategory = rs.getLong("fk_project_category");
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		CommonInfoType commonInfoType = commonInfoTypeDAO.find(idCommonInfoType);
-		projectType.setCommonInfoType(commonInfoType);
+		projectType.commonInfoType = commonInfoType;
 		//Get category
 		ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
 		ProjectCategory projectCategory = projectCategoryDAO.findById(idProjectCategory);
-		projectType.setProjectCategory(projectCategory);
+		projectType.projectCategory = projectCategory;
 		return projectType;
 	}
 

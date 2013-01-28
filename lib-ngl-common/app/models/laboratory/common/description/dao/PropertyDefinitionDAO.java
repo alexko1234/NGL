@@ -53,95 +53,97 @@ public class PropertyDefinitionDAO {
 	{
 		//Create propertyDefinition
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("code", propertyDefinition.getCode());
-		parameters.put("name", propertyDefinition.getName());
-		parameters.put("description", propertyDefinition.getDescription());
-		parameters.put("required", propertyDefinition.getRequired());
-		parameters.put("active", propertyDefinition.getActive());
-		parameters.put("choice_in_list", propertyDefinition.getChoiceInList());
-		parameters.put("type", propertyDefinition.getType());
-		parameters.put("display_format", propertyDefinition.getDisplayFormat());
-		parameters.put("display_order", propertyDefinition.getDisplayOrder());
-		parameters.put("default_value", propertyDefinition.getDefaultValue());
-		parameters.put("level", propertyDefinition.getLevel());
-		parameters.put("in_out", propertyDefinition.getInOut());
-		parameters.put("propagation", propertyDefinition.getPropagation());
+		parameters.put("code", propertyDefinition.code);
+		parameters.put("name", propertyDefinition.name);
+		parameters.put("description", propertyDefinition.description);
+		parameters.put("required", propertyDefinition.required);
+		parameters.put("active", propertyDefinition.active);
+		parameters.put("choice_in_list", propertyDefinition.choiceInList);
+		parameters.put("type", propertyDefinition.type);
+		parameters.put("display_format", propertyDefinition.displayFormat);
+		parameters.put("display_order", propertyDefinition.displayOrder);
+		parameters.put("default_value", propertyDefinition.defaultValue);
+		parameters.put("level", propertyDefinition.level);
+		parameters.put("in_out", propertyDefinition.inOut);
+		parameters.put("propagation", propertyDefinition.propagation);
 		parameters.put("common_info_type_id", idCommonInfoType);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-		propertyDefinition.setId(newId);
+		propertyDefinition.id = newId;
 
 		//Add values list
-		List<Value> values = propertyDefinition.getPossibleValues();
+		List<Value> values = propertyDefinition.possibleValues;
 		if(values!=null && values.size()>0){
 			ValueDAO valueDao = Spring.getBeanOfType(ValueDAO.class);
 			for(Value value : values){
-				valueDao.add(value, propertyDefinition.getId());
+				valueDao.add(value, propertyDefinition.id);
 			}
 		}
 
 		//Add measureCategory
-		if(propertyDefinition.getMeasureCategory()!=null){
-			if(propertyDefinition.getMeasureCategory().getId()==null){
+		if(propertyDefinition.measureCategory!=null){
+			if(propertyDefinition.measureCategory.id==null){
 
 				MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-				propertyDefinition.setMeasureCategory(measureCategoryDAO.add(propertyDefinition.getMeasureCategory()));
+				propertyDefinition.measureCategory = measureCategoryDAO.add(propertyDefinition.measureCategory);
 			}
 			//Update propertyDefinition
 			String sqlCategory = "UPDATE property_definition SET measure_category_id=? WHERE id=?";
-			jdbcTemplate.update(sqlCategory, propertyDefinition.getMeasureCategory().getId(), propertyDefinition.getId());
+			jdbcTemplate.update(sqlCategory, propertyDefinition.measureCategory.id, propertyDefinition.id);
 		}
 
 		//Add measureValue
-		if(propertyDefinition.getMeasureValue()!=null){
-			if(propertyDefinition.getMeasureValue().getId()==null){
+		if(propertyDefinition.measureValue!=null){
+			if(propertyDefinition.measureValue.id==null){
 				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-				propertyDefinition.setMeasureValue(measureValueDAO.add(propertyDefinition.getMeasureValue(),propertyDefinition.getMeasureCategory().getId()));
+				propertyDefinition.measureValue.measureCateroryId = propertyDefinition.measureCategory.id;
+				propertyDefinition.measureValue = measureValueDAO.add(propertyDefinition.measureValue);
 			}
 			//Update propertyDefinition
 			String sqlValue = "UPDATE property_definition SET measure_value_id=? WHERE id=?";
-			jdbcTemplate.update(sqlValue, propertyDefinition.getMeasureValue().getId(), propertyDefinition.getId());
+			jdbcTemplate.update(sqlValue, propertyDefinition.measureValue.id, propertyDefinition.id);
 		}
 		return propertyDefinition;
 	}
 
 	public void update(PropertyDefinition propertyDefinition)
 	{
-		PropertyDefinition propertyDefinitionDB = findById(propertyDefinition.getId());
+		PropertyDefinition propertyDefinitionDB = findById(propertyDefinition.id);
 		String sql = "UPDATE property_definition SET name=?, description=?, required=?, active=?,choice_in_list=?, type=?, display_format=?, display_order=?, default_value=?, level=?, in_out=?, propagation=? WHERE id=?";
-		jdbcTemplate.update(sql, propertyDefinition.getName(), propertyDefinition.getDescription(), propertyDefinition.getRequired(), propertyDefinition.getActive(), propertyDefinition.getChoiceInList(), propertyDefinition.getType(), propertyDefinition.getDisplayFormat(), propertyDefinition.getDisplayOrder(), propertyDefinition.getDefaultValue(), propertyDefinition.getLevel(), propertyDefinition.getInOut(), propertyDefinition.getPropagation(), propertyDefinition.getId());
+		jdbcTemplate.update(sql, propertyDefinition.name, propertyDefinition.description, propertyDefinition.required, propertyDefinition.active, propertyDefinition.choiceInList, propertyDefinition.type, propertyDefinition.displayFormat, propertyDefinition.displayOrder, propertyDefinition.defaultValue, propertyDefinition.level, propertyDefinition.inOut, propertyDefinition.propagation, propertyDefinition.id);
 
 		//Update values list (add new)
-		List<Value> values = propertyDefinition.getPossibleValues();
+		List<Value> values = propertyDefinition.possibleValues;
 		if(values!=null && values.size()>0){
 			ValueDAO valueDao = Spring.getBeanOfType(ValueDAO.class);
 			for(Value value : values){
-				if(propertyDefinitionDB.getPossibleValues()==null || (propertyDefinition.getPossibleValues()!=null && !propertyDefinitionDB.getPossibleValues().contains(value))){
-					valueDao.add(value, propertyDefinition.getId());
+				if(propertyDefinitionDB.possibleValues==null || (propertyDefinition.possibleValues!=null && !propertyDefinitionDB.possibleValues.contains(value))){
+					valueDao.add(value, propertyDefinition.id);
 				}
 			}
 		}
 
 		//Update measure category
-		if(propertyDefinition.getMeasureCategory()!=null){
-			if(propertyDefinition.getMeasureCategory().getId()==null){
+		if(propertyDefinition.measureCategory!=null){
+			if(propertyDefinition.measureCategory.id==null){
 
 				MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-				propertyDefinition.setMeasureCategory(measureCategoryDAO.add(propertyDefinition.getMeasureCategory()));
+				propertyDefinition.measureCategory = measureCategoryDAO.add(propertyDefinition.measureCategory);
 			}
 			//Update propertyDefinition
 			String sqlCategory = "UPDATE property_definition SET measure_category_id=? WHERE id=?";
-			jdbcTemplate.update(sqlCategory, propertyDefinition.getMeasureCategory().getId(), propertyDefinition.getId());
+			jdbcTemplate.update(sqlCategory, propertyDefinition.measureCategory.id, propertyDefinition.id);
 		}
 
 		//Update measureValue
-		if(propertyDefinition.getMeasureValue()!=null){
-			if(propertyDefinition.getMeasureValue().getId()==null){
+		if(propertyDefinition.measureValue!=null){
+			if(propertyDefinition.measureValue.id==null){
 				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-				propertyDefinition.setMeasureValue(measureValueDAO.add(propertyDefinition.getMeasureValue(),propertyDefinition.getMeasureCategory().getId()));
+				propertyDefinition.measureValue.measureCateroryId = propertyDefinition.measureCategory.id;
+				propertyDefinition.measureValue = measureValueDAO.add(propertyDefinition.measureValue);
 			}
 			//Update propertyDefinition
 			String sqlValue = "UPDATE property_definition SET measure_value_id=? WHERE id=?";
-			jdbcTemplate.update(sqlValue, propertyDefinition.getMeasureValue().getId(), propertyDefinition.getId());
+			jdbcTemplate.update(sqlValue, propertyDefinition.measureValue.id, propertyDefinition.id);
 		}
 	}
 }

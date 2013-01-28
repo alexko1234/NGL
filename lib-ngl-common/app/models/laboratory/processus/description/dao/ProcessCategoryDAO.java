@@ -37,10 +37,10 @@ public class ProcessCategoryDAO {
 	public ProcessCategory add(ProcessCategory processCategory)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("name", processCategory.getName());
-        parameters.put("code", processCategory.getCode());
+        parameters.put("name", processCategory.name);
+        parameters.put("code", processCategory.code);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        processCategory.setId(newId);
+        processCategory.id = newId;
         return processCategory;
 	}
 }

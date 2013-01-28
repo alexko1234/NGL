@@ -40,7 +40,7 @@ public class InstrumentUsedType implements IDynamicType{
 		Map<String, String> mapInstrumentTypes = new HashMap<String, String>();
 		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
 		for(InstrumentUsedType instType : instrumentUsedTypeDAO.findAll()){
-			mapInstrumentTypes.put(instType.getId().toString(), instType.getCommonInfoType().getName());
+			mapInstrumentTypes.put(instType.id.toString(), instType.commonInfoType.name);
 		}
 		return mapInstrumentTypes;
 	}
@@ -56,38 +56,7 @@ public class InstrumentUsedType implements IDynamicType{
 		return instrumentUsedTypeDAO.findByCommonInfoType(idCommonInfoType);
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public CommonInfoType getCommonInfoType() {
-		return commonInfoType;
-	}
-
-	public void setCommonInfoType(CommonInfoType commonInfoType) {
-		this.commonInfoType = commonInfoType;
-	}
-
-	public List<Instrument> getInstruments() {
-		return instruments;
-	}
-
-	public void setInstruments(List<Instrument> instruments) {
-		this.instruments = instruments;
-	}
-
 	
-	public InstrumentCategory getInstrumentCategory() {
-		return instrumentCategory;
-	}
-
-	public void setInstrumentCategory(InstrumentCategory instrumentCategory) {
-		this.instrumentCategory = instrumentCategory;
-	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -98,10 +67,10 @@ public class InstrumentUsedType implements IDynamicType{
 		if (getClass() != obj.getClass())
 			return false;
 		InstrumentUsedType other = (InstrumentUsedType) obj;
-		if (commonInfoType.getCode() == null) {
-			if (other.getCommonInfoType().getCode() != null)
+		if (commonInfoType.code == null) {
+			if (other.commonInfoType.code != null)
 				return false;
-		} else if (!commonInfoType.getCode().equals(other.getCommonInfoType().getCode()))
+		} else if (!commonInfoType.code.equals(other.commonInfoType.code))
 			return false;
 		return true;
 	}

@@ -64,32 +64,32 @@ public class InstrumentUsedTypeDAO {
 	public InstrumentUsedType add(InstrumentUsedType instrumentUsedType)
 	{
 		//Check if commonInfoType exist
-		if(instrumentUsedType.getCommonInfoType()!=null && instrumentUsedType.getCommonInfoType().getId()==null)
+		if(instrumentUsedType.commonInfoType!=null && instrumentUsedType.commonInfoType.id==null)
 		{
 			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType cit = commonInfoTypeDAO.add(instrumentUsedType.getCommonInfoType());
-			instrumentUsedType.setCommonInfoType(cit);
+			CommonInfoType cit = commonInfoTypeDAO.add(instrumentUsedType.commonInfoType);
+			instrumentUsedType.commonInfoType = cit;
 		}
 		//Check if instrumentCategory exist
-		if(instrumentUsedType.getInstrumentCategory()!=null && instrumentUsedType.getInstrumentCategory().getId()==null)
+		if(instrumentUsedType.instrumentCategory!=null && instrumentUsedType.instrumentCategory.id==null)
 		{
 			
 			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType cit = commonInfoTypeDAO.add(instrumentUsedType.getCommonInfoType());
-			instrumentUsedType.setCommonInfoType(cit);
+			CommonInfoType cit = commonInfoTypeDAO.add(instrumentUsedType.commonInfoType);
+			instrumentUsedType.commonInfoType = cit;
 		}
 		//Create new InstrumentUsedType
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fk_common_info_type", instrumentUsedType.getCommonInfoType().getId());
+		parameters.put("fk_common_info_type", instrumentUsedType.commonInfoType.id);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-		instrumentUsedType.setId(newId);
+		instrumentUsedType.id = newId;
 
 		//Add instruments list
-		List<Instrument> instruments = instrumentUsedType.getInstruments();
+		List<Instrument> instruments = instrumentUsedType.instruments;
 		if(instruments!=null && instruments.size()>0){
 			InstrumentDAO instrumentDAO = Spring.getBeanOfType(InstrumentDAO.class);
 			for(Instrument instrument : instruments){
-				instrumentDAO.add(instrument, instrumentUsedType.getId());
+				instrumentDAO.add(instrument, instrumentUsedType.id);
 			}
 		}
 		return instrumentUsedType;
@@ -97,19 +97,18 @@ public class InstrumentUsedTypeDAO {
 
 	public void update(InstrumentUsedType instrumentUsedType) 
 	{
-		InstrumentUsedType instrumentUsedTypeDB = findById(instrumentUsedType.getId());
+		InstrumentUsedType instrumentUsedTypeDB = findById(instrumentUsedType.id);
 
 		//Update commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		commonInfoTypeDAO.update(instrumentUsedType.getCommonInfoType());
+		commonInfoTypeDAO.update(instrumentUsedType.commonInfoType);
 
 		//Update instrument list
-		List<Instrument> instruments = instrumentUsedType.getInstruments();
+		List<Instrument> instruments = instrumentUsedType.instruments;
 		if(instruments!=null && instruments.size()>0){
 			InstrumentDAO instrumentDAO = Spring.getBeanOfType(InstrumentDAO.class);
 			for(Instrument instrument : instruments){
-				if(instrumentUsedTypeDB==null || (instrumentUsedTypeDB!=null && !instrumentUsedTypeDB.getInstruments().contains(instrument))){
-					instrumentDAO.add(instrument, instrumentUsedTypeDB.getId());
+				if(instrumentUsedTypeDB==null || (instrumentUsedTypeDB!=null && !instrumentUsedTypeDB.instruments.contains(instrument))){
 				}
 			}
 		}

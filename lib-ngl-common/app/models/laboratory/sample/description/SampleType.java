@@ -29,29 +29,6 @@ public class SampleType implements IDynamicType{
 		return sampleTypeDAO.findById(id);
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public CommonInfoType getCommonInfoType() {
-		return commonInfoType;
-	}
-
-	public void setCommonInfoType(CommonInfoType commonInfoType) {
-		this.commonInfoType = commonInfoType;
-	}
-
-	public SampleCategory getSampleCategory() {
-		return sampleCategory;
-	}
-
-	public void setSampleCategory(SampleCategory sampleCategory) {
-		this.sampleCategory = sampleCategory;
-	}
-	
+		
 	
 }

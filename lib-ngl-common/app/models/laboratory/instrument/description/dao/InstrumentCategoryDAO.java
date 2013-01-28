@@ -38,9 +38,9 @@ public class InstrumentCategoryDAO {
 		InstrumentCategory instrumentCategory = this.jdbcTemplate.queryForObject(sql, mapper, id);
 		ContainerSupportCategoryDAO containerSupportCategoryDAO = Spring.getBeanOfType(ContainerSupportCategoryDAO.class);
 		//Find inContainerSupportCategories
-		instrumentCategory.setInContainerSupportCategories(containerSupportCategoryDAO.findInByInstrumentCategory(instrumentCategory.getId()));
+		instrumentCategory.inContainerSupportCategories = containerSupportCategoryDAO.findInByInstrumentCategory(instrumentCategory.id);
 		//Find outContainerSupportCategorie
-		instrumentCategory.setOutContainerSupportCategories(containerSupportCategoryDAO.findOutByInstrumentCategory(instrumentCategory.getId()));
+		instrumentCategory.outContainerSupportCategories = containerSupportCategoryDAO.findOutByInstrumentCategory(instrumentCategory.id);
 		return instrumentCategory;
 	}
 	
@@ -48,22 +48,22 @@ public class InstrumentCategoryDAO {
 	public InstrumentCategory add(InstrumentCategory instrumentCategory)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("name", instrumentCategory.getName());
-        parameters.put("code", instrumentCategory.getCode());
+        parameters.put("name", instrumentCategory.name);
+        parameters.put("code", instrumentCategory.code);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        instrumentCategory.setId(newId);
+        instrumentCategory.id = newId;
         
         //Add in and out containerSupportCategories
-        if(instrumentCategory.getInContainerSupportCategories()!=null && instrumentCategory.getInContainerSupportCategories().size()>0){
+        if(instrumentCategory.inContainerSupportCategories!=null && instrumentCategory.inContainerSupportCategories.size()>0){
         	String sqlIn = "INSERT INTO instrumentCategory_inContainerSupportCategory(fk_instrument_category,fk_container_support_category) VALUES(?,?)";
-        	for(ContainerSupportCategory containerSupportCategory : instrumentCategory.getInContainerSupportCategories()){
-        		jdbcTemplate.update(sqlIn, instrumentCategory.getId(), containerSupportCategory.getId());
+        	for(ContainerSupportCategory containerSupportCategory : instrumentCategory.inContainerSupportCategories){
+        		jdbcTemplate.update(sqlIn, instrumentCategory.id, containerSupportCategory.id);
         	}
         }
-        if(instrumentCategory.getOutContainerSupportCategories()!=null && instrumentCategory.getOutContainerSupportCategories().size()>0){
+        if(instrumentCategory.outContainerSupportCategories!=null && instrumentCategory.outContainerSupportCategories.size()>0){
         	String sqlOut = "INSERT INTO instrumentCategory_outContainerSupportCategory(fk_instrument_category,fk_container_support_category) VALUES(?,?)";
-        	for(ContainerSupportCategory containerSupportCategory : instrumentCategory.getOutContainerSupportCategories()){
-        		jdbcTemplate.update(sqlOut, instrumentCategory.getId(), containerSupportCategory.getId());
+        	for(ContainerSupportCategory containerSupportCategory : instrumentCategory.outContainerSupportCategories){
+        		jdbcTemplate.update(sqlOut, instrumentCategory.id, containerSupportCategory.id);
         	}
         }
         

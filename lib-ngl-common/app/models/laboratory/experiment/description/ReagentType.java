@@ -8,25 +8,6 @@ public class ReagentType{
 	
 	public CommonInfoType commonInfoType;
 	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-
-	public CommonInfoType getCommonInfoType() {
-		return commonInfoType;
-	}
-
-
-
-	public void setCommonInfoType(CommonInfoType commonInfoType) {
-		this.commonInfoType = commonInfoType;
-	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -37,10 +18,10 @@ public class ReagentType{
 		if (getClass() != obj.getClass())
 			return false;
 		ReagentType other = (ReagentType) obj;
-		if (commonInfoType.getCode() == null) {
-			if (other.getCommonInfoType().getCode() != null)
+		if (commonInfoType.code == null) {
+			if (other.commonInfoType.code != null)
 				return false;
-		} else if (!commonInfoType.getCode().equals(other.getCommonInfoType().getCode()))
+		} else if (!commonInfoType.code.equals(other.commonInfoType.code))
 			return false;
 		return true;
 	}

@@ -34,29 +34,7 @@ public class ObjectType{
 		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
 		return objectTypeDAO.findById(id);
 	}
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public Boolean getGeneric() {
-		return generic;
-	}
-
-	public void setGeneric(Boolean generic) {
-		this.generic = generic;
-	}
+	
 	
 	
 }

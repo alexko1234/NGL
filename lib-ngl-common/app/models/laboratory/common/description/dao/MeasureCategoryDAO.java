@@ -27,10 +27,10 @@ public class MeasureCategoryDAO {
 	public MeasureCategory add(MeasureCategory measureCategory)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("name", measureCategory.getName());
-        parameters.put("code", measureCategory.getCode());
+        parameters.put("name", measureCategory.name);
+        parameters.put("code", measureCategory.code);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        measureCategory.setId(newId);
+        measureCategory.id = newId;
 		return measureCategory;
 	}
 	
@@ -38,6 +38,6 @@ public class MeasureCategoryDAO {
 	public void update(MeasureCategory measureCategory)
 	{
 		String sql = "UPDATE measure_category SET name=? WHERE id=?";
-		jdbcTemplate.update(sql, measureCategory.getName(), measureCategory.getId());
+		jdbcTemplate.update(sql, measureCategory.name, measureCategory.id);
 	}
 }

@@ -36,31 +36,31 @@ public class ProjectTypeDAO {
 	public ProjectType add(ProjectType projectType)
 	{
 		//Check if commonInfoType exist
-		if(projectType.getCommonInfoType()!=null && projectType.getCommonInfoType().getId()==null)
+		if(projectType.commonInfoType!=null && projectType.commonInfoType.id==null)
 		{
 			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType cit = commonInfoTypeDAO.add(projectType.getCommonInfoType());
-			projectType.setCommonInfoType(cit);
+			CommonInfoType cit = commonInfoTypeDAO.add(projectType.commonInfoType);
+			projectType.commonInfoType = cit;
 		}
 		//Check if category exist
-		if(projectType.getProjectCategory()!=null && projectType.getProjectCategory().getId()==null)
+		if(projectType.projectCategory!=null && projectType.projectCategory.id==null)
 		{
 			ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
-			ProjectCategory pc = projectCategoryDAO.add(projectType.getProjectCategory());
-			projectType.setProjectCategory(pc);
+			ProjectCategory pc = projectCategoryDAO.add(projectType.projectCategory);
+			projectType.projectCategory = pc;
 		}
 		//Create new reagentType
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fk_common_info_type", projectType.getCommonInfoType().getId());
-		parameters.put("fk_project_category", projectType.getProjectCategory().getId());
+		parameters.put("fk_common_info_type", projectType.commonInfoType.id);
+		parameters.put("fk_project_category", projectType.projectCategory.id);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-		projectType.setId(newId);
+		projectType.id = newId;
 		return projectType;
 	}
 	
 	public void update(ProjectType projectType)
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		commonInfoTypeDAO.update(projectType.getCommonInfoType());
+		commonInfoTypeDAO.update(projectType.commonInfoType);
 	}
 }

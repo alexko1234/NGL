@@ -31,40 +31,40 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 	protected PropertyDefinition mapRow(ResultSet rs, int rowNumber)
 			throws SQLException {
 		PropertyDefinition propertyDefinition = new PropertyDefinition();
-		propertyDefinition.setId(rs.getLong("pId"));
-		propertyDefinition.setName(rs.getString("pName"));
-		propertyDefinition.setCode(rs.getString("pCode"));
-		propertyDefinition.setDescription(rs.getString("description"));
-		propertyDefinition.setRequired(rs.getBoolean("required"));
-		propertyDefinition.setActive(rs.getBoolean("active"));
-		propertyDefinition.setChoiceInList(rs.getBoolean("choice_in_list"));
-		propertyDefinition.setType(rs.getString("type"));
-		propertyDefinition.setDisplayFormat(rs.getString("display_format"));
-		propertyDefinition.setDisplayOrder(rs.getInt("display_order"));
-		propertyDefinition.setDefaultValue(rs.getString("pDefaultValue"));
-		propertyDefinition.setLevel(rs.getString("level"));
-		propertyDefinition.setInOut(rs.getString("in_out"));
-		propertyDefinition.setPropagation(rs.getBoolean("propagation"));
+		propertyDefinition.id = rs.getLong("pId");
+		propertyDefinition.name = rs.getString("pName");
+		propertyDefinition.code = rs.getString("pCode");
+		propertyDefinition.description = rs.getString("description");
+		propertyDefinition.required = rs.getBoolean("required");
+		propertyDefinition.active = rs.getBoolean("active");
+		propertyDefinition.choiceInList = rs.getBoolean("choice_in_list");
+		propertyDefinition.type = rs.getString("type");
+		propertyDefinition.displayFormat = rs.getString("display_format");
+		propertyDefinition.displayOrder = rs.getInt("display_order");
+		propertyDefinition.defaultValue = rs.getString("pDefaultValue");
+		propertyDefinition.level = rs.getString("level");
+		propertyDefinition.inOut = rs.getString("in_out");
+		propertyDefinition.propagation = rs.getBoolean("propagation");
 		//Add measure category
 		if(rs.getLong("mcId")!=0){
 			MeasureCategory measureCategory = new MeasureCategory();
-			measureCategory.setId(rs.getLong("mcId"));
-			measureCategory.setName(rs.getString("mcName"));
-			measureCategory.setCode(rs.getString("mcCode"));
-			propertyDefinition.setMeasureCategory(measureCategory);
+			measureCategory.id = rs.getLong("mcId");
+			measureCategory.name = rs.getString("mcName");
+			measureCategory.code = rs.getString("mcCode");
+			propertyDefinition.measureCategory = measureCategory;
 		}
 		//Add measure value
 		if(rs.getLong("mvId")!=0){
 			MeasureValue measureValue = new MeasureValue();
-			measureValue.setId(rs.getLong("mvId"));
-			measureValue.setDefaultValue(rs.getBoolean("mvDefaultValue"));
-			measureValue.setValue(rs.getString("value"));
-			propertyDefinition.setMeasureValue(measureValue);
+			measureValue.id = rs.getLong("mvId");
+			measureValue.defaultValue = rs.getBoolean("mvDefaultValue");
+			measureValue.value = rs.getString("value");
+			propertyDefinition.measureValue = measureValue;
 		}
 		//Add possible values
 		ValueDAO valueDAO = Spring.getBeanOfType(ValueDAO.class);
-		List<Value> values = valueDAO.findByPropertyDefinition(propertyDefinition.getId());
-		propertyDefinition.setPossibleValues(values);
+		List<Value> values = valueDAO.findByPropertyDefinition(propertyDefinition.id);
+		propertyDefinition.possibleValues = values;
 		
 		return propertyDefinition;
 	}

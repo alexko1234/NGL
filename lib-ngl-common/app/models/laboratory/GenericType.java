@@ -28,7 +28,7 @@ public class GenericType implements IDynamicType{
 
 	@Override
 	public long getIdType() {
-		return commonInfoType.getId();
+		return commonInfoType.id;
 	}
 
 	@Override

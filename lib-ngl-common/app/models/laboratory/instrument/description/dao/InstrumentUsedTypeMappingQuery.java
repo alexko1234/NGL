@@ -32,21 +32,21 @@ public class InstrumentUsedTypeMappingQuery extends MappingSqlQuery<InstrumentUs
 	protected InstrumentUsedType mapRow(ResultSet rs, int rowNumber)
 			throws SQLException {
 		InstrumentUsedType instrumentUsedType = new InstrumentUsedType();
-		instrumentUsedType.setId(rs.getLong("id"));
+		instrumentUsedType.id = rs.getLong("id");
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		long idInstrumentCategory = rs.getLong("fk_instrument_category");
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		CommonInfoType commonInfoType = commonInfoTypeDAO.find(idCommonInfoType);
-		instrumentUsedType.setCommonInfoType(commonInfoType);
+		instrumentUsedType.commonInfoType = commonInfoType;
 		//Get instrument category
 		InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
 		InstrumentCategory instrumentCategory = instrumentCategoryDAO.findById(idInstrumentCategory);
-		instrumentUsedType.setInstrumentCategory(instrumentCategory);
+		instrumentUsedType.instrumentCategory = instrumentCategory;
 		//Get instrument
 		InstrumentDAO instrumentDAO = Spring.getBeanOfType(InstrumentDAO.class);
-		List<Instrument> instruments = instrumentDAO.findByInstrumentUsedType(instrumentUsedType.getId());
-		instrumentUsedType.setInstruments(instruments);
+		List<Instrument> instruments = instrumentDAO.findByInstrumentUsedType(instrumentUsedType.id);
+		instrumentUsedType.instruments = instruments;
 		return instrumentUsedType;
 	}
 

@@ -36,32 +36,32 @@ public class ProcessTypeDAO {
 	public ProcessType add(ProcessType processType)
 	{
 		//Check if commonInfoType exist
-		if(processType.getCommonInfoType()!=null && processType.getCommonInfoType().getId()==null)
+		if(processType.commonInfoType!=null && processType.commonInfoType.id==null)
 		{
 			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType cit = commonInfoTypeDAO.add(processType.getCommonInfoType());
-			processType.setCommonInfoType(cit);
+			CommonInfoType cit = commonInfoTypeDAO.add(processType.commonInfoType);
+			processType.commonInfoType = cit;
 		}
 		//Check if category exist
-		if(processType.getProcessCategory()!=null && processType.getProcessCategory().getId()==null)
+		if(processType.processCategory!=null && processType.processCategory.id==null)
 		{
 			ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
-			ProcessCategory pc = processCategoryDAO.add(processType.getProcessCategory());
-			processType.setProcessCategory(pc);
+			ProcessCategory pc = processCategoryDAO.add(processType.processCategory);
+			processType.processCategory = pc;
 		}
 
 		//Create new reagentType
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fk_common_info_type", processType.getCommonInfoType().getId());
-		parameters.put("fk_process_category", processType.getProcessCategory().getId());
+		parameters.put("fk_common_info_type", processType.commonInfoType.id);
+		parameters.put("fk_process_category", processType.processCategory.id);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-		processType.setId(newId);
+		processType.id = newId;
 		return processType;
 	}
 
 	public void update(ProcessType processType)
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		commonInfoTypeDAO.update(processType.getCommonInfoType());
+		commonInfoTypeDAO.update(processType.commonInfoType);
 	}
 }

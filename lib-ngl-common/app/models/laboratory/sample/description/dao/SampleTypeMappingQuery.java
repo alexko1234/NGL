@@ -31,17 +31,17 @@ public class SampleTypeMappingQuery extends MappingSqlQuery<SampleType>{
 	@Override
 	protected SampleType mapRow(ResultSet rs, int rowNum) throws SQLException {
 		SampleType sampleType = new SampleType();
-		sampleType.setId(rs.getLong("id"));
+		sampleType.id = rs.getLong("id");
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		long idSampleCategory = rs.getLong("fk_sample_category");
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		CommonInfoType commonInfoType = commonInfoTypeDAO.find(idCommonInfoType);
-		sampleType.setCommonInfoType(commonInfoType);
+		sampleType.commonInfoType = commonInfoType;
 		//Get sampleCategory
 		SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
 		SampleCategory sampleCategory = sampleCategoryDAO.findById(idSampleCategory);
-		sampleType.setSampleCategory(sampleCategory);
+		sampleType.sampleCategory = sampleCategory;
 		return sampleType;
 	}
 

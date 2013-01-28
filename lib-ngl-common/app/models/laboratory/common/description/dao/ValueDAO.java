@@ -35,27 +35,27 @@ public class ValueDAO {
 	public Value add(Value value)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("value", value.getValue());
-        parameters.put("default_value", value.getDefaultValue());
+        parameters.put("value", value.value);
+        parameters.put("default_value", value.defaultValue);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        value.setId(newId);
+        value.id = newId;
 		return value;
 	}
 	
 	public Value add(Value value, long idPropertyDefinition)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("value", value.getValue());
-        parameters.put("default_value", value.getDefaultValue());
+        parameters.put("value", value.value);
+        parameters.put("default_value", value.defaultValue);
         parameters.put("property_definition_id", idPropertyDefinition);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        value.setId(newId);
+        value.id = newId;
 		return value;
 	}
 	
 	public void update(Value value)
 	{
 		String sql = "UPDATE value SET value=?, default_value=? WHERE id=?";
-		jdbcTemplate.update(sql,value.getValue(), value.getDefaultValue(), value.getId());
+		jdbcTemplate.update(sql,value.value, value.defaultValue, value.id);
 	}
 }

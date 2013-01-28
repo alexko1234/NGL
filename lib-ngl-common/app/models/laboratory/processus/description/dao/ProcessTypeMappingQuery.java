@@ -31,17 +31,17 @@ public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType>{
 	@Override
 	protected ProcessType mapRow(ResultSet rs, int rowNum) throws SQLException {
 		ProcessType processType = new ProcessType();
-		processType.setId(rs.getLong("id"));
+		processType.id = rs.getLong("id");
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		long idProjectCategory = rs.getLong("fk_process_category");
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		CommonInfoType commonInfoType = commonInfoTypeDAO.find(idCommonInfoType);
-		processType.setCommonInfoType(commonInfoType);
+		processType.commonInfoType = commonInfoType;
 		//Get category
 		ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
 		ProcessCategory processCategory = processCategoryDAO.findById(idProjectCategory);
-		processType.setProcessCategory(processCategory);
+		processType.processCategory = processCategory;
 		return processType;
 	}
 

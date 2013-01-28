@@ -7,7 +7,7 @@ import models.utils.InstanceHelpers;
 
 public class File {
 	
-	//concaténation de flotseqname + flotseqext	
+	//concatenation de flotseqname + flotseqext	
 	public String fullname;
 	public String extension;
 	public Boolean usable = Boolean.FALSE;

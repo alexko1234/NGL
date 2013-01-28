@@ -82,43 +82,43 @@ public class ExperimentTypeDAO {
 	public ExperimentType add(ExperimentType experimentType)
 	{
 		//Add commonInfoType
-		if(experimentType.getCommonInfoType()!=null && experimentType.getCommonInfoType().getId()==null)
+		if(experimentType.commonInfoType!=null && experimentType.commonInfoType.id==null)
 		{
 			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType cit = commonInfoTypeDAO.add(experimentType.getCommonInfoType());
-			experimentType.setCommonInfoType(cit);
+			CommonInfoType cit = commonInfoTypeDAO.add(experimentType.commonInfoType);
+			experimentType.commonInfoType = cit;
 		}
 		//Create experimentType 
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fk_common_info_type", experimentType.getCommonInfoType().getId());
+		parameters.put("fk_common_info_type", experimentType.commonInfoType.id);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-		experimentType.setId(newId);
+		experimentType.id = newId;
 		//Add nextExperimentTypes list
-		List<ExperimentType> nextExpTypes = experimentType.getNextExperimentTypes();
+		List<ExperimentType> nextExpTypes = experimentType.nextExperimentTypes;
 		if(nextExpTypes!=null && nextExpTypes.size()>0){
 			String sql = "INSERT INTO next_experiment_types(fk_experiment_type,fk_next_experiment_type) VALUES(?,?)";
 			for(ExperimentType expType : nextExpTypes){
-				jdbcTemplate.update(sql, experimentType.getId(), expType.getId());
+				jdbcTemplate.update(sql, experimentType.id, expType.id);
 			}
 		}
 		//Add protocols list
-		List<Protocol> protocols = experimentType.getProtocols();
+		List<Protocol> protocols = experimentType.protocols;
 		if(protocols!=null && protocols.size()>0){
 			ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
 			for(Protocol protocol : protocols){
-				protocolDAO.add(protocol, experimentType.getId());
+				protocolDAO.add(protocol, experimentType.id);
 			}
 			
 		}
 		//Add InstrumentUsedTypes list
-		List<InstrumentUsedType> instrumentUsedTypes = experimentType.getInstrumentTypes();
+		List<InstrumentUsedType> instrumentUsedTypes = experimentType.instrumentTypes;
 		if(instrumentUsedTypes!=null && instrumentUsedTypes.size()>0){
 			InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
 			String sql = "INSERT INTO experiment_type_instrument_type(fk_experiment_type,fk_instrument_type) VALUES(?,?)";
 			for(InstrumentUsedType instrumentUsedType : instrumentUsedTypes){
-				if(instrumentUsedType.getId()==null)
+				if(instrumentUsedType.id==null)
 					instrumentUsedType = instrumentUsedTypeDAO.add(instrumentUsedType);
-				jdbcTemplate.update(sql, experimentType.getId(), instrumentUsedType.getId());
+				jdbcTemplate.update(sql, experimentType.id, instrumentUsedType.id);
 			}
 		}
 		return experimentType;
@@ -126,46 +126,46 @@ public class ExperimentTypeDAO {
 	
 	public void update(ExperimentType experimentType)
 	{
-		ExperimentType expTypeDB = findById(experimentType.getId());
+		ExperimentType expTypeDB = findById(experimentType.id);
 		
 		//Update commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		commonInfoTypeDAO.update(experimentType.getCommonInfoType());
+		commonInfoTypeDAO.update(experimentType.commonInfoType);
 		
 		//Update nexExperiment list (add new)
-		List<ExperimentType> nextExpTypes = experimentType.getNextExperimentTypes();
-		System.out.println("Next experiment db "+expTypeDB.getNextExperimentTypes());
-		for(ExperimentType nextExpTypeDB : expTypeDB.getNextExperimentTypes()){
-			System.out.println(nextExpTypeDB.getId());
+		List<ExperimentType> nextExpTypes = experimentType.nextExperimentTypes;
+		System.out.println("Next experiment db "+expTypeDB.nextExperimentTypes);
+		for(ExperimentType nextExpTypeDB : expTypeDB.nextExperimentTypes){
+			System.out.println(nextExpTypeDB.id);
 		}
 		if(nextExpTypes!=null && nextExpTypes.size()>0){
 			String sql = "INSERT INTO next_experiment_types(fk_experiment_type,fk_next_experiment_type) VALUES(?,?)";
 			for(ExperimentType expType : nextExpTypes){
-				if(expTypeDB.getNextExperimentTypes()==null || (expTypeDB.getNextExperimentTypes()!=null && !expTypeDB.getNextExperimentTypes().contains(expType))){
-					play.Logger.debug("Add next experiment types "+expType.getId());
-					jdbcTemplate.update(sql, experimentType.getId(), expType.getId());
+				if(expTypeDB.nextExperimentTypes==null || (expTypeDB.nextExperimentTypes!=null && !expTypeDB.nextExperimentTypes.contains(expType))){
+					play.Logger.debug("Add next experiment types "+expType.id);
+					jdbcTemplate.update(sql, experimentType.id, expType.id);
 				}
 			}
 		}
 		//Update protocols list (add new)
-		List<Protocol> protocols = experimentType.getProtocols();
+		List<Protocol> protocols = experimentType.protocols;
 		if(protocols!=null && protocols.size()>0){
 			ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
 			for(Protocol protocol : protocols){
-				if(expTypeDB.getProtocols()==null || (expTypeDB.getProtocols()!=null && !expTypeDB.getProtocols().contains(protocol)))
-					protocolDAO.add(protocol, experimentType.getId());
+				if(expTypeDB.protocols==null || (expTypeDB.protocols!=null && !expTypeDB.protocols.contains(protocol)))
+					protocolDAO.add(protocol, experimentType.id);
 			}
 		}
 		//Update InstrumentUsedTypes list
-		List<InstrumentUsedType> instrumentUsedTypes = experimentType.getInstrumentTypes();
+		List<InstrumentUsedType> instrumentUsedTypes = experimentType.instrumentTypes;
 		if(instrumentUsedTypes!=null && instrumentUsedTypes.size()>0){
 			InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
 			String sql = "INSERT experiment_type_instrument_type(fk_experiment_type, fk_instrument_type) VALUES(?,?)";
 			for(InstrumentUsedType instrumentUsedType : instrumentUsedTypes){
-				if(expTypeDB.getInstrumentTypes()==null || (expTypeDB.getInstrumentTypes()!=null && !expTypeDB.getInstrumentTypes().contains(instrumentUsedType))){
-					if(instrumentUsedType.getId()==null)
+				if(expTypeDB.instrumentTypes==null || (expTypeDB.instrumentTypes!=null && !expTypeDB.instrumentTypes.contains(instrumentUsedType))){
+					if(instrumentUsedType.id==null)
 						instrumentUsedType=instrumentUsedTypeDAO.add(instrumentUsedType);
-					jdbcTemplate.update(sql, experimentType.getId(), instrumentUsedType.getId());
+					jdbcTemplate.update(sql, experimentType.id, instrumentUsedType.id);
 				}
 			}
 		}

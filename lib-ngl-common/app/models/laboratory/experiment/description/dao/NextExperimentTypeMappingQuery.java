@@ -31,12 +31,12 @@ public class NextExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentTy
 	protected ExperimentType mapRow(ResultSet rs, int rowNumber)
 			throws SQLException {
 		ExperimentType experimentType = new ExperimentType();
-		experimentType.setId(rs.getLong("id"));
+		experimentType.id = rs.getLong("id");
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		CommonInfoType commonInfoType = commonInfoTypeDAO.find(idCommonInfoType);
-		experimentType.setCommonInfoType(commonInfoType);
+		experimentType.commonInfoType = commonInfoType;
 		return experimentType;
 	}
 

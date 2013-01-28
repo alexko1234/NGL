@@ -72,7 +72,7 @@ public class CommonInfoType{
 		commonInfoTypeDAO.update(this);
 		
 	}
-	
+		
 	public List<PropertyDefinition> getPropertiesDefinition() {
 		return propertiesDefinition;
 	}
@@ -82,78 +82,5 @@ public class CommonInfoType{
 			List<PropertyDefinition> propertiesDefinition) {
 		this.propertiesDefinition = propertiesDefinition;
 	}
-
-
-	public Long getId() {
-		return id;
-	}
-
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-
-	public String getName() {
-		return name;
-	}
-
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-	public String getCode() {
-		return code;
-	}
-
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-
-	public String getCollectionName() {
-		return collectionName;
-	}
-
-
-	public void setCollectionName(String collectionName) {
-		this.collectionName = collectionName;
-	}
-
-
-	public List<State> getVariableStates() {
-		return variableStates;
-	}
-
-
-	public void setVariableStates(List<State> variableStates) {
-		this.variableStates = variableStates;
-	}
-
-
-	public List<Resolution> getResolutions() {
-		return resolutions;
-	}
-
-
-	public void setResolutions(List<Resolution> resolutions) {
-		this.resolutions = resolutions;
-	}
-
-
-	public ObjectType getObjectType() {
-		return objectType;
-	}
-
-
-	public void setObjectType(ObjectType objectType) {
-		this.objectType = objectType;
-	}
-
-	
-	
 	
 }

@@ -31,12 +31,12 @@ public class ReagentTypeMappingQuery extends MappingSqlQuery<ReagentType>{
 	protected ReagentType mapRow(ResultSet rs, int rowNumber)
 			throws SQLException {
 		ReagentType reagentType = new ReagentType();
-		reagentType.setId(rs.getLong("id"));
+		reagentType.id = rs.getLong("id");
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		CommonInfoType commonInfoType = commonInfoTypeDAO.find(idCommonInfoType);
-		reagentType.setCommonInfoType(commonInfoType);
+		reagentType.commonInfoType = commonInfoType;
 		return reagentType;
 	}
 
