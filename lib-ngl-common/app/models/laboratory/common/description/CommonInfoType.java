@@ -7,7 +7,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.utils.Model;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import play.modules.spring.Spring;
