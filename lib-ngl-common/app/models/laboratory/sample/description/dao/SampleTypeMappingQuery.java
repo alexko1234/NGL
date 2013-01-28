@@ -15,16 +15,13 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.modules.spring.Spring;
 
-import com.avaje.ebean.enhance.asm.Type;
-
 public class SampleTypeMappingQuery extends MappingSqlQuery<SampleType>{
 
-	public SampleTypeMappingQuery(DataSource ds)
+	public SampleTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
 	{
-		super(ds,"SELECT id, fk_common_info_type, fk_sample_category "+
-				"FROM sample_type "+
-				"WHERE id = ? ");
-		super.declareParameter(new SqlParameter("id", Type.LONG));
+		super(ds,sql);
+		if(sqlParameter!=null)
+			super.declareParameter(sqlParameter);
 		compile();
 	}
 
@@ -36,7 +33,7 @@ public class SampleTypeMappingQuery extends MappingSqlQuery<SampleType>{
 		long idSampleCategory = rs.getLong("fk_sample_category");
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType commonInfoType = commonInfoTypeDAO.find(idCommonInfoType);
+		CommonInfoType commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
 		sampleType.commonInfoType = commonInfoType;
 		//Get sampleCategory
 		SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
