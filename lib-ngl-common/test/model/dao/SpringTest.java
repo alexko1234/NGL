@@ -60,9 +60,9 @@ public class SpringTest extends AbstractTests{
 	private void checkObjectType(ObjectType type)
 	{
 		Assert.assertNotNull(type);
-		Assert.assertNotNull(type.getId());
-		Assert.assertNotNull(type.getType());
-		Assert.assertNotNull(type.getGeneric());
+		Assert.assertNotNull(type.id);
+		Assert.assertNotNull(type.type);
+		Assert.assertNotNull(type.generic);
 	}
 	
 	@Test
@@ -120,7 +120,7 @@ public class SpringTest extends AbstractTests{
 		List<CommonInfoType> cits = commonInfoTypeDAO.findByName("");
 		for(CommonInfoType cit : cits)
 		{
-			System.out.println(cit.getCode());
+			System.out.println(cit.code);
 		}
 	}
 	
@@ -128,25 +128,25 @@ public class SpringTest extends AbstractTests{
 	{
 		Assert.assertNotNull(cit);
 		Assert.assertNotNull(cit.id);
-		Assert.assertNotNull(cit.getName());
-		Assert.assertNotNull(cit.getCollectionName());
-		Assert.assertNotNull(cit.getObjectType());
-		Assert.assertNotNull(cit.getObjectType().getId());
-		Assert.assertNotNull(cit.getVariableStates());
-		Assert.assertTrue(cit.getVariableStates().size()>0);
-		for(State state : cit.getVariableStates())
+		Assert.assertNotNull(cit.name);
+		Assert.assertNotNull(cit.collectionName);
+		Assert.assertNotNull(cit.objectType);
+		Assert.assertNotNull(cit.objectType.id);
+		Assert.assertNotNull(cit.variableStates);
+		Assert.assertTrue(cit.variableStates.size()>0);
+		for(State state : cit.variableStates)
 		{
-			Assert.assertNotNull(state.getId());
+			Assert.assertNotNull(state.id);
 		}
-		Assert.assertNotNull(cit.getResolutions());
-		Assert.assertTrue(cit.getResolutions().size()>0);
-		for(Resolution resolution : cit.getResolutions()){
-			Assert.assertNotNull(resolution.getId());
+		Assert.assertNotNull(cit.resolutions);
+		Assert.assertTrue(cit.resolutions.size()>0);
+		for(Resolution resolution : cit.resolutions){
+			Assert.assertNotNull(resolution.id);
 		}
 		Assert.assertNotNull(cit.getPropertiesDefinition());
 		Assert.assertTrue(cit.getPropertiesDefinition().size()>0);
 		for(PropertyDefinition prop : cit.getPropertiesDefinition()){
-			Assert.assertNotNull(prop.getId());
+			Assert.assertNotNull(prop.id);
 		}
 	}
 	
@@ -156,8 +156,8 @@ public class SpringTest extends AbstractTests{
 		ProjectTypeDAO projectTypeDAO = Spring.getBeanOfType(ProjectTypeDAO.class);
 		ProjectType projectType = projectTypeDAO.findById(1);
 		Assert.assertNotNull(projectType);
-		Assert.assertNotNull(projectType.getCommonInfoType());
-		Assert.assertNotNull(projectType.getProjectCategory());
+		Assert.assertNotNull(projectType.commonInfoType);
+		Assert.assertNotNull(projectType.projectCategory);
 	}
 	
 	@Test
@@ -168,7 +168,7 @@ public class SpringTest extends AbstractTests{
 		Assert.assertNotNull(states);
 		Assert.assertTrue(states.size()>0);
 		for(State state : states){
-			Assert.assertNotNull(state.getId());
+			Assert.assertNotNull(state.id);
 		}
 	}
 	
@@ -180,7 +180,7 @@ public class SpringTest extends AbstractTests{
 		Assert.assertNotNull(states);
 		Assert.assertTrue(states.size()>0);
 		for(State state : states){
-			Assert.assertNotNull(state.getId());
+			Assert.assertNotNull(state.id);
 		}
 	}
 	
@@ -190,7 +190,7 @@ public class SpringTest extends AbstractTests{
 		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
 		State state = stateDAO.findById(idState);
 		Assert.assertNotNull(state);
-		Assert.assertNotNull(state.getId());
+		Assert.assertNotNull(state.id);
 	}
 	
 	@Test
@@ -201,7 +201,7 @@ public class SpringTest extends AbstractTests{
 		Assert.assertNotNull(resolutions);
 		Assert.assertTrue(resolutions.size()>0);
 		for(Resolution resolution : resolutions){
-			Assert.assertNotNull(resolution.getId());
+			Assert.assertNotNull(resolution.id);
 		}
 	}
 	
@@ -213,15 +213,15 @@ public class SpringTest extends AbstractTests{
 		Assert.assertNotNull(propertyDefinitions);
 		Assert.assertTrue(propertyDefinitions.size()>0);
 		for(PropertyDefinition prop : propertyDefinitions){
-			Assert.assertNotNull(prop.getId());
-			Assert.assertNotNull(prop.getCode());
-			Assert.assertNotNull(prop.getName());
-			Assert.assertNotNull(prop.getDescription());
-			Assert.assertNotNull(prop.getType());
-			Assert.assertNotNull(prop.getActive());
-			Assert.assertNotNull(prop.getLevel());
-			Assert.assertNotNull(prop.getMeasureCategory());
-			Assert.assertNotNull(prop.getMeasureValue());
+			Assert.assertNotNull(prop.id);
+			Assert.assertNotNull(prop.code);
+			Assert.assertNotNull(prop.name);
+			Assert.assertNotNull(prop.description);
+			Assert.assertNotNull(prop.type);
+			Assert.assertNotNull(prop.active);
+			Assert.assertNotNull(prop.level);
+			Assert.assertNotNull(prop.measureCategory);
+			Assert.assertNotNull(prop.measureValue);
 		}
 	}
 	
@@ -233,9 +233,9 @@ public class SpringTest extends AbstractTests{
 		Assert.assertNotNull(propertyDefinitions);
 		Assert.assertTrue(propertyDefinitions.size()>0);
 		for(PropertyDefinition prop : propertyDefinitions){
-			Assert.assertNotNull(prop.getId());
-			Assert.assertNull(prop.getMeasureCategory());
-			Assert.assertNull(prop.getMeasureValue());
+			Assert.assertNotNull(prop.id);
+			Assert.assertNull(prop.measureCategory);
+			Assert.assertNull(prop.measureValue);
 		}
 	}
 	
@@ -275,27 +275,27 @@ public class SpringTest extends AbstractTests{
 	{
 		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		ExperimentType experimentType = experimentTypeDAO.findByCommonInfoType(idCommonInfoType);
-		List<ExperimentType> nextExpTypes = experimentTypeDAO.findNextExperiments(experimentType.getId());
+		List<ExperimentType> nextExpTypes = experimentTypeDAO.findNextExperiments(experimentType.id);
 		Assert.assertNotNull(nextExpTypes);
 		Assert.assertTrue(nextExpTypes.size()>0);
 		for(ExperimentType expType : nextExpTypes){
 			Assert.assertNotNull(expType);
-			Assert.assertNotNull(expType.getId());
-			Assert.assertNotNull(expType.getCommonInfoType());
-			Assert.assertNotNull(expType.getCommonInfoType().id);
+			Assert.assertNotNull(expType.id);
+			Assert.assertNotNull(expType.commonInfoType);
+			Assert.assertNotNull(expType.commonInfoType.id);
 		}
 	}
 	
 	private void checkExperimentType(ExperimentType expType)
 	{
 		Assert.assertNotNull(expType);
-		Assert.assertNotNull(expType.getId());
-		Assert.assertNotNull(expType.getCommonInfoType());
-		Assert.assertNotNull(expType.getCommonInfoType().id);
-		Assert.assertNotNull(expType.getProtocols());
-		Assert.assertTrue(expType.getProtocols().size()>0);
-		for(Protocol protocol : expType.getProtocols()){
-			Assert.assertNotNull(protocol.getId());
+		Assert.assertNotNull(expType.id);
+		Assert.assertNotNull(expType.commonInfoType);
+		Assert.assertNotNull(expType.commonInfoType.id);
+		Assert.assertNotNull(expType.protocols);
+		Assert.assertTrue(expType.protocols.size()>0);
+		for(Protocol protocol : expType.protocols){
+			Assert.assertNotNull(protocol.id);
 		}
 	}
 	@Test
@@ -306,7 +306,7 @@ public class SpringTest extends AbstractTests{
 		Assert.assertNotNull(reagentTypes);
 		Assert.assertTrue(reagentTypes.size()>0);
 		for(ReagentType reagentType : reagentTypes){
-			Assert.assertNotNull(reagentType.getId());
+			Assert.assertNotNull(reagentType.id);
 		}
 	}
 	
@@ -324,7 +324,7 @@ public class SpringTest extends AbstractTests{
 		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
 		Protocol protocol = protocolDAO.findById(1);
 		Assert.assertNotNull(protocol);
-		Assert.assertNotNull(protocol.getProtocolCategory());
+		Assert.assertNotNull(protocol.protocolCategory);
 	}
 	@Test
 	public void testInstrumentUsedType()
@@ -332,7 +332,7 @@ public class SpringTest extends AbstractTests{
 		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		ExperimentType experimentType = experimentTypeDAO.findByCommonInfoType(idCommonInfoType);
 		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		List<InstrumentUsedType> instrumentUsedTypes = instrumentUsedTypeDAO.findByExperimentType(experimentType.getId());
+		List<InstrumentUsedType> instrumentUsedTypes = instrumentUsedTypeDAO.findByExperimentType(experimentType.id);
 		Assert.assertNotNull(instrumentUsedTypes);
 		Assert.assertTrue(instrumentUsedTypes.size()>0);
 		for(InstrumentUsedType instrumentUsedType : instrumentUsedTypes){
@@ -359,15 +359,15 @@ public class SpringTest extends AbstractTests{
 	
 	private void checkInstrumentUsedType(InstrumentUsedType instrumentUsedType)
 	{
-		Assert.assertNotNull(instrumentUsedType.getId());
-		Assert.assertNotNull(instrumentUsedType.getCommonInfoType());
-		Assert.assertNotNull(instrumentUsedType.getInstruments());
-		Assert.assertNotNull(instrumentUsedType.getInstrumentCategory());
-		Assert.assertTrue(instrumentUsedType.getInstruments().size()>0);
-		for(Instrument instrument :instrumentUsedType.getInstruments()){
-			Assert.assertNotNull(instrument.getId());
-			Assert.assertNotNull(instrument.getCode());
-			Assert.assertNotNull(instrument.getName());
+		Assert.assertNotNull(instrumentUsedType.id);
+		Assert.assertNotNull(instrumentUsedType.commonInfoType);
+		Assert.assertNotNull(instrumentUsedType.instruments);
+		Assert.assertNotNull(instrumentUsedType.instrumentCategory);
+		Assert.assertTrue(instrumentUsedType.instruments.size()>0);
+		for(Instrument instrument :instrumentUsedType.instruments){
+			Assert.assertNotNull(instrument.id);
+			Assert.assertNotNull(instrument.code);
+			Assert.assertNotNull(instrument.name);
 		}
 	}
 	@Test
@@ -378,9 +378,9 @@ public class SpringTest extends AbstractTests{
 		Assert.assertNotNull(instruments);
 		Assert.assertTrue(instruments.size()>0);
 		for(Instrument instrument :instruments){
-			Assert.assertNotNull(instrument.getId());
-			Assert.assertNotNull(instrument.getCode());
-			Assert.assertNotNull(instrument.getName());
+			Assert.assertNotNull(instrument.id);
+			Assert.assertNotNull(instrument.code);
+			Assert.assertNotNull(instrument.name);
 		}
 	}
 	
@@ -390,10 +390,10 @@ public class SpringTest extends AbstractTests{
 		InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
 		InstrumentCategory instrumentCategory = instrumentCategoryDAO.findById(1);
 		Assert.assertNotNull(instrumentCategory);
-		Assert.assertNotNull(instrumentCategory.getInContainerSupportCategories());
-		Assert.assertTrue(instrumentCategory.getInContainerSupportCategories().size()>0);
-		Assert.assertNotNull(instrumentCategory.getOutContainerSupportCategories());
-		Assert.assertTrue(instrumentCategory.getOutContainerSupportCategories().size()>0);
+		Assert.assertNotNull(instrumentCategory.inContainerSupportCategories);
+		Assert.assertTrue(instrumentCategory.inContainerSupportCategories.size()>0);
+		Assert.assertNotNull(instrumentCategory.outContainerSupportCategories);
+		Assert.assertTrue(instrumentCategory.outContainerSupportCategories.size()>0);
 	}
 	
 	//@Test
