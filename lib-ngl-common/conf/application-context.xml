@@ -17,15 +17,10 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
     <context:component-scan base-package="models" />
     <jee:jndi-lookup id="dataSource" jndi-name="ngl"/>
     
-    
- <!-- bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver"/>
-        <property name="url" value="jdbc:jtds:sybase://sybaseseq.genoscope.cns.fr:4103/dblims"/>
-        <property name="username" value="submission"/>
-        <property name="password" value="subpwd"/>
-    </bean-->
-    
-    
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
    
     
 </beans>
