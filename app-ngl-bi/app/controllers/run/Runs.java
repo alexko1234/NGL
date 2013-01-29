@@ -113,6 +113,15 @@ public class Runs extends Controller {
 		}
 	}
 
+	public static Result removeRuns(String format){
+		List<Run> runs = MongoDBDAO.all(Constants.RUN_ILLUMINA_COLL_NAME, Run.class);
+		for(Run r:runs){
+			MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, r);
+		}
+		
+		return ok();
+	}
+	
 	public static Result dispatch(String code, String format){
 		Run run = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);		
 		if(run != null){
