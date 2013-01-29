@@ -124,4 +124,10 @@ public class LanesTests extends AbstractTests {
         assertThat(charset(result)).isEqualTo("utf-8");
 	}
 
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

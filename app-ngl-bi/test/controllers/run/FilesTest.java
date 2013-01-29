@@ -89,4 +89,10 @@ public class FilesTest extends AbstractTests{
 		  // System.out.println(Json.toJson(runDelete).toString());
          assertThat(status(result)).isEqualTo(OK);
 	 }
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
 }
