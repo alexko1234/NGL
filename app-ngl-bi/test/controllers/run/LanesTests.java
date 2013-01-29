@@ -88,7 +88,7 @@ public class LanesTests extends AbstractTests {
 		 	
 		 	Result result = callAction(controllers.run.routes.ref.Lanes.createOrUpdate("YANN_TEST1FORLANES","json"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
 		 	
-		 	System.out.println(contentAsString(result));
+		 	//System.out.println(contentAsString(result));
 		    assertThat(status(result)).isEqualTo(OK);
 	        assertThat(contentType(result)).isEqualTo("application/json");
 	        assertThat(charset(result)).isEqualTo("utf-8");
@@ -118,7 +118,7 @@ public class LanesTests extends AbstractTests {
 	 	
 	 	Result result = callAction(controllers.run.routes.ref.Lanes.createOrUpdate("YANN_TEST1FORLANES","json"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
 	 	
-	 	System.out.println(contentAsString(result));
+	 	//System.out.println(contentAsString(result));
 	    assertThat(status(result)).isEqualTo(OK);
         assertThat(contentType(result)).isEqualTo("application/json");
         assertThat(charset(result)).isEqualTo("utf-8");

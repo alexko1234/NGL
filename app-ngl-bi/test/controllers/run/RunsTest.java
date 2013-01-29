@@ -127,5 +127,18 @@ public class RunsTest extends AbstractTests {
 	        assertThat(contentAsString(result).contains("NewPropertyTestUpdateReadSet"));
 	        assertThat(charset(result)).isEqualTo("utf-8");
 	}
+	
+
+	public void testDeleteAllRun(){
+		Result result = callAction(controllers.run.routes.ref.Runs.removeRuns("json"),fakeRequest());
+		assertThat(status(result)).isEqualTo(OK);
+		
+	}
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

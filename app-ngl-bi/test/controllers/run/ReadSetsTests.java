@@ -28,7 +28,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class ReadSetsTests extends AbstractTests {
 	
-	@Test
+	 @Test
 	 public void testReasetCreate() {
 		Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
 		if(runDelete!=null){
@@ -58,7 +58,7 @@ public class ReadSetsTests extends AbstractTests {
         assertThat(charset(result)).isEqualTo("utf-8");
 	 }
 	 
-	@Test
+	 @Test
 	 public void testReasetAdd() {
 				
 		ReadSet readset2 = RunMockHelper.newReadSet("ReadSetBasicWithRun2");
@@ -124,6 +124,14 @@ public class ReadSetsTests extends AbstractTests {
          assertThat(contentType(result)).isEqualTo("application/json");
       	 assertThat(charset(result)).isEqualTo("utf-8");
       	 assertThat(contentAsString(result)).isNotEqualTo("[]").contains("ReadSetBasicWithRun").doesNotContain("ReadSetTEST");
+	 }
+	 
+	 @Test
+	 public void testRemoveReadsets(){
+		 Result result = callAction(controllers.run.routes.ref.Deletions.removeReadsets("YANN_TEST1FORREADSET","json"),fakeRequest());
+         Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
+         //System.out.println("RUN WITHOUT READSET: "+runDelete.lanes.get(0).readsets.toArray());
+         assertThat(status(result)).isEqualTo(OK);
 	 }
 
 	
