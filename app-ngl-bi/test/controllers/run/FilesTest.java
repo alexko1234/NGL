@@ -21,6 +21,7 @@ import static play.test.Helpers.contentAsString;
 
 import org.junit.Test;
 
+import play.libs.Json;
 import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
@@ -52,7 +53,7 @@ public class FilesTest extends AbstractTests{
 		run.lanes = lanes;
 		 
 		Result result = callAction(controllers.run.routes.ref.Runs.createOrUpdate("json"),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-		System.out.println(contentAsString(result));
+	//	System.out.println(contentAsString(result));
 		
 		result = callAction(controllers.run.routes.ref.Files.createOrUpdate("test1","json"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(RunMockHelper.newFile("newfiletest"))));
 	 	//System.out.println(contentAsString(result));
@@ -66,7 +67,7 @@ public class FilesTest extends AbstractTests{
 		File file = RunMockHelper.newFile("newfiletest");
 		file.extension = "IMG";
 	  Result result = callAction(controllers.run.routes.ref.Files.createOrUpdate("test1","json"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
-	  System.out.println(contentAsString(result));
+	  //System.out.println(contentAsString(result));
       assertThat(status(result)).isEqualTo(OK);
       assertThat(contentType(result)).isEqualTo("application/json");
       assertThat(charset(result)).isEqualTo("utf-8");
@@ -75,10 +76,17 @@ public class FilesTest extends AbstractTests{
 	 @Test
 	 public void testFileShow() {
 	  Result result = callAction(controllers.run.routes.ref.Files.show("test1","testfile","json"));
-	  System.out.println(contentAsString(result));
+	//  System.out.println(contentAsString(result));
       assertThat(status(result)).isEqualTo(OK);
       assertThat(contentType(result)).isEqualTo("application/json");
       assertThat(charset(result)).isEqualTo("utf-8");
 	 }
-	
+	 
+	 @Test
+	 public void testRemoveFiles(){
+		 Result result = callAction(controllers.run.routes.ref.Deletions.removeFiles("YANN_TEST1FORREADSET2","json"),fakeRequest());
+		   Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
+		  // System.out.println(Json.toJson(runDelete).toString());
+         assertThat(status(result)).isEqualTo(OK);
+	 }
 }
