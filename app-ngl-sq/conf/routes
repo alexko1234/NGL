@@ -11,8 +11,10 @@ GET     /experiments/add            controllers.experiment.Experiments.add()
 GET		/experiments/:id			controllers.experiment.Experiments.show(id: java.lang.String)
 POST   	/experiments				controllers.experiment.Experiments.createOrUpdate(format: java.lang.String ?= "html")
 
+
+
 GET		/admin/types/experimentTypes		controllers.admin.types.ExperimentTypes.home()
-POST	/admin/types/experimentTypes/:id	controllers.admin.types.ExperimentTypes.createOrUpdate(id:java.lang.String)
+POST	/admin/types/experimentTypes/:id/:version		controllers.admin.types.ExperimentTypes.createOrUpdate(id:java.lang.String, version:java.lang.String)
 POST	/admin/types/instrumentUsedTypes	controllers.admin.types.InstrumentUsedTypes.createOrUpdate()
 GET	   /admin/types/home					controllers.admin.types.GenericTypes.home()
 GET    /admin/types                			controllers.admin.types.GenericTypes.list()
@@ -21,15 +23,6 @@ GET	   /admin/types/:id						controllers.admin.types.GenericTypes.show(id: Long)
 GET	   /admin/types/:id/edit				controllers.admin.types.GenericTypes.edit(id: Long)
 GET    /admin/types/:id/add             	controllers.admin.types.GenericTypes.add(id: Long)
 GET	   /admin/types/pdefs/add/:index		controllers.admin.types.GenericTypes.addPropertyDefinition(index: java.lang.Integer)
-
-GET	   /baskets/home								controllers.container.Baskets.home()
-GET	   /basket/experimenttype/:experimentType		controllers.container.Baskets.listByExperimentType(experimentType:java.lang.String)
-GET	   /baskets										controllers.container.Baskets.list()
-GET	   /baskets/:code					    		controllers.container.Baskets.show(code:java.lang.String, format: java.lang.String ?= "html")
-POST   /baskets/:code					    		controllers.container.Baskets.add(code:java.lang.String, format: java.lang.String ?= "html")
-POST   /baskets					    				controllers.container.Baskets.createOrUpdate(format: java.lang.String ?= "html")
-DELETE /baskets/:code					    		controllers.container.Baskets.delete(code: java.lang.String,format: java.lang.String ?= "html")
-DELETE /baskets/:code/containers/:contrainerCode	controllers.container.Baskets.delete_container(code: java.lang.String,contrainerCode: java.lang.String,format: java.lang.String ?= "html")
 
 GET	   /logout								controllers.administration.authentication.User.logOut()
 
