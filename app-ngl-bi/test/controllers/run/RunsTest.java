@@ -135,10 +135,5 @@ public class RunsTest extends AbstractTests {
 		
 	}
 
-	@Override
-	public void init() {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
