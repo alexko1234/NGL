@@ -40,14 +40,14 @@ public class Global extends GlobalSettings {
 
 	private void insertDefaultDataIfNecessary() {
 
-		if(ExperimentType.findByCode("TEST")==null) {
+		/*if(ExperimentType.findByCode("TEST")==null) {
 			ExperimentType et = new ExperimentType();
-			et.commonInfoType = new CommonInfoType();
-			et.commonInfoType.code = "TEST";
-			et.commonInfoType.name = "TEST";
-			et.commonInfoType.collectionName = "testExp";
-			et.commonInfoType.propertiesDefinition = new ArrayList<PropertyDefinition>();
-			et.commonInfoType.objectType = ObjectType.findById(Long.valueOf("1")); 
+		
+			et.code = "TEST";
+			et.name = "TEST";
+			et.collectionName = "testExp";
+			et.propertiesDefinition = new ArrayList<PropertyDefinition>();
+			et.objectType = ObjectType.findById(Long.valueOf("1")); 
 			PropertyDefinition pd = new PropertyDefinition();
 			pd.active =true;
 			pd.code="P1";
@@ -55,9 +55,9 @@ public class Global extends GlobalSettings {
 			pd.required = false;
 			pd.type = String.class.getName();
 
-			et.commonInfoType.propertiesDefinition.add(pd);
+			et.propertiesDefinition.add(pd);
 			//et.save();
-		}
+		}*/
 
 	}
 }
