@@ -53,7 +53,7 @@ public class CommonInfoType{
 		this.objectType = objectType;
 	}
 
-	public static CommonInfoType findById(long id)
+	public static CommonInfoType findCommonById(long id)
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		return commonInfoTypeDAO.findById(id);
