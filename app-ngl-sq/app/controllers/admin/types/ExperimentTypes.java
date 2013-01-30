@@ -44,15 +44,15 @@ public class ExperimentTypes extends GenericTypes implements IGenericCreateTypes
 		//TODO bug recupere aussi ceux qui ne sont pas selectionné 
 		List<ExperimentType> nextExperiments = new ArrayList<ExperimentType>();
 		for(ExperimentType expType : bean.nextExperimentTypes){
-			System.out.println("expType "+expType.getId());
-			if(expType.getId()!=null)
+			System.out.println("expType "+expType.id);
+			if(expType.id!=null)
 				nextExperiments.add(expType);
 		}
 		bean.nextExperimentTypes = (List<ExperimentType>) GenericTypes.getListTypeFromDB(nextExperiments);
 		
 		//bean.nextExperimentTypes = (List<ExperimentType>) GenericTypes.getListTypeFromDB(bean.nextExperimentTypes);
 		bean.instrumentTypes = (List<InstrumentUsedType>) GenericTypes.getListTypeFromDB(bean.instrumentTypes);
-		bean.commonInfoType=beanCIT;
+		//bean=beanCIT;
 		
 		if(id!=null && !id.equals("null")){
 			bean.id=Long.valueOf(id);
@@ -77,7 +77,7 @@ public class ExperimentTypes extends GenericTypes implements IGenericCreateTypes
 	public Result show(long idCommonInfoType)
 	{
 		ExperimentType expType = ExperimentType.findByCommonInfoType(idCommonInfoType);
-		Form<CommonInfoType> filledFormCIT = commonInfoTypeForm.fill(expType.commonInfoType);
+		Form<CommonInfoType> filledFormCIT = commonInfoTypeForm.fill(expType);
 		Form<ExperimentType> filledFormET = experimentTypeForm.fill(expType);
 		return ok(experimentTypes.render(filledFormCIT, filledFormET,false));
 	}
@@ -85,7 +85,7 @@ public class ExperimentTypes extends GenericTypes implements IGenericCreateTypes
 	@Override
 	public Result edit(long idCommonInfoType){
 		ExperimentType expType = ExperimentType.findByCommonInfoType(idCommonInfoType);
-		Form<CommonInfoType> filledFormCIT = commonInfoTypeForm.fill(expType.commonInfoType);
+		Form<CommonInfoType> filledFormCIT = commonInfoTypeForm.fill(expType);
 		Form<ExperimentType> filledFormET = experimentTypeForm.fill(expType);
 		return ok(experimentTypes.render(filledFormCIT, filledFormET,true));
 	}

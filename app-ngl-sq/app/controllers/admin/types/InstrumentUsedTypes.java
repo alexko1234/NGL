@@ -40,7 +40,7 @@ public class InstrumentUsedTypes extends GenericTypes implements IGenericCreateT
 	@Override
 	public Result show(long idCommonInfoType) {
 		InstrumentUsedType instUsedType = InstrumentUsedType.findByCommonInfoType(idCommonInfoType);
-		Form<CommonInfoType> filledFormCIT = commonInfoTypeForm.fill(instUsedType.commonInfoType);
+		Form<CommonInfoType> filledFormCIT = commonInfoTypeForm.fill(instUsedType);
 		Form<InstrumentUsedType> filledFormIUT = instrumentUsedTypeForm.fill(instUsedType);
 		return ok(instrumentUsedTypes.render(filledFormCIT, filledFormIUT,false));
 	}
@@ -48,7 +48,7 @@ public class InstrumentUsedTypes extends GenericTypes implements IGenericCreateT
 	@Override
 	public Result edit(long idCommonInfoType) {
 		InstrumentUsedType instUsedType = InstrumentUsedType.findByCommonInfoType(idCommonInfoType);
-		Form<CommonInfoType> filledFormCIT = commonInfoTypeForm.fill(instUsedType.commonInfoType);
+		Form<CommonInfoType> filledFormCIT = commonInfoTypeForm.fill(instUsedType);
 		Form<InstrumentUsedType> filledFormIUT = instrumentUsedTypeForm.fill(instUsedType);
 		return ok(instrumentUsedTypes.render(filledFormCIT, filledFormIUT,true));
 	}

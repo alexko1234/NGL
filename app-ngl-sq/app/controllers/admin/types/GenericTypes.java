@@ -155,7 +155,7 @@ public class GenericTypes extends Controller {
 	 */
 	public static Result show(Long id)
 	{
-		CommonInfoType cit = CommonInfoType.findById(id);
+		CommonInfoType cit = CommonInfoType.findCommonById(id);
 		return ControllerTypeFactory.getInstance(cit.objectType.id).show(cit.id);
 	}
 
@@ -166,7 +166,7 @@ public class GenericTypes extends Controller {
 	 */
 	public static Result edit(Long id)
 	{
-		CommonInfoType cit = CommonInfoType.findById(id);
+		CommonInfoType cit = CommonInfoType.findCommonById(id);
 		return ControllerTypeFactory.getInstance(cit.objectType.id).edit(cit.id);
 	}
 }
