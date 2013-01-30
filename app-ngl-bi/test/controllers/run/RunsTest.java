@@ -128,9 +128,9 @@ public class RunsTest extends AbstractTests {
 	        assertThat(charset(result)).isEqualTo("utf-8");
 	}
 	
-
-	public void testDeleteAllRun(){
-		Result result = callAction(controllers.run.routes.ref.Runs.removeRuns("json"),fakeRequest());
+	@Test
+	public void testDeleteRun(){
+		Result result = callAction(controllers.run.routes.ref.Runs.removeRun("YANN_TEST1","json"),fakeRequest());
 		assertThat(status(result)).isEqualTo(OK);
 		
 	}
