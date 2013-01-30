@@ -11,10 +11,8 @@ GET     /experiments/add            controllers.experiment.Experiments.add()
 GET		/experiments/:id			controllers.experiment.Experiments.show(id: java.lang.String)
 POST   	/experiments				controllers.experiment.Experiments.createOrUpdate(format: java.lang.String ?= "html")
 
-
-
 GET		/admin/types/experimentTypes		controllers.admin.types.ExperimentTypes.home()
-POST	/admin/types/experimentTypes/:id/:version		controllers.admin.types.ExperimentTypes.createOrUpdate(id:java.lang.String, version:java.lang.String)
+POST	/admin/types/experimentTypes/:id		controllers.admin.types.ExperimentTypes.createOrUpdate(id:java.lang.String)
 POST	/admin/types/instrumentUsedTypes	controllers.admin.types.InstrumentUsedTypes.createOrUpdate()
 GET	   /admin/types/home					controllers.admin.types.GenericTypes.home()
 GET    /admin/types                			controllers.admin.types.GenericTypes.list()
