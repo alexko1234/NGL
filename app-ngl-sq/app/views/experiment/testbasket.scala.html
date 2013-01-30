@@ -1,0 +1,933 @@
+@(nav:java.lang.String)
+<!DOCTYPE html>
+<html>
+<head>
+	<title>#EXPSIZ20130104145632</title>
+ <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")">   
+       <!-- <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/ngl.css")">-->
+        
+        <!--[if lt IE 9]>
+			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+			<script src="@routes.Assets.at("javascripts/json2.js")" type="text/javascript" charset="utf-8"></script>
+		<![endif]-->
+			
+        <script src="@routes.Assets.at("javascripts/jquery-1.8.0.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/jquery.dataTables.js")" type="text/javascript" charset="utf-8"></script>
+      	 <script src="@routes.Assets.at("javascripts/TableTools.js")" type="text/javascript" charset="utf-8"></script>
+      	 <script src="@routes.Assets.at("javascripts/bootstrap.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/boostrap_tabletools.js")" type="text/javascript" charset="utf-8"></script>
+         
+        
+        <script src="@routes.Assets.at("javascripts/ZeroClipboard.js")" type="text/javascript" charset="utf-8"></script>
+        <script src="@routes.Assets.at("javascripts/ngl.js")" type="text/javascript" charset="utf-8"></script>
+        <script src="@routes.Application.javascriptRoutes" type="text/javascript"></script>
+  <style type="text/css">
+
+body{padding:0px}
+  #sub_body{
+	margin-top:20px;
+
+  }
+  #table_exp{
+	margin-left:0;
+  }
+  #information{
+	position:relative;
+	float:left;
+	width:160px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 12px;
+  }
+  input, .uneditable-input{
+	padding-top: 2px;
+	padding-right: 6px;
+	padding-bottom: 2px;
+	padding-left: 6px;
+	margin-left:0px;
+	margin-bottom:0px;
+  }
+   #accordionExp .well{
+	padding:0;
+	padding-top:1px;
+  }
+   #accordionIns .well{
+	padding:0;
+	padding-top:1px;
+  }
+   #accordionInf .well{
+	padding:0;
+	padding-top:1px;
+  }
+  #accordionExp{
+	width:80%;
+  }
+
+  #workflow{
+	margin-top:15px;
+	margin-left:10px;
+  }
+  #experiment_action{
+  margin-top:15px;
+	margin-left:10px;
+  }
+#head_exp .btn-group{
+	position:relative;
+	float:left;
+	}
+
+   #accordionIns{
+	width:80%;
+  }
+
+  #accordionInf{
+	width:80%;
+  }
+
+  #information table{
+
+	text-align:center;
+  }
+
+  #instrument{
+	position:relative;
+	float:left;
+	width:160px;
+  }
+
+  #trace_information{
+	position:relative;
+	float:left;
+	width:160px;
+  }
+
+   #experience_table{
+	position:relative;
+	float:left;
+	width:100%;
+  }
+
+  #comments{
+	margin-top:20px;
+	font-size:12px;
+  }
+
+   #comments tr{
+	border-bottom:2px;
+  }
+
+	.user{
+		position:relative;
+		float:left;
+		width:200px;
+	}
+
+	.comment{
+		padding-bottom:15px;
+		margin-bottom:15px;
+		border-bottom: 1px solid #e5e5e5;
+
+	}
+
+	#comments table{
+	border-spacing : 200px;
+  }
+  th{
+		color: #333333;}
+   .table th,.table td{
+	text-align:center;
+  }
+
+  .row_selected {
+	background-color: #f1f1f1;
+
+  }
+  #information form{
+	margin 0px;
+  }
+  </style>
+ <script type="text/javascript">
+$(document).ready( function () {
+    $('#table_id').dataTable( {
+		"iDisplayLength":50,
+		 "aoColumnDefs": [
+		 {"aTargets": [2], "mRender": function ( data, type, full ) {if(type==='edit'){return getEdit("edit1",data);}else{return data;}}},
+		 {"aTargets": [3], "mRender": function ( data, type, full ) {if(type==='edit'){return getEdit("edit1",data);}else{return data;}}},
+		 {"aTargets": [4], "mRender": function ( data, type, full ) {if(type==='edit'){return getEdit("edit1",data);}else{return data;}}},
+		 {"aTargets": [5], "mRender": function ( data, type, full ) {if(type==='edit'){return getEdit("edit1",data);}else{return data;}}},
+		 {"aTargets": [6], "mRender": function ( data, type, full ) {if(type==='edit'){return getEdit("edit1",data);}else{return data;}}},
+		 {"aTargets": [7], "mRender": function ( data, type, full ) {if(type==='edit'){return getEdit("edit1",data);}else{return data;}}}
+		 ],
+    "bPaginate": true,
+    "bFilter": true,
+	"sDom":"Trt",
+    "sPaginationType": "bootstrap",
+    "oTableTools": {
+        	"sRowSelect": "multi",
+        	"sSelectedClass": "row_selected",
+        	"aButtons": [
+
+			                {
+			                    "sExtends":    "btngroup",
+			                    "sButtonText": "Edit",
+			                    "sDropdown":	true,
+			                    "mainButton":	"edit",
+			                    "aButtons":	[
+{
+				                    	"sExtends":    "edit",
+				                    	"aTargets": 2,
+				                    	"sEditId": "edit",
+				                    	"sButtonText":  "Volume engagé"
+			                   	 	},{
+				                    	"sExtends":    "edit",
+				                    	"aTargets": 3,
+				                    	"sEditId": "edit",
+				                    	"sButtonText":  "Quantité engagé"
+			                   	 	},{
+				                    	"sExtends":    "edit",
+				                    	"aTargets": 4,
+				                    	"sEditId": "edit",
+				                    	"sButtonText":  "Position"
+			                   	 	},{
+				                    	"sExtends":    "edit",
+				                    	"aTargets": 5,
+				                    	"sEditId": "edit",
+				                    	"sButtonText":  "#"
+			                   	 	}		,{
+				                    	"sExtends":    "edit",
+				                    	"aTargets": 6,
+				                    	"sEditId": "edit",
+				                    	"sButtonText":  "Volume sortie"
+			                   	 	}	,{
+				                    	"sExtends":    "edit",
+				                    	"aTargets": 7,
+				                    	"sEditId": "edit",
+				                    	"sButtonText":  "Quantité ap fragm"
+			                   	 	}
+			                    ]
+
+			                },{
+			                    "sExtends":    "btngroup",
+			                    "sButtonText": "Hide",
+			                    "sDropdown":	true,
+			                    "aButtons":	[
+									{
+				                    	"sExtends":    "hideColumn",
+				                    	"aTargets": 2,
+				                    	"shideColumnId": "hideColumn",
+				                    	"sButtonText":  "Volume engagé"
+			                   	 	},{
+				                    	"sExtends":    "hideColumn",
+				                    	"aTargets": 3,
+				                    	"shideColumnId": "hideColumn",
+				                    	"sButtonText":  "Quantité engagé"
+			                   	 	},{
+				                    	"sExtends":    "hideColumn",
+				                    	"aTargets": 4,
+				                    	"shideColumnId": "hideColumn",
+				                    	"sButtonText":  "Position"
+			                   	 	},{
+				                    	"sExtends":    "hideColumn",
+				                    	"aTargets": 5,
+				                    	"shideColumnId": "hideColumn",
+				                    	"sButtonText":  "#"
+			                   	 	}		,{
+				                    	"sExtends":    "hideColumn",
+				                    	"aTargets": 6,
+				                    	"shideColumnId": "hideColumn",
+				                    	"sButtonText":  "Volume sortie"
+			                   	 	}	,{
+				                    	"sExtends":    "hideColumn",
+				                    	"aTargets": 7,
+				                    	"shideColumnId": "hideColumn",
+				                    	"sButtonText":  "Quantité ap fragm"
+			                   	 	}			,{
+				                    	"sExtends":    "hideColumn",
+				                    	"aTargets": 8,
+				                    	"shideColumnId": "hideColumn",
+				                    	"sButtonText":  "#"
+			                   	 	}					,{
+				                    	"sExtends":    "hideColumn",
+				                    	"aTargets": 9,
+				                    	"shideColumnId": "hideColumn",
+				                    	"sButtonText":  "Taille"
+			                   	 	},{
+				                    	"sExtends":    "hideColumn",
+				                    	"aTargets": 10,
+				                    	"shideColumnId": "hideColumn",
+				                    	"sButtonText":  "Fichier"
+			                   	 	}						,{
+				                    	"sExtends":    "hideColumn",
+				                    	"aTargets": 11,
+				                    	"shideColumnId": "hideColumn",
+				                    	"sButtonText":  "Valid"
+			                   	 	}
+			                    ]
+
+			                },
+			                {
+			                	 "sExtends":    "btngroup",
+			                	 "aButtons":    [ {
+			                		 "sExtends":    "save",
+			                		 "playJSRoute":""
+			                		 },
+			                		 "cancel","select_all" ]
+			                },{
+			                    "sExtends":    "btngroup",
+			                    "sButtonText": "Purification",
+			                    "sButtonClass" : "btn btn-info",
+			                    "sDropdown":	true,
+			                    "aButtons":	[
+						                    	{
+													 "sExtends":    "addToBasket",
+													"sButtonText": "New",
+													 "playJSRoute":  jsRoutes.controllers.container.Baskets.add(),
+													 "playJSRouteNew": jsRoutes.controllers.container.Baskets.createOrUpdate(),
+													 "playJSRouteBasketList":jsRoutes.controllers.container.Baskets.listByExperimentType(),
+													 "newBasket":true,
+														 "experimentTypeCode":"Purif",
+														"sButtonText": "New"
+						                		},
+						                		{
+													 "sExtends":    "addToBasket",
+													"sButtonText": "Add to basket",
+													 "playJSRoute":  jsRoutes.controllers.container.Baskets.add(),
+													 "playJSRouteNew": jsRoutes.controllers.container.Baskets.createOrUpdate(),
+													 "playJSRouteBasketList":jsRoutes.controllers.container.Baskets.listByExperimentType(),
+													 "newBasket":false,
+														 "experimentTypeCode":"Purif",
+						                		}
+						                    ]
+			                   }
+			                   ,{
+									"sExtends":    "btngroup",
+									"sButtonText": "QC",
+									"sButtonClass" : "btn btn-info",
+									"sDropdown":	true,
+									
+									"aButtons":	[
+										{
+											 "sExtends":    "addToBasket",
+											 "playJSRoute":  jsRoutes.controllers.container.Baskets.add(),
+											 "playJSRouteNew": jsRoutes.controllers.container.Baskets.createOrUpdate(),
+											 "playJSRouteBasketList":jsRoutes.controllers.container.Baskets.listByExperimentType(),
+											 "newBasket":true,
+											 "experimentTypeCode":"QC",
+											 "sButtonText": "New"
+										},
+										{
+											 "sExtends":    "addToBasket",
+											 "playJSRoute":  jsRoutes.controllers.container.Baskets.add(),
+											 "playJSRouteNew": jsRoutes.controllers.container.Baskets.createOrUpdate(),
+											 "playJSRouteBasketList":jsRoutes.controllers.container.Baskets.listByExperimentType(),
+											 "newBasket":false,
+											 "experimentTypeCode":"QC",
+											"sButtonText": "Add to basket"
+										}
+									]
+			                   }
+			            ]
+
+        }
+  } );
+
+    function getEdit(id, value){
+    	var html = $($('#'+id).html()).clone();
+    	if(value !== undefined){
+	    	if(html.children("input, select").size() > 0){
+	    		html.children("input, select").val(value);
+	    	}else{
+	    		html.val(value);
+	    	}
+    	}
+    	return html;
+    }
+
+	});
+	</script>
+	<script type="text/html" id="edit1">
+<div class="control-group control-group-datatable" style="margin:0">
+<input type="text" name="name" class="input-small" style="margin:0"/>
+</div>
+</script>
+</head>
+<body data-spy="scroll" data-target=".subnav" data-offset="50">
+
+
+  <!-- Navbar
+    ================================================== -->
+
+<div class="navbar navbar-inverse">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+
+				<a class="brand" href="@routes.Application.index("home")">NGL</a>
+
+					<ul class="nav">
+						<li class="@("active".when(nav == "projects"))"><a href="@routes.Application.index("projects")" >Projects</a>
+						</li>
+						<li class="@("active".when(nav == "samples"))"><a href="@routes.Application.index("samples")">Samples</a>
+						</li>
+						<li class="@("active".when(nav == "libraries"))"><a href="@routes.Application.index("libraries")">Libraries</a>
+						</li>
+						<li class="active"><a href="@controllers.experiment.routes.Experiments.home()">Experiments</a>
+						</li>
+						<li class="@("active".when(nav == "runs"))"><a href="@routes.Application.index("runs")">Runs</a>
+						</li>
+						<li class="dropdown @("active".when(nav == "permissions" || nav == "roles" || nav == "users"))">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="admin">Administration<b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="admin">
+								<li><a href="#">Protocols</a></li>
+								<li><a href="#">Instruments</a></li>
+								<li><a href="#">Tags</a></li>
+								<li><a href="#">Chemical</a></li>
+								<li><a href="#">Fridge</a></li>
+							</ul>
+  						</li>
+  						<li class="dropdown @("active".when(nav == "types"))">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="param">Parameters<b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="param">
+								<li><a href="#">Project Types</a></li>
+								<li><a href="#">Sample Types</a></li>
+								<li><a href="#">Library Types</a></li>
+								<li class="@("active".when(nav == "experimentTypes"))"><a href="@controllers.admin.types.routes.ExperimentTypes.home()">Experiment Types</a></li>
+								<li><a href="#">Run Types</a></li>
+								<li class="divider"></li>
+								<li><a href="#">Instrument Types</a></li>
+								<li><a href="#">Containing Types</a></li>
+								<li><a href="#"> Types</a></li>
+								<li class="divider"></li>
+								<li class="@("active".when(nav == "types"))"><a href="@controllers.admin.types.routes.GenericTypes.home()">Type Types</a></li>
+							</ul>
+  						</li>
+
+					</ul>
+
+					<div class="btn-group pull-right">
+						<a href="#" data-toggle="dropdown" class="btn dropdown-toggle">
+							<i class="icon-user"></i> Username <span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="#">Profile</a></li>
+							<li class="divider"></li>
+							<li><a href="">Sign Out</a></li>
+						</ul>
+					</div>
+</div>
+</div>
+<div id="sub_body" class="container-fluid">
+<div class="row-fluid">
+    <div class="span2"><div class="accordion" id="accordionExp">
+<div class=" well well-smallaccordion-group">
+<div class="accordion-heading"> <div class="btn-group pull-right">
+<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+
+    <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+
+   <li><a href="#">Edit</a></li>
+   <li><a href="#">Save</a></li>
+    </ul>
+    </div>
+<a class="accordion-toggle" data-toggle="collapse" data-parent="#information" href="#collapseOne">
+Experiment
+</a>
+</div>
+<div id="collapseOne" class="accordion-body collapse in">
+<div class="accordion-inner"><div id="information" class="">
+
+    <form class="form-stacked">
+	 <div class="control-group">
+	<label class="control-label">Experiment Type:</label>
+	<div class="controls">
+	<span class="input-small uneditable-input">Sizing</span>
+	</div>
+	</div>
+	 <div class="control-group">
+	<label class="control-label">Resolution:</label>
+	<div class="controls">
+	<span class="input-small uneditable-input">resolution</span>
+	</div>
+	</div>
+	</form>
+</div>
+ </div>
+</div>
+</div></div>
+<div class="accordion" id="accordionIns">
+<div class="well well-small accordion-group">
+<div class="accordion-heading"><div class="btn-group pull-right">
+<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+
+    <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+
+   <li><a href="#">Edit</a></li>
+   <li><a href="#">Save</a></li>
+    </ul>
+    </div>
+<a class="accordion-toggle" data-toggle="collapse" data-parent="#instrument" href="#collapseTwo">
+Instrument
+</a>
+</div>
+<div id="collapseTwo" class="accordion-body collapse in">
+<div class="accordion-inner">
+<div id="instrument" class="">
+
+		<form class="form-stacked">
+		 <div class="control-group">
+	<label class="control-label">Categorie</label>
+	<div class="controls">
+	<span class="input-small uneditable-input">Thermo</span>
+	</div>
+	</div>
+
+	</form>
+</div></div>
+</div>
+</div></div>
+<div class="accordion" id="accordionInf">
+<div class="well well-small accordion-group">
+<div class="accordion-heading">
+<a class="accordion-toggle" data-toggle="collapse" data-parent="#trace_information" href="#collapseThree">
+Info
+</a>
+</div>
+<div id="collapseThree" class="accordion-body collapse in">
+<div class="accordion-inner">
+
+<div id="trace_information" class="">
+	<form class="form-stacked">
+	 <div class="control-group">
+	<label class="control-label">Creator</label>
+	<div class="controls">
+	<span class="input-small uneditable-input">ydeshayes</span>
+	</div>
+	</div>
+	 <div class="control-group">
+	<label class="control-label" for="creationDate">Creation date</label>
+	<div class="controls">
+	<span class="input-small uneditable-input">03/01/2013</span>
+	</div>
+	</div>
+	 <div class="control-group">
+	<label class="control-label" for="mondificationUser">Last modification by</label>
+	<div class="controls">
+	<span class="input-small uneditable-input">ydeshayes</span>
+	</div>
+	</div>
+	 <div class="control-group">
+	<label class="control-label" for="creationDate">Last Modification date</label>
+	<div class="controls">
+	<span class="input-small uneditable-input">03/01/2013</span>
+	</div>
+	</div>
+	</form>
+</div></div>
+</div>
+</div></div></div>
+	<div id="table_exp" class="span10">
+<h1 style="position:relative;float:left;">#EXPSIZ20130104145632</h1>
+<div id="head_exp">
+    <div class="btn-group " id="workflow">
+    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+    In progress
+    <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+	 <li><a href="#">In progress</a></li>
+	 <li class="divider"></li>
+	 <li><a href="#">Started</a></li>
+	  <li><a href="#">In progress</a></li>
+    <li><a href="#">Finished</a></li>
+	  <li><a href="#">Canceled</a></li>
+    </ul>
+    </div>
+	<div class="btn-group " id="experiment_action">
+    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+    Actions
+    <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+	<li><a href="#">Launch calcul</a></li>
+    </ul>
+    </div>
+    </div>
+    <div class="row" style="position:relative;float:left;"> <div class="well well-small span5">	<div class="btn-group pull-right"> <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+
+    <span class="caret"></span></a> <ul class="dropdown-menu">
+
+   <li><a href="#">Edit</a></li> <li><a href="#">Save</a></li> </ul> </div> <h5>Experiment properties:</h5> <div class="row"> <form class="form-stacked" style="padding-left:20px"> <div class="span4">		<div
+   class="control-group"> <label class="control-label">Protocole:</label> <div class="controls"> <span class="input-medium uneditable-input">Amplif_ptr_sox144_1</span> </div> </div></div> <div class="span4"></div>
+   <div class="span4"></div></form> </div></div> <div class="well well-small span5">	<div class="btn-group pull-right"> <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+
+    <span class="caret"></span></a> <ul class="dropdown-menu">
+
+   <li><a href="#">Edit</a></li> <li><a href="#">Save</a></li><li><a href="#">Export</a></li><li><a href="#">Import</a></li> </ul> </div> <h5>Instrument properties:</h5> <div class="row"> <form class="form-stacked" style="padding-left:20px"> <div class="span4">		<div
+   class="control-group"> <label class="control-label">Nom :</label> <div class="controls"> <span class="input-medium uneditable-input">thermo_1</span> </div> </div></div> <div class="span4"><div class=
+   "control-group"> <label class="control-label">Cycles :</label> <div class="controls"> <span class="input-medium uneditable-input">15</span> </div> </div></div><div class="span4"></div></form>
+   </div></div>
+
+
+<div class="row-fluid">
+<div id="experience_table" class="row1">
+<fieldset>
+<table class="table table-bordered table-condensed table-hover dataTable DTTT_selectable" id="table_id">
+   <thead>
+      <tr role="row">
+         <th colspan="8">Sizing</th>
+         <th colspan="2">QBit</th>
+         <th colspan="3">Bioanalyzer ampli</th>
+		 <th colspan="1">Ampure ampli</th>
+		 <th colspan="2">QBit</th>
+		 <th colspan="3">Bioanalyzer ampli</th>
+		 <th colspan="3">QC qPCR</th>
+      </tr>
+      <tr role="row">
+         <th colspan="5">In</th>
+         <th colspan="3"> Out</th>
+         <th colspan="14"></th>
+      </tr>
+      <tr role="row">
+         <th>#</th>
+         <th>Volume<small>(µl)
+            </small>
+         </th>
+         <th>Volume engagé<small> (µl)</small></th>
+         <th>Temps migration<small> (min)</small></th>
+         <th>Voltage<small> (V)</small></th>
+         <th>#</th>
+         <th>Volume<small> (µl)</small></th>
+         <th>Taille découpe</th>
+         <th></th>
+		 		 <th></th>
+         <th>Taille</th>
+         <th>Fichier</th>
+         <th>Valid</th>
+
+		 		 <th>#</th>
+		          <th></th>
+		          <th></th>
+		          <th></th>
+		 		 <th></th>
+		 		 <th></th>
+
+		 		  <th></th>
+         <td></td>
+      </tr>
+   </thead>
+   <tbody>
+      <tr>
+         <td> 52ff42 </td>
+         <td>20 </td>
+         <td>2</td>
+         <td> 2 </td>
+         <td> A1 </td>
+         <td> ezfzef </td>
+         <td>20</td>
+         <td>2</td>
+         <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+         <td></td>
+      </tr>
+      <tr>
+         <td> 52ff42 </td>
+         <td>20</td>
+         <td>2</td>
+         <td> 2 </td>
+         <td> A2 </td>
+         <td> ezfzef </td>
+         <td>20</td>
+         <td>2</td>
+      	<td></td>
+         <td></td>
+        <td></td>
+         <td></td>
+		 <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+         <td></td>
+      </tr>
+      <tr>
+         <td> 8886966 </td>
+         <td>20</td>
+         <td>2</td>
+         <td> 2 </td>
+         <td> A3 </td>
+         <td> ezfzef </td>
+         <td>20</td>
+         <td>2</td>
+         <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+         <td></td>
+      </tr>
+      <tr>
+         <td> 52ff42 </td>
+         <td>20</td>
+         <td>2</td>
+         <td> 2 </td>
+         <td> A4 </td>
+         <td> ezfzef </td>
+         <td>20</td>
+         <td>2</td>
+         <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+         <td></td>
+      </tr>
+      <tr>
+         <td> 52ff42 </td>
+         <td>20</td>
+         <td>2</td>
+         <td> 2 </td>
+         <td> A5 </td>
+         <td> ezfzef </td>
+         <td>20</td>
+         <td>2</td>
+         <td></td>
+        <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+         <td></td>
+      </tr>
+      <tr>
+         <td> 52ff42 </td>
+         <td>20</td>
+         <td>2</td>
+         <td> 2 </td>
+         <td> A9 </td>
+         <td> ezfzef </td>
+         <td>20</td>
+         <td>2</td>
+         <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+         <td></td>
+      </tr>
+      <tr>
+         <td> 52ff42 </td>
+         <td>20</td>
+         <td>2</td>
+         <td> 2 </td>
+         <td> A10 </td>
+         <td> ezfzef </td>
+         <td>20</td>
+         <td>2</td>
+         <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+         <td></td>
+      </tr>
+      <tr>
+         <td> 52ff42 </td>
+         <td>20</td>
+         <td>2</td>
+         <td> 2 </td>
+         <td> A11 </td>
+         <td> ezfzef </td>
+         <td>20</td>
+         <td>2</td>
+         <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+         <td></td>
+      </tr>
+      <tr>
+         <td> 52ff42 </td>
+         <td>20</td>
+         <td>2</td>
+         <td> 2 </td>
+         <td> A12 </td>
+         <td> ezfzef </td>
+         <td>20</td>
+         <td>2</td>
+         <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+         <td></td>
+      </tr>
+      <tr>
+         <td> 52ff42 </td>
+         <td>20</td>
+         <td>2</td>
+         <td> 2 </td>
+         <td> A13 </td>
+         <td> ezfzef </td>
+         <td>20</td>
+         <td>2</td>
+         <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+         <td></td>
+      </tr>
+      <tr>
+         <td> 52ff42 </td>
+         <td>20</td>
+         <td>2</td>
+         <td> 2 </td>
+         <td> A14 </td>
+         <td> ezfzef </td>
+         <td>20</td>
+         <td>2</td>
+         <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+         <td></td>
+         <td></td>
+         <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+		 <td></td>
+         <td></td>
+      </tr>
+   </tbody>
+</table>
+</fieldset>
+</div>
+</div>
+<div class="accordion" id="accordionCom">
+<div class="accordion-group">
+<div class="accordion-heading"><a href="#myModal" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal">Add comment</a>
+<a class="accordion-toggle" data-toggle="collapse" data-parent="#comments" href="#collapseFour">
+See comments
+</a>
+</div>
+<div id="collapseFour" class="accordion-body collapse out">
+<div class="accordion-inner">
+<div id="comments">
+<legend>Comments: </legend>
+<div id="comment_1" class="comment">
+<table>
+<tr><td class="user">
+<img src="images/user.png" width=50 height=50></img><br>Nom Prenom<br><i>le 01/01/2013</i></td><td>un com !!!</td></tr>
+</table>
+</div>
+<div id="comment_2" class="comment">
+<table>
+<tr>
+<td class="user"><img src="images/user.png" width=50 height=50></img><br>Nom Prenom<br><i>le 01/01/2013</i></td><td>Et lucratus cruentis lucratus septem diritatis delectabatur certaminibus sanguine in et nec ut circo lucratus aliquotiens ingentia diritatis sanguine circo se et pugilum lucratus circo circo delectabatur vel ut vel et et nec circo perfusorumque quoque hoc vetitis lucratus perfusorumque sanguine sanguine perfusorumque autem hoc et lucratus sanguine indicium latens obscurum ut pugilum pugilum indicium latens lucratus vel vicissim septem septem indicium cruentis specie sanguine et hoc se circo aliquotiens ludicris ludicris vicissim aliquotiens hoc obscurum obscurum se perfusorumque in nec ut in pugilum sex cruentis sex laetabatur obscurum autem lucratus ingentia hoc nec nec certaminibus cruentis vicissim latens vicissim. Et lucratus cruentis lucratus septem diritatis delectabatur certaminibus sanguine in et nec ut circo lucratus aliquotiens ingentia diritatis sanguine circo se et pugilum lucratus circo circo delectabatur vel ut vel et et nec circo perfusorumque quoque hoc vetitis lucratus perfusorumque sanguine sanguine perfusorumque autem hoc et lucratus sanguine indicium latens obscurum ut pugilum pugilum indicium latens lucratus vel vicissim septem septem indicium cruentis specie sanguine et hoc se circo aliquotiens ludicris ludicris vicissim aliquotiens hoc obscurum obscurum se perfusorumque in nec ut in pugilum sex cruentis sex laetabatur obscurum autem lucratus ingentia hoc nec nec certaminibus cruentis vicissim latens vicissim.</td></tr>
+</table>
+</div>
+<div id="comment_3" class="comment">
+<table>
+<tr>
+<td class="user"><img src="images/user.png" width=50 height=50></img><br>Nom Prenom<br><i>le 01/01/2013</i></td><td>Et lucratus cruentis lucratus septem latens obscurum ut pugilum pugilum indicium latens lucratus vel vicissim septem septem indicium cruentis specie sanguine et hoc se circo aliquotiens ludicris ludicris vicissim aliquotiens hoc obscurum obscurum se perfusorumque in nec ut in pugilum sex cruentis sex laetabatur obscurum autem lucratus ingentia hoc nec nec certaminibus cruentis vicissim latens vicissim. Et lucratus cruentis lucratus septem diritatis delectabatur certaminibus sanguine in et nec ut circo lucratus aliquotiens ingentia diritatis sanguine circo se et pugilum lucratus circo circo delectabatur vel ut vel et et nec circo perfusorumque quoque hoc vetitis lucratus perfusorumque sanguine sanguine perfusorumque autem hoc et lucratus sanguine indicium latens obscurum ut pugilum pugilum indicium latens lucratus vel vicissim septem septem indicium cruentis specie sanguine et hoc se circo aliquotiens ludicris ludicris vicissim aliquotiens hoc obscurum obscurum se perfusorumque in nec ut in pugilum sex cruentis sex laetabatur obscurum autem lucratus ingentia hoc nec nec certaminibus cruentis vicissim latens vicissim.</td></tr>
+</table>
+</div>
+<div id="comment_4" class="comment">
+<table>
+<tr>
+<td class="user"><img src="images/user.png" width=50 height=50></img><br>Nom Prenom<br><i>le 01/01/2013</i></td><td>Et lucratus cruentis lucratus septem latens obscurum ut pugilum pugilum indicium latens lucratus vel vicissim septem septem indicium cruentis specie sanguine et hoc se circo aliquotiens ludicris ludicris vicissim aliquotiens hoc obscurum obscurum se perfusorumque in nec ut in pugilum sex cruentis sex laetabatur obscurum autem lucratus ingentia hoc nec nec certaminibus cruentis vicissim latens vicissim. Et lucratus cruentis lucratus septem diritatis delectabatur certaminibus sanguine in et nec ut circo lucratus aliquotiens ingentia diritatis sanguine circo se et pugilum lucratus circo circo delectabatur vel ut vel et et nec circo perfusorumque quoque hoc vetitis lucratus perfusorumque sanguine sanguine perfusorumque autem hoc et lucratus sanguine indicium latens obscurum ut pugilum pugilum indicium latens lucratus vel vicissim septem septem indicium cruentis specie sanguine et hoc se circo aliquotiens ludicris ludicris vicissim aliquotiens hoc obscurum obscurum se perfusorumque in nec ut in pugilum sex cruentis sex laetabatur obscurum autem lucratus ingentia hoc nec nec certaminibus cruentis vicissim latens vicissim.</td></tr>
+</table>
+</div>
+</div>
+</div> </div>
+</div>
+</div>
+</div>
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel">Adding comment</h3>
+</div>
+<div class="modal-body">
+Leave your comment here:<br>
+<textarea rows="15" style=" width: 489px;"></textarea>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+<button data-dismiss="modal" class="btn btn-primary">Post</button>
+</div>
+</div>
+</body>
+</html>
