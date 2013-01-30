@@ -4,6 +4,8 @@ import java.util.List;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.Run;
+import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBUpdate;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
@@ -113,11 +115,13 @@ public class Runs extends Controller {
 		}
 	}
 
-	public static Result removeRuns(String format){
-		List<Run> runs = MongoDBDAO.all(Constants.RUN_ILLUMINA_COLL_NAME, Run.class);
-		for(Run r:runs){
-			MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, r);
+	public static Result removeRun(String code,String format){
+		Run run = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
+		if(run == null){
+			return badRequest();
 		}
+		
+		MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, run);
 		
 		return ok();
 	}
