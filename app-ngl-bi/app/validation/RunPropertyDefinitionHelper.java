@@ -74,8 +74,8 @@ properties.percentClusterIlluminaFilter
 		propertyDefinitions.add(getPropertyDefinition("prephasing","prephasing",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, String.class));
 		propertyDefinitions.add(getPropertyDefinition("nbClusterInternalAndIlluminaFilter","nbClusterInternalAndIlluminaFilter",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
 		propertyDefinitions.add(getPropertyDefinition("nbClusterIlluminaFilter","nbClusterIlluminaFilter",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
-		propertyDefinitions.add(getPropertyDefinition("percentClusterIlluminaFilter","percentClusterIlluminaFilter",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Float.class));		
-		propertyDefinitions.add(getPropertyDefinition("percentClusterInternalAndIlluminaFilter","percentClusterInternalAndIlluminaFilter",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Float.class));
+		propertyDefinitions.add(getPropertyDefinition("percentClusterIlluminaFilter","percentClusterIlluminaFilter",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Double.class));		
+		propertyDefinitions.add(getPropertyDefinition("percentClusterInternalAndIlluminaFilter","percentClusterInternalAndIlluminaFilter",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Double.class));
 		
 		return propertyDefinitions;
 	}
@@ -98,12 +98,12 @@ properties.percentClusterIlluminaFilter
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(getPropertyDefinition("nbClusterInternalAndIlluminaFilter","nbClusterInternalAndIlluminaFilter",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
 		propertyDefinitions.add(getPropertyDefinition("nbBaseInternalAndIlluminaFilter","nbBaseInternalAndIlluminaFilter",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
-		propertyDefinitions.add(getPropertyDefinition("fraction","fraction",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Float.class));		
+		propertyDefinitions.add(getPropertyDefinition("fraction","fraction",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Double.class));		
 		propertyDefinitions.add(getPropertyDefinition("insertLength","insertLength",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Integer.class));
 		propertyDefinitions.add(getPropertyDefinition("nbUsableBase","nbUsableBase",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
 		propertyDefinitions.add(getPropertyDefinition("nbUsableCluster","nbUsableCluster",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
-		propertyDefinitions.add(getPropertyDefinition("q30","q30",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Float.class));
-		propertyDefinitions.add(getPropertyDefinition("score","score",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Float.class));
+		propertyDefinitions.add(getPropertyDefinition("q30","q30",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Double.class));
+		propertyDefinitions.add(getPropertyDefinition("score","score",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Double.class));
 		propertyDefinitions.add(getPropertyDefinition("nbRead","nbRead",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Integer.class));
 
 		return propertyDefinitions;
