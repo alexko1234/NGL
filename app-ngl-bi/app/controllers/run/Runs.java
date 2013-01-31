@@ -115,13 +115,47 @@ public class Runs extends Controller {
 		}
 	}
 
-	public static Result removeRun(String code,String format){
+	public static Result remove(String code,String format){
 		Run run = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(run == null){
 			return badRequest();
 		}
 		
 		MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, run);
+		
+		return ok();
+	}
+	
+	public static Result removeReadsets(String code, String format){
+		Run run  = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
+		if(run==null){
+			return badRequest();
+		}
+		for(int i=0;run.lanes!=null && i<run.lanes.size();i++){
+			for(int j=0;run.lanes.get(i).readsets != null && j<run.lanes.get(i).readsets.size();j++){
+				MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",code),DBUpdate.unset("lanes."+i+".readsets."+j));
+			}
+			MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",code),DBUpdate.pull("lanes."+i+".readsets",null));	
+		}
+		
+		return ok();
+	}
+	
+	public static Result removeFiles(String code,String format){
+		Run run  = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
+		if(run==null){
+			return badRequest();
+		}
+		for(int i=0;run.lanes!=null && i<run.lanes.size();i++){
+			for(int j=0;run.lanes.get(i).readsets != null && j<run.lanes.get(i).readsets.size();j++){
+				for(int k=0;run.lanes.get(i).readsets.get(j).files!=null && k<run.lanes.get(i).readsets.get(j).files.size();k++){
+					MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",code),DBUpdate.unset("lanes."+i+".readsets."+j+".files."+k));
+				}
+				MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",code),DBUpdate.pull("lanes."+i+".readsets."+j+".files",null));
+				
+			}
+			
+		}
 		
 		return ok();
 	}
