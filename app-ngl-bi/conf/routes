@@ -18,7 +18,9 @@ GET    	   /runs/add             					controllers.run.Runs.add()
 POST   	   /runs									controllers.run.Runs.createOrUpdate(format: java.lang.String ?= "html")
 GET	   	   /runs/:code								controllers.run.Runs.show(code: java.lang.String, format: java.lang.String ?= "html")
 GET	  	   /runs/:code/edit							controllers.run.Runs.edit(code: java.lang.String, format: java.lang.String ?= "html")
-DELETE	   /runs/:code/remove						controllers.run.Runs.removeRun(code:java.lang.String,format: java.lang.String ?= "html")
+DELETE	   /runs/:code								controllers.run.Runs.remove(code:java.lang.String,format: java.lang.String ?= "html")
+DELETE	   /runs/:code/files						controllers.run.Runs.removeFiles(code: java.lang.String,format: java.lang.String ?= "html")
+DELETE	   /runs/:code/readsets						controllers.run.Runs.removeReadsets(code: java.lang.String,format: java.lang.String ?= "html")
 
 #run dispatch
 POST /runs/:code/dispatch							controllers.run.Runs.dispatch(code: java.lang.String, format: java.lang.String ?= "html")
@@ -43,9 +45,6 @@ PUT    /readsets/:readSetCode				controllers.run.ReadSets.update(readSetCode:jav
 GET        /readsets/:code/files/:fullname			controllers.run.Files.show(code: java.lang.String,fullname: java.lang.String, format: java.lang.String ?= "html")
 POST  	   /readsets/:code/files					controllers.run.Files.createOrUpdate(code: java.lang.String, format: java.lang.String ?= "html")
 
-#deletion
-DELETE	   /deletions/:code/files					controllers.run.Deletions.removeFiles(code: java.lang.String,format: java.lang.String ?= "html")
-DELETE	   /deletions/:code/readsets				controllers.run.Deletions.removeReadsets(code: java.lang.String,format: java.lang.String ?= "html")
 
 # Javascript routing
 GET    /assets/javascripts/routes      controllers.Application.javascriptRoutes()
