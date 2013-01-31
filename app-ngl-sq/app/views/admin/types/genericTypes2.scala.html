@@ -22,11 +22,11 @@
 	<div class="tab-content">
 	<div class="tab-pane active" id="search" ng-controller="DataTableCtrl" ng-init="init()">
 		<form class="well form-search">
-			<select ng-model="type" ng-options="type.label for type in types" ng-change="datatable.search()">
+			<select ng-model="type" ng-options="type.label for type in types" ng-change="search()">
 				<option value="">-- chose color --</option>
 			</select>
 			
-			<input type="text" class="search-query" placeholder="Name"  ng-model="name" ng-change="datatable.search()"/>						
+			<input type="text" class="search-query" placeholder="Name"  ng-model="name" ng-change="search()"/>						
 		</form>
 				<div class="btn-toolbar">
 					<div class="btn-group">

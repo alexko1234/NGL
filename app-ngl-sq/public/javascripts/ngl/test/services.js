@@ -1,6 +1,6 @@
-angular.module('nglServices', ['ngResource']).
-    	factory('datatable', function($resource){ //service to manage datatable
-    		var constructor = function(iConfig){
+angular.module('nglServices', []).
+    	factory('datatable', ['$http', function($http){ //service to manage datatable
+    		var constructor = function($scope, iConfig){
     			
     			
     			var datatable = {
@@ -31,6 +31,18 @@ angular.module('nglServices', ['ngResource']).
 		    				this.searchresult = angular.copy(this.searchresultMaster);
 		    				this.config = angular.copy(this.configMaster);
 		    			},
+		    			
+		    			search : function(params){
+		    				if(this.config.url.search){
+		    					$http.get(this.config.url.search,{params:params}).success(function(data) {
+		    						$scope.tableresult = data;
+		    						$scope.tableresultMaster = angular.copy($scope.tableresult);
+		    					});
+		    				}else{
+		    					alert('no url define for search ! ');
+		    				}
+		    			},
+		    			
 		    			/**
 		    			 * Save the selected table line
 		    			 */
@@ -159,4 +171,4 @@ angular.module('nglServices', ['ngResource']).
     			return datatable;
     		}
     		return constructor;
-    	});
+    	}]);

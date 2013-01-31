@@ -156,7 +156,6 @@ public class SpringTest extends AbstractTests{
 		ProjectTypeDAO projectTypeDAO = Spring.getBeanOfType(ProjectTypeDAO.class);
 		ProjectType projectType = projectTypeDAO.findById(1);
 		Assert.assertNotNull(projectType);
-		Assert.assertNotNull(projectType.commonInfoType);
 		Assert.assertNotNull(projectType.projectCategory);
 	}
 	
@@ -281,8 +280,8 @@ public class SpringTest extends AbstractTests{
 		for(ExperimentType expType : nextExpTypes){
 			Assert.assertNotNull(expType);
 			Assert.assertNotNull(expType.id);
-			Assert.assertNotNull(expType.commonInfoType);
-			Assert.assertNotNull(expType.commonInfoType.id);
+			//Assert.assertNotNull(expType.commonInfoType);
+			//Assert.assertNotNull(expType.commonInfoType.id);
 		}
 	}
 	
@@ -290,8 +289,8 @@ public class SpringTest extends AbstractTests{
 	{
 		Assert.assertNotNull(expType);
 		Assert.assertNotNull(expType.id);
-		Assert.assertNotNull(expType.commonInfoType);
-		Assert.assertNotNull(expType.commonInfoType.id);
+		//Assert.assertNotNull(expType.commonInfoType);
+		//Assert.assertNotNull(expType.commonInfoType.id);
 		Assert.assertNotNull(expType.protocols);
 		Assert.assertTrue(expType.protocols.size()>0);
 		for(Protocol protocol : expType.protocols){
@@ -360,7 +359,7 @@ public class SpringTest extends AbstractTests{
 	private void checkInstrumentUsedType(InstrumentUsedType instrumentUsedType)
 	{
 		Assert.assertNotNull(instrumentUsedType.id);
-		Assert.assertNotNull(instrumentUsedType.commonInfoType);
+		//Assert.assertNotNull(instrumentUsedType.commonInfoType);
 		Assert.assertNotNull(instrumentUsedType.instruments);
 		Assert.assertNotNull(instrumentUsedType.instrumentCategory);
 		Assert.assertTrue(instrumentUsedType.instruments.size()>0);
