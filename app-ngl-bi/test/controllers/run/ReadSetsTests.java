@@ -128,7 +128,7 @@ public class ReadSetsTests extends AbstractTests {
 	 
 	 @Test
 	 public void testRemoveReadsets(){
-		 Result result = callAction(controllers.run.routes.ref.Deletions.removeReadsets("YANN_TEST1FORREADSET","json"),fakeRequest());
+		 Result result = callAction(controllers.run.routes.ref.Runs.removeReadsets("YANN_TEST1FORREADSET","json"),fakeRequest());
          Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
          //System.out.println("RUN WITHOUT READSET: "+runDelete.lanes.get(0).readsets.toArray());
          assertThat(status(result)).isEqualTo(OK);

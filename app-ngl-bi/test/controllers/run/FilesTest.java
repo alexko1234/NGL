@@ -84,7 +84,7 @@ public class FilesTest extends AbstractTests{
 	 
 	 @Test
 	 public void testRemoveFiles(){
-		 Result result = callAction(controllers.run.routes.ref.Deletions.removeFiles("YANN_TEST1FORREADSET2","json"),fakeRequest());
+		 Result result = callAction(controllers.run.routes.ref.Runs.removeFiles("YANN_TEST1FORREADSET2","json"),fakeRequest());
 		   Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
 		  // System.out.println(Json.toJson(runDelete).toString());
          assertThat(status(result)).isEqualTo(OK);

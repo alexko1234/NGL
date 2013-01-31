@@ -130,7 +130,7 @@ public class RunsTest extends AbstractTests {
 	
 	@Test
 	public void testDeleteRun(){
-		Result result = callAction(controllers.run.routes.ref.Runs.removeRun("YANN_TEST1","json"),fakeRequest());
+		Result result = callAction(controllers.run.routes.ref.Runs.remove("YANN_TEST1","json"),fakeRequest());
 		assertThat(status(result)).isEqualTo(OK);
 		
 	}
