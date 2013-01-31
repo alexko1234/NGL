@@ -23,7 +23,7 @@ public class Application extends Controller {
 	  	        // Routes	  	       
 	  	        controllers.admin.types.routes.javascript.GenericTypes.show(),
 	  	        controllers.admin.types.routes.javascript.GenericTypes.createOrUpdate(),
-	  	      controllers.admin.types.routes.javascript.GenericTypes.add(),
+	  	        controllers.admin.types.routes.javascript.GenericTypes.add(),
 	  	        controllers.administration.authentication.routes.javascript.User.logOut()
 	  	        
 	  	      )

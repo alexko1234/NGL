@@ -14,6 +14,8 @@ import models.laboratory.common.description.State;
 import org.codehaus.jackson.node.ObjectNode;
 
 import play.api.templates.PlayMagicForJava;
+import play.data.DynamicForm.Dynamic;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
@@ -31,15 +33,14 @@ import views.html.admin.types.*;
  * @author ejacoby
  *
  */
-public class GenericTypes extends Controller {
+public class GenericTypes2 extends Controller {
 
 	/**
 	 * Defines a form wrapping the User class.
 	 */ 
-	final static Form<DataTableForm> datatableForm = form(DataTableForm.class);
 	final static Form<CommonInfoType> commonInfoTypeForm = form(CommonInfoType.class);
 	private static final String Log = null;
-
+	final static DynamicForm inputForm = Controller.form();
 	public static Result home() {
 		//return ok(genericTypes.render(datatableForm, commonInfoTypeForm));
 		return ok(genericTypes2.render());
@@ -52,11 +53,14 @@ public class GenericTypes extends Controller {
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result list() {
 
-		Form<DataTableForm> filledForm = datatableForm.bindFromRequest();
+		DynamicForm filledForm = inputForm.bindFromRequest(); 
 		ObjectNode result = Json.newObject();
 		//List<CommonInfoType> commonInfoTypes = CommonInfoType.findByNameAndType(filledForm.get().sSearch.get(1),(!filledForm.get().sSearch.get(2).isEmpty()) ? Long.valueOf(filledForm.get().sSearch.get(2)):null);
 		
+		//List<CommonInfoType> commonInfoTypes = CommonInfoType.findByNameAndType(filledForm.get("name"), Long.valueOf(filledForm.get("typeCode")));
+		
 		List<CommonInfoType> commonInfoTypes = CommonInfoType.findByNameAndType("", null);
+		
 		
 		/*Page<CommonInfoType> p = CommonInfoType.page(0, 10, "name", "asc", filledForm.get().sSearch.get(1), 
 				(!filledForm.get().sSearch.get(2).isEmpty()) ? Long.valueOf(filledForm.get().sSearch.get(2)):null);
