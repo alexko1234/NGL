@@ -4,7 +4,11 @@
 
 @scripts() = {
         <script src="@helper.getAsset("javascript","angular","1.0.3","angular.min.js")" type="text/javascript" charset="utf-8"></script>   
-        <script src="@routes.Assets.at("javascripts/ngl/test/controller.js")" type="text/javascript" charset="utf-8"></script>     
+        <script src="@helper.getAsset("javascript","angular","1.0.3","angular-resource.min.js")" type="text/javascript" charset="utf-8"></script>           
+        <script src="@routes.Assets.at("javascripts/ngl/test/app.js")" type="text/javascript" charset="utf-8"></script>  
+        <script src="@routes.Assets.at("javascripts/ngl/test/services.js")" type="text/javascript" charset="utf-8"></script>             
+        <script src="@routes.Assets.at("javascripts/ngl/test/controllers.js")" type="text/javascript" charset="utf-8"></script>     
+           
 }  
 
 @main("Test AngularJS DataTable", "types", scripts){
@@ -16,24 +20,24 @@
   
   
 	<div class="tab-content">
-	<div class="tab-pane active" id="search" ng-controller="DataTableCtrl">
+	<div class="tab-pane active" id="search" ng-controller="DataTableCtrl" ng-init="init()">
 		<form class="well form-search">
-			<select ng-model="type" ng-options="type.label for type in types" ng-change="search()">
+			<select ng-model="type" ng-options="type.label for type in types" ng-change="datatable.search()">
 				<option value="">-- chose color --</option>
 			</select>
 			
-			<input type="text" class="search-query" placeholder="Name"  ng-model="name" ng-change="search()"/>						
+			<input type="text" class="search-query" placeholder="Name"  ng-model="name" ng-change="datatable.search()"/>						
 		</form>
 				<div class="btn-toolbar">
 					<div class="btn-group">
-						<a class="btn btn" ng-click="setEditColumn()">Edit</a>
+						<a class="btn btn" ng-click="datatable.setEditColumn()">Edit</a>
 						<a href="#" data-toggle="dropdown" class="btn dropdown-toggle">
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="#" ng-click="setEditColumn('code')">Code</a></li>
-							<li><a href="#" ng-click="setEditColumn('name')">Name</a></li>
-							<li><a href="#" ng-click="setEditColumn('collectionName')">Collection Name</a></li>							
+							<li><a href="#" ng-click="datatable.setEditColumn('code')">Code</a></li>
+							<li><a href="#" ng-click="datatable.setEditColumn('name')">Name</a></li>
+							<li><a href="#" ng-click="datatable.setEditColumn('collectionName')">Collection Name</a></li>							
 						</ul>
 					</div>
 					<div class="btn-group">
@@ -41,18 +45,18 @@
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="#" ng-click="setHideColumn('id')">#</a></li>
-							<li><a href="#" ng-click="setHideColumn('code')">Code</a></li>
-							<li><a href="#" ng-click="setHideColumn('name')">Name</a></li>
-							<li><a href="#" ng-click="setHideColumn('objectType.type')">Type</a></li>
-							<li><a href="#" ng-click="setHideColumn('collectionName')">Collection Name</a></li>
+							<li><a href="#" ng-click="datatable.setHideColumn('id')">#</a></li>
+							<li><a href="#" ng-click="datatable.setHideColumn('code')">Code</a></li>
+							<li><a href="#" ng-click="datatable.setHideColumn('name')">Name</a></li>
+							<li><a href="#" ng-click="datatable.setHideColumn('objectType.type')">Type</a></li>
+							<li><a href="#" ng-click="datatable.setHideColumn('collectionName')">Collection Name</a></li>
 						</ul>
 					</div>
 					<div class="btn-group">
-						<a class="btn" ng-click="save()">Save</a> 
-						<a class="btn" ng-click="cancel()">Cancel</a>  
-						<a class="btn" ng-click="select()">Select all</a>
-						<a class="btn" ng-click="remove()">Delete</a>
+						<a class="btn" ng-click="datatable.save()">Save</a> 
+						<a class="btn" ng-click="datatable.cancel()">Cancel</a>  
+						<a class="btn" ng-click="datatable.select()">Select all</a>
+						<a class="btn" ng-click="datatable.remove()">Delete</a>
 					</div>
 					<div class="btn-group">
 						<a href="#" data-toggle="dropdown"
@@ -76,28 +80,28 @@
 				<table class="table table-condensed table-hover table-bordered">
 				<thead>
 				<tr>
-				<th ng-hide="isHide('id')"              ng-click="setOrderColumn('id')">#</th>
-				<th ng-hide="isHide('code')"            ng-click="setOrderColumn('code')">Code</th>
-				<th ng-hide="isHide('name')"            ng-click="setOrderColumn('name')">Name</th>
-				<th ng-hide="isHide('objectType.type')" ng-click="setOrderColumn('objectType.type')">Type</th>
-				<th ng-hide="isHide('collectionName')"  ng-click="setOrderColumn('collectionName')">Collection Name</th>
+				<th ng-hide="datatable.isHide('id')"              ng-click="datatable.setOrderColumn('id')">#</th>
+				<th ng-hide="datatable.isHide('code')"            ng-click="datatable.setOrderColumn('code')">Code</th>
+				<th ng-hide="datatable.isHide('name')"            ng-click="datatable.setOrderColumn('name')">Name</th>
+				<th ng-hide="datatable.isHide('objectType.type')" ng-click="datatable.setOrderColumn('objectType.type')">Type</th>
+				<th ng-hide="datatable.isHide('collectionName')"  ng-click="datatable.setOrderColumn('collectionName')">Collection Name</th>
 				</tr>
 				</thead>
 				<tbody>
 				<!-- first line to edit mode -->
-				<tr ng-show="datatableConfig.edit">
-				<td ng-hide="isHide('id')"></td>
-				<td ng-hide="isHide('code')"><input type="text" class="input-medium" ng-change="updateColumn('code')" ng-model="datatableConfig.updateColumn.code" ng-show="isEdit('code')"/></td>
-				<td ng-hide="isHide('name')"><input type="text" class="input-medium" ng-change="updateColumn('name')" ng-model="datatableConfig.updateColumn.name" ng-show="isEdit('name')"/></td>
-				<td ng-hide="isHide('objectType.type')"></td>
-				<td ng-hide="isHide('collectionName')"><input type="text" class="input-medium" style="margin:0" ng-change="updateColumn('collectionName')" ng-model="datatableConfig.updateColumn.collectionName" ng-show="isEdit('collectionName')"/></td>		
+				<tr ng-show="datatable.config.edit">
+				<td ng-hide="datatable.isHide('id')"></td>
+				<td ng-hide="datatable.isHide('code')"><input type="text" class="input-medium" ng-change="datatable.updateColumn('code')" ng-model="datatable.config.updateColumn.code" ng-show="datatable.isEdit('code')"/></td>
+				<td ng-hide="datatable.isHide('name')"><input type="text" class="input-medium" ng-change="datatable.updateColumn('name')" ng-model="datatable.config.updateColumn.name" ng-show="datatable.isEdit('name')"/></td>
+				<td ng-hide="datatable.isHide('objectType.type')"></td>
+				<td ng-hide="datatable.isHide('collectionName')"><input type="text" class="input-medium" style="margin:0" ng-change="datatable.updateColumn('collectionName')" ng-model="datatable.config.updateColumn.collectionName" ng-show="datatable.isEdit('collectionName')"/></td>		
 				</tr>
-				<tr ng-repeat="type in tableresult | orderBy:datatableConfig.orderBy:datatableConfig.orderReverse" ng-click="select(type)" ng-class="type.trClass">
-					<td ng-hide="isHide('id')"><span>{{type.id}}</span></td>
-					<td ng-hide="isHide('code')"><span ng-hide="isEdit('code', type)">{{type.code}}</span><input type="text" class="input-medium" ng-model="type.code" ng-show="isEdit('code', type)"/></td>
-					<td ng-hide="isHide('name')"><span ng-hide="isEdit('name', type)">{{type.name}}</span><input type="text" class="input-medium" ng-model="type.name" ng-show="isEdit('name', type)"/></td>
-					<td ng-hide="isHide('objectType.type')"><span>{{type.objectType.type}}</span></td>
-					<td ng-hide="isHide('collectionName')"><span ng-hide="isEdit('collectionName', type)">{{type.collectionName}}</span><input type="text" class="input-medium" style="margin:0" ng-model="type.collectionName" ng-show="isEdit('collectionName', type)"/></td>
+				<tr ng-repeat="type in datatable.searchresult | orderBy:datatable.config.orderBy:datatable.config.orderReverse" ng-click="datatable.select(type)" ng-class="type.trClass">
+					<td ng-hide="datatable.isHide('id')"><span>{{type.id}}</span></td>
+					<td ng-hide="datatable.isHide('code')"><span ng-hide="datatable.isEdit('code', type)">{{type.code}}</span><input type="text" class="input-medium" ng-model="type.code" ng-show="datatable.isEdit('code', type)"/></td>
+					<td ng-hide="datatable.isHide('name')"><span ng-hide="datatable.isEdit('name', type)">{{type.name}}</span><input type="text" class="input-medium" ng-model="type.name" ng-show="datatable.isEdit('name', type)"/></td>
+					<td ng-hide="datatable.isHide('objectType.type')"><span>{{type.objectType.type}}</span></td>
+					<td ng-hide="datatable.isHide('collectionName')"><span ng-hide="datatable.isEdit('collectionName', type)">{{type.collectionName}}</span><input type="text" class="input-medium" style="margin:0" ng-model="type.collectionName" ng-show="datatable.isEdit('collectionName', type)"/></td>
 				</tr>
 				</tbody>
 				</table>
