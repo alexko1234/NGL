@@ -3,7 +3,6 @@ package utils;
 
 import static play.test.Helpers.fakeApplication;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,12 +12,15 @@ import org.junit.Before;
 import play.test.FakeApplication;
 import play.test.Helpers;
 
-public abstract class AbstractTests {
+public abstract class AbstractTests{
 	FakeApplication app;
+	
 	@Before
-	public void start(){
+	public void start() throws Exception{
+		
 		 app = getFakeApplication();
 		 Helpers.start(app);
+		 
 	}
 	
 	@After
@@ -40,7 +42,7 @@ public abstract class AbstractTests {
 		config.put("db.default.user", "ngl");
 		config.put("db.default.password", "ngl@dmin");
 		config.put("db.default.partitionCount", "1");
-		config.put("db.default.maxConnectionsPerPartition", "6");
+		config.put("db.default.maxConnectionsPerPartition", "12");
 		config.put("db.default.minConnectionsPerPartition", "1");
 		config.put("db.default.logStatements", "true");
 		config.put("db.default.jndiName", "ngl");	

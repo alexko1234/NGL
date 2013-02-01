@@ -8,21 +8,6 @@ public class MeasureValue {
 	
 	public Boolean defaultValue = Boolean.FALSE;
   	
-	public Long measureCateroryId;
-
-	
-	
-	public MeasureValue() {
-		super();
-	}
-
-
-
-	public MeasureValue(String value, Boolean defaultValue) {
-		super();
-		this.value = value;
-		this.defaultValue = defaultValue;
-	}
-
+	public MeasureCategory measureCaterory;
 	
 }

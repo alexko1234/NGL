@@ -2,11 +2,14 @@ package models.laboratory.processus.description.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.processus.description.ProcessCategory;
 import models.laboratory.processus.description.ProcessType;
 
@@ -15,17 +18,15 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.modules.spring.Spring;
 
-import com.avaje.ebean.enhance.asm.Type;
-
 public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType>{
 
-	public ProcessTypeMappingQuery(DataSource ds)
+	public ProcessTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
 	{
-		super(ds,"SELECT id, fk_common_info_type, fk_process_category "+
-				"FROM process_type "+
-				"WHERE id = ? ");
-		super.declareParameter(new SqlParameter("id", Type.LONG));
+		super(ds,sql);
+		if(sqlParameter!=null)
+			super.declareParameter(sqlParameter);
 		compile();
+		
 	}
 	
 	@Override
@@ -40,8 +41,12 @@ public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType>{
 		processType.setCommonInfoType(commonInfoType);
 		//Get category
 		ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
-		ProcessCategory processCategory = processCategoryDAO.findById(idProjectCategory);
+		ProcessCategory processCategory = (ProcessCategory) processCategoryDAO.findById(idProjectCategory);
 		processType.processCategory = processCategory;
+		//Get list experimentType
+		ExperimentTypeDAO expTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
+		List<ExperimentType> experimentTypes = expTypeDAO.findByProcessId(processType.id);
+		processType.experimentTypes=experimentTypes;
 		return processType;
 	}
 

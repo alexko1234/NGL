@@ -15,16 +15,13 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.modules.spring.Spring;
 
-import com.avaje.ebean.enhance.asm.Type;
-
 public class ProjectTypeMappingQuery extends MappingSqlQuery<ProjectType>{
 
-	public ProjectTypeMappingQuery(DataSource ds)
+	public ProjectTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
 	{
-		super(ds,"SELECT id, fk_common_info_type, fk_project_category "+
-				"FROM project_type "+
-				"WHERE id = ? ");
-		super.declareParameter(new SqlParameter("id", Type.LONG));
+		super(ds,sql);
+		if(sqlParameter!=null)
+			super.declareParameter(sqlParameter);
 		compile();
 	}
 	
@@ -40,7 +37,7 @@ public class ProjectTypeMappingQuery extends MappingSqlQuery<ProjectType>{
 		projectType.setCommonInfoType(commonInfoType);
 		//Get category
 		ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
-		ProjectCategory projectCategory = projectCategoryDAO.findById(idProjectCategory);
+		ProjectCategory projectCategory = (ProjectCategory) projectCategoryDAO.findById(idProjectCategory);
 		projectType.projectCategory = projectCategory;
 		return projectType;
 	}

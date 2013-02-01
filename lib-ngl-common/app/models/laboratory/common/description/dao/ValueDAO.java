@@ -32,15 +32,6 @@ public class ValueDAO {
 		BeanPropertyRowMapper<Value> mapper = new BeanPropertyRowMapper<Value>(Value.class);
 		return this.jdbcTemplate.query(sql, mapper, idPropertyDefinition);
 	}
-	public Value add(Value value)
-	{
-		Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("value", value.value);
-        parameters.put("default_value", value.defaultValue);
-        Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        value.id = newId;
-		return value;
-	}
 	
 	public Value add(Value value, long idPropertyDefinition)
 	{
@@ -53,9 +44,9 @@ public class ValueDAO {
 		return value;
 	}
 	
-	public void update(Value value)
+	public void update(Value value, long idPropertyDefinition)
 	{
-		String sql = "UPDATE value SET value=?, default_value=? WHERE id=?";
-		jdbcTemplate.update(sql,value.value, value.defaultValue, value.id);
+		String sql = "UPDATE value SET value=?, default_value=? WHERE id=? AND property_definition_id=?";
+		jdbcTemplate.update(sql,value.value, value.defaultValue, value.id, idPropertyDefinition);
 	}
 }

@@ -11,6 +11,14 @@ import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import play.modules.spring.Spring;
 
+/**
+ * Class attributes common types
+ * Represented by a table in the database with its own id
+ * The subclasses are represented by tables in the database with the same id as the parent class
+ * Relations with the protocols and instruments are accessible by the common_info_type table for the experiment subclasses (experimentType, qualityCcontrolType ...)
+ * @author ejacoby
+ *
+ */
 public class CommonInfoType{
 	
 	public Long id;
@@ -30,7 +38,7 @@ public class CommonInfoType{
 	public List<Resolution> resolutions = new ArrayList<Resolution>();
 
 	@Valid
-	public List<PropertyDefinition> propertiesDefinition=new ArrayList<PropertyDefinition>();
+	public List<PropertyDefinition> propertiesDefinitions=new ArrayList<PropertyDefinition>();
 
 	public ObjectType objectType;
 
@@ -39,21 +47,8 @@ public class CommonInfoType{
 		super();
 	}
 
-	public CommonInfoType(String name, String code,
-			String collectionName, List<State> variableStates,
-			List<Resolution> resolutions,
-			List<PropertyDefinition> propertiesDefinition, ObjectType objectType) {
-		super();
-		this.name = name;
-		this.code = code;
-		this.collectionName = collectionName;
-		this.variableStates = variableStates;
-		this.resolutions = resolutions;
-		this.propertiesDefinition = propertiesDefinition;
-		this.objectType = objectType;
-	}
-
-	public static CommonInfoType findCommonById(long id)
+	
+	public static CommonInfoType findById(long id)
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		return commonInfoTypeDAO.findById(id);
@@ -92,16 +87,6 @@ public class CommonInfoType{
 		commonInfoTypeDAO.update(this);
 		
 	}
-		
-	public List<PropertyDefinition> getPropertiesDefinition() {
-		return propertiesDefinition;
-	}
-
-
-	public void setPropertiesDefinition(
-			List<PropertyDefinition> propertiesDefinition) {
-		this.propertiesDefinition = propertiesDefinition;
-	}
 	
 	public void setCommonInfoType(CommonInfoType commonInfoType)
 	{
@@ -111,13 +96,38 @@ public class CommonInfoType{
 		this.collectionName=commonInfoType.collectionName;
 		this.variableStates=commonInfoType.variableStates;
 		this.resolutions=commonInfoType.resolutions;
-		this.propertiesDefinition=commonInfoType.propertiesDefinition;
+		this.propertiesDefinitions=commonInfoType.propertiesDefinitions;
 		this.objectType=commonInfoType.objectType;
 	}
+
 	
-	public long getIdCommonInfoType()
-	{
-		return this.id;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		return result;
 	}
+
+	/**
+	 * Necessary in update operation to add new type in relationship because compare list from database and list to update
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CommonInfoType other = (CommonInfoType) obj;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		return true;
+	}
+	
 	
 }

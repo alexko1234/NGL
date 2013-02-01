@@ -15,15 +15,15 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.modules.spring.Spring;
 
-import com.avaje.ebean.enhance.asm.Type;
-
 public class ProtocolMappingQuery extends MappingSqlQuery<Protocol>{
 
-	public ProtocolMappingQuery(DataSource ds, String sql)
+	public ProtocolMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter)
 	{
 		super(ds,sql);
-		super.declareParameter(new SqlParameter("id", Type.LONG));
+		if(sqlParameter!=null)
+			super.declareParameter(sqlParameter);
 		compile();
+		
 	}
 	@Override
 	protected Protocol mapRow(ResultSet rs, int rowNumber) throws SQLException {
@@ -39,7 +39,7 @@ public class ProtocolMappingQuery extends MappingSqlQuery<Protocol>{
 		protocol.reagentTypes = reagentTypes;
 		//Get protocol category
 		ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
-		ProtocolCategory protocolCategory = protocolCategoryDAO.findById(idProtocolCategory);
+		ProtocolCategory protocolCategory = (ProtocolCategory) protocolCategoryDAO.findById(idProtocolCategory);
 		protocol.protocolCategory = protocolCategory;
 		return protocol;
 	}

@@ -2,16 +2,12 @@ package models.laboratory.instrument.description;
 
 import java.util.List;
 
+import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 
 
-public class InstrumentCategory{
+public class InstrumentCategory extends AbstractCategory{
 
-	public Long id;
-	
-	public String name;
-	
-	public String code;
 	
 	public List<ContainerSupportCategory> inContainerSupportCategories;
 	

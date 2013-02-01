@@ -1,13 +1,8 @@
 package models.laboratory.sample.description;
 
+import models.laboratory.common.description.AbstractCategory;
 
-public class SampleCategory{
 
-	public Long id;
-	
-	public String name;
-	
-	public String code;
+public class SampleCategory extends AbstractCategory{
 
-	
 }

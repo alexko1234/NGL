@@ -14,18 +14,15 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.modules.spring.Spring;
 
-import com.avaje.ebean.enhance.asm.Type;
-
 public class ReagentTypeMappingQuery extends MappingSqlQuery<ReagentType>{
 
-	public ReagentTypeMappingQuery(DataSource ds)
+	public ReagentTypeMappingQuery(DataSource ds,String sql,SqlParameter sqlParameter)
 	{
-		super(ds,"SELECT id, fk_common_info_type "+
-				"FROM reagent_type "+
-				"JOIN protocol_reagent_type ON fk_reagent_type=id "+
-				"WHERE fk_protocol = ? ");
-		super.declareParameter(new SqlParameter("id", Type.LONG));
+		super(ds,sql);
+		if(sqlParameter!=null)
+			super.declareParameter(sqlParameter);
 		compile();
+		
 	}
 	@Override
 	protected ReagentType mapRow(ResultSet rs, int rowNumber)

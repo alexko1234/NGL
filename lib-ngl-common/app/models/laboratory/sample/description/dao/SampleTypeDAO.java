@@ -30,7 +30,7 @@ public class SampleTypeDAO {
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource=dataSource;
-		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("sample_type").usingGeneratedKeyColumns("id");
+		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("sample_type");
 	}
 
 	public SampleType findById(long id)
@@ -60,16 +60,22 @@ public class SampleTypeDAO {
 		if(sampleType.sampleCategory!=null && sampleType.sampleCategory.id==null)
 		{
 			SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
-			SampleCategory sampleCategory = sampleCategoryDAO.add(sampleType.sampleCategory);
+			SampleCategory sampleCategory = (SampleCategory) sampleCategoryDAO.add(sampleType.sampleCategory);
 			sampleType.sampleCategory=sampleCategory;
 		}
 
 		//Create sampleType 
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fk_common_info_type", sampleType.getIdCommonInfoType());
+		parameters.put("id", sampleType.id);
+		parameters.put("fk_common_info_type", sampleType.id);
 		parameters.put("fk_sample_category", sampleType.sampleCategory.id);
-		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-		sampleType.id = newId;
+		jdbcInsert.execute(parameters);
 		return sampleType;
+	}
+	
+	public void update(SampleType sampleType)
+	{
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		commonInfoTypeDAO.update(sampleType);
 	}
 }

@@ -12,7 +12,6 @@ import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 
-import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
@@ -21,12 +20,13 @@ import play.modules.spring.Spring;
 
 public class InstrumentUsedTypeMappingQuery extends MappingSqlQuery<InstrumentUsedType>{
 
-	public InstrumentUsedTypeMappingQuery(DataSource ds, String sql, boolean all)
+	public InstrumentUsedTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
 	{
 		super(ds,sql);
-		if(!all)
-			super.declareParameter(new SqlParameter("id", Type.LONG));
+		if(sqlParameter!=null)
+			super.declareParameter(sqlParameter);
 		compile();
+		
 	}
 	@Override
 	protected InstrumentUsedType mapRow(ResultSet rs, int rowNumber)

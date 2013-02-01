@@ -1,5 +1,6 @@
 package models.laboratory.project.description.dao;
 
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,26 +12,42 @@ import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import play.modules.spring.Spring;
 
+import com.avaje.ebean.enhance.asm.Type;
+
 @Repository
 public class ProjectTypeDAO {
 
-	private ProjectTypeMappingQuery projectTypeMappingQuery;
 	private SimpleJdbcInsert jdbcInsert;
-
+	private DataSource dataSource;
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
-		this.projectTypeMappingQuery = new ProjectTypeMappingQuery(dataSource);
-		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("project_type").usingGeneratedKeyColumns("id");
+		this.dataSource = dataSource;
+		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("project_type");
 	}
 
 	public ProjectType findById(long id)
 	{
-		return this.projectTypeMappingQuery.findObject(id);
+		String sql = "SELECT id, fk_common_info_type, fk_project_category "+
+				"FROM project_type "+
+				"WHERE id = ? ";
+		ProjectTypeMappingQuery projectTypeMappingQuery = new ProjectTypeMappingQuery(dataSource,sql,new SqlParameter("id", Type.LONG));
+		return projectTypeMappingQuery.findObject(id);
+	}
+	
+	public ProjectType findByCode(String code)
+	{
+		String sql = "SELECT pt.id, fk_common_info_type, fk_project_category "+
+				"FROM project_type as pt "+
+				"JOIN common_info_type as c ON c.id=fk_common_info_type "+
+				"WHERE code = ? ";
+		ProjectTypeMappingQuery projectTypeMappingQuery=new ProjectTypeMappingQuery(dataSource,sql, new SqlParameter("code", Types.VARCHAR));
+		return projectTypeMappingQuery.findObject(code);
 	}
 
 	public ProjectType add(ProjectType projectType)
@@ -43,15 +60,15 @@ public class ProjectTypeDAO {
 		if(projectType.projectCategory!=null && projectType.projectCategory.id==null)
 		{
 			ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
-			ProjectCategory pc = projectCategoryDAO.add(projectType.projectCategory);
+			ProjectCategory pc = (ProjectCategory) projectCategoryDAO.add(projectType.projectCategory);
 			projectType.projectCategory = pc;
 		}
 		//Create new projectType
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fk_common_info_type", projectType.getIdCommonInfoType());
+		parameters.put("id", projectType.id);
+		parameters.put("fk_common_info_type", projectType.id);
 		parameters.put("fk_project_category", projectType.projectCategory.id);
-		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-		projectType.id = newId;
+		jdbcInsert.execute(parameters);
 		return projectType;
 	}
 

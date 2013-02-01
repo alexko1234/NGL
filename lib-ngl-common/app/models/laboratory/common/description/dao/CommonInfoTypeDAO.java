@@ -25,7 +25,7 @@ import play.modules.spring.Spring;
 @Repository
 public class CommonInfoTypeDAO{
 
-	
+
 	private DataSource dataSource;
 	private String sqlCommon = "SELECT c.id as cId, c.name, c.code , c.collection_name, o.id as oId, o.type, o.generic "+
 			"FROM common_info_type as c "+
@@ -33,8 +33,8 @@ public class CommonInfoTypeDAO{
 	private SimpleJdbcInsert jdbcInsert;
 	private SimpleJdbcTemplate jdbcTemplate;
 
-	
-	
+
+
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource=dataSource;
@@ -67,23 +67,25 @@ public class CommonInfoTypeDAO{
 	public List<CommonInfoType> findByName(String typeName)
 	{
 		String sql = sqlCommon+
-					"WHERE name like \'%"+typeName+"%\' "+
-					"ORDER by name asc";
+				"WHERE name like \'%"+typeName+"%\' "+
+				"ORDER by name asc";
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, null);
 		return commonInfoTypeMappingQuery.execute();
-					
+
 	}
-	
+
 	public List<CommonInfoType> findByTypeNameAndType(String typeName, long idobjectType)
 	{
 		String sql = sqlCommon+
-					"WHERE name like \'%"+typeName+"%\' "+
-					"AND fk_object_type=? "+
-					"ORDER by name asc";
+				"WHERE name like \'%"+typeName+"%\' "+
+				"AND fk_object_type=? "+
+				"ORDER by name asc";
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("fk_object_type",Type.LONG));
 		return commonInfoTypeMappingQuery.execute(idobjectType);
-					
+
 	}
+
+
 	public CommonInfoType add(CommonInfoType cit)
 	{
 		//Check if objectType exist
@@ -124,9 +126,9 @@ public class CommonInfoTypeDAO{
 				jdbcTemplate.update(sql, newId,resolution.id);
 			}
 		}
-		
+
 		//Add PropertyDefinition
-		List<PropertyDefinition> propertyDefinitions = cit.getPropertiesDefinition();
+		List<PropertyDefinition> propertyDefinitions = cit.propertiesDefinitions;
 		if(propertyDefinitions!=null && propertyDefinitions.size()>0){
 			PropertyDefinitionDAO propertyDefinitionDAO = Spring.getBeanOfType(PropertyDefinitionDAO.class);
 			for(PropertyDefinition propertyDefinition : propertyDefinitions){
@@ -170,16 +172,18 @@ public class CommonInfoTypeDAO{
 			}
 		}
 		//Update propertiesDefinition list (add new)
-		List<PropertyDefinition> propertyDefinitions = cit.getPropertiesDefinition();
+		List<PropertyDefinition> propertyDefinitions = cit.propertiesDefinitions;
 		if(propertyDefinitions!=null && propertyDefinitions.size()>0){
 			PropertyDefinitionDAO propertyDefinitionDAO = Spring.getBeanOfType(PropertyDefinitionDAO.class);
 			for(PropertyDefinition propDef : propertyDefinitions){
-				if(citDB.getPropertiesDefinition()==null || (citDB.getPropertiesDefinition()!=null && !citDB.getPropertiesDefinition().contains(propDef))){
+				if(citDB.propertiesDefinitions==null || (citDB.propertiesDefinitions!=null && !citDB.propertiesDefinitions.contains(propDef))){
 					propertyDefinitionDAO.add(propDef, cit.id);
 				}
 			}
 		}
 		return citDB;
 	}
+
+	
 
 }

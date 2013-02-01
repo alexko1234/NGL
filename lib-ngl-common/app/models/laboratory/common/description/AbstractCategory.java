@@ -1,13 +1,26 @@
-package models.laboratory.instrument.description;
-
-
-public class Instrument {
+package models.laboratory.common.description;
+/**
+ * Parent class categories not represented by a table in the database
+ * @author ejacoby
+ *
+ */
+public class AbstractCategory {
 
 	public Long id;
-	
+
 	public String name;
-	
+
 	public String code;
+
+	public AbstractCategory() {
+		super();
+	}
+
+	public AbstractCategory(String name, String code) {
+		super();
+		this.name = name;
+		this.code = code;
+	}
 
 	@Override
 	public int hashCode() {
@@ -28,7 +41,7 @@ public class Instrument {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Instrument other = (Instrument) obj;
+		AbstractCategory other = (AbstractCategory) obj;
 		if (code == null) {
 			if (other.code != null)
 				return false;
@@ -36,6 +49,6 @@ public class Instrument {
 			return false;
 		return true;
 	}
-	
+
 	
 }

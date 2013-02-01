@@ -1,14 +1,7 @@
 package models.laboratory.container.description;
 
+import models.laboratory.common.description.AbstractCategory;
 
-public class ContainerCategory{
-
-	
-	public Long id;
-	
-	public String name;
-	
-	public String code;
-
+public class ContainerCategory extends AbstractCategory{
 	
 }

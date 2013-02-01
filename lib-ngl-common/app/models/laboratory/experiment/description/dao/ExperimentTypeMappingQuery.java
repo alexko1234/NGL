@@ -8,8 +8,11 @@ import javax.sql.DataSource;
 
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
+import models.laboratory.experiment.description.PurificationMethodType;
+import models.laboratory.experiment.description.QualityControlType;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 
@@ -33,23 +36,43 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 		ExperimentType experimentType = new ExperimentType();
 		play.Logger.debug("Experiment type "+experimentType);
 		experimentType.id = rs.getLong("id");
+		experimentType.doPurification=rs.getBoolean("doPurification");
+		experimentType.mandatoryPurification=rs.getBoolean("mandatoryPurification");
+		experimentType.doQualityControl=rs.getBoolean("doQualityControl");
+		experimentType.mandatoryQualityControl=rs.getBoolean("mandatoryQualityControl");
+		long idExperimentCategory = rs.getLong("fk_experiment_category");
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		CommonInfoType commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
 		experimentType.setCommonInfoType(commonInfoType);
+		
+		//Get List protocols by common info type
+		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
+		List<Protocol> protocols = protocolDAO.findByCommonExperiment(idCommonInfoType);
+		experimentType.protocols=protocols;
+		//Get list instruments by common info type
+		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
+		List<InstrumentUsedType> instrumentUsedTypes = instrumentUsedTypeDAO.findByCommonExperiment(idCommonInfoType);
+		experimentType.instrumentUsedTypes=instrumentUsedTypes;
+		//Get Experiment category
+		ExperimentCategoryDAO experimentCategoryDAO = Spring.getBeanOfType(ExperimentCategoryDAO.class);
+		ExperimentCategory experimentCategory = (ExperimentCategory) experimentCategoryDAO.findById(idExperimentCategory);
+		experimentType.experimentCategory = experimentCategory;
+		
 		//Get nextExperimentType
 		ExperimentTypeDAO expTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		List<ExperimentType> nextExpTypes = expTypeDAO.findNextExperiments(experimentType.id);
-		experimentType.nextExperimentTypes = nextExpTypes;
-		//Get protocol
-		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
-		List<Protocol> protocols = protocolDAO.findByExperimentType(experimentType.id);
-		experimentType.protocols = protocols;
-		//Get instrumentUsedType
-		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		List<InstrumentUsedType> instrumentUsedTypes = instrumentUsedTypeDAO.findByExperimentType(experimentType.id);
-		experimentType.instrumentTypes = instrumentUsedTypes;
+		experimentType.previousExperimentTypes = nextExpTypes;
+		
+		//Get purification method
+		PurificationMethodTypeDAO purificationMethodTypeDAO = Spring.getBeanOfType(PurificationMethodTypeDAO.class);
+		List<PurificationMethodType> purificationMethodTypes = purificationMethodTypeDAO.findByExperimentType(experimentType.id);
+		experimentType.possiblePurificationMethodTypes=purificationMethodTypes;
+		//Get qualityControl
+		QualityControlTypeDAO qualityControlTypeDAO = Spring.getBeanOfType(QualityControlTypeDAO.class);
+		List<QualityControlType> qualityControlTypes = qualityControlTypeDAO.findByExperimentType(experimentType.id);
+		experimentType.possibleQualityControlTypes=qualityControlTypes;
 		
 		return experimentType;
 	}

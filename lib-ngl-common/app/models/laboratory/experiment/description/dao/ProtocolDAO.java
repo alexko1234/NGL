@@ -1,5 +1,6 @@
 package models.laboratory.experiment.description.dao;
 
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +12,12 @@ import models.laboratory.experiment.description.ProtocolCategory;
 import models.laboratory.experiment.description.ReagentType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.avaje.ebean.enhance.asm.Type;
 
 import play.modules.spring.Spring;
 
@@ -33,36 +37,66 @@ public class ProtocolDAO {
 		this.jdbcInsert=new SimpleJdbcInsert(dataSource).withTableName("protocol").usingGeneratedKeyColumns("id");
 	}
 
-	public List<Protocol> findByExperimentType(long idExperimentType)
+
+
+	public List<Protocol> findByCommonExperiment(long idCommonInfoType)
 	{
-		String sql = sqlCommon+" WHERE fk_experiment_type = ? ";
-		ProtocolMappingQuery protocolMappingQuery=new ProtocolMappingQuery(dataSource, sql);
-		return protocolMappingQuery.execute(idExperimentType);
+		String sql = sqlCommon+
+				" JOIN common_info_type_protocol as cit ON fk_protocol=id "+
+				"WHERE fk_common_info_type = ? ";
+		ProtocolMappingQuery protocolMappingQuery=new ProtocolMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
+		return protocolMappingQuery.execute(idCommonInfoType);
 	}
 
 	public Protocol findById(long id)
 	{
 		String sql = sqlCommon+" WHERE id=?";
-		ProtocolMappingQuery protocolMappingQuery = new ProtocolMappingQuery(dataSource, sql);
+		ProtocolMappingQuery protocolMappingQuery = new ProtocolMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return protocolMappingQuery.findObject(id);
 	}
 
-	public Protocol add(Protocol protocol, long idExpType)
+	public Protocol findByName(String name)
+	{
+		String sql = sqlCommon+" WHERE name=?";
+		ProtocolMappingQuery protocolMappingQuery = new ProtocolMappingQuery(dataSource, sql,new SqlParameter("name", Types.VARCHAR));
+		return protocolMappingQuery.findObject(name);
+	}
+
+	public void add(List<Protocol> protocols, long idCommonInfoType)
+	{
+		//Add protocols list
+		if(protocols!=null && protocols.size()>0){
+			for(Protocol protocol : protocols){
+				add(protocol,idCommonInfoType);
+			}
+		}
+	}
+
+	public void add(Protocol protocol, long idCommonInfoType)
+	{
+		String sql = "INSERT INTO common_info_type_protocol(fk_common_info_type, fk_protocol) VALUES(?,?)";
+		if(protocol.id==null)
+			protocol = add(protocol);
+		jdbcTemplate.update(sql, idCommonInfoType, protocol.id);
+	}
+
+	public Protocol add(Protocol protocol)
 	{
 		//Check if category exist
 		if(protocol.protocolCategory!=null && protocol.protocolCategory.id==null)
 		{
 			ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
-			ProtocolCategory pc = protocolCategoryDAO.add(protocol.protocolCategory);
+			ProtocolCategory pc = (ProtocolCategory) protocolCategoryDAO.add(protocol.protocolCategory);
 			protocol.protocolCategory = pc;
 		}
+
 
 		//Create new Protocol
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("name", protocol.name);
 		parameters.put("file_path", protocol.filePath);
 		parameters.put("version", protocol.version);
-		parameters.put("fk_experiment_type", idExpType);
+		parameters.put("fk_protocol_category", protocol.protocolCategory.id);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		protocol.id = newId;
 
@@ -83,7 +117,6 @@ public class ProtocolDAO {
 	public void update(Protocol protocol)
 	{
 		Protocol protoDB = findById(protocol.id);
-
 		String sql = "UPDATE protocol SET name=?, file_path=?, version=? WHERE id=?";
 		jdbcTemplate.update(sql, protocol.name, protocol.filePath, protocol.version, protocol.id);
 

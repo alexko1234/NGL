@@ -36,6 +36,24 @@ public class ResolutionDAO {
 		return this.jdbcTemplate.query(sql, mapper, idCommonInfoType);
 	}
 	
+	public Resolution findByCode(String code)
+	{
+		String sql = "SELECT id,name,code "+
+					"FROM resolution "+
+					"WHERE code=?";
+		BeanPropertyRowMapper<Resolution> mapper = new BeanPropertyRowMapper<Resolution>(Resolution.class);
+		return this.jdbcTemplate.queryForObject(sql, mapper, code);
+	}
+	
+	public Resolution findById(long id)
+	{
+		String sql = "SELECT id,name,code "+
+				"FROM resolution "+
+				"WHERE id=?";
+	BeanPropertyRowMapper<Resolution> mapper = new BeanPropertyRowMapper<Resolution>(Resolution.class);
+	return this.jdbcTemplate.queryForObject(sql, mapper, id);
+	}
+	
 	public Resolution add(Resolution resolution)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();

@@ -4,17 +4,15 @@ package models.laboratory.common.description;
 import java.util.HashMap;
 import java.util.Map;
 
-import models.laboratory.IDynamicType;
 import models.laboratory.common.description.dao.StateDAO;
 import play.modules.spring.Spring;
 
 /**
  * Value of the possible state of type
- * must implement IDynamicType interface in order to be used in GenericType (temporary)
  * @author ejacoby
  *
  */
-public class State implements IDynamicType{
+public class State{
 
 	public Long id;
 	
@@ -48,23 +46,7 @@ public class State implements IDynamicType{
 		return mapPossibleStates;
 	}
 
-	@Override
-	public CommonInfoType getInformations() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public long getIdType() {
-		return id;
-	}
-
-	@Override
-	public IDynamicType findById(long id) {
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		return stateDAO.findById(id);
-	}
-
+	
 
 	@Override
 	public int hashCode() {

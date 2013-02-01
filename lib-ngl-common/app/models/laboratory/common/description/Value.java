@@ -1,5 +1,10 @@
 package models.laboratory.common.description;
 
+/**
+ * Possible value of property definition
+ * @author ejacoby
+ *
+ */
 public class Value {
 
 	public Long id;

@@ -1,21 +1,8 @@
 package models.laboratory.project.description;
 
-public class ProjectCategory {
+import models.laboratory.common.description.AbstractCategory;
 
-	public Long id;
 
-	public String name;
+public class ProjectCategory extends AbstractCategory{
 
-	public String code;
-
-	public ProjectCategory() {
-		super();
-	}
-
-	public ProjectCategory(String name, String code) {
-		super();
-		this.name = name;
-		this.code = code;
-	}
-	
 }

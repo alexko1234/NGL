@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 
@@ -84,7 +85,7 @@ public class PropertyDefinitionDAO {
 			if(propertyDefinition.measureCategory.id==null){
 
 				MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-				propertyDefinition.measureCategory = measureCategoryDAO.add(propertyDefinition.measureCategory);
+				propertyDefinition.measureCategory = (MeasureCategory) measureCategoryDAO.add(propertyDefinition.measureCategory);
 			}
 			//Update propertyDefinition
 			String sqlCategory = "UPDATE property_definition SET measure_category_id=? WHERE id=?";
@@ -95,7 +96,6 @@ public class PropertyDefinitionDAO {
 		if(propertyDefinition.measureValue!=null){
 			if(propertyDefinition.measureValue.id==null){
 				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-				propertyDefinition.measureValue.measureCateroryId = propertyDefinition.measureCategory.id;
 				propertyDefinition.measureValue = measureValueDAO.add(propertyDefinition.measureValue);
 			}
 			//Update propertyDefinition
@@ -127,7 +127,7 @@ public class PropertyDefinitionDAO {
 			if(propertyDefinition.measureCategory.id==null){
 
 				MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-				propertyDefinition.measureCategory = measureCategoryDAO.add(propertyDefinition.measureCategory);
+				propertyDefinition.measureCategory = (MeasureCategory) measureCategoryDAO.add(propertyDefinition.measureCategory);
 			}
 			//Update propertyDefinition
 			String sqlCategory = "UPDATE property_definition SET measure_category_id=? WHERE id=?";
@@ -138,7 +138,6 @@ public class PropertyDefinitionDAO {
 		if(propertyDefinition.measureValue!=null){
 			if(propertyDefinition.measureValue.id==null){
 				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-				propertyDefinition.measureValue.measureCateroryId = propertyDefinition.measureCategory.id;
 				propertyDefinition.measureValue = measureValueDAO.add(propertyDefinition.measureValue);
 			}
 			//Update propertyDefinition

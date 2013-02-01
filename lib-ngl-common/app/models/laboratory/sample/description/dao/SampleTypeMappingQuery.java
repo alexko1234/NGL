@@ -37,7 +37,7 @@ public class SampleTypeMappingQuery extends MappingSqlQuery<SampleType>{
 		sampleType.setCommonInfoType(commonInfoType);
 		//Get sampleCategory
 		SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
-		SampleCategory sampleCategory = sampleCategoryDAO.findById(idSampleCategory);
+		SampleCategory sampleCategory = (SampleCategory) sampleCategoryDAO.findById(idSampleCategory);
 		sampleType.sampleCategory = sampleCategory;
 		return sampleType;
 	}

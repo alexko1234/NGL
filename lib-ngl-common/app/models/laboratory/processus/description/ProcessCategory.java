@@ -1,11 +1,8 @@
 package models.laboratory.processus.description;
 
-public class ProcessCategory {
+import models.laboratory.common.description.AbstractCategory;
 
-	public Long id;
 
-	public String name;
-
-	public String code;
+public class ProcessCategory extends AbstractCategory{
 
 }

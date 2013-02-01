@@ -54,7 +54,7 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 		//Get properties
 		PropertyDefinitionDAO propertyDefinitionDAO = Spring.getBeanOfType(PropertyDefinitionDAO.class);
 		List<PropertyDefinition> properties = propertyDefinitionDAO.findByCommonInfoType(commonInfoType.id);
-		commonInfoType.setPropertiesDefinition(properties);
+		commonInfoType.propertiesDefinitions=properties;
 		return commonInfoType;
 	}
 

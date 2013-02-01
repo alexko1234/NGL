@@ -45,6 +45,15 @@ public class StateDAO {
 		return this.jdbcTemplate.queryForObject(sql, mapper, idState);
 	}
 	
+	public State findByCode(String code)
+	{
+		String sql = "SELECT id,name,code,active,priority "+
+					"FROM state "+
+					"WHERE code=?";
+		BeanPropertyRowMapper<State> mapper = new BeanPropertyRowMapper<State>(State.class);
+		return this.jdbcTemplate.queryForObject(sql, mapper, code);
+	}
+	
 	public List<State> findAll()
 	{
 		String sql = "SELECT id,name,code,active,priority "+

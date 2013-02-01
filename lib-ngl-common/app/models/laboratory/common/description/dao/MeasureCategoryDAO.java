@@ -1,43 +1,43 @@
 package models.laboratory.common.description.dao;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.sql.DataSource;
+import java.util.List;
 
 import models.laboratory.common.description.MeasureCategory;
+import models.laboratory.common.description.MeasureValue;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class MeasureCategoryDAO {
+import play.modules.spring.Spring;
 
-	private SimpleJdbcTemplate jdbcTemplate;
-	private SimpleJdbcInsert jdbcInsert;
-		
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);       
-		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("measure_category").usingGeneratedKeyColumns("id");
+@Repository
+public class MeasureCategoryDAO extends AbstractCategoryDAO<MeasureCategory>{
+
+	public MeasureCategoryDAO() {
+		super("measure_category",MeasureCategory.class);
 	}
-	
-	public MeasureCategory add(MeasureCategory measureCategory)
+
+	public MeasureCategory findById(long id)
 	{
-		Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("name", measureCategory.name);
-        parameters.put("code", measureCategory.code);
-        Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        measureCategory.id = newId;
+		MeasureCategory measureCategory = (MeasureCategory) super.findById(id);
+		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
+		List<MeasureValue> measureValues = measureValueDAO.findByMeasureCategory(id);
+		measureCategory.measurePossibleValues=measureValues;
 		return measureCategory;
 	}
 	
 	
-	public void update(MeasureCategory measureCategory)
+	
+	public MeasureCategory add(MeasureCategory measureCategory)
 	{
-		String sql = "UPDATE measure_category SET name=? WHERE id=?";
-		jdbcTemplate.update(sql, measureCategory.name, measureCategory.id);
+		measureCategory = (MeasureCategory) super.add(measureCategory);
+		//Add measureValue
+		if(measureCategory.measurePossibleValues!=null && measureCategory.measurePossibleValues.size()>0){
+			MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
+			for(MeasureValue measureValue : measureCategory.measurePossibleValues){
+				measureValue.measureCaterory=measureCategory;
+				measureValueDAO.add(measureValue);
+			}
+		}
+        return measureCategory;
 	}
 }
