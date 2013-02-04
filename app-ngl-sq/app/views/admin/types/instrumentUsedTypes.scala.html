@@ -1,7 +1,0 @@
-@(dataFormCommon: Form[models.laboratory.common.description.CommonInfoType], instrumentUsedTypeForm: Form[models.laboratory.instrument.description.InstrumentUsedType], isEdit: Boolean)
-@import helper._
-@import models.laboratory.common.description.ObjectType
-@import models.laboratory.experiment.description._
-
-@typeInfo(dataFormCommon, 
-	controllers.admin.types.routes.InstrumentUsedTypes.createOrUpdate(), "Create Instrument Used Type", "instrumentUsedTypes",isEdit)()

@@ -12,18 +12,6 @@ GET		/experiments/:id			controllers.experiment.Experiments.show(id: java.lang.St
 POST   	/experiments				controllers.experiment.Experiments.createOrUpdate(format: java.lang.String ?= "html")
 
 
-
-GET		/admin/types/experimentTypes		controllers.admin.types.ExperimentTypes.home()
-POST	/admin/types/experimentTypes/:id		controllers.admin.types.ExperimentTypes.createOrUpdate(id:java.lang.String)
-POST	/admin/types/instrumentUsedTypes	controllers.admin.types.InstrumentUsedTypes.createOrUpdate()
-GET	   /admin/types/home					controllers.admin.types.GenericTypes2.home()
-GET    /admin/types                			controllers.admin.types.GenericTypes2.list()
-POST   /admin/types							controllers.admin.types.GenericTypes2.createOrUpdate(format: java.lang.String ?= "html")
-GET	   /admin/types/:id						controllers.admin.types.GenericTypes2.show(id: Long)
-GET	   /admin/types/:id/edit				controllers.admin.types.GenericTypes2.edit(id: Long)
-GET    /admin/types/:id/add             	controllers.admin.types.GenericTypes2.add(id: Long)
-GET	   /admin/types/pdefs/add/:index		controllers.admin.types.GenericTypes2.addPropertyDefinition(index: java.lang.Integer)
-
 GET	   /logout								controllers.administration.authentication.User.logOut()
 
 # Home page
