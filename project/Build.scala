@@ -43,6 +43,7 @@ object ApplicationBuild extends Build {
 		"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
 		"play" %% "spring" % "2.0",
 		"org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
+		"org.springframework" % "spring-test" % "3.0.7.RELEASE",
 		"mysql" % "mysql-connector-java" % "5.1.18"
 		
     	)	 
