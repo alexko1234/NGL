@@ -369,7 +369,7 @@ $(document).ready( function () {
 						</li>
 						<li class="@("active".when(nav == "libraries"))"><a href="@routes.Application.index("libraries")">Libraries</a>
 						</li>
-						<li class="active"><a href="@controllers.experiment.routes.Experiments.home()">Experiments</a>
+						<li class="@("active".when(nav == "libraries"))"><a href="@routes.Application.index("experiments")">Experiments</a>
 						</li>
 						<li class="@("active".when(nav == "runs"))"><a href="@routes.Application.index("runs")">Runs</a>
 						</li>
@@ -389,14 +389,13 @@ $(document).ready( function () {
 								<li><a href="#">Project Types</a></li>
 								<li><a href="#">Sample Types</a></li>
 								<li><a href="#">Library Types</a></li>
-								<li class="@("active".when(nav == "experimentTypes"))"><a href="@controllers.admin.types.routes.ExperimentTypes.home()">Experiment Types</a></li>
+								<li><a href="#">Experiment Types</a></li>
 								<li><a href="#">Run Types</a></li>
 								<li class="divider"></li>
 								<li><a href="#">Instrument Types</a></li>
 								<li><a href="#">Containing Types</a></li>
 								<li><a href="#"> Types</a></li>
 								<li class="divider"></li>
-								<li class="@("active".when(nav == "types"))"><a href="@controllers.admin.types.routes.GenericTypes.home()">Type Types</a></li>
 							</ul>
   						</li>
 
