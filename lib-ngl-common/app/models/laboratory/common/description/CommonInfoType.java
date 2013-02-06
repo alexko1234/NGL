@@ -2,9 +2,13 @@ package models.laboratory.common.description;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
+
+import com.mongodb.util.Hash;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import play.data.validation.Constraints.MaxLength;
@@ -86,6 +90,15 @@ public class CommonInfoType{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.update(this);
 		
+	}
+	
+	public Map<String, PropertyDefinition> getMapPropertyDefinition()
+	{
+		Map<String, PropertyDefinition> mapProperties = new HashMap<String, PropertyDefinition>();
+		for(PropertyDefinition propertyDefinition : propertiesDefinitions){
+			mapProperties.put(propertyDefinition.code, propertyDefinition);
+		}
+		return mapProperties;
 	}
 	
 	public void setCommonInfoType(CommonInfoType commonInfoType)
