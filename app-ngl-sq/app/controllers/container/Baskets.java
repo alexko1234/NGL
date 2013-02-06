@@ -34,7 +34,6 @@ public class Baskets extends Controller{
 	final static Form<String> containerForm = form(String.class);
 	
 	public static Result home() {
-		  //return ok(basket.render(datatableForm));
 		return ok(testbasket.render("projects"));
 	}
 
@@ -49,7 +48,6 @@ public class Baskets extends Controller{
 			}else{
 				basket.traceInformation.setTraceInformation("ngsrg");
 			}			
-			//BusinessValidationHelper.validateRun(filledForm.errors(), runValue, Constants.RUN_ILLUMINA_COLL_NAME);*/			
 			
 			if(!filledForm.hasErrors()) {
 				if(MongoDBDAO.findByCode(COLLECTION_NAME, Basket.class, basket.code) == null){
@@ -93,16 +91,13 @@ public class Baskets extends Controller{
 	
 	public static Result add(String code,String format){
 		JsonNode json = request().body().asJson();
-		System.out.println("JSON: "+json);
 		String containerCode = json.get("container").asText();
 		if(containerCode != null){
-			Basket basket = MongoDBDAO.findByCode(COLLECTION_NAME,Basket.class,code);
-			System.out.println("CODE: "+basket.code);	
+			Basket basket = MongoDBDAO.findByCode(COLLECTION_NAME,Basket.class,code);	
 			if(basket == null || (basket.inputContainers!=null && basket.inputContainers.contains(containerCode))){
 				return badRequest(json);
 			}
 
-			System.out.println("ici");
 			MongoDBDAO.updatePush(COLLECTION_NAME, basket,"inputContainers",containerCode);
 			return ok(json);
 		}
@@ -116,7 +111,7 @@ public class Baskets extends Controller{
 		return ok();
 	}
 	
-	//list of all ths baskets
+	//list of all the baskets
 	public static Result list() {
 		Form<DataTableForm> filledForm = datatableForm.bindFromRequest();
 		List<Basket> baskets= MongoDBDAO.all(COLLECTION_NAME,Basket.class);
@@ -146,8 +141,7 @@ public class Baskets extends Controller{
 			if("json".equals(format)){
 				return ok(Json.toJson(basket));
 			}else{
-				Form<Basket> filledForm = basketForm.fill(basket);				
-				//return ok(run.render(filledForm, Boolean.FALSE));
+				Form<Basket> filledForm = basketForm.fill(basket);
 				return ok(); //TODO must be complete
 			}			
 		}else{
