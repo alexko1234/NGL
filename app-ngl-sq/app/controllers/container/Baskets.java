@@ -44,9 +44,9 @@ public class Baskets extends Controller{
 			Basket basket = filledForm.get();
 			if(null == basket._id){
 				basket.traceInformation = new TraceInformation();
-				basket.traceInformation.setTraceInformation("ngsrg");				
+				basket.traceInformation.setTraceInformation("ngsrg");//TODO: replace				
 			}else{
-				basket.traceInformation.setTraceInformation("ngsrg");
+				basket.traceInformation.setTraceInformation("ngsrg");//TODO: replace
 			}			
 			
 			if(!filledForm.hasErrors()) {
