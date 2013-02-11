@@ -35,8 +35,8 @@ angular.module('nglServices', []).
 		    			search : function(params){
 		    				if(this.config.url.search){
 		    					$http.get(this.config.url.search,{params:params}).success(function(data) {
-		    						$scope.tableresult = data;
-		    						$scope.tableresultMaster = angular.copy($scope.tableresult);
+		    						this.searchresult = data;
+		    						this.searchresultMaster = angular.copy($scope.tableresult);
 		    					});
 		    				}else{
 		    					alert('no url define for search ! ');
