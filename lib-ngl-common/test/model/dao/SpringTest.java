@@ -73,10 +73,7 @@ import utils.AbstractTests;
 //@ContextConfiguration(locations = { "classpath:/test/application-context.xml" })
 public class SpringTest extends AbstractTests{
 
-	FakeApplication app;
-
-	
-	
+		
 	
 	@Test
 	public void initializeDB()
