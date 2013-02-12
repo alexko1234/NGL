@@ -11,10 +11,12 @@ import java.util.Map;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.TBoolean;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import play.Logger;
 import play.data.validation.ValidationError;
 import scala.actors.threadpool.Arrays;
 
@@ -121,6 +123,10 @@ public class ConstraintsHelper {
 			o = Long.valueOf(value.toString());
 		} else if (Date.class.getName().equals(type)) {
 			o = new Date(Integer.valueOf(value.toString()));
+		} else if (TBoolean.class.getName().equals(type)) {
+			o = TBoolean.fromValue(value.toString());
+		} else {
+			Logger.info("Erreur de type :"+type );
 		}
 		return o;
 	}

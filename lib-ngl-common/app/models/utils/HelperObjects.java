@@ -2,15 +2,18 @@ package models.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import play.data.validation.ValidationError;
 import play.db.ebean.Model;
+import validation.utils.ConstraintsHelper;
 import fr.cea.ig.DBObject;
 
 public class HelperObjects<T>{
 
-	
+
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@JsonIgnore
@@ -36,8 +39,36 @@ public class HelperObjects<T>{
 				}	
 			}
 		}
-		
+
 		return objects;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@JsonIgnore
+	public static <T>  T getObject(Class<T> type, String value,Map<String, List<ValidationError>> errors){
+		T object = null ;
+
+		if (type.getSuperclass().equals(DBObject.class)){
+
+			try {
+				object=(T) new ObjectMongoDBReference(type.getClass(),value).getObject();
+			} catch (Exception e) {
+				ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "error.findObjectMongoDB"), "OBJECT FIND",type, value);
+			}	
+
+		}	else if (type.getSuperclass().equals(Model.class)) {
+
+			try {
+				object=(T) new ObjectSGBDReference(type.getClass(),value).getObject();
+			} catch (Exception e) {
+				ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "error.findObjectSGBDR"), "OBJECT FIND",type,value);
+			}	
+
+		}
+
+		if(object==null)
+			ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "error.ObjectNotFound"), "OBJECT NOT FOUND",type,value);
+		return object;
 	}
 
 }

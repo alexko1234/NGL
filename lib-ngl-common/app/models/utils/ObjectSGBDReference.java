@@ -35,7 +35,8 @@ public class ObjectSGBDReference<T> implements IFetch<T>{
 	@Override
 	public T getObject() throws Exception {
 		
-		// code are in commonInfoType 
+		
+		// TODO replace by generic SpringDAO find 
 		return Ebean.find(className).where()  
 			      .eq("code",code).findUnique();
 	}

@@ -1,9 +1,12 @@
 package models.laboratory.sample.instance;
 
+import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.ObjectSGBDReference;
@@ -25,10 +28,16 @@ import fr.cea.ig.DBObject;
 @MongoCollection(name="Sample")
 public class Sample extends DBObject{
 	
+	
+	@JsonIgnore
+	public final static String HEADER="Sample.code;Sample.projectCode;Sample.name;Sample.categoryCode;Sample.referenceCollab;Sample.taxonCode;Sample.comments";
+	
 	// SampleType Ref
 	public String typeCode;
 	//Sample Category Ref
 	public String categoryCode;
+	
+	public String projectCode;
 	
 	// ?? Wath is difference with code / referenceCollbab 
 	public String name;
@@ -38,6 +47,14 @@ public class Sample extends DBObject{
 	public TBoolean valid;
 	//public List<CollaboratorInvolve> collaborators;
 	public String taxonCode;
+		
+	public List<Comment> comments;
+	public TraceInformation traceInformation;
+	
+	public Sample(){
+		this.traceInformation=new TraceInformation();
+	}
+	
 	
 	@JsonIgnore
 	public SampleType getSampleType(){

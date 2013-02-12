@@ -10,7 +10,6 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
-
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.project.instance.Project;
@@ -39,6 +38,10 @@ import fr.cea.ig.DBObject;
 @MongoCollection(name="Container")
 public class Container extends DBObject {
 
+	
+	@JsonIgnore
+	public final static String HEADER="Container.code;Container.categoryCode;Container.comments;ContainerSupport.categorycode;ContainerSupport.x;ContainerSupport.barecode";
+	
 	//ContainerCategory Ref
 	public String categoryCode;
 	
@@ -80,6 +83,18 @@ public class Container extends DBObject {
 	public String fromPurifingCode;
 	//public String fromExtractionTypeCode;
 	
+
+	public Container(){
+		
+	}
+	
+	@JsonIgnore
+	public Container(SampleUsed sampleUsed){
+
+		this.contents=new ArrayList<Content>();
+		this.contents.add(new Content(sampleUsed));
+		this.traceInformation=new TraceInformation();
+	}
 
 	
 	@JsonIgnore

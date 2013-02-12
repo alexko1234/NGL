@@ -10,8 +10,25 @@ import java.util.Date;
  */
 public class Comment {
 
+	
 	public String comment;
 	public String createUser;
-	public Date creationDate;	
+	public Date creationDate;
+	
+	public Comment(String comment) {
+		setComment(comment);
+	}
+	
+	public Comment(){
+		
+	}
+	
+	public void setComment(String comment){
+		
+		if(creationDate==null) 
+			creationDate = new Date();
+		this.comment=comment;
+		
+	}
 	
 }

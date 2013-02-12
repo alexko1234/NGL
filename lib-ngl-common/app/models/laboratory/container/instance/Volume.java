@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class Volume {
 
-	public Float value;
+	public Double value;
 	public Date date;
 	public String unit;
 	

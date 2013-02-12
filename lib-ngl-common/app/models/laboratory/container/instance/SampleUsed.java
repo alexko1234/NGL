@@ -1,5 +1,7 @@
 package models.laboratory.container.instance;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
@@ -14,8 +16,19 @@ public class SampleUsed {
 	// Reference SampleCategory code
 	public String categoryCode;
 	
-	
+	public SampleUsed(){
+		
+		
+	}
 
+	public SampleUsed(String sampleCode,String typeCode,String categoryCode){
+		this.sampleCode=sampleCode;
+		this.typeCode=typeCode;
+		this.categoryCode=categoryCode;
+		
+	}
+
+	@JsonIgnore
 	public Sample getSample(){
 
 		try {
@@ -27,7 +40,7 @@ public class SampleUsed {
 
 	}
 	
-	
+	@JsonIgnore
 	public SampleType getSampleType(){
 
 		try {
@@ -39,6 +52,7 @@ public class SampleUsed {
 
 	}
 	
+	@JsonIgnore
 	public SampleCategory getSampleCategory(){
 
 		try {
