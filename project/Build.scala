@@ -85,8 +85,8 @@ object ApplicationBuild extends Build {
    val nglcommon = PlayProject(appName + "-common", appVersion, nglcommonDependencies, mainLang = JAVA, path = file("lib-ngl-common"),settings = buildSettings).settings(
        // Add your own project settings here      
        resolvers := Seq(nexusig),
-       publishTo := Some(nexusigpublish),
-       excludeFilter in unmanagedResources := "application-context.xml" || "dump*.sql"      
+       publishTo := Some(nexusigpublish),       
+       resourceDirectory in Test <<= baseDirectory / "conftest"
     )
    
    val nglbi = PlayProject(appName + "-bi", appVersion, nglbiDependencies, mainLang = JAVA, path = file("app-ngl-bi"),settings = buildSettings).settings(
