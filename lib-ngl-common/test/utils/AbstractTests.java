@@ -42,10 +42,10 @@ public abstract class AbstractTests{
 		config.put("db.default.user", "ngl");
 		config.put("db.default.password", "ngl@dmin");
 		config.put("db.default.partitionCount", "1");
-		config.put("db.default.maxConnectionsPerPartition", "12");
+		config.put("db.default.maxConnectionsPerPartition", "10");
 		config.put("db.default.minConnectionsPerPartition", "1");
 		config.put("db.default.logStatements", "true");
-		config.put("db.default.jndiName", "ngl");	
+		config.put("db.default.jndiName", "ngl");
 		return config;
 		
 	}
