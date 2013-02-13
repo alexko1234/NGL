@@ -8,9 +8,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.mongodb.util.Hash;
-
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.utils.dao.DAOException;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import play.modules.spring.Spring;
@@ -52,19 +51,19 @@ public class CommonInfoType{
 	}
 
 	
-	public static CommonInfoType findById(long id)
+	public static CommonInfoType findById(long id) throws DAOException
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		return commonInfoTypeDAO.findById(id);
 	}
 	
-	public static List<CommonInfoType> findAll()
+	public static List<CommonInfoType> findAll() throws DAOException
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		return commonInfoTypeDAO.findAll();
 	}
 	
-	public static CommonInfoType findByCode(String code)
+	public static CommonInfoType findByCode(String code) throws DAOException
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		return commonInfoTypeDAO.findByCode(code);
@@ -79,13 +78,14 @@ public class CommonInfoType{
 			return commonInfoTypeDAO.findByTypeNameAndType(name, idObjectType);
 	}
 	
-	public CommonInfoType add()
+	public CommonInfoType add() throws DAOException
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		return commonInfoTypeDAO.add(this);
+		this.id=commonInfoTypeDAO.add(this);
+		return this;
 	}
 	
-	public void update()
+	public void update() throws DAOException
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.update(this);

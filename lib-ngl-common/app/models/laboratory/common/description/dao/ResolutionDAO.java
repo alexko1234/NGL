@@ -1,30 +1,20 @@
 package models.laboratory.common.description.dao;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
 
 import models.laboratory.common.description.Resolution;
+import models.utils.dao.AbstractDAO;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ResolutionDAO {
+public class ResolutionDAO extends AbstractDAO<Resolution>{
 
-	private SimpleJdbcTemplate jdbcTemplate;
-	private SimpleJdbcInsert jdbcInsert;
-
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);       
-		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("resolution").usingGeneratedKeyColumns("id");
+	protected ResolutionDAO() {
+		super("resolution", Resolution.class,true);
 	}
+
 	
 	public List<Resolution> findByCommonInfoType(long idCommonInfoType)
 	{
@@ -36,37 +26,5 @@ public class ResolutionDAO {
 		return this.jdbcTemplate.query(sql, mapper, idCommonInfoType);
 	}
 	
-	public Resolution findByCode(String code)
-	{
-		String sql = "SELECT id,name,code "+
-					"FROM resolution "+
-					"WHERE code=?";
-		BeanPropertyRowMapper<Resolution> mapper = new BeanPropertyRowMapper<Resolution>(Resolution.class);
-		return this.jdbcTemplate.queryForObject(sql, mapper, code);
-	}
 	
-	public Resolution findById(long id)
-	{
-		String sql = "SELECT id,name,code "+
-				"FROM resolution "+
-				"WHERE id=?";
-	BeanPropertyRowMapper<Resolution> mapper = new BeanPropertyRowMapper<Resolution>(Resolution.class);
-	return this.jdbcTemplate.queryForObject(sql, mapper, id);
-	}
-	
-	public Resolution add(Resolution resolution)
-	{
-		Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("name", resolution.name);
-        parameters.put("code", resolution.code);
-        Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        resolution.id = newId;
-        return resolution;
-	}
-	
-	public void update(Resolution resolution)
-	{
-		String sql = "UPDATE resolution SET name=? WHERE id=?";
-		jdbcTemplate.update(sql, resolution.name, resolution.id);
-	}
 }

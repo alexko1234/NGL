@@ -12,7 +12,7 @@ public class Model<T,P> {
       this.dao = dao;
     }
     
-    public T update()
+    /*public T update()
     {
     	return getInstance().update((T) this);
     }
@@ -26,7 +26,7 @@ public class Model<T,P> {
 	public AbstractDAO<Long, T> getInstance()
     {
     	return (AbstractDAO<Long, T>) Spring.getBeanOfType(dao);
-    }
+    }*/
     
     public static class Finder<P, T>
     {
@@ -37,7 +37,7 @@ public class Model<T,P> {
     		this.dao = dao;
     	}
     	
-    	public T findByCode(String code)
+    	/*public T findByCode(String code)
         {
     		return getInstance().findByCode(code);
         }
@@ -56,6 +56,6 @@ public class Model<T,P> {
     	public AbstractDAO<Long, T> getInstance()
         {
         	return (AbstractDAO<Long, T>) Spring.getBeanOfType(dao);
-        }
+        }*/
     }
 }

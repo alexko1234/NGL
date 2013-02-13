@@ -19,6 +19,10 @@ import play.modules.spring.Spring;
 
 public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 
+	public CommonInfoTypeMappingQuery(){
+		super();
+	}
+	
 	public CommonInfoTypeMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter){
 		super(ds,sql);
 		if(sqlParameter!=null)
@@ -32,12 +36,12 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 		CommonInfoType commonInfoType = new CommonInfoType();
 		commonInfoType.id = rs.getLong("cId");
 		commonInfoType.name = rs.getString("name");
-		commonInfoType.code = rs.getString("code");
+		commonInfoType.code = rs.getString("codeSearch");
 		commonInfoType.collectionName = rs.getString("collection_name");
 		//Get object Type
 		ObjectType objectType = new ObjectType();
 		objectType.id = rs.getLong("oId");
-		objectType.type = rs.getString("type");
+		objectType.code = rs.getString("codeObject");
 		objectType.generic =rs.getBoolean("generic");
 		commonInfoType.objectType = objectType;
 

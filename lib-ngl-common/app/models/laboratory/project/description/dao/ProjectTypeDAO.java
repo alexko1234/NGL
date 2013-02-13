@@ -1,67 +1,37 @@
 package models.laboratory.project.description.dao;
 
-import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
+import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.DAOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import play.modules.spring.Spring;
 
-import com.avaje.ebean.enhance.asm.Type;
-
 @Repository
-public class ProjectTypeDAO {
+public class ProjectTypeDAO extends AbstractDAOMapping<ProjectType>{
 
-	private SimpleJdbcInsert jdbcInsert;
-	private DataSource dataSource;
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("project_type");
+	protected ProjectTypeDAO() {
+		super("project_type", ProjectType.class, ProjectTypeMappingQuery.class, 
+				"SELECT t.id, fk_common_info_type, fk_project_category "+
+				"FROM project_type as t "+
+				"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
 
-	public ProjectType findById(long id)
-	{
-		String sql = "SELECT id, fk_common_info_type, fk_project_category "+
-				"FROM project_type "+
-				"WHERE id = ? ";
-		ProjectTypeMappingQuery projectTypeMappingQuery = new ProjectTypeMappingQuery(dataSource,sql,new SqlParameter("id", Type.LONG));
-		return projectTypeMappingQuery.findObject(id);
-	}
-	
-	public ProjectType findByCode(String code)
-	{
-		String sql = "SELECT pt.id, fk_common_info_type, fk_project_category "+
-				"FROM project_type as pt "+
-				"JOIN common_info_type as c ON c.id=fk_common_info_type "+
-				"WHERE code = ? ";
-		ProjectTypeMappingQuery projectTypeMappingQuery=new ProjectTypeMappingQuery(dataSource,sql, new SqlParameter("code", Types.VARCHAR));
-		return projectTypeMappingQuery.findObject(code);
-	}
-
-	public ProjectType add(ProjectType projectType)
+	public long add(ProjectType projectType) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType cit = commonInfoTypeDAO.add(projectType);
-		projectType.setCommonInfoType(cit);
+		projectType.id = commonInfoTypeDAO.add(projectType);
 		//Check if category exist
 		if(projectType.projectCategory!=null && projectType.projectCategory.id==null)
 		{
 			ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
-			ProjectCategory pc = (ProjectCategory) projectCategoryDAO.add(projectType.projectCategory);
-			projectType.projectCategory = pc;
+			projectType.projectCategory.id = projectCategoryDAO.add(projectType.projectCategory);
 		}
 		//Create new projectType
 		Map<String, Object> parameters = new HashMap<String, Object>();
@@ -69,12 +39,23 @@ public class ProjectTypeDAO {
 		parameters.put("fk_common_info_type", projectType.id);
 		parameters.put("fk_project_category", projectType.projectCategory.id);
 		jdbcInsert.execute(parameters);
-		return projectType;
+		return projectType.id;
 	}
 
-	public void update(ProjectType projectType)
+	public void update(ProjectType projectType) throws DAOException
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.update(projectType);
+	}
+
+
+
+	@Override
+	public void remove(ProjectType projectType) {
+		//Remove commonInfoType
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		commonInfoTypeDAO.remove(projectType);
+		//Remove ProjectType
+		super.remove(projectType);
 	}
 }

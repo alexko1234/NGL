@@ -4,64 +4,47 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.AbstractExperiment;
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
+import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.DAOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.modules.spring.Spring;
 
-public abstract class AbstractExperimentDAO<P extends AbstractExperiment> {
+public abstract class AbstractExperimentDAO<P extends AbstractExperiment> extends AbstractDAOMapping<P>{
 
 
-	protected SimpleJdbcTemplate jdbcTemplate;
-	protected SimpleJdbcInsert jdbcInsert;
-	protected DataSource dataSource;
-	protected String tableName;
-
-	public AbstractExperimentDAO(String tableName)
+	public AbstractExperimentDAO(String tableName,Class<P> entityClass, Class<? extends MappingSqlQuery<P>> classMapping, String sqlCommon)
 	{
-		this.tableName=tableName;
-	}
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource=dataSource;
-		this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);  
-		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName(tableName);
+		super(tableName, entityClass, classMapping, sqlCommon,false);
+		
 	}
 
-	public abstract P findById(long id);
-
-	public P add(P experiment)
+	public long add(P experiment) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType cit = commonInfoTypeDAO.add(experiment);
-		experiment.setCommonInfoType(cit);
+		experiment.id = commonInfoTypeDAO.add(experiment);
 		//Create purification method 
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("id", cit.id);
-		parameters.put("fk_common_info_type", cit.id);
+		parameters.put("id", experiment.id);
+		parameters.put("fk_common_info_type", experiment.id);
 		jdbcInsert.execute(parameters);
-		experiment.id = cit.id;
 		//Add list protocols
 		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
 		protocolDAO.add(experiment.protocols, experiment.id);
 		//Add list instruments
 		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
 		instrumentUsedTypeDAO.add(experiment.instrumentUsedTypes, experiment.id);
-		return experiment;
+		return experiment.id;
 	}
 
-	public void update(P experiment)
+	public void update(P experiment) throws DAOException
 	{
 		//Update commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
@@ -89,4 +72,19 @@ public abstract class AbstractExperimentDAO<P extends AbstractExperiment> {
 		}
 	}
 	
+	@Override
+	public void remove(P experiment) {
+		//Remove commonInfoType
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		commonInfoTypeDAO.remove(experiment);
+		//Remove protocol common_info_type_protocol
+		String sqlProto = "DELETE FROM common_info_type_protocol WHERE fk_common_info_type=?";
+		jdbcTemplate.update(sqlProto, experiment.id);
+		//Remove instrument type common_info_type_instrument_type
+		String sqlInstru = "DELETE FROM common_info_type_instrument_type WHERE fk_common_info_type=?";
+		jdbcTemplate.update(sqlInstru, experiment.id);
+		//Remove experiment
+		super.remove(experiment);
+	}
+
 }

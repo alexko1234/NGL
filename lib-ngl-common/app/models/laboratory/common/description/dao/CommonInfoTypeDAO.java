@@ -5,63 +5,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
+import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.DAOException;
 
 import org.springframework.asm.Type;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import play.modules.spring.Spring;
 
 @Repository
-public class CommonInfoTypeDAO{
+public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 
-
-	private DataSource dataSource;
-	private String sqlCommon = "SELECT c.id as cId, c.name, c.code , c.collection_name, o.id as oId, o.type, o.generic "+
-			"FROM common_info_type as c "+
-			"JOIN object_type as o ON o.id=c.fk_object_type ";
-	private SimpleJdbcInsert jdbcInsert;
-	private SimpleJdbcTemplate jdbcTemplate;
-
-
-
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource=dataSource;
-		this.jdbcInsert=new SimpleJdbcInsert(dataSource).withTableName("common_info_type").usingGeneratedKeyColumns("id");
-		this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);       
-	}
-
-	public CommonInfoType findById(Long id)
-	{
-		String sql = sqlCommon+
-				"WHERE c.id = ? ";
-		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
-		return commonInfoTypeMappingQuery.findObject(id);
-	}
-
-	public List<CommonInfoType> findAll()
-	{
-		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sqlCommon,null);
-		return commonInfoTypeMappingQuery.execute();
-	}
-
-	public CommonInfoType findByCode(String code)
-	{
-		String sql = sqlCommon+
-				"WHERE c.code = ? ";
-		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
-		return commonInfoTypeMappingQuery.findObject(code);
+	public CommonInfoTypeDAO() {
+		super("common_info_type", CommonInfoType.class, CommonInfoTypeMappingQuery.class, 
+				"SELECT t.id as cId, t.name, t.code as codeSearch, t.collection_name, o.id as oId, o.code as codeObject, o.generic "+
+				"FROM common_info_type as t "+
+				"JOIN object_type as o ON o.id=t.fk_object_type ",true);
 	}
 
 	public List<CommonInfoType> findByName(String typeName)
@@ -84,15 +49,29 @@ public class CommonInfoTypeDAO{
 		return commonInfoTypeMappingQuery.execute(idobjectType);
 
 	}
+	
+	/**
+	 * Particular sql with two code must be implemented
+	 */
+	public CommonInfoType findByCode(String code) throws DAOException
+	{
+		String sql = sqlCommon+
+				"WHERE codeSearch = ? ";
+		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
+		return commonInfoTypeMappingQuery.findObject(code);
+	}
 
 
-	public CommonInfoType add(CommonInfoType cit)
+	public long add(CommonInfoType cit) throws DAOException
 	{
 		//Check if objectType exist
 		if(cit.objectType!=null && cit.objectType.id==null)
 		{
 			ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-			ObjectType ot = objectTypeDAO.add(cit.objectType);
+			//TODO en attendant Model
+			//ObjectType ot = objectTypeDAO.add(cit.objectType);
+			long id = objectTypeDAO.add(cit.objectType);
+			ObjectType ot = objectTypeDAO.findById(id);
 			cit.objectType = ot;
 		}
 		//Create new cit
@@ -111,7 +90,7 @@ public class CommonInfoTypeDAO{
 			String sql = "INSERT INTO common_info_type_state (fk_common_info_type,fk_state) VALUES(?,?)";
 			for(State state : states){
 				if(state.id==null)
-					state = stateDao.add(state);
+					state.id = stateDao.add(state);
 				jdbcTemplate.update(sql, newId,state.id);
 			}
 		}
@@ -122,7 +101,7 @@ public class CommonInfoTypeDAO{
 			String sql = "INSERT INTO common_info_type_resolution (fk_common_info_type, fk_resolution) VALUES(?,?)";
 			for(Resolution resolution:resolutions){
 				if(resolution.id==null)
-					resolution=resolutionDAO.add(resolution);
+					resolution.id=resolutionDAO.add(resolution);
 				jdbcTemplate.update(sql, newId,resolution.id);
 			}
 		}
@@ -136,10 +115,10 @@ public class CommonInfoTypeDAO{
 					propertyDefinitionDAO.add(propertyDefinition, cit.id);
 			}
 		}
-		return cit;
+		return cit.id;
 	}
 
-	public CommonInfoType update(CommonInfoType cit)
+	public void update(CommonInfoType cit) throws DAOException
 	{
 		CommonInfoType citDB = findById(cit.id);
 
@@ -153,7 +132,7 @@ public class CommonInfoTypeDAO{
 			for(State state : states){
 				if(citDB.variableStates==null || (citDB.variableStates!=null && !citDB.variableStates.contains(state))){
 					if(state.id==null)
-						state = stateDao.add(state);
+						state.id = stateDao.add(state);
 					jdbcTemplate.update(sqlState, citDB.id,state.id);
 				}
 			}
@@ -166,7 +145,7 @@ public class CommonInfoTypeDAO{
 			for(Resolution resolution:resolutions){
 				if(citDB.resolutions==null || (citDB.resolutions!=null && !citDB.resolutions.contains(resolution))){
 					if(resolution.id==null)
-						resolution=resolutionDAO.add(resolution);
+						resolution.id=resolutionDAO.add(resolution);
 					jdbcTemplate.update(sqlReso, citDB.id,resolution.id);
 				}
 			}
@@ -181,9 +160,28 @@ public class CommonInfoTypeDAO{
 				}
 			}
 		}
-		return citDB;
 	}
 
+	@Override
+	public void remove(CommonInfoType commonInfoType) {
+		//Delete state common_info_type_state
+		String sqlState = "DELETE FROM common_info_type_state WHERE fk_common_info_type=?";
+		jdbcTemplate.update(sqlState, commonInfoType.id);
+		//Delete resolution common_info_type_resolution
+		String sqlResol = "DELETE FROM common_info_type_resolution WHERE fk_common_info_type=?";
+		jdbcTemplate.update(sqlResol, commonInfoType.id);
+		//Delete property_definition
+		PropertyDefinitionDAO propertyDefinitionDAO = Spring.getBeanOfType(PropertyDefinitionDAO.class);
+		for(PropertyDefinition propertyDefinition : commonInfoType.propertiesDefinitions){
+			propertyDefinitionDAO.remove(propertyDefinition);
+		}
+		//Delete common_info_type
+		super.remove(commonInfoType);
+	}
+
+
+
+	
 	
 
 }

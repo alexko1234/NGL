@@ -4,28 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
 import models.laboratory.instrument.description.Instrument;
+import models.utils.dao.AbstractDAO;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class InstrumentDAO {
+public class InstrumentDAO extends AbstractDAO<Instrument>{
 
-	private SimpleJdbcTemplate jdbcTemplate;
-	private SimpleJdbcInsert jdbcInsert;
-
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);   
-		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("instrument").usingGeneratedKeyColumns("id");
+	protected InstrumentDAO() {
+		super("instrument", Instrument.class, true);
 	}
-	
+
 	public List<Instrument> findByInstrumentUsedType(long idInstrumentUsedType)
 	{
 		String sql = "SELECT id,name,code FROM instrument WHERE instrument_used_type_id=?";
@@ -44,9 +35,4 @@ public class InstrumentDAO {
         return instrument;
 	}
 	
-	public void update(Instrument instrument)
-	{
-		String sql = "UPDATE instrument SET name=? WHERE id=?";
-		jdbcTemplate.update(sql, instrument.name, instrument.id);
-	}
 }

@@ -1,67 +1,36 @@
 package models.laboratory.sample.description.dao;
 
-import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
+import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.DAOException;
 
-import org.springframework.asm.Type;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import play.modules.spring.Spring;
 
 @Repository
-public class SampleTypeDAO {
+public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
 
-	private DataSource dataSource;
-	private String sqlCommon = "SELECT id, fk_common_info_type, fk_sample_category "+
-			"FROM sample_type ";
-	private SimpleJdbcInsert jdbcInsert;
-
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource=dataSource;
-		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("sample_type");
+	protected SampleTypeDAO() {
+		super("sample_type", SampleType.class, SampleTypeMappingQuery.class, 
+				"SELECT t.id, fk_common_info_type, fk_sample_category "+
+				"FROM sample_type as t JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
 
-	public SampleType findById(long id)
-	{
-		String sql = sqlCommon+
-				"WHERE id = ? ";
-		SampleTypeMappingQuery sampleTypeMappingQuery = new SampleTypeMappingQuery(dataSource,sql, new SqlParameter("id", Type.LONG));
-		return sampleTypeMappingQuery.findObject(id);
-	}
-
-	public SampleType findByCode(String code)
-	{
-		String sql = "SELECT st.id, fk_common_info_type, fk_sample_category "+
-				"FROM sample_type as st JOIN common_info_type as c ON c.id=fk_common_info_type "+
-				"WHERE code=?";
-		SampleTypeMappingQuery sampleTypeMappingQuery = new SampleTypeMappingQuery(dataSource,sql, new SqlParameter("code",Types.VARCHAR));
-		return sampleTypeMappingQuery.findObject(code);
-	}
-
-	public SampleType add(SampleType sampleType)
+	public long add(SampleType sampleType) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType cit = commonInfoTypeDAO.add(sampleType);
-		sampleType.setCommonInfoType(cit);
+		sampleType.id = commonInfoTypeDAO.add(sampleType);
 		//Add sampleCategory
 		if(sampleType.sampleCategory!=null && sampleType.sampleCategory.id==null)
 		{
 			SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
-			SampleCategory sampleCategory = (SampleCategory) sampleCategoryDAO.add(sampleType.sampleCategory);
-			sampleType.sampleCategory=sampleCategory;
+			sampleType.sampleCategory.id = sampleCategoryDAO.add(sampleType.sampleCategory);
 		}
 
 		//Create sampleType 
@@ -70,12 +39,21 @@ public class SampleTypeDAO {
 		parameters.put("fk_common_info_type", sampleType.id);
 		parameters.put("fk_sample_category", sampleType.sampleCategory.id);
 		jdbcInsert.execute(parameters);
-		return sampleType;
+		return sampleType.id;
 	}
 	
-	public void update(SampleType sampleType)
+	public void update(SampleType sampleType) throws DAOException
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.update(sampleType);
+	}
+
+	@Override
+	public void remove(SampleType sampleType) {
+		//Remove commonInfotype
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		commonInfoTypeDAO.remove(sampleType);
+		//Remove sampleType
+		super.remove(sampleType);
 	}
 }

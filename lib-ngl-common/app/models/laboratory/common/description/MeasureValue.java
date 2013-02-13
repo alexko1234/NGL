@@ -8,6 +8,6 @@ public class MeasureValue {
 	
 	public Boolean defaultValue = Boolean.FALSE;
   	
-	public MeasureCategory measureCaterory;
+	public MeasureCategory measureCategory;
 	
 }

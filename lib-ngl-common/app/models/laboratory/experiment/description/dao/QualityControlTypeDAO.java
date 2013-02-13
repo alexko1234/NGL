@@ -1,6 +1,5 @@
 package models.laboratory.experiment.description.dao;
 
-import java.sql.Types;
 import java.util.List;
 
 import models.laboratory.experiment.description.QualityControlType;
@@ -14,7 +13,9 @@ public class QualityControlTypeDAO extends AbstractExperimentDAO<QualityControlT
 
 
 	public QualityControlTypeDAO() {
-		super("quality_control_type");
+		super("quality_control_type", QualityControlType.class,QualityControlTypeMappingQuery.class,
+				"SELECT t.id, fk_common_info_type "+
+				"FROM quality_control_type as t JOIN common_info_type as c ON c.id=fk_common_info_type ");
 	}
 
 	public List<QualityControlType> findByExperimentType(long idExperimentType)
@@ -26,21 +27,4 @@ public class QualityControlTypeDAO extends AbstractExperimentDAO<QualityControlT
 		return qualityControlTypeMappingQuery.execute(idExperimentType);
 	}
 
-	public QualityControlType findById(long id)
-	{
-		String sql = "SELECT id, fk_common_info_type "+
-				"FROM quality_control_type "+
-				"WHERE id = ?";
-		QualityControlTypeMappingQuery qualityControlTypeMappingQuery = new QualityControlTypeMappingQuery(dataSource, sql, new SqlParameter("id", Type.LONG));
-		return qualityControlTypeMappingQuery.findObject(id);
-	}
-	
-	public QualityControlType findByCode(String code)
-	{
-		String sql = "SELECT qc.id, fk_common_info_type "+
-				"FROM quality_control_type as qc JOIN common_info_type as c ON c.id=fk_common_info_type "+
-				"WHERE code = ?";
-		QualityControlTypeMappingQuery qualityControlTypeMappingQuery = new QualityControlTypeMappingQuery(dataSource, sql, new SqlParameter("code", Types.VARCHAR));
-		return qualityControlTypeMappingQuery.findObject(code);
-	}
 }

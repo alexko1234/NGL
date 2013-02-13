@@ -1,27 +1,20 @@
 package models.laboratory.experiment.description.dao;
 
-import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.PurificationMethodType;
 import models.laboratory.experiment.description.QualityControlType;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
+import models.utils.dao.DAOException;
 
 import org.springframework.asm.Type;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import play.modules.spring.Spring;
@@ -30,48 +23,17 @@ import play.modules.spring.Spring;
 @Repository
 public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 
-	private NextExperimentTypeMappingQuery nextExperimentTypeMappingQuery;
-	private String sqlCommon = "SELECT id, doPurification, mandatoryPurification, doQualityControl, mandatoryQualityControl, fk_experiment_category, fk_common_info_type ";
-	
 	public ExperimentTypeDAO() {
-		super("experiment_type");
-	}
-
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		super.setDataSource(dataSource);
-		this.nextExperimentTypeMappingQuery=new NextExperimentTypeMappingQuery(dataSource);
+		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.class,
+				"SELECT t.id, doPurification, mandatoryPurification, doQualityControl, mandatoryQualityControl, fk_experiment_category, fk_common_info_type "+
+						"FROM experiment_type as t "+
+				"JOIN common_info_type as c ON c.id=fk_common_info_type ");
 	}
 
 	public List<ExperimentType> findNextExperiments(long idExperimentType)
 	{
-		return this.nextExperimentTypeMappingQuery.execute(idExperimentType);
-	}
-
-	public ExperimentType findById(long id){
-		String sql = sqlCommon+
-				"FROM experiment_type "+
-				"WHERE id=?";
-		ExperimentTypeMappingQuery experimentTypeMappingQuery = new ExperimentTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
-		return experimentTypeMappingQuery.findObject(id);
-	}
-
-	public List<ExperimentType> findAll()
-	{
-		String sql = sqlCommon+
-				"FROM experiment_type";
-		ExperimentTypeMappingQuery experimentTypeMappingQuery = new ExperimentTypeMappingQuery(dataSource, sql, null);
-		return experimentTypeMappingQuery.execute();
-	}
-
-	public ExperimentType findByCode(String code)
-	{
-		String sql = "SELECT et.id, doPurification, mandatoryPurification, doQualityControl, mandatoryQualityControl,fk_experiment_category, fk_common_info_type "+
-				"FROM experiment_type as et "+
-				"JOIN common_info_type as c ON c.id=fk_common_info_type "+
-				"WHERE code=?";
-		ExperimentTypeMappingQuery experimentTypeMappingQuery = new ExperimentTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
-		return experimentTypeMappingQuery.findObject(code);
+		NextExperimentTypeMappingQuery nextExperimentTypeMappingQuery = new NextExperimentTypeMappingQuery(dataSource);
+		return nextExperimentTypeMappingQuery.execute(idExperimentType);
 	}
 
 	public List<ExperimentType> findByProcessId(long id)
@@ -82,19 +44,17 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 		ExperimentTypeMappingQuery experimentTypeMappingQuery = new ExperimentTypeMappingQuery(dataSource, sql, new SqlParameter("p.fk_process_type", Type.LONG));
 		return experimentTypeMappingQuery.execute(id);
 	}
-	public ExperimentType add(ExperimentType experimentType)
+	public long add(ExperimentType experimentType) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType cit = commonInfoTypeDAO.add(experimentType);
-		experimentType.setCommonInfoType(cit);
+		experimentType.id = commonInfoTypeDAO.add(experimentType);
 
 		//Check if category exist
 		if(experimentType.experimentCategory!=null && experimentType.experimentCategory.id==null)
 		{
 			ExperimentCategoryDAO experimentCategoryDAO = Spring.getBeanOfType(ExperimentCategoryDAO.class);
-			ExperimentCategory ec = (ExperimentCategory) experimentCategoryDAO.add(experimentType.experimentCategory);
-			experimentType.experimentCategory = ec;
+			experimentType.experimentCategory.id = experimentCategoryDAO.add(experimentType.experimentCategory);
 		}
 		//Create experimentType 
 		Map<String, Object> parameters = new HashMap<String, Object>();
@@ -129,7 +89,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			String sql = "INSERT INTO experiment_quality_control(fk_quality_control_type,fk_experiment_type) VALUES(?,?)";
 			for(QualityControlType qualityControlType : qualityControlTypes){
 				if(qualityControlType.id==null)
-					qualityControlType = qualityControlTypeDAO.add(qualityControlType);
+					qualityControlType.id = qualityControlTypeDAO.add(qualityControlType);
 				jdbcTemplate.update(sql, qualityControlType.id, experimentType.id);
 			}
 		}
@@ -140,14 +100,14 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			String sql = "INSERT INTO experiment_purification_method(fk_purification_method_type,fk_experiment_type) VALUES(?,?)";
 			for(PurificationMethodType purificationMethodType : purificationMethodTypes){
 				if(purificationMethodType.id==null)
-					purificationMethodType = purificationMethodTypeDAO.add(purificationMethodType);
+					purificationMethodType.id = purificationMethodTypeDAO.add(purificationMethodType);
 				jdbcTemplate.update(sql, purificationMethodType.id, experimentType.id);
 			}
 		}
-		return experimentType;
+		return experimentType.id;
 	}
 
-	public void update(ExperimentType experimentType)
+	public void update(ExperimentType experimentType) throws DAOException
 	{
 		ExperimentType expTypeDB = findById(experimentType.id);
 
@@ -207,7 +167,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			for(QualityControlType qualityControlType : qualityControlTypes){
 				if(expTypeDB.possibleQualityControlTypes==null || (expTypeDB.possibleQualityControlTypes!=null && !expTypeDB.possibleQualityControlTypes.contains(qualityControlType))){
 					if(qualityControlType.id==null)
-						qualityControlType=qualityControlTypeDAO.add(qualityControlType);
+						qualityControlType.id=qualityControlTypeDAO.add(qualityControlType);
 					jdbcTemplate.update(sql, qualityControlType.id,experimentType.id);
 				}
 			}
@@ -220,10 +180,28 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			for(PurificationMethodType purificationMethodType : purificationMethodTypes){
 				if(expTypeDB.possiblePurificationMethodTypes==null || (expTypeDB.possiblePurificationMethodTypes!=null && !expTypeDB.possiblePurificationMethodTypes.contains(purificationMethodType))){
 					if(purificationMethodType.id==null)
-						purificationMethodType=purificationMethodTypeDAO.add(purificationMethodType);
+						purificationMethodType.id=purificationMethodTypeDAO.add(purificationMethodType);
 					jdbcTemplate.update(sql, purificationMethodType.id,experimentType.id);
 				}
 			}
 		}
 	}
+
+	@Override
+	public void remove(ExperimentType experimentType) {
+		super.remove(experimentType);
+		//Remove next experiment next_experiment_types
+		String sqlNextExp = "DELETE FROM next_experiment_types WHERE fk_experiment_type=?";
+		jdbcTemplate.update(sqlNextExp, experimentType.id);
+		//Remove quality control experiment_quality_control
+		String sqlQuality = "DELETE FROM experiment_quality_control WHERE fk_experiment_type=?";
+		jdbcTemplate.update(sqlQuality, experimentType.id);
+		//Remove purification experiment_purification_method
+		String sqlPurif = "DELETE FROM experiment_purification_method WHERE fk_experiment_type=?";
+		jdbcTemplate.update(sqlPurif, experimentType.id);
+	}
+
+
+
+
 }

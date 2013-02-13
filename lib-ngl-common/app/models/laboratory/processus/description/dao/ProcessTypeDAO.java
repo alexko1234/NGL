@@ -1,74 +1,40 @@
 package models.laboratory.processus.description.dao;
 
-import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
-import models.laboratory.processus.description.ProcessCategory;
 import models.laboratory.processus.description.ProcessType;
+import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.DAOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import play.modules.spring.Spring;
 
-import com.avaje.ebean.enhance.asm.Type;
-
 @Repository
-public class ProcessTypeDAO {
+public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 
-	private SimpleJdbcInsert jdbcInsert;
-	private SimpleJdbcTemplate jdbcTemplate;
-	private DataSource dataSource;
-
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource=dataSource;
-		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("process_type");
-		this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);  
+	protected ProcessTypeDAO() {
+		super("process_type", ProcessType.class, ProcessTypeMappingQuery.class, 
+				"SELECT t.id, fk_common_info_type, fk_process_category "+
+				"FROM process_type as t  "+
+				"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
 
-	public ProcessType findById(long id)
-	{
-		String sql = "SELECT id, fk_common_info_type, fk_process_category "+
-				"FROM process_type "+
-				"WHERE id = ? ";
-		ProcessTypeMappingQuery processTypeMappingQuery=new ProcessTypeMappingQuery(dataSource,sql, new SqlParameter("id", Type.LONG));
-		return processTypeMappingQuery.findObject(id);
-	}
-	
-	public ProcessType findByCode(String code)
-	{
-		String sql = "SELECT pt.id, fk_common_info_type, fk_process_category "+
-				"FROM process_type as pt  "+
-				"JOIN common_info_type as c ON c.id=fk_common_info_type "+
-				"WHERE code = ? ";
-		ProcessTypeMappingQuery processTypeMappingQuery=new ProcessTypeMappingQuery(dataSource,sql, new SqlParameter("code", Types.VARCHAR));
-		return processTypeMappingQuery.findObject(code);
-	}
-
-	public ProcessType add(ProcessType processType)
+	public long add(ProcessType processType) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType cit = commonInfoTypeDAO.add(processType);
-		processType.setCommonInfoType(cit);
+		processType.id = commonInfoTypeDAO.add(processType);
 		//Check if category exist
 		if(processType.processCategory!=null && processType.processCategory.id==null)
 		{
 			ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
-			ProcessCategory pc = (ProcessCategory) processCategoryDAO.add(processType.processCategory);
-			processType.processCategory = pc;
+			processType.processCategory.id = processCategoryDAO.add(processType.processCategory);
 		}
 
 		//Create new processType
@@ -85,14 +51,14 @@ public class ProcessTypeDAO {
 			String sql = "INSERT INTO process_experiment_type(fk_process_type, fk_experiment_type) VALUES(?,?)";
 			for(ExperimentType experimentType : experimentTypes){
 				if(experimentType.id==null)
-					experimentType = experimentTypeDAO.add(experimentType);
+					experimentType.id = experimentTypeDAO.add(experimentType);
 				jdbcTemplate.update(sql, processType.id, experimentType.id);
 			}
 		}
-		return processType;
+		return processType.id;
 	}
 
-	public void update(ProcessType processType)
+	public void update(ProcessType processType) throws DAOException
 	{
 		ProcessType processTypeDB = findById(processType.id);
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
@@ -106,10 +72,22 @@ public class ProcessTypeDAO {
 			for(ExperimentType experimentType : experimentTypes){
 				if(processTypeDB.experimentTypes==null || (processTypeDB.experimentTypes!=null && !processTypeDB.experimentTypes.contains(experimentType))){
 					if(experimentType.id==null)
-						experimentType = experimentTypeDAO.add(experimentType);
+						experimentType.id = experimentTypeDAO.add(experimentType);
 					jdbcTemplate.update(sql, processType.id, experimentType.id);
 				}
 			}
 		}
+	}
+
+	@Override
+	public void remove(ProcessType processType) {
+		//Remove CommonInfoType
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		commonInfoTypeDAO.remove(processType);
+		//Remove process_experiment_type
+		String sqlExp = "DELETE FROM process_experiment_type WHERE fk_process_type=?";
+		jdbcTemplate.update(sqlExp, processType.id);
+		//Remove processType
+		super.remove(processType);
 	}
 }

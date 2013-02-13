@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.ProtocolCategory;
 import models.laboratory.experiment.description.ReagentType;
+import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
@@ -17,6 +18,10 @@ import play.modules.spring.Spring;
 
 public class ProtocolMappingQuery extends MappingSqlQuery<Protocol>{
 
+	public ProtocolMappingQuery()
+	{
+		super();
+	}
 	public ProtocolMappingQuery(DataSource ds, String sql,SqlParameter sqlParameter)
 	{
 		super(ds,sql);
@@ -39,7 +44,12 @@ public class ProtocolMappingQuery extends MappingSqlQuery<Protocol>{
 		protocol.reagentTypes = reagentTypes;
 		//Get protocol category
 		ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
-		ProtocolCategory protocolCategory = (ProtocolCategory) protocolCategoryDAO.findById(idProtocolCategory);
+		ProtocolCategory protocolCategory=null;
+		try {
+			protocolCategory = (ProtocolCategory) protocolCategoryDAO.findById(idProtocolCategory);
+		} catch (DAOException e) {
+			throw new SQLException(e);
+		}
 		protocol.protocolCategory = protocolCategory;
 		return protocol;
 	}

@@ -1,6 +1,5 @@
 package models.laboratory.experiment.description.dao;
 
-import java.sql.Types;
 import java.util.List;
 
 import models.laboratory.experiment.description.PurificationMethodType;
@@ -13,7 +12,11 @@ import org.springframework.stereotype.Repository;
 public class PurificationMethodTypeDAO extends AbstractExperimentDAO<PurificationMethodType>{
 
 	public PurificationMethodTypeDAO() {
-		super("purification_method_type");
+		super("purification_method_type", PurificationMethodType.class,PurificationMethodTypeMappingQuery.class,
+				"SELECT t.id, fk_common_info_type, code "+
+				"FROM purification_method_type as t "+
+				"JOIN common_info_type as c ON c.id=fk_common_info_type ");
+		
 	}
 	
 
@@ -26,22 +29,7 @@ public class PurificationMethodTypeDAO extends AbstractExperimentDAO<Purificatio
 		return purificationMethodTypeMappingQuery.execute(idExperimentType);
 	}
 
-	public PurificationMethodType findByCode(String code)
-	{
-		String sql = "SELECT pm.id, fk_common_info_type "+
-				"FROM purification_method_type as pm JOIN common_info_type as c ON c.id=fk_common_info_type "+
-				"WHERE code = ?";
-		PurificationMethodTypeMappingQuery purificationMethodTypeMappingQuery = new PurificationMethodTypeMappingQuery(dataSource, sql, new SqlParameter("code", Types.VARCHAR));
-		return purificationMethodTypeMappingQuery.findObject(code);
-	}
+
 	
-	public PurificationMethodType findById(long id)
-	{
-		String sql = "SELECT id, fk_common_info_type "+
-				"FROM purification_method_type "+
-				"WHERE id = ?";
-		PurificationMethodTypeMappingQuery purificationMethodTypeMappingQuery = new PurificationMethodTypeMappingQuery(dataSource, sql, new SqlParameter("id", Type.LONG));
-		return purificationMethodTypeMappingQuery.findObject(id);
-	}
-	
+
 }

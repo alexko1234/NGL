@@ -15,6 +15,7 @@ import models.laboratory.experiment.description.PurificationMethodType;
 import models.laboratory.experiment.description.QualityControlType;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
+import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
@@ -23,6 +24,11 @@ import play.modules.spring.Spring;
 
 public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 
+	public ExperimentTypeMappingQuery()
+	{
+		super();
+	}
+	
 	public ExperimentTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
 	{
 		super(ds,sql);
@@ -44,7 +50,12 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
+		CommonInfoType commonInfoType=null;
+		try {
+			commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
+		} catch (DAOException e1) {
+			throw new SQLException(e1);
+		}
 		experimentType.setCommonInfoType(commonInfoType);
 		
 		//Get List protocols by common info type
@@ -57,7 +68,12 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 		experimentType.instrumentUsedTypes=instrumentUsedTypes;
 		//Get Experiment category
 		ExperimentCategoryDAO experimentCategoryDAO = Spring.getBeanOfType(ExperimentCategoryDAO.class);
-		ExperimentCategory experimentCategory = (ExperimentCategory) experimentCategoryDAO.findById(idExperimentCategory);
+		ExperimentCategory experimentCategory=null;
+		try {
+			experimentCategory = (ExperimentCategory) experimentCategoryDAO.findById(idExperimentCategory);
+		} catch (DAOException e) {
+			throw new SQLException(e);
+		}
 		experimentType.experimentCategory = experimentCategory;
 		
 		//Get nextExperimentType

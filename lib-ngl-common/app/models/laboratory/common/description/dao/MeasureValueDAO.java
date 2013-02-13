@@ -4,69 +4,72 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureValue;
+import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.DAOException;
 
-import org.springframework.asm.Type;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
 import play.modules.spring.Spring;
 
 @Repository
-public class MeasureValueDAO{
+public class MeasureValueDAO extends AbstractDAOMapping<MeasureValue>{
 
-	private SimpleJdbcTemplate jdbcTemplate;
-	private SimpleJdbcInsert jdbcInsert;
-	private DataSource dataSource;
-
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-		jdbcTemplate = new SimpleJdbcTemplate(dataSource);      
-		jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("measure_value").usingGeneratedKeyColumns("id");
+	protected MeasureValueDAO() {
+		super("measure_value", MeasureValue.class, MeasureValueMappingQuery.class,
+				"SELECT t.id, value, default_value, measure_category_id "+
+						"FROM measure_value as t ",true);
 	}
-	
+
+
 	public List<MeasureValue> findByMeasureCategory(long idMeasureCategory)
 	{
-		String sql = "SELECT id, value, default_value, measure_category_id "+
-					"FROM measure_value "+
-					"WHERE measure_category_id=?";
-		MeasureValueMappingQuery measureValueMappingQuery = new MeasureValueMappingQuery(dataSource, sql,new SqlParameter("measure_category_id", Type.LONG));
-		return measureValueMappingQuery.execute(idMeasureCategory);
+		String sql = "SELECT id,value,default_value " +
+				"FROM measure_value "+
+				"WHERE measure_category_id=?";
+		BeanPropertyRowMapper<MeasureValue> mapper = new BeanPropertyRowMapper<MeasureValue>(MeasureValue.class);
+		return this.jdbcTemplate.query(sql, mapper, idMeasureCategory);
+	}
+
+	public MeasureValue findByValue(String value)
+	{
+		String sql = "SELECT id,value,default_value " +
+				"FROM measure_value "+
+				"WHERE value=?";
+		BeanPropertyRowMapper<MeasureValue> mapper = new BeanPropertyRowMapper<MeasureValue>(MeasureValue.class);
+		return this.jdbcTemplate.queryForObject(sql, mapper, value);
 	}
 	
-	public MeasureValue add(MeasureValue measureValue)
+	public MeasureValue findByCode(String code) throws DAOException
+	{
+		throw new DAOException("No code field");
+	}
+
+	public long add(MeasureValue measureValue)
 	{
 		//Check if category exist
-		if(measureValue.measureCaterory!=null && measureValue.measureCaterory.id==null)
+		if(measureValue.measureCategory!=null && measureValue.measureCategory.id==null)
 		{
 			MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-			MeasureCategory mc = (MeasureCategory) measureCategoryDAO.add(measureValue.measureCaterory);
-			measureValue.measureCaterory = mc;
+			measureValue.measureCategory.id = measureCategoryDAO.add(measureValue.measureCategory);
 		}
 
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("value", measureValue.value);
 		parameters.put("default_value", measureValue.defaultValue);
-		parameters.put("measure_category_id", measureValue.measureCaterory.id);
+		parameters.put("measure_category_id", measureValue.measureCategory.id);
 
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		measureValue.id = newId;
-		return measureValue;
+		return measureValue.id;
 	}
 
-	public MeasureValue update(MeasureValue measureValue)
-	{
+
+	@Override
+	public void update(MeasureValue measureValue) throws DAOException {
 		String sql = "UPDATE measure_value SET value=?, default_value=? WHERE id=?";
 		jdbcTemplate.update(sql, measureValue.value, measureValue.defaultValue, measureValue.id);
-		return measureValue;
 	}
-
 
 }

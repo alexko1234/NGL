@@ -1,35 +1,29 @@
 package models.laboratory.experiment.description.dao;
 
-import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.ReagentType;
+import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.DAOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
-import com.avaje.ebean.enhance.asm.Type;
 
 import play.modules.spring.Spring;
 
-@Repository
-public class ReagentTypeDAO {
+import com.avaje.ebean.enhance.asm.Type;
 
-	private SimpleJdbcInsert jdbcInsert;
-	private DataSource dataSource;
-	
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource=dataSource;
-		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("reagent_type");
+@Repository
+public class ReagentTypeDAO extends AbstractDAOMapping<ReagentType>{
+
+	protected ReagentTypeDAO() {
+		super("reagent_type", ReagentType.class, ReagentTypeMappingQuery.class, 
+				"SELECT t.id, fk_common_info_type "+
+				"FROM reagent_type as t "+
+				"JOIN common_info_type as c ON c.id=fk_common_info_type ",false);
 	}
 	
 	public List<ReagentType> findByProtocol(long idProtocol)
@@ -42,34 +36,32 @@ public class ReagentTypeDAO {
 		return reagentTypeMappingQuery.execute(idProtocol);
 	}
 	
-	public ReagentType findByCode(String code)
-	{
-		String sql = "SELECT rt.id as id, fk_common_info_type "+
-				"FROM reagent_type as rt "+
-				"JOIN common_info_type as c ON c.id=fk_common_info_type "+
-				"WHERE code = ? ";
-		ReagentTypeMappingQuery reagentTypeMappingQuery=new ReagentTypeMappingQuery(dataSource,sql,new SqlParameter("code", Types.VARCHAR));
-		return reagentTypeMappingQuery.findObject(code);
-	}
-	
-	public ReagentType add(ReagentType reagentType)
+	public long add(ReagentType reagentType) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType cit = commonInfoTypeDAO.add(reagentType);
-		reagentType.setCommonInfoType(cit);
+		reagentType.id = commonInfoTypeDAO.add(reagentType);
+		//reagentType.setCommonInfoType(reagentType);
 		//Create new reagentType
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("fk_common_info_type", cit.id);
-		parameters.put("id", cit.id);
+		parameters.put("fk_common_info_type", reagentType.id);
+		parameters.put("id", reagentType.id);
 		jdbcInsert.execute(parameters);
-		reagentType.id = cit.id;
-		return reagentType;
+		return reagentType.id;
 	}
 	
-	public void update(ReagentType reagentType)
+	public void update(ReagentType reagentType) throws DAOException
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.update(reagentType);
+	}
+
+	@Override
+	public void remove(ReagentType reagentType) {
+		//remove commonInfoType
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		commonInfoTypeDAO.remove(reagentType);
+		//remove reagentType
+		super.remove(reagentType);
 	}
 }

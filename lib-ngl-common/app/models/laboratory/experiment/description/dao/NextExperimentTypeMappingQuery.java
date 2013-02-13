@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.ExperimentType;
+import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
@@ -35,7 +36,12 @@ public class NextExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentTy
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
+		CommonInfoType commonInfoType=null;
+		try {
+			commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
+		} catch (DAOException e) {
+			throw new SQLException(e);
+		}
 		experimentType.setCommonInfoType(commonInfoType);
 		return experimentType;
 	}

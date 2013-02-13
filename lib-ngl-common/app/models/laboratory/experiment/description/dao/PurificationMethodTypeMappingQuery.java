@@ -12,6 +12,7 @@ import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.PurificationMethodType;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
+import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
@@ -20,6 +21,10 @@ import play.modules.spring.Spring;
 
 public class PurificationMethodTypeMappingQuery extends MappingSqlQuery<PurificationMethodType>{
 
+	public PurificationMethodTypeMappingQuery()
+	{
+		super();
+	}
 	public PurificationMethodTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
 	{
 		super(ds,sql);
@@ -36,7 +41,12 @@ public class PurificationMethodTypeMappingQuery extends MappingSqlQuery<Purifica
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		//Get commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
+		CommonInfoType commonInfoType;
+		try {
+			commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
+		} catch (DAOException e) {
+			throw new SQLException(e);
+		}
 		purificationMethodType.setCommonInfoType(commonInfoType);
 		
 		//Get List protocols

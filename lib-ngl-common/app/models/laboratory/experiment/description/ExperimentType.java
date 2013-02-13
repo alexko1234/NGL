@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
+import models.utils.dao.DAOException;
 import play.modules.spring.Spring;
 
 public class ExperimentType extends AbstractExperiment{
@@ -27,25 +28,26 @@ public class ExperimentType extends AbstractExperiment{
 	
 	
 
-	public static ExperimentType findByCode(String code)
+	public static ExperimentType findByCode(String code) throws DAOException
 	{
 		ExperimentTypeDAO expTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		return expTypeDAO.findByCode(code);
 	}
 	
-	public static ExperimentType findExpTypeById(long id)
+	public static ExperimentType findExpTypeById(long id) throws DAOException
 	{
 		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		return experimentTypeDAO.findById(id);
 	}
 	
-	public ExperimentType add()
+	public ExperimentType add() throws DAOException
 	{
 		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-		return experimentTypeDAO.add(this);
+		this.id = experimentTypeDAO.add(this);
+		return this;
 	}
 	
-	public void update()
+	public void update() throws DAOException
 	{
 		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		experimentTypeDAO.update(this);

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import models.laboratory.common.description.dao.StateDAO;
+import models.utils.dao.DAOException;
 import play.modules.spring.Spring;
 
 /**
@@ -36,7 +37,7 @@ public class State{
 		this.priority = priority;
 	}
 
-	public static Map<String, String> getMapPossibleStates()
+	public static Map<String, String> getMapPossibleStates() throws DAOException
 	{
 		Map<String, String> mapPossibleStates = new HashMap<String, String>();
 		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);

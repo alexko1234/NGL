@@ -1,40 +1,29 @@
 package models.laboratory.instrument.description.dao;
 
-import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.instrument.description.Instrument;
-import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.DAOException;
 
 import org.springframework.asm.Type;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import play.modules.spring.Spring;
 
 @Repository
-public class InstrumentUsedTypeDAO {
+public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType>{
 
-	private SimpleJdbcTemplate jdbcTemplate;
-	private SimpleJdbcInsert jdbcInsert;
-	private DataSource dataSource;
-	private String sqlCommon = "SELECT id, fk_common_info_type, fk_instrument_category "+
-			"FROM instrument_used_type ";
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-		this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);
-		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("instrument_used_type");
+	protected InstrumentUsedTypeDAO() {
+		super("instrument_used_type", InstrumentUsedType.class, InstrumentUsedTypeMappingQuery.class, 
+				"SELECT t.id, fk_common_info_type, fk_instrument_category "+
+				"FROM instrument_used_type as t "+
+				"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
 	}
 
 	public List<InstrumentUsedType> findByCommonExperiment(long idCommonInfoType)
@@ -47,40 +36,15 @@ public class InstrumentUsedTypeDAO {
 		return instrumentUsedTypeMappingQuery.execute(idCommonInfoType);
 	}
 
-	public InstrumentUsedType findById(long id)
-	{
-		String sql = sqlCommon+
-				"WHERE id = ? ";
-		InstrumentUsedTypeMappingQuery instrumentUsedTypeMappingQuery = new InstrumentUsedTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
-		return instrumentUsedTypeMappingQuery.findObject(id);
-	}
-
 	public InstrumentUsedType findByCommonInfoType(long idCommonInfoType)
 	{
 		String sql = sqlCommon+
-				
 				"WHERE fk_common_info_type = ? ";
 		InstrumentUsedTypeMappingQuery instrumentUsedTypeMappingQuery = new InstrumentUsedTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return instrumentUsedTypeMappingQuery.findObject(idCommonInfoType);
 	}
-	
-	public InstrumentUsedType findByCode(String code)
-	{
-		String sql = "SELECT it.id, it.fk_common_info_type, it.fk_instrument_category "+
-				"FROM instrument_used_type as it "+
-				"JOIN common_info_type as c ON c.id=it.fk_common_info_type "+
-				"WHERE code = ? ";
-		InstrumentUsedTypeMappingQuery instrumentUsedTypeMappingQuery = new InstrumentUsedTypeMappingQuery(dataSource, sql,new SqlParameter("id", Types.VARCHAR));
-		return instrumentUsedTypeMappingQuery.findObject(code);
-	}
 
-	public List<InstrumentUsedType> findAll()
-	{
-		InstrumentUsedTypeMappingQuery instrumentUsedTypeMappingQuery = new InstrumentUsedTypeMappingQuery(dataSource, sqlCommon,null);
-		return instrumentUsedTypeMappingQuery.execute();
-	}
-
-	public void add(List<InstrumentUsedType> instrumentUsedTypes, long idCommonInfoType)
+	public void add(List<InstrumentUsedType> instrumentUsedTypes, long idCommonInfoType) throws DAOException
 	{
 		if(instrumentUsedTypes!=null && instrumentUsedTypes.size()>0){
 			for(InstrumentUsedType instrumentUsedType : instrumentUsedTypes){
@@ -89,26 +53,25 @@ public class InstrumentUsedTypeDAO {
 		}
 	}
 
-	public void add(InstrumentUsedType instrumentUsedType, long idCommonInfoType)
+	public void add(InstrumentUsedType instrumentUsedType, long idCommonInfoType) throws DAOException
 	{
 		String sql = "INSERT INTO common_info_type_instrument_type(fk_common_info_type, fk_instrument_type) VALUES(?,?)";
 		if(instrumentUsedType.id==null)
-			instrumentUsedType = add(instrumentUsedType);
+			instrumentUsedType.id = add(instrumentUsedType);
 		jdbcTemplate.update(sql, idCommonInfoType, instrumentUsedType.id);
 	}
 
-	public InstrumentUsedType add(InstrumentUsedType instrumentUsedType)
+	public long add(InstrumentUsedType instrumentUsedType) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType cit = commonInfoTypeDAO.add(instrumentUsedType);
-		instrumentUsedType.setCommonInfoType(cit);
+		instrumentUsedType.id =commonInfoTypeDAO.add(instrumentUsedType);
+		instrumentUsedType.setCommonInfoType(instrumentUsedType);
 		//Check if instrumentCategory exist
 		if(instrumentUsedType.instrumentCategory!=null && instrumentUsedType.instrumentCategory.id==null)
 		{
 			InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
-			InstrumentCategory instrumentCategory = instrumentCategoryDAO.add(instrumentUsedType.instrumentCategory);
-			instrumentUsedType.instrumentCategory = instrumentCategory;
+			instrumentUsedType.instrumentCategory.id = instrumentCategoryDAO.add(instrumentUsedType.instrumentCategory);
 		}
 		//Create new InstrumentUsedType
 		Map<String, Object> parameters = new HashMap<String, Object>();
@@ -125,10 +88,10 @@ public class InstrumentUsedTypeDAO {
 				instrumentDAO.add(instrument, instrumentUsedType.id);
 			}
 		}
-		return instrumentUsedType;
+		return instrumentUsedType.id;
 	}
 
-	public void update(InstrumentUsedType instrumentUsedType) 
+	public void update(InstrumentUsedType instrumentUsedType) throws DAOException 
 	{
 		InstrumentUsedType instrumentUsedTypeDB = findById(instrumentUsedType.id);
 
@@ -147,6 +110,22 @@ public class InstrumentUsedTypeDAO {
 			}
 		}
 
+	}
+
+	@Override
+	public void remove(InstrumentUsedType instrumentUsedType) {
+		//remove from abstractExperiment common_info_type_instrument_type
+		String sqlExp = "DELETE FROM common_info_type_instrument_type WHERE fk_instrument_type=?";
+		jdbcTemplate.update(sqlExp, instrumentUsedType.id);
+		//remove instruments
+		String sqlInst = "DELETE FROM instrument WHERE instrument_used_type_id=?";
+		jdbcTemplate.update(sqlInst, instrumentUsedType.id);
+		//remove common_info_type
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		commonInfoTypeDAO.remove(instrumentUsedType);
+		//remove instrument used type
+		super.remove(instrumentUsedType);
+		
 	}
 
 

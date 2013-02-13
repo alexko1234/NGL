@@ -16,14 +16,18 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.modules.spring.Spring;
 
-import com.avaje.ebean.enhance.asm.Type;
-
 public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefinition>{
 
-	public PropertyDefinitionMappingQuery(DataSource ds, String sql)
+	public PropertyDefinitionMappingQuery()
+	{
+		super();
+	}
+	
+	public PropertyDefinitionMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
 	{
 		super(ds,sql);
-		super.declareParameter(new SqlParameter("id", Type.LONG));
+		if(sqlParameter!=null)
+			super.declareParameter(sqlParameter);
 		compile();
 	}
 
@@ -33,7 +37,7 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 		PropertyDefinition propertyDefinition = new PropertyDefinition();
 		propertyDefinition.id = rs.getLong("pId");
 		propertyDefinition.name = rs.getString("pName");
-		propertyDefinition.code = rs.getString("pCode");
+		propertyDefinition.code = rs.getString("codeSearch");
 		propertyDefinition.description = rs.getString("description");
 		propertyDefinition.required = rs.getBoolean("required");
 		propertyDefinition.active = rs.getBoolean("active");

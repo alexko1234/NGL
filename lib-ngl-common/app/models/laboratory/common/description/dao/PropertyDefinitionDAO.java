@@ -1,55 +1,54 @@
 package models.laboratory.common.description.dao;
 
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
+import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.DAOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.asm.Type;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
 import play.modules.spring.Spring;
 
 @Repository
-public class PropertyDefinitionDAO {
+public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition>{
 
-	private DataSource dataSource;
-	private SimpleJdbcTemplate jdbcTemplate;
-	private SimpleJdbcInsert jdbcInsert;
-	private String sqlCommon="SELECT p.id as pId,p.name as pName,p.code as pCode, description, required,active,choice_in_list, type,display_format,display_order,p.default_value as pDefaultValue, level, in_out,propagation, mc.id as mcId,mc.name as mcName,mc.code as mcCode,mv.id as mvId,value,mv.default_value as mvDefaultValue "+
-			"FROM property_definition as p "+
-			"LEFT OUTER JOIN measure_category as mc ON  measure_category_id=mc.id "+
-			"LEFT OUTER JOIN measure_value as mv ON measure_value_id=mv.id ";
-
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-		this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);
-		this.jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("property_definition").usingGeneratedKeyColumns("id");
-
+	protected PropertyDefinitionDAO() {
+		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.class, 
+				"SELECT t.id as pId,t.name as pName,t.code as codeSearch, description, required,active,choice_in_list, type,display_format,display_order,t.default_value as pDefaultValue, level, in_out,propagation, mc.id as mcId,mc.name as mcName,mc.code as mcCode,mv.id as mvId,value,mv.default_value as mvDefaultValue "+
+				"FROM property_definition as t "+
+				"LEFT OUTER JOIN measure_category as mc ON  measure_category_id=mc.id "+
+				"LEFT OUTER JOIN measure_value as mv ON measure_value_id=mv.id ",true);
 	}
 
 	public List<PropertyDefinition> findByCommonInfoType(long idCommonInfoType)
 	{
 		String sql = sqlCommon+" WHERE common_info_type_id = ? ";
-		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql);
+		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, new SqlParameter("common_info_type_id",Type.LONG));
 		return propertyDefinitionMappingQuery.execute(idCommonInfoType);
 	}
 
-	public PropertyDefinition findById(long id)
-	{
-		String sql = sqlCommon+" WHERE p.id=?";
-		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery = new PropertyDefinitionMappingQuery(dataSource, sql);
-		return propertyDefinitionMappingQuery.findObject(id);
+	@Override
+	public long add(PropertyDefinition value) throws DAOException {
+		throw new DAOException("Must be inserted with commonInfoType id");
 	}
 
+	/**
+	 * Particular sql with two code must be implemented
+	 */
+	public PropertyDefinition findByCode(String code) throws DAOException
+	{
+		String sql = sqlCommon+
+				"WHERE codeSearch = ? ";
+		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery = new PropertyDefinitionMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
+		return propertyDefinitionMappingQuery.findObject(code);
+	}
 	public PropertyDefinition add(PropertyDefinition propertyDefinition, long idCommonInfoType)
 	{
 		//Create propertyDefinition
@@ -85,7 +84,7 @@ public class PropertyDefinitionDAO {
 			if(propertyDefinition.measureCategory.id==null){
 
 				MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-				propertyDefinition.measureCategory = (MeasureCategory) measureCategoryDAO.add(propertyDefinition.measureCategory);
+				propertyDefinition.measureCategory.id = measureCategoryDAO.add(propertyDefinition.measureCategory);
 			}
 			//Update propertyDefinition
 			String sqlCategory = "UPDATE property_definition SET measure_category_id=? WHERE id=?";
@@ -96,7 +95,7 @@ public class PropertyDefinitionDAO {
 		if(propertyDefinition.measureValue!=null){
 			if(propertyDefinition.measureValue.id==null){
 				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-				propertyDefinition.measureValue = measureValueDAO.add(propertyDefinition.measureValue);
+				propertyDefinition.measureValue.id = measureValueDAO.add(propertyDefinition.measureValue);
 			}
 			//Update propertyDefinition
 			String sqlValue = "UPDATE property_definition SET measure_value_id=? WHERE id=?";
@@ -105,7 +104,7 @@ public class PropertyDefinitionDAO {
 		return propertyDefinition;
 	}
 
-	public void update(PropertyDefinition propertyDefinition)
+	public void update(PropertyDefinition propertyDefinition) throws DAOException
 	{
 		PropertyDefinition propertyDefinitionDB = findById(propertyDefinition.id);
 		String sql = "UPDATE property_definition SET name=?, description=?, required=?, active=?,choice_in_list=?, type=?, display_format=?, display_order=?, default_value=?, level=?, in_out=?, propagation=? WHERE id=?";
@@ -127,7 +126,7 @@ public class PropertyDefinitionDAO {
 			if(propertyDefinition.measureCategory.id==null){
 
 				MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-				propertyDefinition.measureCategory = (MeasureCategory) measureCategoryDAO.add(propertyDefinition.measureCategory);
+				propertyDefinition.measureCategory.id = measureCategoryDAO.add(propertyDefinition.measureCategory);
 			}
 			//Update propertyDefinition
 			String sqlCategory = "UPDATE property_definition SET measure_category_id=? WHERE id=?";
@@ -138,11 +137,21 @@ public class PropertyDefinitionDAO {
 		if(propertyDefinition.measureValue!=null){
 			if(propertyDefinition.measureValue.id==null){
 				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-				propertyDefinition.measureValue = measureValueDAO.add(propertyDefinition.measureValue);
+				propertyDefinition.measureValue.id = measureValueDAO.add(propertyDefinition.measureValue);
 			}
 			//Update propertyDefinition
 			String sqlValue = "UPDATE property_definition SET measure_value_id=? WHERE id=?";
 			jdbcTemplate.update(sqlValue, propertyDefinition.measureValue.id, propertyDefinition.id);
 		}
+	}
+
+	
+	@Override
+	public void remove(PropertyDefinition propertyDefinition) {
+		//Delete value
+		String sqlState = "DELETE FROM value WHERE property_definition_id=?";
+		jdbcTemplate.update(sqlState, propertyDefinition.id);
+		//Delete property_definition
+		super.remove(propertyDefinition);
 	}
 }
