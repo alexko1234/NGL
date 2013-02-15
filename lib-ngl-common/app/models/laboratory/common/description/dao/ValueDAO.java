@@ -19,14 +19,15 @@ public class ValueDAO extends AbstractDAO<Value>{
 	
 	public List<Value> findByPropertyDefinition(long idPropertyDefinition)
 	{
-		String sql = "SELECT id, value, default_value FROM value WHERE property_definition_id=?";
+		String sql = "SELECT id, code, value, default_value FROM value WHERE property_definition_id=?";
 		BeanPropertyRowMapper<Value> mapper = new BeanPropertyRowMapper<Value>(Value.class);
 		return this.jdbcTemplate.query(sql, mapper, idPropertyDefinition);
 	}
 	
-	public Value add(Value value, long idPropertyDefinition)
+	public Value save(Value value, long idPropertyDefinition)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("code", value.code);
         parameters.put("value", value.value);
         parameters.put("default_value", value.defaultValue);
         parameters.put("property_definition_id", idPropertyDefinition);
@@ -37,7 +38,7 @@ public class ValueDAO extends AbstractDAO<Value>{
 	
 	public void update(Value value, long idPropertyDefinition)
 	{
-		String sql = "UPDATE value SET value=?, default_value=? WHERE id=? AND property_definition_id=?";
-		jdbcTemplate.update(sql,value.value, value.defaultValue, value.id, idPropertyDefinition);
+		String sql = "UPDATE value SET code=?, value=?, default_value=? WHERE id=? AND property_definition_id=?";
+		jdbcTemplate.update(sql,value.code, value.value, value.defaultValue, value.id, idPropertyDefinition);
 	}
 }

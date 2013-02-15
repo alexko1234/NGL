@@ -34,6 +34,7 @@ public class ProtocolMappingQuery extends MappingSqlQuery<Protocol>{
 	protected Protocol mapRow(ResultSet rs, int rowNumber) throws SQLException {
 		Protocol protocol = new Protocol();
 		protocol.id = rs.getLong("id");
+		protocol.code = rs.getString("code");
 		protocol.name = rs.getString("name");
 		protocol.filePath = rs.getString("file_path");
 		protocol.version = rs.getString("version");

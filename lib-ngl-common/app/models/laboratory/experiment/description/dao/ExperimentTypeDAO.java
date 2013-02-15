@@ -44,17 +44,17 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 		ExperimentTypeMappingQuery experimentTypeMappingQuery = new ExperimentTypeMappingQuery(dataSource, sql, new SqlParameter("p.fk_process_type", Type.LONG));
 		return experimentTypeMappingQuery.execute(id);
 	}
-	public long add(ExperimentType experimentType) throws DAOException
+	public long save(ExperimentType experimentType) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		experimentType.id = commonInfoTypeDAO.add(experimentType);
+		experimentType.id = commonInfoTypeDAO.save(experimentType);
 
 		//Check if category exist
 		if(experimentType.experimentCategory!=null && experimentType.experimentCategory.id==null)
 		{
 			ExperimentCategoryDAO experimentCategoryDAO = Spring.getBeanOfType(ExperimentCategoryDAO.class);
-			experimentType.experimentCategory.id = experimentCategoryDAO.add(experimentType.experimentCategory);
+			experimentType.experimentCategory.id = experimentCategoryDAO.save(experimentType.experimentCategory);
 		}
 		//Create experimentType 
 		Map<String, Object> parameters = new HashMap<String, Object>();
@@ -69,10 +69,10 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 
 		//Add list protocols
 		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
-		protocolDAO.add(experimentType.protocols, experimentType.id);
+		protocolDAO.save(experimentType.protocols, experimentType.id);
 		//Add list instruments
 		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		instrumentUsedTypeDAO.add(experimentType.instrumentUsedTypes, experimentType.id);
+		instrumentUsedTypeDAO.save(experimentType.instrumentUsedTypes, experimentType.id);
 		//Add nextExperimentTypes list
 		List<ExperimentType> nextExpTypes = experimentType.previousExperimentTypes;
 		if(nextExpTypes!=null && nextExpTypes.size()>0){
@@ -89,7 +89,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			String sql = "INSERT INTO experiment_quality_control(fk_quality_control_type,fk_experiment_type) VALUES(?,?)";
 			for(QualityControlType qualityControlType : qualityControlTypes){
 				if(qualityControlType.id==null)
-					qualityControlType.id = qualityControlTypeDAO.add(qualityControlType);
+					qualityControlType.id = qualityControlTypeDAO.save(qualityControlType);
 				jdbcTemplate.update(sql, qualityControlType.id, experimentType.id);
 			}
 		}
@@ -100,7 +100,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			String sql = "INSERT INTO experiment_purification_method(fk_purification_method_type,fk_experiment_type) VALUES(?,?)";
 			for(PurificationMethodType purificationMethodType : purificationMethodTypes){
 				if(purificationMethodType.id==null)
-					purificationMethodType.id = purificationMethodTypeDAO.add(purificationMethodType);
+					purificationMethodType.id = purificationMethodTypeDAO.save(purificationMethodType);
 				jdbcTemplate.update(sql, purificationMethodType.id, experimentType.id);
 			}
 		}
@@ -124,7 +124,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
 			for(Protocol protocol : protocols){
 				if(expTypeDB.protocols==null || (expTypeDB.protocols!=null && !expTypeDB.protocols.contains(protocol)))
-					protocolDAO.add(protocol, experimentType.id);
+					protocolDAO.save(protocol, experimentType.id);
 			}
 		}
 		//Update InstrumentUsedTypes list
@@ -133,7 +133,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
 			for(InstrumentUsedType instrumentUsedType : instrumentUsedTypes){
 				if(expTypeDB.instrumentUsedTypes==null || (expTypeDB.instrumentUsedTypes!=null && !expTypeDB.instrumentUsedTypes.contains(instrumentUsedType))){
-					instrumentUsedTypeDAO.add(instrumentUsedType, experimentType.id);
+					instrumentUsedTypeDAO.save(instrumentUsedType, experimentType.id);
 				}
 			}
 		}
@@ -167,7 +167,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			for(QualityControlType qualityControlType : qualityControlTypes){
 				if(expTypeDB.possibleQualityControlTypes==null || (expTypeDB.possibleQualityControlTypes!=null && !expTypeDB.possibleQualityControlTypes.contains(qualityControlType))){
 					if(qualityControlType.id==null)
-						qualityControlType.id=qualityControlTypeDAO.add(qualityControlType);
+						qualityControlType.id=qualityControlTypeDAO.save(qualityControlType);
 					jdbcTemplate.update(sql, qualityControlType.id,experimentType.id);
 				}
 			}
@@ -180,7 +180,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			for(PurificationMethodType purificationMethodType : purificationMethodTypes){
 				if(expTypeDB.possiblePurificationMethodTypes==null || (expTypeDB.possiblePurificationMethodTypes!=null && !expTypeDB.possiblePurificationMethodTypes.contains(purificationMethodType))){
 					if(purificationMethodType.id==null)
-						purificationMethodType.id=purificationMethodTypeDAO.add(purificationMethodType);
+						purificationMethodType.id=purificationMethodTypeDAO.save(purificationMethodType);
 					jdbcTemplate.update(sql, purificationMethodType.id,experimentType.id);
 				}
 			}

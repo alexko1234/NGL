@@ -22,16 +22,16 @@ public class ProjectTypeDAO extends AbstractDAOMapping<ProjectType>{
 				"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
 
-	public long add(ProjectType projectType) throws DAOException
+	public long save(ProjectType projectType) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		projectType.id = commonInfoTypeDAO.add(projectType);
+		projectType.id = commonInfoTypeDAO.save(projectType);
 		//Check if category exist
 		if(projectType.projectCategory!=null && projectType.projectCategory.id==null)
 		{
 			ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
-			projectType.projectCategory.id = projectCategoryDAO.add(projectType.projectCategory);
+			projectType.projectCategory.id = projectCategoryDAO.save(projectType.projectCategory);
 		}
 		//Create new projectType
 		Map<String, Object> parameters = new HashMap<String, Object>();

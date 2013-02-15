@@ -36,11 +36,11 @@ public class ReagentTypeDAO extends AbstractDAOMapping<ReagentType>{
 		return reagentTypeMappingQuery.execute(idProtocol);
 	}
 	
-	public long add(ReagentType reagentType) throws DAOException
+	public long save(ReagentType reagentType) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		reagentType.id = commonInfoTypeDAO.add(reagentType);
+		reagentType.id = commonInfoTypeDAO.save(reagentType);
 		//reagentType.setCommonInfoType(reagentType);
 		//Create new reagentType
 		Map<String, Object> parameters = new HashMap<String, Object>();

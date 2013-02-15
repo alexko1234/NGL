@@ -25,11 +25,11 @@ public abstract class AbstractExperimentDAO<P extends AbstractExperiment> extend
 		
 	}
 
-	public long add(P experiment) throws DAOException
+	public long save(P experiment) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		experiment.id = commonInfoTypeDAO.add(experiment);
+		experiment.id = commonInfoTypeDAO.save(experiment);
 		//Create purification method 
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("id", experiment.id);
@@ -37,10 +37,10 @@ public abstract class AbstractExperimentDAO<P extends AbstractExperiment> extend
 		jdbcInsert.execute(parameters);
 		//Add list protocols
 		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
-		protocolDAO.add(experiment.protocols, experiment.id);
+		protocolDAO.save(experiment.protocols, experiment.id);
 		//Add list instruments
 		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		instrumentUsedTypeDAO.add(experiment.instrumentUsedTypes, experiment.id);
+		instrumentUsedTypeDAO.save(experiment.instrumentUsedTypes, experiment.id);
 		return experiment.id;
 	}
 
@@ -57,7 +57,7 @@ public abstract class AbstractExperimentDAO<P extends AbstractExperiment> extend
 			ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
 			for(Protocol protocol : protocols){
 				if(experimentDB.protocols==null || (experimentDB.protocols!=null && !experimentDB.protocols.contains(protocol)))
-					protocolDAO.add(protocol, experiment.id);
+					protocolDAO.save(protocol, experiment.id);
 			}
 		}
 		//Update InstrumentUsedTypes list
@@ -66,7 +66,7 @@ public abstract class AbstractExperimentDAO<P extends AbstractExperiment> extend
 			InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
 			for(InstrumentUsedType instrumentUsedType : instrumentUsedTypes){
 				if(experimentDB.instrumentUsedTypes==null || (experimentDB.instrumentUsedTypes!=null && !experimentDB.instrumentUsedTypes.contains(instrumentUsedType))){
-					instrumentUsedTypeDAO.add(instrumentUsedType, experiment.id);
+					instrumentUsedTypeDAO.save(instrumentUsedType, experiment.id);
 				}
 			}
 		}

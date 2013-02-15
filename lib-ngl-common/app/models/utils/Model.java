@@ -2,60 +2,79 @@ package models.utils;
 
 import java.util.List;
 
+import models.utils.dao.DAOException;
+import models.utils.dao.IDAO;
 import play.modules.spring.Spring;
 
-public class Model<T,P> {
+public class Model<T> {
 
-	public Class<P> dao;
+	public Long id;
+	public String code;
+	public String classNameDAO;
     
-	public Model(Class<P> dao) {
-      this.dao = dao;
-    }
-    
-    /*public T update()
-    {
-    	return getInstance().update((T) this);
-    }
-    
-    public T add()
-    {
-    	return getInstance().add((T) this);
+	public Model(String classNameDAO) {
+      this.classNameDAO = classNameDAO;
     }
     
     @SuppressWarnings("unchecked")
-	public AbstractDAO<Long, T> getInstance()
+	public void update() throws DAOException
     {
-    	return (AbstractDAO<Long, T>) Spring.getBeanOfType(dao);
-    }*/
+    	getInstance().update((T)this);
+    }
     
-    public static class Finder<P, T>
+    @SuppressWarnings("unchecked")
+	public long save() throws DAOException
     {
-    	public Class<P> dao;
-    	
-    	public Finder(Class<P> dao)
+    	return getInstance().save((T)this);
+    }
+    
+    @SuppressWarnings("unchecked")
+	public void remove() throws DAOException
+    {
+    	getInstance().remove((T)this);
+    }
+    
+    @SuppressWarnings("unchecked")
+	public IDAO<T> getInstance() throws DAOException
+    {
+    	try {
+			return (IDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
+		} catch (ClassNotFoundException e) {
+			throw new DAOException(e);
+		}
+    }
+    
+    public static class Finder<T>
+    {
+    	private String className;
+    	public Finder(String className)
     	{
-    		this.dao = dao;
+    		this.className = className;
     	}
     	
-    	/*public T findByCode(String code)
+    	public T findByCode(String code) throws DAOException
         {
     		return getInstance().findByCode(code);
         }
         
-        public List<T> findAll()
+        public List<T> findAll() throws DAOException
         {
         	return getInstance().findAll();
         }
         
-        public T findById(Long id)
+        public T findById(Long id) throws DAOException
         {
         	return getInstance().findById(id);
         }
         
         @SuppressWarnings("unchecked")
-    	public AbstractDAO<Long, T> getInstance()
+    	public IDAO<T> getInstance() throws DAOException
         {
-        	return (AbstractDAO<Long, T>) Spring.getBeanOfType(dao);
-        }*/
+        	try {
+				return (IDAO<T>) Spring.getBeanOfType(Class.forName(className));
+			} catch (ClassNotFoundException e) {
+				throw new DAOException(e);
+			}
+        }
     }
 }

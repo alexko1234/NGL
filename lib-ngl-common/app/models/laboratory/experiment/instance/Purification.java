@@ -99,7 +99,7 @@ public class Purification extends DBObject {
 	public Protocol getProtocol(){
 		
 		try {
-			return new ObjectSGBDReference<Protocol>(Protocol.class, protocolCode).getObject();
+			//return new ObjectSGBDReference<Protocol>(Protocol.class, protocolCode).getObject();
 		} catch (Exception e) {
 			// TODO
 		}
@@ -111,7 +111,7 @@ public class Purification extends DBObject {
 	public State getState(){
 
 		try {
-			return new ObjectSGBDReference<State>(State.class, stateCode).getObject();
+			//return new ObjectSGBDReference<State>(State.class, stateCode).getObject();
 		} catch (Exception e) {
 			// TODO
 		}
@@ -122,7 +122,7 @@ public class Purification extends DBObject {
 	public Resolution getResolution(){
 
 		try {
-			return new ObjectSGBDReference<Resolution>(Resolution.class, resolutionCode).getObject();
+			//return new ObjectSGBDReference<Resolution>(Resolution.class, resolutionCode).getObject();
 		} catch (Exception e) {
 			// TODO
 		}

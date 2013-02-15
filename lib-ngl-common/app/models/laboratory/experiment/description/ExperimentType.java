@@ -25,32 +25,18 @@ public class ExperimentType extends AbstractExperiment{
 	
 	public ExperimentCategory experimentCategory;
 	
+	public static Finder<ExperimentType> find = new Finder<ExperimentType>(ExperimentTypeDAO.class.getName());
 	
-	
-
-	public static ExperimentType findByCode(String code) throws DAOException
-	{
-		ExperimentTypeDAO expTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-		return expTypeDAO.findByCode(code);
+	public ExperimentType() {
+		super.classNameDAO=ExperimentTypeDAO.class.getName();
 	}
-	
+
+
 	public static ExperimentType findExpTypeById(long id) throws DAOException
 	{
 		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		return experimentTypeDAO.findById(id);
 	}
 	
-	public ExperimentType add() throws DAOException
-	{
-		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-		this.id = experimentTypeDAO.add(this);
-		return this;
-	}
-	
-	public void update() throws DAOException
-	{
-		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-		experimentTypeDAO.update(this);
-	}
 	
 }

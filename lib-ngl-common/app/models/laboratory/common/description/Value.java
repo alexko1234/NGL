@@ -1,32 +1,23 @@
 package models.laboratory.common.description;
 
+import models.laboratory.common.description.dao.ValueDAO;
+import models.utils.Model;
+
 /**
  * Possible value of property definition
  * @author ejacoby
  *
  */
-public class Value {
+public class Value extends Model<Value>{
 
-	public Long id;
-	
 	public String value;   
 	
 	public Boolean defaultValue = Boolean.FALSE;
 
+	public static Finder<Value> find = new Finder<Value>(ValueDAO.class.getName()); 
 	
 	public Value() {
-		super();
+		super(ValueDAO.class.getName());
 	}
-
-
-	public Value(String value, Boolean defaultValue) {
-		super();
-		this.value = value;
-		this.defaultValue = defaultValue;
-	}
-
-	
-	
-	
     
 }

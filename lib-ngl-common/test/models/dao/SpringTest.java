@@ -13,13 +13,7 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.Value;
-import models.laboratory.common.description.dao.MeasureCategoryDAO;
-import models.laboratory.common.description.dao.MeasureValueDAO;
-import models.laboratory.common.description.dao.ObjectTypeDAO;
-import models.laboratory.common.description.dao.ResolutionDAO;
-import models.laboratory.common.description.dao.StateDAO;
 import models.laboratory.container.description.ContainerSupportCategory;
-import models.laboratory.container.description.dao.ContainerSupportCategoryDAO;
 import models.laboratory.experiment.description.AbstractExperiment;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
@@ -28,30 +22,19 @@ import models.laboratory.experiment.description.ProtocolCategory;
 import models.laboratory.experiment.description.PurificationMethodType;
 import models.laboratory.experiment.description.QualityControlType;
 import models.laboratory.experiment.description.ReagentType;
-import models.laboratory.experiment.description.dao.ExperimentCategoryDAO;
-import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
-import models.laboratory.experiment.description.dao.ProtocolCategoryDAO;
 import models.laboratory.experiment.description.dao.ProtocolDAO;
-import models.laboratory.experiment.description.dao.PurificationMethodTypeDAO;
-import models.laboratory.experiment.description.dao.QualityControlTypeDAO;
-import models.laboratory.experiment.description.dao.ReagentTypeDAO;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.instrument.description.dao.InstrumentCategoryDAO;
-import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.laboratory.processus.description.ProcessCategory;
 import models.laboratory.processus.description.ProcessType;
-import models.laboratory.processus.description.dao.ProcessCategoryDAO;
-import models.laboratory.processus.description.dao.ProcessTypeDAO;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
-import models.laboratory.project.description.dao.ProjectCategoryDAO;
-import models.laboratory.project.description.dao.ProjectTypeDAO;
+import models.laboratory.sample.description.ImportCategory;
+import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.description.dao.SampleCategoryDAO;
-import models.laboratory.sample.description.dao.SampleTypeDAO;
 import models.utils.dao.DAOException;
 
 import org.junit.Assert;
@@ -73,10 +56,11 @@ import utils.AbstractTests;
 //@ContextConfiguration(locations = { "classpath:/test/application-context.xml" })
 public class SpringTest extends AbstractTests{
 
-	//@Test
+	
 	/**
 	 * Use to drop and create database schema
 	 * Obsolete with remove test
+	 * ////@Test
 	 */
 	public void initializeDB()
 	{
@@ -90,17 +74,15 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addObjectType() throws DAOException
+	public void saveObjectType() throws DAOException
 	{
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
 		ObjectType objectType = new ObjectType();
 		objectType.code="Test";
 		objectType.generic=false;
-		long id = objectTypeDAO.add(objectType);
-		//TODO en attendant classe model generic
-		ObjectType objectTypeDB = objectTypeDAO.findById(id);
+		long id = objectType.save();
+		ObjectType objectTypeDB = ObjectType.find.findById(id);
 		checkObjectType(objectTypeDB);
-		objectTypeDB = objectTypeDAO.findById(objectTypeDB.id);
+		objectTypeDB = ObjectType.find.findById(objectTypeDB.id);
 		Assert.assertTrue(objectType.code.equals(objectTypeDB.code));
 		Assert.assertTrue(objectType.generic.equals(objectTypeDB.generic));
 		
@@ -109,11 +91,10 @@ public class SpringTest extends AbstractTests{
 	@Test
 	public void updateObjectType() throws DAOException
 	{
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType objectType = objectTypeDAO.findByCode("Test");
+		ObjectType objectType = ObjectType.find.findByCode("Test");
 		objectType.code="UpdateTest";
-		objectTypeDAO.update(objectType);
-		objectType = objectTypeDAO.findById(objectType.id);
+		objectType.update();
+		objectType =  ObjectType.find.findById(objectType.id);
 		Assert.assertTrue(objectType.code.equals("UpdateTest"));
 		checkObjectType(objectType);
 
@@ -129,8 +110,7 @@ public class SpringTest extends AbstractTests{
 	@Test
 	public void testType() throws DAOException
 	{
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType type = objectTypeDAO.findByCode("Experiment");
+		ObjectType type = ObjectType.find.findByCode("Experiment");
 		checkObjectType(type);
 	}
 
@@ -139,8 +119,7 @@ public class SpringTest extends AbstractTests{
 	@Test
 	public void testAllTypes() throws DAOException
 	{
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		List<ObjectType> types = objectTypeDAO.findAll();
+		List<ObjectType> types = ObjectType.find.findAll();
 		Assert.assertNotNull(types.size()>0);
 		for(ObjectType type : types){
 			checkObjectType(type);
@@ -150,11 +129,9 @@ public class SpringTest extends AbstractTests{
 	@Test
 	public void testDeleteType() throws DAOException
 	{
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType type = objectTypeDAO.findByCode("UpdateTest");
-		objectTypeDAO.remove(type);
-		
-		ObjectType objectType = objectTypeDAO.findByCode("UpdateTest");
+		ObjectType type = ObjectType.find.findByCode("UpdateTest");
+		type.remove();
+		ObjectType objectType = ObjectType.find.findByCode("UpdateTest");
 		Assert.assertNull(objectType);
 	}
 
@@ -163,24 +140,22 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addResolution() throws DAOException
+	public void saveResolution() throws DAOException
 	{
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
 		Resolution resolution = createResolution("Resol1", "Resol1");
-		resolution.id = resolutionDAO.add(resolution);
-		resolution=resolutionDAO.findById(resolution.id);
+		resolution.id = resolution.save();
+		resolution=Resolution.find.findById(resolution.id);
 		checkResolution(resolution);
 	}
 
 	@Test
 	public void updateResolution() throws DAOException
 	{
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		Resolution resolution = resolutionDAO.findByCode("Resol1");
+		Resolution resolution = Resolution.find.findByCode("Resol1");
 		checkResolution(resolution);
 		resolution.name="updateResol1";
-		resolutionDAO.update(resolution);
-		resolution = resolutionDAO.findById(resolution.id);
+		resolution.update();
+		resolution = Resolution.find.findById(resolution.id);
 		checkResolution(resolution);
 		Assert.assertTrue(resolution.name.equals("updateResol1"));
 
@@ -207,26 +182,24 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addState() throws DAOException
+	public void saveState() throws DAOException
 	{
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
 		State state = createState("state1", "state1", 1, true);
-		state.id = stateDAO.add(state);
-		state=stateDAO.findById(state.id);
+		state.id = state.save();
+		state=State.find.findById(state.id);
 		checkState(state);
 		Assert.assertTrue(state.code.equals(state.code));
 	}
 
-	////@Test
+	//////@Test
 	public void updateState() throws DAOException
 	{
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		State state = stateDAO.findByCode("state1");
+		State state = State.find.findByCode("state1");
 		checkState(state);
 		Assert.assertTrue(state.code.equals("state1"));
 		state.name="updateState1";
-		stateDAO.update(state);
-		state = stateDAO.findById(state.id);
+		state.update();
+		state = State.find.findById(state.id);
 		checkState(state);
 		Assert.assertTrue(state.name.equals("updateState1"));
 	}
@@ -235,8 +208,7 @@ public class SpringTest extends AbstractTests{
 	@Test
 	public void testStateAll() throws DAOException
 	{
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		List<State> states = stateDAO.findAll();
+		List<State> states = State.find.findAll();
 		Assert.assertNotNull(states);
 		Assert.assertTrue(states.size()>0);
 		for(State state : states){
@@ -266,17 +238,17 @@ public class SpringTest extends AbstractTests{
 
 	/**
 	 * TEST MEASURE_CATEGORY
+	 * @throws DAOException 
 	 */
 	@Test
-	public void addMeasureCategory()
+	public void saveMeasureCategory() throws DAOException
 	{
 		MeasureCategory measureCategory = createMeasureCategory("cat1", "cat1");
 		List<MeasureValue> measureValues = new ArrayList<MeasureValue>();
-		measureValues.add(createMeasureValue("value1", true,measureCategory));
-		measureValues.add(createMeasureValue("value2", false,measureCategory));
+		measureValues.add(createMeasureValue("value1", "value1", true,measureCategory));
+		measureValues.add(createMeasureValue("value2", "value2", false,measureCategory));
 		measureCategory.measurePossibleValues=measureValues;
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		measureCategory.id = measureCategoryDAO.add(measureCategory);
+		measureCategory.id = measureCategory.save();
 		checkMeasureCategory(measureCategory);
 
 	}
@@ -284,16 +256,14 @@ public class SpringTest extends AbstractTests{
 	@Test
 	public void removeMeasureCategory() throws DAOException
 	{
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		MeasureCategory measureCategory = measureCategoryDAO.findByCode("cat1");
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat1");
 		List<MeasureValue> measureValues = measureCategory.measurePossibleValues;
-		measureCategoryDAO.remove(measureCategory);
-		measureCategory = measureCategoryDAO.findByCode("cat1");
-		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
+		measureCategory.remove();
+		measureCategory = MeasureCategory.find.findByCode("cat1");
 		Assert.assertNull(measureCategory);
 		//Check measure Values
 		for(MeasureValue measureValue : measureValues){
-			Assert.assertNull(measureValueDAO.findById(measureValue.id));
+			Assert.assertNull(MeasureValue.find.findById(measureValue.id));
 		}
 	}
 	private void checkMeasureCategory(MeasureCategory measureCategory)
@@ -318,9 +288,10 @@ public class SpringTest extends AbstractTests{
 		return measureCategory;
 	}
 
-	private MeasureValue createMeasureValue(String value, boolean defaultValue, MeasureCategory measureCategory)
+	private MeasureValue createMeasureValue(String code, String value, boolean defaultValue, MeasureCategory measureCategory)
 	{
 		MeasureValue measureValue = new MeasureValue();
+		measureValue.code=code;
 		measureValue.value=value;
 		measureValue.defaultValue=defaultValue;
 		measureValue.measureCategory=measureCategory;
@@ -331,6 +302,7 @@ public class SpringTest extends AbstractTests{
 	{
 		Assert.assertNotNull(measureValue);
 		Assert.assertNotNull(measureValue.id);
+		Assert.assertNotNull(measureValue.code);
 		Assert.assertNotNull(measureValue.value);
 		Assert.assertNotNull(measureValue.defaultValue);
 	}
@@ -340,43 +312,38 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addReagentType() throws DAOException
+	public void saveReagentType() throws DAOException
 	{
 		ReagentType reagentType = new ReagentType();
 		List<State> states = new ArrayList<State>();
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		states.add(stateDAO.findByCode("state1"));
+		states.add(State.find.findByCode("state1"));
 		states.add(createState("state2", "state2", 2, true));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		resolutions.add(resolutionDAO.findByCode("resol1"));
+		resolutions.add(Resolution.find.findByCode("resol1"));
 		resolutions.add(createResolution("resol2", "resol2"));
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType objectType = objectTypeDAO.findByCode("Reagent");
+		ObjectType objectType = ObjectType.find.findByCode("Reagent");
 		MeasureCategory measureCategory = createMeasureCategory("cat2", "cat2");
-		MeasureValue measureValue = createMeasureValue("value2", true, measureCategory);
+		MeasureValue measureValue = createMeasureValue("value2", "value2", true, measureCategory);
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value3", true));
-		possibleValues.add(createValue("value4", false));
+		possibleValues.add(createValue("value3","value3", true));
+		possibleValues.add(createValue("value4","value4", false));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop1", "prop1", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		propertiesDefinitions.add(createPropertyDefinition("prop2", "prop2", true, true, "default", "descProp2", "format2", 2, "in", "content", true, true, "type2", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("reagent1", "reagent1", "reagent1", states, resolutions, propertiesDefinitions, objectType);
 		reagentType.setCommonInfoType(commonInfoType);
-		ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
-		reagentType.id = reagentTypeDAO.add(reagentType);
-		reagentType=reagentTypeDAO.findByCode(reagentType.code);
+		reagentType.id = reagentType.save();
+		reagentType=ReagentType.find.findByCode(reagentType.code);
 		checkCommonInfoType(reagentType);
 	}
 
 	@Test
 	public void updateReagentType() throws DAOException
 	{
-		ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
-		ReagentType reagentType = reagentTypeDAO.findByCode("reagent1");
+		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
 		reagentType.name="updateReagent1";
-		reagentTypeDAO.update(reagentType);
-		reagentType = reagentTypeDAO.findByCode("reagent1");
+		reagentType.update();
+		reagentType = ReagentType.find.findByCode("reagent1");
 		Assert.assertTrue(reagentType.name.equals("updateReagent1"));
 	}
 
@@ -470,9 +437,10 @@ public class SpringTest extends AbstractTests{
 		return propertyDefinition;
 	}
 
-	private Value createValue(String value, boolean defaultValue)
+	private Value createValue(String code, String value, boolean defaultValue)
 	{
 		Value newValue = new Value();
+		newValue.code=code;
 		newValue.value=value;
 		newValue.defaultValue=defaultValue;
 		return newValue;
@@ -481,6 +449,7 @@ public class SpringTest extends AbstractTests{
 	private void checkValue(Value value)
 	{
 		Assert.assertNotNull(value);
+		Assert.assertNotNull(value.code);
 		Assert.assertNotNull(value.value);
 		Assert.assertNotNull(value.defaultValue);
 	}
@@ -490,22 +459,20 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addProtocolCategory() throws DAOException
+	public void saveProtocolCategory() throws DAOException
 	{
 		ProtocolCategory protocolCategory = createProtocolCategory("protoCat1", "protoCat1");
-		ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
-		protocolCategory.id = protocolCategoryDAO.add(protocolCategory);
-		protocolCategory = protocolCategoryDAO.findById(protocolCategory.id);
+		protocolCategory.id = protocolCategory.save();
+		protocolCategory = ProtocolCategory.find.findById(protocolCategory.id);
 		checkAbstractCategory(protocolCategory);
 	}
 	@Test
 	public void updateProtocolCategory() throws DAOException
 	{
-		ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
-		ProtocolCategory protocolCategory = protocolCategoryDAO.findByCode("protoCat1");
+		ProtocolCategory protocolCategory = ProtocolCategory.find.findByCode("protoCat1");
 		protocolCategory.name="updateProtoCat1";
-		protocolCategoryDAO.update(protocolCategory);
-		protocolCategory = (ProtocolCategory) protocolCategoryDAO.findByCode("protoCat1");
+		protocolCategory.update();
+		protocolCategory = ProtocolCategory.find.findByCode("protoCat1");
 		checkAbstractCategory(protocolCategory);
 		Assert.assertTrue(protocolCategory.name.equals("updateProtoCat1"));
 	}
@@ -533,28 +500,25 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addProtocol() throws DAOException
+	public void saveProtocol() throws DAOException
 	{
 		List<ReagentType> reagentTypes = new ArrayList<ReagentType>();
-		ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
-		ReagentType reagentType = reagentTypeDAO.findByCode("reagent1");
+		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
 		reagentTypes.add(reagentType);
-		Protocol protocol = createProtocol("proto1", "path1", "V1", createProtocolCategory("protoCat2", "protoCat2"), reagentTypes);
-		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
-		protocol.id = protocolDAO.add(protocol);
-		protocol = protocolDAO.findById(protocol.id);
+		Protocol protocol = createProtocol("proto1","proto1", "path1", "V1", createProtocolCategory("protoCat2", "protoCat2"), reagentTypes);
+		protocol.id = protocol.save();
+		protocol = Protocol.find.findById(protocol.id);
 		checkProtocol(protocol);
 	}
 
 	@Test
 	public void updateProtocol() throws DAOException
 	{
-		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
-		Protocol protocol = protocolDAO.findByName("proto1");
+		Protocol protocol = Protocol.findByName("proto1");
 		checkProtocol(protocol);
 		protocol.name="updateProto1";
-		protocolDAO.update(protocol);
-		protocol = protocolDAO.findById(protocol.id);
+		protocol.update();
+		protocol = Protocol.find.findById(protocol.id);
 		checkProtocol(protocol);
 		Assert.assertTrue(protocol.name.equals("updateProto1"));
 	}
@@ -572,10 +536,11 @@ public class SpringTest extends AbstractTests{
 		Assert.assertTrue(protocol.reagentTypes.size()>0);
 
 	}
-	private Protocol createProtocol(String name, String filePath, String version, ProtocolCategory protocolCategory, List<ReagentType> reagentTypes)
+	private Protocol createProtocol(String code, String name, String filePath, String version, ProtocolCategory protocolCategory, List<ReagentType> reagentTypes)
 	{
 		Protocol protocol = new Protocol();
 		protocol.name=name;
+		protocol.code=code;
 		protocol.filePath=filePath;
 		protocol.version=version;
 		protocol.protocolCategory=protocolCategory;
@@ -589,24 +554,22 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addContainerSupportCategory() throws DAOException
+	public void saveContainerSupportCategory() throws DAOException
 	{
 		ContainerSupportCategory containerSupportCategory = createContainerSupportCategory("support1", "support1", 10, 10, 10);
-		ContainerSupportCategoryDAO containerSupportCategoryDAO = Spring.getBeanOfType(ContainerSupportCategoryDAO.class);
-		containerSupportCategory.id = containerSupportCategoryDAO.add(containerSupportCategory);
-		containerSupportCategory = containerSupportCategoryDAO.findByCode(containerSupportCategory.code);
+		containerSupportCategory.id = containerSupportCategory.save();
+		containerSupportCategory = ContainerSupportCategory.find.findByCode(containerSupportCategory.code);
 		checkContainerSupportCategory(containerSupportCategory);
 	}
 	@Test
 	public void updateContainerSupportCategory() throws DAOException
 	{
-		ContainerSupportCategoryDAO containerSupportCategoryDAO = Spring.getBeanOfType(ContainerSupportCategoryDAO.class);
-		ContainerSupportCategory containerSupportCategory = containerSupportCategoryDAO.findByCode("support1");
+		ContainerSupportCategory containerSupportCategory = ContainerSupportCategory.find.findByCode("support1");
 		checkContainerSupportCategory(containerSupportCategory);
 		containerSupportCategory.name="updateSupport1";
 		containerSupportCategory.nbLine=5;
-		containerSupportCategoryDAO.update(containerSupportCategory);
-		containerSupportCategory = containerSupportCategoryDAO.findByCode("support1");
+		containerSupportCategory.update();
+		containerSupportCategory = ContainerSupportCategory.find.findByCode("support1");
 		Assert.assertTrue(containerSupportCategory.name.equals("updateSupport1"));
 		Assert.assertTrue(containerSupportCategory.nbLine==5);
 
@@ -636,30 +599,27 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addInstrumentCategory() throws DAOException
+	public void saveInstrumentCategory() throws DAOException
 	{
-		ContainerSupportCategoryDAO containerSupportCategoryDAO = Spring.getBeanOfType(ContainerSupportCategoryDAO.class);
 		List<ContainerSupportCategory> inContainerSupportCategories = new ArrayList<ContainerSupportCategory>();
-		inContainerSupportCategories.add(containerSupportCategoryDAO.findByCode("support1"));
+		inContainerSupportCategories.add(ContainerSupportCategory.find.findByCode("support1"));
 		List<ContainerSupportCategory> outContainerSupportCategories = new ArrayList<ContainerSupportCategory>();
 		outContainerSupportCategories.add(createContainerSupportCategory("support2", "support2", 5, 10, 10));
 		InstrumentCategory instrumentCategory = createInstrumentCategory("InstCat1", "InstCat1", 1, inContainerSupportCategories, 1, outContainerSupportCategories);
-		InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
-		instrumentCategory.id = instrumentCategoryDAO.add(instrumentCategory);
-		instrumentCategory = instrumentCategoryDAO.findById(instrumentCategory.id);
+		instrumentCategory.id = instrumentCategory.save();
+		instrumentCategory = InstrumentCategory.find.findById(instrumentCategory.id);
 		checkInstrumentCategory(instrumentCategory);
 	}
 	@Test
 	public void updateInstrumentCategory() throws DAOException
 	{
-		InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
-		InstrumentCategory instrumentCategory = instrumentCategoryDAO.findByCode("InstCat1");
+		InstrumentCategory instrumentCategory = InstrumentCategory.find.findByCode("InstCat1");
 		checkInstrumentCategory(instrumentCategory);
 		instrumentCategory.name="UpdateInstCat1";
 		instrumentCategory.inContainerSupportCategories.add(createContainerSupportCategory("support3", "support3", 10, 10, 10));
 		instrumentCategory.outContainerSupportCategories.add(createContainerSupportCategory("support4", "support4", 10, 10, 10));
-		instrumentCategoryDAO.update(instrumentCategory);
-		instrumentCategory = instrumentCategoryDAO.findById(instrumentCategory.id);
+		instrumentCategory.update();
+		instrumentCategory = InstrumentCategory.find.findById(instrumentCategory.id);
 		checkInstrumentCategory(instrumentCategory);
 		Assert.assertTrue(instrumentCategory.name.equals("UpdateInstCat1"));
 		Assert.assertTrue(instrumentCategory.inContainerSupportCategories.size()==2);
@@ -703,24 +663,19 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addInstrumentUsedType() throws DAOException
+	public void saveInstrumentUsedType() throws DAOException
 	{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		states.add(stateDAO.findByCode("state1"));
+		states.add(State.find.findByCode("state1"));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		resolutions.add(resolutionDAO.findByCode("resol1"));
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType objectType = objectTypeDAO.findByCode("Instrument");
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		MeasureCategory measureCategory = measureCategoryDAO.findByCode("cat2");
-		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-		MeasureValue measureValue = measureValueDAO.findByValue("value2");
+		resolutions.add(Resolution.find.findByCode("resol1"));
+		ObjectType objectType = ObjectType.find.findByCode("Instrument");
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
+		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value4", true));
-		possibleValues.add(createValue("value5", false));
+		possibleValues.add(createValue("value4","value4", true));
+		possibleValues.add(createValue("value5","value5", false));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop3", "prop3", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("inst1", "inst1", "inst1", states, resolutions, propertiesDefinitions, objectType);
@@ -737,9 +692,8 @@ public class SpringTest extends AbstractTests{
 		instruments.add(createInstrument("inst1", "inst1"));
 
 		InstrumentUsedType instrumentUsedType = createInstrumentUsedType(commonInfoType, instrumentCategory, instruments);
-		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		instrumentUsedType.id = instrumentUsedTypeDAO.add(instrumentUsedType);
-		instrumentUsedType = instrumentUsedTypeDAO.findById(instrumentUsedType.id);
+		instrumentUsedType.id = instrumentUsedType.save();
+		instrumentUsedType = InstrumentUsedType.find.findById(instrumentUsedType.id);
 		checkInstrumentUsedType(instrumentUsedType);
 
 	}
@@ -747,13 +701,12 @@ public class SpringTest extends AbstractTests{
 	@Test
 	public void updateInstrumentUsedType() throws DAOException
 	{
-		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		InstrumentUsedType instrumentUsedType = instrumentUsedTypeDAO.findByCode("inst1");
+		InstrumentUsedType instrumentUsedType = InstrumentUsedType.find.findByCode("inst1");
 		checkInstrumentUsedType(instrumentUsedType);
 		instrumentUsedType.name="updateInst1";
 		instrumentUsedType.instruments.add(createInstrument("inst2", "inst2"));
-		instrumentUsedTypeDAO.update(instrumentUsedType);
-		instrumentUsedType=instrumentUsedTypeDAO.findById(instrumentUsedType.id);
+		instrumentUsedType.update();
+		instrumentUsedType=InstrumentUsedType.find.findById(instrumentUsedType.id);
 		checkInstrumentUsedType(instrumentUsedType);
 		Assert.assertTrue(instrumentUsedType.name.equals("updateInst1"));
 		Assert.assertTrue(instrumentUsedType.instruments.size()==2);
@@ -799,80 +752,63 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addPurificationMethodType() throws DAOException
+	public void savePurificationMethodType() throws DAOException
 	{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		states.add(stateDAO.findByCode("state2"));
+		states.add(State.find.findByCode("state2"));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		resolutions.add(resolutionDAO.findByCode("resol1"));
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType objectType = objectTypeDAO.findByCode("Purification");
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		MeasureCategory measureCategory = measureCategoryDAO.findByCode("cat2");
-		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-		MeasureValue measureValue = measureValueDAO.findByValue("value2");
+		resolutions.add(Resolution.find.findByCode("resol1"));
+		ObjectType objectType = ObjectType.find.findByCode("Purification");
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
+		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value6", true));
+		possibleValues.add(createValue("value6", "value6", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop4", "prop4", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("purif1", "purif1", "purif1", states, resolutions, propertiesDefinitions, objectType);
 
 		//Create list instrument 
 		List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
-		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		instrumentUsedTypes.add(instrumentUsedTypeDAO.findByCode("inst1"));
+		instrumentUsedTypes.add(InstrumentUsedType.find.findByCode("inst1"));
 
 		//Create liste protocol
 		List<Protocol> protocols = new ArrayList<Protocol>();
-		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
-		protocols.add(protocolDAO.findByName("updateProto1"));
+		protocols.add(Protocol.findByName("updateProto1"));
 		List<ReagentType> reagentTypes = new ArrayList<ReagentType>();
-		ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
-		ReagentType reagentType = reagentTypeDAO.findByCode("reagent1");
+		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
 		reagentTypes.add(reagentType);
-		protocols.add(createProtocol("proto1", "path2", "V2", createProtocolCategory("protoCat3", "protoCat3"), reagentTypes));
+		protocols.add(createProtocol("proto2","proto2", "path2", "V2", createProtocolCategory("protoCat3", "protoCat3"), reagentTypes));
 
 		PurificationMethodType purificationMethodType = createPurificationMethodType(commonInfoType, instrumentUsedTypes, protocols);
-		PurificationMethodTypeDAO purificationMethodTypeDAO = Spring.getBeanOfType(PurificationMethodTypeDAO.class);
-		purificationMethodType.id = purificationMethodTypeDAO.add(purificationMethodType);
-		purificationMethodType = purificationMethodTypeDAO.findById(purificationMethodType.id);
+		purificationMethodType.id = purificationMethodType.save();
+		purificationMethodType = PurificationMethodType.find.findById(purificationMethodType.id);
 		checkAbstractExperiment(purificationMethodType);
 	}
 
 	@Test
 	public void updatePurificationMethodType() throws DAOException
 	{
-		PurificationMethodTypeDAO purificationMethodTypeDAO = Spring.getBeanOfType(PurificationMethodTypeDAO.class);
-		PurificationMethodType purificationMethodType = purificationMethodTypeDAO.findByCode("purif1");
+		PurificationMethodType purificationMethodType = PurificationMethodType.find.findByCode("purif1");
 		checkAbstractExperiment(purificationMethodType);
 		purificationMethodType.name="updatePurif1";
 
 		//Add experiment type
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		states.add(stateDAO.findByCode("state1"));
+		states.add(State.find.findByCode("state1"));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		resolutions.add(resolutionDAO.findByCode("resol1"));
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType objectType = objectTypeDAO.findByCode("Instrument");
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		MeasureCategory measureCategory = measureCategoryDAO.findByCode("cat2");
-		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-		MeasureValue measureValue = measureValueDAO.findByValue("value2");
+		resolutions.add(Resolution.find.findByCode("resol1"));
+		ObjectType objectType = ObjectType.find.findByCode("Instrument");
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
+		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value6", true));
+		possibleValues.add(createValue("value6", "value6", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop4", "prop4", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("inst3", "inst3", "inst3", states, resolutions, propertiesDefinitions, objectType);
-
 		
-		InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
-		InstrumentCategory instrumentCategory = instrumentCategoryDAO.findByCode("InstCat1");
+		InstrumentCategory instrumentCategory = InstrumentCategory.find.findByCode("InstCat1");
 		//Get instrument
 		List<Instrument> instruments = new ArrayList<Instrument>();
 		instruments.add(createInstrument("inst3", "inst3"));
@@ -880,14 +816,13 @@ public class SpringTest extends AbstractTests{
 		
 		purificationMethodType.instrumentUsedTypes.add(createInstrumentUsedType(commonInfoType, instrumentCategory, instruments));
 		List<ReagentType> reagentTypes = new ArrayList<ReagentType>();
-		ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
-		ReagentType reagentType = reagentTypeDAO.findByCode("reagent1");
+		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
 		reagentTypes.add(reagentType);
 		
-		purificationMethodType.protocols.add(createProtocol("proto3", "path3", "V2", createProtocolCategory("protoCat4", "protoCat4"), reagentTypes));
+		purificationMethodType.protocols.add(createProtocol("proto3","proto3", "path3", "V2", createProtocolCategory("protoCat4", "protoCat4"), reagentTypes));
 
-		purificationMethodTypeDAO.update(purificationMethodType);
-		purificationMethodType = purificationMethodTypeDAO.findById(purificationMethodType.id);
+		purificationMethodType.update();
+		purificationMethodType = PurificationMethodType.find.findById(purificationMethodType.id);
 		checkAbstractExperiment(purificationMethodType);
 		Assert.assertTrue(purificationMethodType.name.equals("updatePurif1"));
 		Assert.assertTrue(purificationMethodType.protocols.size()==3);
@@ -927,80 +862,62 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addQualityControlType() throws DAOException
+	public void saveQualityControlType() throws DAOException
 	{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		states.add(stateDAO.findByCode("state2"));
+		states.add(State.find.findByCode("state2"));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		resolutions.add(resolutionDAO.findByCode("resol1"));
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType objectType = objectTypeDAO.findByCode("ControlQuality");
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		MeasureCategory measureCategory = measureCategoryDAO.findByCode("cat2");
-		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-		MeasureValue measureValue = measureValueDAO.findByValue("value2");
+		resolutions.add(Resolution.find.findByCode("resol1"));
+		ObjectType objectType = ObjectType.find.findByCode("ControlQuality");
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
+		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value7", true));
+		possibleValues.add(createValue("value7","value7", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop5", "prop5", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("qc1", "qc1", "qc1", states, resolutions, propertiesDefinitions, objectType);
 
 		//Create list instrument 
 		List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
-		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		instrumentUsedTypes.add(instrumentUsedTypeDAO.findByCode("inst1"));
+		instrumentUsedTypes.add(InstrumentUsedType.find.findByCode("inst1"));
 
 		//Create liste protocol
 		List<Protocol> protocols = new ArrayList<Protocol>();
-		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
-		protocols.add(protocolDAO.findByName("updateProto1"));
+		protocols.add(Protocol.findByName("updateProto1"));
 		List<ReagentType> reagentTypes = new ArrayList<ReagentType>();
-		ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
-		ReagentType reagentType = reagentTypeDAO.findByCode("reagent1");
+		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
 		reagentTypes.add(reagentType);
-		
-		protocols.add(protocolDAO.findByName("proto1"));
 
 		QualityControlType qualityControlType = createQualityControlType(commonInfoType, instrumentUsedTypes, protocols);
-		QualityControlTypeDAO qualityControlTypeDAO = Spring.getBeanOfType(QualityControlTypeDAO.class);
-		qualityControlType.id = qualityControlTypeDAO.add(qualityControlType);
-		qualityControlType = qualityControlTypeDAO.findById(qualityControlType.id);
+		qualityControlType.id = qualityControlType.save();
+		qualityControlType = QualityControlType.find.findById(qualityControlType.id);
 		checkAbstractExperiment(qualityControlType);
 	}
 	@Test
 	public void updateQualityControlType() throws DAOException
 	{
-		QualityControlTypeDAO qualityControlTypeDAO = Spring.getBeanOfType(QualityControlTypeDAO.class);
-		QualityControlType qualityControlType = qualityControlTypeDAO.findByCode("qc1");
+		QualityControlType qualityControlType = QualityControlType.find.findByCode("qc1");
 		checkAbstractExperiment(qualityControlType);
 		qualityControlType.name="updateQC1";
 
 		//Add experiment type
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		states.add(stateDAO.findByCode("state1"));
+		states.add(State.find.findByCode("state1"));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		resolutions.add(resolutionDAO.findByCode("resol1"));
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType objectType = objectTypeDAO.findByCode("Instrument");
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		MeasureCategory measureCategory = measureCategoryDAO.findByCode("cat2");
-		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-		MeasureValue measureValue = measureValueDAO.findByValue("value2");
+		resolutions.add(Resolution.find.findByCode("resol1"));
+		ObjectType objectType = ObjectType.find.findByCode("Instrument");
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
+		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value8", true));
+		possibleValues.add(createValue("value8","value8", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop6", "prop6", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("inst4", "inst4", "inst4", states, resolutions, propertiesDefinitions, objectType);
 
 		//Get instrumentCategory
-		InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
-		InstrumentCategory instrumentCategory = instrumentCategoryDAO.findByCode("InstCat1");
+		InstrumentCategory instrumentCategory = InstrumentCategory.find.findByCode("InstCat1");
 		
 		//Get instrument
 		List<Instrument> instruments = new ArrayList<Instrument>();
@@ -1008,17 +925,15 @@ public class SpringTest extends AbstractTests{
 
 		qualityControlType.instrumentUsedTypes.add(createInstrumentUsedType(commonInfoType, instrumentCategory, instruments));
 		List<ReagentType> reagentTypes = new ArrayList<ReagentType>();
-		ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
-		ReagentType reagentType = reagentTypeDAO.findByCode("reagent1");
+		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
 		reagentTypes.add(reagentType);
-		ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
-		qualityControlType.protocols.add(createProtocol("proto4", "path4", "V2", protocolCategoryDAO.findByCode("protoCat2"), reagentTypes));
+		qualityControlType.protocols.add(createProtocol("proto4","proto4", "path4", "V2", ProtocolCategory.find.findByCode("protoCat2"), reagentTypes));
 
-		qualityControlTypeDAO.update(qualityControlType);
-		qualityControlType = qualityControlTypeDAO.findById(qualityControlType.id);
+		qualityControlType.update();
+		qualityControlType = QualityControlType.find.findById(qualityControlType.id);
 		checkAbstractExperiment(qualityControlType);
 		Assert.assertTrue(qualityControlType.name.equals("updateQC1"));
-		Assert.assertTrue(qualityControlType.protocols.size()==3);
+		Assert.assertTrue(qualityControlType.protocols.size()==2);
 		Assert.assertTrue(qualityControlType.instrumentUsedTypes.size()==2);
 	}
 
@@ -1036,24 +951,22 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addExperimentCategory() throws DAOException
+	public void saveExperimentCategory() throws DAOException
 	{
 		ExperimentCategory experimentCategory = createExperimentCategory("expCat1", "expCat2");
-		ExperimentCategoryDAO experimentCategoryDAO = Spring.getBeanOfType(ExperimentCategoryDAO.class);
-		experimentCategory.id=experimentCategoryDAO.add(experimentCategory);
-		experimentCategory=experimentCategoryDAO.findById(experimentCategory.id);
+		experimentCategory.id=experimentCategory.save();
+		experimentCategory=ExperimentCategory.find.findById(experimentCategory.id);
 		checkAbstractCategory(experimentCategory);
 
 	}
 	@Test
 	public void updateExperimentCategory() throws DAOException
 	{
-		ExperimentCategoryDAO experimentCategoryDAO = Spring.getBeanOfType(ExperimentCategoryDAO.class);
-		ExperimentCategory experimentCategory = experimentCategoryDAO.findByCode("expCat1");
+		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
 		checkAbstractCategory(experimentCategory);
 		experimentCategory.name="updateExpCat1";
-		experimentCategoryDAO.update(experimentCategory);
-		experimentCategory = experimentCategoryDAO.findById(experimentCategory.id);
+		experimentCategory.update();
+		experimentCategory = ExperimentCategory.find.findById(experimentCategory.id);
 		checkAbstractCategory(experimentCategory);
 		Assert.assertTrue(experimentCategory.name.equals("updateExpCat1"));
 	}
@@ -1069,116 +982,104 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addExperimentType() throws DAOException
+	public void saveExperimentType() throws DAOException
 	{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		states.add(stateDAO.findByCode("state2"));
+		states.add(State.find.findByCode("state2"));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		resolutions.add(resolutionDAO.findByCode("resol1"));
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType objectType = objectTypeDAO.findByCode("ControlQuality");
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		MeasureCategory measureCategory = measureCategoryDAO.findByCode("cat2");
-		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-		MeasureValue measureValue = measureValueDAO.findByValue("value2");
+		resolutions.add(Resolution.find.findByCode("resol1"));
+		ObjectType objectType = ObjectType.find.findByCode("ControlQuality");
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
+		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value8", true));
+		possibleValues.add(createValue("value8","value8", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop6", "prop6", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("exp1", "exp1", "exp1", states, resolutions, propertiesDefinitions, objectType);
 
 		//Create list instrument 
 		List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
-		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		instrumentUsedTypes.add(instrumentUsedTypeDAO.findByCode("inst1"));
+		instrumentUsedTypes.add(InstrumentUsedType.find.findByCode("inst1"));
 
 		//Create liste protocol
 		List<Protocol> protocols = new ArrayList<Protocol>();
-		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
-		protocols.add(protocolDAO.findByName("updateProto1"));
+		protocols.add(Protocol.findByName("updateProto1"));
 
-		PurificationMethodType purif = Spring.getBeanOfType(PurificationMethodTypeDAO.class).findByCode("purif1");
+		PurificationMethodType purif = PurificationMethodType.find.findByCode("purif1");
 		List<PurificationMethodType> purificationMethodTypes = new ArrayList<PurificationMethodType>();
 		purificationMethodTypes.add(purif);
 
-		QualityControlType qc = Spring.getBeanOfType(QualityControlTypeDAO.class).findByCode("qc1");
+		QualityControlType qc = QualityControlType.find.findByCode("qc1");
 		List<QualityControlType> qualityControlTypes = new ArrayList<QualityControlType>();
 		qualityControlTypes.add(qc);
 
-		ExperimentCategory experimentCategory = Spring.getBeanOfType(ExperimentCategoryDAO.class).findByCode("expCat1");
+		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
 
 		ExperimentType experimentType = createExperimentType(commonInfoType, protocols, instrumentUsedTypes, experimentCategory, new ArrayList<ExperimentType>(),
 				true, true, purificationMethodTypes, true, true, qualityControlTypes);
-		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-		experimentType.id = experimentTypeDAO.add(experimentType);
-		experimentType=experimentTypeDAO.findById(experimentType.id);
+		experimentType.id = experimentType.save();
+		experimentType=ExperimentType.find.findById(experimentType.id);
 		checkExperimentType(experimentType);
 	}
 
 	@Test
 	public void updateExperimentType() throws DAOException
 	{
-		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-		ExperimentType experimentType = experimentTypeDAO.findByCode("exp1");
+		ExperimentType experimentType = ExperimentType.find.findByCode("exp1");
 		checkExperimentType(experimentType);
 		experimentType.name="updateExp1";
 		experimentType.doPurification=false;
 		//Create purification
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
-		states.add(Spring.getBeanOfType(StateDAO.class).findByCode("state2"));
+		states.add(State.find.findByCode("state2"));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
-		resolutions.add(Spring.getBeanOfType(ResolutionDAO.class).findByCode("resol1"));
-		ObjectType objectType = Spring.getBeanOfType(ObjectTypeDAO.class).findByCode("Purification");
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		MeasureCategory measureCategory = measureCategoryDAO.findByCode("cat2");
-		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-		MeasureValue measureValue = measureValueDAO.findByValue("value2");
+		resolutions.add(Resolution.find.findByCode("resol1"));
+		ObjectType objectType = ObjectType.find.findByCode("Purification");
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
+		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value9", true));
+		possibleValues.add(createValue("value9","value9", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop7", "prop7", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("purif2", "purif2", "purif2", states, resolutions, propertiesDefinitions, objectType);
 
 		//Create list instrument 
 		List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
-		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		instrumentUsedTypes.add(instrumentUsedTypeDAO.findByCode("inst1"));
+		instrumentUsedTypes.add(InstrumentUsedType.find.findByCode("inst1"));
 
 		//Create liste protocol
 		List<Protocol> protocols = new ArrayList<Protocol>();
-		protocols.add(Spring.getBeanOfType(ProtocolDAO.class).findByName("updateProto1"));
+		protocols.add(Protocol.findByName("updateProto1"));
 
 		PurificationMethodType purificationMethodType = createPurificationMethodType(commonInfoType, instrumentUsedTypes, protocols);
 		experimentType.possiblePurificationMethodTypes.add(purificationMethodType);
 		//Create quality control
 		//Create commonInfoType
 		states = new ArrayList<State>();
-		states.add(Spring.getBeanOfType(StateDAO.class).findByCode("state2"));
+		states.add(State.find.findByCode("state2"));
 		resolutions = new ArrayList<Resolution>();
-		resolutions.add(Spring.getBeanOfType(ResolutionDAO.class).findByCode("resol1"));
-		objectType = Spring.getBeanOfType(ObjectTypeDAO.class).findByCode("ControlQuality");
+		resolutions.add(Resolution.find.findByCode("resol1"));
+		objectType = ObjectType.find.findByCode("ControlQuality");
 		
 		possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value10", true));
+		possibleValues.add(createValue("value10","value10", true));
 		propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop8", "prop8", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		commonInfoType = createCommonInfoType("qc2", "qc2", "qc2", states, resolutions, propertiesDefinitions, objectType);
 
 		//Create list instrument 
 		instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
-		instrumentUsedTypes.add(Spring.getBeanOfType(InstrumentUsedTypeDAO.class).findByCode("inst1"));
+		instrumentUsedTypes.add(InstrumentUsedType.find.findByCode("inst1"));
 
 		//Create liste protocol
 		protocols = new ArrayList<Protocol>();
 		protocols.add(Spring.getBeanOfType(ProtocolDAO.class).findByName("updateProto1"));
 		QualityControlType qualityControlType = createQualityControlType(commonInfoType, instrumentUsedTypes, protocols);
 		experimentType.possibleQualityControlTypes.add(qualityControlType);
-		experimentTypeDAO.update(experimentType);
-		experimentType=experimentTypeDAO.findById(experimentType.id);
+		experimentType.update();
+		experimentType=ExperimentType.find.findById(experimentType.id);
 		checkExperimentType(experimentType);
 		Assert.assertTrue(experimentType.name.equals("updateExp1"));
 		Assert.assertFalse(experimentType.doPurification);
@@ -1188,56 +1089,48 @@ public class SpringTest extends AbstractTests{
 	}
 
 	@Test
-	public void addPreviousExperiment() throws DAOException
+	public void savePreviousExperiment() throws DAOException
 	{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		states.add(stateDAO.findByCode("state2"));
+		states.add(State.find.findByCode("state2"));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		resolutions.add(resolutionDAO.findByCode("resol1"));
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType objectType = objectTypeDAO.findByCode("ControlQuality");
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		MeasureCategory measureCategory = measureCategoryDAO.findByCode("cat2");
-		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-		MeasureValue measureValue = measureValueDAO.findByValue("value2");
+		resolutions.add(Resolution.find.findByCode("resol1"));
+		ObjectType objectType = ObjectType.find.findByCode("ControlQuality");
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
+		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value9", true));
+		possibleValues.add(createValue("value9","value9", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop7", "prop7", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("exp2", "exp2", "exp2", states, resolutions, propertiesDefinitions, objectType);
 
 		//Create list instrument 
 		List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
-		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		instrumentUsedTypes.add(instrumentUsedTypeDAO.findByCode("inst1"));
+		instrumentUsedTypes.add(InstrumentUsedType.find.findByCode("inst1"));
 
 		//Create liste protocol
 		List<Protocol> protocols = new ArrayList<Protocol>();
-		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
-		protocols.add(protocolDAO.findByName("updateProto1"));
+		protocols.add(Protocol.findByName("updateProto1"));
 
-		PurificationMethodType purif = Spring.getBeanOfType(PurificationMethodTypeDAO.class).findByCode("purif1");
+		PurificationMethodType purif = PurificationMethodType.find.findByCode("purif1");
 		List<PurificationMethodType> purificationMethodTypes = new ArrayList<PurificationMethodType>();
 		purificationMethodTypes.add(purif);
 
-		QualityControlType qc = Spring.getBeanOfType(QualityControlTypeDAO.class).findByCode("qc1");
+		QualityControlType qc = QualityControlType.find.findByCode("qc1");
 		List<QualityControlType> qualityControlTypes = new ArrayList<QualityControlType>();
 		qualityControlTypes.add(qc);
 
-		ExperimentCategory experimentCategory = Spring.getBeanOfType(ExperimentCategoryDAO.class).findByCode("expCat1");
+		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
 
-		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		List<ExperimentType> previousExperiment = new ArrayList<ExperimentType>();
-		previousExperiment.add(experimentTypeDAO.findByCode("exp1"));
+		previousExperiment.add(ExperimentType.find.findByCode("exp1"));
 		ExperimentType experimentType = createExperimentType(commonInfoType, protocols, instrumentUsedTypes, experimentCategory, new ArrayList<ExperimentType>(),
 				true, true, purificationMethodTypes, true, true, qualityControlTypes);
 		experimentType.previousExperimentTypes=previousExperiment;
-		experimentType.id = experimentTypeDAO.add(experimentType);
+		experimentType.id = experimentType.save();
 		checkExperimentType(experimentType);
-		experimentType = experimentTypeDAO.findByCode("exp2");
+		experimentType = ExperimentType.find.findByCode("exp2");
 		Assert.assertNotNull(experimentType.previousExperimentTypes);
 		Assert.assertTrue(experimentType.previousExperimentTypes.size()==1);
 	}
@@ -1288,23 +1181,21 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addProcessCategory() throws DAOException
+	public void saveProcessCategory() throws DAOException
 	{
 		ProcessCategory processCategory = createProcessCategory("processCat1", "processCat1");
-		ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
-		processCategory.id = processCategoryDAO.add(processCategory);
-		processCategory = processCategoryDAO.findById(processCategory.id);
+		processCategory.id = processCategory.save();
+		processCategory = ProcessCategory.find.findById(processCategory.id);
 		checkAbstractCategory(processCategory);
 	}
 	@Test
 	public void updateProcessCategory() throws DAOException
 	{
-		ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
-		ProcessCategory processCategory = processCategoryDAO.findByCode("processCat1");
+		ProcessCategory processCategory = ProcessCategory.find.findByCode("processCat1");
 		checkAbstractCategory(processCategory);
 		processCategory.name="updateProcessCat1";
-		processCategoryDAO.update(processCategory);
-		processCategory = processCategoryDAO.findById(processCategory.id);
+		processCategory.update();
+		processCategory = ProcessCategory.find.findById(processCategory.id);
 		checkAbstractCategory(processCategory);
 		Assert.assertTrue(processCategory.name.equals("updateProcessCat1"));
 	}
@@ -1322,46 +1213,39 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addProcessType() throws DAOException
+	public void saveProcessType() throws DAOException
 	{
 		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
-		experimentTypes.add(Spring.getBeanOfType(ExperimentTypeDAO.class).findByCode("exp1"));
-		ProcessCategory processCategory = Spring.getBeanOfType(ProcessCategoryDAO.class).findByCode("processCat1");
+		experimentTypes.add(ExperimentType.find.findByCode("exp1"));
+		ProcessCategory processCategory = ProcessCategory.find.findByCode("processCat1");
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		states.add(stateDAO.findByCode("state2"));
+		states.add(State.find.findByCode("state2"));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		resolutions.add(resolutionDAO.findByCode("resol1"));
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType objectType = objectTypeDAO.findByCode("Process");
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		MeasureCategory measureCategory = measureCategoryDAO.findByCode("cat2");
-		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-		MeasureValue measureValue = measureValueDAO.findByValue("value2");
+		resolutions.add(Resolution.find.findByCode("resol1"));
+		ObjectType objectType = ObjectType.find.findByCode("Process");
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
+		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value10", true));
+		possibleValues.add(createValue("value10","value10", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop8", "prop8", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("process1", "process1", "process1", states, resolutions, propertiesDefinitions, objectType);
 		ProcessType processType = createProcessType(commonInfoType, experimentTypes, processCategory);
-		ProcessTypeDAO processTypeDAO = Spring.getBeanOfType(ProcessTypeDAO.class);
-		processType.id = processTypeDAO.add(processType);
-		processType = processTypeDAO.findById(processType.id);
+		processType.id = processType.save();
+		processType = ProcessType.find.findById(processType.id);
 		checkProcessType(processType);
 	}
 	@Test
 	public void updateProcessType() throws DAOException
 	{
-		ProcessTypeDAO processTypeDAO = Spring.getBeanOfType(ProcessTypeDAO.class);
-		ProcessType processType = processTypeDAO.findByCode("process1");
+		ProcessType processType = ProcessType.find.findByCode("process1");
 		checkProcessType(processType);
 		processType.name="updateProcess1";
-		ExperimentType exp2 = Spring.getBeanOfType(ExperimentTypeDAO.class).findByCode("exp2");
+		ExperimentType exp2 = ExperimentType.find.findByCode("exp2");
 		processType.experimentTypes.add(exp2);
-		processTypeDAO.update(processType);
-		processType = processTypeDAO.findById(processType.id);
+		processType.update();
+		processType = ProcessType.find.findById(processType.id);
 		checkProcessType(processType);
 		Assert.assertTrue(processType.name.equals("updateProcess1"));
 		Assert.assertTrue(processType.experimentTypes.size()==2);
@@ -1371,10 +1255,9 @@ public class SpringTest extends AbstractTests{
 	@Test
 	public void removeProcessType() throws DAOException
 	{
-		ProcessTypeDAO processTypeDAO = Spring.getBeanOfType(ProcessTypeDAO.class);
-		ProcessType processType = processTypeDAO.findByCode("process1");
-		processTypeDAO.remove(processType);
-		Assert.assertNull(processTypeDAO.findByCode("process1"));
+		ProcessType processType = ProcessType.find.findByCode("process1");
+		processType.remove();
+		Assert.assertNull(ProcessType.find.findByCode("process1"));
 	}
 	
 	private ProcessType createProcessType(CommonInfoType commonInfoType, List<ExperimentType> experimentTypes, ProcessCategory processCategory)
@@ -1403,23 +1286,21 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addProjectCategory() throws DAOException
+	public void saveProjectCategory() throws DAOException
 	{
 		ProjectCategory projectCategory = createProjectCategory("projectCat1", "projectCat1");
-		ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
-		projectCategory.id = projectCategoryDAO.add(projectCategory);
-		projectCategory = projectCategoryDAO.findById(projectCategory.id);
+		projectCategory.id = projectCategory.save();
+		projectCategory = ProjectCategory.find.findById(projectCategory.id);
 		checkAbstractCategory(projectCategory);
 	}
 	@Test
 	public void updateProjectCategory() throws DAOException
 	{
-		ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
-		ProjectCategory projectCategory = projectCategoryDAO.findByCode("projectCat1");
+		ProjectCategory projectCategory = ProjectCategory.find.findByCode("projectCat1");
 		checkAbstractCategory(projectCategory);
 		projectCategory.name="updateProjectCat1";
-		projectCategoryDAO.update(projectCategory);
-		projectCategory = projectCategoryDAO.findById(projectCategory.id);
+		projectCategory.update();
+		projectCategory = ProjectCategory.find.findById(projectCategory.id);
 		checkAbstractCategory(projectCategory);
 		Assert.assertTrue(projectCategory.name.equals("updateProjectCat1"));
 	}
@@ -1437,42 +1318,35 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addProjectType() throws DAOException
+	public void saveProjectType() throws DAOException
 	{
-		ProjectCategory projectCategory = Spring.getBeanOfType(ProjectCategoryDAO.class).findByCode("projectCat1");
+		ProjectCategory projectCategory = ProjectCategory.find.findByCode("projectCat1");
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		states.add(stateDAO.findByCode("state2"));
+		states.add(State.find.findByCode("state2"));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		resolutions.add(resolutionDAO.findByCode("resol1"));
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType objectType = objectTypeDAO.findByCode("Project");
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		MeasureCategory measureCategory = measureCategoryDAO.findByCode("cat2");
-		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-		MeasureValue measureValue = measureValueDAO.findByValue("value2");
+		resolutions.add(Resolution.find.findByCode("resol1"));
+		ObjectType objectType = ObjectType.find.findByCode("Project");
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
+		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value11", true));
+		possibleValues.add(createValue("value11","value11", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop9", "prop9", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("project1", "project1", "project1", states, resolutions, propertiesDefinitions, objectType);
 		ProjectType projectType = createProjectType(commonInfoType, projectCategory);
-		ProjectTypeDAO projectTypeDAO = Spring.getBeanOfType(ProjectTypeDAO.class);
-		projectType.id = projectTypeDAO.add(projectType);
-		projectType = projectTypeDAO.findById(projectType.id);
+		projectType.id = projectType.save();
+		projectType = ProjectType.find.findById(projectType.id);
 		checkProjectType(projectType);
 	}
 	@Test
 	public void updateProjectType() throws DAOException
 	{
-		ProjectTypeDAO projectTypeDAO = Spring.getBeanOfType(ProjectTypeDAO.class);
-		ProjectType projectType = projectTypeDAO.findByCode("project1");
+		ProjectType projectType = ProjectType.find.findByCode("project1");
 		checkProjectType(projectType);
 		projectType.name="updateProject1";
-		projectTypeDAO.update(projectType);
-		projectType = projectTypeDAO.findById(projectType.id);
+		projectType.update();
+		projectType = ProjectType.find.findById(projectType.id);
 		checkProjectType(projectType);
 		Assert.assertTrue(projectType.name.equals("updateProject1"));
 	}
@@ -1480,18 +1354,16 @@ public class SpringTest extends AbstractTests{
 	@Test
 	public void removeProjectType() throws DAOException
 	{
-		ProjectTypeDAO projectTypeDAO = Spring.getBeanOfType(ProjectTypeDAO.class);
-		ProjectType projectType = projectTypeDAO.findByCode("project1");
-		projectTypeDAO.remove(projectType);
-		Assert.assertNull(projectTypeDAO.findByCode("project1"));
+		ProjectType projectType = ProjectType.find.findByCode("project1");
+		projectType.remove();
+		Assert.assertNull(ProjectType.find.findByCode("project1"));
 	}
 	@Test
 	public void removeProjectCategory() throws DAOException
 	{
-		ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
-		ProjectCategory projectCategory = projectCategoryDAO.findByCode("projectCat1");
-		projectCategoryDAO.remove(projectCategory);
-		Assert.assertNull(projectCategoryDAO.findByCode("projectCat1"));
+		ProjectCategory projectCategory = ProjectCategory.find.findByCode("projectCat1");
+		projectCategory.remove();
+		Assert.assertNull(ProjectCategory.find.findByCode("projectCat1"));
 	}
 	
 	private ProjectType createProjectType(CommonInfoType commonInfoType,  ProjectCategory projectCategory)
@@ -1514,23 +1386,21 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addSampleCategory() throws DAOException
+	public void saveSampleCategory() throws DAOException
 	{
 		SampleCategory sampleCategory = createSampleCategory("sampleCat1", "sampleCat1");
-		SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
-		sampleCategory.id = sampleCategoryDAO.add(sampleCategory);
-		sampleCategory = sampleCategoryDAO.findById(sampleCategory.id);
+		sampleCategory.id = sampleCategory.save();
+		sampleCategory = SampleCategory.find.findById(sampleCategory.id);
 		checkAbstractCategory(sampleCategory);
 	}
 	@Test
 	public void updateSampleCategory() throws DAOException
 	{
-		SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
-		SampleCategory sampleCategory = sampleCategoryDAO.findByCode("sampleCat1");
+		SampleCategory sampleCategory = SampleCategory.find.findByCode("sampleCat1");
 		checkAbstractCategory(sampleCategory);
 		sampleCategory.name="updateSampleCat1";
-		sampleCategoryDAO.update(sampleCategory);
-		sampleCategory = sampleCategoryDAO.findById(sampleCategory.id);
+		sampleCategory.update();
+		sampleCategory = SampleCategory.find.findById(sampleCategory.id);
 		checkAbstractCategory(sampleCategory);
 		Assert.assertTrue(sampleCategory.name.equals("updateSampleCat1"));
 	}
@@ -1548,42 +1418,35 @@ public class SpringTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	@Test
-	public void addSampleType() throws DAOException
+	public void saveSampleType() throws DAOException
 	{
-		SampleCategory sampleCategory = Spring.getBeanOfType(SampleCategoryDAO.class).findByCode("sampleCat1");
+		SampleCategory sampleCategory = SampleCategory.find.findByCode("sampleCat1");
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		states.add(stateDAO.findByCode("state2"));
+		states.add(State.find.findByCode("state2"));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		resolutions.add(resolutionDAO.findByCode("resol1"));
-		ObjectTypeDAO objectTypeDAO = Spring.getBeanOfType(ObjectTypeDAO.class);
-		ObjectType objectType = objectTypeDAO.findByCode("Project");
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		MeasureCategory measureCategory = measureCategoryDAO.findByCode("cat2");
-		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-		MeasureValue measureValue = measureValueDAO.findByValue("value2");
+		resolutions.add(Resolution.find.findByCode("resol1"));
+		ObjectType objectType = ObjectType.find.findByCode("Project");
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
+		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value12", true));
+		possibleValues.add(createValue("value12","value12", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop10", "prop10", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("sample1", "sample1", "sample1", states, resolutions, propertiesDefinitions, objectType);
 		SampleType sampleType = createSampleType(commonInfoType, sampleCategory);
-		SampleTypeDAO sampleTypeDAO = Spring.getBeanOfType(SampleTypeDAO.class);
-		sampleType.id = sampleTypeDAO.add(sampleType);
-		sampleType = sampleTypeDAO.findById(sampleType.id);
+		sampleType.id = sampleType.save();
+		sampleType = SampleType.find.findById(sampleType.id);
 		checkSampleType(sampleType);
 	}
 	@Test
 	public void updateSampleType() throws DAOException
 	{
-		SampleTypeDAO sampleTypeDAO = Spring.getBeanOfType(SampleTypeDAO.class);
-		SampleType sampleType = sampleTypeDAO.findByCode("sample1");
+		SampleType sampleType = SampleType.find.findByCode("sample1");
 		checkSampleType(sampleType);
 		sampleType.name="updateSample1";
-		sampleTypeDAO.update(sampleType);
-		sampleType = sampleTypeDAO.findById(sampleType.id);
+		sampleType.update();
+		sampleType = SampleType.find.findById(sampleType.id);
 		checkSampleType(sampleType);
 		Assert.assertTrue(sampleType.name.equals("updateSample1"));
 	}
@@ -1591,10 +1454,9 @@ public class SpringTest extends AbstractTests{
 	@Test
 	public void removeSampleType() throws DAOException
 	{
-		SampleTypeDAO sampleTypeDAO = Spring.getBeanOfType(SampleTypeDAO.class);
-		SampleType sampleType = sampleTypeDAO.findByCode("sample1");
-		sampleTypeDAO.remove(sampleType);
-		Assert.assertNull(sampleTypeDAO.findByCode("sample1"));
+		SampleType sampleType = SampleType.find.findByCode("sample1");
+		sampleType.remove();
+		Assert.assertNull(SampleType.find.findByCode("sample1"));
 	}
 	
 	private SampleType createSampleType(CommonInfoType commonInfoType,  SampleCategory sampleCategory)
@@ -1613,94 +1475,177 @@ public class SpringTest extends AbstractTests{
 	}
 	
 	@Test
+	public void saveImportCategory() throws DAOException
+	{
+		ImportCategory importCategory = createImportCategory("import1", "import1");
+		importCategory.id = importCategory.save();
+		importCategory = ImportCategory.find.findById(importCategory.id);
+		checkAbstractCategory(importCategory);
+	}
+	
+	@Test
+	public void updateImportCategory() throws DAOException
+	{
+		ImportCategory importCategory = ImportCategory.find.findByCode("import1");
+		checkAbstractCategory(importCategory);
+		importCategory.name="updateImport1";
+		importCategory.update();
+		importCategory = ImportCategory.find.findById(importCategory.id);
+		checkAbstractCategory(importCategory);
+		Assert.assertTrue(importCategory.name.equals("updateImport1"));
+	}
+	
+	@Test
+	public void saveImportType() throws DAOException
+	{
+		ImportCategory importCategory = ImportCategory.find.findByCode("import1");
+		//Create commonInfoType
+		List<State> states = new ArrayList<State>();
+		states.add(State.find.findByCode("state2"));
+		List<Resolution> resolutions = new ArrayList<Resolution>();
+		resolutions.add(Resolution.find.findByCode("resol1"));
+		ObjectType objectType = ObjectType.find.findByCode("Import");
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
+		MeasureValue measureValue = MeasureValue.findByValue("value2");
+		List<Value> possibleValues = new ArrayList<Value>();
+		possibleValues.add(createValue("value13","value13", true));
+		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
+		propertiesDefinitions.add(createPropertyDefinition("prop11", "prop11", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
+		CommonInfoType commonInfoType = createCommonInfoType("import1", "import1", "import1", states, resolutions, propertiesDefinitions, objectType);
+		ImportType importType = createImportType(commonInfoType, importCategory);
+		importType.id = importType.save();
+		importType = ImportType.find.findById(importType.id);
+		checkImportType(importType);
+	}
+	@Test
+	public void updateImportType() throws DAOException
+	{
+		ImportType importType = ImportType.find.findByCode("import1");
+		checkImportType(importType);
+		importType.name="updateImport1";
+		importType.update();
+		importType = ImportType.find.findById(importType.id);
+		checkImportType(importType);
+		Assert.assertTrue(importType.name.equals("updateImport1"));
+	}
+	@Test
+	public void removeImportType() throws DAOException
+	{
+		ImportType importType = ImportType.find.findByCode("import1");
+		importType.remove();
+		Assert.assertNull(ImportType.find.findByCode("import1"));
+	}
+	
+	private ImportType createImportType(CommonInfoType commonInfoType,  ImportCategory importCategory)
+	{
+		ImportType importType = new ImportType();
+		importType.setCommonInfoType(commonInfoType);
+		importType.importCategory=importCategory;
+		return importType;
+	}
+	
+	private void checkImportType(ImportType importType)
+	{
+		Assert.assertNotNull(importType);
+		checkCommonInfoType(importType);
+		checkAbstractCategory(importType.importCategory);
+	}
+	@Test
+	public void removeImportCategory() throws DAOException
+	{
+		ImportCategory importCategory = ImportCategory.find.findByCode("import1");
+		importCategory.remove();
+		Assert.assertNull(ImportCategory.find.findByCode("sampleCat1"));
+	}
+	
+	public ImportCategory createImportCategory(String name, String code)
+	{
+		ImportCategory importCategory = new ImportCategory();
+		importCategory.name=name;
+		importCategory.code=code;
+		return importCategory;
+	}
+	@Test
 	public void removeResolution() throws DAOException
 	{
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		Resolution resol = resolutionDAO.findByCode("resol1");
-		resolutionDAO.remove(resol);
-		Assert.assertNull(resolutionDAO.findByCode("resol1"));
+		Resolution resol = Resolution.find.findByCode("resol1");
+		resol.remove();
+		Assert.assertNull(Resolution.find.findByCode("resol1"));
 		
 	}
 	
 	@Test
 	public void removeState() throws DAOException
 	{
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		State state = stateDAO.findByCode("state1");
-		stateDAO.remove(state);
-		state = stateDAO.findByCode("state1");
+		State state = State.find.findByCode("state1");
+		state.remove();
+		state = State.find.findByCode("state1");
 		Assert.assertNull(state);
 	}
 	
 	@Test
 	public void removeInstrumentUsedType() throws DAOException
 	{
-		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		InstrumentUsedType instrumentUsedType = instrumentUsedTypeDAO.findByCode("inst1");
-		instrumentUsedTypeDAO.remove(instrumentUsedType);
-		Assert.assertNull(instrumentUsedTypeDAO.findByCode("inst1"));
+		InstrumentUsedType instrumentUsedType = InstrumentUsedType.find.findByCode("inst1");
+		instrumentUsedType.remove();
+		Assert.assertNull(InstrumentUsedType.find.findByCode("inst1"));
 		
 		//Remove all instrument
-		instrumentUsedType = instrumentUsedTypeDAO.findByCode("inst3");
-		instrumentUsedTypeDAO.remove(instrumentUsedType);
-		instrumentUsedType = instrumentUsedTypeDAO.findByCode("inst4");
-		instrumentUsedTypeDAO.remove(instrumentUsedType);
+		instrumentUsedType = InstrumentUsedType.find.findByCode("inst3");
+		instrumentUsedType.remove();
+		instrumentUsedType = InstrumentUsedType.find.findByCode("inst4");
+		instrumentUsedType.remove();
 		
 	}
 	
 	@Test
 	public void removePurificationMethodType() throws DAOException
 	{
-		PurificationMethodTypeDAO purificationMethodTypeDAO = Spring.getBeanOfType(PurificationMethodTypeDAO.class);
-		PurificationMethodType purificationMethodType = purificationMethodTypeDAO.findByCode("purif1");
-		purificationMethodTypeDAO.remove(purificationMethodType);
-		Assert.assertNull(purificationMethodTypeDAO.findByCode("purif1"));
+		PurificationMethodType purificationMethodType = PurificationMethodType.find.findByCode("purif1");
+		purificationMethodType.remove();
+		Assert.assertNull(PurificationMethodType.find.findByCode("purif1"));
 		//Remove all purif
-		purificationMethodType = purificationMethodTypeDAO.findByCode("purif2");
-		purificationMethodTypeDAO.remove(purificationMethodType);
+		purificationMethodType = PurificationMethodType.find.findByCode("purif2");
+		purificationMethodType.remove();
 	}
 	
 	@Test
 	public void removeQualityControlType() throws DAOException
 	{
-		QualityControlTypeDAO qualityControlTypeDAO = Spring.getBeanOfType(QualityControlTypeDAO.class);
-		QualityControlType qualityControlType = qualityControlTypeDAO.findByCode("qc1");
-		qualityControlTypeDAO.remove(qualityControlType);
-		Assert.assertNull(qualityControlTypeDAO.findByCode("qc1"));
+		QualityControlType qualityControlType = QualityControlType.find.findByCode("qc1");
+		qualityControlType.remove();
+		Assert.assertNull(QualityControlType.find.findByCode("qc1"));
 		
 		//Remove all quality
-		qualityControlType = qualityControlTypeDAO.findByCode("qc2");
-		qualityControlTypeDAO.remove(qualityControlType);
+		qualityControlType = QualityControlType.find.findByCode("qc2");
+		qualityControlType.remove();
 	}
 	
 	@Test
 	public void removeExperimentCategory() throws DAOException
 	{
-		ExperimentCategoryDAO experimentCategoryDAO = Spring.getBeanOfType(ExperimentCategoryDAO.class);
-		ExperimentCategory experimentCategory = experimentCategoryDAO.findByCode("expCat1");
-		experimentCategoryDAO.remove(experimentCategory);
-		Assert.assertNull(experimentCategoryDAO.findByCode("expCat1"));
+		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
+		experimentCategory.remove();
+		Assert.assertNull(ExperimentCategory.find.findByCode("expCat1"));
 	}
 	
 	@Test
 	public void removeExperimentType() throws DAOException
 	{
-		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-		ExperimentType experimentType = experimentTypeDAO.findByCode("exp1");
-		experimentTypeDAO.remove(experimentType);
-		Assert.assertNull(experimentTypeDAO.findByCode("exp1"));
+		ExperimentType experimentType = ExperimentType.find.findByCode("exp1");
+		experimentType.remove();
+		Assert.assertNull(ExperimentType.find.findByCode("exp1"));
 		//Remove all experiment
-		experimentType = experimentTypeDAO.findByCode("exp2");
-		experimentTypeDAO.remove(experimentType);
+		experimentType = ExperimentType.find.findByCode("exp2");
+		experimentType.remove();
 	}
 	
 	@Test
 	public void removeProcessCategory() throws DAOException
 	{
-		ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
-		ProcessCategory processCategory = processCategoryDAO.findByCode("processCat1");
-		processCategoryDAO.remove(processCategory);
-		Assert.assertNull(processCategoryDAO.findByCode("processCat1"));
+		ProcessCategory processCategory = ProcessCategory.find.findByCode("processCat1");
+		processCategory.remove();
+		Assert.assertNull(ProcessCategory.find.findByCode("processCat1"));
 	}
 	
 	@Test
@@ -1715,85 +1660,76 @@ public class SpringTest extends AbstractTests{
 	@Test
 	public void removeReagentType() throws DAOException
 	{
-		ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
-		ReagentType reagentType = reagentTypeDAO.findByCode("reagent1");
-		reagentTypeDAO.remove(reagentType);
-		Assert.assertNull(reagentTypeDAO.findByCode("reagent1"));
+		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
+		reagentType.remove();
+		Assert.assertNull(ReagentType.find.findByCode("reagent1"));
 		
 		//Remove state2
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		State state = stateDAO.findByCode("state2");
-		stateDAO.remove(state);
+		State state = State.find.findByCode("state2");
+		state.remove();
 		//remove resol2
-		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		Resolution resolution = resolutionDAO.findByCode("resol2");
-		resolutionDAO.remove(resolution);
+		Resolution resolution = Resolution.find.findByCode("resol2");
+		resolution.remove();
 		//remove cat2
-		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-		MeasureCategory measureCategory = measureCategoryDAO.findByCode("cat2");
-		measureCategoryDAO.remove(measureCategory);
+		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
+		measureCategory.remove();
 		
 	}
 	
 	@Test
 	public void removeContainerSupportCategory() throws DAOException
 	{
-		ContainerSupportCategoryDAO containerSupportCategoryDAO = Spring.getBeanOfType(ContainerSupportCategoryDAO.class);
-		ContainerSupportCategory containerSupportCategory = containerSupportCategoryDAO.findByCode("support1");
-		containerSupportCategoryDAO.remove(containerSupportCategory);
-		Assert.assertNull(containerSupportCategoryDAO.findByCode("support1"));
-		containerSupportCategory = containerSupportCategoryDAO.findByCode("support2");
-		containerSupportCategoryDAO.remove(containerSupportCategory);
-		containerSupportCategory = containerSupportCategoryDAO.findByCode("support3");
-		containerSupportCategoryDAO.remove(containerSupportCategory);
-		containerSupportCategory = containerSupportCategoryDAO.findByCode("support4");
-		containerSupportCategoryDAO.remove(containerSupportCategory);
-		containerSupportCategory = containerSupportCategoryDAO.findByCode("support5");
-		containerSupportCategoryDAO.remove(containerSupportCategory);
-		containerSupportCategory = containerSupportCategoryDAO.findByCode("support6");
-		containerSupportCategoryDAO.remove(containerSupportCategory);
+		ContainerSupportCategory containerSupportCategory = ContainerSupportCategory.find.findByCode("support1");
+		containerSupportCategory.remove();
+		Assert.assertNull(ContainerSupportCategory.find.findByCode("support1"));
+		containerSupportCategory = ContainerSupportCategory.find.findByCode("support2");
+		containerSupportCategory.remove();
+		containerSupportCategory = ContainerSupportCategory.find.findByCode("support3");
+		containerSupportCategory.remove();
+		containerSupportCategory = ContainerSupportCategory.find.findByCode("support4");
+		containerSupportCategory.remove();
+		containerSupportCategory = ContainerSupportCategory.find.findByCode("support5");
+		containerSupportCategory.remove();
+		containerSupportCategory = ContainerSupportCategory.find.findByCode("support6");
+		containerSupportCategory.remove();
 	}
 	
 	@Test
 	public void removeInstrumentCategory() throws DAOException
 	{
-		InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
-		InstrumentCategory instrumentCategory = instrumentCategoryDAO.findByCode("InstCat1");
-		instrumentCategoryDAO.remove(instrumentCategory);
-		Assert.assertNull(instrumentCategoryDAO.findByCode("InstCat1"));
-		instrumentCategory = instrumentCategoryDAO.findByCode("InstCat2");
-		instrumentCategoryDAO.remove(instrumentCategory);
+		InstrumentCategory instrumentCategory = InstrumentCategory.find.findByCode("InstCat1");
+		instrumentCategory.remove();
+		Assert.assertNull(InstrumentCategory.find.findByCode("InstCat1"));
+		instrumentCategory = InstrumentCategory.find.findByCode("InstCat2");
+		instrumentCategory.remove();
 	}
 	
 	@Test
 	public void removeProtocol() throws DAOException
 	{
-		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
-		Protocol protocol = protocolDAO.findByName("updateProto1");
-		protocolDAO.remove(protocol);
-		Assert.assertNull(protocolDAO.findByName("updateProto1"));
-		ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
-		ProtocolCategory protocolCategory = protocolCategoryDAO.findByCode("protoCat2");
-		protocolCategoryDAO.remove(protocolCategory);
-		protocol = protocolDAO.findByName("proto1");
-		protocolDAO.remove(protocol);
-		protocol = protocolDAO.findByName("proto3");
-		protocolDAO.remove(protocol);
-		protocol = protocolDAO.findByName("proto4");
-		protocolDAO.remove(protocol);
+		Protocol protocol = Protocol.findByName("updateProto1");
+		protocol.remove();
+		Assert.assertNull(Protocol.findByName("updateProto1"));
+		ProtocolCategory protocolCategory = ProtocolCategory.find.findByCode("protoCat2");
+		protocolCategory.remove();
+		protocol = Protocol.find.findByCode("proto2");
+		protocol.remove();
+		protocol = Protocol.find.findByCode("proto3");
+		protocol.remove();
+		protocol = Protocol.find.findByCode("proto4");
+		protocol.remove();
 	}
 	
 	@Test
 	public void removeProtocolCategory() throws DAOException
 	{
-		ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
-		ProtocolCategory protocolCategory = protocolCategoryDAO.findByCode("protoCat1");
-		protocolCategoryDAO.remove(protocolCategory);
-		Assert.assertNull(protocolCategoryDAO.findByCode("protoCat1"));
-		protocolCategory = protocolCategoryDAO.findByCode("protoCat3");
-		protocolCategoryDAO.remove(protocolCategory);
-		protocolCategory = protocolCategoryDAO.findByCode("protoCat4");
-		protocolCategoryDAO.remove(protocolCategory);
+		ProtocolCategory protocolCategory = ProtocolCategory.find.findByCode("protoCat1");
+		protocolCategory.remove();
+		Assert.assertNull(ProtocolCategory.find.findByCode("protoCat1"));
+		protocolCategory = ProtocolCategory.find.findByCode("protoCat3");
+		protocolCategory.remove();
+		protocolCategory = ProtocolCategory.find.findByCode("protoCat4");
+		protocolCategory.remove();
 		
 	}
 }

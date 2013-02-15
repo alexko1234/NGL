@@ -335,10 +335,12 @@ DROP TABLE IF EXISTS `measure_value`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `measure_value` (
   `id` bigint(20) NOT NULL auto_increment,
+  `code` varchar(255) NOT NULL,
   `value` varchar(255) NOT NULL,
   `default_value` tinyint(1) NOT NULL default '0',
   `measure_category_id` bigint(20) default NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `uq_measure_value_code` (`code`)
 ) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -529,12 +531,14 @@ DROP TABLE IF EXISTS `protocol`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `protocol` (
   `id` bigint(20) NOT NULL auto_increment,
+  `code` varchar(255) NOT NULL,
   `name` varchar(255) default NULL,
   `file_path` varchar(255) default NULL,
   `fk_protocol_category` bigint(20) NOT NULL,
   `version` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `fk_protocol_protocolCategory` (`fk_protocol_category`)
+  KEY `fk_protocol_protocolCategory` (`fk_protocol_category`),
+  UNIQUE KEY `uq_protocol_code` (`code`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -674,6 +678,19 @@ CREATE TABLE `sample_category` (
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+DROP TABLE IF EXISTS `import_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `import_category` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL,
+  `code` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `uq_import_category_code` (`code`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
 --
 -- Table structure for table `sample_type`
 --
@@ -688,6 +705,19 @@ CREATE TABLE `sample_type` (
   PRIMARY KEY  (`id`),
   KEY `ix_sample_type_commonInfoType_15` (`fk_common_info_type`),
   KEY `ix_sample_type_sampleCategory` (`fk_sample_category`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+DROP TABLE IF EXISTS `import_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `import_type` (
+  `id` bigint(20) NOT NULL,
+  `fk_common_info_type` bigint(20) NOT NULL,
+  `fk_import_category` bigint(20) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `ix_import_type_commonInfoType_15` (`fk_common_info_type`),
+  KEY `ix_import_type_importCategory` (`fk_import_category`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -812,6 +842,7 @@ DROP TABLE IF EXISTS `value`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `value` (
   `id` bigint(20) NOT NULL auto_increment,
+  `code` varchar(255) NOT NULL,
   `value` varchar(255) NOT NULL,
   `default_value` tinyint(1) NOT NULL default '0',
   `property_definition_id` bigint(20) default NULL,
@@ -828,6 +859,7 @@ INSERT INTO `object_type`(`code`,`generic`) VALUES('Experiment','0');
 INSERT INTO `object_type`(`code`,`generic`) VALUES('Purification','0');
 INSERT INTO `object_type`(`code`,`generic`) VALUES('ControlQuality','0');
 INSERT INTO `object_type`(`code`,`generic`) VALUES('Transfer','0');
+INSERT INTO `object_type`(`code`,`generic`) VALUES('Import','0');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

@@ -19,7 +19,7 @@ public class ReagentUsed {
 	@JsonIgnore
 	public ReagentType getReagentType() {
 		try {
-			return new ObjectSGBDReference<ReagentType>(ReagentType.class,reagentCode).getObject();
+			//return new ObjectSGBDReference<ReagentType>(ReagentType.class,reagentCode).getObject();
 		} catch (Exception e) {
 			// TODO
 		}

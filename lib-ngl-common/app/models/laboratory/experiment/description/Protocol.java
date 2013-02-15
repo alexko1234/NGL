@@ -2,10 +2,13 @@ package models.laboratory.experiment.description;
 
 import java.util.List;
 
-public class Protocol{
+import models.laboratory.experiment.description.dao.ProtocolDAO;
+import models.utils.Model;
+import play.modules.spring.Spring;
 
-	public Long id;
-	
+public class Protocol extends Model<Protocol>{
+
+
 	public String name;
 	public String filePath;
 	public String version;
@@ -14,6 +17,19 @@ public class Protocol{
 	
 	public List<ReagentType> reagentTypes;
 
+	public static Finder<Protocol> find = new Finder<Protocol>(ProtocolDAO.class.getName()); 
+	
+	public Protocol() {
+		super(ProtocolDAO.class.getName());
+	}
+	
+	public static Protocol findByName(String name)
+	{
+		ProtocolDAO protocolDAO = (ProtocolDAO) Spring.getBeanOfType(ProtocolDAO.class.getName());
+		return protocolDAO.findByName(name);
+	}
+	
+	
 	//TODO Detail manip et dosage manip ???
 	
 	/**

@@ -34,7 +34,7 @@ public class ContainerSupport {
 	@JsonIgnore
 	public ContainerSupportCategory getContainerSupportCategory(){
 		try {
-			return new ObjectSGBDReference<ContainerSupportCategory>(ContainerSupportCategory.class, categoryCode).getObject();
+			//return new ObjectSGBDReference<ContainerSupportCategory>(ContainerSupportCategory.class, categoryCode).getObject();
 		} catch (Exception e) {
 			// TODO
 			e.printStackTrace();

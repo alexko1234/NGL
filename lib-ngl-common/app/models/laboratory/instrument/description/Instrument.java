@@ -1,14 +1,18 @@
 package models.laboratory.instrument.description;
 
+import models.laboratory.instrument.description.dao.InstrumentDAO;
+import models.utils.Model;
 
-public class Instrument {
 
-	public Long id;
+public class Instrument extends Model<Instrument>{
+
 	
 	public String name;
 	
-	public String code;
-
+	public Instrument() {
+		super(InstrumentDAO.class.getName());
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

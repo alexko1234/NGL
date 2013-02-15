@@ -22,7 +22,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 
 	protected ProtocolDAO() {
 		super("protocol", Protocol.class, ProtocolMappingQuery.class,
-				"SELECT t.id, name, file_path, version, fk_protocol_category "+
+				"SELECT t.id, code, name, file_path, version, fk_protocol_category "+
 				"FROM protocol as t ",true);
 	}
 
@@ -42,40 +42,36 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 		return protocolMappingQuery.findObject(name);
 	}
 	
-	public Protocol findByCode(String code) throws DAOException
-	{
-		throw new DAOException("No code field");
-	}
-
-	public void add(List<Protocol> protocols, long idCommonInfoType) throws DAOException
+	public void save(List<Protocol> protocols, long idCommonInfoType) throws DAOException
 	{
 		//Add protocols list
 		if(protocols!=null && protocols.size()>0){
 			for(Protocol protocol : protocols){
-				add(protocol,idCommonInfoType);
+				save(protocol,idCommonInfoType);
 			}
 		}
 	}
 
-	public void add(Protocol protocol, long idCommonInfoType) throws DAOException
+	public void save(Protocol protocol, long idCommonInfoType) throws DAOException
 	{
 		String sql = "INSERT INTO common_info_type_protocol(fk_common_info_type, fk_protocol) VALUES(?,?)";
 		if(protocol.id==null)
-			protocol.id = add(protocol);
+			protocol.id = save(protocol);
 		jdbcTemplate.update(sql, idCommonInfoType, protocol.id);
 	}
 
-	public long add(Protocol protocol) throws DAOException
+	public long save(Protocol protocol) throws DAOException
 	{
 		//Check if category exist
 		if(protocol.protocolCategory!=null && protocol.protocolCategory.id==null)
 		{
 			ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
-			protocol.protocolCategory.id = protocolCategoryDAO.add(protocol.protocolCategory);
+			protocol.protocolCategory.id = protocolCategoryDAO.save(protocol.protocolCategory);
 		}
 
 		//Create new Protocol
 		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("code", protocol.code);
 		parameters.put("name", protocol.name);
 		parameters.put("file_path", protocol.filePath);
 		parameters.put("version", protocol.version);
@@ -90,7 +86,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 			String sql = "INSERT INTO protocol_reagent_type (fk_protocol,fk_reagent_type) VALUES(?,?)";
 			for(ReagentType reagentType : reagentTypes){
 				if(reagentType.id==null)
-					reagentType.id = reagentTypeDAO.add(reagentType);
+					reagentType.id = reagentTypeDAO.save(reagentType);
 				jdbcTemplate.update(sql, newId,reagentType.id);
 			}
 		}
@@ -100,8 +96,8 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 	public void update(Protocol protocol) throws DAOException
 	{
 		Protocol protoDB = findById(protocol.id);
-		String sql = "UPDATE protocol SET name=?, file_path=?, version=? WHERE id=?";
-		jdbcTemplate.update(sql, protocol.name, protocol.filePath, protocol.version, protocol.id);
+		String sql = "UPDATE protocol SET code=?, name=?, file_path=?, version=? WHERE id=?";
+		jdbcTemplate.update(sql, protocol.code, protocol.name, protocol.filePath, protocol.version, protocol.id);
 
 		//Update reagentTypes list
 		List<ReagentType> reagentTypes = protocol.reagentTypes;
@@ -110,7 +106,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 			String sqlReagent = "INSERT INTO protocol_reagent_type (fk_protocol,fk_reagent_type) VALUES(?,?)";
 			for(ReagentType reagentType : reagentTypes){
 				if(protoDB.reagentTypes==null || (protoDB.reagentTypes!=null && !protoDB.reagentTypes.contains(reagentType))){
-					reagentType.id = reagentTypeDAO.add(reagentType);
+					reagentType.id = reagentTypeDAO.save(reagentType);
 					jdbcTemplate.update(sqlReagent, protoDB.id, reagentType.id);
 				}
 			}

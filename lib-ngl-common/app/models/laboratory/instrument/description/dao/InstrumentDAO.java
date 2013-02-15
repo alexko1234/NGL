@@ -24,7 +24,7 @@ public class InstrumentDAO extends AbstractDAO<Instrument>{
 		return this.jdbcTemplate.query(sql, mapper, idInstrumentUsedType);
 	}
 	
-	public Instrument add(Instrument instrument, long idInstrumentUsedType)
+	public Instrument save(Instrument instrument, long idInstrumentUsedType)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("name", instrument.name);

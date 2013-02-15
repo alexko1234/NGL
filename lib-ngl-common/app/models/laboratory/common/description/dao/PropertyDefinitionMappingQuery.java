@@ -61,6 +61,7 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 		if(rs.getLong("mvId")!=0){
 			MeasureValue measureValue = new MeasureValue();
 			measureValue.id = rs.getLong("mvId");
+			measureValue.code=rs.getString("mvCode");
 			measureValue.defaultValue = rs.getBoolean("mvDefaultValue");
 			measureValue.value = rs.getString("value");
 			propertyDefinition.measureValue = measureValue;

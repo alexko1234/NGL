@@ -3,7 +3,6 @@ package models.utils.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.utils.ColumnMetaDataCallback;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -35,14 +34,10 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 	{
 		try {
 			String sql = "SELECT ";
-			boolean first=true;
 			for(String column : getColumns()){
-				if(first){
-					sql+=column;
-					first=false;
-				}else
-					sql+=", "+column;
+				sql+=column+", ";
 			}
+			sql = sql.substring(0, sql.lastIndexOf(","));
 			sql+=" FROM "+tableName;
 			return sql;
 		} catch (MetaDataAccessException e) {
@@ -100,7 +95,7 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 	}
 
 	@Transactional	
-	public long add(T value)
+	public long save(T value)
 	{
         SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
         

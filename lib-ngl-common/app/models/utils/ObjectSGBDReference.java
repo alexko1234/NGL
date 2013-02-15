@@ -1,8 +1,8 @@
 package models.utils;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import models.utils.Model.Finder;
 
-import com.avaje.ebean.Ebean;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  * Object used to retrieve an object define in the NGL SQL DB.
@@ -11,7 +11,7 @@ import com.avaje.ebean.Ebean;
  * @author galbini
  *
  */
-public class ObjectSGBDReference<T> implements IFetch<T>{
+public class ObjectSGBDReference<T extends Model<T>> implements IFetch<T>{
 	
 	@JsonIgnore
 	private Class<T> className;
@@ -34,11 +34,11 @@ public class ObjectSGBDReference<T> implements IFetch<T>{
 
 	@Override
 	public T getObject() throws Exception {
-		
-		
+		Finder<T> find = new Finder<T>(className.getName()+"DAO");
 		// TODO replace by generic SpringDAO find 
-		return Ebean.find(className).where()  
-			      .eq("code",code).findUnique();
+		//return Ebean.find(className).where()  
+		//	      .eq("code",code).findUnique();
+		return find.findByCode(code);
 	}
 
 }

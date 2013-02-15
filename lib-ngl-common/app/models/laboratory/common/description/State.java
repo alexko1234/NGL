@@ -1,53 +1,27 @@
 package models.laboratory.common.description;
 
 
-import java.util.HashMap;
-import java.util.Map;
-
 import models.laboratory.common.description.dao.StateDAO;
-import models.utils.dao.DAOException;
-import play.modules.spring.Spring;
+import models.utils.Model;
 
 /**
  * Value of the possible state of type
  * @author ejacoby
  *
  */
-public class State{
+public class State extends Model<State>{
 
-	public Long id;
-	
 	public String name;
-	
-	public String code;
 	
 	public boolean active;
 	
 	public Integer priority;
 	
-	public State() {
-		super();
-	}
-
-	public State(String name, String code, boolean active, Integer priority) {
-		super();
-		this.name = name;
-		this.code = code;
-		this.active = active;
-		this.priority = priority;
-	}
-
-	public static Map<String, String> getMapPossibleStates() throws DAOException
-	{
-		Map<String, String> mapPossibleStates = new HashMap<String, String>();
-		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-		for(State possibleState : stateDAO.findAll()){
-			mapPossibleStates.put(possibleState.id.toString(), possibleState.name);
-		}
-		return mapPossibleStates;
-	}
-
+	public static Finder<State> find = new Finder<State>(StateDAO.class.getName()); 
 	
+	public State() {
+		super(StateDAO.class.getName());
+	}
 
 	@Override
 	public int hashCode() {

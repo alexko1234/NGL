@@ -59,7 +59,7 @@ public class Sample extends DBObject{
 	@JsonIgnore
 	public SampleType getSampleType(){
 		try {
-			return new ObjectSGBDReference<SampleType>(SampleType.class,typeCode).getObject();
+			//return new ObjectSGBDReference<SampleType>(SampleType.class,typeCode).getObject();
 		} catch (Exception e) {
 			// TODO
 		
@@ -70,7 +70,7 @@ public class Sample extends DBObject{
 	@JsonIgnore
 	public SampleCategory getSampleCategory(){
 		try {
-			return new ObjectSGBDReference<SampleCategory>(SampleCategory.class,categoryCode).getObject();
+			//return new ObjectSGBDReference<SampleCategory>(SampleCategory.class,categoryCode).getObject();
 		} catch (Exception e) {
 			// TODO
 		

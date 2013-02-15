@@ -78,7 +78,7 @@ public class Experiment extends DBObject {
 	@JsonIgnore
 	public ExperimentType getExperimentType(){
 		try {
-			return new ObjectSGBDReference<ExperimentType>(ExperimentType.class,experimentTypeCode).getObject();
+			//return new ObjectSGBDReference<ExperimentType>(ExperimentType.class,experimentTypeCode).getObject();
 		} catch (Exception e) {
 			//TODO
 		

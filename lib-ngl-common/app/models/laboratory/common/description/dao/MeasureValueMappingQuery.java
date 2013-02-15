@@ -34,6 +34,7 @@ public class MeasureValueMappingQuery extends MappingSqlQuery<MeasureValue>{
 		measureValue.id=rs.getLong("id");
 		measureValue.value=rs.getString("value");
 		measureValue.defaultValue=rs.getBoolean("default_value");
+		measureValue.code=rs.getString("code");
 		long idCategory = rs.getLong("measure_category_id");
 		
 		MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);

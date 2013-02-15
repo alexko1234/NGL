@@ -2,6 +2,8 @@ package models.laboratory.common.description;
 
 import java.util.List;
 
+import models.laboratory.common.description.dao.PropertyDefinitionDAO;
+import models.utils.Model;
 import play.data.validation.Constraints.Required;
 
 /**
@@ -9,12 +11,7 @@ import play.data.validation.Constraints.Required;
  * @author ejacoby
  *
  */
-public class PropertyDefinition {
-
-	public Long id;
-
-	@Required
-	public String code;
+public class PropertyDefinition extends Model<PropertyDefinition>{
 
 	@Required	
 	public String name;
@@ -45,5 +42,9 @@ public class PropertyDefinition {
 
 	public MeasureValue measureValue;
 
+	public static Finder<PropertyDefinition> find = new Finder<PropertyDefinition>(PropertyDefinitionDAO.class.getName()); 
 	
+	public PropertyDefinition() {
+		super(PropertyDefinitionDAO.class.getName());
+	}
 }

@@ -44,34 +44,34 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		return instrumentUsedTypeMappingQuery.findObject(idCommonInfoType);
 	}
 
-	public void add(List<InstrumentUsedType> instrumentUsedTypes, long idCommonInfoType) throws DAOException
+	public void save(List<InstrumentUsedType> instrumentUsedTypes, long idCommonInfoType) throws DAOException
 	{
 		if(instrumentUsedTypes!=null && instrumentUsedTypes.size()>0){
 			for(InstrumentUsedType instrumentUsedType : instrumentUsedTypes){
-				add(instrumentUsedType, idCommonInfoType);
+				save(instrumentUsedType, idCommonInfoType);
 			}
 		}
 	}
 
-	public void add(InstrumentUsedType instrumentUsedType, long idCommonInfoType) throws DAOException
+	public void save(InstrumentUsedType instrumentUsedType, long idCommonInfoType) throws DAOException
 	{
 		String sql = "INSERT INTO common_info_type_instrument_type(fk_common_info_type, fk_instrument_type) VALUES(?,?)";
 		if(instrumentUsedType.id==null)
-			instrumentUsedType.id = add(instrumentUsedType);
+			instrumentUsedType.id = save(instrumentUsedType);
 		jdbcTemplate.update(sql, idCommonInfoType, instrumentUsedType.id);
 	}
 
-	public long add(InstrumentUsedType instrumentUsedType) throws DAOException
+	public long save(InstrumentUsedType instrumentUsedType) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		instrumentUsedType.id =commonInfoTypeDAO.add(instrumentUsedType);
+		instrumentUsedType.id =commonInfoTypeDAO.save(instrumentUsedType);
 		instrumentUsedType.setCommonInfoType(instrumentUsedType);
 		//Check if instrumentCategory exist
 		if(instrumentUsedType.instrumentCategory!=null && instrumentUsedType.instrumentCategory.id==null)
 		{
 			InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
-			instrumentUsedType.instrumentCategory.id = instrumentCategoryDAO.add(instrumentUsedType.instrumentCategory);
+			instrumentUsedType.instrumentCategory.id = instrumentCategoryDAO.save(instrumentUsedType.instrumentCategory);
 		}
 		//Create new InstrumentUsedType
 		Map<String, Object> parameters = new HashMap<String, Object>();
@@ -85,7 +85,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		if(instruments!=null && instruments.size()>0){
 			InstrumentDAO instrumentDAO = Spring.getBeanOfType(InstrumentDAO.class);
 			for(Instrument instrument : instruments){
-				instrumentDAO.add(instrument, instrumentUsedType.id);
+				instrumentDAO.save(instrument, instrumentUsedType.id);
 			}
 		}
 		return instrumentUsedType.id;
@@ -105,7 +105,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 			InstrumentDAO instrumentDAO = Spring.getBeanOfType(InstrumentDAO.class);
 			for(Instrument instrument : instruments){
 				if(instrumentUsedTypeDB!=null && !instrumentUsedTypeDB.instruments.contains(instrument)){
-					instrumentDAO.add(instrument, instrumentUsedType.id);
+					instrumentDAO.save(instrument, instrumentUsedType.id);
 				}
 			}
 		}

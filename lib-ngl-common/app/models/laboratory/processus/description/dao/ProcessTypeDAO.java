@@ -25,16 +25,16 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 				"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
 
-	public long add(ProcessType processType) throws DAOException
+	public long save(ProcessType processType) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		processType.id = commonInfoTypeDAO.add(processType);
+		processType.id = commonInfoTypeDAO.save(processType);
 		//Check if category exist
 		if(processType.processCategory!=null && processType.processCategory.id==null)
 		{
 			ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
-			processType.processCategory.id = processCategoryDAO.add(processType.processCategory);
+			processType.processCategory.id = processCategoryDAO.save(processType.processCategory);
 		}
 
 		//Create new processType
@@ -51,7 +51,7 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 			String sql = "INSERT INTO process_experiment_type(fk_process_type, fk_experiment_type) VALUES(?,?)";
 			for(ExperimentType experimentType : experimentTypes){
 				if(experimentType.id==null)
-					experimentType.id = experimentTypeDAO.add(experimentType);
+					experimentType.id = experimentTypeDAO.save(experimentType);
 				jdbcTemplate.update(sql, processType.id, experimentType.id);
 			}
 		}
@@ -72,7 +72,7 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 			for(ExperimentType experimentType : experimentTypes){
 				if(processTypeDB.experimentTypes==null || (processTypeDB.experimentTypes!=null && !processTypeDB.experimentTypes.contains(experimentType))){
 					if(experimentType.id==null)
-						experimentType.id = experimentTypeDAO.add(experimentType);
+						experimentType.id = experimentTypeDAO.save(experimentType);
 					jdbcTemplate.update(sql, processType.id, experimentType.id);
 				}
 			}

@@ -45,16 +45,16 @@ public class InstrumentCategoryDAO extends AbstractDAO<InstrumentCategory>{
 	}
 
 
-	public long add(InstrumentCategory instrumentCategory)
+	public long save(InstrumentCategory instrumentCategory)
 	{
-		instrumentCategory.id = super.add(instrumentCategory);
+		instrumentCategory.id = super.save(instrumentCategory);
 		//Add in and out containerSupportCategories
 		ContainerSupportCategoryDAO containerSupportCategoryDAO = Spring.getBeanOfType(ContainerSupportCategoryDAO.class);
 		if(instrumentCategory.inContainerSupportCategories!=null && instrumentCategory.inContainerSupportCategories.size()>0){
 			String sqlIn = "INSERT INTO instrumentCategory_inContainerSupportCategory(fk_instrument_category,fk_container_support_category) VALUES(?,?)";
 			for(ContainerSupportCategory containerSupportCategory : instrumentCategory.inContainerSupportCategories){
 				if(containerSupportCategory.id==null)
-					containerSupportCategory.id=containerSupportCategoryDAO.add(containerSupportCategory);
+					containerSupportCategory.id=containerSupportCategoryDAO.save(containerSupportCategory);
 				jdbcTemplate.update(sqlIn, instrumentCategory.id, containerSupportCategory.id);
 			}
 		}
@@ -62,7 +62,7 @@ public class InstrumentCategoryDAO extends AbstractDAO<InstrumentCategory>{
 			String sqlOut = "INSERT INTO instrumentCategory_outContainerSupportCategory(fk_instrument_category,fk_container_support_category) VALUES(?,?)";
 			for(ContainerSupportCategory containerSupportCategory : instrumentCategory.outContainerSupportCategories){
 				if(containerSupportCategory.id==null)
-					containerSupportCategory.id=containerSupportCategoryDAO.add(containerSupportCategory);
+					containerSupportCategory.id=containerSupportCategoryDAO.save(containerSupportCategory);
 				jdbcTemplate.update(sqlOut, instrumentCategory.id, containerSupportCategory.id);
 			}
 		}
@@ -82,7 +82,7 @@ public class InstrumentCategoryDAO extends AbstractDAO<InstrumentCategory>{
 			for(ContainerSupportCategory containerSupportCategory : instrumentCategory.inContainerSupportCategories){
 				if(instrumentCategoryDB.inContainerSupportCategories==null || (instrumentCategoryDB.inContainerSupportCategories!=null && !instrumentCategoryDB.inContainerSupportCategories.contains(containerSupportCategory))){
 					if(containerSupportCategory.id==null)
-						containerSupportCategory.id=containerSupportCategoryDAO.add(containerSupportCategory);
+						containerSupportCategory.id=containerSupportCategoryDAO.save(containerSupportCategory);
 					jdbcTemplate.update(sqlIn, instrumentCategory.id, containerSupportCategory.id);
 				}
 			}
@@ -92,7 +92,7 @@ public class InstrumentCategoryDAO extends AbstractDAO<InstrumentCategory>{
 			for(ContainerSupportCategory containerSupportCategory : instrumentCategory.outContainerSupportCategories){
 				if(instrumentCategoryDB.outContainerSupportCategories==null || (instrumentCategoryDB.outContainerSupportCategories!=null && !instrumentCategoryDB.outContainerSupportCategories.contains(containerSupportCategory))){
 					if(containerSupportCategory.id==null)
-						containerSupportCategory.id=containerSupportCategoryDAO.add(containerSupportCategory);
+						containerSupportCategory.id=containerSupportCategoryDAO.save(containerSupportCategory);
 					jdbcTemplate.update(sqlOut, instrumentCategory.id, containerSupportCategory.id);
 				}
 			}

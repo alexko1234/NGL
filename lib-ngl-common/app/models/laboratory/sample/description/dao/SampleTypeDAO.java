@@ -21,16 +21,16 @@ public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
 				"FROM sample_type as t JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
 
-	public long add(SampleType sampleType) throws DAOException
+	public long save(SampleType sampleType) throws DAOException
 	{
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		sampleType.id = commonInfoTypeDAO.add(sampleType);
+		sampleType.id = commonInfoTypeDAO.save(sampleType);
 		//Add sampleCategory
 		if(sampleType.sampleCategory!=null && sampleType.sampleCategory.id==null)
 		{
 			SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
-			sampleType.sampleCategory.id = sampleCategoryDAO.add(sampleType.sampleCategory);
+			sampleType.sampleCategory.id = sampleCategoryDAO.save(sampleType.sampleCategory);
 		}
 
 		//Create sampleType 

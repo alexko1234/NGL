@@ -23,20 +23,19 @@ public class MeasureCategoryDAO extends AbstractDAOMapping<MeasureCategory>{
 				"FROM measure_category as t ", true);
 	}
 	
-	public long add(MeasureCategory measureCategory)
+	public long save(MeasureCategory measureCategory)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("name", measureCategory.name);
 		parameters.put("code", measureCategory.code);
 		
 		measureCategory.id = (Long) jdbcInsert.executeAndReturnKey(parameters);
-		//measureCategory = (MeasureCategory) super.add(measureCategory);
 		//Add measureValue
 		if(measureCategory.measurePossibleValues!=null && measureCategory.measurePossibleValues.size()>0){
 			MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
 			for(MeasureValue measureValue : measureCategory.measurePossibleValues){
 				measureValue.measureCategory=measureCategory;
-				measureValueDAO.add(measureValue);
+				measureValueDAO.save(measureValue);
 			}
 		}
         return measureCategory.id;

@@ -100,7 +100,7 @@ public class Container extends DBObject {
 	@JsonIgnore
 	public ContainerCategory getContainerCategory(){
 		try {
-			return new ObjectSGBDReference<ContainerCategory>(ContainerCategory.class,code).getObject();
+			//return new ObjectSGBDReference<ContainerCategory>(ContainerCategory.class,code).getObject();
 		} catch (Exception e) {
 			// TODO
 		}

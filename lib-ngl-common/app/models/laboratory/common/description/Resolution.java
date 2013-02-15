@@ -1,30 +1,23 @@
 package models.laboratory.common.description;
 
+import models.laboratory.common.description.dao.ResolutionDAO;
+import models.utils.Model;
+
 
 /**
  * Value of the resolution of final possible state
  * @author ejacoby
  *
  */
-public class Resolution{
+public class Resolution extends Model<Resolution>{
 
-	public Long id;
-	
 	public String name;
 	
-	public String code;
+	public static Finder<Resolution> find = new Finder<Resolution>(ResolutionDAO.class.getName());
 	
 	public Resolution() {
-		super();
+		super(ResolutionDAO.class.getName());
 	}
-
-	public Resolution(String name, String code) {
-		super();
-		this.name = name;
-		this.code = code;
-	}
-
-	
 
 	@Override
 	public int hashCode() {

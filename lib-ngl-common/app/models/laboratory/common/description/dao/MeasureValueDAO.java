@@ -18,14 +18,14 @@ public class MeasureValueDAO extends AbstractDAOMapping<MeasureValue>{
 
 	protected MeasureValueDAO() {
 		super("measure_value", MeasureValue.class, MeasureValueMappingQuery.class,
-				"SELECT t.id, value, default_value, measure_category_id "+
+				"SELECT t.id, code, value, default_value, measure_category_id "+
 						"FROM measure_value as t ",true);
 	}
 
 
 	public List<MeasureValue> findByMeasureCategory(long idMeasureCategory)
 	{
-		String sql = "SELECT id,value,default_value " +
+		String sql = "SELECT id, code, value,default_value " +
 				"FROM measure_value "+
 				"WHERE measure_category_id=?";
 		BeanPropertyRowMapper<MeasureValue> mapper = new BeanPropertyRowMapper<MeasureValue>(MeasureValue.class);
@@ -34,28 +34,24 @@ public class MeasureValueDAO extends AbstractDAOMapping<MeasureValue>{
 
 	public MeasureValue findByValue(String value)
 	{
-		String sql = "SELECT id,value,default_value " +
+		String sql = "SELECT id, code, value,default_value " +
 				"FROM measure_value "+
 				"WHERE value=?";
 		BeanPropertyRowMapper<MeasureValue> mapper = new BeanPropertyRowMapper<MeasureValue>(MeasureValue.class);
 		return this.jdbcTemplate.queryForObject(sql, mapper, value);
 	}
 	
-	public MeasureValue findByCode(String code) throws DAOException
-	{
-		throw new DAOException("No code field");
-	}
-
-	public long add(MeasureValue measureValue)
+	public long save(MeasureValue measureValue)
 	{
 		//Check if category exist
 		if(measureValue.measureCategory!=null && measureValue.measureCategory.id==null)
 		{
 			MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-			measureValue.measureCategory.id = measureCategoryDAO.add(measureValue.measureCategory);
+			measureValue.measureCategory.id = measureCategoryDAO.save(measureValue.measureCategory);
 		}
 
 		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("code", measureValue.code);
 		parameters.put("value", measureValue.value);
 		parameters.put("default_value", measureValue.defaultValue);
 		parameters.put("measure_category_id", measureValue.measureCategory.id);
@@ -68,8 +64,8 @@ public class MeasureValueDAO extends AbstractDAOMapping<MeasureValue>{
 
 	@Override
 	public void update(MeasureValue measureValue) throws DAOException {
-		String sql = "UPDATE measure_value SET value=?, default_value=? WHERE id=?";
-		jdbcTemplate.update(sql, measureValue.value, measureValue.defaultValue, measureValue.id);
+		String sql = "UPDATE measure_value SET code=?, value=?, default_value=? WHERE id=?";
+		jdbcTemplate.update(sql, measureValue.code, measureValue.value, measureValue.defaultValue, measureValue.id);
 	}
 
 }

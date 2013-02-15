@@ -20,7 +20,7 @@ public interface IDAO<T> {
 
 	public T findByCode(String code) throws DAOException;
 
-	public long add(T value) throws DAOException;
+	public long save(T value) throws DAOException;
 	
 	public void update(T value) throws DAOException;;
 	

@@ -1,4 +1,4 @@
-package models.utils;
+package models.utils.dao;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;

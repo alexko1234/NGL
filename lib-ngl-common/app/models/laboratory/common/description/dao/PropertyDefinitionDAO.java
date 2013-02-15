@@ -21,7 +21,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 	protected PropertyDefinitionDAO() {
 		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.class, 
-				"SELECT t.id as pId,t.name as pName,t.code as codeSearch, description, required,active,choice_in_list, type,display_format,display_order,t.default_value as pDefaultValue, level, in_out,propagation, mc.id as mcId,mc.name as mcName,mc.code as mcCode,mv.id as mvId,value,mv.default_value as mvDefaultValue "+
+				"SELECT t.id as pId,t.name as pName,t.code as codeSearch, description, required,active,choice_in_list, type,display_format,display_order,t.default_value as pDefaultValue, level, in_out,propagation, mc.id as mcId,mc.name as mcName,mc.code as mcCode,mv.id as mvId,mv.code as mvCode, value,mv.default_value as mvDefaultValue "+
 				"FROM property_definition as t "+
 				"LEFT OUTER JOIN measure_category as mc ON  measure_category_id=mc.id "+
 				"LEFT OUTER JOIN measure_value as mv ON measure_value_id=mv.id ",true);
@@ -35,7 +35,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	}
 
 	@Override
-	public long add(PropertyDefinition value) throws DAOException {
+	public long save(PropertyDefinition value) throws DAOException {
 		throw new DAOException("Must be inserted with commonInfoType id");
 	}
 
@@ -49,7 +49,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery = new PropertyDefinitionMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
 		return propertyDefinitionMappingQuery.findObject(code);
 	}
-	public PropertyDefinition add(PropertyDefinition propertyDefinition, long idCommonInfoType)
+	public PropertyDefinition save(PropertyDefinition propertyDefinition, long idCommonInfoType)
 	{
 		//Create propertyDefinition
 		Map<String, Object> parameters = new HashMap<String, Object>();
@@ -75,7 +75,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		if(values!=null && values.size()>0){
 			ValueDAO valueDao = Spring.getBeanOfType(ValueDAO.class);
 			for(Value value : values){
-				valueDao.add(value, propertyDefinition.id);
+				valueDao.save(value, propertyDefinition.id);
 			}
 		}
 
@@ -84,7 +84,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 			if(propertyDefinition.measureCategory.id==null){
 
 				MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-				propertyDefinition.measureCategory.id = measureCategoryDAO.add(propertyDefinition.measureCategory);
+				propertyDefinition.measureCategory.id = measureCategoryDAO.save(propertyDefinition.measureCategory);
 			}
 			//Update propertyDefinition
 			String sqlCategory = "UPDATE property_definition SET measure_category_id=? WHERE id=?";
@@ -95,7 +95,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		if(propertyDefinition.measureValue!=null){
 			if(propertyDefinition.measureValue.id==null){
 				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-				propertyDefinition.measureValue.id = measureValueDAO.add(propertyDefinition.measureValue);
+				propertyDefinition.measureValue.id = measureValueDAO.save(propertyDefinition.measureValue);
 			}
 			//Update propertyDefinition
 			String sqlValue = "UPDATE property_definition SET measure_value_id=? WHERE id=?";
@@ -116,7 +116,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 			ValueDAO valueDao = Spring.getBeanOfType(ValueDAO.class);
 			for(Value value : values){
 				if(propertyDefinitionDB.possibleValues==null || (propertyDefinition.possibleValues!=null && !propertyDefinitionDB.possibleValues.contains(value))){
-					valueDao.add(value, propertyDefinition.id);
+					valueDao.save(value, propertyDefinition.id);
 				}
 			}
 		}
@@ -126,7 +126,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 			if(propertyDefinition.measureCategory.id==null){
 
 				MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-				propertyDefinition.measureCategory.id = measureCategoryDAO.add(propertyDefinition.measureCategory);
+				propertyDefinition.measureCategory.id = measureCategoryDAO.save(propertyDefinition.measureCategory);
 			}
 			//Update propertyDefinition
 			String sqlCategory = "UPDATE property_definition SET measure_category_id=? WHERE id=?";
@@ -137,7 +137,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		if(propertyDefinition.measureValue!=null){
 			if(propertyDefinition.measureValue.id==null){
 				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
-				propertyDefinition.measureValue.id = measureValueDAO.add(propertyDefinition.measureValue);
+				propertyDefinition.measureValue.id = measureValueDAO.save(propertyDefinition.measureValue);
 			}
 			//Update propertyDefinition
 			String sqlValue = "UPDATE property_definition SET measure_value_id=? WHERE id=?";

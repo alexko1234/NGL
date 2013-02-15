@@ -28,7 +28,7 @@ public class InstrumentUsed {
 	public InstrumentCategory getInstrumentCategory(){
 
 		try {
-			return new ObjectSGBDReference<InstrumentCategory>(InstrumentCategory.class,categoryCode).getObject();
+			//return new ObjectSGBDReference<InstrumentCategory>(InstrumentCategory.class,categoryCode).getObject();
 		} catch (Exception e) {
 			// TODO
 		}
