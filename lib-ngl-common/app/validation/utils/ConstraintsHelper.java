@@ -126,7 +126,7 @@ public class ConstraintsHelper {
 		} else if (TBoolean.class.getName().equals(type)) {
 			o = TBoolean.fromValue(value.toString());
 		} else {
-			Logger.info("Erreur de type :"+type );
+			Logger.info("Erreur de type :"+type);
 		}
 		return o;
 	}
