@@ -43,7 +43,6 @@ CREATE TABLE `common_info_type` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uq_common_info_type_type_name` (`name`),
   UNIQUE KEY `uq_common_info_type_type_code` (`code`),
-  UNIQUE KEY `uq_common_info_type_collection_n` (`collection_name`),
   UNIQUE KEY `uq_common_info_type_name` (`name`),
   UNIQUE KEY `uq_common_info_type_code` (`code`),
   KEY `ix_common_info_type_objectType_1` (`fk_object_type`)
