@@ -20,7 +20,7 @@ public class InstrumentUsedType extends CommonInfoType{
 	public static Finder<InstrumentUsedType> find = new Finder<InstrumentUsedType>(InstrumentUsedTypeDAO.class.getName()); 
 	
 	public InstrumentUsedType() {
-		super.classNameDAO = InstrumentUsedTypeDAO.class.getName();
+		super(InstrumentUsedTypeDAO.class.getName());
 	}
 	
 	

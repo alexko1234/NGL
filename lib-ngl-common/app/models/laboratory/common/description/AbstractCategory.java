@@ -7,7 +7,7 @@ import models.utils.Model;
  * @author ejacoby
  *
  */
-public class AbstractCategory extends Model<AbstractCategory>{
+public abstract class AbstractCategory extends Model<AbstractCategory>{
 
 	public String name;
 

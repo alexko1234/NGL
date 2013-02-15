@@ -16,6 +16,6 @@ public class ImportType extends CommonInfoType{
 	
 	public ImportType()
 	{
-		super.classNameDAO=ImportTypeDAO.class.getName();
+		super(ImportTypeDAO.class.getName());
 	}
 }

@@ -15,7 +15,7 @@ public class ProcessType extends CommonInfoType{
 	public static Finder<ProcessType> find = new Finder<ProcessType>(ProcessTypeDAO.class.getName()); 
 	
 	public ProcessType() {
-		super.classNameDAO=ProcessTypeDAO.class.getName();
+		super(ProcessTypeDAO.class.getName());
 	}
 	
 	

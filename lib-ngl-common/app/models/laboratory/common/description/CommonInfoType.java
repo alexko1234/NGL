@@ -46,7 +46,10 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	public CommonInfoType() {
 		super(CommonInfoTypeDAO.class.getName());
 	}
-
+	
+	protected CommonInfoType(String classNameDAO){
+		super(classNameDAO);
+	}
 	
 	public static List<CommonInfoType> findByNameAndType(String name, Long idObjectType)
 	{

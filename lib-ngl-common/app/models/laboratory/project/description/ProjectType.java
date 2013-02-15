@@ -10,7 +10,7 @@ public class ProjectType extends CommonInfoType{
 	public static Finder<ProjectType> find = new Finder<ProjectType>(ProjectTypeDAO.class.getName()); 
 	
 	public ProjectType() {
-		super.classNameDAO=ProjectTypeDAO.class.getName();
+		super(ProjectTypeDAO.class.getName());
 	}
 	
 	

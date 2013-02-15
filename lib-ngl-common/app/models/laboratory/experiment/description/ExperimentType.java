@@ -28,7 +28,7 @@ public class ExperimentType extends AbstractExperiment{
 	public static Finder<ExperimentType> find = new Finder<ExperimentType>(ExperimentTypeDAO.class.getName());
 	
 	public ExperimentType() {
-		super.classNameDAO=ExperimentTypeDAO.class.getName();
+		super(ExperimentTypeDAO.class.getName());
 	}
 
 

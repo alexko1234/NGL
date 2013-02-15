@@ -10,7 +10,7 @@ public class SampleType extends CommonInfoType{
 	public static Finder<SampleType> find = new Finder<SampleType>(SampleTypeDAO.class.getName());
 	
 	public SampleType() {
-		super.classNameDAO=SampleTypeDAO.class.getName();
+		super(SampleTypeDAO.class.getName());
 	}
 	
 	
