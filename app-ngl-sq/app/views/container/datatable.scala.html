@@ -5,6 +5,8 @@
 *	datatable: the name of the datatable object
 *	objectName: the name of the model object
 *	data: where the datatable can find the data
+*	
+*	ex: @views.html.container.datatable(scala.collection.mutable.LinkedHashMap("#" -> "id", "Code" -> "code", "Name" -> "name","Type" -> "objectType.type","Collection Name" -> "collectionName"),List("name","code","collectionName"),"datatable","type","datatable.searchresult")
 *@
 @(column:scala.collection.mutable.LinkedHashMap[String,String],editable:List[String],datatable:String,objectName:String,data:String)
 
