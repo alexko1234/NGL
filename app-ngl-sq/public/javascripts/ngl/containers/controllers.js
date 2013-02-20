@@ -23,27 +23,36 @@
 			editColumn: {
 				all:undefined,
 				code:undefined,
-				name:undefined,
-				collectionName:undefined
+				categoryCode:undefined,
+				sampleCodes:undefined,
+				fromExperimentTypeCodes:undefined,
+				stateCode:undefined,
+				support:{name:undefined}
+				
 			},
 			updateColumn: {
 				code:undefined,
-				name:undefined,
-				collectionName:undefined
+				categoryCode:undefined,
+				sampleCodes:undefined,
+				fromExperimentTypeCodes:undefined,
+				stateCode:undefined,
+				support:{name:undefined}
 			},
 			hideColumn: {
-				id:undefined,
 				code:undefined,
-				name:undefined,
-				objectType:{type:undefined},
-				collectionName:undefined
+				categoryCode:undefined,
+				sampleCodes:undefined,
+				fromExperimentTypeCodes:undefined,
+				stateCode:undefined,
+				support:{name:undefined}
 			},
 			orderColumn:{
-				id:undefined,
 				code:undefined,
-				name:undefined,
-				objectType:{type:undefined},
-				collectionName:undefined
+				categoryCode:undefined,
+				sampleCodes:undefined,
+				fromExperimentTypeCodes:undefined,
+				stateCode:undefined,
+				support:{name:undefined}
 			},
 			url:{
 				//save:"/admin/types?format=json",
