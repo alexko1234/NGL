@@ -23,7 +23,7 @@ public class Lists {
 		return Results.ok(Json.toJson(projects));	
 	}
 	
-	public static Result experimenttypes(){
+	public static Result experimentTypes(){
 		try {
 			List<ExperimentType> exp = ExperimentType.find.findAll();
 			String json = "[";
