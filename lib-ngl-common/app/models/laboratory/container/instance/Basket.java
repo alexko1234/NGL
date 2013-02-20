@@ -13,12 +13,12 @@ public class Basket extends DBObject{
 	//unique code, choose by the creator
 	public String code;
 	
-	//informations
+	//Informations
 	public TraceInformation traceInformation;
 	
-	// ExperimentType for the tubes in the basket
+	//ExperimentType for the tubes in the basket
 	public String experimentTypeCode;
 	
-	//Tubes in the basket
+	//Code of tubes in the basket
 	public List<String> inputContainers;
 }
