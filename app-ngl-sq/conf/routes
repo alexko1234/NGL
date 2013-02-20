@@ -6,6 +6,23 @@
 GET     /                           controllers.Application.index(id:java.lang.String ?="")
 
 
+GET	   /basket/experimenttype/:experimentType		controllers.container.Baskets.listByExperimentType(experimentType:java.lang.String)
+GET	   /baskets										controllers.container.Baskets.list()
+GET	   /baskets/:code					    		controllers.container.Baskets.show(code:java.lang.String, format: java.lang.String ?= "html")
+POST   /baskets/:code					    		controllers.container.Baskets.add(code:java.lang.String, format: java.lang.String ?= "html")
+POST   /baskets					    				controllers.container.Baskets.createOrUpdate(format: java.lang.String ?= "html")
+DELETE /baskets/:code					    		controllers.container.Baskets.delete(code: java.lang.String,format: java.lang.String ?= "html")
+DELETE /baskets/:code/containers/:contrainerCode	controllers.container.Baskets.delete_container(code: java.lang.String,contrainerCode: java.lang.String,format: java.lang.String ?= "html")
+
+GET 	/containers									controllers.container.ContainersViews.home()
+
+#template
+GET		/tpl/containers								controllers.container.ContainersViews.searchViews()
+GET		/tpl/projects/list							controllers.tpl.helper.Lists.projects()
+GET		/tpl/experimenttypes/list					controllers.tpl.helper.Lists.experimenttypes()
+
+#api
+GET		/api/containers								controllers.container.ContainersApis.list()
 
 GET	   /logout								controllers.administration.authentication.User.logOut()
 
