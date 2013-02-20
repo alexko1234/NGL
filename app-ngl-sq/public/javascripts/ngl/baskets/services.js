@@ -53,7 +53,7 @@ angular.module('basketsServices', []).
 					*/
 					fnModalControl:function(oConfig,text){
 						if(!oConfig.manualModal)
-						$('body').append('<div class="modal fade" id="'+oConfig.modalId+'"><div class="modal-header"><a class="close" data-dismiss="modal">&times;</a><h3>'+oConfig.titleModal+'</h3></div><div class="modal-body" id="modal-body"><p>'+text+'</p></div><div class="modal-footer"><a href="#" class="btn" data-dismiss="modal">'+oConfig.textCancelModal+'</a><a href="#" class="btn btn-primary" id="'+oConfig.idBtnModal+'">Add</a></div></div>');
+						$('body').append('<div class="modal fade" id="'+oConfig.modalId+'"><div class="modal-header"><a class="close" data-dismiss="modal">&times;</a><h3>'+oConfig.titleModal+'</h3></div><div class="modal-body" id="modal-body"><p>'+text+'</p></div><div class="modal-footer"><a class="btn" data-dismiss="modal">'+oConfig.textCancelModal+'</a><a class="btn btn-primary" id="'+oConfig.idBtnModal+'">Add</a></div></div>');
 
 						$('#'+oConfig.modalId).modal('show');
 
@@ -131,6 +131,7 @@ angular.module('basketsServices', []).
 									headers: {'Content-Type': 'application/json'}
 								});
 							}
+							$('#'+this.config.modalId).modal('hide');
 						}	
 					}
 				};

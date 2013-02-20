@@ -12,9 +12,8 @@
           }
         });
  }*/
-	$scope.name = "test";
 	$scope.projects=[{"code":'1',"label":'P1'},{"code":'2',"label":'P2'},{"code":'3',"label":'P3'}];
-	$scope.experiments=[{"code":'1',"label":'E1'},{"code":'2',"label":'E2'},{"code":'3',"label":'E3'}];
+	$scope.experiments=[{"code":'RECEP_BQ',"label":'RECEP_BQ'},{"code":'2',"label":'E2'},{"code":'3',"label":'E3'}];
 	$scope.states=[{"code":'1',"label":'S1'},{"code":'2',"label":'S2'},{"code":'3',"label":'S3'}];
 	
 	$scope.datatableConfig = {
@@ -67,6 +66,18 @@
 	$scope.init = function(){
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		$scope.baskets = baskets($scope, $scope.basketsConfig, $scope.datatable);
+		$http.get('/tpl/projects/list').
+			success(function(data, status, headers, config){
+				$scope.projects = data;
+			});
+		$http.get('/tpl/experimenttypes/list').
+			success(function(data, status, headers, config){
+				$scope.experiments = data;
+			});
+	}
+	
+	$scope.search = function(){
+		$scope.datatable.search({project:$scope.project,experiment:$scope.experiment,state:$scope.state});
 	}
 	
 	/*$scope.init = function(){
