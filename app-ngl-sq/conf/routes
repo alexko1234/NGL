@@ -19,7 +19,7 @@ GET 	/containers									controllers.container.ContainersViews.home()
 #template
 GET		/tpl/containers								controllers.container.ContainersViews.searchViews()
 GET		/tpl/projects/list							controllers.tpl.helper.Lists.projects()
-GET		/tpl/experimenttypes/list					controllers.tpl.helper.Lists.experimenttypes()
+GET		/tpl/experimenttypes/list					controllers.tpl.helper.Lists.experimentTypes()
 
 #api
 GET		/api/containers								controllers.container.ContainersApis.list()
