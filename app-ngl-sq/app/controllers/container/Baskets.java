@@ -34,7 +34,8 @@ public class Baskets extends Controller{
 	final static Form<String> containerForm = form(String.class);
 	
 	public static Result home() {
-		return ok(testbasket.render("projects"));
+		//return ok(testbasket.render("projects"));
+		return ok();
 	}
 
 	public static Result createOrUpdate(String format){
