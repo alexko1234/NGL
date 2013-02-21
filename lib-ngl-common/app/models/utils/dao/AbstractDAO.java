@@ -95,7 +95,7 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 	}
 
 	@Transactional	
-	public long save(T value)
+	public long save(T value) throws DAOException
 	{
         SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
         

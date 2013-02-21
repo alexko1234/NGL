@@ -87,7 +87,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 			StateDAO stateDao = Spring.getBeanOfType(StateDAO.class);
 			String sql = "INSERT INTO common_info_type_state (fk_common_info_type,fk_state) VALUES(?,?)";
 			for(State state : states){
-				if(state.id==null)
+				if(state.code!=null && State.find.findByCode(state.code)==null)
 					state.id = stateDao.save(state);
 				jdbcTemplate.update(sql, newId,state.id);
 			}
@@ -98,7 +98,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 			ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
 			String sql = "INSERT INTO common_info_type_resolution (fk_common_info_type, fk_resolution) VALUES(?,?)";
 			for(Resolution resolution:resolutions){
-				if(resolution.id==null)
+				if(resolution.code!=null && Resolution.find.findByCode(resolution.code)==null)
 					resolution.id=resolutionDAO.save(resolution);
 				jdbcTemplate.update(sql, newId,resolution.id);
 			}
@@ -109,7 +109,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		if(propertyDefinitions!=null && propertyDefinitions.size()>0){
 			PropertyDefinitionDAO propertyDefinitionDAO = Spring.getBeanOfType(PropertyDefinitionDAO.class);
 			for(PropertyDefinition propertyDefinition : propertyDefinitions){
-				if(propertyDefinition.id==null)
+				if(propertyDefinition.code!=null && PropertyDefinition.find.findByCode(propertyDefinition.code)==null)
 					propertyDefinitionDAO.save(propertyDefinition, cit.id);
 			}
 		}
@@ -129,7 +129,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 			String sqlState = "INSERT INTO common_info_type_state (fk_common_info_type,fk_state) VALUES(?,?)";
 			for(State state : states){
 				if(citDB.variableStates==null || (citDB.variableStates!=null && !citDB.variableStates.contains(state))){
-					if(state.id==null)
+					if(state.code!=null && State.find.findByCode(state.code)==null)
 						state.id = stateDao.save(state);
 					jdbcTemplate.update(sqlState, citDB.id,state.id);
 				}
@@ -142,7 +142,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 			String sqlReso = "INSERT INTO common_info_type_resolution (fk_common_info_type, fk_resolution) VALUES(?,?)";
 			for(Resolution resolution:resolutions){
 				if(citDB.resolutions==null || (citDB.resolutions!=null && !citDB.resolutions.contains(resolution))){
-					if(resolution.id==null)
+					if(resolution.code!=null && Resolution.find.findByCode(resolution.code)==null)
 						resolution.id=resolutionDAO.save(resolution);
 					jdbcTemplate.update(sqlReso, citDB.id,resolution.id);
 				}

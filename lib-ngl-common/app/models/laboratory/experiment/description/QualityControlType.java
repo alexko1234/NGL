@@ -9,5 +9,7 @@ public class QualityControlType extends AbstractExperiment{
 		super(QualityControlTypeDAO.class.getName());
 	}
 	
-	public static Finder<QualityControlType> find = new Finder<QualityControlType>(QualityControlTypeDAO.class.getName()); 
+	public static Finder<QualityControlType> find = new Finder<QualityControlType>(QualityControlTypeDAO.class.getName());
+	
+	
 }

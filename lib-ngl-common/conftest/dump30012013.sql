@@ -517,7 +517,8 @@ CREATE TABLE `property_definition` (
   PRIMARY KEY  (`id`),
   KEY `ix_property_definition_measure_7` (`measure_category_id`),
   KEY `ix_property_definition_measure_8` (`measure_value_id`),
-  KEY `ix_property_definition_commonI_9` (`common_info_type_id`)
+  KEY `ix_property_definition_commonI_9` (`common_info_type_id`),
+  UNIQUE KEY `uq_property_code` (`code`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2088 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
@@ -28,7 +29,7 @@ public class ProjectTypeDAO extends AbstractDAOMapping<ProjectType>{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		projectType.id = commonInfoTypeDAO.save(projectType);
 		//Check if category exist
-		if(projectType.projectCategory!=null && projectType.projectCategory.id==null)
+		if(projectType.projectCategory!=null && projectType.projectCategory.code!=null && ProjectCategory.find.findByCode(projectType.projectCategory.code)==null)
 		{
 			ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
 			projectType.projectCategory.id = projectCategoryDAO.save(projectType.projectCategory);

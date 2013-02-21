@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.sample.description.ImportCategory;
 import models.laboratory.sample.description.ImportType;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
@@ -28,7 +29,7 @@ public class ImportTypeDAO extends AbstractDAOMapping<ImportType>{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		importType.id = commonInfoTypeDAO.save(importType);
 		//Add sampleCategory
-		if(importType.importCategory!=null && importType.importCategory.id==null)
+		if(importType.importCategory!=null && importType.importCategory.code!=null && ImportCategory.find.findByCode(importType.importCategory.code)==null)
 		{
 			ImportCategoryDAO importCategoryDAO = Spring.getBeanOfType(ImportCategoryDAO.class);
 			importType.importCategory.id = importCategoryDAO.save(importType.importCategory);

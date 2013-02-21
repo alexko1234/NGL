@@ -19,5 +19,6 @@ public class Value extends Model<Value>{
 	public Value() {
 		super(ValueDAO.class.getName());
 	}
-    
+
+	
 }

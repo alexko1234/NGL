@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.PurificationMethodType;
@@ -51,7 +52,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 		experimentType.id = commonInfoTypeDAO.save(experimentType);
 
 		//Check if category exist
-		if(experimentType.experimentCategory!=null && experimentType.experimentCategory.id==null)
+		if(experimentType.experimentCategory!=null && experimentType.experimentCategory.code!=null && ExperimentCategory.find.findByCode(experimentType.experimentCategory.code)==null)
 		{
 			ExperimentCategoryDAO experimentCategoryDAO = Spring.getBeanOfType(ExperimentCategoryDAO.class);
 			experimentType.experimentCategory.id = experimentCategoryDAO.save(experimentType.experimentCategory);
@@ -88,7 +89,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			QualityControlTypeDAO qualityControlTypeDAO = Spring.getBeanOfType(QualityControlTypeDAO.class);
 			String sql = "INSERT INTO experiment_quality_control(fk_quality_control_type,fk_experiment_type) VALUES(?,?)";
 			for(QualityControlType qualityControlType : qualityControlTypes){
-				if(qualityControlType.id==null)
+				if(qualityControlType.code!=null && QualityControlType.find.findByCode(qualityControlType.code)==null)
 					qualityControlType.id = qualityControlTypeDAO.save(qualityControlType);
 				jdbcTemplate.update(sql, qualityControlType.id, experimentType.id);
 			}
@@ -99,7 +100,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			PurificationMethodTypeDAO purificationMethodTypeDAO = Spring.getBeanOfType(PurificationMethodTypeDAO.class);
 			String sql = "INSERT INTO experiment_purification_method(fk_purification_method_type,fk_experiment_type) VALUES(?,?)";
 			for(PurificationMethodType purificationMethodType : purificationMethodTypes){
-				if(purificationMethodType.id==null)
+				if(purificationMethodType.code!=null && PurificationMethodType.find.findByCode(purificationMethodType.code)==null)
 					purificationMethodType.id = purificationMethodTypeDAO.save(purificationMethodType);
 				jdbcTemplate.update(sql, purificationMethodType.id, experimentType.id);
 			}
@@ -145,10 +146,6 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 		}
 		//Update nexExperiment list (add new)
 		List<ExperimentType> nextExpTypes = experimentType.previousExperimentTypes;
-		System.out.println("Next experiment db "+expTypeDB.previousExperimentTypes);
-		for(ExperimentType nextExpTypeDB : expTypeDB.previousExperimentTypes){
-			System.out.println(nextExpTypeDB.id);
-		}
 		if(nextExpTypes!=null && nextExpTypes.size()>0){
 			String sql = "INSERT INTO next_experiment_types(fk_experiment_type,fk_next_experiment_type) VALUES(?,?)";
 			for(ExperimentType expType : nextExpTypes){
@@ -166,7 +163,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			String sql = "INSERT INTO experiment_quality_control(fk_quality_control_type,fk_experiment_type) VALUES(?,?)";
 			for(QualityControlType qualityControlType : qualityControlTypes){
 				if(expTypeDB.possibleQualityControlTypes==null || (expTypeDB.possibleQualityControlTypes!=null && !expTypeDB.possibleQualityControlTypes.contains(qualityControlType))){
-					if(qualityControlType.id==null)
+					if(qualityControlType.code!=null && QualityControlType.find.findByCode(qualityControlType.code)==null)
 						qualityControlType.id=qualityControlTypeDAO.save(qualityControlType);
 					jdbcTemplate.update(sql, qualityControlType.id,experimentType.id);
 				}
@@ -179,7 +176,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			String sql = "INSERT INTO experiment_purification_method(fk_purification_method_type,fk_experiment_type) VALUES(?,?)";
 			for(PurificationMethodType purificationMethodType : purificationMethodTypes){
 				if(expTypeDB.possiblePurificationMethodTypes==null || (expTypeDB.possiblePurificationMethodTypes!=null && !expTypeDB.possiblePurificationMethodTypes.contains(purificationMethodType))){
-					if(purificationMethodType.id==null)
+					if(purificationMethodType.code!=null && PurificationMethodType.find.findByCode(purificationMethodType.code)==null)
 						purificationMethodType.id=purificationMethodTypeDAO.save(purificationMethodType);
 					jdbcTemplate.update(sql, purificationMethodType.id,experimentType.id);
 				}

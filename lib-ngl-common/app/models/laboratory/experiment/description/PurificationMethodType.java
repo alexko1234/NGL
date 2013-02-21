@@ -8,5 +8,7 @@ public class PurificationMethodType extends AbstractExperiment{
 		super(PurificationMethodTypeDAO.class.getName());
 	}
 	
-	public static Finder<PurificationMethodType> find = new Finder<PurificationMethodType>(PurificationMethodTypeDAO.class.getName()); 
+	public static Finder<PurificationMethodType> find = new Finder<PurificationMethodType>(PurificationMethodTypeDAO.class.getName());
+	
+	
 }

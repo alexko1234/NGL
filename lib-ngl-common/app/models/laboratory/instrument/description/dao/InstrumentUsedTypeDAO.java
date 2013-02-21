@@ -6,6 +6,7 @@ import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.instrument.description.Instrument;
+import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
@@ -56,7 +57,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 	public void save(InstrumentUsedType instrumentUsedType, long idCommonInfoType) throws DAOException
 	{
 		String sql = "INSERT INTO common_info_type_instrument_type(fk_common_info_type, fk_instrument_type) VALUES(?,?)";
-		if(instrumentUsedType.id==null)
+		if(instrumentUsedType.code!=null && InstrumentUsedType.find.findByCode(instrumentUsedType.code)==null)
 			instrumentUsedType.id = save(instrumentUsedType);
 		jdbcTemplate.update(sql, idCommonInfoType, instrumentUsedType.id);
 	}
@@ -68,7 +69,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		instrumentUsedType.id =commonInfoTypeDAO.save(instrumentUsedType);
 		instrumentUsedType.setCommonInfoType(instrumentUsedType);
 		//Check if instrumentCategory exist
-		if(instrumentUsedType.instrumentCategory!=null && instrumentUsedType.instrumentCategory.id==null)
+		if(instrumentUsedType.instrumentCategory!=null && instrumentUsedType.instrumentCategory.code!=null && InstrumentCategory.find.findByCode(instrumentUsedType.instrumentCategory.code)==null)
 		{
 			InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
 			instrumentUsedType.instrumentCategory.id = instrumentCategoryDAO.save(instrumentUsedType.instrumentCategory);

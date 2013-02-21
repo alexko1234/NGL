@@ -47,4 +47,5 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 	public PropertyDefinition() {
 		super(PropertyDefinitionDAO.class.getName());
 	}
+	
 }

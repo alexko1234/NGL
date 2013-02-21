@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.experiment.description.Protocol;
+import models.laboratory.experiment.description.ProtocolCategory;
 import models.laboratory.experiment.description.ReagentType;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
@@ -63,7 +64,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 	public long save(Protocol protocol) throws DAOException
 	{
 		//Check if category exist
-		if(protocol.protocolCategory!=null && protocol.protocolCategory.id==null)
+		if(protocol.protocolCategory!=null && protocol.protocolCategory.code!=null && ProtocolCategory.find.findByCode(protocol.protocolCategory.code)==null)
 		{
 			ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
 			protocol.protocolCategory.id = protocolCategoryDAO.save(protocol.protocolCategory);
@@ -85,7 +86,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 			ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
 			String sql = "INSERT INTO protocol_reagent_type (fk_protocol,fk_reagent_type) VALUES(?,?)";
 			for(ReagentType reagentType : reagentTypes){
-				if(reagentType.id==null)
+				if(reagentType.code!=null && ReagentType.find.findByCode(reagentType.code)==null)
 					reagentType.id = reagentTypeDAO.save(reagentType);
 				jdbcTemplate.update(sql, newId,reagentType.id);
 			}

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.MeasureCategory;
+import models.laboratory.common.description.MeasureValue;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.utils.dao.AbstractDAOMapping;
@@ -45,11 +47,11 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	public PropertyDefinition findByCode(String code) throws DAOException
 	{
 		String sql = sqlCommon+
-				"WHERE codeSearch = ? ";
+				"WHERE t.code = ? ";
 		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery = new PropertyDefinitionMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
 		return propertyDefinitionMappingQuery.findObject(code);
 	}
-	public PropertyDefinition save(PropertyDefinition propertyDefinition, long idCommonInfoType)
+	public PropertyDefinition save(PropertyDefinition propertyDefinition, long idCommonInfoType) throws DAOException
 	{
 		//Create propertyDefinition
 		Map<String, Object> parameters = new HashMap<String, Object>();
@@ -81,7 +83,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 		//Add measureCategory
 		if(propertyDefinition.measureCategory!=null){
-			if(propertyDefinition.measureCategory.id==null){
+			if(propertyDefinition.measureCategory.code!=null && MeasureCategory.find.findByCode(propertyDefinition.measureCategory.code)==null){
 
 				MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
 				propertyDefinition.measureCategory.id = measureCategoryDAO.save(propertyDefinition.measureCategory);
@@ -93,7 +95,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 		//Add measureValue
 		if(propertyDefinition.measureValue!=null){
-			if(propertyDefinition.measureValue.id==null){
+			if(propertyDefinition.measureValue.code!=null && MeasureValue.find.findByCode(propertyDefinition.measureValue.code)==null){
 				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
 				propertyDefinition.measureValue.id = measureValueDAO.save(propertyDefinition.measureValue);
 			}
@@ -123,8 +125,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 		//Update measure category
 		if(propertyDefinition.measureCategory!=null){
-			if(propertyDefinition.measureCategory.id==null){
-
+			if(propertyDefinition.measureCategory.code!=null && MeasureCategory.find.findByCode(propertyDefinition.measureCategory.code)==null){
 				MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
 				propertyDefinition.measureCategory.id = measureCategoryDAO.save(propertyDefinition.measureCategory);
 			}
@@ -135,7 +136,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 		//Update measureValue
 		if(propertyDefinition.measureValue!=null){
-			if(propertyDefinition.measureValue.id==null){
+			if(propertyDefinition.measureValue.code!=null && MeasureValue.find.findByCode(propertyDefinition.measureValue.code)==null){
 				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
 				propertyDefinition.measureValue.id = measureValueDAO.save(propertyDefinition.measureValue);
 			}

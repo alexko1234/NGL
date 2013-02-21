@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
@@ -27,7 +28,7 @@ public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		sampleType.id = commonInfoTypeDAO.save(sampleType);
 		//Add sampleCategory
-		if(sampleType.sampleCategory!=null && sampleType.sampleCategory.id==null)
+		if(sampleType.sampleCategory!=null && sampleType.sampleCategory.code!=null && SampleCategory.find.findByCode(sampleType.sampleCategory.code)==null)
 		{
 			SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
 			sampleType.sampleCategory.id = sampleCategoryDAO.save(sampleType.sampleCategory);

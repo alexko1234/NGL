@@ -191,7 +191,7 @@ public class SpringTest extends AbstractTests{
 		Assert.assertTrue(state.code.equals(state.code));
 	}
 
-	//////@Test
+	////////@Test
 	public void updateState() throws DAOException
 	{
 		State state = State.find.findByCode("state1");
@@ -805,7 +805,7 @@ public class SpringTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value6", "value6", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop4", "prop4", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop5", "prop5", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("inst3", "inst3", "inst3", states, resolutions, propertiesDefinitions, objectType);
 		
 		InstrumentCategory instrumentCategory = InstrumentCategory.find.findByCode("InstCat1");
@@ -842,6 +842,7 @@ public class SpringTest extends AbstractTests{
 
 	private void checkAbstractExperiment(AbstractExperiment experiment)
 	{
+		
 		Assert.assertNotNull(experiment);
 		checkCommonInfoType(experiment);
 		Assert.assertNotNull(experiment.instrumentUsedTypes);
@@ -875,7 +876,7 @@ public class SpringTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value7","value7", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop5", "prop5", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop6", "prop6", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("qc1", "qc1", "qc1", states, resolutions, propertiesDefinitions, objectType);
 
 		//Create list instrument 
@@ -913,7 +914,7 @@ public class SpringTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value8","value8", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop6", "prop6", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop7", "prop7", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("inst4", "inst4", "inst4", states, resolutions, propertiesDefinitions, objectType);
 
 		//Get instrumentCategory
@@ -995,7 +996,7 @@ public class SpringTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value8","value8", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop6", "prop6", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop8", "prop8", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("exp1", "exp1", "exp1", states, resolutions, propertiesDefinitions, objectType);
 
 		//Create list instrument 
@@ -1042,7 +1043,7 @@ public class SpringTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value9","value9", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop7", "prop7", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop9", "prop9", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("purif2", "purif2", "purif2", states, resolutions, propertiesDefinitions, objectType);
 
 		//Create list instrument 
@@ -1066,7 +1067,7 @@ public class SpringTest extends AbstractTests{
 		possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value10","value10", true));
 		propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop8", "prop8", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop10", "prop10", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		commonInfoType = createCommonInfoType("qc2", "qc2", "qc2", states, resolutions, propertiesDefinitions, objectType);
 
 		//Create list instrument 
@@ -1102,7 +1103,7 @@ public class SpringTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value9","value9", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop7", "prop7", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop11", "prop11", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("exp2", "exp2", "exp2", states, resolutions, propertiesDefinitions, objectType);
 
 		//Create list instrument 
@@ -1229,7 +1230,7 @@ public class SpringTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value10","value10", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop8", "prop8", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop12", "prop12", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("process1", "process1", "process1", states, resolutions, propertiesDefinitions, objectType);
 		ProcessType processType = createProcessType(commonInfoType, experimentTypes, processCategory);
 		processType.id = processType.save();
@@ -1332,7 +1333,7 @@ public class SpringTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value11","value11", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop9", "prop9", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop13", "prop13", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("project1", "project1", "project1", states, resolutions, propertiesDefinitions, objectType);
 		ProjectType projectType = createProjectType(commonInfoType, projectCategory);
 		projectType.id = projectType.save();
@@ -1432,7 +1433,7 @@ public class SpringTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value12","value12", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop10", "prop10", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop14", "prop14", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("sample1", "sample1", "sample1", states, resolutions, propertiesDefinitions, objectType);
 		SampleType sampleType = createSampleType(commonInfoType, sampleCategory);
 		sampleType.id = sampleType.save();
@@ -1510,7 +1511,7 @@ public class SpringTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value13","value13", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop11", "prop11", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop15", "prop15", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("import1", "import1", "import1", states, resolutions, propertiesDefinitions, objectType);
 		ImportType importType = createImportType(commonInfoType, importCategory);
 		importType.id = importType.save();
