@@ -3,25 +3,31 @@
 @implicitField = @{ FieldConstructor(helper.tbformvertical.f) }
 
 @defining(if(!isEdit) ('states->"disabled") else (Symbol("") -> "")){ disabled =>
+
+@repeat(field("readsets"), min = 0) { readset => 
+ 
 <tr>
-<td>
-	@helper.tbInputText(
-	field = field("number"),  
-	args = 'class -> "input-medium",
-	disabled             
-)
+<td>	
+	@field("number").value
+</td>
+<td>	
+	@readset("code").value
+</td>
+<td>	
+	@readset("sampleContainerCode").value
+</td>
+<td>	
+	@readset("projectCode").value
+</td>
+<td>	
+	@readset("properties['nbClusterInternalAndIlluminaFilter'].value").value
 </td>
 <td>
-	@helper.tbInputText(
-	field = field("properties['nbCycle'].value"),
-	args = 'class -> "input-medium", disabled                            
-)
+	@readset("properties['nbBaseInternalAndIlluminaFilter'].value").value
 </td>
 <td>
-@helper.tbInputText(
-	field = field("properties['nbTiles'].value"),
-	args = 'class -> "input-medium", disabled              
-)
+	@readset("properties['nbRead'].value").value
 </td>
 </tr>
+}
 }

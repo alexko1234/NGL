@@ -12,10 +12,11 @@
 }
 
 @scripts(handler: FieldConstructor, lang : Lang = implicitly[Lang]) = {
+        
   <script type="text/javascript">
 $(document).ready( function () {
     var myDatatable = $('#table_id').dataTable({
-         "sDom":"Trti",
+         "sDom":"Trt",
          "sPaginationType": "bootstrap",
     	 "bFilter": true,
     	 "bDeferRender": true,
@@ -26,7 +27,14 @@ $(document).ready( function () {
          "sServerMethod": "GET",
          "aoColumnDefs": [
                   { "sTitle": "#ID", "mData": "_id","aTargets": [ 0 ] },
-                  { "sTitle": "Code", "mData": "code","aTargets": [ 1 ]}                 
+                  { "sTitle": "Code", "mData": "code","aTargets": [ 1 ]},
+                  { "sTitle": "Flowcell Bar Code", "mData": "containerSupportCode","aTargets": [ 2 ]},
+                  { "sTitle": "Creation Date", "mData": "traceInformation.creationDate","aTargets": [ 3 ],
+                	  "mRender": function ( data, type, full ) {
+                		  var d = new Date(data);
+                	        return d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear()+" "+d.toLocaleTimeString();
+                	      }},
+                  { "sTitle": "Dispatch", "mData": "dispatch","aTargets": [ 4 ]}
          ],
          "oTableTools": {	
         	"sRowSelect": "multi",
@@ -35,18 +43,6 @@ $(document).ready( function () {
 							{
 								 "sExtends":    "btngroup",
 								 "aButtons":    [
-									{
-									    "sExtends":    "text",
-									    "sButtonText": "New",
-									    "sButtonClass" : "btn-primary",			                    
-									    "fnClick": function ( nButton, oConfig, oFlash ) {
-									    	if($('#newelt').length == 0){
-									        	//see ngl.js to see the custom tab event
-									            $('#searchTab').append('<li><a id="newelt" href="#" data-toggle="pilldyn" data-target="#newelement" data-href="@controllers.run.routes.Runs.add()">New<button class="close" data-dismiss="pilldyn">&times;</button></a></li>');					                    		
-									        }	
-									    	$('#newelt').click();
-									    }
-									},
 									{
 									    "sExtends":    "text",
 									    "sButtonText": "Show",
@@ -73,32 +69,10 @@ $(document).ready( function () {
 									}
 								]
 							} ,
-			                {
-			                    "sExtends":    "btngroup",
-			                    "sButtonText": "Edit",
-			                    "sDropdown":	true,
-			                    "mainButton":	"edit",
-			                    "aButtons":	[{
-			                    	"sExtends":    "edit",
-			                    	"aTargets": 1,
-			                    	"sButtonText":  "Name",
-			                    	},
-			                   	 	{
-				                    	"sExtends":    "edit",
-				                    	"aTargets": 2, 
-				                    	"sEditId": "edit2",
-				                    	"sButtonText":  "Code"
-			                   	 	}			                    
-			                    ]
-			                    
-			                },
+			               
 			                {
 			                	 "sExtends":    "btngroup",
-			                	 "aButtons":    [ {
-			                		 "sExtends":    "save",
-			                		 "playJSRoute":jsRoutes.controllers.run.Runs.createOrUpdate("json")
-			                		 },
-			                		 "cancel","select_all" ]
+			                	 "aButtons":    [ "cancel","select_all" ]
 			                }		                			               
 			            ]
 		            	 

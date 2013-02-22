@@ -5,54 +5,38 @@
 @defining(if(!isEdit) ('states->"disabled") else (Symbol("") -> "")){ (disabled) =>
 
 @helper.form(action = controllers.run.routes.Runs.createOrUpdate(), args = 'class -> "form-horizontal", Symbol("data-toggle") -> "ajax") {
-<legend>Set your run</legend>         		
+<legend>Run : @dataForm("code").value() </legend>         		
 <fieldset>
-		 @if(isEdit && null != dataForm("_id").value()){
-		  	@helper.tbInputUneditable(
-				field = dataForm("_id"), 
-                args = '_label -> "#ID",
+	@helper.tbInputUneditable(
+				field = dataForm("properties['nbClusterTotal'].value"), 
+                args = '_label -> "Cluster total",
                 '_showConstraints -> false,
-				'hidden->"yes"				
+				'class -> "input-xlarge" 				
             )
-		 }else{
-		 	@helper.tbInputUneditable(
-				field = dataForm("_id"), 
-                args = '_label -> "#ID",
+
+	@helper.tbInputUneditable(
+				field = dataForm("properties['nbClusterIlluminaFilter'].value"), 
+                args = '_label -> "Illumina filter cluster",
                 '_showConstraints -> false,
-				'hidden->"no"				
+				'class -> "input-xlarge" 				
             )
-		 
-		 }
-            @helper.tbInputText(
-				field = dataForm("code"), 
-                args = '_label -> "Code",
+	@helper.tbInputUneditable(
+				field = dataForm("properties['nbBase'].value"), 
+                args = '_label -> "Base",
                 '_showConstraints -> false,
-				disabled  
+				'class -> "input-xlarge" 				
             )
-            
-             @helper.tbInputText(
-				field = dataForm("properties['test'].value"), 
-                args = '_label -> "Test",
-                '_showConstraints -> false,
-				disabled  
-            )
-            
+	
          <div class="control-group">
 				<label class="control-label">
-				Lanes
-				@if(isEdit){
-				<div>  
-				<a href="#" class="btn btn-mini btn-primary" id="addLaneElement" data-toggle="add-content" 
-				data-href="rowTable1"
-				data-target="tbody_properties_id_@dataForm("_id").value()" data-index="@nbElements(dataForm("lanes"))" title="add a lane"><i class="icon-plus icon-white"></i></a>
-				</div>
-				}				
+				Read Sets
+					
 				</label>
 				<div class="controls">
 					<table id="lanesId" class="table table-bordered table-condensed">
             		<thead>
             		<tr>
-            		<th>Number</th><th>Nb Cycle</th><th>Nb tiles</th>
+            		<th>Lane Number</th><th>Read Set Code</th><th>Sample Container Code</th><th>Project Code</th><th>Internal And Illumina Filter Cluster</th><th>Internal And Illumina Filter Base</th><th>Read</th>
             		</tr>
             		</thead>
 					<tbody id="tbody_properties_id_@dataForm("_id").value()">
@@ -65,17 +49,7 @@
             		</table>
 				</div>
 			</div>   
-                        
-            <div class="form-actions">
-            @if(isEdit){
-            	<button class="btn btn-primary" type="submit">Save</button>
-            	@if(null != dataForm("_id").value()){
-            		<a class="btn" href="#" data-toggle="pilldyn" data-target="#onelement" data-href="@controllers.run.routes.Runs.show(dataForm("code").value())">Cancel</a>
-            	}
-            } else {
-            	<a class="btn btn-primary" href="#" data-toggle="pilldyn" data-target="#onelement" data-href="@controllers.run.routes.Runs.edit(dataForm.get().code)" >Edit</a>
-            }            			
-          </div>
+         
         </fieldset>
 
 }
@@ -83,3 +57,5 @@
 <script type="text/html" id="rowTable1">
 	@addLane(dataForm("lanes[valueIndex]"), isEdit)
 </script>
+
+ 
