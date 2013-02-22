@@ -32,12 +32,14 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		processType.id = commonInfoTypeDAO.save(processType);
 		//Check if category exist
-		if(processType.processCategory!=null && processType.processCategory.code!=null && ProcessCategory.find.findByCode(processType.processCategory.code)==null)
-		{
+		if(processType.processCategory!=null){
+			ProcessCategory processCategoryDB = ProcessCategory.find.findByCode(processType.processCategory.code);
+			if(processCategoryDB ==null){
 			ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
 			processType.processCategory.id = processCategoryDAO.save(processType.processCategory);
+			}else
+				processType.processCategory=processCategoryDB;
 		}
-
 		//Create new processType
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("id", processType.id);
@@ -51,8 +53,11 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 			ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 			String sql = "INSERT INTO process_experiment_type(fk_process_type, fk_experiment_type) VALUES(?,?)";
 			for(ExperimentType experimentType : experimentTypes){
-				if(experimentType.code!=null && ExperimentType.find.findByCode(experimentType.code)==null)
+				ExperimentType experimentTypeDB = ExperimentType.find.findByCode(experimentType.code);
+				if(experimentTypeDB ==null)
 					experimentType.id = experimentTypeDAO.save(experimentType);
+				else
+					experimentType=experimentTypeDB;
 				jdbcTemplate.update(sql, processType.id, experimentType.id);
 			}
 		}
@@ -72,8 +77,11 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 			String sql = "INSERT INTO process_experiment_type(fk_process_type, fk_experiment_type) VALUES(?,?)";
 			for(ExperimentType experimentType : experimentTypes){
 				if(processTypeDB.experimentTypes==null || (processTypeDB.experimentTypes!=null && !processTypeDB.experimentTypes.contains(experimentType))){
-					if(experimentType.code!=null && ExperimentType.find.findByCode(experimentType.code)==null)
+					ExperimentType experimentTypeDB = ExperimentType.find.findByCode(experimentType.code);
+					if(experimentTypeDB ==null)
 						experimentType.id = experimentTypeDAO.save(experimentType);
+					else
+						experimentType=experimentTypeDB;
 					jdbcTemplate.update(sql, processType.id, experimentType.id);
 				}
 			}

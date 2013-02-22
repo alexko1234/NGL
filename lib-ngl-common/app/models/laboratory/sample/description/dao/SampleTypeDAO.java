@@ -19,7 +19,7 @@ public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
 	protected SampleTypeDAO() {
 		super("sample_type", SampleType.class, SampleTypeMappingQuery.class, 
 				"SELECT t.id, fk_common_info_type, fk_sample_category "+
-				"FROM sample_type as t JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
+						"FROM sample_type as t JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
 
 	public long save(SampleType sampleType) throws DAOException
@@ -28,12 +28,14 @@ public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		sampleType.id = commonInfoTypeDAO.save(sampleType);
 		//Add sampleCategory
-		if(sampleType.sampleCategory!=null && sampleType.sampleCategory.code!=null && SampleCategory.find.findByCode(sampleType.sampleCategory.code)==null)
-		{
-			SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
-			sampleType.sampleCategory.id = sampleCategoryDAO.save(sampleType.sampleCategory);
+		if(sampleType.sampleCategory!=null){
+			SampleCategory sampleCategoryDB = SampleCategory.find.findByCode(sampleType.sampleCategory.code);
+			if(sampleCategoryDB ==null){
+				SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
+				sampleType.sampleCategory.id = sampleCategoryDAO.save(sampleType.sampleCategory);
+			}else
+				sampleType.sampleCategory=sampleCategoryDB;
 		}
-
 		//Create sampleType 
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("id", sampleType.id);
@@ -42,7 +44,7 @@ public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
 		jdbcInsert.execute(parameters);
 		return sampleType.id;
 	}
-	
+
 	public void update(SampleType sampleType) throws DAOException
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);

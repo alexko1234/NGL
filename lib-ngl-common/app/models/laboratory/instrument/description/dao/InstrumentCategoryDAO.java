@@ -53,16 +53,22 @@ public class InstrumentCategoryDAO extends AbstractDAO<InstrumentCategory>{
 		if(instrumentCategory.inContainerSupportCategories!=null && instrumentCategory.inContainerSupportCategories.size()>0){
 			String sqlIn = "INSERT INTO instrumentCategory_inContainerSupportCategory(fk_instrument_category,fk_container_support_category) VALUES(?,?)";
 			for(ContainerSupportCategory containerSupportCategory : instrumentCategory.inContainerSupportCategories){
-				if(containerSupportCategory.code!=null && ContainerSupportCategory.find.findByCode(containerSupportCategory.code)==null)
+				ContainerSupportCategory containerSupportCategoryDB = ContainerSupportCategory.find.findByCode(containerSupportCategory.code);
+				if(containerSupportCategoryDB ==null)
 					containerSupportCategory.id=containerSupportCategoryDAO.save(containerSupportCategory);
+				else
+					containerSupportCategory=containerSupportCategoryDB;
 				jdbcTemplate.update(sqlIn, instrumentCategory.id, containerSupportCategory.id);
 			}
 		}
 		if(instrumentCategory.outContainerSupportCategories!=null && instrumentCategory.outContainerSupportCategories.size()>0){
 			String sqlOut = "INSERT INTO instrumentCategory_outContainerSupportCategory(fk_instrument_category,fk_container_support_category) VALUES(?,?)";
 			for(ContainerSupportCategory containerSupportCategory : instrumentCategory.outContainerSupportCategories){
-				if(containerSupportCategory.code!=null && ContainerSupportCategory.find.findByCode(containerSupportCategory.code)==null)
+				ContainerSupportCategory containerSupportCategoryDB = ContainerSupportCategory.find.findByCode(containerSupportCategory.code);
+				if(containerSupportCategoryDB ==null)
 					containerSupportCategory.id=containerSupportCategoryDAO.save(containerSupportCategory);
+				else
+					containerSupportCategory = containerSupportCategoryDB;
 				jdbcTemplate.update(sqlOut, instrumentCategory.id, containerSupportCategory.id);
 			}
 		}
@@ -81,8 +87,11 @@ public class InstrumentCategoryDAO extends AbstractDAO<InstrumentCategory>{
 			String sqlIn = "INSERT INTO instrumentCategory_inContainerSupportCategory(fk_instrument_category,fk_container_support_category) VALUES(?,?)";
 			for(ContainerSupportCategory containerSupportCategory : instrumentCategory.inContainerSupportCategories){
 				if(instrumentCategoryDB.inContainerSupportCategories==null || (instrumentCategoryDB.inContainerSupportCategories!=null && !instrumentCategoryDB.inContainerSupportCategories.contains(containerSupportCategory))){
-					if(containerSupportCategory.code!=null && ContainerSupportCategory.find.findByCode(containerSupportCategory.code)==null)
+					ContainerSupportCategory containerSupportCategoryDB = ContainerSupportCategory.find.findByCode(containerSupportCategory.code);
+					if(containerSupportCategoryDB ==null)
 						containerSupportCategory.id=containerSupportCategoryDAO.save(containerSupportCategory);
+					else
+						containerSupportCategory=containerSupportCategoryDB;
 					jdbcTemplate.update(sqlIn, instrumentCategory.id, containerSupportCategory.id);
 				}
 			}
@@ -91,8 +100,11 @@ public class InstrumentCategoryDAO extends AbstractDAO<InstrumentCategory>{
 			String sqlOut = "INSERT INTO instrumentCategory_outContainerSupportCategory(fk_instrument_category,fk_container_support_category) VALUES(?,?)";
 			for(ContainerSupportCategory containerSupportCategory : instrumentCategory.outContainerSupportCategories){
 				if(instrumentCategoryDB.outContainerSupportCategories==null || (instrumentCategoryDB.outContainerSupportCategories!=null && !instrumentCategoryDB.outContainerSupportCategories.contains(containerSupportCategory))){
-					if(containerSupportCategory.code!=null && ContainerSupportCategory.find.findByCode(containerSupportCategory.code)==null)
+					ContainerSupportCategory containerSupportCategoryDB = ContainerSupportCategory.find.findByCode(containerSupportCategory.code);
+					if(containerSupportCategoryDB ==null)
 						containerSupportCategory.id=containerSupportCategoryDAO.save(containerSupportCategory);
+					else
+						containerSupportCategory=containerSupportCategoryDB;
 					jdbcTemplate.update(sqlOut, instrumentCategory.id, containerSupportCategory.id);
 				}
 			}

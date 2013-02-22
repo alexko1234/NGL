@@ -83,11 +83,12 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 		//Add measureCategory
 		if(propertyDefinition.measureCategory!=null){
-			if(propertyDefinition.measureCategory.code!=null && MeasureCategory.find.findByCode(propertyDefinition.measureCategory.code)==null){
-
+			MeasureCategory measureCategoryDB = MeasureCategory.find.findByCode(propertyDefinition.measureCategory.code);
+			if(measureCategoryDB==null){
 				MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
 				propertyDefinition.measureCategory.id = measureCategoryDAO.save(propertyDefinition.measureCategory);
-			}
+			}else
+				propertyDefinition.measureCategory=measureCategoryDB;
 			//Update propertyDefinition
 			String sqlCategory = "UPDATE property_definition SET measure_category_id=? WHERE id=?";
 			jdbcTemplate.update(sqlCategory, propertyDefinition.measureCategory.id, propertyDefinition.id);
@@ -95,10 +96,12 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 		//Add measureValue
 		if(propertyDefinition.measureValue!=null){
-			if(propertyDefinition.measureValue.code!=null && MeasureValue.find.findByCode(propertyDefinition.measureValue.code)==null){
+			MeasureValue measureValueDB = MeasureValue.find.findByCode(propertyDefinition.measureValue.code);
+			if(measureValueDB ==null){
 				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
 				propertyDefinition.measureValue.id = measureValueDAO.save(propertyDefinition.measureValue);
-			}
+			}else
+				propertyDefinition.measureValue=measureValueDB;
 			//Update propertyDefinition
 			String sqlValue = "UPDATE property_definition SET measure_value_id=? WHERE id=?";
 			jdbcTemplate.update(sqlValue, propertyDefinition.measureValue.id, propertyDefinition.id);
@@ -125,10 +128,12 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 		//Update measure category
 		if(propertyDefinition.measureCategory!=null){
-			if(propertyDefinition.measureCategory.code!=null && MeasureCategory.find.findByCode(propertyDefinition.measureCategory.code)==null){
+			MeasureCategory measureCategoryDB = MeasureCategory.find.findByCode(propertyDefinition.measureCategory.code);
+			if(measureCategoryDB ==null){
 				MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
 				propertyDefinition.measureCategory.id = measureCategoryDAO.save(propertyDefinition.measureCategory);
-			}
+			}else
+				propertyDefinition.measureCategory=measureCategoryDB;
 			//Update propertyDefinition
 			String sqlCategory = "UPDATE property_definition SET measure_category_id=? WHERE id=?";
 			jdbcTemplate.update(sqlCategory, propertyDefinition.measureCategory.id, propertyDefinition.id);
@@ -136,10 +141,12 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 		//Update measureValue
 		if(propertyDefinition.measureValue!=null){
-			if(propertyDefinition.measureValue.code!=null && MeasureValue.find.findByCode(propertyDefinition.measureValue.code)==null){
+			MeasureValue measureValueDB = MeasureValue.find.findByCode(propertyDefinition.measureValue.code);
+			if(measureValueDB ==null){
 				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
 				propertyDefinition.measureValue.id = measureValueDAO.save(propertyDefinition.measureValue);
-			}
+			}else
+				propertyDefinition.measureValue=measureValueDB;
 			//Update propertyDefinition
 			String sqlValue = "UPDATE property_definition SET measure_value_id=? WHERE id=?";
 			jdbcTemplate.update(sqlValue, propertyDefinition.measureValue.id, propertyDefinition.id);

@@ -23,4 +23,5 @@ public class State extends Model<State>{
 		super(StateDAO.class.getName());
 	}
 	
+
 }

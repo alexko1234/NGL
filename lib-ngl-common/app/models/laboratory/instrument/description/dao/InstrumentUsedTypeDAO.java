@@ -23,8 +23,8 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 	protected InstrumentUsedTypeDAO() {
 		super("instrument_used_type", InstrumentUsedType.class, InstrumentUsedTypeMappingQuery.class, 
 				"SELECT t.id, fk_common_info_type, fk_instrument_category "+
-				"FROM instrument_used_type as t "+
-				"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
+						"FROM instrument_used_type as t "+
+						"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
 	}
 
 	public List<InstrumentUsedType> findByCommonExperiment(long idCommonInfoType)
@@ -69,10 +69,13 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		instrumentUsedType.id =commonInfoTypeDAO.save(instrumentUsedType);
 		instrumentUsedType.setCommonInfoType(instrumentUsedType);
 		//Check if instrumentCategory exist
-		if(instrumentUsedType.instrumentCategory!=null && instrumentUsedType.instrumentCategory.code!=null && InstrumentCategory.find.findByCode(instrumentUsedType.instrumentCategory.code)==null)
-		{
-			InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
-			instrumentUsedType.instrumentCategory.id = instrumentCategoryDAO.save(instrumentUsedType.instrumentCategory);
+		if(instrumentUsedType.instrumentCategory!=null){
+			InstrumentCategory instrumentCategoryDB = InstrumentCategory.find.findByCode(instrumentUsedType.instrumentCategory.code);
+			if(instrumentCategoryDB ==null){
+				InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
+				instrumentUsedType.instrumentCategory.id = instrumentCategoryDAO.save(instrumentUsedType.instrumentCategory);
+			}else
+				instrumentUsedType.instrumentCategory=instrumentCategoryDB;
 		}
 		//Create new InstrumentUsedType
 		Map<String, Object> parameters = new HashMap<String, Object>();
@@ -126,7 +129,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		commonInfoTypeDAO.remove(instrumentUsedType);
 		//remove instrument used type
 		super.remove(instrumentUsedType);
-		
+
 	}
 
 

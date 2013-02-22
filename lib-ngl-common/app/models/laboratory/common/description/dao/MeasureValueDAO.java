@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureValue;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
@@ -40,16 +41,19 @@ public class MeasureValueDAO extends AbstractDAOMapping<MeasureValue>{
 		BeanPropertyRowMapper<MeasureValue> mapper = new BeanPropertyRowMapper<MeasureValue>(MeasureValue.class);
 		return this.jdbcTemplate.queryForObject(sql, mapper, value);
 	}
-	
-	public long save(MeasureValue measureValue)
+
+	public long save(MeasureValue measureValue) throws DAOException
 	{
 		//Check if category exist
-		if(measureValue.measureCategory!=null && measureValue.measureCategory.id==null)
-		{
-			MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
-			measureValue.measureCategory.id = measureCategoryDAO.save(measureValue.measureCategory);
-		}
 
+		if(measureValue.measureCategory!=null){
+			MeasureCategory measureCategoryDB = MeasureCategory.find.findByCode(measureValue.measureCategory.code);
+			if(measureCategoryDB==null){
+				MeasureCategoryDAO measureCategoryDAO = Spring.getBeanOfType(MeasureCategoryDAO.class);
+				measureValue.measureCategory.id = measureCategoryDAO.save(measureValue.measureCategory);
+			}else
+				measureValue.measureCategory = measureCategoryDB;
+		}
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("code", measureValue.code);
 		parameters.put("value", measureValue.value);

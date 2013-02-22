@@ -24,7 +24,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 	protected ProtocolDAO() {
 		super("protocol", Protocol.class, ProtocolMappingQuery.class,
 				"SELECT t.id, code, name, file_path, version, fk_protocol_category "+
-				"FROM protocol as t ",true);
+						"FROM protocol as t ",true);
 	}
 
 	public List<Protocol> findByCommonExperiment(long idCommonInfoType)
@@ -42,7 +42,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 		ProtocolMappingQuery protocolMappingQuery = new ProtocolMappingQuery(dataSource, sql,new SqlParameter("name", Types.VARCHAR));
 		return protocolMappingQuery.findObject(name);
 	}
-	
+
 	public void save(List<Protocol> protocols, long idCommonInfoType) throws DAOException
 	{
 		//Add protocols list
@@ -64,10 +64,13 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 	public long save(Protocol protocol) throws DAOException
 	{
 		//Check if category exist
-		if(protocol.protocolCategory!=null && protocol.protocolCategory.code!=null && ProtocolCategory.find.findByCode(protocol.protocolCategory.code)==null)
-		{
-			ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
-			protocol.protocolCategory.id = protocolCategoryDAO.save(protocol.protocolCategory);
+		if(protocol.protocolCategory!=null){
+			ProtocolCategory protocolCategoryDB = ProtocolCategory.find.findByCode(protocol.protocolCategory.code);
+			if(protocolCategoryDB ==null){
+				ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
+				protocol.protocolCategory.id = protocolCategoryDAO.save(protocol.protocolCategory);
+			}else
+				protocol.protocolCategory=protocolCategoryDB;
 		}
 
 		//Create new Protocol
@@ -86,8 +89,11 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 			ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
 			String sql = "INSERT INTO protocol_reagent_type (fk_protocol,fk_reagent_type) VALUES(?,?)";
 			for(ReagentType reagentType : reagentTypes){
-				if(reagentType.code!=null && ReagentType.find.findByCode(reagentType.code)==null)
+				ReagentType reagentTypeDB = ReagentType.find.findByCode(reagentType.code);
+				if(reagentTypeDB ==null)
 					reagentType.id = reagentTypeDAO.save(reagentType);
+				else
+					reagentType=reagentTypeDB;
 				jdbcTemplate.update(sql, newId,reagentType.id);
 			}
 		}

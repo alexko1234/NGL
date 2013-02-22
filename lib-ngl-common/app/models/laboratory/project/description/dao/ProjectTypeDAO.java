@@ -19,8 +19,8 @@ public class ProjectTypeDAO extends AbstractDAOMapping<ProjectType>{
 	protected ProjectTypeDAO() {
 		super("project_type", ProjectType.class, ProjectTypeMappingQuery.class, 
 				"SELECT t.id, fk_common_info_type, fk_project_category "+
-				"FROM project_type as t "+
-				"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
+						"FROM project_type as t "+
+						"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
 
 	public long save(ProjectType projectType) throws DAOException
@@ -29,10 +29,14 @@ public class ProjectTypeDAO extends AbstractDAOMapping<ProjectType>{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		projectType.id = commonInfoTypeDAO.save(projectType);
 		//Check if category exist
-		if(projectType.projectCategory!=null && projectType.projectCategory.code!=null && ProjectCategory.find.findByCode(projectType.projectCategory.code)==null)
-		{
-			ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
-			projectType.projectCategory.id = projectCategoryDAO.save(projectType.projectCategory);
+
+		if(projectType.projectCategory!=null){
+			ProjectCategory projectCategoryDB = ProjectCategory.find.findByCode(projectType.projectCategory.code);
+			if(projectCategoryDB==null){
+				ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
+				projectType.projectCategory.id = projectCategoryDAO.save(projectType.projectCategory);
+			}else
+				projectType.projectCategory=projectCategoryDB;
 		}
 		//Create new projectType
 		Map<String, Object> parameters = new HashMap<String, Object>();

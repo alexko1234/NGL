@@ -23,7 +23,7 @@ public class MeasureCategoryDAO extends AbstractDAOMapping<MeasureCategory>{
 				"FROM measure_category as t ", true);
 	}
 	
-	public long save(MeasureCategory measureCategory)
+	public long save(MeasureCategory measureCategory) throws DAOException
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("name", measureCategory.name);
