@@ -12,12 +12,17 @@ GET		/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experiments
 GET		/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: String)
 
 #run
+#GET	   	   /runs/:code								controllers.run.tpl.Runs.home(code : String)
+#GET		   /tpl/runs/search						controllers.run.tpl.Runs.search()
+#GET		   /tpl/runs/details					controllers.run.tpl.Runs.details()
+
+#GET    	   /api/runs                			controllers.run.Runs.list()
+#GET	   	   /runs/:code							controllers.run.Runs.show(code: java.lang.String, format: java.lang.String ?= "html")
+
 GET	   	   /runs/home								controllers.run.Runs.home()
 GET    	   /runs                					controllers.run.Runs.list()
-GET    	   /runs/add             					controllers.run.Runs.add()
 POST   	   /runs									controllers.run.Runs.createOrUpdate(format: java.lang.String ?= "html")
 GET	   	   /runs/:code								controllers.run.Runs.show(code: java.lang.String, format: java.lang.String ?= "html")
-GET	  	   /runs/:code/edit							controllers.run.Runs.edit(code: java.lang.String, format: java.lang.String ?= "html")
 DELETE	   /runs/:code								controllers.run.Runs.remove(code:java.lang.String,format: java.lang.String ?= "html")
 DELETE	   /runs/:code/files						controllers.run.Runs.removeFiles(code: java.lang.String,format: java.lang.String ?= "html")
 DELETE	   /runs/:code/readsets						controllers.run.Runs.removeReadsets(code: java.lang.String,format: java.lang.String ?= "html")
