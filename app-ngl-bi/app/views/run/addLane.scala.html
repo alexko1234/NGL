@@ -1,33 +1,30 @@
-@(field: Field, isEdit: Boolean)
-@import helper._
-@implicitField = @{ FieldConstructor(helper.tbformvertical.f) }
+@(lane: models.laboratory.run.instance.Lane)
 
-@defining(if(!isEdit) ('states->"disabled") else (Symbol("") -> "")){ disabled =>
-
-@repeat(field("readsets"), min = 0) { readset => 
- 
+@import views.utils.Format;
+@for(readset <- lane.readsets) {
+            		
 <tr>
 <td>	
-	@field("number").value
+	@lane.number
 </td>
 <td>	
-	@readset("code").value
+	@readset.code
 </td>
 <td>	
-	@readset("sampleContainerCode").value
+	@readset.sampleContainerCode
 </td>
 <td>	
-	@readset("projectCode").value
+	@readset.projectCode
 </td>
 <td>	
-	@readset("properties['nbClusterInternalAndIlluminaFilter'].value").value
+	@Format.formatClusters(readset.properties.get("nbClusterInternalAndIlluminaFilter").value)
 </td>
 <td>
-	@readset("properties['nbBaseInternalAndIlluminaFilter'].value").value
+	@Format.formatClusters(readset.properties.get("nbBaseInternalAndIlluminaFilter").value)
 </td>
 <td>
-	@readset("properties['nbRead'].value").value
+	@readset.properties.get("nbRead").value
 </td>
 </tr>
 }
-}
+

@@ -1,61 +1,44 @@
-@(dataForm: Form[models.laboratory.run.instance.Run], isEdit: Boolean)
-@import helper._
-@implicitField = @{ FieldConstructor(helper.tbformhorizontal.f) }
+@(run : models.laboratory.run.instance.Run)
 
-@defining(if(!isEdit) ('states->"disabled") else (Symbol("") -> "")){ (disabled) =>
+@import views.utils.Format;
 
-@helper.form(action = controllers.run.routes.Runs.createOrUpdate(), args = 'class -> "form-horizontal", Symbol("data-toggle") -> "ajax") {
-<legend>Run : @dataForm("code").value() </legend>         		
+<legend>Run : @run.code </legend>         		
 <fieldset>
-	@helper.tbInputUneditable(
-				field = dataForm("properties['nbClusterTotal'].value"), 
-                args = '_label -> "Cluster total",
-                '_showConstraints -> false,
-				'class -> "input-xlarge" 				
-            )
-
-	@helper.tbInputUneditable(
-				field = dataForm("properties['nbClusterIlluminaFilter'].value"), 
-                args = '_label -> "Illumina filter cluster",
-                '_showConstraints -> false,
-				'class -> "input-xlarge" 				
-            )
-	@helper.tbInputUneditable(
-				field = dataForm("properties['nbBase'].value"), 
-                args = '_label -> "Base",
-                '_showConstraints -> false,
-				'class -> "input-xlarge" 				
-            )
+	           
+                <dl class="dl-horizontal">
+    			<dt>Cluster total</dt>
+   				<dd>@Format.formatClusters(run.properties.get("nbClusterTotal").value)</dd>
+   				</dl>
+   				 <dl class="dl-horizontal">
+    			<dt>Illumina filter cluster</dt>
+   				<dd>@Format.formatClusters(run.properties.get("nbClusterIlluminaFilter").value)</dd>
+   				</dl>
+   				 <dl class="dl-horizontal">
+    			<dt>Base</dt>
+   				<dd>@Format.formatBases(run.properties.get("nbBase").value)</dd>
+   				</dl>
 	
-         <div class="control-group">
-				<label class="control-label">
-				Read Sets
-					
-				</label>
-				<div class="controls">
+         <dl class="dl-horizontal">
+    			<dt>Read Sets</dt>					
+				<dd>
 					<table id="lanesId" class="table table-bordered table-condensed">
             		<thead>
             		<tr>
             		<th>Lane Number</th><th>Read Set Code</th><th>Sample Container Code</th><th>Project Code</th><th>Internal And Illumina Filter Cluster</th><th>Internal And Illumina Filter Base</th><th>Read</th>
             		</tr>
             		</thead>
-					<tbody id="tbody_properties_id_@dataForm("_id").value()">
+					<tbody id="@run.code">
             	
-            		@repeat(dataForm("lanes"), min = 0) { lane => 
-    					@addLane(lane, isEdit)
-					}
+            		@for(lane <- run.lanes) {
+            			@addLane(lane)
+            		}
             	
+            		
             		</tbody>
             		</table>
-				</div>
-			</div>   
+				</dd>
+   				</dl>
          
         </fieldset>
-
-}
-}
-<script type="text/html" id="rowTable1">
-	@addLane(dataForm("lanes[valueIndex]"), isEdit)
-</script>
 
  
