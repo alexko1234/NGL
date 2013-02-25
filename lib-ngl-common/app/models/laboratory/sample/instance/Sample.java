@@ -39,7 +39,7 @@ public class Sample extends DBObject{
 	
 	public String projectCode;
 	
-	// ?? Wath is difference with code / referenceCollbab 
+	// ?? Wath is difference with code / referenceCollbab => code s'est interne au genoscope
 	public String name;
 	public String referenceCollab; 
 	public Map<String,PropertyValue> properties;
