@@ -15,16 +15,28 @@ public class ResolutionDAO extends AbstractDAO<Resolution>{
 		super("resolution", Resolution.class,true);
 	}
 
-	
+
 	public List<Resolution> findByCommonInfoType(long idCommonInfoType)
 	{
 		String sql = "SELECT id,name,code "+
-					"FROM resolution "+
-					"JOIN common_info_type_resolution ON fk_resolution=id "+
-					"WHERE fk_common_info_type=?";
+				"FROM resolution "+
+				"JOIN common_info_type_resolution ON fk_resolution=id "+
+				"WHERE fk_common_info_type=?";
 		BeanPropertyRowMapper<Resolution> mapper = new BeanPropertyRowMapper<Resolution>(Resolution.class);
 		return this.jdbcTemplate.query(sql, mapper, idCommonInfoType);
 	}
-	
-	
+
+	@Override
+	public void remove(Resolution resolution)
+	{
+		//Remove list resolution for common_info_type
+		String sqlState = "DELETE FROM common_info_type_resolution WHERE fk_resolution=?";
+		jdbcTemplate.update(sqlState, resolution.id);
+		//remove resolution
+		super.remove(resolution);
+
+
+	}
+
+
 }

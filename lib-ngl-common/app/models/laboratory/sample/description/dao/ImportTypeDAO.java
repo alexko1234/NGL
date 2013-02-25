@@ -54,11 +54,12 @@ public class ImportTypeDAO extends AbstractDAOMapping<ImportType>{
 
 	@Override
 	public void remove(ImportType importType) {
+		//Remove importType
+		super.remove(importType);
 		//Remove commonInfotype
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(importType);
-		//Remove importType
-		super.remove(importType);
+
 	}
 
 

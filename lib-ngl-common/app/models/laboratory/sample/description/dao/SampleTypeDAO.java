@@ -53,10 +53,11 @@ public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
 
 	@Override
 	public void remove(SampleType sampleType) {
+		//Remove sampleType
+		super.remove(sampleType);
 		//Remove commonInfotype
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(sampleType);
-		//Remove sampleType
-		super.remove(sampleType);
+
 	}
 }

@@ -124,11 +124,14 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		//remove instruments
 		String sqlInst = "DELETE FROM instrument WHERE instrument_used_type_id=?";
 		jdbcTemplate.update(sqlInst, instrumentUsedType.id);
+		//remove instrument used type
+		super.remove(instrumentUsedType);
 		//remove common_info_type
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(instrumentUsedType);
-		//remove instrument used type
-		super.remove(instrumentUsedType);
+
+
+
 
 	}
 

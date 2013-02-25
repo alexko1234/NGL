@@ -201,16 +201,20 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 
 	@Override
 	public void remove(ExperimentType experimentType) {
-		super.remove(experimentType);
+		
 		//Remove next experiment next_experiment_types
 		String sqlNextExp = "DELETE FROM next_experiment_types WHERE fk_experiment_type=?";
 		jdbcTemplate.update(sqlNextExp, experimentType.id);
+		String sqlNextExpPrev = "DELETE FROM next_experiment_types WHERE fk_next_experiment_type=?";
+		jdbcTemplate.update(sqlNextExpPrev, experimentType.id);
 		//Remove quality control experiment_quality_control
 		String sqlQuality = "DELETE FROM experiment_quality_control WHERE fk_experiment_type=?";
 		jdbcTemplate.update(sqlQuality, experimentType.id);
 		//Remove purification experiment_purification_method
 		String sqlPurif = "DELETE FROM experiment_purification_method WHERE fk_experiment_type=?";
 		jdbcTemplate.update(sqlPurif, experimentType.id);
+		
+		super.remove(experimentType);
 	}
 
 

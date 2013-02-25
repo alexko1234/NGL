@@ -65,7 +65,7 @@ public class SpringTest extends AbstractTests{
 	public void initializeDB()
 	{
 		ExecuteSQLDAO initializeDatabaseDAO = Spring.getBeanOfType(ExecuteSQLDAO.class);
-		Resource resource = new ClassPathResource("/dump30012013.sql");
+		Resource resource = new ClassPathResource("/schemaInnoDB.sql");
 		initializeDatabaseDAO.executeScript(resource);
 	}
 	
@@ -327,9 +327,11 @@ public class SpringTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value3","value3", true));
 		possibleValues.add(createValue("value4","value4", false));
+		List<Value> possibleValues2 = new ArrayList<Value>();
+		possibleValues2.add(createValue("value5","value5", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop1", "prop1", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
-		propertiesDefinitions.add(createPropertyDefinition("prop2", "prop2", true, true, "default", "descProp2", "format2", 2, "in", "content", true, true, "type2", measureCategory, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop2", "prop2", true, true, "default", "descProp2", "format2", 2, "in", "content", true, true, "type2", measureCategory, measureValue, possibleValues2));
 		CommonInfoType commonInfoType = createCommonInfoType("reagent1", "reagent1", "reagent1", states, resolutions, propertiesDefinitions, objectType);
 		reagentType.setCommonInfoType(commonInfoType);
 		reagentType.id = reagentType.save();
@@ -674,8 +676,8 @@ public class SpringTest extends AbstractTests{
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value4","value4", true));
-		possibleValues.add(createValue("value5","value5", false));
+		possibleValues.add(createValue("value6","value6", true));
+		possibleValues.add(createValue("value7","value7", false));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop3", "prop3", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("inst1", "inst1", "inst1", states, resolutions, propertiesDefinitions, objectType);
@@ -763,7 +765,7 @@ public class SpringTest extends AbstractTests{
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value6", "value6", true));
+		possibleValues.add(createValue("value8", "value8", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop4", "prop4", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("purif1", "purif1", "purif1", states, resolutions, propertiesDefinitions, objectType);
@@ -803,7 +805,7 @@ public class SpringTest extends AbstractTests{
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value6", "value6", true));
+		possibleValues.add(createValue("value9", "value9", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop5", "prop5", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("inst3", "inst3", "inst3", states, resolutions, propertiesDefinitions, objectType);
@@ -874,7 +876,7 @@ public class SpringTest extends AbstractTests{
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value7","value7", true));
+		possibleValues.add(createValue("value10","value10", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop6", "prop6", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("qc1", "qc1", "qc1", states, resolutions, propertiesDefinitions, objectType);
@@ -912,7 +914,7 @@ public class SpringTest extends AbstractTests{
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value8","value8", true));
+		possibleValues.add(createValue("value11","value11", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop7", "prop7", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("inst4", "inst4", "inst4", states, resolutions, propertiesDefinitions, objectType);
@@ -994,7 +996,7 @@ public class SpringTest extends AbstractTests{
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value8","value8", true));
+		possibleValues.add(createValue("value12","value12", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop8", "prop8", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("exp1", "exp1", "exp1", states, resolutions, propertiesDefinitions, objectType);
@@ -1041,7 +1043,7 @@ public class SpringTest extends AbstractTests{
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value9","value9", true));
+		possibleValues.add(createValue("value13","value13", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop9", "prop9", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("purif2", "purif2", "purif2", states, resolutions, propertiesDefinitions, objectType);
@@ -1065,7 +1067,7 @@ public class SpringTest extends AbstractTests{
 		objectType = ObjectType.find.findByCode("ControlQuality");
 		
 		possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value10","value10", true));
+		possibleValues.add(createValue("value14","value14", true));
 		propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop10", "prop10", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		commonInfoType = createCommonInfoType("qc2", "qc2", "qc2", states, resolutions, propertiesDefinitions, objectType);
@@ -1101,7 +1103,7 @@ public class SpringTest extends AbstractTests{
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value9","value9", true));
+		possibleValues.add(createValue("value15","value15", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop11", "prop11", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("exp2", "exp2", "exp2", states, resolutions, propertiesDefinitions, objectType);
@@ -1228,7 +1230,7 @@ public class SpringTest extends AbstractTests{
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value10","value10", true));
+		possibleValues.add(createValue("value16","value16", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop12", "prop12", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("process1", "process1", "process1", states, resolutions, propertiesDefinitions, objectType);
@@ -1331,7 +1333,7 @@ public class SpringTest extends AbstractTests{
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value11","value11", true));
+		possibleValues.add(createValue("value17","value17", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop13", "prop13", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("project1", "project1", "project1", states, resolutions, propertiesDefinitions, objectType);
@@ -1431,7 +1433,7 @@ public class SpringTest extends AbstractTests{
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value12","value12", true));
+		possibleValues.add(createValue("value18","value18", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop14", "prop14", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("sample1", "sample1", "sample1", states, resolutions, propertiesDefinitions, objectType);
@@ -1509,7 +1511,7 @@ public class SpringTest extends AbstractTests{
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureValue measureValue = MeasureValue.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
-		possibleValues.add(createValue("value13","value13", true));
+		possibleValues.add(createValue("value19","value19", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop15", "prop15", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("import1", "import1", "import1", states, resolutions, propertiesDefinitions, objectType);
@@ -1623,14 +1625,6 @@ public class SpringTest extends AbstractTests{
 	}
 	
 	@Test
-	public void removeExperimentCategory() throws DAOException
-	{
-		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
-		experimentCategory.remove();
-		Assert.assertNull(ExperimentCategory.find.findByCode("expCat1"));
-	}
-	
-	@Test
 	public void removeExperimentType() throws DAOException
 	{
 		ExperimentType experimentType = ExperimentType.find.findByCode("exp1");
@@ -1640,6 +1634,16 @@ public class SpringTest extends AbstractTests{
 		experimentType = ExperimentType.find.findByCode("exp2");
 		experimentType.remove();
 	}
+	
+	
+	@Test
+	public void removeExperimentCategory() throws DAOException
+	{
+		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
+		experimentCategory.remove();
+		Assert.assertNull(ExperimentCategory.find.findByCode("expCat1"));
+	}
+	
 	
 	@Test
 	public void removeProcessCategory() throws DAOException
@@ -1711,8 +1715,6 @@ public class SpringTest extends AbstractTests{
 		Protocol protocol = Protocol.findByName("updateProto1");
 		protocol.remove();
 		Assert.assertNull(Protocol.findByName("updateProto1"));
-		ProtocolCategory protocolCategory = ProtocolCategory.find.findByCode("protoCat2");
-		protocolCategory.remove();
 		protocol = Protocol.find.findByCode("proto2");
 		protocol.remove();
 		protocol = Protocol.find.findByCode("proto3");
@@ -1727,10 +1729,16 @@ public class SpringTest extends AbstractTests{
 		ProtocolCategory protocolCategory = ProtocolCategory.find.findByCode("protoCat1");
 		protocolCategory.remove();
 		Assert.assertNull(ProtocolCategory.find.findByCode("protoCat1"));
+		protocolCategory = ProtocolCategory.find.findByCode("protoCat2");
+		protocolCategory.remove();
 		protocolCategory = ProtocolCategory.find.findByCode("protoCat3");
 		protocolCategory.remove();
 		protocolCategory = ProtocolCategory.find.findByCode("protoCat4");
 		protocolCategory.remove();
 		
 	}
+	
+	
+	
+	
 }

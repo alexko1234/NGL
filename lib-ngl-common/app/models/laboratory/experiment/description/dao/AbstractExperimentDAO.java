@@ -22,7 +22,7 @@ public abstract class AbstractExperimentDAO<P extends AbstractExperiment> extend
 	public AbstractExperimentDAO(String tableName,Class<P> entityClass, Class<? extends MappingSqlQuery<P>> classMapping, String sqlCommon)
 	{
 		super(tableName, entityClass, classMapping, sqlCommon,false);
-		
+
 	}
 
 	public long save(P experiment) throws DAOException
@@ -71,12 +71,9 @@ public abstract class AbstractExperimentDAO<P extends AbstractExperiment> extend
 			}
 		}
 	}
-	
+
 	@Override
 	public void remove(P experiment) {
-		//Remove commonInfoType
-		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		commonInfoTypeDAO.remove(experiment);
 		//Remove protocol common_info_type_protocol
 		String sqlProto = "DELETE FROM common_info_type_protocol WHERE fk_common_info_type=?";
 		jdbcTemplate.update(sqlProto, experiment.id);
@@ -85,6 +82,9 @@ public abstract class AbstractExperimentDAO<P extends AbstractExperiment> extend
 		jdbcTemplate.update(sqlInstru, experiment.id);
 		//Remove experiment
 		super.remove(experiment);
+		//Remove commonInfoType
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		commonInfoTypeDAO.remove(experiment);
 	}
 
 }

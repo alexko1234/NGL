@@ -22,8 +22,8 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 	protected ProcessTypeDAO() {
 		super("process_type", ProcessType.class, ProcessTypeMappingQuery.class, 
 				"SELECT t.id, fk_common_info_type, fk_process_category "+
-				"FROM process_type as t  "+
-				"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
+						"FROM process_type as t  "+
+						"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
 
 	public long save(ProcessType processType) throws DAOException
@@ -35,8 +35,8 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 		if(processType.processCategory!=null){
 			ProcessCategory processCategoryDB = ProcessCategory.find.findByCode(processType.processCategory.code);
 			if(processCategoryDB ==null){
-			ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
-			processType.processCategory.id = processCategoryDAO.save(processType.processCategory);
+				ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
+				processType.processCategory.id = processCategoryDAO.save(processType.processCategory);
 			}else
 				processType.processCategory=processCategoryDB;
 		}
@@ -90,13 +90,17 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 
 	@Override
 	public void remove(ProcessType processType) {
-		//Remove CommonInfoType
-		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		commonInfoTypeDAO.remove(processType);
 		//Remove process_experiment_type
 		String sqlExp = "DELETE FROM process_experiment_type WHERE fk_process_type=?";
 		jdbcTemplate.update(sqlExp, processType.id);
+
 		//Remove processType
 		super.remove(processType);
+
+		//Remove CommonInfoType
+		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+		commonInfoTypeDAO.remove(processType);
+
+
 	}
 }

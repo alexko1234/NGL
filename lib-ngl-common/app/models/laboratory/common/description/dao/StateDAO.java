@@ -24,5 +24,16 @@ public class StateDAO extends AbstractDAO<State>{
 		BeanPropertyRowMapper<State> mapper = new BeanPropertyRowMapper<State>(State.class);
 		return this.jdbcTemplate.query(sql, mapper, idCommonInfoType);
 	}
-	
+
+	@Override
+	public void remove(State state)
+	{
+		//Remove list state for common_info_type
+		String sqlState = "DELETE FROM common_info_type_state WHERE fk_state=?";
+		jdbcTemplate.update(sqlState, state.id);
+		//remove resolution
+		super.remove(state);
+
+	}
+
 }

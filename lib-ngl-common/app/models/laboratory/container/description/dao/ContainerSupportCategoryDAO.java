@@ -15,7 +15,7 @@ public class ContainerSupportCategoryDAO extends AbstractDAO<ContainerSupportCat
 		super("container_support_category", ContainerSupportCategory.class,true);
 	}
 
-	
+
 	public List<ContainerSupportCategory> findInByInstrumentCategory(long idInstrumentCategory)
 	{
 		String sql = "SELECT id,name,code,nbUsableContainer,nbLine,nbColumn " +
@@ -34,5 +34,17 @@ public class ContainerSupportCategoryDAO extends AbstractDAO<ContainerSupportCat
 				"WHERE fk_instrument_category=?";
 		BeanPropertyRowMapper<ContainerSupportCategory> mapper = new BeanPropertyRowMapper<ContainerSupportCategory>(ContainerSupportCategory.class);
 		return this.jdbcTemplate.query(sql, mapper, idInstrumentCategory);
+	}
+
+	@Override
+	public void remove(ContainerSupportCategory containerSupportCategory)
+	{
+		//Remove inContainerSupport from instrument category
+		String sqlContainerIn = "DELETE FROM instrumentCategory_inContainerSupportCategory WHERE fk_container_support_category=?";
+		jdbcTemplate.update(sqlContainerIn, containerSupportCategory.id);
+		//Remove outContainerSupport from instrument category
+		String sqlContainerOut = "DELETE FROM instrumentCategory_outContainerSupportCategory WHERE fk_container_support_category=?";
+		jdbcTemplate.update(sqlContainerOut, containerSupportCategory.id);
+		super.remove(containerSupportCategory);
 	}
 }

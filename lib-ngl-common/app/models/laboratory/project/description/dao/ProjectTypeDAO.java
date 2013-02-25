@@ -57,10 +57,11 @@ public class ProjectTypeDAO extends AbstractDAOMapping<ProjectType>{
 
 	@Override
 	public void remove(ProjectType projectType) {
+		//Remove ProjectType
+		super.remove(projectType);
 		//Remove commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(projectType);
-		//Remove ProjectType
-		super.remove(projectType);
+
 	}
 }

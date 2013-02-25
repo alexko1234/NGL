@@ -14,11 +14,11 @@ public class PurificationMethodTypeDAO extends AbstractExperimentDAO<Purificatio
 	public PurificationMethodTypeDAO() {
 		super("purification_method_type", PurificationMethodType.class,PurificationMethodTypeMappingQuery.class,
 				"SELECT t.id, fk_common_info_type, code "+
-				"FROM purification_method_type as t "+
+						"FROM purification_method_type as t "+
 				"JOIN common_info_type as c ON c.id=fk_common_info_type ");
-		
+
 	}
-	
+
 
 	public List<PurificationMethodType> findByExperimentType(long idExperimentType)
 	{
@@ -29,7 +29,12 @@ public class PurificationMethodTypeDAO extends AbstractExperimentDAO<Purificatio
 		return purificationMethodTypeMappingQuery.execute(idExperimentType);
 	}
 
-
-	
+	@Override
+	public void remove(PurificationMethodType purificationMethodType) {
+		//Remove in list associated with experiment_type
+		String sqlState = "DELETE FROM experiment_purification_method WHERE fk_purification_method_type=?";
+		jdbcTemplate.update(sqlState, purificationMethodType.id);
+		super.remove(purificationMethodType);
+	}
 
 }

@@ -11,5 +11,11 @@ public class ExperimentCategoryDAO extends AbstractDAO<ExperimentCategory>{
 	public ExperimentCategoryDAO() {
 		super("experiment_category",ExperimentCategory.class,true);
 	}
-	
+
+	@Override
+	public void remove(ExperimentCategory experimentCategory)
+	{
+		super.remove(experimentCategory);
+	}
+
 }
