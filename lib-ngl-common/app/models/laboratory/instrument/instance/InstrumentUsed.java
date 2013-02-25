@@ -2,6 +2,8 @@ package models.laboratory.instrument.instance;
 
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
+import models.laboratory.project.description.ProjectType;
+import models.utils.HelperObjects;
 import models.utils.ObjectSGBDReference;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -15,23 +17,11 @@ public class InstrumentUsed {
 
 	@JsonIgnore
 	public Instrument getInstrument(){
-
-		try {
-			return new ObjectSGBDReference<Instrument>(Instrument.class,code).getObject();
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
+		return new HelperObjects<Instrument>().getObject(Instrument.class, code, null);
 	}
 
 	@JsonIgnore
 	public InstrumentCategory getInstrumentCategory(){
-
-		try {
-			//return new ObjectSGBDReference<InstrumentCategory>(InstrumentCategory.class,categoryCode).getObject();
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;	
+		return new HelperObjects<InstrumentCategory>().getObject(InstrumentCategory.class, categoryCode, null);
 	}
 }

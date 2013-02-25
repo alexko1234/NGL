@@ -34,10 +34,8 @@ public class ObjectSGBDReference<T extends Model<T>> implements IFetch<T>{
 
 	@Override
 	public T getObject() throws Exception {
-		Finder<T> find = new Finder<T>(className.getName()+"DAO");
-		// TODO replace by generic SpringDAO find 
-		//return Ebean.find(className).where()  
-		//	      .eq("code",code).findUnique();
+		// init Finder from class DAO associated to this class in package ./dao
+		Finder<T> find = new Finder<T>(className.getName().replaceAll("description", "description.dao")+"DAO");
 		return find.findByCode(code);
 	}
 

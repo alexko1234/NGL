@@ -9,11 +9,11 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.experiment.description.Protocol;
+import models.laboratory.experiment.description.PurificationMethodType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
-import models.utils.ObjectSGBDReference;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -73,18 +73,12 @@ public class Purification extends DBObject {
 	//	traceInformation=new TraceInformation();
 	}
 	
-	/*
+	
 	@JsonIgnore
-	public PurificationType getPurificationType(){
-		try {
-			return new ObjectSGBDReference<PurificationType>(PurificationType.class,PurificationTypeCode).getObject();
-		} catch (Exception e) {
-			//TODO
-		
-		}
-		return null;
+	public PurificationMethodType getPurificationType(){
+		return new HelperObjects<PurificationMethodType>().getObject(PurificationMethodType.class, protocolCode, null);
 	}
-	*/
+	
 	@JsonIgnore
 	public List<Sample> getSamples(){
 		return new HelperObjects<Sample>().getObjects(Sample.class, sampleCodes);
@@ -97,38 +91,17 @@ public class Purification extends DBObject {
 	
 	@JsonIgnore
 	public Protocol getProtocol(){
-		
-		try {
-			//return new ObjectSGBDReference<Protocol>(Protocol.class, protocolCode).getObject();
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
-
+		return new HelperObjects<Protocol>().getObject(Protocol.class, protocolCode, null);
 	}
 	
 	@JsonIgnore
 	public State getState(){
-
-		try {
-			//return new ObjectSGBDReference<State>(State.class, stateCode).getObject();
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
+		return new HelperObjects<State>().getObject(State.class, stateCode, null);
 	}
 	
 	@JsonIgnore
 	public Resolution getResolution(){
-
-		try {
-			//return new ObjectSGBDReference<Resolution>(Resolution.class, resolutionCode).getObject();
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
+		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode, null);
 	}
-	
-	
 	
 }

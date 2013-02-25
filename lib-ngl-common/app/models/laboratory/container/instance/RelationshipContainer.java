@@ -2,8 +2,8 @@ package models.laboratory.container.instance;
 
 import java.util.List;
 
+import models.laboratory.container.description.ContainerCategory;
 import models.utils.HelperObjects;
-import models.utils.ObjectMongoDBReference;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -20,13 +20,9 @@ public class RelationshipContainer extends DBObject {
 	
 	
 	@JsonIgnore
-	public Container getCurrentContainer(){
-		try {
-			return new ObjectMongoDBReference<Container>(Container.class, currentContainerCode).getObject();
-		} catch (Exception e) {
-			// TODO 
-		}
-		return null;
+	public ContainerCategory getContainerCategory(){
+		return new HelperObjects<ContainerCategory>().getObject(ContainerCategory.class, currentContainerCode, null);
+
 	}
 	
 	@JsonIgnore

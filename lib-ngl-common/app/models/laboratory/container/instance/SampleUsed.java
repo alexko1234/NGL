@@ -1,14 +1,14 @@
 package models.laboratory.container.instance;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
-import models.utils.ObjectMongoDBReference;
-import models.utils.ObjectSGBDReference;
+import models.utils.HelperObjects;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 public class SampleUsed {
+
 	// Reference Sample code
 	public String sampleCode;
 	// Reference SampleType code
@@ -17,10 +17,10 @@ public class SampleUsed {
 	public String categoryCode;
 	
 	public SampleUsed(){
-		
-		
+	
 	}
 
+	@JsonIgnore
 	public SampleUsed(String sampleCode,String typeCode,String categoryCode){
 		this.sampleCode=sampleCode;
 		this.typeCode=typeCode;
@@ -30,37 +30,21 @@ public class SampleUsed {
 
 	@JsonIgnore
 	public Sample getSample(){
-
-		try {
-			return new ObjectMongoDBReference<Sample>(Sample.class,sampleCode).getObject();
-		} catch (Exception e) {
-			//TODO
-		}
-		return null;
-
+		return new HelperObjects<Sample>().getObject(Sample.class, sampleCode, null);
+		
 	}
 	
 	@JsonIgnore
 	public SampleType getSampleType(){
-
-		try {
-			//return new ObjectSGBDReference<SampleType>(SampleType.class,typeCode).getObject();
-		} catch (Exception e) {
-			//TODO
-		}
-		return null;
+		return new HelperObjects<SampleType>().getObject(SampleType.class, typeCode, null);
 
 	}
 	
 	@JsonIgnore
 	public SampleCategory getSampleCategory(){
+		return new HelperObjects<SampleCategory>().getObject(SampleCategory.class, categoryCode, null);
 
-		try {
-			//return new ObjectSGBDReference<SampleCategory>(SampleCategory.class,categoryCode).getObject();
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
+		
 	}
 
 }

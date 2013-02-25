@@ -2,6 +2,12 @@ package models.laboratory.common.instance;
 
 import java.util.Date;
 
+import models.utils.HelperObjects;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import controllers.administration.authentication.User;
+
 /**
  * Comment are embedded data in collection like Container, Experiment.... 
  * 
@@ -29,6 +35,11 @@ public class Comment {
 			creationDate = new Date();
 		this.comment=comment;
 		
+	}
+
+	@JsonIgnore
+	public User setCreateUser(){
+		return new HelperObjects<User>().getObject(User.class, createUser, null);
 	}
 	
 }

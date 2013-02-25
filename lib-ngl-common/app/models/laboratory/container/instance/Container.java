@@ -15,8 +15,6 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
-import models.utils.ObjectMongoDBReference;
-import models.utils.ObjectSGBDReference;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -40,12 +38,13 @@ public class Container extends DBObject {
 
 	
 	@JsonIgnore
-	public final static String HEADER="Container.code;Container.categoryCode;Container.comments;ContainerSupport.categorycode;ContainerSupport.x;ContainerSupport.barecode";
+	public final static String HEADER="Container.code;Container.categoryCode;Container.comments;ContainerSupport.categorycode;ContainerSupport.x;ContainerSupport.y;ContainerSupport.barecode";
 	
 	//ContainerCategory Ref
 	public String categoryCode;
 	
-	// State Ref
+	// State Ref ??
+	//TODO
 	public String stateCode;
 	public TBoolean valid;
 	// Resolution Ref
@@ -72,7 +71,7 @@ public class Container extends DBObject {
 	public List<Volume> calculedVolume;
 	
 	// For search optimisation
-	public List<String> projetCodes; // getProjets
+	public List<String> projectCodes; // getProjets
 	public List<String> sampleCodes; // getSamples
 	// ExperimentType must be an internal or external experiment ( origine )
 	// List for pool experimentType
@@ -99,63 +98,35 @@ public class Container extends DBObject {
 	
 	@JsonIgnore
 	public ContainerCategory getContainerCategory(){
-		try {
-			//return new ObjectSGBDReference<ContainerCategory>(ContainerCategory.class,code).getObject();
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
+		return new HelperObjects<ContainerCategory>().getObject(ContainerCategory.class, categoryCode, null);
+
 	}
 	
 	@JsonIgnore
 	public List<Project> getProjects() {
-		
-		List<Project> projets =new ArrayList<Project>();
-
-		for (int i = 0; i < projetCodes.size(); i++) {
-			try {
-				projets.add(new ObjectMongoDBReference<Project>(Project.class,projetCodes.get(i)).getObject());
-			} catch (Exception e) {
-				// TODO
-			}	
-		}
-		
-		return projets;
+		return new HelperObjects<Project>().getObjects(Project.class, projectCodes);
 		
 	}
 	
 	@JsonIgnore
 	public List<Sample> getSamples() {
-		
 		return new HelperObjects<Sample>().getObjects(Sample.class, sampleCodes);
-		
 	}
 
 	@JsonIgnore
 	public List<ExperimentType> getExperimentTypes() {
-		
 		return new HelperObjects<ExperimentType>().getObjects(ExperimentType.class, fromExperimentTypeCodes);
-		
 	}
+	
 	
 	@JsonIgnore
 	public State getState(){
-		try {
-			return new ObjectSGBDReference<State>(State.class,stateCode).getObject();
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
+		return new HelperObjects<State>().getObject(State.class, stateCode, null);
 	}
 	
 	@JsonIgnore
 	public Resolution getResolution(){
-		try {
-			return new ObjectSGBDReference<Resolution>(Resolution.class,resolutionCode).getObject();
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
+		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode, null);
 	}
 	
 

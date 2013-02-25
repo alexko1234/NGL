@@ -60,22 +60,10 @@ public class QualityControl extends DBObject {
 		}
 		
 		public QualityControl(String code){
-		//	this.qualityControlTypeCode=code;
+			this.qualityControlTypeCode=code;
 		//	traceInformation=new TraceInformation();
 		}
 		
-		/*
-		@JsonIgnore
-		public QualityControlType getQualityControlType(){
-			try {
-				return new ObjectSGBDReference<QualityControlType>(QualityControlType.class,QualityControlCode).getObject();
-			} catch (Exception e) {
-				//TODO
-			
-			}
-			return null;
-		}
-		*/
 		@JsonIgnore
 		public List<Sample> getSamples(){
 			return new HelperObjects<Sample>().getObjects(Sample.class, sampleCodes);
@@ -88,36 +76,17 @@ public class QualityControl extends DBObject {
 		
 		@JsonIgnore
 		public Protocol getProtocol(){
-			
-			try {
-				//return new ObjectSGBDReference<Protocol>(Protocol.class, protocolCode).getObject();
-			} catch (Exception e) {
-				// TODO
-			}
-			return null;
-
+			return new HelperObjects<Protocol>().getObject(Protocol.class, protocolCode, null);
 		}
 		
 		@JsonIgnore
 		public State getState(){
-
-			try {
-				//return new ObjectSGBDReference<State>(State.class, stateCode).getObject();
-			} catch (Exception e) {
-				// TODO
-			}
-			return null;
+			return new HelperObjects<State>().getObject(State.class, stateCode, null);
 		}
 		
 		@JsonIgnore
 		public Resolution getResolution(){
-
-			try {
-				//return new ObjectSGBDReference<Resolution>(Resolution.class, resolutionCode).getObject();
-			} catch (Exception e) {
-				// TODO
-			}
-			return null;
+			return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode, null);
 		}
 		
 }

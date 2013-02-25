@@ -30,7 +30,7 @@ public class Sample extends DBObject{
 	
 	
 	@JsonIgnore
-	public final static String HEADER="Sample.code;Sample.projectCode;Sample.name;Sample.categoryCode;Sample.referenceCollab;Sample.taxonCode;Sample.comments";
+	public final static String HEADER="Sample.code;Sample.projectCode;Sample.name;Sample.referenceCollab;Sample.taxonCode;Sample.comments";
 	
 	// SampleType Ref
 	public String typeCode;

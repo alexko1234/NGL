@@ -1,6 +1,8 @@
 package validation.utils;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -108,6 +110,18 @@ public class ConstraintsHelper {
 	 * @return
 	 */
 	public static Object transformValue(String type, Object value) {
+		return transformValue(type, value, null);
+	}
+	
+	
+	/**
+	 * 
+	 * @param type : final type
+	 * @param value : the value
+	 * @param format ; format Date
+	 * @return
+	 */
+	public static Object transformValue(String type, Object value,String format) {
 		Object o = null;
 		if (String.class.getName().equals(type)) {
 			o = value.toString();
@@ -122,9 +136,18 @@ public class ConstraintsHelper {
 		} else if (Long.class.getName().equals(type)) {
 			o = Long.valueOf(value.toString());
 		} else if (Date.class.getName().equals(type)) {
-			o = new Date(Integer.valueOf(value.toString()));
+			if(format==null){
+				o = new Date(Integer.valueOf(value.toString()));
+			}
+			else {  SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+				try {
+					o=simpleDateFormat.parse(value.toString());
+				} catch (ParseException e) {
+					Logger.debug(e.toString());
+				}
+			}
 		} else if (TBoolean.class.getName().equals(type)) {
-			o = TBoolean.fromValue(value.toString());
+			o = TBoolean.valueOf(value.toString());
 		} else {
 			Logger.info("Erreur de type :"+type);
 		}

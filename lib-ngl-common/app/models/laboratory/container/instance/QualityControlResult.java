@@ -12,9 +12,10 @@ import models.laboratory.common.instance.PropertyValue;
  * */
 public class QualityControlResult {
 	
-	public String QualityControleCode;
-	public String QualityControleTypeCode;
+	public String qualityControleCode;
+	public String qualityControleTypeCode;
 	public Map<String,PropertyValue> properties;
 	
 
+	
 }

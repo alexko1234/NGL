@@ -2,7 +2,12 @@ package models.laboratory.common.instance;
 
 import java.util.Date;
 
+import models.utils.HelperObjects;
+
 import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import controllers.administration.authentication.User;
 
 /**
  * 
@@ -39,5 +44,15 @@ public class TraceInformation {
 
 		
 	}
-		
+	
+	@JsonIgnore
+	public User setCreateUser(){
+		return new HelperObjects<User>().getObject(User.class, createUser, null);
+	}
+	
+	
+	@JsonIgnore
+	public User setModifyUser(){
+		return new HelperObjects<User>().getObject(User.class, modifyUser, null);
+	}
 }

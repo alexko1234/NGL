@@ -5,7 +5,7 @@ import java.util.Map;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Volume;
-import models.utils.ObjectMongoDBReference;
+import models.utils.HelperObjects;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -21,12 +21,7 @@ public class ContainerUsed {
 	
 	@JsonIgnore
 	public Container getContainer(){
-		try {
-			return new ObjectMongoDBReference<Container>(Container.class, containerCode).getObject();
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
+		return new HelperObjects<Container>().getObject(Container.class, containerCode, null);
 		
 	}
 }

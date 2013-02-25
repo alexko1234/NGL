@@ -1,7 +1,7 @@
 package models.laboratory.container.instance;
 
 import models.laboratory.container.description.ContainerSupportCategory;
-import models.utils.ObjectSGBDReference;
+import models.utils.HelperObjects;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -33,12 +33,7 @@ public class ContainerSupport {
 	
 	@JsonIgnore
 	public ContainerSupportCategory getContainerSupportCategory(){
-		try {
-			//return new ObjectSGBDReference<ContainerSupportCategory>(ContainerSupportCategory.class, categoryCode).getObject();
-		} catch (Exception e) {
-			// TODO
-			e.printStackTrace();
-		}
-		return null;
+		return new HelperObjects<ContainerSupportCategory>().getObject(ContainerSupportCategory.class, categoryCode, null);
+
 	}
 }

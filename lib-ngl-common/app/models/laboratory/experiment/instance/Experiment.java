@@ -14,7 +14,6 @@ import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
-import models.utils.ObjectSGBDReference;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -77,13 +76,7 @@ public class Experiment extends DBObject {
 	
 	@JsonIgnore
 	public ExperimentType getExperimentType(){
-		try {
-			//return new ObjectSGBDReference<ExperimentType>(ExperimentType.class,experimentTypeCode).getObject();
-		} catch (Exception e) {
-			//TODO
-		
-		}
-		return null;
+		return new HelperObjects<ExperimentType>().getObject(ExperimentType.class, experimentTypeCode, null);
 	}
 	
 	@JsonIgnore
@@ -96,40 +89,20 @@ public class Experiment extends DBObject {
 		return new HelperObjects<Project>().getObjects(Project.class, projectCodes);
 	}
 	
+	
 	@JsonIgnore
 	public Protocol getProtocol(){
-		
-		try {
-			return new ObjectSGBDReference<Protocol>(Protocol.class, protocolCode).getObject();
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
-
+		return new HelperObjects<Protocol>().getObject(Protocol.class, protocolCode, null);
 	}
 	
 	@JsonIgnore
 	public State getState(){
-
-		try {
-			return new ObjectSGBDReference<State>(State.class, stateCode).getObject();
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
+		return new HelperObjects<State>().getObject(State.class, stateCode, null);
 	}
 	
 	@JsonIgnore
 	public Resolution getResolution(){
-
-		try {
-			return new ObjectSGBDReference<Resolution>(Resolution.class, resolutionCode).getObject();
-		} catch (Exception e) {
-			// TODO
-		}
-		return null;
+		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode, null);
 	}
-	
-	
 	
 }
