@@ -46,6 +46,7 @@ DROP TABLE IF EXISTS sample_category;
 DROP TABLE IF EXISTS import_category;
 DROP TABLE IF EXISTS process_category;
 DROP TABLE IF EXISTS project_category;
+DROP TABLE IF EXISTS state_category;
 DROP TABLE IF EXISTS role_permission;
 DROP TABLE IF EXISTS user_equipe;
 DROP TABLE IF EXISTS user_role;
@@ -106,6 +107,17 @@ CREATE TABLE common_info_type_resolution (
   FOREIGN KEY (fk_resolution) REFERENCES resolution(id)
 ) ENGINE=InnoDB;
 
+--
+-- Table structure for table `state_category`
+--
+
+CREATE TABLE state_category(
+	id bigint(20) NOT NULL auto_increment,
+	name varchar(255) NOT NULL,
+	code varchar(255) NOT NULL unique,
+	PRIMARY KEY(id),
+	INDEX idx_state_category_code (code)
+)ENGINE=InnoDB;
 
 --
 -- Table structure for table `state`
@@ -117,7 +129,10 @@ CREATE TABLE state (
   code varchar(255) NOT NULL unique,
   active tinyint(1) NOT NULL default '0',
   priority int(11) default NULL,
+  level enum('process','containing','experiment') DEFAULT NULL,
+  fk_state_category bigint(20) NOT NULL,
   PRIMARY KEY  (id),
+  FOREIGN KEY(fk_state_category) REFERENCES state_category(id),
   INDEX idx_state_code (code)
 ) ENGINE=InnoDB;
 

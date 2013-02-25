@@ -17,6 +17,10 @@ public class State extends Model<State>{
 	
 	public Integer priority;
 	
+	public StateCategory stateCategory;
+	
+	public String level;
+	
 	public static Finder<State> find = new Finder<State>(StateDAO.class.getName()); 
 	
 	public State() {

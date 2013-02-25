@@ -12,6 +12,7 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
+import models.laboratory.common.description.StateCategory;
 import models.laboratory.common.description.Value;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.AbstractExperiment;
@@ -178,17 +179,52 @@ public class SpringTest extends AbstractTests{
 	}
 
 	/**
+	 * TEST STATE_CATEGORY
+	 * @throws DAOException 
+	 */
+	@Test
+	public void saveStateCategory() throws DAOException
+	{
+		StateCategory stateCategory = createStateCategory("catState1", "catState1");
+		stateCategory.id=stateCategory.save();
+		stateCategory=StateCategory.find.findById(stateCategory.id);
+		checkAbstractCategory(stateCategory);
+	}
+	
+	@Test
+	public void updateStateCategory() throws DAOException
+	{
+		StateCategory stateCategory = StateCategory.find.findByCode("catState1");
+		checkAbstractCategory(stateCategory);
+		Assert.assertTrue(stateCategory.code.equals("catState1"));
+		stateCategory.name="updateCatStat1";
+		stateCategory.update();
+		stateCategory = StateCategory.find.findById(stateCategory.id);
+		checkAbstractCategory(stateCategory);
+		Assert.assertTrue(stateCategory.name.equals("updateCatStat1"));
+	}
+	private StateCategory createStateCategory(String code, String name)
+	{
+		StateCategory stateCategory = new StateCategory();
+		stateCategory.code=code;
+		stateCategory.name=name;
+		return stateCategory;
+		
+	}
+	/**
 	 * TEST STATE
 	 * @throws DAOException 
 	 */
 	@Test
 	public void saveState() throws DAOException
 	{
-		State state = createState("state1", "state1", 1, true);
+		StateCategory stateCategory = StateCategory.find.findByCode("catState1");
+		Assert.assertNotNull(stateCategory);
+		State state = createState("state1", "state1", 1, true,"experiment",stateCategory);
 		state.id = state.save();
 		state=State.find.findById(state.id);
 		checkState(state);
-		Assert.assertTrue(state.code.equals(state.code));
+		
 	}
 
 	////////@Test
@@ -216,13 +252,15 @@ public class SpringTest extends AbstractTests{
 		}
 	}
 
-	private State createState(String code, String name, Integer priority, boolean active)
+	private State createState(String code, String name, Integer priority, boolean active, String level, StateCategory stateCategory)
 	{
 		State state = new State();
 		state.code=code;
 		state.name=name;
 		state.priority=priority;
 		state.active=active;
+		state.level=level;
+		state.stateCategory=stateCategory;
 		return state;
 	}
 
@@ -234,8 +272,12 @@ public class SpringTest extends AbstractTests{
 		Assert.assertNotNull(state.name);
 		Assert.assertNotNull(state.active);
 		Assert.assertNotNull(state.priority);
+		Assert.assertNotNull(state.level);
+		checkAbstractCategory(state.stateCategory);
+		
 	}
 
+	
 	/**
 	 * TEST MEASURE_CATEGORY
 	 * @throws DAOException 
@@ -315,9 +357,10 @@ public class SpringTest extends AbstractTests{
 	public void saveReagentType() throws DAOException
 	{
 		ReagentType reagentType = new ReagentType();
+		StateCategory stateCategory = StateCategory.find.findByCode("catState1");
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state1"));
-		states.add(createState("state2", "state2", 2, true));
+		states.add(createState("state2", "state2", 2, true,"experiment",stateCategory));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
 		resolutions.add(Resolution.find.findByCode("resol1"));
 		resolutions.add(createResolution("resol2", "resol2"));
@@ -1738,7 +1781,13 @@ public class SpringTest extends AbstractTests{
 		
 	}
 	
-	
+	@Test
+	public void removeStateCategory() throws DAOException
+	{
+		StateCategory stateCategory = StateCategory.find.findByCode("catState1");
+		stateCategory.remove();
+		Assert.assertNull(StateCategory.find.findByCode("catState1"));
+	}
 	
 	
 }
