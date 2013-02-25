@@ -7,7 +7,7 @@ import models.laboratory.common.description.PropertyDefinition;
 
 public class RunPropertyDefinitionHelper {
 	
-	private static PropertyDefinition getPropertyDefinition(String keyCode, String keyName, Boolean required, Boolean active, Boolean choiceInList, Class type) {
+	private static PropertyDefinition getPropertyDefinition(String keyCode, String keyName, Boolean required, Boolean active, Boolean choiceInList, Class<? extends Object> type) {
 		PropertyDefinition propertyDefinition = new PropertyDefinition();
 		propertyDefinition.code = keyCode;
 		propertyDefinition.name = keyName;
