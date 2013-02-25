@@ -54,7 +54,7 @@ public class ConstraintsHelper {
 				
 			}else{
 				//Non active on les supprimes par defaut pour l'instant et erreur
-				if(null != pv || null != pv.value){
+				if(null != pv){
 					properties.remove(propertyDefinition.code);
 					//TODO gestion de warning !!!
 					addErrors(errors, getKey(rootKeyName,propertyDefinition.code), "error.nonactive");
