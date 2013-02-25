@@ -12,7 +12,7 @@ public class PermissionAction extends Action<Permission> {
 	
 	@Override
 	public Result call(Context ctx) throws Throwable {
-		if(PermissionHelper.checkPermission(ctx.session(), new ArrayList(Arrays.asList(configuration.value())), configuration.allPermissions()) && PermissionHelper.checkTeam(ctx.session(),new ArrayList(Arrays.asList(configuration.teams()))))
+		if(PermissionHelper.checkPermission(ctx.session(), new ArrayList<String>(Arrays.asList(configuration.value())), configuration.allPermissions()) && PermissionHelper.checkTeam(ctx.session(),new ArrayList<String>(Arrays.asList(configuration.teams()))))
 			return delegate.call(ctx);
 		else
 			return unauthorized("Acces interdit pour cette ressource");
