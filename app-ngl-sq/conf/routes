@@ -21,6 +21,13 @@ GET		/tpl/containers								controllers.container.ContainersViews.searchViews()
 GET		/tpl/projects/list							controllers.tpl.helper.Lists.projects()
 GET		/tpl/experimenttypes/list					controllers.tpl.helper.Lists.experimentTypes()
 
+# load data
+GET	   	   /loaddata/home								controllers.dataload.SampleLoad.home()
+POST   	   /loaddata									controllers.dataload.SampleLoad.uploadDataFromCSVFile()
+POST	   /createtemplate								controllers.dataload.SampleLoad.createTemplateFile()
+GET		   /loaddatatype								controllers.dataload.InitialData.loadDataType()
+GET       /createprojects								controllers.dataload.InitialData.createProjectFromLims()
+
 #api
 GET		/api/containers								controllers.container.ContainersApis.list()
 
