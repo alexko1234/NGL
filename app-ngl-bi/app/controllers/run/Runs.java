@@ -10,6 +10,7 @@ import net.vz.mongodb.jackson.DBUpdate;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -19,6 +20,9 @@ import views.html.run.run;
 import views.html.run.runs;
 import controllers.utils.DataTableForm;
 import fr.cea.ig.MongoDBDAO;
+
+import java.lang.Double;
+
 /**
  * Controller around Run object
  * @author galbini
@@ -47,40 +51,21 @@ public class Runs extends Controller {
 		return ok(Json.toJson(result));
 	}
 	
-	public static Result add(){
-		Form<Run> defaultForm = runForm.fill(new Run()); //put default value
-		return ok(run.render(defaultForm, true));
-	}
-	
 	public static Result show(String code, String format){
 		Run runValue = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);		
 		if(runValue != null){
 			if("json".equals(format)){
 				return ok(Json.toJson(runValue));
 			}else{
-				Form<Run> filledForm = runForm.fill(runValue);				
-				return ok(run.render(filledForm, Boolean.FALSE));				
+				//Form<Run> filledForm = runForm.fill(runValue);
+				return ok(run.render(runValue));				
 			}			
 		}else{
 			return notFound();
 		}		
 	}
 	
-	public static Result edit(String code, String format){
-		Run runValue = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);		
-		if(runValue != null){
-			if("json".equals(format)){
-				return ok(Json.toJson(runValue));
-			}else{
-				Form<Run> filledForm = runForm.fill(runValue);				
-				return ok(run.render(filledForm, Boolean.TRUE));
-				//return ok(Json.toJson(run));
-			}			
-		}else{
-			return notFound();
-		}	
-	}
-	
+		
 	
 	public static Result createOrUpdate(String format){
 		Form<Run> filledForm = getFilledForm(format);
@@ -104,13 +89,13 @@ public class Runs extends Controller {
 			if ("json".equals(format)) {
 				return ok(Json.toJson(filledForm.get()));
 			} else {
-				return ok(run.render(filledForm, true));
+				return ok(Json.toJson(filledForm.get()));
 			}
 		} else {
 			if ("json".equals(format)) {
 				return badRequest(filledForm.errorsAsJson());
 			} else {
-				return badRequest(run.render(filledForm, true));
+				return badRequest(filledForm.errorsAsJson());
 			}
 		}
 	}
@@ -164,8 +149,7 @@ public class Runs extends Controller {
 		Run run = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);		
 		if(run != null){
 			JsonNode json = request().body().asJson();
-			System.out.println(json);
-			System.out.println("VALUE= "+json.get("dispatch"));
+			Logger.info("Dispatch run : "+code);
 			boolean dispatch = json.get("dispatch").asBoolean();
 			MongoDBDAO.updateSet(Constants.RUN_ILLUMINA_COLL_NAME, run, "dispatch", dispatch);
 		}else{

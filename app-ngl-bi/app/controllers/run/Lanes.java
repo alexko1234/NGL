@@ -8,6 +8,7 @@ import models.laboratory.run.instance.Run;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -33,7 +34,7 @@ public class Lanes extends Controller{
 			Lane laneValue = filledForm.get();
 			BusinessValidationHelper.validateLane(filledForm.errors(), run,laneValue, Constants.RUN_ILLUMINA_COLL_NAME, null);
 			if(!filledForm.hasErrors()) {
-				System.out.println("insert OK :"+laneValue.number);
+				Logger.debug("Insert lane OK :"+laneValue.number);
 				//MongoDBDAO.createOrUpdateInArray(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,"code" , code, "lanes", "number", laneValue.number,laneValue);
 				int laneNumber = laneValue.number;
 				boolean isFind = false;
