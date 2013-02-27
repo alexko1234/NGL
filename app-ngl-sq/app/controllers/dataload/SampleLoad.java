@@ -144,8 +144,8 @@ public class SampleLoad extends Controller{
 			}
 
 
-			MongoDBDAO.saveDBOjects(containers);
-			MongoDBDAO.saveDBOjects(samples);
+			MongoDBDAO.save(containers);
+			MongoDBDAO.save(samples);
 
 			if(filledForm.hasErrors()){
 				return badRequest(sampleload.render(datatableForm, filledForm));

@@ -15,6 +15,7 @@ import models.laboratory.project.description.ProjectType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
+import models.utils.DescriptionHelper;
 import models.utils.HelperObjects;
 import models.utils.dao.DAOException;
 import play.data.validation.ValidationError;
@@ -23,7 +24,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import validation.utils.ConstraintsHelper;
 import data.FirstData;
-import data.utils.DataTypeHelper;
 import fr.cea.ig.MongoDBDAO;
 
 public class InitialData extends Controller{
@@ -33,10 +33,12 @@ public class InitialData extends Controller{
 		public static Result loadDataType(){
 
 			try {
-				DataTypeHelper.saveMapType(SampleType.class,FirstData.getSampleTypeAll());
-				DataTypeHelper.saveMapType(ExperimentType.class, FirstData.getEXperimentType());
-				DataTypeHelper.saveMapType(ImportType.class, FirstData.getImportTypeAll());
-				DataTypeHelper.saveMapType(ProjectType.class, FirstData.getProjectTypeAll());
+				DescriptionHelper.saveMapType(SampleType.class,FirstData.getSampleTypeAll());
+				DescriptionHelper.saveMapType(ExperimentType.class, FirstData.getEXperimentType());
+				DescriptionHelper.saveMapType(ImportType.class, FirstData.getImportTypeAll());
+				DescriptionHelper.saveMapType(ProjectType.class, FirstData.getProjectTypeAll());
+			//TODO	DescriptionHelper.saveMapType(ContainerCategory.class, FirstData.getContainerCategorieAll());
+				
 			} catch (DAOException e) {
 
 				return badRequest(e.getMessage());
@@ -86,7 +88,7 @@ public class InitialData extends Controller{
 				return badRequest(e.getMessage());
 			}
 
-			MongoDBDAO.saveDBOjects(projects);
+			MongoDBDAO.save(projects);
 			
 			return ok(projects.size()+" projects save !!");
 

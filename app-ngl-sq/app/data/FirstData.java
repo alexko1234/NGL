@@ -12,17 +12,17 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
+import models.utils.DescriptionHelper;
 import models.utils.dao.DAOException;
-import data.utils.DataTypeHelper;
 
 public class FirstData {
 
 
 	public static Map<String,SampleType> getSampleAdnClone() throws DAOException{
 
-		SampleType sampleTypeBac = DataTypeHelper.getSampleType("bac","Bac", "ADNClone", getPropertyDefinitionsADNClone());
-		SampleType sampleTypePlasmide = DataTypeHelper.getSampleType("plasmide","Plasmide", "ADNClone", getPropertyDefinitionsADNClone());
-		SampleType sampleTypeFosmide = DataTypeHelper.getSampleType("fosmide","Fosmide", "ADNClone", getPropertyDefinitionsADNClone());
+		SampleType sampleTypeBac = DescriptionHelper.getSampleType("bac","Bac", "ADNClone", getPropertyDefinitionsADNClone());
+		SampleType sampleTypePlasmide = DescriptionHelper.getSampleType("plasmide","Plasmide", "ADNClone", getPropertyDefinitionsADNClone());
+		SampleType sampleTypeFosmide = DescriptionHelper.getSampleType("fosmide","Fosmide", "ADNClone", getPropertyDefinitionsADNClone());
 
 		Map<String,SampleType> results=new HashMap<String, SampleType>();
 		
@@ -37,9 +37,9 @@ public class FirstData {
 	
 	public static Map<String,SampleType> getSampleAdn() throws DAOException{
 
-		SampleType sampleTypeADNGenomique = DataTypeHelper.getSampleType("ADNGenomique","ADN Génomique", "ADN", getPropertyDefinitions());
-		SampleType sampleTypeADNMeta = DataTypeHelper.getSampleType("ADNMetagenomique","ADN métagénomique", "ADN", getPropertyDefinitions());
-		SampleType sampleTypeADNTara = DataTypeHelper.getSampleType("ADNTara","ADN Tara", "ADN",  getPropertyDefinitions());
+		SampleType sampleTypeADNGenomique = DescriptionHelper.getSampleType("ADNGenomique","ADN Génomique", "ADN", getPropertyDefinitions());
+		SampleType sampleTypeADNMeta = DescriptionHelper.getSampleType("ADNMetagenomique","ADN métagénomique", "ADN", getPropertyDefinitions());
+		SampleType sampleTypeADNTara = DescriptionHelper.getSampleType("ADNTara","ADN Tara", "ADN",  getPropertyDefinitions());
 
 		Map<String,SampleType> results=new HashMap<String, SampleType>();
 
@@ -54,8 +54,8 @@ public class FirstData {
 
 	public static Map<String,SampleType> getSampleAmplicon() throws DAOException{
 
-		SampleType sampleTypeAmplicon = DataTypeHelper.getSampleType("amplicon","Amplicon", "amplicon", getPropertyDefinitionsTara()); 
-		SampleType sampleTypeAmpliconTara = DataTypeHelper.getSampleType("ampliconTara","Amplicon Tara", "amplicon", getPropertyDefinitionsTara());
+		SampleType sampleTypeAmplicon = DescriptionHelper.getSampleType("amplicon","Amplicon", "amplicon", getPropertyDefinitionsTara()); 
+		SampleType sampleTypeAmpliconTara = DescriptionHelper.getSampleType("ampliconTara","Amplicon Tara", "amplicon", getPropertyDefinitionsTara());
 
 		Map<String,SampleType> results=new HashMap<String, SampleType>();
 
@@ -68,7 +68,7 @@ public class FirstData {
 
 	public static Map<String,SampleType> getSampleInconnu() throws DAOException{
 
-		SampleType sampleTypeInconnu = DataTypeHelper.getSampleType("indetermine","Indetermine", "inconnu", getPropertyDefinitions()); 
+		SampleType sampleTypeInconnu = DescriptionHelper.getSampleType("indetermine","Indetermine", "inconnu", getPropertyDefinitions()); 
 
 		Map<String,SampleType> results=new HashMap<String, SampleType>();
 
@@ -81,10 +81,10 @@ public class FirstData {
 
 	public static Map<String,SampleType> getSampleArn() throws DAOException{
 
-		SampleType sampleTypeARNTotal = DataTypeHelper.getSampleType("ARNTotal","ARN total", "ARN", getPropertyDefinitions()); 
-		SampleType sampleTypeARNTotalTara = DataTypeHelper.getSampleType("ARNTara","ARN Total Tara", "ARN", getPropertyDefinitionsTara()); 
-		SampleType sampleTypeARNm = DataTypeHelper.getSampleType("ARNm","ARNm", "ARN", getPropertyDefinitions()); 
-		SampleType sampleTypesRNA = DataTypeHelper.getSampleType("sRNA","sRNA", "ARN", getPropertyDefinitions()); 
+		SampleType sampleTypeARNTotal = DescriptionHelper.getSampleType("ARNTotal","ARN total", "ARN", getPropertyDefinitions()); 
+		SampleType sampleTypeARNTotalTara = DescriptionHelper.getSampleType("ARNTara","ARN Total Tara", "ARN", getPropertyDefinitionsTara()); 
+		SampleType sampleTypeARNm = DescriptionHelper.getSampleType("ARNm","ARNm", "ARN", getPropertyDefinitions()); 
+		SampleType sampleTypesRNA = DescriptionHelper.getSampleType("sRNA","sRNA", "ARN", getPropertyDefinitions()); 
 
 		Map<String,SampleType> results=new HashMap<String, SampleType>();
 
@@ -99,8 +99,8 @@ public class FirstData {
 
 	public static Map<String,SampleType> getSamplecDNA() throws DAOException{
 
-		SampleType sampleTypecDNA =DataTypeHelper.getSampleType("cDNA","cDNA", "ARN", getPropertyDefinitions());
-		SampleType sampleTypecDNATARA =DataTypeHelper.getSampleType("cDNATara","cDNA Tara", "ARN", getPropertyDefinitionsTara());
+		SampleType sampleTypecDNA =DescriptionHelper.getSampleType("cDNA","cDNA", "ARN", getPropertyDefinitions());
+		SampleType sampleTypecDNATARA =DescriptionHelper.getSampleType("cDNATara","cDNA Tara", "ARN", getPropertyDefinitionsTara());
 
 		Map<String,SampleType> results=new HashMap<String, SampleType>();
 
@@ -113,8 +113,8 @@ public class FirstData {
 
 	public static Map<String,SampleType> getSampleMatImmunoprecipites() throws DAOException{
 
-		SampleType sampleTypechip = DataTypeHelper.getSampleType("chiP","ChiP", "materielImmunoprecipite", getPropertyDefinitions());
-		SampleType sampleTypeclip = DataTypeHelper.getSampleType("clip","CLIP", "materielImmunoprecipite", getPropertyDefinitions());
+		SampleType sampleTypechip = DescriptionHelper.getSampleType("chiP","ChiP", "materielImmunoprecipite", getPropertyDefinitions());
+		SampleType sampleTypeclip = DescriptionHelper.getSampleType("clip","CLIP", "materielImmunoprecipite", getPropertyDefinitions());
 		Map<String,SampleType> results=new HashMap<String, SampleType>();
 
 		results.put(sampleTypechip.code, sampleTypechip);
@@ -127,19 +127,19 @@ public class FirstData {
 
 	private static List<PropertyDefinition> getPropertyDefinitionsTara() {
 		List<PropertyDefinition> propertyDefinitions = getPropertyDefinitions();
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("station","Station TARA",Boolean.TRUE, Boolean.TRUE, Long.class));
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("profondeur","Profondeur TARA",Boolean.TRUE, Boolean.TRUE, String.class));
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("filtre","Filtre TARA",Boolean.TRUE, Boolean.TRUE, String.class));
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("iteration","Iteration TARA",Boolean.TRUE, Boolean.TRUE, String.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("station","Station TARA",Boolean.TRUE, Boolean.TRUE, Long.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("profondeur","Profondeur TARA",Boolean.TRUE, Boolean.TRUE, String.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("filtre","Filtre TARA",Boolean.TRUE, Boolean.TRUE, String.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("iteration","Iteration TARA",Boolean.TRUE, Boolean.TRUE, String.class));
 
 		return propertyDefinitions;
 	}
 
 	private static List<PropertyDefinition> getPropertyDefinitions() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("tailleTaxon","Taille associée au taxon",Boolean.TRUE, Boolean.TRUE, Long.class));		
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("fragmente","Fragmenté",Boolean.TRUE, Boolean.TRUE, Boolean.class));
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("adaptateurs","Adpatateurs",Boolean.TRUE, Boolean.TRUE, Boolean.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("tailleTaxon","Taille associée au taxon",Boolean.TRUE, Boolean.TRUE, Long.class));		
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("fragmente","Fragmenté",Boolean.TRUE, Boolean.TRUE, Boolean.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("adaptateurs","Adpatateurs",Boolean.TRUE, Boolean.TRUE, Boolean.class));
 
 		return propertyDefinitions;
 	}
@@ -148,10 +148,10 @@ public class FirstData {
 	public static List<PropertyDefinition> getPropertyDefinitionsADNClone() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("tailleInsert","Taille d'insert",Boolean.TRUE, Boolean.TRUE,  Double.class));
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("vecteur","Vecteur",Boolean.FALSE,Boolean.TRUE, Long.class));
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("souche","Souche",Boolean.FALSE, Boolean.TRUE,  Double.class));		
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("siteClone","Site clone",Boolean.FALSE, Boolean.TRUE,  Double.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("tailleInsert","Taille d'insert",Boolean.TRUE, Boolean.TRUE,  Double.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("vecteur","Vecteur",Boolean.FALSE,Boolean.TRUE, Long.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("souche","Souche",Boolean.FALSE, Boolean.TRUE,  Double.class));		
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("siteClone","Site clone",Boolean.FALSE, Boolean.TRUE,  Double.class));
 
 		return propertyDefinitions;
 	}
@@ -160,11 +160,11 @@ public class FirstData {
 
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("index", "Index Illumina",Boolean.FALSE, String.class,DataTypeHelper.getListFromProcedureLims("pl_Tag")));
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("concFournisseur", "Concentration fourni",false,true,Double.class));
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("quantiteFournisseur", "Quantite fournie",false,true, Double.class));
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("volumeFournisseur", "Volume fourni", false,true, Double.class));
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("dateReception", "Date reception", Date.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("index", "Index Illumina",Boolean.FALSE, String.class,DescriptionHelper.getListFromProcedureLims("pl_Tag")));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("concFournisseur", "Concentration fourni",false,true,Double.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("quantiteFournisseur", "Quantite fournie",false,true, Double.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeFournisseur", "Volume fourni", false,true, Double.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("dateReception", "Date reception", Date.class));
 
 		return propertyDefinitions;
 	}
@@ -172,14 +172,14 @@ public class FirstData {
 	public static List<PropertyDefinition> getPropertyDefinitionsImport() {
 
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		MeasureCategory measureCategory1=DataTypeHelper.getMeasureCategory("concentration", "Concentration", "ng/ul", "ng/ul");
-		MeasureCategory measureCategory2=DataTypeHelper.getMeasureCategory("volume", "Volume", "ul", "ul");
-		MeasureCategory measureCategory3=DataTypeHelper.getMeasureCategory("quantity", "Quantité", "ng", "ng");
+		MeasureCategory measureCategory1=DescriptionHelper.getMeasureCategory("concentration", "Concentration", "ng/ul", "ng/ul");
+		MeasureCategory measureCategory2=DescriptionHelper.getMeasureCategory("volume", "Volume", "ul", "ul");
+		MeasureCategory measureCategory3=DescriptionHelper.getMeasureCategory("quantity", "Quantité", "ng", "ng");
 		
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("concFournisseur", "Concentration fournie", Double.class,Boolean.FALSE,measureCategory1,measureCategory1.measurePossibleValues.get(0)));
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("quantiteFournisseur", "Quantite fournie",Double.class,Boolean.FALSE,measureCategory3,measureCategory3.measurePossibleValues.get(0)));
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("volumeFournisseur", "Volume fourni", Double.class,Boolean.FALSE,measureCategory2,measureCategory2.measurePossibleValues.get(0)));
-		propertyDefinitions.add(DataTypeHelper.getPropertyDefinition("dateReception", "Date réception", Date.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("concFournisseur", "Concentration fournie", Double.class,Boolean.FALSE,measureCategory1,measureCategory1.measurePossibleValues.get(0)));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("quantiteFournisseur", "Quantite fournie",Double.class,Boolean.FALSE,measureCategory3,measureCategory3.measurePossibleValues.get(0)));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeFournisseur", "Volume fourni", Double.class,Boolean.FALSE,measureCategory2,measureCategory2.measurePossibleValues.get(0)));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("dateReception", "Date réception", Date.class));
 	
 		return propertyDefinitions;
 	}
@@ -189,10 +189,10 @@ public class FirstData {
 
 		Map<String,ExperimentType> results=new HashMap<String, ExperimentType>();
 
-		ExperimentType experimentTypeBq =DataTypeHelper.getExperimentType("receptionBanqueSolexa", "Reception Banque Solexa", "Librairie", null);
-		ExperimentType experimentTypeBrut =DataTypeHelper.getExperimentType("reception", "Reception", "Sample", null);
+		ExperimentType experimentTypeBq =DescriptionHelper.getExperimentType("receptionBanqueSolexa", "Reception Banque Solexa", "Librairie", null);
+		ExperimentType experimentTypeBrut =DescriptionHelper.getExperimentType("reception", "Reception", "Sample", null);
 		// Librairie ??
-		ExperimentType experimentTypeFrag =DataTypeHelper.getExperimentType("receptionFragmentation", "Reception Fragmentation", "Librairie", null);
+		ExperimentType experimentTypeFrag =DescriptionHelper.getExperimentType("receptionFragmentation", "Reception Fragmentation", "Librairie", null);
 
 		results.put(experimentTypeBq.code, experimentTypeBq);
 		results.put(experimentTypeBrut.code, experimentTypeBrut);
@@ -214,8 +214,8 @@ public class FirstData {
 
 	public static Map<String,ImportType> getImportTypeAll() throws DAOException{
 		Map<String,ImportType> importtypes=new HashMap<String, ImportType>();
-		importtypes.put("importBanqueSolexa",DataTypeHelper.getImportType("importBanqueSolexa","Importation Sample Bq Solexa","importSample",getPropertyDefinitionsImportBq()));
-		importtypes.put("importNormal",DataTypeHelper.getImportType("importNormal","Importation Normal","importSample",getPropertyDefinitionsImport()));
+		importtypes.put("importBanqueSolexa",DescriptionHelper.getImportType("importBanqueSolexa","Importation Sample Bq Solexa","importSample",getPropertyDefinitionsImportBq()));
+		importtypes.put("importNormal",DescriptionHelper.getImportType("importNormal","Importation Normal","importSample",getPropertyDefinitionsImport()));
 		return importtypes;
 	}
 
@@ -223,10 +223,24 @@ public class FirstData {
 	public static Map<String,ProjectType> getProjectTypeAll() throws DAOException {
 		Map<String,ProjectType> projecttypes=new HashMap<String, ProjectType>();
 		
-		ProjectType projectType=DataTypeHelper.getProjectType("projectType", "Projet Type","Projet", null);
+		ProjectType projectType=DescriptionHelper.getProjectType("projectType", "Projet Type","Projet", null);
 				
 		projecttypes.put(projectType.code, projectType);
 		return projecttypes;
 	}
+	
+	/*public static Map<String,ContainerCategory> getContainerCategorieAll() throws DAOException{
+		Map<String,ContainerCategory> containerCategories=new HashMap<String, ContainerCategory>();
+		
+		ContainerCategory containerCategoryTube=DescriptionHelper.getContainerCategory("Tube");
+		ContainerCategory containerCategoryWell=DescriptionHelper.getContainerCategory("Well");
+		ContainerCategory containerCategoryLane=DescriptionHelper.getContainerCategory("Lane");
+		
+		containerCategories.put(containerCategoryLane.code,containerCategoryLane);
+		containerCategories.put(containerCategoryWell.code,containerCategoryWell);
+		containerCategories.put(containerCategoryTube.code,containerCategoryTube);
+		
+		return containerCategories;
+	}*/
 	
 }
