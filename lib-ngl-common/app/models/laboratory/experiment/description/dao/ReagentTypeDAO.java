@@ -36,6 +36,7 @@ public class ReagentTypeDAO extends AbstractDAOMapping<ReagentType>{
 		return reagentTypeMappingQuery.execute(idProtocol);
 	}
 
+	@Override
 	public long save(ReagentType reagentType) throws DAOException
 	{
 		//Add commonInfoType
@@ -50,6 +51,7 @@ public class ReagentTypeDAO extends AbstractDAOMapping<ReagentType>{
 		return reagentType.id;
 	}
 
+	@Override
 	public void update(ReagentType reagentType) throws DAOException
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
@@ -57,7 +59,7 @@ public class ReagentTypeDAO extends AbstractDAOMapping<ReagentType>{
 	}
 
 	@Override
-	public void remove(ReagentType reagentType) {
+	public void remove(ReagentType reagentType) throws DAOException {
 		//Remove reagent type protocol
 		String sqlProtocol = "DELETE FROM protocol_reagent_type WHERE fk_reagent_type=?";
 		jdbcTemplate.update(sqlProtocol, reagentType.id);
@@ -66,6 +68,5 @@ public class ReagentTypeDAO extends AbstractDAOMapping<ReagentType>{
 		//remove commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(reagentType);
-
 	}
 }

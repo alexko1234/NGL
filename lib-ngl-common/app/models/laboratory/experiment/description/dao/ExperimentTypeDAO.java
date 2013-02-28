@@ -45,6 +45,8 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 		ExperimentTypeMappingQuery experimentTypeMappingQuery = new ExperimentTypeMappingQuery(dataSource, sql, new SqlParameter("p.fk_process_type", Type.LONG));
 		return experimentTypeMappingQuery.execute(id);
 	}
+	
+	@Override
 	public long save(ExperimentType experimentType) throws DAOException
 	{
 		//Add commonInfoType
@@ -117,6 +119,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 		return experimentType.id;
 	}
 
+	@Override
 	public void update(ExperimentType experimentType) throws DAOException
 	{
 		ExperimentType expTypeDB = findById(experimentType.id);
@@ -200,7 +203,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 	}
 
 	@Override
-	public void remove(ExperimentType experimentType) {
+	public void remove(ExperimentType experimentType) throws DAOException {
 		
 		//Remove next experiment next_experiment_types
 		String sqlNextExp = "DELETE FROM next_experiment_types WHERE fk_experiment_type=?";

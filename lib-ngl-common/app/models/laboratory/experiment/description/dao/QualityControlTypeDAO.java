@@ -3,6 +3,7 @@ package models.laboratory.experiment.description.dao;
 import java.util.List;
 
 import models.laboratory.experiment.description.QualityControlType;
+import models.utils.dao.DAOException;
 
 import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
@@ -25,6 +26,14 @@ public class QualityControlTypeDAO extends AbstractExperimentDAO<QualityControlT
 				"WHERE eqc.fk_experiment_type = ?";
 		QualityControlTypeMappingQuery qualityControlTypeMappingQuery = new QualityControlTypeMappingQuery(dataSource, sql, new SqlParameter("eqc.fk_experiment_type", Type.LONG));
 		return qualityControlTypeMappingQuery.execute(idExperimentType);
+	}
+	
+	@Override
+	public void remove(QualityControlType qualityControlType) throws DAOException{
+		//Remove in list associated with experiment_type
+		String sqlState = "DELETE FROM experiment_quality_control WHERE fk_quality_control_type=?";
+		jdbcTemplate.update(sqlState, qualityControlType.id);
+		super.remove(qualityControlType);
 	}
 
 }

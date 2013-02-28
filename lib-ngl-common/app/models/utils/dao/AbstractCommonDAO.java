@@ -1,5 +1,7 @@
 package models.utils.dao;
 
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +12,17 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Common opérations between Simple DAO et DAO Using mappingQuery
+ * Common operations between Simple DAO et DAO Using mappingQuery
+ * Must not implement an interface for transactional context because
+ * If implements interface Spring creates an instance for the application and get not that class but a Java Dynamic Proxy that implements that classes interface
+ * Because of this, you cannot cast that object to the original type.
+ * If there aren't interfaces to implement, it will give a CGLib proxy of the class, which is basically just a runtime modified version of the class and so is assignable to the class itself
  * @author ejacoby
  *
  * @param <T>
  */
-public abstract class AbstractCommonDAO<T> implements IDAO<T>{
+@Transactional(readOnly=false, rollbackFor=DAOException.class)
+public abstract class AbstractCommonDAO<T>{
 
 	protected String tableName;
 	protected DataSource dataSource;
@@ -42,11 +49,22 @@ public abstract class AbstractCommonDAO<T> implements IDAO<T>{
 			jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName(tableName);
 	}
 
-	@Transactional
-	public void remove(T value)
+	public void remove(T value) throws DAOException
 	{
 		String sql = "DELETE FROM "+tableName+" WHERE id=:id";
 		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
 		jdbcTemplate.update(sql, ps);
 	}
+	
+	public abstract List<T> findAll() throws DAOException;
+
+	public abstract T findById(long id) throws DAOException;;
+
+	public abstract T findByCode(String code) throws DAOException;
+
+	
+	public abstract long save(T value) throws DAOException;
+	
+	public abstract void update(T value) throws DAOException;
+	
 }

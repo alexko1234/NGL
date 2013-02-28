@@ -4,6 +4,7 @@ import java.util.List;
 
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.utils.dao.AbstractDAO;
+import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
@@ -37,7 +38,7 @@ public class ContainerSupportCategoryDAO extends AbstractDAO<ContainerSupportCat
 	}
 
 	@Override
-	public void remove(ContainerSupportCategory containerSupportCategory)
+	public void remove(ContainerSupportCategory containerSupportCategory) throws DAOException
 	{
 		//Remove inContainerSupport from instrument category
 		String sqlContainerIn = "DELETE FROM instrumentCategory_inContainerSupportCategory WHERE fk_container_support_category=?";

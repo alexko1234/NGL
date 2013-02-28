@@ -10,7 +10,7 @@ import models.utils.Model;
  *
  */
 public class State extends Model<State>{
-
+	
 	public String name;
 	
 	public boolean active;

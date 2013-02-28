@@ -73,7 +73,7 @@ public abstract class AbstractExperimentDAO<P extends AbstractExperiment> extend
 	}
 
 	@Override
-	public void remove(P experiment) {
+	public void remove(P experiment) throws DAOException {
 		//Remove protocol common_info_type_protocol
 		String sqlProto = "DELETE FROM common_info_type_protocol WHERE fk_common_info_type=?";
 		jdbcTemplate.update(sqlProto, experiment.id);

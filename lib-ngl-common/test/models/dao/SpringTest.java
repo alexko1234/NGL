@@ -14,6 +14,7 @@ import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
 import models.laboratory.common.description.Value;
+import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.AbstractExperiment;
 import models.laboratory.experiment.description.ExperimentCategory;
@@ -54,14 +55,25 @@ import utils.AbstractTests;
  */
 //@RunWith(SpringJUnit4ClassRunner.class)
 //TODO erreur classpath
-//@ContextConfiguration(locations = { "classpath:/test/application-context.xml" })
+//@ContextConfiguration(locations = { "/application-context-test.xml" })
 public class SpringTest extends AbstractTests{
 
-	
+
+	/*private TestContextManager testContextManager;
+
+    @Autowired
+    private DataSource myInjectedResource;
+
+    @Before
+    public void setUp() throws Exception{
+        this.testContextManager = new TestContextManager(getClass());
+        this.testContextManager.prepareTestInstance(this);
+    }*/
+
 	/**
 	 * Use to drop and create database schema
 	 * Obsolete with remove test
-	 * ////@Test
+	 * //////@Test
 	 */
 	public void initializeDB()
 	{
@@ -86,7 +98,7 @@ public class SpringTest extends AbstractTests{
 		objectTypeDB = ObjectType.find.findById(objectTypeDB.id);
 		Assert.assertTrue(objectType.code.equals(objectTypeDB.code));
 		Assert.assertTrue(objectType.generic.equals(objectTypeDB.generic));
-		
+
 	}
 
 	@Test
@@ -190,7 +202,7 @@ public class SpringTest extends AbstractTests{
 		stateCategory=StateCategory.find.findById(stateCategory.id);
 		checkAbstractCategory(stateCategory);
 	}
-	
+
 	@Test
 	public void updateStateCategory() throws DAOException
 	{
@@ -209,7 +221,7 @@ public class SpringTest extends AbstractTests{
 		stateCategory.code=code;
 		stateCategory.name=name;
 		return stateCategory;
-		
+
 	}
 	/**
 	 * TEST STATE
@@ -218,16 +230,17 @@ public class SpringTest extends AbstractTests{
 	@Test
 	public void saveState() throws DAOException
 	{
-		StateCategory stateCategory = StateCategory.find.findByCode("catState1");
-		Assert.assertNotNull(stateCategory);
+		//StateCategory stateCategory = StateCategory.find.findByCode("catState1");
+		//Assert.assertNotNull(stateCategory);
+		StateCategory stateCategory = createStateCategory("catState2", "catState2");
 		State state = createState("state1", "state1", 1, true,"experiment",stateCategory);
 		state.id = state.save();
 		state=State.find.findById(state.id);
 		checkState(state);
-		
+
 	}
 
-	////////@Test
+	//////////@Test
 	public void updateState() throws DAOException
 	{
 		State state = State.find.findByCode("state1");
@@ -274,10 +287,10 @@ public class SpringTest extends AbstractTests{
 		Assert.assertNotNull(state.priority);
 		Assert.assertNotNull(state.level);
 		checkAbstractCategory(state.stateCategory);
-		
+
 	}
 
-	
+
 	/**
 	 * TEST MEASURE_CATEGORY
 	 * @throws DAOException 
@@ -522,8 +535,8 @@ public class SpringTest extends AbstractTests{
 		Assert.assertTrue(protocolCategory.name.equals("updateProtoCat1"));
 	}
 
-	
-	
+
+
 	private void checkAbstractCategory(AbstractCategory abstractCategory)
 	{
 		Assert.assertNotNull(abstractCategory);
@@ -654,6 +667,8 @@ public class SpringTest extends AbstractTests{
 		instrumentCategory.id = instrumentCategory.save();
 		instrumentCategory = InstrumentCategory.find.findById(instrumentCategory.id);
 		checkInstrumentCategory(instrumentCategory);
+		Assert.assertTrue(instrumentCategory.inContainerSupportCategories.size()==1);
+		Assert.assertTrue(instrumentCategory.outContainerSupportCategories.size()==1);
 	}
 	@Test
 	public void updateInstrumentCategory() throws DAOException
@@ -671,8 +686,8 @@ public class SpringTest extends AbstractTests{
 		Assert.assertTrue(instrumentCategory.outContainerSupportCategories.size()==2);
 
 	}
-	
-	
+
+
 	private InstrumentCategory createInstrumentCategory(String code, String name, 
 			int nbInContainerSupportCategories, List<ContainerSupportCategory> inContainerSupportCategories,
 			int nbOutContainerSupportCategories, List<ContainerSupportCategory> outContainerSupportCategories)
@@ -757,7 +772,7 @@ public class SpringTest extends AbstractTests{
 		Assert.assertTrue(instrumentUsedType.instruments.size()==2);
 	}
 
-	
+
 	private InstrumentUsedType createInstrumentUsedType(CommonInfoType commonInfoType, InstrumentCategory instrumentCategory,List<Instrument> instruments)
 	{
 		InstrumentUsedType instrumentUsedType = new InstrumentUsedType();
@@ -852,18 +867,18 @@ public class SpringTest extends AbstractTests{
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop5", "prop5", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("inst3", "inst3", "inst3", states, resolutions, propertiesDefinitions, objectType);
-		
+
 		InstrumentCategory instrumentCategory = InstrumentCategory.find.findByCode("InstCat1");
 		//Get instrument
 		List<Instrument> instruments = new ArrayList<Instrument>();
 		instruments.add(createInstrument("inst3", "inst3"));
 
-		
+
 		purificationMethodType.instrumentUsedTypes.add(createInstrumentUsedType(commonInfoType, instrumentCategory, instruments));
 		List<ReagentType> reagentTypes = new ArrayList<ReagentType>();
 		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
 		reagentTypes.add(reagentType);
-		
+
 		purificationMethodType.protocols.add(createProtocol("proto3","proto3", "path3", "V2", createProtocolCategory("protoCat4", "protoCat4"), reagentTypes));
 
 		purificationMethodType.update();
@@ -874,8 +889,8 @@ public class SpringTest extends AbstractTests{
 		Assert.assertTrue(purificationMethodType.instrumentUsedTypes.size()==2);
 	}
 
-	
-	
+
+
 	private PurificationMethodType createPurificationMethodType(CommonInfoType commonInfoType, List<InstrumentUsedType> instrumentUsedTypes, List<Protocol> protocols)
 	{
 		PurificationMethodType purificationMethodType = new PurificationMethodType();
@@ -887,7 +902,7 @@ public class SpringTest extends AbstractTests{
 
 	private void checkAbstractExperiment(AbstractExperiment experiment)
 	{
-		
+
 		Assert.assertNotNull(experiment);
 		checkCommonInfoType(experiment);
 		Assert.assertNotNull(experiment.instrumentUsedTypes);
@@ -964,7 +979,7 @@ public class SpringTest extends AbstractTests{
 
 		//Get instrumentCategory
 		InstrumentCategory instrumentCategory = InstrumentCategory.find.findByCode("InstCat1");
-		
+
 		//Get instrument
 		List<Instrument> instruments = new ArrayList<Instrument>();
 		instruments.add(createInstrument("inst4", "inst4"));
@@ -1108,7 +1123,7 @@ public class SpringTest extends AbstractTests{
 		resolutions = new ArrayList<Resolution>();
 		resolutions.add(Resolution.find.findByCode("resol1"));
 		objectType = ObjectType.find.findByCode("ControlQuality");
-		
+
 		possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value14","value14", true));
 		propertiesDefinitions = new ArrayList<PropertyDefinition>();
@@ -1245,7 +1260,7 @@ public class SpringTest extends AbstractTests{
 		checkAbstractCategory(processCategory);
 		Assert.assertTrue(processCategory.name.equals("updateProcessCat1"));
 	}
-	
+
 	private ProcessCategory createProcessCategory(String code, String name)
 	{
 		ProcessCategory processCategory = new ProcessCategory();
@@ -1295,7 +1310,7 @@ public class SpringTest extends AbstractTests{
 		checkProcessType(processType);
 		Assert.assertTrue(processType.name.equals("updateProcess1"));
 		Assert.assertTrue(processType.experimentTypes.size()==2);
-		
+
 	}
 
 	@Test
@@ -1305,7 +1320,7 @@ public class SpringTest extends AbstractTests{
 		processType.remove();
 		Assert.assertNull(ProcessType.find.findByCode("process1"));
 	}
-	
+
 	private ProcessType createProcessType(CommonInfoType commonInfoType, List<ExperimentType> experimentTypes, ProcessCategory processCategory)
 	{
 		ProcessType processType = new ProcessType();
@@ -1314,7 +1329,7 @@ public class SpringTest extends AbstractTests{
 		processType.processCategory=processCategory;
 		return processType;
 	}
-	
+
 	private void checkProcessType(ProcessType processType)
 	{
 		Assert.assertNotNull(processType);
@@ -1326,7 +1341,7 @@ public class SpringTest extends AbstractTests{
 			checkExperimentType(experimentType);
 		}
 	}
-	
+
 	/**
 	 * TEST PROJECT_CATEGORY
 	 * @throws DAOException 
@@ -1396,7 +1411,7 @@ public class SpringTest extends AbstractTests{
 		checkProjectType(projectType);
 		Assert.assertTrue(projectType.name.equals("updateProject1"));
 	}
-	
+
 	@Test
 	public void removeProjectType() throws DAOException
 	{
@@ -1411,7 +1426,7 @@ public class SpringTest extends AbstractTests{
 		projectCategory.remove();
 		Assert.assertNull(ProjectCategory.find.findByCode("projectCat1"));
 	}
-	
+
 	private ProjectType createProjectType(CommonInfoType commonInfoType,  ProjectCategory projectCategory)
 	{
 		ProjectType projectType = new ProjectType();
@@ -1419,14 +1434,14 @@ public class SpringTest extends AbstractTests{
 		projectType.projectCategory=projectCategory;
 		return projectType;
 	}
-	
+
 	private void checkProjectType(ProjectType projectType)
 	{
 		Assert.assertNotNull(projectType);
 		checkCommonInfoType(projectType);
 		checkAbstractCategory(projectType.projectCategory);
 	}
-	
+
 	/**
 	 * TEST SAMPLE_CATEGORY
 	 * @throws DAOException 
@@ -1496,7 +1511,7 @@ public class SpringTest extends AbstractTests{
 		checkSampleType(sampleType);
 		Assert.assertTrue(sampleType.name.equals("updateSample1"));
 	}
-	
+
 	@Test
 	public void removeSampleType() throws DAOException
 	{
@@ -1504,7 +1519,7 @@ public class SpringTest extends AbstractTests{
 		sampleType.remove();
 		Assert.assertNull(SampleType.find.findByCode("sample1"));
 	}
-	
+
 	private SampleType createSampleType(CommonInfoType commonInfoType,  SampleCategory sampleCategory)
 	{
 		SampleType sampleType = new SampleType();
@@ -1512,14 +1527,14 @@ public class SpringTest extends AbstractTests{
 		sampleType.sampleCategory=sampleCategory;
 		return sampleType;
 	}
-	
+
 	private void checkSampleType(SampleType sampleType)
 	{
 		Assert.assertNotNull(sampleType);
 		checkCommonInfoType(sampleType);
 		checkAbstractCategory(sampleType.sampleCategory);
 	}
-	
+
 	@Test
 	public void saveImportCategory() throws DAOException
 	{
@@ -1528,7 +1543,7 @@ public class SpringTest extends AbstractTests{
 		importCategory = ImportCategory.find.findById(importCategory.id);
 		checkAbstractCategory(importCategory);
 	}
-	
+
 	@Test
 	public void updateImportCategory() throws DAOException
 	{
@@ -1540,7 +1555,7 @@ public class SpringTest extends AbstractTests{
 		checkAbstractCategory(importCategory);
 		Assert.assertTrue(importCategory.name.equals("updateImport1"));
 	}
-	
+
 	@Test
 	public void saveImportType() throws DAOException
 	{
@@ -1581,7 +1596,7 @@ public class SpringTest extends AbstractTests{
 		importType.remove();
 		Assert.assertNull(ImportType.find.findByCode("import1"));
 	}
-	
+
 	private ImportType createImportType(CommonInfoType commonInfoType,  ImportCategory importCategory)
 	{
 		ImportType importType = new ImportType();
@@ -1589,13 +1604,52 @@ public class SpringTest extends AbstractTests{
 		importType.importCategory=importCategory;
 		return importType;
 	}
-	
+
 	private void checkImportType(ImportType importType)
 	{
 		Assert.assertNotNull(importType);
 		checkCommonInfoType(importType);
 		checkAbstractCategory(importType.importCategory);
 	}
+	
+	@Test
+	public void saveContainerCategory() throws DAOException
+	{
+		ContainerCategory containerCategory = createContainerCategory("container1", "container1");
+		containerCategory.id = containerCategory.save();
+		containerCategory = ContainerCategory.find.findById(containerCategory.id);
+		checkAbstractCategory(containerCategory);
+	}
+	
+	
+	@Test
+	public void updateContainerCategory() throws DAOException
+	{
+		ContainerCategory containerCategory = ContainerCategory.find.findByCode("container1");
+		checkAbstractCategory(containerCategory);
+		containerCategory.name="updateContainer1";
+		containerCategory.update();
+		containerCategory = ContainerCategory.find.findById(containerCategory.id);
+		checkAbstractCategory(containerCategory);
+		Assert.assertTrue(containerCategory.name.equals("updateContainer1"));
+	}
+	
+	@Test
+	public void removeContainerCategory() throws DAOException
+	{
+		ContainerCategory containerCategory = ContainerCategory.find.findByCode("container1");
+		containerCategory.remove();
+		Assert.assertNull(ContainerCategory.find.findByCode("container1"));
+	}
+	
+	public ContainerCategory createContainerCategory(String name, String code)
+	{
+		ContainerCategory containerCategory = new ContainerCategory();
+		containerCategory.name=name;
+		containerCategory.code=code;
+		return containerCategory;
+	}
+	
 	@Test
 	public void removeImportCategory() throws DAOException
 	{
@@ -1603,7 +1657,7 @@ public class SpringTest extends AbstractTests{
 		importCategory.remove();
 		Assert.assertNull(ImportCategory.find.findByCode("sampleCat1"));
 	}
-	
+
 	public ImportCategory createImportCategory(String name, String code)
 	{
 		ImportCategory importCategory = new ImportCategory();
@@ -1617,9 +1671,9 @@ public class SpringTest extends AbstractTests{
 		Resolution resol = Resolution.find.findByCode("resol1");
 		resol.remove();
 		Assert.assertNull(Resolution.find.findByCode("resol1"));
-		
+
 	}
-	
+
 	@Test
 	public void removeState() throws DAOException
 	{
@@ -1628,22 +1682,22 @@ public class SpringTest extends AbstractTests{
 		state = State.find.findByCode("state1");
 		Assert.assertNull(state);
 	}
-	
+
 	@Test
 	public void removeInstrumentUsedType() throws DAOException
 	{
 		InstrumentUsedType instrumentUsedType = InstrumentUsedType.find.findByCode("inst1");
 		instrumentUsedType.remove();
 		Assert.assertNull(InstrumentUsedType.find.findByCode("inst1"));
-		
+
 		//Remove all instrument
 		instrumentUsedType = InstrumentUsedType.find.findByCode("inst3");
 		instrumentUsedType.remove();
 		instrumentUsedType = InstrumentUsedType.find.findByCode("inst4");
 		instrumentUsedType.remove();
-		
+
 	}
-	
+
 	@Test
 	public void removePurificationMethodType() throws DAOException
 	{
@@ -1654,19 +1708,19 @@ public class SpringTest extends AbstractTests{
 		purificationMethodType = PurificationMethodType.find.findByCode("purif2");
 		purificationMethodType.remove();
 	}
-	
+
 	@Test
 	public void removeQualityControlType() throws DAOException
 	{
 		QualityControlType qualityControlType = QualityControlType.find.findByCode("qc1");
 		qualityControlType.remove();
 		Assert.assertNull(QualityControlType.find.findByCode("qc1"));
-		
+
 		//Remove all quality
 		qualityControlType = QualityControlType.find.findByCode("qc2");
 		qualityControlType.remove();
 	}
-	
+
 	@Test
 	public void removeExperimentType() throws DAOException
 	{
@@ -1677,8 +1731,8 @@ public class SpringTest extends AbstractTests{
 		experimentType = ExperimentType.find.findByCode("exp2");
 		experimentType.remove();
 	}
-	
-	
+
+
 	@Test
 	public void removeExperimentCategory() throws DAOException
 	{
@@ -1686,8 +1740,8 @@ public class SpringTest extends AbstractTests{
 		experimentCategory.remove();
 		Assert.assertNull(ExperimentCategory.find.findByCode("expCat1"));
 	}
-	
-	
+
+
 	@Test
 	public void removeProcessCategory() throws DAOException
 	{
@@ -1695,7 +1749,7 @@ public class SpringTest extends AbstractTests{
 		processCategory.remove();
 		Assert.assertNull(ProcessCategory.find.findByCode("processCat1"));
 	}
-	
+
 	@Test
 	public void removeSampleCategory() throws DAOException
 	{
@@ -1704,14 +1758,14 @@ public class SpringTest extends AbstractTests{
 		sampleCategoryDAO.remove(sampleCategory);
 		Assert.assertNull(sampleCategoryDAO.findByCode("sampleCat1"));
 	}
-	
+
 	@Test
 	public void removeReagentType() throws DAOException
 	{
 		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
 		reagentType.remove();
 		Assert.assertNull(ReagentType.find.findByCode("reagent1"));
-		
+
 		//Remove state2
 		State state = State.find.findByCode("state2");
 		state.remove();
@@ -1721,9 +1775,9 @@ public class SpringTest extends AbstractTests{
 		//remove cat2
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		measureCategory.remove();
-		
+
 	}
-	
+
 	@Test
 	public void removeContainerSupportCategory() throws DAOException
 	{
@@ -1741,7 +1795,7 @@ public class SpringTest extends AbstractTests{
 		containerSupportCategory = ContainerSupportCategory.find.findByCode("support6");
 		containerSupportCategory.remove();
 	}
-	
+
 	@Test
 	public void removeInstrumentCategory() throws DAOException
 	{
@@ -1751,7 +1805,7 @@ public class SpringTest extends AbstractTests{
 		instrumentCategory = InstrumentCategory.find.findByCode("InstCat2");
 		instrumentCategory.remove();
 	}
-	
+
 	@Test
 	public void removeProtocol() throws DAOException
 	{
@@ -1765,7 +1819,7 @@ public class SpringTest extends AbstractTests{
 		protocol = Protocol.find.findByCode("proto4");
 		protocol.remove();
 	}
-	
+
 	@Test
 	public void removeProtocolCategory() throws DAOException
 	{
@@ -1778,9 +1832,9 @@ public class SpringTest extends AbstractTests{
 		protocolCategory.remove();
 		protocolCategory = ProtocolCategory.find.findByCode("protoCat4");
 		protocolCategory.remove();
-		
+
 	}
-	
+
 	@Test
 	public void removeStateCategory() throws DAOException
 	{
@@ -1788,6 +1842,6 @@ public class SpringTest extends AbstractTests{
 		stateCategory.remove();
 		Assert.assertNull(StateCategory.find.findByCode("catState1"));
 	}
-	
-	
+
+
 }

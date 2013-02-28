@@ -155,7 +155,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 	
 	@Override
-	public void remove(PropertyDefinition propertyDefinition) {
+	public void remove(PropertyDefinition propertyDefinition) throws DAOException {
 		//Delete value
 		String sqlState = "DELETE FROM value WHERE property_definition_id=?";
 		jdbcTemplate.update(sqlState, propertyDefinition.id);

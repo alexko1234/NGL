@@ -22,6 +22,7 @@ public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
 						"FROM sample_type as t JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
 
+	@Override
 	public long save(SampleType sampleType) throws DAOException
 	{
 		//Add commonInfoType
@@ -45,6 +46,7 @@ public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
 		return sampleType.id;
 	}
 
+	@Override
 	public void update(SampleType sampleType) throws DAOException
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
@@ -52,12 +54,11 @@ public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
 	}
 
 	@Override
-	public void remove(SampleType sampleType) {
+	public void remove(SampleType sampleType) throws DAOException {
 		//Remove sampleType
 		super.remove(sampleType);
 		//Remove commonInfotype
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(sampleType);
-
 	}
 }

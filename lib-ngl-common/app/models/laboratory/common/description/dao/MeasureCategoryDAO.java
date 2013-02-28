@@ -15,14 +15,13 @@ import play.modules.spring.Spring;
 @Repository
 public class MeasureCategoryDAO extends AbstractDAOMapping<MeasureCategory>{
 
-	
-
 	protected MeasureCategoryDAO() {
 		super("measure_category", MeasureCategory.class, MeasureCategoryMappingQuery.class, 
 				"SELECT t.id, name, code "+
 				"FROM measure_category as t ", true);
 	}
 	
+	@Override
 	public long save(MeasureCategory measureCategory) throws DAOException
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
@@ -38,10 +37,11 @@ public class MeasureCategoryDAO extends AbstractDAOMapping<MeasureCategory>{
 				measureValueDAO.save(measureValue);
 			}
 		}
-        return measureCategory.id;
+       return measureCategory.id;
 	}
 	
-	public void remove(MeasureCategory measureCategory)
+	@Override
+	public void remove(MeasureCategory measureCategory) throws DAOException
 	{
 		//remove measure values
 		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
@@ -50,7 +50,6 @@ public class MeasureCategoryDAO extends AbstractDAOMapping<MeasureCategory>{
 		}
 		//remove measure category
 		super.remove(measureCategory);
-				
 	}
 
 	@Override

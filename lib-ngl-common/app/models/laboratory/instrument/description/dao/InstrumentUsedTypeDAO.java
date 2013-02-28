@@ -62,6 +62,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		jdbcTemplate.update(sql, idCommonInfoType, instrumentUsedType.id);
 	}
 
+	@Override
 	public long save(InstrumentUsedType instrumentUsedType) throws DAOException
 	{
 		//Add commonInfoType
@@ -95,6 +96,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		return instrumentUsedType.id;
 	}
 
+	@Override
 	public void update(InstrumentUsedType instrumentUsedType) throws DAOException 
 	{
 		InstrumentUsedType instrumentUsedTypeDB = findById(instrumentUsedType.id);
@@ -117,7 +119,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 	}
 
 	@Override
-	public void remove(InstrumentUsedType instrumentUsedType) {
+	public void remove(InstrumentUsedType instrumentUsedType) throws DAOException {
 		//remove from abstractExperiment common_info_type_instrument_type
 		String sqlExp = "DELETE FROM common_info_type_instrument_type WHERE fk_instrument_type=?";
 		jdbcTemplate.update(sqlExp, instrumentUsedType.id);
@@ -129,10 +131,6 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		//remove common_info_type
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(instrumentUsedType);
-
-
-
-
 	}
 
 

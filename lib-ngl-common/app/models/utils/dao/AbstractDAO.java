@@ -3,14 +3,12 @@ package models.utils.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Generic operations for SimpleDAO
@@ -44,7 +42,7 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 			throw new DAOException(e);
 		}
 	}
-	
+
 	private String getSQLUpdate() throws DAOException
 	{
 		try {
@@ -60,7 +58,7 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 			throw new DAOException(e);
 		}
 	}
-	
+
 	public List<T> findAll() throws DAOException
 	{
 		try {
@@ -94,26 +92,21 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 		}
 	}
 
-	@Transactional	
 	public long save(T value) throws DAOException
 	{
-        SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
-        
-        long id  = (Long) jdbcInsert.executeAndReturnKey(ps);
-        //TODO set id to generic model
-        //value.setId(id);
-        return id;
+		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
+		long id  = (Long) jdbcInsert.executeAndReturnKey(ps);
+		return id;
 	}
 
-	
-	@Transactional	
+
 	public void update(T value) throws DAOException
 	{
 		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
 		jdbcTemplate.update(getSQLUpdate(), ps);
 	}
-	
-	
+
+
 
 
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import models.laboratory.common.description.Resolution;
 import models.utils.dao.AbstractDAO;
+import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
@@ -27,15 +28,13 @@ public class ResolutionDAO extends AbstractDAO<Resolution>{
 	}
 
 	@Override
-	public void remove(Resolution resolution)
+	public void remove(Resolution resolution) throws DAOException
 	{
 		//Remove list resolution for common_info_type
 		String sqlState = "DELETE FROM common_info_type_resolution WHERE fk_resolution=?";
 		jdbcTemplate.update(sqlState, resolution.id);
 		//remove resolution
 		super.remove(resolution);
-
-
 	}
 
 

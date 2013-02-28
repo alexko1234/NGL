@@ -23,6 +23,7 @@ public class ProjectTypeDAO extends AbstractDAOMapping<ProjectType>{
 						"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
 
+	@Override
 	public long save(ProjectType projectType) throws DAOException
 	{
 		//Add commonInfoType
@@ -47,21 +48,19 @@ public class ProjectTypeDAO extends AbstractDAOMapping<ProjectType>{
 		return projectType.id;
 	}
 
+	@Override
 	public void update(ProjectType projectType) throws DAOException
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.update(projectType);
 	}
 
-
-
 	@Override
-	public void remove(ProjectType projectType) {
+	public void remove(ProjectType projectType) throws DAOException {
 		//Remove ProjectType
 		super.remove(projectType);
 		//Remove commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(projectType);
-
 	}
 }

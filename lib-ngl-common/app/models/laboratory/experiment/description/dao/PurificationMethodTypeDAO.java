@@ -3,6 +3,7 @@ package models.laboratory.experiment.description.dao;
 import java.util.List;
 
 import models.laboratory.experiment.description.PurificationMethodType;
+import models.utils.dao.DAOException;
 
 import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
@@ -30,7 +31,7 @@ public class PurificationMethodTypeDAO extends AbstractExperimentDAO<Purificatio
 	}
 
 	@Override
-	public void remove(PurificationMethodType purificationMethodType) {
+	public void remove(PurificationMethodType purificationMethodType) throws DAOException{
 		//Remove in list associated with experiment_type
 		String sqlState = "DELETE FROM experiment_purification_method WHERE fk_purification_method_type=?";
 		jdbcTemplate.update(sqlState, purificationMethodType.id);

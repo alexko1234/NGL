@@ -7,7 +7,6 @@ import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import play.modules.spring.Spring;
 
@@ -44,7 +43,7 @@ public class InstrumentCategoryDAO extends AbstractDAO<InstrumentCategory>{
 		return instrumentCategory;
 	}
 
-
+	@Override
 	public long save(InstrumentCategory instrumentCategory) throws DAOException
 	{
 		instrumentCategory.id = super.save(instrumentCategory);
@@ -76,6 +75,7 @@ public class InstrumentCategoryDAO extends AbstractDAO<InstrumentCategory>{
 		return instrumentCategory.id;
 	}
 
+	@Override
 	public void update(InstrumentCategory instrumentCategory) throws DAOException
 	{
 		InstrumentCategory instrumentCategoryDB = findById(instrumentCategory.id);
@@ -111,8 +111,8 @@ public class InstrumentCategoryDAO extends AbstractDAO<InstrumentCategory>{
 		}
 	}
 
-	@Transactional
-	public void remove(InstrumentCategory instrumentCategory)
+	@Override
+	public void remove(InstrumentCategory instrumentCategory) throws DAOException
 	{
 		//remove inContainerSupportCategories instrumentCategory_inContainerSupportCategory
 		String sqlIn = "DELETE FROM instrumentCategory_inContainerSupportCategory WHERE fk_instrument_category=?";
@@ -122,6 +122,5 @@ public class InstrumentCategoryDAO extends AbstractDAO<InstrumentCategory>{
 		jdbcTemplate.update(sqlOut, instrumentCategory.id);
 		//remove instrumentCategory
 		super.remove(instrumentCategory);
-
 	}
 }

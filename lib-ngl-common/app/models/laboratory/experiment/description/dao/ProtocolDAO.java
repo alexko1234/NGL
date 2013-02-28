@@ -61,6 +61,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 		jdbcTemplate.update(sql, idCommonInfoType, protocol.id);
 	}
 
+	@Override
 	public long save(Protocol protocol) throws DAOException
 	{
 		//Check if category exist
@@ -100,6 +101,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 		return protocol.id;
 	}
 
+	@Override
 	public void update(Protocol protocol) throws DAOException
 	{
 		Protocol protoDB = findById(protocol.id);
@@ -121,10 +123,8 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 		}
 	}
 
-
-
 	@Override
-	public void remove(Protocol protocol) {
+	public void remove(Protocol protocol) throws DAOException {
 		//Remove list reagentType protocol_reagent_type
 		String sqlState = "DELETE FROM protocol_reagent_type WHERE fk_protocol=?";
 		jdbcTemplate.update(sqlState, protocol.id);

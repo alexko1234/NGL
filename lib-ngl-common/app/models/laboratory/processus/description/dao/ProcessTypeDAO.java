@@ -26,6 +26,7 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 						"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
 
+	@Override
 	public long save(ProcessType processType) throws DAOException
 	{
 		//Add commonInfoType
@@ -64,6 +65,7 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 		return processType.id;
 	}
 
+	@Override
 	public void update(ProcessType processType) throws DAOException
 	{
 		ProcessType processTypeDB = findById(processType.id);
@@ -89,7 +91,7 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 	}
 
 	@Override
-	public void remove(ProcessType processType) {
+	public void remove(ProcessType processType) throws DAOException {
 		//Remove process_experiment_type
 		String sqlExp = "DELETE FROM process_experiment_type WHERE fk_process_type=?";
 		jdbcTemplate.update(sqlExp, processType.id);
@@ -100,7 +102,5 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 		//Remove CommonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(processType);
-
-
 	}
 }

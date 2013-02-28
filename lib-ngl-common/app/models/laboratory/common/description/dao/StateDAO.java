@@ -33,14 +33,13 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	}
 
 	@Override
-	public void remove(State state)
+	public void remove(State state) throws DAOException
 	{
 		//Remove list state for common_info_type
 		String sqlState = "DELETE FROM common_info_type_state WHERE fk_state=?";
 		jdbcTemplate.update(sqlState, state.id);
 		//remove resolution
 		super.remove(state);
-
 	}
 
 	@Override
@@ -49,7 +48,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		if(state.stateCategory!=null){
 			StateCategory stateCategoryDB = StateCategory.find.findByCode(state.stateCategory.code);
 			if(stateCategoryDB==null){
-				state.stateCategory.id=state.save();
+				state.stateCategory.id=state.stateCategory.save();
 			}else
 				state.stateCategory=stateCategoryDB;
 		}

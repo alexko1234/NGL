@@ -178,7 +178,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 	}
 
 	@Override
-	public void remove(CommonInfoType commonInfoType) {
+	public void remove(CommonInfoType commonInfoType) throws DAOException{
 		//Delete state common_info_type_state
 		String sqlState = "DELETE FROM common_info_type_state WHERE fk_common_info_type=?";
 		jdbcTemplate.update(sqlState, commonInfoType.id);

@@ -4,6 +4,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
 	xsi:schemaLocation="
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
@@ -14,21 +16,28 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 
 	<context:annotation-config />
 	<context:component-scan base-package="models" />
-	<jee:jndi-lookup id="dataSource" jndi-name="ngl" />
+	<!-- <jee:jndi-lookup id="dataSource" jndi-name="ngl" /> -->
+	
+	<!-- disable the DBPlugin (it will be automatically disabled
+		if  don't configure any database in application.conf), then the
+		datasource or the transaction manager are standard Spring beans and
+		should be managed without any problem by the Spring plugin. -->
+	 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://mysql.genoscope.cns.fr:3307/NGL"/>
+        <property name="username" value="ngl"/>
+        <property name="password" value="ngl@dmin"/>
+    </bean>
 	
 	
+	<!-- Define the transaction strategy depends environment here JDBC. Reference dataSource -->
 	<bean id="txManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-
-<!-- <jdbc:initialize-database data-source="dataSource" enabled="true">
-		<jdbc:script location="classpath:dump30012013.sql" />
-	</jdbc:initialize-database> -->
+	
+	<!-- enable the configuration of transactional behavior based on annotations -->
+  <tx:annotation-driven transaction-manager="txManager"/>
 	
 	
-	<!-- <jdbc:embedded-database id="dataSource" type="HSQL"> <jdbc:script location="classpath:dump30012013.sql" 
-		/> </jdbc:embedded-database> -->
-
-
 </beans>

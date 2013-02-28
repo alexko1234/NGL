@@ -2,8 +2,8 @@ package models.utils;
 
 import java.util.List;
 
+import models.utils.dao.AbstractCommonDAO;
 import models.utils.dao.DAOException;
-import models.utils.dao.IDAO;
 import play.modules.spring.Spring;
 
 public class Model<T> {
@@ -12,6 +12,11 @@ public class Model<T> {
 	public String code;
 	public String classNameDAO;
     
+	
+	public Model() {
+		super();
+	}
+
 	public Model(String classNameDAO) {
       this.classNameDAO = classNameDAO;
     }
@@ -26,6 +31,7 @@ public class Model<T> {
 	public long save() throws DAOException
     {
     	return getInstance().save((T)this);
+    	
     }
     
     @SuppressWarnings("unchecked")
@@ -35,11 +41,15 @@ public class Model<T> {
     }
     
     @SuppressWarnings("unchecked")
-	public IDAO<T> getInstance() throws DAOException
+	public AbstractCommonDAO<T> getInstance() throws DAOException
     {
     	try {
-			return (IDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
+			return (AbstractCommonDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
 		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new DAOException(e);
+		}catch(Exception e){
+			e.printStackTrace();
 			throw new DAOException(e);
 		}
     }
@@ -68,10 +78,10 @@ public class Model<T> {
         }
         
         @SuppressWarnings("unchecked")
-    	public IDAO<T> getInstance() throws DAOException
+    	public AbstractCommonDAO<T> getInstance() throws DAOException
         {
         	try {
-				return (IDAO<T>) Spring.getBeanOfType(Class.forName(className));
+				return (AbstractCommonDAO<T>) Spring.getBeanOfType(Class.forName(className));
 			} catch (ClassNotFoundException e) {
 				throw new DAOException(e);
 			}
