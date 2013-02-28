@@ -1,10 +1,3 @@
---
--- Current Database: `NGL`
---
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `NGL` /*!40100 DEFAULT CHARACTER SET latin1 */;
-
-USE `NGL`;
 
 DROP TABLE IF EXISTS common_info_type_instrument_type;
 DROP TABLE IF EXISTS experiment_purification_method;
@@ -411,7 +404,7 @@ CREATE TABLE experiment_quality_control (
   PRIMARY KEY  (fk_quality_control_type,fk_experiment_type),
   FOREIGN KEY (fk_quality_control_type) REFERENCES quality_control_type(id),
   FOREIGN KEY (fk_experiment_type) REFERENCES experiment_type(id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table `transfer_method_type`
