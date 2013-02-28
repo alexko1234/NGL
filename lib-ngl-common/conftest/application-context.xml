@@ -16,18 +16,18 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 
 	<context:annotation-config />
 	<context:component-scan base-package="models" />
-	<!-- <jee:jndi-lookup id="dataSource" jndi-name="ngl" /> -->
+	<jee:jndi-lookup id="dataSource" jndi-name="ngl" />
 	
 	<!-- disable the DBPlugin (it will be automatically disabled
 		if  don't configure any database in application.conf), then the
 		datasource or the transaction manager are standard Spring beans and
 		should be managed without any problem by the Spring plugin. -->
-	 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<!--  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://mysql.genoscope.cns.fr:3307/NGL"/>
         <property name="username" value="ngl"/>
         <property name="password" value="ngl@dmin"/>
-    </bean>
+    </bean> -->
 	
 	
 	<!-- Define the transaction strategy depends environment here JDBC. Reference dataSource -->

@@ -37,7 +37,7 @@ public abstract class AbstractTests{
 	public Map<String,String> fakeConfiguration(){
 		Map<String,String> config = new HashMap<String,String>();
 		
-		/*config.put("evolutionplugin", "disabled");
+		config.put("evolutionplugin", "disabled");
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");
 		config.put("db.default.url", "jdbc:mysql://mysql.genoscope.cns.fr:3307/NGL");
 		config.put("db.default.user", "ngl");
@@ -47,7 +47,6 @@ public abstract class AbstractTests{
 		config.put("db.default.minConnectionsPerPartition", "1");
 		config.put("db.default.logStatements", "true");
 		config.put("db.default.jndiName", "ngl");
-		config.put("db.default.isolation", "READ_UNCOMMITTED");*/
 		return config;
 		
 	}
