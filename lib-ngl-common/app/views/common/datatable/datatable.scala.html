@@ -1,0 +1,82 @@
+@*
+*	Create a datatable
+*	config: views.common.datatable.DatatableConfig : datatable configuration
+*	
+*@
+@(config: views.common.datatable.DatatableConfig, form: Html = Html(""))
+@import views.common.datatable.DatatableColumn
+
+@form
+
+@if(config.toolbar){
+<div class="btn-toolbar">
+	<div class="btn-group">
+		@if(config.show){<button class="btn btn-primary" ng-click="@(config.name).show()">@Messages("button.show")</button>}
+		@if(config.edit){
+		<button class="btn" ng-click="@(config.name).setEditColumn()">@Messages("button.edit")</button>
+		<button data-toggle="dropdown" class="btn dropdown-toggle">
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+			@for(column: DatatableColumn <- config.columns){
+				@if(column.editable){
+					<li><a href="#" ng-click="@(config.name).setEditColumn('@column.id')">@Messages(column.label)</a></li>
+				}				
+			}						
+		</ul>
+		}
+	</div>
+	@if(config.edit){
+	<div class="btn-group">
+		<button class="btn" ng-click="@(config.name).save()">@Messages("button.save")</button> 
+		<button class="btn" ng-click="@(config.name).remove()">@Messages("button.remove")</button>			
+	</div>
+	}
+	<div class="btn-group">
+		<button class="btn" ng-click="@(config.name).select()">@Messages("button.selectall")</button>
+		<button class="btn" ng-click="@(config.name).cancel()">@Messages("button.cancel")</button>		
+	</div>
+	
+	@if(config.hidding){
+	<div class="btn-group">
+		<button data-toggle="dropdown" class="btn dropdown-toggle">@Messages("button.hide")
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+			@for(column: DatatableColumn <- config.columns){
+				@if(column.hidding){
+					<li><a href="#" ng-click="@(config.name).setHideColumn('@column.id')">@Messages(column.label)</a></li>
+				}				
+			}						
+		</ul>		
+	</div>
+	}
+</div>
+}
+<form class="form-inline">
+<table class="table table-condensed table-hover table-bordered">
+	<thead>
+	<tr>
+		@for(column: DatatableColumn <- config.columns){
+			<th ng-hide="@(config.name).isHide('@column.id')" ng-click="@(config.name).setOrderColumn('@column.id')">@Messages(column.label)</th>
+		}
+	</tr>
+	</thead>
+	<tbody>
+	<!-- first line to edit mode -->
+	<tr ng-show="@(config.name).config.edit">
+		@for(column: DatatableColumn <- config.columns){
+			<td ng-hide="@(config.name).isHide('@column.id')">@if(column.editable){<input type="text" class="input-medium" ng-change="@(config.name).updateColumn('@column.id')" ng-model="@(config.name).config.updateColumn.@column.id" ng-show="@(config.name).isEdit('@column.id')"/>}</td>
+		}
+	</tr>
+	<tr ng-repeat="value in @(config.name).searchresult | orderBy:@(config.name).config.orderBy:@(config.name).config.orderReverse" ng-click="@(config.name).select(value)" ng-class="value.trClass">
+		@for(column: DatatableColumn <- config.columns){
+				<td ng-hide="@(config.name).isHide('@column.id')">
+				<span @if(column.editable){ng-hide="@(config.name).isEdit('@column.id', value)"}>@addColumnFormatter(config.name, column)</span>
+				@if(column.editable){<input type="text" class="input-medium" ng-model="value.@column.id" ng-show="@(config.name).isEdit('@column.id', value)"/>}
+				</td>
+		}
+	</tr>
+	</tbody>
+</table>
+</form>

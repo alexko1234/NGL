@@ -50,6 +50,7 @@ public class ConstraintsHelper {
 						//TODO unit validation
 						
 					}catch(Throwable e){
+						Logger.error(e.getMessage());
 						addErrors(errors, getKey(rootKeyName,propertyDefinition.code), "error.badtype", propertyDefinition.type, pv.value);
 					}
 				}	
@@ -118,7 +119,7 @@ public class ConstraintsHelper {
 	 * 
 	 * @param type : final type
 	 * @param value : the value
-	 * @param format ; format Date
+	 * @param format : format Date
 	 * @return
 	 */
 	public static Object transformValue(String type, Object value,String format) {
@@ -138,18 +139,19 @@ public class ConstraintsHelper {
 		} else if (Date.class.getName().equals(type)) {
 			if(format==null){
 				o = new Date(Integer.valueOf(value.toString()));
-			}
-			else {  SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+			} else {  
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
 				try {
 					o=simpleDateFormat.parse(value.toString());
 				} catch (ParseException e) {
-					Logger.debug(e.toString());
+					throw new RuntimeException(e.getMessage(),e);
 				}
 			}
 		} else if (TBoolean.class.getName().equals(type)) {
 			o = TBoolean.valueOf(value.toString());
 		} else {
 			Logger.info("Erreur de type :"+type);
+			throw new RuntimeException("Type not exist "+type);
 		}
 		return o;
 	}

@@ -1,4 +1,4 @@
-package controllers.run;
+package controllers;
 
 public interface Constants {
 	

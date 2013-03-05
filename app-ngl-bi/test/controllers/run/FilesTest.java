@@ -17,15 +17,12 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import net.vz.mongodb.jackson.DBQuery;
 
-import static play.test.Helpers.contentAsString;
-
 import org.junit.Test;
 
-import play.libs.Json;
 import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
-import controllers.run.Files;
+import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 
 public class FilesTest extends AbstractTests{

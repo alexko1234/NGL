@@ -16,10 +16,10 @@ public class Application extends Controller {
 	  	    response().setContentType("text/javascript");
 	  	    return ok(
 	  	    		
-	  	      Routes.javascriptRouter("jsRoutes",
+	  	      Routes.javascriptRouter("jsRoutes"
 	  	        // Routes
-	  	    		controllers.run.routes.javascript.Runs.show(),
-	  	    		controllers.run.routes.javascript.Runs.createOrUpdate()
+	  	    		//controllers.run.routes.javascript.Runs.show(),
+	  	    		//controllers.run.routes.javascript.Runs.createOrUpdate()
 	  	      )	  	      
 	  	    );
 	  	  }

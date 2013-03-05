@@ -1,0 +1,8 @@
+@(datatableName:String, column: views.common.datatable.DatatableColumn)
+
+
+@if(column.isDate()){
+{{value.@column.id | date:'@Messages("datetime.format")'}}
+}else{
+{{value.@column.id}}	
+}

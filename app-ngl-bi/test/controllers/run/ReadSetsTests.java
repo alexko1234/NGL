@@ -24,6 +24,7 @@ import org.junit.Test;
 import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
+import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 
 public class ReadSetsTests extends AbstractTests {

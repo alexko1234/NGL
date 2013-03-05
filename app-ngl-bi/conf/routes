@@ -7,29 +7,65 @@
 GET     /                           controllers.Application.index(id:java.lang.String ?="")
 
 #ngs-rs api
-GET		/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
-GET		/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experiments()
-GET		/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: String)
+GET		/api/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
+GET		/api/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experiments()
+GET		/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: String)
 
-#run
-#GET	   	   /runs/:code								controllers.run.tpl.Runs.home(code : String)
-#GET		   /tpl/runs/search						controllers.run.tpl.Runs.search()
-#GET		   /tpl/runs/details					controllers.run.tpl.Runs.details()
+#run tpl
+GET	   	/runs/:code									controllers.run.tpl.Runs.home(code : String)
+GET		/tpl/runs/search							controllers.run.tpl.Runs.search()
+GET		/tpl/runs/details							controllers.run.tpl.Runs.details()
 
-#GET    	   /api/runs                			controllers.run.Runs.list()
-#GET	   	   /runs/:code							controllers.run.Runs.show(code: java.lang.String, format: java.lang.String ?= "html")
+#run api
+GET    	/api/runs                					controllers.run.api.Runs.list()
+GET    	/api/runs/:code               				controllers.run.api.Runs.get(code: String)
+POST   	/api/runs									controllers.run.api.Runs.save()
+POST 	/api/runs/:code/dispatch					controllers.run.api.Runs.dispatch(code: java.lang.String)
+DELETE	/api/runs/:code								controllers.run.api.Runs.remove(code:java.lang.String)
+DELETE	/api/runs/:code/files						controllers.run.api.Runs.removeFiles(code: java.lang.String)
+DELETE	/api/runs/:code/readsets					controllers.run.api.Runs.removeReadsets(code: java.lang.String)
 
-GET	   	   /runs/home								controllers.run.Runs.home()
-GET    	   /runs                					controllers.run.Runs.list()
-POST   	   /runs									controllers.run.Runs.createOrUpdate(format: java.lang.String ?= "html")
-GET	   	   /runs/:code								controllers.run.Runs.show(code: java.lang.String, format: java.lang.String ?= "html")
-DELETE	   /runs/:code								controllers.run.Runs.remove(code:java.lang.String,format: java.lang.String ?= "html")
-DELETE	   /runs/:code/files						controllers.run.Runs.removeFiles(code: java.lang.String,format: java.lang.String ?= "html")
-DELETE	   /runs/:code/readsets						controllers.run.Runs.removeReadsets(code: java.lang.String,format: java.lang.String ?= "html")
+#run lane
+GET	   	/api/runs/:code/:laneNumber					controllers.run.api.Lanes.get(code: java.lang.String, laneNumber:java.lang.Integer)
+POST  	/api/runs/:code								controllers.run.api.Lanes.save(code: java.lang.String)
 
-#run dispatch
-POST /runs/:code/dispatch							controllers.run.Runs.dispatch(code: java.lang.String, format: java.lang.String ?= "html")
+#run readset
+POST   	/api/runs/:code/:laneNumber					controllers.run.api.ReadSets.save(code: java.lang.String, laneNumber:java.lang.Integer)
+#readset
+GET	   	/api/readsets/:readSetCode					controllers.run.api.ReadSets.get(readSetCode:java.lang.String)
+PUT    	/api/readsets/:readSetCode					controllers.run.api.ReadSets.update(readSetCode:java.lang.String)
 
+#file
+GET     /api/readsets/:code/files/:fullname			controllers.run.api.Files.get(code: java.lang.String,fullname: java.lang.String)
+POST  	/api/readsets/:code/files					controllers.run.api.Files.save(code: java.lang.String)
+
+#archive
+GET	   	/archives/home								controllers.archive.tpl.ReadSets.home()
+GET		/tpl/archives/search						controllers.archive.tpl.ReadSets.search()
+
+PUT	   	/api/archives/readsets/:readSetCode			controllers.archive.api.ReadSets.update(readSetCode:java.lang.String)
+GET	   	/api/archives/readsets						controllers.archive.api.ReadSets.list(archive: java.lang.Integer ?= 2) 
+
+# Javascript routing
+GET    /assets/javascripts/routes      				controllers.Application.javascriptRoutes()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+
+
+#old for backward compatibility
+GET			/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
+GET			/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experiments()
+GET			/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: String)
+
+
+GET	   	/runs/:code								controllers.run.Runs.show(code: String, format: java.lang.String ?= "html")
+POST    /runs									controllers.run.Runs.createOrUpdate(format: java.lang.String ?= "html")
+DELETE	/runs/:code								controllers.run.Runs.remove(code:java.lang.String, format: java.lang.String ?= "html")
+DELETE	/runs/:code/files						controllers.run.Runs.removeFiles(code: java.lang.String, format: java.lang.String ?= "html")
+DELETE	/runs/:code/readsets					controllers.run.Runs.removeReadsets(code: java.lang.String, format: java.lang.String ?= "html")
+POST	/runs/:code/dispatch					controllers.run.Runs.dispatch(code: java.lang.String, format: java.lang.String ?= "html")
 
 #run lane
 GET	   /runs/:code/:laneNumber					controllers.run.Lanes.show(code: java.lang.String, laneNumber:java.lang.Integer,format: java.lang.String ?= "html")
@@ -45,14 +81,6 @@ GET	   /readsets/needarchive				controllers.run.ReadSets.needArchive(format: jav
 GET	   /readsets/:readSetCode				controllers.run.ReadSets.showWithReadsetCode(readSetCode:java.lang.String, format: java.lang.String ?= "html")
 PUT    /readsets/:readSetCode				controllers.run.ReadSets.update(readSetCode:java.lang.String, format: java.lang.String ?= "html")
 
-
 #file
 GET        /readsets/:code/files/:fullname			controllers.run.Files.show(code: java.lang.String,fullname: java.lang.String, format: java.lang.String ?= "html")
 POST  	   /readsets/:code/files					controllers.run.Files.createOrUpdate(code: java.lang.String, format: java.lang.String ?= "html")
-
-
-# Javascript routing
-GET    /assets/javascripts/routes      controllers.Application.javascriptRoutes()
-
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
