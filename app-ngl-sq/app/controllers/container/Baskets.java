@@ -115,7 +115,7 @@ public class Baskets extends Controller{
 	//list of all the baskets
 	public static Result list() {
 		Form<DataTableForm> filledForm = datatableForm.bindFromRequest();
-		List<Basket> baskets= MongoDBDAO.all(COLLECTION_NAME,Basket.class);
+		List<Basket> baskets= MongoDBDAO.find(COLLECTION_NAME,Basket.class).toList();
 		ObjectNode result = Json.newObject();
 		result.put("iTotalRecords", baskets.size());
 		result.put("iTotalDisplayRecords", baskets.size());
@@ -126,7 +126,7 @@ public class Baskets extends Controller{
 	
 	public static Result listByExperimentType(String experimentType) {
 		Form<DataTableForm> filledForm = datatableForm.bindFromRequest();
-		List<Basket> baskets= MongoDBDAO.find(COLLECTION_NAME, Basket.class, DBQuery.is("experimentTypeCode", experimentType));
+		List<Basket> baskets= MongoDBDAO.find(COLLECTION_NAME, Basket.class, DBQuery.is("experimentTypeCode", experimentType)).toList();
 		ObjectNode result = Json.newObject();
 		result.put("iTotalRecords", baskets.size());
 		result.put("iTotalDisplayRecords", baskets.size());
@@ -152,7 +152,7 @@ public class Baskets extends Controller{
 	
 	public static Map<String,String> getSelectList(){
 		Form<DataTableForm> filledForm = datatableForm.bindFromRequest();
-		List<Basket> baskets= MongoDBDAO.all(COLLECTION_NAME,Basket.class);
+		List<Basket> baskets= MongoDBDAO.find(COLLECTION_NAME,Basket.class).toList();
 		Map<String,String> map = new HashMap<String,String>();
 		for(Basket b:baskets){
 			map.put(b.code, b.code);
