@@ -127,7 +127,7 @@ public class SampleLoad extends Controller{
 				sample.categoryCode=sampleType.sampleCategory.code;
 				sample.typeCode=sampleType.code;
 
-				Container container= LoadDataHelper.containerFromCSVLine(firstLine,nextLine, new SampleUsed(sample.code,sampleTypeCode,sample.categoryCode),importType.getMapPropertyDefinition());
+				Container container= LoadDataHelper.containerFromCSVLine(firstLine,nextLine,sample,importType.getMapPropertyDefinition());
 
 				ConstraintsHelper.validateProperties(filledForm.errors(), sample.properties, sampleType.propertiesDefinitions,null );
 

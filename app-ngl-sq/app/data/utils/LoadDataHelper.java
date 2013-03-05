@@ -105,9 +105,10 @@ public class LoadDataHelper {
 	
 	
 	public static Container containerFromCSVLine(String[] firstLine,
-			String[] nextLine,SampleUsed sampleUsed,Map<String,PropertyDefinition> propertiesDefinition) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+			String[] nextLine,Sample sample,Map<String,PropertyDefinition> propertiesDefinition) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 
-		Container container = new Container(sampleUsed);
+		Container container = new Container();
+		container.addContent(sample);
 		Content content =container.contents.get(0);
 		Class<Container> aClass=Container.class;
 		Field field =null;
@@ -144,7 +145,6 @@ public class LoadDataHelper {
 		}
 		
 		container.traceInformation.setTraceInformation(Http.Context.current().session().get("CAS_FILTER_USER"));
-		
 		return container;
 	}
 	
