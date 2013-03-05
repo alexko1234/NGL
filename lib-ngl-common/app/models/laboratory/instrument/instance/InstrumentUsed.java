@@ -2,17 +2,13 @@ package models.laboratory.instrument.instance;
 
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
-import models.laboratory.project.description.ProjectType;
 import models.utils.HelperObjects;
-import models.utils.ObjectSGBDReference;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 public class InstrumentUsed {
 
-	// Reference Instrument code
 	public String code;
-	// Reference Instrument Category code
 	public String categoryCode;
 
 	@JsonIgnore

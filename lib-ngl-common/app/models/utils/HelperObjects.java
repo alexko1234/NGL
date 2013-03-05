@@ -19,7 +19,7 @@ public class HelperObjects<T>{
 	public List<T> getObjects(Class<T> type, List<String> values){
 		List<T> objects =new ArrayList<T>();
 
-		if (type.equals(DBObject.class)){
+		if (type.getSuperclass().getName().equals(DBObject.class.getName())){
 
 			for (int i = 0; i < values.size(); i++) {
 				try {
@@ -46,13 +46,12 @@ public class HelperObjects<T>{
 	@JsonIgnore
 	public <T> T getObject(Class<T> type, String value,Map<String, List<ValidationError>> errors){
 		T object = null ;
-
-		if (type.equals(DBObject.class)){
+		if (type.getSuperclass().getName().equals(DBObject.class.getName())){
 
 			try {
-
 				object=(T) new ObjectMongoDBReference(type,value).getObject();
 			} catch (Exception e) {
+				if(errors !=null)
 				ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "error.findObjectMongoDB"), "OBJECT FIND",type, value);
 			}	
 
@@ -61,12 +60,13 @@ public class HelperObjects<T>{
 			try {
 				object=(T) new ObjectSGBDReference(type,value).getObject();
 			} catch (Exception e) {
+				if(errors !=null)
 				ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "error.findObjectSGBDR"), "OBJECT FIND",type,value);
 			}	
 
 		}
 
-		if(object==null)
+		if(object==null && errors!=null)
 			ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "error.ObjectNotFound"), "OBJECT NOT FOUND",type,value);
 		return object;
 	}

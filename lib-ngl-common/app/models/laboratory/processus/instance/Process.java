@@ -5,9 +5,11 @@ import java.util.Map;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.processus.description.ProcessCategory;
+import models.laboratory.processus.description.ProcessType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
@@ -20,14 +22,15 @@ import fr.cea.ig.DBObject;
 
 
 
-@MongoCollection(name="Processus")
-public class Processus extends DBObject {
+@MongoCollection(name="Process")
+public class Process extends DBObject {
 	
-	//public ProcessusTypeRef processusType;
-
-	public String name;
-	public String status;
-	public TBoolean valid;
+	public String codeType;
+	public String categoryType;
+	
+	public String stateCode;
+	public String resolutionCode;
+	
 	public TraceInformation traceinformation;
 	public List<Comment> comments;
 
@@ -43,16 +46,33 @@ public class Processus extends DBObject {
 	// Samples ref
 	public List<String> sampleCodes;
 	
+	public List<String> containerCodes;
+
+	
+	@JsonIgnore
+	public List<Container> getContainers(){
+		return new HelperObjects<Container>().getObjects(Container.class, containerCodes);
+	}
+	
 	@JsonIgnore
 	public List<Sample> getSamples(){
 		return new HelperObjects<Sample>().getObjects(Sample.class, sampleCodes);
 	}
 	
 	@JsonIgnore
+	public ProcessType getProcessType(){
+		return new HelperObjects<ProcessType>().getObject(ProcessType.class, codeType, null);
+	}
+	
+	@JsonIgnore
+	public ProcessCategory getProcessCategory(){
+		return new HelperObjects<ProcessCategory>().getObject(ProcessCategory.class, categoryType, null);
+	}
+	
+	@JsonIgnore
 	public List<Project> getProjects(){
 		return new HelperObjects<Project>().getObjects(Project.class, projectCodes);
 	}
-	
 	
 	@JsonIgnore
 	public List<Experiment> getExperiments(){

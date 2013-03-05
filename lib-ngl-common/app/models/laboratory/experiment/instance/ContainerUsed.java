@@ -16,8 +16,8 @@ public class ContainerUsed {
 	// Take for inputContainer or Create for outputContainer
 	public Volume volume;
 	// Proprietes a renseigner en fonction du type d'experiment ou d'instrument
-	Map<String,PropertyValue> experimentProperties;
-	Map<String,PropertyValue> instrumentProperties;
+	public Map<String,PropertyValue> experimentProperties;
+	public Map<String,PropertyValue> instrumentProperties;
 	
 	@JsonIgnore
 	public Container getContainer(){

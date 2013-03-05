@@ -87,6 +87,7 @@ public class Container extends DBObject {
 		
 	}
 	
+	//Delete method if possibles
 	@JsonIgnore
 	public Container(SampleUsed sampleUsed){
 
@@ -114,7 +115,7 @@ public class Container extends DBObject {
 	}
 
 	@JsonIgnore
-	public List<ExperimentType> getExperimentTypes() {
+	public List<ExperimentType> getFromExperimentTypes() {
 		return new HelperObjects<ExperimentType>().getObjects(ExperimentType.class, fromExperimentTypeCodes);
 	}
 	
@@ -129,5 +130,33 @@ public class Container extends DBObject {
 		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode, null);
 	}
 	
+	@JsonIgnore
+	public void addContent(Sample sample){
+		
+		//Create new content
+		if(contents==null){
+			this.contents=new ArrayList<Content>();
+		}
+		
+		this.contents.add(new Content(new SampleUsed(sample.code, sample.typeCode, sample.categoryCode)));
+		
+		//Add projet code if not exist
+		if(this.projectCodes==null){
+			this.projectCodes=new ArrayList<String>();
+		}
+		if(!projectCodes.contains(sample.projectCode)){
+			this.projectCodes.add(sample.projectCode);
+		}
+		
+		//Add sample code if not exist
+		if(this.sampleCodes==null){
+			this.sampleCodes=new ArrayList<String>();
+		}
+		if(!sampleCodes.contains(sample.code)){
+			sampleCodes.add(sample.code);
+		}
+		
+	}
+		
 
 }

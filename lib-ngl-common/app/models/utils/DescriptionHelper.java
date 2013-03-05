@@ -17,13 +17,19 @@ import models.laboratory.common.description.MeasureValue;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
+import models.laboratory.common.description.StateCategory;
 import models.laboratory.common.description.Value;
 import models.laboratory.common.description.dao.ObjectTypeDAO;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.description.Protocol;
+import models.laboratory.experiment.description.PurificationMethodType;
+import models.laboratory.experiment.description.QualityControlType;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.processus.description.ProcessCategory;
+import models.laboratory.processus.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.sample.description.ImportCategory;
@@ -39,7 +45,7 @@ import play.modules.spring.Spring;
 
 public class DescriptionHelper {
 
-	
+
 	public static PropertyDefinition getPropertyDefinition(String keyCode, String keyName, Boolean required, Boolean active, Boolean choiceInList,
 			List<Value> possiblesValues , Class<?> type, String description, String  displayFormat, int displayOrder
 			,boolean propagation, String inOut, String defaultValue 
@@ -127,7 +133,7 @@ public class DescriptionHelper {
 	}
 
 
-	public static State getState(String code){
+	public static State getState(String code) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
 
 		State state = null;
 		try {
@@ -139,7 +145,7 @@ public class DescriptionHelper {
 				state.code=code;
 				state.name=code;
 				state.priority=0;
-				//state.save();
+				state.stateCategory=getCategory(StateCategory.class, "stateCategory");
 			}
 
 
@@ -170,43 +176,46 @@ public class DescriptionHelper {
 		}
 		return resolution;
 	}
-	
-		
-	public static SampleType getSampleType(String codeType, String nameType,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException
-		{
 
-			List<State> states = new ArrayList<State>();
-			states.add(DescriptionHelper.getState("Etat"+codeType));
-			List<Resolution> resolutions = new ArrayList<Resolution>();
-			resolutions.add(DescriptionHelper.getResolution("Resolution"+codeType));
 
-			CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeType,nameType, "Sample", null, null, null, "Sample");
-			commonInfoType.propertiesDefinitions=propertyDefinitions;
-
-			SampleType sampleType = new SampleType();
-			sampleType.setCommonInfoType(commonInfoType);
-
-			sampleType.sampleCategory=getSampleCategory(codeCategory);
-
-			return sampleType;
-	}
-	
-	
-	public static ExperimentType getExperimentType(String codeType, String nameType,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException
+	public static SampleType getSampleType(String codeType, String nameType,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
 
 		List<State> states = new ArrayList<State>();
-		/*states.add(DataTypeHelper.getState("New"));
-		states.add(DataTypeHelper.getState("In Progress"));
-		states.add(DataTypeHelper.getState("Finish"));
-	*/
+		states.add(DescriptionHelper.getState("Etat"+codeType));
+		List<Resolution> resolutions = new ArrayList<Resolution>();
+		resolutions.add(DescriptionHelper.getResolution("Resolution"+codeType));
+
+		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeType,nameType, "Sample", null, null, null, "Sample");
+		commonInfoType.propertiesDefinitions=propertyDefinitions;
+		commonInfoType.resolutions=resolutions;
+		commonInfoType.variableStates=states;
+
+		SampleType sampleType = new SampleType();
+		sampleType.setCommonInfoType(commonInfoType);
+
+		sampleType.sampleCategory=getSampleCategory(codeCategory);
+
+		return sampleType;
+	}
+
+
+	public static ExperimentType getExperimentType(String codeType, String nameType,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException
+	{
+
+		List<State> states = new ArrayList<State>();
+		states.add(DescriptionHelper.getState("New"));
+		states.add(DescriptionHelper.getState("In Progress"));
+		states.add(DescriptionHelper.getState("Finish"));
+
 		List<Resolution> resolutions = new ArrayList<Resolution>();
 		resolutions.add(DescriptionHelper.getResolution("Resolution"+codeType));
 
 		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeType,nameType, "Experiment", null, null, null, "Experiment");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
 		commonInfoType.variableStates=states;
-		
+		commonInfoType.resolutions=resolutions;
+
 		ExperimentType experimentType = new ExperimentType();
 		experimentType.setCommonInfoType(commonInfoType);
 
@@ -214,6 +223,27 @@ public class DescriptionHelper {
 
 		return experimentType;
 	}
+	public static ExperimentType getExperimentType(String codeType, String nameType,String codeCategory
+			,List<PropertyDefinition> propertyDefinitions,List<InstrumentUsedType> instrumentUsedTypes, List<Protocol> protocol, List<State> states, List<Resolution> resolutions, boolean doPurification, boolean doQualityControl, boolean mandatoryPurification, boolean mandatoryQualityControl, List<PurificationMethodType> possiblePurificationMethodTypes, List<QualityControlType> possibleQualityControlTypes, List<ExperimentType> previousExperimentTypes) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException
+			{ 
+
+		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeType,nameType, "Experiment", states,propertyDefinitions,resolutions, "Experiment");
+
+		ExperimentType experimentType = new ExperimentType();
+		experimentType.setCommonInfoType(commonInfoType);
+		experimentType.experimentCategory=getExperimentCategory(codeCategory);
+		experimentType.instrumentUsedTypes=instrumentUsedTypes;
+		experimentType.doPurification=doPurification;
+		experimentType.doQualityControl=doQualityControl;
+		experimentType.mandatoryPurification=mandatoryPurification;
+		experimentType.mandatoryQualityControl=mandatoryQualityControl;
+		experimentType.possiblePurificationMethodTypes=possiblePurificationMethodTypes;
+		experimentType.possibleQualityControlTypes=possibleQualityControlTypes;
+		experimentType.previousExperimentTypes=previousExperimentTypes;
+
+		return experimentType;
+			}
+
 
 
 	public static MeasureCategory getMeasureCategory(String code,String name,String codeValue,String valueValue){
@@ -244,8 +274,8 @@ public class DescriptionHelper {
 		}
 		return measureCategory;
 	}
-	
-	
+
+
 	public static List<Value> getListFromProcedureLims(String procedure){
 		List<Value> listIndex=new ArrayList<Value>();
 		try{
@@ -268,7 +298,7 @@ public class DescriptionHelper {
 		return listIndex;
 	}
 
-	public static ImportType getImportType(String codeImport, String nameImport,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException
+	public static ImportType getImportType(String codeImport, String nameImport,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
 
 		List<State> states = new ArrayList<State>();
@@ -278,6 +308,8 @@ public class DescriptionHelper {
 
 		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeImport,nameImport, "Import", null, null, null, "Import");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
+		commonInfoType.variableStates=states;
+		commonInfoType.resolutions=resolutions;
 
 		ImportType importType = new ImportType();
 		importType.setCommonInfoType(commonInfoType);
@@ -286,9 +318,9 @@ public class DescriptionHelper {
 
 		return importType;
 	}
-	
-	
-	public static ProjectType getProjectType(String codeProject, String nameProject,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException
+
+
+	public static ProjectType getProjectType(String codeProject, String nameProject,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
 
 		List<State> states = new ArrayList<State>();
@@ -298,6 +330,8 @@ public class DescriptionHelper {
 
 		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeProject,nameProject, "Project", null, null, null, "Project");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
+		commonInfoType.variableStates=states;
+		commonInfoType.resolutions=resolutions;
 
 		ProjectType projectType =new ProjectType();
 		projectType.setCommonInfoType(commonInfoType);
@@ -306,8 +340,8 @@ public class DescriptionHelper {
 
 		return projectType;
 	}
-	
-	
+
+
 
 	private static ProjectCategory getProjectCategory(String codeCategory) throws DAOException {
 		ProjectCategory projectCategory = ProjectCategory.find.findByCode(codeCategory);
@@ -334,7 +368,7 @@ public class DescriptionHelper {
 		}
 		return importCategory;
 	}
-	
+
 	private static SampleCategory getSampleCategory(String codeCategory) throws DAOException {
 		System.err.println("Find import category :"+codeCategory);
 		SampleCategory sampleCategory = SampleCategory.find.findByCode(codeCategory);
@@ -347,7 +381,7 @@ public class DescriptionHelper {
 		}
 		return sampleCategory;
 	}
-	
+
 	public static <T extends AbstractCategory> T getCategory(Class<T> type,String codeCategory) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 
 		Finder<T> find = new Finder<T>(type.getName().replaceAll("description", "description.dao")+"DAO");
@@ -358,10 +392,10 @@ public class DescriptionHelper {
 			objectCategory.code=codeCategory;
 			objectCategory.name=codeCategory;
 		}
-		
+
 		return objectCategory;
 	}
-	
+
 	public static ExperimentCategory getExperimentCategory(String codeCategory) throws DAOException {
 		System.err.println("Find import category :"+codeCategory);
 		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode(codeCategory);
@@ -375,32 +409,46 @@ public class DescriptionHelper {
 		return experimentCategory;
 	}
 
-	
+
 	public static <T extends Model> Map<String,List<ValidationError>>  saveMapType(Class<T> type,Map<String, T > mapCommonInfoType) throws DAOException{
 
 		Map<String,List<ValidationError>>errors=new HashMap<String, List<ValidationError>>();
 
-			for(Entry<String,T> sampleType : mapCommonInfoType.entrySet()){
+		for(Entry<String,T> sampleType : mapCommonInfoType.entrySet()){
 
-				T samp= new HelperObjects<T>().getObject(type, sampleType.getKey(), errors);
-				if(samp!=null){
-					samp.remove();
-				}
+			T samp= new HelperObjects<T>().getObject(type, sampleType.getKey(), errors);
+			if(samp!=null){
+				samp.remove();
+			}
 
-				Logger.debug(" Save :"+sampleType.getValue().code);
-				sampleType.getValue().save();
+			Logger.debug(" Before save :"+sampleType.getValue().code);
+			sampleType.getValue().save();
 
-				
-				samp=new  HelperObjects<T>().getObject(type, sampleType.getKey(), errors);
-				Logger.debug(" Save :"+sampleType.getValue().code);
-			}	
+			Logger.debug(" After save :"+sampleType.getValue().code);
+			samp=new  HelperObjects<T>().getObject(type, sampleType.getKey(), errors);
+			Logger.debug(" After find :"+sampleType.getValue().code);
+		}	
 
 		return errors;
+	}
+	
+	
+	public static <T extends Model> List<T> arrayToListType(Class<T> type, String[] listString) throws DAOException{
+		List<T> listType = new ArrayList<T>();
+		Finder<T> find = new Finder<T>(type.getName().replaceAll("description", "description.dao")+"DAO");
+		T object;
+		for(String i:listString){
+			object=find.findByCode(i);
+			if(object!=null)
+			listType.add(object);
+		}
+		
+		return listType;
 	}
 
 
 	public static InstrumentUsedType getInstrumentUsedType(String instrumentUsedTypeCode, String instrument, String instrumentCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-		
+
 		List<State> states = new ArrayList<State>();
 		states.add(DescriptionHelper.getState("Etat"+instrumentUsedTypeCode));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
@@ -418,8 +466,62 @@ public class DescriptionHelper {
 		ins.name=instrument;
 		instrumentUsedType.instruments.add(ins);
 
-		instrumentUsedType.instrumentCategory=getCategory(InstrumentCategory.class, instrumentCategory);
 		
+		instrumentUsedType.instrumentCategory=getCategory(InstrumentCategory.class, instrumentCategory);
+
 		return instrumentUsedType;
+	}
+
+	public static InstrumentUsedType getInstrumentUsedType(String instrumentUsedTypeCode, List<Instrument> instrument, String instrumentCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+
+		InstrumentUsedType instrumentUsedType=DescriptionHelper.getInstrumentUsedType(instrumentUsedTypeCode, "", instrumentCategory, propertyDefinitions);
+
+		instrumentUsedType.instruments=instrument;
+
+		return instrumentUsedType;
+	}
+
+
+	public static State getState(String stateCode, String stateName, String level) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		State state = new State();
+		state.code=stateCode;
+		state.name=stateName;
+		state.level=level;
+		state.stateCategory=getCategory(StateCategory.class, level);
+		return state;
+	}
+
+
+	public static ProcessType getProcessType(String typeCode, String categoryCode, List<PropertyDefinition> propertyDefinitions,List<ExperimentType> experimentTypes, List<State> variableStates, List<Resolution> resolutions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException  {
+		ProcessType processType = new ProcessType();
+		processType.setCommonInfoType(DescriptionHelper.getCommonInfoType(typeCode,typeCode, "Process", variableStates, propertyDefinitions, resolutions, "Process"));
+		processType.experimentTypes=experimentTypes;
+		processType.processCategory=getCategory(ProcessCategory.class, categoryCode);
+		return processType;
+	}
+
+
+	public static PurificationMethodType getPurificationMethodType(String typeCode, String name, List<PropertyDefinition> propertyDefinitions, List<InstrumentUsedType> instrumentUsedTypes, List<Protocol> protocols, List<State> variablesStates, List<Resolution> resolutions) throws DAOException {
+		PurificationMethodType purificationMethodType = new PurificationMethodType();
+		purificationMethodType.instrumentUsedTypes=instrumentUsedTypes;
+		purificationMethodType.protocols=protocols;
+		purificationMethodType.setCommonInfoType(DescriptionHelper.getCommonInfoType(typeCode, typeCode,"Purification", variablesStates, propertyDefinitions, resolutions, "Purification"));
+		return purificationMethodType;
+	}
+
+	public static QualityControlType getQualityControlType(String typeCode, String name, String categoryCode, List<PropertyDefinition> propertyDefinitions, List<InstrumentUsedType> instrumentUsedTypes, List<Protocol> protocols, List<State> variablesStates, List<Resolution> resolutions) throws DAOException {
+		QualityControlType qualityControlType = new QualityControlType();
+		qualityControlType.instrumentUsedTypes=instrumentUsedTypes;
+		qualityControlType.protocols=protocols;
+		qualityControlType.setCommonInfoType(DescriptionHelper.getCommonInfoType(typeCode, typeCode,"ControlQuality", variablesStates, propertyDefinitions, resolutions , "ControlQuality"));
+		return qualityControlType;
+	}
+
+
+	public static Instrument getInstrument(String name) {
+		Instrument ins=new Instrument();
+		ins.code=name;
+		ins.name=name;
+		return ins;
 	}
 }

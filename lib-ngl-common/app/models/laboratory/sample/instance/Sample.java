@@ -7,9 +7,10 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.project.instance.Project;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
-import models.utils.ObjectSGBDReference;
+import models.utils.HelperObjects;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -58,24 +59,17 @@ public class Sample extends DBObject{
 	
 	@JsonIgnore
 	public SampleType getSampleType(){
-		try {
-			//return new ObjectSGBDReference<SampleType>(SampleType.class,typeCode).getObject();
-		} catch (Exception e) {
-			// TODO
-		
-		}
-		return null;
+		return new HelperObjects<SampleType>().getObject(SampleType.class, typeCode, null);
 	}
 	
 	@JsonIgnore
 	public SampleCategory getSampleCategory(){
-		try {
-			//return new ObjectSGBDReference<SampleCategory>(SampleCategory.class,categoryCode).getObject();
-		} catch (Exception e) {
-			// TODO
-		
-		}
-		return null;
+		return new HelperObjects<SampleCategory>().getObject(SampleCategory.class, categoryCode, null);
+	}
+	
+	@JsonIgnore
+	public Project getProject(){
+		return new HelperObjects<Project>().getObject(Project.class, projectCode, null);
 	}
 	
 

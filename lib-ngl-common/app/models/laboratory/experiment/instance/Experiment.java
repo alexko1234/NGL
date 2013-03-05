@@ -8,6 +8,7 @@ import models.laboratory.common.description.State;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.instance.InstrumentUsed;
@@ -35,12 +36,13 @@ import fr.cea.ig.DBObject;
 public class Experiment extends DBObject {
 
 	// ExperimentType
-	public String experimentTypeCode;
-	
+	public String typeCode;
+	public String categoryCode;
+	public String name;
 	// Informations
 	public TraceInformation traceInformation;
 	public Map<String,PropertyValue> experimentProperties;
-	public List<Comment> comment;
+	public List<Comment> comments;
 	public Map<String, PropertyValue> instrumentProperties;
 	
 	public InstrumentUsed instrument;
@@ -70,14 +72,20 @@ public class Experiment extends DBObject {
 	}
 	
 	public Experiment(String code){
-		this.experimentTypeCode=code;
+		this.code=code;
 		traceInformation=new TraceInformation();
 	}
 	
 	@JsonIgnore
 	public ExperimentType getExperimentType(){
-		return new HelperObjects<ExperimentType>().getObject(ExperimentType.class, experimentTypeCode, null);
+		return new HelperObjects<ExperimentType>().getObject(ExperimentType.class, typeCode, null);
 	}
+
+	@JsonIgnore
+	public ExperimentCategory getExperimentCategory(){
+		return new HelperObjects<ExperimentCategory>().getObject(ExperimentCategory.class, categoryCode, null);
+	}
+
 	
 	@JsonIgnore
 	public List<Sample> getSamples(){

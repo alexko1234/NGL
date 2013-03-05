@@ -18,10 +18,9 @@ import fr.cea.ig.MongoDBDAO;
  *
  */
 public class ObjectMongoDBReference<T extends DBObject> implements IFetch<T> {
-	
+		
 	@JsonIgnore
 	private Class<T> className;
-	
 	public String code;
 	
 	
@@ -38,7 +37,6 @@ public class ObjectMongoDBReference<T extends DBObject> implements IFetch<T> {
 	
 	@Override
 	public T getObject() throws Exception {
-		
 		MongoCollection annotation =className.getAnnotation(MongoCollection.class);		
 		return MongoDBDAO.findByCode(annotation.name(),className,code);
 	}
