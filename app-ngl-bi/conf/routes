@@ -12,75 +12,42 @@ GET		/api/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experim
 GET		/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: String)
 
 #run tpl
-GET	   	/runs/:code									controllers.run.tpl.Runs.home(code : String)
-GET		/tpl/runs/search							controllers.run.tpl.Runs.search()
-GET		/tpl/runs/details							controllers.run.tpl.Runs.details()
+GET	   	/runs/:code									controllers.runs.tpl.Runs.home(code : String)
+GET		/tpl/runs/search							controllers.runs.tpl.Runs.search()
+GET		/tpl/runs/details							controllers.runs.tpl.Runs.details()
 
 #run api
-GET    	/api/runs                					controllers.run.api.Runs.list()
-GET    	/api/runs/:code               				controllers.run.api.Runs.get(code: String)
-POST   	/api/runs									controllers.run.api.Runs.save()
-POST 	/api/runs/:code/dispatch					controllers.run.api.Runs.dispatch(code: java.lang.String)
-DELETE	/api/runs/:code								controllers.run.api.Runs.remove(code:java.lang.String)
-DELETE	/api/runs/:code/files						controllers.run.api.Runs.removeFiles(code: java.lang.String)
-DELETE	/api/runs/:code/readsets					controllers.run.api.Runs.removeReadsets(code: java.lang.String)
+GET    	/api/runs                					controllers.runs.api.Runs.list()
+GET    	/api/runs/:code               				controllers.runs.api.Runs.get(code: String)
+POST   	/api/runs									controllers.runs.api.Runs.save()
+POST 	/api/runs/:code/dispatch					controllers.runs.api.Runs.dispatch(code: java.lang.String)
+DELETE	/api/runs/:code								controllers.runs.api.Runs.remove(code:java.lang.String)
+DELETE	/api/runs/:code/files						controllers.runs.api.Runs.removeFiles(code: java.lang.String)
+DELETE	/api/runs/:code/readsets					controllers.runs.api.Runs.removeReadsets(code: java.lang.String)
 
 #run lane
-GET	   	/api/runs/:code/:laneNumber					controllers.run.api.Lanes.get(code: java.lang.String, laneNumber:java.lang.Integer)
-POST  	/api/runs/:code								controllers.run.api.Lanes.save(code: java.lang.String)
+GET	   	/api/runs/:code/:laneNumber					controllers.runs.api.Lanes.get(code: java.lang.String, laneNumber:java.lang.Integer)
+POST  	/api/runs/:code								controllers.runs.api.Lanes.save(code: java.lang.String)
 
 #run readset
-POST   	/api/runs/:code/:laneNumber					controllers.run.api.ReadSets.save(code: java.lang.String, laneNumber:java.lang.Integer)
+POST   	/api/runs/:code/:laneNumber					controllers.runs.api.ReadSets.save(code: java.lang.String, laneNumber:java.lang.Integer)
 #readset
-GET	   	/api/readsets/:readSetCode					controllers.run.api.ReadSets.get(readSetCode:java.lang.String)
-PUT    	/api/readsets/:readSetCode					controllers.run.api.ReadSets.update(readSetCode:java.lang.String)
+GET	   	/api/readsets/:readSetCode					controllers.runs.api.ReadSets.get(readSetCode:java.lang.String)
+PUT    	/api/readsets/:readSetCode					controllers.runs.api.ReadSets.update(readSetCode:java.lang.String)
 
 #file
-GET     /api/readsets/:code/files/:fullname			controllers.run.api.Files.get(code: java.lang.String,fullname: java.lang.String)
-POST  	/api/readsets/:code/files					controllers.run.api.Files.save(code: java.lang.String)
+GET     /api/readsets/:code/files/:fullname			controllers.runs.api.Files.get(code: java.lang.String,fullname: java.lang.String)
+POST  	/api/readsets/:code/files					controllers.runs.api.Files.save(code: java.lang.String)
 
 #archive
-GET	   	/archives/home								controllers.archive.tpl.ReadSets.home()
-GET		/tpl/archives/search						controllers.archive.tpl.ReadSets.search()
+GET	   	/archives/home								controllers.archives.tpl.ReadSets.home()
+GET		/tpl/archives/search						controllers.archives.tpl.ReadSets.search()
 
-PUT	   	/api/archives/readsets/:readSetCode			controllers.archive.api.ReadSets.update(readSetCode:java.lang.String)
-GET	   	/api/archives/readsets						controllers.archive.api.ReadSets.list(archive: java.lang.Integer ?= 2) 
+PUT	   	/api/archives/readsets/:readSetCode			controllers.archives.api.ReadSets.update(readSetCode:java.lang.String)
+GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list(archive: java.lang.Integer ?= 2) 
 
 # Javascript routing
 GET    /assets/javascripts/routes      				controllers.Application.javascriptRoutes()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
-
-
-
-#old for backward compatibility
-GET			/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
-GET			/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experiments()
-GET			/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: String)
-
-
-GET	   	/runs/:code								controllers.run.Runs.show(code: String, format: java.lang.String ?= "html")
-POST    /runs									controllers.run.Runs.createOrUpdate(format: java.lang.String ?= "html")
-DELETE	/runs/:code								controllers.run.Runs.remove(code:java.lang.String, format: java.lang.String ?= "html")
-DELETE	/runs/:code/files						controllers.run.Runs.removeFiles(code: java.lang.String, format: java.lang.String ?= "html")
-DELETE	/runs/:code/readsets					controllers.run.Runs.removeReadsets(code: java.lang.String, format: java.lang.String ?= "html")
-POST	/runs/:code/dispatch					controllers.run.Runs.dispatch(code: java.lang.String, format: java.lang.String ?= "html")
-
-#run lane
-GET	   /runs/:code/:laneNumber					controllers.run.Lanes.show(code: java.lang.String, laneNumber:java.lang.Integer,format: java.lang.String ?= "html")
-POST   /runs/:code								controllers.run.Lanes.createOrUpdate(code: java.lang.String, format: java.lang.String ?= "html")
-
-#run readset
-GET	   /runs/:code/:laneNumber/:readSetCode		controllers.run.ReadSets.show(code: java.lang.String, laneNumber:java.lang.Integer, readSetCode:java.lang.String, format: java.lang.String ?= "html")
-POST   /runs/:code/:laneNumber					controllers.run.ReadSets.createOrUpdate(code: java.lang.String, laneNumber:java.lang.Integer, format: java.lang.String ?= "html")
-
-#readset
-PUT	   /readsets/:readSetCode/archive		controllers.run.ReadSets.updateArchive(readSetCode:java.lang.String,format: java.lang.String ?= "html")
-GET	   /readsets/needarchive				controllers.run.ReadSets.needArchive(format: java.lang.String ?= "html")
-GET	   /readsets/:readSetCode				controllers.run.ReadSets.showWithReadsetCode(readSetCode:java.lang.String, format: java.lang.String ?= "html")
-PUT    /readsets/:readSetCode				controllers.run.ReadSets.update(readSetCode:java.lang.String, format: java.lang.String ?= "html")
-
-#file
-GET        /readsets/:code/files/:fullname			controllers.run.Files.show(code: java.lang.String,fullname: java.lang.String, format: java.lang.String ?= "html")
-POST  	   /readsets/:code/files					controllers.run.Files.createOrUpdate(code: java.lang.String, format: java.lang.String ?= "html")

@@ -47,11 +47,11 @@ public class ReadSetsTests extends AbstractTests {
 		
 		ReadSet readset = RunMockHelper.newReadSet("ReadSetBasicWithRun");
 		 
-		callAction(controllers.run.routes.ref.Runs.createOrUpdate("json"),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 		
 		readset = RunMockHelper.newReadSet("ReadSetTEST");
 		
-		Result result = callAction(controllers.run.routes.ref.ReadSets.createOrUpdate("YANN_TEST1FORREADSET",1,"json"),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
+		Result result = callAction(controllers.runs.api.routes.ref.ReadSets.save("YANN_TEST1FORREADSET",1),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
 		     
 	 	//System.out.println(contentAsString(result));
         assertThat(status(result)).isEqualTo(OK);
@@ -72,11 +72,11 @@ public class ReadSetsTests extends AbstractTests {
 		*/ 
 		
 		
-		Result result = callAction(controllers.run.routes.ref.ReadSets.createOrUpdate("YANN_TEST1FORREADSET",2,"json"),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset2)));
+		Result result = callAction(controllers.runs.api.routes.ref.ReadSets.save("YANN_TEST1FORREADSET",2),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset2)));
 		assertThat(status(result)).isEqualTo(OK);
 	    assertThat(contentType(result)).isEqualTo("application/json");
 	    assertThat(charset(result)).isEqualTo("utf-8");
-		result = callAction(controllers.run.routes.ref.ReadSets.createOrUpdate("YANN_TEST1FORREADSET",2,"json"),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset3)));
+		result = callAction(controllers.runs.api.routes.ref.ReadSets.save("YANN_TEST1FORREADSET",2),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset3)));
 	       
 	 	//System.out.println(contentAsString(result));
        assertThat(status(result)).isEqualTo(OK);
@@ -89,7 +89,7 @@ public class ReadSetsTests extends AbstractTests {
 		ReadSet readset = RunMockHelper.newReadSet("ReadSetTEST");
 		readset.sampleCode = "THE SAMPLE CODE AFTER UPDATE";
 
-		 Result result = callAction(controllers.run.routes.ref.ReadSets.update("ReadSetTEST","json"),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
+		 Result result = callAction(controllers.runs.api.routes.ref.ReadSets.update("ReadSetTEST"),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
 	     
 	     assertThat(status(result)).isEqualTo(OK);
 	     assertThat(contentType(result)).isEqualTo("application/json");
@@ -101,7 +101,7 @@ public class ReadSetsTests extends AbstractTests {
 
 			ReadSet readset = RunMockHelper.newReadSet("ReadSetTEST");
 			
-			Result result = callAction(controllers.run.routes.ref.ReadSets.createOrUpdate("YANN_TEST1FORREADSET",2,"json"),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
+			Result result = callAction(controllers.runs.api.routes.ref.ReadSets.save("YANN_TEST1FORREADSET",2),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
 		        
 		 	//System.out.println(contentAsString(result));
 	        assertThat(status(result)).isEqualTo(BAD_REQUEST);
@@ -111,16 +111,16 @@ public class ReadSetsTests extends AbstractTests {
 	 
 	 @Test
 	 public void testArchiveReadSet(){
-		 Result result = callAction(controllers.run.routes.ref.ReadSets.updateArchive("ReadSetTEST","json"),fakeRequest().withJsonBody(RunMockHelper.getArchiveJson("codeTestArchive")));
+		 Result result = callAction(controllers.archives.api.routes.ref.ReadSets.update("ReadSetTEST"),fakeRequest().withJsonBody(RunMockHelper.getArchiveJson("codeTestArchive")));
          assertThat(status(result)).isEqualTo(OK);
     	 
-         result = callAction(controllers.run.routes.ref.ReadSets.updateArchive("ReadSetTESTNOTEXIT","json"),fakeRequest().withJsonBody(RunMockHelper.getArchiveJson("codeTestArchive")));
+         result = callAction(controllers.archives.api.routes.ref.ReadSets.update("ReadSetTESTNOTEXIT"),fakeRequest().withJsonBody(RunMockHelper.getArchiveJson("codeTestArchive")));
          assertThat(status(result)).isEqualTo(NOT_FOUND);
 	 }
 	 
 	 @Test
 	 public void testNeedAchive(){
-		 Result result = callAction(controllers.run.routes.ref.ReadSets.needArchive("json"),fakeRequest());
+		 Result result = callAction(controllers.archives.api.routes.ref.ReadSets.list(2),fakeRequest());
          assertThat(status(result)).isEqualTo(OK);
          assertThat(contentType(result)).isEqualTo("application/json");
       	 assertThat(charset(result)).isEqualTo("utf-8");
@@ -129,10 +129,11 @@ public class ReadSetsTests extends AbstractTests {
 	 
 	 @Test
 	 public void testRemoveReadsets(){
-		 Result result = callAction(controllers.run.routes.ref.Runs.removeReadsets("YANN_TEST1FORREADSET","json"),fakeRequest());
-         Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
+		 Result result = callAction(controllers.runs.api.routes.ref.Runs.removeReadsets("YANN_TEST1FORREADSET"),fakeRequest());
          //System.out.println("RUN WITHOUT READSET: "+runDelete.lanes.get(0).readsets.toArray());
+         //assertThat(runDelete).isNull();
          assertThat(status(result)).isEqualTo(OK);
+         
 	 }
 
 

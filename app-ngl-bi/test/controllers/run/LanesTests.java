@@ -42,11 +42,11 @@ public class LanesTests extends AbstractTests {
 		lanes.add(lane);
 		run.lanes = lanes;
 		
-	 	callAction(controllers.run.routes.ref.Runs.createOrUpdate("json"),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+	 	callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
         
 	 	lane.abort = TBoolean.TRUE;
 	 	
-	 	Result result = callAction(controllers.run.routes.ref.Lanes.createOrUpdate("YANN_TEST1FORLANES","json"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
+	 	Result result = callAction(controllers.runs.api.routes.ref.Lanes.save("YANN_TEST1FORLANES"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
 	 	
 		//System.out.println(contentAsString(result));
 	    assertThat(status(result)).isEqualTo(OK);
@@ -64,10 +64,10 @@ public class LanesTests extends AbstractTests {
 			Run run = RunMockHelper.newRun("YANN_TEST1FORLANES");
 			Lane lane = RunMockHelper.newLane(1);
 		
-		 	callAction(controllers.run.routes.ref.Runs.createOrUpdate("json"),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		 	callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 	        
 		 	
-		 	Result result = callAction(controllers.run.routes.ref.Lanes.createOrUpdate("YANN_TEST1FORLANES","json"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
+		 	Result result = callAction(controllers.runs.api.routes.ref.Lanes.save("YANN_TEST1FORLANES"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
 		 	
 			//System.out.println(contentAsString(result));
 		    assertThat(status(result)).isEqualTo(OK);
@@ -86,7 +86,7 @@ public class LanesTests extends AbstractTests {
 
 			lane.readsets = readsets;
 		 	
-		 	Result result = callAction(controllers.run.routes.ref.Lanes.createOrUpdate("YANN_TEST1FORLANES","json"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
+		 	Result result = callAction(controllers.runs.api.routes.ref.Lanes.save("YANN_TEST1FORLANES"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
 		 	
 		 	//System.out.println(contentAsString(result));
 		    assertThat(status(result)).isEqualTo(OK);
@@ -110,13 +110,13 @@ public class LanesTests extends AbstractTests {
 		readsets.add(readset);
 		lane.readsets = readsets;
 		
-	 	callAction(controllers.run.routes.ref.Runs.createOrUpdate("json"),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+	 	callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 	 	
 		lane = RunMockHelper.newLane(1);
 	
 		lane.readsets = readsets;
 	 	
-	 	Result result = callAction(controllers.run.routes.ref.Lanes.createOrUpdate("YANN_TEST1FORLANES","json"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
+	 	Result result = callAction(controllers.runs.api.routes.ref.Lanes.save("YANN_TEST1FORLANES"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
 	 	
 	 	//System.out.println(contentAsString(result));
 	    assertThat(status(result)).isEqualTo(OK);

@@ -49,10 +49,10 @@ public class FilesTest extends AbstractTests{
 		lanes.add(lane2);
 		run.lanes = lanes;
 		 
-		Result result = callAction(controllers.run.routes.ref.Runs.createOrUpdate("json"),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 	//	System.out.println(contentAsString(result));
 		
-		result = callAction(controllers.run.routes.ref.Files.createOrUpdate("test1","json"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(RunMockHelper.newFile("newfiletest"))));
+		result = callAction(controllers.runs.api.routes.ref.Files.save("test1"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(RunMockHelper.newFile("newfiletest"))));
 	 	//System.out.println(contentAsString(result));
         assertThat(status(result)).isEqualTo(OK);
         assertThat(contentType(result)).isEqualTo("application/json");
@@ -63,7 +63,7 @@ public class FilesTest extends AbstractTests{
 	 public void testFileUpdate() {
 		File file = RunMockHelper.newFile("newfiletest");
 		file.extension = "IMG";
-	  Result result = callAction(controllers.run.routes.ref.Files.createOrUpdate("test1","json"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
+	  Result result = callAction(controllers.runs.api.routes.ref.Files.save("test1"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
 	  //System.out.println(contentAsString(result));
       assertThat(status(result)).isEqualTo(OK);
       assertThat(contentType(result)).isEqualTo("application/json");
@@ -72,7 +72,7 @@ public class FilesTest extends AbstractTests{
 	 
 	 @Test
 	 public void testFileShow() {
-	  Result result = callAction(controllers.run.routes.ref.Files.show("test1","testfile","json"));
+	  Result result = callAction(controllers.runs.api.routes.ref.Files.get("test1","testfile"));
 	//  System.out.println(contentAsString(result));
       assertThat(status(result)).isEqualTo(OK);
       assertThat(contentType(result)).isEqualTo("application/json");
@@ -81,9 +81,10 @@ public class FilesTest extends AbstractTests{
 	 
 	 @Test
 	 public void testRemoveFiles(){
-		 Result result = callAction(controllers.run.routes.ref.Runs.removeFiles("YANN_TEST1FORREADSET2","json"),fakeRequest());
-		   Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
+		 Result result = callAction(controllers.runs.api.routes.ref.Runs.removeFiles("YANN_TEST1FORREADSET2"),fakeRequest());
+		  Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
 		  // System.out.println(Json.toJson(runDelete).toString());
+		 //assertThat(runDelete).isNull();
          assertThat(status(result)).isEqualTo(OK);
 	 }
 

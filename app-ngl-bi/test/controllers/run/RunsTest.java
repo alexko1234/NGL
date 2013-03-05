@@ -50,7 +50,7 @@ public class RunsTest extends AbstractTests {
 			readsets.add(readset);
 			run.lanes.get(0).readsets = readsets;
 			
-		 	Result result = callAction(controllers.run.routes.ref.Runs.createOrUpdate("json"),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		 	Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 	        
 		 	//assertThat(contentAsString(result).)
 		 	//System.out.println(contentAsString(result));
@@ -66,7 +66,7 @@ public class RunsTest extends AbstractTests {
 			
 			run.dispatch=true;
 			
-		 	Result result = callAction(controllers.run.routes.ref.Runs.createOrUpdate("json"),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		 	Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 	        
 		 	//assertThat(contentAsString(result).)
 		 	//System.out.println(contentAsString(result));
@@ -87,7 +87,7 @@ public class RunsTest extends AbstractTests {
 			List<ReadSet> readsets = new ArrayList<ReadSet>();
 			readsets.add(readset);
 			run.lanes.get(0).readsets = readsets;
-		 	Result result = callAction(controllers.run.routes.ref.Runs.createOrUpdate("json"),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		 	Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 	        
 		 	//assertThat(contentAsString(result).)
 		 	//System.out.println(contentAsString(result));
@@ -103,7 +103,7 @@ public class RunsTest extends AbstractTests {
 			run.lanes.get(0).properties.remove("nbCycleRead1");
 			run.lanes.get(0).properties.put("nbCycleRead1",new PropertyValue("42"));
 			
-			Result result = callAction(controllers.run.routes.ref.Runs.createOrUpdate("json"),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 	        
 		 	//assertThat(contentAsString(result).)
 		 	//System.out.println(contentAsString(result));
@@ -119,7 +119,7 @@ public class RunsTest extends AbstractTests {
 			
 			run.lanes.get(0).readsets.get(0).properties.remove("score");
 			run.lanes.get(0).readsets.get(0).properties.put("score",  new PropertyValue("42"));
-			Result result = callAction(controllers.run.routes.ref.Runs.createOrUpdate("json"),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 	        
 		 	//assertThat(contentAsString(result).)
 		 	//System.out.println(contentAsString(result));
@@ -131,7 +131,7 @@ public class RunsTest extends AbstractTests {
 	
 	@Test
 	public void testDeleteRun(){
-		Result result = callAction(controllers.run.routes.ref.Runs.remove("YANN_TEST1","json"),fakeRequest());
+		Result result = callAction(controllers.runs.api.routes.ref.Runs.remove("YANN_TEST1"),fakeRequest());
 		assertThat(status(result)).isEqualTo(OK);
 		
 	}
