@@ -8,7 +8,7 @@ import play.mvc.Result;
 import views.common.datatable.DatatableColumn;
 import views.common.datatable.DatatableConfig;
 import views.common.datatable.DatatableHelpers;
-import views.html.run.*;
+import views.html.runs.*;
 
 /**
  * Controller around Run object

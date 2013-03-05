@@ -8,7 +8,7 @@ import play.mvc.Result;
 import views.common.datatable.DatatableColumn;
 import views.common.datatable.DatatableConfig;
 import views.common.datatable.DatatableHelpers;
-import views.html.archive.*;
+import views.html.archives.*;
 /**
  * Controller around archive readset object
  * @author galbini
