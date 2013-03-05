@@ -45,7 +45,7 @@ object ApplicationBuild extends Build {
 		"org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
-                "net.sf.opencsv" % "opencsv" % "2.0",
+        "net.sf.opencsv" % "opencsv" % "2.0",
 		"org.springframework" % "spring-test" % "3.0.7.RELEASE"
     	)	 
    	
