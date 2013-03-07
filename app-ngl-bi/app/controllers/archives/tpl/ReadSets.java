@@ -6,9 +6,9 @@ import java.util.List;
 import play.Routes;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.common.datatable.DatatableColumn;
-import views.common.datatable.DatatableConfig;
-import views.common.datatable.DatatableHelpers;
+import views.components.datatable.DatatableColumn;
+import views.components.datatable.DatatableConfig;
+import views.components.datatable.DatatableHelpers;
 import views.html.archives.*;
 /**
  * Controller around archive readset object

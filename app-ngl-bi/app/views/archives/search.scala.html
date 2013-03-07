@@ -1,4 +1,4 @@
-@(datatableConfig: views.common.datatable.DatatableConfig)
+@(datatableConfig: views.components.datatable.DatatableConfig)
 
 @form() = {
 <form class="well form-search">
@@ -14,5 +14,5 @@
 </form>
 }
 <div ng-init="init()">
-@views.html.common.datatable.datatable(datatableConfig, form)		
+@views.html.components.datatable.datatable(datatableConfig, form)		
 </div>
