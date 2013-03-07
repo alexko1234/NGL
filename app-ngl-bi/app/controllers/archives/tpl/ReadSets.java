@@ -3,6 +3,7 @@ package controllers.archives.tpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import play.Routes;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.common.datatable.DatatableColumn;
@@ -32,5 +33,16 @@ public class ReadSets extends Controller {
 		DatatableConfig config = new DatatableConfig(columns);
 		return ok(search.render(config));
 	}
+	
+	public static Result javascriptRoutes() {
+  	    response().setContentType("text/javascript");
+  	    return ok(  	    		
+  	      Routes.javascriptRouter("jsRoutes",
+  	        // Routes
+  	    		controllers.archives.tpl.routes.javascript.ReadSets.home(),  
+  	    		controllers.archives.api.routes.javascript.ReadSets.list()  	    		
+  	      )	  	      
+  	    );
+  	  }
 	
 }

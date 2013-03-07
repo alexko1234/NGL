@@ -2,6 +2,7 @@ package views.common.datatable;
 
 import java.util.List;
 
+
 import play.libs.Scala;
 
 import scala.collection.Seq;
@@ -23,6 +24,7 @@ public class DatatableConfig {
 	public DatatableConfig(List<DatatableColumn> columns, Boolean show) {
 		this.columns = Scala.toSeq(columns);
 		this.show = show;
+		int count = 0;		
 		for(DatatableColumn column:  columns){
 			if(column.editable.booleanValue()){
 				this.edit = Boolean.TRUE;
@@ -30,8 +32,8 @@ public class DatatableConfig {
 			if(column.hidding.booleanValue()){
 				this.hidding = Boolean.TRUE;
 			}
+			column.id = "p"+count++;
 		}
 		toolbar = (edit.booleanValue() || hidding.booleanValue() || show.booleanValue())?Boolean.TRUE:Boolean.FALSE;
-	}
-	
+	}		
 }

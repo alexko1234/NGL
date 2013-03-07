@@ -27,7 +27,7 @@ menu.archives = Archives
 
 
 #page field label
-
+page.search.label.search = Recherche
 
 #page field value
 page.archives.fvalue.archive.0 = Tout

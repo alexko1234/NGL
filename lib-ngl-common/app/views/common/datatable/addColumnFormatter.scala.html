@@ -2,7 +2,7 @@
 
 
 @if(column.isDate()){
-{{value.@column.id | date:'@Messages("datetime.format")'}}
+{{value.@column.property | date:'@Messages("datetime.format")'}}
 }else{
-{{value.@column.id}}	
+{{value.@column.property}}	
 }

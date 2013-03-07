@@ -4,6 +4,23 @@ angular.module('datatableServices', []).
     	factory('datatable', ['$http', function($http){ //service to manage datatable
     		var constructor = function($scope, iConfig){
 				var datatable = {
+						configDefault:{
+							addshow:undefined,			
+							edit: false,
+							orderReverse:false,
+							orderBy:undefined,
+							editColumn: {
+								all:false	
+							},
+							updateColumn:{},
+							hideColumn: {},
+							orderColumn:{},
+							url:{
+								save:undefined,
+								remove:undefined,
+								search:undefined
+							}
+						},
 						config:undefined,
     					configMaster:undefined,
     					searchresult:undefined,
@@ -35,18 +52,33 @@ angular.module('datatableServices', []).
 		    				this.searchresult = angular.copy(this.searchresultMaster);
 		    				this.config = angular.copy(this.configMaster);
 		    			},
-		    			
+		    			/**
+		    			 * Search function to populate the datatable
+		    			 */
 		    			search : function(params){
-		    				if(this.config.url.search){
-		    					$http.get(this.config.url.search,{params:params}).success(function(data) {
+		    				var url = this.getUrl(this.config.url.search);
+		    				if(url){
+		    					$http.get(url,{params:params}).success(function(data) {
 									$scope.datatable.searchresult = data;
 									$scope.datatable.searchresultMaster = angular.copy(data);
 		    					});
 		    				}else{
-		    					console.log('no url define for search ! ');
+		    					console.log('no url define for search ! '+this.config.url.search);
 		    				}
 		    			},
-		    			
+		    			/**
+		    			 * Return an url from play js object or string
+		    			 */
+		    			getUrl : function(url){
+		    				if(angular.isObject(url)){
+		    					if(angular.isDefined(url.url)){
+		    						return url.url;
+		    					}
+		    				}else if(angular.isString(url)){
+		    					return url;
+		    				}
+		    				return undefined;
+		    			},
 		    			/**
 		    			 * Save the selected table line
 		    			 */
@@ -55,7 +87,7 @@ angular.module('datatableServices', []).
 		    					if(this.searchresult[i].selected){
 		    						if(this.config.url.save){
 		    							this.saveObject(this.searchresult[i], i);
-		    						}else{
+		    						}else{		    									    		    				
 		    							this.searchresult[i].selected = false;
 		    							this.searchresult[i].edit=false;
 		    							this.searchresult[i].trClass = undefined;
@@ -66,17 +98,22 @@ angular.module('datatableServices', []).
 		    				}		    				
 		    			},
 		    			saveObject : function(value, i){
-		    				$http.post(this.config.url.save, value)
-		    				.success(function(data) {
-		    					this.searchresult[i].selected = false;
-		    					this.searchresult[i].edit=false;
-		    					this.searchresult[i].trClass = undefined;
-		    					this.searchresultMaster[i] = angular.copy(this.searchresult[i]);
-		    					this.searchresult[i].trClass = "success";
-		    				})
-		    				.error(function(data) {
-		    					this.searchresult[i].trClass = "error";
-		    				});
+		    				var url = this.getUrl(this.config.url.save);
+			    			if(url){
+			    				$http.post(url, value)
+				    				.success(function(data) {
+				    					this.searchresult[i].selected = false;
+				    					this.searchresult[i].edit=false;
+				    					this.searchresult[i].trClass = undefined;
+				    					this.searchresultMaster[i] = angular.copy(this.searchresult[i]);
+				    					this.searchresult[i].trClass = "success";
+				    				})
+				    				.error(function(data) {
+				    					this.searchresult[i].trClass = "error";
+				    				});
+		    				}else{
+		    					console.log('no url define for save ! '+this.config.url.save);
+		    				}
 		    				
 		    			},
 		    			
@@ -88,8 +125,13 @@ angular.module('datatableServices', []).
 		    					if(this.searchresult[i].selected){
 		    						this.searchresult.splice(i,1);				
 		    						this.searchresultMaster.splice(i,1);
-		    						//TODO missing update in db
 		    						i--;
+		    						var url = this.getUrl(this.config.url.remove);
+					    			if(url){
+					    				//TODO must be complete
+					    			}else{
+				    					console.log('no url define for remove ! '+this.config.url.remove);
+				    				}
 		    					}						
 		    				}
 		    				this.config = angular.copy(this.configMaster);
@@ -113,7 +155,7 @@ angular.module('datatableServices', []).
 		    			 * set Edit all column or just one
 		    			 * @param editColumnName : column name
 		    			 */
-		    			setEditColumn : function(editColumnName){		
+		    			setEditColumn : function(columnId){		
 		    				var find = false;
 		    				for(var i = 0; i < this.searchresult.length; i++){
 		    					if(this.searchresult[i].selected){
@@ -126,7 +168,7 @@ angular.module('datatableServices', []).
 		    				}
 		    				if(find){
 		    					this.config.edit = true;			
-		    					if(editColumnName){  (new Function("config","config.editColumn."+editColumnName+"=true"))(this.config);}
+		    					if(columnId){  (new Function("config","config.editColumn."+columnId+"=true"))(this.config);}
 		    					else this.config.editColumn.all = true;
 		    				}
 		    			},
@@ -135,12 +177,12 @@ angular.module('datatableServices', []).
 		    			 * @param editColumnName : column name
 		    			 * @param line : the line in the table
 		    			 */
-		    			isEdit : function(editColumnName, line){
-		    				if(editColumnName && line){
-		    					var columnEdit = (new Function("config","return config.editColumn."+editColumnName))(this.config);
+		    			isEdit : function(columnId, line){
+		    				if(columnId && line){
+		    					var columnEdit = (new Function("config","return config.editColumn."+columnId))(this.config);
 		    					return (line.edit && columnEdit) || (line.edit && this.config.editColumn.all);
-		    				}else if(editColumnName){
-		    					var columnEdit =  (new Function("config","return config.editColumn."+editColumnName))(this.config);
+		    				}else if(columnId){
+		    					var columnEdit =  (new Function("config","return config.editColumn."+columnId))(this.config);
 		    					return (columnEdit || this.config.editColumn.all);
 		    				}else{
 		    					return this.config.edit;
@@ -150,10 +192,10 @@ angular.module('datatableServices', []).
 		    			 * Update all line with the same value
 		    			 * @param updateColumnName : column name
 		    			 */
-		    			updateColumn : function(updateColumnName){	
+		    			updateColumn : function(columnPropertyName, columnId){	
 		    				for(var i = 0; i < this.searchresult.length; i++){
 		    					if(this.searchresult[i].selected){
-		    						var fn = new Function("searchresult", "config","searchresult."+updateColumnName+"=config.updateColumn."+updateColumnName);
+		    						var fn = new Function("searchresult", "config","searchresult."+columnPropertyName+"=config.updateColumn."+columnId);
 		    						fn(this.searchresult[i], this.config);				
 		    					}
 		    				}
@@ -163,31 +205,31 @@ angular.module('datatableServices', []).
 		    			 * set the hide column
 		    			 * @param hideColumnName : column name
 		    			 */
-		    			setHideColumn : function(hideColumnName){	
-		    				var fn = new Function("config", "if(!config.hideColumn."+hideColumnName+"){config.hideColumn."+hideColumnName+"=true;} else{ config.hideColumn."+hideColumnName+"=false;}");
+		    			setHideColumn : function(columnId){	
+		    				var fn = new Function("config", "if(!config.hideColumn."+columnId+"){config.hideColumn."+columnId+"=true;} else{ config.hideColumn."+columnId+"=false;}");
 		    				fn(this.config);		
 		    			},
 		    			/**
 		    			 * Test if a column must be hide
 		    			 * @param hideColumnName : column name 
 		    			 */
-		    			isHide : function(hideColumnName){
-		    				var fn = new Function("config", "if(config.hideColumn."+hideColumnName+") return config.hideColumn."+hideColumnName+";else return false;");
+		    			isHide : function(columnId){
+		    				var fn = new Function("config", "if(config.hideColumn."+columnId+") return config.hideColumn."+columnId+";else return false;");
 		    				return fn(this.config);
 		    			},
 		    			/**
 		    			 * set the order column name
 		    			 * @param orderColumnName : column name
 		    			 */
-		    			setOrderColumn : function(orderColumnName){
-		    				this.config.orderBy = orderColumnName;
-		    				var fn = new Function("config", "if(!config.orderColumn."+orderColumnName+"){config.orderColumn."+orderColumnName+"=true; config.orderReverse=true;} else{ config.orderColumn."+orderColumnName+"=false; config.orderReverse=false;}");
+		    			setOrderColumn : function(columnPropertyName, columnId){
+		    				this.config.orderBy = columnPropertyName;
+		    				var fn = new Function("config", "if(!config.orderColumn."+columnId+"){config.orderColumn."+columnId+"=true; config.orderReverse=true;} else{ config.orderColumn."+columnId+"=false; config.orderReverse=false;}");
 		    				fn(this.config);
 		    			}
     			};
-    			
-    			datatable.config = iConfig;
-    			datatable.configMaster = angular.copy(iConfig);    			
+			    var settings = $.extend(true, {}, datatable.configDefault, iConfig);
+    			datatable.config = angular.copy(settings);
+    			datatable.configMaster = angular.copy(settings);    			
     			return datatable;
     		}
     		return constructor;

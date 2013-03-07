@@ -3,6 +3,7 @@ package controllers.runs.tpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import play.Routes;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.common.datatable.DatatableColumn;
@@ -33,6 +34,19 @@ public class Runs extends Controller {
 	
 	public static Result details() {
 		return ok(details.render());
-	}	
+	}
+	
+	
+	public static Result javascriptRoutes() {
+  	    response().setContentType("text/javascript");
+  	    return ok(  	    		
+  	      Routes.javascriptRouter("jsRoutes",
+  	        // Routes
+  	    		controllers.runs.tpl.routes.javascript.Runs.home(),  
+  	    		controllers.runs.api.routes.javascript.Runs.get(),
+  	    		controllers.runs.api.routes.javascript.Runs.list()  	    		
+  	      )	  	      
+  	    );
+  	  }
 	
 }

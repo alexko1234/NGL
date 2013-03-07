@@ -1,9 +1,11 @@
 @*
 *	Create a datatable
 *	config: views.common.datatable.DatatableConfig : datatable configuration
+*	form: Html : search form
+*	buttons: Html : additionnal buttons
 *	
 *@
-@(config: views.common.datatable.DatatableConfig, form: Html = Html(""))
+@(config: views.common.datatable.DatatableConfig, form: Html = Html(""), buttons: Html = Html(""))
 @import views.common.datatable.DatatableColumn
 
 @form
@@ -20,7 +22,7 @@
 		<ul class="dropdown-menu">
 			@for(column: DatatableColumn <- config.columns){
 				@if(column.editable){
-					<li><a href="#" ng-click="@(config.name).setEditColumn('@column.id')">@Messages(column.label)</a></li>
+					<li><a href="#" ng-click="@(config.name).setEditColumn('@column.id')">@Messages(column.header)</a></li>
 				}				
 			}						
 		</ul>
@@ -45,12 +47,13 @@
 		<ul class="dropdown-menu">
 			@for(column: DatatableColumn <- config.columns){
 				@if(column.hidding){
-					<li><a href="#" ng-click="@(config.name).setHideColumn('@column.id')">@Messages(column.label)</a></li>
+					<li><a href="#" ng-click="@(config.name).setHideColumn('@column.id')">@Messages(column.header)</a></li>
 				}				
 			}						
 		</ul>		
 	</div>
 	}
+	@buttons
 </div>
 }
 <form class="form-inline">
@@ -58,20 +61,22 @@
 	<thead>
 	<tr>
 		@for(column: DatatableColumn <- config.columns){
-			<th ng-hide="@(config.name).isHide('@column.id')" ng-click="@(config.name).setOrderColumn('@column.id')">@Messages(column.label)</th>
+			<th @if(column.hidding){ng-hide="@(config.name).isHide('@column.id')"} ng-click="@(config.name).setOrderColumn('@column.property', '@column.id')">@Messages(column.header)</th>
 		}
 	</tr>
 	</thead>
 	<tbody>
 	<!-- first line to edit mode -->
+	@if(config.edit){
 	<tr ng-show="@(config.name).config.edit">
 		@for(column: DatatableColumn <- config.columns){
-			<td ng-hide="@(config.name).isHide('@column.id')">@if(column.editable){<input type="text" class="input-medium" ng-change="@(config.name).updateColumn('@column.id')" ng-model="@(config.name).config.updateColumn.@column.id" ng-show="@(config.name).isEdit('@column.id')"/>}</td>
+			<td ng-hide="@(config.name).isHide('@column.id')">@if(column.editable){<input type="text" class="input-medium" ng-change="@(config.name).updateColumn('@column.property', '@column.id')" ng-model="@(config.name).config.updateColumn.@column.id" ng-show="@(config.name).isEdit('@column.id')"/>}</td>
 		}
 	</tr>
+	}
 	<tr ng-repeat="value in @(config.name).searchresult | orderBy:@(config.name).config.orderBy:@(config.name).config.orderReverse" ng-click="@(config.name).select(value)" ng-class="value.trClass">
 		@for(column: DatatableColumn <- config.columns){
-				<td ng-hide="@(config.name).isHide('@column.id')">
+				<td @if(column.hidding){ng-hide="@(config.name).isHide('@column.id')"}>
 				<span @if(column.editable){ng-hide="@(config.name).isEdit('@column.id', value)"}>@addColumnFormatter(config.name, column)</span>
 				@if(column.editable){<input type="text" class="input-medium" ng-model="value.@column.id" ng-show="@(config.name).isEdit('@column.id', value)"/>}
 				</td>

@@ -4,8 +4,9 @@ import java.util.Date;
 
 public class DatatableColumn {
 	
-	public String label;
-	public String id;
+	public String header; //header of the column
+	public String property; //property name in object
+	public String id;   //id of the column
 	public Boolean editable = Boolean.FALSE;
 	public Boolean hidding = Boolean.FALSE;
 	public Boolean ordering = Boolean.FALSE;

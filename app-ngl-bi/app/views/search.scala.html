@@ -1,12 +1,13 @@
-@(title: String, nav: String = "", scripts: Html = Html(""))
+@(title: String, nav: String = "", scripts: Html = Html(""), searchtagurl: play.api.mvc.Call)
 
 
 
 @main(title, nav, scripts){
 <div id="home" ng-app="home" >
-<div class="row-fluid" ng-controller="MainCtrl">  
+<div class="row-fluid" ng-controller="SearchMainCtrl">  
   <div class="tabbable tabs-left">
 	<ul id="searchTab" class="nav nav-tabs">
+	   <li class="{{searchTab.clazz}}"><a href="@searchtagurl" ng-click="activeTab('searchTab')">@Messages("page.search.label.search")</a></li>
 	   <li ng-repeat="value in tabs" class="{{value.clazz}}"><a href="{{value.href}}" ng-click="activeTab(value)">{{value.label}}<button class="close" ng-click="removeTab($index)" ng-show="value.remove">&times;</button></a></li>
     </ul>	
 	<div class="tab-content">

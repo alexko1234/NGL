@@ -1,35 +1,12 @@
 "use strict";
 
-function MainCtrl($scope){
-	$scope.tabs = [
-	               {
-	            	   label:'Search',
-	            	   href:'/archives/home',
-	            	   clazz:'active',
-	            	   remove:false
-	               }	               
-	              ];	
-}
-
-
 function SearchCtrl($scope, datatable) {
 	$scope.archive = 2; //default only need archive
 	
 	$scope.datatableConfig = {
-			edit: false,
-			orderReverse:true,
-			orderBy:'date',
-			editColumn: {
-				all:undefined				
-			},
-			updateColumn: {
-			},
-			hideColumn: {
-			},
-			orderColumn:{
-			},
+			orderBy:'date',			
 			url:{
-				search:'/api/archives/readsets'
+				search:jsRoutes.controllers.archives.api.ReadSets.list()
 			}
 	};
 	

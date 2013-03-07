@@ -1,9 +1,11 @@
 @()
 
 @scripts() = {
+		 <script src="@routes.Assets.at("ngl/1.0/javascript/controllers/commons.js")" type="text/javascript" charset="utf-8"></script>                            
          <script src="@routes.Assets.at("ngl/1.0/javascript/services/datatable.js")" type="text/javascript" charset="utf-8"></script>          
          <script src="@routes.Assets.at("ngl/1.0/javascript/archives/controllers.js")" type="text/javascript" charset="utf-8"></script>                      
-         <script src="@routes.Assets.at("ngl/1.0/javascript/archives/app.js")" type="text/javascript" charset="utf-8"></script>     
+         <script src="@routes.Assets.at("ngl/1.0/javascript/archives/app.js")" type="text/javascript" charset="utf-8"></script> 
+         <script src="@controllers.archives.tpl.routes.ReadSets.javascriptRoutes" type="text/javascript" charset="utf-8"></script>     
 }
 
-@views.html.search("title.archives", "archives", scripts)
+@views.html.search("title.archives", "archives", scripts, controllers.archives.tpl.routes.ReadSets.home())

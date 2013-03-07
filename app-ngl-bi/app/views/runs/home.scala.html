@@ -1,9 +1,12 @@
 @()
 
 @scripts() = {
+		 <script src="@routes.Assets.at("ngl/1.0/javascript/controllers/commons.js")" type="text/javascript" charset="utf-8"></script>                   
          <script src="@routes.Assets.at("ngl/1.0/javascript/services/datatable.js")" type="text/javascript" charset="utf-8"></script>          
          <script src="@routes.Assets.at("ngl/1.0/javascript/runs/controllers.js")" type="text/javascript" charset="utf-8"></script>                      
-         <script src="@routes.Assets.at("ngl/1.0/javascript/runs/app.js")" type="text/javascript" charset="utf-8"></script>     
+         <script src="@routes.Assets.at("ngl/1.0/javascript/runs/app.js")" type="text/javascript" charset="utf-8"></script>    
+         <script src="@controllers.runs.tpl.routes.Runs.javascriptRoutes" type="text/javascript" charset="utf-8"></script> 
 }
 
-@views.html.search("title.runs", "runs", scripts)
+
+@views.html.search("title.runs", "runs", scripts, controllers.runs.tpl.routes.Runs.home("home"))

@@ -120,7 +120,7 @@ public class ReadSetsTests extends AbstractTests {
 	 
 	 @Test
 	 public void testNeedAchive(){
-		 Result result = callAction(controllers.archives.api.routes.ref.ReadSets.list(2),fakeRequest());
+		 Result result = callAction(controllers.archives.api.routes.ref.ReadSets.list(),fakeRequest());
          assertThat(status(result)).isEqualTo(OK);
          assertThat(contentType(result)).isEqualTo("application/json");
       	 assertThat(charset(result)).isEqualTo("utf-8");

@@ -4,7 +4,7 @@
 
 # Home page
 # Home page
-GET     /                           controllers.Application.index(id:java.lang.String ?="")
+GET     /                           controllers.Application.index()
 
 #ngs-rs api
 GET		/api/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
@@ -12,9 +12,10 @@ GET		/api/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experim
 GET		/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: String)
 
 #run tpl
-GET	   	/runs/:code									controllers.runs.tpl.Runs.home(code : String)
+GET	   	/runs/:code									controllers.runs.tpl.Runs.home(code:java.lang.String)
 GET		/tpl/runs/search							controllers.runs.tpl.Runs.search()
 GET		/tpl/runs/details							controllers.runs.tpl.Runs.details()
+GET		/tpl/runs/assets								controllers.runs.tpl.Runs.javascriptRoutes()
 
 #run api
 GET    	/api/runs                					controllers.runs.api.Runs.list()
@@ -42,12 +43,13 @@ POST  	/api/readsets/:code/files					controllers.runs.api.Files.save(code: java.
 #archive
 GET	   	/archives/home								controllers.archives.tpl.ReadSets.home()
 GET		/tpl/archives/search						controllers.archives.tpl.ReadSets.search()
+GET		/tpl/archives/assets							controllers.archives.tpl.ReadSets.javascriptRoutes()
 
 PUT	   	/api/archives/readsets/:readSetCode			controllers.archives.api.ReadSets.update(readSetCode:java.lang.String)
-GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list(archive: java.lang.Integer ?= 2) 
+GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list() 
 
 # Javascript routing
-GET    /assets/javascripts/routes      				controllers.Application.javascriptRoutes()
+#GET    /assets/javascripts/routes      			controllers.Application.javascriptRoutes()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

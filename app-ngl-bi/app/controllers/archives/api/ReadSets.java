@@ -39,7 +39,8 @@ public class ReadSets extends Controller{
 	 * @param archive : default 2
 	 * @return
 	 */
-	public static Result list(Integer archive){
+	public static Result list(){
+		Integer archive = getArchiveValue();
 		List<Archive> archives = new ArrayList<Archive>();
 		List<Run> runs = MongoDBDAO.find(Constants.RUN_ILLUMINA_COLL_NAME, Run.class,getQuery(archive)).toList();
 		for(Run run:runs){
@@ -58,6 +59,15 @@ public class ReadSets extends Controller{
 			}
 		}
 		return ok(Json.toJson(archives));		
+	}
+
+	private static Integer getArchiveValue() {
+		try{
+			return Integer.valueOf(request().queryString().get("archive")[0]);
+		}catch(Exception e){
+			Logger.error(e.getMessage());
+			return 2; // default value;
+		}
 	}
 
 	private static Query getQuery(Integer archive) {
