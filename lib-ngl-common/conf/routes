@@ -1,0 +1,2 @@
+#just for compile main.scala.html
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

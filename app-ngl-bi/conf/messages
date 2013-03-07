@@ -1,35 +1,17 @@
-#format date
-datetime.format=dd/MM/yyyy HH:mm:ss
-date.format=dd/MM/yyyy
-
-
-#button
-button.selectall=Tout Sélectionner
-button.cancel=Annuler
-button.hide=Cacher
-button.show=Voir
-button.edit=Editer
-button.save=Sauver
-button.remove=Supprimer
+#application
+application.name=NGL-BI
 
 #page title
-title.search=Recherche
 title.runs=Runs
 title.run=Run
 title.archives=Archives
-
-#application
-application.name=NGL-BI
 
 #menu
 menu.runs = Runs
 menu.archives = Archives
 
-
-#page field label
-page.search.label.search = Recherche
-
 #page field value
 page.archives.fvalue.archive.0 = Tout
 page.archives.fvalue.archive.1 = Archivés
 page.archives.fvalue.archive.2 = Non Archivés
+

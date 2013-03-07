@@ -1,0 +1,35 @@
+@(nav: String = "")
+
+  <!-- Navbar
+    ================================================== -->
+		
+<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				
+				<a class="brand" href="@routes.Application.index()">@Messages("application.name")</a>
+				
+					<ul class="nav">
+						<li class="@("active".when(nav == "runs"))"><a href="@controllers.runs.tpl.routes.Runs.home("home")">@Messages("menu.runs")</a>
+						</li>						
+					</ul>
+					<ul class="nav">
+						<li class="@("active".when(nav == "archives"))"><a href="@controllers.archives.tpl.routes.ReadSets.home()">@Messages("menu.archives")</a>
+						</li>						
+					</ul>
+					@**
+					<div class="btn-group pull-right">
+						<a href="#" data-toggle="dropdown" class="btn dropdown-toggle">
+							<i class="icon-user"></i>Username <span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="#">Profile</a></li>
+							<li class="divider"></li>
+							<li><a href="">Sign Out</a></li>
+						</ul>
+					</div>
+					**@
+				</div>
+			</div>
+		</div>
+

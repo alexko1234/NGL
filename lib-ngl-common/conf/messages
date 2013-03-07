@@ -1,0 +1,18 @@
+#format date
+datetime.format=dd/MM/yyyy HH:mm:ss
+date.format=dd/MM/yyyy
+
+
+#button
+button.selectall=Tout Sélectionner
+button.cancel=Annuler
+button.hide=Cacher
+button.show=Voir
+button.edit=Editer
+button.save=Sauver
+button.remove=Supprimer
+
+
+#page field label
+page.search.label.search = Recherche
+
