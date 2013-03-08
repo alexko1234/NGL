@@ -33,6 +33,7 @@ import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.DescriptionHelper;
+import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 
 import org.junit.AfterClass;
@@ -227,11 +228,8 @@ public class InstanceTest extends AbstractTests{
 		sample.typeCode="sampleType";
 		sample.projectCode="ProjectCode";
 
-
-		sample.comments=new ArrayList<Comment>();
-		sample.comments.add(new Comment("comment"));
-		sample.traceInformation=new TraceInformation();
-		sample.traceInformation.setTraceInformation("test"); 
+		sample.comments=InstanceHelpers.addComment("comment", sample.comments);
+		InstanceHelpers.updateTraceInformation(sample.traceInformation); 
 
 		MongoDBDAO.save(Sample.class.getSimpleName(), sample);
 
@@ -239,13 +237,17 @@ public class InstanceTest extends AbstractTests{
 
 		assertThat(sample.code).isEqualTo("SampleCode");
 		assertThat(sample.name).isEqualTo("sampleName");
+		
+		assertThat(sample.comments).isNotNull();
 		assertThat(sample.comments.get(0).comment).isEqualTo("comment");
-		assertThat(sample.traceInformation.createUser).isEqualTo("test");
+		assertThat(sample.traceInformation.modifyUser).isNotNull();
 		assertThat(sample.valid).isEqualTo(TBoolean.UNSET);
 
 		assertThat(sample.getSampleCategory().code).isEqualTo("sampleCategory");
 		assertThat(sample.getSampleType().code).isEqualTo("sampleType");
 		assertThat(sample.getProject().code).isEqualTo("ProjectCode");
+		
+
 
 	}
 
@@ -281,7 +283,6 @@ public class InstanceTest extends AbstractTests{
 
 		container.comments=new ArrayList<Comment>();
 		container.comments.add(new Comment("comment"));
-		container.traceInformation=new TraceInformation();
 		container.traceInformation.setTraceInformation("test"); 
 
 		MongoDBDAO.save(Container.class.getSimpleName(), container);
@@ -362,7 +363,6 @@ public class InstanceTest extends AbstractTests{
 
 		experiment.comments=new ArrayList<Comment>();
 		experiment.comments.add(new Comment("comment"));
-		experiment.traceInformation=new TraceInformation();
 		experiment.traceInformation.setTraceInformation("test"); 
 
 		MongoDBDAO.save(Experiment.class.getSimpleName(), experiment);
