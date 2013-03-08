@@ -19,6 +19,7 @@ import models.laboratory.container.instance.SampleUsed;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
+import models.utils.InstanceHelpers;
 import play.Logger;
 import play.data.validation.ValidationError;
 import play.mvc.Http;
@@ -131,8 +132,7 @@ public class LoadDataHelper {
 			else if(firstLine[i].startsWith(rootPrefix)) {
 
 				if(firstLine[i].endsWith(".comments")){
-					container.comments=new ArrayList<Comment>();
-					container.comments.add(new Comment(nextLine[i]));
+					container.comments=InstanceHelpers.addComment(nextLine[i],container.comments);
 				}
 				else	{
 
@@ -144,7 +144,8 @@ public class LoadDataHelper {
 			
 		}
 		
-		container.traceInformation.setTraceInformation(Http.Context.current().session().get("CAS_FILTER_USER"));
+		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
+		
 		return container;
 	}
 	
@@ -171,9 +172,8 @@ public class LoadDataHelper {
 			}
 			else if(firstLine[i].startsWith(rootPrefix)) {
 
-				if(firstLine[i].endsWith(".comments")){
-					sample.comments=new ArrayList<Comment>();
-					sample.comments.add(new Comment(nextLine[i]));
+				if(firstLine[i].endsWith(".comments")){					
+					sample.comments=InstanceHelpers.addComment(nextLine[i],sample.comments);
 				}
 				else	{
 
@@ -184,7 +184,7 @@ public class LoadDataHelper {
 			}
 		}
 		
-		sample.traceInformation.setTraceInformation(Http.Context.current().session().get("CAS_FILTER_USER"));
+		sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 
 		return sample;
 	}

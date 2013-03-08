@@ -65,6 +65,7 @@ public class SampleLoad extends Controller{
 	public static Result uploadDataFromCSVFile() throws Exception {
 
 		Form<InputLoadData> filledForm = inputLoadData.bindFromRequest();
+		System.err.println("Error filledForm :"+filledForm.hasErrors());
 		InputLoadData inputLoadDatas = filledForm.get();		
 		String sampleTypeCode=inputLoadDatas.sampleType;
 		String importTypeCode=inputLoadDatas.importType;
@@ -95,21 +96,19 @@ public class SampleLoad extends Controller{
 			String [] nextLine;
 
 			SampleType sampleType= new HelperObjects<SampleType>().getObject(SampleType.class, sampleTypeCode, filledForm.errors());
+
 			ImportType importType= new HelperObjects<ImportType>().getObject(ImportType.class, importTypeCode, filledForm.errors());
 
-			if(sampleType==null){
-				ConstraintsHelper.addErrors(filledForm.errors(), ConstraintsHelper.getKey(null, "SampleTypeCode"), "SAMPLE TYPE NOT EXISTS",sampleTypeCode);
+			if(filledForm.hasErrors())
+			{
 				return badRequest(sampleload.render(datatableForm, filledForm));
-			}
 
-			if(importType==null){
-				ConstraintsHelper.addErrors(filledForm.errors(), ConstraintsHelper.getKey(null, "ExperimentTypeCOde"), "EXPERIMENT TYPE NOT EXISTS",importTypeCode);
-				return badRequest(sampleload.render(datatableForm, filledForm));
 			}
-
+			
 			String[] firstLine=reader.readNext();
 
 			LoadDataHelper.validateHeader(firstLine,sampleType,importType,filledForm.errors());
+			
 			if(filledForm.hasErrors())
 			{
 				return badRequest(sampleload.render(datatableForm, filledForm));
