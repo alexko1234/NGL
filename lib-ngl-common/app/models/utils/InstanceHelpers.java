@@ -1,12 +1,19 @@
 package models.utils;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.TraceInformation;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
+
+import play.mvc.Http;
 
 public class InstanceHelpers {
 	
@@ -18,6 +25,38 @@ public class InstanceHelpers {
 		    	 return new PropertyValue();
 		     }
 		 });
+	}
+	
+	
+	public static String getUser(){
+
+		String user;
+		if(Http.Context.current().session().get("CAS_FILTER_USER")==null){
+			user="admin";
+		}
+		else {
+			user=Http.Context.current().session().get("CAS_FILTER_USER");
+		}
+		return user;
+
+	}
+	
+	public static List<Comment> addComment(String comment,List<Comment> comments){
+		if(comments==null){
+			comments=new ArrayList<Comment>();
+		}
+		
+		Comment newComment=new Comment(comment);
+		newComment.createUser=InstanceHelpers.getUser();
+		
+		comments.add(newComment);
+		return comments;
+	}
+	
+	public static void updateTraceInformation(TraceInformation traceInformation){
+		traceInformation.modifyUser=InstanceHelpers.getUser();
+		traceInformation.modifyDate=new Date();
+
 	}
 
 }

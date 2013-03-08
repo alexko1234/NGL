@@ -84,7 +84,7 @@ public class Container extends DBObject {
 	
 
 	public Container(){
-		
+		traceInformation=new TraceInformation();
 	}
 	
 	//Delete method if possibles

@@ -37,6 +37,10 @@ public class Project extends DBObject {
 	public List<Comment> comments;
 	
 	
+	public Project(){
+		traceInformation=new TraceInformation();
+	}
+	
 	@JsonIgnore
 	public ProjectType getProjectType(){
 			return new HelperObjects<ProjectType>().getObject(ProjectType.class, typeCode, null);
