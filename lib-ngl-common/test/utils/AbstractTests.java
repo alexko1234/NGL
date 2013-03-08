@@ -3,21 +3,36 @@ package utils;
 
 import static play.test.Helpers.fakeApplication;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import play.mvc.Http;
 import play.test.FakeApplication;
 import play.test.Helpers;
 
+@RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractTests {
+	
+	@Mock
+	private Http.Request request;
+
 	protected static FakeApplication app;
+	
+	
 	@Before
 	public void start(){
 		 app = getFakeApplication();
 		 Helpers.start(app);
+		  Map<String, String> flashData = Collections.emptyMap();
+	      Http.Context context = new Http.Context(request, flashData, flashData);
+	      Http.Context.current.set(context);	
 	}
 	
 	@After
