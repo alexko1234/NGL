@@ -14,19 +14,19 @@ import controllers.utils.DataTableForm;
 import models.administration.authorisation.Team;
 import views.html.administration.authorisation.addTeam;
 import views.html.administration.authorisation.adminTeams;
-
+import static play.data.Form.form;
 
 public class Teams extends Controller{
 	
 	final static Form<DataTableForm> datatableForm = form(DataTableForm.class);
 	
 	public static Result home() {
-		  return ok(adminTeams.render(datatableForm, play.mvc.Controller.form(Team.class)));
+		  return ok(adminTeams.render(datatableForm, form(Team.class)));
 	}
 	
 	
 	  public static Result add() {
-		  return ok(addTeam.render(play.mvc.Controller.form(Team.class),true));
+		  return ok(addTeam.render(form(Team.class),true));
 	  }
 	
 	  

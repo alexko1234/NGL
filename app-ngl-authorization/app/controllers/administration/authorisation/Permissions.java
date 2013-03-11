@@ -11,14 +11,15 @@ import models.administration.authorisation.Permission;
 import controllers.utils.DataTableForm;
 import views.html.administration.authorisation.addPermission;
 import views.html.administration.authorisation.adminPermissions;
-
+import views.html.*;
+import static play.data.Form.form;
 
 public class Permissions extends Controller {
 	
 	final static Form<DataTableForm> datatableForm = form(DataTableForm.class);
 	
 	public static Result home() {
-		  return ok(adminPermissions.render(datatableForm,  play.mvc.Controller.form(models.administration.authorisation.Permission.class)));
+		  return ok(adminPermissions.render(datatableForm,  form(models.administration.authorisation.Permission.class)));
 	}
 	
 	public static Result remove(java.lang.Integer id) {
@@ -27,7 +28,7 @@ public class Permissions extends Controller {
 	}
 	
 	 public static Result add() {
-		  return ok(addPermission.render( play.mvc.Controller.form(models.administration.authorisation.Permission.class),true));
+		  return ok(addPermission.render( form(models.administration.authorisation.Permission.class),true));
 	  }
 	 
 	 @BodyParser.Of(BodyParser.Json.class)

@@ -4,6 +4,7 @@ import org.codehaus.jackson.node.ObjectNode;
 
 import com.avaje.ebean.Page;
 
+import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
@@ -14,6 +15,7 @@ import models.administration.authorisation.User;
 import  views.html.administration.authorisation.addUser;
 import  views.html.administration.authorisation.adminUsers;
 import controllers.authorisation.PermissionHelper;
+import static play.data.Form.form;
 
 
 public class Users extends Controller {
@@ -22,7 +24,7 @@ public class Users extends Controller {
 
 	 public static Result home() {
 		  
-		  return ok(adminUsers.render(datatableForm, play.mvc.Controller.form(User.class)));
+		  return ok(adminUsers.render(datatableForm, form(User.class)));
 	  }
 	 
 	
@@ -33,7 +35,7 @@ public class Users extends Controller {
 	
 	  
 	  public static Result add() {
-		  return ok(addUser.render(play.mvc.Controller.form(User.class),true));
+		  return ok(addUser.render(form(User.class),true));
 	  }
 	
 	  @BodyParser.Of(BodyParser.Json.class)

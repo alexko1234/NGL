@@ -10,10 +10,12 @@ import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 import controllers.utils.DataTableForm;
+import static play.data.Form.form;
 import models.administration.authorisation.Role;
 import  views.html.administration.authorisation.addRole;
 import views.html.administration.authorisation.adminRoles;
 import controllers.authorisation.PermissionHelper;
+import static play.data.Form.form;
 
 public class Roles extends Controller {
 	
@@ -21,7 +23,7 @@ public class Roles extends Controller {
 	
   public static Result home() {
 		  
-		  return ok(adminRoles.render(datatableForm, play.mvc.Controller.form(Role.class)));
+		  return ok(adminRoles.render(datatableForm, form(Role.class)));
 	  }
 	
 	public static Result remove(java.lang.Integer id) {
@@ -30,7 +32,7 @@ public class Roles extends Controller {
 	}
 
 	  public static Result add() {
-		  return ok(addRole.render(play.mvc.Controller.form(Role.class),PermissionHelper.getMapPerm(),"permissions","id",true));
+		  return ok(addRole.render(form(Role.class),PermissionHelper.getMapPerm(),"permissions","id",true));
 	  }
 	  
 	  @BodyParser.Of(BodyParser.Json.class)
