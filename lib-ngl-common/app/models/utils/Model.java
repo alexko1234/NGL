@@ -4,7 +4,7 @@ import java.util.List;
 
 import models.utils.dao.AbstractCommonDAO;
 import models.utils.dao.DAOException;
-import play.modules.spring.Spring;
+import play.api.modules.spring.Spring;
 
 public class Model<T> {
 
@@ -76,6 +76,7 @@ public class Model<T> {
         {
         	return getInstance().findById(id);
         }
+        
         
         @SuppressWarnings("unchecked")
     	public AbstractCommonDAO<T> getInstance() throws DAOException

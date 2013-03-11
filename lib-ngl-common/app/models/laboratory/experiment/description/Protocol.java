@@ -4,7 +4,7 @@ import java.util.List;
 
 import models.laboratory.experiment.description.dao.ProtocolDAO;
 import models.utils.Model;
-import play.modules.spring.Spring;
+import play.api.modules.spring.Spring;
 
 public class Protocol extends Model<Protocol>{
 
@@ -25,7 +25,7 @@ public class Protocol extends Model<Protocol>{
 	
 	public static Protocol findByName(String name)
 	{
-		ProtocolDAO protocolDAO = (ProtocolDAO) Spring.getBeanOfType(ProtocolDAO.class.getName());
+		ProtocolDAO protocolDAO = (ProtocolDAO) Spring.getBeanOfType(ProtocolDAO.class);
 		return protocolDAO.findByName(name);
 	}
 	

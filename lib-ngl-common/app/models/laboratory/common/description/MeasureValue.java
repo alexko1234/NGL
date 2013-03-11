@@ -1,6 +1,6 @@
 package models.laboratory.common.description;
 
-import play.modules.spring.Spring;
+import play.api.modules.spring.Spring;
 import models.laboratory.common.description.dao.MeasureValueDAO;
 import models.utils.Model;
 

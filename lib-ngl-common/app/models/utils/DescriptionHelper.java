@@ -41,7 +41,7 @@ import models.utils.dao.DAOException;
 import play.Logger;
 import play.data.validation.ValidationError;
 import play.db.DB;
-import play.modules.spring.Spring;
+import play.api.modules.spring.Spring;
 
 public class DescriptionHelper {
 

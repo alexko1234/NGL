@@ -20,7 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
 import play.data.validation.ValidationError;
-import scala.actors.threadpool.Arrays;
 
 public class ConstraintsHelper {
 	
@@ -192,7 +191,7 @@ public class ConstraintsHelper {
 		if (!errors.containsKey(key)) {
 			errors.put(key, new ArrayList<ValidationError>());
 		}
-		errors.get(key).add(new ValidationError(key, message, Arrays.asList(arguments)));
+		errors.get(key).add(new ValidationError(key, message,  java.util.Arrays.asList(arguments)));
 	}
 
 	public static String getKey(String rootKeyName, String property) {

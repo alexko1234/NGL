@@ -14,7 +14,7 @@ import models.utils.dao.DAOException;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
-import play.modules.spring.Spring;
+import play.api.modules.spring.Spring;
 
 public class ProjectTypeMappingQuery extends MappingSqlQuery<ProjectType>{
 

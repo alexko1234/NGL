@@ -1,4 +1,10 @@
 package controllers.history.user;
+import fr.cea.ig.MongoDBDAO;
+import play.data.DynamicForm;
+import play.mvc.Action;
+import play.mvc.Http;
+import play.mvc.Http.Context;
+import play.mvc.Result;
 /** 
  * Write user action into database
  * 
@@ -9,12 +15,6 @@ package controllers.history.user;
  *@author ydeshayes
  */
 import models.history.UserAction;
-import play.data.DynamicForm;
-import play.mvc.Action;
-import play.mvc.Http;
-import play.mvc.Http.Context;
-import play.mvc.Result;
-import fr.cea.ig.MongoDBDAO;
 
 public class UserHistory extends Action.Simple{
 
@@ -28,7 +28,7 @@ public class UserHistory extends Action.Simple{
 
 		login = Context.current().session().get("CAS_FILTER_USER");
 		
-		DynamicForm data = play.mvc.Controller.form().bindFromRequest();
+		DynamicForm data = new DynamicForm().bindFromRequest();
 		params=data.data().toString();
 		
 		action = context.request().toString();

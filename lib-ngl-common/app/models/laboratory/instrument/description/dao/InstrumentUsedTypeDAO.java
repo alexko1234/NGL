@@ -15,7 +15,7 @@ import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-import play.modules.spring.Spring;
+import play.api.modules.spring.Spring;
 
 @Repository
 public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType>{

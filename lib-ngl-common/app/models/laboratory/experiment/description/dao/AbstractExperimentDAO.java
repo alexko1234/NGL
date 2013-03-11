@@ -14,7 +14,7 @@ import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.object.MappingSqlQuery;
 
-import play.modules.spring.Spring;
+import play.api.modules.spring.Spring;
 
 public abstract class AbstractExperimentDAO<P extends AbstractExperiment> extends AbstractDAOMapping<P>{
 

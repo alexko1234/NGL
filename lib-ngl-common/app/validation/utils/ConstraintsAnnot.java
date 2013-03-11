@@ -13,6 +13,7 @@ import javax.validation.Payload;
 
 import models.laboratory.run.instance.Run;
 import play.data.validation.Constraints.Validator;
+import play.libs.F.Tuple;
 
 import com.mongodb.MongoException;
 
@@ -61,7 +62,7 @@ public class ConstraintsAnnot {
             }
         }
         
-      
+        public Tuple<String, Object[]> getErrorMessageKey(){return null;}
     }
     
     /**
@@ -103,7 +104,7 @@ public class ConstraintsAnnot {
             }
         }
         
-      
+        public Tuple<String, Object[]> getErrorMessageKey(){return null;}
     }
 
 }

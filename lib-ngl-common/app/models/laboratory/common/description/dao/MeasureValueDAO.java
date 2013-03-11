@@ -12,7 +12,7 @@ import models.utils.dao.DAOException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
-import play.modules.spring.Spring;
+import play.api.modules.spring.Spring;
 
 @Repository
 public class MeasureValueDAO extends AbstractDAOMapping<MeasureValue>{
