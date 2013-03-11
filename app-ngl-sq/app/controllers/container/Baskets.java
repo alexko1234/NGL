@@ -26,6 +26,7 @@ import controllers.utils.DataTableForm;
 import fr.cea.ig.MongoDBDAO;
 
 import views.html.experiment.testbasket;
+import static play.data.Form.form;
 
 public class Baskets extends Controller{
 	public static final String COLLECTION_NAME = "TEST_BASKET_YANN";
