@@ -29,7 +29,7 @@
 		@for((name:String, id:String) <- column){
 			@if(!editable.contains(id)){
 				<td ng-hide="@(datatable).isHide('@id')"><span>{{@(objectName).@(id)}}</span></td>
-			} else {	
+			}else {	
 				<td ng-hide="@(datatable).isHide('@id')"><span ng-hide="@(datatable).isEdit('@id', @objectName)">{{@(objectName).@(id)}}</span><input type="text" class="input-medium" ng-model="@(objectName).@(id)" ng-show="@(datatable).isEdit('@id', @objectName)"/></td>
 			}
 		}

@@ -14,7 +14,7 @@
 				<option value="">-- select project --</option>
 			</select>
 			
-			<select ng-model="experiment" ng-options="experiment.label for experiment in experiments" id="experiment" ng-change="baskets.setExperiment('experiment');search()">
+			<select ng-model="experiment" ng-options="experiment.name for experiment in experiments" id="experiment" ng-change="baskets.setExperiment('experiment');search()">
 				<option value="">-- select experiment --</option>
 			</select>
 			
