@@ -8,9 +8,10 @@ import lims.models.experiment.Experiment;
 import lims.models.instrument.Instrument;
 import play.data.Form;
 import play.libs.Json;
-import play.modules.spring.Spring;
+import play.api.modules.spring.Spring;
 import play.mvc.Controller;
 import play.mvc.Result;
+import static play.data.Form.form;
 
 /**
  * Extract Information from the LIMS Sequencing

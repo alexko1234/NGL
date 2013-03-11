@@ -8,7 +8,7 @@ import lims.models.instrument.Instrument;
 
 import org.junit.Test;
 
-import play.modules.spring.Spring;
+import play.api.modules.spring.Spring;
 import utils.AbstractTests;
 
 public class LimsRunDAOTest extends AbstractTests {

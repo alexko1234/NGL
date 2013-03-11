@@ -7,6 +7,7 @@ import org.codehaus.jackson.JsonNode;
 
 import play.Logger;
 import play.data.Form;
+import static play.data.Form.form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
