@@ -1,15 +1,13 @@
 angular.module('nglServices', []).
     	factory('datatable', ['$http', function($http){ //service to manage datatable
     		var constructor = function($scope, iConfig){
-    			
-    			
-    			var datatable = {
+				var datatable = {
     					config:undefined,
     					configMaster:undefined,
     					searchresult:undefined,
     					searchresultMaster:undefined,
     					/**
-    					 * Select all the table line
+    					 * Select all the table line or just one
     					 */
 						select : function(line){
 		    				if(line){
@@ -17,7 +15,11 @@ angular.module('nglServices', []).
 		    						line.selected=true;
 		    						line.trClass="row_selected";
 		    					}
-		    				}else{
+								else{
+									line.selected=false;
+		    						line.trClass="";
+								}
+		    				}else {
 		    					for(var i = 0; i < this.searchresult.length; i++){
 		    						this.searchresult[i].selected=true;
 		    						this.searchresult[i].trClass="row_selected";
@@ -35,8 +37,9 @@ angular.module('nglServices', []).
 		    			search : function(params){
 		    				if(this.config.url.search){
 		    					$http.get(this.config.url.search,{params:params}).success(function(data) {
-		    						this.searchresult = data;
-		    						this.searchresultMaster = angular.copy($scope.tableresult);
+									$scope.datatable.searchresult = data;
+									$scope.datatable.searchresultMaster = angular.copy(data);
+
 		    					});
 		    				}else{
 		    					alert('no url define for search ! ');
@@ -100,6 +103,7 @@ angular.module('nglServices', []).
 		    					if(this.searchresult[i].selected){
 		    						this.searchresult[i].edit=true;
 		    						find = true;
+		    					
 		    					}else{
 		    						this.searchresult[i].edit=false;
 		    					}
