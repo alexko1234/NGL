@@ -1,5 +1,7 @@
 package models.laboratory.experiment.description.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +17,13 @@ import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.dao.DAOException;
 
 import org.springframework.asm.Type;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-import play.modules.spring.Spring;
+import play.api.modules.spring.Spring;
+
+import models.utils.ListObject;
 
 
 @Repository
@@ -44,6 +49,23 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 				"WHERE p.fk_process_type = ?";
 		ExperimentTypeMappingQuery experimentTypeMappingQuery = new ExperimentTypeMappingQuery(dataSource, sql, new SqlParameter("p.fk_process_type", Type.LONG));
 		return experimentTypeMappingQuery.execute(id);
+	}
+
+	public List<ListObject> findAllForList(){
+		String sql = "SELECT c.code AS code, c.name AS name "+
+				"FROM experiment_type as et JOIN common_info_type as c ON c.id=et.fk_common_info_type";
+		
+		List<ListObject> list = jdbcTemplate.query(
+			    sql,
+			    new RowMapper<ListObject>() {
+
+			        public ListObject mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            ListObject listObj = new ListObject(rs.getString("code"),rs.getString("name"));
+			            return listObj;
+			        }
+			    });
+		
+		return list;
 	}
 	
 	@Override
@@ -219,7 +241,6 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 		
 		super.remove(experimentType);
 	}
-
 
 
 
