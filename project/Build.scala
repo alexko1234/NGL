@@ -42,7 +42,7 @@ object ApplicationBuild extends Build {
    	val nglcommonDependencies = Seq(
 		javaCore, javaJdbc,javaEbean,
 		"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
-		"play" %% "play-spring-module" % "1.1-SNAPSHOT",
+		"fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
 		"org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
@@ -55,7 +55,7 @@ object ApplicationBuild extends Build {
 	      javaCore, javaJdbc,
 			"commons-collections" % "commons-collections" % "3.2.1",
 	        "org.apache.commons" % "commons-lang3" % "3.1",
-	       "play" %% "play-spring-module" % "1.1-SNAPSHOT",
+	       "fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
 	        "org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
 	        "mysql" % "mysql-connector-java" % "5.1.18",
 	        "postgresql" % "postgresql" % "8.3-603.jdbc4",
@@ -68,7 +68,7 @@ object ApplicationBuild extends Build {
     	val nglsqDependencies = Seq(
 			javaCore, javaJdbc,
 	      // Add your project dependencies here,
-		 "play" %% "play-spring-module" % "1.1-SNAPSHOT",
+		 "fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
 	      "net.sourceforge.jtds" % "jtds" % "1.2.4",
 	      "org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
 	      "mysql" % "mysql-connector-java" % "5.1.18",
