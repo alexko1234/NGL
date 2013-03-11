@@ -16,18 +16,18 @@ import org.apache.commons.collections.Transformer;
 import play.mvc.Http;
 
 public class InstanceHelpers {
-	
+
 	@SuppressWarnings("unchecked")
 	public static Map<String, PropertyValue> getLazyMapPropertyValue() {
 		return MapUtils.lazyMap(new HashMap<String, PropertyValue>(), new Transformer() {
-		     public PropertyValue transform(Object mapKey) {
-		    	 //todo comment je sais quel est le type on doit mettre
-		    	 return new PropertyValue();
-		     }
-		 });
+			public PropertyValue transform(Object mapKey) {
+				//todo comment je sais quel est le type on doit mettre
+				return new PropertyValue();
+			}
+		});
 	}
-	
-	
+
+
 	public static String getUser(){
 
 		String user;
@@ -40,23 +40,33 @@ public class InstanceHelpers {
 		return user;
 
 	}
-	
+
 	public static List<Comment> addComment(String comment,List<Comment> comments){
 		if(comments==null){
 			comments=new ArrayList<Comment>();
 		}
-		
+
 		Comment newComment=new Comment(comment);
 		newComment.createUser=InstanceHelpers.getUser();
-		
+
 		comments.add(newComment);
 		return comments;
 	}
-	
+
+
 	public static void updateTraceInformation(TraceInformation traceInformation){
 		traceInformation.modifyUser=InstanceHelpers.getUser();
 		traceInformation.modifyDate=new Date();
 
 	}
 
+	public static List<String> addCode(String code,List<String> listCodes){
+		if(listCodes==null){
+			listCodes=new ArrayList<String>();
+		}
+		if(!listCodes.contains(code)){
+			listCodes.add(code);
+		}
+		return listCodes;
+	}
 }

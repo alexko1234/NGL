@@ -15,6 +15,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
+import models.utils.InstanceHelpers;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -140,21 +141,9 @@ public class Container extends DBObject {
 		
 		this.contents.add(new Content(new SampleUsed(sample.code, sample.typeCode, sample.categoryCode)));
 		
-		//Add projet code if not exist
-		if(this.projectCodes==null){
-			this.projectCodes=new ArrayList<String>();
-		}
-		if(!projectCodes.contains(sample.projectCode)){
-			this.projectCodes.add(sample.projectCode);
-		}
-		
-		//Add sample code if not exist
-		if(this.sampleCodes==null){
-			this.sampleCodes=new ArrayList<String>();
-		}
-		if(!sampleCodes.contains(sample.code)){
-			sampleCodes.add(sample.code);
-		}
+		projectCodes=InstanceHelpers.addCode(sample.projectCode,projectCodes);
+	
+		sampleCodes=InstanceHelpers.addCode(sample.code,sampleCodes);
 		
 	}
 		

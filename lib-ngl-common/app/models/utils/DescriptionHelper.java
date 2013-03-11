@@ -194,7 +194,7 @@ public class DescriptionHelper {
 		SampleType sampleType = new SampleType();
 		sampleType.setCommonInfoType(commonInfoType);
 
-		sampleType.sampleCategory=getSampleCategory(codeCategory);
+		sampleType.sampleCategory=getCategory(SampleCategory.class,codeCategory);
 
 		return sampleType;
 	}
@@ -314,7 +314,7 @@ public class DescriptionHelper {
 		ImportType importType = new ImportType();
 		importType.setCommonInfoType(commonInfoType);
 
-		importType.importCategory=getImportCategory(codeCategory);
+		importType.importCategory=getCategory(ImportCategory.class,codeCategory);
 
 		return importType;
 	}
@@ -336,51 +336,11 @@ public class DescriptionHelper {
 		ProjectType projectType =new ProjectType();
 		projectType.setCommonInfoType(commonInfoType);
 
-		projectType.projectCategory=getProjectCategory(codeCategory);
+		projectType.projectCategory=getCategory(ProjectCategory.class,codeCategory);
 
 		return projectType;
 	}
 
-
-
-	private static ProjectCategory getProjectCategory(String codeCategory) throws DAOException {
-		ProjectCategory projectCategory = ProjectCategory.find.findByCode(codeCategory);
-
-		if(projectCategory==null){
-			System.err.println(" import category not find :"+codeCategory);
-			projectCategory=new ProjectCategory();
-			projectCategory.code=codeCategory;
-			projectCategory.name=codeCategory;
-		}
-		return projectCategory;
-	}
-
-
-	private static ImportCategory getImportCategory(String codeCategory) throws DAOException {
-		System.err.println("Find import category :"+codeCategory);
-		ImportCategory importCategory = ImportCategory.find.findByCode(codeCategory);
-
-		if(importCategory==null){
-			System.err.println(" import category not find :"+codeCategory);
-			importCategory=new ImportCategory();
-			importCategory.code=codeCategory;
-			importCategory.name=codeCategory;
-		}
-		return importCategory;
-	}
-
-	private static SampleCategory getSampleCategory(String codeCategory) throws DAOException {
-		System.err.println("Find import category :"+codeCategory);
-		SampleCategory sampleCategory = SampleCategory.find.findByCode(codeCategory);
-
-		if(sampleCategory==null){
-			System.err.println(" import category not find :"+codeCategory);
-			sampleCategory=new SampleCategory();
-			sampleCategory.code=codeCategory;
-			sampleCategory.name=codeCategory;
-		}
-		return sampleCategory;
-	}
 
 	public static <T extends AbstractCategory> T getCategory(Class<T> type,String codeCategory) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 
