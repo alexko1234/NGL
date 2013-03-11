@@ -11,32 +11,27 @@ import net.vz.mongodb.jackson.DBQuery;
 import play.libs.Json;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.project.instance.Project;
+import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import fr.cea.ig.MongoDBDAO;
 
 public class Lists {
 	public static Result projects(){
 		BasicDBObject keys = new BasicDBObject();
+		keys.put("_id", 0);//Don't need the _id field
 		keys.put("name", 1);
-		List<Project> projects = MongoDBDAO.getCollection("project", Project.class).find(DBQuery.exists("_id"),keys).toArray();
+		keys.put("code", 1);
+		List<Project> projects = MongoDBDAO.getCollection("Project", Project.class).find(DBQuery.exists("_id"),keys).toArray();
 		
-		return Results.ok(Json.toJson(projects));	
+		return Results.ok(Json.toJson(ListObject.projectToJsonObject(projects)));	
 	}
 	
 	public static Result experimentTypes(){
 		try {
-			List<ExperimentType> exp = ExperimentType.find.findAll();
-			String json = "[";
-			int i=0;
-			for(ExperimentType e:exp){
-				json += "{\"code\":\""+e.code+"\",\"label\":\""+e.name+"\"}";
-				if(i!=exp.size()-1){
-					json += ",";
-				}
-				i++;
-			}
-			json += "]";
-			return  Results.ok(json);
+			List<ListObject> exp = ExperimentType.findAllForList();
+			
+			return Results.ok(Json.toJson(exp));
+			
 		} catch (DAOException e) {
 			e.printStackTrace();
 		}
