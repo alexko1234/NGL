@@ -41,7 +41,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.dao.DataAccessException;
 
-import play.modules.spring.Spring;
+import static play.data.Form.form;
 import play.test.Helpers;
 import utils.AbstractTests;
 import fr.cea.ig.DBObject;
