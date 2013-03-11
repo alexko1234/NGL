@@ -14,6 +14,7 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import play.Logger;
 import play.data.Form;
+import static play.data.Form.form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import validation.utils.ConstraintsHelper;
