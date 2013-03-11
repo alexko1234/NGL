@@ -1,6 +1,11 @@
 function SearchMainCtrl($scope){
 	//contain each tab of on element of the datatable
 	$scope.tabs = [];
+	$scope.hideTabs = { 
+		hide:false,
+		clazz:'icon-resize-full'
+	};
+	
 	$scope.searchTab = {
 		clazz:'active'	
 	};
@@ -43,5 +48,21 @@ function SearchMainCtrl($scope){
 	 */
 	$scope.removeTab = function(index){
 		$scope.tabs.splice(index,1);
-	}
+	};
+	
+	
+	$scope.toggleTabs = function(){
+		$scope.hideTabs.hide = !$scope.hideTabs.hide;
+		if($scope.hideTabs.hide){
+			$scope.hideTabs.clazz='icon-resize-small';
+		}else{
+			$scope.hideTabs.clazz='icon-resize-full';
+		}
+	};
+	
+	$scope.setHideTabs =  function(){
+		$scope.hideTabs.hide = true;
+		$scope.hideTabs.clazz='icon-resize-small';
+		
+	};
 }

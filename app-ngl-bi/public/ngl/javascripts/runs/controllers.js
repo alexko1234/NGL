@@ -44,8 +44,8 @@ function DetailsCtrl($scope, $http, $routeParams) {
 			//init tabs on left screen when none exist
 			if($scope.tabs.length == 0){
 				$scope.tabs.push({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.home($scope.run.code).url,remove:true})
-				$scope.activeTab($scope.tabs[0]);
-			}
+				$scope.activeTab($scope.tabs[0]);				
+			}			
 		});
 	}
 	
