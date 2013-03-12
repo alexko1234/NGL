@@ -91,6 +91,7 @@ object ApplicationBuild extends Build {
    val nglcommon = play.Project(appName + "-common", appVersion, nglcommonDependencies, path = file("lib-ngl-common"),settings = buildSettings).settings(
        // Add your own project settings here      
        resolvers := Seq(nexusig),
+	   sbt.Keys.fork in Test := false,
        publishTo := Some(nexusigpublish),       
        resourceDirectory in Test <<= baseDirectory / "conftest"
     )
