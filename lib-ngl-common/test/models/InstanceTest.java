@@ -228,8 +228,8 @@ public class InstanceTest extends AbstractTests{
 		sample.typeCode="sampleType";
 		sample.projectCode="ProjectCode";
 
-		sample.comments=InstanceHelpers.addComment("comment", sample.comments);
-		InstanceHelpers.updateTraceInformation(sample.traceInformation); 
+		/*sample.comments=InstanceHelpers.addComment("comment", sample.comments);
+		InstanceHelpers.updateTraceInformation(sample.traceInformation); */
 
 		MongoDBDAO.save(Sample.class.getSimpleName(), sample);
 
@@ -238,10 +238,10 @@ public class InstanceTest extends AbstractTests{
 		assertThat(sample.code).isEqualTo("SampleCode");
 		assertThat(sample.name).isEqualTo("sampleName");
 		
-		assertThat(sample.comments).isNotNull();
+		/*assertThat(sample.comments).isNotNull();
 		assertThat(sample.comments.get(0).comment).isEqualTo("comment");
 		assertThat(sample.traceInformation.modifyUser).isNotNull();
-		assertThat(sample.valid).isEqualTo(TBoolean.UNSET);
+		assertThat(sample.valid).isEqualTo(TBoolean.UNSET);*/
 
 		assertThat(sample.getSampleCategory().code).isEqualTo("sampleCategory");
 		assertThat(sample.getSampleType().code).isEqualTo("sampleType");
