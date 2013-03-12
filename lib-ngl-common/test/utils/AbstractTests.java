@@ -30,9 +30,10 @@ public abstract class AbstractTests {
 	public void start(){
 		 app = getFakeApplication();
 		 Helpers.start(app);
-		  Map<String, String> flashData = Collections.emptyMap();
-	      Http.Context context = new Http.Context(request, flashData, flashData);
-	      Http.Context.current.set(context);	
+		/*  Map<String, String> flashData = Collections.emptyMap();
+		  Map<String, Object> listeNull = Collections.emptyMap();
+	      Http.Context context = new Http.Context(new Long(5),null,request, flashData, flashData,listeNull);
+	      Http.Context.current.set(context);*/
 	}
 	
 	@After
