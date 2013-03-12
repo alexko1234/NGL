@@ -99,7 +99,6 @@ object ApplicationBuild extends Build {
    val nglbi = play.Project(appName + "-bi", appVersion, nglbiDependencies, path = file("app-ngl-bi"),settings = buildSettings).settings(
        // Add your own project settings here      
        resolvers := Seq(nexusig),
-       publishArtifact := false,
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish) 
  
@@ -108,7 +107,6 @@ object ApplicationBuild extends Build {
    val nglsq = play.Project(appName + "-sq", appVersion, nglsqDependencies, path = file("app-ngl-sq"),settings = buildSettings).settings(
           // Add your own project settings here      
           resolvers := Seq(nexusig),
-          publishArtifact := false,
           publishArtifact in makePom := false,
           publishTo := Some(nexusigpublish) 
     
@@ -118,7 +116,6 @@ object ApplicationBuild extends Build {
    val nglauth = play.Project(appName + "-authorization", appVersion, nglauthDependencies, path = file("app-ngl-authorization"),settings = buildSettings).settings(
              // Add your own project settings here      
              resolvers := Seq(nexusig),
-             publishArtifact := false,
              publishArtifact in makePom := false,
              publishTo := Some(nexusigpublish)
        
@@ -127,7 +124,6 @@ object ApplicationBuild extends Build {
    val nglasset = play.Project(appName + "-asset", appVersion, path = file("app-ngl-asset"),settings = buildSettings).settings(
                 // Add your own project settings here      
                 resolvers := Seq(nexusig),
-                publishArtifact := false,
                 publishArtifact in makePom := false,
                 publishTo := Some(nexusigpublish) 
           
@@ -137,7 +133,6 @@ object ApplicationBuild extends Build {
    val main = play.Project(appName, appVersion, settings = buildSettings).settings(
       // Add your own project settings here      
       resolvers := Seq(nexusig),
-      publishArtifact := false,
       publishArtifact in makePom := false,
       publishTo := Some(nexusigpublish)
     ).aggregate(
