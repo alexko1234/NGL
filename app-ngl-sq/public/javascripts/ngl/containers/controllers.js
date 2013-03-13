@@ -1,6 +1,6 @@
 "use strict";
- containerApp.controller('MainCtrl', function($scope, $http, datatable, baskets) {
-	
+function SearchCtrl($scope, $http,datatable,baskets) {
+
 	$scope.datatableConfig = {
 			edit: false,
 			orderReverse:false,
@@ -60,17 +60,25 @@
 	$scope.init = function(){
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		$scope.baskets = baskets($scope, $scope.basketsConfig, $scope.datatable);
+		
 		$http.get('/tpl/projects/list').
 			success(function(data, status, headers, config){
 				$scope.projects = data;
 			});
+			
 		$http.get('/tpl/experimenttypes/list').
 			success(function(data, status, headers, config){
 				$scope.experiments = data;
+			});
+			
+		$http.get('/tpl/containers/states/list').
+			success(function(data, status, headers, config){
+				$scope.states = data;
 			});
 	}
 	
 	$scope.search = function(){
 		$scope.datatable.search({project:$scope.project,experiment:$scope.experiment,state:$scope.state});
 	}
-});
+}
+SearchCtrl.$inject = ['$scope','$http', 'datatable','baskets'];
