@@ -81,7 +81,8 @@ public class LimsRunServices implements ILimsRunServices {
 				lib.projectCode = lrs.projectCode;
 				lib.insertLength = lrs.insertLength;
 				lib.typeCode = lrs.experimentTypeCode;
-				if(null != lrs.indexName)lib.isIndex = Boolean.TRUE;
+				if(null != lrs.indexName && lrs.indexTypeCode != 3)lib.isIndex = Boolean.TRUE;
+				else if(null != lrs.indexName)lib.isIndex = Boolean.FALSE;
 				currentLane.librairies.add(lib);
 			}
 			flowcell.lanes = lanes.values();

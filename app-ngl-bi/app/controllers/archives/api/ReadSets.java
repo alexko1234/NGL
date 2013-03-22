@@ -25,6 +25,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import validation.BusinessValidationHelper;
 import validation.utils.ConstraintsHelper;
+import views.components.datatable.DatatableHelpers;
+import views.components.datatable.DatatableResponse;
 import fr.cea.ig.MongoDBDAO;
 /**
  * Controller that manage the readset archive
@@ -42,6 +44,7 @@ public class ReadSets extends Controller{
 	public static Result list(){
 		Integer archive = getArchiveValue();
 		List<Archive> archives = new ArrayList<Archive>();
+		
 		List<Run> runs = MongoDBDAO.find(Constants.RUN_ILLUMINA_COLL_NAME, Run.class,getQuery(archive)).toList();
 		for(Run run:runs){
 			if(run.lanes != null){
@@ -58,7 +61,7 @@ public class ReadSets extends Controller{
 				}
 			}
 		}
-		return ok(Json.toJson(archives));		
+		return ok(Json.toJson(new DatatableResponse(archives)));		
 	}
 
 	private static Integer getArchiveValue() {

@@ -12,7 +12,7 @@
 	<dd>{{run.properties.nbClusterIlluminaFilter.value / 1000000000}}</dd>
 </dl>
 <dl class="dl-horizontal">
-	<dt>Base</dt>
+	<dt>Base (Gb)</dt>
 	<dd>{{run.properties.nbBase.value / 1000000000}}</dd>
 </dl>
 <dl class="dl-horizontal">
@@ -45,7 +45,7 @@
 	<table id="lanesId" class="table table-bordered table-condensed">
         		<thead>
         		<tr>
-        		<th>Lane Number</th><th>Read Set Code</th><th>Sample Container Code</th><th>Project Code</th><th>Internal And Illumina Filter Cluster</th><th>Internal And Illumina Filter Base</th><th>Q30</th>
+        		<th>Lane Number</th><th>Read Set Code</th><th>Sample Container Code</th><th>Project Code</th><th>Internal And Illumina Filter Cluster</th><th>Internal And Illumina Filter Base (Gb)</th><th>Q30</th>
         		</tr>
         		</thead>
 				<tbody id="{{run.code}}" ng-repeat="lane in run.lanes | orderBy:'number'">

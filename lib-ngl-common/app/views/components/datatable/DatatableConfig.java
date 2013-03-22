@@ -9,14 +9,19 @@ import scala.collection.Seq;
 
 public class DatatableConfig {
 	
+	public static final String DEFAULT_NB_ELEMENT = "50";
+	public static final String DEFAULT_PAGE_NUMBER = "0";
+	public static final String DEFAULT_ORDER_SENSE = "1";
+	
 	public Seq<DatatableColumn> columns;
 
-	public Boolean toolbar = Boolean.FALSE;
+	public Boolean button = Boolean.FALSE;
 	public Boolean edit = Boolean.FALSE;
 	public Boolean hidding = Boolean.FALSE;
 	public Boolean show = Boolean.FALSE;
 	public String name = "datatable"; //default js name
-		
+	
+	
 	public DatatableConfig(List<DatatableColumn> columns) {
 		this(columns, Boolean.FALSE);
 	}
@@ -34,6 +39,6 @@ public class DatatableConfig {
 			}
 			column.id = "p"+count++;
 		}
-		toolbar = (edit.booleanValue() || hidding.booleanValue() || show.booleanValue())?Boolean.TRUE:Boolean.FALSE;
+		button = (edit.booleanValue() || hidding.booleanValue() || show.booleanValue())?Boolean.TRUE:Boolean.FALSE;
 	}		
 }

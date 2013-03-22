@@ -3,15 +3,16 @@ datetime.format=dd/MM/yyyy HH:mm:ss
 date.format=dd/MM/yyyy
 
 
-#button
-button.selectall=Tout Sélectionner
-button.cancel=Annuler
-button.hide=Cacher
-button.show=Voir
-button.edit=Editer
-button.save=Sauver
-button.remove=Supprimer
-
+#datatable
+datatable.button.selectall=Tout Sélectionner
+datatable.button.cancel=Annuler
+datatable.button.hide=Cacher
+datatable.button.show=Afficher Details
+datatable.button.edit=Editer
+datatable.button.save=Sauver
+datatable.button.remove=Supprimer
+datatable.button.length=Taille ({0})
+datatable.totalNumberRecords = {0} Résultats
 
 #page field label
 page.search.label.search = Recherche

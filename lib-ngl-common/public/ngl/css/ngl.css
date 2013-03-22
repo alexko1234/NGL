@@ -22,6 +22,17 @@ body {
 }
 
 
+.datatable .btn-toolbar{
+	margin-top: 0px;
+}
+.datatable .pagination{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.datatable .well{
+	margin-bottom: 10px;
+}
 
 #sorting{
 	background-position: -289px -96px;

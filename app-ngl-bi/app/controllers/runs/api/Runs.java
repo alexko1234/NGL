@@ -10,14 +10,19 @@ import net.vz.mongodb.jackson.DBUpdate;
 import org.codehaus.jackson.JsonNode;
 
 import play.Logger;
+import play.data.DynamicForm;
 import play.data.Form;
 import static play.data.Form.form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import validation.BusinessValidationHelper;
+import views.components.datatable.DatatableHelpers;
+import views.components.datatable.DatatableResponse;
 import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.MongoDBResult.Sort;
 /**
  * Controller around Run object
  * @author galbini
@@ -26,13 +31,25 @@ import fr.cea.ig.MongoDBDAO;
 public class Runs extends Controller {
 	
 	final static Form<Run> runForm = form(Run.class);
-	
+	final static DynamicForm listForm = new DynamicForm();
 	
 	public static Result list(){
-		List<Run> runs = MongoDBDAO.find(Constants.RUN_ILLUMINA_COLL_NAME, Run.class).toList();
-		return ok(Json.toJson(runs));
+		DynamicForm filledForm =  listForm.bindFromRequest();
+		MongoDBResult<Run> results = MongoDBDAO.find(Constants.RUN_ILLUMINA_COLL_NAME, Run.class)
+				.sort(DatatableHelpers.getOrderBy(filledForm), getOrderSense(filledForm))
+				.page(DatatableHelpers.getPageNumber(filledForm), DatatableHelpers.getNumberRecordsPerPage(filledForm)); 
+		List<Run> runs = results.toList();
+		return ok(Json.toJson(new DatatableResponse(runs, results.count())));
 	}
 	
+	private static Sort getOrderSense(DynamicForm filledForm) {
+		if(Integer.valueOf(-1).equals(DatatableHelpers.getOrderSense(filledForm))){
+			return Sort.DESC;
+		}else{
+			return Sort.ASC;
+		}
+	}
+
 	public static Result get(String code){
 		Run runValue = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(runValue != null){			

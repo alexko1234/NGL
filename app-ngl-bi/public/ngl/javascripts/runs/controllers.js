@@ -3,12 +3,15 @@
 function SearchCtrl($scope, datatable) {
 
 	$scope.datatableConfig = {
-			addshow:function(line){
-				$scope.tabs.push({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.home(line.code).url,remove:true})
-			},				
-			orderBy:'traceInformation.creationDate',
-			url:{
-				search:jsRoutes.controllers.runs.api.Runs.list()
+			order :{by:'traceInformation.creationDate'},
+			search:{
+				url:jsRoutes.controllers.runs.api.Runs.list()
+			},
+			pagination:{remote:true},
+			show:{
+				add :function(line){
+					$scope.tabs.push({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.home(line.code).url,remove:true})
+				}
 			}
 	};
 	

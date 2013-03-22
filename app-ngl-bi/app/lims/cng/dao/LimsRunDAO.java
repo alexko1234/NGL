@@ -88,9 +88,11 @@ ORDER BY l.number
 		c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + nbDay);
     	return c.getTime();
 	}
+    
+    
 	public List<LimsLibrary> geContainerSupport(String barCode){
     	String sql = "SELECT l.number as laneNumber, et.short_name as experimentTypeCode, s.stock_barcode as sampleBarCode," +
-    			" i.short_name as indexName, i.sequence as indexSequence ,ind.name as sampleCode, sl.size as insertLength, fn_getsampleid_projects(s.id) as projectCode"
+    			" i.short_name as indexName, i.type as indexTypeCode, i.sequence as indexSequence ,ind.name as sampleCode, sl.size as insertLength, fn_getsampleid_projects(s.id) as projectCode"
     			+ " FROM t_flowcell f"
     			+ " JOIN t_lane l ON l.flowcell_id=f.id"
     			+ " JOIN t_sample_lane sl ON sl.lane_id=l.id"

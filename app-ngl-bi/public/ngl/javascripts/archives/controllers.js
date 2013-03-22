@@ -4,10 +4,17 @@ function SearchCtrl($scope, datatable) {
 	$scope.archive = 2; //default only need archive
 	
 	$scope.datatableConfig = {
-			orderBy:'date',			
-			url:{
-				search:jsRoutes.controllers.archives.api.ReadSets.list()
+			search : { 
+				url:jsRoutes.controllers.archives.api.ReadSets.list()
+			},
+			pagination : {
+				mode : 'local'
+			},
+			order : {
+				mode : 'local',
+				by:'date'
 			}
+			
 	};
 	
 	$scope.init = function(){

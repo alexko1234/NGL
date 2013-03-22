@@ -9,14 +9,13 @@
   <div class="tabbable tabs-left">
 	<ul id="searchTab" class="nav nav-tabs" ng-hide="hideTabs.hide">
 	   <li class="{{searchTab.clazz}}"><a href="@searchtagurl" ng-click="activeTab('searchTab')">@Messages("page.search.label.search")</a></li>
-	   <li ng-repeat="value in tabs" class="{{value.clazz}}"><a href="{{value.href}}" ng-click="activeTab(value)">{{value.label}}<button class="close" ng-click="removeTab($index)" ng-show="value.remove">&times;</button></a></li>
+	   <li ng-repeat="value in tabs" class="{{value.clazz}}"><a href="{{value.href}}" ng-click="activeTab(value)" class="pull-left">{{value.label}}</a><button class="close pull-right" ng-click="removeTab($index)" ng-show="value.remove">&times;</button></li>
     </ul>	
 	<div class="tab-content">
 	<div class="tab-pane active" id="search">		
 		<div ng-view></div>
 	</div>		
-  	</div>
-  	
+  	</div>  	
   </div>
  </div>
 </div>

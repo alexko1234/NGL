@@ -30,6 +30,11 @@ public class ReadSets extends Controller {
 		columns.add(DatatableHelpers.getColumn("path", "Path"));
 		columns.add(DatatableHelpers.getDateColumn("date", "Date"));
 		columns.add(DatatableHelpers.getColumn("id", "Id"));
+		/*
+		for(DatatableColumn c :  columns){
+			c.editable=true;
+		}
+		*/
 		DatatableConfig config = new DatatableConfig(columns);
 		return ok(search.render(config));
 	}
