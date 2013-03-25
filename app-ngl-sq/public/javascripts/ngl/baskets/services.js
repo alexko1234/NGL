@@ -15,10 +15,11 @@ angular.module('basketsServices', []).
 					*/
 					add: function(newBasket,experimentTypeCode){
 						var that = this;
-						if(this.data.searchresult != null){
+						if(this.data.displayResult != null){
 							var selected = false;
-							for(var i = 0; i < this.data.searchresult.length; i++){
-									if(this.data.searchresult[i].selected){
+							for(var i = 0; i < this.data.displayResult.length; i++){
+									if(this.data.displayResult[i].selected){
+										alert("true");
 										selected=true;
 										break;
 									}
@@ -112,22 +113,22 @@ angular.module('basketsServices', []).
 					*	Set the experiment type of the basket
 					*	@param experimentTypeCode String: the code of the type experiment
 					*/
-					setExperiment:function(id){
-						var get_id = document.getElementById(id);
-						var result = get_id.options[get_id.selectedIndex].value;
-						this.experimentTypeCode = result;
+					setExperiment:function(experiment){
+						if(experiment){
+							this.experimentTypeCode = experiment.code;
+						}
 					},
 					/**
 					*	Call the url to add a container to a backet
 					*/
 					addToBasket:function() {
 						var that = this;
-						for(var i = 0; i < data.searchresult.length; i++){
-							if(data.searchresult[i].selected){
+						for(var i = 0; i < data.displayResult.length; i++){
+							if(data.displayResult[i].selected){
 								$http({
 									method: 'POST',
 									url: that.config.url+"/"+code,
-									data: JSON.stringify({ "container": data.searchresult[i].code }),
+									data: JSON.stringify({ "container": data.displayResult[i].code }),
 									headers: {'Content-Type': 'application/json'}
 								});
 							}
