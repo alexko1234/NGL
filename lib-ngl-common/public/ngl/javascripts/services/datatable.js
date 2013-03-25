@@ -4,15 +4,6 @@ angular.module('datatableServices', []).
     	factory('datatable', ['$http','$filter', function($http, $filter){ //service to manage datatable
     		var constructor = function($scope, iConfig){
 				var datatable = {
-						newConfigDefault:{
-							
-							remove:{
-								active:true,
-								mode:'remote', //or local
-								url:undefined
-							}						
-						},
-						
 						
 						configDefault:{
 							search : {
@@ -48,7 +39,7 @@ angular.module('datatableServices', []).
 							},
 							edit : {
 								active:true,
-								started : false,
+								start : false,
 								all : false,
 								columns : {} //columnIndex : {edit : true/false, value:undefined}
 							},
@@ -57,10 +48,13 @@ angular.module('datatableServices', []).
 								mode:'local', //or local
 								url:undefined
 							},
-							url:{
-								remove:undefined
-							},
-							
+							remove:{
+								active:true,
+								mode:'local', //or local
+								url:undefined,
+								start:false,
+								counter:0
+							},							
 							showTotalNumberRecords:true,
 							showButtons:false
 						},
@@ -98,7 +92,7 @@ angular.module('datatableServices', []).
 		    			 */
 		    			setData:function(data, recordsNumber){
 		    				var configPagination = this.config.pagination;
-		    				if(configPagination.active && !this.isRemoteMode(this.config.search.mode)){
+		    				if(configPagination.active && !this.isRemoteMode(configPagination.mode)){
 		    					this.config.pagination.pageNumber=0;
 		    				}
 		    				this.allResult = data;
@@ -310,8 +304,7 @@ angular.module('datatableServices', []).
 			    				for(var i = 0; i < this.displayResult.length; i++){
 			    					if(this.displayResult[i].selected){
 			    						this.displayResult[i].edit=true;
-			    						find = true;
-			    					
+			    						find = true;			    					
 			    					}else{
 			    						this.displayResult[i].edit=false;
 			    					}
@@ -385,11 +378,11 @@ angular.module('datatableServices', []).
 		    			save : function(){
 		    				if(this.config.save.active){
 			    				for(var i = 0; i < this.displayResult.length; i++){
-			    					if(this.displayResult[i].selected){
+			    					if(this.displayResult[i].edit){
 			    						if(this.isRemoteMode(this.config.save.mode)){
-			    							this.saveObject(this.displayResult[i], i);
+			    							this.saveRemote(this.displayResult[i], i);
 			    						}else{		    									    		    				
-			    							this.updateRecords(i);
+			    							this.saveLocal(i);
 			    						}
 			    					}						
 			    				}
@@ -397,41 +390,106 @@ angular.module('datatableServices', []).
 		    					console.log("save is not active !");		    				
 		    				}
 		    			},
-		    			saveObject : function(value, i){
+		    			saveRemote : function(value, i){
 		    				var url = this.getUrl(this.config.save.url);
 			    			if(url){
-			    				$http.post(url, value, {datatable:this})
+			    				$http.post(url, value, {datatable:this,index:i})
 				    				.success(function(data, status, headers, config) {
-				    					this.displayResult[i].selected = false;
-		    							this.displayResult[i].edit=false;
-		    							this.displayResult[i].trClass = undefined;
-		    							this.displayResultMaster[i] = angular.copy(this.displayResult[i]);
-		    							this.displayResult[i].trClass = "success";
+				    					config.datatable.saveLocal(config.index);
 				    				})
 				    				.error(function(data, status, headers, config) {
-				    					this.displayResult[i].trClass = "error";
+				    					config.datatable.displayResult[config.index].trClass = "error";
+				    					//TODO add error messages as in datatable jquery
 				    				});
 		    				}else{
 		    					console.log('no url define for save ! ');
 		    				}
 		    				
-		    			},
-		    			
+		    			},		    			
 		    			/**
 		    			 * Call after save to update the records property
 		    			 */
-		    			updateRecords: function(i){
-		    				this.displayResult[i].selected = false;
-							this.displayResult[i].edit=false;
-							this.displayResult[i].trClass = undefined;
-							//update in the all result table
-							var j = i;
-							if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
-								j = i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage);
-							}
-							this.allResult[j] = angular.copy(this.displayResult[i]);
-							this.displayResult[i].trClass = "success";							
+		    			saveLocal: function(i){
+		    				if(this.config.save.active){
+			    				this.displayResult[i].selected = false;
+								this.displayResult[i].edit = false;
+								this.displayResult[i].trClass = undefined;
+								//update in the all result table
+								var j = i;
+								if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
+									j = i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage);
+								}
+								this.allResult[j] = angular.copy(this.displayResult[i]);
+								this.displayResult[i].trClass = "success";		
+		    				}else{
+		    					console.log("save is not active !");		    				
+		    				}
 		    			},
+		    			//remove
+		    			/**
+		    			 *  Remove the selected table line
+		    			 */
+		    			remove : function(){
+		    				if(this.config.remove.active && !this.config.remove.start){
+		    					var localDisplayResult = angular.copy(this.displayResult);
+		    					this.config.remove.counter = 0;
+		    					this.config.remove.start = true;
+			    				for(var i = 0; i < localDisplayResult.length; i++){
+			    					if(localDisplayResult[i].selected){
+			    						if(this.isRemoteMode(this.config.remove.mode)){
+			    							//this.removeRemote(localDisplayResult[i], i);
+			    						}else{		    									    		    				
+			    							this.removeLocal(i);			    							
+			    						}
+			    					}						
+			    				}
+			    				this.config.remove.start = false;
+			    				this.config.remove.counter = 0;
+		    				}else{
+		    					console.log("remove is not active !");		    				
+		    				}
+		    			},
+		    			/*
+		    			removeRemote : function(value, i){
+		    				if(this.config.remove.active && this.config.remove.start){
+			    				var url = this.getUrl(this.config.remove.url);
+				    			if(url){
+				    				$http.delete(url, value, {datatable:this,index:i})
+					    				.success(function(data, status, headers, config) {
+					    					config.datatable.removeLocal(config.index);
+					    				})
+					    				.error(function(data, status, headers, config) {
+					    					config.datatable.displayResult[config.index].trClass = "error";
+					    					//TODO add error messages as in datatable jquery
+					    				});
+			    				}else{
+			    					console.log('no url define for remove ! ');
+			    				}
+		    				} else{
+		    					console.log("remove is not active !");		    				
+		    				}
+		    				
+		    			},*/
+		    			/**
+		    			 * Call after save to update the records property
+		    			 */
+		    			removeLocal: function(i, nbDelete){
+		    				if(this.config.remove.active && this.config.remove.start){
+			    				//update in the all result table
+								var j = i;
+								if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
+									j = (i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage))-this.config.remove.counter;
+								}
+								this.allResult.splice(j,1);
+								this.config.remove.counter++;
+								this.totalNumberRecords--;
+								this.computeDisplayResult();
+								this.computePaginationList();
+		    				} else{
+		    					console.log("remove is not active !");		    				
+		    				}
+		    			},
+		    			//select
     					/**
     					 * Select all the table line or just one
     					 */
@@ -468,11 +526,13 @@ angular.module('datatableServices', []).
 		    				/*cancel only edit and hide mode */
 		    				this.config.edit = angular.copy(this.configMaster.edit);
 		    				this.config.hide = angular.copy(this.configMaster.hide);
+		    				this.config.remove = angular.copy(this.configMaster.remove);
 		    				
 		    				this.computeDisplayResult();
 		    				this.computePaginationList();
 		    			},
 		    			
+		    			//helper functions
 		    			/**
 		    			 * set if button is present
 		    			 */
@@ -484,29 +544,6 @@ angular.module('datatableServices', []).
 		    			isShowToolbar: function(){
 		    				return (this.config.showButtons || this.config.pagination.active ||  this.config.showTotalNumberRecords);
 		    			},
-		    			
-		    			/**
-		    			 *  Remove the selected table line
-		    			 */
-		    			remove : function(){
-		    				for(var i = 0; i < this.displayResult.length; i++){
-		    					if(this.displayResult[i].selected){
-		    						this.displayResult.splice(i,1);				
-		    						this.displayResultMaster.splice(i,1);
-		    						i--;
-		    						var url = this.getUrl(this.config.url.remove);
-					    			if(url){
-					    				//TODO must be complete
-					    			}else{
-				    					console.log('no url define for remove ! '+this.config.url.remove);
-				    				}
-		    					}						
-		    				}
-		    				this.config = angular.copy(this.configMaster);
-		    			},
-		    			
-		    			
-		    			//helper functions
 		    			/**
 		    			 * Add pagination parameters if needed
 		    			 */
