@@ -41,6 +41,9 @@ public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType>{
 			processType.id = rs.getLong("id");
 			long idCommonInfoType = rs.getLong("fk_common_info_type");
 			long idProjectCategory = rs.getLong("fk_process_category");
+			long idVoidExpType = rs.getLong("fk_void_experiment_type");
+			long idFirstExpType = rs.getLong("fk_first_experiment_type");
+			long idLastExpType = rs.getLong("fk_last_experiment_type");
 			//Get commonInfoType
 			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 			CommonInfoType commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
@@ -53,6 +56,12 @@ public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType>{
 			ExperimentTypeDAO expTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 			List<ExperimentType> experimentTypes = expTypeDAO.findByProcessId(processType.id);
 			processType.experimentTypes=experimentTypes;
+			//Get voidExperimentType
+			processType.voidExperimentType=expTypeDAO.findById(idVoidExpType);
+			//Get voidExperimentType
+			processType.firstExperimentType=expTypeDAO.findById(idFirstExpType);
+			//Get voidExperimentType
+			processType.lastExperimentType=expTypeDAO.findById(idLastExpType);
 			return processType;
 		} catch (DAOException e) {
 			throw new SQLException(e);

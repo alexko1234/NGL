@@ -21,7 +21,7 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 
 	protected ProcessTypeDAO() {
 		super("process_type", ProcessType.class, ProcessTypeMappingQuery.class, 
-				"SELECT t.id, fk_common_info_type, fk_process_category "+
+				"SELECT t.id, fk_common_info_type, fk_process_category, fk_void_experiment_type, fk_first_experiment_type, fk_last_experiment_type "+
 						"FROM process_type as t  "+
 						"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
@@ -46,12 +46,44 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 		parameters.put("id", processType.id);
 		parameters.put("fk_common_info_type", processType.id);
 		parameters.put("fk_process_category", processType.processCategory.id);
+		
+		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
+		
+		//Save void experiment type
+		if(processType.voidExperimentType!=null){
+			ExperimentType voidExpTypeDB = ExperimentType.find.findByCode(processType.voidExperimentType.code);
+			if(voidExpTypeDB==null){
+				processType.voidExperimentType.id = experimentTypeDAO.save(processType.voidExperimentType);
+			}else
+				processType.voidExperimentType = voidExpTypeDB;
+		}
+		parameters.put("fk_void_experiment_type", processType.voidExperimentType.id);
+		
+		//Save first experiment type
+		if(processType.firstExperimentType!=null){
+			ExperimentType firstExpTypeDB = ExperimentType.find.findByCode(processType.firstExperimentType.code);
+			if(firstExpTypeDB==null){
+				processType.firstExperimentType.id = experimentTypeDAO.save(processType.firstExperimentType);
+			}else
+				processType.firstExperimentType = firstExpTypeDB;
+		}
+		parameters.put("fk_first_experiment_type", processType.firstExperimentType.id);
+		
+		if(processType.lastExperimentType!=null){
+			ExperimentType lastExpTypeDB = ExperimentType.find.findByCode(processType.lastExperimentType.code);
+			if(lastExpTypeDB==null){
+				processType.lastExperimentType.id = experimentTypeDAO.save(processType.lastExperimentType);
+			}else
+				processType.lastExperimentType = lastExpTypeDB;
+		}
+		parameters.put("fk_last_experiment_type", processType.lastExperimentType.id);
+		
+		
 		jdbcInsert.execute(parameters);
 
 		//Add list experimentType
 		List<ExperimentType> experimentTypes = processType.experimentTypes;
 		if(experimentTypes!=null && experimentTypes.size()>0){
-			ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 			String sql = "INSERT INTO process_experiment_type(fk_process_type, fk_experiment_type) VALUES(?,?)";
 			for(ExperimentType experimentType : experimentTypes){
 				ExperimentType experimentTypeDB = ExperimentType.find.findByCode(experimentType.code);

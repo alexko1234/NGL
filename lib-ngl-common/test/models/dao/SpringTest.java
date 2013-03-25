@@ -1277,7 +1277,8 @@ public class SpringTest extends AbstractTests{
 	public void saveProcessType() throws DAOException
 	{
 		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
-		experimentTypes.add(ExperimentType.find.findByCode("exp1"));
+		ExperimentType expType = ExperimentType.find.findByCode("exp1");
+		experimentTypes.add(expType);
 		ProcessCategory processCategory = ProcessCategory.find.findByCode("processCat1");
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
@@ -1292,7 +1293,7 @@ public class SpringTest extends AbstractTests{
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop12", "prop12", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("process1", "process1", "process1", states, resolutions, propertiesDefinitions, objectType);
-		ProcessType processType = createProcessType(commonInfoType, experimentTypes, processCategory);
+		ProcessType processType = createProcessType(commonInfoType, experimentTypes, processCategory,expType,expType,expType);
 		processType.id = processType.save();
 		processType = ProcessType.find.findById(processType.id);
 		checkProcessType(processType);
@@ -1321,12 +1322,16 @@ public class SpringTest extends AbstractTests{
 		Assert.assertNull(ProcessType.find.findByCode("process1"));
 	}
 
-	private ProcessType createProcessType(CommonInfoType commonInfoType, List<ExperimentType> experimentTypes, ProcessCategory processCategory)
+	private ProcessType createProcessType(CommonInfoType commonInfoType, List<ExperimentType> experimentTypes, ProcessCategory processCategory, 
+			ExperimentType voidExpType, ExperimentType firstExpType, ExperimentType lastExpType)
 	{
 		ProcessType processType = new ProcessType();
 		processType.setCommonInfoType(commonInfoType);
 		processType.experimentTypes=experimentTypes;
 		processType.processCategory=processCategory;
+		processType.voidExperimentType=voidExpType;
+		processType.firstExperimentType=firstExpType;
+		processType.lastExperimentType=lastExpType;
 		return processType;
 	}
 
@@ -1340,6 +1345,9 @@ public class SpringTest extends AbstractTests{
 		for(ExperimentType experimentType : processType.experimentTypes){
 			checkExperimentType(experimentType);
 		}
+		Assert.assertNotNull(processType.voidExperimentType.id);
+		Assert.assertNotNull(processType.firstExperimentType.id);
+		Assert.assertNotNull(processType.lastExperimentType.id);
 	}
 
 	/**

@@ -551,9 +551,15 @@ CREATE TABLE process_type (
   id bigint(20) NOT NULL,
   fk_common_info_type bigint(20) NOT NULL,
   fk_process_category bigint(20) NOT NULL,
+  fk_void_experiment_type bigint(20) NOT NULL,
+  fk_first_experiment_type bigint(20) NOT NULL,
+  fk_last_experiment_type bigint(20) NOT NULL,
   PRIMARY KEY  (id),
  FOREIGN KEY (fk_common_info_type) REFERENCES common_info_type(id),
- FOREIGN KEY (fk_process_category) REFERENCES process_category(id)
+ FOREIGN KEY (fk_process_category) REFERENCES process_category(id),
+ FOREIGN KEY (fk_void_experiment_type) REFERENCES experiment_type(id),
+ FOREIGN KEY (fk_first_experiment_type) REFERENCES experiment_type(id),
+ FOREIGN KEY (fk_last_experiment_type) REFERENCES experiment_type(id)
 ) ENGINE=InnoDB;
 
 
