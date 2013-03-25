@@ -39,10 +39,9 @@ function SearchCtrl($scope, $http,datatable,baskets) {
 				stateCode:undefined,
 				support:{name:undefined}
 			},
-			url:{
+			search:{
 				//save:"/admin/types?format=json",
-				remove:"",
-				search:'/api/containers'
+				url:'/api/containers'
 			},
 	};
 	
