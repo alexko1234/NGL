@@ -17,6 +17,11 @@
 @if(config.button){
 <div class="btn-toolbar pull-left" ng-show="@(config.name).config.showButtons">
 	<div class="btn-group">
+			<button class="btn" ng-click="@(config.name).select()">@Messages("datatable.button.selectall")</button>
+			<button class="btn" ng-click="@(config.name).cancel()">@Messages("datatable.button.cancel")</button>		
+	</div>
+		
+	<div class="btn-group">		
 		@if(config.show){<button class="btn btn-primary" ng-click="@(config.name).show()" ng-disabled="!@(config.name).isSelect()">@Messages("datatable.button.show")</button>}
 		@if(config.edit){
 		<button class="btn" ng-click="@(config.name).setEditColumn()" ng-disabled="!@(config.name).isSelect()">@Messages("datatable.button.edit")</button>
@@ -38,10 +43,6 @@
 		<button class="btn" ng-click="@(config.name).remove()" ng-disabled="!@(config.name).isSelect()">@Messages("datatable.button.remove")</button>			
 	</div>
 	}
-	<div class="btn-group">
-		<button class="btn" ng-click="@(config.name).select()">@Messages("datatable.button.selectall")</button>
-		<button class="btn" ng-click="@(config.name).cancel()">@Messages("datatable.button.cancel")</button>		
-	</div>
 	
 	@if(config.hidding){
 	<div class="btn-group">

@@ -304,6 +304,8 @@ angular.module('datatableServices', []).
 			    				for(var i = 0; i < this.displayResult.length; i++){
 			    					if(this.displayResult[i].selected){
 			    						this.displayResult[i].edit=true;
+			    						this.displayResult[i].selected=false;
+			    						this.displayResult[i].trClass = undefined;
 			    						find = true;			    					
 			    					}else{
 			    						this.displayResult[i].edit=false;
@@ -362,7 +364,7 @@ angular.module('datatableServices', []).
 		    			updateColumn : function(columnPropertyName, columnId){
 		    				if(this.config.edit.active){
 			    				for(var i = 0; i < this.displayResult.length; i++){
-			    					if(this.displayResult[i].selected){
+			    					if(this.displayResult[i].edit){
 			    						var fn = new Function("displayResult", "config","displayResult."+columnPropertyName+"=config.edit.columns."+columnId+".value");
 			    						fn(this.displayResult[i], this.config);				
 			    					}
@@ -495,7 +497,7 @@ angular.module('datatableServices', []).
     					 */
 						select : function(line){
 		    				if(line){
-		    					if(!line.selected){
+		    					if(!line.selected && !line.edit){
 		    						line.selected=true;
 		    						line.trClass="row_selected";
 		    					}
