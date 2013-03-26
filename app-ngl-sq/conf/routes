@@ -14,12 +14,16 @@ POST   /baskets					    				controllers.container.Baskets.createOrUpdate(format:
 DELETE /baskets/:code					    		controllers.container.Baskets.delete(code: java.lang.String,format: java.lang.String ?= "html")
 DELETE /baskets/:code/containers/:contrainerCode	controllers.container.Baskets.delete_container(code: java.lang.String,contrainerCode: java.lang.String,format: java.lang.String ?= "html")
 
-GET 	/containers									controllers.container.ContainersViews.home()
+GET 	/containers/home									controllers.containers.tpl.Containers.home()
+
 
 #template
-GET		/tpl/containers								controllers.container.ContainersViews.searchViews()
+GET		/tpl/containers/search								controllers.containers.tpl.Containers.search()
 GET		/tpl/projects/list							controllers.tpl.helper.Lists.projects()
+GET		/tpl/samples/list							controllers.tpl.helper.Lists.samples()
+GET		/tpl/processType/list						controllers.tpl.helper.Lists.processusType()
 GET		/tpl/experimenttypes/list					controllers.tpl.helper.Lists.experimentTypes()
+GET		/tpl/containers/states/list					controllers.tpl.helper.Lists.containerStates()
 
 # load data
 GET	   	   /loaddata/home								controllers.dataload.SampleLoad.home()
@@ -29,7 +33,8 @@ GET		   /loaddatatype								controllers.dataload.InitialData.loadDataType()
 GET       /createprojects								controllers.dataload.InitialData.createProjectFromLims()
 
 #api
-GET		/api/containers								controllers.container.ContainersApis.list(state: java.lang.String ?= "")
+GET		/api/containers								controllers.containers.api.Containers.list()
+GET		/api/containers/projects					controllers.containers.api.Containers.samplesProjectsList()
 
 GET	   /logout								controllers.administration.authentication.User.logOut()
 
