@@ -6,6 +6,7 @@ angular.module('datatableServices', []).
 				var datatable = {
 						
 						configDefault:{
+							columns : [], //ex : [{id:'',header:'',order:true,hide:false,edit:true}]
 							search : {
 								active:true,
 								mode:'remote', //or local but not implemented
@@ -25,7 +26,7 @@ angular.module('datatableServices', []).
 								mode:'remote', //or local
 								by : undefined,
 								reverse : false,
-								columns:{}//columnIndex : true / false
+								columns:{}//key is the column index
 							},
 							show :{
 								active:true,
@@ -55,8 +56,7 @@ angular.module('datatableServices', []).
 								start:false,
 								counter:0
 							},							
-							showTotalNumberRecords:true,
-							showButtons:false
+							showTotalNumberRecords:true
 						},
 						config:undefined,
     					configMaster:undefined,
@@ -215,7 +215,7 @@ angular.module('datatableServices', []).
 		    					console.log("pagination is not active !!!");
 		    				}
     					},
-    					isPagination: function(){
+    					isShowPagination: function(){
 		    				return (this.config.pagination.active && this.config.pagination.pageList.length > 0);
 		    			},	
     					//order functions
@@ -233,18 +233,40 @@ angular.module('datatableServices', []).
 		    			 */
 		    			setOrderColumn : function(columnPropertyName, columnId){
 		    				if(this.config.order.active){
-		    					this.config.order.by = columnPropertyName;
-			    				var fn = new Function("config", "if(!config.order.columns."+columnId+")" +
-			    						"{config.order.columns."+columnId+"=true; config.order.reverse=true;} " +
-			    								"else{ config.order.columns."+columnId+"=false; config.order.reverse=false;}");
-			    				fn(this.config);
-			    				
+		    					if(this.config.order.by != columnPropertyName){
+		    						this.config.order.by = columnPropertyName;
+		    						this.config.order.reverse = false;
+		    					}else{
+		    						this.config.order.reverse = !this.config.order.reverse;
+		    					}
+		    					
+		    					for(var i = 0; i < this.config.columns.length; i++){
+		    						var fn = undefined;
+		    						if(this.config.columns[i].id == columnId){
+		    							fn = new Function("config", "config.order.columns."+this.config.columns[i].id+"=true;");
+		    						}else{
+		    							fn = new Function("config", "config.order.columns."+this.config.columns[i].id+"=false;");
+		    						}
+		    						fn(this.config);		    						
+		    					}
+		    					
 		    					if(!this.isRemoteMode(this.config.order.mode)){
 		    						this.sortAllResult(); //sort all the result
 				    				this.computeDisplayResult(); //redefined the result must be displayed
 			    				} else if(this.config.order.active){
 			    					this.search(this.lastSearchParams);
 			    				}		    					
+		    				} else{
+		    					console.log("order is not active !!!");
+		    				}
+		    			},
+		    			getOrderColumnClass : function(columnId){
+		    				if(this.config.order.active){
+		    					var fn = new Function("config", 
+		    							"if(!config.order.columns."+columnId+") {return 'icon-sort  pull-right';}" +
+			    						"else if(config.order.columns."+columnId+" && !config.order.reverse) {return 'icon-sort-up  pull-right';}" +			    						
+			    						"else if(config.order.columns."+columnId+" && config.order.reverse) {return 'icon-sort-down  pull-right';}");
+			    				return fn(this.config);			    						    					    					
 		    				} else{
 		    					console.log("order is not active !!!");
 		    				}
@@ -303,9 +325,7 @@ angular.module('datatableServices', []).
 			    				var find = false;
 			    				for(var i = 0; i < this.displayResult.length; i++){
 			    					if(this.displayResult[i].selected){
-			    						this.displayResult[i].edit=true;
-			    						this.displayResult[i].selected=false;
-			    						this.displayResult[i].trClass = undefined;
+			    						this.displayResult[i].edit=true;			    						
 			    						find = true;			    					
 			    					}else{
 			    						this.displayResult[i].edit=false;
@@ -356,6 +376,9 @@ angular.module('datatableServices', []).
 		    					console.log("edit is not active !");
 		    					return false;
 		    				}
+		    			},
+		    			isShowEdit : function(){
+		    				return (this.config.edit.active || this.config.save.active);
 		    			},
 		    			/**
 		    			 * Update all line with the same value
@@ -437,7 +460,7 @@ angular.module('datatableServices', []).
 		    					this.config.remove.counter = 0;
 		    					this.config.remove.start = true;
 			    				for(var i = 0; i < localDisplayResult.length; i++){
-			    					if(localDisplayResult[i].selected){
+			    					if(localDisplayResult[i].selected && !localDisplayResult[i].edit){
 			    						if(this.isRemoteMode(this.config.remove.mode)){
 			    							//this.removeRemote(localDisplayResult[i], i);
 			    						}else{		    									    		    				
@@ -497,7 +520,7 @@ angular.module('datatableServices', []).
     					 */
 						select : function(line){
 		    				if(line){
-		    					if(!line.selected && !line.edit){
+		    					if(!line.selected){
 		    						line.selected=true;
 		    						line.trClass="row_selected";
 		    					}
@@ -522,6 +545,15 @@ angular.module('datatableServices', []).
 		    				return false;
 		    			},
 		    			/**
+		    			 * indicate if at least one line is selected and not in edit mode
+		    			 */
+		    			isSelectAndNotEdit: function(){
+		    				for(var i = 0; this.displayResult && i < this.displayResult.length; i++){
+	    						if(this.displayResult[i].selected && !this.displayResult[i].edit)return true;	    						
+	    					}
+		    				return false;
+		    			},
+		    			/**
 		    			 * cancel edit, hide and selected lines only
 		    			 */
 		    			cancel : function(){
@@ -534,17 +566,15 @@ angular.module('datatableServices', []).
 		    				this.computePaginationList();
 		    			},
 		    			
-		    			//helper functions
-		    			/**
-		    			 * set if button is present
-		    			 */
-		    			setShowButtons: function(boolean){
-		    				this.config.showButtons=boolean;
-		    				this.configMaster = angular.copy(this.config); //in case of cancel to keep showButtons config 
-		    				
-		    			},
+		    			//helper functions		    			
 		    			isShowToolbar: function(){
-		    				return (this.config.showButtons || this.config.pagination.active ||  this.config.showTotalNumberRecords);
+		    				return (this.isShowToolbarLeft() || this.isShowToolbarRight());
+		    			},
+		    			isShowToolbarLeft: function(){
+		    				return ( this.isShowEdit() || this.config.remove.active || this.config.hide.active || this.config.show.active);
+		    			},
+		    			isShowToolbarRight: function(){
+		    				return (this.isShowPagination() || this.config.showTotalNumberRecords);
 		    			},
 		    			/**
 		    			 * Add pagination parameters if needed
@@ -585,6 +615,38 @@ angular.module('datatableServices', []).
 		    				}else{
 		    					return false;
 		    				}
+		    			},
+		    			/**
+		    			 * Set columns configuration
+		    			 */
+		    			setColumnsConfig: function(columns){
+		    				this.config.columns = columns;
+		    				this.configMaster.columns = angular.copy(columns);
+		    			},
+		    			getColumns: function(){
+		    				return this.config.columns;		    				
+		    			},
+		    			/**
+		    			 * Return column with hide
+		    			 */
+		    			getHideColumns: function(){
+		    				var c = [];
+		    				for(var i = 0 ; i < this.config.columns.length; i++){
+		    					if(this.config.columns[i].hide){
+		    						c.push(this.config.columns[i]);
+		    					}
+		    				}
+		    				return c;
+		    			},
+		    			/**
+		    			 * Return column with hide
+		    			 */
+		    			getEditColumns: function(){
+		    				var c = [];
+		    				for(var i = 0 ; i < this.config.columns.length; i++){
+		    					if(this.config.columns[i].edit)c.push(this.config.columns[i]);
+		    				}
+		    				return c;
 		    			}
 		    			
     			};

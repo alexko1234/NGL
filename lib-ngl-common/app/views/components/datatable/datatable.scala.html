@@ -7,7 +7,7 @@
 *@
 @(config: views.components.datatable.DatatableConfig, form: Html = Html(""), buttons: Html = Html(""))
 @import views.components.datatable.DatatableColumn
-<div class="datatable" ng-init="@(config.name).setShowButtons(@config.button)">
+<div class="datatable" ng-init="@(config.name).setColumnsConfig(@config.toJson())">
 <div class="row-fluid">
 @form
 </div>
@@ -15,46 +15,43 @@
 <div class="row-fluid" ng-show="@(config.name).isShowToolbar()">
 <div class="span6">
 @if(config.button){
-<div class="btn-toolbar pull-left" ng-show="@(config.name).config.showButtons">
+<div class="btn-toolbar pull-left" ng-show="@(config.name).isShowToolbarLeft()">
 	<div class="btn-group">
-			<button class="btn" ng-click="@(config.name).select()">@Messages("datatable.button.selectall")</button>
-			<button class="btn" ng-click="@(config.name).cancel()">@Messages("datatable.button.cancel")</button>		
+			<button class="btn" ng-click="@(config.name).select()"><i class="icon-check icon-large"></i> @Messages("datatable.button.selectall")</button>
+			<button class="btn" ng-click="@(config.name).cancel()"><i class="icon-undo icon-large"></i> @Messages("datatable.button.cancel")</button>		
 	</div>
-		
-	<div class="btn-group">		
-		@if(config.show){<button class="btn btn-primary" ng-click="@(config.name).show()" ng-disabled="!@(config.name).isSelect()">@Messages("datatable.button.show")</button>}
-		@if(config.edit){
-		<button class="btn" ng-click="@(config.name).setEditColumn()" ng-disabled="!@(config.name).isSelect()">@Messages("datatable.button.edit")</button>
+	@if(config.show){<button class="btn" ng-click="@(config.name).show()" ng-disabled="!@(config.name).isSelect()" ng-show="@(config.name).config.show.active"><i class="icon-pushpin icon-large"></i> @Messages("datatable.button.show")</button>}
+	@if(config.edit){				
+	<div class="btn-group"  ng-show="@(config.name).config.edit.active">		
+		<button class="btn" ng-click="@(config.name).setEditColumn()" ng-disabled="!@(config.name).isSelect()"><i class="icon-edit icon-large"></i> @Messages("datatable.button.edit")</button>
 		<button data-toggle="dropdown" class="btn dropdown-toggle" ng-disabled="!@(config.name).isSelect()">
 			<span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
-			@for(column: DatatableColumn <- config.columns){
-				@if(column.editable){
-					<li><a href="#" ng-click="@(config.name).setEditColumn('@column.id')">@Messages(column.header)</a></li>
-				}				
-			}						
-		</ul>
-		}
-	</div>
-	@if(config.edit){
-	<div class="btn-group">
-		<button class="btn" ng-click="@(config.name).save()" ng-disabled="!@(config.name).isEditStart()">@Messages("datatable.button.save")</button> 
-		<button class="btn" ng-click="@(config.name).remove()" ng-disabled="!@(config.name).isSelect()">@Messages("datatable.button.remove")</button>			
+			  <li ng-repeat="column in @(config.name).getEditColumns()">
+				<a href="#" ng-click="@(config.name).setEditColumn(column.id)">{{column.header}}</a>
+			  </li>									
+		</ul>		
 	</div>
 	}
-	
-	@if(config.hidding){
+	@if(config.edit){
 	<div class="btn-group">
-		<button data-toggle="dropdown" class="btn dropdown-toggle">@Messages("datatable.button.hide")
+		<button class="btn" ng-click="@(config.name).save()" ng-disabled="!@(config.name).isEditStart()" ng-show="@(config.name).isShowEdit()"><i class="icon-save icon-large"></i> @Messages("datatable.button.save")</button> 
+		<button class="btn" ng-click="@(config.name).remove()" ng-disabled="!@(config.name).isSelectAndNotEdit()" ng-show="@(config.name).config.remove.active"><i class="icon-trash icon-large"></i> @Messages("datatable.button.remove")</button>			
+	</div>
+	}	
+	@if(config.hidding){
+	<div class="btn-group" ng-show="@(config.name).config.hide.active">>
+		<button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-eye-close icon-large"></i> @Messages("datatable.button.hide")
 			<span class="caret"></span>
 		</button>
 		<ul class="dropdown-menu">
-			@for(column: DatatableColumn <- config.columns){
-				@if(column.hidding){
-					<li><a href="#" ng-click="@(config.name).setHideColumn('@column.id')">@Messages(column.header)</a></li>
-				}				
-			}						
+				<li ng-repeat="column in @(config.name).getHideColumns()">
+					<a href="#" ng-click="@(config.name).setHideColumn(column.id)">
+					<i class="icon-eye-open" ng-show="@(config.name).isHide(column.id)""></i>
+					<i class="icon-eye-close" ng-hide="@(config.name).isHide(column.id)"></i> {{column.header}}
+					</a>
+				</li>																
 		</ul>		
 	</div>
 	}
@@ -64,14 +61,14 @@
 </div>
 <div class="span6">
 <div class="span7">
-<div class="pagination pagination-right" ng-show="@(config.name).isPagination()">
+<div class="pagination pagination-right" ng-show="@(config.name).isShowPagination()">
     <ul>
     	<li ng-repeat="page in @(config.name).config.pagination.pageList" ng-class="page.clazz"><a href="#" ng-click="@(config.name).setPageNumber(page)">{{page.label}}</a></li>    
     </ul>
 </div>
 </div>
 <div class="span5">
-<div class="btn-toolbar pull-right" ng-show="@(config.name).config.pagination.active || @(config.name).config.showTotalNumberRecords">
+<div class="btn-toolbar pull-right" ng-show="@(config.name).isShowToolbarRight()">
 	<button class="btn btn-info" disabled="disabled" ng-show="@(config.name).config.showTotalNumberRecords">
 		@Messages("datatable.totalNumberRecords", "{{"+config.name+".totalNumberRecords}}")
 	</button>
@@ -94,9 +91,9 @@
 <table class="table table-condensed table-hover table-bordered">
 	<thead>
 	<tr>
-		@for(column: DatatableColumn <- config.columns){
-			<th @if(column.hidding){ng-hide="@(config.name).isHide('@column.id')"} ng-click="@(config.name).setOrderColumn('@column.property', '@column.id')">@Messages(column.header)</th>
-		}
+		<th ng-repeat="column in @(config.name).getColumns()" ng-hide="@(config.name).isHide(column.id)"> {{column.header}}
+		<i ng-class="@(config.name).getOrderColumnClass(column.id)" ng-click="@(config.name).setOrderColumn(column.property, column.id)" ng-show="column.order"></i>			
+		</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -104,15 +101,16 @@
 	@if(config.edit){
 	<tr ng-show="@(config.name).isEditStart()">
 		@for(column: DatatableColumn <- config.columns){
-			<td ng-hide="@(config.name).isHide('@column.id')">@if(column.editable){<input type="text" class="input-medium" ng-change="@(config.name).updateColumn('@column.property', '@column.id')" ng-model="@(config.name).config.edit.columns.@(column.id).value" ng-show="@(config.name).isEdit('@column.id')"/>}</td>
+			<td ng-hide="@(config.name).isHide('@column.id')">
+			@if(column.edit){<input type="text" class="input-medium" ng-change="@(config.name).updateColumn('@column.property', '@column.id')" ng-model="@(config.name).config.edit.columns.@(column.id).value" ng-show="@(config.name).isEdit('@column.id')"/>}</td>
 		}
 	</tr>
 	}
 	<tr ng-repeat="value in @(config.name).displayResult | orderBy:@(config.name).config.orderBy:@(config.name).config.orderReverse" ng-click="@(config.name).select(value)" ng-class="value.trClass">
 		@for(column: DatatableColumn <- config.columns){
-				<td @if(column.hidding){ng-hide="@(config.name).isHide('@column.id')"}>
-				<span @if(column.editable){ng-hide="@(config.name).isEdit('@column.id', value)"}>@addColumnFormatter(config.name, column)</span>
-				@if(column.editable){<input type="text" class="input-medium" ng-model="value.@column.property" ng-show="@(config.name).isEdit('@column.id', value)"/>}
+				<td @if(column.hide){ng-hide="@(config.name).isHide('@column.id')"}>
+				<span @if(column.edit){ng-hide="@(config.name).isEdit('@column.id', value)"}>@addColumnFormatter(config.name, column)</span>
+				@if(column.edit){<input type="text" class="input-medium" ng-model="value.@column.property" ng-show="@(config.name).isEdit('@column.id', value)"/>}
 				</td>
 		}
 	</tr>

@@ -2,6 +2,7 @@ package views.components.datatable;
 
 import java.util.Date;
 
+import play.i18n.Messages;
 import play.data.Form;
 import play.data.Form.Field;
 import static views.components.datatable.DatatableConfig.*;
@@ -11,14 +12,14 @@ public class DatatableHelpers {
 	public static DatatableColumn getColumn(String property, String header) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
-		column1.header = header;
+		column1.header = Messages.get(header);
 		return column1;
 	}
 	
 	public static DatatableColumn getDateColumn(String property, String header) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
-		column1.header = header;
+		column1.header =  Messages.get(header);
 		column1.type = Date.class;
 		return column1;
 	}
