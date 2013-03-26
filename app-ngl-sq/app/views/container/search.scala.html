@@ -1,5 +1,10 @@
-@()
+@(datatableConfig: views.components.datatable.DatatableConfig)
 @import scala.collection.immutable._
+<style media="screen" type="text/css">
+.tab-content{
+	height:1000px;
+}
+</style>
 <div class="row-fluid" ng-init="init()">  
   <div class="tabbable tabs-left">
 	<ul id="searchTab" class="nav nav-tabs">
@@ -9,19 +14,21 @@
   
 	<div class="tab-content">
 	<div class="tab-pane active" id="search">
+		@form() = {
 		<form class="well form-search">
-			<select ng-model="project" ng-options="project.name for project in projects" ng-change="search()">
+			<select ng-model="project" id="project" ng-options="project.code+'-'+project.name for project in projects" ng-change="search()">
 				<option value="">-- select project --</option>
 			</select>
 			
-			<select ng-model="experiment" ng-options="experiment.name for experiment in experiments" id="experiment" ng-change="baskets.setExperiment('experiment');search()">
+			<select ng-model="experiment" ng-options="experiment.name for experiment in experiments" id="experiment" ng-change="baskets.setExperiment(experiment);search()">
 				<option value="">-- select experiment --</option>
 			</select>
 			
-			<select ng-model="state" ng-options="state.label for state in states" ng-change="search()">
+			<select ng-model="state" ng-options="state.name for state in states" ng-change="search()">
 				<option value="">-- select container state --</option>
 			</select>					
 		</form>
+		}
 				<div class="btn-toolbar">
 					<div class="btn-group">
 						<button class="btn" ng-click="datatable.cancel()">Cancel</button>  
@@ -38,11 +45,11 @@
     </ul>
     </div>
 
-					<button class="btn btn-info" ng-click="">Create {{experiment.label}}</button>
+					<button class="btn btn-info" ng-click="" ng-hide="experiment==null">Create {{experiment.code}}</button>
 				</div>
-				<form class="form-inline">
-				@views.html.container.datatable(scala.collection.mutable.LinkedHashMap("Code" -> "code", "Type" -> "categoryCode", "Sample" -> "sampleCodes","Experiment" -> "fromExperimentTypeCodes","State" -> "stateCode","Support" -> "support.name"),List("type"),"datatable","type","datatable.searchresult")
-				</form>
+<div ng-init="init()">
+@views.html.components.datatable.datatable(datatableConfig, form)		
+</div>
 	</div>
 	<div class="tab-pane fade" id="onelement"></div>
 	<div class="tab-pane fade" id="newelement"></div>	

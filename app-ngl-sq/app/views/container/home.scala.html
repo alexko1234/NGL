@@ -3,18 +3,16 @@
 @import models.laboratory.common.description.ObjectType
 
 @scripts() = {
-        <script src="@helper.getAsset("javascript","angular","1.0.3","angular.min.js")" type="text/javascript" charset="utf-8"></script> 
-         <script src="@helper.getAsset("javascript","angular","1.0.3","angular-resource.min.js")" type="text/javascript" charset="utf-8"></script>     
-         <script src="@routes.Assets.at("javascripts/ngl/containers/app.js")" type="text/javascript" charset="utf-8"></script>  
-         <script src="@routes.Assets.at("javascripts/ngl/datatable/services.js")" type="text/javascript" charset="utf-8"></script>  
-          <script src="@routes.Assets.at("javascripts/ngl/baskets/services.js")" type="text/javascript" charset="utf-8"></script>  
-        <script src="@routes.Assets.at("javascripts/ngl/containers/controllers.js")" type="text/javascript" charset="utf-8"></script>     
+	<script src="@helper.getAsset("javascripts","angular","1.0.5","angular_1.0.5.min.js")" type="text/javascript" charset="utf-8"></script>   
+	<script src="@routes.Assets.at("javascripts/ngl/containers/app.js")" type="text/javascript" charset="utf-8"></script>  
+       <script src="@routes.Assets.at("ngl/javascripts/services/datatable.js")" type="text/javascript" charset="utf-8"></script>  
+	<script src="@routes.Assets.at("javascripts/ngl/baskets/services.js")" type="text/javascript" charset="utf-8"></script>  
+	<script src="@routes.Assets.at("javascripts/ngl/containers/controllers.js")" type="text/javascript" charset="utf-8"></script>     
 }
 
 @main("Test AngularJS DataTable", "types", scripts){
-<div id="container" ng-app="containerApp" >
-	<div ng-view>
+	<div id="container" ng-app="home">
+		<div ng-view>
+		</div>
 	</div>
-
-</div>
 }
