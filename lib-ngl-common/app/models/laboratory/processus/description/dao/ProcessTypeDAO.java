@@ -1,5 +1,7 @@
 package models.laboratory.processus.description.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +11,11 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.processus.description.ProcessCategory;
 import models.laboratory.processus.description.ProcessType;
+import models.utils.ListObject;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import play.api.modules.spring.Spring;
@@ -26,6 +30,24 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 						"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
 	}
 
+	public List<ListObject> findAllForList(){
+		String sql = "SELECT t.id,c.code as code, c.name as name, fk_common_info_type, fk_process_category "+
+				"FROM process_type as t  "+
+				"JOIN common_info_type as c ON c.id=fk_common_info_type";
+		
+		List<ListObject> list = jdbcTemplate.query(
+			    sql,
+			    new RowMapper<ListObject>() {
+
+			        public ListObject mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            ListObject listObj = new ListObject(rs.getString("code"),rs.getString("name"));
+			            return listObj;
+			        }
+			    });
+		
+		return list;
+	}
+	
 	@Override
 	public long save(ProcessType processType) throws DAOException
 	{
