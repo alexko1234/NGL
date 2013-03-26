@@ -1,0 +1,17 @@
+#Container table
+container.table.code = Code
+container.table.categoryCode = Code catégorie
+container.table.sampleCode = Code sample
+container.table.fromExperimentTypeCodes = Expérience
+container.table.stateCode = Statut
+container.table.support.name = Support
+container.table.stateCode = Code état
+container.table.valid = Valide
+
+#process
+processus.create = Crée un processus
+
+#baskets
+baskets = Panier
+baskets.new = créer un panier
+baskets.add = ajouter au panier
