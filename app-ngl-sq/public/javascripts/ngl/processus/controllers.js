@@ -63,13 +63,12 @@ function SearchCtrl($scope, $http,datatable,baskets) {
 			data: {"type":processusType},
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(data) {
-			alert(data.code);
 			var process = data;
 			var code = process.code;
-			alert($scope.datatable.displayResultMaster.length);
-			for(var i = 0; i < $scope.datatable.displayResultMaster.length; i++){
-				if($scope.datatable.displayResultMaster[i] && $scope.datatable.displayResultMaster[i].selected){
-					$scope.addContainer(code,JSON.stringify({ "container": $scope.datatable.displayResultMaster[i].code}));
+			alert($scope.datatable.displayResult.length);
+			for(var i = 0; i < $scope.datatable.displayResult.length; i++){
+				if($scope.datatable.displayResult[i] && $scope.datatable.displayResult[i].selected){
+					$scope.addContainer(code,JSON.stringify({ "container": $scope.datatable.displayResult[i].code}));
 				}
 			}
 		});
@@ -83,6 +82,7 @@ function SearchCtrl($scope, $http,datatable,baskets) {
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(data) {
 			//Call post for adding container
+			alert("success");
 		});
 	}
 	
