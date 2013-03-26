@@ -1,14 +1,18 @@
 package models.laboratory.common.description.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
+import models.utils.ListObject;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
@@ -69,6 +73,23 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	public void update(State state) throws DAOException {
 		String sql = "UPDATE state SET code=?, name=?, active=?, priority=?, level=? WHERE id=?";
 		jdbcTemplate.update(sql, state.code, state.name, state.active, state.priority, state.level, state.id);
+	}
+	
+	public List<ListObject> findAllForContainerList(){
+		String sql = "SELECT code, name "+
+				"FROM state WHERE level='containing'";
+		
+		List<ListObject> list = jdbcTemplate.query(
+			    sql,
+			    new RowMapper<ListObject>() {
+
+			        public ListObject mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            ListObject listObj = new ListObject(rs.getString("code"),rs.getString("name"));
+			            return listObj;
+			        }
+			    });
+		
+		return list;
 	}
 
 }
