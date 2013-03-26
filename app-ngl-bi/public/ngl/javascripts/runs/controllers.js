@@ -10,7 +10,7 @@ function SearchCtrl($scope, datatable) {
 			pagination:{remote:true},
 			show:{
 				add :function(line){
-					$scope.tabs.push({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.home(line.code).url,remove:true})
+					$scope.tabs.push({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.home(line.code).url,remove:true});
 				}
 			}
 	};
