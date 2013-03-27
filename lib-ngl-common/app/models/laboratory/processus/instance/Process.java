@@ -7,7 +7,7 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processus.description.ProcessCategory;
 import models.laboratory.processus.description.ProcessType;
 import models.laboratory.project.instance.Project;
@@ -36,27 +36,29 @@ public class Process extends DBObject {
 
 	public Map<String,PropertyValue> properties;
 	
+	// Creating one process create many process instance there are sample on container selected
+	public String aggregationKey;
+	
 	// User or Equipe
 	//public List<String> equipeCode;
 	
-	// Experiments ref
-	public List<String> experimentCodes;
 	// Projects ref
-	public List<String> projectCodes;
+	public String projectCode;
 	// Samples ref
-	public List<String> sampleCodes;
-	
-	public List<String> containerCodes;
+	public String sampleCode;
+
+	public String currentExperimentTypeCode;
+	public List<String> containerOutCodes;
 
 	
 	@JsonIgnore
 	public List<Container> getContainers(){
-		return new HelperObjects<Container>().getObjects(Container.class, containerCodes);
+		return new HelperObjects<Container>().getObjects(Container.class, containerOutCodes);
 	}
 	
 	@JsonIgnore
-	public List<Sample> getSamples(){
-		return new HelperObjects<Sample>().getObjects(Sample.class, sampleCodes);
+	public Sample getSample(){
+		return new HelperObjects<Sample>().getObject(Sample.class, sampleCode,null);
 	}
 	
 	@JsonIgnore
@@ -70,13 +72,13 @@ public class Process extends DBObject {
 	}
 	
 	@JsonIgnore
-	public List<Project> getProjects(){
-		return new HelperObjects<Project>().getObjects(Project.class, projectCodes);
+	public Project getProject(){
+		return new HelperObjects<Project>().getObject(Project.class, projectCode,null);
 	}
 	
 	@JsonIgnore
-	public List<Experiment> getExperiments(){
-		return new HelperObjects<Experiment>().getObjects(Experiment.class, experimentCodes);
+	public ExperimentType getCurrentOutExperimentType(){
+		return new HelperObjects<ExperimentType>().getObject(ExperimentType.class, currentExperimentTypeCode,null);
 	}
 	
 }
