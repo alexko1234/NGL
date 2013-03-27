@@ -99,16 +99,20 @@ public class Containers extends Controller {
 	}
 	
 	public static Result samplesProjectsList(){
-		DynamicForm requestData = form().bindFromRequest();
-		String containersJson = requestData.get("containers");
+		JsonNode json = request().body().asJson();		
+		String myJson = json.get("containers").toString();
 		Map<ListObject,ListObject> projects = new HashMap<ListObject,ListObject>(); 
 		
 		try{
-			JSONObject myjson = new JSONObject(containersJson);
-			JSONArray the_json_array = myjson.getJSONArray("containers");
+			
+			JSONArray the_json_array = new JSONArray(myJson);
+			
 			for(int i=0;i<the_json_array.length();i++){
-				String code = (String) the_json_array.get(i);
+				JSONObject obj = (JSONObject) the_json_array.get(i);
+				String code = obj.getString("code");
+				Logger.info(code);
 				Container containers = MongoDBDAO.findByCode("Container", Container.class, code);
+				
 				for(String s : containers.sampleCodes){
 					Sample sample = MongoDBDAO.findByCode("Sample",Sample.class,s);
 					/*for(String p:sample.projectCode){
@@ -123,8 +127,6 @@ public class Containers extends Controller {
 		}catch(JSONException jse){
 			Logger.info("Error json "+jse);
 		}
-		
-		Logger.info(Json.toJson(projects).toString());
 		return ok(Json.toJson(projects));
 	}
 }
