@@ -56,7 +56,7 @@ function SearchCtrl($scope, $http,datatable,baskets) {
 		urlList:"/basket/experimenttype"
 	};
 	
-	$scope.createProcessus = function(processusType){
+	$scope.createProcessus = function(processusType){	
 		$http({
 			method: 'POST',
 			url: '/api/processus',
@@ -77,7 +77,7 @@ function SearchCtrl($scope, $http,datatable,baskets) {
 	$scope.addContainer = function(code,container){
 		$http({
 			method: 'POST',
-			url: '/api/processus/'+code,
+			url: '/api/processus/',
 			data: container,
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(data) {
