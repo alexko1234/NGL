@@ -17,11 +17,11 @@ import play.mvc.Http;
 import play.test.FakeApplication;
 import play.test.Helpers;
 
-@RunWith(MockitoJUnitRunner.class)
+//@RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractTests {
 	
-	@Mock
-	private Http.Request request;
+	//@Mock
+	//private Http.Request request;
 
 	protected static FakeApplication app;
 	

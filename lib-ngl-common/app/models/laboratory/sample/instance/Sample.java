@@ -38,7 +38,7 @@ public class Sample extends DBObject{
 	//Sample Category Ref
 	public String categoryCode;
 	
-	public String projectCode;
+	public List<String> projectCodes;
 	
 	// ?? Wath is difference with code / referenceCollbab => code s'est interne au genoscope
 	public String name;
@@ -68,8 +68,8 @@ public class Sample extends DBObject{
 	}
 	
 	@JsonIgnore
-	public Project getProject(){
-		return new HelperObjects<Project>().getObject(Project.class, projectCode, null);
+	public List<Project> getProjects(){
+		return new HelperObjects<Project>().getObjects(Project.class, projectCodes);
 	}
 	
 

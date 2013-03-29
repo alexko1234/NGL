@@ -226,7 +226,7 @@ public class InstanceTest extends AbstractTests{
 
 		sample.categoryCode="sampleCategory";
 		sample.typeCode="sampleType";
-		sample.projectCode="ProjectCode";
+		sample.projectCodes=	InstanceHelpers.addCode("ProjectCode", sample.projectCodes);
 
 		/*sample.comments=InstanceHelpers.addComment("comment", sample.comments);
 		InstanceHelpers.updateTraceInformation(sample.traceInformation); */
@@ -245,7 +245,7 @@ public class InstanceTest extends AbstractTests{
 
 		assertThat(sample.getSampleCategory().code).isEqualTo("sampleCategory");
 		assertThat(sample.getSampleType().code).isEqualTo("sampleType");
-		assertThat(sample.getProject().code).isEqualTo("ProjectCode");
+		assertThat(sample.getProjects().size()).isEqualTo(1);
 		
 
 

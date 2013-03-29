@@ -27,6 +27,8 @@ public class ContainerSupport {
 	
 	public String categoryCode;
 
+	public String stockCode;
+	
 	// Position
 	public String x;
 	public String y;

@@ -15,6 +15,7 @@ public class RelationshipContainer extends DBObject {
 
 	// container ref
 	public String currentContainerCode;
+	public String processCode;
 	// containers ref
 	public List<String> childContainerCodes;
 	
@@ -29,5 +30,13 @@ public class RelationshipContainer extends DBObject {
 	public List<Container> getChildContainers(){
 		return new HelperObjects<Container>().getObjects(Container.class,childContainerCodes);
 	}
+	
+	
+	@JsonIgnore
+	public Process getProcess(){
+		return new HelperObjects<Process>().getObject(Process.class, processCode, null);
+
+	}
+	
 	
 }

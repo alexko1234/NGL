@@ -141,7 +141,7 @@ public class Container extends DBObject {
 		
 		this.contents.add(new Content(new SampleUsed(sample.code, sample.typeCode, sample.categoryCode)));
 		
-		projectCodes=InstanceHelpers.addCode(sample.projectCode,projectCodes);
+		projectCodes=InstanceHelpers.addCodesList(sample.projectCodes,projectCodes);
 	
 		sampleCodes=InstanceHelpers.addCode(sample.code,sampleCodes);
 		

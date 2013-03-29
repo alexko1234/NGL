@@ -452,11 +452,15 @@ public class DescriptionHelper {
 	}
 
 
-	public static ProcessType getProcessType(String typeCode, String categoryCode, List<PropertyDefinition> propertyDefinitions,List<ExperimentType> experimentTypes, List<State> variableStates, List<Resolution> resolutions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException  {
+	public static ProcessType getProcessType(String typeCode, String categoryCode, List<PropertyDefinition> propertyDefinitions,List<ExperimentType> experimentTypes, 
+			ExperimentType voidExperimentType, ExperimentType firstExperimentType, ExperimentType lastExperimentType,List<State> variableStates, List<Resolution> resolutions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException  {
 		ProcessType processType = new ProcessType();
 		processType.setCommonInfoType(DescriptionHelper.getCommonInfoType(typeCode,typeCode, "Process", variableStates, propertyDefinitions, resolutions, "Process"));
 		processType.experimentTypes=experimentTypes;
 		processType.processCategory=getCategory(ProcessCategory.class, categoryCode);
+		processType.voidExperimentType=voidExperimentType;
+		processType.firstExperimentType=firstExperimentType;
+		processType.lastExperimentType=lastExperimentType;
 		return processType;
 	}
 
