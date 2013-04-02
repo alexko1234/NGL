@@ -57,21 +57,33 @@ function SearchCtrl($scope, $http,datatable,baskets) {
 	};
 	
 	$scope.createProcessus = function(processusType){	
-		$http({
-			method: 'POST',
-			url: '/api/processus',
-			data: {"type":processusType},
-			headers: {'Content-Type': 'application/json'}
-		}).success(function(data) {
-			var process = data;
-			var code = process.code;
-			alert($scope.datatable.displayResult.length);
-			for(var i = 0; i < $scope.datatable.displayResult.length; i++){
+		if($scope.detectSelect()){
+			$http({
+				method: 'POST',
+				url: '/api/processus',
+				data: {"type":processusType},
+				headers: {'Content-Type': 'application/json'}
+			}).success(function(data) {
+				var process = data;
+				var code = process.code;
+				for(var i = 0; i < $scope.datatable.displayResult.length; i++){
+					if($scope.datatable.displayResult[i] && $scope.datatable.displayResult[i].selected){
+						$scope.addContainer(code,JSON.stringify({ "container": $scope.datatable.displayResult[i].code}));
+					}
+				}
+			});
+		}else{
+			alert("No container selected");
+		}
+	}
+	
+	$scope.detectSelect = function(){
+		for(var i = 0; i < $scope.datatable.displayResult.length; i++){
 				if($scope.datatable.displayResult[i] && $scope.datatable.displayResult[i].selected){
-					$scope.addContainer(code,JSON.stringify({ "container": $scope.datatable.displayResult[i].code}));
+					return true;
 				}
 			}
-		});
+		return false;
 	}
 	
 	$scope.addContainer = function(code,container){
@@ -82,7 +94,6 @@ function SearchCtrl($scope, $http,datatable,baskets) {
 			headers: {'Content-Type': 'application/json'}
 		}).success(function(data) {
 			//Call post for adding container
-			alert("success");
 		});
 	}
 	
