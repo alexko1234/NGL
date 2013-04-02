@@ -57,23 +57,19 @@ function SearchCtrl($scope, $http,datatable,baskets) {
 	};
 	
 	$scope.createProcessus = function(processusType){	
-		if($scope.detectSelect()){
-			$http({
-				method: 'POST',
-				url: '/api/processus',
-				data: {"type":processusType},
-				headers: {'Content-Type': 'application/json'}
-			}).success(function(data) {
-				var process = data;
-				var code = process.code;
-				for(var i = 0; i < $scope.datatable.displayResult.length; i++){
-					if($scope.datatable.displayResult[i] && $scope.datatable.displayResult[i].selected){
-						$scope.addContainer(code,JSON.stringify({ "container": $scope.datatable.displayResult[i].code}));
-					}
-				}
-			});
-		}else{
-			alert("No container selected");
+		for(var i = 0; i < $scope.datatable.displayResult.length; i++){
+			if($scope.datatable.displayResult[i] && $scope.datatable.displayResult[i].selected){
+				$http({
+					method: 'POST',
+					url: '/api/processus',
+					data: {"type":processusType},
+					headers: {'Content-Type': 'application/json'}
+				}).success(function(data) {
+					var process = data;
+					var code = process.code;
+					$scope.addContainer(code,JSON.stringify({ "container": $scope.datatable.displayResult[i].code}));
+				});
+			}
 		}
 	}
 	
@@ -123,13 +119,13 @@ function SearchCtrl($scope, $http,datatable,baskets) {
 	
 	$scope.search = function(){
 		if($scope.processus==undefined && ($scope.project!=undefined || $scope.experiment!=undefined || $scope.sample!=undefined)){ 
-			alert("Processus needed");
-			
-			$scope.project=undefined;
-			$scope.experiment=undefined;
-			$scope.sample=undefined;
+			$('#processus').addClass('error');
+			$('#processusHelp').html("Error: this information is required  ");
 		}else{
-			$scope.datatable.search({project:$scope.project,experiment:$scope.experiment,state:{"code":"N"},sample:$scope.sample,process:$scope.processus});//State have to be IWP
+			alert($scope.project);
+			$scope.datatable.search({projectCode:$scope.project,experimentCode:$scope.experiment,containerState:"N",containerSample:$scope.sample,containerProcess:$scope.processus.code});//State have to be IWP
+			$('#processus').removeClass('error');
+			$('#processusHelp').html("");
 		}
 	}
 }
