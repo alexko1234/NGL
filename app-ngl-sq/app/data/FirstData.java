@@ -3,6 +3,8 @@ package data;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -212,18 +214,18 @@ public class FirstData {
 	}
 
 
-	public static Map<String,ExperimentType> getEXperimentType() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public static Map<String,ExperimentType> getExperimentType() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 
 		Map<String,ExperimentType> results=new HashMap<String, ExperimentType>();
 
-		ExperimentType experimentTypeBq =DescriptionHelper.getExperimentType("receptionBanqueSolexa", "Reception Banque Solexa", "Librairie", null);
-		ExperimentType experimentTypeBrut =DescriptionHelper.getExperimentType("reception", "Reception", "Sample", null);
+		//ExperimentType experimentTypeBq =DescriptionHelper.getExperimentType("receptionBanqueSolexa", "Reception Banque Solexa", "Librairie", null);
+		ExperimentType experimentTypeBrut =DescriptionHelper.getExperimentType("voidExperimentType", "Sans Experiment Type", "Sample", null);
 		// Librairie ??
-		ExperimentType experimentTypeFrag =DescriptionHelper.getExperimentType("receptionFragmentation", "Reception Fragmentation", "Librairie", null);
+		//ExperimentType experimentTypeFrag =DescriptionHelper.getExperimentType("receptionFragmentation", "Reception Fragmentation", "Librairie", null);
 
-		results.put(experimentTypeBq.code, experimentTypeBq);
+		//results.put(experimentTypeBq.code, experimentTypeBq);
 		results.put(experimentTypeBrut.code, experimentTypeBrut);
-		results.put(experimentTypeFrag.code, experimentTypeFrag);
+		//results.put(experimentTypeFrag.code, experimentTypeFrag);
 		return results;
 
 	}
@@ -341,7 +343,8 @@ public class FirstData {
 		Map<String,ProcessType> process=new HashMap<String, ProcessType>();
 
 		//TODO add ExperimentType
-		ProcessType processType =  DescriptionHelper.getProcessType("bqMPIllumina","Banque Mate Pair Illumina",null,getExperimentTypeBqMP(),null,null);
+		ProcessType processType =  DescriptionHelper.getProcessType("bqMPIllumina","Banque Mate Pair Illumina",null,new ArrayList<ExperimentType>(getExperimentTypeBqMP().values())
+				,getExperimentTypeBqMP().get("voidExperimentType"),getExperimentTypeBqMP().get("circularisationBqMP"),getExperimentTypeBqMP().get("ampliPCRBqMP"),null,null);
 		process.put(processType.code, processType);
 
 		return process;
@@ -422,6 +425,8 @@ public class FirstData {
 		List<InstrumentUsedType> instrumentUsedTypes=DescriptionHelper.arrayToListType(InstrumentUsedType.class, new String[]{"agilent2100"});
 
 		QualityControlType qctype1 =  DescriptionHelper.getQualityControlType("qcBionalyzerNonAmpli", "QC bionanalyzer Non Ampli", "Bioanalyzer", propertyDefinitions,  instrumentUsedTypes, null, new ArrayList<State>(getStateAll().values()), null);
+		
+		
 		// QC bioanalyzer Ampli
 		List<PropertyDefinition> propertyDefinitions2=new ArrayList<PropertyDefinition>();				
 		propertyDefinitions2.add(DescriptionHelper.getPropertyDefinition("volumeBioanalyzerInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));			 			
@@ -467,8 +472,8 @@ public class FirstData {
 
 
 
-	public static List<ExperimentType> getExperimentTypeBqMP() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
+	public static LinkedHashMap<String, ExperimentType> getExperimentTypeBqMP() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		LinkedHashMap<String, ExperimentType> experimentTypes =  new  LinkedHashMap<String, ExperimentType>();
 
 		
 		//TODO pour toutes les ExperimentTypes
@@ -479,15 +484,28 @@ public class FirstData {
 		//List<PurificationMethodType> possiblePurificationMethodTypes
 		//List<QualityControlType> possibleQualityControlTypes
 
+		List<ExperimentType> previousExp=new ArrayList<ExperimentType>();
+		
+		ExperimentType prev =ExperimentType.find.findByCode("voidExperimentType");
+		if(prev!=null){
+			previousExp.add(prev);
+		}
+		ExperimentType circularisationBqP=DescriptionHelper.getExperimentType("circularisationBqMP", "Circularisation et digestion ADN linéaire + fragmentation ADN circulaire par covaris","Libraries"
+				,null,DescriptionHelper.arrayToListType(InstrumentUsedType.class,new String[]{"covaris"}),null,null,null,true, true,true,true,null ,null ,previousExp);
+		experimentTypes.put(circularisationBqP.code,circularisationBqP);
 
-		experimentTypes.add(DescriptionHelper.getExperimentType("circularisationBqMP", "Circularisation et digestion ADN linéaire + fragmentation ADN circulaire par covaris","Libraries"
-				,null,DescriptionHelper.arrayToListType(InstrumentUsedType.class,new String[]{"covaris"}),null,null,null,true, true,true,true,null ,null ,null));
+		List<ExperimentType> previousExp2=new ArrayList<ExperimentType>();
+		previousExp2.add(circularisationBqP);
+		ExperimentType librairieBqMP =DescriptionHelper.getExperimentType("librairieBqMP", "Librairie (rep, ajout du A, ligation adapt)","Libraries"
+				,null,null,null,null,null,true, true,true,true,null ,null ,previousExp2); 
+		experimentTypes.put(librairieBqMP.code,librairieBqMP);
 
-		experimentTypes.add(DescriptionHelper.getExperimentType("librairieBqMP", "Librairie (rep, ajout du A, ligation adapt)","Libraries"
-				,null,null,null,null,null,true, true,true,true,null ,null ,null));
-
-		experimentTypes.add(DescriptionHelper.getExperimentType("ampliPCRBqMP", "Amplification (enrich par PCR)","Libraries"
-				,null,DescriptionHelper.arrayToListType(InstrumentUsedType.class,new String[]{"thermocycleur"}),null,null,null,true, true,true,true,null ,null ,null));
+		
+		List<ExperimentType> previousExp3=new ArrayList<ExperimentType>();
+		previousExp3.add(librairieBqMP);		
+		experimentTypes.put("ampliPCRBqMP",DescriptionHelper.getExperimentType("ampliPCRBqMP", "Amplification (enrich par PCR)","Libraries"
+				,null,DescriptionHelper.arrayToListType(InstrumentUsedType.class,new String[]{"thermocycleur"}),null,null,null,true, true,true,true,null ,null ,previousExp3));
+		
 		return experimentTypes;
 	}
 

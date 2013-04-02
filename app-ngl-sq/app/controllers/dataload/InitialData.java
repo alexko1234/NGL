@@ -45,15 +45,13 @@ public class InitialData extends Controller{
 				DescriptionHelper.saveMapType(ContainerCategory.class, FirstData.getContainerCategorieAll());
 				DescriptionHelper.saveMapType(State.class,FirstData.getStateAll());
 				DescriptionHelper.saveMapType(InstrumentUsedType.class, FirstData.getInstrumentUsedTypeAll());
-				
 				DescriptionHelper.saveMapType(ProjectType.class, FirstData.getProjectTypeAll());
 				DescriptionHelper.saveMapType(SampleType.class,FirstData.getSampleTypeAll());
-				DescriptionHelper.saveMapType(ExperimentType.class, FirstData.getEXperimentType());
+				DescriptionHelper.saveMapType(ExperimentType.class, FirstData.getExperimentType());
 				DescriptionHelper.saveMapType(ImportType.class, FirstData.getImportTypeAll());
-
 				DescriptionHelper.saveMapType(PurificationMethodType.class,FirstData.getPurificationMethodtypeAll());
 				DescriptionHelper.saveMapType(QualityControlType.class,FirstData.getQualityControlAll());
-				
+				DescriptionHelper.saveMapType(ExperimentType.class, FirstData.getExperimentTypeBqMP());
 			    DescriptionHelper.saveMapType(ProcessType.class,FirstData.getProcessTypeAll());		
 				
 			    
@@ -84,7 +82,7 @@ public class InitialData extends Controller{
 			ResultSet resultSet=null;
 			String query=null;
 
-			query="select distinct p.prsco,prsnom=rtrim(p.prsnom),prscom,prsdc from Projet p, Adnmateriel a where p.prsco=a.prsco and esprjco!=25 and eadnco!=170";
+			query="select distinct prsco=rtrim(p.prsco),prsnom=rtrim(p.prsnom),prscom,prsdc from Projet p, Adnmateriel a where p.prsco=a.prsco and esprjco!=25 and eadnco!=170";
 			try {
 				java.sql.Statement stm=DB.getConnection("lims").createStatement();
 
