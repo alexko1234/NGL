@@ -19,7 +19,6 @@ angular.module('basketsServices', []).
 							var selected = false;
 							for(var i = 0; i < this.data.displayResult.length; i++){
 									if(this.data.displayResult[i].selected){
-										alert("true");
 										selected=true;
 										break;
 									}
