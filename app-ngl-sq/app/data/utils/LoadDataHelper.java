@@ -175,6 +175,9 @@ public class LoadDataHelper {
 				if(firstLine[i].endsWith(".comments")){					
 					sample.comments=InstanceHelpers.addComment(nextLine[i],sample.comments);
 				}
+				else if(firstLine[i].endsWith(".projectCodes")){					
+					sample.projectCodes=InstanceHelpers.addCode(nextLine[i],sample.projectCodes);
+				}
 				else	{
 
 					field = aClass.getField(firstLine[i].replaceFirst(rootPrefix, ""));
