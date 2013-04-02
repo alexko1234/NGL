@@ -7,6 +7,8 @@ import java.util.Map;
 
 import models.laboratory.sample.instance.Sample;
 
+import models.utils.*;
+
 import org.codehaus.jackson.JsonNode;
 import org.json.JSONException;
 import org.json.JSONObject;
