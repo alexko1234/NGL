@@ -115,12 +115,12 @@ public class Containers extends Controller {
 				
 				for(String s : containers.sampleCodes){
 					Sample sample = MongoDBDAO.findByCode("Sample",Sample.class,s);
-					/*for(String p:sample.projectCode){
+					for(String p:sample.projectCodes){
 						Project project = MongoDBDAO.findByCode("Project",Project.class,p);
 						projects.put(new ListObject(sample.code,sample.name), new ListObject(project.code,project.name));
-					}*/
-					Project project = MongoDBDAO.findByCode("Project",Project.class,sample.projectCode);
-					projects.put(new ListObject(sample.code,sample.name), new ListObject(project.code,project.name));
+					}
+					/*Project project = MongoDBDAO.findByCode("Project",Project.class,sample.projectCode);
+					projects.put(new ListObject(sample.code,sample.name), new ListObject(project.code,project.name));*/
 					
 				}
 			}
