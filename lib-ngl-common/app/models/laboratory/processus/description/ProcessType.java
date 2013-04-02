@@ -29,6 +29,10 @@ public class ProcessType extends CommonInfoType{
 		super(ProcessTypeDAO.class.getName());
 	}
 	
+	/**
+	 * Return a list of ListObject that help populating the <select> input
+	 * @return List<ListObject>
+	 */
 	public static List<ListObject> findAllForList() throws DAOException{
 		ProcessTypeDAO processTypeDAO = Spring.getBeanOfType(ProcessTypeDAO.class);
 		return processTypeDAO.findAllForList();
