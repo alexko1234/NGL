@@ -159,14 +159,11 @@ public class SampleLoadTest extends AbstractTests {
 		//System.err.println(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		assertThat(MongoDBDAO.findByCode(Container.class.getAnnotation(MongoCollection.class).name(), Container.class, "AAA_A1")).isNotNull();
-		assertThat(MongoDBDAO.findByCode(Sample.class.getAnnotation(MongoCollection.class).name(), Sample.class, "A")).isNotNull();
+		Sample sample =MongoDBDAO.findByCode(Sample.class.getAnnotation(MongoCollection.class).name(), Sample.class, "A");
+		assertThat(sample).isNotNull();
+		assertThat(sample.projectCodes.get(0)).isEqualTo("AAA");
 
 	}
 	
-	//TODO
-	//@Test
-	public void HeaderFalse(){
-
-	}
 
 }
