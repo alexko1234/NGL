@@ -31,53 +31,44 @@ import models.laboratory.processus.description.ProcessType;
 import models.laboratory.project.instance.Project;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import org.apache.commons.lang3.StringUtils;
 
 public class Containers extends Controller {
 	
 	final static DynamicForm inputForm = form();
 	
 	public static Result list(){
-		DynamicForm requestData = form().bindFromRequest();
-		
-		String projectCode = "";
-		String experimentCode = "";
-		String containerState = "";
-		String containerSample = "";
-		String containerProcess = "";
+		Form<ContainersSearch> containerForm = form(ContainersSearch.class);
+		ContainersSearch containersSearch = containerForm.bindFromRequest().get();
 		
 		DBCursor<Container> cursor = MongoDBDAO.getCollection("Container",Container.class).find();
 		
-		if(requestData.get("project") != null && requestData.get("project")!=""){
-			 projectCode = Json.parse(requestData.get("project")).get("code").asText();
-			 cursor.and(DBQuery.is("projectCodes", projectCode));
+		if(StringUtils.isNotEmpty(containersSearch.projectCode)){
+			 cursor.and(DBQuery.is("projectCodes", containersSearch.projectCode));
 	    }
 		
-	    if(requestData.get("experiment") != null && requestData.get("experiment")!=""){
-	    	experimentCode = Json.parse(requestData.get("experiment")).get("code").asText();
-	    	cursor.and(DBQuery.in("fromExperimentTypeCodes", experimentCode)).or(DBQuery.is("fromExperimentTypeCodes", null));
+	    if(StringUtils.isNotEmpty(containersSearch.experimentCode)){
+	    	cursor.and(DBQuery.in("fromExperimentTypeCodes", containersSearch.experimentCode)).or(DBQuery.is("fromExperimentTypeCodes", null));
 	    }
 	    
-	    if(requestData.get("state") != null && requestData.get("state")!=""){
-	    	containerState = Json.parse(requestData.get("state")).get("code").asText();
-	    	cursor.and(DBQuery.is("stateCode", containerState));
+	    if(StringUtils.isNotEmpty(containersSearch.containerState)){
+	    	cursor.and(DBQuery.is("stateCode", containersSearch.containerState));
 	    }
 	    
-	    if(requestData.get("sample") != null && requestData.get("sample")!=""){
-	    	containerSample = Json.parse(requestData.get("sample")).get("code").asText();
-	    	cursor.and(DBQuery.in("sampleCodes", containerSample));
+	    if(StringUtils.isNotEmpty(containersSearch.containerSample)){
+	    	cursor.and(DBQuery.in("sampleCodes", containersSearch.containerSample));
 	    }
 	    
-	    if(requestData.get("process") != null && requestData.get("process")!=""){
-	    	containerProcess = Json.parse(requestData.get("process")).get("code").asText();
+	    if(StringUtils.isNotEmpty(containersSearch.containerProcess)){
 	    	ProcessType processType = null;
 	    	
 	    	try{
-	    		processType = ProcessType.find.findByCode(containerProcess);
+	    		processType = ProcessType.find.findByCode(containersSearch.containerProcess);
 	    	}catch(DAOException e){
 	    		return internalServerError();
 	    	}
 	    	
-	    	List<String> listePrevious = new ArrayList<String>();  
+	    	List<String> listePrevious = new ArrayList<String>();
 	    	for(ExperimentType e:processType.experimentTypes){
 	    		for(ExperimentType et:e.previousExperimentTypes){
 	    			listePrevious.add(et.code);
@@ -87,11 +78,11 @@ public class Containers extends Controller {
 	    	cursor.and(DBQuery.in("fromExperimentTypeCodes", listePrevious));
 	    }
 	    
-	    Logger.info("Project code: "+projectCode);
-	    Logger.info("Experiment code: "+experimentCode);
-	    Logger.info("Container state: "+containerState);
-	    Logger.info("Container sample: "+containerSample);
-	    Logger.info("Container process: "+containerProcess);
+	    Logger.info("Project code: "+containersSearch.projectCode);
+	    Logger.info("Experiment code: "+containersSearch.experimentCode);
+	    Logger.info("Container state: "+containersSearch.containerState);
+	    Logger.info("Container sample: "+containersSearch.containerSample);
+	    Logger.info("Container process: "+containersSearch.containerProcess);
 	    
 	    List<Container> containers = cursor.limit(100).toArray();
 		
@@ -104,7 +95,6 @@ public class Containers extends Controller {
 		Map<ListObject,ListObject> projects = new HashMap<ListObject,ListObject>(); 
 		
 		try{
-			
 			JSONArray the_json_array = new JSONArray(myJson);
 			
 			for(int i=0;i<the_json_array.length();i++){
@@ -119,9 +109,6 @@ public class Containers extends Controller {
 						Project project = MongoDBDAO.findByCode("Project",Project.class,p);
 						projects.put(new ListObject(sample.code,sample.name), new ListObject(project.code,project.name));
 					}
-					/*Project project = MongoDBDAO.findByCode("Project",Project.class,sample.projectCode);
-					projects.put(new ListObject(sample.code,sample.name), new ListObject(project.code,project.name));*/
-					
 				}
 			}
 		}catch(JSONException jse){
