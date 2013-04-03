@@ -99,7 +99,7 @@ properties.percentClusterIlluminaFilter
 		propertyDefinitions.add(getPropertyDefinition("nbClusterInternalAndIlluminaFilter","nbClusterInternalAndIlluminaFilter",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
 		propertyDefinitions.add(getPropertyDefinition("nbBaseInternalAndIlluminaFilter","nbBaseInternalAndIlluminaFilter",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
 		propertyDefinitions.add(getPropertyDefinition("fraction","fraction",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Double.class));		
-		propertyDefinitions.add(getPropertyDefinition("insertLength","insertLength",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, String.class)); //String because lims not valid
+		//propertyDefinitions.add(getPropertyDefinition("insertLengthTh","insertLengthTh",Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, String.class)); //String because lims not valid
 		propertyDefinitions.add(getPropertyDefinition("nbUsableBase","nbUsableBase",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
 		propertyDefinitions.add(getPropertyDefinition("nbUsableCluster","nbUsableCluster",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
 		propertyDefinitions.add(getPropertyDefinition("q30","q30",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Double.class));

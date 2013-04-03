@@ -24,17 +24,13 @@ public class ReadSets extends Controller {
 	public static Result search() {
 		
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("runCode", "Run Code"));
-		columns.add(DatatableHelpers.getColumn("projectCode", "Project Code"));
-		columns.add(DatatableHelpers.getColumn("readSetCode", "Read Set Code"));
-		columns.add(DatatableHelpers.getColumn("path", "Path"));
-		columns.add(DatatableHelpers.getDateColumn("date", "Date"));
-		columns.add(DatatableHelpers.getColumn("id", "Id"));
-		/*
-		for(DatatableColumn c :  columns){
-			c.editable=true;
-		}
-		*/
+		columns.add(DatatableHelpers.getColumn("runCode", "Run Code", true, false, false));
+		columns.add(DatatableHelpers.getColumn("projectCode", "Project Code", true, false, false));
+		columns.add(DatatableHelpers.getColumn("readSetCode", "Read Set Code", true, false, false));
+		columns.add(DatatableHelpers.getColumn("path", "Path", true, false, false));
+		columns.add(DatatableHelpers.getDateColumn("date", "Date", true, false, false));
+		columns.add(DatatableHelpers.getColumn("id", "Backup Id"));
+		
 		DatatableConfig config = new DatatableConfig(columns);
 		return ok(search.render(config));
 	}

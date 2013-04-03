@@ -25,10 +25,10 @@ public class Runs extends Controller {
 	public static Result search() {
 		
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("code", "Code"));
-		columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", "Creation date"));
-		columns.add(DatatableHelpers.getColumn("dispatch", "Dispatch"));
-		DatatableConfig config = new DatatableConfig(columns, Boolean.TRUE);
+		columns.add(DatatableHelpers.getColumn("code", "Code", true, false, false));
+		columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", "Creation date", true, false, false));
+		columns.add(DatatableHelpers.getColumn("dispatch", "Dispatch", true, false, false));
+		DatatableConfig config = new DatatableConfig(columns, Boolean.TRUE, Boolean.FALSE);
 		return ok(search.render(config));
 	}
 	

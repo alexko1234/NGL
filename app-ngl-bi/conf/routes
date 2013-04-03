@@ -43,13 +43,12 @@ POST  	/api/readsets/:code/files					controllers.runs.api.Files.save(code: java.
 #archive
 GET	   	/archives/home								controllers.archives.tpl.ReadSets.home()
 GET		/tpl/archives/search						controllers.archives.tpl.ReadSets.search()
-GET		/tpl/archives/assets							controllers.archives.tpl.ReadSets.javascriptRoutes()
+GET		/tpl/archives/assets						controllers.archives.tpl.ReadSets.javascriptRoutes()
 
 PUT	   	/api/archives/readsets/:readSetCode			controllers.archives.api.ReadSets.update(readSetCode:java.lang.String)
 GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list() 
 
-# Javascript routing
-#GET    /assets/javascripts/routes      			controllers.Application.javascriptRoutes()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+				

@@ -7,8 +7,8 @@ function SearchCtrl($scope, datatable) {
 			search:{
 				url:jsRoutes.controllers.runs.api.Runs.list()
 			},
-			pagination:{remote:true},
 			show:{
+				active:true,
 				add :function(line){
 					$scope.tabs.push({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.home(line.code).url,remove:true});
 				}
