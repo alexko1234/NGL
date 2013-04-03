@@ -29,29 +29,29 @@ angular.module('datatableServices', []).
 								columns:{}//key is the column index
 							},
 							show :{
-								active:true,
+								active:false,
 								add:function(line){
 									console.log("show : add function is not defined in the controller !!!");
 								}
 							},
 							hide:{
-								active:true,
+								active:false,
 								columns : {} //columnIndex : true / false
 							},
 							edit : {
-								active:true,
+								active:false,
 								start : false,
 								all : false,
 								columns : {} //columnIndex : {edit : true/false, value:undefined}
 							},
 							save :{
-								active:true,
-								mode:'local', //or local
+								active:false,
+								mode:'remote', //or local
 								url:undefined
 							},
 							remove:{
-								active:true,
-								mode:'local', //or local
+								active:false,
+								mode:'remote', //or local
 								url:undefined,
 								start:false,
 								counter:0
@@ -173,12 +173,12 @@ angular.module('datatableServices', []).
 	    									this.config.pagination.numberRecordsPerPageList[i].clazz='';
 	    								}
 	    							}
-	    							//reinit to first page
 	    							if(this.config.edit.active && this.config.edit.start){
 	    								//TODO add a warning popup
 	    								console.log("edit is active, you lost all modification !!");
 	    								this.config.edit = angular.copy(this.configMaster.edit); //reinit edit
 	    							}
+	    							//reinit to first page	    							
 	    							this.config.pagination.pageNumber=0;
 	    							if(this.isRemoteMode(this.config.pagination.mode)){
 	    								this.search(this.lastSearchParams);
@@ -249,7 +249,11 @@ angular.module('datatableServices', []).
 		    						}
 		    						fn(this.config);		    						
 		    					}
-		    					
+		    					if(this.config.edit.active && this.config.edit.start){
+    								//TODO add a warning popup
+    								console.log("edit is active, you lost all modification !!");
+    								this.config.edit = angular.copy(this.configMaster.edit); //reinit edit
+    							}
 		    					if(!this.isRemoteMode(this.config.order.mode)){
 		    						this.sortAllResult(); //sort all the result
 				    				this.computeDisplayResult(); //redefined the result must be displayed
@@ -263,9 +267,9 @@ angular.module('datatableServices', []).
 		    			getOrderColumnClass : function(columnId){
 		    				if(this.config.order.active){
 		    					var fn = new Function("config", 
-		    							"if(!config.order.columns."+columnId+") {return 'icon-sort  pull-right';}" +
-			    						"else if(config.order.columns."+columnId+" && !config.order.reverse) {return 'icon-sort-up  pull-right';}" +			    						
-			    						"else if(config.order.columns."+columnId+" && config.order.reverse) {return 'icon-sort-down  pull-right';}");
+		    							"if(!config.order.columns."+columnId+") {return 'icon-sort';}" +
+			    						"else if(config.order.columns."+columnId+" && !config.order.reverse) {return 'icon-sort-up';}" +			    						
+			    						"else if(config.order.columns."+columnId+" && config.order.reverse) {return 'icon-sort-down';}");
 			    				return fn(this.config);			    						    					    					
 		    				} else{
 		    					console.log("order is not active !!!");
@@ -303,7 +307,7 @@ angular.module('datatableServices', []).
 		    			},
 		    			/**
 		    			 * Test if a column must be hide
-		    			 * @param hideColumnName : column name 
+		    			 * @param columnId : column id 
 		    			 */
 		    			isHide : function(columnId){
 		    				if(this.config.hide.active){
@@ -313,7 +317,7 @@ angular.module('datatableServices', []).
 		    					console.log("hide is not active !");
 		    					return false;
 		    				}
-		    			},
+		    			},		    			
 		    			//edit
 		    			
 		    			/**
@@ -620,6 +624,18 @@ angular.module('datatableServices', []).
 		    			 * Set columns configuration
 		    			 */
 		    			setColumnsConfig: function(columns){
+		    				for(var i = 0 ; i < columns.length; i++){
+		    					if(columns[i].hide && !this.config.hide.active){
+		    						columns[i].hide = false;
+		    					}
+		    					if(columns[i].order && !this.config.order.active){
+		    						columns[i].order = false;
+		    					}
+		    					if(columns[i].edit && !this.config.edit.active){
+		    						columns[i].edit = false;
+		    					}
+		    				}
+		    				
 		    				this.config.columns = columns;
 		    				this.configMaster.columns = angular.copy(columns);
 		    			},

@@ -9,6 +9,7 @@ datatable.button.cancel=Annuler
 datatable.button.hide=Cacher
 datatable.button.show=Afficher Details
 datatable.button.edit=Editer
+datatable.button.sort=Ordonner
 datatable.button.save=Sauver
 datatable.button.remove=Supprimer
 datatable.button.length=Taille ({0})

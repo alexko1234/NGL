@@ -18,21 +18,23 @@ public class DatatableConfig {
 	
 	public Seq<DatatableColumn> columns;
 	public List<DatatableColumn> columnList;
-	public Boolean button = Boolean.FALSE;
-	public Boolean edit = Boolean.FALSE;
-	public Boolean hidding = Boolean.FALSE;
-	public Boolean show = Boolean.FALSE;
+	public Boolean button = Boolean.FALSE; //est ce qu'il y a des bouttons à afficher
+	public Boolean edit = Boolean.FALSE; //mode edition
+	public Boolean remove = Boolean.FALSE; //mode suppression
+	public Boolean hidding = Boolean.FALSE; //mode cacher. attention très consomateur en resource
+	public Boolean show = Boolean.FALSE; //mode details
 	public String name = "datatable"; //default js name
-	
+	public Boolean compact = Boolean.TRUE; //mode compact pour le nom des bouttons
 	
 	public DatatableConfig(List<DatatableColumn> columns) {
-		this(columns, Boolean.FALSE);
+		this(columns, Boolean.FALSE, Boolean.FALSE);
 	}
 	
-	public DatatableConfig(List<DatatableColumn> columns, Boolean show) {
+	public DatatableConfig(List<DatatableColumn> columns, Boolean show, Boolean remove) {
 		this.columnList = columns;
 		this.columns = Scala.toSeq(columns);
 		this.show = show;
+		this.remove = remove;
 		int count = 0;		
 		for(DatatableColumn column:  columns){
 			if(column.edit.booleanValue()){
@@ -43,7 +45,7 @@ public class DatatableConfig {
 			}
 			column.id = "p"+count++;
 		}
-		button = (edit.booleanValue() || hidding.booleanValue() || show.booleanValue())?Boolean.TRUE:Boolean.FALSE;
+		this.button = (this.edit.booleanValue() || this.hidding.booleanValue() || this.show.booleanValue() || this.remove.booleanValue())?Boolean.TRUE:Boolean.FALSE;
 	}	
 	
 	

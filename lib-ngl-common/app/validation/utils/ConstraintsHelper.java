@@ -59,7 +59,7 @@ public class ConstraintsHelper {
 				if(null != pv){
 					properties.remove(propertyDefinition.code);
 					//TODO gestion de warning !!!
-					addErrors(errors, getKey(rootKeyName,propertyDefinition.code), "error.nonactive");
+					addErrors(errors, getKey(rootKeyName,propertyDefinition.code), "error.notactive");
 				}
 			}
 			
@@ -67,7 +67,7 @@ public class ConstraintsHelper {
 				inputProperties.remove(propertyDefinition.code);
 			}
 		}
-		//treat other porperty not defined
+		//treat other property not defined
 		for(String key : inputProperties.keySet()){
 			addErrors(errors, getKey(rootKeyName,key), "error.notdefined");
 		}
