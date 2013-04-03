@@ -2,19 +2,6 @@
 datetime.format=dd/MM/yyyy HH:mm:ss
 date.format=dd/MM/yyyy
 
-
-#datatable
-datatable.button.selectall=Tout Sélectionner
-datatable.button.cancel=Annuler
-datatable.button.hide=Cacher
-datatable.button.show=Afficher Details
-datatable.button.edit=Editer
-datatable.button.sort=Ordonner
-datatable.button.save=Sauver
-datatable.button.remove=Supprimer
-datatable.button.length=Taille ({0})
-datatable.totalNumberRecords = {0} Résultats
-
 #page field label
 page.search.label.search = Recherche
 

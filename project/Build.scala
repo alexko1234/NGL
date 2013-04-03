@@ -62,7 +62,8 @@ object ApplicationBuild extends Build {
 	        "net.sourceforge.jtds" % "jtds" % "1.2.4",      	
 	        "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
 	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
-	        "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
+	        "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
+	        "fr.cea.ig" %% "datatable" % "1.0-SNAPSHOT"
 			)
     	
     	val nglsqDependencies = Seq(
@@ -75,7 +76,8 @@ object ApplicationBuild extends Build {
               "net.sourceforge.jtds" % "jtds" % "1.2.2",
 	      "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
 	      "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
-	      "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
+	      "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
+	      "fr.cea.ig" %% "datatable" % "1.0-SNAPSHOT"	   
 		 	)
     	
     	val nglauthDependencies = Seq(
