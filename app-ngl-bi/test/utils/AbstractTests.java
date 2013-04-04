@@ -45,6 +45,10 @@ public abstract class AbstractTests {
 		config.put("db.lims.user", "ngl_bi");
 		config.put("db.lims.password", "N3wG3nLim5");
 		config.put("db.lims.jndiName", "lims");
+		
+		config.put("asset.url.dev","http://192.168.243.231:9001");
+		config.put("asset.url.prod","http://192.168.243.231:9001");
+		config.put("asset.mode","dev");
 		return config;
 		
 	}

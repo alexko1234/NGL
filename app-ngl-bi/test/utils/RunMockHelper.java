@@ -79,7 +79,7 @@ public class RunMockHelper {
 		r.projectCode = "42";
 		r.sampleContainerCode = "container1";
 		r.properties.put("score",  new PropertyValue("150"));
-		r.properties.put("insertLength",  new PropertyValue("1500"));
+		//r.properties.put("insertLength",  new PropertyValue("1500"));
 		r.properties.put("q30",  new PropertyValue("1.23"));
 		r.properties.put("nbUsableBase",  new PropertyValue("1500000"));
 		r.properties.put("nbUsableCluster",  new PropertyValue("150000"));
