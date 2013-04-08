@@ -122,8 +122,27 @@ function SearchCtrl($scope, $http,datatable,baskets) {
 			$('#processus').addClass('error');
 			$('#processusHelp').html("Error: this information is required  ");
 		}else{
-			alert($scope.project);
-			$scope.datatable.search({projectCode:$scope.project,experimentCode:$scope.experiment,containerState:"N",containerSample:$scope.sample,containerProcess:$scope.processus.code});//State have to be IWP
+			var jsonSearch = {};
+			jsonSearch['containerState'] = 'N';
+			
+			if($scope.project != undefined){
+				jsonSearch['projectCode'] = $scope.project;
+			}
+			
+			if($scope.experiment != undefined){
+				jsonSearch['experimentCode'] = $scope.experiment
+			;
+			}
+			if($scope.sample != undefined){
+				jsonSearch['containerSample'] = $scope.sample;
+			}
+			
+			if($scope.processus.code != undefined){
+				jsonSearch['containerProcess'] = $scope.processus.code;
+			}
+
+			//$scope.datatable.search(JSON.parse("{projectCode:$scope.project,experimentCode:$scope.experiment,containerState:'N',containerSample:$scope.sample,containerProcess:$scope.processus.code}"));//State have to be IWP
+			$scope.datatable.search(jsonSearch);
 			$('#processus').removeClass('error');
 			$('#processusHelp').html("");
 		}
