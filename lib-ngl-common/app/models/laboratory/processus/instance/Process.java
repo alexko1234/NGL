@@ -48,12 +48,14 @@ public class Process extends DBObject {
 	public String sampleCode;
 
 	public String currentExperimentTypeCode;
-	public List<String> containerOutCodes;
+	
+	public String containerInputCode;
+	//public List<String> containerOutCodes;
 
 	
 	@JsonIgnore
-	public List<Container> getContainers(){
-		return new HelperObjects<Container>().getObjects(Container.class, containerOutCodes);
+	public Container getInputContainer(){
+		return new HelperObjects<Container>().getObject(Container.class, containerInputCode, null);
 	}
 	
 	@JsonIgnore
