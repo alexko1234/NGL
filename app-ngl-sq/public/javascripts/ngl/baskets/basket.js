@@ -8,7 +8,6 @@ factory('basketsLocal', ['$http', function($http){ //service to manage baskets l
 			configMaster : undefined,
 			basket : [],
 			
-			
 			configDefault:{
 				transform: function(element){
 					return element;
