@@ -1,0 +1,36 @@
+@(datatableConfig: views.components.datatable.DatatableConfig)
+@import scala.collection.immutable._
+@form() = {
+	<form class="well form-search form-vertical">
+	<!--<div class="control-group pull-left error">  -->
+	<div id="processus"  class="control-group pull-left"> 
+	<select ng-model="processus" ng-options="processus.name for processus in process" ng-change="search()">
+		<option value="">-- select processus --</option>
+	</select>		
+	</div>
+	
+	<select ng-model="sample" ng-options="sample.name for sample in samples" id="sample" ng-change="search()">
+		<option value="">-- select sample --</option>
+	</select>
+	
+	<select ng-model="project" ng-options="project.code+'-'+project.name for project in projects" ng-change="search()">
+		<option value="">-- select project --</option>
+	</select>
+
+	</form>
+}
+
+@button() = {
+	<div class="btn-group">
+  			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> @Messages("baskets")<span class="caret"></span></a>
+  		<ul class="dropdown-menu">
+ 				<li><a  ng-click="baskets.add(true,baskets.experimentTypeCode);">@Messages("baskets.new")</a></li>
+ 				<li><a  ng-click="baskets.add(false,baskets.experimentTypeCode);">@Messages("baskets.add")</a></li>
+  	    </ul>
+	</div>
+	<button class="btn btn-info" ng-click="initialiseProcessus(processus.code)" ng-hide="processus==null">@(Messages("processus.create")) {{processus.code}}</button>
+}
+
+<div ng-init="init()">
+@views.html.components.datatable.datatable(datatableConfig, form,button)		
+</div>

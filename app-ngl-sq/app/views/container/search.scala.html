@@ -1,19 +1,5 @@
 @(datatableConfig: views.components.datatable.DatatableConfig)
 @import scala.collection.immutable._
-<style media="screen" type="text/css">
-.tab-content{
-	height:1000px;
-}
-</style>
-<div class="row-fluid" ng-init="init()">  
-  <div class="tabbable tabs-left">
-	<ul id="searchTab" class="nav nav-tabs">
-        <li class="active"><a data-toggle="pill" data-target="#search" href="#">Search</a></li>       
-    </ul>	
-  
-  
-	<div class="tab-content">
-	<div class="tab-pane active" id="search">
 		@form() = {
 		<form class="well form-search">
 			<select ng-model="project" id="project" ng-options="project.code+'-'+project.name for project in projects" ng-change="search()">
@@ -30,29 +16,16 @@
 		</form>
 		}
 				<div class="btn-toolbar">
-					<div class="btn-group">
-						<button class="btn" ng-click="datatable.cancel()">Cancel</button>  
-						<button class="btn" ng-click="datatable.select()">Select all</button>
-						</div>
 						    <div class="btn-group">
-    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-  	 Basket
-    <span class="caret"></span>
-    </a>
+    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Basket<span class="caret"></span></a>
     <ul class="dropdown-menu">
    		<li><a  ng-click="baskets.add(true,baskets.experimentTypeCode);">new basket</a></li>
    		<li><a  ng-click="baskets.add(false,baskets.experimentTypeCode);">add to basket</a></li>
     </ul>
     </div>
 
-					<button class="btn btn-info" ng-click="" ng-hide="experiment==null">Create {{experiment.code}}</button>
-				</div>
+<button class="btn btn-info" ng-click="" ng-hide="experiment==null">Create {{experiment.code}}</button>
+</div>
 <div ng-init="init()">
 @views.html.components.datatable.datatable(datatableConfig, form)		
 </div>
-	</div>
-	<div class="tab-pane fade" id="onelement"></div>
-	<div class="tab-pane fade" id="newelement"></div>	
-  </div>
-  </div>
- </div>
