@@ -1,6 +1,7 @@
 function SearchMainCtrl($scope){
 	//contain each tab of on element of the datatable
-	$scope.tabs = [];
+	$scope.tabs = [];	
+	
 	$scope.hideTabs = { 
 		hide:false,
 		clazz:'icon-resize-full'
@@ -9,6 +10,35 @@ function SearchMainCtrl($scope){
 	$scope.searchTab = {
 		clazz:'active'	
 	};
+	
+	/**
+	 * function to keep the basket when we switch views
+	 */
+	$scope.getBasket = function(){
+		return $scope.basketsLocal;
+	};
+	
+	/**
+	 * function to return the basket
+	 */
+	$scope.setBasket = function(basketsLocal){
+		$scope.basketsLocal = basketsLocal;
+	};
+	
+	/**
+	 * function to keep the form when we switch views
+	 */
+	$scope.getForm = function(){
+		return $scope.form;
+	};
+	
+	/**
+	 * function to return the form
+	 */
+	$scope.setForm = function(form){
+		$scope.form = form;
+	};
+	
 	/**
 	 * function to keep the datatable when we display a detail of one element
 	 */
@@ -63,6 +93,5 @@ function SearchMainCtrl($scope){
 	$scope.setHideTabs =  function(){
 		$scope.hideTabs.hide = true;
 		$scope.hideTabs.clazz='icon-resize-small';
-		
 	};
 }
