@@ -6,12 +6,12 @@ function SearchCtrl($scope, $http,$filter,datatable,baskets,basketsLocal) {
 		pagination:{
 			mode:'local'
 		},
-			hide:{
-				active:true
-			},
-			search:{
-				url:'/api/containers'
-			}
+		hide:{
+			active:true
+		},
+		search:{
+			url:'/api/containers'
+		}
 	};
 	
 	$scope.basketsConfig = {
@@ -59,7 +59,7 @@ function SearchCtrl($scope, $http,$filter,datatable,baskets,basketsLocal) {
 		}
 		
 		
-		if(angular.isUndefined($scope.getDatatable())){
+		if(angular.isUndefined($scope.getBasket())){
 			$scope.basketsLocal = basketsLocal($scope,$scope.basketsLocalConfig);
 			
 			$scope.setBasket($scope.basketsLocal);
@@ -96,7 +96,6 @@ function SearchCtrl($scope, $http,$filter,datatable,baskets,basketsLocal) {
 				
 				$scope.setForm($scope.form);
 		}else{
-		
 			//loading the data
 			$scope.projects = $scope.form.projects;
 			$scope.experiments = $scope.form.experiments;
