@@ -6,11 +6,11 @@ function SearchCtrl($scope, $http,$filter,datatable,baskets,basketsLocal) {
 		pagination:{
 			mode:'local'
 		},
+			hide:{
+				active:true
+			},
 			search:{
 				url:'/api/containers'
-			},
-			otherButtons:{
-				active:true
 			}
 	};
 	
@@ -28,45 +28,15 @@ function SearchCtrl($scope, $http,$filter,datatable,baskets,basketsLocal) {
 	$scope.basketsLocalConfig = {
 		transform: function(container){
 			var processus = {};
+			
 			processus.projectCode = container.projectCodes[0];
 			processus.sampleCode = container.sampleCodes[0];
 			processus.containerInputCode = container.code;
 			processus.codeType = container.categoryCode;
 			
-			//var date = new Date();
-			//processus.code =  processus.codeType+"/"+processus.projectCode+"/"+processus.sampleCode+"/"+$filter('date')(date,"yyyyMMddHHMMss");//yyyyMMDDHHMMSS
-			
 			return processus;
 		}
 	};
-	
-	/*$scope.createProcessus = function(processusType){	
-		for(var i = 0; i < $scope.datatable.displayResult.length; i++){
-			if($scope.datatable.displayResult[i] && $scope.datatable.displayResult[i].selected){
-				$http({
-					method: 'POST',
-					url: '/api/processus',
-					data: {"type":processusType,"container":$scope.datatable.displayResult[i].code},
-					headers: {'Content-Type': 'application/json'}
-				}).success(function(data) {
-					var process = data;
-					var code = process.code;
-					$scope.addContainer(code,JSON.stringify({ "container": $scope.datatable.displayResult[i].code}));
-				});
-			}
-		}
-	}
-	
-	$scope.addContainer = function(code,container){
-		$http({
-			method: 'POST',
-			url: '/api/processus/',
-			data: container,
-			headers: {'Content-Type': 'application/json'}
-		}).success(function(data) {
-			//Call post for adding container
-		});
-	}*/
 	
 	$scope.initialiseProcessus = function(processusType){
 		for(var i = 0; i < $scope.datatable.displayResult.length; i++){
@@ -77,16 +47,26 @@ function SearchCtrl($scope, $http,$filter,datatable,baskets,basketsLocal) {
 	}
 	
 	$scope.init = function(){
-		$scope.basketsLocal.setConfig($scope.basketsLocalConfig);
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.tabs.push({label:"Processus",href:jsRoutes.controllers.processus.tpl.Processus.home("list").url,remove:false});//$scope.tabs[1]
 			$scope.datatable = datatable($scope, $scope.datatableConfig);
 			$scope.baskets = baskets($scope, $scope.basketsConfig, $scope.datatable);
+			$scope.basketsLocal = basketsLocal($scope,$scope.basketsLocalConfig);
 			
 			$scope.setDatatable($scope.datatable);	
 		}else{
 			$scope.datatable = $scope.getDatatable();
 		}
+		
+		
+		if(angular.isUndefined($scope.getDatatable())){
+			$scope.basketsLocal = basketsLocal($scope,$scope.basketsLocalConfig);
+			
+			$scope.setBasket($scope.basketsLocal);
+		}else{
+			$scope.basketsLocal = $scope.getBasket();
+		}
+		
 		
 		if(angular.isUndefined($scope.getForm())){
 			$scope.form = {};
@@ -170,7 +150,7 @@ function SearchCtrl($scope, $http,$filter,datatable,baskets,basketsLocal) {
 		
 	}
 }
-SearchCtrl.$inject = ['$scope','$http','$filter', 'datatable','baskets'];
+SearchCtrl.$inject = ['$scope','$http','$filter', 'datatable','baskets','basketsLocal'];
 
 function ListCtrl($scope, $http, $routeParams,datatable,baskets,basketsLocal) {
 	$scope.datatableConfig = {
@@ -186,10 +166,9 @@ function ListCtrl($scope, $http, $routeParams,datatable,baskets,basketsLocal) {
 	$scope.init = function(){
 		$(".popover").remove();
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
-		$scope.baskets = baskets($scope, $scope.basketsConfig, $scope.datatable);
-		alert(JSON.stringify($scope.basketsLocal.get()));
+		
 		$scope.datatable.setData($scope.basketsLocal.get(),$scope.basketsLocal.get().length);
 	}
 	
 };
-ListCtrl.$inject = ['$scope', '$http', '$routeParams','datatable','baskets'];
+ListCtrl.$inject = ['$scope', '$http', '$routeParams','datatable','baskets','basketsLocal'];
