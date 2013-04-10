@@ -16,6 +16,7 @@ DELETE /baskets/:code/containers/:contrainerCode	controllers.container.Baskets.d
 
 GET 	/containers/home									controllers.containers.tpl.Containers.home()
 
+GET 	/processus/:code									controllers.processus.tpl.Processus.home(code:java.lang.String)
 
 #template
 GET		/tpl/containers/search								controllers.containers.tpl.Containers.search()
@@ -24,6 +25,7 @@ GET		/tpl/samples/list							controllers.tpl.helper.Lists.samples()
 GET		/tpl/processType/list						controllers.tpl.helper.Lists.processusType()
 GET		/tpl/experimenttypes/list					controllers.tpl.helper.Lists.experimentTypes()
 GET		/tpl/containers/states/list					controllers.tpl.helper.Lists.containerStates()
+GET		/tpl/processus/search								controllers.processus.tpl.Processus.search()
 
 # load data
 GET	   	   /loaddata/home								controllers.dataload.SampleLoad.home()
@@ -34,7 +36,11 @@ GET       /createprojects								controllers.dataload.InitialData.createProjectF
 
 #api
 GET		/api/containers								controllers.containers.api.Containers.list()
-GET		/api/containers/projects					controllers.containers.api.Containers.samplesProjectsList()
+POST	/api/containers/projects					controllers.containers.api.Containers.samplesProjectsList()
+POST	/api/processus								controllers.processus.api.Processus.save()
+POST	/api/processus/								controllers.processus.api.Processus.addContainer()
+GET		/tpl/processus/list							controllers.processus.tpl.Processus.list()
+GET		/tpl/processus/assets						controllers.processus.tpl.Processus.javascriptRoutes()
 
 GET	   /logout								controllers.administration.authentication.User.logOut()
 
