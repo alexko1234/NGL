@@ -10,6 +10,7 @@ container.table.valid = Valide
 
 #process
 processus.create = Crée un processus
+processus.save = Sauvegarder
 
 #baskets
 baskets = Panier
