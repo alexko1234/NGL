@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('basketsLocalServices', []).
-factory('basketsLocal', ['$http', function($http){ //service to manage baskets local
+angular.module('basketServices', []).
+factory('basket', ['$http', function($http){ //service to manage baskets local
 	var constructor = function($scope, iConfig){
 		var baskets = {
 			config : undefined,
@@ -21,10 +21,16 @@ factory('basketsLocal', ['$http', function($http){ //service to manage baskets l
 			},
 			
 			/**
-			 * function to add an element to the basket
+			 * function to add an element or several to the basket
 			 */
 			add: function(element){
-				this.basket.push(this.config.transform(element));
+				if(angular.isArray(element)){
+					for(var i = 0; i < element.length; i++){
+						this.basket.push(this.config.transform(element[i]));
+					}
+				}else{
+					this.basket.push(this.config.transform(element));
+				}				
 			},
 			
 			/**

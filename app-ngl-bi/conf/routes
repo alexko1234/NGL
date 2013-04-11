@@ -15,7 +15,7 @@ GET		/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.co
 GET	   	/runs/:code									controllers.runs.tpl.Runs.home(code:java.lang.String)
 GET		/tpl/runs/search							controllers.runs.tpl.Runs.search()
 GET		/tpl/runs/details							controllers.runs.tpl.Runs.details()
-GET		/tpl/runs/assets								controllers.runs.tpl.Runs.javascriptRoutes()
+GET		/tpl/runs/assets							controllers.runs.tpl.Runs.javascriptRoutes()
 
 #run api
 GET    	/api/runs                					controllers.runs.api.Runs.list()

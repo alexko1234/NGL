@@ -15,14 +15,14 @@ function SearchMainCtrl($scope){
 	 * function to keep the basket when we switch views
 	 */
 	$scope.getBasket = function(){
-		return $scope.basketsLocal;
+		return $scope.basketMaster;
 	};
 	
 	/**
 	 * function to return the basket
 	 */
-	$scope.setBasket = function(basketsLocal){
-		$scope.basketsLocal = basketsLocal;
+	$scope.setBasket = function(basket){
+		$scope.basketMaster = basket;
 	};
 	
 	/**

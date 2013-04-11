@@ -5,3 +5,6 @@ date.format=dd/MM/yyyy
 #page field label
 page.search.label.search = Recherche
 
+#panier
+button.addbasket = Ajouter au panier
+
