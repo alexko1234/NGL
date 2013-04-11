@@ -86,6 +86,20 @@ object ApplicationBuild extends Build {
 	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
 	        "mysql" % "mysql-connector-java" % "5.1.18"
 		)
+
+
+       val nglplaquesDependencies = Seq(
+                        javaCore, javaJdbc,
+              // Add your project dependencies here,
+	      "commons-collections" % "commons-collections" % "3.2.1",
+              "fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
+              "net.sourceforge.jtds" % "jtds" % "1.2.4",
+              "org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
+		"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
+              "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
+	      "fr.cea.ig" %% "datatable" % "1.0-SNAPSHOT"
+                  )
+
    }
    
     
@@ -131,6 +145,15 @@ object ApplicationBuild extends Build {
           
       )
    
+   val nglplaques = play.Project(appName + "-plaques", appVersion, nglplaquesDependencies, path = file("app-ngl-plaques"),settings = buildSettings).settings(
+       // Add your own project settings here
+       resolvers := Seq(nexusig),
+       publishArtifact in makePom := false,
+       publishTo := Some(nexusigpublish)
+
+    ).dependsOn(nglcommon)
+
+
    
    val main = play.Project(appName, appVersion, settings = buildSettings).settings(
       // Add your own project settings here      
@@ -138,7 +161,7 @@ object ApplicationBuild extends Build {
       publishArtifact in makePom := false,
       publishTo := Some(nexusigpublish)
     ).aggregate(
-     	nglcommon,nglsq,nglbi,nglauth,nglasset
+     	nglcommon,nglsq,nglbi,nglauth,nglasset,nglplaques
     )
 
 }
