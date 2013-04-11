@@ -1,0 +1,19 @@
+@(nav: String = "")
+
+  <!-- Navbar
+    ================================================== -->
+		
+<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				
+				<a class="brand" href="@routes.Application.index()">@Messages("application.name")</a>
+				
+					<ul class="nav">
+						<li class="@("active".when(nav == "manips"))"><a href="@controllers.manips.tpl.routes.Manips.home("home")">@Messages("menu.manips")</a>
+						</li>						
+					</ul>
+				</div>
+			</div>
+		</div>
+

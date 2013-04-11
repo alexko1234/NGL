@@ -1,0 +1,26 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index()
+
+# manip tpl
+GET	   	/manips/:code									controllers.manips.tpl.Manips.home(code:java.lang.String)
+GET		/tpl/manips/search							    controllers.manips.tpl.Manips.search()
+GET		/tpl/manips/assets								controllers.manips.tpl.Manips.javascriptRoutes()
+
+
+# list tpl
+GET /tpl/projects/list									controllers.Lists.projects()
+GET /tpl/samples/list									controllers.Lists.samples()
+GET /tpl/etmanips/list									controllers.Lists.etmanips()
+
+#manip api
+GET    	/api/manip                						controllers.manips.api.Manips.list()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+# Javascript routing
+#GET    /assets/javascripts/routes      			controllers.Application.javascriptRoutes()
