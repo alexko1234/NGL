@@ -2,11 +2,8 @@ package models;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.instance.Comment;
@@ -34,14 +31,13 @@ import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.DescriptionHelper;
 import models.utils.InstanceHelpers;
-import models.utils.dao.DAOException;
 
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.dao.DataAccessException;
 
-import static play.data.Form.form;
 import play.test.Helpers;
 import utils.AbstractTests;
 import fr.cea.ig.DBObject;
@@ -60,6 +56,7 @@ public class InstanceTest extends AbstractTests{
 	static State sState;
 	static Resolution sResolution;
 
+
 	@BeforeClass
 	public static void startTest(){
 		app = getFakeApplication();
@@ -75,6 +72,18 @@ public class InstanceTest extends AbstractTests{
 		deleteData();
 		Helpers.stop(app);
 	}
+	
+	
+	@Before
+	public void start(){
+		 app = getFakeApplication();
+		 Helpers.start(app);
+	}
+	
+	@After
+	public void stop(){
+		Helpers.stop(app);
+	}	
 
 
 	private static void deleteData(){
