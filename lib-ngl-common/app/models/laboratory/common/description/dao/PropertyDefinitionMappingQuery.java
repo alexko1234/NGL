@@ -22,7 +22,7 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 	{
 		super();
 	}
-	
+
 	public PropertyDefinitionMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
 	{
 		super(ds,sql);
@@ -63,14 +63,24 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 			measureValue.id = rs.getLong("mvId");
 			measureValue.code=rs.getString("mvCode");
 			measureValue.defaultValue = rs.getBoolean("mvDefaultValue");
-			measureValue.value = rs.getString("value");
+			measureValue.value = rs.getString("mvValue");
 			propertyDefinition.measureValue = measureValue;
+		}
+
+		//Add display measure value
+		if(rs.getLong("mvDispId")!=0){
+			MeasureValue measureValue = new MeasureValue();
+			measureValue.id = rs.getLong("mvDispId");
+			measureValue.code = rs.getString("mvDispCode");
+			measureValue.defaultValue = rs.getBoolean("mvDispDefaultValue");
+			measureValue.value = rs.getString("mvDispValue");
+			propertyDefinition.displayMeasureValue = measureValue;
 		}
 		//Add possible values
 		ValueDAO valueDAO = Spring.getBeanOfType(ValueDAO.class);
 		List<Value> values = valueDAO.findByPropertyDefinition(propertyDefinition.id);
 		propertyDefinition.possibleValues = values;
-		
+
 		return propertyDefinition;
 	}
 

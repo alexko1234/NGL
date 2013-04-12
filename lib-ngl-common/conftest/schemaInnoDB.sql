@@ -190,10 +190,12 @@ CREATE TABLE property_definition (
   choice_in_list tinyint(1) NOT NULL default '0',
   measure_category_id bigint(20) default NULL,
   measure_value_id bigint(20) default NULL,
+  display_measure_value_id bigint(20) default NULL,
   common_info_type_id bigint(20) default NULL,
   PRIMARY KEY  (id),
   FOREIGN KEY (measure_category_id) REFERENCES measure_category(id),
   FOREIGN KEY (measure_value_id) REFERENCES measure_value(id),
+  FOREIGN KEY (display_measure_value_id) REFERENCES measure_value(id),
   FOREIGN KEY (common_info_type_id) REFERENCES common_info_type(id),
   INDEX idx_property_def_code (code)
 ) ENGINE=InnoDB;

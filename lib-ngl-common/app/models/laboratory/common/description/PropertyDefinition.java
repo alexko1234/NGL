@@ -22,7 +22,7 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 
 	public Boolean active = Boolean.TRUE;
 	public Boolean choiceInList = Boolean.FALSE;
-	
+
 	@Required	
 	public String type;
 	public String displayFormat;
@@ -40,12 +40,14 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 
 	public MeasureCategory measureCategory;
 
+	//Unité de stockage
 	public MeasureValue measureValue;
-
+	//Unité d'affichage
+	public MeasureValue displayMeasureValue;
 	public static Finder<PropertyDefinition> find = new Finder<PropertyDefinition>(PropertyDefinitionDAO.class.getName()); 
-	
+
 	public PropertyDefinition() {
 		super(PropertyDefinitionDAO.class.getName());
 	}
-	
+
 }

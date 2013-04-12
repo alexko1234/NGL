@@ -23,10 +23,14 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 	protected PropertyDefinitionDAO() {
 		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.class, 
-				"SELECT t.id as pId,t.name as pName,t.code as codeSearch, description, required,active,choice_in_list, type,display_format,display_order,t.default_value as pDefaultValue, level, in_out,propagation, mc.id as mcId,mc.name as mcName,mc.code as mcCode,mv.id as mvId,mv.code as mvCode, value,mv.default_value as mvDefaultValue "+
-				"FROM property_definition as t "+
-				"LEFT OUTER JOIN measure_category as mc ON  measure_category_id=mc.id "+
-				"LEFT OUTER JOIN measure_value as mv ON measure_value_id=mv.id ",true);
+				"SELECT t.id as pId,t.name as pName,t.code as codeSearch, description, required,active,choice_in_list, type,display_format,display_order, "+
+						"t.default_value as pDefaultValue, level, in_out,propagation, mc.id as mcId,mc.name as mcName,mc.code as mcCode, "+
+						"mv.id as mvId,mv.code as mvCode, mv.value as mvValue,mv.default_value as mvDefaultValue, "+
+						"mvDisp.id as mvDispId, mvDisp.code as mvDispCode, mvDisp.value as mvDispValue, mvDisp.default_value as mvDispDefaultValue "+
+						"FROM property_definition as t "+
+						"LEFT OUTER JOIN measure_category as mc ON  measure_category_id=mc.id "+
+						"LEFT OUTER JOIN measure_value as mv ON measure_value_id=mv.id "+
+						"LEFT OUTER JOIN measure_value as mvDisp ON display_measure_value_id=mvDisp.id ",true);
 	}
 
 	public List<PropertyDefinition> findByCommonInfoType(long idCommonInfoType)
@@ -95,16 +99,27 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		}
 
 		//Add measureValue
+		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
 		if(propertyDefinition.measureValue!=null){
 			MeasureValue measureValueDB = MeasureValue.find.findByCode(propertyDefinition.measureValue.code);
-			if(measureValueDB ==null){
-				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
+			if(measureValueDB ==null)
 				propertyDefinition.measureValue.id = measureValueDAO.save(propertyDefinition.measureValue);
-			}else
+			else
 				propertyDefinition.measureValue=measureValueDB;
 			//Update propertyDefinition
 			String sqlValue = "UPDATE property_definition SET measure_value_id=? WHERE id=?";
 			jdbcTemplate.update(sqlValue, propertyDefinition.measureValue.id, propertyDefinition.id);
+		}
+		//Add displayMeasureValue
+		if(propertyDefinition.displayMeasureValue!=null){
+			MeasureValue displayMeasureValueDB = MeasureValue.find.findByCode(propertyDefinition.displayMeasureValue.code);
+			if(displayMeasureValueDB == null)
+				propertyDefinition.displayMeasureValue.id = measureValueDAO.save(propertyDefinition.displayMeasureValue);
+			else
+				propertyDefinition.displayMeasureValue=displayMeasureValueDB;
+			//Update propertyDefinition
+			String sqlValue = "UPDATE property_definition SET display_measure_value_id=? WHERE id=?";
+			jdbcTemplate.update(sqlValue, propertyDefinition.displayMeasureValue.id, propertyDefinition.id);
 		}
 		return propertyDefinition;
 	}
@@ -140,20 +155,32 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		}
 
 		//Update measureValue
+		MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
+
 		if(propertyDefinition.measureValue!=null){
 			MeasureValue measureValueDB = MeasureValue.find.findByCode(propertyDefinition.measureValue.code);
-			if(measureValueDB ==null){
-				MeasureValueDAO measureValueDAO = Spring.getBeanOfType(MeasureValueDAO.class);
+			if(measureValueDB ==null)
 				propertyDefinition.measureValue.id = measureValueDAO.save(propertyDefinition.measureValue);
-			}else
+			else
 				propertyDefinition.measureValue=measureValueDB;
 			//Update propertyDefinition
 			String sqlValue = "UPDATE property_definition SET measure_value_id=? WHERE id=?";
 			jdbcTemplate.update(sqlValue, propertyDefinition.measureValue.id, propertyDefinition.id);
 		}
+		//Update displayMeasureValue
+		if(propertyDefinition.displayMeasureValue!=null){
+			MeasureValue displayMeasureValueDB = MeasureValue.find.findByCode(propertyDefinition.displayMeasureValue.code);
+			if(displayMeasureValueDB==null)
+				propertyDefinition.displayMeasureValue.id = measureValueDAO.save(propertyDefinition.displayMeasureValue);
+			else
+				propertyDefinition.displayMeasureValue = displayMeasureValueDB;
+			//Update propertyDefinition
+			String sqlValue = "UPDATE property_definition SET display_measure_value_id=? WHERE id=?";
+			jdbcTemplate.update(sqlValue, propertyDefinition.displayMeasureValue.id, propertyDefinition.id);
+		}
 	}
 
-	
+
 	@Override
 	public void remove(PropertyDefinition propertyDefinition) throws DAOException {
 		//Delete value

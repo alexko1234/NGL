@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.After;
+
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -26,20 +26,7 @@ public abstract class AbstractTests {
 	protected static FakeApplication app;
 	
 	
-	@Before
-	public void start(){
-		 app = getFakeApplication();
-		 Helpers.start(app);
-		/*  Map<String, String> flashData = Collections.emptyMap();
-		  Map<String, Object> listeNull = Collections.emptyMap();
-	      Http.Context context = new Http.Context(new Long(5),null,request, flashData, flashData,listeNull);
-	      Http.Context.current.set(context);*/
-	}
 	
-	@After
-	public void stop(){
-		Helpers.stop(app);
-	}
 	
 	public static FakeApplication getFakeApplication(){
 		return fakeApplication(fakeConfiguration());
