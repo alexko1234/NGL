@@ -5,6 +5,52 @@
 # Home page
 GET     /                           controllers.Application.index(id:java.lang.String ?="")
 
+#containers tpl
+GET 	/containers/home						controllers.containers.tpl.Containers.home()
+GET		/tpl/containers/search					controllers.containers.tpl.Containers.search()
+
+#containers api
+GET		/api/containers							controllers.containers.api.Containers.list()
+POST	/api/containers/projects				controllers.containers.api.Containers.samplesProjectsList()
+
+#processes tpl
+GET 	/processes/:code						controllers.processes.tpl.Processes.home(code:java.lang.String)
+GET		/tpl/processes/search					controllers.processes.tpl.Processes.search()
+GET		/tpl/processes/list						controllers.processes.tpl.Processes.list()
+GET		/tpl/processes/assets					controllers.processes.tpl.Processes.javascriptRoutes()
+
+#processes api
+POST	/api/processus							controllers.processes.api.Processes.save()
+POST	/api/processus							controllers.processes.api.Processes.addContainer()
+
+#api combobox
+GET		/api/lists/projects						controllers.lists.api.Lists.projects()
+GET		/api/lists/samples						controllers.lists.api.Lists.samples(projectCode:java.lang.String)
+GET		/api/lists/processType					controllers.lists.api.Lists.processTypes()
+GET		/api/lists/experimenttypes				controllers.lists.api.Lists.experimentTypes()
+GET		/api/lists/containers/states			controllers.lists.api.Lists.containerStates()
+
+
+# load data
+GET	   	   /loaddata/home						controllers.dataload.SampleLoad.home()
+POST   	   /loaddata							controllers.dataload.SampleLoad.uploadDataFromCSVFile()
+POST	   /createtemplate						controllers.dataload.SampleLoad.createTemplateFile()
+GET		   /loaddatatype						controllers.dataload.InitialData.loadDataType()
+GET       /createprojects						controllers.dataload.InitialData.createProjectFromLims()
+
+
+
+GET	   /logout								controllers.administration.authentication.User.logOut()
+
+# Home page
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+
+
+
 
 GET	   /basket/experimenttype/:experimentType		controllers.container.Baskets.listByExperimentType(experimentType:java.lang.String)
 GET	   /baskets										controllers.container.Baskets.list()
@@ -13,41 +59,3 @@ POST   /baskets/:code					    		controllers.container.Baskets.add(code:java.lang
 POST   /baskets					    				controllers.container.Baskets.createOrUpdate(format: java.lang.String ?= "html")
 DELETE /baskets/:code					    		controllers.container.Baskets.delete(code: java.lang.String,format: java.lang.String ?= "html")
 DELETE /baskets/:code/containers/:contrainerCode	controllers.container.Baskets.delete_container(code: java.lang.String,contrainerCode: java.lang.String,format: java.lang.String ?= "html")
-
-GET 	/containers/home									controllers.containers.tpl.Containers.home()
-
-GET 	/processus/:code									controllers.processus.tpl.Processus.home(code:java.lang.String)
-
-#template
-GET		/tpl/containers/search								controllers.containers.tpl.Containers.search()
-GET		/tpl/projects/list							controllers.tpl.helper.Lists.projects()
-GET		/tpl/samples/list							controllers.tpl.helper.Lists.samples()
-GET		/tpl/processType/list						controllers.tpl.helper.Lists.processusType()
-GET		/tpl/experimenttypes/list					controllers.tpl.helper.Lists.experimentTypes()
-GET		/tpl/containers/states/list					controllers.tpl.helper.Lists.containerStates()
-GET		/tpl/processus/search								controllers.processus.tpl.Processus.search()
-
-# load data
-GET	   	   /loaddata/home								controllers.dataload.SampleLoad.home()
-POST   	   /loaddata									controllers.dataload.SampleLoad.uploadDataFromCSVFile()
-POST	   /createtemplate								controllers.dataload.SampleLoad.createTemplateFile()
-GET		   /loaddatatype								controllers.dataload.InitialData.loadDataType()
-GET       /createprojects								controllers.dataload.InitialData.createProjectFromLims()
-
-#api
-GET		/api/containers								controllers.containers.api.Containers.list()
-POST	/api/containers/projects					controllers.containers.api.Containers.samplesProjectsList()
-POST	/api/processus								controllers.processus.api.Processus.save()
-POST	/api/processus/								controllers.processus.api.Processus.addContainer()
-GET		/tpl/processus/list							controllers.processus.tpl.Processus.list()
-GET		/tpl/processus/assets						controllers.processus.tpl.Processus.javascriptRoutes()
-
-GET	   /logout								controllers.administration.authentication.User.logOut()
-
-# Home page
-
-# Javascript routing
-GET    /assets/javascripts/routes      controllers.Application.javascriptRoutes()
-
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
