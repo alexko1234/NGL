@@ -37,10 +37,10 @@ import org.apache.commons.lang3.StringUtils;
 
 public class Containers extends Controller {
 	
-	final static DynamicForm inputForm = form();
+	final static Form<ContainersSearch> containerForm = form(ContainersSearch.class);
 	
 	public static Result list(){
-		Form<ContainersSearch> containerForm = form(ContainersSearch.class);
+		
 		ContainersSearch containersSearch = containerForm.bindFromRequest().get();
 		
 		DBCursor<Container> cursor = MongoDBDAO.getCollection("Container",Container.class).find();
@@ -53,19 +53,19 @@ public class Containers extends Controller {
 	    	cursor.and(DBQuery.in("fromExperimentTypeCodes", containersSearch.experimentCode)).or(DBQuery.is("fromExperimentTypeCodes", null));
 	    }
 	    
-	    if(StringUtils.isNotEmpty(containersSearch.containerState)){
-	    	cursor.and(DBQuery.is("stateCode", containersSearch.containerState));
+	    if(StringUtils.isNotEmpty(containersSearch.stateCode)){
+	    	cursor.and(DBQuery.is("stateCode", containersSearch.stateCode));
 	    }
 	    
-	    if(StringUtils.isNotEmpty(containersSearch.containerSample)){
-	    	cursor.and(DBQuery.in("sampleCodes", containersSearch.containerSample));
+	    if(StringUtils.isNotEmpty(containersSearch.sampleCode)){
+	    	cursor.and(DBQuery.in("sampleCodes", containersSearch.sampleCode));
 	    }
 	    
-	    if(StringUtils.isNotEmpty(containersSearch.containerProcess)){
+	    if(StringUtils.isNotEmpty(containersSearch.processTypeCode)){
 	    	ProcessType processType = null;
 	    	
 	    	try{
-	    		processType = ProcessType.find.findByCode(containersSearch.containerProcess);
+	    		processType = ProcessType.find.findByCode(containersSearch.processTypeCode);
 	    	}catch(DAOException e){
 	    		return internalServerError();
 	    	}
@@ -82,9 +82,9 @@ public class Containers extends Controller {
 	    
 	    Logger.info("Project code: "+containersSearch.projectCode);
 	    Logger.info("Experiment code: "+containersSearch.experimentCode);
-	    Logger.info("Container state: "+containersSearch.containerState);
-	    Logger.info("Container sample: "+containersSearch.containerSample);
-	    Logger.info("Container process: "+containersSearch.containerProcess);
+	    Logger.info("Container state: "+containersSearch.stateCode);
+	    Logger.info("Container sample: "+containersSearch.sampleCode);
+	    Logger.info("Container process: "+containersSearch.processTypeCode);
 	    
 	    List<Container> containers = cursor.limit(100).toArray();
 		
