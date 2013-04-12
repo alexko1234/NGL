@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-
+import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -56,8 +56,7 @@ public abstract class AbstractTests {
 		config.put("db.lims.minConnectionsPerPartition", "1");
 		config.put("db.lims.logStatements", "true");
 		config.put("db.lims.jndiName", "lims");	
-		
-		
+				
 		config.put("mongodb.database","NGL-COMMON-TEST");
 		config.put("mongodb.credentials","ngl:ngl");
 		config.put("mongodb.servers","gsphere.genoscope.cns.fr:27017");
