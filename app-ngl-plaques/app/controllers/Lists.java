@@ -17,7 +17,6 @@ import play.mvc.Results;
 public class Lists extends Controller {
 
 	public static Result projects(){
-		
 		return Results.ok(Json.toJson(getListObjectFromProcedureLims("pl_Projet")));	
 	}
 	
@@ -28,6 +27,10 @@ public class Lists extends Controller {
 	
 	public static Result etmanips(){
 		return Results.ok(Json.toJson(getListObjectFromProcedureLims("pl_Etmanip")));	
+	}
+	
+	public static Result etmateriels(){
+		return Results.ok(Json.toJson(getListObjectFromProcedureLims("pl_Etmateriel")));	
 	}
 	
 	//TODO deplacer dans Common

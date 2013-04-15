@@ -28,7 +28,7 @@ public class LimsManipDAO {
         this.tracenameCaller = new SimpleJdbcCall(jdbcTemplate)
                                 .withProcedureName("pl_MaterielmanipChoisi ")
                                                 .withoutProcedureColumnMetaDataAccess()
-                                                .useInParameterNames("@emnco")
+                                                .useInParameterNames("@emnco","@prsco","@ematerielco")
                                                 .returningResultSet("#result-set-1", new BeanPropertyRowMapper<Manip>(Manip.class))
                                                 .declareParameters(
                                                 		new SqlParameter("@prsco",Types.CHAR),
@@ -48,9 +48,6 @@ public class LimsManipDAO {
                                                 		new SqlParameter("@proco",Types.INTEGER),
                                                 		new SqlParameter("@ttpco",Types.SMALLINT),
                                                 		new SqlParameter("@percom",Types.SMALLINT)
-
-                                                              //  new SqlParameter("@emnco", Types.INTEGER)
-                                                                //,new SqlParameter("@ematerielco", Types.INTEGER)
                                                 );
         
     }
@@ -58,7 +55,9 @@ public class LimsManipDAO {
 
     public List<Manip> getManips(Integer emnco, Integer ematerielco,String prsco){
         MapSqlParameterSource in = new MapSqlParameterSource();
-        in.addValue("@prsco",prsco);
+        if(prsco!=null){
+        	in.addValue("@prsco",prsco);
+        } else in.addValue("@prsco", null);
         in.addValue("@bqanom",null);
         in.addValue("@emnco",emnco);
         in.addValue("@ematerielco",ematerielco);

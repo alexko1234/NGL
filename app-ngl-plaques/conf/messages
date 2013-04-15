@@ -1,8 +1,10 @@
 application.name=NGL Plaque
-page.search.label.search=Recherche Manip
+page.search.label.search=Manips
 
 #Menu
 menu.manips=Manips
 menu.plaques=Plaques
 
 #Manips
+
+button.addbasket=Puits

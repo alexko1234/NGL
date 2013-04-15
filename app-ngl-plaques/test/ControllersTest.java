@@ -38,5 +38,13 @@ public class ControllersTest extends AbstractTests{
 			assertThat(status(result)).isEqualTo(OK);
 			assertThat(contentAsString(result).length()).isGreaterThan(2);
 		}
+	
+	@Test
+	public void tplEtmaterielsList(){
+			Result result = callAction(controllers.routes.ref.Lists.etmateriels(),fakeRequest());
+			//System.err.println(contentAsString(result));
+			assertThat(status(result)).isEqualTo(OK);
+			assertThat(contentAsString(result).length()).isGreaterThan(2);
+		}
 
 }
