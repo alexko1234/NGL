@@ -17,12 +17,10 @@ public class Application extends Controller {
 
   public static Result javascriptRoutes() {
 	  	    response().setContentType("text/javascript");
-	  	    return ok(
-	  	      
+	  	    return ok(	  	      
 	  	        Routes.javascriptRouter("jsRoutes",	  	       
 	  	        // Routes	  	       
-	  	        controllers.administration.authentication.routes.javascript.User.logOut()
-	  	        
+	  	        controllers.administration.authentication.routes.javascript.User.logOut()	  	        
 	  	      )
 	  	    );
 	  	  }
