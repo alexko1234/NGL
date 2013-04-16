@@ -78,7 +78,7 @@ public class SpringTest extends AbstractTests{
 	/**
 	 * Use to drop and create database schema
 	 * Obsolete with remove test
-	 * //////@Test
+	 * //@Test
 	 */
 	public void initializeDB()
 	{
