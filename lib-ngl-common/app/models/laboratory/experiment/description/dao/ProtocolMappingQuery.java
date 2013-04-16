@@ -8,7 +8,8 @@ import javax.sql.DataSource;
 
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.ProtocolCategory;
-import models.laboratory.experiment.description.ReagentType;
+import models.laboratory.reagent.description.ReagentType;
+import models.laboratory.reagent.description.dao.ReagentTypeDAO;
 import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;

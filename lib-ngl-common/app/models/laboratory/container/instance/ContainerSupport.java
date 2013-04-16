@@ -1,6 +1,7 @@
 package models.laboratory.container.instance;
 
 import models.laboratory.container.description.ContainerSupportCategory;
+import models.laboratory.stock.instance.Stock;
 import models.utils.HelperObjects;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -38,4 +39,12 @@ public class ContainerSupport {
 		return new HelperObjects<ContainerSupportCategory>().getObject(ContainerSupportCategory.class, categoryCode, null);
 
 	}
+	
+
+	@JsonIgnore
+	public Stock getStock(){
+		return new HelperObjects<Stock>().getObject(Stock.class, stockCode, null);
+
+	}
+
 }

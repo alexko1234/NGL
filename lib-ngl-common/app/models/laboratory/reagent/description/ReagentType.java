@@ -1,10 +1,10 @@
-package models.laboratory.experiment.description;
+package models.laboratory.reagent.description;
 
 import models.laboratory.common.description.CommonInfoType;
-import models.laboratory.experiment.description.dao.ReagentTypeDAO;
+import models.laboratory.reagent.description.dao.ReagentTypeDAO;
 
 public class ReagentType extends CommonInfoType{
-
+	
 	public ReagentType() {
 		super(ReagentTypeDAO.class.getName());
 	}

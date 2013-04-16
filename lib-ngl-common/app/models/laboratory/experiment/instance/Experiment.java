@@ -13,6 +13,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.project.instance.Project;
+import models.laboratory.reagent.instance.ReagentUsed;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import net.vz.mongodb.jackson.MongoCollection;
@@ -61,6 +62,8 @@ public class Experiment extends DBObject {
 	*/
 	public List<InputOutputContainer> listInputOutputContainers;
 	
+	public List<ReagentUsed> reagentUseds;
+
 	// Protocol ref
 	public String protocolCode;
 //	public List<ReagentUsed> reagentsUsed;

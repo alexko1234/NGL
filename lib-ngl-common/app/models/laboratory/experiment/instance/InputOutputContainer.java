@@ -10,7 +10,6 @@ public class InputOutputContainer {
 	// n input  to 1 output 
 	public List<ContainerUsed> inputContainers;
 	public List<ContainerUsed> outputContainers;
-
 	public Comment comment;
 
 

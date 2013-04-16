@@ -1,11 +1,11 @@
-package models.laboratory.experiment.description.dao;
+package models.laboratory.reagent.description.dao;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.experiment.description.ReagentType;
+import models.laboratory.reagent.description.ReagentType;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 

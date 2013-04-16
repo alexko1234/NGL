@@ -3,6 +3,7 @@ package models.laboratory.experiment.description;
 import java.util.List;
 
 import models.laboratory.experiment.description.dao.ProtocolDAO;
+import models.laboratory.reagent.description.ReagentType;
 import models.utils.Model;
 import play.api.modules.spring.Spring;
 
@@ -29,8 +30,5 @@ public class Protocol extends Model<Protocol>{
 		return protocolDAO.findByName(name);
 	}
 	
-	
-	//TODO Detail manip et dosage manip ???
-
 	
 }
