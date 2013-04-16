@@ -36,7 +36,7 @@
             destinationClassName="models.description.common.ObjectType"
             endpointName="objectType" kind="Simple"/>
     </Class>
-    <Class name="models.laboratory.processus.description.ProcessType" x="26" y="364">
+    <Class name="models.laboratory.processes.description.ProcessType" x="26" y="364">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -45,7 +45,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Association
-            destinationClassName="models.laboratory.processus.description.ProcessCategory"
+            destinationClassName="models.laboratory.processes.description.ProcessCategory"
             endpointName="processCategory" kind="Simple"/>
         <Association
             destinationClassName="models.description.common.CommonInfoType"
@@ -133,7 +133,7 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
     </Class>
-    <Class name="models.laboratory.processus.description.ProcessCategory" x="-6" y="241">
+    <Class name="models.laboratory.processes.description.ProcessCategory" x="-6" y="241">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>

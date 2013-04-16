@@ -1,16 +1,21 @@
 #Container table
 container.table.code = Code
-container.table.categoryCode = Code catégorie
-container.table.sampleCode = Code sample
-container.table.fromExperimentTypeCodes = Expérience
+container.table.categoryCode = Code Catégorie
+container.table.projectCodes = Code Projet
+container.table.sampleCodes = Codes Echantillon
+container.table.fromExperimentTypeCodes = Type d'Expérience
 container.table.stateCode = Statut
 container.table.support.name = Support
-container.table.stateCode = Code état
+container.table.stateCode = Code Etat
 container.table.valid = Valide
 
 #process
 processus.create = Crée un processus
 processus.save = Sauvegarder
+
+processes.select.processType = -- selectionner un type de processus --
+processes.select.project = -- selectionner un projet --
+processes.select.sample = -- selectionner un échantillon --
 
 #baskets
 baskets = Panier

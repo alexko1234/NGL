@@ -3,11 +3,12 @@
 function SearchCtrl($scope, $http, datatable,basket) {
 	 
 	$scope.datatableConfig = {
-		pagination:{
-			mode:'local'
-		},		
 		search:{
 			url:'/api/containers'
+		},
+		order:{
+			active:true,
+			by:'code'
 		},
 		otherButtons :{
 			active:true
@@ -38,7 +39,7 @@ function SearchCtrl($scope, $http, datatable,basket) {
 		
 		
 		if(angular.isUndefined($scope.getBasket())){
-			$scope.basket = basket($scope,$scope.basketsConfig);			
+			$scope.basket = basket($scope,$scope.basketConfig);			
 			$scope.setBasket($scope.basket);
 		}else{
 			$scope.basket = $scope.getBasket();

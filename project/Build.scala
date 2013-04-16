@@ -47,7 +47,8 @@ object ApplicationBuild extends Build {
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
         "net.sf.opencsv" % "opencsv" % "2.0",
-		"org.springframework" % "spring-test" % "3.0.7.RELEASE"
+		"org.springframework" % "spring-test" % "3.0.7.RELEASE",
+	    "fr.cea.ig" %% "datatable" % "1.0-SNAPSHOT"
     	)	
    	
    	val nglbiDependencies = Seq(
@@ -62,8 +63,7 @@ object ApplicationBuild extends Build {
 	        "net.sourceforge.jtds" % "jtds" % "1.2.4",      	
 	        "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
 	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
-	        "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
-	        "fr.cea.ig" %% "datatable" % "1.0-SNAPSHOT"
+	        "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
 			)
     	
     	val nglsqDependencies = Seq(
@@ -76,8 +76,7 @@ object ApplicationBuild extends Build {
               "net.sourceforge.jtds" % "jtds" % "1.2.2",
 	      "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
 	      "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
-	      "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
-	      "fr.cea.ig" %% "datatable" % "1.0-SNAPSHOT"	   
+	      "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"  
 		 	)
     	
     	val nglauthDependencies = Seq(

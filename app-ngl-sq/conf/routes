@@ -11,7 +11,6 @@ GET		/tpl/containers/search					controllers.containers.tpl.Containers.search()
 
 #containers api
 GET		/api/containers							controllers.containers.api.Containers.list()
-POST	/api/containers/projects				controllers.containers.api.Containers.samplesProjectsList()
 
 #processes tpl
 GET 	/processes/:code						controllers.processes.tpl.Processes.home(code:java.lang.String)

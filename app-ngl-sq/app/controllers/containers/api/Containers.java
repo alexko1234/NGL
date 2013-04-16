@@ -1,64 +1,78 @@
 package controllers.containers.api;
 
+import static play.data.Form.form;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.sample.instance.Sample;
-
-import models.utils.*;
-
-import org.codehaus.jackson.JsonNode;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONArray;
-
-import net.vz.mongodb.jackson.DBCursor;
-import net.vz.mongodb.jackson.DBQuery;
-
-import fr.cea.ig.MongoDBDAO;
-import play.Logger;
-import play.data.DynamicForm;
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Controller;
-import play.mvc.Result;
-import views.components.datatable.DatatableResponse;
-import static play.data.Form.form;
-
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.processus.description.ProcessType;
+import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.instance.Project;
+import models.laboratory.sample.instance.Sample;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import org.apache.commons.lang3.StringUtils;
+import net.vz.mongodb.jackson.DBQuery;
 
-public class Containers extends Controller {
+import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.JsonNode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import play.Logger;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import views.components.datatable.DatatableHelpers;
+import views.components.datatable.DatatableResponse;
+import controllers.CommonController;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+
+
+
+public class Containers extends CommonController {
 	
+	private static final String CONTAINER_COLL_NAME = "Container";
 	final static Form<ContainersSearch> containerForm = form(ContainersSearch.class);
 	
 	public static Result list(){
-		
-		ContainersSearch containersSearch = containerForm.bindFromRequest().get();
-		
-		DBCursor<Container> cursor = MongoDBDAO.getCollection("Container",Container.class).find();
+		Form<ContainersSearch> containerFilledForm = containerForm.bindFromRequest();
+		ContainersSearch containersSearch = containerFilledForm.get();
+		DBQuery.Query query = getQuery(containersSearch);
+	    MongoDBResult<Container> results = MongoDBDAO.find(CONTAINER_COLL_NAME, Container.class, query)
+				.sort(DatatableHelpers.getOrderBy(containerFilledForm), getMongoDBOrderSense(containerFilledForm))
+				.page(DatatableHelpers.getPageNumber(containerFilledForm), DatatableHelpers.getNumberRecordsPerPage(containerFilledForm)); 
+		List<Container> containers = results.toList();
+		return ok(Json.toJson(new DatatableResponse(containers, results.count())));
+	}
+
+	/**
+	 * Construct the container query
+	 * @param containersSearch
+	 * @return
+	 */
+	private static DBQuery.Query getQuery(ContainersSearch containersSearch) {
+		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		
 		if(StringUtils.isNotEmpty(containersSearch.projectCode)){
-			 cursor.and(DBQuery.is("projectCodes", containersSearch.projectCode));
+			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCode));
 	    }
 		
-	    if(StringUtils.isNotEmpty(containersSearch.experimentCode)){
-	    	cursor.and(DBQuery.in("fromExperimentTypeCodes", containersSearch.experimentCode)).or(DBQuery.is("fromExperimentTypeCodes", null));
+	    if(StringUtils.isNotEmpty(containersSearch.fromExperimentCode)){
+	    	queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentCode), DBQuery.is("fromExperimentTypeCodes", null)));
 	    }
 	    
+	    
 	    if(StringUtils.isNotEmpty(containersSearch.stateCode)){
-	    	cursor.and(DBQuery.is("stateCode", containersSearch.stateCode));
+	    	queryElts.add(DBQuery.is("stateCode", containersSearch.stateCode));
 	    }
 	    
 	    if(StringUtils.isNotEmpty(containersSearch.sampleCode)){
-	    	cursor.and(DBQuery.in("sampleCodes", containersSearch.sampleCode));
+	    	queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
 	    }
 	    
 	    if(StringUtils.isNotEmpty(containersSearch.processTypeCode)){
@@ -67,7 +81,7 @@ public class Containers extends Controller {
 	    	try{
 	    		processType = ProcessType.find.findByCode(containersSearch.processTypeCode);
 	    	}catch(DAOException e){
-	    		return internalServerError();
+	    		throw new RuntimeException(e.getMessage(),e);
 	    	}
 	    	
 	    	List<String> listePrevious = new ArrayList<String>();
@@ -75,47 +89,12 @@ public class Containers extends Controller {
 	    		for(ExperimentType et:e.previousExperimentTypes){
 	    			listePrevious.add(et.code);
 	    		}
-	    	}
-	    	
-	    	cursor.and(DBQuery.in("fromExperimentTypeCodes", listePrevious));
+	    	}	    	
+	    	queryElts.add(DBQuery.in("fromExperimentTypeCodes", listePrevious));	    		    	
 	    }
+	    Logger.info("Containers Query : "+containersSearch);
 	    
-	    Logger.info("Project code: "+containersSearch.projectCode);
-	    Logger.info("Experiment code: "+containersSearch.experimentCode);
-	    Logger.info("Container state: "+containersSearch.stateCode);
-	    Logger.info("Container sample: "+containersSearch.sampleCode);
-	    Logger.info("Container process: "+containersSearch.processTypeCode);
-	    
-	    List<Container> containers = cursor.limit(100).toArray();
-		
-		return ok(Json.toJson(new DatatableResponse(containers)));
+		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}
 	
-	public static Result samplesProjectsList(){
-		JsonNode json = request().body().asJson();		
-		String myJson = json.get("containers").toString();
-		Map<ListObject,ListObject> projects = new HashMap<ListObject,ListObject>(); 
-		
-		try{
-			JSONArray the_json_array = new JSONArray(myJson);
-			
-			for(int i=0;i<the_json_array.length();i++){
-				JSONObject obj = (JSONObject) the_json_array.get(i);
-				String code = obj.getString("code");
-				Logger.info(code);
-				Container containers = MongoDBDAO.findByCode("Container", Container.class, code);
-				
-				for(String s : containers.sampleCodes){
-					Sample sample = MongoDBDAO.findByCode("Sample",Sample.class,s);
-					for(String p:sample.projectCodes){
-						Project project = MongoDBDAO.findByCode("Project",Project.class,p);
-						projects.put(new ListObject(sample.code,sample.name), new ListObject(project.code,project.name));
-					}
-				}
-			}
-		}catch(JSONException jse){
-			Logger.info("Error json "+jse);
-		}
-		return ok(Json.toJson(projects));
-	}
 }

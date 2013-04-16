@@ -22,7 +22,7 @@ import models.laboratory.experiment.instance.InputOutputContainer;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
-import models.laboratory.processus.instance.Process;
+import models.laboratory.processes.instance.Process;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.project.instance.Project;

@@ -18,7 +18,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.PurificationMethodType;
 import models.laboratory.experiment.description.QualityControlType;
 import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.processus.description.ProcessType;
+import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.description.ImportType;

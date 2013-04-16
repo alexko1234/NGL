@@ -13,7 +13,7 @@ import net.vz.mongodb.jackson.DBQuery;
 import play.libs.Json;
 import models.laboratory.common.description.State;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.processus.description.ProcessType;
+import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.ListObject;

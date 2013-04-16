@@ -17,8 +17,8 @@ import play.mvc.Result;
 import models.laboratory.container.instance.Basket;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.processus.description.ProcessType;
-import  models.laboratory.processus.instance.Process;
+import models.laboratory.processes.description.ProcessType;
+import  models.laboratory.processes.instance.Process;
 
 public class Processes extends Controller{
 	public static Result save(){
