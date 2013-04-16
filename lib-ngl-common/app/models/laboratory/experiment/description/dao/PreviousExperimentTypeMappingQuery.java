@@ -17,13 +17,13 @@ import play.api.modules.spring.Spring;
 
 import com.avaje.ebean.enhance.asm.Type;
 
-public class NextExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
+public class PreviousExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 
-	public NextExperimentTypeMappingQuery(DataSource ds)
+	public PreviousExperimentTypeMappingQuery(DataSource ds)
 	{
 		super(ds,"SELECT id, fk_common_info_type "+
 				"FROM experiment_type "+
-				"JOIN next_experiment_types ON fk_next_experiment_type=id "+
+				"JOIN previous_experiment_types ON fk_previous_experiment_type = id "+
 				"WHERE fk_experiment_type = ? ");
 		super.declareParameter(new SqlParameter("id", Type.LONG));
 		compile();

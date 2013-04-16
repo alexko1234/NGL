@@ -36,7 +36,7 @@ public class PurificationMethodTypeMappingQuery extends MappingSqlQuery<Purifica
 	protected PurificationMethodType mapRow(ResultSet rs, int rowNumber)
 			throws SQLException {
 		PurificationMethodType purificationMethodType = new PurificationMethodType();
-		play.Logger.debug("Experiment type "+purificationMethodType);
+		//play.Logger.debug("Experiment type "+purificationMethodType);
 		purificationMethodType.id = rs.getLong("id");
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		//Get commonInfoType

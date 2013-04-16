@@ -36,10 +36,10 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 				"JOIN common_info_type as c ON c.id=fk_common_info_type ");
 	}
 
-	public List<ExperimentType> findNextExperiments(long idExperimentType)
+	public List<ExperimentType> findPreviousExperiments(long idExperimentType)
 	{
-		NextExperimentTypeMappingQuery nextExperimentTypeMappingQuery = new NextExperimentTypeMappingQuery(dataSource);
-		return nextExperimentTypeMappingQuery.execute(idExperimentType);
+		PreviousExperimentTypeMappingQuery prevExperimentTypeMappingQuery = new PreviousExperimentTypeMappingQuery(dataSource);
+		return prevExperimentTypeMappingQuery.execute(idExperimentType);
 	}
 
 	public List<ExperimentType> findByProcessId(long id)
@@ -104,9 +104,9 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 		//Add nextExperimentTypes list
 		List<ExperimentType> nextExpTypes = experimentType.previousExperimentTypes;
 		if(nextExpTypes!=null && nextExpTypes.size()>0){
-			String sql = "INSERT INTO next_experiment_types(fk_experiment_type,fk_next_experiment_type) VALUES(?,?)";
+			String sql = "INSERT INTO previous_experiment_types(fk_previous_experiment_type,fk_experiment_type) VALUES(?,?)";
 			for(ExperimentType expType : nextExpTypes){
-				jdbcTemplate.update(sql, experimentType.id, expType.id);
+				jdbcTemplate.update(sql, expType.id, experimentType.id);
 			}
 		}
 
@@ -178,11 +178,11 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			sqlUpdate = "UPDATE experiment_type SET fk_experiment_category=? WHERE id=?";
 			jdbcTemplate.update(sqlUpdate, experimentType.experimentCategory.id, experimentType.id);
 		}
-		//Update nexExperiment list (add new)
-		List<ExperimentType> nextExpTypes = experimentType.previousExperimentTypes;
-		if(nextExpTypes!=null && nextExpTypes.size()>0){
-			String sql = "INSERT INTO next_experiment_types(fk_experiment_type,fk_next_experiment_type) VALUES(?,?)";
-			for(ExperimentType expType : nextExpTypes){
+		//Update previousExperiment list (add new)
+		List<ExperimentType> previousExpTypes = experimentType.previousExperimentTypes;
+		if(previousExpTypes!=null && previousExpTypes.size()>0){
+			String sql = "INSERT INTO previous_experiment_types(fk_previous_experiment_type,fk_experiment_type) VALUES(?,?)";
+			for(ExperimentType expType : previousExpTypes){
 				if(expTypeDB.previousExperimentTypes==null || (expTypeDB.previousExperimentTypes!=null && !expTypeDB.previousExperimentTypes.contains(expType))){
 					play.Logger.debug("Add next experiment types "+expType.id);
 					jdbcTemplate.update(sql, experimentType.id, expType.id);
@@ -227,10 +227,10 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 	@Override
 	public void remove(ExperimentType experimentType) throws DAOException {
 		
-		//Remove next experiment next_experiment_types
-		String sqlNextExp = "DELETE FROM next_experiment_types WHERE fk_experiment_type=?";
+		//Remove next experiment previous_experiment_types
+		String sqlNextExp = "DELETE FROM previous_experiment_types WHERE fk_experiment_type=?";
 		jdbcTemplate.update(sqlNextExp, experimentType.id);
-		String sqlNextExpPrev = "DELETE FROM next_experiment_types WHERE fk_next_experiment_type=?";
+		String sqlNextExpPrev = "DELETE FROM previous_experiment_types WHERE fk_previous_experiment_type=?";
 		jdbcTemplate.update(sqlNextExpPrev, experimentType.id);
 		//Remove quality control experiment_quality_control
 		String sqlQuality = "DELETE FROM experiment_quality_control WHERE fk_experiment_type=?";
@@ -243,5 +243,8 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 	}
 
 
+	public List<ExperimentType> getPreviousExperimentType(String processTypeCode){
+		return null;
+	}
 
 }

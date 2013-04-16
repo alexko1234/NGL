@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS process_experiment_type;
 DROP TABLE IF EXISTS protocol_reagent_type;
 DROP TABLE IF EXISTS instrument;
 DROP TABLE IF EXISTS instrument_used_type;
-DROP TABLE IF EXISTS next_experiment_types;
+DROP TABLE IF EXISTS previous_experiment_types;
 DROP TABLE IF EXISTS process_type;
 DROP TABLE IF EXISTS experiment_type;
 DROP TABLE IF EXISTS purification_method_type;
@@ -245,15 +245,15 @@ CREATE TABLE experiment_type (
 ) ENGINE=InnoDB;
 
 --
--- Table structure for table `next_experiment_types`
+-- Table structure for table `previous_experiment_types`
 --
 
-CREATE TABLE next_experiment_types (
-  fk_experiment_type bigint(20) NOT NULL,
-  fk_next_experiment_type bigint(20) NOT NULL,
-  PRIMARY KEY  (fk_experiment_type,fk_next_experiment_type),
+CREATE TABLE previous_experiment_types (
+  	fk_previous_experiment_type bigint(20) NOT NULL,
+	fk_experiment_type bigint(20) NOT NULL,  
+  PRIMARY KEY  (fk_experiment_type,fk_previous_experiment_type),
  FOREIGN KEY (fk_experiment_type) REFERENCES experiment_type(id),
- FOREIGN KEY (fk_next_experiment_type) REFERENCES experiment_type(id)
+ FOREIGN KEY (fk_previous_experiment_type) REFERENCES experiment_type(id)
 ) ENGINE=InnoDB;
 
 --

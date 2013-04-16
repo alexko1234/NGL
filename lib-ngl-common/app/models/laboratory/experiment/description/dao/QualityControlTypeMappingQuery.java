@@ -36,7 +36,7 @@ public class QualityControlTypeMappingQuery extends MappingSqlQuery<QualityContr
 	protected QualityControlType mapRow(ResultSet rs, int rowNumber)
 			throws SQLException {
 		QualityControlType qualityControlType = new QualityControlType();
-		play.Logger.debug("Experiment type "+qualityControlType);
+		//play.Logger.debug("Experiment type "+qualityControlType);
 		qualityControlType.id = rs.getLong("id");
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		//Get commonInfoType

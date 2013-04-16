@@ -1,8 +1,8 @@
 #Container table
-container.table.code = Code
+container.table.code = Code Container
 container.table.categoryCode = Code Catégorie
-container.table.projectCodes = Code Projet
-container.table.sampleCodes = Codes Echantillon
+container.table.projectCodes = Codes Projets
+container.table.sampleCodes = Codes Echantillons
 container.table.fromExperimentTypeCodes = Type d'Expérience
 container.table.stateCode = Statut
 container.table.support.name = Support

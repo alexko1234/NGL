@@ -44,6 +44,12 @@ factory('basket', ['$http', function($http){ //service to manage baskets local
 			 */
 			length : function(){
 				return this.basket.length;
+			},
+			/**
+			 * Reinitialize the basket
+			 */
+			reset : function(){
+				this.basket = [];
 			}
 	
 	};

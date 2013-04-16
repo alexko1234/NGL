@@ -40,7 +40,7 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 	protected ExperimentType mapRow(ResultSet rs, int rowNumber)
 			throws SQLException {
 		ExperimentType experimentType = new ExperimentType();
-		play.Logger.debug("Experiment type "+experimentType);
+		//play.Logger.debug("Experiment type "+experimentType);
 		experimentType.id = rs.getLong("id");
 		experimentType.doPurification=rs.getBoolean("doPurification");
 		experimentType.mandatoryPurification=rs.getBoolean("mandatoryPurification");
@@ -78,7 +78,7 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 		
 		//Get nextExperimentType
 		ExperimentTypeDAO expTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-		List<ExperimentType> nextExpTypes = expTypeDAO.findNextExperiments(experimentType.id);
+		List<ExperimentType> nextExpTypes = expTypeDAO.findPreviousExperiments(experimentType.id);
 		experimentType.previousExperimentTypes = nextExpTypes;
 		
 		//Get purification method

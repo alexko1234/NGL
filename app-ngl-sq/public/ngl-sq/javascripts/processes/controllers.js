@@ -79,7 +79,8 @@ function SearchCtrl($scope, $http, datatable,basket) {
 			this.search();
 		}else{
 			$scope.tabs.splice(0,1);
-		}		
+		}	
+		$scope.basket.reset();
 	}
 	
 	$scope.changeProject = function(){
