@@ -23,7 +23,6 @@ import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.ProtocolCategory;
 import models.laboratory.experiment.description.PurificationMethodType;
 import models.laboratory.experiment.description.QualityControlType;
-import models.laboratory.reagent.description.ReagentType;
 import models.laboratory.experiment.description.dao.ProtocolDAO;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
@@ -38,17 +37,19 @@ import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.description.dao.SampleCategoryDAO;
 import models.utils.dao.DAOException;
+import models.laboratory.reagent.description.dao.ReagentTypeDAO;
+import models.laboratory.reagent.description.ReagentType;
 
-import org.junit.Assert;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import play.api.modules.spring.Spring;
-import utils.AbstractTests;
 import play.test.Helpers;
+import utils.AbstractTests;
 
 
 /**
