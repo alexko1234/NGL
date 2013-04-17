@@ -23,7 +23,7 @@ import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.ProtocolCategory;
 import models.laboratory.experiment.description.PurificationMethodType;
 import models.laboratory.experiment.description.QualityControlType;
-import models.laboratory.experiment.description.ReagentType;
+import models.laboratory.reagent.description.ReagentType;
 import models.laboratory.experiment.description.dao.ProtocolDAO;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
