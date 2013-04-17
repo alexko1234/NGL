@@ -28,7 +28,8 @@ public class Runs extends Controller {
 		columns.add(DatatableHelpers.getColumn("code", "Code", true, false, false));
 		columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", "Creation date", true, false, false));
 		columns.add(DatatableHelpers.getColumn("dispatch", "Dispatch", true, false, false));
-		DatatableConfig config = new DatatableConfig(columns, Boolean.TRUE, Boolean.FALSE);
+		DatatableConfig config = new DatatableConfig(columns);
+		config.show = true;
 		return ok(search.render(config));
 	}
 	
