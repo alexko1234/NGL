@@ -18,36 +18,37 @@ import views.html.processes.*;
 public class Processes extends Controller{
 	
 	public static Result home(String code){
-		return ok(home.render());
+		return ok(home.render(code));
 	}
 	
-	public static Result search(){
+	public static Result searchContainers(){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("container.table.code"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("container.table.projectCodes"), true, false, false));				
-		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("container.table.sampleCodes"), true, false, false));		
-		columns.add(DatatableHelpers.getColumn("valid", Messages.get("container.table.valid"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("container.table.stateCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("container.table.categoryCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("container.table.fromExperimentTypeCodes")));
+		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes"), true, false, false));				
+		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("containers.table.sampleCodes"), true, false, false));		
+		columns.add(DatatableHelpers.getColumn("valid", Messages.get("containers.table.valid"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("containers.table.stateCode"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes")));
 		
 		DatatableConfig config = new DatatableConfig(columns);
 		config.button = Boolean.TRUE;
-		return ok(search.render(config));
+		return ok(searchContainers.render(config));
 	}
 	
-	public static Result list(){
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("container.table.code")));
-		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("container.table.categoryCode")));
-		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("container.table.sampleCode")));
-		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("container.table.fromExperimentTypeCodes")));
-		columns.add(DatatableHelpers.getColumn("valid", Messages.get("container.table.valid")));
-		columns.add(DatatableHelpers.getColumn("support.name", Messages.get("container.table.support.name")));
-		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("container.table.stateCode")));
-		DatatableConfig config = new DatatableConfig(columns,true, true);
-		config.button = Boolean.TRUE;
-		return ok(list.render(config));
+	public static Result newProcesses(String processTypeCode){
+		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
+		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code")));
+		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode")));						
+		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode")));
+		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode")));
+		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("processes.table.stateCode")));
+		DatatableConfig config = new DatatableConfig(columns);
+		config.save = true;
+		config.edit = true;
+		config.remove = true;
+		config.button = true;
+		return ok(newProcesses.render(config));
 	}
 	
 	
@@ -56,6 +57,7 @@ public class Processes extends Controller{
   	    return ok(  	    		
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
+  	    		controllers.processes.tpl.routes.javascript.Processes.newProcesses(),  
   	    		controllers.processes.tpl.routes.javascript.Processes.home(),  
   	    		controllers.lists.api.routes.javascript.Lists.projects(),
   	    		controllers.lists.api.routes.javascript.Lists.samples(),

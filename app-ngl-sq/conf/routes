@@ -14,8 +14,8 @@ GET		/api/containers							controllers.containers.api.Containers.list()
 
 #processes tpl
 GET 	/processes/:code						controllers.processes.tpl.Processes.home(code:java.lang.String)
-GET		/tpl/processes/search					controllers.processes.tpl.Processes.search()
-GET		/tpl/processes/list						controllers.processes.tpl.Processes.list()
+GET		/tpl/processes/new/search				controllers.processes.tpl.Processes.searchContainers()
+GET		/tpl/processes/new/:processTypeCode		controllers.processes.tpl.Processes.newProcesses(processTypeCode:java.lang.String)
 GET		/tpl/processes/assets					controllers.processes.tpl.Processes.javascriptRoutes()
 
 #processes api

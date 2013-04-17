@@ -8,10 +8,7 @@ factory('basket', ['$http', function($http){ //service to manage baskets local
 			configMaster : undefined,
 			basket : [],
 			
-			configDefault:{
-				transform: function(element){
-					return element;
-				}
+			configDefault:{			
 			},
 			/**
 			 * function to keep the basket when we switch views
@@ -26,10 +23,10 @@ factory('basket', ['$http', function($http){ //service to manage baskets local
 			add: function(element){
 				if(angular.isArray(element)){
 					for(var i = 0; i < element.length; i++){
-						this.basket.push(this.config.transform(element[i]));
+						this.basket.push(element[i]);
 					}
 				}else{
-					this.basket.push(this.config.transform(element));
+					this.basket.push(element);
 				}				
 			},
 			

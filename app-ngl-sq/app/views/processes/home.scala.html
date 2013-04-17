@@ -1,4 +1,4 @@
-@()
+@(code : String)
 
 @import models.laboratory.common.description.ObjectType
 
@@ -11,4 +11,4 @@
 	<script src="@controllers.processes.tpl.routes.Processes.javascriptRoutes" type="text/javascript" charset="utf-8"></script>   
 }
 
-@views.html.search("processes.title", "processus", scripts, controllers.processes.tpl.routes.Processes.home("home"))
+@views.html.search("processes.title", "processus", scripts, controllers.processes.tpl.routes.Processes.home(code))

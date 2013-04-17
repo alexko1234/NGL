@@ -35,13 +35,13 @@ public class Processes extends Controller{
 		Process processus = new Process();
 		processus.projectCode = container.projectCodes.get(0);
 		processus.sampleCode = container.sampleCodes.get(0);
-		processus.codeType = codeType;
+		//processus.codeType = codeType;
 		processus.containerInputCode = container.code;
 		
 		//processus.code = "testCode";//processtypecode/projectcode/samplecode/YYYYMMDDHHMMSS
 		Date d = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMDDHHMMSS");
-		processus.code = processus.codeType+"/"+processus.projectCode+"/"+processus.sampleCode+"/"+dateFormat.format(d);
+		//processus.code = processus.codeType+"/"+processus.projectCode+"/"+processus.sampleCode+"/"+dateFormat.format(d);
 		Logger.info("Code du nouveau processus: "+processus.code);
 		
 		MongoDBDAO.save("Process", processus);

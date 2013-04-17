@@ -1,6 +1,6 @@
 "use strict";
 
-function SearchCtrl($scope, $http, datatable,basket) {
+function SearchContainerCtrl($scope, $http, datatable,basket) {
 	 
 	$scope.datatableConfig = {
 		search:{
@@ -14,21 +14,7 @@ function SearchCtrl($scope, $http, datatable,basket) {
 			active:true
 		}
 	};
-	
-	$scope.basketConfig = {
-		transform: function(container){
-			var processus = {};
-			processus.projectCode = container.projectCodes[0];
-			processus.sampleCode = container.sampleCodes[0];
-			processus.containerInputCode = container.code;
-			processus.codeType = container.categoryCode;
-			return processus;
-		}
-	};
-	
-	
-	
-	
+		
 	$scope.init = function(){
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, $scope.datatableConfig);			
@@ -39,7 +25,7 @@ function SearchCtrl($scope, $http, datatable,basket) {
 		
 		
 		if(angular.isUndefined($scope.getBasket())){
-			$scope.basket = basket($scope,$scope.basketConfig);			
+			$scope.basket = basket($scope);			
 			$scope.setBasket($scope.basket);
 		}else{
 			$scope.basket = $scope.getBasket();
@@ -75,7 +61,7 @@ function SearchCtrl($scope, $http, datatable,basket) {
 	
 	$scope.changeProcessType = function(){
 		if($scope.form.processTypes.selected){
-			$scope.tabs[0] = {label:$scope.form.processTypes.selected.name,href:jsRoutes.controllers.processes.tpl.Processes.home("list").url,remove:false};
+			$scope.tabs[0] = {label:$scope.form.processTypes.selected.name,href:jsRoutes.controllers.processes.tpl.Processes.home("new/"+$scope.form.processTypes.selected.code).url,remove:false};
 			this.search();
 		}else{
 			$scope.tabs.splice(0,1);
@@ -114,10 +100,21 @@ function SearchCtrl($scope, $http, datatable,basket) {
 			$scope.datatable.search(jsonSearch);
 		}							
 	}
+	
+	$scope.addToBasket = function(containers){
+		for(var i = 0; i < containers.length; i++){
+				var processus = {
+						projectCode: containers[i].projectCodes[0],
+						sampleCode: containers[i].sampleCodes[0],
+						containerInputCode: containers[i].code
+				};			
+				this.basket.add(processus);
+		}					
+	}
 }
-SearchCtrl.$inject = ['$scope','$http', 'datatable','basket'];
+SearchContainerCtrl.$inject = ['$scope','$http', 'datatable','basket'];
 
-function ListCtrl($scope, datatable) {
+function ListNewCtrl($scope, datatable) {
 	
 	$scope.datatableConfig = {
 			pagination:{
@@ -125,14 +122,34 @@ function ListCtrl($scope, datatable) {
 			},		
 			search:{
 				active:false
+			},
+			order:{
+				mode:'local', //or 
+				active:true,
+				by:'containerInputCode'
+			},
+			edit:{
+				active:false
+			},
+			save:{
+				active:true,
+				withoutEdit:true,
+			},
+			remove:{
+				active:true,
+				mode:'local',
+				callback : function(datatable){
+					$scope.basket.reset();
+					$scope.basket.add(datatable.allResult);
+				}
 			}
 		};
 	
 	$scope.init = function(){
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		$scope.basket = $scope.getBasket();
-		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
+		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);		
 	}
 	
 };
-ListCtrl.$inject = ['$scope', 'datatable'];
+ListNewCtrl.$inject = ['$scope', 'datatable'];

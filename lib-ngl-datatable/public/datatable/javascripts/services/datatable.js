@@ -46,6 +46,7 @@ angular.module('datatableServices', []).
 							},
 							save :{
 								active:false,
+								withoutEdit:false,
 								mode:'remote', //or local
 								url:undefined
 							},
@@ -373,18 +374,7 @@ angular.module('datatableServices', []).
 		    					console.log("edit is not active !");
 		    					return false;
 		    				}
-		    			},
-		    			/**
-		    			 * Test if edit mode is start
-		    			 */
-		    			isEditStart: function(){
-		    				if(this.config.edit.active){
-		    					return this.config.edit.start;
-		    				}else{
-		    					console.log("edit is not active !");
-		    					return false;
-		    				}
-		    			},
+		    			},		    			
 		    			/**
 		    			 * Update all line with the same value
 		    			 * @param updateColumnName : column name
@@ -408,7 +398,7 @@ angular.module('datatableServices', []).
 		    			save : function(){
 		    				if(this.config.save.active){
 			    				for(var i = 0; i < this.displayResult.length; i++){
-			    					if(this.displayResult[i].edit){
+			    					if(this.displayResult[i].edit || this.config.save.withoutEdit){
 			    						if(this.isRemoteMode(this.config.save.mode)){
 			    							this.saveRemote(this.displayResult[i], i);
 			    						}else{		    									    		    				
@@ -453,6 +443,19 @@ angular.module('datatableServices', []).
 								this.displayResult[i].trClass = "success";		
 		    				}else{
 		    					console.log("save is not active !");		    				
+		    				}
+		    			},
+		    			/**
+		    			 * Test if save mode can be enable
+		    			 */
+		    			isSaveEnable: function(){
+		    				if(this.config.edit.active && !this.config.save.withoutEdit){
+		    					return this.config.edit.start;
+		    				}else if(this.config.save.withoutEdit){
+		    					return true;
+		    				}else{
+		    					console.log("edit is not active !");
+		    					return false;
 		    				}
 		    			},
 		    			//remove

@@ -42,7 +42,7 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 		return prevExperimentTypeMappingQuery.execute(idExperimentType);
 	}
 
-	public List<ExperimentType> findByProcessId(long id)
+	public List<ExperimentType> findByProcessTypeId(long id)
 	{
 		String sql = "SELECT et.id, doPurification, mandatoryPurification, doQualityControl, mandatoryQualityControl,fk_common_info_type, fk_experiment_category, fk_common_info_type "+
 				"FROM experiment_type as et JOIN process_experiment_type as p ON p.fk_experiment_type=et.id "+
@@ -243,8 +243,23 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 	}
 
 
-	public List<ExperimentType> getPreviousExperimentType(String processTypeCode){
-		return null;
+	public List<String> findPreviousExperimentTypeCode(String processTypeCode){
+		String query = "select cit.code from process_type pt " +
+				"inner join previous_experiment_types net on net.fk_previous_experiment_type =  pt.fk_first_experiment_type "+
+				"inner join experiment_type etp on etp.id = net.fk_experiment_type "+
+				"inner join common_info_type cit on cit.id = etp.id";
+
+		List<String> list = jdbcTemplate.query(
+				query,
+			    new RowMapper<String>() {
+
+			        public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+			        	String listObj = rs.getString("code");
+			            return listObj;
+			        }
+			    });
+		
+		return list;
 	}
 
 }

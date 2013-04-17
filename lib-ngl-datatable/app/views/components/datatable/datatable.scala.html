@@ -32,7 +32,7 @@
 		<button class="btn" ng-click="@(config.name).setEditColumn()" ng-disabled="!@(config.name).isSelect()"  data-toggle="tooltip" title="@Messages("datatable.button.edit")">
 		<i class="icon-edit icon-large"></i>@if(!config.compact){ @Messages("datatable.button.edit")}
 		</button>
-		
+		@if(config.editColumn){
 		<button data-toggle="dropdown" class="btn dropdown-toggle" ng-disabled="!@(config.name).isSelect()">
 			<span class="caret"></span>
 		</button>
@@ -41,16 +41,19 @@
 				<a href="#" ng-click="@(config.name).setEditColumn(column.id)">{{column.header}}</a>
 			  </li>									
 		</ul>
+		}
 	</div>
 	}
 	**@
-	@if(config.edit || config.remove){	
+	@if(config.edit || config.remove || config.save){	
 	<div class="btn-group">
 		@if(config.edit){
-		<button class="btn" ng-click="@(config.name).setEditColumn()" ng-disabled="!@(config.name).isSelect()"  data-toggle="tooltip" title="@Messages("datatable.button.edit")">
+		<button class="btn" ng-click="@(config.name).setEditColumn()" ng-disabled="!@(config.name).isSelect()"  ng-show="@(config.name).config.edit.active" data-toggle="tooltip" title="@Messages("datatable.button.edit")">
 		<i class="icon-edit icon-large"></i>@if(!config.compact){ @Messages("datatable.button.edit")}
 		</button>
-		<button class="btn" ng-click="@(config.name).save()" ng-disabled="!@(config.name).isEditStart()" ng-show="@(config.name).isShowEdit()"  data-toggle="tooltip" title="@Messages("datatable.button.save")" >
+		}
+		@if(config.save){
+		<button class="btn" ng-click="@(config.name).save()" ng-disabled="!@(config.name).isSaveEnable()" ng-show="@(config.name).config.save.active"  data-toggle="tooltip" title="@Messages("datatable.button.save")" >
 		<i class="icon-save icon-large"></i>@if(!config.compact){ @Messages("datatable.button.save")}
 		</button> 
 		}
@@ -113,18 +116,18 @@
 <table class="table table-condensed table-hover table-bordered">
 	<thead>
 	<tr>
-		<th ng-repeat="column in @(config.name).getColumns()" ng-hide="@(config.name).isHide(column.id)"> {{column.header}}
+		<th ng-repeat="column in @(config.name).getColumns()" @if(config.hidding){ng-hide="@(config.name).isHide(column.id)"}> {{column.header}}
 		<div class="btn-group pull-right">
-			<button class="btn btn-mini" ng-click="@(config.name).setEditColumn(column.id)" ng-show="column.edit" ng-disabled="!@(config.name).isSelect()" data-toggle="tooltip" title="@Messages("datatable.button.edit")"><i class="icon-edit"></i></button>
-			<button class="btn btn-mini" ng-click="@(config.name).setOrderColumn(column.property, column.id)" ng-show="column.order" data-toggle="tooltip" title="@Messages("datatable.button.sort")"><i ng-class="@(config.name).getOrderColumnClass(column.id)"></i></button>
-			<button class="btn btn-mini" ng-click="@(config.name).setHideColumn(column.id)" ng-show="column.hide" data-toggle="tooltip" title="@Messages("datatable.button.hide")"><i class="icon-eye-close"></i></button>			
-			</div>					
+			@if(config.editColumn){<button class="btn btn-mini" ng-click="@(config.name).setEditColumn(column.id)" ng-show="column.edit" ng-disabled="!@(config.name).isSelect()" data-toggle="tooltip" title="@Messages("datatable.button.edit")"><i class="icon-edit"></i></button>}
+			@if(config.order){<button class="btn btn-mini" ng-click="@(config.name).setOrderColumn(column.property, column.id)" ng-show="column.order" data-toggle="tooltip" title="@Messages("datatable.button.sort")"><i ng-class="@(config.name).getOrderColumnClass(column.id)"></i></button>}
+			@if(config.hidding){<button class="btn btn-mini" ng-click="@(config.name).setHideColumn(column.id)" ng-show="column.hide" data-toggle="tooltip" title="@Messages("datatable.button.hide")"><i class="icon-eye-close"></i></button>}			
+		</div>					
 		</th>
 	</tr>
 	</thead>
 	<tbody>
 	<!-- first line to edit mode -->
-	@if(config.edit){
+	@if(config.editColumn){
 	<tr ng-show="@(config.name).isEditStart()">
 		@for(column: DatatableColumn <- config.columns){
 			<td @if(column.hide){ng-hide="@(config.name).isHide('@column.id')"}>

@@ -25,7 +25,7 @@ import fr.cea.ig.DBObject;
 @MongoCollection(name="Process")
 public class Process extends DBObject {
 	
-	public String codeType;
+	public String typeCode;
 	public String categoryType;
 	
 	public String stateCode;
@@ -50,8 +50,7 @@ public class Process extends DBObject {
 	public String currentExperimentTypeCode;
 	
 	public String containerInputCode;
-	//public List<String> containerOutCodes;
-
+	
 	
 	@JsonIgnore
 	public Container getInputContainer(){
@@ -65,7 +64,7 @@ public class Process extends DBObject {
 	
 	@JsonIgnore
 	public ProcessType getProcessType(){
-		return new HelperObjects<ProcessType>().getObject(ProcessType.class, codeType, null);
+		return new HelperObjects<ProcessType>().getObject(ProcessType.class, typeCode, null);
 	}
 	
 	@JsonIgnore

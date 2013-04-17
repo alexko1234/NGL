@@ -32,7 +32,7 @@ object ApplicationBuild extends Build {
                publishMavenStyle := true               
            )  
            
-            val buildSettingsLib = Defaults.defaultSettings ++ Seq (
+           val buildSettingsLib = Defaults.defaultSettings ++ Seq (
                organization   := buildOrganization,
                version        := buildVersion,
                credentials += Credentials(new File(sys.env.getOrElse("NEXUS_CREDENTIALS","") + "/nexus.credentials")),
@@ -59,8 +59,7 @@ object ApplicationBuild extends Build {
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
         "net.sf.opencsv" % "opencsv" % "2.0",
-		"org.springframework" % "spring-test" % "3.0.7.RELEASE",
-	    "fr.cea.ig" %% "datatable" % "1.0-SNAPSHOT"
+		"org.springframework" % "spring-test" % "3.0.7.RELEASE"
     	)	
    	val ngldatatableDependencies = Seq(
    	    javaCore
@@ -85,15 +84,15 @@ object ApplicationBuild extends Build {
     	
     	val nglsqDependencies = Seq(
 			javaCore, javaJdbc,
-	      // Add your project dependencies here,
-		 "fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
-	      "net.sourceforge.jtds" % "jtds" % "1.2.4",
-	      "org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
-	      "mysql" % "mysql-connector-java" % "5.1.18",
-              "net.sourceforge.jtds" % "jtds" % "1.2.2",
-	      "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
-	      "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
-	      "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"  
+		      // Add your project dependencies here,
+		      "fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
+		      "net.sourceforge.jtds" % "jtds" % "1.2.4",
+		      "org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
+		      "mysql" % "mysql-connector-java" % "5.1.18",
+		      "net.sourceforge.jtds" % "jtds" % "1.2.2",
+		      "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
+		      "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
+		      "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"  
 		 	)
     	
     	val nglauthDependencies = Seq(
@@ -127,20 +126,22 @@ object ApplicationBuild extends Build {
        
     )
     
+     val ngldatatable = play.Project("lib-datatable", libDatatableVersion, ngldatatableDependencies, path = file("lib-ngl-datatable"),settings = buildSettingsLib).settings(
+       // Add your own project settings here      
+       resolvers := Seq(nexusig),
+	   sbt.Keys.fork in Test := false,
+       publishTo := Some(nexusigpublish)
+    )
+    
    val nglcommon = play.Project(appName + "-common", appVersion, nglcommonDependencies, path = file("lib-ngl-common"),settings = buildSettings).settings(
        // Add your own project settings here      
        resolvers := Seq(nexusig),
 	   sbt.Keys.fork in Test := false,
        publishTo := Some(nexusigpublish),       
        resourceDirectory in Test <<= baseDirectory / "conftest"
-    ).dependsOn(nglframeworkweb)
+    ).dependsOn(nglframeworkweb, ngldatatable)
     
-    val ngldatatable = play.Project("lib-datatable", libDatatableVersion, ngldatatableDependencies, path = file("lib-ngl-datatable"),settings = buildSettingsLib).settings(
-       // Add your own project settings here      
-       resolvers := Seq(nexusig),
-	   sbt.Keys.fork in Test := false,
-       publishTo := Some(nexusigpublish)
-    )
+   
    
    
    val nglbi = play.Project(appName + "-bi", appVersion, nglbiDependencies, path = file("app-ngl-bi"),settings = buildSettings).settings(
@@ -149,7 +150,7 @@ object ApplicationBuild extends Build {
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish) 
  
-    ).dependsOn(nglcommon,ngldatatable)
+    ).dependsOn(nglcommon)
    
    val nglsq = play.Project(appName + "-sq", appVersion, nglsqDependencies, path = file("app-ngl-sq"),settings = buildSettings).settings(
           // Add your own project settings here      
@@ -157,7 +158,7 @@ object ApplicationBuild extends Build {
           publishArtifact in makePom := false,
           publishTo := Some(nexusigpublish) 
     
-    ).dependsOn(nglcommon,ngldatatable)
+    ).dependsOn(nglcommon)
    
    
    val nglauth = play.Project(appName + "-authorization", appVersion, nglauthDependencies, path = file("app-ngl-authorization"),settings = buildSettings).settings(
@@ -182,7 +183,7 @@ object ApplicationBuild extends Build {
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish)
 
-    ).dependsOn(nglcommon,ngldatatable)
+    ).dependsOn(nglcommon)
 
 
    
