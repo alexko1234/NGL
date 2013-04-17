@@ -1,13 +1,14 @@
 @()
+@import scala.collection.immutable._
 
 @scripts() = {
 	 <script src="@routes.Assets.at("ngl-common/javascripts/controllers/commons.js")" type="text/javascript" charset="utf-8"></script>
 	 	<script src="@routes.Assets.at("ngl-common/javascripts/services/basket.js")" type="text/javascript" charset="utf-8"></script>                   
      <script src="@routes.Assets.at("datatable/javascripts/services/datatable.js")" type="text/javascript" charset="utf-8"></script>                           
-	<script src="@routes.Assets.at("javascripts/ngl/manips/app.js")" type="text/javascript" charset="utf-8"></script>  
-	<script src="@routes.Assets.at("javascripts/ngl/manips/controllers.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@routes.Assets.at("javascripts/ngl-plaques/manips/app.js")" type="text/javascript" charset="utf-8"></script>  
+	<script src="@routes.Assets.at("javascripts/ngl-plaues/manips/controllers.js")" type="text/javascript" charset="utf-8"></script>
 	    <script src="@controllers.manips.tpl.routes.Manips.javascriptRoutes" type="text/javascript" charset="utf-8"></script>
 }
 
-@views.html.search("title.manips", "manips", scripts, controllers.manips.tpl.routes.Manips.home("home"))
+@views.html.search("Plaques", "manips", scripts, controllers.manips.tpl.routes.Manips.home("home"))
 

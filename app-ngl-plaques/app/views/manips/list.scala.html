@@ -1,12 +1,6 @@
 @(datatableConfig: views.components.datatable.DatatableConfig)
-@form() = {
 
-}
-
-@button() = {
-	<button class="btn btn-info" ng-click="sauvegarde()" >@(Messages("manips.save"))</button>
-}
 
 <div ng-init="init()">
-@views.html.components.datatable.datatable(datatableConfig, form, button)		
+@views.html.components.datatable.datatable(datatableConfig)		
 </div>

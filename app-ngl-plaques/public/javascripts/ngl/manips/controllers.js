@@ -11,34 +11,42 @@ function SearchCtrl($scope, $http, datatable,basket) {
 				active:true
 			}
 	};
-
-	$scope.basketLocalConfig = {
-			transform: function(manip){
-				var puit={};
-				puit.code=manip.code;
-				puit.name=manip.name;
-				return puit;
-			}
-		};
 	
-	/*$scope.init = function(){
-		$scope.datatable = datatable($scope, $scope.datatableConfig);
-		$scope.basket=basket($scope, $scope.basketsConfig, $scope.datatable);
+	$scope.addToBasket = function(manips){
+		for(var i = 0; i < manips.length; i++){
+				var puit = {
+						
+						matmaco:manips[i].matmaco,
+						matmanom:manips[i].matmanom,
+						x:$scope.positionPlaque96()
+				};			
+				this.basket.add(puit);
+		}					
+	}
+	
+	$scope.positionPlaque96= function(){
 		
-		$http.get('/tpl/projects/list').
-		success(function(data, status, headers, config){
-			$scope.projects = data;
-		});
+		if($scope.y==undefined){
+			$scope.y=1;
+			$scope.x="A";
+		}
+		else {
+			//changement de colonne
+			if($scope.y==12){
+				
+				if(String.fromCharCode($scope.x.charCodeAt(0))=="H")
+				{ return "Erreur"};
+				
+				$scope.x= String.fromCharCode($scope.x.charCodeAt(0)+1);
+				$scope.y=1;
+			}
+			
+			$scope.y=$scope.y+1; 
 		
-		
-		$http.get('/tpl/etmanips/list').
-		success(function(data, status, headers, config){
-			$scope.etmanips = data;
-		});
-
-		
-		$scope.search();
-	}*/
+		};
+				
+		return $scope.x+$scope.y;
+	}	
 	
 	
 	$scope.init = function(){
@@ -125,6 +133,18 @@ function ListCtrl($scope, datatable) {
 			},		
 			search:{
 				active:false
+			},
+			save:{
+				active:true,
+				withoutEdit:true,
+			},
+			remove:{
+				active:true,
+				mode:'local',
+				callback : function(datatable){
+					$scope.basket.reset();
+					$scope.basket.add(datatable.allResult);
+				}
 			}
 		};
 	

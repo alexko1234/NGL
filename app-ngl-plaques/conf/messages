@@ -6,5 +6,5 @@ menu.manips=Manips
 menu.plaques=Plaques
 
 #Manips
-
+manip.title="Création plaque"
 button.addbasket=Puits
