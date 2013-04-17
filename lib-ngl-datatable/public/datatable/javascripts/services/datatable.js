@@ -42,7 +42,7 @@ angular.module('datatableServices', []).
 								active:false,
 								start : false,
 								all : false,
-								columns : {} //columnIndex : {edit : true/false, value:undefined}
+								columns : {}, //columnIndex : {edit : true/false, value:undefined}
 							},
 							save :{
 								active:false,
@@ -54,7 +54,8 @@ angular.module('datatableServices', []).
 								mode:'remote', //or local
 								url:undefined,
 								start:false,
-								counter:0
+								counter:0,
+								callback : undefined //used to have a callback after remove all element. the datatable is pass to callback method
 							},	
 							otherButtons:{
 								active:false
@@ -384,9 +385,6 @@ angular.module('datatableServices', []).
 		    					return false;
 		    				}
 		    			},
-		    			isShowEdit : function(){
-		    				return (this.config.edit.active || this.config.save.active);
-		    			},
 		    			/**
 		    			 * Update all line with the same value
 		    			 * @param updateColumnName : column name
@@ -477,6 +475,9 @@ angular.module('datatableServices', []).
 			    				}
 			    				this.config.remove.start = false;
 			    				this.config.remove.counter = 0;
+			    				if(angular.isFunction(this.config.remove.callback)){
+			    					this.config.remove.callback(this);
+			    				}
 		    				}else{
 		    					console.log("remove is not active !");		    				
 		    				}
@@ -508,9 +509,11 @@ angular.module('datatableServices', []).
 		    			removeLocal: function(i, nbDelete){
 		    				if(this.config.remove.active && this.config.remove.start){
 			    				//update in the all result table
-								var j = i;
+								var j ;
 								if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
 									j = (i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage))-this.config.remove.counter;
+								}else{
+									j = i -this.config.remove.counter
 								}
 								this.allResult.splice(j,1);
 								this.config.remove.counter++;
@@ -595,7 +598,7 @@ angular.module('datatableServices', []).
 		    				return (this.isShowToolbarLeft() || this.isShowToolbarRight());
 		    			},
 		    			isShowToolbarLeft: function(){
-		    				return ( this.isShowEdit() || this.config.remove.active || this.config.hide.active || this.config.show.active || this.config.otherButtons.active);
+		    				return (  this.config.edit.active ||  this.config.save.active || this.config.remove.active || this.config.hide.active || this.config.show.active || this.config.otherButtons.active);
 		    			},
 		    			isShowToolbarRight: function(){
 		    				return (this.isShowPagination() || this.config.showTotalNumberRecords);
