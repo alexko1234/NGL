@@ -30,6 +30,7 @@ public class Runs extends Controller {
 		columns.add(DatatableHelpers.getColumn("dispatch", "Dispatch", true, false, false));
 		DatatableConfig config = new DatatableConfig(columns);
 		config.show = true;
+		config.button = true;
 		return ok(search.render(config));
 	}
 	
