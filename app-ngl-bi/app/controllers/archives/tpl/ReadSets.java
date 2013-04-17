@@ -29,7 +29,7 @@ public class ReadSets extends Controller {
 		columns.add(DatatableHelpers.getColumn("readSetCode", "Read Set Code", true, false, false));
 		columns.add(DatatableHelpers.getColumn("path", "Path", true, false, false));
 		columns.add(DatatableHelpers.getDateColumn("date", "Date", true, false, false));
-		columns.add(DatatableHelpers.getColumn("id", "Backup Id"));
+		columns.add(DatatableHelpers.getColumn("id", "Backup Id", true, false, false));
 		
 		DatatableConfig config = new DatatableConfig(columns);
 		return ok(search.render(config));
