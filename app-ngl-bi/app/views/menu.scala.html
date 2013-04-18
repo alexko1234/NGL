@@ -7,7 +7,7 @@
 		<div class="navbar-inner">
 			<div class="container-fluid">
 				
-				<a class="brand" href="@routes.Application.index()">@Messages("application.name")</a>
+				<a class="brand" href="@controllers.routes.Application.index()">@Messages("application.name")</a>
 				
 					<ul class="nav">
 						<li class="@("active".when(nav == "runs"))"><a href="@controllers.runs.tpl.routes.Runs.home("home")">@Messages("menu.runs")</a>

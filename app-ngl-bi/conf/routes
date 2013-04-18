@@ -3,8 +3,7 @@
 # ~~~~
 
 # Home page
-# Home page
-GET     /                           controllers.Application.index()
+GET     /                           				controllers.Application.index()
 
 #ngs-rs api
 GET		/api/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
