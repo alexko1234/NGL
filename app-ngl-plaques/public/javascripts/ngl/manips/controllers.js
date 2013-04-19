@@ -12,40 +12,49 @@ function SearchCtrl($scope, $http, datatable,basket) {
 			}
 	};
 	
+	
 	$scope.addToBasket = function(manips){
 		for(var i = 0; i < manips.length; i++){
-				var puit = {
-						
-						matmaco:manips[i].matmaco,
-						matmanom:manips[i].matmanom,
-						x:$scope.positionPlaque96()
-				};			
-				this.basket.add(puit);
+			
+			$scope.lastPosition=$scope.positionPlaque96();
+			
+			var puit = {
+					
+					matmaco:manips[i].matmaco,
+					matmanom:manips[i].matmanom,
+					x:$scope.x,
+					y:$scope.y,
+					position:$scope.y+$scope.x
+			};		
+			
+			this.basket.add(puit);
 		}					
 	}
 	
 	$scope.positionPlaque96= function(){
 		
+		
 		if($scope.y==undefined){
-			$scope.y=1;
-			$scope.x="A";
+			$scope.x=1;
+			$scope.y="A";
 		}
 		else {
 			//changement de colonne
-			if($scope.y==12){
+			if($scope.x==12){
 				
-				if(String.fromCharCode($scope.x.charCodeAt(0))=="H")
-				{ return "Erreur"};
+				if(String.fromCharCode($scope.y.charCodeAt(0))=="H")
+				{ $scope.x=null;
+				  $scope.y="";
+				};
 				
-				$scope.x= String.fromCharCode($scope.x.charCodeAt(0)+1);
-				$scope.y=1;
+				$scope.y= String.fromCharCode($scope.y.charCodeAt(0)+1);
+				$scope.x=1;
 			}
-			
-			$scope.y=$scope.y+1; 
+			else {	$scope.x=$scope.x+1; } 
 		
 		};
-				
-		return $scope.x+$scope.y;
+		
+		return "" ;
 	}	
 	
 	
@@ -53,6 +62,8 @@ function SearchCtrl($scope, $http, datatable,basket) {
 		
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.tabs.push({label:"Puits",href:jsRoutes.controllers.manips.tpl.Manips.home("list").url,remove:false});//$scope.tabs[1]
+			$scope.tabs.push({label:"Plaques",href:jsRoutes.controllers.manips.tpl.Manips.home("plaque").url,remove:false});//$scope.tabs[1]
+			
 			$scope.datatable = datatable($scope, $scope.datatableConfig);
 			$scope.setDatatable($scope.datatable);	
 			
@@ -96,6 +107,7 @@ function SearchCtrl($scope, $http, datatable,basket) {
 		}else{
 			$scope.form = $scope.getForm();			
 		}
+		
 		
 }
 	
@@ -152,7 +164,32 @@ function ListCtrl($scope, datatable) {
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		$scope.basket = $scope.getBasket();
 		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
+		
 	}
+	
+	
+
 	
 };
 ListCtrl.$inject = ['$scope', 'datatable'];
+
+
+function PlaqueCtrl($scope) {
+	
+	
+	$scope.init = function(){
+		$scope.puits=$scope.getBasket().get();
+		
+	}
+	
+	$scope.displayCellPlaque =function(puits,label,val){
+        for (var i = 0, len = puits.length; i < len; i++) {
+         if (puits[i][label] === val) {
+         return puits[i].matmanom;
+         }
+     }
+         return "------";
+     }
+};
+
+PlaqueCtrl.$inject = ['$scope'];

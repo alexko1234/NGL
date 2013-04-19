@@ -10,6 +10,11 @@ angular.module('home', ['datatableServices','basketServices'], function($routePr
 		controller : 'ListCtrl'
 	});
 	
+	$routeProvider.when('/manips/plaque', {
+		templateUrl : '/tpl/manips/plaque',
+		controller : 'PlaqueCtrl'
+	});
+	
 	$routeProvider.otherwise({redirectTo: '/manips/home'});
 
 	// configure html5 to get links working with bookmarked
