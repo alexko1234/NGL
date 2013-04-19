@@ -1,0 +1,21 @@
+<div ng-init="init()">
+    <table>
+       <table>
+        <thead>
+            <tr>
+                <th>Plaque</th>
+                <th ng-repeat="i in ['A','B','C','D','E','F','G','H']">{{i}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="x in [1,2,3,4,5,6,7,8,9,10,11,12]" class="total">
+                <td>{{x}}</td>
+                <td ng-repeat="y in ['A','B','C','D','E','F','G','H']" class="browser">
+                    {{displayCellPlaque(puits,"position",y+x)}}</td>
+          
+            </tr>
+          
+        <tbody>
+    
+        </table>
+</div>

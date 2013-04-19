@@ -33,7 +33,7 @@ public class Manips extends Controller {
 	//TODO messages Code,Nom
 	public static Result list(){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("x", "Position Plaque"));
+		columns.add(DatatableHelpers.getColumn("position", "Position Plaque"));
 		columns.add(DatatableHelpers.getColumn("matmaco", "Code"));
 		columns.add(DatatableHelpers.getColumn("matmanom", "Nom"));
 		DatatableConfig config = new DatatableConfig(columns);
@@ -42,10 +42,10 @@ public class Manips extends Controller {
 		return ok(views.html.manips.list.render(config));
 	}
 	
-	/*
-	public static Result plaque96(){
+	
+	public static Result plaque(){
 		return ok(views.html.manips.plaque.render());
-	}*/
+	}
 	
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
@@ -54,7 +54,6 @@ public class Manips extends Controller {
   	        // Routes
   	    		controllers.manips.tpl.routes.javascript.Manips.home() ,
   	    		controllers.manips.api.routes.javascript.Manips.list(),
-  	  //  		controllers.manips.api.routes.javascript.Manips.plaque(),
   	    		controllers.routes.javascript.Lists.projects(),
   	    		controllers.routes.javascript.Lists.etmateriels(),
   	    		controllers.routes.javascript.Lists.etmanips()
