@@ -64,7 +64,7 @@ public class BusinessValidationHelper {
 		}		
 	}
 	
-	public static void validateProcess(Map<String, List<ValidationError>> errors, Process process,  String collectionName){
+	public static void validateProcess(Map<String, List<ValidationError>> errors, Process process,  String collectionName, String rootKeyName){
 		if(process == null){
 			throw new IllegalArgumentException("process is null");
 		}
@@ -76,7 +76,7 @@ public class BusinessValidationHelper {
 			//Check if the container exist in mongoDB
 			Container container = MongoDBDAO.findByCode(CONTAINER_COLL_NAME, Container.class, process.containerInputCode);
 			if(container == null){
-				addErrors(errors,process.containerInputCode, getKey("","containerInputCode"));
+				addErrors(errors,process.containerInputCode, getKey(rootKeyName,"containerInputCode"));
 			}
 		}
 		
@@ -85,6 +85,6 @@ public class BusinessValidationHelper {
 		required(errors, process.sampleCode, "sampleCode");
 		required(errors, process.typeCode, "typeCode");
 		
-		validateProperties(errors, process.properties, process.getProcessType().propertiesDefinitions, getKey("","properties"));
+		validateProperties(errors, process.properties, process.getProcessType().propertiesDefinitions, getKey(rootKeyName,"properties"));
 	}
 }

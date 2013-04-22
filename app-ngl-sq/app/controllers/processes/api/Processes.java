@@ -40,7 +40,7 @@ public class Processes extends Controller{
 				value.traceInformation.setTraceInformation("ngsrg");
 			}
 			//TODO Business Validation
-			BusinessValidationHelper.validateProcess(filledForm.errors(), value, Constants.PROCESS_COLL_NAME);
+			BusinessValidationHelper.validateProcess(filledForm.errors(), value, Constants.PROCESS_COLL_NAME,null);
 			//TODO Workflows Implementation
 			//container -> A
 			if (!filledForm.hasErrors()) {
