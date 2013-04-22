@@ -26,7 +26,7 @@ public class Lists extends Controller{
 		keys.put("_id", 0);//Don't need the _id field
 		keys.put("name", 1);
 		keys.put("code", 1);
-		List<Project> projects = MongoDBDAO.getCollection("Project", Project.class).find(DBQuery.exists("_id"),keys).toArray();
+		List<Project> projects = MongoDBDAO.find("Project", Project.class,DBQuery.exists("_id"),keys).sort("code").toList();
 		
 		return Results.ok(Json.toJson(ListObject.projectToJsonObject(projects)));	
 	}
@@ -62,7 +62,7 @@ public class Lists extends Controller{
 		keys.put("_id", 0);//Don't need the _id field
 		keys.put("name", 1);
 		keys.put("code", 1);
-		List<Sample> samples = MongoDBDAO.getCollection("Sample", Sample.class).find(DBQuery.is("projectCodes", projectCode),keys).toArray();
+		List<Sample> samples = MongoDBDAO.find("Sample", Sample.class,DBQuery.is("projectCodes", projectCode),keys).sort("code").toList();
 		
 		return Results.ok(Json.toJson(ListObject.sampleToJsonObject(samples)));
 	}

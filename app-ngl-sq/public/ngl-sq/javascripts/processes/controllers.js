@@ -1,10 +1,10 @@
 "use strict";
 
-function SearchContainerCtrl($scope, $http, datatable,basket) {
+function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 	 
 	$scope.datatableConfig = {
 		search:{
-			url:'/api/containers'
+			url:jsRoutes.controllers.containers.api.Containers.list()
 		},
 		order:{
 			active:true,
@@ -15,6 +15,8 @@ function SearchContainerCtrl($scope, $http, datatable,basket) {
 		}
 	};
 		
+	$scope.comboLists = comboLists;
+	
 	$scope.init = function(){
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, $scope.datatableConfig);			
@@ -39,20 +41,8 @@ function SearchContainerCtrl($scope, $http, datatable,basket) {
 					samples:{}
 			};
 			$scope.setForm($scope.form);
-			
-			$http.get(jsRoutes.controllers.lists.api.Lists.processTypes().url).
-				success(function(data, status, headers, config){
-					$scope.form.processTypes.options = data;
-			});
-				
-			
-			$http.get(jsRoutes.controllers.lists.api.Lists.projects().url).
-				success(function(data, status, headers, config){
-					$scope.form.projects.options = data;
-				});
-			
-			
-			
+			$scope.form.processTypes.options = $scope.comboLists.getProcessTypes().query();
+			$scope.form.projects.options = $scope.comboLists.getProjects().query();
 			
 		}else{
 			$scope.form = $scope.getForm();			
@@ -71,10 +61,7 @@ function SearchContainerCtrl($scope, $http, datatable,basket) {
 	
 	$scope.changeProject = function(){
 		if($scope.form.projects.selected){
-			$http.get(jsRoutes.controllers.lists.api.Lists.samples($scope.form.projects.selected.code).url).
-			success(function(data, status, headers, config){
-				$scope.form.samples.options = data;
-			});		
+			$scope.form.samples.options =  $scope.comboLists.getSamples($scope.form.projects.selected.code).query();			
 		}else{
 			$scope.form.samples.options = [];
 		}	
@@ -87,7 +74,7 @@ function SearchContainerCtrl($scope, $http, datatable,basket) {
 	$scope.search = function(){
 		if($scope.form.processTypes.selected){ 		
 			var jsonSearch = {};			
-			jsonSearch.stateCode = 'N';			
+			jsonSearch.stateCode = 'N';	//default state code for containers		
 			if($scope.form.projects.selected){
 				jsonSearch.projectCode = $scope.form.projects.selected.code;
 			}			
@@ -103,16 +90,19 @@ function SearchContainerCtrl($scope, $http, datatable,basket) {
 	
 	$scope.addToBasket = function(containers){
 		for(var i = 0; i < containers.length; i++){
+			for(var j = 0; j < containers[i].sampleCodes.length; j++){ //one process by sample
 				var processus = {
 						projectCode: containers[i].projectCodes[0],
-						sampleCode: containers[i].sampleCodes[0],
-						containerInputCode: containers[i].code
+						sampleCode: containers[i].sampleCodes[j],
+						containerInputCode: containers[i].code,
+						typeCode:$scope.form.processTypes.selected.code
 				};			
 				this.basket.add(processus);
+			}
 		}					
 	}
 }
-SearchContainerCtrl.$inject = ['$scope','$http', 'datatable','basket'];
+SearchContainerCtrl.$inject = ['$scope', 'datatable','basket','comboLists'];
 
 function ListNewCtrl($scope, datatable) {
 	
@@ -134,6 +124,7 @@ function ListNewCtrl($scope, datatable) {
 			save:{
 				active:true,
 				withoutEdit:true,
+				url:jsRoutes.controllers.processes.api.Processes.save()
 			},
 			remove:{
 				active:true,

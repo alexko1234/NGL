@@ -5,6 +5,7 @@ import java.util.List;
 
 import controllers.processes.tpl.routes.javascript;
 
+import play.Logger;
 import play.Routes;
 import play.i18n.Messages;
 import play.mvc.Controller;
@@ -19,6 +20,11 @@ public class Processes extends Controller{
 	
 	public static Result home(String code){
 		return ok(home.render(code));
+	}
+	
+	public static Result code(String code){
+		Logger.info("Process Code: " + code);
+		return ok(home.render("home"));
 	}
 	
 	public static Result searchContainers(){
@@ -59,9 +65,11 @@ public class Processes extends Controller{
   	        // Routes
   	    		controllers.processes.tpl.routes.javascript.Processes.newProcesses(),  
   	    		controllers.processes.tpl.routes.javascript.Processes.home(),  
+  	    		controllers.processes.api.routes.javascript.Processes.save(),
   	    		controllers.lists.api.routes.javascript.Lists.projects(),
   	    		controllers.lists.api.routes.javascript.Lists.samples(),
-  	    		controllers.lists.api.routes.javascript.Lists.processTypes()
+  	    		controllers.lists.api.routes.javascript.Lists.processTypes(),
+  	    		controllers.containers.api.routes.javascript.Containers.list()
   	      )	  	      
   	    );
   	  }

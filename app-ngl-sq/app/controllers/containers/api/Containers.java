@@ -49,7 +49,7 @@ public class Containers extends CommonController {
 	    MongoDBResult<Container> results = MongoDBDAO.find(CONTAINER_COLL_NAME, Container.class, query)
 				.sort(DatatableHelpers.getOrderBy(containerFilledForm), getMongoDBOrderSense(containerFilledForm))
 				.page(DatatableHelpers.getPageNumber(containerFilledForm), DatatableHelpers.getNumberRecordsPerPage(containerFilledForm)); 
-		List<Container> containers = results.toList();
+		List<Container> containers = results.sort("code").toList();
 		return ok(Json.toJson(new DatatableResponse(containers, results.count())));
 	}
 
