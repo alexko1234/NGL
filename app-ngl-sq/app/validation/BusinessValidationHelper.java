@@ -85,6 +85,6 @@ public class BusinessValidationHelper {
 		required(errors, process.sampleCode, "sampleCode");
 		required(errors, process.typeCode, "typeCode");
 		
-		validateProperties(errors, process.properties, process.getProcessType().propertiesDefinitions, getKey(rootKeyName,"properties"));
+		//validateProperties(errors, process.properties, process.getProcessType().propertiesDefinitions, getKey(rootKeyName,"properties"));
 	}
 }
