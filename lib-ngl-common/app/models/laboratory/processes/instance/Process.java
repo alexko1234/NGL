@@ -26,18 +26,18 @@ import fr.cea.ig.DBObject;
 public class Process extends DBObject {
 	
 	public String typeCode;
-	public String categoryType;
+	public String categoryCode;
 	
 	public String stateCode;
 	public String resolutionCode;
 	
-	public TraceInformation traceinformation;
+	public TraceInformation traceInformation;
 	public List<Comment> comments;
 
 	public Map<String,PropertyValue> properties;
 	
 	// Creating one process create many process instance there are sample on container selected
-	public String aggregationKey;
+	// public String aggregationKey; //? used containerInputCode as aggregationKey
 	
 	// User or Equipe
 	//public List<String> equipeCode;
@@ -69,7 +69,7 @@ public class Process extends DBObject {
 	
 	@JsonIgnore
 	public ProcessCategory getProcessCategory(){
-		return new HelperObjects<ProcessCategory>().getObject(ProcessCategory.class, categoryType, null);
+		return new HelperObjects<ProcessCategory>().getObject(ProcessCategory.class, categoryCode, null);
 	}
 	
 	@JsonIgnore
