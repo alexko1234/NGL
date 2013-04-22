@@ -16,6 +16,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import validation.BusinessValidationHelper;
 
 public class Processes extends Controller{
 	
@@ -39,8 +40,9 @@ public class Processes extends Controller{
 				value.traceInformation.setTraceInformation("ngsrg");
 			}
 			//TODO Business Validation
+			BusinessValidationHelper.validateProcess(filledForm.errors(), value, Constants.PROCESS_COLL_NAME);
 			//TODO Workflows Implementation
-			//BusinessValidationHelper.validateRun(filledForm.errors(), runValue, Constants.RUN_ILLUMINA_COLL_NAME);
+			//container -> A
 			if (!filledForm.hasErrors()) {
 				value = MongoDBDAO.save(Constants.PROCESS_COLL_NAME,value);
 				filledForm = filledForm.fill(value);
