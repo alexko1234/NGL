@@ -9,10 +9,7 @@ angular.module('home', ['datatableServices','basketServices', 'comboListsService
 		templateUrl : function(params){return '/tpl/processes/new/'+params.processTypeCode},
 		controller : 'ListNewCtrl'
 	});
-	$routeProvider.when('/processes/:processTypeCode/:projectCode/:sampleCode/:date', {
-		templateUrl : function(params){return '/tpl/processes/details/'+params.processTypeCode},
-		controller : 'ListNewCtrl'
-	});
+	
 	$routeProvider.otherwise({redirectTo: '/processes/new'});
 
 	// configure html5 to get links working with bookmarked

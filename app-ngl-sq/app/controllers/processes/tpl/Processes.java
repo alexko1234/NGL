@@ -22,10 +22,7 @@ public class Processes extends Controller{
 		return ok(home.render(code));
 	}
 	
-	public static Result code(String code){
-		Logger.info("Process Code: " + code);
-		return ok(home.render("home"));
-	}
+	
 	
 	public static Result searchContainers(){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
