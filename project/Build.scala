@@ -126,7 +126,7 @@ object ApplicationBuild extends Build {
        
     )
     
-     val ngldatatable = play.Project("lib-datatable", libDatatableVersion, ngldatatableDependencies, path = file("lib-ngl-datatable"),settings = buildSettingsLib).settings(
+     val ngldatatable = play.Project("datatable", libDatatableVersion, ngldatatableDependencies, path = file("lib-ngl-datatable"),settings = buildSettingsLib).settings(
        // Add your own project settings here      
        resolvers := Seq(nexusig),
 	   sbt.Keys.fork in Test := false,
@@ -141,9 +141,7 @@ object ApplicationBuild extends Build {
        resourceDirectory in Test <<= baseDirectory / "conftest"
     ).dependsOn(nglframeworkweb, ngldatatable)
     
-   
-   
-   
+    
    val nglbi = play.Project(appName + "-bi", appVersion, nglbiDependencies, path = file("app-ngl-bi"),settings = buildSettings).settings(
        // Add your own project settings here      
        resolvers := Seq(nexusig),
