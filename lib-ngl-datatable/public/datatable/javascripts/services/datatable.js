@@ -413,12 +413,18 @@ angular.module('datatableServices', []).
 		    			saveRemote : function(value, i){
 		    				var url = this.getUrl(this.config.save.url);
 			    			if(url){
+			    				//remove datatable properties
+			    				value.selected = undefined;
+			    				value.edit = undefined;
+			    				value.trClass = undefined;
+			    				//call url
 			    				$http.post(url, value, {datatable:this,index:i})
 				    				.success(function(data, status, headers, config) {
-				    					config.datatable.saveLocal(config.index);
+				    					config.datatable.saveLocal(data, config.index);
 				    				})
 				    				.error(function(data, status, headers, config) {
 				    					config.datatable.displayResult[config.index].trClass = "error";
+				    					config.datatable.displayResult[config.index].edit = true;
 				    					//TODO add error messages as in datatable jquery
 				    				});
 		    				}else{
@@ -429,12 +435,12 @@ angular.module('datatableServices', []).
 		    			/**
 		    			 * Call after save to update the records property
 		    			 */
-		    			saveLocal: function(i){
+		    			saveLocal: function(data, i){
 		    				if(this.config.save.active){
-			    				this.displayResult[i].selected = false;
-								this.displayResult[i].edit = false;
-								this.displayResult[i].trClass = undefined;
-								//update in the all result table
+		    					if(data){
+		    						this.displayResult[i] = data;
+		    					}
+			    				//update in the all result table
 								var j = i;
 								if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
 									j = i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage);
