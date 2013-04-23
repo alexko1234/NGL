@@ -80,7 +80,7 @@ public class BusinessValidationHelper {
 				addErrors(errors,process.containerInputCode, getKey(rootKeyName,"containerInputCode"));
 			} else {
 				if(!container.stateCode.equals("IWP") && !container.stateCode.equals("N")){
-					addErrors(errors,process.containerInputCode, getKey(rootKeyName,"containerNotIWP"));
+					addErrors(errors,process.containerInputCode, getKey(rootKeyName,"containerNotIWPOrN"));
 				}
 			}
 		}
