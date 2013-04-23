@@ -1,6 +1,8 @@
 package validation.utils;
 
 
+import static validation.utils.ConstraintsHelper.required;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.TraceInformation;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -196,5 +199,32 @@ public class ConstraintsHelper {
 
 	public static String getKey(String rootKeyName, String property) {
 		return (StringUtils.isBlank(rootKeyName))?property: rootKeyName+"."+property;
+	}
+	
+	/**
+	 * Validate TraceInformation 
+	 * Check createUser and creationDate is not null if _id is null
+	 * Check createUser, creationDate, modifyUser, modifyDate is not null if _id is null
+	 * 
+	 * @param errors
+	 * @param trace
+	 * @param id
+	 */
+	public static void validateTraceInformation(
+			Map<String, List<ValidationError>> errors, TraceInformation trace,
+			String id) {
+		if (id != null) {
+			if(required(errors, trace, "traceInformation")){
+				required(errors, trace.createUser, "traceInformation.createUser");
+				required(errors, trace.creationDate, "traceInformation.creationDate");
+				required(errors, trace.modifyUser, "traceInformation.modifyUser");
+				required(errors, trace.modifyDate, "traceInformation.modifyDate");
+			}
+		} else {
+			if(required(errors, trace, "traceInformation")){
+				required(errors, trace.createUser, "traceInformation.createUser");
+				required(errors, trace.creationDate, "traceInformation.creationDate");
+			}
+		}
 	}
 }
