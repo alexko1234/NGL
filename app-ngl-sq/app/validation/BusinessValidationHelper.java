@@ -21,6 +21,7 @@ import fr.cea.ig.MongoDBDAO;
 import models.laboratory.run.instance.Run;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 
 import play.Logger;
@@ -77,6 +78,10 @@ public class BusinessValidationHelper {
 			Container container = MongoDBDAO.findByCode(CONTAINER_COLL_NAME, Container.class, process.containerInputCode);
 			if(container == null){
 				addErrors(errors,process.containerInputCode, getKey(rootKeyName,"containerInputCode"));
+			} else {
+				if(!container.stateCode.equals("IWP") && !container.stateCode.equals("N")){
+					addErrors(errors,process.containerInputCode, getKey(rootKeyName,"containerNotIWP"));
+				}
 			}
 		}
 		
@@ -85,6 +90,10 @@ public class BusinessValidationHelper {
 		required(errors, process.sampleCode, "sampleCode");
 		required(errors, process.typeCode, "typeCode");
 		
-		//validateProperties(errors, process.properties, process.getProcessType().propertiesDefinitions, getKey(rootKeyName,"properties"));
+		ProcessType processType = process.getProcessType();
+		
+		if(processType != null && processType.propertiesDefinitions!=null){
+			validateProperties(errors, process.properties, process.getProcessType().propertiesDefinitions, getKey(rootKeyName,"nullPropertiesDefinitions"));
+		}
 	}
 }
