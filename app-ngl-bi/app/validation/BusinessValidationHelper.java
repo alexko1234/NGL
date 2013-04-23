@@ -4,13 +4,13 @@ import static validation.utils.ConstraintsHelper.addErrors;
 import static validation.utils.ConstraintsHelper.getKey;
 import static validation.utils.ConstraintsHelper.required;
 import static validation.utils.ConstraintsHelper.validateProperties;
+import static validation.utils.ConstraintsHelper.validateTraceInformation;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
@@ -37,32 +37,6 @@ public class BusinessValidationHelper {
 	public static final String FIELD_CODE = "code";
 	public static final String FIELD_TYPE_CODE = "typeCode";
 	public static final String FIELD_SUPPORT_CODE = "containerSupportCode";
-	/**
-	 * Validate TraceInformation 
-	 * Check createUser and creationDate is not null if _id is null
-	 * Check createUser, creationDate, modifyUser, modifyDate is not null if _id is null
-	 * 
-	 * @param errors
-	 * @param trace
-	 * @param id
-	 */
-	public static void validateTraceInformation(
-			Map<String, List<ValidationError>> errors, TraceInformation trace,
-			String id) {
-		if (id != null) {
-			if(required(errors, trace, "traceInformation")){
-				required(errors, trace.createUser, "traceInformation.createUser");
-				required(errors, trace.creationDate, "traceInformation.creationDate");
-				required(errors, trace.modifyUser, "traceInformation.modifyUser");
-				required(errors, trace.modifyDate, "traceInformation.modifyDate");
-			}
-		} else {
-			if(required(errors, trace, "traceInformation")){
-				required(errors, trace.createUser, "traceInformation.createUser");
-				required(errors, trace.creationDate, "traceInformation.creationDate");
-			}
-		}
-	}
 
 	/**
 	 * Validate the code of a mongodb object
@@ -116,8 +90,6 @@ public class BusinessValidationHelper {
 		}		
 	}
 
-	
-	
 	/**
 	 * @param errors
 	 * @param run
