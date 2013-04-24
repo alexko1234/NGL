@@ -12,6 +12,7 @@ import models.utils.ListObject;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
@@ -79,17 +80,9 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		String sql = "SELECT code, name "+
 				"FROM state WHERE level='containing'";
 		
-		List<ListObject> list = jdbcTemplate.query(
-			    sql,
-			    new RowMapper<ListObject>() {
-
-			        public ListObject mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            ListObject listObj = new ListObject(rs.getString("code"),rs.getString("name"));
-			            return listObj;
-			        }
-			    });
+		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
 		
-		return list;
+		return this.jdbcTemplate.query(sql, mapper);
 	}
 
 }
