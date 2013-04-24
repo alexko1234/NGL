@@ -13,6 +13,7 @@ GET		/tpl/containers/search					controllers.containers.tpl.Containers.search()
 GET		/api/containers							controllers.containers.api.Containers.list()
 
 #processes tpl
+GET		/tpl/processes/search					controllers.processes.tpl.Processes.search()
 GET 	/processes/:code						controllers.processes.tpl.Processes.home(code:java.lang.String)
 GET		/tpl/processes/new/search				controllers.processes.tpl.Processes.searchContainers()
 GET		/tpl/processes/new/:processTypeCode		controllers.processes.tpl.Processes.newProcesses(processTypeCode:java.lang.String)
@@ -20,6 +21,7 @@ GET		/tpl/processes/assets					controllers.processes.tpl.Processes.javascriptRou
 
 #processes api
 POST	/api/processus							controllers.processes.api.Processes.save()
+GET		/api/processus							controllers.processes.api.Processes.list()
 
 #api combobox
 GET		/api/lists/projects						controllers.lists.api.Lists.projects()

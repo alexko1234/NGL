@@ -22,8 +22,6 @@ public class Processes extends Controller{
 		return ok(home.render(code));
 	}
 	
-	
-	
 	public static Result searchContainers(){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, false));
@@ -37,6 +35,20 @@ public class Processes extends Controller{
 		DatatableConfig config = new DatatableConfig(columns);
 		config.button = Boolean.TRUE;
 		return ok(searchContainers.render(config));
+	}
+	
+	public static Result search(){
+		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
+		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code")));
+		columns.add(DatatableHelpers.getColumn("typeCode", Messages.get("processes.table.typeCode")));
+		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode")));						
+		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode")));
+		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode")));
+		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("processes.table.stateCode")));
+		//TODO: add propertyDefinition columns
+		DatatableConfig config = new DatatableConfig(columns);
+		
+		return ok(search.render(config));
 	}
 	
 	public static Result newProcesses(String processTypeCode){
@@ -66,7 +78,8 @@ public class Processes extends Controller{
   	    		controllers.lists.api.routes.javascript.Lists.projects(),
   	    		controllers.lists.api.routes.javascript.Lists.samples(),
   	    		controllers.lists.api.routes.javascript.Lists.processTypes(),
-  	    		controllers.containers.api.routes.javascript.Containers.list()
+  	    		controllers.containers.api.routes.javascript.Containers.list(),
+  	    		controllers.processes.api.routes.javascript.Processes.list()
   	      )	  	      
   	    );
   	  }

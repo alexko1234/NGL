@@ -12,6 +12,13 @@
 					<ul class="nav">
 						<li class="@("active".when(nav == "projects"))"><a href="@routes.Application.index("projects")" >Projects</a>
 						</li>
+						<li class="dropdown @("active".when(nav == Messages("processes.menu") || Messages("processes.menu.new") || Messages("processes.menu.search")))">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("processes.menu")<b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
+								<li class="@("active".when(nav == Messages("processes.menu.new")))"><a href="@controllers.processes.tpl.routes.Processes.home("home")">@Messages("processes.menu.new")</a></li>
+								<li class="@("active".when(nav == Messages("processes.menu.search")))"><a href="@controllers.processes.tpl.routes.Processes.home("search")">@Messages("processes.menu.search")</a></li>																				
+							</ul>
+  						</li>																		
 						<li class="@("active".when(nav == "samples"))"><a href="@routes.Application.index("samples")">Samples</a>
 						</li>
 						<li class="@("active".when(nav == "libraries"))"><a href="@routes.Application.index("libraries")">Libraries</a>

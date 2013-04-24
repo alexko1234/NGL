@@ -10,10 +10,15 @@ containers.table.stateCode = Code Etat
 containers.table.valid = Valide
 
 #processes
+processes.title = Processus
+processes.menu = Processus
+processes.menu.new = Nouveaux
+processes.menu.search = Rechercher
 processes.create = Crée un processus
 processes.save = Sauvegarder
 
 processes.table.code = Code Processus
+processes.table.typeCode = Type de Processus
 processes.table.projectCode = Code Projet
 processes.table.sampleCode = Code Sample
 processes.table.containerInputCode = Code Container Initial

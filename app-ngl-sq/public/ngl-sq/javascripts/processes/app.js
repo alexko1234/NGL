@@ -9,6 +9,10 @@ angular.module('home', ['datatableServices','basketServices', 'comboListsService
 		templateUrl : function(params){return '/tpl/processes/new/'+params.processTypeCode},
 		controller : 'ListNewCtrl'
 	});
+	$routeProvider.when('/processes/search', {
+		templateUrl : function(params){return '/tpl/processes/search'},
+		controller : 'SearchCtrl'
+	});
 	
 	$routeProvider.otherwise({redirectTo: '/processes/new'});
 
