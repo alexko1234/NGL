@@ -16,21 +16,7 @@ public class Containers extends Controller {
 
 	public static Result home(String code){
 		return ok(home.render(code));
-	}
-	
-	public static Result backetSearch(){
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("container.table.code")));
-		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("container.table.categoryCode")));
-		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("container.table.sampleCodes")));
-		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("container.table.fromExperimentTypeCodes")));
-		columns.add(DatatableHelpers.getColumn("valid", Messages.get("container.table.valid")));
-		columns.add(DatatableHelpers.getColumn("support.name", Messages.get("container.table.support.name")));
-		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("container.table.stateCode")));
-		DatatableConfig config = new DatatableConfig(columns);
-		return ok(basketSearch.render(config));
-	}
-	
+	}	
 	
 	public static Result search(){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
