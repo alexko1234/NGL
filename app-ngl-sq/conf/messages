@@ -24,7 +24,7 @@ processes.table.sampleCode = Code Sample
 processes.table.containerInputCode = Code Container Initial
 processes.table.stateCode = Code Etat
 processes.table.resolutionCode = Code resolution
-processes.table.traceInformation = Information creation/modification
+processes.table.creationDate = Date creation
 processes.table.comments = Commentaires
 processes.table.currentExperimentTypeCode = Code du type experience courante
 
