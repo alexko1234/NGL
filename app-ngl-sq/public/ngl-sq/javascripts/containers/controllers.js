@@ -1,5 +1,5 @@
 "use strict";
-function SearchCtrl($scope, $http,datatable,baskets) {
+function BasketCtrl($scope, $http,datatable,baskets) {
 
 	$scope.datatableConfig = {
 			edit: false,
@@ -80,4 +80,4 @@ function SearchCtrl($scope, $http,datatable,baskets) {
 		$scope.datatable.search({project:$scope.project,experiment:$scope.experiment,state:$scope.state});
 	}
 }
-SearchCtrl.$inject = ['$scope','$http', 'datatable','baskets'];
+BasketCtrl.$inject = ['$scope','$http', 'datatable','baskets'];
