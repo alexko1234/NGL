@@ -1,6 +1,7 @@
 package controllers.processes.tpl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import controllers.processes.tpl.routes.javascript;
@@ -45,6 +46,9 @@ public class Processes extends Controller{
 		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode")));
 		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode")));
 		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("processes.table.stateCode")));
+		columns.add(DatatableHelpers.getColumn("resolutionCode", Messages.get("processes.table.resolutionCode")));
+		columns.add( DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("processes.table.creationDate")));
+		columns.add(DatatableHelpers.getColumn("currentExperimentTypeCode", Messages.get("processes.table.currentExperimentTypeCode")));
 		//TODO: add propertyDefinition columns
 		DatatableConfig config = new DatatableConfig(columns);
 		
