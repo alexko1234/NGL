@@ -12,6 +12,7 @@ import net.vz.mongodb.jackson.DBQuery;
 
 import play.libs.Json;
 import models.laboratory.common.description.State;
+import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.instance.Project;
@@ -80,4 +81,15 @@ public class Lists extends Controller{
 		return  Results.internalServerError();
 	}
 	
+	public static Result containerCategoryCodes(){
+		try {
+			List<ListObject> containerCategory =  ContainerCategory.findAllForList();
+			return Results.ok(Json.toJson(containerCategory));
+		
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+	
+		return  Results.internalServerError();
+	}
 }

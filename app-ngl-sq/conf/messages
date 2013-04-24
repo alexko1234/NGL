@@ -1,4 +1,10 @@
-#Container table
+#Containers
+containers.title = Containers
+containers.menu = Containers
+containers.menu.creation = Création
+containers.menu.search = Rechercher
+
+#Containers table
 containers.table.code = Code Container
 containers.table.categoryCode = Code Catégorie
 containers.table.projectCodes = Codes Projets
@@ -8,6 +14,9 @@ containers.table.stateCode = Statut
 containers.table.support.name = Support
 containers.table.stateCode = Code Etat
 containers.table.valid = Valide
+
+containers.select.state =  -- selectionner un état --
+containers.select.categoryCode =  -- selectionner un type --
 
 #processes
 processes.title = Processus

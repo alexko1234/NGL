@@ -1,31 +1,25 @@
 @(datatableConfig: views.components.datatable.DatatableConfig)
 @import scala.collection.immutable._
-		@form() = {
-		<form class="well form-search">
-			<select ng-model="project" id="project" ng-options="project.code+'-'+project.name for project in projects" ng-change="search()">
-				<option value="">-- select project --</option>
-			</select>
-			
-			<select ng-model="experiment" ng-options="experiment.name for experiment in experiments" id="experiment" ng-change="baskets.setExperiment(experiment);search()">
-				<option value="">-- select experiment --</option>
-			</select>
-			
-			<select ng-model="state" ng-options="state.name for state in states" ng-change="search()">
-				<option value="">-- select container state --</option>
-			</select>					
-		</form>
-		}
-				<div class="btn-toolbar">
-						    <div class="btn-group">
-    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Basket<span class="caret"></span></a>
-    <ul class="dropdown-menu">
-   		<li><a  ng-click="baskets.add(true,baskets.experimentTypeCode);">new basket</a></li>
-   		<li><a  ng-click="baskets.add(false,baskets.experimentTypeCode);">add to basket</a></li>
-    </ul>
-    </div>
+@form() = {
+	<form class="well form-search form-vertical">
+		<select ng-model="form.categoryCodes.selected" ng-options="CategoryCode.name for CategoryCode in form.categoryCodes.options" ng-change="search()">
+			<option value="">@Messages("containers.select.categoryCode")</option>
+		</select>		
+		
+		<select ng-model="form.projects.selected" ng-options="project.code+' - '+project.name for project in form.projects.options" ng-change="changeProject()">
+			<option value="">@Messages("processes.select.project")</option>
+		</select>
+		
+		<select ng-model="form.samples.selected" ng-options="sample.code for sample in form.samples.options" ng-change="search()">
+			<option value="">@Messages("processes.select.sample")-</option>
+		</select>	
+		
+		<select ng-model="form.stateCodes.selected" ng-options="stateCode.name for stateCode in form.stateCodes.options" ng-change="search()">
+			<option value="">@Messages("containers.select.state")</option>
+		</select>
+	</form>
+}
 
-<button class="btn btn-info" ng-click="" ng-hide="experiment==null">Create {{experiment.code}}</button>
-</div>
 <div ng-init="init()">
-@views.html.components.datatable.datatable(datatableConfig, form)		
+	@views.html.components.datatable.datatable(datatableConfig, form)	
 </div>

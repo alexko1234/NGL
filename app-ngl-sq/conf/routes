@@ -6,8 +6,9 @@
 GET     /                           controllers.Application.index(id:java.lang.String ?="")
 
 #containers tpl
-GET 	/containers/home						controllers.containers.tpl.Containers.home()
+GET 	/containers/:code					controllers.containers.tpl.Containers.home(code:java.lang.String)
 GET		/tpl/containers/search					controllers.containers.tpl.Containers.search()
+GET		/tpl/containers/assets					controllers.containers.tpl.Containers.javascriptRoutes()
 
 #containers api
 GET		/api/containers							controllers.containers.api.Containers.list()
@@ -29,6 +30,7 @@ GET		/api/lists/samples						controllers.lists.api.Lists.samples(projectCode:jav
 GET		/api/lists/processType					controllers.lists.api.Lists.processTypes()
 GET		/api/lists/experimenttypes				controllers.lists.api.Lists.experimentTypes()
 GET		/api/lists/containers/states			controllers.lists.api.Lists.containerStates()
+GET		/api/lists/containers/categorycodes		controllers.lists.api.Lists.containerCategoryCodes()
 
 
 # load data

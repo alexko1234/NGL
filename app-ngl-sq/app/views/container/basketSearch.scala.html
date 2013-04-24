@@ -1,0 +1,31 @@
+@(datatableConfig: views.components.datatable.DatatableConfig)
+@import scala.collection.immutable._
+		@form() = {
+		<form class="well form-search">
+			<select ng-model="project" id="project" ng-options="project.code+'-'+project.name for project in projects" ng-change="search()">
+				<option value="">-- select project --</option>
+			</select>
+			
+			<select ng-model="experiment" ng-options="experiment.name for experiment in experiments" id="experiment" ng-change="baskets.setExperiment(experiment);search()">
+				<option value="">-- select experiment --</option>
+			</select>
+			
+			<select ng-model="state" ng-options="state.name for state in states" ng-change="search()">
+				<option value="">-- select container state --</option>
+			</select>					
+		</form>
+		}
+				<div class="btn-toolbar">
+						    <div class="btn-group">
+    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">Basket<span class="caret"></span></a>
+    <ul class="dropdown-menu">
+   		<li><a  ng-click="baskets.add(true,baskets.experimentTypeCode);">new basket</a></li>
+   		<li><a  ng-click="baskets.add(false,baskets.experimentTypeCode);">add to basket</a></li>
+    </ul>
+    </div>
+
+<button class="btn btn-info" ng-click="" ng-hide="experiment==null">Create {{experiment.code}}</button>
+</div>
+<div ng-init="init()">
+@views.html.components.datatable.datatable(datatableConfig, form)		
+</div>
