@@ -1,11 +1,6 @@
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 
-import models.laboratory.common.description.CommonInfoType;
-import models.laboratory.common.description.ObjectType;
-import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.experiment.description.ExperimentType;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;

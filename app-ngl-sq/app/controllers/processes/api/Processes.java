@@ -26,7 +26,6 @@ import fr.cea.ig.MongoDBResult;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Result;
 import validation.BusinessValidationHelper;
 import workflow.Workflow;

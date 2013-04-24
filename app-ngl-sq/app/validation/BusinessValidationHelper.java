@@ -5,27 +5,19 @@ import static validation.utils.ConstraintsHelper.getKey;
 import static validation.utils.ConstraintsHelper.required;
 import static validation.utils.ConstraintsHelper.validateProperties;
 import static validation.utils.ConstraintsHelper.validateTraceInformation;
-import static validation.utils.ConstraintsHelper.addErrors;
-
 
 import java.util.List;
 import java.util.Map;
 
-import net.vz.mongodb.jackson.DBQuery;
+import models.laboratory.container.instance.Container;
+import models.laboratory.processes.description.ProcessType;
+import models.laboratory.processes.instance.Process;
+import play.data.validation.ValidationError;
 
 import com.mongodb.MongoException;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
-
-import models.laboratory.run.instance.Run;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.container.instance.Container;
-import models.laboratory.processes.description.ProcessType;
-import models.laboratory.processes.instance.Process;
-
-import play.Logger;
-import play.data.validation.ValidationError;
 
 /**
  * Helper to validate MongoDB Object Used before insert or update a MongoDB

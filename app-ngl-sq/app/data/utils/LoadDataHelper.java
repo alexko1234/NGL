@@ -2,7 +2,6 @@ package data.utils;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,18 +10,15 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
-import models.laboratory.container.instance.SampleUsed;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceHelpers;
 import play.Logger;
 import play.data.validation.ValidationError;
-import play.mvc.Http;
 import validation.utils.ConstraintsHelper;
 
 public class LoadDataHelper {

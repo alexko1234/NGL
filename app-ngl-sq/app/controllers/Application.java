@@ -3,10 +3,7 @@ package controllers;
 import play.Routes;
 import play.mvc.Controller;
 import play.mvc.Result;
-import play.mvc.With;
 import views.html.index;
-import controllers.authorisation.Permission;
-import fr.cea.ig.MongoDBDAO;
 
 
 public class Application extends Controller {
