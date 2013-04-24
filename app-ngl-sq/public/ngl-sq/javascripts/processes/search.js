@@ -28,9 +28,8 @@ function SearchCtrl($scope, datatable, comboLists) {
 		}else{
 			$scope.form.samples.options = [];
 		}	
-		if($scope.form.typeCodes.selected){
-			$scope.search();
-		}
+		
+		$scope.search();
 	}
 	
 	$scope.init = function(){
@@ -46,18 +45,17 @@ function SearchCtrl($scope, datatable, comboLists) {
 	
 	$scope.search = function(){		
 			var jsonSearch = {};			
+
+			if($scope.form.projects.selected){
+				jsonSearch.projectCode = $scope.form.projects.selected.code;
+			}			
+			if($scope.form.samples.selected){
+				jsonSearch.sampleCode = $scope.form.samples.selected.code;
+			}			
 			if($scope.form.typeCodes.selected){
-				if($scope.form.projects.selected){
-					jsonSearch.projectCode = $scope.form.projects.selected.code;
-				}			
-				if($scope.form.samples.selected){
-					jsonSearch.sampleCode = $scope.form.samples.selected.code;
-				}			
-				if($scope.form.typeCodes.selected){
-					jsonSearch.typeCode = $scope.form.typeCodes.selected.code;
-				}			
-				$scope.datatable.search(jsonSearch);
-			}
+				jsonSearch.typeCode = $scope.form.typeCodes.selected.code;
+			}			
+			$scope.datatable.search(jsonSearch);							
 	}
 }
 
