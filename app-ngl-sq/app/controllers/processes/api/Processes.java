@@ -15,6 +15,7 @@ import org.codehaus.jackson.JsonNode;
 import controllers.CodeHelper;
 import controllers.CommonController;
 import controllers.Constants;
+import controllers.authorisation.PermissionHelper;
 
 import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
@@ -46,14 +47,15 @@ public class Processes extends CommonController{
 				//init state
 				//the trace
 				value.traceInformation = new TraceInformation();
-				value.traceInformation.setTraceInformation("ngsrg");
+			
+				value.traceInformation.setTraceInformation(PermissionHelper.getCurrentUser(session()));
 				//the default status
 				value.stateCode = "N";
 				//code and name generation
 				value.code = CodeHelper.generateProcessCode(value);
 				Logger.info("New process code : "+value.code);
 			} else {
-				value.traceInformation.setTraceInformation("ngsrg");
+				value.traceInformation.setTraceInformation(PermissionHelper.getCurrentUser(session()));
 			}
 			
 			//Business Validation

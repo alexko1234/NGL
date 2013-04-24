@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import models.administration.authorisation.Permission;
 import models.administration.authorisation.Role;
 import models.administration.authorisation.Team;
@@ -21,6 +23,21 @@ import play.mvc.Http.Session;
 import com.avaje.ebean.Query;
 
 public class PermissionHelper {
+	private static final String COOKIE_SESSION = "CAS_FILTER_USER";
+	
+	/**
+	 * 
+	 * @param ses the user session
+	 * @return the current user login for this session
+	 */
+	public static String getCurrentUser(Session ses){
+		if(ses != null && StringUtils.isNotEmpty(ses.get(COOKIE_SESSION))){
+			return ses.get(COOKIE_SESSION);
+		}
+		
+		return "";
+	}
+	
 	/**
 	 * 
 	 * @param ses the user session
@@ -28,7 +45,7 @@ public class PermissionHelper {
 	 * @return true if the user can access to the resources
 	 */
 	public static boolean checkPermission(Session ses, String codePermission) {
-		User user = User.find.where().eq("login", ses.get("CAS_FILTER_USER")).findUnique();  
+		User user = User.find.where().eq("login", ses.get(COOKIE_SESSION)).findUnique();  
 		if(user!=null) {
 			for(Role role:user.roles) {
 				for(models.administration.authorisation.Permission perm:role.permissions) {
@@ -38,7 +55,6 @@ public class PermissionHelper {
 			}
 		}
 		return false;
-		//return true; // pour les tests
 	}
 	
 	/**
@@ -49,7 +65,7 @@ public class PermissionHelper {
 	 * @return true if the user can access to the resources
 	 */
 	public static boolean checkPermission(Session ses,  ArrayList<String> codePermission, String allPermission) {
-		User user = User.find.where().eq("login", ses.get("CAS_FILTER_USER")).findUnique();  
+		User user = User.find.where().eq("login", ses.get(COOKIE_SESSION)).findUnique();  
 		if(user!=null) {
 			if(allPermission.equals("false")){
 				for(Role role:user.roles) {
@@ -87,7 +103,7 @@ public class PermissionHelper {
 	 * @return true if the user is in the team
 	 */
 	public static boolean checkTeam(Session ses, String varteam) {
-		User user = User.find.where().eq("login", ses.get("CAS_FILTER_USER")).findUnique();  
+		User user = User.find.where().eq("login", ses.get(COOKIE_SESSION)).findUnique();  
 		if(user!=null) {
 			for(Team team:user.teams) {
 				if(team.nom.equals(varteam))
@@ -107,7 +123,7 @@ public class PermissionHelper {
 		if(teams.size() < 2 && teams.get(0).equalsIgnoreCase(""))
 			return true;
 		
-		User user = User.find.where().eq("login", ses.get("CAS_FILTER_USER")).findUnique();  
+		User user = User.find.where().eq("login", ses.get(COOKIE_SESSION)).findUnique();  
 		if(user!=null) {
 			for(Team team:user.teams) {
 				for(String varteam:teams){
