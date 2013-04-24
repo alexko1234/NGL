@@ -64,28 +64,18 @@ public class Containers extends CommonController {
 		if(StringUtils.isNotEmpty(containersSearch.projectCode)){
 			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCode));
 	    }
-		
-	    if(StringUtils.isNotEmpty(containersSearch.fromExperimentCode)){
-	    	queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentCode), DBQuery.is("fromExperimentTypeCodes", null)));
-	    }
-	    
-	    
+	   
 	    if(StringUtils.isNotEmpty(containersSearch.stateCode)){
 	    	queryElts.add(DBQuery.is("stateCode", containersSearch.stateCode));
 	    }
 	    
+	    if(StringUtils.isNotEmpty(containersSearch.categoryCode)){
+	    	queryElts.add(DBQuery.is("categoryCode", containersSearch.categoryCode.toUpperCase()));
+	    }
+	   
 	    if(StringUtils.isNotEmpty(containersSearch.sampleCode)){
 	    	queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
 	    }
-	    
-	    if(StringUtils.isNotEmpty(containersSearch.processTypeCode)){
-	    	List<String> listePrevious = Spring.getBeanOfType(ExperimentTypeDAO.class).findPreviousExperimentTypeCode(containersSearch.processTypeCode);
-	    	if(null != listePrevious && listePrevious.size() > 0){
-	    		Logger.info("fromExperimentTypeCodes Query : "+listePrevious);
-	    		queryElts.add(DBQuery.in("fromExperimentTypeCodes", listePrevious));
-	    	}	    		    	
-	    }
-	    
 	    
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}
