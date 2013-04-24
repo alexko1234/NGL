@@ -12,7 +12,7 @@ containers.table.valid = Valide
 #processes
 processes.title = Processus
 processes.menu = Processus
-processes.menu.new = Nouveaux
+processes.menu.creation = Création
 processes.menu.search = Rechercher
 processes.create = Crée un processus
 processes.save = Sauvegarder
@@ -23,6 +23,10 @@ processes.table.projectCode = Code Projet
 processes.table.sampleCode = Code Sample
 processes.table.containerInputCode = Code Container Initial
 processes.table.stateCode = Code Etat
+processes.table.resolutionCode = Code resolution
+processes.table.traceInformation = Information creation/modification
+processes.table.comments = Commentaires
+processes.table.currentExperimentTypeCode = Code du type experience courante
 
 processes.select.processType = -- selectionner un type de processus --
 processes.select.project = -- selectionner un projet --
