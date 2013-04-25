@@ -91,7 +91,7 @@ public class Processes extends CommonController{
 	    MongoDBResult<Process> results = MongoDBDAO.find(PROCESS_COLL_NAME, Process.class, query)
 				.sort(DatatableHelpers.getOrderBy(processesSearchFilledForm), getMongoDBOrderSense(processesSearchFilledForm))
 				.page(DatatableHelpers.getPageNumber(processesSearchFilledForm), DatatableHelpers.getNumberRecordsPerPage(processesSearchFilledForm)); 
-		List<Process> process = results.sort("code").toList();
+		List<Process> process = results.toList();
 		return ok(Json.toJson(new DatatableResponse(process, results.count())));
 	}
 	

@@ -7,8 +7,6 @@ function SearchCtrl($scope, datatable, comboLists) {
 				url:jsRoutes.controllers.containers.api.Containers.list()
 			},
 			order:{
-				mode:'local', //or 
-				active:true,
 				by:'code'
 			}
 		};

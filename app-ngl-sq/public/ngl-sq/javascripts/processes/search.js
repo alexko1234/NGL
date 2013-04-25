@@ -8,9 +8,7 @@ function SearchCtrl($scope, datatable, comboLists) {
 				
 			},
 			order:{
-				mode:'local', //or 
-				active:true,
-				by:'containerInputCode'
+				by:'code'
 			}
 		};
 	

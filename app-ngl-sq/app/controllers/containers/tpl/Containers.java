@@ -20,14 +20,14 @@ public class Containers extends Controller {
 	
 	public static Result search(){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code")));
-		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode")));
-		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("containers.table.sampleCodes")));
-		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes")));
-		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes")));
-		columns.add(DatatableHelpers.getColumn("valid", Messages.get("containers.table.valid")));
-		columns.add(DatatableHelpers.getColumn("support.name", Messages.get("containers.table.support.name")));
-		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("containers.table.stateCode")));
+		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("containers.table.sampleCodes"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("valid", Messages.get("containers.table.valid"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("support.name", Messages.get("containers.table.support.name"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("containers.table.stateCode"), true, false, false));
 		DatatableConfig config = new DatatableConfig(columns);
 		return ok(search.render(config));
 	}
