@@ -1,0 +1,20 @@
+@(datatableConfig: views.components.datatable.DatatableConfig)
+@import scala.collection.immutable._
+
+@form() = {
+<form class="well form-search">
+		<select ng-model="form.etmanips.selected" ng-options="etmanip.name for etmanip in form.etmanips.options" id="etmanip" ng-change="search()">
+				<option value="">@Messages("plates.select.etapemanips")</option>
+		</select>
+		
+		<select ng-model="form.projects.selected" id="project" ng-options="project.name for project in form.projects.options" ng-change="search()">
+				<option value="">@Messages("plates.select.project")</option>
+		</select>
+</form>
+}
+
+
+<div ng-init="init()">  
+ 		@views.html.components.datatable.datatable(datatableConfig,form)		
+</div>
+

@@ -5,12 +5,20 @@
 # Home page
 GET     /                           controllers.Application.index()
 
-# manip tpl
-GET	   	/manips/:code									controllers.manips.tpl.Manips.home(code:java.lang.String)
-GET		/tpl/manips/search							    controllers.manips.tpl.Manips.search()
-GET		/tpl/manips/assets								controllers.manips.tpl.Manips.javascriptRoutes()
-GET		/tpl/manips/list								controllers.manips.tpl.Manips.list()
-GET		/tpl/manips/plaque								controllers.manips.tpl.Manips.plaque()
+# plates tpl
+GET	   	/plaques/:code									controllers.plaques.tpl.Plaques.home(code:java.lang.String)
+GET		/tpl/plaques/new/search							controllers.plaques.tpl.Plaques.searchManips()
+GET		/tpl/plaques/search								controllers.plaques.tpl.Plaques.search()
+GET		/tpl/plaques/details							controllers.plaques.tpl.Plaques.details()
+GET		/tpl/plaques/assets								controllers.plaques.tpl.Plaques.javascriptRoutes()
+
+#plates api
+POST	/api/plaques									controllers.plaques.api.Plaques.save()
+GET		/api/plaques									controllers.plaques.api.Plaques.list()
+GET    	/api/plaques/:code               				controllers.plaques.api.Plaques.get(code: String)
+
+#manip api
+GET    	/api/manip                						controllers.manips.api.Manips.list()
 
 
 # list tpl
@@ -19,8 +27,6 @@ GET /tpl/samples/list									controllers.Lists.samples()
 GET /tpl/etmanips/list									controllers.Lists.etmanips()
 GET /tpl/etmateriels/list								controllers.Lists.etmateriels()
 
-#manip api
-GET    	/api/manip                						controllers.manips.api.Manips.list()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

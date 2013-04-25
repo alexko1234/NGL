@@ -1,10 +1,30 @@
-application.name=NGL Plaque
-page.search.label.search=Manips
+application.name=NGL Plaques
 
 #Menu
-menu.manips=Manips
-menu.plaques=Plaques
+menu.plaques.new=Création
+menu.plaques.search=Recherche
 
 #Manips
-manip.title="Création plaque"
-button.addbasket=Puits
+manips.table.code = Code Manip
+manips.table.name  = Nom Manip
+
+#Plaques
+plates.title.search=Recherche de Plaques
+plates.title.new=Création d'une Plaque
+plates.button.compute = Calcul coordonnées
+plates.button.save = Sauvegarder Plaque
+plate.button.table = Vue Tableau
+plate.button.plate = Vue Plaque
+
+plates.title = Plaque
+plates.table.code = Code Plaque
+plates.table.well.code = Code Manip
+plates.table.well.name = Nom Manip
+plates.table.well.x = X
+plates.table.well.y = Y
+
+plates.table.nbWells = Nombre de Manips
+
+plates.select.etapemanips = -- sélectionner une étape --
+plates.select.etatmanips = -- sélectionner un état --
+plates.select.project = -- sélectionner un projet --
