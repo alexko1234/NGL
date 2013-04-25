@@ -84,7 +84,7 @@ public class BusinessValidationHelper {
 		
 		ProcessType processType = process.getProcessType();
 		
-		if(processType != null && processType.propertiesDefinitions!=null){
+		if(processType != null && processType.propertiesDefinitions != null){
 			validateProperties(errors, process.properties, process.getProcessType().propertiesDefinitions, getKey(rootKeyName,"nullPropertiesDefinitions"));
 		}
 	}

@@ -6,11 +6,17 @@
 		<div class="navbar-inner">
 			<div class="container-fluid">
 				
-				<a class="brand" href="@routes.Application.index("home")">NGL</a>
+				<a class="brand" href="@routes.Application.index("home")">@Messages("application.name")</a>
 				
 					<ul class="nav">
-						<li class="@("active".when(nav == "projects"))"><a href="@routes.Application.index("projects")" >Projects</a>
-						</li>
+						@** <li class="@("active".when(nav == "projects"))"><a href="@routes.Application.index("projects")" >Projects</a> </li>**@
+						
+						<li class="dropdown @("active".when(nav == Messages("containers.menu")))">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("containers.menu")<b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
+								<li class="@("active".when(nav == Messages("containers.menu.search")))"><a href="@controllers.containers.tpl.routes.Containers.home("search")">@Messages("containers.menu.search")</a></li>																				
+							</ul>
+  						</li>
 						<li class="dropdown @("active".when(nav == Messages("processes.menu")))">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("processes.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
@@ -18,12 +24,8 @@
 								<li class="@("active".when(nav == Messages("processes.menu.search")))"><a href="@controllers.processes.tpl.routes.Processes.home("search")">@Messages("processes.menu.search")</a></li>																				
 							</ul>
   						</li>	
-  						<li class="dropdown @("active".when(nav == Messages("containers.menu")))">
-							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("containers.menu")<b class="caret"></b></a>
-							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
-								<li class="@("active".when(nav == Messages("containers.menu.search")))"><a href="@controllers.containers.tpl.routes.Containers.home("search")">@Messages("containers.menu.search")</a></li>																				
-							</ul>
-  						</li>																		
+  						
+  						@**																		
 						<li class="@("active".when(nav == "samples"))"><a href="@routes.Application.index("samples")">Samples</a>
 						</li>
 						<li class="@("active".when(nav == "libraries"))"><a href="@routes.Application.index("libraries")">Libraries</a>
@@ -56,7 +58,7 @@
 								<li class="divider"></li>																						
 							</ul>
   						</li>
-  								
+  							**@	
 					</ul>
 					
 					<div class="btn-group pull-right">

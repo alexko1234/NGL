@@ -6,7 +6,7 @@
 GET     /                           controllers.Application.index(id:java.lang.String ?="")
 
 #containers tpl
-GET 	/containers/:code					controllers.containers.tpl.Containers.home(code:java.lang.String)
+GET 	/containers/:code					    controllers.containers.tpl.Containers.home(code:java.lang.String)
 GET		/tpl/containers/search					controllers.containers.tpl.Containers.search()
 GET		/tpl/containers/assets					controllers.containers.tpl.Containers.javascriptRoutes()
 

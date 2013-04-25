@@ -13,7 +13,6 @@ angular.module('home', ['datatableServices','basketServices', 'comboListsService
 		templateUrl : function(params){return '/tpl/processes/search'},
 		controller : 'SearchCtrl'
 	});
-	
 	$routeProvider.otherwise({redirectTo: '/processes/new'});
 
 	// configure html5 to get links working with bookmarked

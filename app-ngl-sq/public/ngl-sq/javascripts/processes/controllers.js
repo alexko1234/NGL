@@ -124,7 +124,10 @@ function ListNewCtrl($scope, datatable) {
 			save:{
 				active:true,
 				withoutEdit:true,
-				url:jsRoutes.controllers.processes.api.Processes.save()
+				url:jsRoutes.controllers.processes.api.Processes.save(),
+				callback : function(datatable){
+					$scope.basket.reset();				
+				}
 			},
 			remove:{
 				active:true,
