@@ -128,7 +128,7 @@
 	<tbody>
 	<!-- first line to edit mode -->
 	@if(config.editColumn){
-	<tr ng-show="@(config.name).isEditStart()">
+	<tr ng-show="@(config.name).isEdit()">
 		@for(column: DatatableColumn <- config.columns){
 			<td @if(column.hide){ng-hide="@(config.name).isHide('@column.id')"}>
 			@if(column.edit){<input type="text" class="input-medium" ng-change="@(config.name).updateColumn('@column.property', '@column.id')" ng-model="@(config.name).config.edit.columns.@(column.id).value" ng-show="@(config.name).isEdit('@column.id')"/>}</td>

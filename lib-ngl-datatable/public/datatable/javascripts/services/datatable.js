@@ -48,7 +48,8 @@ angular.module('datatableServices', []).
 								active:false,
 								withoutEdit:false,
 								mode:'remote', //or local
-								url:undefined
+								url:undefined,
+								callback : undefined //used to have a callback after remove all element. the datatable is pass to callback method
 							},
 							remove:{
 								active:false,
@@ -105,6 +106,30 @@ angular.module('datatableServices', []).
 		    				this.sortAllResult();
 		    				this.computeDisplayResult();
 		    				this.computePaginationList();
+		    			},
+		    			/**
+		    			 * Return all the data
+		    			 */
+		    			getData:function(){
+		    				return this.allResult;
+		    			},
+		    			/**
+		    			 * Add data
+		    			 */
+		    			addData: function(data){
+		    				if(!angular.isUndefined(data) && (angular.isArray(data) && data.length > 0)){
+			    				var configPagination = this.config.pagination;
+			    				if(configPagination.active && !this.isRemoteMode(configPagination.mode)){
+			    					this.config.pagination.pageNumber=0;
+			    				}
+			    				for(var i = 0 ; i < data.length; i++){
+			    					this.allResult.push(data[i]);				    				
+			    				}
+			    				this.totalNumberRecords = this.allResult.length;
+			    				this.sortAllResult();
+			    				this.computeDisplayResult();
+			    				this.computePaginationList();
+			    			}
 		    			},
 		    			/**
 		    			 * Selected only the records will be displayed.
@@ -374,7 +399,7 @@ angular.module('datatableServices', []).
 		    					console.log("edit is not active !");
 		    					return false;
 		    				}
-		    			},		    			
+		    			},
 		    			/**
 		    			 * Update all line with the same value
 		    			 * @param updateColumnName : column name
@@ -397,26 +422,33 @@ angular.module('datatableServices', []).
 		    			 */
 		    			save : function(){
 		    				if(this.config.save.active){
+		    					var saveObjects = [];		    					
 			    				for(var i = 0; i < this.displayResult.length; i++){
 			    					if(this.displayResult[i].edit || this.config.save.withoutEdit){
+			    						//remove datatable properties
+			    						this.displayResult[i].selected = undefined;
+			    						this.displayResult[i].edit = undefined;
+			    						this.displayResult[i].trClass = undefined;					    				
 			    						if(this.isRemoteMode(this.config.save.mode)){
-			    							this.saveRemote(this.displayResult[i], i);
-			    						}else{		    									    		    				
+			    							this.saveOneRemote(this.displayResult[i], i);
+			    						} else{		    									    		    				
 			    							this.saveLocal(i);
 			    						}
 			    					}						
+			    				}
+			    				if(this.config.save.global && saveObjects.length > 0){
+			    					this.saveAllRemote(saveObjects);
+			    				}
+			    				if(angular.isFunction(this.config.save.callback)){
+			    					this.config.save.callback(this);
 			    				}
 		    				}else{
 		    					console.log("save is not active !");		    				
 		    				}
 		    			},
-		    			saveRemote : function(value, i){
+		    			saveOneRemote : function(value, i){
 		    				var url = this.getUrl(this.config.save.url);
 			    			if(url){
-			    				//remove datatable properties
-			    				value.selected = undefined;
-			    				value.edit = undefined;
-			    				value.trClass = undefined;
 			    				//call url
 			    				$http.post(url, value, {datatable:this,index:i})
 				    				.success(function(data, status, headers, config) {
@@ -431,7 +463,7 @@ angular.module('datatableServices', []).
 		    					console.log('no url define for save ! ');
 		    				}
 		    				
-		    			},		    			
+		    			},	
 		    			/**
 		    			 * Call after save to update the records property
 		    			 */
@@ -555,7 +587,7 @@ angular.module('datatableServices', []).
 		    				}
 		    			},
 		    			/**
-		    			 * Return all selected element and unselect
+		    			 * Return all selected element and unselect the data
 		    			 */
 		    			getSelection : function(unselect){
 		    				var selection = [];
