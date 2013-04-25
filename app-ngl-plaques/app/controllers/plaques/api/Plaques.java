@@ -81,6 +81,20 @@ public class Plaques extends CommonController {
 				if(!isUpdate){
 					validatePlateCode(plate, errors); 
 				}
+				
+				for(int i = 0 ; i < plate.wells.length ; i++){
+					for(int j = 0 ; j < plate.wells.length ; j++){
+						if(i != j){
+							if(plate.wells[i].code.equals(plate.wells[j].code)){
+								addErrors(errors, "well["+i+"]", "plates.error.severalsamewellcode", plate.wells[i].code);
+							}
+							
+							if(plate.wells[i].x.equals(plate.wells[j].x) && plate.wells[i].y.equals(plate.wells[j].y)){
+								addErrors(errors, "well["+i+"]", "plates.error.wellwithsamecoord", plate.wells[i].x, plate.wells[i].y);
+							}
+						}
+					}
+				}
 			}
 		}
 	}

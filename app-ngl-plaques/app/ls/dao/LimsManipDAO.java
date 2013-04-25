@@ -93,6 +93,7 @@ public class LimsManipDAO {
     
     
     public void updatePlateCoordonates(Plate plate){
+    	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
     	for(Well well: plate.wells){
     		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x, well.y);
     	}
