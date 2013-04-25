@@ -12,6 +12,13 @@ function SearchMainCtrl($scope){
 	};
 	
 	/**
+	 * function to reset all tabs
+	 */
+	$scope.resetTabs = function(){
+		$scope.tabs = [];
+	};
+	
+	/**
 	 * function to keep the basket when we switch views
 	 */
 	$scope.getBasket = function(){
