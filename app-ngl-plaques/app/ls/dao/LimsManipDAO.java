@@ -15,6 +15,7 @@ import ls.models.Plate;
 import ls.models.Well;
 import models.utils.ListObject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fest.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -29,65 +30,18 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class LimsManipDAO {
         private JdbcTemplate jdbcTemplate;
-        private SimpleJdbcCall tracenameCaller;
+   
 
     @Autowired
     public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.tracenameCaller = new SimpleJdbcCall(jdbcTemplate)
-                                .withProcedureName("pl_MaterielmanipChoisi ")
-                                                .withoutProcedureColumnMetaDataAccess()
-                                                .useInParameterNames("@emnco","@prsco","@ematerielco")
-                                                .returningResultSet("#result-set-1", new BeanPropertyRowMapper<Manip>(Manip.class))
-                                                .declareParameters(
-                                                		new SqlParameter("@prsco",Types.CHAR),
-                                                		new SqlParameter("@bqanom",Types.CHAR),
-                                                		new SqlParameter("@emnco",Types.TINYINT),
-                                                		new SqlParameter("@ematerielco",Types.TINYINT),
-                                                		new SqlParameter("@val",Types.TINYINT),
-                                                		new SqlParameter("@adnco",Types.NUMERIC),
-                                                		new SqlParameter("@tinsco",Types.SMALLINT),
-                                                		new SqlParameter("@tseqco",Types.TINYINT),
-                                                		new SqlParameter("@tbhdco",Types.VARCHAR),
-                                                		new SqlParameter("@gmidnom",Types.VARCHAR),
-                                                		new SqlParameter("@gmidco",Types.INTEGER),
-                                                		new SqlParameter("@dated",Types.VARCHAR),
-                                                		new SqlParameter("@datef",Types.VARCHAR),
-                                                		new SqlParameter("@perco",Types.SMALLINT),
-                                                		new SqlParameter("@proco",Types.INTEGER),
-                                                		new SqlParameter("@ttpco",Types.SMALLINT),
-                                                		new SqlParameter("@percom",Types.SMALLINT)
-                                                );
-        
+        this.jdbcTemplate = new JdbcTemplate(dataSource);              
     }
 
 
-    public List<Manip> getManips(Integer emnco, Integer ematerielco,String prsco){
-        MapSqlParameterSource in = new MapSqlParameterSource();
-        if(prsco!=null){
-        	in.addValue("@prsco",prsco);
-        } else in.addValue("@prsco", null);
-        in.addValue("@bqanom",null);
-        in.addValue("@emnco",emnco);
-        in.addValue("@ematerielco",ematerielco);
-        in.addValue("@val",null);
-        in.addValue("@adnco",null);
-        in.addValue("@tinsco",null);
-        in.addValue("@tseqco",null);
-        in.addValue("@tbhdco",null);
-        in.addValue("@gmidnom",null);
-        in.addValue("@gmidco",null);
-        in.addValue("@dated",null);
-        in.addValue("@datef",null);
-        in.addValue("@perco",null);
-        in.addValue("@proco",null);
-        in.addValue("@ttpco",null);
-        in.addValue("@percom",null);
-
-        Map<String, Object> out = tracenameCaller.execute(in);
-//        System.out.println("getCallString()["+tracenameCaller.getCallString()+"]");
-
-        List<Manip> results = (List<Manip>) out.get("#result-set-1");
+    public List<Manip> findManips(Integer emnco, Integer ematerielco,String prsco){
+        List<Manip> results = this.jdbcTemplate.query("pl_MaterielmanipChoisi @prsco=?, @emnco=?, @ematerielco=?, @plaque=? ", 
+        		new Object[]{prsco, emnco, ematerielco, 1},new BeanPropertyRowMapper<Manip>(Manip.class));
+        
         return results;
     }
     
@@ -129,7 +83,7 @@ public class LimsManipDAO {
 	}
 
 
-	public List<Plate> getPlaques(Integer emnco, String projetValue) {
+	public List<Plate> findPlaques(Integer emnco, String projetValue) {
 		List<Plate> plates = this.jdbcTemplate.query("pl_MaterielmanipPlaques @prsco=?, @emnco=?", new Object[]{projetValue, emnco}, new RowMapper<Plate>() {
 	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	Plate plate = new Plate();
@@ -143,8 +97,12 @@ public class LimsManipDAO {
 		return plates;
 	}
 
-
-	public Plate getPlate(String code) {
+	/**
+	 * Return a plate with coordinate
+	 * @param code
+	 * @return
+	 */
+	public Plate findPlate(String code) {
 		List<Well> wells = this.jdbcTemplate.query("pl_MaterielmanipPlaque @plaqueId=?", new Object[]{code}, new RowMapper<Well>() {
 	        public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	Well well = new Well();

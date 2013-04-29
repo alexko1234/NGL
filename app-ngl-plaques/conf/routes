@@ -22,14 +22,14 @@ GET    	/api/manip                						controllers.manips.api.Manips.list()
 
 
 # list tpl
-GET /tpl/projects/list									controllers.Lists.projects()
-GET /tpl/samples/list									controllers.Lists.samples()
-GET /tpl/etmanips/list									controllers.Lists.etmanips()
-GET /tpl/etmateriels/list								controllers.Lists.etmateriels()
+GET /api/lists/projects									controllers.lists.api.Lists.projects()
+GET /api/lists/samples									controllers.lists.api.Lists.samples()
+GET /api/lists/etmanips									controllers.lists.api.Lists.etmanips()
+GET /api/lists/etmateriels								controllers.lists.api.Lists.etmateriels()
 
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
-
+GET     /messages.js                controllers.Application.jsMessages()
 # Javascript routing
 #GET    /assets/javascripts/routes      			controllers.Application.javascriptRoutes()

@@ -2,8 +2,8 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.List;
 
+import ls.dao.LimsManipDAO;
 import ls.models.Manip;
-import ls.services.LimsManipServices;
 
 import org.junit.Test;
 
@@ -16,8 +16,8 @@ public class LimsPlaqueTest extends AbstractTests {
 	@Test
 	public void limsManipServicesGetManips(){
 		
-		LimsManipServices  limsManipServices = Spring.getBeanOfType(LimsManipServices.class);
-        List<Manip> results = limsManipServices.getManips(13,2,"AAA");
+		LimsManipDAO  limsManipServices = Spring.getBeanOfType(LimsManipDAO.class);
+        List<Manip> results = limsManipServices.findManips(13,2,"AAA");
         assertThat(results.size()).isNotNull();
 
 	}

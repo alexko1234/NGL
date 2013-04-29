@@ -14,17 +14,17 @@ import ls.models.Plate;
 import ls.models.Well;
 import play.Logger;
 import play.api.modules.spring.Spring;
-import play.data.DynamicForm;
 import play.data.Form;
 import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.Result;
 import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
+import controllers.MaterielManipSearch;
 
 public class Plaques extends CommonController {
 	final static Form<Plate> wellsForm = form(Plate.class);
-	final static DynamicForm listForm = new DynamicForm();
+	final static Form<MaterielManipSearch> manipForm = form(MaterielManipSearch.class);
 	
 	public static Result save(){
 		
@@ -51,17 +51,16 @@ public class Plaques extends CommonController {
 	}
 	
 	public static Result list(){
-		DynamicForm filledForm =  listForm.bindFromRequest();
+		Form<MaterielManipSearch> filledForm =  manipForm.bindFromRequest();
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
-		Logger.info("Project Value :"+getProjetValue());
-		List<Plate> plates = limsManipDAO.getPlaques(getEtmanipValue(),getProjetValue());
-		Logger.info("Etmanip "+getEtmanipValue());
+		Logger.info("Manip Form :"+filledForm.toString());		
+		List<Plate> plates = limsManipDAO.findPlaques(filledForm.get().emateriel,filledForm.get().project);		
 		return ok(Json.toJson(new DatatableResponse(plates, plates.size())));
 	}
 	
 	public static Result get(String code){
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
-		Plate plate = limsManipDAO.getPlate(code);
+		Plate plate = limsManipDAO.findPlate(code);
 		if(plate != null){			
 			return ok(Json.toJson(plate));					
 		}else{
@@ -108,40 +107,10 @@ public class Plaques extends CommonController {
 	}
 
 	private static String newCode() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMDDHHmmss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
 		String code = "PL"+sdf.format(new Date());
 		return code;
 	}
 
-	private static String getProjetValue() {
-
-		try{
-			return request().queryString().get("project")[0];
-		}catch(Exception e){
-			Logger.error(e.getMessage());
-			return null; // default value;
-		}
-	}
-
-	private static Integer getEtmanipValue() {
-		try{
-			return Integer.valueOf(request().queryString().get("etmanip")[0]);
-		}catch(Exception e){
-			Logger.error(e.getMessage());
-			return null; // default value;
-		}
-	}
-	
-	
-	private static Integer getEtmaterielmanipValue(){
-		try{
-			return Integer.valueOf(request().queryString().get("emateriel")[0]);
-		}catch(Exception e){
-			Logger.error(e.getMessage());
-			return 2; // default value;
-		}
 		
-	}
-
-	
 }

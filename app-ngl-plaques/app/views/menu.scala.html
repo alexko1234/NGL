@@ -7,7 +7,7 @@
 		<div class="navbar-inner">
 			<div class="container-fluid">
 				
-				<a class="brand" href="@routes.Application.index()">@Messages("application.name")</a>
+				<a class="brand" href="/">@Messages("application.name")</a>
 				
 					<ul class="nav">
 						<li class="@("active".when(nav == "plates.new"))"><a href="@controllers.plaques.tpl.routes.Plaques.home("new")">@Messages("menu.plaques.new")</a></li>

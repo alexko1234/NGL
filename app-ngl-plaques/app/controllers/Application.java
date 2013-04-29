@@ -2,8 +2,9 @@ package controllers;
 
 import java.util.List;
 
+import jsmessages.JsMessages;
+
 import ls.models.Manip;
-import ls.services.LimsManipServices;
 import play.api.modules.spring.Spring;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -15,14 +16,8 @@ public class Application extends Controller {
         return ok(index.render("Your new application is ready.","home"));
         
     }
-   
-  /*  public static Result index() {
-        LimsManipServices  limsManipServices = Spring.getBeanOfType(LimsManipServices.class);
-        List<Manip> results = limsManipServices.getManips(13,2);
-        System.out.println("SIZE = "+results.size());
+   public static Result jsMessages() {
+       return ok(JsMessages.generate("Messages")).as("application/javascript");
+   }
 
-        return ok(index.render("Your new application is ready."));
-  }*/
-
-  
 }

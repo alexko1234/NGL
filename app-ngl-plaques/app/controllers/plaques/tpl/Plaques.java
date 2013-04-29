@@ -60,9 +60,9 @@ public class Plaques extends CommonController {
 	  	    		controllers.plaques.api.routes.javascript.Plaques.get(),
 	  	    		controllers.plaques.api.routes.javascript.Plaques.save(),
 	  	    		controllers.manips.api.routes.javascript.Manips.list(),
-	  	    		controllers.routes.javascript.Lists.projects(),
-	  	    		controllers.routes.javascript.Lists.etmateriels(),
-	  	    		controllers.routes.javascript.Lists.etmanips()
+	  	    		controllers.lists.api.routes.javascript.Lists.projects(),
+	  	    		controllers.lists.api.routes.javascript.Lists.etmateriels(),
+	  	    		controllers.lists.api.routes.javascript.Lists.etmanips()
 	  	      )	  	      
 	  	    );
 	  	  }
