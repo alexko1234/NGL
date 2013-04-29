@@ -1,7 +1,7 @@
 package validation.utils;
 
 
-import static validation.utils.ConstraintsHelper.required;
+
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -52,7 +52,7 @@ public class ConstraintsHelper {
 						//TODO unit validation
 						
 					}catch(Throwable e){
-						Logger.error(e.getMessage());
+						Logger.error(e.getMessage(),e);
 						addErrors(errors, getKey(rootKeyName,propertyDefinition.code), "error.badtype", propertyDefinition.type, pv.value);
 					}
 				}	
@@ -193,7 +193,7 @@ public class ConstraintsHelper {
 			String key, String message, Object... arguments) {
 		if (!errors.containsKey(key)) {
 			errors.put(key, new ArrayList<ValidationError>());
-		}
+		}		
 		errors.get(key).add(new ValidationError(key, message,  java.util.Arrays.asList(arguments)));
 	}
 

@@ -8,3 +8,9 @@ page.search.label.search = Recherche
 #panier
 button.addbasket = Ajouter au panier
 
+#validation error
+error.valuenotauthorized = Valeur non authorisée : {0}
+error.badtype = Mauvais type : {0} / {1}
+error.notactive = Propriété non active 
+error.notdefined = Propriété non définie
+error.required = Propriété obligatoire
