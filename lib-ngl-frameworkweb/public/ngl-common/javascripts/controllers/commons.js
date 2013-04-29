@@ -19,6 +19,19 @@ function SearchMainCtrl($scope){
 	};
 	
 	/**
+	 * function to reset all tabs
+	 */
+	$scope.addTabs = function(tabs){
+		if(angular.isArray(tabs)){
+			for(var i = 0; i < tabs.length; i++){
+				$scope.tabs.push(tabs[i]);
+			}
+		}else{
+			$scope.tabs.push(tabs);
+		}		
+	};
+	
+	/**
 	 * function to keep the basket when we switch views
 	 */
 	$scope.getBasket = function(){
