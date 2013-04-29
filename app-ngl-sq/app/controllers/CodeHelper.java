@@ -8,7 +8,7 @@ import models.laboratory.processes.instance.Process;
 public class CodeHelper {
 
 	private static SimpleDateFormat getSimpleDateFormat(){
-		return new SimpleDateFormat("yyyyMMDDHHmmss");
+		return new SimpleDateFormat("yyyyMMddHHmmss");
 	}
 	
 	//ProcessusTypeCode/ProjectCode/SampeCode/YYYYMMDDHHMMSS
