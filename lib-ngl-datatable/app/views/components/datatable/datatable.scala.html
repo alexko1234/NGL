@@ -116,7 +116,7 @@
 <table class="table table-condensed table-hover table-bordered">
 	<thead>
 	<tr>
-		<th ng-repeat="column in @(config.name).getColumns()" @if(config.hidding){ng-hide="@(config.name).isHide(column.id)"}> {{column.header}}
+		<th ng-repeat="column in @(config.name).getColumnsConfig()" @if(config.hidding){ng-hide="@(config.name).isHide(column.id)"}> {{column.header}}
 		<div class="btn-group pull-right">
 			@if(config.editColumn){<button class="btn btn-mini" ng-click="@(config.name).setEditColumn(column.id)" ng-show="column.edit" ng-disabled="!@(config.name).isSelect()" data-toggle="tooltip" title="@Messages("datatable.button.edit")"><i class="icon-edit"></i></button>}
 			@if(config.order){<button class="btn btn-mini" ng-click="@(config.name).setOrderColumn(column.property, column.id)" ng-show="column.order" data-toggle="tooltip" title="@Messages("datatable.button.sort")"><i ng-class="@(config.name).getOrderColumnClass(column.id)"></i></button>}

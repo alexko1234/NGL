@@ -703,8 +703,11 @@ angular.module('datatableServices', []).
 		    				this.config.columns = columns;
 		    				this.configMaster.columns = angular.copy(columns);
 		    			},
-		    			getColumns: function(){
+		    			getColumnsConfig: function(){
 		    				return this.config.columns;		    				
+		    			},
+		    			getConfig: function(){
+		    				return this.config;		    				
 		    			},
 		    			/**
 		    			 * Return column with hide
