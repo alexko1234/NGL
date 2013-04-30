@@ -32,7 +32,7 @@ public abstract class AbstractTests {
 	
 	public static Map<String,String> fakeConfiguration(){
 		Map<String,String> config = new HashMap<String,String>();
-		
+		config.put("application.secret","ITA:BR/13B]?3@7r`4<^b49^]75RNWQfbOr<@1EuA5O6XZG<6xPq4=YvnZ/^Hh?k");
 		config.put("evolutionplugin", "disabled");
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");
 		config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST");
