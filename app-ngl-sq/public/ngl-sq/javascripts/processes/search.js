@@ -1,6 +1,6 @@
 "use strict"
 
-function SearchCtrl($scope, datatable, comboLists) {
+function SearchCtrl($scope,$location,$routeParams, datatable, comboLists) {
 	
 	$scope.datatableConfig = {	
 			search:{
@@ -16,7 +16,7 @@ function SearchCtrl($scope, datatable, comboLists) {
 	
 	$scope.changeTypeCode = function(){
 		if($scope.form.typeCodes.selected){
-			this.search();
+			$location.path('/processes/search/'+$scope.form.typeCodes.selected.code);
 		}
 	}
 	
@@ -31,14 +31,24 @@ function SearchCtrl($scope, datatable, comboLists) {
 	}
 	
 	$scope.init = function(){
-		$scope.datatable = datatable($scope, $scope.datatableConfig);		
-		$scope.form = {
+		if(angular.isUndefined($scope.getForm())){
+			$scope.form = {
 					typeCodes:{},
 					projects:{},
 					samples:{}
-		};
-		$scope.form.typeCodes.options = $scope.comboLists.getProcessTypes().query();
-		$scope.form.projects.options = $scope.comboLists.getProjects().query();
+			};
+			$scope.setForm($scope.form);
+			$scope.form.typeCodes.options = $scope.comboLists.getProcessTypes().query();
+			$scope.form.projects.options = $scope.comboLists.getProjects().query();
+			
+		}else{
+			$scope.form = $scope.getForm();			
+		}
+		
+		$scope.datatable = datatable($scope, $scope.datatableConfig);
+		if($scope.form.projects.selected || $scope.form.typeCodes.selected){
+			$scope.search();
+		}
 	}
 	
 	$scope.search = function(){		
@@ -57,4 +67,4 @@ function SearchCtrl($scope, datatable, comboLists) {
 	}
 }
 
-SearchCtrl.$inject = ['$scope', 'datatable','comboLists'];
+SearchCtrl.$inject = ['$scope','$location','$routeParams', 'datatable','comboLists'];

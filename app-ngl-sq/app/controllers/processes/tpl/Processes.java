@@ -4,6 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.ning.http.client.providers.apache.ApacheAsyncHttpProvider;
+
+import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.processes.description.ProcessType;
+import models.utils.dao.DAOException;
+
 import controllers.processes.tpl.routes.javascript;
 
 import play.Logger;
@@ -23,6 +31,10 @@ public class Processes extends Controller{
 		return ok(home.render(code));
 	}
 	
+	public static Result searchHome(String code){
+		return ok(home.render(code));
+	}
+	
 	public static Result searchContainers(){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, false));
@@ -38,7 +50,7 @@ public class Processes extends Controller{
 		return ok(searchContainers.render(config));
 	}
 	
-	public static Result search(){
+	public static Result search(String processTypeCode){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("typeCode", Messages.get("processes.table.typeCode"), true, false, false));
@@ -49,7 +61,22 @@ public class Processes extends Controller{
 		columns.add(DatatableHelpers.getColumn("resolutionCode", Messages.get("processes.table.resolutionCode"), true, false, false));
 		columns.add( DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("processes.table.creationDate"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("currentExperimentTypeCode", Messages.get("processes.table.currentExperimentTypeCode"), true, false, false));
-		//TODO: add propertyDefinition columns
+		
+		//Adding property definition columns
+		if(!StringUtils.isEmpty(processTypeCode) && !processTypeCode.equals("home")) {
+			try {
+				ProcessType processType = ProcessType.find.findByCode(processTypeCode);
+				if(processType != null && processType.propertiesDefinitions != null) {
+					List<PropertyDefinition> propertyDefinition = processType.propertiesDefinitions;
+					for(PropertyDefinition p : propertyDefinition) {
+						columns.add(DatatableHelpers.getColumn("propertiesDefinitions."+p.name, Messages.get("processes.table."+p.name), true, false, false));
+					}
+				}
+			} catch (DAOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		DatatableConfig config = new DatatableConfig(columns);
 		
 		return ok(search.render(config));

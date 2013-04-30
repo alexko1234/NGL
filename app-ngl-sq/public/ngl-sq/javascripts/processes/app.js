@@ -10,7 +10,12 @@ angular.module('home', ['datatableServices','basketServices', 'comboListsService
 		controller : 'ListNewCtrl'
 	});
 	$routeProvider.when('/processes/search', {
-		templateUrl : function(params){return '/tpl/processes/search'},
+		templateUrl : function(params){return '/tpl/processes/search/home'},
+		controller : 'SearchCtrl'
+	});
+	
+	$routeProvider.when('/processes/search/:processTypeCode', {
+		templateUrl : function(params){return '/tpl/processes/search/'+params.processTypeCode},
 		controller : 'SearchCtrl'
 	});
 	$routeProvider.otherwise({redirectTo: '/processes/new'});
