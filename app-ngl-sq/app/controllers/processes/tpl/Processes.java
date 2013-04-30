@@ -62,6 +62,34 @@ public class Processes extends Controller{
 		columns.add( DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("processes.table.creationDate"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("currentExperimentTypeCode", Messages.get("processes.table.currentExperimentTypeCode"), true, false, false));
 		
+		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode));
+		
+		DatatableConfig config = new DatatableConfig(columns);
+		
+		return ok(search.render(config));
+	}
+	
+	public static Result newProcesses(String processTypeCode){
+		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
+		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code")));
+		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode")));						
+		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode")));
+		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode")));
+		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("processes.table.stateCode")));
+		
+		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode));
+		
+		DatatableConfig config = new DatatableConfig(columns);
+		config.save = true;
+		config.edit = true;
+		config.remove = true;
+		config.button = true;
+		return ok(newProcesses.render(config));
+	}
+	
+	
+	private static List<DatatableColumn> getPropertiesDefinitionsColumns(String processTypeCode){
+		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
 		//Adding property definition columns
 		if(!StringUtils.isEmpty(processTypeCode) && !processTypeCode.equals("home")) {
 			try {
@@ -76,27 +104,8 @@ public class Processes extends Controller{
 				e.printStackTrace();
 			}
 		}
-		
-		DatatableConfig config = new DatatableConfig(columns);
-		
-		return ok(search.render(config));
+		return columns;
 	}
-	
-	public static Result newProcesses(String processTypeCode){
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code")));
-		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode")));						
-		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode")));
-		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode")));
-		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("processes.table.stateCode")));
-		DatatableConfig config = new DatatableConfig(columns);
-		config.save = true;
-		config.edit = true;
-		config.remove = true;
-		config.button = true;
-		return ok(newProcesses.render(config));
-	}
-	
 	
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
