@@ -47,20 +47,18 @@ public class Processes extends CommonController{
 				//the trace
 				value.traceInformation = new TraceInformation();
 			
-				//value.traceInformation.setTraceInformation(PermissionHelper.getCurrentUser(session()));
-				value.traceInformation.setTraceInformation("ngsrg");
+				value.traceInformation.setTraceInformation(PermissionHelper.getCurrentUser(session()));
 				//the default status
 				value.stateCode = "N";
 				//code and name generation
 				value.code = CodeHelper.generateProcessCode(value);
 				Logger.info("New process code : "+value.code);
 			} else {
-				//value.traceInformation.setTraceInformation(PermissionHelper.getCurrentUser(session()));
-				value.traceInformation.setTraceInformation("ngsrg");
+				value.traceInformation.setTraceInformation(PermissionHelper.getCurrentUser(session()));
 			}
 			
 			//Business Validation
-			//BusinessValidationHelper.validateProcess(filledForm.errors(), value, Constants.PROCESS_COLL_NAME,null);
+			BusinessValidationHelper.validateProcess(filledForm.errors(), value, Constants.PROCESS_COLL_NAME,null);
 			
 			if (!filledForm.hasErrors()) {
 				//Workflows Implementation
