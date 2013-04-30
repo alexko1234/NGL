@@ -22,6 +22,7 @@ plates.button.table = Vue Tableau
 plates.button.plate = Vue Plaque
 plates.button.compute = Calcul Position
 plates.button.edit = Editer Plaque
+plates.button.unedit = Désactiver l''édition
 
 plates.legend = Plaque
 plates.table.code = Code Plaque
@@ -40,4 +41,4 @@ plates.msg.save.error = Sauvegarde echouée
 plates.msg.details = [détails]
 
 plates.error.severalsamewellcode = Plusieurs fois la même manip : {0}
-plates.error.wellwithsamecoord = Plusieurs fois les même coordonnées : x = {0} / y = {1}
+plates.error.wellwithsamecoord = Plusieurs fois les même coordonnées : {0}

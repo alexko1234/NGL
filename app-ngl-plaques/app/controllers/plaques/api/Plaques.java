@@ -85,11 +85,11 @@ public class Plaques extends CommonController {
 					for(int j = 0 ; j < plate.wells.length ; j++){
 						if(i != j){
 							if(plate.wells[i].code.equals(plate.wells[j].code)){
-								addErrors(errors, "well["+i+"]", "plates.error.severalsamewellcode", plate.wells[i].code);
+								addErrors(errors, "wells["+i+"]", "plates.error.severalsamewellcode", plate.wells[i].name);
 							}
 							
 							if(plate.wells[i].x.equals(plate.wells[j].x) && plate.wells[i].y.equals(plate.wells[j].y)){
-								addErrors(errors, "well["+i+"]", "plates.error.wellwithsamecoord", plate.wells[i].x, plate.wells[i].y);
+								addErrors(errors, "wells["+i+"]", "plates.error.wellwithsamecoord", plate.wells[i].x, plate.wells[i].y);
 							}
 						}
 					}
