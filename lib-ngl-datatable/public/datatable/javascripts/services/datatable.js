@@ -30,6 +30,7 @@ angular.module('datatableServices', []).
 							},
 							show :{
 								active:false,
+								showButton : true,
 								add:function(line){
 									console.log("show : add function is not defined in the controller !!!");
 								}
@@ -40,6 +41,8 @@ angular.module('datatableServices', []).
 							},
 							edit : {
 								active:false,
+								withoutSelect:false, //edit all line
+								showButton : true,
 								start : false,
 								all : false,
 								columns : {}, //columnIndex : {edit : true/false, value:undefined}
@@ -47,18 +50,30 @@ angular.module('datatableServices', []).
 							save :{
 								active:false,
 								withoutEdit:false,
+								showButton : true,
 								mode:'remote', //or local
 								url:undefined,
 								callback : undefined //used to have a callback after remove all element. the datatable is pass to callback method
 							},
 							remove:{
 								active:false,
+								withEdit:false,
+								showButton : true,
 								mode:'remote', //or local
 								url:undefined,
 								start:false,
 								counter:0,
 								callback : undefined //used to have a callback after remove all element. the datatable is pass to callback method
-							},	
+							},
+							select:{
+								active:true,
+								showButton:true,
+								isSelectAll:false
+							},
+							cancel : {
+								active:true,
+								showButton:true
+							},
 							otherButtons:{
 								active:false
 							},
@@ -305,6 +320,12 @@ angular.module('datatableServices', []).
 		    					console.log("order is not active !!!");
 		    				}
 		    			},
+		    			/**
+		    			 * indicate if we can order the table
+		    			 */
+		    			canOrder: function(){
+		    				return (this.config.edit.active ? !this.config.edit.start : this.config.order.active);
+		    			},
 		    			//show
 		    			/**
 		    			 * show one element
@@ -358,7 +379,7 @@ angular.module('datatableServices', []).
 		    				if(this.config.edit.active){
 			    				var find = false;
 			    				for(var i = 0; i < this.displayResult.length; i++){
-			    					if(this.displayResult[i].selected){
+			    					if(this.displayResult[i].selected || this.config.edit.withoutSelect){
 			    						this.displayResult[i].edit=true;			    						
 			    						find = true;			    					
 			    					}else{
@@ -399,6 +420,12 @@ angular.module('datatableServices', []).
 		    					console.log("edit is not active !");
 		    					return false;
 		    				}
+		    			},
+		    			/**
+		    			 * indicate if at least one line is selected
+		    			 */
+		    			canEdit: function(){
+		    				return (this.config.edit.withoutSelect?true:isSelect());
 		    			},
 		    			/**
 		    			 * Update all line with the same value
@@ -486,7 +513,7 @@ angular.module('datatableServices', []).
 		    			/**
 		    			 * Test if save mode can be enable
 		    			 */
-		    			isSaveEnable: function(){
+		    			canSave: function(){
 		    				if(this.config.edit.active && !this.config.save.withoutEdit){
 		    					return this.config.edit.start;
 		    				}else if(this.config.save.withoutEdit){
@@ -506,7 +533,7 @@ angular.module('datatableServices', []).
 		    					this.config.remove.counter = 0;
 		    					this.config.remove.start = true;
 			    				for(var i = 0; i < localDisplayResult.length; i++){
-			    					if(localDisplayResult[i].selected && !localDisplayResult[i].edit){
+			    					if(localDisplayResult[i].selected && (!localDisplayResult[i].edit || this.config.remove.withEdit)){
 			    						if(this.isRemoteMode(this.config.remove.mode)){
 			    							//this.removeRemote(localDisplayResult[i], i);
 			    						}else{		    									    		    				
@@ -523,7 +550,7 @@ angular.module('datatableServices', []).
 		    					console.log("remove is not active !");		    				
 		    				}
 		    			},
-		    			/*
+		    			
 		    			removeRemote : function(value, i){
 		    				if(this.config.remove.active && this.config.remove.start){
 			    				var url = this.getUrl(this.config.remove.url);
@@ -543,7 +570,7 @@ angular.module('datatableServices', []).
 		    					console.log("remove is not active !");		    				
 		    				}
 		    				
-		    			},*/
+		    			},
 		    			/**
 		    			 * Call after save to update the records property
 		    			 */
@@ -557,12 +584,25 @@ angular.module('datatableServices', []).
 									j = i -this.config.remove.counter
 								}
 								this.allResult.splice(j,1);
+								this.displayResult.splice((i -this.config.remove.counter),1);
 								this.config.remove.counter++;
 								this.totalNumberRecords--;
-								this.computeDisplayResult();
 								this.computePaginationList();
 		    				} else{
 		    					console.log("remove is not active !");		    				
+		    				}
+		    			},
+		    			/**
+		    			 * indicate if at least one line is selected and not in edit mode
+		    			 */
+		    			canRemove: function(){
+		    				if(this.config.remove.active){
+			    				for(var i = 0; this.displayResult && i < this.displayResult.length; i++){
+		    						if(this.displayResult[i].selected && (!this.displayResult[i].edit || this.config.remove.withEdit))return true;	    						
+		    					}
+		    				}else{
+		    					console.log("remove is not active !");
+		    					return false;
 		    				}
 		    			},
 		    			//select
@@ -570,22 +610,41 @@ angular.module('datatableServices', []).
     					 * Select all the table line or just one
     					 */
 						select : function(line){
-		    				if(line){
-		    					if(!line.selected){
-		    						line.selected=true;
-		    						line.trClass="row_selected";
-		    					}
-								else{
-									line.selected=false;
-		    						line.trClass="";
-								}
-		    				}else {
-		    					for(var i = 0; i < this.displayResult.length; i++){
-		    						this.displayResult[i].selected=true;
-		    						this.displayResult[i].trClass="row_selected";
-		    					}
-		    				}
+							if(this.config.select.active){
+			    				if(line){
+			    					if(!line.selected){
+			    						line.selected=true;
+			    						line.trClass="row_selected";
+			    					}
+									else{
+										line.selected=false;
+			    						line.trClass="";
+									}
+			    				}
+							}else{
+								console.log("select is not active");
+							}
 		    			},
+		    			/**
+		    			 * Select or unselect all line
+		    			 */
+		    			selectAll : function(value){
+		    				if(this.config.select.active){
+			    				this.config.select.isSelectAll = value;
+			    				for(var i = 0; i < this.displayResult.length; i++){
+			    					if(value){
+			    						this.displayResult[i].selected=true;
+			    						this.displayResult[i].trClass="row_selected";
+			    					}else{
+			    						this.displayResult[i].selected=false;
+			    						this.displayResult[i].trClass="";
+			    					}
+		    					}
+		    				}else{
+								console.log("select is not active");
+							}
+		    			},	    			
+		    			
 		    			/**
 		    			 * Return all selected element and unselect the data
 		    			 */
@@ -601,6 +660,7 @@ angular.module('datatableServices', []).
 		    						selection.push(angular.copy(this.displayResult[i]));
 		    					}
 		    				}
+		    				if(unselect){this.config.select.isSelectAll = false;}
 		    				return selection;
 		    			},
 		    			/**
@@ -613,25 +673,18 @@ angular.module('datatableServices', []).
 		    				return false;
 		    			},
 		    			/**
-		    			 * indicate if at least one line is selected and not in edit mode
-		    			 */
-		    			isSelectAndNotEdit: function(){
-		    				for(var i = 0; this.displayResult && i < this.displayResult.length; i++){
-	    						if(this.displayResult[i].selected && !this.displayResult[i].edit)return true;	    						
-	    					}
-		    				return false;
-		    			},
-		    			/**
 		    			 * cancel edit, hide and selected lines only
 		    			 */
 		    			cancel : function(){
-		    				/*cancel only edit and hide mode */
-		    				this.config.edit = angular.copy(this.configMaster.edit);
-		    				this.config.hide = angular.copy(this.configMaster.hide);
-		    				this.config.remove = angular.copy(this.configMaster.remove);
-		    				
-		    				this.computeDisplayResult();
-		    				this.computePaginationList();
+		    				if(this.config.cancel.active){
+			    				/*cancel only edit and hide mode */
+			    				this.config.edit = angular.copy(this.configMaster.edit);
+			    				this.config.hide = angular.copy(this.configMaster.hide);
+			    				this.config.remove = angular.copy(this.configMaster.remove);
+			    				
+			    				this.computeDisplayResult();
+			    				this.computePaginationList();
+		    				}
 		    			},
 		    			
 		    			//helper functions		    			
@@ -643,6 +696,9 @@ angular.module('datatableServices', []).
 		    			},
 		    			isShowToolbarRight: function(){
 		    				return (this.isShowPagination() || this.config.showTotalNumberRecords);
+		    			},
+		    			showButton: function(configParam){
+		    				return (this.config[configParam].active && this.config[configParam].showButton);
 		    			},
 		    			/**
 		    			 * Add pagination parameters if needed
@@ -708,6 +764,11 @@ angular.module('datatableServices', []).
 		    			},
 		    			getConfig: function(){
 		    				return this.config;		    				
+		    			},
+		    			setConfig: function(config){
+		    				var settings = $.extend(true, {}, this.configDefault, config);
+		    	    		this.config = angular.copy(settings);
+		    	    		this.configMaster = angular.copy(settings);    
 		    			},
 		    			/**
 		    			 * Return column with hide
