@@ -27,7 +27,7 @@ function SearchCtrl($scope, $http,datatable) {
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getTabs(0))){
 			$scope.addTabs({label:Messages('plates.tabs.search'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("search").url,remove:false});
-			$scope.activeTab($scope.getTabs(0));
+			$scope.activeTab(0);
 		}
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, datatableConfig);

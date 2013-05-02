@@ -17,7 +17,7 @@ public class Plaques extends CommonController {
 		}
 
 		public static Result get(String code) {
-			return ok();
+			return ok(views.html.plaques.home.render("search"));
 		}
 		
 		public static Result searchManips() {

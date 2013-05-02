@@ -23,7 +23,7 @@ function SearchManipsCtrl($scope, $http, datatable, basket) {
 		
 		if(angular.isUndefined($scope.getTabs(0))){
 			$scope.addTabs({label:Messages('plates.tabs.searchmanips'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("new").url,remove:false});
-			$scope.activeTab($scope.getTabs(0));
+			$scope.activeTab(0);
 		}
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, datatableConfig);

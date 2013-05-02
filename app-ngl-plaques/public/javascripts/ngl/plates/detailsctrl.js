@@ -49,7 +49,10 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 		$scope.plate = {code:undefined, wells:undefined, typeCode:undefined, typeName:undefined};
 		
 		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('details');
+			$scope.setHomePage('search');
+			$scope.addTabs({label:Messages('plates.tabs.search'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("search").url,remove:false});
+			$scope.addTabs({label:$routeParams.code,href:jsRoutes.controllers.plaques.tpl.Plaques.get($routeParams.code).url,remove:false});			
+			$scope.activeTab(1);
 		}
 		
 		if(angular.isUndefined($scope.getBasket())){
