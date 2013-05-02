@@ -17,8 +17,12 @@ function SearchManipsCtrl($scope, $http, datatable, basket) {
 	};
 	
 	$scope.init = function(){
+		if(angular.isUndefined($scope.getHomePage())){
+			$scope.setHomePage('creation');
+		}
+		
 		if(angular.isUndefined($scope.getTabs(0))){
-			$scope.addTabs({label:Messages('plates.tabs.searchmanips'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("new").url,remove:false, from:'creation'});
+			$scope.addTabs({label:Messages('plates.tabs.searchmanips'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("new").url,remove:false});
 			$scope.activeTab($scope.getTabs(0));
 		}
 		if(angular.isUndefined($scope.getDatatable())){
@@ -92,12 +96,14 @@ function SearchManipsCtrl($scope, $http, datatable, basket) {
 		for(var i = 0; i < manips.length; i++){
 			var well = {
 					code:manips[i].matmaco,
-					name:manips[i].matmanom
+					name:manips[i].matmanom,
+					typeCode:$scope.form.etmanips.selected.code,
+					typeName:$scope.form.etmanips.selected.name
 			};		
 			this.basket.add(well);
 		}
 		if(this.basket.length() > 0 && $scope.getTabs().length === 1){
-			$scope.addTabs({label:Messages('plates.tabs.new'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("details").url,remove:false, from:'creation', isNew:true});//$scope.getTab()[1]
+			$scope.addTabs({label:Messages('plates.tabs.new'),href:jsRoutes.controllers.plaques.tpl.Plaques.get("new").url,remove:false});//$scope.getTab()[1]
 		}
 		
 	};

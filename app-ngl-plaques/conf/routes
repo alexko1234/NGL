@@ -6,7 +6,8 @@
 GET     /                           controllers.Application.index()
 
 # plates tpl
-GET	   	/plaques/:code									controllers.plaques.tpl.Plaques.home(code:java.lang.String)
+GET	   	/plaques/:homecode/home							controllers.plaques.tpl.Plaques.home(homecode:java.lang.String)
+GET	   	/plaques/:code									controllers.plaques.tpl.Plaques.get(code:java.lang.String)
 GET		/tpl/plaques/new/search							controllers.plaques.tpl.Plaques.searchManips()
 GET		/tpl/plaques/search								controllers.plaques.tpl.Plaques.search()
 GET		/tpl/plaques/details							controllers.plaques.tpl.Plaques.details()

@@ -57,7 +57,7 @@ angular.module('datatableServices', []).
 							},
 							remove:{
 								active:false,
-								withEdit:false,
+								withEdit:false, //to remove a line in edition mode
 								showButton : true,
 								mode:'remote', //or local
 								url:undefined,

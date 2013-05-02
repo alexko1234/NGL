@@ -30,7 +30,8 @@ plates.table.well.code = Code Manip
 plates.table.well.name = Nom Manip
 plates.table.well.x = X
 plates.table.well.y = Y
-plates.table.nbWells = Nombre de Manips
+plates.table.nbWells = Nombre de Puits Utilisés
+plates.table.typeName = Type de Manips
 
 plates.select.etapemanips = -- sélectionner une étape --
 plates.select.etatmanips = -- sélectionner un état --
@@ -42,3 +43,4 @@ plates.msg.details = [détails]
 
 plates.error.severalsamewellcode = Plusieurs fois la même manip : {0}
 plates.error.wellwithsamecoord = Plusieurs fois les même coordonnées : {0}
+plates.error.typecode.different = Type de manips différent du type de plaque : {0}

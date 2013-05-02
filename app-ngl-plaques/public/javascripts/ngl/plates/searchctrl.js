@@ -14,15 +14,19 @@ function SearchCtrl($scope, $http,datatable) {
 			show:{
 				active:true,
 				add :function(line){
-					$scope.addTabs({label:line.code,href:jsRoutes.controllers.plaques.tpl.Plaques.home(line.code).url,remove:true, from:'search'});
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.plaques.tpl.Plaques.get(line.code).url,remove:true});
 				}
 			}
 	};
 	
 	$scope.init = function(){
+		if(angular.isUndefined($scope.getHomePage())){
+			$scope.setHomePage('search');
+		}
+		
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getTabs(0))){
-			$scope.addTabs({label:Messages('plates.tabs.search'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("search").url,remove:false, from:'search'});
+			$scope.addTabs({label:Messages('plates.tabs.search'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("search").url,remove:false});
 			$scope.activeTab($scope.getTabs(0));
 		}
 		if(angular.isUndefined($scope.getDatatable())){

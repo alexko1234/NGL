@@ -46,7 +46,11 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 	$scope.init = function(){
 		$scope.clearMessages();		
 		$scope.datatable = datatable($scope, datatableConfig);
-		$scope.plate = {code:undefined, wells:undefined};
+		$scope.plate = {code:undefined, wells:undefined, typeCode:undefined, typeName:undefined};
+		
+		if(angular.isUndefined($scope.getHomePage())){
+			$scope.setHomePage('details');
+		}
 		
 		if(angular.isUndefined($scope.getBasket())){
 			$scope.basket = basket($scope);			
@@ -55,22 +59,16 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 			$scope.basket = $scope.getBasket();
 		}
 		
-		//extract from creation or search
-		if($scope.getTabs().length > 0){
-			$scope.from = $scope.getTabs(0).from;			
-		}
-		
 		//on traite le details
-		if($scope.isCreation() && $scope.getTabs().length > 0 && $scope.getTabs(1).isNew){
+		if($routeParams.code === 'new'){
 			$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
 			$scope.edit();
 		}else{
 			$http.get(jsRoutes.controllers.plaques.api.Plaques.get($routeParams.code).url).success(function(data) {
-				$scope.plate.code=data.code;
+				$scope.plate = data;
 				$scope.datatable.setData(data.wells, data.wells.length);
 				$scope.datatable.addData($scope.basket.get());	
-				
-				if($scope.getTabs().length > 0 && $scope.getTabs(1).isEdit){
+				if($scope.isEditMode()){
 					$scope.edit();
 				}else {
 					$scope.unedit();
@@ -78,16 +76,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 			});		
 		}			
 	};
-	
-	$scope.isCreation = function(){
-		return ($scope.from === 'creation');
-	};
-	
-	$scope.isDetails = function(){
-		return ($scope.from === 'details');
-	};
-	
-	
+		
 	/**
 	 * Pass in edit mode
 	 */
@@ -95,12 +84,12 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 		$scope.setEditConfig(true);		
 		$scope.datatable.setEditColumn();
 		
-		if(!$scope.isCreation() && !$scope.isDetails()){
+		if($scope.isHomePage('search') && !$scope.isBackupTabs()){
 			$scope.backupTabs();
 			$scope.resetTabs();
-			$scope.addTabs({label:Messages('plates.tabs.searchmanips'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("new").url,remove:false,from:'details', isEdit:$scope.editMode});
-			$scope.addTabs({label:$scope.plate.code,href:jsRoutes.controllers.plaques.tpl.Plaques.home($scope.plate.code).url,remove:false,from:'details', isEdit:$scope.editMode});
-			$scope.activeTab($scope.getTabs(1));
+			$scope.addTabs({label:Messages('plates.tabs.searchmanips'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("new").url,remove:false});
+			$scope.addTabs({label:$scope.plate.code,href:jsRoutes.controllers.plaques.tpl.Plaques.get($scope.plate.code).url,remove:false});
+			$scope.activeTab(1);
 			//reinit datatable and form
 			$scope.setDatatable(undefined);	
 			$scope.setForm(undefined);			
@@ -115,11 +104,11 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 		$scope.setEditConfig(false);
 		$scope.datatable.cancel();
 		
-		if(!$scope.isCreation() && $scope.isBackupTabs()){
+		if($scope.isHomePage('search') && $scope.isBackupTabs()){
 			$scope.restoreBackupTabs();
+			$scope.activeTab(1);
 			$scope.setDatatable(undefined);	
-			$scope.setForm(undefined);
-			$scope.from = 'search';
+			$scope.setForm(undefined);			
 		}		
 	}
 	
@@ -132,10 +121,11 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 		config.edit.active=value;		
 		config.remove.active=value;
 		$scope.datatable.setConfig(config);
-		if($scope.isCreation()){
-			$scope.getTabs(1).isEdit=value;								
-		}
-				
+		if(value){
+			$scope.startEditMode();								
+		}else{
+			$scope.stopEditMode();
+		}						
 	};
 	
 	/**
@@ -147,39 +137,49 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 		
 		$http.post(jsRoutes.controllers.plaques.api.Plaques.save().url, $scope.plate).
 			success(function(data, status, headers, config){
-				$scope.plate.code=data.code;
+				$scope.plate=data;
 				$scope.datatable.setData(data.wells,data.wells.length);
 				$scope.basket.reset();
-				$scope.unedit();
 				$scope.message.clazz="alert alert-success";
 				$scope.message.text=Messages('plates.msg.save.sucess')
 				
-				if($scope.isCreation()){
-					$scope.setTab(1,{label:$scope.plate.code,href:jsRoutes.controllers.plaques.tpl.Plaques.home($scope.plate.code).url,remove:false, from:'creation', isEdit:$scope.editMode});					
-				}				
+				if($scope.isHomePage('creation')){
+					$scope.setTab(1,{label:$scope.plate.code,href:jsRoutes.controllers.plaques.tpl.Plaques.get($scope.plate.code).url,remove:false});					
+				}			
 		}).error(function(data, status, headers, config){
 				$scope.message.clazz="alert alert-error";
 				$scope.message.text=Messages('plates.msg.save.error');
-				$scope.message.details = data;
-				$scope.message.isDetails = true;
-				var columns = $scope.datatable.getColumnsConfig();
 				
+				var columns = $scope.datatable.getColumnsConfig();
+				var msg = {};
 				for(var i = 0; i < $scope.plate.wells.length; i++){
 					var isError = false;
 					if(!angular.isUndefined(data["wells["+i+"]"])){
 						isError = true;
+						if(angular.isUndefined(msg["["+i+"] : "+$scope.plate.wells[i].name])){
+							msg["["+i+"] : "+$scope.plate.wells[i].name] = {};
+						}
+						msg["["+i+"] : "+$scope.plate.wells[i].name].global = data["wells["+i+"]"];
 					}
-					for(var j = 0; j < columns.length && !isError; j++){
+					for(var j = 0; j < columns.length ; j++){
 						if(!angular.isUndefined(data["wells["+i+"]."+columns[j].property])){
 							isError = true;
+							if(angular.isUndefined(msg["["+i+"] : "+$scope.plate.wells[i].name])){
+								msg["["+i+"] : "+$scope.plate.wells[i].name] = {};
+							}
+							msg["["+i+"] : "+$scope.plate.wells[i].name][columns[j].property] = data["wells["+i+"]."+columns[j].property];
 						}						
 					}		
 					if(isError){
-						$scope.plate.wells[i].trClass = "error";
+						$scope.plate.wells[i].trClass = "error";						
 					}else{
 						$scope.plate.wells[i].trClass = "success";
 					}
-				} 				
+				} 
+				
+				
+				$scope.message.details = msg;
+				$scope.message.isDetails = true;
 		});
 	};
 	

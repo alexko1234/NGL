@@ -5,6 +5,8 @@ function TabMainCtrl($scope){
 	var basketMaster = undefined;
 	var datatableMaster = undefined;
 	var form = undefined;
+	var homePage = undefined; //the home page who called the ctrl
+	var editMode = false; //active or not the edit mode for the details page
 	
 	$scope.hideTabs = { 
 		hide:false,
@@ -60,21 +62,43 @@ function TabMainCtrl($scope){
 	/**
 	 * Set one element of list active
 	 */
-	$scope.activeTab = function(tab){
-		if(angular.isObject(tab)){
+	$scope.activeTab = function(value){
+		var tab = undefined;
+		if(angular.isNumber(value)){
+			tab = tabs[value];
+		}else if(angular.isObject(value)){
+			tab = value;
+		}
+		
+		if(!angular.isUndefined(tab)){
 			tab.clazz='active';
 			for(var i = 0; i < tabs.length; i++){
 				if(tabs[i].href != tab.href){
 					tabs[i].clazz='';
 				}
 			}
-		}else{
+		} else{
 			for(var i = 0; i < tabs.length; i++){				
-					tabs[i].clazz='';
+				tabs[i].clazz='';
 			}
 		}
 		
 	};
+	
+	$scope.toggleTabs = function(){
+		$scope.hideTabs.hide = !$scope.hideTabs.hide;
+		if($scope.hideTabs.hide){
+			$scope.hideTabs.clazz='icon-resize-small';
+		}else{
+			$scope.hideTabs.clazz='icon-resize-full';
+		}
+	};
+	
+	$scope.setHideTabs =  function(){
+		$scope.hideTabs.hide = true;
+		$scope.hideTabs.clazz='icon-resize-small';
+	};
+	
 	/**
 	 * Backup the current tabs
 	 */
@@ -119,10 +143,10 @@ function TabMainCtrl($scope){
 	};
 	
 	/**
-	 * function to return the form
+	 * function to return the search form
 	 */
-	$scope.setForm = function(form){
-		form = form;
+	$scope.setForm = function(value){
+		form = value;
 	};
 	
 	/**
@@ -139,18 +163,41 @@ function TabMainCtrl($scope){
 		return datatableMaster;
 	};
 	
-		
-	$scope.toggleTabs = function(){
-		$scope.hideTabs.hide = !$scope.hideTabs.hide;
-		if($scope.hideTabs.hide){
-			$scope.hideTabs.clazz='icon-resize-small';
-		}else{
-			$scope.hideTabs.clazz='icon-resize-full';
-		}
+	/**
+	 * function to set the origine of a page
+	 */
+	$scope.getHomePage = function(){
+		return homePage;
 	};
 	
-	$scope.setHideTabs =  function(){
-		$scope.hideTabs.hide = true;
-		$scope.hideTabs.clazz='icon-resize-small';
+	/**
+	 * function to return the origine of a page
+	 */
+	$scope.setHomePage = function(value){
+		homePage = value;
+	};
+	/**
+	 * Test if home page equal value
+	 */
+	$scope.isHomePage= function(value){
+		return homePage === value;
+	};
+	/**
+	 * Start edition in details page
+	 */
+	$scope.startEditMode = function(){
+		editMode = true;
+	};
+	/**
+	 *  Stop edition in details page
+	 */
+	$scope.stopEditMode = function(){
+		editMode = false;
+	};
+	/**
+	 * Edition mode status
+	 */
+	$scope.isEditMode = function(){
+		return editMode;
 	};
 }

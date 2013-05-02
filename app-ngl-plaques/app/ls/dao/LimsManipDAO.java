@@ -40,32 +40,81 @@ public class LimsManipDAO {
 
     public List<Manip> findManips(Integer emnco, Integer ematerielco,String prsco){
         List<Manip> results = this.jdbcTemplate.query("pl_MaterielmanipChoisi @prsco=?, @emnco=?, @ematerielco=?, @plaque=? ", 
-        		new Object[]{prsco, emnco, ematerielco, 1},new BeanPropertyRowMapper<Manip>(Manip.class));
-        
+        		new Object[]{prsco, emnco, ematerielco, 1},new BeanPropertyRowMapper<Manip>(Manip.class));        
         return results;
     }
     
-    
-    public void updatePlateCoordonates(Plate plate){
+    public void createPlate(Plate plate){
+    	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?", new Object[]{plate.code, plate.typeCode});    	
+    }
+       
+    public void updatePlate(Plate plate){
     	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
     	for(Well well: plate.wells){
     		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x, well.y);
     	}
     }
 
+    public List<Plate> findPlates(Integer emnco, String projetValue) {
+		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @prsco=?, @emnco=?", new Object[]{projetValue, emnco}, new RowMapper<Plate>() {
+	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        	Plate plate = new Plate();
+	        	//well.plateCode = rs.getString("plaqueId");
+	        	plate.code = rs.getString("plaqueId");
+	        	plate.typeCode = rs.getInt("emnco");
+	        	plate.typeName = rs.getString("emnnom");
+	        	plate.nbWells = rs.getInt("nombrePuitUtilises");	        	
+	            return plate;
+	        }
+	    });
+		return plates;
+	}
 
-	public boolean isPlateCodeExist(String plateCode) {
-		List<Well> wells = this.jdbcTemplate.query("pl_MaterielmanipPlaque @plaqueId=?", new Object[]{plateCode}, new RowMapper<Well>() {
+	/**
+	 * Return a plate with coordinate
+	 * @param code
+	 * @return
+	 */
+	public Plate getPlate(String code) {
+		Plate plate = this.jdbcTemplate.queryForObject("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
+	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        	Plate plate = new Plate();
+	        	plate.code = rs.getString("plaqueId");
+	        	plate.typeCode = rs.getInt("emnco");
+	        	plate.typeName = rs.getString("emnnom");
+	        	plate.nbWells = rs.getInt("nombrePuitUtilises");		        	
+	            return plate;
+	        }
+	    });
+		
+		
+		List<Well> wells = this.jdbcTemplate.query("pl_MaterielmanipPlaque @plaqueId=?", new Object[]{code}, new RowMapper<Well>() {
 	        public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	Well well = new Well();
-	        	//well.plateCode = rs.getString("plaqueId");
+	        	well.name = rs.getString("matmanom");
 	        	well.code = rs.getInt("matmaco");
 	        	well.x = rs.getString("plaqueX");
-	        	well.y = rs.getString("plaqueY");
+	        	well.y = rs.getString("plaqueY");	
+	        	well.typeCode = rs.getInt("emnco");
+	        	well.typeName = rs.getString("emnnom");
 	            return well;
 	        }
 	    });
-		return (wells.size() > 0);
+		
+		plate.wells = wells.toArray(new Well[wells.size()]);
+		return plate;
+	}
+    
+
+	public boolean isPlateExist(String code) {
+		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
+	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        	Plate plate = new Plate();
+	        	plate.code = rs.getString("plaqueId");	        		        
+	            return plate;
+	        }
+	    });
+		return (plates.size() > 0);
 	}
 	
 	public List<ListObject> getListObjectFromProcedureLims(String procedure) {
@@ -83,40 +132,6 @@ public class LimsManipDAO {
 	}
 
 
-	public List<Plate> findPlaques(Integer emnco, String projetValue) {
-		List<Plate> plates = this.jdbcTemplate.query("pl_MaterielmanipPlaques @prsco=?, @emnco=?", new Object[]{projetValue, emnco}, new RowMapper<Plate>() {
-	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
-	        	Plate plate = new Plate();
-	        	//well.plateCode = rs.getString("plaqueId");
-	        	plate.code = rs.getString("plaqueId");
-	        	plate.nbWells = rs.getInt("nombrePuits");
-	        	
-	            return plate;
-	        }
-	    });
-		return plates;
-	}
-
-	/**
-	 * Return a plate with coordinate
-	 * @param code
-	 * @return
-	 */
-	public Plate findPlate(String code) {
-		List<Well> wells = this.jdbcTemplate.query("pl_MaterielmanipPlaque @plaqueId=?", new Object[]{code}, new RowMapper<Well>() {
-	        public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
-	        	Well well = new Well();
-	        	well.name = rs.getString("matmanom");
-	        	well.code = rs.getInt("matmaco");
-	        	well.x = rs.getString("plaqueX");
-	        	well.y = rs.getString("plaqueY");
-	            return well;
-	        }
-	    });
-		Plate plate = new Plate();
-		plate.code = code;
-		plate.wells = wells.toArray(new Well[wells.size()]);
-		return plate;
-	}
+	
 }
 

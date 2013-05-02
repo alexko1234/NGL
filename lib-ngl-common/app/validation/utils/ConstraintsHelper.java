@@ -188,7 +188,6 @@ public class ConstraintsHelper {
 	 * @param message : message key
 	 * @param arguments : message args
 	 */
-	@SuppressWarnings("unchecked")
 	public static void addErrors(Map<String, List<ValidationError>> errors,
 			String key, String message, Object... arguments) {
 		if (!errors.containsKey(key)) {

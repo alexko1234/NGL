@@ -34,12 +34,19 @@ public class Plaques extends CommonController {
 			boolean isUpdate = true;
 			if(plate.code == null){
 				plate.code = newCode();
+				if(plate.wells.length > 0){
+					plate.typeName = plate.wells[0].typeName;
+					plate.typeCode = plate.wells[0].typeCode;
+				}
 				isUpdate = false;
 			}
 			validatePlate(plate, filledForm.errors(), isUpdate);
 			if (!filledForm.hasErrors()) {
 				Logger.debug(plate.toString());
-				Spring.getBeanOfType(LimsManipDAO.class).updatePlateCoordonates(plate);				
+				if(!isUpdate){
+					Spring.getBeanOfType(LimsManipDAO.class).createPlate(plate);
+				}
+				Spring.getBeanOfType(LimsManipDAO.class).updatePlate(plate);				
 				filledForm.fill(plate);
 			}
 		}
@@ -54,13 +61,13 @@ public class Plaques extends CommonController {
 		Form<MaterielManipSearch> filledForm =  manipForm.bindFromRequest();
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
 		Logger.info("Manip Form :"+filledForm.toString());		
-		List<Plate> plates = limsManipDAO.findPlaques(filledForm.get().emateriel,filledForm.get().project);		
+		List<Plate> plates = limsManipDAO.findPlates(filledForm.get().etmanip,filledForm.get().project);		
 		return ok(Json.toJson(new DatatableResponse(plates, plates.size())));
 	}
 	
 	public static Result get(String code){
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
-		Plate plate = limsManipDAO.findPlate(code);
+		Plate plate = limsManipDAO.getPlate(code);
 		if(plate != null){			
 			return ok(Json.toJson(plate));					
 		}else{
@@ -70,12 +77,16 @@ public class Plaques extends CommonController {
 	
 	private static void validatePlate(Plate plate, Map<String, List<ValidationError>> errors, boolean isUpdate) {
 		if(required(errors, plate, "plate")){
-			required(errors, plate.code, "plateCode");
+			required(errors, plate.code, "code");
+			required(errors, plate.typeCode, "typeCode");
 			if(required(errors, plate.wells, "wells")){
-				for(Well well : plate.wells){
-					required(errors, well.x, well.name+".x");
-					required(errors, well.y, well.name+".y");
-					required(errors, well.code, well.name+".code");
+				for(int i = 0 ; i < plate.wells.length ; i++){
+					required(errors, plate.wells[i].x, "wells["+i+"]"+".x");
+					required(errors, plate.wells[i].y, "wells["+i+"]"+".y");
+					required(errors, plate.wells[i].code, "wells["+i+"]"+".code");
+					if(!plate.wells[i].typeCode.equals(plate.typeCode)){
+						addErrors(errors, "wells["+i+"]"+".typeName", "plates.error.typecode.different", plate.typeName, plate.wells[i].typeName);
+					}
 				}
 				if(!isUpdate){
 					validatePlateCode(plate, errors); 
@@ -85,12 +96,12 @@ public class Plaques extends CommonController {
 					for(int j = 0 ; j < plate.wells.length ; j++){
 						if(i != j){
 							if(plate.wells[i].code.equals(plate.wells[j].code)){
-								addErrors(errors, "wells["+i+"]", "plates.error.severalsamewellcode", plate.wells[i].name);
+								addErrors(errors, "wells["+i+"]"+".name", "plates.error.severalsamewellcode", plate.wells[i].name);
 							}
 							
-							if(plate.wells[i].x.equals(plate.wells[j].x) && plate.wells[i].y.equals(plate.wells[j].y)){
+							if(plate.wells[i].x != null && plate.wells[i].y != null && plate.wells[i].x.equals(plate.wells[j].x) && plate.wells[i].y.equals(plate.wells[j].y)){
 								addErrors(errors, "wells["+i+"]", "plates.error.wellwithsamecoord", plate.wells[i].x, plate.wells[i].y);
-							}
+							}							
 						}
 					}
 				}
@@ -101,7 +112,7 @@ public class Plaques extends CommonController {
 
 	private static void validatePlateCode(Plate plate,
 			Map<String, List<ValidationError>> errors) {
-		if(Spring.getBeanOfType(LimsManipDAO.class).isPlateCodeExist(plate.code)){
+		if(Spring.getBeanOfType(LimsManipDAO.class).isPlateExist(plate.code)){
 			addErrors(errors, "code", "plates.error.code.exist");
 		}
 	}

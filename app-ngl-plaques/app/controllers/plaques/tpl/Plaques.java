@@ -12,10 +12,14 @@ import views.components.datatable.DatatableHelpers;
 
 public class Plaques extends CommonController {
 	
-		public static Result home(String code) {
-			return ok(views.html.plaques.home.render(code));
+		public static Result home(String homecode) {
+			return ok(views.html.plaques.home.render(homecode));
 		}
 
+		public static Result get(String code) {
+			return ok();
+		}
+		
 		public static Result searchManips() {
 			List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
 			columns.add(DatatableHelpers.getColumn("matmaco", "manips.table.code", true, false, false));
@@ -28,6 +32,7 @@ public class Plaques extends CommonController {
 		public static Result search(){
 			List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
 			columns.add(DatatableHelpers.getColumn("code", "plates.table.code", true, false, false));
+			columns.add(DatatableHelpers.getColumn("typeName", "plates.table.typeName", true, false, false));
 			columns.add(DatatableHelpers.getColumn("nbWells", "plates.table.nbWells"));
 			DatatableConfig config = new DatatableConfig(columns);
 			config.show = true;
@@ -39,7 +44,8 @@ public class Plaques extends CommonController {
 		public static Result details(){
 			List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
 			columns.add(DatatableHelpers.getColumn("code", "plates.table.well.code", true, false, false));
-			columns.add(DatatableHelpers.getColumn("name", "plates.table.well.name", true, false, false));		
+			columns.add(DatatableHelpers.getColumn("name", "plates.table.well.name", true, false, false));
+			columns.add(DatatableHelpers.getColumn("typeName", "plates.table.typeName", true, false, false));
 			columns.add(DatatableHelpers.getColumn("x", "plates.table.well.x", true, true, false));
 			columns.add(DatatableHelpers.getColumn("y", "plates.table.well.y", true, true, false));		
 			DatatableConfig config = new DatatableConfig(columns);
@@ -55,6 +61,7 @@ public class Plaques extends CommonController {
 	  	      Routes.javascriptRouter("jsRoutes",
 	  	        // Routes
 	  	    		controllers.plaques.tpl.routes.javascript.Plaques.home() ,
+	  	    		controllers.plaques.tpl.routes.javascript.Plaques.get(),
 	  	    		controllers.plaques.tpl.routes.javascript.Plaques.details() ,
 	  	    		controllers.plaques.api.routes.javascript.Plaques.list(),
 	  	    		controllers.plaques.api.routes.javascript.Plaques.get(),
