@@ -555,7 +555,7 @@ angular.module('datatableServices', []).
 		    				if(this.config.remove.active && this.config.remove.start){
 			    				var url = this.getUrl(this.config.remove.url);
 				    			if(url){
-				    				$http.delete(url, value, {datatable:this,index:i})
+				    				$http['delete'](url, value, {datatable:this,index:i})
 					    				.success(function(data, status, headers, config) {
 					    					config.datatable.removeLocal(config.index);
 					    				})
