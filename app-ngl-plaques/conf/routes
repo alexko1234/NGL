@@ -6,27 +6,27 @@
 GET     /                           controllers.Application.index()
 
 # plates tpl
-GET	   	/plaques/:homecode/home							controllers.plaques.tpl.Plaques.home(homecode:java.lang.String)
-GET	   	/plaques/:code									controllers.plaques.tpl.Plaques.get(code:java.lang.String)
-GET		/tpl/plaques/new/search							controllers.plaques.tpl.Plaques.searchManips()
-GET		/tpl/plaques/search								controllers.plaques.tpl.Plaques.search()
-GET		/tpl/plaques/details							controllers.plaques.tpl.Plaques.details()
-GET		/tpl/plaques/assets								controllers.plaques.tpl.Plaques.javascriptRoutes()
+GET	   	/plates/:homecode/home						controllers.plates.tpl.Plates.home(homecode:java.lang.String)
+GET	   	/plates/:code								controllers.plates.tpl.Plates.get(code:java.lang.String)
+GET		/tpl/plates/new/search						controllers.plates.tpl.Plates.searchManips()
+GET		/tpl/plates/search							controllers.plates.tpl.Plates.search()
+GET		/tpl/plates/details							controllers.plates.tpl.Plates.details()
+GET		/tpl/plates/assets							controllers.plates.tpl.Plates.javascriptRoutes()
 
 #plates api
-POST	/api/plaques									controllers.plaques.api.Plaques.save()
-GET		/api/plaques									controllers.plaques.api.Plaques.list()
-GET    	/api/plaques/:code               				controllers.plaques.api.Plaques.get(code: String)
+POST	/api/plates									controllers.plates.api.Plates.save()
+GET		/api/plates									controllers.plates.api.Plates.list()
+GET    	/api/plates/:code               			controllers.plates.api.Plates.get(code: String)
 
 #manip api
-GET    	/api/manip                						controllers.manips.api.Manips.list()
+GET    	/api/manip                					controllers.manips.api.Manips.list()
 
 
 # list tpl
-GET /api/lists/projects									controllers.lists.api.Lists.projects()
-GET /api/lists/samples									controllers.lists.api.Lists.samples()
-GET /api/lists/etmanips									controllers.lists.api.Lists.etmanips()
-GET /api/lists/etmateriels								controllers.lists.api.Lists.etmateriels()
+GET /api/lists/projects								controllers.lists.api.Lists.projects()
+GET /api/lists/samples								controllers.lists.api.Lists.samples()
+GET /api/lists/etmanips								controllers.lists.api.Lists.etmanips()
+GET /api/lists/etmateriels							controllers.lists.api.Lists.etmateriels()
 
 
 # Map static resources from the /public folder to the /assets URL path

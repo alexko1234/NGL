@@ -1,8 +1,8 @@
 application.name=NGL Plaques
 
 #Menu
-menu.plaques.new=Création
-menu.plaques.search=Recherche
+plates.menu.new=Création
+plates.menu.search=Recherche
 
 #Manips
 manips.table.code = Code Manip
