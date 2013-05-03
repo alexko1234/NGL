@@ -1,23 +1,24 @@
-package controllers.plaques.tpl;
+package controllers.plates.tpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import controllers.CommonController;
+import controllers.plates.tpl.routes.javascript;
 import play.Routes;
 import play.mvc.Result;
 import views.components.datatable.DatatableColumn;
 import views.components.datatable.DatatableConfig;
 import views.components.datatable.DatatableHelpers;
 
-public class Plaques extends CommonController {
+public class Plates extends CommonController {
 	
 		public static Result home(String homecode) {
-			return ok(views.html.plaques.home.render(homecode));
+			return ok(views.html.plates.home.render(homecode));
 		}
 
 		public static Result get(String code) {
-			return ok(views.html.plaques.home.render("search"));
+			return ok(views.html.plates.home.render("search"));
 		}
 		
 		public static Result searchManips() {
@@ -26,7 +27,7 @@ public class Plaques extends CommonController {
 			columns.add(DatatableHelpers.getColumn("matmanom", "manips.table.name", true, false, false));
 			DatatableConfig config = new DatatableConfig(columns);
 			config.button = Boolean.TRUE;
-			return ok(views.html.plaques.searchManips.render(config));
+			return ok(views.html.plates.searchManips.render(config));
 		}
 		
 		public static Result search(){
@@ -37,7 +38,7 @@ public class Plaques extends CommonController {
 			DatatableConfig config = new DatatableConfig(columns);
 			config.show = true;
 			config.button = true;
-			return ok(views.html.plaques.search.render(config));
+			return ok(views.html.plates.search.render(config));
 		}
 		
 		//TODO messages Code,Nom
@@ -52,7 +53,7 @@ public class Plaques extends CommonController {
 			config.remove=true;
 			config.button=true;		
 			config.editColumn=false;
-			return ok(views.html.plaques.details.render(config));
+			return ok(views.html.plates.details.render(config));
 		}
 		
 		public static Result javascriptRoutes() {
@@ -60,12 +61,12 @@ public class Plaques extends CommonController {
 	  	    return ok(  	    		
 	  	      Routes.javascriptRouter("jsRoutes",
 	  	        // Routes
-	  	    		controllers.plaques.tpl.routes.javascript.Plaques.home() ,
-	  	    		controllers.plaques.tpl.routes.javascript.Plaques.get(),
-	  	    		controllers.plaques.tpl.routes.javascript.Plaques.details() ,
-	  	    		controllers.plaques.api.routes.javascript.Plaques.list(),
-	  	    		controllers.plaques.api.routes.javascript.Plaques.get(),
-	  	    		controllers.plaques.api.routes.javascript.Plaques.save(),
+	  	    		controllers.plates.tpl.routes.javascript.Plates.home() ,
+	  	    		controllers.plates.tpl.routes.javascript.Plates.get(),
+	  	    		controllers.plates.tpl.routes.javascript.Plates.details() ,
+	  	    		controllers.plates.api.routes.javascript.Plates.list(),
+	  	    		controllers.plates.api.routes.javascript.Plates.get(),
+	  	    		controllers.plates.api.routes.javascript.Plates.save(),
 	  	    		controllers.manips.api.routes.javascript.Manips.list(),
 	  	    		controllers.lists.api.routes.javascript.Lists.projects(),
 	  	    		controllers.lists.api.routes.javascript.Lists.etmateriels(),

@@ -1,4 +1,4 @@
-package controllers.plaques.api;
+package controllers.plates.api;
 
 import static play.data.Form.form;
 import static validation.utils.ConstraintsHelper.addErrors;
@@ -22,7 +22,7 @@ import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
 import controllers.MaterielManipSearch;
 
-public class Plaques extends CommonController {
+public class Plates extends CommonController {
 	final static Form<Plate> wellsForm = form(Plate.class);
 	final static Form<MaterielManipSearch> manipForm = form(MaterielManipSearch.class);
 	
