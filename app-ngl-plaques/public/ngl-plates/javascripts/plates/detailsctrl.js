@@ -50,9 +50,9 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('plates.tabs.search'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("search").url,remove:false});
-			$scope.addTabs({label:$routeParams.code,href:jsRoutes.controllers.plaques.tpl.Plaques.get($routeParams.code).url,remove:false});			
-			$scope.activeTab(1);
+			$scope.addTabs({label:Messages('plates.tabs.search'),href:jsRoutes.controllers.plates.tpl.Plates.home("search").url,remove:false});
+			$scope.addTabs({label:$routeParams.code,href:jsRoutes.controllers.plates.tpl.Plates.get($routeParams.code).url,remove:false});			
+			$scope.activeTab($scope.getTabs(1));
 		}
 		
 		if(angular.isUndefined($scope.getBasket())){
@@ -67,7 +67,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 			$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
 			$scope.edit();
 		}else{
-			$http.get(jsRoutes.controllers.plaques.api.Plaques.get($routeParams.code).url).success(function(data) {
+			$http.get(jsRoutes.controllers.plates.api.Plates.get($routeParams.code).url).success(function(data) {
 				$scope.plate = data;
 				$scope.datatable.setData(data.wells, data.wells.length);
 				$scope.datatable.addData($scope.basket.get());	
@@ -90,8 +90,8 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 		if($scope.isHomePage('search') && !$scope.isBackupTabs()){
 			$scope.backupTabs();
 			$scope.resetTabs();
-			$scope.addTabs({label:Messages('plates.tabs.searchmanips'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("new").url,remove:false});
-			$scope.addTabs({label:$scope.plate.code,href:jsRoutes.controllers.plaques.tpl.Plaques.get($scope.plate.code).url,remove:false});
+			$scope.addTabs({label:Messages('plates.tabs.searchmanips'),href:jsRoutes.controllers.plates.tpl.Plates.home("new").url,remove:false});
+			$scope.addTabs({label:$scope.plate.code,href:jsRoutes.controllers.plates.tpl.Plates.get($scope.plate.code).url,remove:false});
 			$scope.activeTab(1);
 			//reinit datatable and form
 			$scope.setDatatable(undefined);	
@@ -138,7 +138,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 		$scope.clearMessages();
 		$scope.plate.wells = $scope.datatable.displayResult;
 		
-		$http.post(jsRoutes.controllers.plaques.api.Plaques.save().url, $scope.plate).
+		$http.post(jsRoutes.controllers.plates.api.Plates.save().url, $scope.plate).
 			success(function(data, status, headers, config){
 				$scope.plate=data;
 				$scope.datatable.setData(data.wells,data.wells.length);
@@ -147,7 +147,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 				$scope.message.text=Messages('plates.msg.save.sucess')
 				
 				if($scope.isHomePage('creation')){
-					$scope.setTab(1,{label:$scope.plate.code,href:jsRoutes.controllers.plaques.tpl.Plaques.get($scope.plate.code).url,remove:false});					
+					$scope.setTab(1,{label:$scope.plate.code,href:jsRoutes.controllers.plates.tpl.Plates.get($scope.plate.code).url,remove:false});					
 				}			
 		}).error(function(data, status, headers, config){
 				$scope.message.clazz="alert alert-error";

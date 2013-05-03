@@ -22,8 +22,8 @@ function SearchManipsCtrl($scope, $http, datatable, basket) {
 		}
 		
 		if(angular.isUndefined($scope.getTabs(0))){
-			$scope.addTabs({label:Messages('plates.tabs.searchmanips'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("new").url,remove:false});
-			$scope.activeTab(0);
+			$scope.addTabs({label:Messages('plates.tabs.searchmanips'),href:jsRoutes.controllers.plates.tpl.Plates.home("new").url,remove:false});
+			$scope.activeTab($scope.getTabs(0));
 		}
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, datatableConfig);
@@ -103,7 +103,7 @@ function SearchManipsCtrl($scope, $http, datatable, basket) {
 			this.basket.add(well);
 		}
 		if(this.basket.length() > 0 && $scope.getTabs().length === 1){
-			$scope.addTabs({label:Messages('plates.tabs.new'),href:jsRoutes.controllers.plaques.tpl.Plaques.get("new").url,remove:false});//$scope.getTab()[1]
+			$scope.addTabs({label:Messages('plates.tabs.new'),href:jsRoutes.controllers.plates.tpl.Plates.get("new").url,remove:false});//$scope.getTab()[1]
 		}
 		
 	};

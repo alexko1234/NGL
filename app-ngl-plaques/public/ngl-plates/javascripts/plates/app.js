@@ -1,21 +1,22 @@
 "use strict";
  
 angular.module('home', ['datatableServices','basketServices'], function($routeProvider, $locationProvider) {
-	$routeProvider.when('/plaques/search/home', {
-		templateUrl : '/tpl/plaques/search',
+		
+	$routeProvider.when('/plates/search/home', {
+		templateUrl : '/tpl/plates/search',
 		controller : 'SearchCtrl'
 	});	
 	
-	$routeProvider.when('/plaques/new/home', {
-		templateUrl : '/tpl/plaques/new/search',
+	$routeProvider.when('/plates/new/home', {
+		templateUrl : '/tpl/plates/new/search',
 		controller : 'SearchManipsCtrl'
 	});
 	
-	$routeProvider.when('/plaques/:code', {
-		templateUrl : '/tpl/plaques/details',
+	$routeProvider.when('/plates/:code', {
+		templateUrl : '/tpl/plates/details',
 		controller : 'DetailsCtrl'
 	});
-	$routeProvider.otherwise({redirectTo: '/plaques/search/home'});
+	$routeProvider.otherwise({redirectTo: '/plates/search/home'});
 
 	// configure html5 to get links working with bookmarked
 	$locationProvider.html5Mode(true);

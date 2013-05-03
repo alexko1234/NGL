@@ -5,7 +5,7 @@ function SearchCtrl($scope, $http,datatable) {
 	var datatableConfig = {
 			order :{by:'code', mode:'local'},
 			search:{
-				url:jsRoutes.controllers.plaques.api.Plaques.list()
+				url:jsRoutes.controllers.plates.api.Plates.list()
 			},
 			pagination:{
 				active:true,
@@ -14,7 +14,7 @@ function SearchCtrl($scope, $http,datatable) {
 			show:{
 				active:true,
 				add :function(line){
-					$scope.addTabs({label:line.code,href:jsRoutes.controllers.plaques.tpl.Plaques.get(line.code).url,remove:true});
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.plates.tpl.Plates.get(line.code).url,remove:true});
 				}
 			}
 	};
@@ -26,8 +26,8 @@ function SearchCtrl($scope, $http,datatable) {
 		
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getTabs(0))){
-			$scope.addTabs({label:Messages('plates.tabs.search'),href:jsRoutes.controllers.plaques.tpl.Plaques.home("search").url,remove:false});
-			$scope.activeTab(0);
+			$scope.addTabs({label:Messages('plates.tabs.search'),href:jsRoutes.controllers.plates.tpl.Plates.home("search").url,remove:false});
+			$scope.activeTab($scope.getTabs(0));
 		}
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, datatableConfig);
