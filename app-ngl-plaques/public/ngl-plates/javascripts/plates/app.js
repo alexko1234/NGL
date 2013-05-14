@@ -8,7 +8,7 @@ angular.module('home', ['datatableServices','basketServices'], function($routePr
 	});	
 	
 	$routeProvider.when('/plates/new/home', {
-		templateUrl : '/tpl/plates/new/search',
+		templateUrl : '/tpl/plates/search-manips',
 		controller : 'SearchManipsCtrl'
 	});
 	
