@@ -1,0 +1,16 @@
+.visible-print {
+  display: none !important;
+}
+
+@media print {
+  .visible-print {
+    display: inherit !important;
+  }
+  .hidden-print {
+    display: none !important;
+  }
+  
+  .accordion-group .accordion-body.collapse {
+        height: auto;
+  }
+}
