@@ -6,9 +6,10 @@ import fr.cea.ig.MongoDBResult.Sort;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
+import play.mvc.Result;
 import views.components.datatable.DatatableHelpers;
 
-public class CommonController extends Controller{
+public abstract class CommonController extends Controller{
 	/**
 	 * Return the order sense in mongo db 
 	 * @param filledForm
@@ -33,4 +34,5 @@ public class CommonController extends Controller{
 		Form<T> filledForm = form.bind(json); 
 		return filledForm;
 	}
+		
 }
