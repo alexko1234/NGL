@@ -78,7 +78,6 @@ object ApplicationBuild extends Build {
 	        "mysql" % "mysql-connector-java" % "5.1.18",
 	        "postgresql" % "postgresql" % "8.3-603.jdbc4",
 	        "net.sourceforge.jtds" % "jtds" % "1.2.4",      	
-	        "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
 	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
 	        "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
 			)
@@ -98,26 +97,28 @@ object ApplicationBuild extends Build {
     	
     	val nglauthDependencies = Seq(
 		javaCore, javaJdbc,javaEbean,
-	    "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
-	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
+			"fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
+			"fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
 	        "mysql" % "mysql-connector-java" % "5.1.18"
 		)
 
 
        val nglplaquesDependencies = Seq(
-                        javaCore, javaJdbc,
+              javaCore, javaJdbc,
               // Add your project dependencies here,
-	      "commons-collections" % "commons-collections" % "3.2.1",
+              "commons-collections" % "commons-collections" % "3.2.1",
               "fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
               "net.sourceforge.jtds" % "jtds" % "1.2.4",
               "org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
-		"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
-              "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT"
-                  )
+              "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
+       )
         
-
+       val ngldevguideDependencies = Seq(
+           javaCore
+       )
    }
    
+  
     
   val nglframeworkweb = play.Project("lib-frameworkweb", libFrameworkWebVersion, nglframeworkwebDependencies, path = file("lib-ngl-frameworkweb"),settings = buildSettingsLib).settings(
        // Add your own project settings here      
@@ -169,7 +170,7 @@ object ApplicationBuild extends Build {
        
    ).dependsOn(nglcommon)
    
-   val nglasset = play.Project(appName + "-asset", appVersion, path = file("app-ngl-asset"),settings = buildSettings).settings(
+   val nglasset = play.Project(appName + "-assets", appVersion, path = file("app-ngl-asset"),settings = buildSettings).settings(
                 // Add your own project settings here      
                 resolvers := Seq(nexusig),
                 publishArtifact in makePom := false,
@@ -186,7 +187,14 @@ object ApplicationBuild extends Build {
     ).dependsOn(nglcommon)
 
 
-   
+    val ngldevguide = play.Project(appName + "-devguide", appVersion, ngldevguideDependencies, path = file("app-ngl-devguide"),settings = buildSettings).settings(
+       // Add your own project settings here      
+       resolvers := Seq(nexusig),
+       publishArtifact in makePom := false,
+       publishTo := Some(nexusigpublish) 
+ 
+    ).dependsOn(nglcommon)
+    
    val main = play.Project(appName, appVersion, settings = buildSettings).settings(
       // Add your own project settings here      
       resolvers := Seq(nexusig),
