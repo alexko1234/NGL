@@ -10,7 +10,7 @@ manips.table.name  = Nom Manip
 
 #Plaques
 plates.title.search=Recherche de Plaques
-plates.title.new=Création d'une Plaque
+plates.title.new=Création d''une Plaque
 
 plates.tabs.search = Recherche
 plates.tabs.searchmanips = Recherche Manips
