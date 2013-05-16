@@ -1,0 +1,20 @@
+@(nav: String = "")
+
+  <!-- Navbar
+    ================================================== -->
+		
+<div class="navbar navbar-inverse navbar-fixed-top hidden-print">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				
+				<a class="brand" href="/">@Messages("application.name")</a>
+				
+					<ul class="nav">
+							<li class="@("active".when(nav == "technologies"))"><a href="/technologies">Technologies</a></li>
+							<li class="@("active".when(nav == "namingrules"))"><a href="/naming-rules">Règles de Nommage</a></li>
+							<li class="@("active".when(nav == "datatable"))"><a href="/datatable">Datatable</a></li>																	
+					</ul>
+				</div>
+			</div>
+		</div>
+
