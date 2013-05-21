@@ -62,7 +62,7 @@ public class Processes extends Controller{
 		columns.add( DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("processes.table.creationDate"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("currentExperimentTypeCode", Messages.get("processes.table.currentExperimentTypeCode"), true, false, false));
 		
-		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode));
+		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode,false));
 		
 		DatatableConfig config = new DatatableConfig(columns);
 		
@@ -77,7 +77,7 @@ public class Processes extends Controller{
 		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode")));
 		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("processes.table.stateCode")));
 		
-		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode));
+		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode, true));
 		
 		DatatableConfig config = new DatatableConfig(columns);
 		config.save = true;
@@ -88,16 +88,18 @@ public class Processes extends Controller{
 	}
 	
 	
-	private static List<DatatableColumn> getPropertiesDefinitionsColumns(String processTypeCode){
+	private static List<DatatableColumn> getPropertiesDefinitionsColumns(String processTypeCode,Boolean edit){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
 		//Adding property definition columns
 		if(!StringUtils.isEmpty(processTypeCode) && !processTypeCode.equals("home")) {
 			try {
 				ProcessType processType = ProcessType.find.findByCode(processTypeCode);
 				if(processType != null && processType.propertiesDefinitions != null) {
+					columns.add(DatatableHelpers.getColumn("properties."+"test.value", Messages.get("processes.table.properties."+"test"), true, edit, false));
+					
 					List<PropertyDefinition> propertyDefinition = processType.propertiesDefinitions;
 					for(PropertyDefinition p : propertyDefinition) {
-						columns.add(DatatableHelpers.getColumn("propertiesDefinitions."+p.name, Messages.get("processes.table."+p.name), true, false, false));
+						columns.add(DatatableHelpers.getColumn("properties."+p.name, Messages.get("processes.table.properties."+p.name), true, edit, false));
 					}
 				}
 			} catch (DAOException e) {
