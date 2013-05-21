@@ -1,12 +1,6 @@
 package utils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import models.laboratory.container.instance.Basket;
-import models.laboratory.container.instance.Volume;
-import models.laboratory.experiment.instance.ContainerUsed;
 
 import org.codehaus.jackson.JsonNode;
 
