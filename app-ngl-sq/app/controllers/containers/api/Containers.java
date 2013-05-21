@@ -26,11 +26,11 @@ import fr.cea.ig.MongoDBResult;
 public class Containers extends CommonController {
 	
 	private static final String CONTAINER_COLL_NAME = "Container";
-	final static Form<ContainersSearch> containerForm = form(ContainersSearch.class);
+	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
 	
 	public static Result list(){
-		Form<ContainersSearch> containerFilledForm = containerForm.bindFromRequest();
-		ContainersSearch containersSearch = containerFilledForm.get();
+		Form<ContainersSearchForm> containerFilledForm = containerForm.bindFromRequest();
+		ContainersSearchForm containersSearch = containerFilledForm.get();
 		DBQuery.Query query = getQuery(containersSearch);
 	    MongoDBResult<Container> results = MongoDBDAO.find(CONTAINER_COLL_NAME, Container.class, query)
 				.sort(DatatableHelpers.getOrderBy(containerFilledForm), getMongoDBOrderSense(containerFilledForm))
@@ -44,7 +44,7 @@ public class Containers extends CommonController {
 	 * @param containersSearch
 	 * @return
 	 */
-	private static DBQuery.Query getQuery(ContainersSearch containersSearch) {
+	private static DBQuery.Query getQuery(ContainersSearchForm containersSearch) {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Logger.info("Containers Query : "+containersSearch);
 		if(StringUtils.isNotEmpty(containersSearch.projectCode)){

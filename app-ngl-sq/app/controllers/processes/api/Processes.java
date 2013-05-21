@@ -35,7 +35,7 @@ public class Processes extends CommonController{
 	
 	private static final String PROCESS_COLL_NAME = "Process";
 	final static Form<Process> processForm = form(Process.class);
-	final static Form<ProcessesSearch> processesSearchForm = form(ProcessesSearch.class);
+	final static Form<ProcessesSearchForm> processesSearchForm = form(ProcessesSearchForm.class);
 	
 	
 	public static Result save(){
@@ -83,8 +83,8 @@ public class Processes extends CommonController{
 	}
 	
 	public static Result list(){
-		Form<ProcessesSearch> processesSearchFilledForm = processesSearchForm.bindFromRequest();
-		ProcessesSearch processSearch = processesSearchFilledForm.get();
+		Form<ProcessesSearchForm> processesSearchFilledForm = processesSearchForm.bindFromRequest();
+		ProcessesSearchForm processSearch = processesSearchFilledForm.get();
 		DBQuery.Query query = getQuery(processSearch);
 	    MongoDBResult<Process> results = MongoDBDAO.find(PROCESS_COLL_NAME, Process.class, query)
 				.sort(DatatableHelpers.getOrderBy(processesSearchFilledForm), getMongoDBOrderSense(processesSearchFilledForm))
@@ -98,7 +98,7 @@ public class Processes extends CommonController{
 	 * @param processesSearch
 	 * @return the query
 	 */
-	private static DBQuery.Query getQuery(ProcessesSearch processesSearch) {
+	private static DBQuery.Query getQuery(ProcessesSearchForm processesSearch) {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		
 		Logger.info("Process Query : "+processesSearch);

@@ -12,6 +12,7 @@ import java.util.Map;
 import models.laboratory.container.instance.Container;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
+import play.Logger;
 import play.data.validation.ValidationError;
 
 import com.mongodb.MongoException;
@@ -83,8 +84,7 @@ public class BusinessValidationHelper {
 		required(errors, process.typeCode, "typeCode");
 		
 		ProcessType processType = process.getProcessType();
-		
-		if(processType != null && processType.propertiesDefinitions != null){
+		if(processType != null && processType.propertiesDefinitions != null && !processType.propertiesDefinitions.isEmpty()){
 			validateProperties(errors, process.properties, process.getProcessType().propertiesDefinitions, getKey(rootKeyName,"nullPropertiesDefinitions"));
 		}
 	}

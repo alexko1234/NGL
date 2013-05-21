@@ -95,8 +95,6 @@ public class Processes extends Controller{
 			try {
 				ProcessType processType = ProcessType.find.findByCode(processTypeCode);
 				if(processType != null && processType.propertiesDefinitions != null) {
-					columns.add(DatatableHelpers.getColumn("properties."+"test.value", Messages.get("processes.table.properties."+"test"), true, edit, false));
-					
 					List<PropertyDefinition> propertyDefinition = processType.propertiesDefinitions;
 					for(PropertyDefinition p : propertyDefinition) {
 						columns.add(DatatableHelpers.getColumn("properties."+p.name, Messages.get("processes.table.properties."+p.name), true, edit, false));
