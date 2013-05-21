@@ -28,7 +28,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.BusinessValidationHelper;
-import workflow.Workflow;
+import workflows.Workflows;
 
 
 public class Processes extends CommonController{
@@ -62,7 +62,7 @@ public class Processes extends CommonController{
 			
 			if (!filledForm.hasErrors()) {
 				//Workflows Implementation
-				Workflow.setAvailable(value.containerInputCode);
+				Workflows.setAvailable(value.containerInputCode);
 				
 				value = MongoDBDAO.save(Constants.PROCESS_COLL_NAME,value);
 				filledForm = filledForm.fill(value);
