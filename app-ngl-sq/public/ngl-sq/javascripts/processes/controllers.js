@@ -95,7 +95,8 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 						projectCode: containers[i].projectCodes[0],
 						sampleCode: containers[i].sampleCodes[j],
 						containerInputCode: containers[i].code,
-						typeCode:$scope.form.processTypes.selected.code
+						typeCode:$scope.form.processTypes.selected.code,
+						properties:{}
 				};			
 				this.basket.add(processus);
 			}
@@ -119,7 +120,7 @@ function ListNewCtrl($scope, datatable) {
 				by:'containerInputCode'
 			},
 			edit:{
-				active:false
+				active:true
 			},
 			save:{
 				active:true,
