@@ -9,6 +9,7 @@ GET     /                           controllers.Application.index()
 GET     /naming-rules                controllers.Application.namingRules(submenu:String = "")
 GET     /naming-rules/:submenu       controllers.Application.namingRules(submenu:String)
 GET     /technologies                controllers.Application.technologies()
+GET     /modules/:name                	controllers.Application.modules(name:String)
 
 ###############
 #Example Pages

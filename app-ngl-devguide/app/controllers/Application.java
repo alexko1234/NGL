@@ -18,4 +18,8 @@ public class Application extends Controller {
 	 public static Result technologies() {
 		 return ok(technologies.render("technologies"));	       
 	 }
+	 
+	 public static Result modules(String name) {
+		 return ok(modules.render(name));	       
+	 }
 }
