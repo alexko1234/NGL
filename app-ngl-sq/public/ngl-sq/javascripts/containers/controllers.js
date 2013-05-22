@@ -41,19 +41,8 @@ function BasketCtrl($scope, $http,datatable,baskets) {
 			},
 			search:{
 				//save:"/admin/types?format=json",
-				url:'/api/containers'
+				url:jsRoutes.controllers.containers.api.Containers.list().url
 			},
-	};
-	
-	$scope.basketsConfig = {
-		idBtnModal:"Add",
-		titleModal:"Add to basket",
-		textModal:"",
-		modalId:"newBasketModal",
-		textCancelModal:"Cancel",
-		manualModal:false,
-		url:"/baskets",
-		urlList:"/basket/experimenttype"
 	};
 	
 	$scope.init = function(){

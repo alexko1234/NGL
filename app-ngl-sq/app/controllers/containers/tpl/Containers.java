@@ -41,7 +41,8 @@ public class Containers extends Controller {
   	    		controllers.lists.api.routes.javascript.Lists.samples(),
   	    		controllers.containers.api.routes.javascript.Containers.list(),
   	    		controllers.lists.api.routes.javascript.Lists.containerStates(),
-  	    		controllers.lists.api.routes.javascript.Lists.containerCategoryCodes()
+  	    		controllers.lists.api.routes.javascript.Lists.containerCategoryCodes(),
+  	    		controllers.containers.tpl.routes.javascript.Containers.search()
   	      )	  	      
   	    );
   	}

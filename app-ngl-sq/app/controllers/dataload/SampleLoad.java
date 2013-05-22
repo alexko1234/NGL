@@ -32,7 +32,7 @@ public class SampleLoad extends Controller{
 
 
 	
-	public static Result home() {
+	public static Result home(String code) {
 		return ok(sampleload.render(datatableForm, inputLoadData));
 	}
 

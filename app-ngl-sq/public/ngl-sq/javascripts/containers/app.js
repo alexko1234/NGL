@@ -1,8 +1,8 @@
 "use strict";
  
 angular.module('home', ['datatableServices','comboListsServices'], function($routeProvider, $locationProvider) {
-	$routeProvider.when('/containers/home', {
-		templateUrl : '/tpl/containers/search',
+	$routeProvider.when('/containers/search/home', {
+		templateUrl : jsRoutes.controllers.containers.tpl.Containers.search().url,
 		controller : 'SearchCtrl'
 	});
 	$routeProvider.otherwise({redirectTo: '/containers/home'});

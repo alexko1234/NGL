@@ -51,7 +51,7 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 	
 	$scope.changeProcessType = function(){
 		if($scope.form.processTypes.selected){
-			$scope.tabs[0] = {label:$scope.form.processTypes.selected.name,href:jsRoutes.controllers.processes.tpl.Processes.home("new/"+$scope.form.processTypes.selected.code).url,remove:false};
+			$scope.tabs[0] = {label:$scope.form.processTypes.selected.name,href:$scope.form.processTypes.selected.code,remove:false};
 			this.search();
 		}else{
 			$scope.tabs.splice(0,1);
