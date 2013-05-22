@@ -6,7 +6,7 @@
 GET     /                           controllers.Application.index(id:java.lang.String ?="")
 
 #containers tpl
-GET 	/containers/:code					    controllers.containers.tpl.Containers.home(code:java.lang.String)
+GET 	/containers/:homecode/home				controllers.containers.tpl.Containers.home(homecode:java.lang.String)
 GET		/tpl/containers/search					controllers.containers.tpl.Containers.search()
 GET		/tpl/containers/js-routes				controllers.containers.tpl.Containers.javascriptRoutes()
 
@@ -14,11 +14,11 @@ GET		/tpl/containers/js-routes				controllers.containers.tpl.Containers.javascri
 GET		/api/containers							controllers.containers.api.Containers.list()
 
 #processes tpl
-GET 	/processes/:code						controllers.processes.tpl.Processes.home(code:java.lang.String)
-GET		/tpl/processes/search/:processTypeCode	controllers.processes.tpl.Processes.search(processTypeCode:java.lang.String)
-GET		/tpl/processes/new/search				controllers.processes.tpl.Processes.searchContainers()
-GET		/tpl/processes/new/:processTypeCode		controllers.processes.tpl.Processes.newProcesses(processTypeCode:java.lang.String)
-GET		/tpl/processes/js-routes				controllers.processes.tpl.Processes.javascriptRoutes()
+GET 	/processes/:homecode/home							controllers.processes.tpl.Processes.home(homecode:java.lang.String)
+GET		/tpl/processes/search/:processTypeCode				controllers.processes.tpl.Processes.search(processTypeCode:java.lang.String)
+GET		/tpl/processes/searchContainers						controllers.processes.tpl.Processes.searchContainers()
+GET		/tpl/processes/newProcesses/:processTypeCode		controllers.processes.tpl.Processes.newProcesses(processTypeCode:java.lang.String)
+GET		/tpl/processes/js-routes							controllers.processes.tpl.Processes.javascriptRoutes()
 
 #processes api
 POST	/api/processus							controllers.processes.api.Processes.save()
@@ -34,7 +34,7 @@ GET		/api/lists/containers/categorycodes		controllers.lists.api.Lists.containerC
 
 
 # load data
-GET	   	   /loaddata/home						controllers.dataload.SampleLoad.home()
+GET	   	   /loaddata/:homecode/home				controllers.dataload.SampleLoad.home(homecode:java.lang.String)
 POST   	   /loaddata							controllers.dataload.SampleLoad.uploadDataFromCSVFile()
 POST	   /createtemplate						controllers.dataload.SampleLoad.createTemplateFile()
 GET		   /loaddatatype						controllers.dataload.InitialData.loadDataType()
