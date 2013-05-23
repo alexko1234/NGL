@@ -67,6 +67,7 @@ public class Plates extends CommonController {
 	  	    		controllers.plates.api.routes.javascript.Plates.list(),
 	  	    		controllers.plates.api.routes.javascript.Plates.get(),
 	  	    		controllers.plates.api.routes.javascript.Plates.save(),
+	  	    		controllers.plates.api.routes.javascript.Plates.delete(),
 	  	    		controllers.manips.api.routes.javascript.Manips.list(),
 	  	    		controllers.lists.api.routes.javascript.Lists.projects(),
 	  	    		controllers.lists.api.routes.javascript.Lists.etmateriels(),

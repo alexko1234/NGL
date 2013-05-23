@@ -114,6 +114,30 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 			$scope.setForm(undefined);			
 		}		
 	}
+	/**
+	 * delete a plate
+	 * 
+	 */
+	$scope.remove = function(){
+		$scope.clearMessages();
+		$http["delete"](jsRoutes.controllers.plates.api.Plates["delete"]($scope.plate.code).url).
+			success(function(data, status, headers, config){
+				$scope.plate = {code:undefined, wells:undefined, typeCode:undefined, typeName:undefined};
+				if($scope.isHomePage('search') && $scope.isBackupTabs()){
+					$scope.restoreBackupTabs();
+					$scope.setDatatable(undefined);	
+					$scope.setForm(undefined);			
+				}else if($scope.isHomePage('search')){
+					$scope.getDatatable().search();
+				}
+				$scope.removeTab($scope.getActiveTabIndex());
+				$scope.activeTab(0, true);				
+										
+			}).error(function(data, status, headers, config){
+				$scope.message.clazz="alert alert-error";
+				$scope.message.text=Messages('plates.msg.delete.error');
+			});
+	}
 	
 	/**
 	 * Configure edit and remote on datatable
@@ -220,4 +244,4 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
         return "------";
      }
 };
-DetailsCtrl.$inject = ['$scope', '$http', '$routeParams', 'datatable', 'basket'];
+DetailsCtrl.$inject = ['$scope', '$http', '$routeParams','datatable', 'basket'];

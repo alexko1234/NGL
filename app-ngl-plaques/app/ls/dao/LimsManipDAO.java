@@ -76,7 +76,7 @@ public class LimsManipDAO {
 	 * @return
 	 */
 	public Plate getPlate(String code) {
-		Plate plate = this.jdbcTemplate.queryForObject("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
+		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
 	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	Plate plate = new Plate();
 	        	plate.code = rs.getString("plaqueId");
@@ -88,21 +88,26 @@ public class LimsManipDAO {
 	    });
 		
 		
-		List<Well> wells = this.jdbcTemplate.query("pl_MaterielmanipPlaque @plaqueId=?", new Object[]{code}, new RowMapper<Well>() {
-	        public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
-	        	Well well = new Well();
-	        	well.name = rs.getString("matmanom");
-	        	well.code = rs.getInt("matmaco");
-	        	well.x = rs.getString("plaqueX");
-	        	well.y = rs.getString("plaqueY");	
-	        	well.typeCode = rs.getInt("emnco");
-	        	well.typeName = rs.getString("emnnom");
-	            return well;
-	        }
-	    });
+		if(plates.size() == 1){
+			Plate plate = plates.get(0);
+			List<Well> wells = this.jdbcTemplate.query("pl_MaterielmanipPlaque @plaqueId=?", new Object[]{code}, new RowMapper<Well>() {
+		        public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
+		        	Well well = new Well();
+		        	well.name = rs.getString("matmanom");
+		        	well.code = rs.getInt("matmaco");
+		        	well.x = rs.getString("plaqueX");
+		        	well.y = rs.getString("plaqueY");	
+		        	well.typeCode = rs.getInt("emnco");
+		        	well.typeName = rs.getString("emnnom");
+		            return well;
+		        }
+		    });
 		
-		plate.wells = wells.toArray(new Well[wells.size()]);
-		return plate;
+			plate.wells = wells.toArray(new Well[wells.size()]);
+			return plate;
+		}else{
+			return null;
+		}
 	}
     
 
@@ -129,6 +134,11 @@ public class LimsManipDAO {
 					}
 				});
 		return listObjects;
+	}
+
+
+	public void deletePlate(String plateCode) {
+		this.jdbcTemplate.update("ps_PlaqueSolexa @plaqueId=?", new Object[]{plateCode});
 	}
 
 

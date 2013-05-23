@@ -75,6 +75,13 @@ public class Plates extends CommonController {
 		}
 	}
 	
+	public static Result delete(String code){
+		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
+		limsManipDAO.deletePlate(code);
+		return ok();
+	}
+	
+	
 	private static void validatePlate(Plate plate, Map<String, List<ValidationError>> errors, boolean isUpdate) {
 		if(required(errors, plate, "plate")){
 			required(errors, plate.code, "code");

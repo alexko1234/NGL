@@ -17,6 +17,7 @@ GET		/tpl/plates/js-routes						controllers.plates.tpl.Plates.javascriptRoutes()
 POST	/api/plates									controllers.plates.api.Plates.save()
 GET		/api/plates									controllers.plates.api.Plates.list()
 GET    	/api/plates/:code               			controllers.plates.api.Plates.get(code: String)
+DELETE	/api/plates/:code               			controllers.plates.api.Plates.delete(code: String)
 
 #manip api
 GET    	/api/manip                					controllers.manips.api.Manips.list()

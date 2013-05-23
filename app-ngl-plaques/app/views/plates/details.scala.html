@@ -18,6 +18,8 @@
 	<button class="btn" ng-click="unedit()" ng-switch-when="true" data-toggle="tooltip" title="@Messages("plates.button.unedit")"><i class="icon-undo icon-large"></i>@if(!datatableConfig.compact){@(Messages("plates.button.unedit"))}</button>	
 </div>
 
+<button class="btn" ng-click="remove()" data-toggle="tooltip" ng-show="plate.code !== undefined" title="@Messages("plates.button.delete")"><i class="icon-trash icon-large"></i>@if(!datatableConfig.compact){@(Messages("plates.button.delete"))}</button>
+
 </div>
 
 <div ng-class="message.clazz" ng-show="message.text !== undefined">
