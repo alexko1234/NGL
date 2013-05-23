@@ -127,8 +127,10 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 					$scope.restoreBackupTabs();
 					$scope.setDatatable(undefined);	
 					$scope.setForm(undefined);			
-				}else if($scope.isHomePage('search')){
-					$scope.getDatatable().search();
+				}
+				
+				if($scope.isHomePage('search')){
+					$scope.getDatatable().searchWithLastParams();
 				}
 				$scope.removeTab($scope.getActiveTabIndex());
 				$scope.activeTab(0, true);				
@@ -171,7 +173,8 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 				$scope.message.text=Messages('plates.msg.save.sucess')
 				
 				if($scope.isHomePage('creation')){
-					$scope.setTab(1,{label:$scope.plate.code,href:jsRoutes.controllers.plates.tpl.Plates.get($scope.plate.code).url,remove:false});					
+					$scope.setTab(1,{label:$scope.plate.code,href:jsRoutes.controllers.plates.tpl.Plates.get($scope.plate.code).url,remove:false});
+					$scope.activeTab(1);
 				}			
 		}).error(function(data, status, headers, config){
 				$scope.message.clazz="alert alert-error";
