@@ -109,6 +109,13 @@ angular.module('datatableServices', []).
 		    				}
 		    			},
 		    			/**
+		    			 * Search with the last parameters
+		    			 */
+		    			searchWithLastParams : function(){
+		    				this.search(this.lastSearchParams);
+		    			},
+		    			
+		    			/**
 		    			 * Set all data used by search method or directly when local data
 		    			 */
 		    			setData:function(data, recordsNumber){
@@ -226,7 +233,7 @@ angular.module('datatableServices', []).
 	    							//reinit to first page	    							
 	    							this.config.pagination.pageNumber=0;
 	    							if(this.isRemoteMode(this.config.pagination.mode)){
-	    								this.search(this.lastSearchParams);
+	    								this.searchWithLastParams();
 	    							}else{
 	    								this.computeDisplayResult();
 	    								this.computePaginationList();
@@ -250,7 +257,7 @@ angular.module('datatableServices', []).
 	    							
 		    						this.config.pagination.pageNumber=page.number;
 		    						if(this.isRemoteMode(this.config.pagination.mode)){
-										this.search(this.lastSearchParams);
+										this.searchWithLastParams();
 									}else{
 										this.computeDisplayResult();
 										this.computePaginationList();
@@ -303,7 +310,7 @@ angular.module('datatableServices', []).
 		    						this.sortAllResult(); //sort all the result
 				    				this.computeDisplayResult(); //redefined the result must be displayed
 			    				} else if(this.config.order.active){
-			    					this.search(this.lastSearchParams);
+			    					this.searchWithLastParams();
 			    				}		    					
 		    				} else{
 		    					console.log("order is not active !!!");

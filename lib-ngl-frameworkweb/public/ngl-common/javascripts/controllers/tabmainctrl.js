@@ -1,4 +1,6 @@
-function TabMainCtrl($scope){
+"use strict";
+
+function TabMainCtrl($scope, $location){
 	//contain each tab of on element of the datatable
 	var tabs = [];
 	var bcktabs = undefined;
@@ -14,7 +16,7 @@ function TabMainCtrl($scope){
 	};
 	
 	/**
-	 * function to reset all tabs
+	 * function to get all tabs or one
 	 */
 	$scope.getTabs = function(index){
 		if(angular.isUndefined(index)){
@@ -26,6 +28,13 @@ function TabMainCtrl($scope){
 	};
 	
 	/**
+	 * function to get a tabs
+	 */
+	$scope.getTab = function(index){		
+		return tabs[index];				
+	};
+	
+	/**
 	 * function to reset all tabs
 	 */
 	$scope.resetTabs = function(){
@@ -33,7 +42,7 @@ function TabMainCtrl($scope){
 	};
 	
 	/**
-	 * function to reset all tabs
+	 * function to add tabs
 	 */
 	$scope.addTabs = function(newtabs){
 		if(angular.isArray(newtabs)){
@@ -62,7 +71,7 @@ function TabMainCtrl($scope){
 	/**
 	 * Set one element of list active
 	 */
-	$scope.activeTab = function(value){
+	$scope.activeTab = function(value, changeLocation){
 		var tab = undefined;
 		if(angular.isNumber(value)){
 			tab = tabs[value];
@@ -83,7 +92,20 @@ function TabMainCtrl($scope){
 			}
 		}
 		
+		if(changeLocation){
+			$location.url(tab.href);
+		}
+		
 	};
+	
+	
+	$scope.getActiveTabIndex = function(){
+		for(var i = 0; i < tabs.length; i++){				
+			if(tabs[i].clazz === 'active'){
+				return i;
+			}
+		}
+	}
 	
 	$scope.toggleTabs = function(){
 		$scope.hideTabs.hide = !$scope.hideTabs.hide;
@@ -201,3 +223,5 @@ function TabMainCtrl($scope){
 		return editMode;
 	};
 }
+
+TabMainCtrl.$inject = ['$scope', '$location'];
