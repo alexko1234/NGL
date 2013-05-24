@@ -16,6 +16,12 @@ function SearchCtrl($scope, $http,datatable) {
 				add :function(line){
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.plates.tpl.Plates.get(line.code).url,remove:true});
 				}
+			},
+			remove:{
+				active:true,
+				url:function(value){
+					return jsRoutes.controllers.plates.api.Plates["delete"](value.code).url
+				}
 			}
 	};
 	

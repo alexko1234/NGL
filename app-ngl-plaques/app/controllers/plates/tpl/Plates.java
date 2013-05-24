@@ -36,6 +36,7 @@ public class Plates extends CommonController {
 			columns.add(DatatableHelpers.getColumn("typeName", "plates.table.typeName", true, false, false));
 			columns.add(DatatableHelpers.getColumn("nbWells", "plates.table.nbWells"));
 			DatatableConfig config = new DatatableConfig(columns);
+			config.remove = true;
 			config.show = true;
 			config.button = true;
 			return ok(views.html.plates.search.render(config));
