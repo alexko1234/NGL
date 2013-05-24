@@ -119,7 +119,7 @@ angular.module('datatableServices', []).
 			    						config.datatable.setData(data.data, data.recordsNumber);		    						
 			    					});
 			    				}else{
-			    					console.log('no url define for search ! '+this.config.url.search);
+			    					throw 'no url define for search ! ';
 			    				}
 		    				}else{
 		    					console.log("search is not active !!")
@@ -489,7 +489,11 @@ angular.module('datatableServices', []).
 			    							this.saveLocal(i);
 			    						}
 			    					}						
-			    				}		    					
+			    				}
+		    					
+		    					if(!this.isRemoteMode(this.config.save.mode)){
+	    							this.saveFinish();
+	    						}
 		    				}else{
 		    					console.log("save is not active !");		    				
 		    				}
@@ -501,17 +505,19 @@ angular.module('datatableServices', []).
 			    				$http.post(url, value, {datatable:this,index:i})
 				    				.success(function(data, status, headers, config) {
 				    					config.datatable.saveLocal(data, config.index);
+				    					config.datatable.config.save.number--;
 				    					config.datatable.saveFinish();
 				    				})
 				    				.error(function(data, status, headers, config) {
 				    					config.datatable.displayResult[config.index].trClass = "error";
 				    					config.datatable.displayResult[config.index].edit = true;
 				    					config.datatable.config.save.error++;
+				    					config.datatable.config.save.number--;
 				    					config.datatable.saveFinish();
 				    					//TODO add error messages as in datatable jquery
 				    				});
 		    				}else{
-		    					console.log('no url define for save ! ');
+		    					throw 'no url define for save !';
 		    				}
 		    				
 		    			},	
@@ -530,7 +536,7 @@ angular.module('datatableServices', []).
 								}
 								this.allResult[j] = angular.copy(this.displayResult[i]);
 								this.displayResult[i].trClass = "success";
-								this.saveFinish();
+								this.config.save.number--;
 		    				}else{
 		    					console.log("save is not active !");		    				
 		    				}
@@ -538,8 +544,7 @@ angular.module('datatableServices', []).
 		    			/**
 		    			 * Call when a save local or remote is finish
 		    			 */
-		    			saveFinish: function(){
-		    				this.config.save.number--;
+		    			saveFinish: function(){		    				
 		    				if(this.config.save.number === 0){
 		    					if(this.config.save.error > 0){
 		    						this.config.messages.clazz = this.config.messages.errorClass;
@@ -563,9 +568,9 @@ angular.module('datatableServices', []).
 		    			 * Test if save mode can be enable
 		    			 */
 		    			canSave: function(){
-		    				if(this.config.edit.active && !this.config.save.withoutEdit){
+		    				if(this.config.edit.active && !this.config.save.withoutEdit && !this.config.save.start){
 		    					return this.config.edit.start;
-		    				}else if(this.config.edit.active && this.config.save.withoutEdit){
+		    				}else if(this.config.edit.active && this.config.save.withoutEdit && !this.config.save.start){
 		    					return true;
 		    				}else{
 		    					return false;
@@ -639,7 +644,7 @@ angular.module('datatableServices', []).
 					    					config.datatable.removeFinish();
 					    				});
 			    				}else{
-			    					console.log('no url define for remove ! ');
+			    					throw  'no url define for remove ! ';
 			    				}
 		    				} else{
 		    					console.log("remove is not active !");		    				
