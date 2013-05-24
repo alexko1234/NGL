@@ -22,6 +22,9 @@ function SearchCtrl($scope, $http,datatable) {
 				url:function(value){
 					return jsRoutes.controllers.plates.api.Plates["delete"](value.code).url
 				}
+			},
+			messages:{
+				active:true
 			}
 	};
 	

@@ -137,6 +137,9 @@ function ListNewCtrl($scope, datatable) {
 					$scope.basket.reset();
 					$scope.basket.add(datatable.allResult);
 				}
+			},
+			messages:{
+				active:true
 			}
 		};
 	

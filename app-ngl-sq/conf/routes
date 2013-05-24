@@ -49,3 +49,4 @@ GET	   /logout								controllers.administration.authentication.User.logOut()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /messages.js                controllers.Application.jsMessages()

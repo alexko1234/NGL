@@ -11,7 +11,6 @@ import java.util.Map;
 
 import ls.dao.LimsManipDAO;
 import ls.models.Plate;
-import ls.models.Well;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
@@ -27,12 +26,12 @@ public class Plates extends CommonController {
 	final static Form<MaterielManipSearch> manipForm = form(MaterielManipSearch.class);
 	
 	public static Result save(){
-		
 		Form<Plate> filledForm = getFilledForm(wellsForm, Plate.class);
 		if (!filledForm.hasErrors()) {
 			Plate plate = filledForm.get();
 			boolean isUpdate = true;
-			if(plate.code == null){
+			Logger.info("SAVE Plate : "+ plate);
+			if(plate.code == null){								
 				plate.code = newCode();
 				if(plate.wells.length > 0){
 					plate.typeName = plate.wells[0].typeName;
@@ -66,6 +65,7 @@ public class Plates extends CommonController {
 	}
 	
 	public static Result get(String code){
+		Logger.info("GET Plate : "+code);
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
 		Plate plate = limsManipDAO.getPlate(code);
 		if(plate != null){			
@@ -76,6 +76,7 @@ public class Plates extends CommonController {
 	}
 	
 	public static Result delete(String code){
+		Logger.info("DELETE Plate : "+code);
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
 		limsManipDAO.deletePlate(code);
 		return ok();

@@ -1,5 +1,6 @@
 package controllers;
 
+import jsmessages.JsMessages;
 import play.Routes;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -21,4 +22,9 @@ public class Application extends Controller {
 	  	      )
 	  	    );
 	  	  }
+  
+  
+  public static Result jsMessages() {
+      return ok(JsMessages.generate("Messages")).as("application/javascript");
+  }
 }

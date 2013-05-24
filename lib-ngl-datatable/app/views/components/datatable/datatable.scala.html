@@ -47,7 +47,7 @@
 	</div>
 	}	
 	@if(config.hidding){
-	<div class="btn-group" ng-show="@(config.name).config.hide.active">>
+	<div class="btn-group" ng-show="@(config.name).config.hide.active">
 		<button data-toggle="dropdown" class="btn dropdown-toggle" data-toggle="tooltip" title="@Messages("datatable.button.hide")">
 		<i class="icon-eye-close icon-large"></i>@if(!config.compact){ @Messages("datatable.button.hide")}
 			<span class="caret"></span>
@@ -93,6 +93,13 @@
 </div>
 </div>
 </div>
+
+<div class="row-fluid" ng-show="@(config.name).config.messages.active">
+<div ng-class="@(config.name).config.messages.clazz" ng-show="@(config.name).config.messages.text !== undefined">
+	<strong>{{@(config.name).config.messages.text}}</strong>
+</div>
+</div>
+
 <div class="row-fluid">
 <form class="form-inline">
 <table class="table table-condensed table-hover table-bordered">

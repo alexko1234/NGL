@@ -40,7 +40,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 			},
 			cancel : {
 				showButton:false
-			},
+			}
 		};
 		
 	$scope.init = function(){
