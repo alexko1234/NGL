@@ -171,7 +171,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 				$scope.basket.reset();
 				$scope.message.clazz="alert alert-success";
 				$scope.message.text=Messages('plates.msg.save.sucess')
-				
+				$scope.edit();				
 				if($scope.isHomePage('creation')){
 					$scope.setTab(1,{label:$scope.plate.code,href:jsRoutes.controllers.plates.tpl.Plates.get($scope.plate.code).url,remove:false});
 					$scope.activeTab(1);
