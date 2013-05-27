@@ -505,7 +505,7 @@ angular.module('datatableServices', []).
 			    				$http.post(url, value, {datatable:this,index:i})
 				    				.success(function(data, status, headers, config) {
 				    					config.datatable.saveLocal(data, config.index);
-				    					config.datatable.config.save.number--;
+				    					//config.datatable.config.save.number--;
 				    					config.datatable.saveFinish();
 				    				})
 				    				.error(function(data, status, headers, config) {
@@ -544,7 +544,7 @@ angular.module('datatableServices', []).
 		    			/**
 		    			 * Call when a save local or remote is finish
 		    			 */
-		    			saveFinish: function(){		    				
+		    			saveFinish: function(){
 		    				if(this.config.save.number === 0){
 		    					if(this.config.save.error > 0){
 		    						this.config.messages.clazz = this.config.messages.errorClass;
