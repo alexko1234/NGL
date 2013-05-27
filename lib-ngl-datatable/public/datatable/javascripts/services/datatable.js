@@ -53,7 +53,7 @@ angular.module('datatableServices', []).
 								showButton : true,
 								mode:'remote', //or local
 								url:undefined,
-								callback : undefined, //used to have a callback after remove all element. the datatable is pass to callback method
+								callback : undefined, //used to have a callback after save all element. the datatable is pass to callback method
 								start : false, //if save started
 								number : 0, //number of element in progress
 								error : 0
@@ -505,7 +505,6 @@ angular.module('datatableServices', []).
 			    				$http.post(url, value, {datatable:this,index:i})
 				    				.success(function(data, status, headers, config) {
 				    					config.datatable.saveLocal(data, config.index);
-				    					//config.datatable.config.save.number--;
 				    					config.datatable.saveFinish();
 				    				})
 				    				.error(function(data, status, headers, config) {
