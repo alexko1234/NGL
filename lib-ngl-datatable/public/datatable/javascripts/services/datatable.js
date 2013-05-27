@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('datatableServices', []).
-    	factory('datatable', ['$http','$filter', function($http, $filter){ //service to manage datatable
+    	factory('datatable', ['$http','$filter','$parse', function($http, $filter,$parse){ //service to manage datatable
     		var constructor = function($scope, iConfig){
 				var datatable = {
 						
@@ -459,10 +459,13 @@ angular.module('datatableServices', []).
 		    				if(this.config.edit.active){
 			    				for(var i = 0; i < this.displayResult.length; i++){
 			    					if(this.displayResult[i].edit){
-			    						var fn = new Function("displayResult", "config","displayResult."+columnPropertyName+"=config.edit.columns."+columnId+".value");
-			    						fn(this.displayResult[i], this.config);				
+			    						//var fn = new Function("displayResult", "config","displayResult."+columnPropertyName+"=config.edit.columns."+columnId+".value");
+			    						//fn(this.displayResult[i], this.config);
+										$parse("displayResult["+i+"]."+columnPropertyName).assign(this,this.config.edit.columns[columnId].value);
 			    					}
 			    				}
+								
+								//this.displayResult[0].properties.test.value =  "";
 		    				}else{
 		    					console.log("edit is not active !");		    				
 		    				}
