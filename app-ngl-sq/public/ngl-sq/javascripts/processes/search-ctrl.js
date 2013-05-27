@@ -9,6 +9,16 @@ function SearchCtrl($scope,$location,$routeParams, datatable, comboLists) {
 			},
 			order:{
 				by:'code'
+			},
+			save:{
+				active:true,
+				withoutEdit:false,
+				url:jsRoutes.controllers.processes.api.Processes.save(),
+				callback : function(datatable){
+				}
+			},
+			edit:{
+				active:true
 			}
 		};
 	

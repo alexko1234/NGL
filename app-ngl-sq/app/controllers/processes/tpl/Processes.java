@@ -58,9 +58,11 @@ public class Processes extends Controller{
 		columns.add( DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("processes.table.creationDate"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("currentExperimentTypeCode", Messages.get("processes.table.currentExperimentTypeCode"), true, false, false));
 		
-		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode,false));
+		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode,true));
 		
 		DatatableConfig config = new DatatableConfig(columns);
+		config.save = true;
+		config.edit = true;
 		
 		return ok(search.render(config));
 	}

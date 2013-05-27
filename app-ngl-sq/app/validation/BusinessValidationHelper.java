@@ -63,7 +63,10 @@ public class BusinessValidationHelper {
 			throw new IllegalArgumentException("process is null");
 		}
 		
-		validateCode(errors, process, collectionName, Process.class);
+		if(process._id == null){
+			validateCode(errors, process, collectionName, Process.class);
+		}
+		
 		validateTraceInformation(errors, process.traceInformation, process._id);
 		
 		if(process._id == null && required(errors, process.containerInputCode, "containerInputCode")){
