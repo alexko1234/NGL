@@ -560,6 +560,7 @@ angular.module('datatableServices', []).
 		    					
 		    					this.config.save.error = 0;
 		    					this.config.save.start = false;
+								this.config.edit.start = false;
 		    						    					
 		    				}
 	    					
