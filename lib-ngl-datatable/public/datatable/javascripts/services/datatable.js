@@ -464,8 +464,6 @@ angular.module('datatableServices', []).
 										$parse("displayResult["+i+"]."+columnPropertyName).assign(this,this.config.edit.columns[columnId].value);
 			    					}
 			    				}
-								
-								//this.displayResult[0].properties.test.value =  "";
 		    				}else{
 		    					console.log("edit is not active !");		    				
 		    				}
