@@ -66,7 +66,7 @@ public class BusinessValidationHelper {
 		validateCode(errors, process, collectionName, Process.class);
 		validateTraceInformation(errors, process.traceInformation, process._id);
 		
-		if(required(errors, process.containerInputCode, "containerInputCode")){
+		if(process._id == null && required(errors, process.containerInputCode, "containerInputCode")){
 			//Check if the container exist in mongoDB
 			Container container = MongoDBDAO.findByCode(CONTAINER_COLL_NAME, Container.class, process.containerInputCode);
 			if(container == null){

@@ -50,13 +50,8 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 	}
 	
 	$scope.changeProcessType = function(){
-		if($scope.form.processTypes.selected){
-			$scope.tabs[0] = {label:$scope.form.processTypes.selected.name,href:$scope.form.processTypes.selected.code,remove:false};
-			this.search();
-		}else{
-			$scope.tabs.splice(0,1);
-		}	
 		$scope.basket.reset();
+		this.search();
 	}
 	
 	$scope.changeProject = function(){
@@ -100,7 +95,12 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 				};			
 				this.basket.add(processus);
 			}
-		}					
+		}
+		if($scope.form.processTypes.selected){
+			$scope.tabs[0] = {label:$scope.form.processTypes.selected.name,href:$scope.form.processTypes.selected.code,remove:false};
+		}else{
+			$scope.tabs.splice(0,1);
+		}
 	}
 }
 SearchContainerCtrl.$inject = ['$scope', 'datatable','basket','comboLists'];
@@ -124,10 +124,10 @@ function ListNewCtrl($scope, datatable) {
 			},
 			save:{
 				active:true,
-				withoutEdit:true,
+				withoutEdit:false,
 				url:jsRoutes.controllers.processes.api.Processes.save(),
 				callback : function(datatable){
-					$scope.basket.reset();				
+					$scope.basket.reset();
 				}
 			},
 			remove:{
@@ -147,7 +147,8 @@ function ListNewCtrl($scope, datatable) {
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		$scope.basket = $scope.getBasket();
 		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);		
+		$scope.datatable.selectAll(true);
+		$scope.datatable.setEditColumn();
 	}
-	
 };
 ListNewCtrl.$inject = ['$scope', 'datatable'];

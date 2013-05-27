@@ -61,8 +61,10 @@ public class Processes extends CommonController{
 			BusinessValidationHelper.validateProcess(filledForm.errors(), value, Constants.PROCESS_COLL_NAME,null);
 			
 			if (!filledForm.hasErrors()) {
-				//Workflows Implementation
-				Workflows.setAvailable(value.containerInputCode);
+				if(value._id != null){
+					//Workflows Implementation
+					Workflows.setAvailable(value.containerInputCode);
+				}
 				
 				value = MongoDBDAO.save(Constants.PROCESS_COLL_NAME,value);
 				filledForm = filledForm.fill(value);
