@@ -696,7 +696,7 @@ angular.module('datatableServices', []).
 			    				if(line){
 			    					if(!line.selected){
 			    						line.selected=true;
-			    						line.trClass="row_selected";
+			    						line.trClass="info";
 			    					}
 									else{
 										line.selected=false;
@@ -716,7 +716,7 @@ angular.module('datatableServices', []).
 			    				for(var i = 0; i < this.displayResult.length; i++){
 			    					if(value){
 			    						this.displayResult[i].selected=true;
-			    						this.displayResult[i].trClass="row_selected";
+			    						this.displayResult[i].trClass="info";
 			    					}else{
 			    						this.displayResult[i].selected=false;
 			    						this.displayResult[i].trClass="";
