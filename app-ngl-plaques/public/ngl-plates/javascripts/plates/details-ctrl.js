@@ -129,7 +129,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 					$scope.setForm(undefined);			
 				}
 				
-				if($scope.isHomePage('search')){
+				if($scope.isHomePage('search') && !angular.isUndefined($scope.getDatatable())){
 					$scope.getDatatable().searchWithLastParams();
 				}
 				$scope.removeTab($scope.getActiveTabIndex());
