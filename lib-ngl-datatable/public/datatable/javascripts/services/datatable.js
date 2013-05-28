@@ -457,9 +457,10 @@ angular.module('datatableServices', []).
 		    			 */
 		    			updateColumn : function(columnPropertyName, columnId){
 		    				if(this.config.edit.active){
-			    				for(var i = 0; i < this.displayResult.length; i++){
+			    				var getter = $parse(columnPropertyName);
+		    					for(var i = 0; i < this.displayResult.length; i++){
 			    					if(this.displayResult[i].edit){
-										$parse("displayResult["+i+"]."+columnPropertyName).assign(this,this.config.edit.columns[columnId].value);
+										getter.assign(this.displayResult[i],this.config.edit.columns[columnId].value);
 			    					}
 			    				}
 		    				}else{
