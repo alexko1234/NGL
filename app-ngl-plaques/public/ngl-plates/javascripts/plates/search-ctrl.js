@@ -20,7 +20,7 @@ function SearchCtrl($scope, $http,datatable) {
 			remove:{
 				active:true,
 				url:function(value){
-					return jsRoutes.controllers.plates.api.Plates["delete"](value.code).url
+					return jsRoutes.controllers.plates.api.Plates["remove"](value.code).url
 				}
 			},
 			messages:{

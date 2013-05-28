@@ -75,7 +75,7 @@ public class Plates extends CommonController {
 		}
 	}
 	
-	public static Result delete(String code){
+	public static Result remove(String code){
 		Logger.info("DELETE Plate : "+code);
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
 		limsManipDAO.deletePlate(code);

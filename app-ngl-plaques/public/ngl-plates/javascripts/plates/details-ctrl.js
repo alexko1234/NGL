@@ -120,7 +120,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 	 */
 	$scope.remove = function(){
 		$scope.clearMessages();
-		$http["delete"](jsRoutes.controllers.plates.api.Plates["delete"]($scope.plate.code).url).
+		$http["delete"](jsRoutes.controllers.plates.api.Plates["remove"]($scope.plate.code).url).
 			success(function(data, status, headers, config){
 				$scope.plate = {code:undefined, wells:undefined, typeCode:undefined, typeName:undefined};
 				if($scope.isHomePage('search') && $scope.isBackupTabs()){
