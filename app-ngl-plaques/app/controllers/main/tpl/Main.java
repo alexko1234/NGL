@@ -1,4 +1,4 @@
-package controllers;
+package controllers.main.tpl;
 
 import java.util.List;
 
