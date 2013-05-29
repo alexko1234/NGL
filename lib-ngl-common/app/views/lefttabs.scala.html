@@ -1,8 +1,5 @@
-@(title: String, nav: String = "", scripts: Html = Html(""), searchtagurl: play.api.mvc.Call)
-
-
-
-@main(title, nav, scripts){
+@(title: String,  menu: Html = Html(""), scripts: Html = Html(""))
+@main(title, menu, scripts){
 <div id="home" ng-app="home" >
 <div class="row-fluid" ng-controller="TabMainCtrl">
   <button class="btn btn-mini pull-right hidden-print" ng-click="toggleTabs()"><i class="{{hideTabs.clazz}}"></i></button>
