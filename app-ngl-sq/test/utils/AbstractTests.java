@@ -65,9 +65,7 @@ public abstract class AbstractTests {
 		config.put("ehcacheplugin", "disabled");
 		config.put("mongodbJacksonMapperCloseOnStop", "disabled");
 		
-		config.put("asset.url.dev","http://192.168.243.231:9001");
-		config.put("asset.url.prod","http://192.168.243.231:9001");
-		config.put("asset.mode","dev");
+		config.put("asset.url","http://192.168.243.231:9001");
 		
 		return config;
 		
