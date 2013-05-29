@@ -25,6 +25,11 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 			$scope.datatable = $scope.getDatatable();
 		}
 		
+		if(angular.isUndefined($scope.getHomePage())){
+			$scope.setHomePage('new');
+			$scope.addTabs({label:Messages('processes.tabs.search'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
+			$scope.activeTab(0);
+		}
 		
 		if(angular.isUndefined($scope.getBasket())){
 			$scope.basket = basket($scope);			
@@ -50,6 +55,7 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 	}
 	
 	$scope.changeProcessType = function(){
+		$scope.removeTab(1);
 		$scope.basket.reset();
 		this.search();
 	}
@@ -97,9 +103,7 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 			}
 		}
 		if($scope.form.processTypes.selected){
-			$scope.tabs[0] = {label:$scope.form.processTypes.selected.name,href:$scope.form.processTypes.selected.code,remove:false};
-		}else{
-			$scope.tabs.splice(0,1);
+			$scope.addTabs({label:$scope.form.processTypes.selected.name,href:$scope.form.processTypes.selected.code,remove:false});
 		}
 	}
 }

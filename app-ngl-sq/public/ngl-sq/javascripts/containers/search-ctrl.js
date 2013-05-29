@@ -25,6 +25,13 @@ function SearchCtrl($scope, datatable, comboLists) {
 	
 	$scope.init = function(){
 		$scope.datatable = datatable($scope, $scope.datatableConfig);		
+		
+		if(angular.isUndefined($scope.getHomePage())){
+			$scope.setHomePage('new');
+			$scope.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("new").url,remove:false});
+			$scope.activeTab(0);
+		}
+		
 		$scope.form = {
 					categoryCodes:{},
 					projects:{},
