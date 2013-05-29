@@ -44,7 +44,15 @@ angular.module('comboListsServices', ['ngResource']).
 					return $resource(jsRoutes.controllers.lists.api.Lists.containerStates().url, {}, {
 						query: {method:'GET', isArray:true}
 					});
-				}
+				},
+				/**
+				 * Return the list of experiment types with name and code properties only
+				 */
+				getExperimentTypes :  function(){
+					return $resource(jsRoutes.controllers.lists.api.Lists.experimentTypes().url, {}, {
+						query: {method:'GET', isArray:true}
+					});
+				},
 		};
 		return functions;
 });
