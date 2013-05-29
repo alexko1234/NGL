@@ -43,7 +43,20 @@ processes.select.processType = -- selectionner un type de processus --
 processes.select.project = -- selectionner un projet --
 processes.select.sample = -- selectionner un échantillon --
 
+
+#experiments
+experiments.title = Experiences
+experiments.menu = Experiences
+experiments.menu.creation = Création
+experiments.menu.search = Rechercher
+experiments.create = Créer une experience
+experiments.save = Sauvegarder
+
+experiments.select.experimentType = -- selectionner un type d'experience --
+
+button.newexperiment = Créer une experience
+
 #baskets
 baskets = Panier
-baskets.new = créer un panier
-baskets.add = ajouter au panier
+baskets.new = Créer un panier
+baskets.add = Ajouter au panier
