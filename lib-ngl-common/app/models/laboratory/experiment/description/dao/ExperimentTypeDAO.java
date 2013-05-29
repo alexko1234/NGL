@@ -243,11 +243,11 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 	}
 
 
-	public List<String> findPreviousExperimentTypeCode(String processTypeCode){
+	public List<String> findPreviousProcessExperimentTypeCode(String processTypeCode){
 		String query = "select cit.code from process_type pt " +
 				"inner join previous_experiment_types net on net.fk_previous_experiment_type =  pt.fk_first_experiment_type "+
 				"inner join experiment_type etp on etp.id = net.fk_experiment_type "+
-				"inner join common_info_type cit on cit.id = etp.id";
+				"inner join common_info_type cit on cit.id = etp.id WHERE cit.code='"+processTypeCode+"'";
 
 		List<String> list = jdbcTemplate.query(
 				query,
@@ -260,6 +260,5 @@ public class ExperimentTypeDAO extends AbstractExperimentDAO<ExperimentType>{
 			    });
 		
 		return list;
-	}
-
+	}	
 }
