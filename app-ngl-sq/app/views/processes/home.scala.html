@@ -3,6 +3,7 @@
 @import models.laboratory.common.description.ObjectType
 
 @scripts() = {
+ 	<script src="@routes.Assets.at("ngl-common/javascripts/controllers/tabmainctrl.js")" type="text/javascript" charset="utf-8"></script>
 	<script src="@routes.Assets.at("ngl-common/javascripts/controllers/commons.js")" type="text/javascript" charset="utf-8"></script>  
 	<script src="@routes.Assets.at("datatable/javascripts/services/datatable.js")" type="text/javascript" charset="utf-8"></script>     
 	<script src="@routes.Assets.at("ngl-common/javascripts/services/basket.js")" type="text/javascript" charset="utf-8"></script>  
@@ -14,4 +15,4 @@
 	<script src="@controllers.processes.tpl.routes.Processes.javascriptRoutes" type="text/javascript" charset="utf-8"></script>   
 }
 
-@views.html.search("processes.title", "Processus", scripts, controllers.processes.tpl.routes.Processes.home(code))
+@views.html.lefttabs("processes.title", menu("processes."+code), scripts)
