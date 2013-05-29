@@ -1,4 +1,5 @@
 application.name=NGL Plaques
+index.title = Welcome to NGL Plaques
 
 #Menu
 plates.menu.new=Création

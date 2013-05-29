@@ -4,7 +4,7 @@ import java.util.List;
 
 import jsmessages.JsMessages;
 
-import ls.models.Manip;
+import play.Routes;
 import play.api.modules.spring.Spring;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -15,7 +15,19 @@ public class Main extends Controller {
    public static Result index() {
         return ok(index.render());
         
-    }
+   }
+   
+   public static Result javascriptRoutes() {
+ 	    response().setContentType("text/javascript");
+ 	    return ok(	  	      
+ 	        Routes.javascriptRouter("jsRoutes",	  	       
+ 	        // Routes	  	       
+ 	        controllers.administration.authentication.routes.javascript.User.logOut()	  	        
+ 	      )
+ 	    );
+ 	  }
+   
+   
    public static Result jsMessages() {
        return ok(JsMessages.generate("Messages")).as("application/javascript");
    }

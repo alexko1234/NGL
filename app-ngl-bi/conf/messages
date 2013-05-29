@@ -1,5 +1,6 @@
 #application
 application.name=NGL-BI
+index.title=Welcome to NGL-BI
 
 #page title
 title.runs=Runs

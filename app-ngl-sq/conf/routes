@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index(id:java.lang.String ?="")
+GET     /                           controllers.main.tpl.Main.index()
 
 #containers tpl
 GET 	/containers/:homecode/home				controllers.containers.tpl.Containers.home(homecode:java.lang.String)
@@ -49,4 +49,4 @@ GET	   /logout								controllers.administration.authentication.User.logOut()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
-GET     /messages.js                controllers.Application.jsMessages()
+GET     /messages.js                controllers.main.tpl.Main.jsMessages()

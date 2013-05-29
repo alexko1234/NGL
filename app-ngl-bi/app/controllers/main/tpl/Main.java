@@ -4,7 +4,7 @@ import java.util.List;
 
 import jsmessages.JsMessages;
 
-import ls.models.Manip;
+
 import play.api.modules.spring.Spring;
 import play.mvc.Controller;
 import play.mvc.Result;
