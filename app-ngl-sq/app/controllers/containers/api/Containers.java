@@ -6,39 +6,71 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.avaje.ebeaninternal.server.persist.Constant;
+
 
 import play.Logger;
+import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
+import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import models.laboratory.processes.description.ProcessType;
+import models.laboratory.processes.instance.Process;
+import models.utils.dao.DAOException;
 
 
 
 public class Containers extends CommonController {
 	
-	private static final String CONTAINER_COLL_NAME = "Container";
 	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
 	
 	public static Result list(){
 		Form<ContainersSearchForm> containerFilledForm = containerForm.bindFromRequest();
 		ContainersSearchForm containersSearch = containerFilledForm.get();
 		DBQuery.Query query = getQuery(containersSearch);
-	    MongoDBResult<Container> results = MongoDBDAO.find(CONTAINER_COLL_NAME, Container.class, query)
+	    MongoDBResult<Container> results = MongoDBDAO.find(Constants.CONTAINER_COLL_NAME, Container.class, query)
 				.sort(DatatableHelpers.getOrderBy(containerFilledForm), getMongoDBOrderSense(containerFilledForm))
 				.page(DatatableHelpers.getPageNumber(containerFilledForm), DatatableHelpers.getNumberRecordsPerPage(containerFilledForm)); 
 		List<Container> containers = results.toList();
+		
+		checkProcessExperimentTypes(containersSearch,containers);
+		
 		return ok(Json.toJson(new DatatableResponse(containers, results.count())));
 	}
 
+	/**
+	 * Check if the first experiment type code of the container processus is the same as the containerSearch experiment type code
+	 * 
+	 * @param containersSearch
+	 * @param containers
+	 * @return the new list
+	 */
+	private static List<Container> checkProcessExperimentTypes(ContainersSearchForm containersSearch, List<Container> containers){
+		List<Container> containersLocal=containers;
+		if(containersLocal != null &&StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
+			for(int i=0;i<containersLocal.size();i++){//because of the remove, can't use foreach syntax
+				List<Process> p = MongoDBDAO.find(Constants.PROCESS_COLL_NAME, Process.class,DBQuery.is("containerInputCode", containersLocal.get(i).code)).toList();
+				if(p.size() > 0 && !p.get(0).getProcessType().firstExperimentType.code.equals(containersSearch.experimentTypeCode)){
+					containersLocal.remove(i);
+				}
+			}
+		}
+		
+		return containersLocal;
+	}
+	
 	/**
 	 * Construct the container query
 	 * @param containersSearch
@@ -46,7 +78,6 @@ public class Containers extends CommonController {
 	 */
 	private static DBQuery.Query getQuery(ContainersSearchForm containersSearch) {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
-		Logger.info("Containers Query : "+containersSearch);
 		if(StringUtils.isNotEmpty(containersSearch.projectCode)){
 			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCode));
 	    }
@@ -61,6 +92,26 @@ public class Containers extends CommonController {
 	   
 	    if(StringUtils.isNotEmpty(containersSearch.sampleCode)){
 	    	queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
+	    }
+	    
+	    if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isEmpty(containersSearch.experimentTypeCode)){
+	    	List<String> listePrevious = Spring.getBeanOfType(ExperimentTypeDAO.class).findPreviousProcessExperimentTypeCode(containersSearch.processTypeCode);
+	    	if(null != listePrevious && listePrevious.size() > 0){
+	    		queryElts.add(DBQuery.in("fromExperimentTypeCodes", listePrevious));
+	    	}	    		    	
+	    }
+	    
+	    if(StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
+			try {
+				List<ExperimentType> previous = ExperimentType.find.findByCode(containersSearch.experimentTypeCode).previousExperimentTypes;
+				List<String> previousString = new ArrayList<String>();
+				for(ExperimentType e:previous){
+					previousString.add(e.code);
+				}
+				queryElts.add(DBQuery.in("fromExperimentTypeCodes", previousString));
+			} catch (DAOException e) {
+				e.printStackTrace();
+			}
 	    }
 	    
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
