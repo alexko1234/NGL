@@ -9,9 +9,9 @@
 <button class="btn"  data-target="#tab1" data-toggle="tab" data-toggle="tooltip" title="@Messages("plates.button.table")">@Messages("plates.button.table")</button>
 <button class="btn"  data-target="#tab2" data-toggle="tab" data-toggle="tooltip" title="@Messages("plates.button.plate")">@Messages("plates.button.plate")</button>
 </div>
-<div class="btn-group" ng-show="isEditMode()">
-<button class="btn" ng-click="save()" data-toggle="tooltip" title="@Messages("plates.button.save")"><i class="icon-save icon-large"></i>@if(!datatableConfig.compact){@(Messages("plates.button.save"))}</button>	
-<button class="btn" ng-click="computeXY()" data-toggle="tooltip" title="@Messages("plates.button.compute")"><i class="icon-magic icon-large"></i> @if(!datatableConfig.compact){@(Messages("plates.button.compute"))}</button>
+<div class="btn-group">
+<button class="btn" ng-click="save()" data-toggle="tooltip" title="@Messages("plates.button.save")" ng-disabled="!isEditMode()"><i class="icon-save icon-large"></i>@if(!datatableConfig.compact){@(Messages("plates.button.save"))}</button>	
+<button class="btn" ng-click="computeXY()" data-toggle="tooltip" title="@Messages("plates.button.compute")" ng-disabled="!isEditMode()"><i class="icon-magic icon-large"></i> @if(!datatableConfig.compact){@(Messages("plates.button.compute"))}</button>
 </div>
 <div class="btn-group" ng-switch on="isEditMode()">
 	<button class="btn" ng-click="edit()" ng-switch-when="false" data-toggle="tooltip" title="@Messages("plates.button.edit")"><i class="icon-edit icon-large"></i>@if(!datatableConfig.compact){@(Messages("plates.button.edit"))}</button>

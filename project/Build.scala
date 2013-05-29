@@ -170,7 +170,7 @@ object ApplicationBuild extends Build {
        
    ).dependsOn(nglcommon)
    
-   val nglasset = play.Project(appName + "-assets", appVersion, path = file("app-ngl-asset"),settings = buildSettings).settings(
+   val nglassets = play.Project(appName + "-assets", appVersion, path = file("app-ngl-asset"),settings = buildSettings).settings(
                 // Add your own project settings here      
                 resolvers := Seq(nexusig),
                 publishArtifact in makePom := false,
@@ -178,7 +178,7 @@ object ApplicationBuild extends Build {
           
       )
    
-   val nglplaques = play.Project(appName + "-plaques", appVersion, nglplaquesDependencies, path = file("app-ngl-plaques"),settings = buildSettings).settings(
+   val nglplates = play.Project(appName + "-plates", appVersion, nglplaquesDependencies, path = file("app-ngl-plaques"),settings = buildSettings).settings(
        // Add your own project settings here
        resolvers := Seq(nexusig),
        publishArtifact in makePom := false,
@@ -201,7 +201,7 @@ object ApplicationBuild extends Build {
       publishArtifact in makePom := false,
       publishTo := Some(nexusigpublish)
     ).aggregate(
-     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglauth,nglasset,nglplaques
+     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglauth,nglassets,nglplates
     )
 
 }
