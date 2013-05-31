@@ -7,16 +7,16 @@
         <meta charset="utf-8">
     	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     	<title>@Messages(title)</title>
-        @assets() 
+        @css() 
         <link rel="stylesheet" href="@routes.Assets.at("ngl-devguide/css/docs.css")"> 
         <link rel="stylesheet" href="@routes.Assets.at("gcp/css/prettify.css")"/>		 		
     </head>
     <body>
 	@menu(nav)
-	
 	<div class="container-fluid">
 		@content
 	</div>
+	@javascripts() 
 	<script src="@routes.Assets.at("gcp/javascripts/prettify.js")"></script>
 	@scripts
 </body>

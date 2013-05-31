@@ -7,6 +7,9 @@ hr {
 	margin: 40px 0 39px;
 }
 
+section {
+	padding-top:30px
+}
 
 .example:after {
     background-color: #F5F5F5;
