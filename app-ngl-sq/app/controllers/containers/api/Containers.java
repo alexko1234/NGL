@@ -45,32 +45,9 @@ public class Containers extends CommonController {
 				.page(DatatableHelpers.getPageNumber(containerFilledForm), DatatableHelpers.getNumberRecordsPerPage(containerFilledForm)); 
 		List<Container> containers = results.toList();
 		
-		checkProcessExperimentTypes(containersSearch,containers);
-		
 		return ok(Json.toJson(new DatatableResponse(containers, results.count())));
 	}
 
-	/**
-	 * Check if the first experiment type code of the container processus is the same as the containerSearch experiment type code
-	 * 
-	 * @param containersSearch
-	 * @param containers
-	 * @return the new list
-	 */
-	private static List<Container> checkProcessExperimentTypes(ContainersSearchForm containersSearch, List<Container> containers){
-		List<Container> containersLocal=containers;
-		if(containersLocal != null &&StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
-			for(int i=0;i<containersLocal.size();i++){//because of the remove, can't use foreach syntax
-				List<Process> p = MongoDBDAO.find(Constants.PROCESS_COLL_NAME, Process.class,DBQuery.is("containerInputCode", containersLocal.get(i).code)).toList();
-				if(p.size() > 0 && !p.get(0).getProcessType().firstExperimentType.code.equals(containersSearch.experimentTypeCode)){
-					containersLocal.remove(i);
-				}
-			}
-		}
-		
-		return containersLocal;
-	}
-	
 	/**
 	 * Construct the container query
 	 * @param containersSearch
@@ -113,6 +90,10 @@ public class Containers extends CommonController {
 				e.printStackTrace();
 			}
 	    }
+	    
+	   if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
+	    	queryElts.add(DBQuery.is("processTypeCode", containersSearch.processTypeCode));
+	   }
 	    
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}
