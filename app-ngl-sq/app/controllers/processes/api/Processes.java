@@ -39,7 +39,7 @@ public class Processes extends CommonController{
 	
 	
 	public static Result save(){
-		Form<Process> filledForm = getFilledForm();
+		Form<Process> filledForm = getFilledForm(processForm,Process.class);
 		if (!filledForm.hasErrors()) {
 			Process value = filledForm.get();
 			if (null == value._id) {
@@ -70,7 +70,7 @@ public class Processes extends CommonController{
 			if (!filledForm.hasErrors()) {
 				if(value._id == null){
 					//Workflows Implementation
-					Workflows.setAvailable(value.containerInputCode);
+					Workflows.setAvailable(value.containerInputCode,value.typeCode);
 				}
 				
 				value = MongoDBDAO.save(Constants.PROCESS_COLL_NAME,value);
@@ -83,16 +83,10 @@ public class Processes extends CommonController{
 			return badRequest(filledForm.errorsAsJson());
 		}			
 	}
-	
-	private static Form<Process> getFilledForm() {
-		JsonNode json = request().body().asJson();
-		Process input = Json.fromJson(json, Process.class);
-		Form<Process> filledForm = processForm.fill(input); // bindJson ne marche pas
-		return filledForm;
-	}
+
 	
 	public static Result list(){
-		Form<ProcessesSearchForm> processesSearchFilledForm = processesSearchForm.bindFromRequest();
+		Form<ProcessesSearchForm> processesSearchFilledForm = getFilledForm(processesSearchForm,ProcessesSearchForm.class);
 		ProcessesSearchForm processSearch = processesSearchFilledForm.get();
 		DBQuery.Query query = getQuery(processSearch);
 	    MongoDBResult<Process> results = MongoDBDAO.find(Constants.PROCESS_COLL_NAME, Process.class, query)
