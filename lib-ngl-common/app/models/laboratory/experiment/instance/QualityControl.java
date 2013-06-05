@@ -28,8 +28,8 @@ public class QualityControl extends DBObject {
 		
 		// Informations
 		public TraceInformation traceInformation;
-		public Map<String,PropertyValue> PurificationProperties;
-		public List<Comment> comment;
+		public Map<String,PropertyValue> qualityControlProperties;
+		public List<Comment> comments;
 		public Map<String, PropertyValue> instrumentProperties;
 		
 		public InstrumentUsed instrument;

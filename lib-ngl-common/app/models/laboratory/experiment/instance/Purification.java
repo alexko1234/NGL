@@ -37,8 +37,8 @@ public class Purification extends DBObject {
 	
 	// Informations
 	public TraceInformation traceInformation;
-	public Map<String,PropertyValue> PurificationProperties;
-	public List<Comment> comment;
+	public Map<String,PropertyValue> purificationProperties;
+	public List<Comment> comments;
 	public Map<String, PropertyValue> instrumentProperties;
 	
 	public InstrumentUsed instrument;
@@ -53,10 +53,7 @@ public class Purification extends DBObject {
 	//Samples ref
 	public List<String> sampleCodes;
 	
-	/* 1 container input / 1 container output
-	*/
-	public ContainerUsed inputContainer;
-	public ContainerUsed outputContainer;
+	public List<InputOutputContainer> listInputOutputContainers;
 	
 	// Protocol ref
 	public String protocolCode;

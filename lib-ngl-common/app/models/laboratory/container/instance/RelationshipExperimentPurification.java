@@ -15,7 +15,7 @@ public class RelationshipExperimentPurification {
 	// Reference container out put of Experiment
 	public String containerCode;
 	//Reference Code in Purification
-	public String purifCode;
+	public String purificationCode;
 	//Position in serie of purification
 	public String position;
 	

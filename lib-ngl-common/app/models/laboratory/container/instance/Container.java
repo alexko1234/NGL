@@ -56,7 +56,6 @@ public class Container extends DBObject {
 	public Map<String, PropertyValue> properties;
 	public List<Comment> comments;
 
-	
 	//Relation with support
 	public ContainerSupport support; 
 	
@@ -66,7 +65,6 @@ public class Container extends DBObject {
 	// Embedded QC result, this data are copying from collection QC
 	public List<QualityControlResult> qualityControlResults;
 
-	
 	//Stock management 
 	public List<Volume> mesuredVolume;
 	public List<Volume> calculedVolume;

@@ -1,12 +1,13 @@
 @(nav: String)
 
 @scripts() = {
+	 dvJavascripts()
 	 <script src="@routes.Assets.at("ngl-devguide/javascripts/naming-rules/app.js")" type="text/javascript" charset="utf-8"></script>
 	 <script src="@routes.Assets.at("ngl-devguide/javascripts/directives/directives.js")" type="text/javascript" charset="utf-8"></script>
 	 
 }
 
-@main("Règles de Nommage", nav, scripts()) {
+@main("Règles de Nommage", menu(nav), dvJavascripts(scripts()), dvCss()) {
 <header>
  <div class="row-fluid">
     <div class="span11 offset1">

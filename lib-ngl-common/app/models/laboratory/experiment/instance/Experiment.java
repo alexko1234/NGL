@@ -67,7 +67,7 @@ public class Experiment extends DBObject {
 	// Protocol ref
 	public String protocolCode;
 //	public List<ReagentUsed> reagentsUsed;
-	//public DBRef<Processus, String> fromProcessus;
+	
 
 	
 	public Experiment(){

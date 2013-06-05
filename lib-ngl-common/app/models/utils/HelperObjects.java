@@ -51,8 +51,10 @@ public class HelperObjects<T>{
 			try {
 				object=(T) new ObjectMongoDBReference(type,value).getObject();
 			} catch (Exception e) {
-				if(errors !=null)
-				ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "error.findObjectMongoDB"), "OBJECT FIND",type, value);
+				if(errors !=null){
+					ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "error.findObjectMongoDB"), "OBJECT FIND",type, value);
+				}
+				//TODO log error !
 			}	
 
 		}	else {
@@ -60,14 +62,17 @@ public class HelperObjects<T>{
 			try {
 				object=(T) new ObjectSGBDReference(type,value).getObject();
 			} catch (Exception e) {
-				if(errors !=null)
-				ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "error.findObjectSGBDR"), "OBJECT FIND",type,value);
+				if(errors !=null){
+					ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "error.findObjectSGBDR"), "OBJECT FIND",type,value);
+				}
+				//TODO log error !
 			}	
 
 		}
 
-		if(object==null && errors!=null)
+		if(object==null && errors!=null){
 			ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "error.ObjectNotFound"), "OBJECT NOT FOUND",type,value);
+		}
 		return object;
 	}
 

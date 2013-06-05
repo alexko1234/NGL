@@ -27,9 +27,7 @@ public class InstanceHelpers {
 		});
 	}
 
-
 	public static String getUser(){
-
 		String user;
 		if(Http.Context.current().session().get("CAS_FILTER_USER")==null){
 			user="admin";
@@ -73,7 +71,7 @@ public class InstanceHelpers {
 	
 	
 	// Add unique codes from list to list 
-	public static List<String> addCodesList(List<String> codes,List<String> listCodes){
+	public static List<String> addCodesList(List<String> codes, List<String> listCodes){
 		if(listCodes==null){
 			listCodes=new ArrayList<String>();
 		}
