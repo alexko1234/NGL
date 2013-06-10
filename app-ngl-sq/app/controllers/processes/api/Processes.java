@@ -83,10 +83,9 @@ public class Processes extends CommonController{
 			return badRequest(filledForm.errorsAsJson());
 		}			
 	}
-
 	
 	public static Result list(){
-		Form<ProcessesSearchForm> processesSearchFilledForm = getFilledForm(processesSearchForm,ProcessesSearchForm.class);
+		Form<ProcessesSearchForm> processesSearchFilledForm = processesSearchForm.bindFromRequest();
 		ProcessesSearchForm processSearch = processesSearchFilledForm.get();
 		DBQuery.Query query = getQuery(processSearch);
 	    MongoDBResult<Process> results = MongoDBDAO.find(Constants.PROCESS_COLL_NAME, Process.class, query)
