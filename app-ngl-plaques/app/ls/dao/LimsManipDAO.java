@@ -26,6 +26,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
+import play.Logger;
+
 
 @Repository
 public class LimsManipDAO {
@@ -39,23 +41,28 @@ public class LimsManipDAO {
 
 
     public List<Manip> findManips(Integer emnco, Integer ematerielco,String prsco){
-        List<Manip> results = this.jdbcTemplate.query("pl_MaterielmanipChoisi @prsco=?, @emnco=?, @ematerielco=?, @plaque=? ", 
+    	Logger.info("pl_MaterielmanipChoisi @prsco='"+prsco+"', @emnco="+emnco+", @ematerielco="+ematerielco+", @plaque=1 ");
+        List<Manip> results = this.jdbcTemplate.query("pl_MaterielmanipChoisi @prsco=?, @emnco=?, @ematerielco=?, @plaque=?", 
         		new Object[]{prsco, emnco, ematerielco, 1},new BeanPropertyRowMapper<Manip>(Manip.class));        
         return results;
     }
     
     public void createPlate(Plate plate){
+    	Logger.info("pc_PlaqueSolexa @plaqueId="+plate.code+", @emnco="+plate.typeCode);
     	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?", new Object[]{plate.code, plate.typeCode});    	
     }
        
     public void updatePlate(Plate plate){
+    	Logger.info("ps_MaterielmanipPlaque @plaqueId="+plate.code);
     	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
     	for(Well well: plate.wells){
+    		Logger.info("pm_MaterielmanipPlaque @matmaco="+well.code+", @plaqueId="+plate.code+", @plaqueX="+well.x+", @plaqueY="+well.y+"");
     		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x, well.y);
     	}
     }
 
     public List<Plate> findPlates(Integer emnco, String projetValue) {
+    	Logger.info("pl_PlaqueSolexa @prsco="+projetValue+", @emnco="+emnco);
 		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @prsco=?, @emnco=?", new Object[]{projetValue, emnco}, new RowMapper<Plate>() {
 	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	Plate plate = new Plate();
@@ -76,6 +83,7 @@ public class LimsManipDAO {
 	 * @return
 	 */
 	public Plate getPlate(String code) {
+		Logger.info("pl_PlaqueSolexa @plaqueId="+code);
 		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
 	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	Plate plate = new Plate();
@@ -90,6 +98,7 @@ public class LimsManipDAO {
 		
 		if(plates.size() == 1){
 			Plate plate = plates.get(0);
+			Logger.info("pl_MaterielmanipPlaque @plaqueId="+plate.code);
 			List<Well> wells = this.jdbcTemplate.query("pl_MaterielmanipPlaque @plaqueId=?", new Object[]{code}, new RowMapper<Well>() {
 		        public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
 		        	Well well = new Well();
@@ -112,6 +121,7 @@ public class LimsManipDAO {
     
 
 	public boolean isPlateExist(String code) {
+		Logger.info("pl_PlaqueSolexa @plaqueId="+code);
 		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
 	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	Plate plate = new Plate();
@@ -138,6 +148,7 @@ public class LimsManipDAO {
 
 
 	public void deletePlate(String plateCode) {
+		Logger.info("ps_PlaqueSolexa @plaqueId="+plateCode);
 		this.jdbcTemplate.update("ps_PlaqueSolexa @plaqueId=?", new Object[]{plateCode});
 	}
 
