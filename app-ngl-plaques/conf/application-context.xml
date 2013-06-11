@@ -15,17 +15,6 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 
     <context:annotation-config />
     <context:component-scan base-package="ls" />
-    <!--jee:jndi-lookup id="dataSource" jndi-name="lims"/-->
-    
-    
- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver"/>
-        <property name="url" value="jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims"/>
-        <property name="username" value="mhaquell"/>
-        <property name="password" value="cmoexhdr"/>
-    </bean>
-    
-    
-   
+    <jee:jndi-lookup id="dataSource" jndi-name="lims"/>
     
 </beans>
