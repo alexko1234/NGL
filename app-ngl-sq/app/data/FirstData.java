@@ -48,34 +48,39 @@ public class FirstData {
 
 	public static Map<String,SampleType> getSampleAdn() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 
-		SampleType sampleTypeADNGenomique = DescriptionHelper.getSampleType("ADNGenomique","ADN Génomique", "ADN", getPropertyDefinitions());
-		SampleType sampleTypeADNMeta = DescriptionHelper.getSampleType("ADNMetagenomique","ADN métagénomique", "ADN", getPropertyDefinitions());
-		SampleType sampleTypeADNTara = DescriptionHelper.getSampleType("ADNTara","ADN Tara", "ADN",  getPropertyDefinitions());
+		SampleType sampleTypeADNGenomique = DescriptionHelper.getSampleType("ADNGenomique","ADN Génomique", "ADN", getPropertyDefinitionsAdn());
+		SampleType sampleTypeADNMeta = DescriptionHelper.getSampleType("ADNMetagenomique","ADN métagénomique", "ADN", getPropertyDefinitionsAdn());
+	//	SampleType sampleTypeADNTara = DescriptionHelper.getSampleType("ADNTara","ADN Tara", "ADN",  getPropertyDefinitionsAdn());
 
 		Map<String,SampleType> results=new HashMap<String, SampleType>();
 
 
 		results.put(sampleTypeADNGenomique.code, sampleTypeADNGenomique);
 		results.put(sampleTypeADNMeta.code, sampleTypeADNMeta);
-		results.put(sampleTypeADNTara.code,sampleTypeADNTara);
+	//	results.put(sampleTypeADNTara.code,sampleTypeADNTara);
 
 		return results;
 
 	}
 
+	
+
 	public static Map<String,SampleType> getSampleAmplicon() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 
-		SampleType sampleTypeAmplicon = DescriptionHelper.getSampleType("amplicon","Amplicon", "amplicon", getPropertyDefinitionsTara()); 
-		SampleType sampleTypeAmpliconTara = DescriptionHelper.getSampleType("ampliconTara","Amplicon Tara", "amplicon", getPropertyDefinitionsTara());
+		SampleType sampleTypeAmplicon = DescriptionHelper.getSampleType("amplicon","Amplicon", "amplicon", getPropertyDefinitionsAmplicon()); 
+	//	SampleType sampleTypeAmpliconTara = DescriptionHelper.getSampleType("ampliconTara","Amplicon Tara", "amplicon", getPropertyDefinitionsAmplicon());
 
 		Map<String,SampleType> results=new HashMap<String, SampleType>();
 
 		results.put(sampleTypeAmplicon.code, sampleTypeAmplicon);
-		results.put(sampleTypeAmpliconTara.code, sampleTypeAmpliconTara);
+	//	results.put(sampleTypeAmpliconTara.code, sampleTypeAmpliconTara);
 
 		return results;
 
 	}
+
+	
+
 
 	public static Map<String,SampleType> getSampleInconnu() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 
@@ -91,17 +96,17 @@ public class FirstData {
 
 
 	public static Map<String,SampleType> getSampleArn() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-
-		SampleType sampleTypeARNTotal = DescriptionHelper.getSampleType("ARNTotal","ARN total", "ARN", getPropertyDefinitions()); 
-		SampleType sampleTypeARNTotalTara = DescriptionHelper.getSampleType("ARNTara","ARN Total Tara", "ARN", getPropertyDefinitionsTara()); 
-		SampleType sampleTypeARNm = DescriptionHelper.getSampleType("ARNm","ARNm", "ARN", getPropertyDefinitions()); 
-		SampleType sampleTypesRNA = DescriptionHelper.getSampleType("sRNA","sRNA", "ARN", getPropertyDefinitions()); 
+		
+		SampleType sampleTypeARNTotal = DescriptionHelper.getSampleType("ARNTotal","ARN total", "ARN", getPropertyDefinitionsArn()); 
+	//	SampleType sampleTypeARNTotalTara = DescriptionHelper.getSampleType("ARNTara","ARN Total Tara", "ARN", getPropertyDefinitionsArn()); 
+		SampleType sampleTypeARNm = DescriptionHelper.getSampleType("ARNm","ARNm", "ARN", getPropertyDefinitionsArn()); 
+		SampleType sampleTypesRNA = DescriptionHelper.getSampleType("sRNA","sRNA", "ARN", getPropertyDefinitionsArn()); 
 
 		Map<String,SampleType> results=new HashMap<String, SampleType>();
 
 
 		results.put(sampleTypeARNTotal.code, sampleTypeARNTotal);
-		results.put(sampleTypeARNTotalTara.code, sampleTypeARNTotalTara);
+	//	results.put(sampleTypeARNTotalTara.code, sampleTypeARNTotalTara);
 		results.put(sampleTypeARNm.code,sampleTypeARNm);
 		results.put(sampleTypesRNA.code,sampleTypesRNA);
 
@@ -110,17 +115,18 @@ public class FirstData {
 
 	public static Map<String,SampleType> getSamplecDNA() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 
-		SampleType sampleTypecDNA =DescriptionHelper.getSampleType("cDNA","cDNA", "ARN", getPropertyDefinitions());
-		SampleType sampleTypecDNATARA =DescriptionHelper.getSampleType("cDNATara","cDNA Tara", "ARN", getPropertyDefinitionsTara());
+		SampleType sampleTypecDNA =DescriptionHelper.getSampleType("cDNA","cDNA", "cDNA", getPropertyDefinitionscDNA());
+	//	SampleType sampleTypecDNATARA =DescriptionHelper.getSampleType("cDNATara","cDNA Tara", "cDNA", getPropertyDefinitionscDNA());
 
 		Map<String,SampleType> results=new HashMap<String, SampleType>();
 
 		results.put(sampleTypecDNA.code, sampleTypecDNA);
-		results.put(sampleTypecDNATARA.code, sampleTypecDNATARA);
+	//	results.put(sampleTypecDNATARA.code, sampleTypecDNATARA);
 
 		return results;
 
 	}
+
 
 	public static Map<String,SampleType> getSampleMatImmunoprecipites() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 
@@ -135,30 +141,27 @@ public class FirstData {
 
 	}
 
+	//TODO revoir la liste avec Julie
+		private static List<PropertyDefinition> getPropertyDefinitions() {
+			List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+			propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("tailleTaxon","Taille associée au taxon",Boolean.TRUE, Boolean.TRUE, Long.class));		
+			propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("fragmente","Fragmenté",Boolean.TRUE, Boolean.TRUE, Boolean.class));
+			propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("adaptateur","Adpatateurs",Boolean.TRUE, Boolean.TRUE, Boolean.class));
+			propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("codeLims","Code LIMS",Boolean.TRUE, Boolean.TRUE, Integer.class));
+			return propertyDefinitions;
+		}
 
-	private static List<PropertyDefinition> getPropertyDefinitionsTara() {
-		List<PropertyDefinition> propertyDefinitions = getPropertyDefinitions();
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("station","Station TARA",Boolean.TRUE, Boolean.TRUE, Long.class));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("profondeur","Profondeur TARA",Boolean.TRUE, Boolean.TRUE, String.class));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("filtre","Filtre TARA",Boolean.TRUE, Boolean.TRUE, String.class));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("iteration","Iteration TARA",Boolean.TRUE, Boolean.TRUE, String.class));
-
-		return propertyDefinitions;
-	}
-
-	private static List<PropertyDefinition> getPropertyDefinitions() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("tailleTaxon","Taille associée au taxon",Boolean.TRUE, Boolean.TRUE, Long.class));		
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("fragmente","Fragmenté",Boolean.TRUE, Boolean.TRUE, Boolean.class));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("adaptateurs","Adpatateurs",Boolean.TRUE, Boolean.TRUE, Boolean.class));
-
-		return propertyDefinitions;
-	}
-
+		private static List<PropertyDefinition> getPropertyDefinitionsArn(){
+			List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+	        propertyDefinitions.addAll(getPropertyDefinitions());
+	        propertyDefinitions.remove(DescriptionHelper.getPropertyDefinition("fragmente","Fragmenté",Boolean.TRUE, Boolean.TRUE, Boolean.class));
+	        return propertyDefinitions;
+		}
+	
 
 	public static List<PropertyDefinition> getPropertyDefinitionsADNClone() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-
+        propertyDefinitions.addAll(getPropertyDefinitions());
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("tailleInsert","Taille d'insert",Boolean.TRUE, Boolean.TRUE,  Double.class));
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("vecteur","Vecteur",Boolean.FALSE,Boolean.TRUE, Long.class));
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("souche","Souche",Boolean.FALSE, Boolean.TRUE,  Double.class));		
@@ -167,19 +170,57 @@ public class FirstData {
 		return propertyDefinitions;
 	}
 
-	public static List<PropertyDefinition> getPropertyDefinitionsImportBq() {
+	private static List<PropertyDefinition> getPropertyDefinitionsAdn() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.addAll(getPropertyDefinitions());
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("WGA","WGA",Boolean.FALSE, Boolean.TRUE,  Double.class));		
+		return propertyDefinitions;
+	}
+
+	private static List<PropertyDefinition> getPropertyDefinitionscDNA() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.addAll(getPropertyDefinitions());
+        //TODO julie liste de valeur
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("typeSynthese","Type de synthèse",Boolean.FALSE, Boolean.TRUE,  String.class));		
+		return propertyDefinitions;
+	}
+
+	private static List<PropertyDefinition> getPropertyDefinitionsAmplicon() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.addAll(getPropertyDefinitions());
+        //TODO julie
+        // Specifier le type de donnees
+        propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("materielCible","Matériel ciblé",Boolean.FALSE, Boolean.TRUE,  String.class));
+        propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("nbRegion","Nombre régions ciblées",Boolean.FALSE, Boolean.TRUE,  Integer.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("regionCiblees","Région Ciblée",Boolean.FALSE, Boolean.TRUE,  String.class));
+		
+		return propertyDefinitions;
+
+	}
+	
+	public static List<PropertyDefinition> getPropertyDefinitionsImportBq() throws DAOException {
 
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-
+		
+		propertyDefinitions.addAll(getPropertyDefinitionsImport());
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("index", "Index Illumina",Boolean.FALSE, String.class,DescriptionHelper.getListFromProcedureLims("pl_Tag")));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("concFournisseur", "Concentration fourni",false,true,Double.class));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("quantiteFournisseur", "Quantite fournie",false,true, Double.class));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeFournisseur", "Volume fourni", false,true, Double.class));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("dateReception", "Date reception", Date.class));
 
 		return propertyDefinitions;
 	}
 
+	public static List<PropertyDefinition> getPropertyDefinitionsImportTara() {
+
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		//TODO Add list values
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("station", "Station TARA",false,true,Integer.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("profondeur", "Profondeur TARA",false,true,String.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("filtre", "Filtre TARA",false,true,String.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("iteration", "Iteration TARA",false,true,Integer.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("materiel", "Materiel TARA",false,true,String.class));
+		
+		return propertyDefinitions;
+	}
 	
 	public static Map<String,MeasureCategory> getMeasureCategoryAll(){
 		Map<String,MeasureCategory> measureCategories=new HashMap<String, MeasureCategory>();
@@ -207,6 +248,9 @@ public class FirstData {
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("concFournisseur", "Concentration fournie", Double.class,Boolean.FALSE,measureCategory1,measureCategory1.measurePossibleValues.get(0)));
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("quantiteFournisseur", "Quantite fournie",Double.class,Boolean.FALSE,measureCategory3,measureCategory3.measurePossibleValues.get(0)));
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeFournisseur", "Volume fourni", Double.class,Boolean.FALSE,measureCategory2,measureCategory2.measurePossibleValues.get(0)));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("concReelle", "Concentration réelle",false,true,Double.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("quantiteReelle", "Quantite réelle",false,true, Double.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeReelle", "Volume réel", false,true, Double.class));
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("dateReception", "Date réception", Date.class));
 
 		return propertyDefinitions;
@@ -235,7 +279,7 @@ public class FirstData {
 		sampletypes.putAll(FirstData.getSampleAmplicon());
 		sampletypes.putAll(FirstData.getSamplecDNA());
 		sampletypes.putAll(FirstData.getSampleInconnu());
-		sampletypes.putAll(FirstData.getSamplecDNA());
+		sampletypes.putAll(FirstData.getSampleArn());
 		sampletypes.putAll(FirstData.getSampleMatImmunoprecipites());
 		return sampletypes;
 	}
@@ -244,6 +288,7 @@ public class FirstData {
 		Map<String,ImportType> importtypes=new HashMap<String, ImportType>();
 		importtypes.put("importBanqueSolexa",DescriptionHelper.getImportType("importBanqueSolexa","Importation Sample Bq Solexa","importSample",getPropertyDefinitionsImportBq()));
 		importtypes.put("importNormal",DescriptionHelper.getImportType("importNormal","Importation Normal","importSample",getPropertyDefinitionsImport()));
+		importtypes.put("importTara",DescriptionHelper.getImportType("importTara","Importation Tara","importSample",getPropertyDefinitionsImportTara()));
 		return importtypes;
 	}
 
