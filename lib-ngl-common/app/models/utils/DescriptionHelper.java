@@ -124,7 +124,7 @@ public class DescriptionHelper {
 	public static SampleCategory getSampleCategory(String code,String name) throws DAOException{
 
 		SampleCategory sampleCategory=SampleCategory.find.findByCode(code);
-		System.err.println("SampleCategory "+sampleCategory); 
+		Logger.debug("SampleCategory "+sampleCategory); 
 		if(sampleCategory==null){
 			sampleCategory=new SampleCategory();
 			sampleCategory.code=code;
@@ -347,7 +347,7 @@ public class DescriptionHelper {
 		Finder<T> find = new Finder<T>(type.getName().replaceAll("description", "description.dao")+"DAO");
 		T objectCategory=find.findByCode(codeCategory);
 		if(objectCategory==null){
-			System.err.println(" import category not find :"+codeCategory);
+			Logger.debug("category not find :"+codeCategory);
 			objectCategory=(T) Class.forName(type.getName()).newInstance();
 			objectCategory.code=codeCategory;
 			objectCategory.name=codeCategory;
@@ -357,11 +357,11 @@ public class DescriptionHelper {
 	}
 
 	public static ExperimentCategory getExperimentCategory(String codeCategory) throws DAOException {
-		System.err.println("Find import category :"+codeCategory);
+		Logger.debug("Find experiment category :"+codeCategory);
 		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode(codeCategory);
 
 		if(experimentCategory==null){
-			System.err.println(" import category not find :"+codeCategory);
+			Logger.debug("experiment category not find :"+codeCategory);
 			experimentCategory=new ExperimentCategory();
 			experimentCategory.code=codeCategory;
 			experimentCategory.name=codeCategory;
