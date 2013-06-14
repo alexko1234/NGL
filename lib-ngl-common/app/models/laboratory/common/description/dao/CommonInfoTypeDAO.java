@@ -117,7 +117,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		if(propertyDefinitions!=null && propertyDefinitions.size()>0){
 			PropertyDefinitionDAO propertyDefinitionDAO = Spring.getBeanOfType(PropertyDefinitionDAO.class);
 			for(PropertyDefinition propertyDefinition : propertyDefinitions){
-				PropertyDefinition propertyDefinitionDB = PropertyDefinition.find.findByCode(propertyDefinition.code);
+				PropertyDefinition propertyDefinitionDB= propertyDefinitionDAO.findByCodeAndType(propertyDefinition.code,newId);
 				if(propertyDefinitionDB ==null)
 					propertyDefinitionDAO.save(propertyDefinition, cit.id);
 				

@@ -45,16 +45,21 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		throw new DAOException("Must be inserted with commonInfoType id");
 	}
 
-	/**
-	 * Particular sql with two code must be implemented
-	 */
+	@Override
 	public PropertyDefinition findByCode(String code) throws DAOException
 	{
-		String sql = sqlCommon+
-				"WHERE t.code = ? ";
-		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery = new PropertyDefinitionMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
-		return propertyDefinitionMappingQuery.findObject(code);
+		throw new DAOException("Many propertydefinitions can have same code value");
 	}
+	
+	
+	public PropertyDefinition findByCodeAndType(String code,long idCommonInfoType) throws DAOException
+	{
+		String sql = sqlCommon+
+				"WHERE t.code = ? and common_info_type_id = ? ";
+		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery = new PropertyDefinitionMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR),new SqlParameter("common_info_type_id",Type.LONG));
+		return propertyDefinitionMappingQuery.findObject(code,idCommonInfoType);
+	}
+	
 	public PropertyDefinition save(PropertyDefinition propertyDefinition, long idCommonInfoType) throws DAOException
 	{
 		//Create propertyDefinition

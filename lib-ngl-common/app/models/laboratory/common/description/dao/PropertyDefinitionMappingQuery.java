@@ -23,11 +23,13 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 		super();
 	}
 
-	public PropertyDefinitionMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
+	public PropertyDefinitionMappingQuery(DataSource ds, String sql, SqlParameter ... sqlParameters)
 	{
 		super(ds,sql);
-		if(sqlParameter!=null)
-			super.declareParameter(sqlParameter);
+		for(SqlParameter sqlParameter : sqlParameters){
+			if(sqlParameter!=null)
+				super.declareParameter(sqlParameter);
+		}
 		compile();
 	}
 

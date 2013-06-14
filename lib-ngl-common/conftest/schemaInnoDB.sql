@@ -175,7 +175,7 @@ CREATE TABLE measure_value (
 
 CREATE TABLE property_definition (
   id bigint(20) NOT NULL auto_increment,
-  code varchar(255) NOT NULL unique,
+  code varchar(255) NOT NULL,
   name varchar(255) NOT NULL,
   required tinyint(1) NOT NULL default '0',
   active tinyint(1) NOT NULL default '0',
@@ -197,7 +197,8 @@ CREATE TABLE property_definition (
   FOREIGN KEY (measure_value_id) REFERENCES measure_value(id),
   FOREIGN KEY (display_measure_value_id) REFERENCES measure_value(id),
   FOREIGN KEY (common_info_type_id) REFERENCES common_info_type(id),
-  INDEX idx_property_def_code (code)
+  INDEX idx_property_def_code (code),
+  CONSTRAINT UNIQUE (code,common_info_type_id)
 ) ENGINE=InnoDB;
 
 --
