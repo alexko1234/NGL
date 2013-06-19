@@ -41,6 +41,12 @@ public class Project extends DBObject {
 		traceInformation=new TraceInformation();
 	}
 	
+	public Project(String code, String name){
+		this.code=code;
+		this.name=name;
+		traceInformation=new TraceInformation();
+	}
+	
 	@JsonIgnore
 	public ProjectType getProjectType(){
 			return new HelperObjects<ProjectType>().getObject(ProjectType.class, typeCode, null);

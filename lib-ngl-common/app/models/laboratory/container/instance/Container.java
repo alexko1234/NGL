@@ -44,8 +44,6 @@ public class Container extends DBObject {
 	//ContainerCategory Ref
 	public String categoryCode;
 	
-	// State Ref ??
-	//TODO
 	public String stateCode;
 	public TBoolean valid;
 	// Resolution Ref
@@ -66,8 +64,13 @@ public class Container extends DBObject {
 	public List<QualityControlResult> qualityControlResults;
 
 	//Stock management 
-	public List<Volume> mesuredVolume;
-	public List<Volume> calculedVolume;
+	public List<PropertyValue> mesuredVolume;
+	public List<PropertyValue> mesuredConcentration;
+	public List<PropertyValue> mesuredQuantity;
+	
+	public List<PropertyValue> calculedVolume;
+	
+	
 	
 	// For search optimisation
 	public List<String> projectCodes; // getProjets
