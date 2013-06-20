@@ -124,8 +124,7 @@ object ApplicationBuild extends Build {
        // Add your own project settings here      
        resolvers := Seq(nexusig),
 	   sbt.Keys.fork in Test := false,
-       publishTo := Some(nexusigpublish)
-       
+       publishTo := Some(nexusigpublish)      
     )
     
      val ngldatatable = play.Project("datatable", libDatatableVersion, ngldatatableDependencies, path = file("lib-ngl-datatable"),settings = buildSettingsLib).settings(
@@ -150,15 +149,21 @@ object ApplicationBuild extends Build {
        resolvers := Seq(nexusig),
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish) 
- 
-    ).dependsOn(nglcommon)
+     ).dependsOn(nglcommon)
    
+    val ngldata = play.Project(appName + "-data", appVersion, nglsqDependencies, path = file("app-ngl-data"),settings = buildSettings).settings(
+       // Add your own project settings here      
+       resolvers := Seq(nexusig),
+       publishArtifact in makePom := false,
+       publishTo := Some(nexusigpublish) 
+     ).dependsOn(nglcommon) 
+    
+    
    val nglsq = play.Project(appName + "-sq", appVersion, nglsqDependencies, path = file("app-ngl-sq"),settings = buildSettings).settings(
           // Add your own project settings here      
           resolvers := Seq(nexusig),
           publishArtifact in makePom := false,
           publishTo := Some(nexusigpublish) 
-    
     ).dependsOn(nglcommon)
    
    
@@ -167,7 +172,6 @@ object ApplicationBuild extends Build {
              resolvers := Seq(nexusig),
              publishArtifact in makePom := false,
              publishTo := Some(nexusigpublish)
-       
    ).dependsOn(nglcommon)
    
    val nglassets = play.Project(appName + "-assets", appVersion, path = file("app-ngl-asset"),settings = buildSettings).settings(
@@ -183,7 +187,6 @@ object ApplicationBuild extends Build {
        resolvers := Seq(nexusig),
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish)
-
     ).dependsOn(nglcommon)
 
 
@@ -192,7 +195,6 @@ object ApplicationBuild extends Build {
        resolvers := Seq(nexusig),
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish) 
- 
     ).dependsOn(nglcommon)
     
    val main = play.Project(appName, appVersion, settings = buildSettings).settings(
@@ -201,7 +203,7 @@ object ApplicationBuild extends Build {
       publishArtifact in makePom := false,
       publishTo := Some(nexusigpublish)
     ).aggregate(
-     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglauth,nglassets,nglplates
+     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglauth,nglassets,nglplates,ngldata
     )
 
 }
