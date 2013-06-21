@@ -245,14 +245,14 @@ public class FirstData {
 		MeasureCategory measureCategory2=MeasureCategory.find.findByCode("quantity");
 		MeasureCategory measureCategory3=MeasureCategory.find.findByCode("volume");
 		
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("concFournisseur", "Concentration fournie", Double.class,Boolean.FALSE,measureCategory1,measureCategory1.measurePossibleValues.get(0)));
+	/*	propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("concFournisseur", "Concentration fournie", Double.class,Boolean.FALSE,measureCategory1,measureCategory1.measurePossibleValues.get(0)));
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("quantiteFournisseur", "Quantite fournie",Double.class,Boolean.FALSE,measureCategory3,measureCategory3.measurePossibleValues.get(0)));
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeFournisseur", "Volume fourni", Double.class,Boolean.FALSE,measureCategory2,measureCategory2.measurePossibleValues.get(0)));
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("concReelle", "Concentration réelle",false,true,Double.class));
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("quantiteReelle", "Quantite réelle",false,true, Double.class));
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeReelle", "Volume réel", false,true, Double.class));
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("dateReception", "Date réception", Date.class));
-
+   */
 		return propertyDefinitions;
 	}
 
@@ -386,9 +386,8 @@ public class FirstData {
 	public static Map<String,ProcessType> getProcessTypeAll() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 		Map<String,ProcessType> process=new HashMap<String, ProcessType>();
 
-		//TODO add ExperimentType
 		ProcessType processType =  DescriptionHelper.getProcessType("bqMPIllumina","Banque Mate Pair Illumina",null,new ArrayList<ExperimentType>(getExperimentTypeBqMP().values())
-				,getExperimentTypeBqMP().get("voidExperimentType"),getExperimentTypeBqMP().get("circularisationBqMP"),getExperimentTypeBqMP().get("ampliPCRBqMP"),null,null);
+				,getExperimentType().get("voidExperimentType"),getExperimentTypeBqMP().get("circularisationBqMP"),getExperimentTypeBqMP().get("ampliPCRBqMP"),null,null);
 		process.put(processType.code, processType);
 
 		return process;
