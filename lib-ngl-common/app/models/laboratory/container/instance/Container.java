@@ -137,42 +137,14 @@ public class Container extends DBObject implements IValidation {
 		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode, errors);
 	}
 
-	@JsonIgnore
-	public void addContent(Sample sample){
-
-		//Create new content
-		if(contents==null){
-			this.contents=new ArrayList<Content>();
-		}
-
-		Content content = new Content(new SampleUsed(sample.code, sample.typeCode, sample.categoryCode));
-
-		SampleType sampleType =new HelperObjects<SampleType>().getObject(SampleType.class, sample.categoryCode, null);
-		ImportType importType =new HelperObjects<ImportType>().getObject(ImportType.class, sample.categoryCode, null);
-
-		if(importType!=null ){
-			content.properties.putAll(InstanceHelpers.copyPropertyValueFromLevel(importType.getMapPropertyDefinition(), "content", sample.properties));
-		}
-
-		if(sampleType!=null){
-			content.properties.putAll(InstanceHelpers.copyPropertyValueFromLevel(sampleType.getMapPropertyDefinition(), "content", sample.properties));
-		}
-
-		this.contents.add(content);
-
-		projectCodes=InstanceHelpers.addCodesList(sample.projectCodes,projectCodes);
-
-		sampleCodes=InstanceHelpers.addCode(sample.code,sampleCodes);
-
-	}
-
+	
 	@JsonIgnore
 	@Override
 	public void validate(Map<String,List<ValidationError>> errors){
 
 		BusinessValidationHelper.validateCode(errors, this,this.getClass().getAnnotation(MongoCollection.class).name(), String.class);
 
-		//	BusinessValidationHelper.validationType(errors, this.categoryCode, ContainerCategory.class);
+		BusinessValidationHelper.validationType(errors, this.categoryCode, ContainerCategory.class);
 
 		BusinessValidationHelper.validationReferences(errors, this.projectCodes,Project.class);
 

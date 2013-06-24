@@ -12,7 +12,6 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
@@ -94,16 +93,6 @@ public class InstanceHelpers {
 
 		}
 		return listCodes;
-	}
-
-
-	public static ContainerSupport getContainerSupportTube(String barCode){
-		ContainerSupport containerSupport=new ContainerSupport();
-		containerSupport.barCode=barCode;	
-		containerSupport.categoryCode="TUBE";
-		containerSupport.x="1";
-		containerSupport.y="1";
-		return containerSupport;
 	}
 
 
