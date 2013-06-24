@@ -1,13 +1,20 @@
 package models.laboratory.container.instance;
 
+import java.util.List;
+import java.util.Map;
+
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
+import models.utils.IValidation;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-public class SampleUsed {
+import play.data.validation.ValidationError;
+import validation.utils.BusinessValidationHelper;
+
+public class SampleUsed implements IValidation{
 
 	// Reference Sample code
 	public String sampleCode;
@@ -45,6 +52,16 @@ public class SampleUsed {
 		return new HelperObjects<SampleCategory>().getObject(SampleCategory.class, categoryCode, null);
 
 		
+	}
+
+	@JsonIgnore
+	@Override
+	public void validate(Map<String, List<ValidationError>> errors) {
+
+		BusinessValidationHelper.validationType(errors, sampleCode, Sample.class);
+		BusinessValidationHelper.validationType(errors, typeCode, SampleType.class);
+		BusinessValidationHelper.validationType(errors, categoryCode, SampleCategory.class);
+
 	}
 
 }

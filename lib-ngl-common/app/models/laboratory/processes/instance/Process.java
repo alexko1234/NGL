@@ -13,9 +13,12 @@ import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
+import models.utils.IValidation;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+
+import play.data.validation.ValidationError;
 
 import fr.cea.ig.DBObject;
 
@@ -23,7 +26,7 @@ import fr.cea.ig.DBObject;
 
 
 @MongoCollection(name="Process")
-public class Process extends DBObject {
+public class Process extends DBObject implements IValidation{
 	
 	public String typeCode;
 	public String categoryCode;
@@ -80,6 +83,13 @@ public class Process extends DBObject {
 	@JsonIgnore
 	public ExperimentType getCurrentOutExperimentType(){
 		return new HelperObjects<ExperimentType>().getObject(ExperimentType.class, currentExperimentTypeCode,null);
+	}
+
+	@JsonIgnore
+	@Override
+	public void validate(Map<String, List<ValidationError>> errors) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

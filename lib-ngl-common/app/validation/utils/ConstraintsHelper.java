@@ -26,7 +26,7 @@ import play.data.validation.ValidationError;
 
 public class ConstraintsHelper {
 	
-	public static void validateProperties(Map<String, List<ValidationError>> errors, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, String rootKeyName) {
+	public static void validateProperties(Map<String, List<ValidationError>> errors, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, String rootKeyName,Boolean validateNotDefined) {
 		Map<String, PropertyValue> inputProperties = new HashMap<String, PropertyValue>(0);
 		if(null != properties){
 			inputProperties = new HashMap<String, PropertyValue>(properties);		
@@ -71,9 +71,16 @@ public class ConstraintsHelper {
 			}
 		}
 		//treat other property not defined
-		for(String key : inputProperties.keySet()){
-			addErrors(errors, getKey(rootKeyName,key), "error.notdefined");
+		if(validateNotDefined){
+			for(String key : inputProperties.keySet()){
+				addErrors(errors, getKey(rootKeyName,key), "error.notdefined");
+			}
 		}
+	}
+	
+	//Validate Properties not defined
+	public static void validateProperties(Map<String, List<ValidationError>> errors, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, String rootKeyName){
+		validateProperties(errors, properties, propertyDefinitions, rootKeyName,true);
 	}
 
 	public static boolean checkIfExistInTheList(
@@ -177,7 +184,7 @@ public class ConstraintsHelper {
         	isValid =  CollectionUtils.isNotEmpty((Collection)object);
         }
         if(!isValid){
-        	addErrors(errors, key, "error.required");
+        	addErrors(errors, key, "error.required",object);
         }        
         return isValid;		
 	}

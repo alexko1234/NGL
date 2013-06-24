@@ -8,12 +8,19 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
+import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.HelperObjects;
+import models.utils.IValidation;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.validator.internal.metadata.core.ConstraintHelper;
+
+import play.data.validation.ValidationError;
+import validation.utils.BusinessValidationHelper;
+import validation.utils.ConstraintsHelper;
 
 import fr.cea.ig.DBObject;
 
@@ -27,7 +34,7 @@ import fr.cea.ig.DBObject;
  *
  */
 @MongoCollection(name="Sample")
-public class Sample extends DBObject{
+public class Sample extends DBObject implements IValidation{
 	
 	
 	@JsonIgnore
@@ -35,6 +42,8 @@ public class Sample extends DBObject{
 	
 	// SampleType Ref
 	public String typeCode;
+	
+	public String importTypeCode;
 	//Sample Category Ref
 	public String categoryCode;
 	
@@ -70,6 +79,24 @@ public class Sample extends DBObject{
 	@JsonIgnore
 	public List<Project> getProjects(){
 		return new HelperObjects<Project>().getObjects(Project.class, projectCodes);
+	}
+
+
+	@JsonIgnore
+	@Override
+	public void validate(Map<String, List<ValidationError>> errors) {
+		
+		BusinessValidationHelper.validateCode(errors, this,this.getClass().getAnnotation(MongoCollection.class).name(), String.class);
+		
+		BusinessValidationHelper.validationType(errors, this.categoryCode, SampleCategory.class);
+		
+		SampleType sampleType=BusinessValidationHelper.validationType(errors, this.typeCode, SampleType.class);
+		ConstraintsHelper.validateProperties(errors, this.properties, sampleType.propertiesDefinitions,"",false);
+		
+		ImportType importType=BusinessValidationHelper.validationType(errors, this.importTypeCode, ImportType.class);
+		ConstraintsHelper.validateProperties(errors, this.properties, importType.propertiesDefinitions,"",false);
+
+		//TODO validation taxon 
 	}
 	
 

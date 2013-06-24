@@ -16,9 +16,12 @@ import models.laboratory.project.instance.Project;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
+import models.utils.IValidation;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+
+import play.data.validation.ValidationError;
 
 import fr.cea.ig.DBObject;
 
@@ -34,7 +37,7 @@ import fr.cea.ig.DBObject;
  */
 
 @MongoCollection(name="Experiment")
-public class Experiment extends DBObject {
+public class Experiment extends DBObject implements IValidation {
 
 	// ExperimentType
 	public String typeCode;
@@ -114,6 +117,13 @@ public class Experiment extends DBObject {
 	@JsonIgnore
 	public Resolution getResolution(){
 		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode, null);
+	}
+
+	@JsonIgnore
+	@Override
+	public void validate(Map<String, List<ValidationError>> errors) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

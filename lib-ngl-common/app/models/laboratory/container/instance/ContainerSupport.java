@@ -1,10 +1,16 @@
 package models.laboratory.container.instance;
 
+import java.util.List;
+import java.util.Map;
+
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.stock.instance.Stock;
 import models.utils.HelperObjects;
+import models.utils.IValidation;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+
+import play.data.validation.ValidationError;
 
 
 
@@ -20,7 +26,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  * @author mhaquell
  *
  */
-public class ContainerSupport {
+public class ContainerSupport implements IValidation {
 	
 	// Support name
 	public String name;
@@ -45,6 +51,13 @@ public class ContainerSupport {
 	public Stock getStock(){
 		return new HelperObjects<Stock>().getObject(Stock.class, stockCode, null);
 
+	}
+
+	@JsonIgnore
+	@Override
+	public void validate(Map<String, List<ValidationError>> errors) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

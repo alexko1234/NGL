@@ -1,7 +1,13 @@
 package models.laboratory.stock.instance;
 
 import java.util.List;
+import java.util.Map;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import play.data.validation.ValidationError;
+
+import models.utils.IValidation;
 import net.vz.mongodb.jackson.MongoCollection;
 import fr.cea.ig.DBObject;
 
@@ -17,7 +23,7 @@ import fr.cea.ig.DBObject;
  *
  */
 @MongoCollection(name="Stock")
-public class Stock extends DBObject{
+public class Stock extends DBObject implements IValidation{
 
 	//Place
 	public String buildingCode;
@@ -36,5 +42,12 @@ public class Stock extends DBObject{
 	
 	// History stocks/support
 	public List<StockUsed> stockUsed;
+
+	@JsonIgnore
+	@Override
+	public void validate(Map<String, List<ValidationError>> errors) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

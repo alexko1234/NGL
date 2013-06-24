@@ -10,9 +10,12 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 import models.utils.HelperObjects;
+import models.utils.IValidation;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+
+import play.data.validation.ValidationError;
 
 import fr.cea.ig.DBObject;
 
@@ -26,7 +29,7 @@ import fr.cea.ig.DBObject;
  *
  */
 @MongoCollection(name="Project")
-public class Project extends DBObject {
+public class Project extends DBObject implements IValidation{
 
 	public String typeCode;
 	public String categoryCode;
@@ -60,5 +63,11 @@ public class Project extends DBObject {
 	@JsonIgnore
 	public State getState(){
 			return new HelperObjects<State>().getObject(State.class, stateCode, null);
+	}
+
+	@Override
+	@JsonIgnore
+	public void validate(Map<String, List<ValidationError>> errors) {
+		
 	}
 }

@@ -13,15 +13,18 @@ import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
+import models.utils.IValidation;
 import models.utils.ObjectSGBDReference;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import play.data.validation.ValidationError;
+
 import fr.cea.ig.DBObject;
 
 @MongoCollection(name="QualityControl")
-public class QualityControl extends DBObject {
+public class QualityControl extends DBObject implements IValidation {
 
 		// PurificationType
 		public String qualityControlTypeCode;
@@ -87,6 +90,13 @@ public class QualityControl extends DBObject {
 		@JsonIgnore
 		public Resolution getResolution(){
 			return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode, null);
+		}
+
+		@JsonIgnore
+		@Override
+		public void validate(Map<String, List<ValidationError>> errors) {
+			// TODO Auto-generated method stub
+			
 		}
 		
 }

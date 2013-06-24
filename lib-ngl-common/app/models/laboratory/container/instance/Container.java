@@ -1,5 +1,7 @@
 package models.laboratory.container.instance;
 
+import static validation.utils.ConstraintsHelper.required;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,13 +15,19 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.project.instance.Project;
+import models.laboratory.sample.description.ImportType;
+import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
+import models.utils.IValidation;
 import models.utils.InstanceHelpers;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import play.data.validation.ValidationError;
+import validation.utils.BusinessValidationHelper;
+import validation.utils.ConstraintsHelper;
 import fr.cea.ig.DBObject;
 
 
@@ -35,20 +43,20 @@ import fr.cea.ig.DBObject;
  *
  */
 @MongoCollection(name="Container")
-public class Container extends DBObject {
+public class Container extends DBObject implements IValidation {
 
-	
+
 	@JsonIgnore
 	public final static String HEADER="Container.code;Container.categoryCode;Container.comments;ContainerSupport.categorycode;ContainerSupport.x;ContainerSupport.y;ContainerSupport.barecode";
-	
+
 	//ContainerCategory Ref
 	public String categoryCode;
-	
+
 	public String stateCode;
 	public TBoolean valid;
 	// Resolution Ref
 	public String resolutionCode; //used to classify the final state (ex : ) 
-	
+
 	// Container informations
 	public TraceInformation traceInformation;
 	public Map<String, PropertyValue> properties;
@@ -56,7 +64,7 @@ public class Container extends DBObject {
 
 	//Relation with support
 	public ContainerSupport support; 
-	
+
 	//Embedded content with values;
 	public List<Content> contents;
 
@@ -64,32 +72,29 @@ public class Container extends DBObject {
 	public List<QualityControlResult> qualityControlResults;
 
 	//Stock management 
-	public List<PropertyValue> mesuredVolume;
-	public List<PropertyValue> mesuredConcentration;
-	public List<PropertyValue> mesuredQuantity;
-	
+	public PropertyValue mesuredVolume;
+	public PropertyValue mesuredConcentration;
+	public PropertyValue mesuredQuantity;
+
 	public List<PropertyValue> calculedVolume;
-	
-	
-	
+
 	// For search optimisation
 	public List<String> projectCodes; // getProjets
 	public List<String> sampleCodes; // getSamples
 	// ExperimentType must be an internal or external experiment ( origine )
 	// List for pool experimentType
 	public List<String> fromExperimentTypeCodes; // getExperimentType
-	
+
 	// Propager au container de purif ??
 	//public String fromExperimentCode; ??
 	public String fromPurifingCode;
 	//public String fromExtractionTypeCode;
-	
+
 
 	public Container(){
 		traceInformation=new TraceInformation();
 	}
-	
-	//Delete method if possibles
+
 	@JsonIgnore
 	public Container(SampleUsed sampleUsed){
 
@@ -98,55 +103,93 @@ public class Container extends DBObject {
 		this.traceInformation=new TraceInformation();
 	}
 
-	
+
 	@JsonIgnore
-	public ContainerCategory getContainerCategory(){
-		return new HelperObjects<ContainerCategory>().getObject(ContainerCategory.class, categoryCode, null);
+	public ContainerCategory getContainerCategory(Map<String,List<ValidationError>> errors){
+		return new HelperObjects<ContainerCategory>().getObject(ContainerCategory.class, categoryCode,errors);
 
 	}
-	
+
 	@JsonIgnore
-	public List<Project> getProjects() {
+	public List<Project> getProjects(Map<String,List<ValidationError>> errors) {
 		return new HelperObjects<Project>().getObjects(Project.class, projectCodes);
-		
-	}
-	
-	@JsonIgnore
-	public List<Sample> getSamples() {
-		return new HelperObjects<Sample>().getObjects(Sample.class, sampleCodes);
+
 	}
 
 	@JsonIgnore
-	public List<ExperimentType> getFromExperimentTypes() {
-		return new HelperObjects<ExperimentType>().getObjects(ExperimentType.class, fromExperimentTypeCodes);
+	public List<Sample> getSamples(Map<String,List<ValidationError>> errors) {
+		return new HelperObjects<Sample>().getObjects(Sample.class, sampleCodes,errors);
 	}
-	
-	
+
 	@JsonIgnore
-	public State getState(){
-		return new HelperObjects<State>().getObject(State.class, stateCode, null);
+	public List<ExperimentType> getFromExperimentTypes(Map<String,List<ValidationError>> errors) {
+		return new HelperObjects<ExperimentType>().getObjects(ExperimentType.class, fromExperimentTypeCodes,errors);
 	}
-	
+
+
 	@JsonIgnore
-	public Resolution getResolution(){
-		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode, null);
+	public State getState(Map<String,List<ValidationError>> errors){
+		return new HelperObjects<State>().getObject(State.class, stateCode, errors);
 	}
-	
+
+	@JsonIgnore
+	public Resolution getResolution(Map<String,List<ValidationError>> errors){
+		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode, errors);
+	}
+
 	@JsonIgnore
 	public void addContent(Sample sample){
-		
+
 		//Create new content
 		if(contents==null){
 			this.contents=new ArrayList<Content>();
 		}
-		
-		this.contents.add(new Content(new SampleUsed(sample.code, sample.typeCode, sample.categoryCode)));
-		
+
+		Content content = new Content(new SampleUsed(sample.code, sample.typeCode, sample.categoryCode));
+
+		SampleType sampleType =new HelperObjects<SampleType>().getObject(SampleType.class, sample.categoryCode, null);
+		ImportType importType =new HelperObjects<ImportType>().getObject(ImportType.class, sample.categoryCode, null);
+
+		if(importType!=null ){
+			content.properties.putAll(InstanceHelpers.copyPropertyValueFromLevel(importType.getMapPropertyDefinition(), "content", sample.properties));
+		}
+
+		if(sampleType!=null){
+			content.properties.putAll(InstanceHelpers.copyPropertyValueFromLevel(sampleType.getMapPropertyDefinition(), "content", sample.properties));
+		}
+
+		this.contents.add(content);
+
 		projectCodes=InstanceHelpers.addCodesList(sample.projectCodes,projectCodes);
-	
+
 		sampleCodes=InstanceHelpers.addCode(sample.code,sampleCodes);
-		
+
 	}
-		
+
+	@JsonIgnore
+	@Override
+	public void validate(Map<String,List<ValidationError>> errors){
+
+		BusinessValidationHelper.validateCode(errors, this,this.getClass().getAnnotation(MongoCollection.class).name(), String.class);
+
+		//	BusinessValidationHelper.validationType(errors, this.categoryCode, ContainerCategory.class);
+
+		BusinessValidationHelper.validationReferences(errors, this.projectCodes,Project.class);
+
+		BusinessValidationHelper.validationReferences(errors, this.sampleCodes,Sample.class);
+
+		if(this.fromExperimentTypeCodes!=null)
+			BusinessValidationHelper.validationReferences(errors, this.fromExperimentTypeCodes,ExperimentType.class);	
+
+		if(this.resolutionCode!=null)
+			BusinessValidationHelper.validationType(errors, this.resolutionCode, Resolution.class);
+
+		if(required(errors, this.contents, "container.contents")){
+			for(Content content :this.contents){
+				content.validate(errors);
+			}
+		}
+
+	}
 
 }
