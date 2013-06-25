@@ -2,6 +2,8 @@ package models.utils;
 
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import models.utils.dao.AbstractCommonDAO;
 import models.utils.dao.DAOException;
 import play.api.modules.spring.Spring;
@@ -12,34 +14,34 @@ public class Model<T> {
 	public String code;
 	public String classNameDAO;
     
-	
+	@JsonIgnore
 	public Model() {
 		super();
 	}
-
+	@JsonIgnore
 	public Model(String classNameDAO) {
       this.classNameDAO = classNameDAO;
     }
-    
+	@JsonIgnore
     @SuppressWarnings("unchecked")
 	public void update() throws DAOException
     {
     	getInstance().update((T)this);
     }
-    
+	@JsonIgnore
     @SuppressWarnings("unchecked")
 	public long save() throws DAOException
     {
     	return getInstance().save((T)this);
     	
     }
-    
+	@JsonIgnore
     @SuppressWarnings("unchecked")
 	public void remove() throws DAOException
     {
     	getInstance().remove((T)this);
     }
-    
+	@JsonIgnore
     @SuppressWarnings("unchecked")
 	public AbstractCommonDAO<T> getInstance() throws DAOException
     {
@@ -57,27 +59,28 @@ public class Model<T> {
     public static class Finder<T>
     {
     	private String className;
+    	@JsonIgnore
     	public Finder(String className)
     	{
     		this.className = className;
     	}
-    	
+    	@JsonIgnore
     	public T findByCode(String code) throws DAOException
         {
     		return getInstance().findByCode(code);
         }
-        
+    	@JsonIgnore
         public List<T> findAll() throws DAOException
         {
         	return getInstance().findAll();
         }
-        
+    	@JsonIgnore
         public T findById(Long id) throws DAOException
         {
         	return getInstance().findById(id);
         }
         
-        
+    	@JsonIgnore
         @SuppressWarnings("unchecked")
     	public AbstractCommonDAO<T> getInstance() throws DAOException
         {
@@ -96,7 +99,7 @@ public class Model<T> {
 		result = prime * result + ((code == null) ? 0 : code.hashCode());
 		return result;
 	}
-
+	@JsonIgnore
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

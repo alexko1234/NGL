@@ -2,6 +2,9 @@ package models.laboratory.common.description;
 
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import models.laboratory.common.description.dao.PropertyDefinitionDAO;
 import models.utils.Model;
 import play.data.validation.Constraints.Required;
@@ -11,6 +14,7 @@ import play.data.validation.Constraints.Required;
  * @author ejacoby
  *
  */
+
 public class PropertyDefinition extends Model<PropertyDefinition>{
 
 	@Required	
@@ -44,8 +48,11 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 	public MeasureValue measureValue;
 	//Unité d'affichage
 	public MeasureValue displayMeasureValue;
+	
+	@JsonIgnore
 	public static Finder<PropertyDefinition> find = new Finder<PropertyDefinition>(PropertyDefinitionDAO.class.getName()); 
 
+	@JsonIgnore
 	public PropertyDefinition() {
 		super(PropertyDefinitionDAO.class.getName());
 	}
