@@ -51,8 +51,26 @@ experiments.menu.creation = Création
 experiments.menu.search = Rechercher
 experiments.create = Créer une experience
 experiments.save = Sauvegarder
+experiments.save_all = Sauvegarder tout
+experiments.edit = Editer
+experiments.unedit = Désactiver l''édition
+experiments.noCode = Aucun code
+experiments.addqc = Ajouter QC
+experiments.addpurif = Ajouter purification
+experiments.state = Etat
+experiments.intrument = Instrument
+experiments.status = Statut
+experiments.intrumentUsedType = Type d'instrument
+
+experiments.msg.save.sucess = Sauvegarde réussie
+experiments.msg.save.error = Sauvegarde echouée
+experiments.msg.details = [détails]
 
 experiments.select.experimentType = -- selectionner un type d'experience --
+experiments.select.instrument = -- Selectionner un instrument --
+experiments.select.resolutions = -- Selectionner une resolution --
+experiments.select.protocols = -- Selectionner un protocole --
+experiments.select.intrumentUsedType = -- Selectionner un Type d'instrument --
 
 button.newexperiment = Créer une experience
 
