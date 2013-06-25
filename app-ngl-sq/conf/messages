@@ -61,6 +61,7 @@ experiments.state = Etat
 experiments.intrument = Instrument
 experiments.status = Statut
 experiments.intrumentUsedType = Type d'instrument
+experiments.tabs.search = Recherche
 
 experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée
