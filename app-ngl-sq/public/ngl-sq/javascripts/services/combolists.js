@@ -53,6 +53,26 @@ angular.module('comboListsServices', ['ngResource']).
 						query: {method:'GET', isArray:true}
 					});
 				},
+				getInstrumentUsedTypes : function(experimentTypeCode){
+					return $resource(jsRoutes.controllers.lists.api.Lists.instrumentUsedTypes(experimentTypeCode).url, {}, {
+						query: {method:'GET', isArray:true}
+					});
+				},
+				getInstruments : function(intrumentUsedTypeCode){
+					return $resource(jsRoutes.controllers.lists.api.Lists.instruments(intrumentUsedTypeCode).url, {}, {
+						query: {method:'GET', isArray:true}
+					});
+				},
+				getProtocols : function(ExperimentTypeCode){
+					return $resource(jsRoutes.controllers.lists.api.Lists.protocols(ExperimentTypeCode).url, {}, {
+						query: {method:'GET', isArray:true}
+					});
+				},
+				getResolution : function(){
+					return $resource(jsRoutes.controllers.lists.api.Lists.resolutions().url, {}, {
+						query: {method:'GET', isArray:true}
+					});
+				}
 		};
 		return functions;
 });

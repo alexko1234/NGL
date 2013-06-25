@@ -21,7 +21,7 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, $scope.datatableConfig);			
 			$scope.setDatatable($scope.datatable);	
-		}else{
+		} else {
 			$scope.datatable = $scope.getDatatable();
 		}
 		
@@ -35,7 +35,7 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 		if(angular.isUndefined($scope.getBasket())){
 			$scope.basket = basket($scope);			
 			$scope.setBasket($scope.basket);
-		}else{
+		} else {
 			$scope.basket = $scope.getBasket();
 		}
 		
@@ -52,13 +52,14 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 			$scope.form.processTypes.options = $scope.comboLists.getProcessTypes().query();
 			$scope.form.projects.options = $scope.comboLists.getProjects().query();
 			
-		}else{
+		} else {
 			$scope.form = $scope.getForm();		
 		}
 	}
 	
 	$scope.changeExperimentType = function(){
 		$scope.removeTab(1);
+		
 		$scope.basket.reset();
 		this.search();
 	}
@@ -66,7 +67,7 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 	$scope.changeProject = function(){
 		if($scope.form.projects.selected){
 			$scope.form.samples.options =  $scope.comboLists.getSamples($scope.form.projects.selected.code).query();			
-		}else{
+		} else {
 			$scope.form.samples.options = [];
 		}	
 		if($scope.form.experimentTypes.selected){
@@ -99,10 +100,10 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 	
 	$scope.addToBasket = function(containers){
 		for(var i = 0; i < containers.length; i++){
-		
 			this.basket.add(containers[i]);
 		}
-		if($scope.form.experimentTypes.selected){
+		
+		if($scope.form.experimentTypes.selected && this.basket.length() > 0 && $scope.getTabs().length === 1){
 			$scope.addTabs({label:$scope.form.experimentTypes.selected.name,href:"/experiments/new/"+$scope.form.experimentTypes.selected.code,remove:false});
 		}
 	}

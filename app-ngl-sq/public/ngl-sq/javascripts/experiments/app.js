@@ -15,12 +15,12 @@ angular.module('home', ['datatableServices','basketServices', 'comboListsService
 	});
 	
 	$routeProvider.when('/experiments/search/:experimentTypeCode', {
-		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.search(params.experimentsTypeCode).url},
+		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.search(params.experimentTypeCode).url},
 		controller : 'SearchCtrl'
 	});
 	
 	$routeProvider.when('/experiments/edit/:experimentTypeCode', {
-		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.editExperiment(params.experimentsTypeCode).url},
+		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.editExperiment(params.experimentTypeCode).url},
 		controller : 'CreateNewCtrl'
 	});
 	
