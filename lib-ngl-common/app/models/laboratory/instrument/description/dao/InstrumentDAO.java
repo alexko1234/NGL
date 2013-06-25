@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.instrument.description.Instrument;
+import models.utils.ListObject;
 import models.utils.dao.AbstractDAO;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -22,6 +24,12 @@ public class InstrumentDAO extends AbstractDAO<Instrument>{
 		String sql = "SELECT id,name,code FROM instrument WHERE instrument_used_type_id=?";
 		BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
 		return this.jdbcTemplate.query(sql, mapper, idInstrumentUsedType);
+	}
+	
+	public List<ListObject> findAllForList(){
+		String sql = "SELECT code , name,  FROM instrument";
+		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
+		return this.jdbcTemplate.query(sql, mapper);
 	}
 	
 	public Instrument save(Instrument instrument, long idInstrumentUsedType)

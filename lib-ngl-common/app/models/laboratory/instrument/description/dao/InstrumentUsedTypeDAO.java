@@ -1,5 +1,6 @@
 package models.laboratory.instrument.description.dao;
 
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,10 +9,12 @@ import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.utils.ListObject;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
 import org.springframework.asm.Type;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
@@ -37,6 +40,25 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		return instrumentUsedTypeMappingQuery.execute(idCommonInfoType);
 	}
 
+	public List<InstrumentUsedType> findByInstrument(String instrumentCode)
+	{
+		String sql = "SELECT it.id, it.fk_common_info_type, it.fk_instrument_category "+
+				"FROM instrument_used_type as it "+
+				"JOIN instrument as i ON instrument_used_type_id=it.id " +
+				"WHERE i.code = ? ";
+		InstrumentUsedTypeMappingQuery instrumentUsedTypeMappingQuery = new InstrumentUsedTypeMappingQuery(dataSource, sql,new SqlParameter("code", Types.VARCHAR));
+		return instrumentUsedTypeMappingQuery.execute(instrumentCode);
+	}
+	
+	public List<ListObject> findbyExperimentTypeCodeForList(String experimentTypeCode){
+		String sql = "SELECT t.id,c.code as code, c.name as name "+
+				"FROM process_type as t  "+
+				"JOIN common_info_type as c ON c.id=fk_common_info_type";
+		
+		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
+		return this.jdbcTemplate.query(sql, mapper);
+	}
+	
 	public InstrumentUsedType findByCommonInfoType(long idCommonInfoType)
 	{
 		String sql = sqlCommon+
