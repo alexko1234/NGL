@@ -1,8 +1,15 @@
 package controllers;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.*;
 
 import fr.cea.ig.MongoDBResult.Sort;
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -29,10 +36,10 @@ public abstract class CommonController extends Controller{
 	 * @return
 	 */
 	protected static <T> Form<T> getFilledForm(Form<T> form, Class<T> clazz) {
+		Logger.info("Request: "+request().body().toString());
 		JsonNode json = request().body().asJson();
-		//T input = Json.fromJson(json, clazz);
-		Form<T> filledForm = form.bind(json); 
+		T input = Json.fromJson(json, clazz);
+		Form<T> filledForm = form.fill(input); 
 		return filledForm;
 	}
-		
 }
