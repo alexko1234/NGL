@@ -89,6 +89,8 @@ public class Container extends DBObject implements IValidation {
 	//public String fromExperimentCode; ??
 	public String fromPurifingCode;
 	//public String fromExtractionTypeCode;
+	//process
+	public String processTypeCode;
 
 
 	public Container(){
