@@ -1,24 +1,28 @@
 package controllers.lists.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.mongodb.BasicDBObject;
-
-import play.Routes;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.Results;
-import net.vz.mongodb.jackson.DBQuery;
-
-import play.libs.Json;
+import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.description.Protocol;
+import models.laboratory.instrument.description.Instrument;
+import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import net.vz.mongodb.jackson.DBQuery;
+import play.libs.Json;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.Results;
+
+import com.mongodb.BasicDBObject;
+
 import fr.cea.ig.MongoDBDAO;
 
 public class Lists extends Controller{
@@ -44,7 +48,7 @@ public class Lists extends Controller{
 		
 		return  Results.internalServerError();
 	}
-	
+
 	public static Result containerStates(){
 		try {
 			List<ListObject> states = State.findAllForContainerList();
@@ -90,6 +94,77 @@ public class Lists extends Controller{
 			e.printStackTrace();
 		}
 	
+		return  Results.internalServerError();
+	}
+	
+	public static Result instrumentUsedTypes(String experimentTypeCode){
+		List<ListObject> list = new ArrayList<ListObject>();
+		try {
+			List<InstrumentUsedType> listInstruUsed = ExperimentType.find.findByCode(experimentTypeCode).instrumentUsedTypes;
+			for(InstrumentUsedType instruUsedType: listInstruUsed){
+				list.add(new ListObject(instruUsedType.code,instruUsedType.name));
+			}
+			
+			return Results.ok(Json.toJson(list));
+		}catch (DAOException e) {
+		e.printStackTrace();
+		}
+	
+		
+		return  Results.internalServerError();
+	}
+	
+	
+	public static Result instruments(String instrumentUsedTypeCode){
+		List<ListObject> list = new ArrayList<ListObject>();
+		try {
+				InstrumentUsedType instrumentUsedType = InstrumentUsedType.find.findByCode(instrumentUsedTypeCode);
+				for(Instrument instru:instrumentUsedType.instruments){
+					list.add(new ListObject(instru.code,instru.name));
+				}
+
+			return Results.ok(Json.toJson(list));
+			
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+	
+		return  Results.internalServerError();
+	}
+	
+	public static Result protocols(String experimentTypeCode){
+		try {
+			List<Protocol> protocols = ExperimentType.find.findByCode(experimentTypeCode).protocols;
+			List<ListObject> list = new ArrayList<ListObject>();
+			
+			for(Protocol protocol:protocols){
+				list.add(new ListObject(protocol.code, protocol.name));
+			}
+			
+			return Results.ok(Json.toJson(list));
+			
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		
+		return  Results.internalServerError();
+	}
+	
+	public static Result resolutions(){
+		try {
+			List<Resolution> resolutions = Resolution.find.findAll();
+			List<ListObject> list = new ArrayList<ListObject>();
+			
+			for(Resolution resolution:resolutions){
+				list.add(new ListObject(resolution.code, resolution.name));
+			}
+			
+			return Results.ok(Json.toJson(list));
+			
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		
 		return  Results.internalServerError();
 	}
 }
