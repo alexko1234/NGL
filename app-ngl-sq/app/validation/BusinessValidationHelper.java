@@ -5,11 +5,13 @@ import static validation.utils.ConstraintsHelper.getKey;
 import static validation.utils.ConstraintsHelper.required;
 import static validation.utils.ConstraintsHelper.validateProperties;
 import static validation.utils.ConstraintsHelper.validateTraceInformation;
-
+import static validation.utils.BusinessValidationHelper.validateCode;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import play.Logger;
@@ -34,33 +36,10 @@ public class BusinessValidationHelper {
 	private static final String CONTAINER_COLL_NAME = "Container";
 	
 	
-	/**
-	 * Validate the code of a mongodb object
-	 * Check is code is not null and unique
-	 * 
-	 * @param errors
-	 * @param dbObject
-	 * @param collectionName
-	 */
-	private static void validateCode(Map<String, List<ValidationError>> errors,
-			DBObject dbObject, String collectionName, Class<?> type) {
-		// validation of unique code
-		if(required(errors, dbObject.code, "code")){
-			try {
-				DBObject o = (DBObject)MongoDBDAO.findByCode(collectionName, type, dbObject.code);
-				if(null != o && !o._id.equals(dbObject._id)){
-					addErrors(errors, FIELD_CODE, ERROR_NOTUNIQUE, dbObject.code);
-				}
-							
-			} catch (MongoException e) {
-				addErrors(errors, FIELD_CODE, ERROR_NOTUNIQUE, dbObject.code);
-			}
-		}		
-	}
 	
 	public static void validateProcess(Map<String, List<ValidationError>> errors, Process process,  String collectionName, String rootKeyName){
 		if(process == null){
-			throw new IllegalArgumentException("process is null");
+			throw new IllegalArgumentException("Process is null");
 		}
 		
 		if(process._id == null){
@@ -85,10 +64,49 @@ public class BusinessValidationHelper {
 		required(errors, process.projectCode, "projectCode");
 		required(errors, process.sampleCode, "sampleCode");
 		required(errors, process.typeCode, "typeCode");
+		validation.utils.BusinessValidationHelper.validationType(errors, process.typeCode, ProcessType.class);
 		
 		ProcessType processType = process.getProcessType();
 		if(processType != null && processType.propertiesDefinitions != null && !processType.propertiesDefinitions.isEmpty()){
 			validateProperties(errors, process.properties, process.getProcessType().propertiesDefinitions, getKey(rootKeyName,"nullPropertiesDefinitions"));
 		}
+	}
+	
+	public static void validateExperiment(Map<String, List<ValidationError>> errors, Experiment experiment,  String collectionName, String rootKeyName){
+		if(experiment == null){
+			throw new IllegalArgumentException("Experiment is null");
+		}
+		
+		if(experiment._id == null){
+			validateCode(errors, experiment, collectionName, Process.class);
+		}
+		
+		validateTraceInformation(errors, experiment.traceInformation, experiment._id);
+		
+		required(errors, experiment.stateCode, "stateCode"); 
+		
+		if(experiment.stateCode.equals("N")) {
+			required(errors, experiment.typeCode, "typeCode");
+		} else if(experiment.stateCode.equals("IP")) {
+			required(errors, experiment.typeCode, "typeCode"); 
+			required(errors, experiment.resolutionCode, "resolutionCode");
+			required(errors, experiment.protocolCode, "protocolCode");
+			required(errors, experiment.instrument, "instrument");
+		} else if(experiment.stateCode.equals("F")) {
+			required(errors, experiment.typeCode, "typeCode"); 
+			required(errors, experiment.resolutionCode, "resolutionCode");
+			required(errors, experiment.protocolCode, "protocolCode");
+			required(errors, experiment.instrument, "instrument");
+			required(errors, experiment.instrumentProperties, "instrumentProperties");
+			required(errors, experiment.experimentProperties, "experimentProperties");
+			required(errors, experiment.listInputOutputContainers, "InputOutputContainer");
+			
+			validateProperties(errors, experiment.experimentProperties, experiment.getExperimentType().propertiesDefinitions, getKey(rootKeyName,"nullPropertiesDefinitions"));
+			
+		}else{
+			addErrors(errors,experiment.stateCode, getKey(rootKeyName,"InvalidExperimentStateCode"));
+		}	
+		
+		validation.utils.BusinessValidationHelper.validationType(errors, experiment.typeCode, ExperimentType.class);
 	}
 }
