@@ -230,9 +230,7 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 				var getter = $parse("experiment.value.instrumentProperties."+data[i].name+".value");
 				getter.assign($scope,"");
 			}
-			alert(JSON.stringify(data));
 			$scope.experiment.instrumentProperties.instrumentPropertiesInputs = data;
-			//alert($scope.experiment.instrumentProperties.instrumentPropertiesInputs.properties.choiceInList);
 		})
 		.error(function(data, status, headers, config) {
 			$scope.message.clazz = "alert alert-error";
