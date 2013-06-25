@@ -1,6 +1,9 @@
 package workflows;
 
+import java.util.List;
+
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.instance.ContainerUsed;
 import fr.cea.ig.MongoDBDAO;
 
 public class Workflows {
@@ -17,5 +20,15 @@ public class Workflows {
 			MongoDBDAO.updateSet(CONTAINER_COLL_NAME, container,"stateCode", "A");
 			MongoDBDAO.updateSet(CONTAINER_COLL_NAME, container,"processTypeCode", processTypeCode);
 		}
+	}
+	
+	public static void setInWaitingExperiment(List<ContainerUsed> inputContainers){
+		for(ContainerUsed containerUsed:inputContainers){
+			Container container = MongoDBDAO.findByCode(CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
+			
+			if(container != null && (container.stateCode.equals("A"))){
+				MongoDBDAO.updateSet(CONTAINER_COLL_NAME, container,"stateCode", "IWE");
+			}
+		}	
 	}
 }
