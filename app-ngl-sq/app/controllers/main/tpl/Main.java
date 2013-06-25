@@ -1,11 +1,8 @@
 package controllers.main.tpl;
 
-import java.util.List;
-
 import jsmessages.JsMessages;
 
 import play.Routes;
-import play.api.modules.spring.Spring;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
