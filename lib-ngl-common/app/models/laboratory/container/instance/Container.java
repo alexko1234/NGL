@@ -3,6 +3,7 @@ package models.laboratory.container.instance;
 import static validation.utils.ConstraintsHelper.required;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,6 +95,7 @@ public class Container extends DBObject implements IValidation {
 
 
 	public Container(){
+		properties=new HashMap<String, PropertyValue>();
 		traceInformation=new TraceInformation();
 	}
 
@@ -103,6 +105,7 @@ public class Container extends DBObject implements IValidation {
 		this.contents=new ArrayList<Content>();
 		this.contents.add(new Content(sampleUsed));
 		this.traceInformation=new TraceInformation();
+		properties=new HashMap<String, PropertyValue>();
 	}
 
 
@@ -137,36 +140,6 @@ public class Container extends DBObject implements IValidation {
 	@JsonIgnore
 	public Resolution getResolution(Map<String,List<ValidationError>> errors){
 		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode, errors);
-	}
-
-
-	@JsonIgnore
-	public void addContent(Sample sample){
-
-		//Create new content
-		if(contents==null){
-			this.contents=new ArrayList<Content>();
-		}
-
-		Content content = new Content(new SampleUsed(sample.code, sample.typeCode, sample.categoryCode));
-
-		SampleType sampleType =new HelperObjects<SampleType>().getObject(SampleType.class, sample.categoryCode, null);
-		ImportType importType =new HelperObjects<ImportType>().getObject(ImportType.class, sample.categoryCode, null);
-
-		if(importType!=null ){
-			content.properties.putAll(InstanceHelpers.copyPropertyValueFromLevel(importType.getMapPropertyDefinition(), "content", sample.properties));
-		}
-
-		if(sampleType!=null){
-			content.properties.putAll(InstanceHelpers.copyPropertyValueFromLevel(sampleType.getMapPropertyDefinition(), "content", sample.properties));
-		}
-
-		this.contents.add(content);
-
-		projectCodes=InstanceHelpers.addCodesList(sample.projectCodes,projectCodes);
-
-		sampleCodes=InstanceHelpers.addCode(sample.code,sampleCodes);
-
 	}
 
 	
