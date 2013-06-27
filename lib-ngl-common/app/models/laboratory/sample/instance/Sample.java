@@ -1,8 +1,10 @@
 package models.laboratory.sample.instance;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
@@ -18,6 +20,7 @@ import net.vz.mongodb.jackson.MongoCollection;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.internal.metadata.core.ConstraintHelper;
 
+import play.Logger;
 import play.data.validation.ValidationError;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ConstraintsHelper;
@@ -90,11 +93,25 @@ public class Sample extends DBObject implements IValidation{
 		
 		BusinessValidationHelper.validationType(errors, this.categoryCode, SampleCategory.class);
 		
-		SampleType sampleType=BusinessValidationHelper.validationType(errors, this.typeCode, SampleType.class);
-		ConstraintsHelper.validateProperties(errors, this.properties, sampleType.propertiesDefinitions,"",false);
+		//Validate properties definition from sampleType and importType where level sample
+		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
 		
+		SampleType sampleType=BusinessValidationHelper.validationType(errors, this.typeCode, SampleType.class);
 		ImportType importType=BusinessValidationHelper.validationType(errors, this.importTypeCode, ImportType.class);
-		ConstraintsHelper.validateProperties(errors, this.properties, importType.propertiesDefinitions,"",false);
+		
+		Logger.debug("Import type "+importType.code);
+		
+		proDefinitions.addAll(sampleType.propertiesDefinitions);
+
+		for(PropertyDefinition propertyDefinition:importType.propertiesDefinitions){
+			//TODO
+			if(propertyDefinition.level.equals("current")){
+				Logger.debug("Property definition add "+propertyDefinition.code);
+				proDefinitions.add(propertyDefinition);
+			}
+		}
+		
+		ConstraintsHelper.validateProperties(errors, this.properties, proDefinitions,"");
 
 		//TODO validation taxon 
 	}

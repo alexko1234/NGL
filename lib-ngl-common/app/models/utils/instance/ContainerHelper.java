@@ -1,7 +1,10 @@
 package models.utils.instance;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
@@ -17,13 +20,13 @@ public class ContainerHelper {
 	public static ContainerSupport getContainerSupportTube(String barCode){
 		ContainerSupport containerSupport=new ContainerSupport();
 		containerSupport.barCode=barCode;	
-		containerSupport.categoryCode="TUBE";
+		containerSupport.categoryCode="tube";
 		containerSupport.x="1";
 		containerSupport.y="1";
 		return containerSupport;
 	}
-	
-	
+
+
 	public static void addContent(Container container,Sample sample){
 
 		//Create new content
@@ -35,14 +38,11 @@ public class ContainerHelper {
 
 		SampleType sampleType =new HelperObjects<SampleType>().getObject(SampleType.class, sample.categoryCode, null);
 		ImportType importType =new HelperObjects<ImportType>().getObject(ImportType.class, sample.categoryCode, null);
-
-		if(importType!=null ){
-			content.properties.putAll(InstanceHelpers.copyPropertyValueFromLevel(importType.getMapPropertyDefinition(), "content", sample.properties));
-		}
-
-		if(sampleType!=null){
-			content.properties.putAll(InstanceHelpers.copyPropertyValueFromLevel(sampleType.getMapPropertyDefinition(), "content", sample.properties));
-		}
+				
+		if(importType !=null)
+			InstanceHelpers.copyPropertyValueFromLevel(importType.getMapPropertyDefinition(), "containing", sample.properties,content.properties);
+		if(sampleType !=null)
+			InstanceHelpers.copyPropertyValueFromLevel(sampleType.getMapPropertyDefinition(), "containing", sample.properties,content.properties);
 
 		container.contents.add(content);
 

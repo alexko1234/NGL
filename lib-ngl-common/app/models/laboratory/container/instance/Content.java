@@ -1,5 +1,6 @@
 package models.laboratory.container.instance;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,11 +22,12 @@ public class Content implements IValidation{
 	public Map<String,PropertyValue> properties;
 	
 	public Content(){
-		
+		properties=new HashMap<String, PropertyValue>();
 	}
 	
 	@JsonIgnore
 	public Content(SampleUsed sampleUsed){
+		properties=new HashMap<String, PropertyValue>();
 		this.sampleUsed=sampleUsed;
 	}
 

@@ -96,28 +96,27 @@ public class InstanceHelpers {
 	}
 
 
-	public static Map<String,PropertyValue> copyPropertyValueFromLevel(Map<String,PropertyDefinition> propertyDefinitions,String level, Map<String,PropertyValue> properties){
+	public static void copyPropertyValueFromLevel(Map<String,PropertyDefinition> propertyDefinitions,String level, 
+			Map<String,PropertyValue> propertiesInput,Map<String,PropertyValue> propertiesOutPut){
 
 		Set<Entry<String, PropertyDefinition>> entries=propertyDefinitions.entrySet();
-		Map<String,PropertyValue> propertyResults = null;
-
+		
 		for(Entry<String, PropertyDefinition> entry :entries){
 
 			if(entry.getValue().level.equals(level)){
 
-				PropertyValue propertyValue= properties.get(entry.getKey());
+				PropertyValue propertyValue= propertiesInput.get(entry.getKey());
 
 				if(propertyValue!=null) {
 
-					if(propertyResults==null){
-						propertyResults=new HashMap<String, PropertyValue>();
+					if(propertiesOutPut==null){
+						propertiesOutPut=new HashMap<String, PropertyValue>();
 					}
-					propertyResults.put(entry.getKey(),propertyValue);
+					propertiesOutPut.put(entry.getKey(),propertyValue);
 				}
 			}
 		}
 
-		return propertyResults;
 	}
 
 	public static DBObject save(IValidation obj, Map<String,List<ValidationError>> errors) {
