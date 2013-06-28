@@ -122,7 +122,11 @@ public class InstanceHelpers {
 	public static DBObject save(IValidation obj, Map<String,List<ValidationError>> errors) {
 		Map<String, List<ValidationError>> localErrors=new HashMap<String, List<ValidationError>>();
 
-		obj.validate(localErrors);
+		if(obj!=null)
+			obj.validate(localErrors);
+		else {
+			return null;
+		}
 
 		if(localErrors.size()==0){
 			return MongoDBDAO.save(obj.getClass().getAnnotation(MongoCollection.class).name(),(DBObject) obj);
