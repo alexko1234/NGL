@@ -229,22 +229,28 @@ public class LimsDAO {
 
 		if(tadnco.equals("15")) return "fosmide";
 		else
-			if(tadnco.equals("1") && !tprco.equals("11")) return "ADNGenomique";
-			else
-				if(tadnco.equals("1") && tprco.equals("11")) return "ADNMetagenomique";
-				else
-					if(tadnco.equals("19") || tadnco.equals("6")) return "amplicon";
-					else
-						if(tadnco.equals("12")) return "cDNA";
-						else
-							if( tadnco.equals("11")) return "ARNTotal";
-							else 
-								if(tadnco.equals("18")) return "sRNA";
-								else
-									if(tadnco.equals("10")) return "ARNm";
-									else
-										if(tadnco.equals("17")) return "ChiP";
-										
+		if(tadnco.equals("8")) return "plasmide";
+		else
+		if(tadnco.equals("2")) return "bac";
+		else
+		if(tadnco.equals("1") && !tprco.equals("11")) return "ADNGenomique";
+		else
+		if(tadnco.equals("1") && tprco.equals("11")) return "ADNMetagenomique";
+		else
+		if(tadnco.equals("19") || tadnco.equals("6")) return "amplicon";
+		else
+		if(tadnco.equals("12")) return "cDNA";
+		else
+		if( tadnco.equals("11")) return "ARNTotal";
+		else 
+		if(tadnco.equals("18")) return "sRNA";
+		else
+		if(tadnco.equals("10")) return "ARNm";
+		else
+		if(tadnco.equals("17")) return "ChiP";
+		else
+		//TODO le mapping est faux 
+		if(tadnco.equals("16")) return "CLIP";
 		//Logger.debug("Erreur mapping Type materiel ("+tadnco+")/Type projet ("+tprco+") et Sample Type");
 		return null;
 	}
