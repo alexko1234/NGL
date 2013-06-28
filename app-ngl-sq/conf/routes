@@ -62,8 +62,6 @@ GET	   	   /loaddata/:homecode/home				controllers.dataload.SampleLoad.home(home
 POST   	   /loaddata							controllers.dataload.SampleLoad.uploadDataFromCSVFile()
 POST	   /createtemplate						controllers.dataload.SampleLoad.createTemplateFile()
 GET		   /loaddatatype						controllers.dataload.InitialData.loadDataType()
-GET       /createprojects						controllers.dataload.InitialData.createProjectFromLims()
-
 
 
 GET	   /logout								controllers.administration.authentication.User.logOut()

@@ -79,3 +79,10 @@ button.newexperiment = Créer une experience
 baskets = Panier
 baskets.new = Créer un panier
 baskets.add = Ajouter au panier
+
+error.codeNotExist=Le code {0} n'existe pas
+error.propertyNotExist=La propriété {0} n'existe pas pour {1}
+limsdao.error.emptymapping =Pas de correspondance avec les paramètres suivants :{0}
+
+#initialdata
+initialdata.error.sampleNotExist=Le container {0} 

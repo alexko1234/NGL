@@ -1,20 +1,28 @@
 package controllers.dataload;
 
+import static play.data.Form.form;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import models.LimsDAO;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.SampleUsed;
+import models.laboratory.container.instance.Content;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import play.Logger;
+import play.api.modules.spring.Spring;
+import play.data.DynamicForm;
+import play.data.DynamicForm.Dynamic;
 import play.data.Form;
-import static play.data.Form.form;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import validation.utils.ConstraintsHelper;
@@ -30,8 +38,6 @@ public class SampleLoad extends Controller{
 	final static Form<InputLoadData> inputLoadData = form(InputLoadData.class);
 	final static Form<DataTableForm> datatableForm = form(DataTableForm.class);
 
-
-	
 	public static Result home(String code) {
 		return ok(sampleload.render(datatableForm, inputLoadData));
 	}
@@ -46,11 +52,11 @@ public class SampleLoad extends Controller{
 		FileWriter fileWriter=null;	
 
 		SampleType sampleType= new HelperObjects<SampleType>().getObject(SampleType.class,sampleTypeCode,filledForm.errors());
-		ImportType experimentType= new HelperObjects<ImportType>().getObject(ImportType.class, experimentTypeCode, filledForm.errors());
+		ImportType importType= new HelperObjects<ImportType>().getObject(ImportType.class, experimentTypeCode, filledForm.errors());
 
 		try{
 			fileWriter=new FileWriter(fileName);
-			fileWriter.write(LoadDataHelper.getFirstLine(sampleType, experimentType));
+			fileWriter.write(LoadDataHelper.getFirstLine(sampleType, importType));
 			fileWriter.close();
 		}catch(Exception e){
 			System.err.println(e.getStackTrace());
@@ -158,6 +164,6 @@ public class SampleLoad extends Controller{
 
 
 	}
-
+	
 
 }

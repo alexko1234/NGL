@@ -17,6 +17,7 @@ import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceHelpers;
+import models.utils.instance.ContainerHelper;
 import play.Logger;
 import play.data.validation.ValidationError;
 import validation.utils.ConstraintsHelper;
@@ -105,7 +106,7 @@ public class LoadDataHelper {
 			String[] nextLine,Sample sample,Map<String,PropertyDefinition> propertiesDefinition) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 
 		Container container = new Container();
-		container.addContent(sample);
+		ContainerHelper.addContent(container, sample);
 		Content content =container.contents.get(0);
 		Class<Container> aClass=Container.class;
 		Field field =null;

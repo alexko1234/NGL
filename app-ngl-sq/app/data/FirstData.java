@@ -163,9 +163,9 @@ public class FirstData {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.addAll(getPropertyDefinitions());
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("tailleInsert","Taille d'insert",Boolean.TRUE, Boolean.TRUE,  Double.class));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("vecteur","Vecteur",Boolean.FALSE,Boolean.TRUE, Long.class));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("souche","Souche",Boolean.FALSE, Boolean.TRUE,  Double.class));		
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("siteClone","Site clone",Boolean.FALSE, Boolean.TRUE,  Double.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("vecteur","Vecteur",Boolean.FALSE,Boolean.TRUE, String.class));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("souche","Souche",Boolean.FALSE, Boolean.TRUE,  String.class));		
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("siteClone","Site clone",Boolean.FALSE, Boolean.TRUE,  String.class));
 
 		return propertyDefinitions;
 	}
@@ -203,7 +203,8 @@ public class FirstData {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		propertyDefinitions.addAll(getPropertyDefinitionsImport());
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("index", "Index Illumina",Boolean.FALSE, String.class,DescriptionHelper.getListFromProcedureLims("pl_Tag")));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("index", "Index Illumina",Boolean.FALSE, String.class,null));
+		//DescriptionHelper.getListFromProcedureLims("pl_Tag")
 
 		return propertyDefinitions;
 	}
@@ -225,15 +226,19 @@ public class FirstData {
 	public static Map<String,MeasureCategory> getMeasureCategoryAll(){
 		Map<String,MeasureCategory> measureCategories=new HashMap<String, MeasureCategory>();
 		
-		MeasureCategory measureCategory1=DescriptionHelper.getMeasureCategory("concentration", "Concentration", "ng/ul", "ng/ul");
-		MeasureCategory measureCategory2=DescriptionHelper.getMeasureCategory("volume", "Volume", "ul", "ul");
+		MeasureCategory measureCategory1=DescriptionHelper.getMeasureCategory("concentration", "Concentration", "ng/µl", "ng/µl");
+		MeasureCategory measureCategory2=DescriptionHelper.getMeasureCategory("volume", "Volume", "µl", "µl");
 		MeasureCategory measureCategory3=DescriptionHelper.getMeasureCategory("quantity", "Quantité", "ng", "ng");
 		MeasureCategory measureCategory4=DescriptionHelper.getMeasureCategory("taille", "Taille", "bases", "bases");
+		MeasureCategory measureCategory5=DescriptionHelper.getMeasureCategory("taille", "Taille", "Mb", "Mega bases");
 
+		
 		measureCategories.put(measureCategory1.code, measureCategory1);
 		measureCategories.put(measureCategory2.code, measureCategory2);
 		measureCategories.put(measureCategory3.code, measureCategory3);
 		measureCategories.put(measureCategory4.code, measureCategory4);
+		measureCategories.put(measureCategory5.code, measureCategory5);
+
 		
 		return measureCategories;
 	}
@@ -244,15 +249,9 @@ public class FirstData {
 		MeasureCategory measureCategory1=MeasureCategory.find.findByCode("concentration");		
 		MeasureCategory measureCategory2=MeasureCategory.find.findByCode("quantity");
 		MeasureCategory measureCategory3=MeasureCategory.find.findByCode("volume");
-		
-	/*	propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("concFournisseur", "Concentration fournie", Double.class,Boolean.FALSE,measureCategory1,measureCategory1.measurePossibleValues.get(0)));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("quantiteFournisseur", "Quantite fournie",Double.class,Boolean.FALSE,measureCategory3,measureCategory3.measurePossibleValues.get(0)));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeFournisseur", "Volume fourni", Double.class,Boolean.FALSE,measureCategory2,measureCategory2.measurePossibleValues.get(0)));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("concReelle", "Concentration réelle",false,true,Double.class));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("quantiteReelle", "Quantite réelle",false,true, Double.class));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeReelle", "Volume réel", false,true, Double.class));
+	
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("dateReception", "Date réception", Date.class));
-   */
+   
 		return propertyDefinitions;
 	}
 
@@ -289,7 +288,16 @@ public class FirstData {
 		importtypes.put("importBanqueSolexa",DescriptionHelper.getImportType("importBanqueSolexa","Importation Sample Bq Solexa","importSample",getPropertyDefinitionsImportBq()));
 		importtypes.put("importNormal",DescriptionHelper.getImportType("importNormal","Importation Normal","importSample",getPropertyDefinitionsImport()));
 		importtypes.put("importTara",DescriptionHelper.getImportType("importTara","Importation Tara","importSample",getPropertyDefinitionsImportTara()));
+		importtypes.put("importTaraBanqueSolexa",DescriptionHelper.getImportType("importTaraBanqueSolexa","Importation Tara Bq","importSample",getPropertyDefinitionsImportTaraBq()));
+
 		return importtypes;
+	}
+
+
+	private static List<PropertyDefinition> getPropertyDefinitionsImportTaraBq() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions =getPropertyDefinitionsImportTara();
+		propertyDefinitions.addAll(getPropertyDefinitionsImportBq());
+		return propertyDefinitions;
 	}
 
 
@@ -297,10 +305,22 @@ public class FirstData {
 		Map<String,ProjectType> projecttypes=new HashMap<String, ProjectType>();
 
 		ProjectType projectType=DescriptionHelper.getProjectType("projectType", "Projet Type","Projet", null);
-
+		ProjectType projectType1=DescriptionHelper.getProjectType("franceGenomique", "France Génomique","Projet", getPropertyDefinitionFG());
+		
 		projecttypes.put(projectType.code, projectType);
+		projecttypes.put(projectType1.code, projectType1);
+
 		return projecttypes;
 	}
+
+	private static List<PropertyDefinition> getPropertyDefinitionFG() {
+	
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("groupeFG", "Groupe France Génomique",Boolean.FALSE, String.class,null));
+		return propertyDefinitions;
+
+	}
+
 
 	public static Map<String,ContainerCategory> getContainerCategorieAll() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 		Map<String,ContainerCategory> containerCategories=new HashMap<String, ContainerCategory>();
@@ -344,13 +364,18 @@ public class FirstData {
 		containerSupport5.nbColumn=1;
 		containerSupport5.nbLine=1;
 		containerSupport5.nbUsableContainer=1;
+		
+		ContainerSupportCategory containerSupport6=DescriptionHelper.getCategory(ContainerSupportCategory.class,"Tube");
+		containerSupport5.nbColumn=1;
+		containerSupport5.nbLine=1;
+		containerSupport5.nbUsableContainer=1;
 
 		containerCategories.put(containerSupport1.code,containerSupport1);
 		containerCategories.put(containerSupport2.code,containerSupport2);
 		containerCategories.put(containerSupport3.code,containerSupport3);
 		containerCategories.put(containerSupport4.code,containerSupport4);
 		containerCategories.put(containerSupport5.code,containerSupport5);
-
+		containerCategories.put(containerSupport6.code,containerSupport6);
 		return containerCategories;
 	}
 
@@ -399,9 +424,9 @@ public class FirstData {
 
 		// Ampure NON Ampli
 		List<PropertyDefinition> propertyDefinitions=new ArrayList<PropertyDefinition>();				
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeInput", "Volume entrée", true, true, false, null, Long.class,"Volume de sortie de l'experience qui précède","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));			 			
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeMeasure", "Volume mesuré", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeOutput", "Volume sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeInput", "Volume entrée", true, true, false, null, Long.class,"Volume de sortie de l'experience qui précède","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));			 			
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeMeasure", "Volume mesuré", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeOutput", "Volume sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));
 		//TODO
 		//propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("nbBilles", "Nb billes", true, true, false, null, Interger.class);
 		//TODO		
@@ -412,9 +437,9 @@ public class FirstData {
 
 		// Ampure Ampli
 		List<PropertyDefinition> propertyDefinitions2=new ArrayList<PropertyDefinition>();				
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeInput", "Volume entrée", true, true, false, null, Long.class,"Volume de sortie de l'experience qui précède","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));			 			
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeMeasure", "Volume mesuré", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeOutput", "Volume sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeInput", "Volume entrée", true, true, false, null, Long.class,"Volume de sortie de l'experience qui précède","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));			 			
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeMeasure", "Volume mesuré", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeOutput", "Volume sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));
 		//TODO
 		//propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("nbBilles", "Nb billes", true, true, false, null, Interger.class);
 		//TODO		
@@ -425,21 +450,21 @@ public class FirstData {
 
 		// Colonne Zimoclean
 		List<PropertyDefinition> propertyDefinitions3=new ArrayList<PropertyDefinition>();				
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));			 			
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeOutput", "Volume sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));			 			
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeOutput", "Volume sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));
 		PurificationMethodType purificationMethodType3 =  DescriptionHelper.getPurificationMethodType("colonneZimoclean","Colonne Zimoclean"
 				, propertyDefinitions3,null,null,new ArrayList<State>(getStateAll().values()),null);
 
 		List<PropertyDefinition> propertyDefinitions4=new ArrayList<PropertyDefinition>();				
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));			 			
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeOutput", "Volume sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));			 			
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeOutput", "Volume sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));
 		PurificationMethodType purificationMethodType4 =  DescriptionHelper.getPurificationMethodType("purifADNBiotinyle","Purification ADN biotinylé"
 				, propertyDefinitions4,null,null,new ArrayList<State>(getStateAll().values()),null);
 
 
 		List<PropertyDefinition> propertyDefinitions5=new ArrayList<PropertyDefinition>();				
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));			 			
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeOutput", "Volume sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));			 			
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeOutput", "Volume sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));
 		PurificationMethodType purificationMethodType5 =  DescriptionHelper.getPurificationMethodType("nucleospin","Nucleospin"
 				, propertyDefinitions5,null,null,new ArrayList<State>(getStateAll().values()),null);
 
@@ -459,8 +484,8 @@ public class FirstData {
 
 		// QC bioanalyzer Non ampli
 		List<PropertyDefinition> propertyDefinitions=new ArrayList<PropertyDefinition>();				
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeBioanalyzerInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));			 			
-		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("concentrationBioanalyzerInput", "Concentration entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("concentration"),MeasureValue.find.findByCode("ng/ul")));
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("volumeBioanalyzerInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));			 			
+		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("concentrationBioanalyzerInput", "Concentration entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("concentration"),MeasureValue.find.findByCode("ng/µl")));
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("tailleBioanalyzerOutput", "Taille bioanalyzer", true, true, false, null, Integer.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("taille"),MeasureValue.find.findByCode("bases")));
 		//Comment gérer les fichiers
 		propertyDefinitions.add(DescriptionHelper.getPropertyDefinition("profilDNAHS", "Profil DNA HS", true, true, false, null, String.class,"",null, 1, false, "out", null,null, null,null));
@@ -472,8 +497,8 @@ public class FirstData {
 		
 		// QC bioanalyzer Ampli
 		List<PropertyDefinition> propertyDefinitions2=new ArrayList<PropertyDefinition>();				
-		propertyDefinitions2.add(DescriptionHelper.getPropertyDefinition("volumeBioanalyzerInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));			 			
-		propertyDefinitions2.add(DescriptionHelper.getPropertyDefinition("concentrationBioanalyzerInput", "Concentration entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("concentration"),MeasureValue.find.findByCode("ng/ul")));
+		propertyDefinitions2.add(DescriptionHelper.getPropertyDefinition("volumeBioanalyzerInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));			 			
+		propertyDefinitions2.add(DescriptionHelper.getPropertyDefinition("concentrationBioanalyzerInput", "Concentration entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("concentration"),MeasureValue.find.findByCode("ng/µl")));
 		propertyDefinitions2.add(DescriptionHelper.getPropertyDefinition("tailleBioanalyzerOutput", "Taille bioanalyzer", true, true, false, null, Integer.class,"",null, 1, false, "out", null,null, MeasureCategory.find.findByCode("taille"),MeasureValue.find.findByCode("bases")));
 		propertyDefinitions2.add(DescriptionHelper.getPropertyDefinition("profilDNAHS", "Profil DNA HS", true, true, false, null, String.class,"",null, 1, false, "out", null,null, null,null));
 
@@ -481,11 +506,11 @@ public class FirstData {
 		
 		//QC Qubit
 		List<PropertyDefinition> propertyDefinitions3=new ArrayList<PropertyDefinition>();				
-		propertyDefinitions3.add(DescriptionHelper.getPropertyDefinition("volumeQubitInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));			 			
-		propertyDefinitions3.add(DescriptionHelper.getPropertyDefinition("concentrationQubitInput", "Concentration entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("concentration"),MeasureValue.find.findByCode("ng/ul")));
+		propertyDefinitions3.add(DescriptionHelper.getPropertyDefinition("volumeQubitInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));			 			
+		propertyDefinitions3.add(DescriptionHelper.getPropertyDefinition("concentrationQubitInput", "Concentration entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("concentration"),MeasureValue.find.findByCode("ng/µl")));
 
-		propertyDefinitions3.add(DescriptionHelper.getPropertyDefinition("volumeQubitOutput", "Volume sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));			 			
-		propertyDefinitions3.add(DescriptionHelper.getPropertyDefinition("concentrationQubitOutput", "Concentration sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("concentration"),MeasureValue.find.findByCode("ng/ul")));
+		propertyDefinitions3.add(DescriptionHelper.getPropertyDefinition("volumeQubitOutput", "Volume sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));			 			
+		propertyDefinitions3.add(DescriptionHelper.getPropertyDefinition("concentrationQubitOutput", "Concentration sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("concentration"),MeasureValue.find.findByCode("ng/µl")));
 
 		//Manque Kit utilisé
 		List<InstrumentUsedType> instrumentUsedTypes3=DescriptionHelper.arrayToListType(InstrumentUsedType.class, new String[]{"qubit"});
@@ -495,11 +520,11 @@ public class FirstData {
 		
 		// qPCR
 		List<PropertyDefinition> propertyDefinitions4=new ArrayList<PropertyDefinition>();				
-		propertyDefinitions4.add(DescriptionHelper.getPropertyDefinition("volumeQpcrInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("ul")));			 			
-		propertyDefinitions4.add(DescriptionHelper.getPropertyDefinition("concentrationQpcrInput", "Concentration entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("concentration"),MeasureValue.find.findByCode("ng/ul")));
+		propertyDefinitions4.add(DescriptionHelper.getPropertyDefinition("volumeQpcrInput", "Volume entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("volume"),MeasureValue.find.findByCode("µl")));			 			
+		propertyDefinitions4.add(DescriptionHelper.getPropertyDefinition("concentrationQpcrInput", "Concentration entrée", true, true, false, null, Long.class,"","##,##", 1, false, "in", null,null, MeasureCategory.find.findByCode("concentration"),MeasureValue.find.findByCode("ng/µl")));
 
 		//Manque autres valeurs voir avec Julie
-		propertyDefinitions4.add(DescriptionHelper.getPropertyDefinition("concentrationQpcrOutput", "Concentration sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("concentration"),MeasureValue.find.findByCode("ng/ul")));
+		propertyDefinitions4.add(DescriptionHelper.getPropertyDefinition("concentrationQpcrOutput", "Concentration sortie", true, true, false, null, Long.class,"","##,##", 1, false, "out", null,null, MeasureCategory.find.findByCode("concentration"),MeasureValue.find.findByCode("ng/µl")));
 
 		List<InstrumentUsedType> instrumentUsedTypes4=DescriptionHelper.arrayToListType(InstrumentUsedType.class, new String[]{"tecan"});
 		
