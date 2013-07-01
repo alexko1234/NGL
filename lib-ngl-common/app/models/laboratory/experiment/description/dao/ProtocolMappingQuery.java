@@ -41,9 +41,11 @@ public class ProtocolMappingQuery extends MappingSqlQuery<Protocol>{
 		protocol.version = rs.getString("version");
 		long idProtocolCategory = rs.getLong("fk_protocol_category");
 		//Add reagent type
+		/*
 		ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
 		List<ReagentType> reagentTypes = reagentTypeDAO.findByProtocol(protocol.id);
 		protocol.reagentTypes = reagentTypes;
+		*/
 		//Get protocol category
 		ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
 		ProtocolCategory protocolCategory=null;
@@ -52,7 +54,7 @@ public class ProtocolMappingQuery extends MappingSqlQuery<Protocol>{
 		} catch (DAOException e) {
 			throw new SQLException(e);
 		}
-		protocol.protocolCategory = protocolCategory;
+		protocol.category = protocolCategory;
 		return protocol;
 	}
 

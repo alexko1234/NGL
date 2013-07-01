@@ -70,7 +70,7 @@ public class ImportDataRun implements Runnable {
 
 		Map<String, List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 
-		ProjectType projectType= new HelperObjects<ProjectType>().getObject(ProjectType.class,projectTypeCode, errors);
+		ProjectType projectType= new HelperObjects<ProjectType>().getObject(ProjectType.class,projectTypeCode);
 
 		List<Project> projects=new ArrayList<Project>();
 
@@ -109,7 +109,7 @@ public class ImportDataRun implements Runnable {
 		for(Container container :listContainers){
 
 			Content content= container.contents.get(0);
-			sample = new HelperObjects<Sample>().getObject(Sample.class, content.sampleUsed.sampleCode,null);
+			sample = new HelperObjects<Sample>().getObject(Sample.class, content.sampleUsed.sampleCode);
 		
 			/* Sample content not in MongoDB */
 			if(sample==null){

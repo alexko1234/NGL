@@ -6,7 +6,9 @@ import java.util.Map;
 
 import models.laboratory.common.description.Value;
 import models.utils.dao.AbstractDAO;
+import models.utils.dao.DAOException;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +21,7 @@ public class ValueDAO extends AbstractDAO<Value>{
 	
 	public List<Value> findByPropertyDefinition(long idPropertyDefinition)
 	{
-		String sql = "SELECT id, code, value, default_value FROM value WHERE property_definition_id=?";
+		String sql = "SELECT id, value, default_value FROM value WHERE fk_property_definition=?";
 		BeanPropertyRowMapper<Value> mapper = new BeanPropertyRowMapper<Value>(Value.class);
 		return this.jdbcTemplate.query(sql, mapper, idPropertyDefinition);
 	}
@@ -27,10 +29,9 @@ public class ValueDAO extends AbstractDAO<Value>{
 	public Value save(Value value, long idPropertyDefinition)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("code", value.code);
-        parameters.put("value", value.value);
+		parameters.put("value", value.value);
         parameters.put("default_value", value.defaultValue);
-        parameters.put("property_definition_id", idPropertyDefinition);
+        parameters.put("fk_property_definition", idPropertyDefinition);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
         value.id = newId;
 		return value;
@@ -38,7 +39,14 @@ public class ValueDAO extends AbstractDAO<Value>{
 	
 	public void update(Value value, long idPropertyDefinition)
 	{
-		String sql = "UPDATE value SET code=?, value=?, default_value=? WHERE id=? AND property_definition_id=?";
+		String sql = "UPDATE value SET value=?, default_value=? WHERE id=? AND fk_property_definition=?";
 		jdbcTemplate.update(sql,value.code, value.value, value.defaultValue, value.id, idPropertyDefinition);
 	}
+
+	@Override
+	public Value findByCode(String code) throws DAOException {
+		throw new NotImplementedException("Value does not have a code");
+	}
+	
+	
 }

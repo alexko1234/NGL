@@ -1,6 +1,7 @@
 package models.utils;
 
 import models.utils.Model.Finder;
+import models.utils.dao.DAOException;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -33,7 +34,7 @@ public class ObjectSGBDReference<T extends Model<T>> implements IFetch<T>{
 	}
 
 	@Override
-	public T getObject() throws Exception {
+	public T getObject() throws DAOException {
 		// init Finder from class DAO associated to this class in package ./dao
 		Finder<T> find = new Finder<T>(className.getName().replaceAll("description", "description.dao")+"DAO");
 		return find.findByCode(code);

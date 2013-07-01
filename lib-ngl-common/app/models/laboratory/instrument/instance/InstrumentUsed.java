@@ -19,12 +19,12 @@ public class InstrumentUsed implements IValidation {
 
 	@JsonIgnore
 	public Instrument getInstrument(){
-		return new HelperObjects<Instrument>().getObject(Instrument.class, code, null);
+		return new HelperObjects<Instrument>().getObject(Instrument.class, code);
 	}
 
 	@JsonIgnore
 	public InstrumentCategory getInstrumentCategory(){
-		return new HelperObjects<InstrumentCategory>().getObject(InstrumentCategory.class, categoryCode, null);
+		return new HelperObjects<InstrumentCategory>().getObject(InstrumentCategory.class, categoryCode);
 	}
 
 	@JsonIgnore

@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.container.description.dao.ContainerSupportCategoryDAO;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -50,11 +51,18 @@ public class InstrumentUsedTypeMappingQuery extends MappingSqlQuery<InstrumentUs
 			//Get instrument category
 			InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
 			InstrumentCategory instrumentCategory=instrumentCategoryDAO.findById(idInstrumentCategory);
-			instrumentUsedType.instrumentCategory = instrumentCategory;
+			instrumentUsedType.category = instrumentCategory;
 			//Get instrument
 			InstrumentDAO instrumentDAO = Spring.getBeanOfType(InstrumentDAO.class);
 			List<Instrument> instruments = instrumentDAO.findByInstrumentUsedType(instrumentUsedType.id);
 			instrumentUsedType.instruments = instruments;
+			
+			ContainerSupportCategoryDAO containerSupportCategoryDAO = Spring.getBeanOfType(ContainerSupportCategoryDAO.class);
+			//Find inContainerSupportCategories
+			instrumentUsedType.inContainerSupportCategories = containerSupportCategoryDAO.findInByInstrumentCategory(instrumentCategory.id);
+			//Find outContainerSupportCategorie
+			instrumentUsedType.outContainerSupportCategories = containerSupportCategoryDAO.findOutByInstrumentCategory(instrumentCategory.id);
+		
 			return instrumentUsedType;
 		} catch (DAOException e) {
 			throw new SQLException(e);

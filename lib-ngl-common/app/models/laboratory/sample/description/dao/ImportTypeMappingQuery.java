@@ -49,7 +49,7 @@ public class ImportTypeMappingQuery extends MappingSqlQuery<ImportType>{
 			} catch (DAOException e) {
 				throw new SQLException(e);
 			}
-			importType.importCategory = importCategory;
+			importType.category = importCategory;
 			return importType;
 		} catch (DAOException e) {
 			throw new SQLException(e);

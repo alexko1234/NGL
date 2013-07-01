@@ -25,23 +25,23 @@ public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
 	@Override
 	public long save(SampleType sampleType) throws DAOException
 	{
+		
+		if(null == sampleType){
+			throw new DAOException("sampleType is mandatory");
+		}
+		//Check if category exist
+		if(sampleType.category == null || sampleType.category.id == null){
+			throw new DAOException("SampleCategory is not present !!");
+		}
+		
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		sampleType.id = commonInfoTypeDAO.save(sampleType);
-		//Add sampleCategory
-		if(sampleType.sampleCategory!=null){
-			SampleCategory sampleCategoryDB = SampleCategory.find.findByCode(sampleType.sampleCategory.code);
-			if(sampleCategoryDB ==null){
-				SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
-				sampleType.sampleCategory.id = sampleCategoryDAO.save(sampleType.sampleCategory);
-			}else
-				sampleType.sampleCategory=sampleCategoryDB;
-		}
 		//Create sampleType 
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("id", sampleType.id);
 		parameters.put("fk_common_info_type", sampleType.id);
-		parameters.put("fk_sample_category", sampleType.sampleCategory.id);
+		parameters.put("fk_sample_category", sampleType.category.id);
 		jdbcInsert.execute(parameters);
 		return sampleType.id;
 	}

@@ -71,12 +71,12 @@ public class Sample extends DBObject implements IValidation{
 	
 	@JsonIgnore
 	public SampleType getSampleType(){
-		return new HelperObjects<SampleType>().getObject(SampleType.class, typeCode, null);
+		return new HelperObjects<SampleType>().getObject(SampleType.class, typeCode);
 	}
 	
 	@JsonIgnore
 	public SampleCategory getSampleCategory(){
-		return new HelperObjects<SampleCategory>().getObject(SampleCategory.class, categoryCode, null);
+		return new HelperObjects<SampleCategory>().getObject(SampleCategory.class, categoryCode);
 	}
 	
 	@JsonIgnore
@@ -88,7 +88,7 @@ public class Sample extends DBObject implements IValidation{
 	@JsonIgnore
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
-		
+	
 		BusinessValidationHelper.validateCode(errors, this,this.getClass().getAnnotation(MongoCollection.class).name(), String.class);
 		
 		BusinessValidationHelper.validationType(errors, this.categoryCode, SampleCategory.class);

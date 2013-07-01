@@ -57,39 +57,39 @@ public class Process extends DBObject implements IValidation{
 	
 	@JsonIgnore
 	public Container getInputContainer(){
-		return new HelperObjects<Container>().getObject(Container.class, containerInputCode, null);
+		return new HelperObjects<Container>().getObject(Container.class, containerInputCode);
 	}
 	
 	@JsonIgnore
 	public Sample getSample(){
-		return new HelperObjects<Sample>().getObject(Sample.class, sampleCode,null);
+		return new HelperObjects<Sample>().getObject(Sample.class, sampleCode);
 	}
 	
 	@JsonIgnore
 	public ProcessType getProcessType(){
-		return new HelperObjects<ProcessType>().getObject(ProcessType.class, typeCode, null);
+		return new HelperObjects<ProcessType>().getObject(ProcessType.class, typeCode);
 	}
 	
 	@JsonIgnore
 	public ProcessCategory getProcessCategory(){
-		return new HelperObjects<ProcessCategory>().getObject(ProcessCategory.class, categoryCode, null);
+		return new HelperObjects<ProcessCategory>().getObject(ProcessCategory.class, categoryCode);
 	}
 	
 	@JsonIgnore
 	public Project getProject(){
-		return new HelperObjects<Project>().getObject(Project.class, projectCode,null);
+		return new HelperObjects<Project>().getObject(Project.class, projectCode);
 	}
 	
 	@JsonIgnore
 	public ExperimentType getCurrentOutExperimentType(){
-		return new HelperObjects<ExperimentType>().getObject(ExperimentType.class, currentExperimentTypeCode,null);
+		return new HelperObjects<ExperimentType>().getObject(ExperimentType.class, currentExperimentTypeCode);
 	}
 
 	@JsonIgnore
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
 		// TODO Auto-generated method stub
-		
+	
 	}
 	
 }

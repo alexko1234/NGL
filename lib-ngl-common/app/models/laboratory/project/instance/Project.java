@@ -52,17 +52,17 @@ public class Project extends DBObject implements IValidation{
 	
 	@JsonIgnore
 	public ProjectType getProjectType(){
-			return new HelperObjects<ProjectType>().getObject(ProjectType.class, typeCode, null);
+			return new HelperObjects<ProjectType>().getObject(ProjectType.class, typeCode);
 	}
 	
 	@JsonIgnore
 	public ProjectCategory getProjectCategory(){
-			return new HelperObjects<ProjectCategory>().getObject(ProjectCategory.class, categoryCode, null);
+			return new HelperObjects<ProjectCategory>().getObject(ProjectCategory.class, categoryCode);
 	}
 
 	@JsonIgnore
 	public State getState(){
-			return new HelperObjects<State>().getObject(State.class, stateCode, null);
+			return new HelperObjects<State>().getObject(State.class, stateCode);
 	}
 
 	@Override

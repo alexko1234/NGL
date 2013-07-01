@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.LimsDAO;
+
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.sample.description.ImportType;
@@ -51,8 +51,8 @@ public class SampleLoad extends Controller{
 		String fileName=inputLoadDatas.fileName;
 		FileWriter fileWriter=null;	
 
-		SampleType sampleType= new HelperObjects<SampleType>().getObject(SampleType.class,sampleTypeCode,filledForm.errors());
-		ImportType importType= new HelperObjects<ImportType>().getObject(ImportType.class, experimentTypeCode, filledForm.errors());
+		SampleType sampleType= new HelperObjects<SampleType>().getObject(SampleType.class,sampleTypeCode);
+		ImportType importType= new HelperObjects<ImportType>().getObject(ImportType.class, experimentTypeCode);
 
 		try{
 			fileWriter=new FileWriter(fileName);
@@ -102,9 +102,9 @@ public class SampleLoad extends Controller{
 			CSVReader reader = new CSVReader(fileReader,LoadDataHelper.SEPARATOR);
 			String [] nextLine;
 
-			SampleType sampleType= new HelperObjects<SampleType>().getObject(SampleType.class, sampleTypeCode, filledForm.errors());
+			SampleType sampleType= new HelperObjects<SampleType>().getObject(SampleType.class, sampleTypeCode);
 
-			ImportType importType= new HelperObjects<ImportType>().getObject(ImportType.class, importTypeCode, filledForm.errors());
+			ImportType importType= new HelperObjects<ImportType>().getObject(ImportType.class, importTypeCode);
 
 			if(filledForm.hasErrors())
 			{
@@ -130,7 +130,7 @@ public class SampleLoad extends Controller{
 
 				j++;
 				Sample sample =LoadDataHelper.sampleFromCSVLine(firstLine,nextLine,sampleType.getMapPropertyDefinition());
-				sample.categoryCode=sampleType.sampleCategory.code;
+				sample.categoryCode=sampleType.category.code;
 				sample.typeCode=sampleType.code;
 
 				Container container= LoadDataHelper.containerFromCSVLine(firstLine,nextLine,sample,importType.getMapPropertyDefinition());

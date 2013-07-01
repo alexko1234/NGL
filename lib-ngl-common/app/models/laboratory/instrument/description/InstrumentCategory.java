@@ -7,15 +7,7 @@ import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.dao.InstrumentCategoryDAO;
 
 
-public class InstrumentCategory extends AbstractCategory{
-
-	public List<ContainerSupportCategory> inContainerSupportCategories;
-	
-	public int nbInContainerSupportCategories;
-	
-	public List<ContainerSupportCategory> outContainerSupportCategories;
-
-	public int nbOutContainerSupportCategories;
+public class InstrumentCategory extends AbstractCategory<InstrumentCategory>{
 	
 	public static Finder<InstrumentCategory> find = new Finder<InstrumentCategory>(InstrumentCategoryDAO.class.getName()); 
 	

@@ -16,48 +16,49 @@ import org.springframework.jdbc.object.MappingSqlQuery;
  */
 public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 
-	protected MappingSqlQuery<T> mapping;
 	//table of class <T> must be named as "t" and "code" field must be unique
 	protected String sqlCommon;
 	protected Class<? extends MappingSqlQuery<T>> classMapping;
 
 	protected AbstractDAOMapping(String tableName, Class<T> entityClass, Class<? extends MappingSqlQuery<T>> classMapping, String sqlCommon, boolean useGeneratedKey) {
-		super(tableName, entityClass,useGeneratedKey);
+		super(tableName, entityClass, useGeneratedKey);
 		this.classMapping=classMapping;
 		this.sqlCommon=sqlCommon;
 	}
 
-	public T findById(long id) throws DAOException
+	public T findById(Long id) throws DAOException
 	{
-		String sql = sqlCommon+
-				"WHERE t.id = ? ";
-		initializeMapping(sql, new SqlParameter("id", Type.LONG));
-		return mapping.findObject(id);
+		if(null == id){
+			throw new DAOException("id is mandatory");
+		}
+		String sql = sqlCommon+" WHERE t.id = ? ";
+		return initializeMapping(sql, new SqlParameter("id", Type.LONG)).findObject(id);
 	}
 
 	public List<T> findAll() throws DAOException
 	{
-		initializeMapping(sqlCommon, null);
-		return mapping.execute();
+		return initializeMapping(sqlCommon, null).execute();
 	}
 
 	public T findByCode(String code) throws DAOException
 	{
-		String sql = sqlCommon+
-				"WHERE code = ? ";
-		initializeMapping(sql, new SqlParameter("code",Types.VARCHAR));
-		return mapping.findObject(code);
+		if(null == code){
+			throw new DAOException("code is mandatory");
+		}
+		String sql = sqlCommon+" WHERE code = ? ";		
+		return initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
 	}
 	
-	private void initializeMapping(String sql, SqlParameter sqlParam) throws DAOException
+	protected MappingSqlQuery<T> initializeMapping(String sql, SqlParameter sqlParam) throws DAOException
 	{
 		try {
-			mapping = classMapping.newInstance();
+			MappingSqlQuery<T> mapping = classMapping.newInstance();
 			mapping.setDataSource(dataSource);
 			mapping.setSql(sql);
 			if(sqlParam!=null)
 				mapping.declareParameter(sqlParam);
 			mapping.compile();
+			return mapping;
 		} catch (InvalidDataAccessApiUsageException e) {
 			throw new DAOException(e);
 		} catch (InstantiationException e) {

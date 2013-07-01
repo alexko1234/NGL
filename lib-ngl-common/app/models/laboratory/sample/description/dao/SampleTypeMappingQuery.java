@@ -49,7 +49,7 @@ public class SampleTypeMappingQuery extends MappingSqlQuery<SampleType>{
 			} catch (DAOException e) {
 				throw new SQLException(e);
 			}
-			sampleType.sampleCategory = sampleCategory;
+			sampleType.category = sampleCategory;
 			return sampleType;
 		} catch (DAOException e) {
 			throw new SQLException(e);

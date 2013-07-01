@@ -150,7 +150,7 @@ public class LimsDAO {
 
 				sample.comments=new ArrayList<Comment>();
 				sample.comments.add(new Comment(rs.getString("comment")));
-				sample.categoryCode=sampleType.sampleCategory.code;
+				sample.categoryCode=sampleType.category.code;
 
 
 				for(PropertyDefinition propertyDefinition :sampleType.propertiesDefinitions)

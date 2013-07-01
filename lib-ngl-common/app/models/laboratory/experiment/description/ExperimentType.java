@@ -3,45 +3,26 @@ package models.laboratory.experiment.description;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
-import models.utils.ListObject;
-import models.utils.dao.DAOException;
-import play.api.modules.spring.Spring;
+import models.laboratory.instrument.description.InstrumentUsedType;
 
-public class ExperimentType extends AbstractExperiment{
-
-	//Possibility to do purification
-	public boolean doPurification=Boolean.FALSE;
-	public boolean mandatoryPurification=Boolean.FALSE;
-	//List of possible purificationMethodType
-	public List<PurificationMethodType> possiblePurificationMethodTypes=new ArrayList<PurificationMethodType>();
-	
-	//Possibility to do quality control
-	public boolean doQualityControl=Boolean.FALSE;
-	public boolean mandatoryQualityControl=Boolean.FALSE;
-	//List of possible quality control type
-	public List<QualityControlType> possibleQualityControlTypes=new ArrayList<QualityControlType>();
-	
-	public List<ExperimentType> previousExperimentTypes=new ArrayList<ExperimentType>();
-	
-	public ExperimentCategory experimentCategory;
+/**
+ * Parent class categories not represented by a table in the database
+ * Database relationship for experiment with instrumentUsedType and protocol are represented in CommonInfoType table
+ * @author ejacoby
+ *
+ */
+public class ExperimentType extends CommonInfoType{
+ 
+	public ExperimentCategory category;
+	//Relationship accessible by the parent table in the database
+	public List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
+	public List<Protocol> protocols = new ArrayList<Protocol>();
+		
+	public ExperimentType() {
+		super(ExperimentTypeDAO.class.getName());		
+	}
 	
 	public static Finder<ExperimentType> find = new Finder<ExperimentType>(ExperimentTypeDAO.class.getName());
-	
-	public ExperimentType() {
-		super(ExperimentTypeDAO.class.getName());
-	}
-
-	public static ExperimentType findExpTypeById(long id) throws DAOException
-	{
-		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-		return experimentTypeDAO.findById(id);
-	}
-	
-	public static List<ListObject> findAllForList() throws DAOException{
-		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-		return experimentTypeDAO.findAllForList();
-	}
-	
-	
 }

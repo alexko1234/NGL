@@ -10,7 +10,7 @@ import models.laboratory.sample.description.dao.ImportTypeDAO;
  */
 public class ImportType extends CommonInfoType{
 
-	public ImportCategory importCategory;
+	public ImportCategory category;
 	
 	public static Finder<ImportType> find = new Finder<ImportType>(ImportTypeDAO.class.getName());
 	

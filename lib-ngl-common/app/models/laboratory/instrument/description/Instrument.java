@@ -6,7 +6,6 @@ import models.utils.Model;
 
 public class Instrument extends Model<Instrument>{
 
-	
 	public String name;
 	
 	public Instrument() {

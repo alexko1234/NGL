@@ -1,12 +1,12 @@
 package controllers.dataload;
 
+import data.FirstData;
+
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.State;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.PurificationMethodType;
-import models.laboratory.experiment.description.QualityControlType;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectType;
@@ -17,7 +17,7 @@ import play.Logger;
 import play.data.DynamicForm;
 import play.mvc.Controller;
 import play.mvc.Result;
-import data.FirstData;
+//import data.FirstData;
 
 
 public class InitialData extends Controller{
@@ -28,7 +28,7 @@ public class InitialData extends Controller{
 	public static Result loadDataType(){
 
 		try {
-			
+			/*
 			DescriptionHelper.saveMapType(MeasureCategory.class,FirstData.getMeasureCategoryAll());
 			DescriptionHelper.saveMapType(ContainerSupportCategory.class,FirstData.getContainerSupportCategoryAll());
 			DescriptionHelper.saveMapType(ContainerCategory.class, FirstData.getContainerCategorieAll());
@@ -42,7 +42,7 @@ public class InitialData extends Controller{
 			DescriptionHelper.saveMapType(ExperimentType.class, FirstData.getExperimentType());
 			DescriptionHelper.saveMapType(ExperimentType.class, FirstData.getExperimentTypeBqMP());
 			DescriptionHelper.saveMapType(ProcessType.class,FirstData.getProcessTypeAll());
-			
+			*/
 		} catch (Exception e) {
 			Logger.error("",e);
 			return badRequest(e.getMessage());

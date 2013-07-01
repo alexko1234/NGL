@@ -3,13 +3,26 @@ package controllers.lists.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mongodb.BasicDBObject;
+
+import play.Routes;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.Results;
+import net.vz.mongodb.jackson.DBQuery;
+
+import play.api.modules.spring.Spring;
+import play.libs.Json;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
+import models.laboratory.common.description.dao.StateDAO;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
+import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
@@ -37,31 +50,15 @@ public class Lists extends Controller{
 	}
 	
 	public static Result experimentTypes(){
-		try {
-			List<ListObject> exp = ExperimentType.findAllForList();
-			
+			List<ListObject> exp = Spring.getBeanOfType(ExperimentTypeDAO.class).findAllForList();	
 			return Results.ok(Json.toJson(exp));
-			
-		} catch (DAOException e) {
-			e.printStackTrace();
-		}
-		
-		return  Results.internalServerError();
-	}
-
-	public static Result containerStates(){
-		try {
-			List<ListObject> states = State.findAllForContainerList();
-			
-			return Results.ok(Json.toJson(states));
-			
-		} catch (DAOException e) {
-			e.printStackTrace();
-		}
-		
-		return  Results.internalServerError();
 	}
 	
+	public static Result containerStates(){		
+		List<ListObject> states = Spring.getBeanOfType(StateDAO.class).findAllForContainerList();			
+		return Results.ok(Json.toJson(states));		
+	}
+
 	public static Result samples(String projectCode){
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("_id", 0);//Don't need the _id field
@@ -132,6 +129,7 @@ public class Lists extends Controller{
 		return  Results.internalServerError();
 	}
 	
+	
 	public static Result protocols(String experimentTypeCode){
 		try {
 			List<Protocol> protocols = ExperimentType.find.findByCode(experimentTypeCode).protocols;
@@ -149,6 +147,7 @@ public class Lists extends Controller{
 		
 		return  Results.internalServerError();
 	}
+	
 	
 	public static Result resolutions(){
 		try {

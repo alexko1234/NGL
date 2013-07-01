@@ -25,23 +25,23 @@ public class ImportTypeDAO extends AbstractDAOMapping<ImportType>{
 
 	@Override
 	public long save(ImportType importType) throws DAOException {
+		
+		if(null == importType){
+			throw new DAOException("importType is mandatory");
+		}
+		//Check if category exist
+		if(importType.category == null || importType.category.id == null){
+			throw new DAOException("ImportCategory is not present !!");
+		}
+		
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		importType.id = commonInfoTypeDAO.save(importType);
-		//Add sampleCategory
-		if(importType.importCategory!=null){
-			ImportCategory importCategoryDB = ImportCategory.find.findByCode(importType.importCategory.code);
-			if(importCategoryDB ==null){
-				ImportCategoryDAO importCategoryDAO = Spring.getBeanOfType(ImportCategoryDAO.class);
-				importType.importCategory.id = importCategoryDAO.save(importType.importCategory);
-			}else
-				importType.importCategory=importCategoryDB;
-		}
 		//Create sampleType 
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("id", importType.id);
 		parameters.put("fk_common_info_type", importType.id);
-		parameters.put("fk_import_category", importType.importCategory.id);
+		parameters.put("fk_import_category", importType.category.id);
 		jdbcInsert.execute(parameters);
 		return importType.id;
 	}

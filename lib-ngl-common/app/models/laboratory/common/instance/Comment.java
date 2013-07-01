@@ -38,8 +38,8 @@ public class Comment {
 	}
 
 	@JsonIgnore
-	public User setCreateUser(){
-		return new HelperObjects<User>().getObject(User.class, createUser, null);
+	public User getCreateUser(){
+		return new HelperObjects<User>().getObject(User.class, createUser);
 	}
 	
 }

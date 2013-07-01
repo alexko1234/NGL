@@ -26,7 +26,7 @@ public class RelationshipContainer extends DBObject implements IValidation {
 	
 	@JsonIgnore
 	public ContainerCategory getContainerCategory(){
-		return new HelperObjects<ContainerCategory>().getObject(ContainerCategory.class, currentContainerCode, null);
+		return new HelperObjects<ContainerCategory>().getObject(ContainerCategory.class, currentContainerCode);
 
 	}
 	
@@ -38,7 +38,7 @@ public class RelationshipContainer extends DBObject implements IValidation {
 	
 	@JsonIgnore
 	public Process getProcess(){
-		return new HelperObjects<Process>().getObject(Process.class, processCode, null);
+		return new HelperObjects<Process>().getObject(Process.class, processCode);
 
 	}
 
@@ -46,7 +46,7 @@ public class RelationshipContainer extends DBObject implements IValidation {
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
 		// TODO Auto-generated method stub
-		
+	
 	}
 	
 	

@@ -5,7 +5,7 @@ import models.laboratory.sample.description.dao.SampleTypeDAO;
 
 public class SampleType extends CommonInfoType{
 
-	public SampleCategory sampleCategory;
+	public SampleCategory category;
 
 	public static Finder<SampleType> find = new Finder<SampleType>(SampleTypeDAO.class.getName());
 	

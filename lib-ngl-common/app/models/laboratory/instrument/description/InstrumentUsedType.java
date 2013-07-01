@@ -5,6 +5,7 @@ import java.util.List;
 import play.api.modules.spring.Spring;
 
 import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.laboratory.processes.description.dao.ProcessTypeDAO;
 import models.utils.ListObject;
@@ -20,16 +21,16 @@ public class InstrumentUsedType extends CommonInfoType{
 	
 	public List<Instrument> instruments;
 	
-	public InstrumentCategory instrumentCategory;
+	public InstrumentCategory category;
 
+	public List<ContainerSupportCategory> inContainerSupportCategories;
+	public List<ContainerSupportCategory> outContainerSupportCategories;
+	
+	
 	public static Finder<InstrumentUsedType> find = new Finder<InstrumentUsedType>(InstrumentUsedTypeDAO.class.getName()); 
 	
 	public InstrumentUsedType() {
 		super(InstrumentUsedTypeDAO.class.getName());
 	}
 	
-	public static List<ListObject> findbyExperimentTypeCodeForList(String experimentTypeCode) throws DAOException{
-		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
-		return instrumentUsedTypeDAO.findbyExperimentTypeCodeForList(experimentTypeCode);
-	}
 }

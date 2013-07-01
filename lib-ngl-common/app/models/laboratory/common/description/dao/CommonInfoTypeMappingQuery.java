@@ -37,7 +37,6 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 		commonInfoType.id = rs.getLong("cId");
 		commonInfoType.name = rs.getString("name");
 		commonInfoType.code = rs.getString("codeSearch");
-		commonInfoType.collectionName = rs.getString("collection_name");
 		//Get object Type
 		ObjectType objectType = new ObjectType();
 		objectType.id = rs.getLong("oId");
@@ -48,7 +47,7 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 		//Get variables State
 		StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
 		List<State> states = stateDAO.findByCommonInfoType(commonInfoType.id);
-		commonInfoType.variableStates = states;
+		commonInfoType.states = states;
 
 		//Get Resolutions
 		ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);

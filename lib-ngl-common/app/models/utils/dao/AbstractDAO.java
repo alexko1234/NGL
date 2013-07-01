@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
 
+import play.Logger;
+
 /**
  * Generic operations for SimpleDAO
  * @author ejacoby
@@ -18,6 +20,7 @@ import org.springframework.jdbc.support.MetaDataAccessException;
  */
 public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 
+	
 	protected AbstractDAO(String tableName, Class<T> entityClass,boolean useGeneratedKey) {
 		super(tableName, entityClass,useGeneratedKey);
 	}
@@ -70,8 +73,11 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 		}
 	}
 
-	public T findById(long id) throws DAOException
+	public T findById(Long id) throws DAOException
 	{
+		if(null == id){
+			throw new DAOException("id is mandatory");
+		}
 		try {
 			String sql = getSQLSelect()+" WHERE id=?";
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
@@ -83,17 +89,26 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 
 	public T findByCode(String code) throws DAOException
 	{
+		if(null == code){
+			throw new DAOException("code is mandatory");
+		}
 		try {
+			
 			String sql = getSQLSelect()+" WHERE code=?";
+			//Logger.debug(sql+" "+code);
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 			return this.jdbcTemplate.queryForObject(sql, mapper, code);
 		} catch (DataAccessException e) {
+			Logger.warn(e.getMessage());
 			return null;
 		}
 	}
 
 	public long save(T value) throws DAOException
 	{
+		if(null == value){
+			throw new DAOException("value is mandatory");
+		}
 		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
 		long id  = (Long) jdbcInsert.executeAndReturnKey(ps);
 		return id;
@@ -102,6 +117,9 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 
 	public void update(T value) throws DAOException
 	{
+		if(null == value){
+			throw new DAOException("value is mandatory");
+		}
 		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
 		jdbcTemplate.update(getSQLUpdate(), ps);
 	}

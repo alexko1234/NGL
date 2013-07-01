@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureValue;
+import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
@@ -23,8 +23,6 @@ import models.laboratory.common.description.dao.ObjectTypeDAO;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
-import models.laboratory.experiment.description.PurificationMethodType;
-import models.laboratory.experiment.description.QualityControlType;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -49,7 +47,7 @@ public class DescriptionHelper {
 	public static PropertyDefinition getPropertyDefinition(String keyCode, String keyName, Boolean required, Boolean active, Boolean choiceInList,
 			List<Value> possiblesValues , Class<?> type, String description, String  displayFormat, int displayOrder
 			,boolean propagation, String inOut, String defaultValue 
-			,String level, MeasureCategory measureCategory, MeasureValue measureValue) {
+			,String level, MeasureCategory measureCategory, MeasureUnit measureValue) {
 		PropertyDefinition propertyDefinition = new PropertyDefinition();
 		propertyDefinition.code = keyCode;
 		propertyDefinition.name = keyName;
@@ -62,11 +60,11 @@ public class DescriptionHelper {
 		propertyDefinition.displayFormat=displayFormat;
 		propertyDefinition.displayOrder=displayOrder;
 		propertyDefinition.propagation=propagation;
-		propertyDefinition.inOut=inOut;
+		//propertyDefinition.inOut=inOut;
 		propertyDefinition.defaultValue=defaultValue;
-		propertyDefinition.level="current";
+		//propertyDefinition.level="current";
 		propertyDefinition.measureCategory=measureCategory;
-		propertyDefinition.measureValue=measureValue;		
+		propertyDefinition.saveMeasureValue=measureValue;		
 
 		return propertyDefinition;
 	}
@@ -80,12 +78,12 @@ public class DescriptionHelper {
 		return getPropertyDefinition(keyCode, keyName, Boolean.TRUE, Boolean.TRUE, type);
 	}
 
-	public static PropertyDefinition getPropertyDefinition(String keyCode, String keyName, Class<?> type, Boolean required,MeasureCategory measureCategory,MeasureValue measureValue) {
+	public static PropertyDefinition getPropertyDefinition(String keyCode, String keyName, Class<?> type, Boolean required,MeasureCategory measureCategory,MeasureUnit measureValue) {
 		return getPropertyDefinition(keyCode, keyName, required, Boolean.TRUE, false, null, type, null, null, 0,Boolean.FALSE,null,null,null,measureCategory,measureValue);
 
 	}
 
-	public static PropertyDefinition getPropertyDefinition(String keyCode, String keyName, Class<?> type,MeasureCategory measureCategory,MeasureValue measureValue) {
+	public static PropertyDefinition getPropertyDefinition(String keyCode, String keyName, Class<?> type,MeasureCategory measureCategory,MeasureUnit measureValue) {
 		return getPropertyDefinition(keyCode, keyName, Boolean.TRUE, Boolean.TRUE, false, null, type, null, null, 0,Boolean.FALSE,null,null,null,measureCategory,measureValue);
 
 	}
@@ -110,8 +108,7 @@ public class DescriptionHelper {
 		CommonInfoType commonInfoType=new CommonInfoType();
 		commonInfoType.name=name;
 		commonInfoType.code=code;
-		commonInfoType.collectionName=collectionName;
-		commonInfoType.variableStates = variableStates;
+		commonInfoType.states = variableStates;
 		commonInfoType.resolutions = resolutions;
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
 		ObjectTypeDAO objectTypeDAO=Spring.getBeanOfType(ObjectTypeDAO.class);
@@ -128,7 +125,8 @@ public class DescriptionHelper {
 		if(sampleCategory==null){
 			sampleCategory=new SampleCategory();
 			sampleCategory.code=code;
-			sampleCategory.name=name;}
+			sampleCategory.name=name;
+		}
 		return sampleCategory;
 	}
 
@@ -144,8 +142,8 @@ public class DescriptionHelper {
 				state.active=true;
 				state.code=code;
 				state.name=code;
-				state.priority=0;
-				state.stateCategory=getCategory(StateCategory.class, "stateCategory");
+				state.position=0;
+				
 			}
 
 
@@ -189,19 +187,22 @@ public class DescriptionHelper {
 		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeType,nameType, "Sample", null, null, null, "Sample");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
 		commonInfoType.resolutions=resolutions;
-		commonInfoType.variableStates=states;
+		commonInfoType.states=states;
 
 		SampleType sampleType = new SampleType();
 		sampleType.setCommonInfoType(commonInfoType);
 
-		sampleType.sampleCategory=getCategory(SampleCategory.class,codeCategory);
+		sampleType.category=getCategory(SampleCategory.class,codeCategory);
 
 		return sampleType;
 	}
 
 
-	public static ExperimentType getExperimentType(String codeType, String nameType,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException
-	{
+	public static ExperimentType getExperimentType(String codeType,
+			String nameType, String codeCategory,
+			List<PropertyDefinition> propertyDefinitions) throws DAOException,
+			InstantiationException, IllegalAccessException,
+			ClassNotFoundException {
 
 		List<State> states = new ArrayList<State>();
 		states.add(DescriptionHelper.getState("New"));
@@ -213,37 +214,36 @@ public class DescriptionHelper {
 
 		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeType,nameType, "Experiment", null, null, null, "Experiment");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
-		commonInfoType.variableStates=states;
+		commonInfoType.states=states;
 		commonInfoType.resolutions=resolutions;
 
 		ExperimentType experimentType = new ExperimentType();
 		experimentType.setCommonInfoType(commonInfoType);
 
-		experimentType.experimentCategory=getExperimentCategory(codeCategory);
+		experimentType.category=getExperimentCategory(codeCategory);
 
 		return experimentType;
 	}
-	public static ExperimentType getExperimentType(String codeType, String nameType,String codeCategory
-			,List<PropertyDefinition> propertyDefinitions,List<InstrumentUsedType> instrumentUsedTypes, List<Protocol> protocol, List<State> states, List<Resolution> resolutions, boolean doPurification, boolean doQualityControl, boolean mandatoryPurification, boolean mandatoryQualityControl, List<PurificationMethodType> possiblePurificationMethodTypes, List<QualityControlType> possibleQualityControlTypes, List<ExperimentType> previousExperimentTypes) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException
-			{ 
 
-		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeType,nameType, "Experiment", states,propertyDefinitions,resolutions, "Experiment");
+	public static ExperimentType getExperimentType(String codeType,
+			String nameType, String codeCategory,
+			List<PropertyDefinition> propertyDefinitions,
+			List<InstrumentUsedType> instrumentUsedTypes,
+			List<Protocol> protocol, List<State> states,
+			List<Resolution> resolutions) throws DAOException,
+			InstantiationException, IllegalAccessException,
+			ClassNotFoundException {
+
+		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(
+				codeType, nameType, "Experiment", states, propertyDefinitions,
+				resolutions, "Experiment");
 
 		ExperimentType experimentType = new ExperimentType();
 		experimentType.setCommonInfoType(commonInfoType);
-		experimentType.experimentCategory=getExperimentCategory(codeCategory);
-		experimentType.instrumentUsedTypes=instrumentUsedTypes;
-		experimentType.doPurification=doPurification;
-		experimentType.doQualityControl=doQualityControl;
-		experimentType.mandatoryPurification=mandatoryPurification;
-		experimentType.mandatoryQualityControl=mandatoryQualityControl;
-		experimentType.possiblePurificationMethodTypes=possiblePurificationMethodTypes;
-		experimentType.possibleQualityControlTypes=possibleQualityControlTypes;
-		experimentType.previousExperimentTypes=previousExperimentTypes;
-
+		experimentType.category = getExperimentCategory(codeCategory);
+		experimentType.instrumentUsedTypes = instrumentUsedTypes;
 		return experimentType;
-			}
-
+	}
 
 
 	public static MeasureCategory getMeasureCategory(String code,String name,String codeValue,String valueValue){
@@ -256,16 +256,6 @@ public class DescriptionHelper {
 				measureCategory.code=code;
 				measureCategory.name=name;
 
-				List<MeasureValue> measureValues=new ArrayList<MeasureValue>();
-
-				MeasureValue measureValue=new MeasureValue();
-				measureValue.code=codeValue;
-				measureValue.value=valueValue;
-				measureValue.defaultValue=true;
-				measureValue.measureCategory=measureCategory;
-
-				measureValues.add(measureValue);
-				measureCategory.measurePossibleValues=measureValues;
 			}
 
 		} catch (DAOException e) {
@@ -308,13 +298,13 @@ public class DescriptionHelper {
 
 		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeImport,nameImport, "Import", null, null, null, "Import");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
-		commonInfoType.variableStates=states;
+		commonInfoType.states=states;
 		commonInfoType.resolutions=resolutions;
 
 		ImportType importType = new ImportType();
 		importType.setCommonInfoType(commonInfoType);
 
-		importType.importCategory=getCategory(ImportCategory.class,codeCategory);
+		importType.category=getCategory(ImportCategory.class,codeCategory);
 
 		return importType;
 	}
@@ -330,19 +320,19 @@ public class DescriptionHelper {
 
 		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeProject,nameProject, "Project", null, null, null, "Project");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
-		commonInfoType.variableStates=states;
+		commonInfoType.states=states;
 		commonInfoType.resolutions=resolutions;
 
 		ProjectType projectType =new ProjectType();
 		projectType.setCommonInfoType(commonInfoType);
 
-		projectType.projectCategory=getCategory(ProjectCategory.class,codeCategory);
+		projectType.category=getCategory(ProjectCategory.class,codeCategory);
 
 		return projectType;
 	}
 
 
-	public static <T extends AbstractCategory> T getCategory(Class<T> type,String codeCategory) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+	public static <T extends AbstractCategory<T>> T getCategory(Class<T> type,String codeCategory) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 
 		Finder<T> find = new Finder<T>(type.getName().replaceAll("description", "description.dao")+"DAO");
 		T objectCategory=find.findByCode(codeCategory);
@@ -370,27 +360,7 @@ public class DescriptionHelper {
 	}
 
 
-	public static <T extends Model> Map<String,List<ValidationError>>  saveMapType(Class<T> type,Map<String, T > mapCommonInfoType) throws DAOException{
-
-		Map<String,List<ValidationError>>errors=new HashMap<String, List<ValidationError>>();
-
-		for(Entry<String,T> sampleType : mapCommonInfoType.entrySet()){
-
-			T samp= new HelperObjects<T>().getObject(type, sampleType.getKey(), errors);
-			if(samp!=null){
-				samp.remove();
-			}
-
-			Logger.debug(" Before save :"+sampleType.getValue().code);
-			sampleType.getValue().save();
-
-			Logger.debug(" After save :"+sampleType.getValue().code);
-			samp=new  HelperObjects<T>().getObject(type, sampleType.getKey(), errors);
-			Logger.debug(" After find :"+sampleType.getValue().code);
-		}	
-
-		return errors;
-	}
+	
 	
 	
 	public static <T extends Model> List<T> arrayToListType(Class<T> type, String[] listString) throws DAOException{
@@ -427,7 +397,7 @@ public class DescriptionHelper {
 		instrumentUsedType.instruments.add(ins);
 
 		
-		instrumentUsedType.instrumentCategory=getCategory(InstrumentCategory.class, instrumentCategory);
+		instrumentUsedType.category=getCategory(InstrumentCategory.class, instrumentCategory);
 
 		return instrumentUsedType;
 	}
@@ -446,8 +416,6 @@ public class DescriptionHelper {
 		State state = new State();
 		state.code=stateCode;
 		state.name=stateName;
-		state.level=level;
-		state.stateCategory=getCategory(StateCategory.class, level);
 		return state;
 	}
 
@@ -457,30 +425,12 @@ public class DescriptionHelper {
 		ProcessType processType = new ProcessType();
 		processType.setCommonInfoType(DescriptionHelper.getCommonInfoType(typeCode,typeCode, "Process", variableStates, propertyDefinitions, resolutions, "Process"));
 		processType.experimentTypes=experimentTypes;
-		processType.processCategory=getCategory(ProcessCategory.class, categoryCode);
+		processType.category=getCategory(ProcessCategory.class, categoryCode);
 		processType.voidExperimentType=voidExperimentType;
 		processType.firstExperimentType=firstExperimentType;
 		processType.lastExperimentType=lastExperimentType;
 		return processType;
 	}
-
-
-	public static PurificationMethodType getPurificationMethodType(String typeCode, String name, List<PropertyDefinition> propertyDefinitions, List<InstrumentUsedType> instrumentUsedTypes, List<Protocol> protocols, List<State> variablesStates, List<Resolution> resolutions) throws DAOException {
-		PurificationMethodType purificationMethodType = new PurificationMethodType();
-		purificationMethodType.instrumentUsedTypes=instrumentUsedTypes;
-		purificationMethodType.protocols=protocols;
-		purificationMethodType.setCommonInfoType(DescriptionHelper.getCommonInfoType(typeCode, typeCode,"Purification", variablesStates, propertyDefinitions, resolutions, "Purification"));
-		return purificationMethodType;
-	}
-
-	public static QualityControlType getQualityControlType(String typeCode, String name, String categoryCode, List<PropertyDefinition> propertyDefinitions, List<InstrumentUsedType> instrumentUsedTypes, List<Protocol> protocols, List<State> variablesStates, List<Resolution> resolutions) throws DAOException {
-		QualityControlType qualityControlType = new QualityControlType();
-		qualityControlType.instrumentUsedTypes=instrumentUsedTypes;
-		qualityControlType.protocols=protocols;
-		qualityControlType.setCommonInfoType(DescriptionHelper.getCommonInfoType(typeCode, typeCode,"ControlQuality", variablesStates, propertyDefinitions, resolutions , "ControlQuality"));
-		return qualityControlType;
-	}
-
 
 	public static Instrument getInstrument(String name) {
 		Instrument ins=new Instrument();

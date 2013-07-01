@@ -24,19 +24,11 @@ import play.api.modules.spring.Spring;
  */
 public class CommonInfoType extends Model<CommonInfoType>{
 	
-	@Required
-	@MaxLength(10)
 	public String name; //used as label
 	
-	//document-oriented NoSQL database system (actually MongoDB) collection name 
-	@Required
-	public String collectionName;
-
-	public List<State> variableStates = new ArrayList<State>();
-
+	public List<State> states = new ArrayList<State>();
 	public List<Resolution> resolutions = new ArrayList<Resolution>();
 
-	@Valid
 	public List<PropertyDefinition> propertiesDefinitions=new ArrayList<PropertyDefinition>();
 
 	public ObjectType objectType;
@@ -50,7 +42,6 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	protected CommonInfoType(String classNameDAO){
 		super(classNameDAO);
 	}
-	
 	
 	public static List<CommonInfoType> findByNameAndType(String name, Long idObjectType)
 	{
@@ -77,8 +68,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		this.id=commonInfoType.id;
 		this.name=commonInfoType.name;
 		this.code=commonInfoType.code;
-		this.collectionName=commonInfoType.collectionName;
-		this.variableStates=commonInfoType.variableStates;
+		this.states=commonInfoType.states;
 		this.resolutions=commonInfoType.resolutions;
 		this.propertiesDefinitions=commonInfoType.propertiesDefinitions;
 		this.objectType=commonInfoType.objectType;

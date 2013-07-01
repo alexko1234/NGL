@@ -37,19 +37,19 @@ public class SampleUsed implements IValidation{
 
 	@JsonIgnore
 	public Sample getSample(){
-		return new HelperObjects<Sample>().getObject(Sample.class, sampleCode, null);
+		return new HelperObjects<Sample>().getObject(Sample.class, sampleCode);
 		
 	}
 	
 	@JsonIgnore
 	public SampleType getSampleType(){
-		return new HelperObjects<SampleType>().getObject(SampleType.class, typeCode, null);
+		return new HelperObjects<SampleType>().getObject(SampleType.class, typeCode);
 
 	}
 	
 	@JsonIgnore
 	public SampleCategory getSampleCategory(){
-		return new HelperObjects<SampleCategory>().getObject(SampleCategory.class, categoryCode, null);
+		return new HelperObjects<SampleCategory>().getObject(SampleCategory.class, categoryCode);
 
 		
 	}

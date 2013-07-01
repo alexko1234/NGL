@@ -92,15 +92,15 @@ public class InstanceTest extends AbstractTests{
 			for(Class t:classTest){
 				MongoDBDAO.getCollection(t.getSimpleName(), t).drop();
 			}
-			ProjectCategory projectCategory= sProjectType.projectCategory;
+			ProjectCategory projectCategory= sProjectType.category;
 			sProjectType.remove();
 			projectCategory.remove();
 
-			SampleCategory sampleCategory=sSampleType.sampleCategory;
+			SampleCategory sampleCategory=sSampleType.category;
 			sSampleType.remove();
 			sampleCategory.remove();
 
-			ExperimentCategory experimentCategory=sexpExperimentType.experimentCategory;
+			ExperimentCategory experimentCategory=sexpExperimentType.category;
 			sexpExperimentType.remove();
 			experimentCategory.remove();
 
@@ -327,7 +327,6 @@ public class InstanceTest extends AbstractTests{
 	public void updateExperience(){
 		Experiment experiment=findObject(Experiment.class);
 
-		experiment.name="experimentName";
 		experiment.typeCode="experimentType";
 		experiment.categoryCode="experimentCategory";
 
@@ -378,7 +377,6 @@ public class InstanceTest extends AbstractTests{
 		experiment=findObject(Experiment.class);
 
 		assertThat(experiment.code).isEqualTo("ExperimentCode");
-		assertThat(experiment.name).isEqualTo("experimentName");
 		assertThat(experiment.comments.get(0).comment).isEqualTo("comment");
 		assertThat(experiment.traceInformation.createUser).isEqualTo("test");
 		assertThat(experiment.getExperimentCategory()).isNotNull();

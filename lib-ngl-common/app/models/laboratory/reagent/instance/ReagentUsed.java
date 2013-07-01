@@ -16,7 +16,7 @@ public class ReagentUsed {
 	
 	@JsonIgnore
 	public ReagentType getReagentType() {
-		return new HelperObjects<ReagentType>().getObject(ReagentType.class, reagentCode, null);
+		return new HelperObjects<ReagentType>().getObject(ReagentType.class, reagentCode);
 	}
 	 
 	

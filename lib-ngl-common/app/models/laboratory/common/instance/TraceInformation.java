@@ -46,13 +46,13 @@ public class TraceInformation {
 	}
 	
 	@JsonIgnore
-	public User setCreateUser(){
-		return new HelperObjects<User>().getObject(User.class, createUser, null);
+	public User getCreateUser(){
+		return new HelperObjects<User>().getObject(User.class, createUser);
 	}
 	
 	
 	@JsonIgnore
-	public User setModifyUser(){
-		return new HelperObjects<User>().getObject(User.class, modifyUser, null);
+	public User getModifyUser(){
+		return new HelperObjects<User>().getObject(User.class, modifyUser);
 	}
 }

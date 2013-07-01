@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class
+        name="models.laboratory.container.instance.RelationshipExperimentPurification"
+        x="40" y="707">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="models.laboratory.common.instance.TBoolean" x="176" y="108">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class
+        name="models.laboratory.container.instance.QualityControlResult"
+        x="683" y="218">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="models.laboratory.common.instance.PropertyValue"
+            endpointName="properties" kind="Simple"/>
+    </Class>
+    <Class name="models.laboratory.container.instance.Container" x="331" y="252">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="models.laboratory.container.instance.QualityControlResult"
+            endpointName="qualityControlResults" kind="Simple"/>
+        <Association
+            destinationClassName="models.laboratory.common.instance.TBoolean"
+            endpointName="valid" kind="Simple"/>
+        <Association
+            destinationClassName="models.laboratory.common.instance.PropertyValue"
+            endpointName="mesuredQuantity" kind="Simple"/>
+        <Association
+            destinationClassName="models.laboratory.container.instance.ContainerSupport"
+            endpointName="support" kind="Simple"/>
+        <Association
+            destinationClassName="models.laboratory.container.instance.Content"
+            endpointName="contents" kind="Simple"/>
+        <Association
+            destinationClassName="models.laboratory.common.instance.PropertyValue"
+            endpointName="mesuredVolume" kind="Simple">
+            <Point x="573" y="490"/>
+        </Association>
+        <Association
+            destinationClassName="models.laboratory.common.instance.TraceInformation"
+            endpointName="traceInformation" kind="Simple"/>
+        <Association
+            destinationClassName="models.laboratory.common.instance.PropertyValue"
+            endpointName="calculedVolume" kind="Simple">
+            <Point x="675" y="391"/>
+        </Association>
+        <Association
+            destinationClassName="models.laboratory.common.instance.PropertyValue"
+            endpointName="properties" kind="Simple"/>
+        <Association
+            destinationClassName="models.laboratory.common.instance.PropertyValue"
+            endpointName="mesuredConcentration" kind="Simple"/>
+        <Association
+            destinationClassName="models.laboratory.common.instance.Comment"
+            endpointName="comments" kind="Simple"/>
+    </Class>
+    <Class
+        name="models.laboratory.container.instance.RelationshipContainer"
+        x="41" y="557">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="models.laboratory.container.instance.Basket" x="10" y="14">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="models.laboratory.common.instance.TraceInformation"
+            endpointName="traceInformation" kind="Simple"/>
+    </Class>
+    <Class name="models.laboratory.container.instance.SampleUsed"
+        x="359" y="669">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="models.laboratory.common.instance.TraceInformation"
+        x="482" y="19">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="models.laboratory.container.instance.Volume" x="76" y="278">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="models.laboratory.common.instance.Comment" x="672" y="70">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="models.laboratory.common.instance.PropertyValue"
+        x="754" y="537">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="models.laboratory.container.instance.ContainerSupport"
+        x="79" y="396">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="models.laboratory.container.instance.Content" x="412" y="559">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="models.laboratory.container.instance.SampleUsed"
+            endpointName="sampleUsed" kind="Simple"/>
+        <Association
+            destinationClassName="models.laboratory.common.instance.PropertyValue"
+            endpointName="properties" kind="Simple"/>
+    </Class>
+</ClassDiagram>

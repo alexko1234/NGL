@@ -1,10 +1,13 @@
 package models.utils.dao;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcOperations;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -22,8 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
  * @param <T>
  */
 @Transactional(readOnly=false, rollbackFor=DAOException.class)
-public abstract class AbstractCommonDAO<T>{
+public abstract class AbstractCommonDAO<T> {
 
+	
 	protected String tableName;
 	protected DataSource dataSource;
 	protected SimpleJdbcTemplate jdbcTemplate;
@@ -58,7 +62,7 @@ public abstract class AbstractCommonDAO<T>{
 	
 	public abstract List<T> findAll() throws DAOException;
 
-	public abstract T findById(long id) throws DAOException;;
+	public abstract T findById(Long id) throws DAOException;;
 
 	public abstract T findByCode(String code) throws DAOException;
 
@@ -66,5 +70,7 @@ public abstract class AbstractCommonDAO<T>{
 	public abstract long save(T value) throws DAOException;
 	
 	public abstract void update(T value) throws DAOException;
+
+	
 	
 }

@@ -26,24 +26,24 @@ public class ProjectTypeDAO extends AbstractDAOMapping<ProjectType>{
 	@Override
 	public long save(ProjectType projectType) throws DAOException
 	{
+		
+		if(null == projectType){
+			throw new DAOException("ProjectType is mandatory");
+		}
+		//Check if category exist
+		if(projectType.category == null || projectType.category.id == null){
+			throw new DAOException("ProjectCategory is not present !!");
+		}
+		
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		projectType.id = commonInfoTypeDAO.save(projectType);
-		//Check if category exist
-
-		if(projectType.projectCategory!=null){
-			ProjectCategory projectCategoryDB = ProjectCategory.find.findByCode(projectType.projectCategory.code);
-			if(projectCategoryDB==null){
-				ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
-				projectType.projectCategory.id = projectCategoryDAO.save(projectType.projectCategory);
-			}else
-				projectType.projectCategory=projectCategoryDB;
-		}
+		
 		//Create new projectType
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("id", projectType.id);
 		parameters.put("fk_common_info_type", projectType.id);
-		parameters.put("fk_project_category", projectType.projectCategory.id);
+		parameters.put("fk_project_category", projectType.category.id);
 		jdbcInsert.execute(parameters);
 		return projectType.id;
 	}

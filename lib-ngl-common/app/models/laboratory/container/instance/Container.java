@@ -110,47 +110,48 @@ public class Container extends DBObject implements IValidation {
 
 
 	@JsonIgnore
-	public ContainerCategory getContainerCategory(Map<String,List<ValidationError>> errors){
-		return new HelperObjects<ContainerCategory>().getObject(ContainerCategory.class, categoryCode,errors);
+	public ContainerCategory getContainerCategory(){
+		return new HelperObjects<ContainerCategory>().getObject(ContainerCategory.class, categoryCode);
 
 	}
 
 	@JsonIgnore
-	public List<Project> getProjects(Map<String,List<ValidationError>> errors) {
+	public List<Project> getProjects() {
 		return new HelperObjects<Project>().getObjects(Project.class, projectCodes);
 
 	}
 
 	@JsonIgnore
-	public List<Sample> getSamples(Map<String,List<ValidationError>> errors) {
-		return new HelperObjects<Sample>().getObjects(Sample.class, sampleCodes,errors);
+	public List<Sample> getSamples() {
+		return new HelperObjects<Sample>().getObjects(Sample.class, sampleCodes);
 	}
 
 	@JsonIgnore
-	public List<ExperimentType> getFromExperimentTypes(Map<String,List<ValidationError>> errors) {
-		return new HelperObjects<ExperimentType>().getObjects(ExperimentType.class, fromExperimentTypeCodes,errors);
+	public List<ExperimentType> getFromExperimentTypes() {
+		return new HelperObjects<ExperimentType>().getObjects(ExperimentType.class, fromExperimentTypeCodes);
 	}
 
 
 	@JsonIgnore
-	public State getState(Map<String,List<ValidationError>> errors){
-		return new HelperObjects<State>().getObject(State.class, stateCode, errors);
+	public State getState(){
+		return new HelperObjects<State>().getObject(State.class, stateCode);
 	}
 
 	@JsonIgnore
-	public Resolution getResolution(Map<String,List<ValidationError>> errors){
-		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode, errors);
+	public Resolution getResolution(){
+		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode);
 	}
 
-	
+		
 	@JsonIgnore
 	@Override
 	public void validate(Map<String,List<ValidationError>> errors){
 
 		BusinessValidationHelper.validateCode(errors, this,this.getClass().getAnnotation(MongoCollection.class).name(), String.class);
 
-		BusinessValidationHelper.validationType(errors, this.categoryCode, ContainerCategory.class);
-
+		BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.categoryCode, "categoryCode", ContainerCategory.find);
+		
+		
 		BusinessValidationHelper.validationReferences(errors, this.projectCodes,Project.class);
 
 		BusinessValidationHelper.validationReferences(errors, this.sampleCodes,Sample.class);

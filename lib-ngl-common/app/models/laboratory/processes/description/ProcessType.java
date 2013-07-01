@@ -12,7 +12,7 @@ import play.api.modules.spring.Spring;
 
 public class ProcessType extends CommonInfoType{
 
-	public ProcessCategory processCategory;
+	public ProcessCategory category;
 	
 	public List<ExperimentType> experimentTypes;
 	

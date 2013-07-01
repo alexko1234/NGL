@@ -1,23 +1,17 @@
 package models.laboratory.processes.description.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
-import models.laboratory.instrument.description.Instrument;
-import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.ListObject;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import play.api.modules.spring.Spring;
@@ -48,105 +42,107 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 	@Override
 	public long save(ProcessType processType) throws DAOException
 	{
+		
+		if(null == processType){
+			throw new DAOException("ProcessType is mandatory");
+		}
+		//Check if category exist
+		if(processType.category == null || processType.category.id == null){
+			throw new DAOException("ProcessCategory is not present !!");
+		}
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		processType.id = commonInfoTypeDAO.save(processType);
-		//Check if category exist
-		if(processType.processCategory!=null){
-			ProcessCategory processCategoryDB = ProcessCategory.find.findByCode(processType.processCategory.code);
-			if(processCategoryDB ==null){
-				ProcessCategoryDAO processCategoryDAO = Spring.getBeanOfType(ProcessCategoryDAO.class);
-				processType.processCategory.id = processCategoryDAO.save(processType.processCategory);
-			}else
-				processType.processCategory=processCategoryDB;
-		}
+		processType.id = commonInfoTypeDAO.save(processType);		
 		//Create new processType
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("id", processType.id);
 		parameters.put("fk_common_info_type", processType.id);
-		parameters.put("fk_process_category", processType.processCategory.id);
+		parameters.put("fk_process_category", processType.category.id);
 		
-		ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		
-		//Save void experiment type
-		if(processType.voidExperimentType!=null){
-			ExperimentType voidExpTypeDB = ExperimentType.find.findByCode(processType.voidExperimentType.code);
-			if(voidExpTypeDB==null){
-				processType.voidExperimentType.id = experimentTypeDAO.save(processType.voidExperimentType);
-			}else
-				processType.voidExperimentType = voidExpTypeDB;
+		if(processType.voidExperimentType == null || processType.voidExperimentType.id == null ){
+			throw new DAOException("VoidExperimentType is not present !!");
 		}
+				
 		parameters.put("fk_void_experiment_type", processType.voidExperimentType.id);
 		
-		//Save first experiment type
-		if(processType.firstExperimentType!=null){
-			ExperimentType firstExpTypeDB = ExperimentType.find.findByCode(processType.firstExperimentType.code);
-			if(firstExpTypeDB==null){
-				processType.firstExperimentType.id = experimentTypeDAO.save(processType.firstExperimentType);
-			}else
-				processType.firstExperimentType = firstExpTypeDB;
+		if(processType.firstExperimentType == null || processType.firstExperimentType.id == null ){
+			throw new DAOException("FirstExperimentType is not present !!");
 		}
+		
 		parameters.put("fk_first_experiment_type", processType.firstExperimentType.id);
 		
-		if(processType.lastExperimentType!=null){
-			ExperimentType lastExpTypeDB = ExperimentType.find.findByCode(processType.lastExperimentType.code);
-			if(lastExpTypeDB==null){
-				processType.lastExperimentType.id = experimentTypeDAO.save(processType.lastExperimentType);
-			}else
-				processType.lastExperimentType = lastExpTypeDB;
+		if(processType.lastExperimentType == null || processType.lastExperimentType.id == null ){
+			throw new DAOException("LastExperimentType is not present !!");
 		}
-		parameters.put("fk_last_experiment_type", processType.lastExperimentType.id);
 		
+		parameters.put("fk_last_experiment_type", processType.lastExperimentType.id);
 		
 		jdbcInsert.execute(parameters);
 
-		//Add list experimentType
-		List<ExperimentType> experimentTypes = processType.experimentTypes;
-		if(experimentTypes!=null && experimentTypes.size()>0){
-			String sql = "INSERT INTO process_experiment_type(fk_process_type, fk_experiment_type) VALUES(?,?)";
-			for(ExperimentType experimentType : experimentTypes){
-				ExperimentType experimentTypeDB = ExperimentType.find.findByCode(experimentType.code);
-				if(experimentTypeDB ==null)
-					experimentType.id = experimentTypeDAO.save(experimentType);
-				else
-					experimentType=experimentTypeDB;
-				jdbcTemplate.update(sql, processType.id, experimentType.id);
-			}
+		if(processType.experimentTypes == null || processType.experimentTypes.size() == 0 ){
+			throw new DAOException("ExperimentTypes is not present !!");
 		}
+		
+		//Add list experimentType
+		insertExperimentTypes(processType.experimentTypes, processType.id, false);
 		return processType.id;
 	}
 
 	@Override
 	public void update(ProcessType processType) throws DAOException
 	{
-		ProcessType processTypeDB = findById(processType.id);
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.update(processType);
-
-		//Update InstrumentUsedTypes list
-		List<ExperimentType> experimentTypes = processType.experimentTypes;
-		if(experimentTypes!=null && experimentTypes.size()>0){
-			ExperimentTypeDAO experimentTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-			String sql = "INSERT INTO process_experiment_type(fk_process_type, fk_experiment_type) VALUES(?,?)";
-			for(ExperimentType experimentType : experimentTypes){
-				if(processTypeDB.experimentTypes==null || (processTypeDB.experimentTypes!=null && !processTypeDB.experimentTypes.contains(experimentType))){
-					ExperimentType experimentTypeDB = ExperimentType.find.findByCode(experimentType.code);
-					if(experimentTypeDB ==null)
-						experimentType.id = experimentTypeDAO.save(experimentType);
-					else
-						experimentType=experimentTypeDB;
-					jdbcTemplate.update(sql, processType.id, experimentType.id);
-				}
-			}
+		if(processType.voidExperimentType == null || processType.voidExperimentType.id == null ){
+			throw new DAOException("VoidExperimentType is not present !!");
 		}
+		
+		if(processType.firstExperimentType == null || processType.firstExperimentType.id == null ){
+			throw new DAOException("FirstExperimentType is not present !!");
+		}
+		
+		if(processType.lastExperimentType == null || processType.lastExperimentType.id == null ){
+			throw new DAOException("LastExperimentType is not present !!");
+		}
+		
+		
+		if(processType.experimentTypes == null || processType.experimentTypes.size() == 0 ){
+			throw new DAOException("ExperimentTypes is not present !!");
+		}
+		
+		String sql = "update process_experiment_type set fk_first_experiment_type = ?, fk_last_experiment_type = ?, fk_void_experiment_type = ? where id = ?";
+		jdbcTemplate.update(sql, processType.firstExperimentType.id, processType.lastExperimentType.id, processType.voidExperimentType.id, processType.id);
+		insertExperimentTypes(processType.experimentTypes, processType.id, true);
 	}
 
+	private void insertExperimentTypes(
+			List<ExperimentType> experimentTypes, Long id, boolean deleteBefore) throws DAOException {
+		if(deleteBefore){
+			removeExperimentTypes(id);
+		}
+		//Add resolutions list		
+		if(experimentTypes!=null && experimentTypes.size()>0){
+			String sql = "INSERT INTO process_experiment_type(fk_process_type, fk_experiment_type) VALUES(?,?)";
+			for(ExperimentType experimentType:experimentTypes){
+				if(experimentType == null || experimentType.id == null ){
+					throw new DAOException("experimentType is mandatory");
+				}
+				jdbcTemplate.update(sql, id, experimentType.id);
+			}
+		}		
+	}
+	
+	private void removeExperimentTypes(Long id) {
+		String sql = "DELETE FROM process_experiment_type WHERE fk_process_type=?";
+		jdbcTemplate.update(sql, id);
+		
+	}
+	
 	@Override
 	public void remove(ProcessType processType) throws DAOException {
 		//Remove process_experiment_type
-		String sqlExp = "DELETE FROM process_experiment_type WHERE fk_process_type=?";
-		jdbcTemplate.update(sqlExp, processType.id);
-
+		removeExperimentTypes(processType.id);
 		//Remove processType
 		super.remove(processType);
 

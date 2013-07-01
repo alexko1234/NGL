@@ -6,10 +6,12 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureValue;
+import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
+import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
@@ -37,9 +39,9 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 	protected PropertyDefinition mapRow(ResultSet rs, int rowNumber)
 			throws SQLException {
 		PropertyDefinition propertyDefinition = new PropertyDefinition();
-		propertyDefinition.id = rs.getLong("pId");
-		propertyDefinition.name = rs.getString("pName");
-		propertyDefinition.code = rs.getString("codeSearch");
+		propertyDefinition.id = rs.getLong("id");
+		propertyDefinition.name = rs.getString("name");
+		propertyDefinition.code = rs.getString("code");
 		propertyDefinition.description = rs.getString("description");
 		propertyDefinition.required = rs.getBoolean("required");
 		propertyDefinition.active = rs.getBoolean("active");
@@ -47,36 +49,26 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 		propertyDefinition.type = rs.getString("type");
 		propertyDefinition.displayFormat = rs.getString("display_format");
 		propertyDefinition.displayOrder = rs.getInt("display_order");
-		propertyDefinition.defaultValue = rs.getString("pDefaultValue");
-		propertyDefinition.level = rs.getString("level");
-		propertyDefinition.inOut = rs.getString("in_out");
+		propertyDefinition.defaultValue = rs.getString("default_value");
 		propertyDefinition.propagation = rs.getBoolean("propagation");
 		//Add measure category
-		if(rs.getLong("mcId")!=0){
-			MeasureCategory measureCategory = new MeasureCategory();
-			measureCategory.id = rs.getLong("mcId");
-			measureCategory.name = rs.getString("mcName");
-			measureCategory.code = rs.getString("mcCode");
-			propertyDefinition.measureCategory = measureCategory;
-		}
-		//Add measure value
-		if(rs.getLong("mvId")!=0){
-			MeasureValue measureValue = new MeasureValue();
-			measureValue.id = rs.getLong("mvId");
-			measureValue.code=rs.getString("mvCode");
-			measureValue.defaultValue = rs.getBoolean("mvDefaultValue");
-			measureValue.value = rs.getString("mvValue");
-			propertyDefinition.measureValue = measureValue;
-		}
+		try{
+			propertyDefinition.level = Level.find.findById(rs.getLong("fk_level"));
+			
+			if(rs.getLong("fk_measure_category") !=0 ){
+				propertyDefinition.measureCategory = MeasureCategory.find.findById(rs.getLong("fk_measure_category"));
+			}
+			//Add measure value
+			if(rs.getLong("fk_save_measure_unit")!=0){		
+				propertyDefinition.saveMeasureValue = MeasureUnit.find.findById(rs.getLong("fk_save_measure_unit"));
+			}
+			
+			if(rs.getLong("fk_display_measure_unit")!=0){		
+				propertyDefinition.displayMeasureValue = MeasureUnit.find.findById(rs.getLong("fk_display_measure_unit"));
+			}
 
-		//Add display measure value
-		if(rs.getLong("mvDispId")!=0){
-			MeasureValue measureValue = new MeasureValue();
-			measureValue.id = rs.getLong("mvDispId");
-			measureValue.code = rs.getString("mvDispCode");
-			measureValue.defaultValue = rs.getBoolean("mvDispDefaultValue");
-			measureValue.value = rs.getString("mvDispValue");
-			propertyDefinition.displayMeasureValue = measureValue;
+		} catch (DAOException e) {
+			throw new SQLException(e);
 		}
 		//Add possible values
 		ValueDAO valueDAO = Spring.getBeanOfType(ValueDAO.class);

@@ -21,7 +21,7 @@ public class InstrumentDAO extends AbstractDAO<Instrument>{
 
 	public List<Instrument> findByInstrumentUsedType(long idInstrumentUsedType)
 	{
-		String sql = "SELECT id,name,code FROM instrument WHERE instrument_used_type_id=?";
+		String sql = "SELECT id,name,code FROM instrument WHERE fk_instrument_used_type=?";
 		BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
 		return this.jdbcTemplate.query(sql, mapper, idInstrumentUsedType);
 	}
@@ -37,7 +37,7 @@ public class InstrumentDAO extends AbstractDAO<Instrument>{
 		Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("name", instrument.name);
         parameters.put("code", instrument.code);
-        parameters.put("instrument_used_type_id", idInstrumentUsedType);
+        parameters.put("fk_instrument_used_type", idInstrumentUsedType);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
         instrument.id = newId;
         return instrument;

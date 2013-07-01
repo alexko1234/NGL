@@ -1,7 +1,12 @@
 package models.laboratory.common.description;
 
+import java.util.List;
+
 import models.laboratory.common.description.dao.ResolutionDAO;
+import models.laboratory.common.description.dao.StateDAO;
 import models.utils.Model;
+import models.utils.Model.Finder;
+import models.utils.dao.DAOException;
 
 
 /**
@@ -11,13 +16,28 @@ import models.utils.Model;
  */
 public class Resolution extends Model<Resolution>{
 
-	public String name;
+	public enum CODE{Project,Process,Sample,Instrument,Reagent,Experiment,Import,Container};
 	
-	public static Finder<Resolution> find = new Finder<Resolution>(ResolutionDAO.class.getName());
+	public String name;
+	public ResolutionCategory category;
+	
+	
+	public static ResolutionFinder find = new ResolutionFinder();
 	
 	public Resolution() {
 		super(ResolutionDAO.class.getName());
 	}
 
+	public static class ResolutionFinder extends Finder<Resolution> {
+
+		public ResolutionFinder() {
+			super(ResolutionDAO.class.getName());
+		}
+
+		public List<Resolution> findByCategoryCode(String code)
+				throws DAOException {
+			return ((ResolutionDAO) getInstance()).findByCategoryCode(code);
+		}
+	}
 	
 }

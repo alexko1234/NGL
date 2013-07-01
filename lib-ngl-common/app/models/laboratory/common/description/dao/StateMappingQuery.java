@@ -34,17 +34,8 @@ public class StateMappingQuery extends MappingSqlQuery<State>{
 		state.code=rs.getString("code");
 		state.name=rs.getString("name");
 		state.active=rs.getBoolean("active");
-		state.priority=rs.getInt("priority");
-		state.level=rs.getString("level");
+		state.position=rs.getInt("position");
 		
-		long idCategory = rs.getLong("fk_state_category");
-		StateCategory stateCategory = null;
-		try {
-			stateCategory = StateCategory.find.findById(idCategory);
-		} catch (DAOException e) {
-			throw new SQLException(e);
-		}
-		state.stateCategory=stateCategory;
 		return state;
 	}
 

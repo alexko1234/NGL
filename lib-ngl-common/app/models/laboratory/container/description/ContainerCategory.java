@@ -9,7 +9,7 @@ import models.laboratory.processes.description.dao.ProcessTypeDAO;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 
-public class ContainerCategory extends AbstractCategory{
+public class ContainerCategory extends AbstractCategory<ContainerCategory>{
 
 	public static Finder<ContainerCategory> find = new Finder<ContainerCategory>(ContainerCategoryDAO.class.getName()); 
 	

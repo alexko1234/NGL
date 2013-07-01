@@ -14,7 +14,7 @@ public class Protocol extends Model<Protocol>{
 	public String filePath;
 	public String version;
 	
-	public ProtocolCategory protocolCategory;
+	public ProtocolCategory category;
 	
 	public List<ReagentType> reagentTypes;
 
@@ -23,12 +23,5 @@ public class Protocol extends Model<Protocol>{
 	public Protocol() {
 		super(ProtocolDAO.class.getName());
 	}
-	
-	public static Protocol findByName(String name)
-	{
-		ProtocolDAO protocolDAO = (ProtocolDAO) Spring.getBeanOfType(ProtocolDAO.class);
-		return protocolDAO.findByName(name);
-	}
-	
 	
 }

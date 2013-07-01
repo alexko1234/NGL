@@ -32,11 +32,9 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 	public String displayFormat;
 	public Integer displayOrder;
 
-	public String level;
+	public Level level;
 	//Propagation des propriétés
-	public boolean propagation;
-	//propriétés d'entrée ou sortie pour les niveaux contenant et contenu
-	public String inOut;
+	public Boolean propagation;
 
 	public List<Value> possibleValues;
 
@@ -45,9 +43,9 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 	public MeasureCategory measureCategory;
 
 	//Unité de stockage
-	public MeasureValue measureValue;
+	public MeasureUnit saveMeasureValue;
 	//Unité d'affichage
-	public MeasureValue displayMeasureValue;
+	public MeasureUnit displayMeasureValue;
 	
 	@JsonIgnore
 	public static Finder<PropertyDefinition> find = new Finder<PropertyDefinition>(PropertyDefinitionDAO.class.getName()); 

@@ -5,7 +5,7 @@ import models.laboratory.project.description.dao.ProjectTypeDAO;
 
 public class ProjectType extends CommonInfoType{
 
-	public ProjectCategory projectCategory;
+	public ProjectCategory category;
 
 	public static Finder<ProjectType> find = new Finder<ProjectType>(ProjectTypeDAO.class.getName()); 
 	

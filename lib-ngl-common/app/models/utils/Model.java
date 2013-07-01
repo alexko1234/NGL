@@ -1,5 +1,6 @@
 package models.utils;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -10,9 +11,13 @@ import play.api.modules.spring.Spring;
 
 public class Model<T> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3835776102653386895L;
 	public Long id;
 	public String code;
-	public String classNameDAO;
+	protected String classNameDAO;
     
 	@JsonIgnore
 	public Model() {
@@ -58,38 +63,43 @@ public class Model<T> {
     
     public static class Finder<T>
     {
-    	private String className;
-    	@JsonIgnore
-    	public Finder(String className)
-    	{
-    		this.className = className;
-    	}
-    	@JsonIgnore
-    	public T findByCode(String code) throws DAOException
-        {
-    		return getInstance().findByCode(code);
-        }
-    	@JsonIgnore
-        public List<T> findAll() throws DAOException
-        {
-        	return getInstance().findAll();
-        }
-    	@JsonIgnore
-        public T findById(Long id) throws DAOException
-        {
-        	return getInstance().findById(id);
-        }
-        
-    	@JsonIgnore
-        @SuppressWarnings("unchecked")
-    	public AbstractCommonDAO<T> getInstance() throws DAOException
-        {
-        	try {
-				return (AbstractCommonDAO<T>) Spring.getBeanOfType(Class.forName(className));
+		private String className;
+
+		@JsonIgnore
+		public Finder(String className) {
+			this.className = className;
+		}
+
+		@JsonIgnore
+		public T findByCode(String code) throws DAOException {
+			return getInstance().findByCode(code);
+		}
+		
+		@JsonIgnore
+		public Boolean isCodeExist(String code) throws DAOException {
+			return true;
+		}
+
+		@JsonIgnore
+		public List<T> findAll() throws DAOException {
+			return getInstance().findAll();
+		}
+
+		@JsonIgnore
+		public T findById(Long id) throws DAOException {
+			return getInstance().findById(id);
+		}
+
+		@JsonIgnore
+		@SuppressWarnings("unchecked")
+		public AbstractCommonDAO<T> getInstance() throws DAOException {
+			try {
+				return (AbstractCommonDAO<T>) Spring.getBeanOfType(Class
+						.forName(className));
 			} catch (ClassNotFoundException e) {
 				throw new DAOException(e);
 			}
-        }
+		}
     }
 
 	@Override
@@ -108,7 +118,8 @@ public class Model<T> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Model other = (Model) obj;
+		@SuppressWarnings("unchecked")
+		Model<T> other = (Model<T>) obj;
 		if (code == null) {
 			if (other.code != null)
 				return false;
@@ -116,6 +127,5 @@ public class Model<T> {
 			return false;
 		return true;
 	}
-    
-    
+   
 }

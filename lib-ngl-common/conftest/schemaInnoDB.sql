@@ -1,17 +1,13 @@
-
+DROP TABLE IF EXISTS experiment_type_node_experiment_type;
+DROP TABLE IF EXISTS previous_nodes;
+DROP TABLE IF EXISTS experiment_type_node;
 DROP TABLE IF EXISTS common_info_type_instrument_type;
-DROP TABLE IF EXISTS experiment_purification_method;
-DROP TABLE IF EXISTS experiment_quality_control;
 DROP TABLE IF EXISTS process_experiment_type;
 DROP TABLE IF EXISTS protocol_reagent_type;
 DROP TABLE IF EXISTS instrument;
 DROP TABLE IF EXISTS instrument_used_type;
-DROP TABLE IF EXISTS previous_experiment_types;
 DROP TABLE IF EXISTS process_type;
 DROP TABLE IF EXISTS experiment_type;
-DROP TABLE IF EXISTS purification_method_type;
-DROP TABLE IF EXISTS quality_control_type;
-DROP TABLE IF EXISTS transfer_method_type;
 DROP TABLE IF EXISTS reagent_type;
 DROP TABLE IF EXISTS sample_type;
 DROP TABLE IF EXISTS import_type;
@@ -49,6 +45,7 @@ DROP TABLE IF EXISTS permission;
 DROP TABLE IF EXISTS role;
 DROP TABLE IF EXISTS team;
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS play_evolutions;
 --
 -- Table structure for table `object_type`
 --
@@ -122,7 +119,6 @@ CREATE TABLE state (
   code varchar(255) NOT NULL unique,
   active tinyint(1) NOT NULL default '0',
   priority int(11) default NULL,
-  level enum('process','containing','experiment') DEFAULT NULL,
   fk_state_category bigint(20) NOT NULL,
   PRIMARY KEY  (id),
   FOREIGN KEY(fk_state_category) REFERENCES state_category(id),
@@ -184,7 +180,7 @@ CREATE TABLE property_definition (
   display_order int(11) default NULL,
   default_value varchar(255) default NULL,
   description text,
-  level enum('current','content','containing') NOT NULL,
+  level enum('current','content','container') NOT NULL,
   in_out enum('in','out') default NULL,
   propagation tinyint(1) default NULL,
   choice_in_list tinyint(1) NOT NULL default '0',
@@ -234,10 +230,6 @@ CREATE TABLE experiment_category (
 
 CREATE TABLE experiment_type (
   id bigint(20) NOT NULL,
-  doPurification tinyint(1) NOT NULL default '0',
-  mandatoryPurification tinyint(1) NOT NULL default '0',
-  doQualityControl tinyint(1) NOT NULL default '0',
-  mandatoryQualityControl tinyint(1) NOT NULL default '0',
   fk_experiment_category bigint(20) NOT NULL,
   fk_common_info_type bigint(20) NOT NULL,
   PRIMARY KEY  (id),
@@ -245,16 +237,41 @@ CREATE TABLE experiment_type (
   FOREIGN KEY (fk_common_info_type) REFERENCES common_info_type(id)
 ) ENGINE=InnoDB;
 
+
+CREATE TABLE experiment_type_node (
+  id bigint(20) NOT NULL,
+  fk_experiment_type bigint(20) NOT NULL,
+  doPurification tinyint(1) NOT NULL default '0',
+  mandatoryPurification tinyint(1) NOT NULL default '0',
+  doQualityControl tinyint(1) NOT NULL default '0',
+  mandatoryQualityControl tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (id),
+  FOREIGN KEY (fk_experiment_type) REFERENCES experiment_type(id) 
+) ENGINE=InnoDB;
+
+
 --
 -- Table structure for table `previous_experiment_types`
 --
 
-CREATE TABLE previous_experiment_types (
-  	fk_previous_experiment_type bigint(20) NOT NULL,
-	fk_experiment_type bigint(20) NOT NULL,  
-  PRIMARY KEY  (fk_experiment_type,fk_previous_experiment_type),
- FOREIGN KEY (fk_experiment_type) REFERENCES experiment_type(id),
- FOREIGN KEY (fk_previous_experiment_type) REFERENCES experiment_type(id)
+CREATE TABLE previous_nodes (
+  fk_previous_node bigint(20) NOT NULL,
+  fk_node bigint(20) NOT NULL,  
+  PRIMARY KEY  (fk_previous_node,fk_node),
+  FOREIGN KEY (fk_previous_node) REFERENCES experiment_type_node(id),
+  FOREIGN KEY (fk_node) REFERENCES experiment_type_node(id)
+) ENGINE=InnoDB;
+
+--
+-- Table structure for table `experiment_purification_method`
+--
+
+CREATE TABLE experiment_type_node_experiment_type (
+  fk_experiment_type bigint(20) NOT NULL,
+  fk_experiment_type_node bigint(20) NOT NULL,
+  PRIMARY KEY  (fk_experiment_type,fk_experiment_type_node),
+  FOREIGN KEY (fk_experiment_type) REFERENCES experiment_type(id),
+  FOREIGN KEY (fk_experiment_type_node) REFERENCES experiment_type_node(id)
 ) ENGINE=InnoDB;
 
 --
@@ -362,63 +379,8 @@ CREATE TABLE instrumentCategory_outContainerSupportCategory (
    FOREIGN KEY (fk_container_support_category) REFERENCES container_support_category(id)
 ) ENGINE=InnoDB;
 
---
--- Table structure for table `purification_method_type`
---
-
-CREATE TABLE purification_method_type (
-  id bigint(20) NOT NULL,
-  fk_common_info_type bigint(20) NOT NULL,
-  PRIMARY KEY  (id),
-   FOREIGN KEY (fk_common_info_type) REFERENCES common_info_type(id)
-) ENGINE=InnoDB;
 
 
---
--- Table structure for table `experiment_purification_method`
---
-
-CREATE TABLE experiment_purification_method (
-  fk_purification_method_type bigint(20) NOT NULL,
-  fk_experiment_type bigint(20) NOT NULL,
-  PRIMARY KEY  (fk_purification_method_type,fk_experiment_type),
-  FOREIGN KEY (fk_purification_method_type) REFERENCES purification_method_type(id),
-  FOREIGN KEY (fk_experiment_type) REFERENCES experiment_type(id)
-) ENGINE=InnoDB;
-
---
--- Table structure for table `quality_control_type`
---
-
-CREATE TABLE quality_control_type (
-  id bigint(20) NOT NULL,
-  fk_common_info_type bigint(20) NOT NULL,
-  PRIMARY KEY  (id),
-  FOREIGN KEY (fk_common_info_type) REFERENCES common_info_type(id)
-) ENGINE=InnoDB;
-
---
--- Table structure for table `experiment_quality_control`
---
-
-CREATE TABLE experiment_quality_control (
-  fk_quality_control_type bigint(20) NOT NULL,
-  fk_experiment_type bigint(20) NOT NULL,
-  PRIMARY KEY  (fk_quality_control_type,fk_experiment_type),
-  FOREIGN KEY (fk_quality_control_type) REFERENCES quality_control_type(id),
-  FOREIGN KEY (fk_experiment_type) REFERENCES experiment_type(id)
-) ENGINE=InnoDB;
-
---
--- Table structure for table `transfer_method_type`
---
-
-CREATE TABLE transfer_method_type (
-  id bigint(20) NOT NULL,
-  fk_common_info_type bigint(20) NOT NULL,
-  PRIMARY KEY  (id),
-  FOREIGN KEY (fk_common_info_type) REFERENCES common_info_type(id)
-) ENGINE=InnoDB;
 
 --
 -- Table structure for table `reagent_type`
@@ -719,7 +681,4 @@ INSERT INTO `object_type`(`code`,`generic`) VALUES('Sample','0');
 INSERT INTO `object_type`(`code`,`generic`) VALUES('Instrument','0');
 INSERT INTO `object_type`(`code`,`generic`) VALUES('Reagent','1');
 INSERT INTO `object_type`(`code`,`generic`) VALUES('Experiment','0');
-INSERT INTO `object_type`(`code`,`generic`) VALUES('Purification','0');
-INSERT INTO `object_type`(`code`,`generic`) VALUES('ControlQuality','0');
-INSERT INTO `object_type`(`code`,`generic`) VALUES('Transfer','0');
 INSERT INTO `object_type`(`code`,`generic`) VALUES('Import','0');

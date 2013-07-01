@@ -24,7 +24,7 @@ public class ContainerUsed implements IValidation{
 	
 	@JsonIgnore
 	public Container getContainer(){
-		return new HelperObjects<Container>().getObject(Container.class, containerCode, null);
+		return new HelperObjects<Container>().getObject(Container.class, containerCode);
 		
 	}
 

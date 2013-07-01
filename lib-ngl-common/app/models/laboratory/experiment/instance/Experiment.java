@@ -42,36 +42,27 @@ public class Experiment extends DBObject implements IValidation {
 	// ExperimentType
 	public String typeCode;
 	public String categoryCode;
-	public String name;
 	// Informations
 	public TraceInformation traceInformation;
 	public Map<String,PropertyValue> experimentProperties;
-	public List<Comment> comments;
 	public Map<String, PropertyValue> instrumentProperties;
-	
 	public InstrumentUsed instrument;
+	public String protocolCode;
 	
 	// States
 	public String stateCode;
 	public String resolutionCode;
+	
+	public List<InputOutputContainer> listInputOutputContainers;
+	public List<ReagentUsed> reagentUseds;
+
+	public List<Comment> comments;
 	
 	// For search optimisation
 	//Projects ref
 	public List<String> projectCodes;
 	//Samples ref
 	public List<String> sampleCodes;
-	
-	/* Relation with input and output containers
-	*/
-	public List<InputOutputContainer> listInputOutputContainers;
-	
-	public List<ReagentUsed> reagentUseds;
-
-	// Protocol ref
-	public String protocolCode;
-//	public List<ReagentUsed> reagentsUsed;
-	
-
 	
 	public Experiment(){
 		traceInformation=new TraceInformation();
@@ -84,12 +75,12 @@ public class Experiment extends DBObject implements IValidation {
 	
 	@JsonIgnore
 	public ExperimentType getExperimentType(){
-		return new HelperObjects<ExperimentType>().getObject(ExperimentType.class, typeCode, null);
+		return new HelperObjects<ExperimentType>().getObject(ExperimentType.class, typeCode);
 	}
 
 	@JsonIgnore
 	public ExperimentCategory getExperimentCategory(){
-		return new HelperObjects<ExperimentCategory>().getObject(ExperimentCategory.class, categoryCode, null);
+		return new HelperObjects<ExperimentCategory>().getObject(ExperimentCategory.class, categoryCode);
 	}
 
 	
@@ -106,24 +97,24 @@ public class Experiment extends DBObject implements IValidation {
 	
 	@JsonIgnore
 	public Protocol getProtocol(){
-		return new HelperObjects<Protocol>().getObject(Protocol.class, protocolCode, null);
+		return new HelperObjects<Protocol>().getObject(Protocol.class, protocolCode);
 	}
 	
 	@JsonIgnore
 	public State getState(){
-		return new HelperObjects<State>().getObject(State.class, stateCode, null);
+		return new HelperObjects<State>().getObject(State.class, stateCode);
 	}
 	
 	@JsonIgnore
 	public Resolution getResolution(){
-		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode, null);
+		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode);
 	}
 
 	@JsonIgnore
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
 		// TODO Auto-generated method stub
-		
+	
 	}
 	
 }

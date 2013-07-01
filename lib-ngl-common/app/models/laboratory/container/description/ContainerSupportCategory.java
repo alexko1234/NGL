@@ -3,14 +3,16 @@ package models.laboratory.container.description;
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.container.description.dao.ContainerSupportCategoryDAO;
 
-public class ContainerSupportCategory extends AbstractCategory{
+public class ContainerSupportCategory extends AbstractCategory<ContainerSupportCategory>{
 
-	public int nbUsableContainer;
+	public Integer nbUsableContainer;
 	
-	public int nbLine;
+	public Integer nbLine;
 	
-	public int nbColumn;
+	public Integer nbColumn;
 
+	public ContainerCategory containerCategory;
+	
 	public static Finder<ContainerSupportCategory> find = new Finder<ContainerSupportCategory>(ContainerSupportCategoryDAO.class.getName()); 
 	
 	public ContainerSupportCategory() {

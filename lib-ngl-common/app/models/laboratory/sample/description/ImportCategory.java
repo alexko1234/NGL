@@ -8,7 +8,7 @@ import models.laboratory.sample.description.dao.ImportCategoryDAO;
  * @author ejacoby
  *
  */
-public class ImportCategory extends AbstractCategory{
+public class ImportCategory extends AbstractCategory<ImportCategory>{
 
 	public static Finder<ImportCategory> find = new Finder<ImportCategory>(ImportCategoryDAO.class.getName());
 	

@@ -49,7 +49,7 @@ public class ProjectTypeMappingQuery extends MappingSqlQuery<ProjectType>{
 			} catch (DAOException e) {
 				throw new SQLException(e);
 			}
-			projectType.projectCategory = projectCategory;
+			projectType.category = projectCategory;
 			return projectType;
 		} catch (DAOException e) {
 			throw new SQLException(e);

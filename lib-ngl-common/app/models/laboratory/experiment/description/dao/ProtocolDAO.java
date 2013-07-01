@@ -28,13 +28,13 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 						"FROM protocol as t ",true);
 	}
 
-	public List<Protocol> findByCommonExperiment(long idCommonInfoType)
+	public List<Protocol> findByExperimentTypeId(long id)
 	{
 		String sql = sqlCommon+
-				" JOIN common_info_type_protocol as cit ON fk_protocol=id "+
-				"WHERE fk_common_info_type = ? ";
+				" JOIN experiment_type_protocol as cit ON fk_protocol=id "+
+				"WHERE fk_experiment_type = ? ";
 		ProtocolMappingQuery protocolMappingQuery=new ProtocolMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
-		return protocolMappingQuery.execute(idCommonInfoType);
+		return protocolMappingQuery.execute(id);
 	}
 
 	public Protocol findByName(String name)
@@ -43,7 +43,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 		ProtocolMappingQuery protocolMappingQuery = new ProtocolMappingQuery(dataSource, sql,new SqlParameter("name", Types.VARCHAR));
 		return protocolMappingQuery.findObject(name);
 	}
-
+/*
 	public void save(List<Protocol> protocols, long idCommonInfoType) throws DAOException
 	{
 		//Add protocols list
@@ -61,18 +61,18 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 			protocol.id = save(protocol);
 		jdbcTemplate.update(sql, idCommonInfoType, protocol.id);
 	}
-
+*/
 	@Override
 	public long save(Protocol protocol) throws DAOException
 	{
 		//Check if category exist
-		if(protocol.protocolCategory!=null){
-			ProtocolCategory protocolCategoryDB = ProtocolCategory.find.findByCode(protocol.protocolCategory.code);
+		if(protocol.category!=null){
+			ProtocolCategory protocolCategoryDB = ProtocolCategory.find.findByCode(protocol.category.code);
 			if(protocolCategoryDB ==null){
 				ProtocolCategoryDAO protocolCategoryDAO = Spring.getBeanOfType(ProtocolCategoryDAO.class);
-				protocol.protocolCategory.id = protocolCategoryDAO.save(protocol.protocolCategory);
+				protocol.category.id = protocolCategoryDAO.save(protocol.category);
 			}else
-				protocol.protocolCategory=protocolCategoryDB;
+				protocol.category=protocolCategoryDB;
 		}
 
 		//Create new Protocol
@@ -81,11 +81,12 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 		parameters.put("name", protocol.name);
 		parameters.put("file_path", protocol.filePath);
 		parameters.put("version", protocol.version);
-		parameters.put("fk_protocol_category", protocol.protocolCategory.id);
+		parameters.put("fk_protocol_category", protocol.category.id);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		protocol.id = newId;
 
 		//Add reagent type list
+		/*
 		List<ReagentType> reagentTypes = protocol.reagentTypes;
 		if(reagentTypes!=null && reagentTypes.size()>0){
 			ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
@@ -99,6 +100,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 				jdbcTemplate.update(sql, newId,reagentType.id);
 			}
 		}
+		*/
 		return protocol.id;
 	}
 
@@ -110,6 +112,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 		jdbcTemplate.update(sql, protocol.code, protocol.name, protocol.filePath, protocol.version, protocol.id);
 
 		//Update reagentTypes list
+		/*
 		List<ReagentType> reagentTypes = protocol.reagentTypes;
 		if(reagentTypes!=null && reagentTypes.size()>0){
 			ReagentTypeDAO reagentTypeDAO = Spring.getBeanOfType(ReagentTypeDAO.class);
@@ -122,13 +125,14 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 			}
 
 		}
+		*/
 	}
 
 	@Override
 	public void remove(Protocol protocol) throws DAOException {
 		//Remove list reagentType protocol_reagent_type
-		String sqlState = "DELETE FROM protocol_reagent_type WHERE fk_protocol=?";
-		jdbcTemplate.update(sqlState, protocol.id);
+		//String sqlState = "DELETE FROM protocol_reagent_type WHERE fk_protocol=?";
+		//jdbcTemplate.update(sqlState, protocol.id);
 		//remove protocol
 		super.remove(protocol);
 	}

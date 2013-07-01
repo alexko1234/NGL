@@ -36,7 +36,7 @@ public class ObjectMongoDBReference<T extends DBObject> implements IFetch<T> {
 	}
 	
 	@Override
-	public T getObject() throws Exception {
+	public T getObject() {
 		MongoCollection annotation =className.getAnnotation(MongoCollection.class);		
 		return MongoDBDAO.findByCode(annotation.name(),className,code);
 	}

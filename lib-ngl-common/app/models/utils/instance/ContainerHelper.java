@@ -36,8 +36,8 @@ public class ContainerHelper {
 
 		Content content = new Content(new SampleUsed(sample.code, sample.typeCode, sample.categoryCode));
 
-		SampleType sampleType =new HelperObjects<SampleType>().getObject(SampleType.class, sample.categoryCode, null);
-		ImportType importType =new HelperObjects<ImportType>().getObject(ImportType.class, sample.categoryCode, null);
+		SampleType sampleType =new HelperObjects<SampleType>().getObject(SampleType.class, sample.categoryCode);
+		ImportType importType =new HelperObjects<ImportType>().getObject(ImportType.class, sample.categoryCode);
 				
 		if(importType !=null)
 			InstanceHelpers.copyPropertyValueFromLevel(importType.getMapPropertyDefinition(), "containing", sample.properties,content.properties);

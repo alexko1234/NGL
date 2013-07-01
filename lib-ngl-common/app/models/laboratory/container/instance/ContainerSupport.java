@@ -44,14 +44,14 @@ public class ContainerSupport implements IValidation {
 	
 	@JsonIgnore
 	public ContainerSupportCategory getContainerSupportCategory(){
-		return new HelperObjects<ContainerSupportCategory>().getObject(ContainerSupportCategory.class, categoryCode, null);
+		return new HelperObjects<ContainerSupportCategory>().getObject(ContainerSupportCategory.class, categoryCode);
 
 	}
 	
 
 	@JsonIgnore
 	public Stock getStock(){
-		return new HelperObjects<Stock>().getObject(Stock.class, stockCode, null);
+		return new HelperObjects<Stock>().getObject(Stock.class, stockCode);
 
 	}
 
