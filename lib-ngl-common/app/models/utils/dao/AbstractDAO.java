@@ -103,6 +103,8 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 			return null;
 		}
 	}
+	
+	
 
 	public long save(T value) throws DAOException
 	{

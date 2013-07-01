@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ClassDiagram>
     <Class name="models.laboratory.experiment.instance.ContainerUsed"
-        x="56" y="513">
+        x="55" y="422">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -9,23 +9,10 @@
             private-accepted="false" protected-accepted="false"
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
-        <Association
-            destinationClassName="models.laboratory.common.instance.PropertyValue"
-            endpointName="experimentProperties" kind="Simple">
-            <Point x="72" y="270"/>
-        </Association>
-        <Association
-            destinationClassName="models.laboratory.common.instance.PropertyValue"
-            endpointName="volume" kind="Simple"/>
-        <Association
-            destinationClassName="models.laboratory.common.instance.PropertyValue"
-            endpointName="instrumentProperties" kind="Simple">
-            <Point x="340" y="380"/>
-        </Association>
     </Class>
     <Class
         name="models.laboratory.experiment.instance.InputOutputContainer"
-        x="360" y="692">
+        x="523" y="586">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -44,31 +31,9 @@
             endpointName="outputContainers" kind="Simple">
             <Point x="380" y="573"/>
         </Association>
-        <Association
-            destinationClassName="models.laboratory.common.instance.Comment"
-            endpointName="comment" kind="Simple"/>
     </Class>
     <Class name="models.laboratory.common.instance.TraceInformation"
         x="387" y="27">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-    </Class>
-    <Class name="models.laboratory.common.instance.Comment" x="745" y="729">
-        <AttributesDisplayFilter public-accepted="true"
-            private-accepted="true" protected-accepted="true"
-            default-accepted="true" static-accepted="false"/>
-        <MethodDisplayFilter public-accepted="true"
-            private-accepted="false" protected-accepted="false"
-            default-accepted="false" static-accepted="false"
-            accessors-accepted="false" constructors-accepted="false"/>
-    </Class>
-    <Class name="models.laboratory.common.instance.PropertyValue"
-        x="253" y="188">
         <AttributesDisplayFilter public-accepted="true"
             private-accepted="true" protected-accepted="true"
             default-accepted="true" static-accepted="false"/>
@@ -97,26 +62,13 @@
             default-accepted="false" static-accepted="false"
             accessors-accepted="false" constructors-accepted="false"/>
         <Association
-            destinationClassName="models.laboratory.common.instance.PropertyValue"
-            endpointName="experimentProperties" kind="Simple">
-            <Point x="545" y="285"/>
-        </Association>
-        <Association
             destinationClassName="models.laboratory.common.instance.TraceInformation"
             endpointName="traceInformation" kind="Simple"/>
         <Association
             destinationClassName="models.laboratory.experiment.instance.InputOutputContainer"
             endpointName="listInputOutputContainers" kind="Simple"/>
         <Association
-            destinationClassName="models.laboratory.common.instance.PropertyValue"
-            endpointName="instrumentProperties" kind="Simple">
-            <Point x="491" y="182"/>
-        </Association>
-        <Association
             destinationClassName="models.laboratory.instrument.instance.InstrumentUsed"
             endpointName="instrument" kind="Simple"/>
-        <Association
-            destinationClassName="models.laboratory.common.instance.Comment"
-            endpointName="comments" kind="Simple"/>
     </Class>
 </ClassDiagram>

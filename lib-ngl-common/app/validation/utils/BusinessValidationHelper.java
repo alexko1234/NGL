@@ -235,10 +235,13 @@ public class BusinessValidationHelper {
 	public static <T> T validateExistInstanceCode(Map<String, List<ValidationError>> errors,
 			String code, String key, Class<T> type, String collectionName, boolean returnObject) {
 		T o = null;
-		if(null != code && returnObject){
+		if(null != code){
 			o = MongoDBDAO.findByCode(collectionName, type, code);
 			if(o == null){
 				addErrors(errors, key, ERROR_NOTEXIST, code);
+			}
+			if(!returnObject){
+				o = null;
 			}
 		}
 		/* TODO
