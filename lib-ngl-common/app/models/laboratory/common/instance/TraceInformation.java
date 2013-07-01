@@ -7,6 +7,8 @@ import models.utils.HelperObjects;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import play.Logger;
+
 import controllers.administration.authentication.User;
 
 /**
@@ -25,13 +27,7 @@ public class TraceInformation {
 	public String modifyUser;
 	public Date modifyDate;
 	
-	@JsonCreator
-	public TraceInformation(){
-		
-	}
-	
 	public void setTraceInformation(String user){
-		
 		if (createUser==null){
 			createUser=user;
 		} else {
@@ -40,19 +36,7 @@ public class TraceInformation {
 		
 		if(creationDate==null) {
 			creationDate = new Date();
-		} else { modifyDate=new Date(); }
-
-		
+		} else { modifyDate=new Date(); }		
 	}
 	
-	@JsonIgnore
-	public User getCreateUser(){
-		return new HelperObjects<User>().getObject(User.class, createUser);
-	}
-	
-	
-	@JsonIgnore
-	public User getModifyUser(){
-		return new HelperObjects<User>().getObject(User.class, modifyUser);
-	}
 }
