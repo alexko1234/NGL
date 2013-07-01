@@ -20,6 +20,7 @@ import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.Test;
 
+import play.Logger;
 import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
@@ -59,7 +60,7 @@ public class RunsTest extends AbstractTests {
 	        assertThat(charset(result)).isEqualTo("utf-8");
 
     }
-	
+
 	@Test
 	public void testRunsUpdate() {
 			Run run = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1"));
@@ -67,10 +68,8 @@ public class RunsTest extends AbstractTests {
 			run.dispatch=true;
 			
 		 	Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-	        
-		 	//assertThat(contentAsString(result).)
-		 	//System.out.println(contentAsString(result));
-	        assertThat(status(result)).isEqualTo(OK);
+	        Logger.debug(contentAsString(result));
+		 	assertThat(status(result)).isEqualTo(OK);
 	        assertThat(contentType(result)).isEqualTo("application/json");
 	        assertThat(charset(result)).isEqualTo("utf-8");
 	}
@@ -91,6 +90,7 @@ public class RunsTest extends AbstractTests {
 	        
 		 	//assertThat(contentAsString(result).)
 		 	//System.out.println(contentAsString(result));
+		 	Logger.debug(contentAsString(result));
 	        assertThat(status(result)).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);
 	        assertThat(contentType(result)).isEqualTo("application/json");
 	        assertThat(charset(result)).isEqualTo("utf-8");
@@ -107,6 +107,7 @@ public class RunsTest extends AbstractTests {
 	        
 		 	//assertThat(contentAsString(result).)
 		 	//System.out.println(contentAsString(result));
+			Logger.debug(contentAsString(result));
 	        assertThat(status(result)).isEqualTo(OK);
 	        assertThat(contentType(result)).isEqualTo("application/json");
 	        assertThat(contentAsString(result).contains("NewPropertyTestUpdateLane"));
@@ -123,6 +124,7 @@ public class RunsTest extends AbstractTests {
 	        
 		 	//assertThat(contentAsString(result).)
 		 	//System.out.println(contentAsString(result));
+			Logger.debug(contentAsString(result));
 	        assertThat(status(result)).isEqualTo(OK);
 	        assertThat(contentType(result)).isEqualTo("application/json");
 	        assertThat(contentAsString(result).contains("NewPropertyTestUpdateReadSet"));
