@@ -1,5 +1,7 @@
 package models;
 
+import static validation.utils.ConstraintsHelper.addErrors;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -16,8 +18,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import play.Logger;
 import play.data.validation.ValidationError;
-import static validation.utils.ConstraintsHelper.addErrors;
 
 @Repository
 public class TaraDAO {
@@ -31,7 +33,6 @@ public class TaraDAO {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);              
 	}
 
-	//TODO gestion des erreurs
 	public Map<String,PropertyValue> findTaraSample(Integer limsCode,Map<String,List<ValidationError>> errors){
 
 		List<Map<String,PropertyValue>> results =  this.jdbcTemplate.query("   SELECT"+
@@ -45,7 +46,7 @@ public class TaraDAO {
 				"  LOCUS.LOCUS_NAME as profondeur,"+
 				"  MATERIAL.MATERIAL_CODE,"+
 				"  MATERIAL.MATERIAL_NAME as materiel,"+
-				"  CROSS_REF.REF_ID"+
+				"  CROSS_REF.REF_ID as ref_id"+
 				" FROM "+
 				" AREA INNER JOIN SAMPLE ON (AREA.AREA_ID=SAMPLE.AREA_ID)"+
 				"  INNER JOIN CROSS_REF ON (SAMPLE.SAMPLE_ID=CROSS_REF.SAMPLE_ID)"+
@@ -58,13 +59,15 @@ public class TaraDAO {
 
 			public Map<String,PropertyValue> mapRow(ResultSet rs, int rowNum) throws SQLException {
 				
+				Logger.debug("Tara :"+rs.getInt("ref_id"));
+				
 				//TODO manque materiel origine
 				Map<String,PropertyValue> properMap=new HashMap<String, PropertyValue>();
-				properMap.put("station", new PropertyValue(rs.getInt("station")));
-				properMap.put("profondeur", new PropertyValue(rs.getString("profondeur")));
-				properMap.put("filtre", new PropertyValue(rs.getString("filtre")));
-				properMap.put("iteration", new PropertyValue(rs.getString("iteration")));
-				properMap.put("materiel", new PropertyValue(rs.getString("materiel")));
+				properMap.put("taraStation", new PropertyValue(rs.getInt("station")));
+				properMap.put("taraDepth", new PropertyValue(rs.getString("profondeur")));
+				properMap.put("taraFilter", new PropertyValue(rs.getString("filtre")));
+				properMap.put("taraIteration", new PropertyValue(rs.getString("iteration")));
+				properMap.put("taraSample", new PropertyValue(rs.getString("materiel")));
 				return properMap;
 			}
 
@@ -73,7 +76,7 @@ public class TaraDAO {
 		if(results.size()==1){
 			return results.get(0);
 		} else {
-			//addErrors(errors,"taraRefId","limsdao.error.code.notexist","Tara Reference Id", limsCode);
+			addErrors(errors,"taraRefId","limsdao.error.code.notexist","Tara Reference Id", limsCode);
 			return null;
 		}
 

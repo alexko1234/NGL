@@ -41,7 +41,14 @@ public class LimsDAO {
 
 	private JdbcTemplate jdbcTemplate;
 
+	private static final String CONTAINER_CATEGORY_CODE= "tube";
+	private static final String CONTAINER_STATE_CODE="IWP";
+	private static final String CONTAINER_PROPERTIES_BQ="tag";
+	private static final String LIMS_CODE="limsCode";
+	private static final String SAMPLE_ADPATER="isAdapters";
+	private static final String RECEPTION_DATE ="receptionDate";
 
+	
 	@Autowired
 	@Qualifier("lims")
 	public void setDataSource(DataSource dataSource) {
@@ -60,7 +67,7 @@ public class LimsDAO {
 				container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 				//Logger.debug("Container :"+rs.getString("code"));
 				container.code=rs.getString("code");
-				container.categoryCode="TUBE";
+				container.categoryCode=CONTAINER_CATEGORY_CODE;
 				container.projectCodes=new ArrayList<String>();				
 				container.projectCodes.add(rs.getString("prsco"));
 
@@ -69,14 +76,16 @@ public class LimsDAO {
 
 				container.comments=new ArrayList<Comment>();				
 				container.comments.add(new Comment(rs.getString("comment")));
-				container.stateCode="IWP";
+				container.stateCode=CONTAINER_STATE_CODE;
 				container.valid=null;
 
 				container.support=ContainerHelper.getContainerSupportTube(rs.getString("code"));
 
 				container.properties= new HashMap<String, PropertyValue>();
-				container.properties.put("codeLims",new PropertyValue(rs.getInt("tubco")));
+				container.properties.put(LIMS_CODE,new PropertyValue(rs.getInt("tubco")));
+				container.properties.put(RECEPTION_DATE,new PropertyValue(rs.getString(RECEPTION_DATE)));
 
+				
 				container.mesuredConcentration=new PropertyValue(rs.getFloat("tubconcr"), "ng/ul");
 				container.mesuredVolume=new PropertyValue(rs.getFloat("tubvolr"), "ul");
 				container.mesuredQuantity=new PropertyValue(rs.getFloat("tubqtr"), "ng");
@@ -89,7 +98,7 @@ public class LimsDAO {
 
 				if(rs.getString("indexBq")!=null){
 					content.properties = new HashMap<String, PropertyValue>();
-					content.properties.put("index",new PropertyValue(rs.getString("indexBq")));
+					content.properties.put(CONTAINER_PROPERTIES_BQ,new PropertyValue(rs.getString("indexBq")));
 				}
 
 				return container;
@@ -112,7 +121,7 @@ public class LimsDAO {
 				sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 				String tadco = rs.getString("tadco");
 				String tprco = rs.getString("tprco");
-				String codeLims = rs.getString("codeLims");
+				//String codeLims = rs.getString(LIMS_CODE);
 				//	Logger.debug("Code Materiel (adnco) :"+codeLims" , Type Materiel (tadco) :"+tadco +", Type Projet (tprco) :"+tprco);
 
 				String sampleTypeCode=getSampleTypeFromLims(tadco,tprco);
@@ -180,16 +189,22 @@ public class LimsDAO {
 					TaraDAO  taraServices = Spring.getBeanOfType(TaraDAO.class);
 					if(sample.properties==null){ sample.properties=new HashMap<String, PropertyValue>();}
 
-					Map<String, PropertyValue> map=taraServices.findTaraSample(rs.getInt("codeLims"),errors);
+					Map<String, PropertyValue> map=taraServices.findTaraSample(rs.getInt(LIMS_CODE),errors);
 
 					if(map!=null){
+						Logger.debug("Nb properties :"+map.size());
 						sample.properties.putAll(map);
-					}
+					}else { Logger.debug("Map tara null");}
 
 				}
 				//Logger.debug("Adpatateur :"+sample.properties.get("adaptateur").value.toString());
 
-				sample.importTypeCode=getImportTypeCode(tara, Boolean.parseBoolean(sample.properties.get("adaptateur").value.toString()));
+				boolean adapter=false;
+				if(sample.properties.get(SAMPLE_ADPATER)!=null){
+					adapter= Boolean.parseBoolean(sample.properties.get(SAMPLE_ADPATER).value.toString());
+				}
+				
+				sample.importTypeCode=getImportTypeCode(tara,adapter);
 				Logger.debug("Import Type "+sample.importTypeCode);
 				return sample;
 			}
@@ -207,50 +222,47 @@ public class LimsDAO {
 
 	}
 
-	private String getImportTypeCode(boolean tara, boolean adaptateur) {
+	private String getImportTypeCode(boolean tara, boolean adapter) {
 		
-		Logger.debug("Adaptateur "+adaptateur);
+		Logger.debug("Adaptateur "+adapter);
 		Logger.debug("Tara "+tara);
-		if(adaptateur){
+		if(adapter){
 			if(tara){
-				return "importTaraBanqueSolexa";
+				return "tara-library";
 			}
-			else { return "importBanqueSolexa"; }
+			else { return "library"; }
 		}
 		else if(tara){
-			return "importTara";
+			return "tara-default";
 		}
 		else {
-			 return "importNormal";
+			 return "default-import";
 		}
 	}
 
 	private String getSampleTypeFromLims(String tadnco,String tprco) {
 
-		if(tadnco.equals("15")) return "fosmide";
+		if(tadnco.equals("15")) return "fosmid";
 		else
-		if(tadnco.equals("8")) return "plasmide";
+		if(tadnco.equals("8")) return "plasmid";
 		else
-		if(tadnco.equals("2")) return "bac";
+		if(tadnco.equals("2")) return "BAC";
 		else
-		if(tadnco.equals("1") && !tprco.equals("11")) return "ADNGenomique";
+		if(tadnco.equals("1") && !tprco.equals("11")) return "gDNA";
 		else
-		if(tadnco.equals("1") && tprco.equals("11")) return "ADNMetagenomique";
+		if(tadnco.equals("1") && tprco.equals("11")) return "MeTa-DNA";
 		else
 		if(tadnco.equals("19") || tadnco.equals("6")) return "amplicon";
 		else
 		if(tadnco.equals("12")) return "cDNA";
 		else
-		if( tadnco.equals("11")) return "ARNTotal";
+		if( tadnco.equals("11")) return "total-RNA";
 		else 
 		if(tadnco.equals("18")) return "sRNA";
 		else
-		if(tadnco.equals("10")) return "ARNm";
+		if(tadnco.equals("10")) return "mRNA";
 		else
-		if(tadnco.equals("17")) return "ChiP";
-		else
-		//TODO le mapping est faux 
-		if(tadnco.equals("16")) return "CLIP";
+		if(tadnco.equals("17")) return "chIP";
 		//Logger.debug("Erreur mapping Type materiel ("+tadnco+")/Type projet ("+tprco+") et Sample Type");
 		return null;
 	}
@@ -273,18 +285,21 @@ public class LimsDAO {
 
 	public void updateTubeLims(List<Container> containers,Map<String, List<ValidationError>> errors) {
 
+		String limsCode=null;
+		
 		for(Container container:containers){
 
-			if(container.properties==null || container.properties.get("codeLims")==null)
+			limsCode=container.properties.get(LIMS_CODE).value.toString();
+
+			if(container.properties==null || limsCode==null)
 			{
-				addErrors(errors, "container.properties.codeLims","error.PropertyNotExist","codeLims",container.support.barCode);
+				addErrors(errors, "container.properties.limsCode","error.PropertyNotExist",LIMS_CODE,container.support.barCode);
 
 			}else {
 				try{
-
-					String value=container.properties.get("codeLims").value.toString();
-					Logger.debug("pm_TubeidentInNGL @tubco="+value);
-					this.jdbcTemplate.update("pm_TubeidentInNGL @tubco=?", Integer.parseInt(value));
+			
+					Logger.debug("pm_TubeidentInNGL @tubco="+limsCode);
+					this.jdbcTemplate.update("pm_TubeidentInNGL @tubco=?", Integer.parseInt(limsCode));
 
 				} catch(DataAccessException e){
 
@@ -303,41 +318,7 @@ public class LimsDAO {
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Container container = new Container();
-				container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
-				//Logger.debug("Container :"+rs.getString("code"));
-				container.code=rs.getString("code");
-				container.categoryCode="TUBE";
-				container.projectCodes=new ArrayList<String>();				
-				container.projectCodes.add(rs.getString("prsco"));
-
-				container.sampleCodes=new ArrayList<String>();
-				container.sampleCodes.add(rs.getString("sampleCode"));
-
-				container.comments=new ArrayList<Comment>();				
-				container.comments.add(new Comment(rs.getString("comment")));
-				container.stateCode="IWP";
-				container.valid=null;
-
-				container.support=ContainerHelper.getContainerSupportTube(rs.getString("code"));
-
-				container.properties= new HashMap<String, PropertyValue>();
-				container.properties.put("codeLims",new PropertyValue(rs.getInt("tubco")));
-
-				container.mesuredConcentration=new PropertyValue(rs.getFloat("tubconcr"), "ng/ul");
-				container.mesuredVolume=new PropertyValue(rs.getFloat("tubvolr"), "ul");
-				container.mesuredQuantity=new PropertyValue(rs.getFloat("tubqtr"), "ng");
-
-				Content content = new Content();
-				content.sampleUsed=new SampleUsed();
-				content.sampleUsed.sampleCode=rs.getString("sampleCode");
-				container.contents=new ArrayList<Content>();
-				container.contents.add(content);
-
-				if(rs.getString("indexBq")!=null){
-					content.properties = new HashMap<String, PropertyValue>();
-					content.properties.put("index",new PropertyValue(rs.getString("indexBq")));
-				}
-
+				
 				return container;
 			}
 
