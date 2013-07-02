@@ -115,7 +115,7 @@ ORDER BY l.number
 		 */
 		
 		
-    	String sql = "SELECT l.number as laneNumber, et.short_name as experimentTypeCode, s.stock_barcode as sampleBarCode," +
+    	String sql = "SELECT distinct l.number as laneNumber, et.short_name as experimentTypeCode, s.stock_barcode as sampleBarCode," +
     			" i.short_name as indexName, i.type as indexTypeCode, i.sequence as indexSequence ,ind.name as sampleCode, sl.size as insertLength, fn_getsampleid_projects(s.id) as projectCode"
     			+ " FROM t_flowcell f"
     			+ " JOIN t_lane l ON l.flowcell_id=f.id"
