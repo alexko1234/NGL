@@ -45,7 +45,7 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 			throw new DAOException(e);
 		}
 	}
-
+	
 	private String getSQLUpdate() throws DAOException
 	{
 		try {
@@ -104,8 +104,6 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 		}
 	}
 	
-	
-
 	public long save(T value) throws DAOException
 	{
 		if(null == value){

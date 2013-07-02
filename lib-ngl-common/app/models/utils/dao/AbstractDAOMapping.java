@@ -3,10 +3,15 @@ package models.utils.dao;
 import java.sql.Types;
 import java.util.List;
 
+import models.utils.Model;
+
 import org.springframework.asm.Type;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
+
+import play.Logger;
 
 /**
  *Generic operation DAO with MappingSQL object 
@@ -48,6 +53,29 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 		String sql = sqlCommon+" WHERE code = ? ";		
 		return initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public Boolean isCodeExist(String code) throws DAOException
+	{
+		if(null == code){
+			throw new DAOException("code is mandatory");
+		}
+		try {
+			
+			String sql = sqlCommon+" WHERE code = ? ";	
+			Model<T> o =  (Model<T>)this.jdbcTemplate.queryForObject(sql, this.entityClass, code);
+			if(o != null && o.id != null){
+				return Boolean.TRUE;
+			}else{
+				return Boolean.FALSE;
+			}
+		} catch (DataAccessException e) {
+			Logger.warn(e.getMessage());
+			return null;
+		}
+	}
+	
 	
 	protected MappingSqlQuery<T> initializeMapping(String sql, SqlParameter sqlParam) throws DAOException
 	{

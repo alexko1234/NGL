@@ -77,7 +77,7 @@ public class Model<T> {
 		
 		@JsonIgnore
 		public Boolean isCodeExist(String code) throws DAOException {
-			return true;
+			return getInstance().isCodeExist(code);
 		}
 
 		@JsonIgnore

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -13,6 +14,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
+
+import play.Logger;
 
 /**
  * Common operations between Simple DAO et DAO Using mappingQuery
@@ -70,6 +73,26 @@ public abstract class AbstractCommonDAO<T> {
 	public abstract long save(T value) throws DAOException;
 	
 	public abstract void update(T value) throws DAOException;
+
+	public Boolean isCodeExist(String code) throws DAOException
+	{
+		if(null == code){
+			throw new DAOException("code is mandatory");
+		}
+		try {
+			
+			String sql = "select id from "+tableName+" WHERE code=?";
+			long id =  this.jdbcTemplate.queryForLong(sql, code);
+			if(id > 0){
+				return Boolean.TRUE;
+			}else{
+				return Boolean.FALSE;
+			}
+		} catch (DataAccessException e) {
+			Logger.warn(e.getMessage());
+			return null;
+		}
+	}
 
 	
 	
