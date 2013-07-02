@@ -59,7 +59,6 @@ public class DescriptionHelper {
 		propertyDefinition.description=description;
 		propertyDefinition.displayFormat=displayFormat;
 		propertyDefinition.displayOrder=displayOrder;
-		propertyDefinition.propagation=propagation;
 		//propertyDefinition.inOut=inOut;
 		propertyDefinition.defaultValue=defaultValue;
 		//propertyDefinition.level="current";

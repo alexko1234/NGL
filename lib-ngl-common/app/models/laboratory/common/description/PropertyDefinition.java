@@ -33,9 +33,7 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 	public Integer displayOrder;
 
 	public Level level;
-	//Propagation des propriétés
-	public Boolean propagation;
-
+	
 	public List<Value> possibleValues;
 
 	public String defaultValue;

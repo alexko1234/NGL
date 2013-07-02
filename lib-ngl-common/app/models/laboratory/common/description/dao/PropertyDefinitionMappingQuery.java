@@ -49,8 +49,7 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 		propertyDefinition.type = rs.getString("type");
 		propertyDefinition.displayFormat = rs.getString("display_format");
 		propertyDefinition.displayOrder = rs.getInt("display_order");
-		propertyDefinition.defaultValue = rs.getString("default_value");
-		propertyDefinition.propagation = rs.getBoolean("propagation");
+		propertyDefinition.defaultValue = rs.getString("default_value");		
 		//Add measure category
 		try{
 			propertyDefinition.level = Level.find.findById(rs.getLong("fk_level"));
