@@ -21,6 +21,7 @@ import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import models.utils.IValidation;
+import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import net.vz.mongodb.jackson.MongoCollection;
 
@@ -30,6 +31,7 @@ import play.data.validation.ValidationError;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ConstraintsHelper;
 import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 
 
 
@@ -168,6 +170,11 @@ public class Container extends DBObject implements IValidation {
 			}
 		}
 
+	}
+
+	@Override
+	public boolean exist(Map<String, List<ValidationError>> errors) {
+		return MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code);
 	}
 
 }

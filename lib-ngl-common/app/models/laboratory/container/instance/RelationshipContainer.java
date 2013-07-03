@@ -48,6 +48,12 @@ public class RelationshipContainer extends DBObject implements IValidation {
 		// TODO Auto-generated method stub
 	
 	}
+
+	@Override
+	public boolean exist(Map<String, List<ValidationError>> errors) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	
 }

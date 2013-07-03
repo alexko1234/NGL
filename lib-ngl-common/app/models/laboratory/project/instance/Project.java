@@ -11,6 +11,7 @@ import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 import models.utils.HelperObjects;
 import models.utils.IValidation;
+import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -18,6 +19,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import play.data.validation.ValidationError;
 
 import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 
 
 
@@ -69,5 +71,10 @@ public class Project extends DBObject implements IValidation{
 	@JsonIgnore
 	public void validate(Map<String, List<ValidationError>> errors) {
 		
+	}
+
+	@Override
+	public boolean exist(Map<String, List<ValidationError>> errors) {
+		return MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, code);
 	}
 }

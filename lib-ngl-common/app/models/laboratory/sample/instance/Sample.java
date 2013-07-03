@@ -15,6 +15,7 @@ import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.HelperObjects;
 import models.utils.IValidation;
+import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -26,6 +27,7 @@ import validation.utils.BusinessValidationHelper;
 import validation.utils.ConstraintsHelper;
 
 import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 
 /**
  * 
@@ -100,12 +102,14 @@ public class Sample extends DBObject implements IValidation{
 		ImportType importType=BusinessValidationHelper.validationType(errors, this.importTypeCode, ImportType.class);
 		
 		Logger.debug("Import type "+importType.code);
-		
-		proDefinitions.addAll(sampleType.propertiesDefinitions);
+		Logger.debug("Import type nb property "+importType.propertiesDefinitions.size());
 
+		proDefinitions.addAll(sampleType.propertiesDefinitions);
+		
 		for(PropertyDefinition propertyDefinition:importType.propertiesDefinitions){
-			//TODO
-			if(propertyDefinition.level.equals("current")){
+
+			Logger.debug("Property Definition "+propertyDefinition.code + " leve "+propertyDefinition.level.code);
+			if(propertyDefinition.level.code.equals("SampleAndContent") || propertyDefinition.level.code.contains("Sample")){
 				Logger.debug("Property definition add "+propertyDefinition.code);
 				proDefinitions.add(propertyDefinition);
 			}
@@ -114,6 +118,13 @@ public class Sample extends DBObject implements IValidation{
 		ConstraintsHelper.validateProperties(errors, this.properties, proDefinitions,"");
 
 		//TODO validation taxon 
+	}
+
+
+	@Override
+	public boolean exist(Map<String, List<ValidationError>> errors) {
+		
+		return MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, code);
 	}
 	
 
