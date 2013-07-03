@@ -115,7 +115,7 @@ angular.module('datatableServices', []).
 			    				this.lastSearchParams = params;
 			    				var url = this.getUrl(this.config.search.url);
 			    				if(url){
-			    					$http.get(url,{params:this.getParams(params), datatable:this}).success(function(data, status, headers, config) {		    						
+			    					$http.get(url(),{params:this.getParams(params), datatable:this}).success(function(data, status, headers, config) {		    						
 			    						config.datatable.setData(data.data, data.recordsNumber);		    						
 			    					});
 			    				}else{
@@ -502,7 +502,7 @@ angular.module('datatableServices', []).
 		    				var url = this.getUrl(this.config.save.url);
 			    			if(url){
 			    				//call url
-			    				$http.post(url, value, {datatable:this,index:i})
+			    				$http.post(url(value), value, {datatable:this,index:i})
 				    				.success(function(data, status, headers, config) {
 				    					config.datatable.saveLocal(data, config.index);
 				    					config.datatable.saveFinish();
@@ -807,10 +807,10 @@ angular.module('datatableServices', []).
 		    			getUrl : function(url){
 		    				if(angular.isObject(url)){
 		    					if(angular.isDefined(url.url)){
-		    						return url.url;
+		    						return function(value){return url.url};
 		    					}
 		    				}else if(angular.isString(url)){
-		    					return url;
+		    					return function(value){return url};;
 		    				} else if(angular.isFunction(url)){
 		    					return url;
 		    				}
