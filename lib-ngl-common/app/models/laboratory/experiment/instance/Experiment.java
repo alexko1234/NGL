@@ -54,8 +54,13 @@ public class Experiment extends DBObject implements IValidation {
 	public String resolutionCode;
 	
 	public List<InputOutputContainer> listInputOutputContainers;
+	
+	//Idea for remplace listInputOutputContainers attribut
+	//public List<InputOutput> inputOutputs;
+	//public List<AtomicTransfert> atomicTransferts; 
+	
 	public List<ReagentUsed> reagentUseds;
-
+	
 	public List<Comment> comments;
 	
 	// For search optimisation
@@ -115,6 +120,11 @@ public class Experiment extends DBObject implements IValidation {
 	public void validate(Map<String, List<ValidationError>> errors) {
 		// TODO Auto-generated method stub
 	
+	}
+
+	@Override
+	public boolean exist(Map<String, List<ValidationError>> errors) {
+		return false;
 	}
 	
 }

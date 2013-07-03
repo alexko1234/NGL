@@ -23,6 +23,7 @@ import org.apache.commons.collections.Transformer;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
+import play.Logger;
 import play.data.validation.ValidationError;
 import play.mvc.Http;
 
@@ -102,8 +103,7 @@ public class InstanceHelpers {
 		Set<Entry<String, PropertyDefinition>> entries=propertyDefinitions.entrySet();
 		
 		for(Entry<String, PropertyDefinition> entry :entries){
-
-			if(entry.getValue().level.equals(level)){
+			if(entry.getValue().level.code.contains(level)){
 
 				PropertyValue propertyValue= propertiesInput.get(entry.getKey());
 
@@ -119,7 +119,7 @@ public class InstanceHelpers {
 
 	}
 
-	public static DBObject save(IValidation obj, Map<String,List<ValidationError>> errors) {
+	public static DBObject save(String collectionName,IValidation obj, Map<String,List<ValidationError>> errors) {
 		Map<String, List<ValidationError>> localErrors=new HashMap<String, List<ValidationError>>();
 
 		if(obj!=null)
@@ -129,7 +129,7 @@ public class InstanceHelpers {
 		}
 
 		if(localErrors.size()==0){
-			return MongoDBDAO.save(obj.getClass().getAnnotation(MongoCollection.class).name(),(DBObject) obj);
+			return MongoDBDAO.save(collectionName,(DBObject) obj);
 		}
 		else {
 			errors.putAll(localErrors);
@@ -139,13 +139,13 @@ public class InstanceHelpers {
 
 
 
-	public static  <T extends DBObject> List<T> save(List<T> objects, Map<String,List<ValidationError>> errors) {
+	public static  <T extends DBObject> List<T> save(String collectionName,List<T> objects, Map<String,List<ValidationError>> errors) {
 
 		List<T> dbObjects=new ArrayList<T>();
 
 		for(DBObject object:objects){
 			@SuppressWarnings("unchecked")
-			T result=(T) InstanceHelpers.save((IValidation) object, errors);
+			T result=(T) InstanceHelpers.save(collectionName,(IValidation) object, errors);
 			if(result!=null){
 				dbObjects.add(result);
 			}
