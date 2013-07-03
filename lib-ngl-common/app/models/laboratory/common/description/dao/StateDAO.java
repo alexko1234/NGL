@@ -87,11 +87,11 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	}
 	
 	public List<ListObject> findAllForContainerList(){
-		String sql = "SELECT code, name FROM state t inner join state_category_state scs on scs.fk_state = t.id" +
+		String sql = "SELECT t.code, t.name FROM state t inner join state_category_state scs on scs.fk_state = t.id" +
 				" inner join state_category s on s.id = scs.fk_state_category WHERE s.code = ? ";
 		
 		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
-		return this.jdbcTemplate.query(sql, mapper, StateCategory.CODE.Container);
+		return this.jdbcTemplate.query(sql, mapper, StateCategory.CODE.Container.name());
 	}
 
 	public List<State> findByCategoryCode(String code) throws DAOException {

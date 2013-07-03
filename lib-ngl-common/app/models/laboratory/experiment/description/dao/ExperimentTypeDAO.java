@@ -34,9 +34,9 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 
 	public ExperimentTypeDAO() {
 		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.class,
-				"SELECT t.id, fk_experiment_category, fk_common_info_type "+
+				"SELECT t.id, t.fk_experiment_category, t.fk_common_info_type "+
 						"FROM experiment_type as t "+
-				"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
+				"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
 	}
 	
 	@Override
@@ -159,9 +159,10 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 	}
 
 	public List<String> findVoidProcessExperimentTypeCode(String processTypeCode){
-		String query = sqlCommon + " inner join process_type as p on p.fk_void_experiment_type = t.id"+
-                " inner join common_info_type as cp on cp.id= p.id"+                
-                " where cp.code = ?";
+		String query = "SELECT c.code FROM experiment_type as t " +
+				" inner join common_info_type as c ON c.id=t.fk_common_info_type"+  
+				" inner join process_type as p on p.fk_void_experiment_type = t.id " +
+				" inner join common_info_type as cp on p.id= p.id where cp.code = ?";
 		
 		List<String> list = jdbcTemplate.query(
 				query,
@@ -171,7 +172,7 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 			        	String listObj = rs.getString("code");
 			            return listObj;
 			        }
-			    });
+			    }, processTypeCode);
 		
 		return list;
 	}
