@@ -26,7 +26,6 @@ import models.utils.instance.ContainerHelper;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.validation.ValidationError;
-import sun.security.jca.GetInstance.Instance;
 import validation.utils.ConstraintsHelper;
 import fr.cea.ig.MongoDBDAO;
 
