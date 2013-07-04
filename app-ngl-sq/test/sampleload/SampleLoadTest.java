@@ -30,7 +30,7 @@ import org.junit.Test;
 import play.mvc.Result;
 import play.test.Helpers;
 import utils.AbstractTests;
-import data.FirstData;
+
 import fr.cea.ig.MongoDBDAO;
 
 public class SampleLoadTest extends AbstractTests {

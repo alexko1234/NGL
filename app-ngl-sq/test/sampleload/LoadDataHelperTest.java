@@ -19,7 +19,7 @@ import org.junit.Test;
 import play.data.validation.ValidationError;
 import play.test.Helpers;
 import utils.AbstractTests;
-import data.FirstData;
+
 import data.utils.LoadDataHelper;
 
 public class LoadDataHelperTest extends AbstractTests {
