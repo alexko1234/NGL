@@ -35,9 +35,5 @@ public class ContainerUsed implements IValidation{
 		
 	}
 
-	@Override
-	public boolean exist(Map<String, List<ValidationError>> errors) {
-		return false;
-	}
 }
 

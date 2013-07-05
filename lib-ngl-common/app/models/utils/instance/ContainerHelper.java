@@ -8,10 +8,13 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.SampleUsed;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
+import models.laboratory.sample.description.dao.SampleTypeDAO;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import models.utils.InstanceHelpers;
+import models.utils.dao.DAOException;
 import play.Logger;
+import validation.utils.BusinessValidationHelper;
 
 public class ContainerHelper {
 
@@ -25,7 +28,7 @@ public class ContainerHelper {
 	}
 
 
-	public static void addContent(Container container,Sample sample){
+	public static void addContent(Container container,Sample sample) throws DAOException{
 
 		//Create new content
 		if(container.contents==null){
@@ -34,8 +37,8 @@ public class ContainerHelper {
 
 		Content content = new Content(new SampleUsed(sample.code, sample.typeCode, sample.categoryCode));
 
-		SampleType sampleType =new HelperObjects<SampleType>().getObject(SampleType.class, sample.categoryCode);
-		ImportType importType =new HelperObjects<ImportType>().getObject(ImportType.class, sample.importTypeCode);
+		SampleType sampleType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
+		ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
 				
 		if(importType !=null){
 			InstanceHelpers.copyPropertyValueFromLevel(importType.getMapPropertyDefinition(), "Content", sample.properties,content.properties);

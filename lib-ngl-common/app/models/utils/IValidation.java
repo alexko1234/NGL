@@ -8,6 +8,5 @@ import play.data.validation.ValidationError;
 public interface IValidation {
 	
 	public void validate(Map<String,List<ValidationError>> errors);
-	public boolean exist(Map<String,List<ValidationError>> errors);
 
 }

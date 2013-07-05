@@ -20,6 +20,7 @@ import models.utils.IValidation;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import play.data.validation.ValidationError;
 
@@ -118,13 +119,9 @@ public class Experiment extends DBObject implements IValidation {
 	@JsonIgnore
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
-		// TODO Auto-generated method stub
+		//TODO
 	
 	}
 
-	@Override
-	public boolean exist(Map<String, List<ValidationError>> errors) {
-		return false;
-	}
 	
 }

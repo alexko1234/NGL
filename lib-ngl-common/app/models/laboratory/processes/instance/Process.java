@@ -88,14 +88,8 @@ public class Process extends DBObject implements IValidation{
 	@JsonIgnore
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
-		// TODO Auto-generated method stub
 	
-	}
-
-	@Override
-	public boolean exist(Map<String, List<ValidationError>> errors) {
-		// TODO Auto-generated method stub
-		return false;
+	
 	}
 	
 }

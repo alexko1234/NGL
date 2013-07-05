@@ -17,6 +17,8 @@ import net.vz.mongodb.jackson.MongoCollection;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import play.data.validation.ValidationError;
+import validation.utils.BusinessValidationHelper;
+import validation.utils.ConstraintsHelper;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
@@ -71,10 +73,16 @@ public class Project extends DBObject implements IValidation{
 	@JsonIgnore
 	public void validate(Map<String, List<ValidationError>> errors) {
 		
+		BusinessValidationHelper.validateUniqueInstanceCode(errors, code, Project.class, InstanceConstants.PROJECT_COLL_NAME);
+		
+		BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.categoryCode, "categoryCode", ProjectCategory.find);
+		
+		ProjectType projectType=BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.typeCode, "typeCode", ProjectType.find,true);
+		
+		ConstraintsHelper.validateProperties(errors, this.properties, projectType.propertiesDefinitions,"");
+		
+		BusinessValidationHelper.validateExistDescriptionCode(errors, this.stateCode, "stateCode", State.find);
+		
 	}
 
-	@Override
-	public boolean exist(Map<String, List<ValidationError>> errors) {
-		return MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, code);
-	}
 }

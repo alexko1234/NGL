@@ -20,6 +20,7 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.data.validation.ValidationError;
 
 import com.mongodb.MongoException;
@@ -42,68 +43,35 @@ public class BusinessValidationHelper {
 	public static final String FIELD_TYPE_CODE = "typeCode";
 	public static final String FIELD_SUPPORT_CODE = "containerSupportCode";
 
+
 	/**
-	 * Validate the code of a mongodb object
-	 * Check is code is not null and unique
-	 * 
+	 * Validate if code is unique in MongoDB collection
 	 * @param errors
-	 * @param dbObject
-	 * @param collectionName
+	 * @param code
+	 * @param key
+	 * @param find
+	 * @param returnObject
+	 * @return
 	 */
-	public static void validateCode(Map<String, List<ValidationError>> errors,
-			DBObject dbObject, String collectionName, Class<?> type) {
-		// validation of unique code
-		if(required(errors, dbObject.code, "code")){
-			try {
-				DBObject o = (DBObject)MongoDBDAO.findByCode(collectionName, type, dbObject.code);
-				if(null != o && !o._id.equals(dbObject._id)){
-					addErrors(errors, FIELD_CODE, ERROR_NOTUNIQUE, dbObject.code);
-				}
-							
-			} catch (MongoException e) {
-				addErrors(errors, FIELD_CODE, ERROR_NOTUNIQUE, dbObject.code);
-			}
-		}		
-	}
-
-	/** 
-	 * Validate if mongodb or SGBD code type exists
-	 * 
-	 * @param errors
-	 * @param typeCode
-	 * @param Type class
-	 * 
-	 */
-	public static <T> T validationType(
-			Map<String, List<ValidationError>> errors, String typeCode, Class<T> type) {
-		if(required(errors, typeCode, "typeCode")){
-			 return new HelperObjects<T>().getObject(type, typeCode);
-		}
-		return null;		
-	}
 	
-	
-	/** 
-	 * Validate if mongodb or SGBD list codes from a type exist
-	 * 
-	 * @param errors
-	 * @param typeCodes list
-	 * @param Type class
-	 * 
-	 */
-	public static <T> void  validationReferences(
-			Map<String, List<ValidationError>> errors,List<String> list,Class<T> type) {		
-		if(required(errors, list, "typeCode")){
-				new HelperObjects<T>().getObjects(type, list);
-		}
+	public static <T extends DBObject> boolean validateUniqueInstanceCode(Map<String, List<ValidationError>> errors,
+			String code, Class<T> type, String collectionName){
+		
+		if(null!=code && MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
+			addErrors(errors, FIELD_CODE, ERROR_NOTUNIQUE, code);
+			return false;
+		}else if (code!=null){
+			return false;
+		}	
+		
+		return true;
 	}
-
 	
 	public static <T> T validateRequiredDescriptionCode(Map<String, List<ValidationError>> errors, String code, String key,
 			Finder<T> find) {
 		return validateRequiredDescriptionCode(errors, code, key, find, false);
 	}
-	
+
 	/**
 	 * Validate i a description code is not null and exist in description DB
 	 * @param errors
@@ -121,9 +89,8 @@ public class BusinessValidationHelper {
 		}
 		return o;		
 	}
-	
-	
-	
+
+
 	/***
 	 * Validate if a code in a description table exist
 	 * @param errors
@@ -138,7 +105,7 @@ public class BusinessValidationHelper {
 			Finder<T> find) {
 		return validateExistDescriptionCode(errors, code, key, find, false);
 	}
-	
+
 	/***
 	 * Validate if a code in a description table exist
 	 * @param errors
@@ -158,7 +125,8 @@ public class BusinessValidationHelper {
 				if(o == null){
 					addErrors(errors, key, ERROR_NOTEXIST, code);
 				}
-			}else if(null != code && !find.isCodeExist(code)){
+			}else if(null != code ){
+				if( !find.isCodeExist(code))
 				addErrors(errors, key, ERROR_NOTEXIST, code);
 			}
 		} catch (DAOException e) {
@@ -167,7 +135,7 @@ public class BusinessValidationHelper {
 		return o;
 	}
 
-	public static <T> T validateRequiredInstanceCode(Map<String, List<ValidationError>> errors,
+	public static <T extends DBObject> T validateRequiredInstanceCode(Map<String, List<ValidationError>> errors,
 			String code, String key, Class<T> type, String collectionName) {
 		T o = null;
 		if(required(errors, code, key)){
@@ -175,7 +143,7 @@ public class BusinessValidationHelper {
 		}
 		return o;	
 	}
-	
+
 	/**
 	 * Validate if code is not null and exist
 	 * @param errors
@@ -186,7 +154,7 @@ public class BusinessValidationHelper {
 	 * @param returnObject
 	 * @return
 	 */
-	public static <T> T validateRequiredInstanceCode(Map<String, List<ValidationError>> errors,
+	public static <T extends DBObject> T validateRequiredInstanceCode(Map<String, List<ValidationError>> errors,
 			String code, String key, Class<T> type, String collectionName, boolean returnObject) {
 		T o = null;
 		if(required(errors, code, key)){
@@ -194,6 +162,30 @@ public class BusinessValidationHelper {
 		}
 		return o;	
 	}
+
+
+	/**
+	 * Validate if list is not null and code exist
+	 * @param errors
+	 * @param code
+	 * @param key
+	 * @param type
+	 * @param collectionName
+	 * @param returnObject
+	 * @return
+	 */
+	public static <T extends DBObject> List<T> validateRequiredInstanceCodes(Map<String, List<ValidationError>> errors,
+			List<String> codes, String key, Class<T> type, String collectionName, boolean returnObject) {
+
+		List<T> l = null;
+		
+		if(required(errors, codes, key)){
+			l=validateExistInstanceCodes(errors, codes, key, type, collectionName, returnObject);
+		}
+		return l;
+		
+	}
+	
 	
 	
 	/**
@@ -206,12 +198,12 @@ public class BusinessValidationHelper {
 	 * @param returnObject
 	 * @return
 	 */
-	public static <T> List<T> validateExistInstanceCodes(Map<String, List<ValidationError>> errors,
+	public static <T extends DBObject> List<T> validateExistInstanceCodes(Map<String, List<ValidationError>> errors,
 			List<String> codes, String key, Class<T> type, String collectionName, boolean returnObject) {
 		List<T> l = null;
 		if(null != codes && codes.size() > 0){
 			l = (returnObject)?new ArrayList<T>():null;
-			
+
 			for(String code: codes){
 				T o =validateExistInstanceCode(errors, code, key, type, collectionName, returnObject) ;
 				if(returnObject){
@@ -221,7 +213,7 @@ public class BusinessValidationHelper {
 		}
 		return l;
 	}
-	
+
 	/**
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
@@ -232,23 +224,19 @@ public class BusinessValidationHelper {
 	 * @param returnObject
 	 * @return
 	 */
-	public static <T> T validateExistInstanceCode(Map<String, List<ValidationError>> errors,
+	public static <T extends DBObject> T validateExistInstanceCode(Map<String, List<ValidationError>> errors,
 			String code, String key, Class<T> type, String collectionName, boolean returnObject) {
 		T o = null;
-		if(null != code){
-			o = MongoDBDAO.findByCode(collectionName, type, code);
+
+		if(null != code && returnObject){
+			o =  MongoDBDAO.findByCode(collectionName, type, code);
 			if(o == null){
 				addErrors(errors, key, ERROR_NOTEXIST, code);
 			}
-			if(!returnObject){
-				o = null;
-			}
-		}
-		/* TODO
-		}else if(null != code && !MongoDBDAO.isCodeExist(collectionName, type, code)){
+		}else if(null != code && !MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
 			addErrors(errors, key, ERROR_NOTEXIST, code);
 		}
-		*/
+
 		return o;
 	}	
 }

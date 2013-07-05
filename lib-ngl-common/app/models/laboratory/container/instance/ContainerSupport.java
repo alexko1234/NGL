@@ -8,6 +8,7 @@ import models.laboratory.sample.instance.Sample;
 import models.laboratory.stock.instance.Stock;
 import models.utils.HelperObjects;
 import models.utils.IValidation;
+import models.utils.InstanceConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -58,15 +59,10 @@ public class ContainerSupport implements IValidation {
 	@JsonIgnore
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
-		BusinessValidationHelper.validationType(errors, this.categoryCode,ContainerSupportCategory.class);
-	//	BusinessValidationHelper.validationType(errors, this.stockCode,Stpck.class);
+		BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.categoryCode, "categoryCode", ContainerSupportCategory.find, false);
+		BusinessValidationHelper.validateExistInstanceCode(errors, this.stockCode, "stockCode",Stock.class,InstanceConstants.STOCK_COLL_NAME ,false);
 
 	}
 
-
-	@Override
-	public boolean exist(Map<String, List<ValidationError>> errors) {
-		return false;
-	}
 
 }

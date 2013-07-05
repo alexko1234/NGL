@@ -40,20 +40,20 @@ import fr.cea.ig.MongoDBDAO;
  */
 @MongoCollection(name="Sample")
 public class Sample extends DBObject implements IValidation{
-	
-	
+
+
 	@JsonIgnore
 	public final static String HEADER="Sample.code;Sample.projectCodes;Sample.name;Sample.referenceCollab;Sample.taxonCode;Sample.comments";
-	
+
 	// SampleType Ref
 	public String typeCode;
-	
+
 	public String importTypeCode;
 	//Sample Category Ref
 	public String categoryCode;
-	
+
 	public List<String> projectCodes;
-	
+
 	// ?? Wath is difference with code / referenceCollbab => code s'est interne au genoscope
 	public String name;
 	public String referenceCollab; 
@@ -62,25 +62,25 @@ public class Sample extends DBObject implements IValidation{
 	public TBoolean valid;
 	//public List<CollaboratorInvolve> collaborators;
 	public String taxonCode;
-		
+
 	public List<Comment> comments;
 	public TraceInformation traceInformation;
-	
+
 	public Sample(){
 		this.traceInformation=new TraceInformation();
 	}
-	
-	
+
+
 	@JsonIgnore
 	public SampleType getSampleType(){
 		return new HelperObjects<SampleType>().getObject(SampleType.class, typeCode);
 	}
-	
+
 	@JsonIgnore
 	public SampleCategory getSampleCategory(){
 		return new HelperObjects<SampleCategory>().getObject(SampleCategory.class, categoryCode);
 	}
-	
+
 	@JsonIgnore
 	public List<Project> getProjects(){
 		return new HelperObjects<Project>().getObjects(Project.class, projectCodes);
@@ -90,42 +90,30 @@ public class Sample extends DBObject implements IValidation{
 	@JsonIgnore
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
-	
-		BusinessValidationHelper.validateCode(errors, this,this.getClass().getAnnotation(MongoCollection.class).name(), String.class);
-		
-		BusinessValidationHelper.validationType(errors, this.categoryCode, SampleCategory.class);
-		
-		//Validate properties definition from sampleType and importType where level sample
+
+		BusinessValidationHelper.validateUniqueInstanceCode(errors, this.code, Sample.class, InstanceConstants.SAMPLE_COLL_NAME);
+
+		BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.categoryCode, "categoryCode", SampleCategory.find,false);
+
+		//Validate properties definition from sampleType and importType where level contain string "Sample"
 		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
-		
-		SampleType sampleType=BusinessValidationHelper.validationType(errors, this.typeCode, SampleType.class);
-		ImportType importType=BusinessValidationHelper.validationType(errors, this.importTypeCode, ImportType.class);
-		
-		Logger.debug("Import type "+importType.code);
-		Logger.debug("Import type nb property "+importType.propertiesDefinitions.size());
+
+		SampleType sampleType=BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.typeCode, "typeCode", SampleType.find,true);
+		ImportType importType=BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.importTypeCode,"importTypeCode", ImportType.find,true);
 
 		proDefinitions.addAll(sampleType.propertiesDefinitions);
-		
-		for(PropertyDefinition propertyDefinition:importType.propertiesDefinitions){
 
-			Logger.debug("Property Definition "+propertyDefinition.code + " leve "+propertyDefinition.level.code);
+		for(PropertyDefinition propertyDefinition:importType.propertiesDefinitions){
 			if(propertyDefinition.level.code.equals("SampleAndContent") || propertyDefinition.level.code.contains("Sample")){
-				Logger.debug("Property definition add "+propertyDefinition.code);
 				proDefinitions.add(propertyDefinition);
 			}
 		}
-		
+
 		ConstraintsHelper.validateProperties(errors, this.properties, proDefinitions,"");
 
 		//TODO validation taxon 
 	}
 
 
-	@Override
-	public boolean exist(Map<String, List<ValidationError>> errors) {
-		
-		return MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, code);
-	}
-	
 
 }

@@ -32,12 +32,6 @@ public class RelationshipExperimentPurification  implements IValidation{
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public boolean exist(Map<String, List<ValidationError>> errors) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	
 	/* An other solution : We can model relation between Experiment and Purification in a tree
 

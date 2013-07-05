@@ -15,21 +15,18 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.project.instance.Project;
-import models.laboratory.sample.description.ImportType;
-import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import models.utils.IValidation;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import play.data.validation.ValidationError;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.ConstraintsHelper;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
@@ -149,20 +146,19 @@ public class Container extends DBObject implements IValidation {
 	@Override
 	public void validate(Map<String,List<ValidationError>> errors){
 
-		BusinessValidationHelper.validateCode(errors, this,this.getClass().getAnnotation(MongoCollection.class).name(), String.class);
-
+		BusinessValidationHelper.validateUniqueInstanceCode(errors, this.code, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
+		
 		BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.categoryCode, "categoryCode", ContainerCategory.find);
+				
+		BusinessValidationHelper.validateRequiredInstanceCodes(errors, this.projectCodes, "projectCodes",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
+
+		BusinessValidationHelper.validateRequiredInstanceCodes(errors, this.sampleCodes,"sampleCodes",Sample.class,InstanceConstants.SAMPLE_COLL_NAME,false);
+
+		BusinessValidationHelper.validateExistInstanceCodes(errors, fromExperimentTypeCodes, "fromExperimentTypeCodes", Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME, false);	
+
+		BusinessValidationHelper.validateExistInstanceCode(errors, fromPurifingCode, "fromPurifingCode", Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME, false);
 		
-		
-		BusinessValidationHelper.validationReferences(errors, this.projectCodes,Project.class);
-
-		BusinessValidationHelper.validationReferences(errors, this.sampleCodes,Sample.class);
-
-		if(this.fromExperimentTypeCodes!=null)
-			BusinessValidationHelper.validationReferences(errors, this.fromExperimentTypeCodes,ExperimentType.class);	
-
-		if(this.resolutionCode!=null)
-			BusinessValidationHelper.validationType(errors, this.resolutionCode, Resolution.class);
+		BusinessValidationHelper.validateExistDescriptionCode(errors, this.resolutionCode,"resolutionCode", Resolution.find);
 
 		if(required(errors, this.contents, "container.contents")){
 			for(Content content :this.contents){
@@ -170,11 +166,6 @@ public class Container extends DBObject implements IValidation {
 			}
 		}
 
-	}
-
-	@Override
-	public boolean exist(Map<String, List<ValidationError>> errors) {
-		return MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code);
 	}
 
 }
