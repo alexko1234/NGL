@@ -5,7 +5,6 @@ import static validation.utils.ConstraintsHelper.getKey;
 import static validation.utils.ConstraintsHelper.required;
 import static validation.utils.ConstraintsHelper.validateProperties;
 import static validation.utils.ConstraintsHelper.validateTraceInformation;
-import static validation.utils.BusinessValidationHelper.validateCode;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +13,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
+import models.utils.InstanceConstants;
 import play.Logger;
 import play.data.validation.ValidationError;
 
@@ -43,7 +43,7 @@ public class BusinessValidationHelper {
 		}
 		
 		if(process._id == null){
-			validateCode(errors, process, collectionName, Process.class);
+			validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(errors, process.code, Process.class,InstanceConstants.CONTAINER_COLL_NAME);
 		}
 		
 		validateTraceInformation(errors, process.traceInformation, process._id);
@@ -64,7 +64,7 @@ public class BusinessValidationHelper {
 		required(errors, process.projectCode, "projectCode");
 		required(errors, process.sampleCode, "sampleCode");
 		required(errors, process.typeCode, "typeCode");
-		validation.utils.BusinessValidationHelper.validationType(errors, process.typeCode, ProcessType.class);
+		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(errors, process.typeCode,"typeCode", ProcessType.find);
 		
 		ProcessType processType = process.getProcessType();
 		if(processType != null && processType.propertiesDefinitions != null && !processType.propertiesDefinitions.isEmpty()){
@@ -78,7 +78,7 @@ public class BusinessValidationHelper {
 		}
 		
 		if(experiment._id == null){
-			validateCode(errors, experiment, collectionName, Process.class);
+			validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(errors, experiment.code, Experiment.class, collectionName);
 		}
 		
 		validateTraceInformation(errors, experiment.traceInformation, experiment._id);
@@ -107,6 +107,6 @@ public class BusinessValidationHelper {
 			addErrors(errors,experiment.stateCode, getKey(rootKeyName,"InvalidExperimentStateCode"));
 		}	
 		
-		validation.utils.BusinessValidationHelper.validationType(errors, experiment.typeCode, ExperimentType.class);
+		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(errors, experiment.typeCode, "typeCode", ExperimentType.find);
 	}
 }
