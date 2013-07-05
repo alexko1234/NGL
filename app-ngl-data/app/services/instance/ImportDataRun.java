@@ -14,19 +14,15 @@ import models.LimsDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
-import models.laboratory.project.description.ProjectType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
-import models.utils.HelperObjects;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.validation.ValidationError;
-import validation.utils.ConstraintsHelper;
 import fr.cea.ig.MongoDBDAO;
 
 public class ImportDataRun implements Runnable {
@@ -39,7 +35,7 @@ public class ImportDataRun implements Runnable {
 		errors.clear();
 		Logger.info("ImportDataRun execution");
 		try{
-			createProjectFromLims();
+		//	createProjectFromLims();
 			createContainersSamples();
 
 		}catch (Exception e) {
@@ -67,7 +63,7 @@ public class ImportDataRun implements Runnable {
 		
 		for(Project project:projects){
 			
-			if(project.exist(errors)){
+			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code)){
 				MongoDBDAO.deleteByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code);
 				Logger.debug("Project to create :"+project.code);
 			}
@@ -76,7 +72,6 @@ public class ImportDataRun implements Runnable {
 		
 		return InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,errors);
 		
-
 	}
 
 
@@ -91,20 +86,18 @@ public class ImportDataRun implements Runnable {
 		for(Container container :listContainers){
 
 			Content content= container.contents.get(0);
-			sample = new HelperObjects<Sample>().getObject(Sample.class, content.sampleUsed.sampleCode);
 		
 			/* Sample content not in MongoDB */
-			if(sample==null){
+			if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, content.sampleUsed.sampleCode)){
 				/* Find sample in Mongodb */
 				sample = limsServices.findSampleToCreate(errors,container.contents.get(0).sampleUsed.sampleCode);
 				newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,errors);
 				
-			}else {	newSample = sample;}
+			}else {	newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, content.sampleUsed.sampleCode);}
 			
 			if(newSample==null){
 				/* Error : No sample, remove container from list to create */
 				containers.remove(container);
-				//Logger.debug("Remove container"+container.code );
 				addErrors(errors, "container","initialdata.container.samplenotexist", container.support.barCode,content.sampleUsed.sampleCode);
 			}
 			else{

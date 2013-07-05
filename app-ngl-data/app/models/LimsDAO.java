@@ -48,6 +48,7 @@ public class LimsDAO {
 	private static final String LIMS_CODE="limsCode";
 	private static final String SAMPLE_ADPATER="isAdapters";
 	private static final String RECEPTION_DATE ="receptionDate";
+	protected static final String PROJECT_CATEGORY_CODE = "default";
 
 	
 	@Autowired
@@ -87,8 +88,8 @@ public class LimsDAO {
 				container.properties.put(RECEPTION_DATE,new PropertyValue(rs.getString(RECEPTION_DATE)));
 
 				
-				container.mesuredConcentration=new PropertyValue(rs.getFloat("tubconcr"), "ng/ul");
-				container.mesuredVolume=new PropertyValue(rs.getFloat("tubvolr"), "ul");
+				container.mesuredConcentration=new PropertyValue(rs.getFloat("tubconcr"), "ng/µl");
+				container.mesuredVolume=new PropertyValue(rs.getFloat("tubvolr"), "µl");
 				container.mesuredQuantity=new PropertyValue(rs.getFloat("tubqtr"), "ng");
 
 				Content content = new Content();
@@ -226,7 +227,7 @@ public class LimsDAO {
 	
 	
 	public List<Project> findProjectToCreate(final Map<String, List<ValidationError>> errors) throws SQLException, DAOException {
-		List<Project> results = this.jdbcTemplate.query("pl_ProjetEnCoursListe ",new Object[]{} 
+		List<Project> results = this.jdbcTemplate.query("pl_ProjetToNGL ",new Object[]{} 
 		,new RowMapper<Project>() {
 
 			public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -242,6 +243,7 @@ public class LimsDAO {
 					project.properties.put("fgGroup", new PropertyValue(fgGroupe));
 				}
 			
+				project.categoryCode=PROJECT_CATEGORY_CODE;
 				InstanceHelpers.updateTraceInformation(project.traceInformation);
 				return project;
 			}
