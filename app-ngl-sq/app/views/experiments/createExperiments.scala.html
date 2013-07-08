@@ -346,10 +346,10 @@ th {
 									<label class="control-label">{{instp.name}}</label>
 									<div class="controls"  ng-switch on="instp.choiceInList">
 										<input type="text" ng-switch-when="false" class="input-small"
-											ng-readonly="!experiment.instrumentProperties.enabled"
+											ng-readonly="!experiment.instrumentInformation.enabled"
 											ng-model="experiment.value.instrumentProperties[instp.name].value" />
 										
-										<select ng-model="experiment.value.instrumentProperties[instp.name].value" ng-switch-when="true" >
+										<select  ng-readonly="!experiment.instrumentInformation.enabled" ng-model="experiment.value.instrumentProperties[instp.name].value" ng-switch-when="true" >
 											<option ng-repeat="opt in instp.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
 									    </select>
 									</div>
