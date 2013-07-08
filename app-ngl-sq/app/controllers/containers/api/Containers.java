@@ -9,6 +9,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBQuery.Query;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -64,7 +65,7 @@ public class Containers extends CommonController {
 	    }
 	    
 	    if(StringUtils.isNotEmpty(containersSearch.categoryCode)){
-	    	queryElts.add(DBQuery.is("categoryCode", containersSearch.categoryCode.toUpperCase()));
+	    	queryElts.add(DBQuery.is("categoryCode", containersSearch.categoryCode));
 	    }
 	   
 	    if(StringUtils.isNotEmpty(containersSearch.sampleCode)){
@@ -74,7 +75,7 @@ public class Containers extends CommonController {
 	    if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isEmpty(containersSearch.experimentTypeCode)){
 	    	List<String> listePrevious = Spring.getBeanOfType(ExperimentTypeDAO.class).findVoidProcessExperimentTypeCode(containersSearch.processTypeCode);
 	    	if(null != listePrevious && listePrevious.size() > 0){
-	    		queryElts.add(DBQuery.in("fromExperimentTypeCodes", listePrevious));
+	    		queryElts.add(DBQuery.in("fromExperimentTypeCodes", listePrevious).or(DBQuery.notExists("fromExperimentTypeCodes")));
 	    	}	    		    	
 	    }
 	    
@@ -96,7 +97,6 @@ public class Containers extends CommonController {
 	   if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
 	    	queryElts.add(DBQuery.is("processTypeCode", containersSearch.processTypeCode));
 	   }
-	    
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}
 	
