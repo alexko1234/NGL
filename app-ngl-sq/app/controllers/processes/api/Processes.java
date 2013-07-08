@@ -8,28 +8,26 @@ import java.util.List;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.processes.instance.Process;
+import models.utils.InstanceHelpers;
+import models.utils.dao.DAOHelpers;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonNode;
-
-import controllers.CodeHelper;
-import controllers.CommonController;
-import controllers.Constants;
-import controllers.authorisation.PermissionHelper;
-
-import views.components.datatable.DatatableHelpers;
-import views.components.datatable.DatatableResponse;
-
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.BusinessValidationHelper;
+import views.components.datatable.DatatableHelpers;
+import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
+import controllers.CodeHelper;
+import controllers.CommonController;
+import controllers.Constants;
+import controllers.authorisation.PermissionHelper;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 
 
 public class Processes extends CommonController{
@@ -74,7 +72,7 @@ public class Processes extends CommonController{
 					Workflows.setAvailable(value.containerInputCode,value.typeCode);
 				}
 				
-				value = MongoDBDAO.save(Constants.PROCESS_COLL_NAME,value);
+				value = (Process) InstanceHelpers.save(Constants.PROCESS_COLL_NAME,value,filledForm.errors());
 				filledForm = filledForm.fill(value);
 			}
 		}
