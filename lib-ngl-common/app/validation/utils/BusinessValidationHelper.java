@@ -51,7 +51,7 @@ public class BusinessValidationHelper {
 	 * @param key
 	 * @param find
 	 * @param returnObject
-	 * @return
+	 * @return boolean
 	 */
 	
 	public static <T extends DBObject> boolean validateUniqueInstanceCode(Map<String, List<ValidationError>> errors,
@@ -67,9 +67,9 @@ public class BusinessValidationHelper {
 		return true;
 	}
 	
-	public static <T> T validateRequiredDescriptionCode(Map<String, List<ValidationError>> errors, String code, String key,
+	public static <T> void validateRequiredDescriptionCode(Map<String, List<ValidationError>> errors, String code, String key,
 			Finder<T> find) {
-		return validateRequiredDescriptionCode(errors, code, key, find, false);
+		 validateRequiredDescriptionCode(errors, code, key, find);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class BusinessValidationHelper {
 	 * @param key
 	 * @param find
 	 * @param returnObject
-	 * @return
+	 * @return object de T or null if returnObject is false
 	 */
 	public static <T> T validateRequiredDescriptionCode(Map<String, List<ValidationError>> errors, String code, String key,
 			Finder<T> find, boolean returnObject) {
@@ -98,12 +98,12 @@ public class BusinessValidationHelper {
 	 * @param key
 	 * @param find
 	 * @param returnObject
-	 * @return
+	 * @return void
 	 */
-	public static <T> T validateExistDescriptionCode(
+	public static <T> void validateExistDescriptionCode(
 			Map<String, List<ValidationError>> errors, String code, String key,
 			Finder<T> find) {
-		return validateExistDescriptionCode(errors, code, key, find, false);
+		 validateExistDescriptionCode(errors, code, key, find, false);
 	}
 
 	/***
@@ -113,7 +113,7 @@ public class BusinessValidationHelper {
 	 * @param key
 	 * @param find
 	 * @param returnObject
-	 * @return
+	 * @return object de T or null if returnObject is false
 	 */
 	public static <T> T validateExistDescriptionCode(
 			Map<String, List<ValidationError>> errors, String code, String key,
@@ -135,13 +135,11 @@ public class BusinessValidationHelper {
 		return o;
 	}
 
-	public static <T extends DBObject> T validateRequiredInstanceCode(Map<String, List<ValidationError>> errors,
+	public static <T extends DBObject> void validateRequiredInstanceCode(Map<String, List<ValidationError>> errors,
 			String code, String key, Class<T> type, String collectionName) {
-		T o = null;
 		if(required(errors, code, key)){
-			o = validateExistInstanceCode(errors, code, key, type,collectionName, false);
+			validateExistInstanceCode(errors, code, key, type,collectionName);
 		}
-		return o;	
 	}
 
 	/**
@@ -214,6 +212,12 @@ public class BusinessValidationHelper {
 		return l;
 	}
 
+	
+	
+	public static <T extends DBObject> void validateExistInstanceCode(Map<String, List<ValidationError>> errors,
+			String code, String key, Class<T> type, String collectionName) {
+		validateExistInstanceCode(errors, code, key, type, collectionName, false);
+	}
 	/**
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
