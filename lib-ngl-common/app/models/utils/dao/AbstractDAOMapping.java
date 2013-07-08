@@ -58,22 +58,22 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 	@SuppressWarnings("unchecked")
 	public Boolean isCodeExist(String code) throws DAOException
 	{
-		if(null == code){
-			throw new DAOException("code is mandatory");
-		}
-		try {
-			
-			String sql = sqlCommon+" WHERE code = ? ";	
-			Model<T> o =  (Model<T>)this.jdbcTemplate.queryForObject(sql, this.entityClass, code);
-			if(o != null && o.id != null){
-				return Boolean.TRUE;
-			}else{
-				return Boolean.FALSE;
+			if(null == code){
+				throw new DAOException("code is mandatory");
 			}
-		} catch (DataAccessException e) {
-			Logger.warn(e.getMessage());
-			return null;
-		}
+			try {
+				
+				String sql = "select id from common_info_type WHERE code=?";
+				long id =  this.jdbcTemplate.queryForLong(sql, code);
+				if(id > 0){
+					return Boolean.TRUE;
+				}else{
+					return Boolean.FALSE;
+				}
+			} catch (DataAccessException e) {
+				Logger.warn(e.getMessage());
+				return null;
+			}
 	}
 	
 	
