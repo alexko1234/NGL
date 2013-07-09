@@ -75,7 +75,7 @@ public class Containers extends CommonController {
 	    if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isEmpty(containersSearch.experimentTypeCode)){
 	    	List<String> listePrevious = Spring.getBeanOfType(ExperimentTypeDAO.class).findVoidProcessExperimentTypeCode(containersSearch.processTypeCode);
 	    	if(null != listePrevious && listePrevious.size() > 0){
-	    		queryElts.add(DBQuery.in("fromExperimentTypeCodes", listePrevious).or(DBQuery.notExists("fromExperimentTypeCodes")));
+	    		queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious),DBQuery.notExists("fromExperimentTypeCodes")));
 	    	}	    		    	
 	    }
 	    
@@ -97,6 +97,7 @@ public class Containers extends CommonController {
 	   if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
 	    	queryElts.add(DBQuery.is("processTypeCode", containersSearch.processTypeCode));
 	   }
+	   
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}
 	
