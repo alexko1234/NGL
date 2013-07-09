@@ -70,7 +70,7 @@ public class BusinessValidationHelper {
 	
 	
 	/**
-	 * Validate if code is unique in MongoDB collection
+	 * Validate if field value is unique in MongoDB collection
 	 * @param errors
 	 * @param key : field name
 	 * @param keyValue : field value
