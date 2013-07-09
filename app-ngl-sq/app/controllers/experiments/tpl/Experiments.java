@@ -79,7 +79,7 @@ public class Experiments extends Controller{
 		config.button = true;
 		config.save = true;
 		config.edit = true;
-		
+
 		return ok(createExperiments.render(experimentTypeCode,config,experimentProperties(experimentTypeCode)));
 	}
 	
@@ -122,11 +122,6 @@ public class Experiments extends Controller{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//Test
-		PropertyDefinition prde = new PropertyDefinition();
-		prde.name = "test";
-		expType.propertiesDefinitions.add(prde);
 		
 		return expType.propertiesDefinitions;
 	}
