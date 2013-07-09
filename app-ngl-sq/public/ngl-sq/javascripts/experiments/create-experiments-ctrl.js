@@ -68,10 +68,10 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		save:function(){
 			if(this.enabled && this.protocols.selected &&  this.resolutions.selected.code){
 				$scope.clearMessages();
-				$scope.experiment.value.protocol = this.protocols.selected.code;
+				$scope.experiment.value.protocolCode = this.protocols.selected.code;
 				$scope.experiment.value.resolutionCode = this.resolutions.selected.code;
 				
-				$http.post(jsRoutes.controllers.experiments.api.Experiments.updateExperimentInformation($scope.experiment.value.code).url, $scope.experiment.value)
+				$http.post(jsRoutes.controllers.experiments.api.Experiments.updateExperimentInformations($scope.experiment.value.code).url, $scope.experiment.value)
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						$scope.message.clazz="alert alert-success";
