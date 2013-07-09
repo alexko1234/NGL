@@ -165,6 +165,8 @@ public class Container extends DBObject implements IValidation {
 				content.validate(errors);
 			}
 		}
+		
+		support.validate(errors);
 
 	}
 

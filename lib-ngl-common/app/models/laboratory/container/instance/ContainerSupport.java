@@ -65,7 +65,7 @@ public class ContainerSupport implements IValidation {
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
 
-		BusinessValidationHelper.validateUniqueFieldValue(errors, "barCode", barCode, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
+		BusinessValidationHelper.validateUniqueFieldValue(errors, "support.barCode", barCode, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
 		BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.categoryCode, "categoryCode", ContainerSupportCategory.find, false);
 		BusinessValidationHelper.validateExistInstanceCode(errors, this.stockCode, "stockCode",Stock.class,InstanceConstants.STOCK_COLL_NAME ,false);
 

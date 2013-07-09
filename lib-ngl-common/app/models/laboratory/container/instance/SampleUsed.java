@@ -61,8 +61,7 @@ public class SampleUsed implements IValidation{
 	public void validate(Map<String, List<ValidationError>> errors) {
 
 		BusinessValidationHelper.validateExistInstanceCode(errors, sampleCode, "sampleCode", Sample.class, InstanceConstants.SAMPLE_COLL_NAME, false);
-		Logger.debug("Type code"+typeCode);
-		//BusinessValidationHelper.validateExistDescriptionCode(errors, typeCode, "typeCode", SampleType.find,false);
+		BusinessValidationHelper.validateExistDescriptionCode(errors, typeCode, "typeCode", SampleType.find,false);
 		BusinessValidationHelper.validateExistDescriptionCode(errors, categoryCode, "categoryCode",SampleCategory.find,false);
 
 	}
