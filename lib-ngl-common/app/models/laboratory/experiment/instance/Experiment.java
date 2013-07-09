@@ -54,11 +54,11 @@ public class Experiment extends DBObject implements IValidation {
 	public String stateCode;
 	public String resolutionCode;
 	
-	public List<InputOutputContainer> listInputOutputContainers;
+	//TODO delete class InputOutputContainer
+	//public List<InputOutputContainer> listInputOutputContainers;
 	
-	//Idea for remplace listInputOutputContainers attribut
-	//public List<InputOutput> inputOutputs;
-	//public List<AtomicTransfert> atomicTransferts; 
+	//Idea for replace listInputOutputContainers attribut
+	public Map<Integer,AtomicTransfertMethod> atomicTransfertMethods; 
 	
 	public List<ReagentUsed> reagentUseds;
 	
@@ -119,7 +119,7 @@ public class Experiment extends DBObject implements IValidation {
 	@JsonIgnore
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
-		//TODO
+		
 	
 	}
 
