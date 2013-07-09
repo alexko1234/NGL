@@ -17,6 +17,7 @@ import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceHelpers;
+import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import play.Logger;
 import play.data.validation.ValidationError;
@@ -103,7 +104,7 @@ public class LoadDataHelper {
 	
 	
 	public static Container containerFromCSVLine(String[] firstLine,
-			String[] nextLine,Sample sample,Map<String,PropertyDefinition> propertiesDefinition) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+			String[] nextLine,Sample sample,Map<String,PropertyDefinition> propertiesDefinition) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, DAOException {
 
 		Container container = new Container();
 		ContainerHelper.addContent(container, sample);
