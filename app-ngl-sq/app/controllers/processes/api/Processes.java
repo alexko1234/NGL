@@ -38,8 +38,9 @@ public class Processes extends CommonController{
 	
 	public static Result save(){
 		Form<Process> filledForm = getFilledForm(processForm,Process.class);
+		Process value = null;
 		if (!filledForm.hasErrors()) {
-			Process value = filledForm.get();
+			value = filledForm.get();
 			if (null == value._id) {
 				//init state
 				//the trace
@@ -73,10 +74,10 @@ public class Processes extends CommonController{
 				}
 				
 				value = (Process) InstanceHelpers.save(Constants.PROCESS_COLL_NAME,value,filledForm.errors());
-				filledForm = filledForm.fill(value);
 			}
 		}
 		if (!filledForm.hasErrors()) {
+			filledForm = filledForm.fill(value);
 			return ok(Json.toJson(filledForm.get()));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
