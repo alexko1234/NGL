@@ -9,11 +9,16 @@ import models.laboratory.stock.instance.Stock;
 import models.utils.HelperObjects;
 import models.utils.IValidation;
 import models.utils.InstanceConstants;
+import net.vz.mongodb.jackson.DBQuery;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import fr.cea.ig.MongoDBDAO;
+
 import play.data.validation.ValidationError;
 import validation.utils.BusinessValidationHelper;
+
+import static validation.utils.ConstraintsHelper.addErrors;
 
 
 
@@ -59,6 +64,8 @@ public class ContainerSupport implements IValidation {
 	@JsonIgnore
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
+
+		BusinessValidationHelper.validateUniqueFieldValue(errors, "barCode", barCode, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
 		BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.categoryCode, "categoryCode", ContainerSupportCategory.find, false);
 		BusinessValidationHelper.validateExistInstanceCode(errors, this.stockCode, "stockCode",Stock.class,InstanceConstants.STOCK_COLL_NAME ,false);
 
