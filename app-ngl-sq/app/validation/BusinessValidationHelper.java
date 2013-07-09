@@ -97,10 +97,8 @@ public class BusinessValidationHelper {
 			required(errors, experiment.resolutionCode, "resolutionCode");
 			required(errors, experiment.protocolCode, "protocolCode");
 			required(errors, experiment.instrument, "instrument");
-			required(errors, experiment.instrumentProperties, "instrumentProperties");
-			required(errors, experiment.experimentProperties, "experimentProperties");
 			required(errors, experiment.listInputOutputContainers, "InputOutputContainer");
-			
+				
 			validateProperties(errors, experiment.experimentProperties, experiment.getExperimentType().propertiesDefinitions, getKey(rootKeyName,"nullPropertiesDefinitions"));
 			
 		}else{
