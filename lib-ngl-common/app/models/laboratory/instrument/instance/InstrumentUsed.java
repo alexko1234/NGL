@@ -11,6 +11,7 @@ import models.utils.IValidation;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import play.data.validation.ValidationError;
+import validation.utils.BusinessValidationHelper;
 
 public class InstrumentUsed implements IValidation {
 
@@ -30,8 +31,8 @@ public class InstrumentUsed implements IValidation {
 	@JsonIgnore
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
-		// TODO Auto-generated method stub
-		
+		BusinessValidationHelper.validateRequiredDescriptionCode(errors, code, "instrument.code", Instrument.find);
+		BusinessValidationHelper.validateRequiredDescriptionCode(errors, categoryCode, "instrument.categoryCode", InstrumentCategory.find);
 	}
 
 }
