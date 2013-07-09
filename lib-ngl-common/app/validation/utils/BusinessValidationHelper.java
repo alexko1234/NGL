@@ -18,6 +18,7 @@ import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
+import models.utils.InstanceConstants;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 import play.Logger;
@@ -66,6 +67,32 @@ public class BusinessValidationHelper {
 		
 		return true;
 	}
+	
+	
+	/**
+	 * Validate if code is unique in MongoDB collection
+	 * @param errors
+	 * @param key : field name
+	 * @param keyValue : field value
+	 * @param type : type DBObject
+	 * @param collectionName : Mongo collection name
+	 * @param returnObject
+	 * @return boolean
+	 */
+	
+	public static <T extends DBObject> boolean validateUniqueFieldValue(Map<String, List<ValidationError>> errors,
+			String key, String keyValue, Class<T> type, String collectionName){
+		
+		if(null!=keyValue && MongoDBDAO.checkObjectExist(collectionName, type, key, keyValue)){
+			addErrors(errors, key, ERROR_NOTUNIQUE, keyValue);
+			return false;
+		}else if (keyValue!=null){
+			return false;
+		}	
+		
+		return true;
+	}
+	
 	
 	public static <T> void validateRequiredDescriptionCode(Map<String, List<ValidationError>> errors, String code, String key,
 			Finder<T> find) {
