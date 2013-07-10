@@ -64,9 +64,6 @@ public class Processes extends CommonController{
 				value.traceInformation.setTraceInformation(PermissionHelper.getCurrentUser(session()));
 			}
 			
-			//Business Validation
-			BusinessValidationHelper.validateProcess(filledForm.errors(), value, Constants.PROCESS_COLL_NAME,null);
-			
 			if (!filledForm.hasErrors()) {
 				if(value._id == null){
 					//Workflows Implementation

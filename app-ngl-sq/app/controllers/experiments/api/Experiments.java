@@ -1,18 +1,11 @@
 package controllers.experiments.api;
 
 import static play.data.Form.form;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputOutputContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
-import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
@@ -39,9 +32,7 @@ public class Experiments extends CommonController{
 	 	
 	 	exp = traceInformation(exp);
 	 	
-	 	BusinessValidationHelper.validateExperiment(experimentFilledForm.errors(), exp,Constants.EXPERIMENT_COLL_NAME, null);
-	 	
-		if (!experimentFilledForm.hasErrors()) {
+	 	if (!experimentFilledForm.hasErrors()) {
 		 	
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("typeCode",exp.typeCode);
@@ -61,9 +52,7 @@ public class Experiments extends CommonController{
 	 	
 	 	exp = traceInformation(exp);
 	 	
-	 	BusinessValidationHelper.validateExperiment(experimentFilledForm.errors(), exp,Constants.EXPERIMENT_COLL_NAME, null);
-		
-		if (!experimentFilledForm.hasErrors()) {
+	 	if (!experimentFilledForm.hasErrors()) {
 		 	
 			Builder builder = new DBUpdate.Builder();
 			builder = builder.set("instrument",exp.instrument);
@@ -81,9 +70,7 @@ public class Experiments extends CommonController{
 	 	
 	 	exp = traceInformation(exp);
 	 	
-	 	BusinessValidationHelper.validateExperiment(experimentFilledForm.errors(), exp,Constants.EXPERIMENT_COLL_NAME, null);
-	 	
-		if (!experimentFilledForm.hasErrors()) {
+	 	if (!experimentFilledForm.hasErrors()) {
 		 	
 			Builder builder = new DBUpdate.Builder();
 			builder = builder.set("experimentProperties",exp.experimentProperties);
@@ -101,9 +88,7 @@ public class Experiments extends CommonController{
 	 	
 	 	exp = traceInformation(exp);
 	 	
-	 	BusinessValidationHelper.validateExperiment(experimentFilledForm.errors(), exp,Constants.EXPERIMENT_COLL_NAME, null);
-	 	
-		if (!experimentFilledForm.hasErrors()) {
+	 	if (!experimentFilledForm.hasErrors()) {
 		 	
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("instrumentProperties",exp.instrumentProperties);
@@ -135,9 +120,7 @@ public class Experiments extends CommonController{
 	 	
 	 	exp = traceInformation(exp);
 	 	
-	 	BusinessValidationHelper.validateExperiment(experimentFilledForm.errors(), exp,Constants.EXPERIMENT_COLL_NAME, null);
-		
-		if (!experimentFilledForm.hasErrors()) {
+	 	if (!experimentFilledForm.hasErrors()) {
 		 	
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("comments",exp.comments);
@@ -156,17 +139,15 @@ public class Experiments extends CommonController{
 	 	
 	 	exp = traceInformation(exp);
 	 	
-	 	BusinessValidationHelper.validateExperiment(experimentFilledForm.errors(), exp,Constants.EXPERIMENT_COLL_NAME, null);
-		
 	 	//TODO: Output gestion
 	 	
 		if (!experimentFilledForm.hasErrors()) {
-			for(InputOutputContainer iop: exp.listInputOutputContainers) {
-				Workflows.setInWaitingExperiment(iop.inputContainers);
+			for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+				Workflows.setInWaitingExperiment(exp.atomicTransfertMethods.get(i).getInputContainers());
 			}
 			
 			Builder builder = new DBUpdate.Builder();
-			builder=builder.set("listInputOutputContainers",exp.listInputOutputContainers);
+			builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
 			
 			MongoDBDAO.updateSetArray("Experiment", Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
@@ -181,8 +162,10 @@ public class Experiments extends CommonController{
 	 	
 	 	exp = traceInformation(exp);
 	 	
-	 	BusinessValidationHelper.validateExperiment(experimentFilledForm.errors(), exp,Constants.EXPERIMENT_COLL_NAME, null);
-		
+	 	if(exp.stateCode.equals("IP")){
+	 		//TODO if first experiment in the processus then processus state to IP
+	 	}
+	 	
 	 	if (!experimentFilledForm.hasErrors()) {	 	
 			Builder builder = new DBUpdate.Builder();
 			builder = builder.set("stateCode",exp.stateCode);
@@ -212,8 +195,7 @@ public class Experiments extends CommonController{
 	 	
 		exp = traceInformation(exp);
 	 	
-	 	BusinessValidationHelper.validateExperiment(experimentFilledForm.errors(), exp,Constants.EXPERIMENT_COLL_NAME, null);
-	 	if (!experimentFilledForm.hasErrors()) {	 	
+		if (!experimentFilledForm.hasErrors()) {	 	
 	 		exp = MongoDBDAO.save("Experiment",exp);
 		
 	 		return ok(Json.toJson(exp));
