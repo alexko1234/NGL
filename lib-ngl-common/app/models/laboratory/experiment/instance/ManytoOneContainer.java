@@ -29,5 +29,8 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 		}
 	}
 
+	public List<ContainerUsed> getInputContainers(){
+		return inputContainerUseds;
+	}
 
 }

@@ -22,7 +22,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 	@Override
 	public void createOutputContainerUsed(Map<String,PropertyDefinition> propertyDefinitions, Map<String,PropertyValue> propertyValues) {
 		
-		Container container =MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.containerCode);
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.containerCode);
 		Container outputContainer = new Container();
 		if(outputContainer.contents==null){
 			container.contents=new ArrayList<Content>();
@@ -43,5 +43,11 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 	public void validate(Map<String, List<ValidationError>> errors) {
 		inputContainerUsed.validate(errors);
 		outputContainerUsed.validate(errors);
+	}
+	
+	public List<ContainerUsed> getInputContainers(){
+		List<ContainerUsed> cu = new ArrayList<ContainerUsed>();
+		cu.add(inputContainerUsed);
+		return cu;
 	}
 }

@@ -1,5 +1,6 @@
 package models.laboratory.experiment.instance;
 
+import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.PropertyDefinition;
@@ -24,5 +25,5 @@ public abstract class AtomicTransfertMethod implements IValidation {
 	public int position;
 	public Comment comment;
 	public abstract void createOutputContainerUsed(Map<String,PropertyDefinition> propertyDefinitions, Map<String,PropertyValue> propertyValues);
-
+	public abstract List<ContainerUsed> getInputContainers();
 }

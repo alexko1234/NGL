@@ -1,5 +1,11 @@
 package models.laboratory.experiment.instance;
 
+import static validation.utils.ConstraintsHelper.addErrors;
+import static validation.utils.ConstraintsHelper.getKey;
+import static validation.utils.ConstraintsHelper.required;
+import static validation.utils.ConstraintsHelper.validateProperties;
+import static validation.utils.ConstraintsHelper.validateTraceInformation;
+
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +23,7 @@ import models.laboratory.reagent.instance.ReagentUsed;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import models.utils.IValidation;
+import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -119,7 +126,40 @@ public class Experiment extends DBObject implements IValidation {
 	@JsonIgnore
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
+		String rootKeyName = null;
+		if(this == null){
+			throw new IllegalArgumentException("this is null");
+		}
 		
+		if(this._id == null){
+			validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(errors, this.code, Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME);
+		}
+		
+		validateTraceInformation(errors, this.traceInformation, this._id);
+		
+		required(errors, this.stateCode, "stateCode"); 
+		
+		if(this.stateCode.equals("N")) {
+			required(errors, this.typeCode, "typeCode");
+		} else if(this.stateCode.equals("IP")) {
+			required(errors, this.typeCode, "typeCode"); 
+			required(errors, this.resolutionCode, "resolutionCode");
+			required(errors, this.protocolCode, "protocolCode");
+			required(errors, this.instrument, "instrument");
+		} else if(this.stateCode.equals("F")) {
+			required(errors, this.typeCode, "typeCode"); 
+			required(errors, this.resolutionCode, "resolutionCode");
+			required(errors, this.protocolCode, "protocolCode");
+			required(errors, this.instrument, "instrument");
+			required(errors, this.atomicTransfertMethods, "atomicTransfertMethods");
+				
+			validateProperties(errors, this.experimentProperties, this.getExperimentType().propertiesDefinitions, getKey(rootKeyName,"nullPropertiesDefinitions"));
+			
+		}else{
+			addErrors(errors,this.stateCode, getKey(rootKeyName,"InvalidthisStateCode"));
+		}	
+		
+		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.typeCode, "typeCode", ExperimentType.find);
 	
 	}
 

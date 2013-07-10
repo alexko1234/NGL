@@ -27,7 +27,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 			Map<String, PropertyDefinition> propertyDefinitions,
 			Map<String, PropertyValue> propertyValues) {
 		
-		Container container =MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.containerCode);
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.containerCode);
 		List<Container> outputContainers  = new ArrayList<Container>();
 	
 		for(int i=0;i<outPutNumber;i++){
@@ -44,11 +44,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 			}
 			
 			outputContainers.add(outputContainer);
-			
-		}
-		
-	
-		
+		}	
 	}
 
 
@@ -58,5 +54,11 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 		for(ContainerUsed containerUsed:outputContainerUseds){
 			containerUsed.validate(errors);
 		}
+	}
+	
+	public List<ContainerUsed> getInputContainers(){
+		List<ContainerUsed> cu = new ArrayList<ContainerUsed>();
+		cu.add(inputContainerUsed);
+		return cu;
 	}
 }
