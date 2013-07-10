@@ -3,6 +3,8 @@ package controllers.experiments.tpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import fr.cea.ig.MongoDBDAO;
 
 import models.laboratory.common.description.PropertyDefinition;
@@ -10,6 +12,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
+import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 
 import play.Logger;
@@ -25,6 +28,7 @@ import views.html.experiments.createExperiments;
 import views.html.experiments.home;
 import views.html.experiments.searchContainers;
 import views.html.experiments.newExperiments;
+import views.html.experiments.containersExperiment;
 
 public class Experiments extends Controller{
 	public static Result home(String code){
@@ -65,8 +69,7 @@ public class Experiments extends Controller{
 		//TODO: Multi header datatable
 		//TODO: Datatable with tubes
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("mesuredVolume.value", Messages.get("experiments.table.volume.value"),true, true, false));	
+		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, false));	
 		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes"), true, false, false));				
 		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("containers.table.sampleCodes"), true, false, false));		
 		columns.add(DatatableHelpers.getColumn("valid", Messages.get("containers.table.valid"), true, false, false));
@@ -74,13 +77,17 @@ public class Experiments extends Controller{
 		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes"), true, false, false));
 			
+		List<PropertyDefinition> props = experimentProperties(experimentTypeCode);
+		
+		columns.addAll(getPropertiesDefinitionsColumns(props,true));
+		
 		DatatableConfig config = new DatatableConfig(columns);
 		config.remove = true;
 		config.button = true;
 		config.save = true;
 		config.edit = true;
 
-		return ok(createExperiments.render(experimentTypeCode,config,experimentProperties(experimentTypeCode)));
+		return ok(createExperiments.render(experimentTypeCode,config,props));
 	}
 	
 	public static Result javascriptRoutes() {
@@ -113,6 +120,14 @@ public class Experiments extends Controller{
   	      )	  	      
   	    );
   	  }
+	
+	private static List<DatatableColumn> getPropertiesDefinitionsColumns(List<PropertyDefinition> list, boolean edit){
+		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
+		for(PropertyDefinition p : list) {
+				columns.add(DatatableHelpers.getColumn("properties."+p.name, Messages.get("processes.table.properties."+p.name), true, edit, false));
+			}
+		return columns;
+	}
 	
 	private static List<PropertyDefinition> experimentProperties(String experimentTypeCode){
 		 ExperimentType expType = null;
