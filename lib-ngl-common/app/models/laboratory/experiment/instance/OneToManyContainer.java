@@ -17,9 +17,9 @@ import models.utils.InstanceHelpers;
 
 public class OneToManyContainer extends AtomicTransfertMethod {
 
-	int outPutNumber;
-	ContainerUsed inputContainerUsed;
-	List<ContainerUsed> outputContainerUseds;
+	public int outPutNumber;
+	public ContainerUsed inputContainerUsed;
+	public List<ContainerUsed> outputContainerUseds;
 	
 	
 	@Override

@@ -8,22 +8,24 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.utils.IValidation;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonTypeInfo.As;
 import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
 
 
-@JsonTypeInfo(use=Id.CLASS, include=As.PROPERTY, property="class")
+@JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="class")
 @JsonSubTypes({
-	@JsonSubTypes.Type(value = ManytoOneContainer.class, name = "ManyToOne"),
-	@JsonSubTypes.Type(value = OneToManyContainer.class, name = "OneToMany"),
-	@JsonSubTypes.Type(value = OneToOneContainer.class, name = "OneToOne")
+	@JsonSubTypes.Type(value =  models.laboratory.experiment.instance.ManytoOneContainer.class, name = "ManyToOne"),
+	@JsonSubTypes.Type(value =  models.laboratory.experiment.instance.OneToManyContainer.class, name = "OneToMany"),
+	@JsonSubTypes.Type(value =  models.laboratory.experiment.instance.OneToOneContainer.class, name = "OneToOne")
 })
 public abstract class AtomicTransfertMethod implements IValidation {
 
 	public int position;
 	public Comment comment;
 	public abstract void createOutputContainerUsed(Map<String,PropertyDefinition> propertyDefinitions, Map<String,PropertyValue> propertyValues);
+	@JsonIgnore
 	public abstract List<ContainerUsed> getInputContainers();
 }
