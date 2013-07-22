@@ -13,8 +13,6 @@ import play.i18n.Messages;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import utils.InputCheckBox;
-import utils.InputSelect;
 import views.components.datatable.DatatableColumn;
 import views.components.datatable.DatatableConfig;
 import views.components.datatable.DatatableHelpers;
