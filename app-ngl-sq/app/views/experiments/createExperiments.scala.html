@@ -1,4 +1,5 @@
-@(experimentTypeCode:java.lang.String,datatableConfig: views.components.datatable.DatatableConfig,experimentProperties: List[models.laboratory.common.description.PropertyDefinition])
+@(experimentTypeCode:java.lang.String,datatableConfig: views.components.datatable.DatatableConfig,
+experimentProperties: org.codehaus.jackson.JsonNode)
 <style type="text/css">
 #sub_body {
 	margin-top: 20px;
@@ -288,21 +289,22 @@ th {
 					</div>
 					<h5>Experiment properties:</h5>
 					<div class="row">
-						<form class="form-stacked" style="padding-left: 10%">
-
-							@for(expp <- experimentProperties) {
+						<form class="form-stacked" style="padding-left: 10%" ng-init="setExperimentProperties(@experimentProperties)">
 							<div class="span3">
-								<div class="control-group">
-									<label class="control-label">@expp.name</label>
-									<div class="controls">
-										<!--<span class="input-small uneditable-input">v1</span>-->
-										<input type="text" class="input-small"
+								<div class="control-group" ng-repeat="expp in experiment.experimentProperties.experimentPropertiesInputs">
+								<div  my-current-time="expp"></div>
+								<label class="control-label">{{expp.name}}</label>
+									<div class="controls"  ng-switch on="expp.choiceInList">
+										<input type="text" ng-switch-when="false" class="input-small"
 											ng-readonly="!experiment.experimentProperties.enabled"
-											ng-model="experiment.value.experimentProperties.@(expp.name).value" />
+											ng-model="experiment.value.experimentProperties[expp.name].value" />
+										
+										<select  ng-readonly="!experiment.experimentInformation.enabled" ng-disabled="!experiment.experimentInformation.enabled" ng-model="experiment.value.experimentProperties[expp.name].value" ng-switch-when="true" >
+											<option ng-repeat="opt in expp.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
+									    </select>
 									</div>
 								</div>
 							</div>
-							}
 						</form>
 					</div>
 				</div>
@@ -349,7 +351,7 @@ th {
 											ng-readonly="!experiment.instrumentInformation.enabled"
 											ng-model="experiment.value.instrumentProperties[instp.name].value" />
 										
-										<select  ng-readonly="!experiment.instrumentInformation.enabled" ng-model="experiment.value.instrumentProperties[instp.name].value" ng-switch-when="true" >
+										<select  ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" ng-model="experiment.value.instrumentProperties[instp.name].value" ng-switch-when="true" >
 											<option ng-repeat="opt in instp.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
 									    </select>
 									</div>
@@ -362,15 +364,15 @@ th {
 
 
 				<div class="row-fluid">
-					<div id="experience_table" class="row1">
-						<fieldset>
-							@button() = {
-								<button class="btn btn btn-info" ng-click="" data-toggle="tooltip" title="@Messages("experiments.addpurif")">@(Messages("experiments.addpurif"))</button>
-								<button class="btn btn btn-info" ng-click="" data-toggle="tooltip" title="@Messages("experiments.addqc")">@(Messages("experiments.addqc"))</button>
-							}
-							@views.html.components.datatable.datatable(datatableConfig,null,button)
-						</fieldset>
-					</div>
+		<div id="experience_table" class="row1">
+	<fieldset>
+		@button() = {
+			<button class="btn btn btn-info" ng-click="datatable.deleteColumn('datatable',2)" data-toggle="tooltip" title="@Messages("experiments.addpurif")">@(Messages("experiments.addpurif"))</button>
+			<button class="btn btn btn-info" ng-click="" data-toggle="tooltip" title="@Messages("experiments.addqc")">@(Messages("experiments.addqc"))</button>
+		}
+		@views.html.components.datatable.datatable(datatableConfig,null,button)
+	</fieldset>
+</div>
 				</div>
 				<div class="accordion" id="accordionCom">
 					<div class="accordion-group">
