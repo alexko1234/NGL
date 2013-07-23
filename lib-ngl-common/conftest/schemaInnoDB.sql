@@ -232,6 +232,7 @@ CREATE TABLE experiment_type (
   id bigint(20) NOT NULL,
   fk_experiment_category bigint(20) NOT NULL,
   fk_common_info_type bigint(20) NOT NULL,
+  atomic_transfert_method varchar(255) NOT NULL,
   PRIMARY KEY  (id),
   FOREIGN KEY (fk_experiment_category) REFERENCES experiment_category(id),
   FOREIGN KEY (fk_common_info_type) REFERENCES common_info_type(id)

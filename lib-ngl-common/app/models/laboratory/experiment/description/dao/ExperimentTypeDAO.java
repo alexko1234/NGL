@@ -34,7 +34,7 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 
 	public ExperimentTypeDAO() {
 		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.class,
-				"SELECT t.id, t.fk_experiment_category, t.fk_common_info_type "+
+				"SELECT t.id, t.fk_experiment_category, t.fk_common_info_type, t.atomic_transfert_method "+
 						"FROM experiment_type as t "+
 				"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
 	}
@@ -60,6 +60,7 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 		parameters.put("id", experimentType.id);
 		parameters.put("fk_common_info_type", experimentType.id);
 		parameters.put("fk_experiment_category", experimentType.category.id);
+		parameters.put("atomic_transfert_method", experimentType.atomicTransfertMethod);
 		jdbcInsert.execute(parameters);
 
 		//Add list protocols

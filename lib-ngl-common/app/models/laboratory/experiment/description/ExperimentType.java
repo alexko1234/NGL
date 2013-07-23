@@ -19,6 +19,7 @@ public class ExperimentType extends CommonInfoType{
 	//Relationship accessible by the parent table in the database
 	public List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
 	public List<Protocol> protocols = new ArrayList<Protocol>();
+	public String atomicTransfertMethod;
 		
 	public ExperimentType() {
 		super(ExperimentTypeDAO.class.getName());		
