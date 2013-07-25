@@ -62,6 +62,7 @@ experiments.intrument = Instrument
 experiments.status = Statut
 experiments.intrumentUsedType = Type d'instrument
 experiments.tabs.search = Recherche
+experiments.generateOutput = Generer tube sortie
 
 experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée
