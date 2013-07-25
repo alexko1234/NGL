@@ -22,7 +22,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 	public List<Container> createOutputContainerUsed(
 			Map<String, PropertyDefinition> propertyDefinitions,
 			Map<String, PropertyValue> propertyValues) {
-
+		return null;
 	}
 
 	@Override
