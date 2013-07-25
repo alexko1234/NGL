@@ -5,6 +5,7 @@ import java.util.Map;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.container.instance.Container;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -18,7 +19,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 	public ContainerUsed outputContainerUsed;
 
 	@Override
-	public void createOutputContainerUsed(
+	public List<Container> createOutputContainerUsed(
 			Map<String, PropertyDefinition> propertyDefinitions,
 			Map<String, PropertyValue> propertyValues) {
 

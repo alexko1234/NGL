@@ -23,7 +23,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	
 	
 	@Override
-	public void createOutputContainerUsed(
+	public List<Container> createOutputContainerUsed(
 			Map<String, PropertyDefinition> propertyDefinitions,
 			Map<String, PropertyValue> propertyValues) {
 		
@@ -44,7 +44,9 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 			}
 			
 			outputContainers.add(outputContainer);
-		}	
+		}
+		
+		return outputContainers;
 	}
 
 

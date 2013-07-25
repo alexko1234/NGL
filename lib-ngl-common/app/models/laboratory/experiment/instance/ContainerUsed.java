@@ -34,6 +34,12 @@ public class ContainerUsed implements IValidation{
 	public ContainerUsed(String containerCode) {
 		this.containerCode=containerCode;
 	}
+	
+	@JsonIgnore
+	public ContainerUsed(Container container) {
+		//this.containerCode=containerCode;
+		//TODO
+	}
 
 	@JsonIgnore
 	public Container getContainer(){

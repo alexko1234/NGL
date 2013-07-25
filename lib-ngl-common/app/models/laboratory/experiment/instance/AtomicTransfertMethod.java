@@ -6,6 +6,7 @@ import java.util.Map;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.container.instance.Container;
 import models.utils.IValidation;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -25,7 +26,7 @@ public abstract class AtomicTransfertMethod implements IValidation {
 
 	public int position;
 	public Comment comment;
-	public abstract void createOutputContainerUsed(Map<String,PropertyDefinition> propertyDefinitions, Map<String,PropertyValue> propertyValues);
+	public abstract List<Container> createOutputContainerUsed(Map<String,PropertyDefinition> propertyDefinitions, Map<String,PropertyValue> propertyValues);
 	@JsonIgnore
 	public abstract List<ContainerUsed> getInputContainers();
 }

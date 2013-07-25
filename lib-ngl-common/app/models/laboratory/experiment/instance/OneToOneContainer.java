@@ -20,12 +20,12 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 	
 	@Override
-	public void createOutputContainerUsed(Map<String,PropertyDefinition> propertyDefinitions, Map<String,PropertyValue> propertyValues) {
+	public List<Container> createOutputContainerUsed(Map<String,PropertyDefinition> propertyDefinitions, Map<String,PropertyValue> propertyValues) {
 		
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.containerCode);
 		Container outputContainer = new Container();
 		if(outputContainer.contents==null){
-			container.contents=new ArrayList<Content>();
+			outputContainer.contents=new ArrayList<Content>();
 		}
 		
 		outputContainer.contents.addAll(container.contents);
@@ -36,7 +36,10 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 		
 		//copy value in properties container
 		//TODO
-
+		this.outputContainerUsed = new ContainerUsed(container);
+		List<Container> containers = new ArrayList<Container>();
+		containers.add(container);
+		return containers;
 	}
 	
 	@Override
