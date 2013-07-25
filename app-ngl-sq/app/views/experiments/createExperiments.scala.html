@@ -270,7 +270,7 @@ th {
 					class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="#">Launch calcul</a></li>
+					<li><a href="#" ng-click="outputGeneration();">@Messages("experiments.generateOutput")</a></li>
 				</ul>
 			<button class="btn btn-primary" ng-click="saveAll();" data-toggle="tooltip" title="@Messages("experiments.save_all")">
 				<i class="icon-save icon-large"></i>
@@ -289,10 +289,9 @@ th {
 					</div>
 					<h5>Experiment properties:</h5>
 					<div class="row">
-						<form class="form-stacked" style="padding-left: 10%" ng-init="setExperimentProperties(@experimentProperties)">
+						<form class="form-inline" style="padding-left: 10%" ng-init="setExperimentProperties(@experimentProperties)">
 							<div class="span3">
-								<div class="control-group" ng-repeat="expp in experiment.experimentProperties.experimentPropertiesInputs">
-								<div  my-current-time="expp"></div>
+								<div class="control-group" ng-repeat="expp in experiment.experimentProperties.inputs">
 								<label class="control-label">{{expp.name}}</label>
 									<div class="controls"  ng-switch on="expp.choiceInList">
 										<input type="text" ng-switch-when="false" class="input-small"
@@ -342,8 +341,8 @@ th {
 											</select>
 											<hr>
 								</form>	
-						<form class="form-stacked" style="padding-left: 10%">
-							<div ng-repeat="instp in experiment.instrumentProperties.instrumentPropertiesInputs">
+						<form class="form-inline" style="padding-left: 10%">
+							<div ng-repeat="instp in experiment.instrumentProperties.inputs">
 								<div class="control-group">
 									<label class="control-label">{{instp.name}}</label>
 									<div class="controls"  ng-switch on="instp.choiceInList">
@@ -367,7 +366,7 @@ th {
 		<div id="experience_table" class="row1">
 	<fieldset>
 		@button() = {
-			<button class="btn btn btn-info" ng-click="datatable.deleteColumn('datatable',2)" data-toggle="tooltip" title="@Messages("experiments.addpurif")">@(Messages("experiments.addpurif"))</button>
+			<button class="btn btn btn-info" ng-click="" data-toggle="tooltip" title="@Messages("experiments.addpurif")">@(Messages("experiments.addpurif"))</button>
 			<button class="btn btn btn-info" ng-click="" data-toggle="tooltip" title="@Messages("experiments.addqc")">@(Messages("experiments.addqc"))</button>
 		}
 		@views.html.components.datatable.datatable(datatableConfig,null,button)
