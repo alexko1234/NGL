@@ -4,20 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import play.data.validation.ValidationError;
-
-import fr.cea.ig.MongoDBDAO;
-
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.Content;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
+import models.utils.instance.ContainerHelper;
+import play.data.validation.ValidationError;
+import fr.cea.ig.MongoDBDAO;
 
 public class OneToManyContainer extends AtomicTransfertMethod {
 
-	public int outPutNumber;
+	public int outputNumber;
 	public ContainerUsed inputContainerUsed;
 	public List<ContainerUsed> outputContainerUseds;
 	
@@ -25,25 +22,27 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	@Override
 	public List<Container> createOutputContainerUsed(
 			Map<String, PropertyDefinition> propertyDefinitions,
-			Map<String, PropertyValue> propertyValues) {
+			Map<String, PropertyValue> propertyValues, Experiment experiment) {
 		
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.containerCode);
+		
 		List<Container> outputContainers  = new ArrayList<Container>();
+		outputContainerUseds=new ArrayList<ContainerUsed>();
 	
-		for(int i=0;i<outPutNumber;i++){
-			Container outputContainer=new Container();
-			 
-			if(outputContainer.contents==null){
-				container.contents=new ArrayList<Content>();
-			}
+		for(int i=0;i<outputNumber;i++){
 			
-			outputContainer.contents.addAll(container.contents);
-			//copy properties where level match with content in all content
-			for(Content content:outputContainer.contents){
-				InstanceHelpers.copyPropertyValueFromLevel(propertyDefinitions, "content", propertyValues, content.properties);
-			}
+			Container outputContainer=new Container();
+
+			ContainerHelper.addContent(container, outputContainer, experiment);
+			
+			ContainerHelper.copyProperties(propertyDefinitions,propertyValues,outputContainer);			
+
+			ContainerHelper.addContainerSupport(outputContainer, experiment);
+			
+			ContainerHelper.generateCode(outputContainer);
 			
 			outputContainers.add(outputContainer);
+			outputContainerUseds.add(new ContainerUsed(outputContainer));
 		}
 		
 		return outputContainers;

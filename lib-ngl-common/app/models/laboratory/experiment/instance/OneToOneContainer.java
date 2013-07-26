@@ -7,9 +7,8 @@ import java.util.Map;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.Content;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
+import models.utils.instance.ContainerHelper;
 import play.data.validation.ValidationError;
 import fr.cea.ig.MongoDBDAO;
 
@@ -20,25 +19,23 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 	
 	@Override
-	public List<Container> createOutputContainerUsed(Map<String,PropertyDefinition> propertyDefinitions, Map<String,PropertyValue> propertyValues) {
+	public List<Container> createOutputContainerUsed(Map<String,PropertyDefinition> propertyDefinitions, Map<String,PropertyValue> propertyValues,Experiment experiment) {
 		
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.containerCode);
 		Container outputContainer = new Container();
-		if(outputContainer.contents==null){
-			outputContainer.contents=new ArrayList<Content>();
-		}
 		
-		outputContainer.contents.addAll(container.contents);
-		//copy properties where level match with content in all content
-		for(Content content:outputContainer.contents){
-			InstanceHelpers.copyPropertyValueFromLevel(propertyDefinitions, "content", propertyValues, content.properties);
-		}
+		ContainerHelper.addContent(container, outputContainer, experiment);
 		
-		//copy value in properties container
-		//TODO
+		ContainerHelper.copyProperties(propertyDefinitions,propertyValues,outputContainer);			
+
+		ContainerHelper.addContainerSupport(outputContainer, experiment);
+		
+		ContainerHelper.generateCode(outputContainer);
+		
 		this.outputContainerUsed = new ContainerUsed(container);
+		
 		List<Container> containers = new ArrayList<Container>();
-		containers.add(container);
+		containers.add(outputContainer);
 		return containers;
 	}
 	

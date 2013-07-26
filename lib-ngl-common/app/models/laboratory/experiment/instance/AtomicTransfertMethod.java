@@ -26,7 +26,7 @@ public abstract class AtomicTransfertMethod implements IValidation {
 
 	public int position;
 	public Comment comment;
-	public abstract List<Container> createOutputContainerUsed(Map<String,PropertyDefinition> propertyDefinitions, Map<String,PropertyValue> propertyValues);
+	public abstract List<Container> createOutputContainerUsed(Map<String,PropertyDefinition> propertyDefinitions, Map<String,PropertyValue> propertyValues,Experiment experiment);
 	@JsonIgnore
 	public abstract List<ContainerUsed> getInputContainers();
 }

@@ -17,6 +17,8 @@ public class InstrumentUsed implements IValidation {
 
 	public String code;
 	public String categoryCode;
+	public String inContainerSupportCategoryCode;
+	public String outContainerSupportCategoryCode;
 
 	@JsonIgnore
 	public Instrument getInstrument(){
