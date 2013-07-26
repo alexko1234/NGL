@@ -13,9 +13,12 @@ import models.utils.dao.AbstractDAO;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
+
+import play.Logger;
 
 @Repository
 public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSupportCategory>{
@@ -71,6 +74,26 @@ public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSup
 		super.remove(containerSupportCategory);
 	}
 
+	@SuppressWarnings("unchecked")
+	public Boolean isCodeExist(String code) throws DAOException
+	{
+			if(null == code){
+				throw new DAOException("code is mandatory");
+			}
+			try {
+				
+				String sql = "select id from container_support_category WHERE code=?";
+				long id =  this.jdbcTemplate.queryForLong(sql, code);
+				if(id > 0){
+					return Boolean.TRUE;
+				}else{
+					return Boolean.FALSE;
+				}
+			} catch (DataAccessException e) {
+				Logger.warn(e.getMessage());
+				return null;
+			}
+	}
 	
 	public List<ContainerSupportCategory> findInByInstrumentCategory(Long idInstrumentCategory) throws DAOException {
 		if(null == idInstrumentCategory){
