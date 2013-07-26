@@ -139,26 +139,6 @@ public class Experiment extends DBObject implements IValidation {
 		
 		required(errors, this.stateCode, "stateCode"); 
 		
-		if(this.stateCode.equals("N")) {
-			required(errors, this.typeCode, "typeCode");
-		} else if(this.stateCode.equals("IP")) {
-			required(errors, this.typeCode, "typeCode"); 
-			required(errors, this.resolutionCode, "resolutionCode");
-			required(errors, this.protocolCode, "protocolCode");
-			required(errors, this.instrument, "instrument");
-		} else if(this.stateCode.equals("F")) {
-			required(errors, this.typeCode, "typeCode"); 
-			required(errors, this.resolutionCode, "resolutionCode");
-			required(errors, this.protocolCode, "protocolCode");
-			required(errors, this.instrument, "instrument");
-			required(errors, this.atomicTransfertMethods, "atomicTransfertMethods");
-				
-			validateProperties(errors, this.experimentProperties, this.getExperimentType().propertiesDefinitions, getKey(rootKeyName,"nullPropertiesDefinitions"));
-			
-		}else{
-			addErrors(errors,this.stateCode, getKey(rootKeyName,"InvalidthisStateCode"));
-		}	
-		
 		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.typeCode, "typeCode", ExperimentType.find);
 	
 	}
