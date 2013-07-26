@@ -40,6 +40,7 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 		ExperimentType experimentType = new ExperimentType();
 		//play.Logger.debug("Experiment type "+experimentType);
 		experimentType.id = rs.getLong("id");
+		experimentType.atomicTransfertMethod=rs.getString("atomic_transfert_method");
 		long idExperimentCategory = rs.getLong("fk_experiment_category");
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		//Get commonInfoType
