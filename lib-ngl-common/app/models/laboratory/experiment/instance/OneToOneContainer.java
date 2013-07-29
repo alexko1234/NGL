@@ -32,7 +32,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 		
 		ContainerHelper.generateCode(outputContainer);
 		
-		this.outputContainerUsed = new ContainerUsed(container);
+		this.outputContainerUsed = new ContainerUsed(outputContainer);
 		
 		List<Container> containers = new ArrayList<Container>();
 		containers.add(outputContainer);
