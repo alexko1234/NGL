@@ -184,7 +184,7 @@ public class DescriptionFactory {
 		return csc;
 	}
 
-	public static ExperimentType newExperimentType(String name, String code, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Protocol> protocols, List<InstrumentUsedType> instrumentUsedTypes) throws DAOException {
+	public static ExperimentType newExperimentType(String name, String code, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Protocol> protocols, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod) throws DAOException {
 		ExperimentType et = new ExperimentType();
 		et.code =code.toLowerCase();
 		et.name =name;
@@ -195,6 +195,7 @@ public class DescriptionFactory {
 		et.instrumentUsedTypes = instrumentUsedTypes;
 		et.states = State.find.findByCategoryCode(StateCategory.CODE.Experiment.name());
 		et.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Experiment.name());
+		et.atomicTransfertMethod=atomicTransfertMethod;
 		return et;
 	}
 

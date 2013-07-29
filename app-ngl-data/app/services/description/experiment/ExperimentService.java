@@ -2,12 +2,17 @@ package services.description.experiment;
 
 import static services.description.DescriptionFactory.newExperimentType;
 import static services.description.DescriptionFactory.newExperimentTypeNode;
+import static services.description.DescriptionFactory.newPropertiesDefinition;
 import static services.description.DescriptionFactory.newProtocol;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Level;
+import models.laboratory.common.description.MeasureCategory;
+import models.laboratory.common.description.MeasureUnit;
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.StateCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
@@ -20,6 +25,7 @@ import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
+import services.description.common.MeasureService;
 public class ExperimentService {
 	
 	public static void main(Map<String, List<ValidationError>> errors)  throws DAOException{
@@ -91,23 +97,23 @@ public class ExperimentService {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
 		//transformation
-		l.add(newExperimentType("Fragmentation","fragmentation",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("fragmentation_ptr_sox140_1"), getInstrumentUsedTypes("hand","covaris-s2","covaris-e210")));
-		l.add(newExperimentType("Librairie","librairie",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri")));
-		l.add(newExperimentType("Amplification","amplification",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand","thermo")));
+		l.add(newExperimentType("Fragmentation","fragmentation",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsFragmentation(), getProtocols("fragmentation_ptr_sox140_1"), getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne"));
+		l.add(newExperimentType("Librairie","librairie",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne"));
+		l.add(newExperimentType("Amplification","amplification",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand","thermo"),"OneToOne"));
 		
 		//qc
-		l.add(newExperimentType("Bioanalyzer Non Ampli","bioanalyzer-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("agilent-2100")));
-		l.add(newExperimentType("Bioanalyzer Ampli","bioanalyzer-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("agilent-2100")));
-		l.add(newExperimentType("QuBit","qubit",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("iqubit")));
-		l.add(newExperimentType("qPCR","qpcr",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("iqpcr")));
+		l.add(newExperimentType("Bioanalyzer Non Ampli","bioanalyzer-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("agilent-2100"),"OneToOne"));
+		l.add(newExperimentType("Bioanalyzer Ampli","bioanalyzer-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("agilent-2100"),"OneToOne"));
+		l.add(newExperimentType("QuBit","qubit",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("iqubit"),"OneToOne"));
+		l.add(newExperimentType("qPCR","qpcr",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("iqpcr"),"OneToOne"));
 		
 		//purif
-		l.add(newExperimentType("Ampure Non Ampli","ampure-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, getInstrumentUsedTypes("hand")));
-		l.add(newExperimentType("Ampure Ampli","ampure-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, getInstrumentUsedTypes("hand")));
+		l.add(newExperimentType("Ampure Non Ampli","ampure-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, getInstrumentUsedTypes("hand"),"OneToOne"));
+		l.add(newExperimentType("Ampure Ampli","ampure-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, getInstrumentUsedTypes("hand"),"OneToOne"));
 		
 		
 		//void
-		l.add(newExperimentType("Void Banque 300-600","void-lib-300-600",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null));
+		l.add(newExperimentType("Void Banque 300-600","void-lib-300-600",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne"));
 		
 		
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
@@ -138,6 +144,14 @@ public class ExperimentService {
 	}
 	
 	
+	//Data Test
+	public static List<PropertyDefinition> getPropertyDefinitionsFragmentation() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Key1", "Libelle 1", Level.CODE.Experiment,Double.class, false,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb")));
+		propertyDefinitions.add(newPropertiesDefinition("Key2", "Libelle 2", Level.CODE.ContainerOut,String.class, false));
+		propertyDefinitions.add(newPropertiesDefinition("key3", "Libelle 3", Level.CODE.ContainerIn,String.class, false));
+		return propertyDefinitions;
+	}
 	
 	
 }
