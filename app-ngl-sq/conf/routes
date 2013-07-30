@@ -37,6 +37,7 @@ POST	/api/experiments/:code/experiment-properties					controllers.experiments.ap
 POST	/api/experiments/:code/instrument-information					controllers.experiments.api.Experiments.updateInstrumentInformations(code:java.lang.String)
 POST	/api/experiments/:code/instrument-properties					controllers.experiments.api.Experiments.updateInstrumentProperties(code:java.lang.String)
 POST	/api/experiments/:code/comment									controllers.experiments.api.Experiments.updateComments(code:java.lang.String)
+POST	/api/experiments/:code/generate-output							controllers.experiments.api.Experiments.generateOutput(code:java.lang.String)
 POST	/api/experiments/:code/stateCode								controllers.experiments.api.Experiments.updateStateCode(code:java.lang.String)
 POST	/api/experiments/:code/containers								controllers.experiments.api.Experiments.updateContainers(code:java.lang.String)
 POST	/api/experiments/:experimentTypeCode							controllers.experiments.api.Experiments.save(experimentTypeCode:java.lang.String)
