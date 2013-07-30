@@ -1,13 +1,12 @@
 package controllers.experiments.tpl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentType;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.Routes;
 import play.i18n.Messages;
 import play.libs.Json;
@@ -70,18 +69,21 @@ public class Experiments extends Controller{
 		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes"), true, false, false));
 			
 		List<PropertyDefinition> props = experimentProperties(experimentTypeCode);
-		PropertyDefinition prop = new PropertyDefinition();
-		prop.name = "test";
-		props.add(prop);
-		//columns.addAll(getPropertiesDefinitionsColumns(props,true));
 		
 		DatatableConfig config = new DatatableConfig(columns);
 		config.remove = true;
 		config.button = true;
 		config.save = true;
 		config.edit = true;
-
-		return ok(createExperiments.render(experimentTypeCode,config,Json.toJson(props)));
+		
+		ExperimentType experimentType = null;
+		try{
+			experimentType = ExperimentType.find.findByCode(experimentTypeCode);
+		}catch(models.utils.dao.DAOException e){
+			
+		}
+		
+		return ok(createExperiments.render(Json.toJson(experimentType),config,Json.toJson(props)));
 	}
 	
 	public static Result javascriptRoutes() {
@@ -98,6 +100,7 @@ public class Experiments extends Controller{
   	    		controllers.experiments.tpl.routes.javascript.Experiments.newExperiments(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.home(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.editExperiment(),
+  	    		controllers.experiments.api.routes.javascript.Experiments.generateOutput(),
   	    		controllers.experiments.api.routes.javascript.Experiments.updateExperimentInformations(),
   	    		controllers.experiments.api.routes.javascript.Experiments.updateExperimentProperties(),
   	    		controllers.experiments.api.routes.javascript.Experiments.updateInstrumentInformations(),
@@ -113,15 +116,7 @@ public class Experiments extends Controller{
   	    		controllers.lists.api.routes.javascript.Lists.resolutions()
   	      )	  	      
   	    );
-  	  }
-	
-	private static List<DatatableColumn> getPropertiesDefinitionsColumns(List<PropertyDefinition> list, boolean edit){
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
-		for(PropertyDefinition p : list) {
-				columns.add(DatatableHelpers.getColumn("properties."+p.name, Messages.get("processes.table.properties."+p.name), true, edit, false));
-			}
-		return columns;
-	}
+  	}
 	
 	private static List<PropertyDefinition> experimentProperties(String experimentTypeCode){
 		 ExperimentType expType = null;
