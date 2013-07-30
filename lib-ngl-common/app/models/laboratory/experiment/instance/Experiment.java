@@ -140,6 +140,11 @@ public class Experiment extends DBObject implements IValidation {
 		required(errors, this.stateCode, "stateCode"); 
 		
 		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.typeCode, "typeCode", ExperimentType.find);
+		
+		ExperimentType thisType = this.getExperimentType();
+		if(thisType != null && thisType.propertiesDefinitions != null && !thisType.propertiesDefinitions.isEmpty()){
+			validateProperties(errors, this.experimentProperties, thisType.propertiesDefinitions, getKey(null,"nullPropertiesDefinitions"));
+		}
 	
 	}
 
