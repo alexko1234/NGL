@@ -1,20 +1,28 @@
 package controllers.experiments.api;
 
 import static play.data.Form.form;
+
+import java.util.List;
+import java.util.Map;
+
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.experiment.instance.AtomicTransfertMethod;
+import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
+import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
 import net.vz.mongodb.jackson.DBUpdate.Builder;
+import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-import validation.BusinessValidationHelper;
+
 import workflows.Workflows;
 import controllers.CodeHelper;
 import controllers.CommonController;
@@ -32,6 +40,8 @@ public class Experiments extends CommonController{
 	 	
 	 	exp = traceInformation(exp);
 	 	
+	 	Workflows.setExperimentStateCode(exp,experimentFilledForm.errors());	
+	 	
 	 	if (!experimentFilledForm.hasErrors()) {
 		 	
 			Builder builder = new DBUpdate.Builder();
@@ -39,7 +49,49 @@ public class Experiments extends CommonController{
 			builder=builder.set("resolutionCode",exp.resolutionCode);
 			builder=builder.set("protocolCode",exp.protocolCode);
 			
-			MongoDBDAO.updateSetArray("Experiment", Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			return ok(Json.toJson(exp));
+	 	}
+	 	
+	 	return badRequest(experimentFilledForm.errorsAsJson());
+	}
+	
+	public static Result generateOutput(String code){
+		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
+		Experiment exp = experimentFilledForm.get();
+	 	
+	 	exp = traceInformation(exp);
+	 	List<Container> containers = null;
+	 	if (!experimentFilledForm.hasErrors()) {
+	 		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+	 			Map<String,PropertyValue> propertiesOutput = null;
+	 			Map<String,PropertyValue> propertiesInput = null;
+	 			
+	 			for(ContainerUsed c : exp.atomicTransfertMethods.get(i).getInputContainers()){
+	 				if(c.experimentProperties !=null && c.instrumentProperties!=null){
+	 					propertiesInput = c.experimentProperties;
+	 					propertiesInput.putAll(c.instrumentProperties);
+	 					models.utils.InstanceHelpers.copyPropertyValueFromLevel(exp.getExperimentType().getMapPropertyDefinition(),"container", propertiesInput,propertiesOutput);		 			
+	 				}
+	 			}
+	 			
+	 			if(exp.experimentProperties !=null && exp.instrumentProperties!=null){
+	 				propertiesInput = exp.experimentProperties;
+	 				propertiesInput.putAll(exp.instrumentProperties);
+	 			
+	 				models.utils.InstanceHelpers.copyPropertyValueFromLevel(exp.getExperimentType().getMapPropertyDefinition(),"experiment", propertiesInput,propertiesOutput);		 				
+	 			}
+	 			
+	 			containers = exp.atomicTransfertMethods.get(i).createOutputContainerUsed(exp.getExperimentType().getMapPropertyDefinition(), propertiesOutput,exp);
+	 	}
+	 		
+	 		
+			Builder builder = new DBUpdate.Builder();
+			builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
+			
+			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			
+			InstanceHelpers.save(Constants.EXPERIMENT_COLL_NAME, containers, experimentFilledForm.errors());
 			return ok(Json.toJson(exp));
 	 	}
 	 	
@@ -57,7 +109,7 @@ public class Experiments extends CommonController{
 			Builder builder = new DBUpdate.Builder();
 			builder = builder.set("instrument",exp.instrument);
 			
-			MongoDBDAO.updateSetArray("Experiment", Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 	 	}
 	 	
@@ -75,7 +127,7 @@ public class Experiments extends CommonController{
 			Builder builder = new DBUpdate.Builder();
 			builder = builder.set("experimentProperties",exp.experimentProperties);
 			
-			MongoDBDAO.updateSetArray("Experiment", Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 	 	}
 	 	
@@ -93,7 +145,7 @@ public class Experiments extends CommonController{
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("instrumentProperties",exp.instrumentProperties);
 			
-			MongoDBDAO.updateSetArray("Experiment", Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 	 	}
 	 	
@@ -125,21 +177,19 @@ public class Experiments extends CommonController{
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("comments",exp.comments);
 			
-			MongoDBDAO.updateSetArray("Experiment", Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 	 	}
 	 	
 	 	return badRequest(experimentFilledForm.errorsAsJson());
 	}
 	
-	
 	public static Result updateContainers(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 	 	
 	 	exp = traceInformation(exp);
-	 	
-	 	//TODO: Output gestion
+
 	 	
 		if (!experimentFilledForm.hasErrors()) {
 			for(int i=0;i<exp.atomicTransfertMethods.size();i++){
@@ -149,7 +199,7 @@ public class Experiments extends CommonController{
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
 			
-			MongoDBDAO.updateSetArray("Experiment", Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 	 	}
 	 	
@@ -162,15 +212,14 @@ public class Experiments extends CommonController{
 	 	
 	 	exp = traceInformation(exp);
 	 	
-	 	if(exp.stateCode.equals("IP")){
-	 		//TODO if first experiment in the processus then processus state to IP
-	 	}
 	 	
+	 		//TODO if first experiment in the processus then processus state to IP
+	 	Workflows.setExperimentStateCode(exp,experimentFilledForm.errors());
 	 	if (!experimentFilledForm.hasErrors()) {	 	
 			Builder builder = new DBUpdate.Builder();
-			builder = builder.set("stateCode",exp.stateCode);
+			builder = builder.set("stateCode",exp.stateCode);//TODO: validation? buisness validation
 			
-			MongoDBDAO.updateSetArray("Experiment", Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 	 	}
 	 	
@@ -196,8 +245,7 @@ public class Experiments extends CommonController{
 		exp = traceInformation(exp);
 	 	
 		if (!experimentFilledForm.hasErrors()) {	 	
-	 		exp = MongoDBDAO.save("Experiment",exp);
-		
+			exp = (Experiment)InstanceHelpers.save(Constants.EXPERIMENT_COLL_NAME, exp, experimentFilledForm.errors());
 	 		return ok(Json.toJson(exp));
 	 	} else {
 	 		return badRequest(experimentFilledForm.errorsAsJson());
