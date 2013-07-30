@@ -1,4 +1,4 @@
-@(experimentTypeCode:java.lang.String,datatableConfig: views.components.datatable.DatatableConfig,
+@(experimentType:org.codehaus.jackson.JsonNode,datatableConfig: views.components.datatable.DatatableConfig,
 experimentProperties: org.codehaus.jackson.JsonNode)
 <style type="text/css">
 #sub_body {
@@ -144,7 +144,7 @@ th {
     	</ul>	
 	</div>
 </div>
-<div id="sub_body" class="container-fluid" ng-init="init()">
+<div id="sub_body" class="container-fluid" ng-init="init(@experimentType)">
 	<div class="row-fluid">
 		<div class="span2">
 			<div class="accordion" id="accordionExp">
@@ -291,17 +291,19 @@ th {
 					<div class="row">
 						<form class="form-inline" style="padding-left: 10%" ng-init="setExperimentProperties(@experimentProperties)">
 							<div class="span3">
-								<div class="control-group" ng-repeat="expp in experiment.experimentProperties.inputs">
+								<div class="control-group" ng-repeat="expp in experiment.experimentProperties.inputs" ng-switch on="expp.level.code">
+								<div ng-switch-when="Experiment">
 								<label class="control-label">{{expp.name}}</label>
 									<div class="controls"  ng-switch on="expp.choiceInList">
 										<input type="text" ng-switch-when="false" class="input-small"
 											ng-readonly="!experiment.experimentProperties.enabled"
-											ng-model="experiment.value.experimentProperties[expp.name].value" />
+											ng-model="experiment.value.experimentProperties[expp.code].value" />
 										
-										<select  ng-readonly="!experiment.experimentInformation.enabled" ng-disabled="!experiment.experimentInformation.enabled" ng-model="experiment.value.experimentProperties[expp.name].value" ng-switch-when="true" >
+										<select  ng-readonly="!experiment.experimentInformation.enabled" ng-disabled="!experiment.experimentInformation.enabled" ng-model="experiment.value.experimentProperties[expp.code].value" ng-switch-when="true" >
 											<option ng-repeat="opt in expp.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
 									    </select>
 									</div>
+								</div>
 								</div>
 							</div>
 						</form>
@@ -342,15 +344,15 @@ th {
 											<hr>
 								</form>	
 						<form class="form-inline" style="padding-left: 10%">
-							<div ng-repeat="instp in experiment.instrumentProperties.inputs">
-								<div class="control-group">
+							<div ng-repeat="instp in experiment.instrumentProperties.inputs"  ng-switch on="instp.level.code">
+								<div class="control-group" ng-switch-when="Instrument">
 									<label class="control-label">{{instp.name}}</label>
 									<div class="controls"  ng-switch on="instp.choiceInList">
 										<input type="text" ng-switch-when="false" class="input-small"
 											ng-readonly="!experiment.instrumentInformation.enabled"
-											ng-model="experiment.value.instrumentProperties[instp.name].value" />
+											ng-model="experiment.value.instrumentProperties[instp.code].value" />
 										
-										<select  ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" ng-model="experiment.value.instrumentProperties[instp.name].value" ng-switch-when="true" >
+										<select  ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" ng-model="experiment.value.instrumentProperties[instp.code].value" ng-switch-when="true" >
 											<option ng-repeat="opt in instp.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
 									    </select>
 									</div>
@@ -384,7 +386,8 @@ th {
 						</div>
 						<div id="collapseFour" class="accordion-body collapse out">
 							<div class="accordion-inner">
-								<div id="comments">
+								<div id="comments" ng-switch="experiment.value.comments.length == 0">
+								<div ng-switch-when="false">
 									<legend>Comments: </legend>
 									<div ng-repeat="com in experiment.value.comments" class="comment">
 										<table>
@@ -395,6 +398,12 @@ th {
 											</tr>
 										</table>
 									</div>
+								</div>
+								
+								<div ng-switch-when="true">
+									<h2>No comments</h2>
+								
+								</div>
 								</div>
 							</div>
 						</div>
