@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -45,6 +46,9 @@ public class Sample extends DBObject implements IValidation{
 	@JsonIgnore
 	public final static String HEADER="Sample.code;Sample.projectCodes;Sample.name;Sample.referenceCollab;Sample.taxonCode;Sample.comments";
 
+	@JsonIgnore
+	public final static String LEVEL_SEARCH=Level.CODE.Sample.toString();
+	
 	// SampleType Ref
 	public String typeCode;
 
@@ -102,14 +106,16 @@ public class Sample extends DBObject implements IValidation{
 		ImportType importType=BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.importTypeCode,"importTypeCode", ImportType.find,true);
 
 		proDefinitions.addAll(sampleType.propertiesDefinitions);
-
+		
 		for(PropertyDefinition propertyDefinition:importType.propertiesDefinitions){
-			if(propertyDefinition.level.code.equals("SampleAndContent") || propertyDefinition.level.code.contains("Sample")){
+			if(propertyDefinition.level.code.contains(LEVEL_SEARCH)){
 				proDefinitions.add(propertyDefinition);
 			}
 		}
 
 		ConstraintsHelper.validateProperties(errors, this.properties, proDefinitions,"");
+
+		BusinessValidationHelper.validateRequiredInstanceCodes(errors, this.projectCodes, "projectCodes",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
 
 		//TODO validation taxon 
 	}

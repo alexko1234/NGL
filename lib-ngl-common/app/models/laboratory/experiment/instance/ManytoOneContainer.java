@@ -36,6 +36,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 		List<Container> containers = new ArrayList<Container>();
 		Container container = new Container();
+		container.stateCode="A";
 
 		for(int i=0;i<inputContainers.size();i++){
 			ContainerHelper.addContent(inputContainers.get(i), container,experiment);

@@ -33,6 +33,8 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 			
 			Container outputContainer=new Container();
 
+			outputContainer.stateCode="A";
+
 			ContainerHelper.addContent(container, outputContainer, experiment);
 			
 			ContainerHelper.copyProperties(propertyDefinitions,propertyValues,outputContainer);			
