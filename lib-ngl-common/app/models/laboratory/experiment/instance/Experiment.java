@@ -1,14 +1,13 @@
 package models.laboratory.experiment.instance;
 
-import static validation.utils.ConstraintsHelper.addErrors;
-import static validation.utils.ConstraintsHelper.getKey;
-import static validation.utils.ConstraintsHelper.required;
-import static validation.utils.ConstraintsHelper.validateProperties;
 import static validation.utils.ConstraintsHelper.validateTraceInformation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Level;
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.instance.Comment;
@@ -17,9 +16,13 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
+import models.laboratory.instrument.description.Instrument;
+import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.project.instance.Project;
 import models.laboratory.reagent.instance.ReagentUsed;
+import models.laboratory.sample.description.ImportType;
+import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import models.utils.IValidation;
@@ -27,10 +30,10 @@ import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 import play.data.validation.ValidationError;
-
+import validation.utils.BusinessValidationHelper;
+import validation.utils.ConstraintsHelper;
 import fr.cea.ig.DBObject;
 
 
@@ -47,6 +50,14 @@ import fr.cea.ig.DBObject;
 @MongoCollection(name="Experiment")
 public class Experiment extends DBObject implements IValidation {
 
+	
+	@JsonIgnore
+	public final static String LEVEL_SEARCH_EXP=Level.CODE.Experiment.toString();
+
+	@JsonIgnore
+	public final static String LEVEL_SEARCH_INS=Level.CODE.Instrument.toString();
+
+	
 	// ExperimentType
 	public String typeCode;
 	public String categoryCode;
@@ -54,6 +65,8 @@ public class Experiment extends DBObject implements IValidation {
 	public TraceInformation traceInformation;
 	public Map<String,PropertyValue> experimentProperties;
 	public Map<String, PropertyValue> instrumentProperties;
+	
+	public String instrumentUsedTypeCode;
 	public InstrumentUsed instrument;
 	public String protocolCode;
 	
@@ -126,7 +139,7 @@ public class Experiment extends DBObject implements IValidation {
 	@JsonIgnore
 	@Override
 	public void validate(Map<String, List<ValidationError>> errors) {
-		String rootKeyName = null;
+		
 		if(this == null){
 			throw new IllegalArgumentException("this is null");
 		}
@@ -135,17 +148,32 @@ public class Experiment extends DBObject implements IValidation {
 			validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(errors, this.code, Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME);
 		}
 		
+		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.stateCode, "stateCode", State.find);
+		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.typeCode, "typeCode", ExperimentType.find);
+		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.categoryCode, "categoryCode", ExperimentCategory.find);
+
+		validation.utils.BusinessValidationHelper.validateExistDescriptionCode(errors, this.resolutionCode, "resolutionCode", Resolution.find);
+		validation.utils.BusinessValidationHelper.validateExistDescriptionCode(errors, this.protocolCode, "protocolCode", Protocol.find);
+		validation.utils.BusinessValidationHelper.validateExistDescriptionCode(errors, this.instrumentUsedTypeCode, "instrumentUsedTypeCode", InstrumentUsedType.find);
+
 		validateTraceInformation(errors, this.traceInformation, this._id);
 		
-		required(errors, this.stateCode, "stateCode"); 
+		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.typeCode, "typeCode", ExperimentType.find,true);
+		InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.instrumentUsedTypeCode,"instrumentUsedTypeCode", InstrumentUsedType.find,true);
+
+		ConstraintsHelper.validatePropertiesforLevel(errors, this.experimentProperties, exType.propertiesDefinitions,"",LEVEL_SEARCH_EXP);
+		ConstraintsHelper.validatePropertiesforLevel(errors, this.instrumentProperties, instrumentUsedType.propertiesDefinitions,"",LEVEL_SEARCH_INS);
 		
-		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.typeCode, "typeCode", ExperimentType.find);
-		
-		ExperimentType thisType = this.getExperimentType();
-		if(thisType != null && thisType.propertiesDefinitions != null && !thisType.propertiesDefinitions.isEmpty()){
-			validateProperties(errors, this.experimentProperties, thisType.propertiesDefinitions, getKey(null,"nullPropertiesDefinitions"));
+		for(int i=0;i<atomicTransfertMethods.size();i++){
+			atomicTransfertMethods.get(i).validate(errors);
 		}
-	
+		
+		instrument.validate(errors);
+		
+		for(ReagentUsed reagentUsed:reagentUseds){
+			reagentUsed.validate(errors);
+		}
+					
 	}
 
 	
