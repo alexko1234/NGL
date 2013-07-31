@@ -23,6 +23,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 
+import validation.utils.ContextValidation;
 import workflows.Workflows;
 import controllers.CodeHelper;
 import controllers.CommonController;
@@ -91,7 +92,7 @@ public class Experiments extends CommonController{
 			
 			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			
-			InstanceHelpers.save(Constants.EXPERIMENT_COLL_NAME, containers, experimentFilledForm.errors());
+			InstanceHelpers.save(Constants.EXPERIMENT_COLL_NAME, containers,new ContextValidation( experimentFilledForm.errors()));
 			return ok(Json.toJson(exp));
 	 	}
 	 	
@@ -245,7 +246,7 @@ public class Experiments extends CommonController{
 		exp = traceInformation(exp);
 	 	
 		if (!experimentFilledForm.hasErrors()) {	 	
-			exp = (Experiment)InstanceHelpers.save(Constants.EXPERIMENT_COLL_NAME, exp, experimentFilledForm.errors());
+			exp = (Experiment) InstanceHelpers.save(Constants.EXPERIMENT_COLL_NAME, exp, new ContextValidation(experimentFilledForm.errors()));
 	 		return ok(Json.toJson(exp));
 	 	} else {
 	 		return badRequest(experimentFilledForm.errorsAsJson());

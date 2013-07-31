@@ -19,6 +19,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.BusinessValidationHelper;
+import validation.utils.ContextValidation;
 import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
@@ -70,7 +71,7 @@ public class Processes extends CommonController{
 					Workflows.setAvailable(value.containerInputCode,value.typeCode);
 				}
 				
-				value = (Process) InstanceHelpers.save(Constants.PROCESS_COLL_NAME,value,filledForm.errors());
+				value = (Process) InstanceHelpers.save(Constants.PROCESS_COLL_NAME,value, new ContextValidation(filledForm.errors()));
 			}
 		}
 		if (!filledForm.hasErrors()) {
