@@ -32,9 +32,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.validation.ValidationError;
+import validation.utils.ContextValidation;
 
 
 @Repository
@@ -58,7 +60,7 @@ public class LimsDAO {
 	}
 
 
-	public List<Container> findContainersToCreate(Map<String, List<ValidationError>> errors){
+	public List<Container> findContainersToCreate(ContextValidation contextError){
 
 		List<Container> results = this.jdbcTemplate.query("pl_TubeToNGL ",new Object[]{} 
 		,new RowMapper<Container>() {
@@ -112,7 +114,7 @@ public class LimsDAO {
 	}
 
 
-	public Sample findSampleToCreate(final Map<String, List<ValidationError>> errors, String sampleCode) throws SQLException, DAOException {
+	public Sample findSampleToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {
 
 		List<Sample> results = this.jdbcTemplate.query("pl_MaterielToNGLUn @nom_materiel=?",new Object[]{sampleCode} 
 		,new RowMapper<Sample>() {
@@ -129,7 +131,7 @@ public class LimsDAO {
 				String sampleTypeCode=getSampleTypeFromLims(tadco,tprco);
 
 				if(sampleTypeCode==null){
-					addErrors(errors, "import.sample.typeCode", "limsdao.error.emptymapping",tadco);
+					addErrors(contextError.errors, "import.sample.typeCode", "limsdao.error.emptymapping",tadco);
 					return null;
 				}
 
@@ -143,7 +145,7 @@ public class LimsDAO {
 
 
 				if( sampleType==null ){
-					addErrors(errors, "sampleType.code", "error.codeNotExist", sampleTypeCode);
+					addErrors(contextError.errors, "sampleType.code", "error.codeNotExist", sampleTypeCode);
 					return null;
 				}
 
@@ -191,7 +193,7 @@ public class LimsDAO {
 					TaraDAO  taraServices = Spring.getBeanOfType(TaraDAO.class);
 					if(sample.properties==null){ sample.properties=new HashMap<String, PropertyValue>();}
 
-					Map<String, PropertyValue> map=taraServices.findTaraSample(rs.getInt(LIMS_CODE),errors);
+					Map<String, PropertyValue> map=taraServices.findTaraSample(rs.getInt(LIMS_CODE),contextError.errors);
 
 					if(map!=null){
 						Logger.debug("Nb properties :"+map.size());
@@ -226,7 +228,7 @@ public class LimsDAO {
 
 	
 	
-	public List<Project> findProjectToCreate(final Map<String, List<ValidationError>> errors) throws SQLException, DAOException {
+	public List<Project> findProjectToCreate(final ContextValidation contextError) throws SQLException, DAOException {
 		List<Project> results = this.jdbcTemplate.query("pl_ProjetToNGL ",new Object[]{} 
 		,new RowMapper<Project>() {
 
@@ -313,7 +315,7 @@ public class LimsDAO {
 	}
 
 
-	public void updateTubeLims(List<Container> containers,Map<String, List<ValidationError>> errors) {
+	public void updateTubeLims(List<Container> containers,ContextValidation contextError) {
 
 		String limsCode=null;
 		
@@ -323,7 +325,7 @@ public class LimsDAO {
 
 			if(container.properties==null || limsCode==null)
 			{
-				addErrors(errors, "container.properties.limsCode","error.PropertyNotExist",LIMS_CODE,container.support.barCode);
+				addErrors(contextError.errors, "container.properties.limsCode","error.PropertyNotExist",LIMS_CODE,container.support.barCode);
 
 			}else {
 				try{
@@ -333,7 +335,7 @@ public class LimsDAO {
 
 				} catch(DataAccessException e){
 
-					addErrors(errors, "limsdao.updateTubeLims",e.getMessage(), container.support.barCode);
+					addErrors(contextError.errors, "limsdao.updateTubeLims",e.getMessage(), container.support.barCode);
 				}
 			}
 

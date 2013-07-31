@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+
 import models.LimsDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
@@ -23,16 +24,17 @@ import models.utils.instance.ContainerHelper;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.validation.ValidationError;
+import validation.utils.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 
 public class ImportDataRun implements Runnable {
 
-	static Map<String, List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
+	static ContextValidation contextError = new ContextValidation();
 	static LimsDAO  limsServices = Spring.getBeanOfType(LimsDAO.class);
 
 	@Override
 	public void run() {
-		errors.clear();
+		contextError.errors.clear();
 		Logger.info("ImportDataRun execution");
 		try{
 		//	createProjectFromLims();
@@ -42,7 +44,7 @@ public class ImportDataRun implements Runnable {
 			Logger.debug("",e);
 		}
 		/* Display error messages */
-		Iterator entries = errors.entrySet().iterator();
+		Iterator entries = contextError.errors.entrySet().iterator();
 		while (entries.hasNext()) {
 			Entry thisEntry = (Entry) entries.next();
 			String key = (String) thisEntry.getKey();
@@ -59,7 +61,7 @@ public class ImportDataRun implements Runnable {
 
 	public static List<Project> createProjectFromLims() throws SQLException, DAOException{
 
-		List<Project> projects = limsServices.findProjectToCreate(errors) ;
+		List<Project> projects = limsServices.findProjectToCreate(contextError) ;
 		
 		for(Project project:projects){
 			
@@ -70,7 +72,7 @@ public class ImportDataRun implements Runnable {
 			
 		}
 		
-		return InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,errors);
+		return InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError);
 		
 	}
 
@@ -78,7 +80,7 @@ public class ImportDataRun implements Runnable {
 
 	public	static void createContainersSamples() throws SQLException, DAOException{
 		
-		List<Container> containers = limsServices.findContainersToCreate(errors); 
+		List<Container> containers = limsServices.findContainersToCreate(contextError); 
 		List<Container> listContainers = new ArrayList<Container>(containers);
 		
 		Sample sample =null;
@@ -90,15 +92,15 @@ public class ImportDataRun implements Runnable {
 			/* Sample content not in MongoDB */
 			if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, content.sampleUsed.sampleCode)){
 				/* Find sample in Mongodb */
-				sample = limsServices.findSampleToCreate(errors,container.contents.get(0).sampleUsed.sampleCode);
-				newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,errors);
+				sample = limsServices.findSampleToCreate(contextError,container.contents.get(0).sampleUsed.sampleCode);
+				newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError);
 				
 			}else {	newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, content.sampleUsed.sampleCode);}
 			
 			if(newSample==null){
 				/* Error : No sample, remove container from list to create */
 				containers.remove(container);
-				addErrors(errors, "container","initialdata.container.samplenotexist", container.support.barCode,content.sampleUsed.sampleCode);
+				addErrors(contextError.errors, "container","initialdata.container.samplenotexist", container.support.barCode,content.sampleUsed.sampleCode);
 			}
 			else{
 				Map<String,PropertyValue> properties=container.contents.get(0).properties;
@@ -109,11 +111,11 @@ public class ImportDataRun implements Runnable {
 
 		}
 
-		List<Container> newContainers=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,containers,errors);
+		List<Container> newContainers=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,containers,contextError);
 
 		Logger.debug("Nb containers créés :"+newContainers.size());
 		
-		limsServices.updateTubeLims(newContainers,errors);
+		limsServices.updateTubeLims(newContainers,contextError);
 
 		Logger.info("Maj des tubes du Lims");
 	}

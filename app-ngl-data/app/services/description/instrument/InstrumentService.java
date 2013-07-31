@@ -60,7 +60,9 @@ public class InstrumentService {
 	
 	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme", "program", Level.CODE.Instrument, String.class, true, newValues("Frag_PE300","Frag_PE400","Frag_PE500","Frag_cDNA_Solexa")));		
+		l.add(newPropertiesDefinition("Programme", "program", Level.CODE.Instrument, String.class, true, newValues("Frag_PE300","Frag_PE400","Frag_PE500","Frag_cDNA_Solexa")));
+		//Data test
+		l.add(newPropertiesDefinition("key container in", "keyContainerIn",Level.CODE.ContainerIn, String.class, true, newValues("val1","val2","val3")));
 		return l;
 	}
 	

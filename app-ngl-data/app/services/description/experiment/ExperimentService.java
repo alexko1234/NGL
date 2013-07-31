@@ -147,9 +147,9 @@ public class ExperimentService {
 	//Data Test
 	public static List<PropertyDefinition> getPropertyDefinitionsFragmentation() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Key1", "Libelle 1", Level.CODE.Experiment,Double.class, false,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb")));
-		propertyDefinitions.add(newPropertiesDefinition("Key2", "Libelle 2", Level.CODE.ContainerOut,String.class, false));
-		propertyDefinitions.add(newPropertiesDefinition("key3", "Libelle 3", Level.CODE.ContainerIn,String.class, false));
+        propertyDefinitions.add(newPropertiesDefinition("Libelle 1","Key1", Level.CODE.Experiment,Double.class, false,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb")));
+		propertyDefinitions.add(newPropertiesDefinition("Libelle 2", "Key2", Level.CODE.ContainerOut,String.class, false));
+		propertyDefinitions.add(newPropertiesDefinition("Libelle 3", "Key3", Level.CODE.ContainerIn,String.class, false));
 		return propertyDefinitions;
 	}
 	
