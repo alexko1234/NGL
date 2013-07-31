@@ -1,7 +1,5 @@
 package models.laboratory.instrument.instance;
 
-import java.util.List;
-import java.util.Map;
 
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
@@ -10,8 +8,9 @@ import models.utils.IValidation;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import play.data.validation.ValidationError;
+
 import validation.utils.BusinessValidationHelper;
+import validation.utils.ContextValidation;
 
 public class InstrumentUsed implements IValidation {
 
@@ -32,9 +31,9 @@ public class InstrumentUsed implements IValidation {
 
 	@JsonIgnore
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(errors, code, "instrument.code", Instrument.find);
-		BusinessValidationHelper.validateRequiredDescriptionCode(errors, categoryCode, "instrument.categoryCode", InstrumentCategory.find);
+	public void validate(ContextValidation contextErrors) {
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, code, "instrument.code", Instrument.find);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, categoryCode, "instrument.categoryCode", InstrumentCategory.find);
 	}
 
 }

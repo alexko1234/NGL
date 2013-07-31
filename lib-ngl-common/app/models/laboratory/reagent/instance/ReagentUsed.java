@@ -1,7 +1,5 @@
 package models.laboratory.reagent.instance;
 
-import java.util.List;
-import java.util.Map;
 
 import models.laboratory.reagent.description.ReagentType;
 import models.utils.HelperObjects;
@@ -10,8 +8,9 @@ import models.utils.InstanceConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import play.data.validation.ValidationError;
+
 import validation.utils.BusinessValidationHelper;
+import validation.utils.ContextValidation;
 
 
 public class ReagentUsed implements IValidation {
@@ -28,9 +27,9 @@ public class ReagentUsed implements IValidation {
 	}
 
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.reagentTypeCode, "reagentTypeCode", ReagentType.find);
-		BusinessValidationHelper.validateRequiredInstanceCode(errors, this.reagentInstanceCode, "reagentInstanceCode", ReagentInstance.class,InstanceConstants.REAGENT_INSTANCE_COLL_NAME);
+	public void validate(ContextValidation contextErrors) {
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.reagentTypeCode, "reagentTypeCode", ReagentType.find);
+		BusinessValidationHelper.validateRequiredInstanceCode(contextErrors.errors, this.reagentInstanceCode, "reagentInstanceCode", ReagentInstance.class,InstanceConstants.REAGENT_INSTANCE_COLL_NAME);
 	}
 	 
 	

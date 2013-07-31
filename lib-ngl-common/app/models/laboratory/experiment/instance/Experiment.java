@@ -31,9 +31,10 @@ import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import play.data.validation.ValidationError;
+
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ConstraintsHelper;
+import validation.utils.ContextValidation;
 import fr.cea.ig.DBObject;
 
 
@@ -138,40 +139,40 @@ public class Experiment extends DBObject implements IValidation {
 
 	@JsonIgnore
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
+	public void validate(ContextValidation contextErrors) {
 		
 		if(this == null){
 			throw new IllegalArgumentException("this is null");
 		}
 		
 		if(this._id == null){
-			validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(errors, this.code, Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME);
+			validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(contextErrors.errors, this.code, Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME);
 		}
 		
-		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.stateCode, "stateCode", State.find);
-		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.typeCode, "typeCode", ExperimentType.find);
-		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.categoryCode, "categoryCode", ExperimentCategory.find);
+		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.stateCode, "stateCode", State.find);
+		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.typeCode, "typeCode", ExperimentType.find);
+		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.categoryCode, "categoryCode", ExperimentCategory.find);
 
-		validation.utils.BusinessValidationHelper.validateExistDescriptionCode(errors, this.resolutionCode, "resolutionCode", Resolution.find);
-		validation.utils.BusinessValidationHelper.validateExistDescriptionCode(errors, this.protocolCode, "protocolCode", Protocol.find);
-		validation.utils.BusinessValidationHelper.validateExistDescriptionCode(errors, this.instrumentUsedTypeCode, "instrumentUsedTypeCode", InstrumentUsedType.find);
+		validation.utils.BusinessValidationHelper.validateExistDescriptionCode(contextErrors.errors, this.resolutionCode, "resolutionCode", Resolution.find);
+		validation.utils.BusinessValidationHelper.validateExistDescriptionCode(contextErrors.errors, this.protocolCode, "protocolCode", Protocol.find);
+		validation.utils.BusinessValidationHelper.validateExistDescriptionCode(contextErrors.errors, this.instrumentUsedTypeCode, "instrumentUsedTypeCode", InstrumentUsedType.find);
 
-		validateTraceInformation(errors, this.traceInformation, this._id);
+		validateTraceInformation(contextErrors.errors, this.traceInformation, this._id);
 		
-		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.typeCode, "typeCode", ExperimentType.find,true);
-		InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.instrumentUsedTypeCode,"instrumentUsedTypeCode", InstrumentUsedType.find,true);
+		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.typeCode, "typeCode", ExperimentType.find,true);
+		InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.instrumentUsedTypeCode,"instrumentUsedTypeCode", InstrumentUsedType.find,true);
 
-		ConstraintsHelper.validatePropertiesforLevel(errors, this.experimentProperties, exType.propertiesDefinitions,"",LEVEL_SEARCH_EXP);
-		ConstraintsHelper.validatePropertiesforLevel(errors, this.instrumentProperties, instrumentUsedType.propertiesDefinitions,"",LEVEL_SEARCH_INS);
+		ConstraintsHelper.validatePropertiesforLevel(contextErrors.errors, this.experimentProperties, exType.propertiesDefinitions,"",LEVEL_SEARCH_EXP);
+		ConstraintsHelper.validatePropertiesforLevel(contextErrors.errors, this.instrumentProperties, instrumentUsedType.propertiesDefinitions,"",LEVEL_SEARCH_INS);
 		
 		for(int i=0;i<atomicTransfertMethods.size();i++){
-			atomicTransfertMethods.get(i).validate(errors);
+			atomicTransfertMethods.get(i).validate(contextErrors);
 		}
 		
-		instrument.validate(errors);
+		instrument.validate(contextErrors);
 		
 		for(ReagentUsed reagentUsed:reagentUseds){
-			reagentUsed.validate(errors);
+			reagentUsed.validate(contextErrors);
 		}
 					
 	}

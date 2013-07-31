@@ -25,9 +25,10 @@ import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+
 import play.Logger;
-import play.data.validation.ValidationError;
 import validation.utils.BusinessValidationHelper;
+import validation.utils.ContextValidation;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
@@ -97,32 +98,32 @@ public class Process extends DBObject implements IValidation{
 
 	@JsonIgnore
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
+	public void validate(ContextValidation contextErrors) {
 		if(this == null){
 			throw new IllegalArgumentException("Process is null");
 		}
 		
 		if(this._id == null){
-			validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(errors, this.code, Process.class,InstanceConstants.CONTAINER_COLL_NAME);
+			validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(contextErrors.errors, this.code, Process.class,InstanceConstants.CONTAINER_COLL_NAME);
 		}
 		
-		validateTraceInformation(errors, this.traceInformation, this._id);
+		validateTraceInformation(contextErrors.errors, this.traceInformation, this._id);
 		
 		if(this._id == null){
-			Container container = BusinessValidationHelper.validateRequiredInstanceCode(errors, this.containerInputCode,"containerInputCode",Container.class,InstanceConstants.CONTAINER_COLL_NAME,true);
+			Container container = BusinessValidationHelper.validateRequiredInstanceCode(contextErrors.errors, this.containerInputCode,"containerInputCode",Container.class,InstanceConstants.CONTAINER_COLL_NAME,true);
 			if(!container.stateCode.equals("A")){
-				addErrors(errors,this.containerInputCode, getKey(null,"containerNotIWPOrN"));
+				addErrors(contextErrors.errors,this.containerInputCode, getKey(null,"containerNotIWPOrN"));
 			}
 		}
 		
-		BusinessValidationHelper.validateRequiredInstanceCode(errors, this.sampleCode,"sampleCodes",Sample.class,InstanceConstants.SAMPLE_COLL_NAME,false);
-		BusinessValidationHelper.validateRequiredInstanceCode(errors, this.projectCode,"projectCode",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
-		required(errors, this.stateCode, "stateCode");
-		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.typeCode,"typeCode", ProcessType.find);
+		BusinessValidationHelper.validateRequiredInstanceCode(contextErrors.errors, this.sampleCode,"sampleCodes",Sample.class,InstanceConstants.SAMPLE_COLL_NAME,false);
+		BusinessValidationHelper.validateRequiredInstanceCode(contextErrors.errors, this.projectCode,"projectCode",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
+		required(contextErrors.errors, this.stateCode, "stateCode");
+		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.typeCode,"typeCode", ProcessType.find);
 		
 		ProcessType thisType = this.getProcessType();
 		if(thisType != null && thisType.propertiesDefinitions != null && !thisType.propertiesDefinitions.isEmpty()){
-			validateProperties(errors, this.properties, this.getProcessType().propertiesDefinitions, getKey(null,"nullPropertiesDefinitions"));
+			validateProperties(contextErrors.errors, this.properties, this.getProcessType().propertiesDefinitions, getKey(null,"nullPropertiesDefinitions"));
 		}
 	
 	}

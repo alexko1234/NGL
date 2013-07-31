@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import validation.utils.ContextValidation;
+
+
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
@@ -11,7 +14,6 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.utils.InstanceConstants;
 import models.utils.instance.ContainerHelper;
 import net.vz.mongodb.jackson.DBQuery;
-import play.data.validation.ValidationError;
 import fr.cea.ig.MongoDBDAO;
 
 public class ManytoOneContainer extends AtomicTransfertMethod{
@@ -52,10 +54,10 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 	}
 
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
-		outputContainerUsed.validate(errors);
+	public void validate(ContextValidation contextErrors) {
+		outputContainerUsed.validate(contextErrors);
 		for(ContainerUsed containerUsed:inputContainerUseds){
-			containerUsed.validate(errors);
+			containerUsed.validate(contextErrors);
 		}
 	}
 

@@ -1,12 +1,12 @@
 package models.laboratory.stock.instance;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import play.data.validation.ValidationError;
+import validation.utils.ContextValidation;
+
+
 
 import models.utils.IValidation;
 
@@ -18,7 +18,7 @@ public class StockUsed implements IValidation{
 	
 	@JsonIgnore
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
+	public void validate(ContextValidation contextErrors) {
 		// TODO Auto-generated method stub
 		
 	}

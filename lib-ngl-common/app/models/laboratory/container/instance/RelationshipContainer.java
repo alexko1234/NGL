@@ -1,7 +1,6 @@
 package models.laboratory.container.instance;
 
 import java.util.List;
-import java.util.Map;
 
 import models.laboratory.container.description.ContainerCategory;
 import models.utils.HelperObjects;
@@ -10,7 +9,9 @@ import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import play.data.validation.ValidationError;
+import validation.utils.ContextValidation;
+
+
 
 import fr.cea.ig.DBObject;
 
@@ -44,7 +45,7 @@ public class RelationshipContainer extends DBObject implements IValidation {
 
 	@JsonIgnore
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
+	public void validate(ContextValidation contextErrors) {
 		// TODO Auto-generated method stub
 	
 	}	

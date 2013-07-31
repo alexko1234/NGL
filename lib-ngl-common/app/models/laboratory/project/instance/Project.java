@@ -16,9 +16,10 @@ import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import play.data.validation.ValidationError;
+
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ConstraintsHelper;
+import validation.utils.ContextValidation;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
@@ -71,17 +72,17 @@ public class Project extends DBObject implements IValidation{
 
 	@Override
 	@JsonIgnore
-	public void validate(Map<String, List<ValidationError>> errors) {
+	public void validate(ContextValidation contextErrors) {
 		
-		BusinessValidationHelper.validateUniqueInstanceCode(errors, code, Project.class, InstanceConstants.PROJECT_COLL_NAME);
+		BusinessValidationHelper.validateUniqueInstanceCode(contextErrors.errors, code, Project.class, InstanceConstants.PROJECT_COLL_NAME);
 		
-		BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.categoryCode, "categoryCode", ProjectCategory.find);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.categoryCode, "categoryCode", ProjectCategory.find);
 		
-		ProjectType projectType=BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.typeCode, "typeCode", ProjectType.find,true);
+		ProjectType projectType=BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.typeCode, "typeCode", ProjectType.find,true);
 		
-		ConstraintsHelper.validateProperties(errors, this.properties, projectType.propertiesDefinitions,"");
+		ConstraintsHelper.validateProperties(contextErrors.errors, this.properties, projectType.propertiesDefinitions,"");
 		
-		BusinessValidationHelper.validateExistDescriptionCode(errors, this.stateCode, "stateCode", State.find);
+		BusinessValidationHelper.validateExistDescriptionCode(contextErrors.errors, this.stateCode, "stateCode", State.find);
 		
 	}
 

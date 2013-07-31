@@ -1,12 +1,12 @@
 package models.laboratory.container.instance;
 
-import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import play.data.validation.ValidationError;
+
 import validation.utils.BusinessValidationHelper;
+import validation.utils.ContextValidation;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.utils.IValidation;
@@ -25,7 +25,7 @@ public class QualityControlResult implements IValidation {
 	
 	@JsonIgnore
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
+	public void validate(ContextValidation contextErrors) {
 		
 	}
 	

@@ -1,7 +1,5 @@
 package models.laboratory.container.instance;
 
-import java.util.List;
-import java.util.Map;
 
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
@@ -12,9 +10,10 @@ import models.utils.InstanceConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+
 import play.Logger;
-import play.data.validation.ValidationError;
 import validation.utils.BusinessValidationHelper;
+import validation.utils.ContextValidation;
 
 public class SampleUsed implements IValidation{
 
@@ -58,11 +57,11 @@ public class SampleUsed implements IValidation{
 
 	@JsonIgnore
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
+	public void validate(ContextValidation contextErrors) {
 
-		BusinessValidationHelper.validateExistInstanceCode(errors, sampleCode, "sampleCode", Sample.class, InstanceConstants.SAMPLE_COLL_NAME, false);
-		BusinessValidationHelper.validateExistDescriptionCode(errors, typeCode, "typeCode", SampleType.find,false);
-		BusinessValidationHelper.validateExistDescriptionCode(errors, categoryCode, "categoryCode",SampleCategory.find,false);
+		BusinessValidationHelper.validateExistInstanceCode(contextErrors.errors, sampleCode, "sampleCode", Sample.class, InstanceConstants.SAMPLE_COLL_NAME, false);
+		BusinessValidationHelper.validateExistDescriptionCode(contextErrors.errors, typeCode, "typeCode", SampleType.find,false);
+		BusinessValidationHelper.validateExistDescriptionCode(contextErrors.errors, categoryCode, "categoryCode",SampleCategory.find,false);
 
 	}
 

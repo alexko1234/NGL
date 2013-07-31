@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import validation.utils.ContextValidation;
+
+
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
 import models.utils.instance.ContainerHelper;
-import play.data.validation.ValidationError;
 import fr.cea.ig.MongoDBDAO;
 
 public class OneToManyContainer extends AtomicTransfertMethod {
@@ -52,10 +54,10 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 
 
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
-		inputContainerUsed.validate(errors);
+	public void validate(ContextValidation contextErrors) {
+		inputContainerUsed.validate(contextErrors);
 		for(ContainerUsed containerUsed:outputContainerUseds){
-			containerUsed.validate(errors);
+			containerUsed.validate(contextErrors);
 		}
 	}
 	

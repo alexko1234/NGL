@@ -1,7 +1,5 @@
 package models.laboratory.container.instance;
 
-import java.util.List;
-import java.util.Map;
 
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.sample.instance.Sample;
@@ -13,10 +11,11 @@ import net.vz.mongodb.jackson.DBQuery;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+
 import fr.cea.ig.MongoDBDAO;
 
-import play.data.validation.ValidationError;
 import validation.utils.BusinessValidationHelper;
+import validation.utils.ContextValidation;
 
 import static validation.utils.ConstraintsHelper.addErrors;
 
@@ -63,11 +62,11 @@ public class ContainerSupport implements IValidation {
 
 	@JsonIgnore
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
+	public void validate(ContextValidation contextErrors) {
 
-		BusinessValidationHelper.validateUniqueFieldValue(errors, "support.barCode", barCode, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
-		BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.categoryCode, "categoryCode", ContainerSupportCategory.find, false);
-		BusinessValidationHelper.validateExistInstanceCode(errors, this.stockCode, "stockCode",Stock.class,InstanceConstants.STOCK_COLL_NAME ,false);
+		BusinessValidationHelper.validateUniqueFieldValue(contextErrors.errors, "support.barCode", barCode, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.categoryCode, "categoryCode", ContainerSupportCategory.find, false);
+		BusinessValidationHelper.validateExistInstanceCode(contextErrors.errors, this.stockCode, "stockCode",Stock.class,InstanceConstants.STOCK_COLL_NAME ,false);
 
 	}
 

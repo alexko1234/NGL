@@ -5,28 +5,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
-import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.container.instance.Content;
-import models.laboratory.project.instance.Project;
-import models.laboratory.sample.instance.Sample;
-import net.vz.mongodb.jackson.MongoCollection;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
 
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
-
-import play.Logger;
 import play.data.validation.ValidationError;
 import play.mvc.Http;
+import validation.utils.ContextValidation;
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 
 public class InstanceHelpers {
 
@@ -120,33 +114,34 @@ public class InstanceHelpers {
 
 	}
 
-	public static DBObject save(String collectionName,IValidation obj, Map<String,List<ValidationError>> errors) {
-		Map<String, List<ValidationError>> localErrors=new HashMap<String, List<ValidationError>>();
+	public static DBObject save(String collectionName,IValidation obj, ContextValidation contextError) {
+		ContextValidation localContextError=new ContextValidation();
+		localContextError.errors=new HashMap<String, List<ValidationError>>();
 
 		if(obj!=null)
-			obj.validate(localErrors);
+			obj.validate(localContextError);
 		else {
 			return null;
 		}
 
-		if(localErrors.size()==0){
+		if(localContextError.errors.size()==0){
 			return MongoDBDAO.save(collectionName,(DBObject) obj);
 		}
 		else {
-			errors.putAll(localErrors);
+			contextError.errors.putAll(localContextError.errors);
 			return null;
 		}
 	}
 
 
 
-	public static  <T extends DBObject> List<T> save(String collectionName,List<T> objects, Map<String,List<ValidationError>> errors) {
+	public static  <T extends DBObject> List<T> save(String collectionName,List<T> objects, ContextValidation contextErrors) {
 
 		List<T> dbObjects=new ArrayList<T>();
 
 		for(DBObject object:objects){
 			@SuppressWarnings("unchecked")
-			T result=(T) InstanceHelpers.save(collectionName,(IValidation) object, errors);
+			T result=(T) InstanceHelpers.save(collectionName,(IValidation) object, contextErrors);
 			if(result!=null){
 				dbObjects.add(result);
 			}

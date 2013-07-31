@@ -1,6 +1,5 @@
 package models.laboratory.experiment.instance;
 
-import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
@@ -11,8 +10,9 @@ import models.utils.InstanceConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import play.data.validation.ValidationError;
+
 import validation.utils.BusinessValidationHelper;
+import validation.utils.ContextValidation;
 
 
 public class ContainerUsed implements IValidation{
@@ -49,8 +49,8 @@ public class ContainerUsed implements IValidation{
 
 	@JsonIgnore
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
-		BusinessValidationHelper.validateExistInstanceCode(errors, containerCode, "containerCode", Container.class,InstanceConstants.CONTAINER_COLL_NAME);
+	public void validate(ContextValidation contextErrors) {
+		BusinessValidationHelper.validateExistInstanceCode(contextErrors.errors, containerCode, "containerCode", Container.class,InstanceConstants.CONTAINER_COLL_NAME);
 		//TODO validate experimentProperties ?? 
 		//TODO validate instrumentProperties ??
 	}

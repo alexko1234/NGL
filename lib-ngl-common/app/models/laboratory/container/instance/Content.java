@@ -1,19 +1,24 @@
 package models.laboratory.container.instance;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import play.data.validation.ValidationError;
+
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ConstraintsHelper;
+import validation.utils.ContextValidation;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.utils.IValidation;
 
 public class Content implements IValidation{
+	
+	
+	@JsonIgnore
+	public final static String LEVEL_SEARCH=Level.CODE.Content.toString();
 	
 	public SampleUsed sampleUsed;
 	
@@ -33,12 +38,12 @@ public class Content implements IValidation{
 
 	@JsonIgnore
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
+	public void validate(ContextValidation contextErrors) {
 
 		if(sampleUsed==null){
-			ConstraintsHelper.addErrors(errors,"sampleUsed", "error.codeNotFound");
+			ConstraintsHelper.addErrors(contextErrors.errors,"sampleUsed", "error.codeNotFound");
 		}else {
-			sampleUsed.validate(errors);
+			sampleUsed.validate(contextErrors);
 		}
 			
 	}

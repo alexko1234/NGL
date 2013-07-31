@@ -22,10 +22,11 @@ import net.vz.mongodb.jackson.MongoCollection;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.internal.metadata.core.ConstraintHelper;
 
+
 import play.Logger;
-import play.data.validation.ValidationError;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ConstraintsHelper;
+import validation.utils.ContextValidation;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
@@ -93,17 +94,17 @@ public class Sample extends DBObject implements IValidation{
 
 	@JsonIgnore
 	@Override
-	public void validate(Map<String, List<ValidationError>> errors) {
+	public void validate(ContextValidation contextErrors) {
 
-		BusinessValidationHelper.validateUniqueInstanceCode(errors, this.code, Sample.class, InstanceConstants.SAMPLE_COLL_NAME);
+		BusinessValidationHelper.validateUniqueInstanceCode(contextErrors.errors, this.code, Sample.class, InstanceConstants.SAMPLE_COLL_NAME);
 
-		BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.categoryCode, "categoryCode", SampleCategory.find,false);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.categoryCode, "categoryCode", SampleCategory.find,false);
 
 		//Validate properties definition from sampleType and importType where level contain string "Sample"
 		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
 
-		SampleType sampleType=BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.typeCode, "typeCode", SampleType.find,true);
-		ImportType importType=BusinessValidationHelper.validateRequiredDescriptionCode(errors, this.importTypeCode,"importTypeCode", ImportType.find,true);
+		SampleType sampleType=BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.typeCode, "typeCode", SampleType.find,true);
+		ImportType importType=BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.importTypeCode,"importTypeCode", ImportType.find,true);
 
 		proDefinitions.addAll(sampleType.propertiesDefinitions);
 		
@@ -113,9 +114,9 @@ public class Sample extends DBObject implements IValidation{
 			}
 		}
 
-		ConstraintsHelper.validateProperties(errors, this.properties, proDefinitions,"");
+		ConstraintsHelper.validateProperties(contextErrors.errors, this.properties, proDefinitions,"");
 
-		BusinessValidationHelper.validateRequiredInstanceCodes(errors, this.projectCodes, "projectCodes",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
+		BusinessValidationHelper.validateRequiredInstanceCodes(contextErrors.errors, this.projectCodes, "projectCodes",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
 
 		//TODO validation taxon 
 	}
