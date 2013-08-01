@@ -51,7 +51,26 @@ function TabMainCtrl($scope, $location){
 			}
 		}else{
 			tabs.push(newtabs);
-		}		
+		
+		var doubledTab = [];
+
+		for(var i = 0; i < tabs.length; i++) {
+		    var valueIsInArray = false;
+
+		    for(var j = 0; j < doubledTab.length; j++) {
+		        if(doubledTab[j].label == tabs[i].label) {
+		            valueIsInArray = true;
+		        }
+		    }
+
+		    if(valueIsInArray) {
+		        tabs.splice(i, 1); 
+		    } else {
+		        doubledTab.push(tabs[i]);
+		    }
+		}
+		
+
 	};
 	
 	/**
