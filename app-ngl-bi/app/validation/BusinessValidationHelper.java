@@ -16,7 +16,6 @@ import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
-import models.laboratory.stat.instance.Stat;
 import net.vz.mongodb.jackson.DBQuery;
 import play.data.validation.ValidationError;
 
