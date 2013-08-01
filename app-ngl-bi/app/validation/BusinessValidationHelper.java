@@ -220,12 +220,7 @@ public class BusinessValidationHelper {
 		validateProperties(errors, file.properties, RunPropertyDefinitionHelper.getFilePropertyDefinitions(), getKey(rootKeyName,"properties"));		
 	}
 	
-	// dno
-	/**
-	 * @param errors
-	 * @param stat
-	 * @param collectionName
-	 */
+	/* dno
 	public static void validateStat(Map<String, List<ValidationError>> errors,
 			Stat stat, String collectionName) {
 		if(null == stat ){
@@ -236,6 +231,8 @@ public class BusinessValidationHelper {
 		validationType(errors, stat.typeCode);
 		validateProperties(errors, stat.properties, StatPropertyDefinitionHelper.getStatQCPropertyDefinitions().propertiesDefinitions, "properties");
 	}
+	
+	*/
 	
 
 	
