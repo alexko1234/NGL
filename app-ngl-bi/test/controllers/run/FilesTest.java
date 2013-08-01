@@ -26,8 +26,6 @@ import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 
 public class FilesTest extends AbstractTests{
-
-	
 	
 	@Test
 	 public void testFileCreate() {
@@ -59,6 +57,7 @@ public class FilesTest extends AbstractTests{
         assertThat(charset(result)).isEqualTo("utf-8");
 	 }
 	
+	
 	 @Test
 	 public void testFileUpdate() {
 		File file = RunMockHelper.newFile("newfiletest");
@@ -69,23 +68,36 @@ public class FilesTest extends AbstractTests{
       assertThat(contentType(result)).isEqualTo("application/json");
       assertThat(charset(result)).isEqualTo("utf-8");
 	 }
+	
 	 
 	 @Test
 	 public void testFileShow() {
+		 testFileCreate(); 
 	  Result result = callAction(controllers.runs.api.routes.ref.Files.get("test1","testfile"));
-	//  System.out.println(contentAsString(result));
+	   //  System.out.println(contentAsString(result));
       assertThat(status(result)).isEqualTo(OK);
       assertThat(contentType(result)).isEqualTo("application/json");
       assertThat(charset(result)).isEqualTo("utf-8");
 	 }
 	 
+	 
 	 @Test
 	 public void testRemoveFiles(){
-		 Result result = callAction(controllers.runs.api.routes.ref.Runs.removeFiles("YANN_TEST1FORREADSET2"),fakeRequest());
-		  Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
+		 Result result = callAction(controllers.runs.api.routes.ref.Runs.deleteFiles("YANN_TEST1FORREADSET2"),fakeRequest());
+		  //Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
 		  // System.out.println(Json.toJson(runDelete).toString());
-		 //assertThat(runDelete).isNull();
+		  //assertThat(runDelete).isNull();
+          assertThat(status(result)).isEqualTo(OK);
+	 }
+	 
+	 
+	 
+	 @Test
+	 public void testDeleteFile(){
+		 testFileCreate(); 
+		 Result result = callAction(controllers.runs.api.routes.ref.Files.delete("test1","testfile"),fakeRequest());
          assertThat(status(result)).isEqualTo(OK);
 	 }
+	 
 
 }

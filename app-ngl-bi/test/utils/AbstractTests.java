@@ -47,6 +47,13 @@ public abstract class AbstractTests {
 		config.put("db.lims.jndiName", "lims");
 		
 		config.put("asset.url","http://192.168.243.231:9001");
+		
+		// DNO, 01/07/2013, to delete errors messages;
+		config.put("casUrlValidator", "https://cas.genoscope.cns.fr:8443/cas/serviceValidate");
+		config.put("casUrlLogin", "https://cas.genoscope.cns.fr:8443/cas/login");
+		config.put("casRenew", "false");
+	    config.put("casMode", "debug");
+		
 		return config;
 		
 	}

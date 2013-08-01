@@ -10,10 +10,11 @@ function SearchCtrl($scope, datatable) {
 			show:{
 				active:true,
 				add :function(line){
-					$scope.tabs.push({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.home(line.code).url,remove:true});
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.home(line.code).url,remove:true});
 				}
 			}
 	};
+	
 	
 	
 	$scope.init = function(){
@@ -24,6 +25,13 @@ function SearchCtrl($scope, datatable) {
 			$scope.setDatatable($scope.datatable);
 		}else{
 			$scope.datatable = $scope.getDatatable();
+		}
+		
+		if(angular.isUndefined($scope.getHomePage())){
+			$scope.setHomePage('home');
+			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("home").url,remove:false});
+			
+			$scope.activeTab(0);
 		}
 	}	
 };
@@ -44,11 +52,11 @@ function DetailsCtrl($scope, $http, $routeParams) {
 	$scope.init = function(){
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
-			//init tabs on left screen when none exist
-			if($scope.tabs.length == 0){
-				$scope.tabs.push({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.home($scope.run.code).url,remove:true})
-				$scope.activeTab($scope.tabs[0]);				
-			}			
+			if($scope.getTabs().length == 0){
+				$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.home($scope.run.code).url,remove:true})
+				$scope.activeTab(0);				
+			}
+			
 		});
 	}
 	

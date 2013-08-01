@@ -14,7 +14,6 @@ import play.data.DynamicForm;
 import play.data.Form;
 import static play.data.Form.form;
 import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Result;
 import validation.BusinessValidationHelper;
 import views.components.datatable.DatatableHelpers;
@@ -22,13 +21,15 @@ import views.components.datatable.DatatableResponse;
 import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.MongoDBResult.Sort;
+
+import controllers.CommonController;
+
 /**
  * Controller around Run object
  * @author galbini
  *
  */
-public class Runs extends Controller {
+public class Runs extends CommonController {
 	
 	final static Form<Run> runForm = form(Run.class);
 	final static DynamicForm listForm = new DynamicForm();
@@ -36,19 +37,13 @@ public class Runs extends Controller {
 	public static Result list(){
 		DynamicForm filledForm =  listForm.bindFromRequest();
 		MongoDBResult<Run> results = MongoDBDAO.find(Constants.RUN_ILLUMINA_COLL_NAME, Run.class)
-				.sort(DatatableHelpers.getOrderBy(filledForm), getOrderSense(filledForm))
+				.sort(DatatableHelpers.getOrderBy(filledForm), CommonController.getMongoDBOrderSense(filledForm))
 				.page(DatatableHelpers.getPageNumber(filledForm), DatatableHelpers.getNumberRecordsPerPage(filledForm)); 
 		List<Run> runs = results.toList();
 		return ok(Json.toJson(new DatatableResponse(runs, results.count())));
 	}
 	
-	private static Sort getOrderSense(DynamicForm filledForm) {
-		if(Integer.valueOf(-1).equals(DatatableHelpers.getOrderSense(filledForm))){
-			return Sort.DESC;
-		}else{
-			return Sort.ASC;
-		}
-	}
+	
 
 	public static Result get(String code){
 		Run runValue = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
@@ -60,7 +55,7 @@ public class Runs extends Controller {
 	}
 	
 	public static Result save() {
-		Form<Run> filledForm = getFilledForm();
+		Form<Run> filledForm = getFilledForm(runForm, Run.class);
 
 		if (!filledForm.hasErrors()) {
 			Run runValue = filledForm.get();
@@ -70,7 +65,12 @@ public class Runs extends Controller {
 			} else {
 				runValue.traceInformation.setTraceInformation("ngsrg");
 			}
+			
 			BusinessValidationHelper.validateRun(filledForm.errors(), runValue, Constants.RUN_ILLUMINA_COLL_NAME);
+			//new, dno, 17-07-2013
+			//runValue.validate(filledForm.errors());
+			
+			
 			if (!filledForm.hasErrors()) {
 				runValue = MongoDBDAO.save(Constants.RUN_ILLUMINA_COLL_NAME,runValue);
 				filledForm = filledForm.fill(runValue);
@@ -84,7 +84,8 @@ public class Runs extends Controller {
 		}
 	}
 	
-	public static Result remove(String code){
+	
+	public static Result delete(String code){
 		Run run = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(run == null){
 			return badRequest();
@@ -93,21 +94,25 @@ public class Runs extends Controller {
 		return ok();
 	}
 	
-	public static Result removeReadsets(String code){
+	
+	public static Result deleteReadsets(String code){
 		Run run  = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(run==null){
 			return badRequest();
 		}
 		for(int i=0;run.lanes!=null && i<run.lanes.size();i++){
 			for(int j=0;run.lanes.get(i).readsets != null && j<run.lanes.get(i).readsets.size();j++){
+				// vide
 				MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",code),DBUpdate.unset("lanes."+i+".readsets."+j));
 			}
+			//supprime
 			MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",code),DBUpdate.pull("lanes."+i+".readsets",null));	
 		}		
 		return ok();
 	}
 	
-	public static Result removeFiles(String code){
+
+	public static Result deleteFiles(String code){
 		Run run  = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(run==null){
 			return badRequest();
@@ -125,6 +130,7 @@ public class Runs extends Controller {
 		return ok();
 	}
 	
+	
 	public static Result dispatch(String code){
 		Run run = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);		
 		if(run != null){
@@ -137,11 +143,5 @@ public class Runs extends Controller {
 		}		
 		return ok();	
 	}
-	
-	private static Form<Run> getFilledForm() {
-		JsonNode json = request().body().asJson();
-		Run runInput = Json.fromJson(json, Run.class);
-		Form<Run> filledForm = runForm.fill(runInput); // bindJson ne marche pas
-		return filledForm;
-	}
+
 }

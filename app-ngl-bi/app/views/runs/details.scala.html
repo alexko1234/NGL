@@ -4,77 +4,82 @@
 <fieldset>
 	           
 <dl class="dl-horizontal">
-	<dt>Cluster total</dt>
-	<dd>{{run.properties.nbClusterTotal.value / 1000000000}}</dd>
+	<dt>@Messages("runs.dt.nb_cluster_total")</dt>
+	<!--dd>{{run.properties.nbClusterTotal.value / 1000000000}}</dd-->
+	<dd>{{run.properties.nbClusterTotal.value | number}}</dd>
 </dl>
 <dl class="dl-horizontal">
-	<dt>Illumina filter cluster</dt>
-	<dd>{{run.properties.nbClusterIlluminaFilter.value / 1000000000}}</dd>
+	<dt>@Messages("runs.dt.nb_cluster_illumina")</dt>
+	<!-- dd>{{run.properties.nbClusterIlluminaFilter.value / 1000000000}}</dd-->
+	<dd>{{run.properties.nbClusterIlluminaFilter.value | number}}</dd>
 </dl>
 <dl class="dl-horizontal">
-	<dt>Base (Gb)</dt>
-	<dd>{{run.properties.nbBase.value / 1000000000}}</dd>
+	<dt>@Messages("runs.dt.nb_bases_en_gb")</dt>
+	<!--dd>{{run.properties.nbBase.value / 1000000000}}</dd-->
+	<dd>{{run.properties.nbBase.value | number}}</dd>
 </dl>
 <dl class="dl-horizontal">
-	<dt>Lanes</dt>					
-	<dd>
+  <dt>@Messages("runs.dt.lanes")</dt>					
+  <dd>
 	<table id="lanesId" class="table table-bordered table-condensed">
-        		<thead>
-        		<tr>
-        		<th>Lane Number</th><th>Read Set Number</th><th>Lost (%)</th>
-        		</tr>
-        		</thead>
-				<tbody id="{{run.code}}" ng-repeat="lane in run.lanes | orderBy:'number'">        	  
-        	   	<td>	
-					{{lane.number}}
-				</td>
-				<td>	
-					{{lane.readsets.length}}
-				</td>
-				<td>	
-					{{computeLost(lane)}}
-				</td>				
-			  </tr>
-        		</tbody>
-        		</table>
-</dd>
-			</dl>
+     <thead>
+      <tr>
+       <th>@Messages("runs.table.lanes_number")</th><th>@Messages("runs.table.readset_number")</th><th>@Messages("runs.table.lost_pct")</th>
+      </tr>
+     </thead>
+	 <tbody id="{{run.code}}" ng-repeat="lane in run.lanes | orderBy:'number'">   
+	  <tr>     	  
+       <td>	
+		{{lane.number}}
+	   </td>
+	   <td>	
+		{{lane.readsets.length}}
+	   </td>
+	   <td>	
+		{{computeLost(lane) | number:2 }}
+	   </td>				
+	  </tr>
+     </tbody>
+    </table>
+  </dd>
+</dl>
 <dl class="dl-horizontal">
-	<dt>Read Sets</dt>					
-	<dd>
+ <dt>@Messages("runs.table.readset_number")</dt>					
+ <dd>
 	<table id="lanesId" class="table table-bordered table-condensed">
-        		<thead>
-        		<tr>
-        		<th>Lane Number</th><th>Read Set Code</th><th>Sample Container Code</th><th>Project Code</th><th>Internal And Illumina Filter Cluster</th><th>Internal And Illumina Filter Base (Gb)</th><th>Q30</th>
-        		</tr>
-        		</thead>
-				<tbody id="{{run.code}}" ng-repeat="lane in run.lanes | orderBy:'number'">
-        	   <tr ng-repeat="readset in lane.readsets">
-        	   	<td>	
-					{{lane.number}}
-				</td>
-				<td>	
-					{{readset.code}}
-				</td>
-				<td>	
-					{{readset.sampleContainerCode}}
-				</td>
-				<td>	
-					{{readset.projectCode}}
-				</td>
-				<td>	
-					{{readset.properties.nbClusterInternalAndIlluminaFilter.value / 1000000000}}
-				</td>
-				<td>
-					{{readset.properties.nbBaseInternalAndIlluminaFilter.value / 1000000000}}
-				</td>
-				<td>
-					{{readset.properties.q30.value}}
-				</td>
-			  </tr>
-        		</tbody>
-        		</table>
-</dd>
-			</dl>
+     <thead>
+      <tr>
+       <th>@Messages("runs.table.lane_number")</th><th>@Messages("runs.table.readset_code")</th><th>@Messages("runs.table.sample_container_code")</th><th>@Messages("runs.table.project_code")</th><th>@Messages("runs.table.iaifc")</th><th>@Messages("runs.table.iaifb")</th>
+       <th>@Messages("runs.table.q30")</th>
+      </tr>
+     </thead>
+	 <tbody id="{{run.code}}" ng-repeat="lane in run.lanes | orderBy:'number'">
+      <tr ng-repeat="readset in lane.readsets">
+       <td>	
+		{{lane.number}}
+	   </td>
+	   <td>	
+		{{readset.code}}
+	   </td>
+	   <td>	
+		{{readset.sampleContainerCode}}
+	   </td>
+	   <td>	
+		{{readset.projectCode}}
+	   </td>
+	   <td>	
+		{{readset.properties.nbClusterInternalAndIlluminaFilter.value | number}}
+	   </td>		
+	   <td>
+		{{readset.properties.nbBaseInternalAndIlluminaFilter.value | number}}
+	   </td>
+	   <td>
+		{{readset.properties.q30.value}}
+	   </td>
+	  </tr>
+     </tbody>
+    </table>
+ </dd>
+</dl>
      
 </fieldset>

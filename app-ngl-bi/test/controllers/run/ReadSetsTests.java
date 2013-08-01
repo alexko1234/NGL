@@ -84,6 +84,7 @@ public class ReadSetsTests extends AbstractTests {
        assertThat(charset(result)).isEqualTo("utf-8");
 	 }
 	
+	
 	 @Test	 
 	 public void testReasetUpdate() {
 		ReadSet readset = RunMockHelper.newReadSet("ReadSetTEST");
@@ -98,7 +99,9 @@ public class ReadSetsTests extends AbstractTests {
 	 
 	 @Test	 
 	 public void testReasetUpdateWithCreateOrUpdateFunction() {
-
+		 	testReasetCreate() ;
+		 
+		 
 			ReadSet readset = RunMockHelper.newReadSet("ReadSetTEST");
 			
 			Result result = callAction(controllers.runs.api.routes.ref.ReadSets.save("YANN_TEST1FORREADSET",2),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
@@ -111,10 +114,10 @@ public class ReadSetsTests extends AbstractTests {
 	 
 	 @Test
 	 public void testArchiveReadSet(){
-		 Result result = callAction(controllers.archives.api.routes.ref.ReadSets.update("ReadSetTEST"),fakeRequest().withJsonBody(RunMockHelper.getArchiveJson("codeTestArchive")));
+		 Result result = callAction(controllers.archives.api.routes.ref.ReadSets.save("ReadSetTEST"),fakeRequest().withJsonBody(RunMockHelper.getArchiveJson("codeTestArchive")));
          assertThat(status(result)).isEqualTo(OK);
     	 
-         result = callAction(controllers.archives.api.routes.ref.ReadSets.update("ReadSetTESTNOTEXIT"),fakeRequest().withJsonBody(RunMockHelper.getArchiveJson("codeTestArchive")));
+         result = callAction(controllers.archives.api.routes.ref.ReadSets.save("ReadSetTESTNOTEXIT"),fakeRequest().withJsonBody(RunMockHelper.getArchiveJson("codeTestArchive")));
          assertThat(status(result)).isEqualTo(NOT_FOUND);
 	 }
 	 
@@ -129,14 +132,21 @@ public class ReadSetsTests extends AbstractTests {
 	 
 	 @Test
 	 public void testRemoveReadsets(){
-		 Result result = callAction(controllers.runs.api.routes.ref.Runs.removeReadsets("YANN_TEST1FORREADSET"),fakeRequest());
+		 Result result = callAction(controllers.runs.api.routes.ref.Runs.deleteReadsets("YANN_TEST1FORREADSET"),fakeRequest());
          //System.out.println("RUN WITHOUT READSET: "+runDelete.lanes.get(0).readsets.toArray());
          //assertThat(runDelete).isNull();
          assertThat(status(result)).isEqualTo(OK);
          
 	 }
-
-
-	
+	 
+	 
+	 
+	@Test
+	public void testDeleteReadset(){
+		testReasetCreate();
+		Result result = callAction(controllers.runs.api.routes.ref.ReadSets.delete("ReadSetTEST"),fakeRequest());
+		assertThat(status(result)).isEqualTo(OK);	
+	}
+		
 
 }

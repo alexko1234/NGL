@@ -3,7 +3,10 @@ package controllers.runs.tpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import jsmessages.JsMessages;
+
 import play.Routes;
+import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.components.datatable.DatatableColumn;
@@ -25,9 +28,9 @@ public class Runs extends Controller {
 	public static Result search() {
 		
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("code", "Code", true, false, false));
-		columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", "Creation date", true, false, false));
-		columns.add(DatatableHelpers.getColumn("dispatch", "Dispatch", true, false, false));
+		columns.add(DatatableHelpers.getColumn("code", Messages.get("runs.table.code"), true, false, false));
+		columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("runs.table.creationdate"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("dispatch", Messages.get("runs.table.dispatch"), true, false, false));
 		DatatableConfig config = new DatatableConfig(columns);
 		config.show = true;
 		config.button = true;

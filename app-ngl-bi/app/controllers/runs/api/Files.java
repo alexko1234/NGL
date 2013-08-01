@@ -5,24 +5,29 @@ import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBUpdate;
 
 import org.codehaus.jackson.JsonNode;
 
+import play.Logger;
 import play.data.Form;
 import static play.data.Form.form;
 import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Result;
 import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 
-public class Files extends Controller{
+import controllers.CommonController;
+
+
+
+public class Files extends CommonController{
 	
 	final static Form<File> fileForm = form(File.class);
 	
 	public static Result save(String readsetCode){
 			
-		Form<File> filledForm = getFilledForm();
+		Form<File> filledForm = getFilledForm(fileForm, File.class);
 		
 		if(!filledForm.hasErrors()) {
 			Run run = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("lanes.readsets.code", readsetCode));	
@@ -68,9 +73,8 @@ public class Files extends Controller{
 	}
 	
 	
-	public static Result get(String readsetCode,String fullname){
+	public static Result get(String readsetCode, String fullname){
 		Run run = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("lanes.readsets.code", readsetCode));	
-		//Logger.info("run value "+run.toString());
 		if(null == run){
 			return notFound();
 		}
@@ -101,10 +105,41 @@ public class Files extends Controller{
 		}		
 	}
 	
-	private static Form<File> getFilledForm() {
-		JsonNode json = request().body().asJson();
-		File fileInput = Json.fromJson(json, File.class);
-		Form<File> filledForm = fileForm.fill(fileInput); // bindJson ne marche pas !
-		return filledForm;
+	
+	public static Result delete(String readsetCode, String fullname) {
+		Boolean bUpdate = false;
+		
+		Run run = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("lanes.readsets.code", readsetCode));	
+		//Logger.info("run value "+run.toString());
+		String runCode = null;
+		if (run != null) {
+			runCode = run.code;
+			for(int i = 0; i < run.lanes.size(); i++){
+				Lane l = run.lanes.get(i);
+				for(int j = 0; l.readsets != null && j < l.readsets.size(); j++) {
+					ReadSet r = l.readsets.get(j);
+					for(int k=0; r.files != null && k<r.files.size(); k++) {
+						File f = r.files.get(k);
+						if(f.fullname.equals(fullname)) {
+							 bUpdate = true;		
+							// vide
+							MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.is("code",runCode), DBUpdate.unset("lanes."+i+".readsets."+j+".files."+k));		
+						}
+						
+					}
+					//supprime
+					MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",runCode),DBUpdate.pull("lanes."+i+".readsets."+j+".files",null));	
+							
+				}
+	 			if (bUpdate) break;
+			}
+		}
+		if(bUpdate){
+			return ok();				
+		}else{
+			return notFound();
+		}		
 	}
+	
+	
 }

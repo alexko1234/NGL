@@ -16,6 +16,7 @@ import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.laboratory.stat.instance.Stat;
 import net.vz.mongodb.jackson.DBQuery;
 import play.data.validation.ValidationError;
 
@@ -218,6 +219,24 @@ public class BusinessValidationHelper {
 		required(errors, file.usable, getKey(rootKeyName,"usable"));		
 		validateProperties(errors, file.properties, RunPropertyDefinitionHelper.getFilePropertyDefinitions(), getKey(rootKeyName,"properties"));		
 	}
+	
+	// dno
+	/**
+	 * @param errors
+	 * @param stat
+	 * @param collectionName
+	 */
+	public static void validateStat(Map<String, List<ValidationError>> errors,
+			Stat stat, String collectionName) {
+		if(null == stat ){
+			throw new IllegalArgumentException("stat is null");
+		}
+		validateCode(errors, stat, collectionName, Run.class);
+		validateTraceInformation(errors, stat.traceInformation, stat._id);
+		validationType(errors, stat.typeCode);
+		validateProperties(errors, stat.properties, StatPropertyDefinitionHelper.getStatQCPropertyDefinitions().propertiesDefinitions, "properties");
+	}
+	
 
 	
 }

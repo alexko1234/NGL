@@ -2,30 +2,43 @@ package controllers.runs.api;
 
 import java.util.List;
 
+import com.mongodb.MongoException;
+
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBUpdate;
+import net.vz.mongodb.jackson.JacksonDBCollection;
+import net.vz.mongodb.jackson.WriteResult;
 import net.vz.mongodb.jackson.DBQuery.Query;
-
-import org.codehaus.jackson.JsonNode;
+import net.vz.mongodb.jackson.DBUpdate.Builder;
 
 import play.data.Form;
 import static play.data.Form.form;
 import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Result;
+
 import validation.BusinessValidationHelper;
+
 import controllers.Constants;
+import controllers.CommonController;
+
 import fr.cea.ig.MongoDBDAO;
 
-public class ReadSets extends Controller{
+import play.Logger;
+
+
+
+
+
+public class ReadSets extends CommonController{
 
 	final static Form<ReadSet> readSetForm = form(ReadSet.class);
 	
 	public static Result save(String code, Integer laneNumber){
 		
-		Form<ReadSet> filledForm = getFilledForm();
+		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
 		
 		if(!filledForm.hasErrors()) {
 			Run run = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", code).is("lanes.number", laneNumber));	
@@ -65,7 +78,8 @@ public class ReadSets extends Controller{
 	}
 	
 	public static Result update(String readSetCode){
-		Form<ReadSet> filledForm = getFilledForm();
+		
+		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
 		if(!filledForm.hasErrors()){
 			ReadSet readsetValue = filledForm.get();
 		
@@ -125,14 +139,37 @@ public class ReadSets extends Controller{
 		}		
 	}
 	
+
 	
-	private static Form<ReadSet> getFilledForm() {
-		Form<ReadSet> filledForm;
-		JsonNode json = request().body().asJson();			
-		ReadSet readSetInput = Json.fromJson(json, ReadSet.class);
-		filledForm = readSetForm.fill(readSetInput);	//bindJson ne marche pas !					
-		return filledForm;
+	public static Result delete(String readSetCode){
+		//Logger.info("in delete "+readSetCode );
+		Boolean bUpdate = false;
+		Query object = DBQuery.is("lanes.readsets.code", readSetCode);
+		Run run =  MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, object);	
+		if(run==null){
+			return badRequest();
+		}
+		String runCode = run.code;
+		for(int i=0;run.lanes!=null && i<run.lanes.size();i++){
+			for(int j=0;run.lanes.get(i).readsets != null && j<run.lanes.get(i).readsets.size();j++){
+				// vide
+				if (run.lanes.get(i).readsets.get(j).code.equals(readSetCode) ) {
+					MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",runCode),DBUpdate.unset("lanes."+i+".readsets."+j));
+					bUpdate = true;
+				}
+			}
+			//supprime
+			MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",runCode),DBUpdate.pull("lanes."+i+".readsets",null));	
+
+		}		
+		if (bUpdate) {
+			return ok();
+		}
+		else {
+			return notFound();
+		}
 	}
+	
 	
 	
 }

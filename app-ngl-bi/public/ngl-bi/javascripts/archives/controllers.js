@@ -20,8 +20,19 @@ function SearchCtrl($scope, datatable) {
 	$scope.init = function(){
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		$scope.search();
+		$scope.datatable.search({archive:$scope.archive});
+		
+		if(angular.isUndefined($scope.getHomePage())){
+			$scope.setHomePage('home');
+			$scope.addTabs({label:Messages('archives.menu.search'),href:jsRoutes.controllers.archives.tpl.ReadSets.home().url,remove:false});
+			
+			$scope.activeTab(0);
+		}
 	}
 	
+	/* 
+      call by the init above and the search() to select the type of archives to vizualise (0,1,2)
+	 */
 	$scope.search = function(){
 		$scope.datatable.search({archive:$scope.archive});
 	}

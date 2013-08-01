@@ -21,19 +21,22 @@ import play.data.DynamicForm;
 import play.data.DynamicForm.Dynamic;
 import play.data.Form;
 import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Result;
 import validation.BusinessValidationHelper;
 import validation.utils.ConstraintsHelper;
 import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import fr.cea.ig.MongoDBDAO;
+
+import play.i18n.*;
+
+import controllers.CommonController;
 /**
  * Controller that manage the readset archive
  * @author galbini
  *
  */
-public class ReadSets extends Controller{
+public class ReadSets extends CommonController{
 
 	static DynamicForm form = new DynamicForm();
 	/**
@@ -94,10 +97,11 @@ public class ReadSets extends Controller{
 		archive.path = readset.path;
 		archive.id = readset.archiveId;
 		archive.date = readset.archiveDate;
+		
 		return archive;
 	}
 	
-	public static Result update(String readSetCode){
+	public static Result save(String readSetCode){
 		JsonNode json = request().body().asJson();	
 		String archiveId = json.get("archiveId").asText();
 		
