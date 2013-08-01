@@ -10,14 +10,17 @@ public class ContextValidation {
 	
 	public String rootKeyName;
 	public Map<String,List<ValidationError>> errors;
-	List<Object> contextObjects;
+	public Map<String,Object> contextObjects;
+	public String key;
 	
 	public ContextValidation(){
 		errors= new HashMap<String, List<ValidationError>>();
+		contextObjects= new HashMap<String, Object>();
 	}
 	
 	public ContextValidation(Map<String,List<ValidationError>> errors){
 		this.errors= errors;
+		contextObjects= new HashMap<String, Object>();
 	}
 
 }

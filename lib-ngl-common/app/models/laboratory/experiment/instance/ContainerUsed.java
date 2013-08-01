@@ -11,6 +11,7 @@ import models.utils.InstanceConstants;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 
+import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ContextValidation;
 
@@ -49,8 +50,8 @@ public class ContainerUsed implements IValidation{
 
 	@JsonIgnore
 	@Override
-	public void validate(ContextValidation contextErrors) {
-		BusinessValidationHelper.validateExistInstanceCode(contextErrors.errors, containerCode, "containerCode", Container.class,InstanceConstants.CONTAINER_COLL_NAME);
+	public void validate(ContextValidation contextValidation) {
+		InstanceValidationHelper.validationContainerCode(containerCode, contextValidation);
 		//TODO validate experimentProperties ?? 
 		//TODO validate instrumentProperties ??
 	}

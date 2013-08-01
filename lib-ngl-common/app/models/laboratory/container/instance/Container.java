@@ -1,7 +1,5 @@
 package models.laboratory.container.instance;
 
-import static validation.utils.ConstraintsHelper.required;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +14,6 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
@@ -26,11 +23,11 @@ import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-
+import validation.DescriptionValidationHelper;
+import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ContextValidation;
 import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
 
 
 
@@ -150,30 +147,37 @@ public class Container extends DBObject implements IValidation {
 		
 	@JsonIgnore
 	@Override
-	public void validate(ContextValidation contextErrors){
+	public void validate(ContextValidation contextValidation){
 
-		BusinessValidationHelper.validateUniqueInstanceCode(contextErrors.errors, this.code, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
+		contextValidation.contextObjects.put("_id",this._id);
 		
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.categoryCode, "categoryCode", ContainerCategory.find);
-				
-		BusinessValidationHelper.validateRequiredInstanceCodes(contextErrors.errors, this.projectCodes, "projectCodes",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
-
-		BusinessValidationHelper.validateRequiredInstanceCodes(contextErrors.errors, this.sampleCodes,"sampleCodes",Sample.class,InstanceConstants.SAMPLE_COLL_NAME,false);
-
-		BusinessValidationHelper.validateExistInstanceCodes(contextErrors.errors, fromExperimentTypeCodes, "fromExperimentTypeCodes", Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME, false);	
-
-		BusinessValidationHelper.validateExistInstanceCode(contextErrors.errors, fromPurifingCode, "fromPurifingCode", Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME, false);
+		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
 		
-		BusinessValidationHelper.validateExistDescriptionCode(contextErrors.errors, this.resolutionCode,"resolutionCode", Resolution.find);
-
-		if(required(contextErrors.errors, this.contents, "container.contents")){
-			for(Content content :this.contents){
-				content.validate(contextErrors);
-			}
-		}
+		DescriptionValidationHelper.validationContainerCategoryCode(categoryCode, contextValidation);
 		
-		support.validate(contextErrors);
+		DescriptionValidationHelper.validationProcessTypeCode(processTypeCode, contextValidation);
+		
+		InstanceValidationHelper.validationProjectCodes(projectCodes, contextValidation);
+		
+		InstanceValidationHelper.validationSampleCodes(sampleCodes, contextValidation);
+		
+		InstanceValidationHelper.validationExperimentCodes(fromExperimentTypeCodes, contextValidation);
+	
+		InstanceValidationHelper.validationExperimentCode(fromPurifingCode, contextValidation);
 
+		InstanceValidationHelper.validationResolutionCode(resolutionCode, contextValidation);
+		
+		InstanceValidationHelper.validationStateCode(stateCode, contextValidation);
+		
+		InstanceValidationHelper.validationContents(contents,contextValidation);
+		
+		InstanceValidationHelper.validationContainerSupport(support,contextValidation);
+		
+		traceInformation.validate(contextValidation);
+		
+		InstanceValidationHelper.validationComments(comments,contextValidation);
+		
+		//TODO validate properties
 	}
 
 }

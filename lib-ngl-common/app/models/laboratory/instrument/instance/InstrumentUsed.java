@@ -8,7 +8,7 @@ import models.utils.IValidation;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-
+import validation.DescriptionValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ContextValidation;
 
@@ -31,9 +31,10 @@ public class InstrumentUsed implements IValidation {
 
 	@JsonIgnore
 	@Override
-	public void validate(ContextValidation contextErrors) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, code, "instrument.code", Instrument.find);
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, categoryCode, "instrument.categoryCode", InstrumentCategory.find);
+	public void validate(ContextValidation contextValidation) {
+		DescriptionValidationHelper.validationInstrumentCode(code,contextValidation);
+		DescriptionValidationHelper.validationInstrumentCategoryCode(code,contextValidation);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, categoryCode, "instrument.categoryCode", InstrumentCategory.find);
 	}
 
 }

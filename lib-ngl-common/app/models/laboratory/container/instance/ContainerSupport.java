@@ -2,22 +2,17 @@ package models.laboratory.container.instance;
 
 
 import models.laboratory.container.description.ContainerSupportCategory;
-import models.laboratory.sample.instance.Sample;
 import models.laboratory.stock.instance.Stock;
 import models.utils.HelperObjects;
 import models.utils.IValidation;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.DBQuery;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-
-import fr.cea.ig.MongoDBDAO;
-
+import validation.DescriptionValidationHelper;
+import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ContextValidation;
-
-import static validation.utils.ConstraintsHelper.addErrors;
 
 
 
@@ -62,11 +57,11 @@ public class ContainerSupport implements IValidation {
 
 	@JsonIgnore
 	@Override
-	public void validate(ContextValidation contextErrors) {
+	public void validate(ContextValidation contextValidation) {
 
-		BusinessValidationHelper.validateUniqueFieldValue(contextErrors.errors, "support.barCode", barCode, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.categoryCode, "categoryCode", ContainerSupportCategory.find, false);
-		BusinessValidationHelper.validateExistInstanceCode(contextErrors.errors, this.stockCode, "stockCode",Stock.class,InstanceConstants.STOCK_COLL_NAME ,false);
+		BusinessValidationHelper.validateUniqueFieldValue(contextValidation.errors, "support.barCode", barCode, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
+		DescriptionValidationHelper.validationContainerSupportCategoryCode(categoryCode, contextValidation);
+		InstanceValidationHelper.validationStockCode(stockCode, contextValidation);
 
 	}
 

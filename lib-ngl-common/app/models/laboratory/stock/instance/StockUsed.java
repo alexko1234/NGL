@@ -18,7 +18,7 @@ public class StockUsed implements IValidation{
 	
 	@JsonIgnore
 	@Override
-	public void validate(ContextValidation contextErrors) {
+	public void validate(ContextValidation contextValidation) {
 		// TODO Auto-generated method stub
 		
 	}

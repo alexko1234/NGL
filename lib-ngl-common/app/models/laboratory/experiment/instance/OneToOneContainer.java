@@ -43,9 +43,9 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 	}
 	
 	@Override
-	public void validate(ContextValidation contextErrors) {
-		inputContainerUsed.validate(contextErrors);
-		outputContainerUsed.validate(contextErrors);
+	public void validate(ContextValidation contextValidation) {
+		inputContainerUsed.validate(contextValidation);
+		outputContainerUsed.validate(contextValidation);
 	}
 	
 	public List<ContainerUsed> getInputContainers(){

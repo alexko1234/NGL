@@ -9,6 +9,7 @@ import models.utils.InstanceConstants;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 
+import validation.DescriptionValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ContextValidation;
 
@@ -27,9 +28,11 @@ public class ReagentUsed implements IValidation {
 	}
 
 	@Override
-	public void validate(ContextValidation contextErrors) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.reagentTypeCode, "reagentTypeCode", ReagentType.find);
-		BusinessValidationHelper.validateRequiredInstanceCode(contextErrors.errors, this.reagentInstanceCode, "reagentInstanceCode", ReagentInstance.class,InstanceConstants.REAGENT_INSTANCE_COLL_NAME);
+	public void validate(ContextValidation contextValidation) {
+		
+		DescriptionValidationHelper.validationReagentTypeCode(reagentTypeCode,contextValidation);
+		DescriptionValidationHelper.validationReagentInstanceCode(reagentInstanceCode,contextValidation);
+
 	}
 	 
 	

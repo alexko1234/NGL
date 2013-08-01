@@ -1,13 +1,9 @@
 package models.laboratory.experiment.instance;
 
-import static validation.utils.ConstraintsHelper.validateTraceInformation;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.instance.Comment;
@@ -16,13 +12,10 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
-import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.project.instance.Project;
 import models.laboratory.reagent.instance.ReagentUsed;
-import models.laboratory.sample.description.ImportType;
-import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import models.utils.IValidation;
@@ -31,7 +24,8 @@ import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-
+import validation.DescriptionValidationHelper;
+import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ConstraintsHelper;
 import validation.utils.ContextValidation;
@@ -139,42 +133,45 @@ public class Experiment extends DBObject implements IValidation {
 
 	@JsonIgnore
 	@Override
-	public void validate(ContextValidation contextErrors) {
+	public void validate(ContextValidation contextValidation) {
 		
 		if(this == null){
 			throw new IllegalArgumentException("this is null");
 		}
 		
-		if(this._id == null){
-			validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(contextErrors.errors, this.code, Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME);
-		}
+		contextValidation.contextObjects.put("_id",this._id);
 		
-		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.stateCode, "stateCode", State.find);
-		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.typeCode, "typeCode", ExperimentType.find);
-		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.categoryCode, "categoryCode", ExperimentCategory.find);
-
-		validation.utils.BusinessValidationHelper.validateExistDescriptionCode(contextErrors.errors, this.resolutionCode, "resolutionCode", Resolution.find);
-		validation.utils.BusinessValidationHelper.validateExistDescriptionCode(contextErrors.errors, this.protocolCode, "protocolCode", Protocol.find);
-		validation.utils.BusinessValidationHelper.validateExistDescriptionCode(contextErrors.errors, this.instrumentUsedTypeCode, "instrumentUsedTypeCode", InstrumentUsedType.find);
-
-		validateTraceInformation(contextErrors.errors, this.traceInformation, this._id);
+		validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME);
 		
-		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.typeCode, "typeCode", ExperimentType.find,true);
-		InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.instrumentUsedTypeCode,"instrumentUsedTypeCode", InstrumentUsedType.find,true);
+		InstanceValidationHelper.validationStateCode(stateCode, contextValidation);
+		DescriptionValidationHelper.validationExperimentTypeCode(typeCode, contextValidation);
+		DescriptionValidationHelper.validationExperimentCategoryCode(categoryCode, contextValidation);
+		InstanceValidationHelper.validationResolutionCode(resolutionCode, contextValidation);
+		DescriptionValidationHelper.validationProtocol(protocolCode,contextValidation);
+		DescriptionValidationHelper.validationInstrumentUsedTypeCode(instrumentUsedTypeCode,contextValidation);
+		
+		
+		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.typeCode, "typeCode", ExperimentType.find,true);
+		InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.instrumentUsedTypeCode,"instrumentUsedTypeCode", InstrumentUsedType.find,true);
 
-		ConstraintsHelper.validatePropertiesforLevel(contextErrors.errors, this.experimentProperties, exType.propertiesDefinitions,"",LEVEL_SEARCH_EXP);
-		ConstraintsHelper.validatePropertiesforLevel(contextErrors.errors, this.instrumentProperties, instrumentUsedType.propertiesDefinitions,"",LEVEL_SEARCH_INS);
+		ConstraintsHelper.validatePropertiesforLevel(contextValidation.errors, this.experimentProperties, exType.propertiesDefinitions,"",LEVEL_SEARCH_EXP);
+		ConstraintsHelper.validatePropertiesforLevel(contextValidation.errors, this.instrumentProperties, instrumentUsedType.propertiesDefinitions,"",LEVEL_SEARCH_INS);
 		
 		for(int i=0;i<atomicTransfertMethods.size();i++){
-			atomicTransfertMethods.get(i).validate(contextErrors);
+			atomicTransfertMethods.get(i).validate(contextValidation);
 		}
 		
-		instrument.validate(contextErrors);
+		instrument.validate(contextValidation);
 		
 		for(ReagentUsed reagentUsed:reagentUseds){
-			reagentUsed.validate(contextErrors);
+			reagentUsed.validate(contextValidation);
 		}
 					
+		traceInformation.validate(contextValidation);
+		
+		for(Comment comment :comments){
+			comment.validate(contextValidation);
+		}
 	}
 
 	

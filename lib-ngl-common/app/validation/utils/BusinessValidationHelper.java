@@ -47,23 +47,27 @@ public class BusinessValidationHelper {
 
 	/**
 	 * Validate if code is unique in MongoDB collection
-	 * @param errors
+	 * Unique code is validate if key "_id" not in map contextObjects or if value of key "_id" is null else no code validation
+	 * @param contextValidatin
 	 * @param code
-	 * @param key
-	 * @param find
-	 * @param returnObject
-	 * @return boolean
+	 * @param type
+	 * @return collctionName
 	 */
-	
-	public static <T extends DBObject> boolean validateUniqueInstanceCode(Map<String, List<ValidationError>> errors,
+
+	public static <T extends DBObject> boolean validateUniqueInstanceCode(ContextValidation contextValidation,
 			String code, Class<T> type, String collectionName){
-		
-		if(null!=code && MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
-			addErrors(errors, FIELD_CODE, ERROR_NOTUNIQUE, code);
-			return false;
-		}else if (code!=null){
-			return false;
-		}	
+	
+		// Unique code is validate is key "_id" not in map contextObjects or if value of key "_id" is null
+		if( !contextValidation.contextObjects.containsKey("_id") || ( contextValidation.contextObjects.containsKey("_id") && contextValidation.contextObjects.get("_id")==null ) ){
+
+			if(null!=code && MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
+				addErrors(contextValidation.errors, FIELD_CODE, ERROR_NOTUNIQUE, code);
+				return false;
+			}else if (code!=null){
+				return false;
+			}	
+
+		}
 		
 		return true;
 	}

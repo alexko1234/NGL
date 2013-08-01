@@ -38,12 +38,12 @@ public class Content implements IValidation{
 
 	@JsonIgnore
 	@Override
-	public void validate(ContextValidation contextErrors) {
-
+	public void validate(ContextValidation contextValidation) {
+		
 		if(sampleUsed==null){
-			ConstraintsHelper.addErrors(contextErrors.errors,"sampleUsed", "error.codeNotFound");
+			ConstraintsHelper.addErrors(contextValidation.errors,"sampleUsed", "error.codeNotFound");
 		}else {
-			sampleUsed.validate(contextErrors);
+			sampleUsed.validate(contextValidation);
 		}
 			
 	}

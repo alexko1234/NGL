@@ -2,9 +2,6 @@ package models.laboratory.processes.instance;
 
 import static validation.utils.ConstraintsHelper.addErrors;
 import static validation.utils.ConstraintsHelper.getKey;
-import static validation.utils.ConstraintsHelper.required;
-import static validation.utils.ConstraintsHelper.validateProperties;
-import static validation.utils.ConstraintsHelper.validateTraceInformation;
 
 import java.util.List;
 import java.util.Map;
@@ -25,13 +22,11 @@ import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-
-import play.Logger;
+import validation.DescriptionValidationHelper;
+import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ContextValidation;
-
 import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
 
 
 
@@ -98,34 +93,33 @@ public class Process extends DBObject implements IValidation{
 
 	@JsonIgnore
 	@Override
-	public void validate(ContextValidation contextErrors) {
+	public void validate(ContextValidation contextValidation) {
 		if(this == null){
 			throw new IllegalArgumentException("Process is null");
 		}
+
+		contextValidation.contextObjects.put("_id",this._id);
+		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Process.class,InstanceConstants.CONTAINER_COLL_NAME);
 		
+		//??????????
 		if(this._id == null){
-			validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(contextErrors.errors, this.code, Process.class,InstanceConstants.CONTAINER_COLL_NAME);
-		}
-		
-		validateTraceInformation(contextErrors.errors, this.traceInformation, this._id);
-		
-		if(this._id == null){
-			Container container = BusinessValidationHelper.validateRequiredInstanceCode(contextErrors.errors, this.containerInputCode,"containerInputCode",Container.class,InstanceConstants.CONTAINER_COLL_NAME,true);
+			Container container = BusinessValidationHelper.validateRequiredInstanceCode(contextValidation.errors, this.containerInputCode,"containerInputCode",Container.class,InstanceConstants.CONTAINER_COLL_NAME,true);
 			if(!container.stateCode.equals("A")){
-				addErrors(contextErrors.errors,this.containerInputCode, getKey(null,"containerNotIWPOrN"));
+				addErrors(contextValidation.errors,this.containerInputCode, getKey(null,"containerNotIWPOrN"));
 			}
 		}
+		InstanceValidationHelper.validationSampleCode(sampleCode, contextValidation);
+		InstanceValidationHelper.validationProjectCode(projectCode, contextValidation);
+		InstanceValidationHelper.validationStateCode(stateCode, contextValidation);
+		DescriptionValidationHelper.validationProcessTypeCode(typeCode,contextValidation);
 		
-		BusinessValidationHelper.validateRequiredInstanceCode(contextErrors.errors, this.sampleCode,"sampleCodes",Sample.class,InstanceConstants.SAMPLE_COLL_NAME,false);
-		BusinessValidationHelper.validateRequiredInstanceCode(contextErrors.errors, this.projectCode,"projectCode",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
-		required(contextErrors.errors, this.stateCode, "stateCode");
-		validation.utils.BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.typeCode,"typeCode", ProcessType.find);
-		
-		ProcessType thisType = this.getProcessType();
+		//TODO
+	/*	ProcessType thisType = this.getProcessType();
 		if(thisType != null && thisType.propertiesDefinitions != null && !thisType.propertiesDefinitions.isEmpty()){
-			validateProperties(contextErrors.errors, this.properties, this.getProcessType().propertiesDefinitions, getKey(null,"nullPropertiesDefinitions"));
+			validateProperties(contextValidation.errors, this.properties, this.getProcessType().propertiesDefinitions, getKey(null,"nullPropertiesDefinitions"));
 		}
-	
+	*/
+		traceInformation.validate(contextValidation);
 	}
 	
 }

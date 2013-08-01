@@ -79,10 +79,14 @@ public class ConstraintsHelper {
 	}
 	
 	//Validate Properties not defined
+	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions){
+		validateProperties(contextValidation.errors, properties, propertyDefinitions, contextValidation.rootKeyName,true);
+	}
+
 	public static void validateProperties(Map<String, List<ValidationError>> errors, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, String rootKeyName){
 		validateProperties(errors, properties, propertyDefinitions, rootKeyName,true);
 	}
-
+	
 	public static void validatePropertiesforLevel(Map<String, List<ValidationError>> errors, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, String rootKeyName, String level){
 		
 		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();

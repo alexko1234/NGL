@@ -17,6 +17,8 @@ import net.vz.mongodb.jackson.MongoCollection;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 
+import validation.DescriptionValidationHelper;
+import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ConstraintsHelper;
 import validation.utils.ContextValidation;
@@ -72,18 +74,22 @@ public class Project extends DBObject implements IValidation{
 
 	@Override
 	@JsonIgnore
-	public void validate(ContextValidation contextErrors) {
+	public void validate(ContextValidation contextValidation) {
 		
-		BusinessValidationHelper.validateUniqueInstanceCode(contextErrors.errors, code, Project.class, InstanceConstants.PROJECT_COLL_NAME);
+		contextValidation.contextObjects.put("_id",this._id);
+		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, code, Project.class, InstanceConstants.PROJECT_COLL_NAME);
+
+		DescriptionValidationHelper.validationProjectCategoryCode(categoryCode,contextValidation);
+		InstanceValidationHelper.validationStateCode(stateCode, contextValidation);
 		
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.categoryCode, "categoryCode", ProjectCategory.find);
+		//TODO
+		ProjectType projectType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.typeCode, "typeCode", ProjectType.find,true);
+		ConstraintsHelper.validateProperties(contextValidation, this.properties, projectType.propertiesDefinitions);
 		
-		ProjectType projectType=BusinessValidationHelper.validateRequiredDescriptionCode(contextErrors.errors, this.typeCode, "typeCode", ProjectType.find,true);
-		
-		ConstraintsHelper.validateProperties(contextErrors.errors, this.properties, projectType.propertiesDefinitions,"");
-		
-		BusinessValidationHelper.validateExistDescriptionCode(contextErrors.errors, this.stateCode, "stateCode", State.find);
-		
+		traceInformation.validate(contextValidation);
+		for(Comment comment:comments){
+			comment.validate(contextValidation);
+		}
 	}
 
 }

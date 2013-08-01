@@ -12,6 +12,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 
 import play.Logger;
+import validation.DescriptionValidationHelper;
+import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ContextValidation;
 
@@ -57,11 +59,13 @@ public class SampleUsed implements IValidation{
 
 	@JsonIgnore
 	@Override
-	public void validate(ContextValidation contextErrors) {
+	public void validate(ContextValidation contextValidation) {
 
-		BusinessValidationHelper.validateExistInstanceCode(contextErrors.errors, sampleCode, "sampleCode", Sample.class, InstanceConstants.SAMPLE_COLL_NAME, false);
-		BusinessValidationHelper.validateExistDescriptionCode(contextErrors.errors, typeCode, "typeCode", SampleType.find,false);
-		BusinessValidationHelper.validateExistDescriptionCode(contextErrors.errors, categoryCode, "categoryCode",SampleCategory.find,false);
+		InstanceValidationHelper.validationSampleCode(sampleCode, contextValidation);
+		DescriptionValidationHelper.validationSampleCategoryCode(categoryCode,contextValidation);
+		DescriptionValidationHelper.validationSampleTypeCode(typeCode,contextValidation);
+		//DescriptionValidation.validationCategoryCode(categoryCode, contextValidation, SampleCategory.find);
+		//DescriptionValidation.validationRequiredTypeCode(typeCode, contextValidation, SampleType.find);
 
 	}
 

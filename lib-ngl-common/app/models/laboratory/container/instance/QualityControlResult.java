@@ -25,7 +25,7 @@ public class QualityControlResult implements IValidation {
 	
 	@JsonIgnore
 	@Override
-	public void validate(ContextValidation contextErrors) {
+	public void validate(ContextValidation contextValidation) {
 		
 	}
 	
