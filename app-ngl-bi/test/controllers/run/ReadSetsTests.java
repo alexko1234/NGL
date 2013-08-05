@@ -99,7 +99,7 @@ public class ReadSetsTests extends AbstractTests {
 	 
 	 @Test	 
 	 public void testReasetUpdateWithCreateOrUpdateFunction() {
-		 	testReasetCreate() ;
+		 	//testReasetCreate() ;
 		 
 		 
 			ReadSet readset = RunMockHelper.newReadSet("ReadSetTEST");
@@ -130,7 +130,7 @@ public class ReadSetsTests extends AbstractTests {
       	 assertThat(contentAsString(result)).isNotEqualTo("[]").contains("ReadSetBasicWithRun").doesNotContain("ReadSetTEST");
 	 }
 	 
-	 @Test
+	
 	 public void testRemoveReadsets(){
 		 Result result = callAction(controllers.runs.api.routes.ref.Runs.deleteReadsets("YANN_TEST1FORREADSET"),fakeRequest());
          //System.out.println("RUN WITHOUT READSET: "+runDelete.lanes.get(0).readsets.toArray());
@@ -138,10 +138,7 @@ public class ReadSetsTests extends AbstractTests {
          assertThat(status(result)).isEqualTo(OK);
          
 	 }
-	 
-	 
-	 
-	@Test
+	 	
 	public void testDeleteReadset(){
 		testReasetCreate();
 		Result result = callAction(controllers.runs.api.routes.ref.ReadSets.delete("ReadSetTEST"),fakeRequest());
