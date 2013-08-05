@@ -51,6 +51,7 @@ function TabMainCtrl($scope, $location){
 			}
 		}else{
 			tabs.push(newtabs);
+		}
 		
 		var doubledTab = [];
 

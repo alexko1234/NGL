@@ -1,0 +1,75 @@
+#application
+application.name=NGL-BI
+home.title.name=Bienvenue dans NGL-BI
+
+#home page main
+home.h10.header=Bienvenue sur le NGL - Bio Informatique
+home.p.comment=C''est un LIMS simple et flexible pour le séquençage de nouvelle génération
+home.a.comment=En savoir plus...
+
+#authentification
+authentification.dropdown_list.username=Nom
+authentification.dropdown_list.profile=Profil
+authentification.dropdown_list.signout=Se déconnecter
+
+#page title
+runs.page.title=Runs
+run.legend.title=Run
+archives.page.title=Archives
+
+#menu
+menu.runs.search = Runs
+menu.archives.search = Archives
+runs.menu.search = Rechercher
+## dno, from my personal point of view, must be removed, but, to have the same comportement as before, i prefer put it
+archives.menu.search = Rechercher
+
+#runs - main
+runs.table.code=Code
+runs.table.creationdate=Date de création
+# a vérifier
+runs.table.dispatch=Dispatch
+runs.dt.nb_cluster_total=Nb clusters (total)
+runs.dt.nb_cluster_illumina=Nb clusters (filtre Illumina)
+runs.dt.nb_bases_en_gb=Nombre de bases (Gb)
+runs.dt.lanes=Pistes
+runs.dt.readsets=Lots de séquence
+
+#runs - detail
+runs.table.lanes_number=N° de piste
+runs.table.readset_number=Nb de lots de séquence
+runs.table.lost_pct=Perte (%)
+
+runs.table.lane_number=N° de piste
+runs.table.readset_code=N° du lot de séquence
+runs.table.sample_container_code=Code Barre de l''échantillon ("Banque")
+runs.table.project_code=Projet
+runs.table.iaifc=Nb de clusters Illumina (filtre Illumina)
+runs.table.iaifb=Nb de bases filtrées (filtre Illumina) (Gb)
+runs.table.q30=Q30
+
+#archives filter value
+archives.input_radio.0 = Tout
+archives.input_radio.1 = Archivés
+archives.input_radio.2 = Non Archivés
+
+#archives - datatable
+archives.table.runcode=Run
+archives.table.projectcode=Projet
+archives.table.readsetcode=Echantillon
+archives.table.path=Emplacement
+archives.table.date=Date d''archivage
+archives.table.backupid=ID archive
+
+#propertiesDefinition
+property.nbRead.label=Nb Lectures
+property.asciiEncoding.label=Encodage ASCII
+property.label.label=Libellé
+
+date.format=dd/MM/yyyy
+
+
+
+
+
+
