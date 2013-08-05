@@ -113,12 +113,13 @@ public class ContainerHelper {
 			Map<String, PropertyDefinition> propertyDefinitions,
 			Map<String, PropertyValue> propertyValues, Container outputContainer) {
 		
+		/*
 		for(int i=0;i<outputContainer.contents.size();i++){
 			InstanceHelpers.copyPropertyValueFromLevel(propertyDefinitions, Content.LEVEL_SEARCH, propertyValues, outputContainer.contents.get(i).properties);
 		}
 		
 		InstanceHelpers.copyPropertyValueFromLevel(propertyDefinitions, Container.LEVEL_SEARCH, propertyValues, outputContainer.properties);
-		
+		*/
 	}
 
 
