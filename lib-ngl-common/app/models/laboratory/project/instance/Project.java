@@ -82,9 +82,7 @@ public class Project extends DBObject implements IValidation{
 		DescriptionValidationHelper.validationProjectCategoryCode(categoryCode,contextValidation);
 		InstanceValidationHelper.validationStateCode(stateCode, contextValidation);
 		
-		//TODO
-		ProjectType projectType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.typeCode, "typeCode", ProjectType.find,true);
-		ConstraintsHelper.validateProperties(contextValidation, this.properties, projectType.propertiesDefinitions);
+		DescriptionValidationHelper.validationProject(typeCode,properties, contextValidation);
 		
 		traceInformation.validate(contextValidation);
 		for(Comment comment:comments){

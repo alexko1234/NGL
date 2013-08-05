@@ -49,9 +49,6 @@ public class Sample extends DBObject implements IValidation{
 	@JsonIgnore
 	public final static String HEADER="Sample.code;Sample.projectCodes;Sample.name;Sample.referenceCollab;Sample.taxonCode;Sample.comments";
 
-	@JsonIgnore
-	public final static String LEVEL_SEARCH=Level.CODE.Sample.toString();
-	
 	// SampleType Ref
 	public String typeCode;
 
@@ -105,24 +102,10 @@ public class Sample extends DBObject implements IValidation{
 		DescriptionValidationHelper.validationSampleCategoryCode(categoryCode,contextValidation);
 		InstanceValidationHelper.validationProjectCodes(this.projectCodes, contextValidation);
 
-		//TODO
-		//Validate properties definition from sampleType and importType where level contain string "Sample"
-		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
-
-		SampleType sampleType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.typeCode, "typeCode", SampleType.find,true);
-		ImportType importType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.importTypeCode,"importTypeCode", ImportType.find,true);
-
-		proDefinitions.addAll(sampleType.propertiesDefinitions);
+		DescriptionValidationHelper.validationSampleType(typeCode,importTypeCode,properties,contextValidation);
 		
-		for(PropertyDefinition propertyDefinition:importType.propertiesDefinitions){
-			if(propertyDefinition.level.code.contains(LEVEL_SEARCH)){
-				proDefinitions.add(propertyDefinition);
-			}
-		}
-
-		ConstraintsHelper.validateProperties(contextValidation, this.properties, proDefinitions);
-
 		traceInformation.validate(contextValidation);
+	
 		for(Comment comment:comments){
 			comment.validate(contextValidation);
 		}

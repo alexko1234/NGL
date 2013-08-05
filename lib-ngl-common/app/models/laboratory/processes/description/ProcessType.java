@@ -3,6 +3,7 @@ package models.laboratory.processes.description;
 import java.util.List;
 
 import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.dao.StateDAO;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.dao.ProcessTypeDAO;
@@ -36,6 +37,10 @@ public class ProcessType extends CommonInfoType{
 	public static List<ListObject> findAllForList() throws DAOException{
 		ProcessTypeDAO processTypeDAO = Spring.getBeanOfType(ProcessTypeDAO.class);
 		return processTypeDAO.findAllForList();
+	}
+	
+	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
+		return getPropertydefinitionByInstance("Process");
 	}
 	
 }

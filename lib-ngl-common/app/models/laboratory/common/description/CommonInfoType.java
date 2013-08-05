@@ -6,12 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.Valid;
-
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.utils.Model;
-import play.data.validation.Constraints.MaxLength;
-import play.data.validation.Constraints.Required;
 import play.api.modules.spring.Spring;
 
 /**
@@ -23,9 +19,9 @@ import play.api.modules.spring.Spring;
  *
  */
 public class CommonInfoType extends Model<CommonInfoType>{
-	
+
 	public String name; //used as label
-	
+
 	public List<State> states = new ArrayList<State>();
 	public List<Resolution> resolutions = new ArrayList<Resolution>();
 
@@ -34,15 +30,15 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	public ObjectType objectType;
 
 	public static Finder<CommonInfoType> find = new Finder<CommonInfoType>(CommonInfoTypeDAO.class.getName()); 
-	
+
 	public CommonInfoType() {
 		super(CommonInfoTypeDAO.class.getName());
 	}
-	
+
 	protected CommonInfoType(String classNameDAO){
 		super(classNameDAO);
 	}
-	
+
 	public static List<CommonInfoType> findByNameAndType(String name, Long idObjectType)
 	{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
@@ -51,9 +47,9 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		else 
 			return commonInfoTypeDAO.findByTypeNameAndType(name, idObjectType);
 	}
-	
-	
-	
+
+
+
 	public Map<String, PropertyDefinition> getMapPropertyDefinition()
 	{
 		Map<String, PropertyDefinition> mapProperties = new HashMap<String, PropertyDefinition>();
@@ -62,7 +58,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		}
 		return mapProperties;
 	}
-	
+
 	public void setCommonInfoType(CommonInfoType commonInfoType)
 	{
 		this.id=commonInfoType.id;
@@ -73,5 +69,17 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		this.propertiesDefinitions=commonInfoType.propertiesDefinitions;
 		this.objectType=commonInfoType.objectType;
 	}
-	
+
+	public List<PropertyDefinition> getPropertydefinitionByInstance(String instance){
+
+		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
+
+		for(PropertyDefinition propertyDefinition:this.propertiesDefinitions){
+			if(propertyDefinition.level.code.contains(instance)){
+				proDefinitions.add(propertyDefinition);
+			}
+		}	
+		return proDefinitions;
+	}
+
 }

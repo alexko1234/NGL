@@ -1,6 +1,9 @@
 package models.laboratory.project.description;
 
+import java.util.List;
+
 import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.project.description.dao.ProjectTypeDAO;
 
 public class ProjectType extends CommonInfoType{
@@ -13,6 +16,8 @@ public class ProjectType extends CommonInfoType{
 		super(ProjectTypeDAO.class.getName());
 	}
 	
-	
+	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
+		return getPropertydefinitionByInstance("Project");
+	}
 	
 }

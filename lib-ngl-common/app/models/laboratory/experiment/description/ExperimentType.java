@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.instrument.description.InstrumentUsedType;
 
@@ -26,4 +27,8 @@ public class ExperimentType extends CommonInfoType{
 	}
 	
 	public static Finder<ExperimentType> find = new Finder<ExperimentType>(ExperimentTypeDAO.class.getName());
+	
+	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
+		return getPropertydefinitionByInstance("Experiment");
+	}
 }

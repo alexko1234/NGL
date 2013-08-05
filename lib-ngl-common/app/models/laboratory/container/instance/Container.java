@@ -48,10 +48,6 @@ public class Container extends DBObject implements IValidation {
 	@JsonIgnore
 	public final static String HEADER="Container.code;Container.categoryCode;Container.comments;ContainerSupport.categorycode;ContainerSupport.x;ContainerSupport.y;ContainerSupport.barecode";
 
-
-	@JsonIgnore
-	public final static String LEVEL_SEARCH=Level.CODE.Container.toString();
-	
 	//ContainerCategory Ref
 	public String categoryCode;
 
@@ -160,9 +156,9 @@ public class Container extends DBObject implements IValidation {
 		InstanceValidationHelper.validationProjectCodes(projectCodes, contextValidation);
 		
 		InstanceValidationHelper.validationSampleCodes(sampleCodes, contextValidation);
-		
+		//TODO pbl key
 		InstanceValidationHelper.validationExperimentCodes(fromExperimentTypeCodes, contextValidation);
-	
+		//TODO pbl key
 		InstanceValidationHelper.validationExperimentCode(fromPurifingCode, contextValidation);
 
 		InstanceValidationHelper.validationResolutionCode(resolutionCode, contextValidation);

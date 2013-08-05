@@ -3,7 +3,6 @@ package models.laboratory.experiment.instance;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Level;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.instance.Comment;
@@ -12,7 +11,6 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
-import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.project.instance.Project;
 import models.laboratory.reagent.instance.ReagentUsed;
@@ -26,8 +24,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import validation.DescriptionValidationHelper;
 import validation.InstanceValidationHelper;
-import validation.utils.BusinessValidationHelper;
-import validation.utils.ConstraintsHelper;
 import validation.utils.ContextValidation;
 import fr.cea.ig.DBObject;
 
@@ -44,14 +40,6 @@ import fr.cea.ig.DBObject;
 
 @MongoCollection(name="Experiment")
 public class Experiment extends DBObject implements IValidation {
-
-	
-	@JsonIgnore
-	public final static String LEVEL_SEARCH_EXP=Level.CODE.Experiment.toString();
-
-	@JsonIgnore
-	public final static String LEVEL_SEARCH_INS=Level.CODE.Instrument.toString();
-
 	
 	// ExperimentType
 	public String typeCode;
@@ -150,12 +138,11 @@ public class Experiment extends DBObject implements IValidation {
 		DescriptionValidationHelper.validationProtocol(protocolCode,contextValidation);
 		DescriptionValidationHelper.validationInstrumentUsedTypeCode(instrumentUsedTypeCode,contextValidation);
 		
-		
-		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.typeCode, "typeCode", ExperimentType.find,true);
-		InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.instrumentUsedTypeCode,"instrumentUsedTypeCode", InstrumentUsedType.find,true);
+		//ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.typeCode, "typeCode", ExperimentType.find,true);
+		//InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.instrumentUsedTypeCode,"instrumentUsedTypeCode", InstrumentUsedType.find,true);
+		//ConstraintsHelper.validatePropertiesforLevel(contextValidation.errors, this.experimentProperties, exType.propertiesDefinitions,"",LEVEL_SEARCH_EXP);
 
-		ConstraintsHelper.validatePropertiesforLevel(contextValidation.errors, this.experimentProperties, exType.propertiesDefinitions,"",LEVEL_SEARCH_EXP);
-		ConstraintsHelper.validatePropertiesforLevel(contextValidation.errors, this.instrumentProperties, instrumentUsedType.propertiesDefinitions,"",LEVEL_SEARCH_INS);
+		DescriptionValidationHelper.validationExperimentType(typeCode, experimentProperties, contextValidation);
 		
 		for(int i=0;i<atomicTransfertMethods.size();i++){
 			atomicTransfertMethods.get(i).validate(contextValidation);

@@ -15,6 +15,9 @@ import validation.utils.ContextValidation;
 public class InstrumentUsed implements IValidation {
 
 	public String code;
+	//TODO ?? ces infos sont pour l'instant dans Experiment ???
+	//public String typeCode;
+	//public Map<String,PropertyValue> properties
 	public String categoryCode;
 	public String inContainerSupportCategoryCode;
 	public String outContainerSupportCategoryCode;

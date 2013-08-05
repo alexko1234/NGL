@@ -111,14 +111,8 @@ public class Process extends DBObject implements IValidation{
 		InstanceValidationHelper.validationSampleCode(sampleCode, contextValidation);
 		InstanceValidationHelper.validationProjectCode(projectCode, contextValidation);
 		InstanceValidationHelper.validationStateCode(stateCode, contextValidation);
-		DescriptionValidationHelper.validationProcessTypeCode(typeCode,contextValidation);
+		DescriptionValidationHelper.validationProcess(typeCode,properties,contextValidation);
 		
-		//TODO
-	/*	ProcessType thisType = this.getProcessType();
-		if(thisType != null && thisType.propertiesDefinitions != null && !thisType.propertiesDefinitions.isEmpty()){
-			validateProperties(contextValidation.errors, this.properties, this.getProcessType().propertiesDefinitions, getKey(null,"nullPropertiesDefinitions"));
-		}
-	*/
 		traceInformation.validate(contextValidation);
 	}
 	

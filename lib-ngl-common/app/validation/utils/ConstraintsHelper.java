@@ -80,7 +80,9 @@ public class ConstraintsHelper {
 	
 	//Validate Properties not defined
 	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions){
-		validateProperties(contextValidation.errors, properties, propertyDefinitions, contextValidation.rootKeyName,true);
+		if( propertyDefinitions != null && !propertyDefinitions.isEmpty()){
+			validateProperties(contextValidation.errors, properties, propertyDefinitions, contextValidation.rootKeyName,true);
+		}
 	}
 
 	public static void validateProperties(Map<String, List<ValidationError>> errors, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, String rootKeyName){
