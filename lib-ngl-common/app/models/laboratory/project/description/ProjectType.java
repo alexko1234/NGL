@@ -3,6 +3,7 @@ package models.laboratory.project.description;
 import java.util.List;
 
 import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.project.description.dao.ProjectTypeDAO;
 
@@ -17,7 +18,7 @@ public class ProjectType extends CommonInfoType{
 	}
 	
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
-		return getPropertydefinitionByInstance("Project");
+		return getPropertyDefinitionByLevel(Level.CODE.Project);
 	}
 	
 }

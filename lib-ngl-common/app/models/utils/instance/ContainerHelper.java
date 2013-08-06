@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
@@ -48,10 +49,11 @@ public class ContainerHelper {
 		ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
 				
 		if(importType !=null){
-			InstanceHelpers.copyPropertyValueFromLevel(importType.getMapPropertyDefinition(), "Content", sample.properties,content.properties);
+			
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,content.properties);
 		}
 		if(sampleType !=null){
-			InstanceHelpers.copyPropertyValueFromLevel(sampleType.getMapPropertyDefinition(), "Content", sample.properties,content.properties);
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,content.properties);
 		}
 
 		container.contents.add(content);
@@ -67,7 +69,7 @@ public class ContainerHelper {
 		if(outputContainer.contents==null){
 			outputContainer.contents=new ArrayList<Content>();
 		}
-		
+		//Copy all properties
 		outputContainer.contents.addAll(inputContainer.contents);
 		outputContainer.projectCodes=InstanceHelpers.addCodesList(inputContainer.projectCodes,outputContainer.projectCodes);
 		outputContainer.sampleCodes=InstanceHelpers.addCodesList(inputContainer.sampleCodes,outputContainer.sampleCodes);
@@ -88,7 +90,7 @@ public class ContainerHelper {
 		}
 		
 		if(experiment.instrument.outContainerSupportCategoryCode==null){
-			container.support=getContainerSupportTube(Double.toString(Math.random()));
+			container.support=getContainerSupportTube(container.code);
 		}else{
 			//TODO 
 			ContainerSupport containerSupport=new ContainerSupport();
@@ -106,22 +108,21 @@ public class ContainerHelper {
 	}
 
 
-	//Copy properties values from lists of properties definition and properties values in object Container
+/*	//Copy properties values from lists of properties definition and properties values in object Container
 	// if the level of the property definition contains "content" the property value is copied in all properties map of container.contents
 	// if the level contains "container" the property value is copied in properties map in container
 	public static void copyProperties(
-			Map<String, PropertyDefinition> propertyDefinitions,
-			Map<String, PropertyValue> propertyValues, Container outputContainer) {
+			Map<String, PropertyValue> propertyValues, Container outputContainer, ExperimentType experimentType) {
 		
-		/*
+		
 		for(int i=0;i<outputContainer.contents.size();i++){
-			InstanceHelpers.copyPropertyValueFromLevel(propertyDefinitions, Content.LEVEL_SEARCH, propertyValues, outputContainer.contents.get(i).properties);
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(experimentType.getPropertyDefinitionByLevel(Level.CODE.Content), propertyValues, outputContainer.contents.get(i).properties);
 		}
 		
-		InstanceHelpers.copyPropertyValueFromLevel(propertyDefinitions, Container.LEVEL_SEARCH, propertyValues, outputContainer.properties);
-		*/
+		InstanceHelpers.copyPropertyValueFromPropertiesDefinition(experimentType.getPropertyDefinitionByLevel(Level.CODE.ContainerOut), propertyValues, outputContainer.properties);
+		
 	}
-
+*/
 
 	public static void generateCode(Container outputContainer) {
 		if(outputContainer.code==null){

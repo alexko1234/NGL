@@ -5,6 +5,7 @@ import java.util.List;
 import play.api.modules.spring.Spring;
 
 import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
@@ -36,6 +37,6 @@ public class InstrumentUsedType extends CommonInfoType{
 	
 
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
-		return getPropertydefinitionByInstance("Instrument");
+		return getPropertyDefinitionByLevel(Level.CODE.Instrument);
 	}
 }

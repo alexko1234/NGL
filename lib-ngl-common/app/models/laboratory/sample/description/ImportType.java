@@ -3,6 +3,7 @@ package models.laboratory.sample.description;
 import java.util.List;
 
 import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.sample.description.dao.ImportTypeDAO;
 
@@ -23,6 +24,6 @@ public class ImportType extends CommonInfoType{
 	}
 	
 	public List<PropertyDefinition> getPropertiesDefinitionSampleLevel(){
-		return getPropertydefinitionByInstance("Sample");
+		return getPropertyDefinitionByLevel(Level.CODE.Sample);
 	}
 }

@@ -3,23 +3,16 @@ package models.laboratory.container.instance;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
-
-import validation.utils.BusinessValidationHelper;
-import validation.utils.ConstraintsHelper;
-import validation.utils.ContextValidation;
-
-import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.utils.IValidation;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import validation.utils.ConstraintsHelper;
+import validation.utils.ContextValidation;
+
 public class Content implements IValidation{
-	
-	
-	@JsonIgnore
-	public final static String LEVEL_SEARCH=Level.CODE.Content.toString();
-	
+		
 	public SampleUsed sampleUsed;
 	
 	// Necessary if not contentType ? Name ?

@@ -70,15 +70,19 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		this.objectType=commonInfoType.objectType;
 	}
 
-	public List<PropertyDefinition> getPropertydefinitionByInstance(String instance){
+	public List<PropertyDefinition> getPropertyDefinitionByLevel(Level.CODE...levels){
 
 		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
 
 		for(PropertyDefinition propertyDefinition:this.propertiesDefinitions){
-			if(propertyDefinition.level.code.contains(instance)){
-				proDefinitions.add(propertyDefinition);
+			for(int i=0;i<levels.length;i++){
+
+				if(levels[i].toString().equals(propertyDefinition.level.code)){
+					proDefinitions.add(propertyDefinition);
+				}						
 			}
 		}	
+		
 		return proDefinitions;
 	}
 

@@ -3,6 +3,7 @@ package models.laboratory.processes.description;
 import java.util.List;
 
 import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.dao.StateDAO;
 import models.laboratory.experiment.description.ExperimentType;
@@ -40,7 +41,7 @@ public class ProcessType extends CommonInfoType{
 	}
 	
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
-		return getPropertydefinitionByInstance("Process");
+		return getPropertyDefinitionByLevel(Level.CODE.Process);
 	}
 	
 }

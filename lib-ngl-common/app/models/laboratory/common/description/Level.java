@@ -6,7 +6,7 @@ import models.utils.Model;
 public class Level extends Model<Level>{
 	
 	public enum CODE {Sample, SampleUsed, SampleAndSampleUsed, SampleAndContent, Experiment, Container, ContainerIn, ContainerOut,
-		Content, ContentIn, ContentOut, Instrument, Project};
+		Content, ContentIn, ContentOut, Instrument, Project, Process};
 		
 	public static Finder<Level> find = new Finder<Level>(LevelDAO.class.getName()); 
 	

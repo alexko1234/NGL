@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import models.laboratory.common.description.Level;
+import models.laboratory.common.description.Level.CODE;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -92,26 +94,31 @@ public class InstanceHelpers {
 	}
 
 
-	public static void copyPropertyValueFromLevel(Map<String,PropertyDefinition> propertyDefinitions,String level, 
+
+	public static void copyPropertyValueFromPropertiesDefinition(List<PropertyDefinition> propertyDefinitions, 
 			Map<String,PropertyValue> propertiesInput,Map<String,PropertyValue> propertiesOutPut){
 
-		Set<Entry<String, PropertyDefinition>> entries=propertyDefinitions.entrySet();
-		
-		for(Entry<String, PropertyDefinition> entry :entries){
-			if(entry.getValue().level.code.contains(level)){
+		for(PropertyDefinition propertyDefinition : propertyDefinitions){
 
-				PropertyValue propertyValue= propertiesInput.get(entry.getKey());
+			PropertyValue propertyValue= propertiesInput.get(propertyDefinition.code);
 
-				if(propertyValue!=null) {
+			if(propertyValue!=null) {
 
-					if(propertiesOutPut==null){
-						propertiesOutPut=new HashMap<String, PropertyValue>();
-					}
-					propertiesOutPut.put(entry.getKey(),propertyValue);
+				if(propertiesOutPut==null){
+					propertiesOutPut=new HashMap<String, PropertyValue>();
 				}
+				propertiesOutPut.put(propertyDefinition.code,propertyValue);
 			}
 		}
 
+	}
+	
+	public static void copyPropertyValueFromLevel(
+			Map<String, PropertyDefinition> propertyDefinitions,
+			Level.CODE level, Map<String, PropertyValue> propertyValues,
+			Map<String, PropertyValue> properties) {
+	
+		
 	}
 
 	public static DBObject save(String collectionName,IValidation obj, ContextValidation contextError) {
@@ -150,5 +157,7 @@ public class InstanceHelpers {
 		return (List<T>) dbObjects;
 	}
 
-	
+
+
+
 }

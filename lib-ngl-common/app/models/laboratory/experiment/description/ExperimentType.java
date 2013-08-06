@@ -3,6 +3,8 @@ package models.laboratory.experiment.description;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.qos.logback.classic.Level;
+
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
@@ -21,7 +23,7 @@ public class ExperimentType extends CommonInfoType{
 	public List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
 	public List<Protocol> protocols = new ArrayList<Protocol>();
 	public String atomicTransfertMethod;
-		
+	
 	public ExperimentType() {
 		super(ExperimentTypeDAO.class.getName());		
 	}
@@ -29,6 +31,7 @@ public class ExperimentType extends CommonInfoType{
 	public static Finder<ExperimentType> find = new Finder<ExperimentType>(ExperimentTypeDAO.class.getName());
 	
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
-		return getPropertydefinitionByInstance("Experiment");
+		return getPropertyDefinitionByLevel(models.laboratory.common.description.Level.CODE.Experiment);
 	}
+	
 }
