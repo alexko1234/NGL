@@ -24,9 +24,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 	public ContainerUsed outputContainerUsed;
 
 	@Override
-	public List<Container> createOutputContainerUsed(
-			Map<String, PropertyDefinition> propertyDefinitions,
-			Map<String, PropertyValue> propertyValues,Experiment experiment) {
+	public List<Container> createOutputContainerUsed(Experiment experiment) {
 
 
 		List<String> containerCodes= new ArrayList<String>();
@@ -38,15 +36,16 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 		List<Container> containers = new ArrayList<Container>();
 		Container container = new Container();
-		container.stateCode="A";
+		
+		container.stateCode="N";
 
 		for(int i=0;i<inputContainers.size();i++){
 			ContainerHelper.addContent(inputContainers.get(i), container,experiment);
 		}
-
-		ContainerHelper.copyProperties(propertyDefinitions,propertyValues,container);			
-		ContainerHelper.addContainerSupport(container, experiment);
+		
 		ContainerHelper.generateCode(container);
+		//TODO copy properties
+		ContainerHelper.addContainerSupport(container, experiment);
 		
 		outputContainerUsed=new ContainerUsed(container);
 		containers.add(container);
