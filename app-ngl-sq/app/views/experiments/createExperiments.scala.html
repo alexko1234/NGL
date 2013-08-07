@@ -368,8 +368,13 @@ th {
 		<div id="experience_table" class="row1">
 	<fieldset>
 		@button() = {
+			<!-- <button class="btn" ng-click="saveContainers()" data-toggle="tooltip" title="Sauver">
+			<i class="icon-save icon-large"></i>
+			</button>-->
+			<div class="btn-group">
 			<button class="btn btn btn-info" ng-click="" data-toggle="tooltip" title="@Messages("experiments.addpurif")">@(Messages("experiments.addpurif"))</button>
 			<button class="btn btn btn-info" ng-click="" data-toggle="tooltip" title="@Messages("experiments.addqc")">@(Messages("experiments.addqc"))</button>
+			</div>
 		}
 		@views.html.components.datatable.datatable(datatableConfig,null,button)
 	</fieldset>
