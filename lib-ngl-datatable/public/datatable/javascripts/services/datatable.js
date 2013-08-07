@@ -1,12 +1,19 @@
 "use strict";
 
 angular.module('datatableServices', []).
-    	factory('datatable', ['$http','$filter','$parse', function($http, $filter,$parse){ //service to manage datatable
+    	factory('datatable', ['$http','$filter','$parse','$compile', function($http, $filter,$parse,$compile){ //service to manage datatable
     		var constructor = function($scope, iConfig){
 				var datatable = {
 						
 						configDefault:{
+							name:"datatable",
+							extraHeaders:{
+								number:0,
+								list:{},
+								dynamic:true
+							},
 							columns : [], //ex : [{id:'',header:'',order:true,hide:false,edit:true}]
+							columnsUrl:undefined, //Load columns config
 							search : {
 								active:true,
 								mode:'remote', //or local but not implemented
@@ -94,7 +101,8 @@ angular.module('datatableServices', []).
 									return Messages(key, args);
 								}
 							},
-							showTotalNumberRecords:true
+							showTotalNumberRecords:true,
+							compact:false //mode compact pour le nom des bouttons
 						},
 						config:undefined,
     					configMaster:undefined,
@@ -103,7 +111,7 @@ angular.module('datatableServices', []).
     					displayResultMaster:undefined,
     					totalNumberRecords:undefined,
     					lastSearchParams : undefined, //used with pagination when length or page change
-    					
+    					inc:0, //used for unique column ids
     					
     					
     					//search functions
@@ -375,10 +383,12 @@ angular.module('datatableServices', []).
 		    				if(this.config.hide.active){
 			    				var fn = new Function("config", "if(!config.hide.columns."+columnId+")" +
 			    						"{config.hide.columns."+columnId+"=true;} else {config.hide.columns."+columnId+"=false;}");
-			    				fn(this.config);		
+			    				fn(this.config);
+			    				this.newExtraHeaderConfig();
 		    				}else{
 		    					console.log("hide is not active !");
 		    				}
+		    				
 		    			},
 		    			/**
 		    			 * Test if a column must be hide
@@ -513,7 +523,7 @@ angular.module('datatableServices', []).
 				    					config.datatable.config.save.error++;
 				    					config.datatable.config.save.number--;
 				    					config.datatable.saveFinish();
-				    					//TODO add error messages as in datatable jquery
+				    					//TODO add error messages as in datatable angular.element
 				    				});
 		    				}else{
 		    					throw 'no url define for save !';
@@ -830,20 +840,30 @@ angular.module('datatableServices', []).
 		    			 * Set columns configuration
 		    			 */
 		    			setColumnsConfig: function(columns){
-		    				for(var i = 0 ; i < columns.length; i++){
-		    					if(columns[i].hide && !this.config.hide.active){
-		    						columns[i].hide = false;
-		    					}
-		    					if(columns[i].order && !this.config.order.active){
-		    						columns[i].order = false;
-		    					}
-		    					if(columns[i].edit && !this.config.edit.active){
-		    						columns[i].edit = false;
-		    					}
-		    				}
-		    				
-		    				this.config.columns = columns;
-		    				this.configMaster.columns = angular.copy(columns);
+		    				if(columns!= undefined){
+			    				for(var i = 0 ; i < columns.length; i++){
+			    					if(columns[i].id == null){
+			    						columns[i].id = this.generateColumnId();
+			    					}
+			    					if(columns[i].hide && !this.config.hide.active){
+			    						columns[i].hide = false;
+			    					}
+			    					if(columns[i].order && !this.config.order.active){
+			    						columns[i].order = false;
+			    					}
+			    					if(columns[i].edit && !this.config.edit.active){
+			    						columns[i].edit = false;
+			    					}
+			    				}
+			    				
+			    				this.config.columns = columns;
+			    				this.configMaster.columns = angular.copy(columns);
+		    			    }
+		    			},
+		    			setColumnsConfigWithUrl : function(){
+		    				$http.get(this.config.columnsUrl,{datatable:this}).success(function(data, status, headers, config) {		    						
+	    						config.datatable.setColumnsConfig(data);
+	    					});
 		    			},
 		    			getColumnsConfig: function(){
 		    				return this.config.columns;		    				
@@ -854,8 +874,15 @@ angular.module('datatableServices', []).
 		    			setConfig: function(config){
 		    				var settings = $.extend(true, {}, this.configDefault, config);
 		    	    		this.config = angular.copy(settings);
-		    	    		this.configMaster = angular.copy(settings);    
+		    	    		this.configMaster = angular.copy(settings);
+		    	    		if(this.config.columnsUrl){
+		    					this.setColumnsConfigWithUrl();
+		    				}else{
+		    					this.setColumnsConfig(this.config.columns);
+		    				}
+		    	    		this.newExtraHeaderConfig();
 		    			},
+		    			
 		    			/**
 		    			 * Return column with hide
 		    			 */
@@ -877,13 +904,444 @@ angular.module('datatableServices', []).
 		    					if(this.config.columns[i].edit)c.push(this.config.columns[i]);
 		    				}
 		    				return c;
+		    			},
+		    			generateColumnId : function(){
+		    				this.inc++;
+		    				return "p"+this.inc;
+		    			},
+		    			newColumn : function(header,property,edit, hide,order,type,choiceInList,possibleValues,extraHeaders){
+		    				var column = {};
+		    				column.id = this.generateColumnId();
+		    				column.header = header;
+		    				column.property = property;
+		    				column.edit = edit;
+		    				column.hide = hide;
+		    				column.order = order;
+		    				column.type = type;
+		    				column.choiceInList = choiceInList;
+		    				if(possibleValues!=undefined){
+		    					column.possibleValues = possibleValues;
+		    				}
+		    				
+		    				if(extraHeaders!=undefined){
+		    					column.extraHeaders = extraHeaders;
+		    				}
+		    				
+		    				return column;
+		    			},
+		    			/**
+		    			 * Add a new column to the table with the <th>title</th>
+		    			 * at position
+		    			 */
+		    			addColumn : function(position, column){
+		    				if(position>=0){
+		    					this.config.columns.splice(position,0,column);
+		    				}else{
+		    					this.config.columns.push(column);
+		    				}
+		    				this.newExtraHeaderConfig();
+		    			},
+		    			/**
+		    			 * Remove a column at position
+		    			 */
+		    			deleteColumn : function(position){
+		    				var tbl = document.getElementById(this.config.name);
+		    				for (var i=0; i<tbl.rows.length; i++) {
+		    					tbl.rows[i].deleteCell(position-1);
+		    				}
+		    			},
+		    			columnFormatter:function(col){
+		    				var format = "";
+		    				if(col.type == "date"){
+		    					format += '| date:\'Messages("datetime.format")\'';
+							}
+		    				
+		    				return format;
+		    			},
+		    			addToExtraHeaderConfig:function(pos,header){
+		    				if(!angular.isDefined(this.config.extraHeaders.list[pos])){
+								this.config.extraHeaders.list[pos] = [];
+							}
+		    				
+							this.config.extraHeaders.list[pos].push(header);
+		    			},
+		    			getExtraHeaderConfig : function(){
+		    				return this.config.extraHeaders.list;
+		    			},
+		    			newExtraHeaderConfig : function(){
+		    				if(this.config.extraHeaders.dynamic === true){
+			    				this.config.extraHeaders.list = {};
+			    				var count = 0;//Number of undefined extraHeader column beetween two defined ones
+			    				//Every level of header
+			    				for(var i=(this.config.extraHeaders.number-1);i>=0;i--){
+			    					var header = undefined;
+			    					//Every column
+				    				for(var j=0;j<this.config.columns.length;j++){
+				    					if(!this.isHide(this.config.columns[j].id)){
+				    					//if the column have a extra header for this level
+				    						if(this.config.columns[j].extraHeaders != undefined && this.config.columns[j].extraHeaders[i] != undefined ){
+				    							if(count>0){
+				    								//adding the empty header of undefined extraHeader columns
+				    								this.addToExtraHeaderConfig(i,{"label":"","colspan":count});
+				    								count = 0;//Reset the count to 0
+				    							}
+				    							//The first time the header will be undefined
+				    							if(header == undefined){	
+				    								//create the new header with colspan 0 (the current column will be counted)
+							    					header =  {"label":this.config.columns[j].extraHeaders[i],"colspan":0};
+							    				}
+				    							
+				    							//if two near columns have the same header
+				    							if(this.config.columns[j].extraHeaders[i] == header.label){
+				    								header.colspan += 1;
+				    							}else{
+				    								//We have a new header
+				    								//adding the current one
+				    								this.addToExtraHeaderConfig(i, header);
+				    								//and create the new one with colspan 0
+				    								header =  {"label":this.config.columns[j].extraHeaders[i],"colspan":0};
+				    							}
+				    						
+				    						}else if(header != undefined){
+				    							//If we find a undefined column, we add the old header
+				    							this.addToExtraHeaderConfig(i, header);
+				    							//and increment the count var
+				    							count++;
+				    							//The old header is added
+			    								header =  undefined;	
+				    						}else{
+				    							//No header to add, the previous one was a undefined column
+				    							//increment the count var
+				    							count++;
+				    						}
+				    					}
+				    				}
+				    				
+				    				//At the end of the level loop
+				    				//If we have undefined column left
+				    				if(count>0){
+				    					this.addToExtraHeaderConfig(i,{"label":"","colspan":count});
+				    					count = 0;
+				    				}
+				    				//If we have defined column left
+				    				if(header != undefined){
+		    							this.addToExtraHeaderConfig(i, header);	
+				    				}	
+			    				}
+		    				}
 		    			}
-		    			
     			};
-			    var settings = $.extend(true, {}, datatable.configDefault, iConfig);
-    			datatable.config = angular.copy(settings);
-    			datatable.configMaster = angular.copy(settings);    
-    			return datatable;
+				
+				datatable.setConfig(iConfig);
+    			
+				return datatable;
     		}
     		return constructor;
-    	}]);
+    	}]).directive("datatable", function($compile) {
+  		  return {
+			    restrict: 'A',
+			    link: function(scope, element, attrs) {
+			    	var config = {}; 
+			    	var buttonsConfig = ""; //add other button by adding a <div id="datatableButtonsConfiguration"> your button </div>
+			    	var formConfig = ""; //add form on top by adding a <div id="datatableFormConfiguration"> your form </div>
+
+			    	//get the buttons and form in the divs
+			    	var getOtherConfig = function(){
+			    		var divs = angular.element(element).children("div");
+			    		for(var i=0;i<divs.length;i++){
+			    			if(divs[i].id === "datatableFormConfiguration"){
+			    				formConfig = divs[i].innerHTML;
+			    			}
+			    			if(divs[i].id === "datatableButtonsConfiguration"){
+			    				buttonsConfig = divs[i].innerHTML;
+			    			}
+			    		}
+			    	};
+
+			    	var setConfig = function(newConfig){
+			    		config = newConfig;
+			    	};
+			    	
+			    	//generate the datatable
+			    	var generateDatatable = function(){
+			    		getOtherConfig();//Loading divs for other buttons and forms
+			    		//Form Section
+			    		//var formDiv = angular.element('<div class="datatable" ng-init="'+config.name+'.setColumnsConfig('+config+')"></div>');
+			    		var formHead = angular.element('<div class="row-fluid"></div>');
+			    		if(formConfig){
+			    			formHead.append(formConfig);//Adding the form
+				    		//formDiv.append(form);
+			    		}
+			    		
+			    		//Buttons Section
+			    		var toolbar = angular.element('<div class="row-fluid" ng-show="'+config.name+'.isShowToolbar()"></div>');
+			    		var divButtons = angular.element('<div class="span8"></div>');
+			    		
+		    			var buttons = angular.element('<div class="btn-toolbar pull-left" ng-show="'+config.name+'.isShowToolbarLeft()"></div>  ');
+		    			var buttonsSelect = '<div class="btn-group" ng-switch on="'+config.name+'.config.select.isSelectAll"><button class="btn" ng-click="'+config.name+'.selectAll(true)"  ng-show="'+config.name+'.showButton(\'select\')"  ng-switch-when="false" data-toggle="tooltip" title="'+Messages("datatable.button.selectall")+'"><i class="icon-check icon-large"></i>';
+		    			
+		    			if(!config.compact){ 
+		    				buttonsSelect+= Messages("datatable.button.selectall");
+		    			}
+		    			
+		    			buttonsSelect += '</button><button class="btn" ng-click="'+config.name+'.selectAll(false)" ng-show="'+config.name+'.showButton(\'select\')"  ng-switch-when="true" data-toggle="tooltip" title="'+Messages("datatable.button.unselectall")+'"><i class="icon-check-empty icon-large"></i>';
+		    			
+		    			if(!config.compact){
+		    				buttonsSelect += Messages("datatable.button.unselectall");
+		    			}
+		    			
+		    			buttonsSelect += '</button><button class="btn" ng-click="'+config.name+'.cancel()"  ng-show="'+config.name+'.showButton(\'cancel\')" data-toggle="tooltip" title="'+Messages("datatable.button.cancel")+'"><i class="icon-undo icon-large"></i>';
+		    			if(!config.compact){ 
+		    				buttonsSelect += Messages("datatable.button.cancel");
+		    			}
+		    			buttonsSelect += '</button></div>';
+		    			angular.element(divButtons).append(buttons);
+		    			angular.element(buttons).append(buttonsSelect);
+		    			
+		    			if(config.show){
+		    				var buttonsShow = '<button class="btn" ng-click="'+config.name+'.show()" ng-disabled="!'+config.name+'.isSelect()" ng-show="'+config.name+'.showButton(\'show\')" data-toggle="tooltip" title="'+Messages("datatable.button.show")+'"><i class="icon-pushpin icon-large"></i>';
+		    				if(!config.compact){
+		    					buttonsShow +=  Messages("datatable.button.show");
+		    				}
+		    				buttonsShow += '</button>';
+		    				angular.element(buttons).append(buttonsShow);
+		    			}
+		    			
+		    			if(config.edit || config.remove || config.save){	
+		    				var divCrud = angular.element('<div class="btn-group"></div>');
+		    					if(config.edit.active){
+		    						
+		    						var buttonEdit = '<button class="btn" ng-click="'+config.name+'.setEditColumn()" ng-disabled="!'+config.name+'.canEdit()"  ng-show="'+config.name+'.showButton(\'edit\')" data-toggle="tooltip" title="'+Messages("datatable.button.edit")+'"><i class="icon-edit icon-large"></i>';
+		    						if(!config.compact){ 
+		    							buttonEdit += Messages("datatable.button.edit");
+		    						}
+		    						
+		    						buttonEdit += '</button>';
+
+		    						angular.element(divCrud).append(buttonEdit);
+		    					}
+		    					
+		    					if(config.save.active){
+		    						var buttonSave = '<button class="btn" ng-click="'+config.name+'.save()" ng-disabled="!'+config.name+'.canSave()" ng-show="'+config.name+'.showButton(\'save\')"  data-toggle="tooltip" title="'+Messages("datatable.button.save")+'" ><i class="icon-save icon-large"></i>';
+		    						
+		    						if(!config.compact){ 
+		    							buttonSave+= Messages("datatable.button.save");
+		    							}
+		    						buttonSave+= '</button>';
+		    						angular.element(divCrud).append(buttonSave);
+		    					}
+		    					
+		    					if(config.remove.active){
+		    						var buttonRemove = '<button class="btn" ng-click="'+config.name+'.remove()" ng-disabled="!'+config.name+'.canRemove()" ng-show="'+config.name+'.showButton(\'remove\')"  data-toggle="tooltip" title="'+Messages("datatable.button.remove")+'"><i class="icon-trash icon-large"></i>';
+		    						if(!config.compact){ 
+		    							buttonRemove += Messages("datatable.button.remove");
+		    							}
+		    						
+		    						buttonRemove += '</button>';
+		    						angular.element(divCrud).append(buttonRemove);
+		    					}
+		    					
+		    					angular.element(buttons).append(divCrud);
+		    				}
+		    			
+		    			if(config.hide.active){
+		    				var divHide = angular.element('<div class="btn-group" ng-show="'+config.name+'.config.hide.active"></div>');
+		    				var buttonHide = '<button data-toggle="dropdown" class="btn dropdown-toggle" data-toggle="tooltip" title="'+Messages("datatable.button.hide")+'"><i class="icon-eye-close icon-large"></i>';
+		    				if(!config.compact){ 
+		    					buttonHide+= Messages("datatable.button.hide");
+		    				}
+		    				buttonHide+= '<span class="caret"></span></button>';
+		    				var dropdown = '<ul class="dropdown-menu"><li ng-repeat="column in '+config.name+'.getHideColumns()"><a href="#" ng-click="'+config.name+'.setHideColumn(column.id)"><i class="icon-eye-open" ng-show="'+config.name+'.isHide(column.id)""></i><i class="icon-eye-close" ng-hide="'+config.name+'.isHide(column.id)"></i> {{column.header}}</a></li></ul>';
+		    				divHide.append(buttonHide);
+		    				divHide.append(dropdown);
+		    				angular.element(buttons).append(divHide);
+		    			}
+		    			if(buttonsConfig){
+							angular.element(divButtons).append(buttonsConfig);
+						}
+
+			    		angular.element(toolbar).append(divButtons);
+			    		
+			    		//Pagination Section
+			    		if(config.pagination.active){
+							var divPagination = angular.element('<div class="span4"></div>');
+							var pagination = '<div class="span7"><div class="pagination pagination-right" ng-show="'+config.name+'.isShowPagination()"><ul><li ng-repeat="page in '+config.name+'.config.pagination.pageList" ng-class="page.clazz"><a href="#" ng-click="'+config.name+'.setPageNumber(page)">{{page.label}}</a></li></ul></div></div>';
+							var divPaginationButton = angular.element('<div class="span5"></div>');
+							var paginationToolBar = angular.element('<div class="btn-toolbar pull-right" ng-show="'+config.name+'.isShowToolbarRight()"></div>');
+							var paginationButtonTotal = '	<button class="btn btn-info" disabled="disabled" ng-show="'+config.name+'.config.showTotalNumberRecords">'+Messages("datatable.totalNumberRecords", "{{"+config.name+".totalNumberRecords}}")+'</button>';
+							var paginationDropDown = '<div class="btn-group" ng-show="'+config.name+'.config.pagination.active"><button data-toggle="dropdown" class="btn dropdown-toggle">'+Messages("datatable.button.length", "{{"+config.name+".config.pagination.numberRecordsPerPage}}")+' <span class="caret"></span></button><ul class="dropdown-menu pull-right"><li	ng-repeat="elt in '+config.name+'.config.pagination.numberRecordsPerPageList" class={{elt.clazz}}><a href="#" ng-click="'+config.name+'.setNumberRecordsPerPage(elt)">{{elt.number}}</a></li></ul></div>';
+							
+							angular.element(paginationToolBar).append(paginationButtonTotal);
+							angular.element(paginationToolBar).append(paginationDropDown);
+							angular.element(divPaginationButton).append(paginationToolBar);
+							angular.element(divPagination).append(pagination);
+							angular.element(divPagination).append(divPaginationButton);
+							
+							angular.element(toolbar).append(divPagination);	
+			    		}
+						//Messages Section
+			    		var messages = '<div class="row-fluid" ng-show="'+config.name+'.config.messages.active"><div ng-class="'+config.name+'.config.messages.clazz" ng-show="'+config.name+'.config.messages.text !== undefined"><strong>{{'+config.name+'.config.messages.text}}</strong></div></div>';
+			    		
+			    		//Table Section
+				    	var datatable =  angular.element('<div class="row-fluid"></div>');
+				    	var form = angular.element('<form class="form-inline"></form>');
+				    	var table = angular.element('<table class="table table-condensed table-hover table-bordered"></table>');
+				    	
+				    	var tableHead = '<thead>';
+				    		
+				    	tableHead += '<tr ng-repeat="(key,headers) in '+config.name+'.getExtraHeaderConfig()"><th colspan="{{header.colspan}}" ng-repeat="header in headers">{{header.label}}</th></tr>';
+				    		
+				    	tableHead += '<tr><th id="{{column.id}}" ng-repeat="column in '+config.name+'.getColumnsConfig()"';
+				    	
+				    	if(config.hide.active){
+				    		tableHead += ' ng-hide="'+config.name+'.isHide(column.id)"';
+				    	}
+				    	tableHead+= '>{{column.header}} <div class="btn-group pull-right">';
+				    	if(config.editColumn){
+				    		tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setEditColumn(column.id)" ng-show="column.edit" ng-disabled="!'+config.name+'.canEdit()" data-toggle="tooltip" title="'+Messages("datatable.button.edit")+'"><i class="icon-edit"></i></button>'
+						}
+						if(config.order){
+							tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setOrderColumn(column.property, column.id)" ng-show="column.order" ng-disabled="!'+config.name+'.canOrder()" data-toggle="tooltip" title="'+Messages("datatable.button.sort")+'"><i ng-class="'+config.name+'.getOrderColumnClass(column.id)"></i></button>'
+						}
+						if(config.hidding){
+							tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setHideColumn(column.id)" ng-show="column.hide" data-toggle="tooltip" title="'+Messages("datatable.button.hide")+'"><i class="icon-eye-close"></i></button>'
+						}			
+						tableHead += '</div></th></tr></thead>';
+						
+						var tableBody = '<tbody><tr ng-show="'+config.name+'.isEdit()"><td ng-repeat="col in '+config.name+'.config.columns" ng-hide="'+config.name+'.isHide(col.id)"><div class="controls" ><div html-input="col" header></div></div></td></tr>';
+						tableBody += '<tr ng-repeat="value in '+config.name+'.displayResult | orderBy:'+config.name+'.config.orderBy:'+config.name+'.config.orderReverse" ng-click="'+config.name+'.select(value)" ng-class="value.trClass"><td ng-hide="'+config.name+'.isHide(col.id)" ng-repeat="col in '+config.name+'.config.columns"> <div class="controls" ><div html-input="col"></div></div></td></tr></tbody>';
+	
+				    	table.html(tableHead+tableBody);
+				    	
+				    	form.append(table);
+				    	
+				    	datatable.append(form);
+				    	
+				    	/*formDiv.append(form);
+				    	formDiv.append(toolbar);
+				    	formDiv.append(messages);
+				    	formDiv.append(datatable);*/
+				    	
+				    	element.html("");
+				    	
+				    	//Adding all to the DOM
+				    	//element.append($compile(formDiv)(scope));
+				    	element.append($compile(formHead)(scope));
+				    	element.append($compile(toolbar)(scope));
+				    	element.append($compile(messages)(scope));
+				    	element.append($compile(datatable)(scope));
+			    	};
+			    	
+			    	//Whatcher of the datatable config value
+			    	scope.$watch(attrs.datatable, function(newValue, oldValue) {
+		                if (newValue){//when a new value is find
+		                	setConfig(newValue);//set the config
+		                	generateDatatable();//generate the datatable
+		                }
+		            });
+			    },
+			  };
+			}).directive("htmlInput", function($compile) {
+    		  return {
+    			    restrict: 'A',
+    			    link: function(scope, element, attrs) {
+    			    	var name="datatable";
+    			    	
+    			    	var ngChange = "";
+    			    	var ngShow = name+".isEdit(col.id,value)";
+    			    	
+    			    	if(attrs.datatableName){
+    			    		name=attrs.datatableName;
+    			    	}
+    			    	
+    			    	if(attrs.header != undefined){
+    			    		ngChange = name+".updateColumn(col.property, col.id)";
+    			    		ngShow = name+".isEdit(col.id)";
+    			    	}
+    			    	
+    			    	var getNgModel = function(col){
+        			    	if(attrs.header != undefined){
+        			    		return   name+".config.edit.columns."+col.id+".value";
+        			    	}
+        			    	
+        			    	return  "value."+col.property;
+    			    	};
+    			    	
+    			    	var addHtmlElement = function(col){
+    			    		var newElement = "";
+							var valueElement = '<span ng-show="!'+name+'.isEdit(col.id,value)" >{{value.'+col.property+'}}</span>';
+        		  	    	if(col.edit && col.type === "String" || col.type === undefined || col.type === "Number"
+        		  	    		|| col.type === "Month" || col.type === "Week"  || col.type === "Time" || col.type === "DateTime"
+        		  	    		|| col.type === "Range" || col.type === "Color" || col.type === "Mail" || col.type === "Tel"
+        		  	    		|| col.type === "Url" || col.type === "Date"){
+	        		  	    		if(!col.choiceInList){
+	        		  	    			switch (col.type) 
+	        		  	    			{ 
+		        		  	    			case "String": 
+		        		  	    				newElement = $compile('<input type="text" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    			break; 
+		        		  	    			case "Number": 
+		        		  	    				newElement = $compile('<input type="number" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    			break; 
+		        		  	    			case "Month": 
+		        		  	    				newElement = $compile('<input type="month" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    			break; 
+		        		  	    			case "Week": 
+		        		  	    				newElement = $compile('<input type="week" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    			break;
+		        		  	    			case "Time": 
+		        		  	    				newElement = $compile('<input type="time" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    			break;
+		        		  	    			case "DateTime": 
+		        		  	    				newElement = $compile('<input type="datetime" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    			break;
+		        		  	    			case "Range": 
+		        		  	    				newElement = $compile('<input type="datetime" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    			break;
+		        		  	    			case "Color": 
+		        		  	    				newElement = $compile('<input type="color" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    			break;
+		        		  	    			case "Mail": 
+		        		  	    				newElement = $compile('<input type="mail" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    			break;
+		        		  	    			case "Tel": 
+		        		  	    				newElement = $compile('<input type="tel" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    			break;
+		        		  	    			case "Url": 
+		        		  	    				newElement = $compile('<input type="url" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    			break;
+		        		  	    			case "Date": 
+		        		  	    				newElement = $compile('<input type="date" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    			break;
+		        		  	    			default: 
+		        		  	    				newElement = $compile('<input type="text" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    			break; 
+	        		  	    			}
+	        		  	    		}else{
+	        		  	    			if(col.listStyle==1){
+	            		  	    			newElement = $compile('<label ng-repeat="opt in col.possibleValues"  ng-show="'+ngShow+'"  for="radio{{col.id}}"><input id="radio{{col.id}}" type="radio"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" value="{{opt.name}}">{{opt.name}}<br></label>'+valueElement)(scope);
+	            		  	    		}else{
+	            		  	    			newElement = $compile('<select ng-show="'+ngShow+'" ng-options="opt.name for opt in col.possibleValues"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>'+valueElement)(scope);
+	            		  	    		}
+	        		  	    		}
+        		  	    	}else if(col.edit && col.type =="Boolean"){
+        		  	    			newElement = $compile('<input type="checkbox" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+        		  	    	}
+	        		  	    else if(!col.edit){
+        		  	    		newElement  = $compile('<span >{{value.'+col.property+'}}</span>')(scope);
+        		  	    	}
+        		  	    	
+        		  	    	element.html("");
+        		  	    	element.append(newElement);
+    			    	};
+    			    	
+    			        scope.$watch(attrs.htmlInput, function(newValue, oldValue) {
+    			        	
+    		                if (newValue){
+    		                	addHtmlElement(newValue);
+    		                }
+    		            });
+
+    			    },
+    			  };
+    			});

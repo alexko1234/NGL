@@ -1,10 +1,12 @@
 package views.components.datatable;
 
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
 
 
+import play.Logger;
 import play.libs.Json;
 import play.libs.Scala;
 
@@ -30,6 +32,10 @@ public class DatatableConfig {
 	public Boolean compact = Boolean.TRUE; //mode compact pour le nom des bouttons
 	
 		
+	public DatatableConfig() {
+		
+	}
+	
 	public DatatableConfig(List<DatatableColumn> columns) {
 		this.columnList = columns;
 		this.columns = Scala.toSeq(columns);		
@@ -51,8 +57,11 @@ public class DatatableConfig {
 		this.button = (this.edit.booleanValue() || this.hidding.booleanValue() || this.show.booleanValue() || this.remove.booleanValue())?Boolean.TRUE:Boolean.FALSE;
 	}	
 	
-	
 	public JsonNode toJson(){
 		return Json.toJson(columnList);		
+	}
+	
+	public JsonNode allConfigtoJson(){
+		return Json.toJson(this);		
 	}
 }
