@@ -30,6 +30,7 @@ GET		/tpl/experiments/searchContainers						controllers.experiments.tpl.Experime
 GET		/tpl/experiments/newExperiments/:experimentTypeCode		controllers.experiments.tpl.Experiments.newExperiments(experimentTypeCode:java.lang.String)
 GET		/tpl/experiments/js-routes								controllers.experiments.tpl.Experiments.javascriptRoutes()
 GET		/tpl/experiments/editExperiment/:experimentTypeCode		controllers.experiments.tpl.Experiments.editExperiment(experimentTypeCode:java.lang.String)
+GET		/tpl/experiments/getEditExperimentColumns				controllers.experiments.tpl.Experiments.getEditExperimentColumns()
 
 #experiments api
 POST	/api/experiments/:code/experiment-information					controllers.experiments.api.Experiments.updateExperimentInformations(code:java.lang.String)
