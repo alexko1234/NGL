@@ -230,8 +230,11 @@ public class Experiments extends CommonController{
 
 		if (!experimentFilledForm.hasErrors()) {	 	
 			exp = (Experiment) InstanceHelpers.save(Constants.EXPERIMENT_COLL_NAME, exp, new ContextValidation(experimentFilledForm.errors()));
+		}
+		
+		if (!experimentFilledForm.hasErrors()) {
 			return ok(Json.toJson(exp));
-		} else {
+		}else {
 			return badRequest(experimentFilledForm.errorsAsJson());
 		}
 	}
