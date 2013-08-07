@@ -19,7 +19,7 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 	
 	$scope.init = function(){
 		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, $scope.datatableConfig);			
+			$scope.datatable = datatable($scope, $scope.datatableConfig);
 			$scope.setDatatable($scope.datatable);	
 		} else {
 			$scope.datatable = $scope.getDatatable();

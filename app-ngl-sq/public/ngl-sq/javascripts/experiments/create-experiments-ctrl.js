@@ -2,6 +2,8 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 	
 	$scope.INSTRUMENTPROPERTIES = "instrumentProperties",
 	$scope.EXPERIMENTPROPERTIES = "experimentProperties",
+	$scope.INPUT = "inputContainer",
+	$scope.OUTPUT = "outputContainer",
 	
 	$scope.experiment = {
 			value: {
@@ -27,6 +29,8 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 	
 	
 	$scope.datatableConfig = {
+	    columnsUrl : jsRoutes.controllers.experiments.tpl.Experiments.getEditExperimentColumns().url,
+	    compact:true,
 		pagination:{
 			active:false
 		},		
@@ -36,30 +40,48 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		order:{
 			mode:'local', //or 
 			active:true,
-			by:'containerInputCode'
+			by:'ContainerInputCode'
 		},
 		remove:{
-			active:true,
-			mode:'local',
-			callback : function(datatable){
-				$scope.basket.reset();
-				$scope.basket.add(datatable.allResult);
-			}
+			active:false,
 		},
 		save:{
 			active:true,
-			withoutEdit:false,
-			url:jsRoutes.controllers.experiments.api.Experiments.updateContainers($scope.experiment.value.code).url,
+			withoutEdit:true,
+			url:function(value){
+				return jsRoutes.controllers.experiments.api.Experiments.updateContainers(value.code).url;
+			},
 			callback : function(datatable){
 				$scope.basket.reset();
 			}
+		},
+		hide:{
+			active:true
 		},
 		edit:{
 			active:true
 		},
 		messages:{
 			active:true
-		}
+		},
+		extraHeaders:{
+			number:2,
+			dynamic:true,
+			list:{0:[{
+				"label":"test",
+				"colspan":"1"
+				
+			},{
+				"label":"a",
+				"colspan":"1"
+				
+			}],
+			1:[{
+				"label":"test2",
+				"colspan":"5"
+				
+			}]}
+		},
 	};
 	
 	$scope.experiment.experimentInformation = {
@@ -93,6 +115,7 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 			}
 		}
 	};
+
 	
 	$scope.saveContainers = function(){
 		$scope.clearMessages();
@@ -156,6 +179,26 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		save:function(){
 			if(this.enabled){	
 				$scope.clearMessages();
+				for(var i=0;i<$scope.datatable.displayResult.length;i++){
+					if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
+						for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].length;j++){
+							$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed[j].experimentProperties = $scope.datatable.displayResult[i].inputExperimentProperties;
+							i++;
+						}
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties = $scope.datatable.displayResult[i].outputExperimentProperties;					
+						
+					}else{
+						$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties = $scope.datatable.displayResult[i].inputExperimentProperties;
+						if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany"){
+							for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].length;j++){
+								$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].experimentProperties = $scope.datatable.displayResult[i].outputExperimentProperties;
+								i++;
+							}
+						}else{
+							$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties = $scope.datatable.displayResult[i].outputExperimentProperties;					
+						}
+					}
+				}
 				$http.post(jsRoutes.controllers.experiments.api.Experiments.updateExperimentProperties($scope.experiment.value.code).url, $scope.experiment.value)
 				.success(function(data, status, headers, config) {
 					if(data!=null){
@@ -184,6 +227,26 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		save:function(){
 			if(this.enabled && $scope.experiment.instrumentInformation.instrumentUsedTypes.selected){
 				$scope.clearMessages();
+				for(var i=0;i<$scope.datatable.displayResult.length;i++){
+					if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
+						for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].length;j++){
+							$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].instrumentProperties = $scope.datatable.displayResult[i].inputInstrumentProperties;
+							i++;
+						}
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties = $scope.datatable.displayResult[i].outputInstrumentProperties;
+						
+					}else{
+						$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties = $scope.datatable.displayResult[i].inputInstrumentProperties;
+						if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany"){
+							for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].length;j++){
+								$scope.experiment.value.atomicTransfertMethods[i].ouputContainerUseds[j].instrumentProperties = $scope.datatable.displayResult[i].outputInstrumentProperties;
+								i++;
+							}
+						}else{
+							$scope.experiment.value.atomicTransfertMethods[i].ouputContainerUsed.instrumentProperties = $scope.datatable.displayResult[i].outputInstrumentProperties;					
+						}
+					}
+				}
 				$http.post(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentProperties($scope.experiment.value.code).url, $scope.experiment.value)
 				.success(function(data, status, headers, config) {
 					if(data!=null){
@@ -235,9 +298,13 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		$http.post(jsRoutes.controllers.experiments.api.Experiments.generateOutput($scope.experiment.value.code).url, $scope.experiment.value)
 		.success(function(data, status, headers, config) {
 			if(data!=null){
+				$scope.clearMessages();
 				$scope.message.clazz="alert alert-success";
-				$scope.message.text=Messages('experiments.msg.save.sucess')
+				$scope.message.text=Messages('experiments.msg.save.sucess');
 				$scope.experiment.value = data;
+				
+				$scope.addExperimentPropertiesOutputsColumns();
+				$scope.addInstrumentPropertiesOutputsColumns();
 			}
 		})
 		.error(function(data, status, headers, config) {
@@ -256,8 +323,16 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 			
 			$scope.experiment.instrumentProperties.inputs = data;
 			
-			$scope.addInstrumentPropertiesColumns();
-			
+			for(var i=0; i<data.length;i++){			
+					//Creation of the properties on the scope
+					var getter = $parse("experiment.value.instrumentProperties."+data[i].code+".value");
+					getter.assign($scope,"");
+				
+					if(data[i].choiceInList){
+						var possibleValues = $scope.possibleValuesToSelect(data[i].possibleValues);
+					}
+					$scope.datatable.addColumn(2,$scope.datatable.newColumn(data[i].name,"inputInstrumentProperties."+data[i].code+".value",true, true,true,String.class,data[i].choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"}));
+			}
 		})
 		.error(function(data, status, headers, config) {
 			$scope.message.clazz = "alert alert-error";
@@ -268,92 +343,73 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		});
 	};
 	
-	$scope.addInstrumentPropertiesColumns = function(){
+	$scope.possibleValuesToSelect = function(possibleValues){
+		var selectPossibleValues = [];
+		
+		for(var i=0;i<possibleValues.length;i++){
+			var value = possibleValues[i].value;
+			var possibleValue = {};
+			possibleValue.code = value;
+			possibleValue.name = value;
+			selectPossibleValues[i] = possibleValue;
+		}
+		
+		return selectPossibleValues;
+	},
+
+	
+	$scope.addInstrumentPropertiesOutputsColumns = function(){
 		var data = $scope.experiment.instrumentProperties.inputs;
+		
+		for (var j=1; j<$scope.getBasket().get().length+1; j++) {
+			$scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUsed.instrumentProperties = {};
+		}
+		
 		for(var i=0; i<data.length;i++){
-			$scope.datatable.addColumn(data[i].name,2,data[i].name+$scope.INSTRUMENTPROPERTIES);
-			
-			//Creation of the properties on the scope
-			var getter = $parse("experiment.value.instrumentProperties."+data[i].name+".value");
-			getter.assign($scope,"");
-			
-			$scope.addInstrumentPropertiesColumn(data,i);
+			if(data[i].level != undefined && data[i].level.code.indexOf('ContainerOut') != -1){						
+				if(data[i].choiceInList){
+					var possibleValues = $scope.possibleValuesToSelect(data[i].possibleValues);
+				}
+				
+				$scope.datatable.addColumn(2,$scope.datatable.newColumn(data[i].name,"outputInstrumentProperties."+data[i].code+".value",true, true,true,String.class,data[i].choiceInList,possibleValues));
+			}
 		}
 		
 	},
 	
-	$scope.addExperimentPropertiesColumns = function(){
+	$scope.addExperimentPropertiesInputsColumns = function(){
 		var data = $scope.experiment.experimentProperties.inputs;
+	
 		for(var i=0; i<data.length;i++){
-			$scope.datatable.addColumn(data[i].name,2,data[i].name+$scope.EXPERIMENTPROPERTIES);
-			
-			//Creation of the properties on the scope
-			var getter = $parse("experiment.value.experimentProperties."+data[i].name+".value");
-			getter.assign($scope,"");
-			
-			$scope.addExperimentPropertiesColumn(data,i);
+			if(data[i].level != undefined && data[i].level.code.indexOf('ContainerIn') != -1){
+				if(data[i].choiceInList){
+					alert(data[i].possibleValues);
+					var possibleValues = $scope.possibleValuesToMap(data[i].possibleValues);
+				}
+				$scope.datatable.addColumn(2,$scope.datatable.newColumn(data[i].name,"inputExperimentProperties."+data[i].code+".value",true, true,true,String.class,data[i].choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"}));
+			}
 		}
-		
 	},
 	
-	$scope.addInstrumentPropertiesColumn = function(data,i){
-		if(data[i].choiceInList){
-			$scope.datatable.addRow(0, 2,"<div class='controls'><select class='input-small' ng-change=\"alert('ok');datatable.updateColumn('"+data[i].name+"', '"+data[i].id+"')\"> <option ng-repeat='opt in experiment.instrumentProperties.inputs["+i+"].possibleValues' value='{{opt.value}}'>{{opt.value}}</option></select></div>",data[i].name+$scope.INSTRUMENTPROPERTIES);
-		}else{
-			$scope.datatable.addRow(0,2, "<div class='controls'> <input type='text' class='input-small' ng-readonly='!experiment.instrumentInformation.enabled' /></div>",data[i].name+$scope.INSTRUMENTPROPERTIES);
-		}
+	$scope.addExperimentPropertiesOutputsColumns = function(){
+		var data = $scope.experiment.experimentProperties.inputs;
 		
-		for (var j=1; j<$scope.datatable.getNumberRows()-1; j++) {
-			if($scope.experiment.value.atomicTransfertMethods[(j-1)].class == "ManyToOne"){
-				$scope.manyToInput(data[i],i,j,"instrumentProperties");
-			}else{
-				$scope.oneToInput(data[i],i,j,"instrumentProperties");
-			}
+		for (var j=1; j<$scope.getBasket().get().length+1; j++) {
+			$scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUsed.experimentProperties = {};
 		}
-	};
-	
-	$scope.addExperimentPropertiesColumn = function(data,i){
-		if(data[i].choiceInList){
-			$scope.datatable.addRow(0, 2,"<div class='controls'><select class='input-small' ng-change=\"alert('ok');datatable.updateColumn('"+data[i].name+"', '"+data[i].id+"')\"> <option ng-repeat='opt in experiment.experimentProperties.inputs["+i+"].possibleValues' value='{{opt.value}}'>{{opt.value}}</option></select></div>",data[i].name+$scope.EXPERIMENTPROPERTIES);
-		}else{
-			$scope.datatable.addRow(0,2, "<div class='controls'> <input type='text' class='input-small' ng-readonly='!experiment.experimentInformation.enabled' /></div>",data[i].name+$scope.EXPERIMENTPROPERTIES);
-		}
-		
-		for (var j=1; j<$scope.datatable.getNumberRows()-1; j++) {
-			if($scope.experiment.value.atomicTransfertMethods[(j-1)].class == "ManyToOne"){
-				$scope.manyToInput(data[i],i,j,"experimentProperties");
-			}else{
-				$scope.oneToInput(data[i],i,j,"experimentProperties");
-			}
-		}
-	};
 
-
-	$scope.manyToInput = function(data,i,j,field){
-		for(var k=0;k<$scope.experiment.value.atomicTransfertMethods[(j-1)].inputContainerUseds.length;k++){
-			//Creation of the properties on the scope
-			getter = $parse("experiment.value.atomicTransfertMethods["+(j-1)+"].inputContainerUseds["+k+"]."+field+"[\""+data.name+"\"]");
-			getter.assign($scope,{"value":""});
-			
-			if(data.choiceInList){
-				$scope.datatable.addRow(j, 2,"<div class='controls'><select class='input-small' ng-model='experiment.value.atomicTransfertMethods["+(j-1)+"].inputContainerUseds["+k+"]."+field+"[\""+data.name+"\"].value'> <option ng-repeat='opt in experiment."+field+".inputs["+i+"].possibleValues' value='{{opt.value}}'>{{opt.value}}</option></select></div>",data.name+field);	
-			}else{
-				$scope.datatable.addRow(j,2, "<div class='controls'> <input type='text' class='input-small'ng-model='experiment.value.atomicTransfertMethods["+(j-1)+"].inputContainerUseds["+k+"]."+field+"[\""+data.name+"\"].value' /></div>",data.name+field);
+		for(var i=0; i<data.length;i++){
+			if(data[i].level != undefined && data[i].level.code.indexOf('ContainerOut') != -1){
+				if(data[i].choiceInList){
+					var possibleValues = $scope.possibleValuesToSelect(data[i].possibleValues);
+				}
+				
+				$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data[i].name,"outputExperimentProperties."+data[i].code+".value",true, true,true,"String",data[i].choiceInList,possibleValues,{0:"Output",1:"Experiment"}));
+				
 			}
 		}
-	}
+	},
 	
-	$scope.oneToInput = function(data,i,j,field){
-		//Creation of the properties on the scope
-		getter = $parse("experiment.value.atomicTransfertMethods["+(j-1)+"].inputContainerUsed."+field+"[\""+data.name+"\"]");
-		getter.assign($scope,{"value":""});
-		
-		if(data.choiceInList){
-			$scope.datatable.addRow(j, 2,"<div class='controls'><select class='input-small' ng-model='experiment.value.atomicTransfertMethods["+(j-1)+"].inputContainerUsed."+field+"[\""+data.name+"\"].value'> <option ng-repeat='opt in experiment."+field+".inputs["+i+"].possibleValues' value='{{opt.value}}'>{{opt.value}}</option></select></div>",data.name+field);	
-		}else{
-			$scope.datatable.addRow(j,2, "<div class='controls'> <input type='text' class='input-small' ng-model='experiment.value.atomicTransfertMethods["+(j-1)+"].inputContainerUsed."+field+"[\""+data.name+"\"].value' /></div>",data.name+field);
-		}
-	}
 	
 	$scope.getInstruments = function(){
 		if($scope.experiment.instrumentInformation.instrumentUsedTypes.selected === null){
@@ -363,25 +419,19 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		$scope.experiment.value.instrumentProperties = {};
 		
 		for(var i=0;i< $scope.getBasket().get().length;i++){
-			if($scope.experiment.value.atomicTransfertMethods[i].class == "manyToOne"){
+			if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
 				$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.instrumentProperties = {};
 			}else{
 				$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties = {};
-			}
-				
+			}	
 		}
-		
-		//suppression des colonnes dans le datatable
-		//alert(Math.ceil($('td[id*="instrumentProperties"]').length / $scope.datatable.getNumberRows()));
-		$('th[id*="instrumentProperties"]').remove();
-		$('td[id*="instrumentProperties"]').remove();
 		
 		$scope.experiment.instrumentInformation.instruments.options = $scope.comboLists.getInstruments($scope.experiment.instrumentInformation.instrumentUsedTypes.selected.code).query();
 		$scope.getInstrumentProperties($scope.experiment.instrumentInformation.instrumentUsedTypes.selected.code);
-	
+		
 	};
 	
-	$scope.saveAll = function(){
+	$scope.saveAll = function(){		
 		$scope.experiment.experimentInformation.save();
 		
 		$scope.experiment.experimentProperties.save();
@@ -393,7 +443,7 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		$scope.saveContainers();
 	};
 	
-	$scope.init = function(){
+	$scope.init = function(experimentType){
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		$scope.basket = $scope.getBasket();
 		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
@@ -408,18 +458,19 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 			
 			var basketList = $scope.getBasket().get();
 			
-
 			$scope.experiment.value.atomicTransfertMethods = {};
 			
 			//Initialisation of the experiment
 			if($scope.experiment.value.code === ""){
 				$http.post(jsRoutes.controllers.experiments.api.Experiments.save($scope.getForm().experimentTypes.selected.code).url, $scope.experiment.value)
 				.success(function(data, status, headers, config) {
+					$scope.clearMessages();
 					if(data!=null){
 						$scope.experiment.value = data;
+						$scope.experiment.value.categoryCode = experimentType.category.code;
 						
 						for(var i=0;i<basketList.length;i++){
-							$scope.experiment.value.atomicTransfertMethods[i] = {class:"OneToOne", inputContainerUsed:[]};
+							$scope.experiment.value.atomicTransfertMethods[i] = {class:experimentType.atomicTransfertMethod, inputContainerUsed:[]};
 							
 							if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
 								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.push({containerCode:basketList[i].code,instrumentProperties:{},experimentProperties:{}});
@@ -431,11 +482,11 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 					
 					angular.element(document).ready(function() {
 						for(i=0; i<$scope.experiment.experimentProperties.inputs.length;i++){
-							var getter = $parse("experiment.value.experimentProperties."+$scope.experiment.experimentProperties.inputs[i].name+".value");
+							var getter = $parse("experiment.value.experimentProperties."+$scope.experiment.experimentProperties.inputs[i].code+".value");
 							getter.assign($scope,"");
-							
-							$scope.addExperimentPropertiesColumns();
 						}
+						
+						$scope.addExperimentPropertiesInputsColumns();
 					});
 				})
 				.error(function(data, status, headers, config) {
@@ -452,12 +503,6 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 			
 		} else {
 			$scope.experiment = $scope.form.experiment;
-			
-			angular.element(document).ready(function() {
-				$scope.addExperimentPropertiesColumns();
-				$scope.addInstrumentPropertiesColumns();
-			});
-
 		}
 	}	
 }

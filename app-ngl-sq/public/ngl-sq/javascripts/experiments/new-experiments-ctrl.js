@@ -8,7 +8,7 @@ function ListNewCtrl($scope, datatable) {
 				active:false
 			},
 			order:{
-				mode:'local', //or 
+				mode:'local',
 				active:true,
 				by:'containerInputCode'
 			},
