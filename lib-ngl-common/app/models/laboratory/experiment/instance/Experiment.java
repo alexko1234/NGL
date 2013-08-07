@@ -149,15 +149,16 @@ public class Experiment extends DBObject implements IValidation {
 		}
 		
 		instrument.validate(contextValidation);
-		
-		for(ReagentUsed reagentUsed:reagentUseds){
-			reagentUsed.validate(contextValidation);
+		if(reagentUseds != null){
+			for(ReagentUsed reagentUsed:reagentUseds){
+				reagentUsed.validate(contextValidation);
+			}
 		}
-					
 		traceInformation.validate(contextValidation);
-		
-		for(Comment comment :comments){
-			comment.validate(contextValidation);
+		if(comments != null){
+			for(Comment comment :comments){
+				comment.validate(contextValidation);
+			}
 		}
 	}
 

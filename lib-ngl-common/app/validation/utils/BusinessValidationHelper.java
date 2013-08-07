@@ -151,12 +151,12 @@ public class BusinessValidationHelper {
 			Finder<T> find, boolean returnObject) {
 		T o = null;
 		try {
-			if(null != code && returnObject){
+			if(code != "" && null != code && returnObject){
 				o = find.findByCode(code);
 				if(o == null){
 					addErrors(errors, key, ERROR_NOTEXIST, code);
 				}
-			}else if(null != code ){
+			}else if(code != "" && null != code ){
 				if( !find.isCodeExist(code))
 				addErrors(errors, key, ERROR_NOTEXIST, code);
 			}

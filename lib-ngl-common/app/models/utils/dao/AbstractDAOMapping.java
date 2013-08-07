@@ -3,6 +3,7 @@ package models.utils.dao;
 import java.sql.Types;
 import java.util.List;
 
+import models.laboratory.common.description.CommonInfoType;
 import models.utils.Model;
 
 import org.springframework.asm.Type;
@@ -62,8 +63,13 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 				throw new DAOException("code is mandatory");
 			}
 			try {
-				
-				String sql = "select id from common_info_type WHERE code=?";
+				String sql= null;
+				if(entityClass.getSuperclass() == CommonInfoType.class){
+					sql = "select id from common_info_type WHERE code=?";
+				}
+				else{
+					sql = "select id from "+tableName+" WHERE code=?";
+				}
 				long id =  this.jdbcTemplate.queryForLong(sql, code);
 				if(id > 0){
 					return Boolean.TRUE;
