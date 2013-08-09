@@ -24,4 +24,13 @@ public class LevelService {
 		DAOHelpers.saveModels(Level.class, l, errors);
 	}
 	
+	
+	public static List<Level> getLevels(Level.CODE...codes) throws DAOException {
+		List<Level> levels = new ArrayList<Level>();
+		for(Level.CODE code: codes){
+			levels.add(Level.find.findByCode(code.name()));
+		}
+		return levels;
+	}
+
 }

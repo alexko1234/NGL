@@ -15,6 +15,7 @@ import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
+import services.description.common.LevelService;
 public class ProjectService {
 	
 	public static void main(Map<String, List<ValidationError>> errors)  throws DAOException{
@@ -43,7 +44,7 @@ public class ProjectService {
 
 	private static List<PropertyDefinition> getFGPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> pds = new ArrayList<PropertyDefinition>();
-		pds.add(newPropertiesDefinition("Groupe", "fgGroup", Level.CODE.Project, String.class, true));
+		pds.add(newPropertiesDefinition("Groupe", "fgGroup", LevelService.getLevels(Level.CODE.Project), String.class, true));
 		return pds;
 	}
 	

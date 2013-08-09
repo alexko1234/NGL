@@ -53,25 +53,25 @@ public class DescriptionFactory {
 		}
 	}
 
-	public static PropertyDefinition newPropertiesDefinition(String name, String code, Level.CODE level, Class<?> type, Boolean required) throws DAOException{
+	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
 		pd.active = true;
-		pd.level = Level.find.findByCode(level.name());
+		pd.levels = levels;;
 		pd.type = type.getName();
 		pd.required = required;
 		pd.choiceInList = false;		
 		return pd;
 	}
 	
-	public static PropertyDefinition newPropertiesDefinition(String name, String code, Level.CODE level, Class<?> type, Boolean required,
+	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required,
 			MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
 		pd.active = true;
-		pd.level = Level.find.findByCode(level.name());
+		pd.levels = levels;
 		pd.type = type.getName();
 		pd.required = required;
 		pd.choiceInList = false;	
@@ -81,13 +81,13 @@ public class DescriptionFactory {
 		return pd;
 	}
 
-	public static PropertyDefinition newPropertiesDefinition(String name, String code, Level.CODE level, Class<?> type, Boolean required, 
+	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
 			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
 		pd.active = true;
-		pd.level = Level.find.findByCode(level.name());
+		pd.levels = levels;
 		pd.type = type.getName();
 		pd.required = required;
 		pd.choiceInList = true;		
@@ -98,12 +98,12 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	public static PropertyDefinition newPropertiesDefinition(String name, String code, Level.CODE level, Class<?> type, Boolean required, List<Value> values) throws DAOException{
+	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
 		pd.active = true;
-		pd.level = Level.find.findByCode(level.name());
+		pd.levels = levels;
 		pd.type = type.getName();
 		pd.required = required;
 		pd.choiceInList = true;		

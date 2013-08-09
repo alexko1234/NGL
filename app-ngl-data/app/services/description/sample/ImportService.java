@@ -16,6 +16,7 @@ import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
+import services.description.common.LevelService;
 public class ImportService {
 	public static void main(Map<String, List<ValidationError>> errors)  throws DAOException{
 		DAOHelpers.removeAll(ImportType.class, ImportType.find);
@@ -52,37 +53,37 @@ public class ImportService {
 
 	private static List<PropertyDefinition> getCommonPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", Level.CODE.Container, Date.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true));
 		return propertyDefinitions;
 	}
 	
 	private static List<PropertyDefinition> getLibraryPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.addAll(getCommonPropertyDefinitions());
-		propertyDefinitions.add(newPropertiesDefinition("Index", "tag", Level.CODE.Content, String.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Index", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true));
 		return propertyDefinitions;
 	}
 	
 	private static List<PropertyDefinition> getTaraPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.addAll(getCommonPropertyDefinitions());
-		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", Level.CODE.SampleAndContent, Integer.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("Profondeur TARA", "taraDepth", Level.CODE.SampleAndContent, String.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("Filtre TARA", "taraFilter", Level.CODE.SampleAndContent, String.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("Iteration TARA", "taraIteration", Level.CODE.SampleAndContent, Integer.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("Materiel TARA", "taraSample", Level.CODE.SampleAndContent, String.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Profondeur TARA", "taraDepth", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Filtre TARA", "taraFilter", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Iteration TARA", "taraIteration", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Materiel TARA", "taraSample", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true));
 		return propertyDefinitions;
 	}
 	
 	private static List<PropertyDefinition> getLibraryTaraPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.addAll(getCommonPropertyDefinitions());
-		propertyDefinitions.add(newPropertiesDefinition("Index", "tag", Level.CODE.Content, String.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", Level.CODE.SampleAndContent, Integer.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("Profondeur TARA", "taraDepth", Level.CODE.SampleAndContent, String.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("Filtre TARA", "taraFilter", Level.CODE.SampleAndContent, String.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("Iteration TARA", "taraIteration", Level.CODE.SampleAndContent, Integer.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("Materiel TARA", "taraSample", Level.CODE.SampleAndContent, String.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Index", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Profondeur TARA", "taraDepth", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Filtre TARA", "taraFilter", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Iteration TARA", "taraIteration", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Materiel TARA", "taraSample", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true));
 		
 		return propertyDefinitions;
 	}

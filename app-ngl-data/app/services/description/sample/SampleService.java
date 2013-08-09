@@ -18,6 +18,7 @@ import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
+import services.description.common.LevelService;
 import services.description.common.MeasureService;
 public class SampleService {
 	public static void main(Map<String, List<ValidationError>> errors)  throws DAOException{
@@ -71,59 +72,59 @@ public class SampleService {
 	
 	private static List<PropertyDefinition> getSampleCommonPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", Level.CODE.SampleAndContent,Double.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("Mb"), MeasureUnit.find.findByCode("Mb")));
-		propertyDefinitions.add(newPropertiesDefinition("Fragmenté", "isFragmented", Level.CODE.Sample,Boolean.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("Adaptateurs", "isAdapters", Level.CODE.Sample,Boolean.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", Level.CODE.Sample,Integer.class, false));
+		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Content,Level.CODE.Sample),Double.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("Mb"), MeasureUnit.find.findByCode("Mb")));
+		propertyDefinitions.add(newPropertiesDefinition("Fragmenté", "isFragmented", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Adaptateurs", "isAdapters", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Sample),Integer.class, false));
 		return propertyDefinitions;
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsADNClone() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.addAll(getSampleCommonPropertyDefinitions());
-        propertyDefinitions.add(newPropertiesDefinition("Taille d'insert", "insertSize", Level.CODE.Sample,Double.class, false,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb")));
-		propertyDefinitions.add(newPropertiesDefinition("Vecteur", "vector", Level.CODE.Sample,String.class, false));
-		propertyDefinitions.add(newPropertiesDefinition("Souche", "strain", Level.CODE.Sample,String.class, false));
-		propertyDefinitions.add(newPropertiesDefinition("Site clone", "cloneSite", Level.CODE.Sample,String.class, false));
+        propertyDefinitions.add(newPropertiesDefinition("Taille d'insert", "insertSize", LevelService.getLevels(Level.CODE.Sample),Double.class, false,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb")));
+		propertyDefinitions.add(newPropertiesDefinition("Vecteur", "vector", LevelService.getLevels(Level.CODE.Sample),String.class, false));
+		propertyDefinitions.add(newPropertiesDefinition("Souche", "strain", LevelService.getLevels(Level.CODE.Sample),String.class, false));
+		propertyDefinitions.add(newPropertiesDefinition("Site clone", "cloneSite", LevelService.getLevels(Level.CODE.Sample),String.class, false));
 		return propertyDefinitions;
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsADN() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.addAll(getSampleCommonPropertyDefinitions());
-        propertyDefinitions.add(newPropertiesDefinition("WGA", "isWGA", Level.CODE.Sample,Boolean.class, false));
+        propertyDefinitions.add(newPropertiesDefinition("WGA", "isWGA", LevelService.getLevels(Level.CODE.Sample),Boolean.class, false));
 		return propertyDefinitions;
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsADNGenomic() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.addAll(getPropertyDefinitionsADN());
-        propertyDefinitions.add(newPropertiesDefinition("%GC", "gcPercent", Level.CODE.Sample,Float.class, false));
+        propertyDefinitions.add(newPropertiesDefinition("%GC", "gcPercent", LevelService.getLevels(Level.CODE.Sample),Float.class, false));
 		return propertyDefinitions;
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsAmplicon() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.addAll(getSampleCommonPropertyDefinitions());
-        propertyDefinitions.add(newPropertiesDefinition("Matériel ciblé", "targetSampleCategory", Level.CODE.Sample,String.class, false));
-        propertyDefinitions.add(newPropertiesDefinition("Plusieurs Régions ciblées", "isSeveralTargets", Level.CODE.Sample, Boolean.class, false));
-        propertyDefinitions.add(newPropertiesDefinition("Régions ciblées", "targets", Level.CODE.Sample, String.class, false));
+        propertyDefinitions.add(newPropertiesDefinition("Matériel ciblé", "targetSampleCategory", LevelService.getLevels(Level.CODE.Sample),String.class, false));
+        propertyDefinitions.add(newPropertiesDefinition("Plusieurs Régions ciblées", "isSeveralTargets", LevelService.getLevels(Level.CODE.Sample), Boolean.class, false));
+        propertyDefinitions.add(newPropertiesDefinition("Régions ciblées", "targets", LevelService.getLevels(Level.CODE.Sample), String.class, false));
         
         return propertyDefinitions;
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsARN() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", Level.CODE.SampleAndContent,Double.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("Mb"), MeasureUnit.find.findByCode("Mb")));
-		propertyDefinitions.add(newPropertiesDefinition("Fragmenté", "isFragmented", Level.CODE.Sample,Boolean.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", Level.CODE.Sample,Integer.class, false));
+		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content),Double.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("Mb"), MeasureUnit.find.findByCode("Mb")));
+		propertyDefinitions.add(newPropertiesDefinition("Fragmenté", "isFragmented", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true));
+		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Sample),Integer.class, false));
 		return propertyDefinitions;
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionscDNA() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.addAll(getSampleCommonPropertyDefinitions());
-        propertyDefinitions.add(newPropertiesDefinition("Type de synthèse", "synthesisType", Level.CODE.Sample, String.class, false, newValues("random","oligoDT")));        
+        propertyDefinitions.add(newPropertiesDefinition("Type de synthèse", "synthesisType", LevelService.getLevels(Level.CODE.Sample), String.class, false, newValues("random","oligoDT")));        
         return propertyDefinitions;
 	}
 	

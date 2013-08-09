@@ -16,17 +16,22 @@ import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
+import play.Logger;
 import play.data.validation.ValidationError;
+import services.description.common.LevelService;
 
 public class InstrumentService {
 	
 	
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{
+		Logger.debug("Begin remove Instrument Used TYpe");
 		DAOHelpers.removeAll(InstrumentUsedType.class, InstrumentUsedType.find);
 		DAOHelpers.removeAll(InstrumentCategory.class, InstrumentCategory.find);
-		
+		Logger.debug("End Remove");
 		saveInstrumentCategories(errors);
-		saveInstrumentUsedTypes(errors);			
+		Logger.debug("End Inst category");
+		saveInstrumentUsedTypes(errors);	
+		Logger.debug("End Inst type");
 	}
 	
 	public static void saveInstrumentCategories(Map<String, List<ValidationError>> errors) throws DAOException {
@@ -60,39 +65,39 @@ public class InstrumentService {
 	
 	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme", "program", Level.CODE.Instrument, String.class, true, newValues("Frag_PE300","Frag_PE400","Frag_PE500","Frag_cDNA_Solexa")));
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("Frag_PE300","Frag_PE400","Frag_PE500","Frag_cDNA_Solexa")));
 		//Data test
-		l.add(newPropertiesDefinition("key container in", "keyContainerIn",Level.CODE.ContainerIn, String.class, true, newValues("val1","val2","val3")));
+		l.add(newPropertiesDefinition("key container in", "keyContainerIn",LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, newValues("val1","val2","val3")));
 		return l;
 	}
 	
 	private static List<PropertyDefinition> getSpriProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme", "program", Level.CODE.Instrument, String.class, true, newValues("300-600")));		
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("300-600")));		
 		return l;
 	}
 	
 	private static List<PropertyDefinition> getThermoProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme", "program", Level.CODE.Instrument, String.class, true, newValues("15","18")));		
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("15","18")));		
 		return l;
 	}
 	
 	private static List<PropertyDefinition> getAgilentProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Type puce", "chipType", Level.CODE.Instrument, String.class, true, newValues("DNA HS", "DNA 12000", "RNA")));		
+		l.add(newPropertiesDefinition("Type puce", "chipType", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("DNA HS", "DNA 12000", "RNA")));		
 		return l;
 	}
 	
 	private static List<PropertyDefinition> getQuBitProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Kit", "kit", Level.CODE.Instrument, String.class, true, newValues("HS", "BR")));		
+		l.add(newPropertiesDefinition("Kit", "kit", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("HS", "BR")));		
 		return l;
 	}
 	
 	private static List<PropertyDefinition> getQPCRProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Nb. Echantillon", "sampleNumber", Level.CODE.Instrument, Integer.class, true));		
+		l.add(newPropertiesDefinition("Nb. Echantillon", "sampleNumber", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true));		
 		return l;
 	}
 

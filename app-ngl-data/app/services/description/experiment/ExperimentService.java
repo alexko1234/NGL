@@ -25,6 +25,7 @@ import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
+import services.description.common.LevelService;
 import services.description.common.MeasureService;
 public class ExperimentService {
 	
@@ -147,9 +148,9 @@ public class ExperimentService {
 	//Data Test
 	public static List<PropertyDefinition> getPropertyDefinitionsFragmentation() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Libelle 1","Key1", Level.CODE.Experiment,Double.class, false,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb")));
-		propertyDefinitions.add(newPropertiesDefinition("Libelle 2", "Key2", Level.CODE.ContainerOut,String.class, false));
-		propertyDefinitions.add(newPropertiesDefinition("Libelle 3", "Key3", Level.CODE.ContainerIn,String.class, false));
+        propertyDefinitions.add(newPropertiesDefinition("Libelle 1","Key1", LevelService.getLevels(Level.CODE.Experiment),Double.class, false,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb")));
+		propertyDefinitions.add(newPropertiesDefinition("Libelle 2", "Key2", LevelService.getLevels(Level.CODE.ContainerOut),String.class, false));
+		propertyDefinitions.add(newPropertiesDefinition("Libelle 3", "Key3", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false));
 		return propertyDefinitions;
 	}
 	
