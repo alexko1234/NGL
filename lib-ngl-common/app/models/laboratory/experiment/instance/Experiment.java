@@ -131,10 +131,10 @@ public class Experiment extends DBObject implements IValidation {
 		
 		validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME);
 		
-		InstanceValidationHelper.validationStateCode(stateCode, contextValidation);
+		DescriptionValidationHelper.validationStateCode(stateCode, contextValidation);
 		DescriptionValidationHelper.validationExperimentTypeCode(typeCode, contextValidation);
 		DescriptionValidationHelper.validationExperimentCategoryCode(categoryCode, contextValidation);
-		InstanceValidationHelper.validationResolutionCode(resolutionCode, contextValidation);
+		DescriptionValidationHelper.validationResolutionCode(resolutionCode, contextValidation);
 		DescriptionValidationHelper.validationProtocol(protocolCode,contextValidation);
 		DescriptionValidationHelper.validationInstrumentUsedTypeCode(instrumentUsedTypeCode,contextValidation);
 		

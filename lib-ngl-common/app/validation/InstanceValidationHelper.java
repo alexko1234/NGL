@@ -4,8 +4,7 @@ import static validation.utils.ConstraintsHelper.required;
 
 import java.util.List;
 
-import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.State;
+
 import models.laboratory.common.instance.Comment;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -21,9 +20,6 @@ import validation.utils.ContextValidation;
 
 public class InstanceValidationHelper {
 
-	public static void validationStateCode(String stateCode,ContextValidation contextValidation){
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, stateCode,"stateCode", State.find);
-	}
 
 	public static void validationProjectCodes(List<String> projectCodes,ContextValidation contextValidation){
 		BusinessValidationHelper.validateRequiredInstanceCodes(contextValidation.errors, projectCodes, "projectCodes",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
@@ -44,10 +40,7 @@ public class InstanceValidationHelper {
 		BusinessValidationHelper.validateExistInstanceCode(contextValidation.errors, experimentCode, "fromPurifingCode", Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME, false);		
 	}
 
-	public static void validationResolutionCode(String resolutionCode,
-			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateExistDescriptionCode(contextValidation.errors, resolutionCode,"resolutionCode", Resolution.find);		
-	}
+	
 
 	public static void validationSampleCode(String sampleCode,
 			ContextValidation contextValidation) {

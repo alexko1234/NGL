@@ -80,7 +80,7 @@ public class Project extends DBObject implements IValidation{
 		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, code, Project.class, InstanceConstants.PROJECT_COLL_NAME);
 
 		DescriptionValidationHelper.validationProjectCategoryCode(categoryCode,contextValidation);
-		InstanceValidationHelper.validationStateCode(stateCode, contextValidation);
+		DescriptionValidationHelper.validationStateCode(stateCode, contextValidation);
 		
 		DescriptionValidationHelper.validationProject(typeCode,properties, contextValidation);
 		

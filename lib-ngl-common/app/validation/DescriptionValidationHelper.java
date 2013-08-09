@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.description.Resolution;
+import models.laboratory.common.description.State;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -156,6 +158,15 @@ public class DescriptionValidationHelper {
 		
 		ConstraintsHelper.validateProperties(contextValidation,properties, proDefinitions);
 
+	}
+	
+	public static void validationStateCode(String stateCode,ContextValidation contextValidation){
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, stateCode,"stateCode", State.find);
+	}
+
+	public static void validationResolutionCode(String resolutionCode,
+			ContextValidation contextValidation) {
+		BusinessValidationHelper.validateExistDescriptionCode(contextValidation.errors, resolutionCode,"resolutionCode", Resolution.find);		
 	}
 	
 }

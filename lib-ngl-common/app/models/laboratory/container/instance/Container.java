@@ -161,9 +161,9 @@ public class Container extends DBObject implements IValidation {
 		//TODO pbl key
 		InstanceValidationHelper.validationExperimentCode(fromPurifingCode, contextValidation);
 
-		InstanceValidationHelper.validationResolutionCode(resolutionCode, contextValidation);
+		DescriptionValidationHelper.validationResolutionCode(resolutionCode, contextValidation);
 		
-		InstanceValidationHelper.validationStateCode(stateCode, contextValidation);
+		DescriptionValidationHelper.validationStateCode(stateCode, contextValidation);
 		
 		InstanceValidationHelper.validationContents(contents,contextValidation);
 		
