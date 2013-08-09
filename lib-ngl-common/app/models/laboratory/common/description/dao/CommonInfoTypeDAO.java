@@ -98,6 +98,10 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		String sqlValues = "DELETE FROM value  WHERE fk_property_definition in (select p.id from property_definition p "
 	                                              +"where p.fk_common_info_type = ?)";
 		jdbcTemplate.update(sqlValues, citId);
+
+		String sqlLevels = "DELETE FROM property_definition_level WHERE fk_property_definition in (select p.id from property_definition p "
+	                                              +"where p.fk_common_info_type = ?)";
+		jdbcTemplate.update(sqlLevels, citId);
 		
 		String sqlProps = "DELETE FROM property_definition WHERE fk_common_info_type = ?";
 		jdbcTemplate.update(sqlProps, citId);

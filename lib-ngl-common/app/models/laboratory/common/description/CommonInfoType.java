@@ -76,8 +76,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 
 		for(PropertyDefinition propertyDefinition:this.propertiesDefinitions){
 			for(int i=0;i<levels.length;i++){
-
-				if(levels[i].toString().equals(propertyDefinition.level.code)){
+				if(propertyDefinition.levels.contains(levels[i])){
 					proDefinitions.add(propertyDefinition);
 				}						
 			}

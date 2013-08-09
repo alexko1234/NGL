@@ -89,7 +89,7 @@ public class ConstraintsHelper {
 		validateProperties(errors, properties, propertyDefinitions, rootKeyName,true);
 	}
 	
-	public static void validatePropertiesforLevel(Map<String, List<ValidationError>> errors, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, String rootKeyName, String level){
+	/*public static void validatePropertiesforLevel(Map<String, List<ValidationError>> errors, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, String rootKeyName, String level){
 		
 		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
 		
@@ -99,7 +99,7 @@ public class ConstraintsHelper {
 			}
 		}
 		validateProperties(errors, properties, proDefinitions, rootKeyName,true);
-	}
+	}*/
 	
 	public static boolean checkIfExistInTheList(
 			PropertyDefinition propertyDefinition, PropertyValue pv) {

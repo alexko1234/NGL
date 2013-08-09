@@ -32,7 +32,7 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 	public String displayFormat;
 	public Integer displayOrder;
 
-	public Level level;
+	public List<Level> levels;
 	
 	public List<Value> possibleValues;
 

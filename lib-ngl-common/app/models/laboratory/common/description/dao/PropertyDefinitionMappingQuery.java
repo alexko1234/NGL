@@ -52,7 +52,10 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 		propertyDefinition.defaultValue = rs.getString("default_value");		
 		//Add measure category
 		try{
-			propertyDefinition.level = Level.find.findById(rs.getLong("fk_level"));
+			//Add levels
+			LevelDAO levelDAO=Spring.getBeanOfType(LevelDAO.class);
+			List<Level> levels=levelDAO.findByPropertyDefinitionID(propertyDefinition.id);
+			propertyDefinition.levels = levels;
 			
 			if(rs.getLong("fk_measure_category") !=0 ){
 				propertyDefinition.measureCategory = MeasureCategory.find.findById(rs.getLong("fk_measure_category"));
