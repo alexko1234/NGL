@@ -18,9 +18,8 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
-import models.utils.DescriptionHelper;
+import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-import net.vz.mongodb.jackson.MongoCollection;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
@@ -30,7 +29,6 @@ import org.junit.Test;
 import play.mvc.Result;
 import play.test.Helpers;
 import utils.AbstractTests;
-
 import fr.cea.ig.MongoDBDAO;
 
 public class SampleLoadTest extends AbstractTests {
@@ -44,26 +42,20 @@ public class SampleLoadTest extends AbstractTests {
 		 app = getFakeApplication();
 		 Helpers.start(app);
 		
-		sampleType=DescriptionHelper.getSampleType("sampleTypeTest","sampleTypeTest", "sampleCategory", FirstData.getPropertyDefinitionsADNClone());
-		sampleType.save();
-		importType=DescriptionHelper.getImportType("importTypeTest","importTypeTest","importCategory", FirstData.getPropertyDefinitionsImportBq());		
-		importType.save();
+		sampleType=SampleType.find.findByCode("BAC");
+		importType=ImportType.find.findByCode("library");		
+		
 		fileName="./app-ngl-sq/test/sampleload/dataFile/sample_type.csv";		
-		Helpers.stop(app);
 	}
 	
 	@AfterClass
 	public static void removeData() throws DAOException{
 		 app = getFakeApplication();
-		 Helpers.start(app);
-
-		sampleType.remove();
-		importType.remove();
 
 		FileUtils.deleteQuietly(new File(fileName));
 		
-		MongoDBDAO.delete(Sample.class.getAnnotation(MongoCollection.class).name(), MongoDBDAO.findByCode(Sample.class.getAnnotation(MongoCollection.class).name(), Sample.class, "A")); 
-		MongoDBDAO.delete(Container.class.getAnnotation(MongoCollection.class).name(),MongoDBDAO.findByCode(Container.class.getAnnotation(MongoCollection.class).name(), Container.class, "AAA_A1") );
+		MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "A")); 
+		MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME,MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, "AAA_A1") );
 		
 		Helpers.stop(app);
 	}
@@ -84,7 +76,7 @@ public class SampleLoadTest extends AbstractTests {
 
 
 	@Test
-	public void ImportTypeNotFound(){
+	public void importTypeNotFound(){
 
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("sampleType", sampleType.code);
@@ -100,7 +92,7 @@ public class SampleLoadTest extends AbstractTests {
 
 
 	@Test
-	public void SampleTypeNotFound(){
+	public void sampleTypeNotFound(){
 
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("sampleType", "");
@@ -156,10 +148,9 @@ public class SampleLoadTest extends AbstractTests {
         fbw.close();
 		
 		Result result = callAction(controllers.dataload.routes.ref.SampleLoad.uploadDataFromCSVFile(),fakeRequest().withFormUrlEncodedBody(data));
-		//System.err.println(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
-		assertThat(MongoDBDAO.findByCode(Container.class.getAnnotation(MongoCollection.class).name(), Container.class, "AAA_A1")).isNotNull();
-		Sample sample =MongoDBDAO.findByCode(Sample.class.getAnnotation(MongoCollection.class).name(), Sample.class, "A");
+		assertThat(MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, "AAA_A1")).isNotNull();
+		Sample sample =MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "A");
 		assertThat(sample).isNotNull();
 		assertThat(sample.projectCodes.get(0)).isEqualTo("AAA");
 

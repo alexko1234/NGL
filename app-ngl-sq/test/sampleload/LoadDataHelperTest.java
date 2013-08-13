@@ -10,16 +10,15 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
-import models.utils.DescriptionHelper;
 import models.utils.dao.DAOException;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import play.data.validation.ValidationError;
 import play.test.Helpers;
 import utils.AbstractTests;
-
 import data.utils.LoadDataHelper;
 
 public class LoadDataHelperTest extends AbstractTests {
@@ -35,13 +34,20 @@ public class LoadDataHelperTest extends AbstractTests {
 	public static void initData() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{		 
 		app = getFakeApplication();
 		Helpers.start(app);
-		sampleType= DescriptionHelper.getSampleType("bac","Bac", "ADNClone", FirstData.getPropertyDefinitionsADNClone());
-		importType= DescriptionHelper.getImportType("importBanqueSolexa","Importation Sample Bq Solexa","importSample",FirstData.getPropertyDefinitionsImportBq());
+		
+		sampleType=SampleType.find.findByCode("BAC");
+		importType=ImportType.find.findByCode("library");
 
 		sampleHeader= LoadDataHelper.getHeaderProperties(Sample.HEADER, sampleType.propertiesDefinitions, Sample.class);
 		importHeader= LoadDataHelper.getHeaderProperties(Container.HEADER, importType.propertiesDefinitions, ImportType.class);
 	}
 
+	@AfterClass
+	public static void removeData() throws DAOException{	
+   		Helpers.stop(app);
+	}
+	
+	
 	@Test
 	public void validateHeaderMissColumn(){
 		String[] firstLineDiff = sampleHeader.concat(";Test.column1;").concat(importHeader).concat(";Test.column2").split(String.valueOf(LoadDataHelper.SEPARATOR));

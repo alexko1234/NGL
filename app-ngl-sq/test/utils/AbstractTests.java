@@ -6,24 +6,10 @@ import static play.test.Helpers.fakeApplication;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
-
 import play.test.FakeApplication;
-import play.test.Helpers;
 
 public abstract class AbstractTests {
 	protected static FakeApplication app;
-	@Before
-	public void start(){
-		 app = getFakeApplication();
-		 Helpers.start(app);
-	}
-	
-	@After
-	public void stop(){
-		Helpers.stop(app);
-	}
 	
 	public static FakeApplication getFakeApplication(){
 		return fakeApplication(fakeConfiguration());
