@@ -11,6 +11,7 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.project.instance.Project;
+import models.laboratory.reagent.instance.ReagentInstance;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.stock.instance.Stock;
 import models.utils.InstanceConstants;
@@ -86,6 +87,11 @@ public class InstanceValidationHelper {
 			support.validate(contextValidation);
 		}
 		
+	}
+
+	public static void validationReagentInstanceCode(
+			String reagentInstanceCode, ContextValidation contextValidation) {
+		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation.errors, reagentInstanceCode, "reagentInstanceCode", ReagentInstance.class,InstanceConstants.REAGENT_INSTANCE_COLL_NAME);
 	}
 	
 }

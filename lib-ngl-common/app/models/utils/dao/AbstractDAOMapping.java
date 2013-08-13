@@ -8,6 +8,7 @@ import models.utils.Model;
 
 import org.springframework.asm.Type;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
@@ -54,35 +55,41 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 		String sql = sqlCommon+" WHERE code = ? ";		
 		return initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
 	}
-	
-	
+
+
 	@SuppressWarnings("unchecked")
 	public Boolean isCodeExist(String code) throws DAOException
 	{
-			if(null == code){
-				throw new DAOException("code is mandatory");
+		if(null == code){
+			throw new DAOException("code is mandatory");
+		}
+		try {
+			String sql= null;
+			if(entityClass.getSuperclass() == CommonInfoType.class){
+				sql = "select id from common_info_type WHERE code=?";
 			}
-			try {
-				String sql= null;
-				if(entityClass.getSuperclass() == CommonInfoType.class){
-					sql = "select id from common_info_type WHERE code=?";
-				}
-				else{
-					sql = "select id from "+tableName+" WHERE code=?";
-				}
+			else{
+				sql = "select id from "+tableName+" WHERE code=?";
+			}
+			try{
 				long id =  this.jdbcTemplate.queryForLong(sql, code);
 				if(id > 0){
 					return Boolean.TRUE;
 				}else{
 					return Boolean.FALSE;
 				}
-			} catch (DataAccessException e) {
-				Logger.warn(e.getMessage());
-				return null;
+
+			}catch (EmptyResultDataAccessException e ) {
+				return Boolean.FALSE;
 			}
+
+		} catch (DataAccessException e) {
+			Logger.warn(e.getMessage());
+			return null;
+		}
 	}
-	
-	
+
+
 	protected MappingSqlQuery<T> initializeMapping(String sql, SqlParameter sqlParam) throws DAOException
 	{
 		try {

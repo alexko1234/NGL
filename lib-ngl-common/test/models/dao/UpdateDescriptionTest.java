@@ -6,6 +6,7 @@ import java.util.List;
 
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.ObjectType;
@@ -205,7 +206,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(propertyDefinition.displayFormat);
 		Assert.assertNotNull(propertyDefinition.displayOrder);
 		//Assert.assertNotNull(propertyDefinition.inOut);
-		Assert.assertNotNull(propertyDefinition.level);
+		Assert.assertNotNull(propertyDefinition.levels);
 		Assert.assertNotNull(propertyDefinition.required);
 		Assert.assertNotNull(propertyDefinition.type);
 		Assert.assertNotNull(propertyDefinition.measureCategory);
@@ -417,7 +418,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value11","value11", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop7", "prop7", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop7", "prop7", true, true, "default", "descProp1", "format1", 1, "in", Level.CODE.Content, true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("inst4", "inst4", "inst4", states, resolutions, propertiesDefinitions, objectType);
 
 		//Get instrumentCategory
@@ -461,7 +462,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value13","value13", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop9", "prop9", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop9", "prop9", true, true, "default", "descProp1", "format1", 1, "in", Level.CODE.Content, true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("purif2", "purif2", "purif2", states, resolutions, propertiesDefinitions, objectType);
 
 		//Create list instrument 
@@ -482,7 +483,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value14","value14", true));
 		propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop10", "prop10", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop10", "prop10", true, true, "default", "descProp1", "format1", 1, "in", Level.CODE.Content, true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
 		commonInfoType = createCommonInfoType("qc2", "qc2", "qc2", states, resolutions, propertiesDefinitions, objectType);
 
 		//Create list instrument 
@@ -519,7 +520,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value9", "value9", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
-		propertiesDefinitions.add(createPropertyDefinition("prop5", "prop5", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
+		propertiesDefinitions.add(createPropertyDefinition("prop5", "prop5", true, true, "default", "descProp1", "format1", 1, "in", Level.CODE.Content, true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("inst3", "inst3", "inst3", states, resolutions, propertiesDefinitions, objectType);
 
 		InstrumentCategory instrumentCategory = InstrumentCategory.find.findByCode("InstCat1");
@@ -697,8 +698,8 @@ public class UpdateDescriptionTest extends AbstractTests{
 	}
 
 
-	private PropertyDefinition createPropertyDefinition(String code, String name, boolean active, boolean choiceInList, String defaultValue, String description, String displayFormat, Integer displayOrder, String inOut, String level, boolean propagation, boolean required, String type,
-			MeasureCategory measureCategory,MeasureUnit measureValue, MeasureUnit displayMeasureValue, List<Value> possibleValues)
+	private PropertyDefinition createPropertyDefinition(String code, String name, boolean active, boolean choiceInList, String defaultValue, String description, String displayFormat, Integer displayOrder, String inOut, Level.CODE level, boolean propagation, boolean required, String type,
+			MeasureCategory measureCategory,MeasureUnit measureValue, MeasureUnit displayMeasureValue, List<Value> possibleValues) throws DAOException
 	{
 		PropertyDefinition propertyDefinition = new PropertyDefinition();
 		propertyDefinition.code=code;
@@ -710,7 +711,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		propertyDefinition.displayFormat=displayFormat;
 		propertyDefinition.displayOrder=displayOrder;
 		//propertyDefinition.inOut=inOut;
-		//propertyDefinition.level=level;
+		propertyDefinition.levels=getLevels(level);
 		propertyDefinition.required=required;
 		propertyDefinition.type=type;
 		propertyDefinition.measureCategory=measureCategory;
@@ -720,6 +721,13 @@ public class UpdateDescriptionTest extends AbstractTests{
 		return propertyDefinition;
 	}
 
+	public static List<Level> getLevels(Level.CODE...codes) throws DAOException {
+		List<Level> levels = new ArrayList<Level>();
+		for(Level.CODE code: codes){
+			levels.add(Level.find.findByCode(code.name()));
+		}
+		return levels;
+	}
 
 	private CommonInfoType createCommonInfoType(String code, String name, String collectionName, 
 			List<State> variableStates, List<Resolution> resolutions, List<PropertyDefinition> propertiesDefinitions, ObjectType objectType)

@@ -20,11 +20,9 @@ import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.reagent.description.ReagentType;
-import models.laboratory.reagent.instance.ReagentInstance;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
-import models.utils.InstanceConstants;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ConstraintsHelper;
 import validation.utils.ContextValidation;
@@ -85,11 +83,6 @@ public class DescriptionValidationHelper {
 	public static void validationReagentTypeCode(String reagentTypeCode,
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, reagentTypeCode, "reagentTypeCode", ReagentType.find);		
-	}
-
-	public static void validationReagentInstanceCode(
-			String reagentInstanceCode, ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation.errors, reagentInstanceCode, "reagentInstanceCode", ReagentInstance.class,InstanceConstants.REAGENT_INSTANCE_COLL_NAME);
 	}
 
 	public static void validationSampleCategoryCode(String categoryCode,

@@ -323,7 +323,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(propertyDefinition.displayFormat);
 		Assert.assertNotNull(propertyDefinition.displayOrder);
 		//Assert.assertNotNull(propertyDefinition.inOut);
-		Assert.assertNotNull(propertyDefinition.level);
+		Assert.assertNotNull(propertyDefinition.levels);
 		Assert.assertNotNull(propertyDefinition.required);
 		Assert.assertNotNull(propertyDefinition.type);
 		Assert.assertNotNull(propertyDefinition.measureCategory);

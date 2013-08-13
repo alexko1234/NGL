@@ -10,6 +10,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 
 import validation.DescriptionValidationHelper;
+import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ContextValidation;
 
@@ -31,7 +32,7 @@ public class ReagentUsed implements IValidation {
 	public void validate(ContextValidation contextValidation) {
 		
 		DescriptionValidationHelper.validationReagentTypeCode(reagentTypeCode,contextValidation);
-		DescriptionValidationHelper.validationReagentInstanceCode(reagentInstanceCode,contextValidation);
+		InstanceValidationHelper.validationReagentInstanceCode(reagentInstanceCode,contextValidation);
 
 	}
 	 

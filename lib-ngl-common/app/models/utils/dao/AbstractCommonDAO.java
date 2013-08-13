@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -30,7 +31,7 @@ import play.Logger;
 @Transactional(readOnly=false, rollbackFor=DAOException.class)
 public abstract class AbstractCommonDAO<T> {
 
-	
+
 	protected String tableName;
 	protected DataSource dataSource;
 	protected SimpleJdbcTemplate jdbcTemplate;
@@ -62,16 +63,16 @@ public abstract class AbstractCommonDAO<T> {
 		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
 		jdbcTemplate.update(sql, ps);
 	}
-	
+
 	public abstract List<T> findAll() throws DAOException;
 
 	public abstract T findById(Long id) throws DAOException;;
 
 	public abstract T findByCode(String code) throws DAOException;
 
-	
+
 	public abstract long save(T value) throws DAOException;
-	
+
 	public abstract void update(T value) throws DAOException;
 
 	public Boolean isCodeExist(String code) throws DAOException
@@ -80,12 +81,15 @@ public abstract class AbstractCommonDAO<T> {
 			throw new DAOException("code is mandatory");
 		}
 		try {
-			
-			String sql = "select id from "+tableName+" WHERE code=?";
-			long id =  this.jdbcTemplate.queryForLong(sql, code);
-			if(id > 0){
-				return Boolean.TRUE;
-			}else{
+			try{
+				String sql = "select id from "+tableName+" WHERE code=?";
+				long id =  this.jdbcTemplate.queryForLong(sql, code);
+				if(id > 0){
+					return Boolean.TRUE;
+				}else{
+					return Boolean.FALSE;
+				}
+			}catch (EmptyResultDataAccessException e ) {
 				return Boolean.FALSE;
 			}
 		} catch (DataAccessException e) {
@@ -94,6 +98,6 @@ public abstract class AbstractCommonDAO<T> {
 		}
 	}
 
-	
-	
+
+
 }
