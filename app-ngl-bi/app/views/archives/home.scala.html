@@ -1,4 +1,4 @@
-@()
+@(code: String)
 
 @scripts() = {
 	 <script src="@routes.Assets.at("ngl-common/javascripts/controllers/tabmainctrl.js")" type="text/javascript" charset="utf-8"></script>
@@ -12,4 +12,4 @@
 	<script src="@routes.Assets.at("ngl-common/javascripts/services/basket.js")" type="text/javascript" charset="utf-8"></script>             
 }
 
-@views.html.main("archives.page.title", menu("archives"), scripts)(views.html.contents.lefttabs())
+@views.html.main("archives.page.title", menu("archives" + code), scripts)(views.html.contents.lefttabs())
