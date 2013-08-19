@@ -45,6 +45,7 @@ public class ReadSets extends CommonController{
 	 * @return
 	 */
 	public static Result list(){
+		
 		Integer archive = getArchiveValue();
 		List<Archive> archives = new ArrayList<Archive>();
 		
@@ -66,6 +67,7 @@ public class ReadSets extends CommonController{
 		}
 		return ok(Json.toJson(new DatatableResponse(archives)));		
 	}
+	
 
 	private static Integer getArchiveValue() {
 		try{
@@ -85,7 +87,7 @@ public class ReadSets extends CommonController{
 		}else{ //not archive value = 2
 			query = DBQuery.and(DBQuery.is("dispatch", true), DBQuery.elemMatch("lanes", DBQuery.elemMatch("readsets", DBQuery.notExists("archiveId"))));
 		}
-		
+		 
 		return query;
 	}
 
