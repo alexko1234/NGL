@@ -8,6 +8,12 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.instance.PropertyValue;
+import static validation.utils.ConstraintsHelper.required;
+
+import java.util.List;
+import java.util.Map;
+
+import play.data.validation.ValidationError;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
@@ -59,13 +65,13 @@ public class DescriptionValidationHelper {
 
 	public static void validationInstrumentCode(String code,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, code, "instrument.code", Instrument.find);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, code, "instrumentUsed.code", Instrument.find);
 		
 	}
 
 	public static void validationInstrumentCategoryCode(String categoryCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, categoryCode, "instrument.categoryCode", InstrumentCategory.find);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, categoryCode, "instrumentUsed.categoryCode", InstrumentCategory.find);
 	}
 
 	public static void validationProcessTypeCode(String typeCode,
@@ -107,6 +113,40 @@ public class DescriptionValidationHelper {
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, typeCode, "typeCode",SampleType.find,false);
 	}
+
+	public static void validationRunTypeCode(String typeCode,
+			ContextValidation contextValidation) {
+		if(required(contextValidation.errors, typeCode, "typeCode")){
+			//TODO add controles si le type existe int�rrogation de la partie sgbd
+			//TODO : quand runType sera dans le mod�le description
+			//BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.typeCode, "typeCode", RunType.find, false);
+			
+			//getRunPropertyDefinitions
+			
+			/*
+			 * 		proDefinitions.addAll(sampleType.propertiesDefinitions);
+		
+				for(PropertyDefinition propertyDefinition:importType.propertiesDefinitions){
+					if(propertyDefinition.level.code.contains(LEVEL_SEARCH)){
+						proDefinitions.add(propertyDefinition);
+					}
+				}
+				
+				ConstraintsHelper.validateProperties(contextValidation, this.properties, proDefinitions);
+			 */
+			
+		}
+		
+	}
+
+	public static void validationContainerSupportCode(
+			String containerSupportCode, ContextValidation contextValidation) {		
+		if(required(contextValidation.errors, containerSupportCode, "containerSupportCode")){
+			//TODO add controles si le container existe dans mongo db
+			//BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.containerSupportCode, "containerSupportCode", ContainerSupportCode.find, false);
+		}		 
+	}
+	
 
 	public static void validationProject(String typeCode,
 			Map<String, PropertyValue> properties,
