@@ -15,6 +15,7 @@ import static play.data.Form.form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.BusinessValidationHelper;
+import validation.utils.ContextValidation;
 import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -31,21 +32,38 @@ public class Lanes extends CommonController{
 		
 		Form<Lane> filledForm = getFilledForm(laneForm, Lane.class);		
 		
+		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		
 		if(!filledForm.hasErrors()) {
 			Run run = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 			if(run == null){
 				return notFound();
 			}
 			Lane laneValue = filledForm.get();
-			BusinessValidationHelper.validateLane(filledForm.errors(), run,laneValue, Constants.RUN_ILLUMINA_COLL_NAME, null);
+			
+			//BusinessValidationHelper.validateLane(filledForm.errors(), run,laneValue, Constants.RUN_ILLUMINA_COLL_NAME, null);
+			ctxVal.contextObjects.put("run", run);
+			String rootKeyName = "lanes";
+			
+			int laneNumber = laneValue.number;
+			int index = 0;
+			for(int i = 0;run.lanes != null &&  i < run.lanes.size(); i++){
+				ctxVal.rootKeyName = rootKeyName+"["+index+++"]";
+				if(run.lanes.get(i).number.equals(laneNumber)){
+					break;
+				}
+			}
+			laneValue.validate(ctxVal);
+			
+			
 			if(!filledForm.hasErrors()) {
-				Logger.debug("Insert lane OK :"+laneValue.number);
+				//Logger.debug("Insert lane OK :"+laneValue.number);
 				//MongoDBDAO.createOrUpdateInArray(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,"code" , code, "lanes", "number", laneValue.number,laneValue);
-				int laneNumber = laneValue.number;
 				boolean isFind = false;
 				for(int i = 0;run.lanes != null &&  i < run.lanes.size(); i++){
 					Lane l = run.lanes.get(i);
-					if(l.number.equals(laneNumber)){ 
+					if(l.number.equals(laneNumber)){
+						
 						isFind = true;
 						MongoDBDAO.updateSet(Constants.RUN_ILLUMINA_COLL_NAME, run, "lanes."+i, laneValue);
 						break;
@@ -57,10 +75,10 @@ public class Lanes extends CommonController{
 			}
 		}
 		
-		if (!filledForm.hasErrors()) {
+		if (!filledForm.hasErrors() ) {
 			return ok(Json.toJson(filledForm.get()));			
 		} else {
-			return badRequest(filledForm.errorsAsJson());			
+			return badRequest(filledForm.errorsAsJson());
 		}		
 	}
 
