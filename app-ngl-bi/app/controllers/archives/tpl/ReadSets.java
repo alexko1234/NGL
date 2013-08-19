@@ -20,8 +20,12 @@ import views.html.archives.*;
  */
 public class ReadSets extends Controller {
 	
-	public static Result home() {
-		return ok(home.render());
+	public static Result home(String homecode) {
+		return ok(home.render(homecode));
+	}
+	
+	public static Result get(String code) {
+		return ok(views.html.archives.home.render("search"));
 	}
 	
 	public static Result search() {
@@ -43,8 +47,9 @@ public class ReadSets extends Controller {
   	    return ok(  	    		
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
-  	    		controllers.archives.tpl.routes.javascript.ReadSets.home(),  
-  	    		controllers.archives.api.routes.javascript.ReadSets.list()  	    		
+  	    	controllers.archives.tpl.routes.javascript.ReadSets.home(),  
+  	    	controllers.archives.tpl.routes.javascript.ReadSets.get(),  
+  	    	controllers.archives.api.routes.javascript.ReadSets.list()  	    		
   	      )	  	      
   	    );
   	  }
