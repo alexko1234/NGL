@@ -1,32 +1,24 @@
 package controllers.runs.api;
 
-import java.util.List;
+import static play.data.Form.form;
 
-import com.mongodb.MongoException;
+import java.util.List;
 
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
-import net.vz.mongodb.jackson.JacksonDBCollection;
-import net.vz.mongodb.jackson.WriteResult;
 import net.vz.mongodb.jackson.DBQuery.Query;
-import net.vz.mongodb.jackson.DBUpdate.Builder;
-
+import net.vz.mongodb.jackson.DBUpdate;
 import play.data.Form;
-import static play.data.Form.form;
 import play.libs.Json;
 import play.mvc.Result;
-
-import validation.BusinessValidationHelper;
-
-import controllers.Constants;
+import validation.utils.ContextValidation;
 import controllers.CommonController;
-
+import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 
-import play.Logger;
+import static validation.utils.ConstraintsHelper.getKey;
 
 
 
@@ -40,13 +32,35 @@ public class ReadSets extends CommonController{
 		
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
 		
+		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		
 		if(!filledForm.hasErrors()) {
 			Run run = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", code).is("lanes.number", laneNumber));	
 			if(null == run){
 				return notFound();
 			}
-			ReadSet readsetValue = filledForm.get();			
-			BusinessValidationHelper.validateReadSet(filledForm.errors(),run, laneNumber, readsetValue, Constants.RUN_ILLUMINA_COLL_NAME, null);
+			ReadSet readsetValue = filledForm.get();	
+			
+			//beginning code for validation
+			ctxVal.contextObjects.put("run", run);
+			String rootKeyName1 = "lanes";
+			String rootKeyName2 = "";
+			String rootKeyName3 = "";
+			for(int i = 0; i < run.lanes.size(); i++){
+				Lane l = run.lanes.get(i);
+				rootKeyName2 = rootKeyName1+"["+i+"]";
+				if(l.number.equals(laneNumber)){ 
+					ctxVal.contextObjects.put("lane",l);
+					for(int j=0; l.readsets != null && j < l.readsets.size() ; j++){
+						rootKeyName3 = getKey(rootKeyName2,"readsets["+j+"]");
+					}
+					break;
+				}
+			}
+			ctxVal.rootKeyName = rootKeyName3;
+			readsetValue.validate(ctxVal);
+			//end
+			
 			
 			if(!filledForm.hasErrors()) {
 				for(int i = 0; i < run.lanes.size(); i++){
@@ -80,6 +94,9 @@ public class ReadSets extends CommonController{
 	public static Result update(String readSetCode){
 		
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
+		
+		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		
 		if(!filledForm.hasErrors()){
 			ReadSet readsetValue = filledForm.get();
 		
@@ -90,9 +107,26 @@ public class ReadSets extends CommonController{
 					return notFound();
 				} 
 				
-				BusinessValidationHelper.validateReadSet(filledForm.errors(), run,-1, readsetValue, Constants.RUN_ILLUMINA_COLL_NAME,null);
-				
+				//beginning code for validation
+				ctxVal.contextObjects.put("run", run);
+				String rootKeyName1 = "lanes";
+				String rootKeyName2 = "";
 				boolean flagReadSet = false;
+				for(int i=0; i<run.lanes.size() && !flagReadSet; i++){
+					for(int j=0;j<run.lanes.get(i).readsets.size() && !flagReadSet; j++) {
+						if(run.lanes.get(i).readsets.get(j).code.equals(readsetValue.code)){
+							//ReadSet find
+							flagReadSet = true;		
+							rootKeyName2 = getKey(rootKeyName1+"["+i+"]","readsets["+j+"]");
+							ctxVal.contextObjects.put("lane",run.lanes.get(i));
+						}
+					}
+				}
+				ctxVal.rootKeyName = rootKeyName2;
+				readsetValue.validate(ctxVal);
+				//end
+				
+				flagReadSet = false;
 				if(!filledForm.hasErrors()) {
 					for(int i=0; i<run.lanes.size() && !flagReadSet;i++){
 						for(int j=0;j<run.lanes.get(i).readsets.size() && !flagReadSet;j++) {
@@ -113,6 +147,8 @@ public class ReadSets extends CommonController{
 		}
 	}
 	
+	
+	
 	public static Result get(String readSetCode){
 		Query object = DBQuery.is("lanes.readsets.code", readSetCode);
 		Run run =  MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, object);		
@@ -130,8 +166,7 @@ public class ReadSets extends CommonController{
 					}
 				}
 			}
-		}
-		
+		}	
 		if(readsetValue != null){
 			return ok(Json.toJson(readsetValue));					
 		}else{
