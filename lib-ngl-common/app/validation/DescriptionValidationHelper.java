@@ -8,7 +8,7 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.instance.PropertyValue;
-import static validation.utils.ConstraintsHelper.required;
+import java.util.List;
 
 import java.util.List;
 import java.util.Map;
