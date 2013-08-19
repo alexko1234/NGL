@@ -1,5 +1,7 @@
 package controllers.runs.api;
 
+import static play.data.Form.form;
+
 import java.util.List;
 
 import models.laboratory.common.instance.TraceInformation;
@@ -12,17 +14,15 @@ import org.codehaus.jackson.JsonNode;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
-import static play.data.Form.form;
 import play.libs.Json;
 import play.mvc.Result;
-import validation.BusinessValidationHelper;
+import validation.utils.ContextValidation;
 import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
+import controllers.CommonController;
 import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-
-import controllers.CommonController;
 
 /**
  * Controller around Run object
@@ -54,9 +54,12 @@ public class Runs extends CommonController {
 		}
 	}
 	
+	
 	public static Result save() {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
-
+		
+		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		
 		if (!filledForm.hasErrors()) {
 			Run runValue = filledForm.get();
 			if (null == runValue._id) {
@@ -66,9 +69,8 @@ public class Runs extends CommonController {
 				runValue.traceInformation.setTraceInformation("ngsrg");
 			}
 			
-			BusinessValidationHelper.validateRun(filledForm.errors(), runValue, Constants.RUN_ILLUMINA_COLL_NAME);
-			//new, dno, 17-07-2013
-			//runValue.validate(filledForm.errors());
+			ctxVal.rootKeyName = "";
+			runValue.validate(ctxVal);
 			
 			
 			if (!filledForm.hasErrors()) {
@@ -76,7 +78,7 @@ public class Runs extends CommonController {
 				filledForm = filledForm.fill(runValue);
 			}
 		}
-
+		
 		if (!filledForm.hasErrors()) {
 			return ok(Json.toJson(filledForm.get()));
 		} else {
@@ -115,6 +117,7 @@ public class Runs extends CommonController {
 	public static Result deleteFiles(String code){
 		Run run  = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(run==null){
+
 			return badRequest();
 		}
 		for(int i=0;run.lanes!=null && i<run.lanes.size();i++){
