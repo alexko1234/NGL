@@ -21,8 +21,12 @@ import views.html.runs.*;
  */
 public class Runs extends Controller {
 	
-	public static Result home(String code) {
-		return ok(home.render());
+	public static Result home(String homecode) {
+		return ok(home.render(homecode));
+	}
+	
+	public static Result get(String code) {
+		return ok(views.html.runs.home.render("search"));
 	}
 	
 	public static Result search() {
@@ -48,6 +52,7 @@ public class Runs extends Controller {
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
   	    		controllers.runs.tpl.routes.javascript.Runs.home(),  
+  	    		controllers.runs.tpl.routes.javascript.Runs.get(),  
   	    		controllers.runs.api.routes.javascript.Runs.get(),
   	    		controllers.runs.api.routes.javascript.Runs.list()  	    		
   	      )	  	      
