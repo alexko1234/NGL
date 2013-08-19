@@ -1,22 +1,37 @@
 package validation;
 
+import static validation.utils.ConstraintsHelper.addErrors;
+import static validation.utils.ConstraintsHelper.getKey;
 import static validation.utils.ConstraintsHelper.required;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
-
+import net.vz.mongodb.jackson.DBQuery;
+import fr.cea.ig.MongoDBDAO;
+import play.data.validation.ValidationError;
+import models.laboratory.common.description.Resolution;
+import models.laboratory.common.description.State;
 import models.laboratory.common.instance.Comment;
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.project.instance.Project;
 import models.laboratory.reagent.instance.ReagentInstance;
+import models.laboratory.run.instance.File;
+import models.laboratory.run.instance.Lane;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.stock.instance.Stock;
 import models.utils.InstanceConstants;
 
 import validation.utils.BusinessValidationHelper;
+import validation.utils.ConstraintsHelper;
 import validation.utils.ContextValidation;
 
 public class InstanceValidationHelper {
@@ -41,7 +56,7 @@ public class InstanceValidationHelper {
 		BusinessValidationHelper.validateExistInstanceCode(contextValidation.errors, experimentCode, "fromPurifingCode", Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME, false);		
 	}
 
-	
+
 
 	public static void validationSampleCode(String sampleCode,
 			ContextValidation contextValidation) {
@@ -88,10 +103,61 @@ public class InstanceValidationHelper {
 		}
 		
 	}
-
+	
 	public static void validationReagentInstanceCode(
 			String reagentInstanceCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation.errors, reagentInstanceCode, "reagentInstanceCode", ReagentInstance.class,InstanceConstants.REAGENT_INSTANCE_COLL_NAME);
+		}
 	}
+public static void validationLanes(List<Lane> lanes, ContextValidation contextValidation) {		
+		//TODO number of lanes (depends of the type run and the mode incremental insert or full insert !!!)
+		//TODO validate lane number
+				
+		if(null != lanes ) {
+			String rootKeyName = getKey(contextValidation.rootKeyName, "lanes");
+			int index = 0;			
+			Set<Integer> laneNumbers = new TreeSet<Integer>();
+			for (Lane lane : lanes) {
+				contextValidation.rootKeyName = rootKeyName+"["+index+++"]";
+				lane.validate(contextValidation);
+				if(laneNumbers.contains(lane.number)){
+					ConstraintsHelper.addErrors(contextValidation.errors, getKey(contextValidation.rootKeyName,"number"), InstanceConstants.ERROR_NOTUNIQUE,lane.number);
+				}				
+				laneNumbers.add(lane.number);				
+			}
+		}
+
+	}
+	
+	
+	public static void validationReadSets(List<ReadSet> readsets, ContextValidation contextValidation) {
+		
+		if(null != readsets) {
+			String rootKeyName = getKey(contextValidation.rootKeyName,"readsets");
+			int index = 0;
+			for (ReadSet readSet : readsets) {
+				contextValidation.rootKeyName = rootKeyName+"["+index+++"]";
+				readSet.validate(contextValidation);
+			}
+		}
+		
+	}
+	
+	
+	
+	
+	public static void validationFiles(List<File> files, ContextValidation contextValidation) {
+
+		if(null != files) {	
+			String rootKeyName = getKey(contextValidation.rootKeyName,"files");
+			int index = 0;
+			for (File file : files) {
+				contextValidation.rootKeyName = rootKeyName+"["+index+++"]";
+				file.validate(contextValidation);
+			}
+		}
+
+	}
+
 	
 }
