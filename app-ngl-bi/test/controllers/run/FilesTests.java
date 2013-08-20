@@ -119,8 +119,7 @@ public class FilesTests extends AbstractTests{
 					
 					callAction(controllers.runs.api.routes.ref.Files.save(readSetCode),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
 			 }
-		 }
-		 System.out.println("READSETCODE=" +readSetCode);	 
+		 } 
 		 
 		  File file = RunMockHelper.newFile("newfiletest");
 		  file.extension = "IMG";
@@ -183,10 +182,7 @@ public class FilesTests extends AbstractTests{
 					
 					callAction(controllers.runs.api.routes.ref.Files.save(readSetCode),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
 			 }
-			 
-			 System.out.println("FILENAME=" + readset.files.get(0).fullname);
 		 }
-		 System.out.println("READSETCODE=" +readSetCode);	
 		 
 		 
 		 
@@ -245,8 +241,7 @@ public class FilesTests extends AbstractTests{
 					
 					callAction(controllers.runs.api.routes.ref.Files.save(readSetCode),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
 			 }
-		 }
-		 System.out.println("READSETCODE=" +readSetCode);	 
+		 } 
 		 
 		 Result result = callAction(controllers.runs.api.routes.ref.Files.delete(readSetCode,"newfiletest"),fakeRequest());
          assertThat(status(result)).isEqualTo(OK);
