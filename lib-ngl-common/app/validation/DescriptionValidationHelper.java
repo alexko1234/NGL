@@ -10,7 +10,6 @@ import models.laboratory.common.description.State;
 import models.laboratory.common.instance.PropertyValue;
 import java.util.List;
 
-import java.util.List;
 import java.util.Map;
 
 import play.data.validation.ValidationError;
@@ -116,7 +115,7 @@ public class DescriptionValidationHelper {
 
 	public static void validationRunTypeCode(String typeCode,
 			ContextValidation contextValidation) {
-		if(required(contextValidation.errors, typeCode, "typeCode")){
+		if(ConstraintsHelper.required(contextValidation.errors, typeCode, "typeCode")){
 			//TODO add controles si le type existe int�rrogation de la partie sgbd
 			//TODO : quand runType sera dans le mod�le description
 			//BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.typeCode, "typeCode", RunType.find, false);
@@ -141,7 +140,7 @@ public class DescriptionValidationHelper {
 
 	public static void validationContainerSupportCode(
 			String containerSupportCode, ContextValidation contextValidation) {		
-		if(required(contextValidation.errors, containerSupportCode, "containerSupportCode")){
+		if(ConstraintsHelper.required(contextValidation.errors, containerSupportCode, "containerSupportCode")){
 			//TODO add controles si le container existe dans mongo db
 			//BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.containerSupportCode, "containerSupportCode", ContainerSupportCode.find, false);
 		}		 
