@@ -48,7 +48,6 @@ public class ReadSets extends CommonController{
 		
 		Integer archive = getArchiveValue();
 		List<Archive> archives = new ArrayList<Archive>();
-		
 		List<Run> runs = MongoDBDAO.find(Constants.RUN_ILLUMINA_COLL_NAME, Run.class,getQuery(archive)).toList();
 		for(Run run:runs){
 			if(run.lanes != null){
@@ -87,7 +86,6 @@ public class ReadSets extends CommonController{
 		}else{ //not archive value = 2
 			query = DBQuery.and(DBQuery.is("dispatch", true), DBQuery.elemMatch("lanes", DBQuery.elemMatch("readsets", DBQuery.notExists("archiveId"))));
 		}
-		 
 		return query;
 	}
 
