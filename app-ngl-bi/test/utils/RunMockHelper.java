@@ -1,7 +1,7 @@
 package utils;
 
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.instrument.instance.InstrumentUsed;
+import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -92,18 +92,32 @@ public class RunMockHelper {
 	}
 	
 	public static JsonNode getArchiveJson(String archiveId){
-		 System.out.println( Json.newObject().textNode("arichiveId:"+archiveId));
+		 System.out.println( Json.newObject().textNode("archiveId:"+archiveId));
 		 //System.out.println("parsed::"+Json.parse("[{\"archiveId\":\""+archiveId+"\"}]"));
 		 return Json.parse("{\"archiveId\":\""+archiveId+"\"}");
 		 
 	 }
 	 
-	public static File newFile(String code){
+	public static File newFile(){
 		File file = new File();
 		file.fullname = "testfile";
 		file.extension = ".exe";
 		file.typeCode = "42";
 		file.usable = true;
+		
+		return file;
+		
+	}
+	
+	public static File newFile(String code){
+		File file = new File();
+		file.fullname = code;
+		file.extension = ".exe";
+		file.typeCode = "42";
+		file.usable = true;
+		
+		file.properties.put("label", new PropertyValue("thelabel"));
+		file.properties.put("asciiEncoding", new PropertyValue("xxx"));
 		
 		return file;
 		

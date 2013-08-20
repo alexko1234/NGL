@@ -1,6 +1,6 @@
 "use strict";
 
-function SearchCtrl($scope, datatable) {
+function SearchCtrl($scope, $routeParams, datatable) {
 	$scope.archive = 2; //default only need archive
 	
 	$scope.datatableConfig = {
@@ -23,15 +23,14 @@ function SearchCtrl($scope, datatable) {
 		$scope.datatable.search({archive:$scope.archive});
 		
 		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('home');
-			$scope.addTabs({label:Messages('archives.menu.search'),href:jsRoutes.controllers.archives.tpl.ReadSets.home().url,remove:false});
-			
+			$scope.setHomePage('search');
+			$scope.addTabs({label:Messages('archives.menu.search'),href:jsRoutes.controllers.archives.tpl.ReadSets.home("search").url,remove:false});
 			$scope.activeTab(0);
 		}
 	}
 	
 	/* 
-      call by the init above and the search() to select the type of archives to vizualise (0,1,2)
+      call by the init above and the search() to select the type of archives to visualize (0,1,2)
 	 */
 	$scope.search = function(){
 		$scope.datatable.search({archive:$scope.archive});
@@ -39,4 +38,4 @@ function SearchCtrl($scope, datatable) {
 	
 };
 
-SearchCtrl.$inject = ['$scope', 'datatable'];
+SearchCtrl.$inject = ['$scope', '$routeParams', 'datatable'];

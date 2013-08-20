@@ -9,11 +9,11 @@
 				
 				<a class="brand" href="@controllers.main.tpl.routes.Main.home()">@Messages("application.name")</a>				
 					<ul class="nav">
-						<li class="@("active".when(nav == "runs"))"><a href="@controllers.runs.tpl.routes.Runs.home("home")">@Messages("menu.runs")</a>
+						<li class="@("active".when(nav == "runs.search"))"><a href="@controllers.runs.tpl.routes.Runs.home("search")">@Messages("menu.runs.search")</a>
 						</li>						
 					</ul>
 					<ul class="nav">
-						<li class="@("active".when(nav == "archives"))"><a href="@controllers.archives.tpl.routes.ReadSets.home()">@Messages("menu.archives")</a>
+						<li class="@("active".when(nav == "archives.search"))"><a href="@controllers.archives.tpl.routes.ReadSets.home("search")">@Messages("menu.archives.search")</a>
 						</li>						
 					</ul>
 					

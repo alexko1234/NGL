@@ -11,7 +11,8 @@ GET		/api/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experim
 GET		/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: java.lang.String)
 
 #run tpl
-GET	   	/runs/:code									controllers.runs.tpl.Runs.home(code: java.lang.String)
+GET	   	/runs/:homecode/home						controllers.runs.tpl.Runs.home(homecode: java.lang.String)
+GET	   	/runs/:code									controllers.runs.tpl.Runs.get(code: java.lang.String)
 GET		/tpl/runs/search							controllers.runs.tpl.Runs.search()
 GET		/tpl/runs/details							controllers.runs.tpl.Runs.details()
 GET		/tpl/runs/js-routes							controllers.runs.tpl.Runs.javascriptRoutes()
@@ -42,7 +43,8 @@ POST  	/api/readsets/:code/files					controllers.runs.api.Files.save(code: java.
 DELETE  /api/readsets/:code/files/:fullname			controllers.runs.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
 
 #archive
-GET	   	/archives/home								controllers.archives.tpl.ReadSets.home()
+GET	   	/archives/:homecode/home					controllers.archives.tpl.ReadSets.home(homecode: java.lang.String)
+GET	   	/archives/:code								controllers.archives.tpl.ReadSets.get(code: java.lang.String)
 GET		/tpl/archives/search						controllers.archives.tpl.ReadSets.search()
 GET		/tpl/archives/js-routes						controllers.archives.tpl.ReadSets.javascriptRoutes()
 
@@ -51,6 +53,6 @@ GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list()
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
-GET     /messages.js                controllers.main.tpl.Main.jsMessages()
+GET     /assets/*file               				controllers.Assets.at(path="/public", file)
+GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
 

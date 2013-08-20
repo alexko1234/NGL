@@ -1,6 +1,6 @@
 "use strict";
 
-function SearchCtrl($scope, datatable) {
+function SearchCtrl($scope, $routeParams, datatable) {
 
 	$scope.datatableConfig = {
 			order :{by:'traceInformation.creationDate'},
@@ -10,7 +10,7 @@ function SearchCtrl($scope, datatable) {
 			show:{
 				active:true,
 				add :function(line){
-					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.home(line.code).url,remove:true});
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.get(line.code).url,remove:true});
 				}
 			}
 	};
@@ -28,15 +28,14 @@ function SearchCtrl($scope, datatable) {
 		}
 		
 		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('home');
-			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("home").url,remove:false});
-			
-			$scope.activeTab(0);
+			$scope.setHomePage('search');
+			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:false});
+			$scope.activeTab(0); // desactive le lien !
 		}
 	}	
 };
 
-SearchCtrl.$inject = ['$scope', 'datatable'];
+SearchCtrl.$inject = ['$scope', '$routeParams', 'datatable'];
 
 
 function DetailsCtrl($scope, $http, $routeParams) {
@@ -53,8 +52,9 @@ function DetailsCtrl($scope, $http, $routeParams) {
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
 			if($scope.getTabs().length == 0){
-				$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.home($scope.run.code).url,remove:true})
-				$scope.activeTab(0);				
+				$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:false});
+				$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.get($scope.run.code).url,remove:true})
+				$scope.activeTab($scope.getTabs(1));
 			}
 			
 		});

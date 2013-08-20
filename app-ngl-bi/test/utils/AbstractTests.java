@@ -40,6 +40,7 @@ public abstract class AbstractTests {
 		config.put("mongodb.credentials", "ngl-bi:NglBiPassWT");
 		config.put("mongodb.servers", "gsphere.genoscope.cns.fr:27017");
 		
+		
 		config.put("db.lims.driver", "org.postgresql.Driver");
 		config.put("db.lims.url", "jdbc:postgresql://db.cng.fr/solexaprod");
 		config.put("db.lims.user", "ngl_bi");
@@ -48,7 +49,7 @@ public abstract class AbstractTests {
 		
 		config.put("asset.url","http://192.168.243.231:9001");
 		
-		// DNO, 01/07/2013, to delete errors messages;
+		// to delete errors messages;
 		config.put("casUrlValidator", "https://cas.genoscope.cns.fr:8443/cas/serviceValidate");
 		config.put("casUrlLogin", "https://cas.genoscope.cns.fr:8443/cas/login");
 		config.put("casRenew", "false");
