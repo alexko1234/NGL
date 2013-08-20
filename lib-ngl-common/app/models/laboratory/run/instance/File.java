@@ -1,17 +1,14 @@
-package models.laboratory.run.instance;package models.laboratory.run.instance;
+package models.laboratory.run.instance;
 
 import static validation.utils.ConstraintsHelper.getKey;
 import static validation.utils.ConstraintsHelper.required;
-
 import java.util.Map;
-
 import net.vz.mongodb.jackson.DBQuery;
-
 import models.laboratory.common.instance.PropertyValue;
 import models.utils.IValidation;
 import models.utils.InstanceConstants;
+import validation.utils.ValidationConstants;
 import models.utils.InstanceHelpers;
-import validation.utils.BusinessValidationHelper;
 import validation.utils.ConstraintsHelper;
 import validation.utils.ContextValidation;
 import validation.utils.RunPropertyDefinitionHelper;
@@ -43,7 +40,7 @@ public class File extends DBObject implements IValidation {
 		//Validate unique file.code if not already exist
 		Run runExist = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("lanes.readsets.files.fullname", this.fullname));
 		if(runExist != null && run._id == null){ //when new run
-			ConstraintsHelper.addErrors(contextValidation.errors, getKey(contextValidation.rootKeyName,"fullname"),InstanceConstants.ERROR_NOTUNIQUE, this.fullname);
+			ConstraintsHelper.addErrors(contextValidation.errors, getKey(contextValidation.rootKeyName,"fullname"),ValidationConstants.ERROR_NOTUNIQUE, this.fullname);
 		}
 		 
 		required(contextValidation.errors, this.extension, getKey(contextValidation.rootKeyName,"extension"));
