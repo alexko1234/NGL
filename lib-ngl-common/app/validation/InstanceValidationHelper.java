@@ -28,6 +28,7 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.stock.instance.Stock;
+import validation.utils.ValidationConstants;
 import models.utils.InstanceConstants;
 
 import validation.utils.BusinessValidationHelper;
@@ -36,7 +37,10 @@ import validation.utils.ContextValidation;
 
 public class InstanceValidationHelper {
 
-
+	public static void validationStateCode(String stateCode,ContextValidation contextValidation){
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, stateCode,"stateCode", State.find);
+	}
+	
 	public static void validationProjectCodes(List<String> projectCodes,ContextValidation contextValidation){
 		BusinessValidationHelper.validateRequiredInstanceCodes(contextValidation.errors, projectCodes, "projectCodes",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
 	}
@@ -50,23 +54,23 @@ public class InstanceValidationHelper {
 		BusinessValidationHelper.validateExistInstanceCodes(contextValidation.errors, experimentCodes, "fromExperimentTypeCodes", Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME, false);
 	}
 
-
 	public static void validationExperimentCode(String experimentCode,
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateExistInstanceCode(contextValidation.errors, experimentCode, "fromPurifingCode", Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME, false);		
 	}
 
-
+	public static void validationResolutionCode(String resolutionCode,
+			ContextValidation contextValidation) {
+		BusinessValidationHelper.validateExistDescriptionCode(contextValidation.errors, resolutionCode,"resolutionCode", Resolution.find);		
+	}
 
 	public static void validationSampleCode(String sampleCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateExistInstanceCode(contextValidation.errors, sampleCode, "sampleCode", Sample.class, InstanceConstants.SAMPLE_COLL_NAME, false);
-		
+		BusinessValidationHelper.validateExistInstanceCode(contextValidation.errors, sampleCode, "sampleCode", Sample.class, InstanceConstants.SAMPLE_COLL_NAME, false);		
 	}
 
 	public static void validationStockCode(String stockCode,ContextValidation contextValidation){
 		BusinessValidationHelper.validateExistInstanceCode(contextValidation.errors, stockCode, "stockCode",Stock.class,InstanceConstants.STOCK_COLL_NAME ,false);
-
 	}
 
 	public static void validationContainerCode(String containerCode,
@@ -81,7 +85,6 @@ public class InstanceValidationHelper {
 
 	public static void validationContents(List<Content> contents,
 			ContextValidation contextValidation) {
-
 		if(required(contextValidation.errors, contents, "container.contents")){
 			for(Content content :contents){
 				content.validate(contextValidation);
@@ -108,8 +111,8 @@ public class InstanceValidationHelper {
 			String reagentInstanceCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation.errors, reagentInstanceCode, "reagentInstanceCode", ReagentInstance.class,InstanceConstants.REAGENT_INSTANCE_COLL_NAME);
 		}
-	}
-public static void validationLanes(List<Lane> lanes, ContextValidation contextValidation) {		
+	
+	public static void validationLanes(List<Lane> lanes, ContextValidation contextValidation) {		
 		//TODO number of lanes (depends of the type run and the mode incremental insert or full insert !!!)
 		//TODO validate lane number
 				
@@ -121,7 +124,7 @@ public static void validationLanes(List<Lane> lanes, ContextValidation contextVa
 				contextValidation.rootKeyName = rootKeyName+"["+index+++"]";
 				lane.validate(contextValidation);
 				if(laneNumbers.contains(lane.number)){
-					ConstraintsHelper.addErrors(contextValidation.errors, getKey(contextValidation.rootKeyName,"number"), InstanceConstants.ERROR_NOTUNIQUE,lane.number);
+					ConstraintsHelper.addErrors(contextValidation.errors, getKey(contextValidation.rootKeyName,"number"), ValidationConstants.ERROR_NOTUNIQUE,lane.number);
 				}				
 				laneNumbers.add(lane.number);				
 			}
