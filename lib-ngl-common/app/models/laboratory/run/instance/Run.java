@@ -1,8 +1,5 @@
 package models.laboratory.run.instance;
 
-import static validation.utils.ConstraintsHelper.getKey;
-import static validation.utils.ConstraintsHelper.required;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,7 +52,8 @@ public class Run extends DBObject implements IValidation {
         contextValidation.putObject("_id",this._id);
             
 
-        if(ValidationHelper.required(contextValidation.errors, this.code, ValidationHelper.getKey(contextValidation.rootKeyName,"code"))){        if(ValidationHelper.required(contextValidation.errors, this.code, ValidationHelper.getKey(contextValidation.rootKeyName,"code"))){
+        	if(ValidationHelper.required(contextValidation.errors, this.code, ValidationHelper.getKey(contextValidation.rootKeyName,"code"))){        
+        
                 BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Run.class, InstanceConstants.RUN_ILLUMINA_COLL_NAME);		
             }
 
@@ -75,10 +73,9 @@ public class Run extends DBObject implements IValidation {
 
 
 
-            String rootKeyNameProp = getKey("",".properties");
-            ConstraintsHelper.validateProperties(contextValidation.errors, this.properties, RunPropertyDefinitionHelper.getRunPropertyDefinitions(), rootKeyNameProp);
-                
-        }		
+            String rootKeyNameProp = ValidationHelper.getKey("",".properties");
+            ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getRunPropertyDefinitions(), rootKeyNameProp);
+		
     }
 
     /*
@@ -97,4 +94,6 @@ public class Run extends DBObject implements IValidation {
     id du depot flowcell ???
     id du type de sequençage ???
     */
+    
+}
 
