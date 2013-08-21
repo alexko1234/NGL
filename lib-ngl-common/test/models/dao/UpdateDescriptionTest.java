@@ -208,7 +208,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		//Assert.assertNotNull(propertyDefinition.inOut);
 		Assert.assertNotNull(propertyDefinition.levels);
 		Assert.assertNotNull(propertyDefinition.required);
-		Assert.assertNotNull(propertyDefinition.type);
+		Assert.assertNotNull(propertyDefinition.valueType);
 		Assert.assertNotNull(propertyDefinition.measureCategory);
 		Assert.assertNotNull(propertyDefinition.saveMeasureValue);
 		checkMeasureValue(propertyDefinition.saveMeasureValue);
@@ -713,7 +713,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		//propertyDefinition.inOut=inOut;
 		propertyDefinition.levels=getLevels(level);
 		propertyDefinition.required=required;
-		propertyDefinition.type=type;
+		propertyDefinition.valueType=type;
 		propertyDefinition.measureCategory=measureCategory;
 		propertyDefinition.saveMeasureValue=measureValue;
 		propertyDefinition.displayMeasureValue = displayMeasureValue;
