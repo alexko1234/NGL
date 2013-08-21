@@ -1,6 +1,6 @@
 package models;
 
-import static validation.utils.ConstraintsHelper.addErrors;
+import static validation.utils.ValidationHelper.addErrors;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -63,11 +64,11 @@ public class TaraDAO {
 				
 				//TODO manque materiel origine
 				Map<String,PropertyValue> properMap=new HashMap<String, PropertyValue>();
-				properMap.put("taraStation", new PropertyValue(rs.getInt("station")));
-				properMap.put("taraDepth", new PropertyValue(rs.getString("profondeur")));
-				properMap.put("taraFilter", new PropertyValue(rs.getString("filtre")));
-				properMap.put("taraIteration", new PropertyValue(rs.getString("iteration")));
-				properMap.put("taraSample", new PropertyValue(rs.getString("materiel")));
+				properMap.put("taraStation", new PropertySingleValue(rs.getInt("station")));
+				properMap.put("taraDepth", new PropertySingleValue(rs.getString("profondeur")));
+				properMap.put("taraFilter", new PropertySingleValue(rs.getString("filtre")));
+				properMap.put("taraIteration", new PropertySingleValue(rs.getString("iteration")));
+				properMap.put("taraSample", new PropertySingleValue(rs.getString("materiel")));
 				return properMap;
 			}
 

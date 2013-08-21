@@ -1,6 +1,6 @@
 package models;
 
-import static validation.utils.ConstraintsHelper.addErrors;
+import static validation.utils.ValidationHelper.addErrors;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.SampleUsed;
@@ -86,13 +87,13 @@ public class LimsDAO {
 				container.support=ContainerHelper.getContainerSupportTube(rs.getString("code"));
 
 				container.properties= new HashMap<String, PropertyValue>();
-				container.properties.put(LIMS_CODE,new PropertyValue(rs.getInt("tubco")));
-				container.properties.put(RECEPTION_DATE,new PropertyValue(rs.getString(RECEPTION_DATE)));
+				container.properties.put(LIMS_CODE,new PropertySingleValue(rs.getInt("tubco")));
+				container.properties.put(RECEPTION_DATE,new PropertySingleValue(rs.getString(RECEPTION_DATE)));
 
 				
-				container.mesuredConcentration=new PropertyValue(rs.getFloat("tubconcr"), "ng/µl");
-				container.mesuredVolume=new PropertyValue(rs.getFloat("tubvolr"), "µl");
-				container.mesuredQuantity=new PropertyValue(rs.getFloat("tubqtr"), "ng");
+				container.mesuredConcentration=new PropertySingleValue(rs.getFloat("tubconcr"), "ng/µl");
+				container.mesuredVolume=new PropertySingleValue(rs.getFloat("tubvolr"), "µl");
+				container.mesuredQuantity=new PropertySingleValue(rs.getFloat("tubqtr"), "ng");
 
 				Content content = new Content();
 				content.sampleUsed=new SampleUsed();
@@ -102,7 +103,7 @@ public class LimsDAO {
 
 				if(rs.getString("indexBq")!=null){
 					content.properties = new HashMap<String, PropertyValue>();
-					content.properties.put(CONTAINER_PROPERTIES_BQ,new PropertyValue(rs.getString("indexBq")));
+					content.properties.put(CONTAINER_PROPERTIES_BQ,new PropertySingleValue(rs.getString("indexBq")));
 				}
 
 				return container;
@@ -173,7 +174,7 @@ public class LimsDAO {
 						code=rs.getString(propertyDefinition.code);
 
 						if(sample.properties==null){ sample.properties=new HashMap<String, PropertyValue>();}
-						sample.properties.put(propertyDefinition.code, new PropertyValue(code));
+						sample.properties.put(propertyDefinition.code, new PropertySingleValue(code));
 
 					}catch (SQLException e) {
 						Logger.debug("Property "+propertyDefinition.code+" not exist in pl_MaterielToNGL");
@@ -242,7 +243,7 @@ public class LimsDAO {
 				else {
 					project.typeCode="france-genomique";
 					project.properties= new HashMap<String, PropertyValue>();
-					project.properties.put("fgGroup", new PropertyValue(fgGroupe));
+					project.properties.put("fgGroup", new PropertySingleValue(fgGroupe));
 				}
 			
 				project.categoryCode=PROJECT_CATEGORY_CODE;

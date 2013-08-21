@@ -1,6 +1,6 @@
 package services.instance;
 
-import static validation.utils.ConstraintsHelper.addErrors;
+import static validation.utils.ValidationHelper.addErrors;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

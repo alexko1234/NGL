@@ -59,7 +59,7 @@ public class DescriptionFactory {
 		pd.code = code;
 		pd.active = true;
 		pd.levels = levels;;
-		pd.type = type.getName();
+		pd.valueType = type.getName();
 		pd.required = required;
 		pd.choiceInList = false;		
 		return pd;
@@ -72,7 +72,7 @@ public class DescriptionFactory {
 		pd.code = code;
 		pd.active = true;
 		pd.levels = levels;
-		pd.type = type.getName();
+		pd.valueType = type.getName();		
 		pd.required = required;
 		pd.choiceInList = false;	
 		pd.measureCategory = measureCategory;
@@ -88,7 +88,7 @@ public class DescriptionFactory {
 		pd.code = code;
 		pd.active = true;
 		pd.levels = levels;
-		pd.type = type.getName();
+		pd.valueType = type.getName();
 		pd.required = required;
 		pd.choiceInList = true;		
 		pd.possibleValues = values;
@@ -104,7 +104,7 @@ public class DescriptionFactory {
 		pd.code = code;
 		pd.active = true;
 		pd.levels = levels;
-		pd.type = type.getName();
+		pd.valueType = type.getName();
 		pd.required = required;
 		pd.choiceInList = true;		
 		pd.possibleValues = values;
