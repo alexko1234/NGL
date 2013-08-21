@@ -42,6 +42,49 @@ import fr.cea.ig.MongoDBDAO;
 public class RunValidationTest extends AbstractTests {
 	
 	@Test
+	 public void testEntireRunValidationTraceAllErrors() {
+		// just to show all errors messages (key, value) and show in that way the manner it looks like !;
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+			 Run run = getEmptyRun();
+			 
+			 ArrayList<Lane> al = new ArrayList<Lane>();
+			 Lane l = getEmptyLane();
+			 
+			 
+			 ReadSet r = getEmptyReadSet();
+			 ArrayList<ReadSet> ar = new ArrayList<ReadSet>();
+			
+			 File f = getEmptyFile();
+			 ArrayList<File> af = new ArrayList<File>();
+			 af.add(f);
+			 r.files = af;
+			 
+			 ar.add(r);
+			 l.readsets = ar;
+			 
+			 al.add(l);
+			 run.lanes = al;
+			 
+			 HashMap<String, List<ValidationError>> e = new HashMap<String, List<ValidationError>>();
+			 ContextValidation ctxVal = new ContextValidation(e);   
+			 ctxVal.rootKeyName = "";
+			 
+			 run.validate(ctxVal); 
+
+			 System.out.println("------------------------------------------------------");
+					 
+			 for (Map.Entry entry : ctxVal.errors.entrySet()) {
+			     System.out.println(entry.getKey() + "---------------------------------->" + entry.getValue());
+			 }
+			 
+			 System.out.println("-------------------------------------------------------");
+
+		}});
+	 }
+	
+	
+	@Test
 	 public void testRunValidationOk() {
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
@@ -185,7 +228,6 @@ public class RunValidationTest extends AbstractTests {
 	 }	
 	
 	
-	
 	@Test
 	 public void testLaneValidationOk(){
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
@@ -234,7 +276,7 @@ public class RunValidationTest extends AbstractTests {
 	 }
 	 
 	 
-	 @Test
+	@Test
 	 public void testExistingReadSetValidationErreur(){
 		 
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
@@ -290,11 +332,9 @@ public class RunValidationTest extends AbstractTests {
 	 }
 	 
 	 
-	 
 	@Test
 	 public void testFileValidationOk(){
 		
-			// au cas où le testFileValidationErreur() vient de passer...
 			Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET21"));
 			if(runDelete!=null){
 				MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -425,6 +465,28 @@ public class RunValidationTest extends AbstractTests {
 	}
 	
 	
+	private Lane getEmptyLane(){
+		
+		Lane lane = new Lane();
+		lane.number = 0;
+		
+		lane.properties.put("nbCycleRead1",new PropertyValue(""));
+		lane.properties.put("nbCycleReadIndex1",new PropertyValue(""));
+		lane.properties.put("nbCycleRead2",new PropertyValue(""));
+		lane.properties.put("nbCycleReadIndex2",new PropertyValue(""));
+		lane.properties.put("nbCluster",new PropertyValue(""));
+		lane.properties.put("nbBaseInternalAndIlluminaFilter",new PropertyValue(""));
+		lane.properties.put("phasing",new PropertyValue(""));
+		lane.properties.put("prephasing",new PropertyValue(""));
+		lane.properties.put("nbClusterInternalAndIlluminaFilter",new PropertyValue(""));
+		lane.properties.put("nbClusterIlluminaFilter",new PropertyValue(""));
+		lane.properties.put("percentClusterIlluminaFilter",new PropertyValue(""));		
+		lane.properties.put("percentClusterInternalAndIlluminaFilter",new PropertyValue(""));
+		
+		return lane;
+	}
+	
+	
 	
 	private Lane getLane2(){
 		
@@ -470,6 +532,26 @@ public class RunValidationTest extends AbstractTests {
 	}
 	
 	
+	private ReadSet getEmptyReadSet() {
+		ReadSet readSet = new ReadSet();
+		readSet.code = "";
+		readSet.path = "";
+		readSet.projectCode = ""; 
+		readSet.sampleCode = "";
+		readSet.sampleContainerCode = "";
+		readSet.properties.put("nbUsableBase", new PropertyValue(""));
+		readSet.properties.put("nbUsableCluster", new PropertyValue(""));
+		readSet.properties.put("q30",new PropertyValue(""));
+		readSet.properties.put("score", new PropertyValue(""));
+		readSet.properties.put("nbRead", new PropertyValue(""));
+		readSet.properties.put("nbClusterInternalAndIlluminaFilter", new PropertyValue(""));
+		readSet.properties.put("nbBaseInternalAndIlluminaFilter", new PropertyValue(""));
+		readSet.properties.put("fraction", new PropertyValue(""));
+
+		return readSet;
+	}
+	
+	
 	private ReadSet getExistingReadSet() {
 		ReadSet readSet = new ReadSet();
 		readSet.code = "ReadSetBasicWithRun3";
@@ -500,6 +582,18 @@ public class RunValidationTest extends AbstractTests {
 		
 		file.properties.put("asciiEncoding", new PropertySingleValue("33"));
 		file.properties.put("label", new PropertySingleValue("READ1"));		
+		return file;
+	}
+	 
+	 private File getEmptyFile() {
+		File file = new File();
+		file.extension = "";
+		file.fullname = "";
+		file.typeCode = "";
+		file.usable = null;
+		
+		file.properties.put("asciiEncoding", new PropertyValue(""));
+		file.properties.put("label", new PropertyValue(""));		
 		return file;
 	}
 	 
@@ -543,6 +637,35 @@ public class RunValidationTest extends AbstractTests {
 			return run;
 		}
 	
+	
+	private Run getEmptyRun() {
+		Run run = new Run();
+		run.code = "";
+		run.typeCode = "";
+		run.containerSupportCode = "";
+		
+		run.traceInformation = new TraceInformation();
+		run.traceInformation.setTraceInformation("test");
+		
+		
+		//run.properties.put("nbCycle", new PropertyValue(""));		
+		run.properties.put("nbClusterTotal", new PropertyValue(""));
+		run.properties.put("nbClusterIlluminaFilter", new PropertyValue(""));
+		run.properties.put("nbBase", new PropertyValue("abc"));
+		run.properties.put("flowcellPosition", new PropertyValue(""));
+		run.properties.put("rtaVersion", new PropertyValue(""));
+		run.properties.put("flowcellVersion", new PropertyValue(""));
+		run.properties.put("controlLane", new PropertyValue(""));
+		run.properties.put("mismatch", new PropertyValue(""));
+		
+		run.instrumentUsed = new InstrumentUsed();
+		run.instrumentUsed.code = "";
+		run.instrumentUsed.categoryCode = "";
+	
+		return run;
+	}
+	
+	
 	private Run getExistingRun() {
 		Run run = new Run();
 		run.code = "YANN_TEST1FORREADSET";
@@ -566,7 +689,6 @@ public class RunValidationTest extends AbstractTests {
 		run.instrumentUsed = new InstrumentUsed();
 		run.instrumentUsed.code = "HS7";
 		run.instrumentUsed.categoryCode = "HISEQ2000";
-		
 		
 		return run;
 	}
