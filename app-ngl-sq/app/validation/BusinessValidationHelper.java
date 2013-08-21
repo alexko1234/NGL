@@ -1,10 +1,10 @@
 package validation;
 
-import static validation.utils.ConstraintsHelper.addErrors;
-import static validation.utils.ConstraintsHelper.getKey;
-import static validation.utils.ConstraintsHelper.required;
-import static validation.utils.ConstraintsHelper.validateProperties;
-import static validation.utils.ConstraintsHelper.validateTraceInformation;
+import static validation.utils.ValidationHelper.addErrors;
+import static validation.utils.ValidationHelper.getKey;
+import static validation.utils.ValidationHelper.required;
+import static validation.utils.ValidationHelper.validateProperties;
+import static validation.utils.ValidationHelper.validateTraceInformation;
 import java.util.List;
 import java.util.Map;
 

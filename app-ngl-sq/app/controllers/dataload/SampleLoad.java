@@ -25,7 +25,8 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import validation.utils.ConstraintsHelper;
+import validation.utils.ContextValidation;
+import validation.utils.ValidationHelper;
 import views.html.dataload.sampleload;
 import au.com.bytecode.opencsv.CSVReader;
 import controllers.utils.DataTableForm;
@@ -60,7 +61,7 @@ public class SampleLoad extends Controller{
 			fileWriter.close();
 		}catch(Exception e){
 			System.err.println(e.getStackTrace());
-			ConstraintsHelper.addErrors(filledForm.errors(), ConstraintsHelper.getKey(null, "error.initfilewriter"), "FILE ",fileName);
+			ValidationHelper.addErrors(filledForm.errors(), ValidationHelper.getKey(null, "error.initfilewriter"), "FILE ",fileName);
 			return badRequest(sampleload.render(datatableForm, filledForm));
 		}
 
@@ -135,10 +136,10 @@ public class SampleLoad extends Controller{
 
 				Container container= LoadDataHelper.containerFromCSVLine(firstLine,nextLine,sample,importType.getMapPropertyDefinition());
 
-				ConstraintsHelper.validateProperties(filledForm.errors(), sample.properties, sampleType.propertiesDefinitions,null );
+				ValidationHelper.validateProperties(new ContextValidation(filledForm.errors()), sample.properties, sampleType.propertiesDefinitions,null );
 
 				if(container.contents.get(0).properties!=null)
-					ConstraintsHelper.validateProperties(filledForm.errors(), container.contents.get(0).properties, importType.propertiesDefinitions,null );
+					ValidationHelper.validateProperties(new ContextValidation(filledForm.errors()), container.contents.get(0).properties, importType.propertiesDefinitions,null );
 
 				samples.add(sample);
 				containers.add(container);

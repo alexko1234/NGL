@@ -42,7 +42,7 @@ public class Experiments extends CommonController{
 
 		exp = traceInformation(exp);
 
-		Workflows.setExperimentStateCode(exp,experimentFilledForm.errors());	
+		Workflows.setExperimentStateCode(exp,new ContextValidation(experimentFilledForm.errors()));	
 
 		if (!experimentFilledForm.hasErrors()) {
 
@@ -198,7 +198,7 @@ public class Experiments extends CommonController{
 
 
 		//TODO if first experiment in the processus then processus state to IP
-		Workflows.setExperimentStateCode(exp,experimentFilledForm.errors());
+		Workflows.setExperimentStateCode(exp,new ContextValidation(experimentFilledForm.errors()));
 		if (!experimentFilledForm.hasErrors()) {	 	
 			Builder builder = new DBUpdate.Builder();
 			builder = builder.set("stateCode",exp.stateCode);//TODO: validation? buisness validation

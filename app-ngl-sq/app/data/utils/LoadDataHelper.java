@@ -11,6 +11,7 @@ import java.util.Map;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.sample.description.ImportType;
@@ -21,7 +22,7 @@ import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import play.Logger;
 import play.data.validation.ValidationError;
-import validation.utils.ConstraintsHelper;
+import validation.utils.ValidationHelper;
 
 public class LoadDataHelper {
 	
@@ -33,14 +34,14 @@ public class LoadDataHelper {
 	public static void validateHeader(String[] firstLine, SampleType sampleType, ImportType importType, Map<String, List<ValidationError>> errors) {
 		
 		if (firstLine==null){
-			ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "Header"), "HEADER VIDE",sampleType.code,importType.code);
+			ValidationHelper.addErrors(errors, ValidationHelper.getKey(null, "Header"), "HEADER VIDE",sampleType.code,importType.code);
 			return;
 		}
 		
 		String resultFirstLine=getFirstLine(sampleType, importType);
 		
 		if (resultFirstLine==null) {
-			ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "Header"), "HEADER VIDE",sampleType.code,importType.code);
+			ValidationHelper.addErrors(errors, ValidationHelper.getKey(null, "Header"), "HEADER VIDE",sampleType.code,importType.code);
 			return;
 		}
 				
@@ -58,7 +59,7 @@ public class LoadDataHelper {
         
 		for(String column : different){
 			Logger.debug("Column error :"+column);
-			ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "COLUMN "+column), "COLUMN ",column);
+			ValidationHelper.addErrors(errors, ValidationHelper.getKey(null, "COLUMN "+column), "COLUMN ",column);
 		}
 	}
 
@@ -67,7 +68,7 @@ public class LoadDataHelper {
 		File file=new File(fileName);
 		if(!file.exists()){
 			Logger.debug("File not found :"+fileName);
-			ConstraintsHelper.addErrors(errors, ConstraintsHelper.getKey(null, "Filename"), "FILE NOT EXIST",fileName);
+			ValidationHelper.addErrors(errors, ValidationHelper.getKey(null, "Filename"), "FILE NOT EXIST",fileName);
 		}
 		
 	}
@@ -125,7 +126,7 @@ public class LoadDataHelper {
 				if(content.properties==null) content.properties=new HashMap<String, PropertyValue>();
 				String key=firstLine[i].substring((contentPrefix).length());
 				if(!nextLine[i].isEmpty())
-					content.properties.put(key, new PropertyValue(ConstraintsHelper.transformValue(propertiesDefinition.get(key).type, nextLine[i],FORMAT_DATE)));
+					content.properties.put(key, new PropertySingleValue(ValidationHelper.transformValue(propertiesDefinition.get(key).valueType, nextLine[i],FORMAT_DATE)));
 			}
 			else if(firstLine[i].startsWith(rootPrefix)) {
 
@@ -135,7 +136,7 @@ public class LoadDataHelper {
 				else	{
 
 					field = aClass.getField(firstLine[i].replaceFirst(aClass.getSimpleName()+".", ""));
-					field.set(container,ConstraintsHelper.transformValue(field.getType().getName(), nextLine[i],FORMAT_DATE));
+					field.set(container,ValidationHelper.transformValue(field.getType().getName(), nextLine[i],FORMAT_DATE));
 				}		  
 
 			}
@@ -166,7 +167,7 @@ public class LoadDataHelper {
 				if(sample.properties==null) sample.properties=new HashMap<String, PropertyValue>();
 				String key=firstLine[i].substring((rootPrefix+PREFIX).length());
 				if(!nextLine[i].isEmpty())	
-					sample.properties.put(key, new PropertyValue(ConstraintsHelper.transformValue(propertiesDefinition.get(key).type, nextLine[i],FORMAT_DATE)));
+					sample.properties.put(key, new PropertySingleValue(ValidationHelper.transformValue(propertiesDefinition.get(key).valueType, nextLine[i],FORMAT_DATE)));
 			}
 			else if(firstLine[i].startsWith(rootPrefix)) {
 
@@ -179,7 +180,7 @@ public class LoadDataHelper {
 				else	{
 
 					field = aClass.getField(firstLine[i].replaceFirst(rootPrefix, ""));
-					field.set(sample,ConstraintsHelper.transformValue(field.getType().getName(), nextLine[i],FORMAT_DATE));
+					field.set(sample,ValidationHelper.transformValue(field.getType().getName(), nextLine[i],FORMAT_DATE));
 				}		  
 
 			}

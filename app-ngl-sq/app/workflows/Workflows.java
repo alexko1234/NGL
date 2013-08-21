@@ -1,9 +1,9 @@
 package workflows;
 
-import static validation.utils.ConstraintsHelper.addErrors;
-import static validation.utils.ConstraintsHelper.getKey;
-import static validation.utils.ConstraintsHelper.required;
-import static validation.utils.ConstraintsHelper.validateProperties;
+import static validation.utils.ValidationHelper.addErrors;
+import static validation.utils.ValidationHelper.getKey;
+import static validation.utils.ValidationHelper.required;
+import static validation.utils.ValidationHelper.validateProperties;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +13,7 @@ import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import play.Logger;
 import play.data.validation.ValidationError;
+import validation.utils.ContextValidation;
 import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 
@@ -49,25 +50,25 @@ public class Workflows {
 	 * Set a state of an experiment 
 	 * @param experiment: the experiment, errors: the filledForm errors
 	 */
-	public static void setExperimentStateCode(Experiment experiment, Map<String, List<ValidationError>>  errors){
+	public static void setExperimentStateCode(Experiment experiment, ContextValidation  contextValidation){
 		if(experiment.stateCode.equals("N")) {
-			required(errors, experiment.typeCode, "typeCode");
+			required(contextValidation.errors, experiment.typeCode, "typeCode");
 		} else if(experiment.stateCode.equals("IP")) {
-			required(errors, experiment.typeCode, "typeCode"); 
-			required(errors, experiment.resolutionCode, "resolutionCode");
-			required(errors, experiment.protocolCode, "protocolCode");
-			required(errors, experiment.instrument.code, "instrument");
+			required(contextValidation.errors, experiment.typeCode, "typeCode"); 
+			required(contextValidation.errors, experiment.resolutionCode, "resolutionCode");
+			required(contextValidation.errors, experiment.protocolCode, "protocolCode");
+			required(contextValidation.errors, experiment.instrument.code, "instrument");
 		} else if(experiment.stateCode.equals("F")) {
-			required(errors, experiment.typeCode, "typeCode"); 
-			required(errors, experiment.resolutionCode, "resolutionCode");
-			required(errors, experiment.protocolCode, "protocolCode");
-			required(errors, experiment.instrument.code, "instrument");
-			required(errors, experiment.atomicTransfertMethods, "atomicTransfertMethods");
+			required(contextValidation.errors, experiment.typeCode, "typeCode"); 
+			required(contextValidation.errors, experiment.resolutionCode, "resolutionCode");
+			required(contextValidation.errors, experiment.protocolCode, "protocolCode");
+			required(contextValidation.errors, experiment.instrument.code, "instrument");
+			required(contextValidation.errors, experiment.atomicTransfertMethods, "atomicTransfertMethods");
 				
-			validateProperties(errors, experiment.experimentProperties, experiment.getExperimentType().propertiesDefinitions, getKey(null,"nullPropertiesDefinitions"));
+			validateProperties(contextValidation, experiment.experimentProperties, experiment.getExperimentType().propertiesDefinitions, getKey(null,"nullPropertiesDefinitions"));
 			
 		}else{
-			addErrors(errors,experiment.stateCode, getKey(null,"InvalidthisStateCode"));
+			addErrors(contextValidation.errors,experiment.stateCode, getKey(null,"InvalidthisStateCode"));
 		}	
 	}
 }
