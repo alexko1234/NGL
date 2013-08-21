@@ -1,8 +1,8 @@
 package validation.utils;
 
-import static validation.utils.ConstraintsHelper.addErrors;
-import static validation.utils.ConstraintsHelper.getKey;
-import static validation.utils.ConstraintsHelper.required;
+import static validation.utils.ValidationHelper.addErrors;
+import static validation.utils.ValidationHelper.getKey;
+import static validation.utils.ValidationHelper.required;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +58,7 @@ public class BusinessValidationHelper {
 			String code, Class<T> type, String collectionName){
 	
 		// Unique code is validate is key "_id" not in map contextObjects or if value of key "_id" is null
-		if( !contextValidation.contextObjects.containsKey("_id") || ( contextValidation.contextObjects.containsKey("_id") && contextValidation.contextObjects.get("_id")==null ) ){
-
+		if(contextValidation.getObject("_id") == null){
 			if(null!=code && MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
 				addErrors(contextValidation.errors, FIELD_CODE, ERROR_NOTUNIQUE, code);
 				return false;

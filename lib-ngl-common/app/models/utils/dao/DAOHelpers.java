@@ -12,7 +12,7 @@ import models.utils.Model;
 import models.utils.Model.Finder;
 import play.Logger;
 import play.data.validation.ValidationError;
-import validation.utils.ConstraintsHelper;
+import validation.utils.ValidationHelper;
 
 public class DAOHelpers {
 	

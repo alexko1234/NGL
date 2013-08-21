@@ -61,7 +61,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		parameters.put("required", propertyDefinition.required);
 		parameters.put("active", propertyDefinition.active);
 		parameters.put("choice_in_list", propertyDefinition.choiceInList);
-		parameters.put("type", propertyDefinition.type);
+		parameters.put("type", propertyDefinition.valueType);
 		parameters.put("display_format", propertyDefinition.displayFormat);
 		parameters.put("display_order", propertyDefinition.displayOrder);
 		parameters.put("default_value", propertyDefinition.defaultValue);
@@ -106,7 +106,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 				"display_order=?, default_value=? " +
 				" WHERE id=?";
 		jdbcTemplate.update(sql, propertyDefinition.name, propertyDefinition.description, propertyDefinition.required, 
-				propertyDefinition.active, propertyDefinition.choiceInList, propertyDefinition.type, propertyDefinition.displayFormat, 
+				propertyDefinition.active, propertyDefinition.choiceInList, propertyDefinition.valueType, propertyDefinition.displayFormat, 
 				propertyDefinition.displayOrder, propertyDefinition.defaultValue, 
 				propertyDefinition.id);
 

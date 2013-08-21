@@ -16,7 +16,7 @@ public class RunPropertyDefinitionHelper {
 		propertyDefinition.required = required;
 		propertyDefinition.active = active;
 		propertyDefinition.choiceInList = choiceInList;
-		propertyDefinition.type = type.getName();		
+		propertyDefinition.valueType = type.getName();		
 		return propertyDefinition;
 	}
 

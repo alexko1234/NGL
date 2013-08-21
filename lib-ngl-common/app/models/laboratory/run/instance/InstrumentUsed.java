@@ -1,6 +1,6 @@
 package models.laboratory.run.instance;
 
-import static validation.utils.ConstraintsHelper.required;
+import static validation.utils.ValidationHelper.required;
 import models.utils.IValidation;
 
 import org.codehaus.jackson.annotate.JsonIgnore;

@@ -20,7 +20,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import validation.DescriptionValidationHelper;
 import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.ConstraintsHelper;
+import validation.utils.ValidationHelper;
 import validation.utils.ContextValidation;
 
 import fr.cea.ig.DBObject;
@@ -76,7 +76,7 @@ public class Project extends DBObject implements IValidation{
 	@JsonIgnore
 	public void validate(ContextValidation contextValidation) {
 		
-		contextValidation.contextObjects.put("_id",this._id);
+		contextValidation.putObject("_id",this._id);
 		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, code, Project.class, InstanceConstants.PROJECT_COLL_NAME);
 
 		DescriptionValidationHelper.validationProjectCategoryCode(categoryCode,contextValidation);

@@ -6,6 +6,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import models.laboratory.common.description.dao.PropertyDefinitionDAO;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.utils.Model;
 import play.data.validation.Constraints.Required;
 
@@ -27,8 +28,9 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 	public Boolean active = Boolean.TRUE;
 	public Boolean choiceInList = Boolean.FALSE;
 
+	public String propertyType = PropertySingleValue.class.getName(); //Single, Map, List, File, Object, List<Object>
 	@Required	
-	public String type;
+	public String valueType;  //String, Integer, Boolean, TBoolean, etc.
 	public String displayFormat;
 	public Integer displayOrder;
 

@@ -127,7 +127,7 @@ public class Experiment extends DBObject implements IValidation {
 			throw new IllegalArgumentException("this is null");
 		}
 		
-		contextValidation.contextObjects.put("_id",this._id);
+		contextValidation.putObject("_id",this._id);
 		
 		validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME);
 		

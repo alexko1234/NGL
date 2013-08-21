@@ -1,17 +1,19 @@
 package models.laboratory.run.instance;
 
-import static validation.utils.ConstraintsHelper.getKey;
-import static validation.utils.ConstraintsHelper.required;
+import validation.utils.ValidationHelper;
+
+import java.util.HashMap;
 import java.util.Map;
+
 import net.vz.mongodb.jackson.DBQuery;
+
 import models.laboratory.common.instance.PropertyValue;
 import models.utils.IValidation;
 import models.utils.InstanceConstants;
-import validation.utils.ValidationConstants;
-import models.utils.InstanceHelpers;
-import validation.utils.ConstraintsHelper;
+import validation.utils.BusinessValidationHelper;
 import validation.utils.ContextValidation;
 import validation.utils.RunPropertyDefinitionHelper;
+import validation.utils.ValidationConstants;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
@@ -23,7 +25,7 @@ public class File extends DBObject implements IValidation {
 	public Boolean usable = Boolean.FALSE;
 	public String typeCode; //id du type de fichier
 	
-	public Map<String, PropertyValue> properties= InstanceHelpers.getLazyMapPropertyValue();
+	public Map<String, PropertyValue> properties = new HashMap<String, PropertyValue>();
 	
 	/*
 	asciiEncoding	encodage ascii du fichier
@@ -35,21 +37,21 @@ public class File extends DBObject implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		
-		Run run = (Run) contextValidation.contextObjects.get("run");
+		Run run = (Run) contextValidation.getObject("run");
 		
 		//Validate unique file.code if not already exist
 		Run runExist = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("lanes.readsets.files.fullname", this.fullname));
 		if(runExist != null && run._id == null){ //when new run
-			ConstraintsHelper.addErrors(contextValidation.errors, getKey(contextValidation.rootKeyName,"fullname"),ValidationConstants.ERROR_NOTUNIQUE, this.fullname);
+			ValidationHelper.addErrors(contextValidation.errors, ValidationHelper.getKey(contextValidation.rootKeyName,"fullname"),ValidationConstants.ERROR_NOTUNIQUE, this.fullname);
 		}
 		 
-		required(contextValidation.errors, this.extension, getKey(contextValidation.rootKeyName,"extension"));
-		required(contextValidation.errors, this.fullname, getKey(contextValidation.rootKeyName,"fullname"));
-		required(contextValidation.errors, this.typeCode, getKey(contextValidation.rootKeyName,"typeCode"));
-		required(contextValidation.errors, this.usable, getKey(contextValidation.rootKeyName,"usable"));	
+		ValidationHelper.required(contextValidation.errors, this.extension, ValidationHelper.getKey(contextValidation.rootKeyName,"extension"));
+		ValidationHelper.required(contextValidation.errors, this.fullname, ValidationHelper.getKey(contextValidation.rootKeyName,"fullname"));
+		ValidationHelper.required(contextValidation.errors, this.typeCode, ValidationHelper.getKey(contextValidation.rootKeyName,"typeCode"));
+		ValidationHelper.required(contextValidation.errors, this.usable, ValidationHelper.getKey(contextValidation.rootKeyName,"usable"));	
 		
-		String rootKeyNameProp = getKey(contextValidation.rootKeyName,"properties");
-		ConstraintsHelper.validateProperties(contextValidation.errors, this.properties, RunPropertyDefinitionHelper.getFilePropertyDefinitions(), rootKeyNameProp);		
+		String rootKeyNameProp = ValidationHelper.getKey(contextValidation.rootKeyName,"properties");
+		ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getFilePropertyDefinitions(), rootKeyNameProp);		
 		
 	}
 

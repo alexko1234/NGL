@@ -8,7 +8,7 @@ import models.utils.IValidation;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import validation.utils.ConstraintsHelper;
+import validation.utils.ValidationHelper;
 import validation.utils.ContextValidation;
 
 public class Content implements IValidation{
@@ -34,7 +34,7 @@ public class Content implements IValidation{
 	public void validate(ContextValidation contextValidation) {
 		
 		if(sampleUsed==null){
-			ConstraintsHelper.addErrors(contextValidation.errors,"sampleUsed", "error.codeNotFound");
+			ValidationHelper.addErrors(contextValidation.errors,"sampleUsed", "error.codeNotFound");
 		}else {
 			sampleUsed.validate(contextValidation);
 		}

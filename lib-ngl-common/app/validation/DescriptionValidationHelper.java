@@ -10,6 +10,7 @@ import models.laboratory.common.description.State;
 import models.laboratory.common.instance.PropertyValue;
 import java.util.List;
 
+import java.util.List;
 import java.util.Map;
 
 import play.data.validation.ValidationError;
@@ -29,8 +30,9 @@ import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.ConstraintsHelper;
+import validation.utils.ValidationHelper;
 import validation.utils.ContextValidation;
+import validation.utils.ValidationHelper;
 
 public class DescriptionValidationHelper {
 	
@@ -53,7 +55,7 @@ public class DescriptionValidationHelper {
 			String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
 		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, typeCode, "typeCode", ExperimentType.find,true);
 		if(exType!=null){
-			ConstraintsHelper.validateProperties(contextValidation.errors, properties, exType.getPropertiesDefinitionDefaultLevel(), contextValidation.rootKeyName,true);
+			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), contextValidation.rootKeyName,true);
 		}
 	}
 	
@@ -115,7 +117,7 @@ public class DescriptionValidationHelper {
 
 	public static void validationRunTypeCode(String typeCode,
 			ContextValidation contextValidation) {
-		if(ConstraintsHelper.required(contextValidation.errors, typeCode, "typeCode")){
+		if(ValidationHelper.required(contextValidation, typeCode, "typeCode")){
 			//TODO add controles si le type existe int�rrogation de la partie sgbd
 			//TODO : quand runType sera dans le mod�le description
 			//BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.typeCode, "typeCode", RunType.find, false);
@@ -140,7 +142,7 @@ public class DescriptionValidationHelper {
 
 	public static void validationContainerSupportCode(
 			String containerSupportCode, ContextValidation contextValidation) {		
-		if(ConstraintsHelper.required(contextValidation.errors, containerSupportCode, "containerSupportCode")){
+		if(ValidationHelper.required(contextValidation, containerSupportCode, "containerSupportCode")){
 			//TODO add controles si le container existe dans mongo db
 			//BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.containerSupportCode, "containerSupportCode", ContainerSupportCode.find, false);
 		}		 
@@ -152,7 +154,7 @@ public class DescriptionValidationHelper {
 			ContextValidation contextValidation) {
 		ProjectType projectType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, typeCode, "typeCode", ProjectType.find,true);
 		if(projectType!=null){
-		ConstraintsHelper.validateProperties(contextValidation, properties, projectType.getPropertiesDefinitionDefaultLevel());
+		ValidationHelper.validateProperties(contextValidation, properties, projectType.getPropertiesDefinitionDefaultLevel());
 		}
 		
 	}
@@ -162,7 +164,7 @@ public class DescriptionValidationHelper {
 			ContextValidation contextValidation) {
 		ProcessType processType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, typeCode, "typeCode", ProcessType.find,true);
 		if(processType!=null){
-			ConstraintsHelper.validateProperties(contextValidation, properties, processType.getPropertiesDefinitionDefaultLevel());
+			ValidationHelper.validateProperties(contextValidation, properties, processType.getPropertiesDefinitionDefaultLevel());
 		}
 		
 	}
@@ -172,7 +174,7 @@ public class DescriptionValidationHelper {
 			ContextValidation contextValidation) {
 		InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, typeCode, "typeCode", InstrumentUsedType.find,true);
 		if(instrumentUsedType!=null){
-			ConstraintsHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel());
+			ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel());
 		}
 		
 	}
@@ -188,9 +190,11 @@ public class DescriptionValidationHelper {
 		proDefinitions.addAll(sampleType.getPropertiesDefinitionDefaultLevel());
 		proDefinitions.addAll(importType.getPropertiesDefinitionSampleLevel());
 		
-		ConstraintsHelper.validateProperties(contextValidation,properties, proDefinitions);
+		ValidationHelper.validateProperties(contextValidation,properties, proDefinitions);
 
 	}
+	
+	
 	
 	public static void validationStateCode(String stateCode,ContextValidation contextValidation){
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, stateCode,"stateCode", State.find);

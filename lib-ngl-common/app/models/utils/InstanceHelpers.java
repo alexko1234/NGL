@@ -14,6 +14,7 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.property.PropertySingleValue;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
@@ -31,7 +32,7 @@ public class InstanceHelpers {
 		return MapUtils.lazyMap(new HashMap<String, PropertyValue>(), new Transformer() {
 			public PropertyValue transform(Object mapKey) {
 				//todo comment je sais quel est le type on doit mettre
-				return new PropertyValue();
+				return new PropertySingleValue();
 			}
 		});
 	}

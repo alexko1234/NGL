@@ -10,7 +10,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import play.Logger;
 import validation.utils.ContextValidation;
-import validation.utils.ConstraintsHelper;
+import validation.utils.ValidationHelper;
 import controllers.administration.authentication.User;
 
 /**
@@ -43,17 +43,17 @@ public class TraceInformation implements IValidation {
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		if (contextValidation.contextObjects.get("_id") != null) {
-			if(ConstraintsHelper.required(contextValidation.errors, this, "traceInformation")){
-				ConstraintsHelper.required(contextValidation.errors, createUser, "traceInformation.createUser");
-				ConstraintsHelper.required(contextValidation.errors, creationDate, "traceInformation.creationDate");
-				ConstraintsHelper.required(contextValidation.errors, modifyUser, "traceInformation.modifyUser");
-				ConstraintsHelper.required(contextValidation.errors, modifyDate, "traceInformation.modifyDate");
+		if (contextValidation.getObject("_id") != null) {
+			if(ValidationHelper.required(contextValidation.errors, this, "traceInformation")){
+				ValidationHelper.required(contextValidation.errors, createUser, "traceInformation.createUser");
+				ValidationHelper.required(contextValidation.errors, creationDate, "traceInformation.creationDate");
+				ValidationHelper.required(contextValidation.errors, modifyUser, "traceInformation.modifyUser");
+				ValidationHelper.required(contextValidation.errors, modifyDate, "traceInformation.modifyDate");
 			}
 		} else {
-			if(ConstraintsHelper.required(contextValidation.errors, this, "traceInformation")){
-				ConstraintsHelper.required(contextValidation.errors, createUser, "traceInformation.createUser");
-				ConstraintsHelper.required(contextValidation.errors, creationDate, "traceInformation.creationDate");
+			if(ValidationHelper.required(contextValidation.errors, this, "traceInformation")){
+				ValidationHelper.required(contextValidation.errors, createUser, "traceInformation.createUser");
+				ValidationHelper.required(contextValidation.errors, creationDate, "traceInformation.creationDate");
 			}
 		}
 	}

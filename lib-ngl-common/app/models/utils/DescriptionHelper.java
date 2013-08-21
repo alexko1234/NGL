@@ -55,7 +55,7 @@ public class DescriptionHelper {
 		propertyDefinition.active = active;
 		propertyDefinition.choiceInList = choiceInList;
 		propertyDefinition.possibleValues = possiblesValues;
-		propertyDefinition.type = type.getName();
+		propertyDefinition.valueType = type.getName();
 		propertyDefinition.description=description;
 		propertyDefinition.displayFormat=displayFormat;
 		propertyDefinition.displayOrder=displayOrder;

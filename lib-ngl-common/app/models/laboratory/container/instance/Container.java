@@ -145,7 +145,7 @@ public class Container extends DBObject implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation){
 
-		contextValidation.contextObjects.put("_id",this._id);
+		contextValidation.putObject("_id",this._id);
 		
 		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
 		
@@ -161,14 +161,14 @@ public class Container extends DBObject implements IValidation {
 		//TODO pbl key
 		InstanceValidationHelper.validationExperimentCode(fromPurifingCode, contextValidation);
 
-		InstanceValidationHelper.validationResolutionCode(resolutionCode, contextValidation);
+		DescriptionValidationHelper.validationResolutionCode(resolutionCode, contextValidation);
 		
-		InstanceValidationHelper.validationStateCode(stateCode, contextValidation);
+		DescriptionValidationHelper.validationStateCode(stateCode, contextValidation);
 		
 		InstanceValidationHelper.validationContents(contents,contextValidation);
 		
 		InstanceValidationHelper.validationContainerSupport(support,contextValidation);
-
+		
 		traceInformation.validate(contextValidation);
 		
 		InstanceValidationHelper.validationComments(comments,contextValidation);

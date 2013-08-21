@@ -27,7 +27,7 @@ import play.Logger;
 import validation.DescriptionValidationHelper;
 import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.ConstraintsHelper;
+import validation.utils.ValidationHelper;
 import validation.utils.ContextValidation;
 
 import fr.cea.ig.DBObject;
@@ -95,7 +95,7 @@ public class Sample extends DBObject implements IValidation{
 	@Override
 	public void validate(ContextValidation contextValidation) {
 
-		contextValidation.contextObjects.put("_id",this._id);
+		contextValidation.putObject("_id",this._id);
 		
 		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Sample.class, InstanceConstants.SAMPLE_COLL_NAME);
 

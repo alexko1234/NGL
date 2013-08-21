@@ -1,7 +1,7 @@
 package models.laboratory.processes.instance;
 
-import static validation.utils.ConstraintsHelper.addErrors;
-import static validation.utils.ConstraintsHelper.getKey;
+import static validation.utils.ValidationHelper.addErrors;
+import static validation.utils.ValidationHelper.getKey;
 
 import java.util.List;
 import java.util.Map;
@@ -98,7 +98,7 @@ public class Process extends DBObject implements IValidation{
 			throw new IllegalArgumentException("Process is null");
 		}
 
-		contextValidation.contextObjects.put("_id",this._id);
+		contextValidation.putObject("_id",this._id);
 		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Process.class,InstanceConstants.CONTAINER_COLL_NAME);
 		
 		//??????????
