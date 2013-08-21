@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -104,7 +105,7 @@ public class RunsTests extends AbstractTests {
 				testRuns();
 			}
 			run.lanes.get(0).properties.remove("nbCycleRead1");
-			run.lanes.get(0).properties.put("nbCycleRead1",new PropertyValue("42"));
+			run.lanes.get(0).properties.put("nbCycleRead1",new PropertySingleValue("42"));
 			
 			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 	        
@@ -125,7 +126,7 @@ public class RunsTests extends AbstractTests {
 			}
 			
 			run.lanes.get(0).readsets.get(0).properties.remove("score");
-			run.lanes.get(0).readsets.get(0).properties.put("score",  new PropertyValue("42"));
+			run.lanes.get(0).readsets.get(0).properties.put("score",  new PropertySingleValue("42"));
 			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 	        
 		 	//assertThat(contentAsString(result).)

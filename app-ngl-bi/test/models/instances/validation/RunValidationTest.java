@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.File;
@@ -66,7 +66,7 @@ public class RunValidationTest extends AbstractTests {
 			 l.add(lane);
 			 run.lanes = l;
 			 ContextValidation ctxVal = new ContextValidation(); 
-			 ctxVal.contextObjects.put("run", run);
+			 ctxVal.putObject("run", run);
 			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
 			 
 			 assertThat(ctxVal.errors).hasSize(0);
@@ -85,7 +85,7 @@ public class RunValidationTest extends AbstractTests {
 			 l.add(lane);
 			 run.lanes = l;
 			 ContextValidation ctxVal = new ContextValidation(); 
-			 ctxVal.contextObjects.put("run", run);
+			 ctxVal.putObject("run", run);
 			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
 			 
 			 assertThat(ctxVal.errors).hasSize(1);
@@ -132,7 +132,7 @@ public class RunValidationTest extends AbstractTests {
 			 run.lanes = lanes;
 			 
 			 ContextValidation ctxVal = new ContextValidation(); 
-			 ctxVal.contextObjects.put("run", run);
+			 ctxVal.putObject("run", run);
 			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
 			 
 			 assertThat(ctxVal.errors).hasSize(0);
@@ -174,7 +174,7 @@ public class RunValidationTest extends AbstractTests {
 			 run.lanes = lanes;
 			 
 			 ContextValidation ctxVal = new ContextValidation(); 
-			 ctxVal.contextObjects.put("run", run);
+			 ctxVal.putObject("run", run);
 			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
 			 
 			 assertThat(ctxVal.errors).hasSize(1);
@@ -199,7 +199,7 @@ public class RunValidationTest extends AbstractTests {
 			 ContextValidation ctxVal = new ContextValidation();
 			 if (run != null) {
 					 ctxVal.rootKeyName ="lanes[0]";
-					 ctxVal.contextObjects.put("run", run);
+					 ctxVal.putObject("run", run);
 			 }		 
 			 run.lanes.get(0).validate(ctxVal);
 			 
@@ -224,8 +224,8 @@ public class RunValidationTest extends AbstractTests {
 			 run.lanes.get(0).readsets = ar;
 	
 			 ContextValidation ctxVal = new ContextValidation();
-			 ctxVal.contextObjects.put("run",run);
-			 ctxVal.contextObjects.put("lane",lane);		 
+			 ctxVal.putObject("run",run);
+			 ctxVal.putObject("lane",lane);		 
 			 ctxVal.rootKeyName = "lanes[0].readsets[0]";
 			 r.validate(ctxVal);
 			 
@@ -269,8 +269,8 @@ public class RunValidationTest extends AbstractTests {
 				run.lanes = lanes;		
 				
 				 ContextValidation ctxVal = new ContextValidation();
-				 ctxVal.contextObjects.put("run",run);
-				 ctxVal.contextObjects.put("lane",lane);
+				 ctxVal.putObject("run",run);
+				 ctxVal.putObject("lane",lane);
 				 ctxVal.rootKeyName = "lanes[1].readsets[0]";
 				 readset.validate(ctxVal);
 			
@@ -323,7 +323,7 @@ public class RunValidationTest extends AbstractTests {
 			run.lanes = lanes;
 			
 			 ContextValidation ctxVal = new ContextValidation();
-			 ctxVal.contextObjects.put("run",run);
+			 ctxVal.putObject("run",run);
 			 ctxVal.rootKeyName = "lanes[0].readsets[0].files[0]";
 			 file.validate(ctxVal);
 			 
@@ -363,7 +363,7 @@ public class RunValidationTest extends AbstractTests {
         // test to validate existence of error when duplication of the same file !
         
 		 ContextValidation ctxVal = new ContextValidation();
-		 ctxVal.contextObjects.put("run",run);
+		 ctxVal.putObject("run",run);
 		 File file = getExistingFile();
 		 file.validate(ctxVal);
 		 
@@ -386,18 +386,18 @@ public class RunValidationTest extends AbstractTests {
 		Lane lane = new Lane();
 		lane.number = 2;
 		
-		lane.properties.put("nbCycleRead1",new PropertyValue("1056"));
-		lane.properties.put("nbCycleReadIndex1",new PropertyValue("1056"));
-		lane.properties.put("nbCycleRead2",new PropertyValue("1056"));
-		lane.properties.put("nbCycleReadIndex2",new PropertyValue("1056"));
-		lane.properties.put("nbCluster",new PropertyValue("1056"));
-		lane.properties.put("nbBaseInternalAndIlluminaFilter",new PropertyValue("1056"));
-		lane.properties.put("phasing",new PropertyValue("phasing"));
-		lane.properties.put("prephasing",new PropertyValue("prephasing"));
-		lane.properties.put("nbClusterInternalAndIlluminaFilter",new PropertyValue("1056"));
-		lane.properties.put("nbClusterIlluminaFilter",new PropertyValue("1056"));
-		lane.properties.put("percentClusterIlluminaFilter",new PropertyValue("99.99"));		
-		lane.properties.put("percentClusterInternalAndIlluminaFilter",new PropertyValue("99.99"));
+		lane.properties.put("nbCycleRead1",new PropertySingleValue("1056"));
+		lane.properties.put("nbCycleReadIndex1",new PropertySingleValue("1056"));
+		lane.properties.put("nbCycleRead2",new PropertySingleValue("1056"));
+		lane.properties.put("nbCycleReadIndex2",new PropertySingleValue("1056"));
+		lane.properties.put("nbCluster",new PropertySingleValue("1056"));
+		lane.properties.put("nbBaseInternalAndIlluminaFilter",new PropertySingleValue("1056"));
+		lane.properties.put("phasing",new PropertySingleValue("phasing"));
+		lane.properties.put("prephasing",new PropertySingleValue("prephasing"));
+		lane.properties.put("nbClusterInternalAndIlluminaFilter",new PropertySingleValue("1056"));
+		lane.properties.put("nbClusterIlluminaFilter",new PropertySingleValue("1056"));
+		lane.properties.put("percentClusterIlluminaFilter",new PropertySingleValue("99.99"));		
+		lane.properties.put("percentClusterInternalAndIlluminaFilter",new PropertySingleValue("99.99"));
 		
 		return lane;
 	}
@@ -408,18 +408,18 @@ public class RunValidationTest extends AbstractTests {
 		Lane lane = new Lane();
 		lane.number = 20;
 		
-		lane.properties.put("nbCycleRead1",new PropertyValue("1056"));
-		lane.properties.put("nbCycleReadIndex1",new PropertyValue("1056"));
-		lane.properties.put("nbCycleRead2",new PropertyValue("1056"));
-		lane.properties.put("nbCycleReadIndex2",new PropertyValue("1056"));
-		lane.properties.put("nbCluster",new PropertyValue("1056"));
-		lane.properties.put("nbBaseInternalAndIlluminaFilter",new PropertyValue("1056"));
-		lane.properties.put("phasing",new PropertyValue("phasing"));
-		lane.properties.put("prephasing",new PropertyValue("prephasing"));
-		lane.properties.put("nbClusterInternalAndIlluminaFilter",new PropertyValue("1056"));
-		lane.properties.put("nbClusterIlluminaFilter",new PropertyValue("1056"));
-		lane.properties.put("percentClusterIlluminaFilter",new PropertyValue("99.99"));		
-		lane.properties.put("percentClusterInternalAndIlluminaFilter",new PropertyValue("99.99"));
+		lane.properties.put("nbCycleRead1",new PropertySingleValue("1056"));
+		lane.properties.put("nbCycleReadIndex1",new PropertySingleValue("1056"));
+		lane.properties.put("nbCycleRead2",new PropertySingleValue("1056"));
+		lane.properties.put("nbCycleReadIndex2",new PropertySingleValue("1056"));
+		lane.properties.put("nbCluster",new PropertySingleValue("1056"));
+		lane.properties.put("nbBaseInternalAndIlluminaFilter",new PropertySingleValue("1056"));
+		lane.properties.put("phasing",new PropertySingleValue("phasing"));
+		lane.properties.put("prephasing",new PropertySingleValue("prephasing"));
+		lane.properties.put("nbClusterInternalAndIlluminaFilter",new PropertySingleValue("1056"));
+		lane.properties.put("nbClusterIlluminaFilter",new PropertySingleValue("1056"));
+		lane.properties.put("percentClusterIlluminaFilter",new PropertySingleValue("99.99"));		
+		lane.properties.put("percentClusterInternalAndIlluminaFilter",new PropertySingleValue("99.99"));
 		
 		return lane;
 	}
@@ -431,18 +431,18 @@ public class RunValidationTest extends AbstractTests {
 		Lane lane = new Lane();
 		lane.number = 3;
 		
-		lane.properties.put("nbCycleRead1",new PropertyValue("1056"));
-		lane.properties.put("nbCycleReadIndex1",new PropertyValue("1056"));
-		lane.properties.put("nbCycleRead2",new PropertyValue("1056"));
-		lane.properties.put("nbCycleReadIndex2",new PropertyValue("1056"));
-		lane.properties.put("nbCluster",new PropertyValue("1056"));
-		lane.properties.put("nbBaseInternalAndIlluminaFilter",new PropertyValue("1056"));
-		lane.properties.put("phasing",new PropertyValue("phasing"));
-		lane.properties.put("prephasing",new PropertyValue("prephasing"));
-		lane.properties.put("nbClusterInternalAndIlluminaFilter",new PropertyValue("1056"));
-		lane.properties.put("nbClusterIlluminaFilter",new PropertyValue("1056"));
-		lane.properties.put("percentClusterIlluminaFilter",new PropertyValue("99.99"));		
-		lane.properties.put("percentClusterInternalAndIlluminaFilter",new PropertyValue("99.99"));
+		lane.properties.put("nbCycleRead1",new PropertySingleValue("1056"));
+		lane.properties.put("nbCycleReadIndex1",new PropertySingleValue("1056"));
+		lane.properties.put("nbCycleRead2",new PropertySingleValue("1056"));
+		lane.properties.put("nbCycleReadIndex2",new PropertySingleValue("1056"));
+		lane.properties.put("nbCluster",new PropertySingleValue("1056"));
+		lane.properties.put("nbBaseInternalAndIlluminaFilter",new PropertySingleValue("1056"));
+		lane.properties.put("phasing",new PropertySingleValue("phasing"));
+		lane.properties.put("prephasing",new PropertySingleValue("prephasing"));
+		lane.properties.put("nbClusterInternalAndIlluminaFilter",new PropertySingleValue("1056"));
+		lane.properties.put("nbClusterIlluminaFilter",new PropertySingleValue("1056"));
+		lane.properties.put("percentClusterIlluminaFilter",new PropertySingleValue("99.99"));		
+		lane.properties.put("percentClusterInternalAndIlluminaFilter",new PropertySingleValue("99.99"));
 		
 		return lane;
 	}
@@ -455,16 +455,16 @@ public class RunValidationTest extends AbstractTests {
 		readSet.projectCode = "PCODE"; 
 		readSet.sampleCode = "SPCODE";
 		readSet.sampleContainerCode = "SPCONTCODE";
-		//readSet.properties.put("insertLength", new PropertyValue("1056"));
-		readSet.properties.put("nbUsableBase", new PropertyValue("4565456465"));
-		readSet.properties.put("nbUsableCluster", new PropertyValue("132132132132"));
-		readSet.properties.put("q30",new PropertyValue("10.23"));
-		readSet.properties.put("score", new PropertyValue("0.636"));
-		readSet.properties.put("nbRead", new PropertyValue("33"));
+		//readSet.properties.put("insertLength", new PropertySingleValue("1056"));
+		readSet.properties.put("nbUsableBase", new PropertySingleValue("4565456465"));
+		readSet.properties.put("nbUsableCluster", new PropertySingleValue("132132132132"));
+		readSet.properties.put("q30",new PropertySingleValue("10.23"));
+		readSet.properties.put("score", new PropertySingleValue("0.636"));
+		readSet.properties.put("nbRead", new PropertySingleValue("33"));
 		
-		readSet.properties.put("nbClusterInternalAndIlluminaFilter", new PropertyValue("4565456465"));
-		readSet.properties.put("nbBaseInternalAndIlluminaFilter", new PropertyValue("4565456465"));
-		readSet.properties.put("fraction", new PropertyValue("0.2"));
+		readSet.properties.put("nbClusterInternalAndIlluminaFilter", new PropertySingleValue("4565456465"));
+		readSet.properties.put("nbBaseInternalAndIlluminaFilter", new PropertySingleValue("4565456465"));
+		readSet.properties.put("fraction", new PropertySingleValue("0.2"));
 
 		return readSet;
 	}
@@ -477,16 +477,16 @@ public class RunValidationTest extends AbstractTests {
 		readSet.projectCode = "PCODE"; 
 		readSet.sampleCode = "SPCODE";
 		readSet.sampleContainerCode = "SPCONTCODE";
-		//readSet.properties.put("insertLength", new PropertyValue("1056"));
-		readSet.properties.put("nbUsableBase", new PropertyValue("4565456465"));
-		readSet.properties.put("nbUsableCluster", new PropertyValue("132132132132"));
-		readSet.properties.put("q30",new PropertyValue("10.23"));
-		readSet.properties.put("score", new PropertyValue("0.636"));
-		readSet.properties.put("nbRead", new PropertyValue("33"));
+		//readSet.properties.put("insertLength", new PropertySingleValue("1056"));
+		readSet.properties.put("nbUsableBase", new PropertySingleValue("4565456465"));
+		readSet.properties.put("nbUsableCluster", new PropertySingleValue("132132132132"));
+		readSet.properties.put("q30",new PropertySingleValue("10.23"));
+		readSet.properties.put("score", new PropertySingleValue("0.636"));
+		readSet.properties.put("nbRead", new PropertySingleValue("33"));
 		
-		readSet.properties.put("nbClusterInternalAndIlluminaFilter", new PropertyValue("4565456465"));
-		readSet.properties.put("nbBaseInternalAndIlluminaFilter", new PropertyValue("4565456465"));
-		readSet.properties.put("fraction", new PropertyValue("0.2"));
+		readSet.properties.put("nbClusterInternalAndIlluminaFilter", new PropertySingleValue("4565456465"));
+		readSet.properties.put("nbBaseInternalAndIlluminaFilter", new PropertySingleValue("4565456465"));
+		readSet.properties.put("fraction", new PropertySingleValue("0.2"));
 
 		return readSet;
 	}
@@ -498,8 +498,8 @@ public class RunValidationTest extends AbstractTests {
 		file.typeCode = "RAW";
 		file.usable = Boolean.FALSE;
 		
-		file.properties.put("asciiEncoding", new PropertyValue("33"));
-		file.properties.put("label", new PropertyValue("READ1"));		
+		file.properties.put("asciiEncoding", new PropertySingleValue("33"));
+		file.properties.put("label", new PropertySingleValue("READ1"));		
 		return file;
 	}
 	 
@@ -510,8 +510,8 @@ public class RunValidationTest extends AbstractTests {
 		file.typeCode = "RAW";
 		file.usable = Boolean.FALSE;
 		
-		file.properties.put("asciiEncoding", new PropertyValue("33"));
-		file.properties.put("label", new PropertyValue("READ1"));		
+		file.properties.put("asciiEncoding", new PropertySingleValue("33"));
+		file.properties.put("label", new PropertySingleValue("READ1"));		
 		return file;
 	}
 	 
@@ -526,15 +526,15 @@ public class RunValidationTest extends AbstractTests {
 			run.traceInformation = new TraceInformation();
 			run.traceInformation.setTraceInformation("test");
 			
-			run.properties.put("nbCycle", new PropertyValue("25"));		
-			run.properties.put("nbClusterTotal", new PropertyValue("25"));
-			run.properties.put("nbClusterIlluminaFilter", new PropertyValue("25"));
-			run.properties.put("nbBase", new PropertyValue("25"));
-			run.properties.put("flowcellPosition", new PropertyValue("25"));
-			run.properties.put("rtaVersion", new PropertyValue("25"));
-			run.properties.put("flowcellVersion", new PropertyValue("25"));
-			run.properties.put("controlLane", new PropertyValue("25"));
-			run.properties.put("mismatch", new PropertyValue("False"));
+			run.properties.put("nbCycle", new PropertySingleValue("25"));		
+			run.properties.put("nbClusterTotal", new PropertySingleValue("25"));
+			run.properties.put("nbClusterIlluminaFilter", new PropertySingleValue("25"));
+			run.properties.put("nbBase", new PropertySingleValue("25"));
+			run.properties.put("flowcellPosition", new PropertySingleValue("25"));
+			run.properties.put("rtaVersion", new PropertySingleValue("25"));
+			run.properties.put("flowcellVersion", new PropertySingleValue("25"));
+			run.properties.put("controlLane", new PropertySingleValue("25"));
+			run.properties.put("mismatch", new PropertySingleValue("False"));
 			
 			run.instrumentUsed = new InstrumentUsed();
 			run.instrumentUsed.code = "HS7";
@@ -553,15 +553,15 @@ public class RunValidationTest extends AbstractTests {
 		run.traceInformation = new TraceInformation();
 		run.traceInformation.setTraceInformation("test");
 		
-		run.properties.put("nbCycle", new PropertyValue("25"));		
-		run.properties.put("nbClusterTotal", new PropertyValue("25"));
-		run.properties.put("nbClusterIlluminaFilter", new PropertyValue("25"));
-		run.properties.put("nbBase", new PropertyValue("25"));
-		run.properties.put("flowcellPosition", new PropertyValue("25"));
-		run.properties.put("rtaVersion", new PropertyValue("25"));
-		run.properties.put("flowcellVersion", new PropertyValue("25"));
-		run.properties.put("controlLane", new PropertyValue("25"));
-		run.properties.put("mismatch", new PropertyValue("False"));
+		run.properties.put("nbCycle", new PropertySingleValue("25"));		
+		run.properties.put("nbClusterTotal", new PropertySingleValue("25"));
+		run.properties.put("nbClusterIlluminaFilter", new PropertySingleValue("25"));
+		run.properties.put("nbBase", new PropertySingleValue("25"));
+		run.properties.put("flowcellPosition", new PropertySingleValue("25"));
+		run.properties.put("rtaVersion", new PropertySingleValue("25"));
+		run.properties.put("flowcellVersion", new PropertySingleValue("25"));
+		run.properties.put("controlLane", new PropertySingleValue("25"));
+		run.properties.put("mismatch", new PropertySingleValue("False"));
 		
 		run.instrumentUsed = new InstrumentUsed();
 		run.instrumentUsed.code = "HS7";

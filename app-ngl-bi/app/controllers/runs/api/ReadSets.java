@@ -18,7 +18,7 @@ import controllers.CommonController;
 import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 
-import static validation.utils.ConstraintsHelper.getKey;
+import static validation.utils.ValidationHelper.getKey;
 
 
 
@@ -42,7 +42,7 @@ public class ReadSets extends CommonController{
 			ReadSet readsetValue = filledForm.get();	
 			
 			//beginning code for validation
-			ctxVal.contextObjects.put("run", run);
+			ctxVal.putObject("run", run);
 			String rootKeyName1 = "lanes";
 			String rootKeyName2 = "";
 			String rootKeyName3 = "";
@@ -50,7 +50,7 @@ public class ReadSets extends CommonController{
 				Lane l = run.lanes.get(i);
 				rootKeyName2 = rootKeyName1+"["+i+"]";
 				if(l.number.equals(laneNumber)){ 
-					ctxVal.contextObjects.put("lane",l);
+					ctxVal.putObject("lane",l);
 					for(int j=0; l.readsets != null && j < l.readsets.size() ; j++){
 						rootKeyName3 = getKey(rootKeyName2,"readsets["+j+"]");
 					}
@@ -108,7 +108,7 @@ public class ReadSets extends CommonController{
 				} 
 				
 				//beginning code for validation
-				ctxVal.contextObjects.put("run", run);
+				ctxVal.putObject("run", run);
 				String rootKeyName1 = "lanes";
 				String rootKeyName2 = "";
 				boolean flagReadSet = false;
@@ -118,7 +118,7 @@ public class ReadSets extends CommonController{
 							//ReadSet find
 							flagReadSet = true;		
 							rootKeyName2 = getKey(rootKeyName1+"["+i+"]","readsets["+j+"]");
-							ctxVal.contextObjects.put("lane",run.lanes.get(i));
+							ctxVal.putObject("lane",run.lanes.get(i));
 						}
 					}
 				}

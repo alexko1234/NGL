@@ -1,6 +1,7 @@
 package utils;
 
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
@@ -35,16 +36,16 @@ public class RunMockHelper {
 		run.code = code;
 		run.typeCode = "RHS2000";
 		run.containerSupportCode = "FC00000";				
-		run.properties.put("nbCycle", new PropertyValue("25"));		
-		run.properties.put("nbClusterTotal", new PropertyValue("25"));
-		run.properties.put("nbClusterIlluminaFilter", new PropertyValue("25"));
-		run.properties.put("nbCycle", new PropertyValue("25"));
-		run.properties.put("nbBase", new PropertyValue("25"));
-		run.properties.put("flowcellPosition", new PropertyValue("25"));
-		run.properties.put("rtaVersion", new PropertyValue("25"));
-		run.properties.put("flowcellVersion", new PropertyValue("25"));
-		run.properties.put("controlLane", new PropertyValue("25"));
-		run.properties.put("mismatch", new PropertyValue("25"));
+		run.properties.put("nbCycle", new PropertySingleValue("25"));		
+		run.properties.put("nbClusterTotal", new PropertySingleValue("25"));
+		run.properties.put("nbClusterIlluminaFilter", new PropertySingleValue("25"));
+		run.properties.put("nbCycle", new PropertySingleValue("25"));
+		run.properties.put("nbBase", new PropertySingleValue("25"));
+		run.properties.put("flowcellPosition", new PropertySingleValue("25"));
+		run.properties.put("rtaVersion", new PropertySingleValue("25"));
+		run.properties.put("flowcellVersion", new PropertySingleValue("25"));
+		run.properties.put("controlLane", new PropertySingleValue("25"));
+		run.properties.put("mismatch", new PropertySingleValue("25"));
 		run.instrumentUsed = new InstrumentUsed();
 		run.instrumentUsed.categoryCode = "HISEQ2000";
 		run.instrumentUsed.code = "HS7";
@@ -54,18 +55,18 @@ public class RunMockHelper {
 	public static Lane newLane(int number){
 		Lane lane = new Lane();
 		lane.number = number;
-		lane.properties.put("nbCycleRead1",new PropertyValue("1056"));
-		lane.properties.put("nbCycleReadIndex1",new PropertyValue("1056"));
-		lane.properties.put("nbCycleRead2",new PropertyValue("1056"));
-		lane.properties.put("nbCycleReadIndex2",new PropertyValue("1056"));
-		lane.properties.put("nbCluster",new PropertyValue("1056"));
-		lane.properties.put("nbBaseInternalAndIlluminaFilter",new PropertyValue("1056"));
-		lane.properties.put("phasing",new PropertyValue("phasing"));
-		lane.properties.put("prephasing",new PropertyValue("prephasing"));
-		lane.properties.put("nbClusterInternalAndIlluminaFilter",new PropertyValue("1056"));
-		lane.properties.put("nbClusterIlluminaFilter",new PropertyValue("1056"));
-		lane.properties.put("percentClusterIlluminaFilter",new PropertyValue("99.99"));		
-		lane.properties.put("percentClusterInternalAndIlluminaFilter",new PropertyValue("99.99"));
+		lane.properties.put("nbCycleRead1",new PropertySingleValue("1056"));
+		lane.properties.put("nbCycleReadIndex1",new PropertySingleValue("1056"));
+		lane.properties.put("nbCycleRead2",new PropertySingleValue("1056"));
+		lane.properties.put("nbCycleReadIndex2",new PropertySingleValue("1056"));
+		lane.properties.put("nbCluster",new PropertySingleValue("1056"));
+		lane.properties.put("nbBaseInternalAndIlluminaFilter",new PropertySingleValue("1056"));
+		lane.properties.put("phasing",new PropertySingleValue("phasing"));
+		lane.properties.put("prephasing",new PropertySingleValue("prephasing"));
+		lane.properties.put("nbClusterInternalAndIlluminaFilter",new PropertySingleValue("1056"));
+		lane.properties.put("nbClusterIlluminaFilter",new PropertySingleValue("1056"));
+		lane.properties.put("percentClusterIlluminaFilter",new PropertySingleValue("99.99"));		
+		lane.properties.put("percentClusterInternalAndIlluminaFilter",new PropertySingleValue("99.99"));
 				
 		return lane;
 	}
@@ -78,15 +79,15 @@ public class RunMockHelper {
 		r.sampleCode = "samplecode1";
 		r.projectCode = "42";
 		r.sampleContainerCode = "container1";
-		r.properties.put("score",  new PropertyValue("150"));
-		//r.properties.put("insertLength",  new PropertyValue("1500"));
-		r.properties.put("q30",  new PropertyValue("1.23"));
-		r.properties.put("nbUsableBase",  new PropertyValue("1500000"));
-		r.properties.put("nbUsableCluster",  new PropertyValue("150000"));
-		r.properties.put("nbRead",  new PropertyValue("1500000"));
-		r.properties.put("nbBaseInternalAndIlluminaFilter",new PropertyValue("1056"));
-		r.properties.put("nbClusterInternalAndIlluminaFilter",new PropertyValue("1056"));
-		r.properties.put("fraction",new PropertyValue("0.2"));
+		r.properties.put("score",  new PropertySingleValue("150"));
+		//r.properties.put("insertLength",  new PropertyValueOne("1500"));
+		r.properties.put("q30",  new PropertySingleValue("1.23"));
+		r.properties.put("nbUsableBase",  new PropertySingleValue("1500000"));
+		r.properties.put("nbUsableCluster",  new PropertySingleValue("150000"));
+		r.properties.put("nbRead",  new PropertySingleValue("1500000"));
+		r.properties.put("nbBaseInternalAndIlluminaFilter",new PropertySingleValue("1056"));
+		r.properties.put("nbClusterInternalAndIlluminaFilter",new PropertySingleValue("1056"));
+		r.properties.put("fraction",new PropertySingleValue("0.2"));
 		
 		return r;
 	}
@@ -116,8 +117,8 @@ public class RunMockHelper {
 		file.typeCode = "42";
 		file.usable = true;
 		
-		file.properties.put("label", new PropertyValue("thelabel"));
-		file.properties.put("asciiEncoding", new PropertyValue("xxx"));
+		file.properties.put("label", new PropertySingleValue("thelabel"));
+		file.properties.put("asciiEncoding", new PropertySingleValue("xxx"));
 		
 		return file;
 		

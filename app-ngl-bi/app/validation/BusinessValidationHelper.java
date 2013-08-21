@@ -1,10 +1,10 @@
 package validation;
 
-import static validation.utils.ConstraintsHelper.addErrors;
-import static validation.utils.ConstraintsHelper.getKey;
-import static validation.utils.ConstraintsHelper.required;
-import static validation.utils.ConstraintsHelper.validateProperties;
-import static validation.utils.ConstraintsHelper.validateTraceInformation;
+import static validation.utils.ValidationHelper.addErrors;
+import static validation.utils.ValidationHelper.getKey;
+import static validation.utils.ValidationHelper.required;
+import static validation.utils.ValidationHelper.validateProperties;
+import static validation.utils.ValidationHelper.validateTraceInformation;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +18,7 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import net.vz.mongodb.jackson.DBQuery;
 import play.data.validation.ValidationError;
+import validation.utils.ContextValidation;
 
 import com.mongodb.MongoException;
 
@@ -106,7 +107,7 @@ public class BusinessValidationHelper {
 		validationContainerSupportCode(errors, run.containerSupportCode);
 		validateInstrumentUsed(errors, run.instrumentUsed);
 		validateLanes(errors, run,run.lanes, collectionName, "lanes");
-		validateProperties(errors, run.properties, RunPropertyDefinitionHelper.getRunPropertyDefinitions(), "properties");
+		validateProperties(new ContextValidation(errors), run.properties, RunPropertyDefinitionHelper.getRunPropertyDefinitions(), "properties");
 	}
 	
 	public static void validateLanes(Map<String, List<ValidationError>> errors,Run run,
@@ -140,7 +141,7 @@ public class BusinessValidationHelper {
 				}
 			}			
 		}
-		validateProperties(errors, lane.properties, RunPropertyDefinitionHelper.getLanePropertyDefinitions(), getKey(rootKeyName,"properties"));
+		validateProperties(new ContextValidation(errors), lane.properties, RunPropertyDefinitionHelper.getLanePropertyDefinitions(), getKey(rootKeyName,"properties"));
 		validateReadSets(errors, run,lane,lane.readsets, collectionName,  getKey(rootKeyName,"readsets"));		
 	}
 
@@ -194,7 +195,7 @@ public class BusinessValidationHelper {
 		}
 		required(errors, readSet.path, getKey(rootKeyName,"path"));
 		
-		validateProperties(errors, readSet.properties, RunPropertyDefinitionHelper.getReadSetPropertyDefinitions(), getKey(rootKeyName,"properties"));
+		validateProperties(new ContextValidation(errors), readSet.properties, RunPropertyDefinitionHelper.getReadSetPropertyDefinitions(), getKey(rootKeyName,"properties"));
 		validateFiles(errors, readSet.files, collectionName, getKey(rootKeyName,"files"));
 	}
 
@@ -216,7 +217,7 @@ public class BusinessValidationHelper {
 		required(errors, file.fullname, getKey(rootKeyName,"fullname"));
 		required(errors, file.typeCode, getKey(rootKeyName,"typeCode"));
 		required(errors, file.usable, getKey(rootKeyName,"usable"));		
-		validateProperties(errors, file.properties, RunPropertyDefinitionHelper.getFilePropertyDefinitions(), getKey(rootKeyName,"properties"));		
+		validateProperties(new ContextValidation(errors), file.properties, RunPropertyDefinitionHelper.getFilePropertyDefinitions(), getKey(rootKeyName,"properties"));		
 	}
 	
 	/* dno

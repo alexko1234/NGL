@@ -42,7 +42,7 @@ public class Lanes extends CommonController{
 			Lane laneValue = filledForm.get();
 			
 			//BusinessValidationHelper.validateLane(filledForm.errors(), run,laneValue, Constants.RUN_ILLUMINA_COLL_NAME, null);
-			ctxVal.contextObjects.put("run", run);
+			ctxVal.putObject("run", run);
 			String rootKeyName = "lanes";
 			
 			int laneNumber = laneValue.number;
