@@ -37,7 +37,7 @@ import play.test.Helpers;
 import utils.AbstractTests;
 import validation.DescriptionValidationHelper;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.ConstraintsHelper;
+import validation.utils.ValidationHelper;
 import validation.utils.ContextValidation;
 
 public class DescriptionValidationHelperTest extends AbstractTests{
