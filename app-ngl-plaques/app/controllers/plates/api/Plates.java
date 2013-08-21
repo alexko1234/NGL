@@ -1,8 +1,8 @@
 package controllers.plates.api;
 
 import static play.data.Form.form;
-import static validation.utils.ConstraintsHelper.addErrors;
-import static validation.utils.ConstraintsHelper.required;
+import static validation.utils.ValidationHelper.addErrors;
+import static validation.utils.ValidationHelper.required;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
