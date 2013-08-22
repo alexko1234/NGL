@@ -2,20 +2,10 @@ package validation;
 
 import validation.utils.ValidationConstants;
 import  validation.utils.ValidationHelper;
-
-
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
-import net.vz.mongodb.jackson.DBQuery;
-import fr.cea.ig.MongoDBDAO;
-import play.data.validation.ValidationError;
-import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.State;
 import models.laboratory.common.instance.Comment;
-import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
@@ -25,7 +15,6 @@ import models.laboratory.reagent.instance.ReagentInstance;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.stock.instance.Stock;
 import models.utils.InstanceConstants;
@@ -44,19 +33,15 @@ public class InstanceValidationHelper {
 	public static void validationSampleCodes(List<String> sampleCodes,ContextValidation contextValidation){
 		BusinessValidationHelper.validateRequiredInstanceCodes(contextValidation.errors, sampleCodes,"sampleCodes",Sample.class,InstanceConstants.SAMPLE_COLL_NAME,false);
 	}
-
 	
 	public static void validationExperimentCodes(List<String> experimentCodes,ContextValidation contextValidation){
 		BusinessValidationHelper.validateExistInstanceCodes(contextValidation.errors, experimentCodes, "fromExperimentTypeCodes", Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME, false);
 	}
 
-
 	public static void validationExperimentCode(String experimentCode,
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateExistInstanceCode(contextValidation.errors, experimentCode, "fromPurifingCode", Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME, false);		
 	}
-
-
 
 	public static void validationSampleCode(String sampleCode,
 			ContextValidation contextValidation) {
@@ -82,7 +67,7 @@ public class InstanceValidationHelper {
 	public static void validationContents(List<Content> contents,
 			ContextValidation contextValidation) {
 
-		if(ValidationHelper.required(contextValidation.errors, contents, "container.contents")){
+		if(ValidationHelper.required(contextValidation, contents, "container.contents")){
 			for(Content content :contents){
 				content.validate(contextValidation);
 			}
@@ -98,42 +83,38 @@ public class InstanceValidationHelper {
 
 	public static void validationContainerSupport(ContainerSupport support,
 			ContextValidation contextValidation) {
-		if(ValidationHelper.required(contextValidation.errors,support,"container.support")) {
+		if(ValidationHelper.required(contextValidation, support, "container.support")) {
 			support.validate(contextValidation);
 		}
 		
 	}
 	
-	public static void validationReagentInstanceCode(
-			String reagentInstanceCode, ContextValidation contextValidation) {
+	public static void validationReagentInstanceCode(String reagentInstanceCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation.errors, reagentInstanceCode, "reagentInstanceCode", ReagentInstance.class,InstanceConstants.REAGENT_INSTANCE_COLL_NAME);
 	}
 	
 	public static void validationLanes(List<Lane> lanes, ContextValidation contextValidation) {		
 		//TODO number of lanes (depends of the type run and the mode incremental insert or full insert !!!)
 		//TODO validate lane number
-				
 		if(null != lanes ) {
-			String rootKeyName = ValidationHelper.getKey(contextValidation.rootKeyName, "lanes");
+			String rootKeyName = contextValidation.getKey("lanes");
 			int index = 0;			
 			Set<Integer> laneNumbers = new TreeSet<Integer>();
 			for (Lane lane : lanes) {
 				contextValidation.rootKeyName = rootKeyName+"["+index+++"]";
 				lane.validate(contextValidation);
 				if(laneNumbers.contains(lane.number)){
-					ValidationHelper.addErrors(contextValidation.errors, ValidationHelper.getKey(contextValidation.rootKeyName,"number"), ValidationConstants.ERROR_NOTUNIQUE,lane.number);
+					contextValidation.addErrors("number", ValidationConstants.ERROR_NOTUNIQUE,lane.number);
 				}				
 				laneNumbers.add(lane.number);				
 			}
 		}
 
-	}
-	
+	}	
 	
 	public static void validationReadSets(List<ReadSet> readsets, ContextValidation contextValidation) {
-		
 		if(null != readsets) {
-			String rootKeyName = ValidationHelper.getKey(contextValidation.rootKeyName,"readsets");
+			String rootKeyName = contextValidation.getKey("readsets");
 			int index = 0;
 			for (ReadSet readSet : readsets) {
 				contextValidation.rootKeyName = rootKeyName+"["+index+++"]";
@@ -143,13 +124,9 @@ public class InstanceValidationHelper {
 		
 	}
 	
-	
-	
-	
 	public static void validationFiles(List<File> files, ContextValidation contextValidation) {
-
 		if(null != files) {	
-			String rootKeyName = ValidationHelper.getKey(contextValidation.rootKeyName,"files");
+			String rootKeyName = contextValidation.getKey("files");
 			int index = 0;
 			for (File file : files) {
 				contextValidation.rootKeyName = rootKeyName+"["+index+++"]";
@@ -159,5 +136,4 @@ public class InstanceValidationHelper {
 
 	}
 
-	
 }

@@ -1,15 +1,8 @@
 package validation;
 
 import static org.fest.assertions.Assertions.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
-import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
@@ -20,24 +13,18 @@ import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
-import models.laboratory.project.description.ProjectType;
 import models.laboratory.reagent.description.ReagentType;
-import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import play.test.Helpers;
 import utils.AbstractTests;
 import validation.DescriptionValidationHelper;
-import validation.utils.BusinessValidationHelper;
-import validation.utils.ValidationHelper;
 import validation.utils.ContextValidation;
 
 public class DescriptionValidationHelperTest extends AbstractTests{
@@ -488,7 +475,7 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	
 	//TODO
 	public void validationProjectTest() {
-		ContextValidation contextValidation=new ContextValidation();
+		//ContextValidation contextValidation=new ContextValidation();
 		//DescriptionValidationHelper.validationProcess(null, null, contextValidation);
 	}
 

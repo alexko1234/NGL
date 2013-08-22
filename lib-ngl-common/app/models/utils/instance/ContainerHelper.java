@@ -3,25 +3,18 @@ package models.utils.instance;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.SampleUsed;
-import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
-import models.laboratory.sample.description.dao.SampleTypeDAO;
 import models.laboratory.sample.instance.Sample;
-import models.utils.HelperObjects;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-import play.Logger;
 import validation.utils.BusinessValidationHelper;
 
 public class ContainerHelper {

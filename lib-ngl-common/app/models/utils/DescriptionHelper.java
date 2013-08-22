@@ -5,10 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.common.description.CommonInfoType;
@@ -17,7 +14,6 @@ import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
-import models.laboratory.common.description.StateCategory;
 import models.laboratory.common.description.Value;
 import models.laboratory.common.description.dao.ObjectTypeDAO;
 import models.laboratory.experiment.description.ExperimentCategory;
@@ -37,7 +33,6 @@ import models.laboratory.sample.description.SampleType;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 import play.Logger;
-import play.data.validation.ValidationError;
 import play.db.DB;
 import play.api.modules.spring.Spring;
 

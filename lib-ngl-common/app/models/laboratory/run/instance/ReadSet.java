@@ -20,6 +20,7 @@ import validation.InstanceValidationHelper;
 import validation.utils.ContextValidation;
 import validation.utils.RunPropertyDefinitionHelper;
 import validation.utils.ValidationConstants;
+import validation.utils.ValidationHelper;
 import static validation.utils.ValidationHelper.*;
 
 public class ReadSet implements IValidation{
@@ -65,7 +66,7 @@ public class ReadSet implements IValidation{
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		
-		if(required(contextValidation.errors, this.code, getKey(contextValidation.rootKeyName,"code"))){
+		if(ValidationHelper.required(contextValidation, this.code, "code")){
 			
 			Lane lane = (Lane) contextValidation.getObject("lane");
 			Run run = (Run) contextValidation.getObject("run");
@@ -74,18 +75,18 @@ public class ReadSet implements IValidation{
 			Run runExist = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("lanes.readsets.code", this.code));
 			
 			if(runExist != null && run._id == null){ //when new run 
-				addErrors(contextValidation.errors, getKey(contextValidation.rootKeyName,"code"),ValidationConstants.ERROR_NOTUNIQUE, this.code);
+				contextValidation.addErrors("code",ValidationConstants.ERROR_NOTUNIQUE, this.code);
 				
 			} else if(runExist != null && run._id != null) { //when run exist
 				if(!runExist.code.equals(run.code) || !runExist._id.equals(run._id)) {
-					addErrors(contextValidation.errors, getKey(contextValidation.rootKeyName,"code"), ValidationConstants.ERROR_NOTUNIQUE, this.code);
+					contextValidation.addErrors("code", ValidationConstants.ERROR_NOTUNIQUE, this.code);
 				}else if(lane.number != -1){
 					for(Lane l:run.lanes){
 						if(l.readsets!=null){ 
 							for(ReadSet r: l.readsets){
 								if(r.code.equals(this.code)){
 									if(l.number != lane.number){
-										addErrors(contextValidation.errors,getKey(contextValidation.rootKeyName,"code"), ValidationConstants.ERROR_NOTUNIQUE, this.code);
+										contextValidation.addErrors("code", ValidationConstants.ERROR_NOTUNIQUE, this.code);
 										break;
 									}
 								}
@@ -96,19 +97,20 @@ public class ReadSet implements IValidation{
 			}
 			
 		}
-		if(required(contextValidation.errors, this.projectCode, getKey(contextValidation.rootKeyName,"projectCode"))){
+		
+		if(ValidationHelper.required(contextValidation, this.projectCode, "projectCode")){
 			//TODO validate if exist readSet.projectCode
 		}
-		if(required(contextValidation.errors, this.sampleCode, getKey(contextValidation.rootKeyName,"sampleCode"))){
+		if(ValidationHelper.required(contextValidation, this.sampleCode, "sampleCode")){
 			//TODO validate if exist
 		}
-		if(required(contextValidation.errors, this.sampleContainerCode, getKey(contextValidation.rootKeyName,"sampleContainerCode"))){
+		if(ValidationHelper.required(contextValidation, this.sampleContainerCode, "sampleContainerCode")){
 			//TODO validate if exist
 		}
-		required(contextValidation.errors, this.path, getKey(contextValidation.rootKeyName,"path"));
+		ValidationHelper.required(contextValidation, this.path, "path");
 		
-		String rootKeyNameProp = getKey(contextValidation.rootKeyName,"properties");
-		validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getReadSetPropertyDefinitions(), rootKeyNameProp);
+		
+		validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getReadSetPropertyDefinitions(), "");
 		
 		contextValidation.putObject("readset", this);
 		InstanceValidationHelper.validationFiles(this.files, contextValidation);

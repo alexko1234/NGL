@@ -3,29 +3,13 @@ package validation.utils;
 import static validation.utils.ValidationHelper.addErrors;
 import static validation.utils.ValidationHelper.getKey;
 import static validation.utils.ValidationHelper.required;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import models.laboratory.container.description.ContainerCategory;
-import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.Content;
-import models.laboratory.container.instance.SampleUsed;
-import models.laboratory.project.instance.Project;
-import models.laboratory.run.instance.Lane;
-import models.laboratory.sample.instance.Sample;
-import models.utils.HelperObjects;
-import models.utils.InstanceConstants;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 import play.Logger;
 import play.data.validation.ValidationError;
-
-import com.mongodb.MongoException;
-
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
@@ -60,7 +44,7 @@ public class BusinessValidationHelper {
 		// Unique code is validate is key "_id" not in map contextObjects or if value of key "_id" is null
 		if(contextValidation.getObject("_id") == null){
 			if(null!=code && MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
-				addErrors(contextValidation.errors, FIELD_CODE, ERROR_NOTUNIQUE, code);
+				contextValidation.addErrors( FIELD_CODE, ERROR_NOTUNIQUE, code);
 				return false;
 			}else if (code!=null){
 				return false;

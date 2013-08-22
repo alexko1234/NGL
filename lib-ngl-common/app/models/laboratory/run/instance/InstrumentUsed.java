@@ -1,11 +1,9 @@
 package models.laboratory.run.instance;
 
-import static validation.utils.ValidationHelper.required;
-import models.utils.IValidation;
-
 import org.codehaus.jackson.annotate.JsonIgnore;
-
+import models.utils.IValidation;
 import validation.utils.ContextValidation;
+import validation.utils.ValidationHelper;
 
 public class InstrumentUsed implements IValidation {
 
@@ -22,11 +20,11 @@ public class InstrumentUsed implements IValidation {
 		//DescriptionValidationHelper.validationInstrumentCode(code,contextValidation);
 		//DescriptionValidationHelper.validationInstrumentCategoryCode(code,contextValidation);
 		
-		if(required(contextValidation.errors, this, "instrumentUsed")){
-			if(required(contextValidation.errors, this.code, "instrumentUsed.code")){
+		if(ValidationHelper.required(contextValidation, this, "instrumentUsed")){
+			if(ValidationHelper.required(contextValidation, this.code, "instrumentUsed.code")){
 				//TODO valid if exist
 			}
-			if(required(contextValidation.errors, this.categoryCode, "instrumentUsed.categoryCode")){
+			if(ValidationHelper.required(contextValidation, this.categoryCode, "instrumentUsed.categoryCode")){
 				//TODO valid if exist
 			}
 		}

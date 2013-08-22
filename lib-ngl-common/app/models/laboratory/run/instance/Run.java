@@ -1,12 +1,9 @@
 package models.laboratory.run.instance;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import models.laboratory.common.description.PropertyDefinition;
 import validation.DescriptionValidationHelper;
 import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
@@ -19,7 +16,6 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.utils.IValidation;
 import models.utils.InstanceConstants;
-
 import fr.cea.ig.DBObject;
 
 
@@ -49,9 +45,8 @@ public class Run extends DBObject implements IValidation {
     public void validate(ContextValidation contextValidation) {
             
         	contextValidation.putObject("_id",this._id);
-            
 
-        	if(ValidationHelper.required(contextValidation.errors, this.code, ValidationHelper.getKey(contextValidation.rootKeyName,"code"))){        
+        	if(ValidationHelper.required(contextValidation, this.code, contextValidation.getKey("code"))){        
         
                 BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Run.class, InstanceConstants.RUN_ILLUMINA_COLL_NAME);		
             }
@@ -66,8 +61,9 @@ public class Run extends DBObject implements IValidation {
         	contextValidation.putObject("run", this);
             InstanceValidationHelper.validationLanes(this.lanes, contextValidation);
 
-            String rootKeyNameProp = ValidationHelper.getKey("",".properties");
-            ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getRunPropertyDefinitions(), rootKeyNameProp);
+            contextValidation.rootKeyName = "";
+            //String rootKeyNameProp = "properties";
+            ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getRunPropertyDefinitions(), "");
 		
     }
 

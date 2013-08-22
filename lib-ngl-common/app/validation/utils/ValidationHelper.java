@@ -1,13 +1,10 @@
 package validation.utils;
 
 
-
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +16,6 @@ import models.laboratory.common.description.Value;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertyListValue;
 import models.laboratory.common.instance.property.PropertyMapValue;
 import models.laboratory.common.instance.property.PropertyObjectListValue;
@@ -280,7 +276,7 @@ public class ValidationHelper {
 	 * @param rootKeyName
 	 * @param property
 	 * @return
-	 * @deprecated used ContextValidation.addErrors
+	 * @deprecated used ContextValidation.getKey
 	 */
 	public static String getKey(String rootKeyName, String property) {
 		return (StringUtils.isBlank(rootKeyName))?property: rootKeyName+"."+property;
@@ -653,7 +649,6 @@ public class ValidationHelper {
 	 */
 	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertyMapValue propertyValue, PropertyDefinition propertyDefinition){
 		if(propertyDefinition.choiceInList){
-			int i = 0;
 			for(Entry<String, ?> entryValue : propertyValue.value.entrySet()){
 				Object value = entryValue.getValue();
 				if(!checkIfExistInTheList(propertyDefinition, value.toString())){

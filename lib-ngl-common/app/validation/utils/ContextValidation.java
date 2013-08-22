@@ -1,7 +1,6 @@
 package validation.utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -28,9 +27,10 @@ public class ContextValidation {
 
 	
 	public Object getObject(String key){
-		if(contextObjects.containsKey(key)){
+		if(contextObjects.containsKey(key)) {
 			return contextObjects.get(key);
-		}else{
+		}
+		else {
 			return null;
 		}
 	}

@@ -13,9 +13,7 @@ import models.laboratory.sample.instance.Sample;
 import models.laboratory.stock.instance.Stock;
 import models.utils.InstanceConstants;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

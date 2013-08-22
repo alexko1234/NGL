@@ -5,11 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.Level.CODE;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
