@@ -109,9 +109,10 @@ public class ReadSet implements IValidation{
 		}
 		ValidationHelper.required(contextValidation, this.path, "path");
 		
-		
+		contextValidation.rootKeyName = contextValidation.getKey("properties");
 		validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getReadSetPropertyDefinitions(), "");
 		
+		contextValidation.rootKeyName = contextValidation.removeKey("properties");
 		contextValidation.putObject("readset", this);
 		InstanceValidationHelper.validationFiles(this.files, contextValidation);
 		

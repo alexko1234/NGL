@@ -36,9 +36,9 @@ public class File extends DBObject implements IValidation {
 		
 		Run run = (Run) contextValidation.getObject("run");
 		
-		//Validate unique file.code if not already exist
+		//Validate unique file.code if not already exists
 		Run runExist = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("lanes.readsets.files.fullname", this.fullname));
-		if(runExist != null && run._id == null){ //when new run
+		if (runExist != null && run._id == null) { //when new run
 			contextValidation.addErrors("fullname",ValidationConstants.ERROR_NOTUNIQUE, this.fullname);
 		}
 		 
@@ -47,7 +47,9 @@ public class File extends DBObject implements IValidation {
 		ValidationHelper.required(contextValidation, this.typeCode, "typeCode");
 		ValidationHelper.required(contextValidation, this.usable, "usable");	
 		
-		ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getFilePropertyDefinitions(), "");		
+		contextValidation.rootKeyName = contextValidation.getKey("properties");
+		ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getFilePropertyDefinitions(), "");
+		contextValidation.rootKeyName = contextValidation.removeKey("properties");
 		
 	}
 

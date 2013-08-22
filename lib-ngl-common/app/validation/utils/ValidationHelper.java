@@ -45,6 +45,7 @@ public class ValidationHelper {
 		for(String key : multimap.keySet()){
 			Collection<PropertyDefinition> pdefs = multimap.get(key); 
 			PropertyValue pv = inputProperties.get(key);
+			
 			if(required(contextValidation, pv, key)){
 				contextValidation.putObject("propertyDefinitions", pdefs);				
 				pv.validate(contextValidation);

@@ -61,8 +61,10 @@ public class Lane implements IValidation{
 			}
 		}
 		
+		contextValidation.rootKeyName = contextValidation.getKey("properties");
 		ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getLanePropertyDefinitions(), "");
 		
+		contextValidation.rootKeyName = contextValidation.removeKey("properties");
 		contextValidation.putObject("lane", this);
 		InstanceValidationHelper.validationReadSets(this.readsets, contextValidation);
 

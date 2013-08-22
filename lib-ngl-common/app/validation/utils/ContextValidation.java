@@ -64,4 +64,25 @@ public class ContextValidation {
 	public String getKey(String property) {
 		return (StringUtils.isBlank(rootKeyName))?property: rootKeyName+"."+property;
 	}
+
+	
+	/**
+	 * 
+	 * @param property
+	 * @return
+	 */	
+	public String removeKey(String property) {
+		// TODO Auto-generated method stub
+		String strReturn = "";
+		if (StringUtils.isBlank(rootKeyName)) {
+			strReturn = "";
+		}
+		if (rootKeyName == property ) {
+			strReturn = "";
+		}
+		else {
+			strReturn = rootKeyName.substring(0, rootKeyName.length()-property.length()-1); 
+		}
+		return strReturn;
+	}
 }
