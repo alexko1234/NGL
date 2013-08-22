@@ -23,7 +23,6 @@ import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
-import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.Test;

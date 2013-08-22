@@ -1,9 +1,7 @@
 package controllers.runs.api;
 
 import static play.data.Form.form;
-
 import java.util.List;
-
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -17,8 +15,6 @@ import validation.utils.ContextValidation;
 import controllers.CommonController;
 import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
-
-import static validation.utils.ValidationHelper.getKey;
 
 
 
@@ -52,7 +48,7 @@ public class ReadSets extends CommonController{
 				if(l.number.equals(laneNumber)){ 
 					ctxVal.putObject("lane",l);
 					for(int j=0; l.readsets != null && j < l.readsets.size() ; j++){
-						rootKeyName3 = getKey(rootKeyName2,"readsets["+j+"]");
+						rootKeyName3 = rootKeyName2 + ".readsets["+j+"]"; 
 					}
 					break;
 				}
@@ -117,7 +113,8 @@ public class ReadSets extends CommonController{
 						if(run.lanes.get(i).readsets.get(j).code.equals(readsetValue.code)){
 							//ReadSet find
 							flagReadSet = true;		
-							rootKeyName2 = getKey(rootKeyName1+"["+i+"]","readsets["+j+"]");
+							ctxVal.rootKeyName = rootKeyName1+"["+i+"]";
+							rootKeyName2 = ctxVal.getKey("readsets["+j+"]");
 							ctxVal.putObject("lane",run.lanes.get(i));
 						}
 					}

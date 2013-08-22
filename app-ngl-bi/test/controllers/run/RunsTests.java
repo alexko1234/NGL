@@ -12,7 +12,6 @@ import static play.test.Helpers.status;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;

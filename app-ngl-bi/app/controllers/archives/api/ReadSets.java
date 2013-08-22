@@ -18,17 +18,10 @@ import controllers.Constants;
 
 import play.Logger;
 import play.data.DynamicForm;
-import play.data.DynamicForm.Dynamic;
-import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-import validation.BusinessValidationHelper;
-import validation.utils.ValidationHelper;
-import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import fr.cea.ig.MongoDBDAO;
-
-import play.i18n.*;
 
 import controllers.CommonController;
 /**

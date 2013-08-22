@@ -6,10 +6,6 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
-
-import org.codehaus.jackson.JsonNode;
-
-import play.Logger;
 import play.data.Form;
 import static play.data.Form.form;
 import play.libs.Json;

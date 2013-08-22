@@ -2,9 +2,6 @@ package controllers.runs.tpl;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import jsmessages.JsMessages;
-
 import play.Routes;
 import play.i18n.Messages;
 import play.mvc.Controller;

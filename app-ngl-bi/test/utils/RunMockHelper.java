@@ -1,6 +1,5 @@
 package utils;
 
-import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.File;
