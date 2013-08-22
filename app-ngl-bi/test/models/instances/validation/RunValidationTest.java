@@ -650,7 +650,7 @@ public class RunValidationTest extends AbstractTests {
 		//run.properties.put("nbCycle", new PropertyValue(""));		
 		run.properties.put("nbClusterTotal", new PropertySingleValue(""));
 		run.properties.put("nbClusterIlluminaFilter", new PropertySingleValue(""));
-		run.properties.put("nbBase", new PropertySingleValue("abc"));
+		run.properties.put("nbBase", new PropertySingleValue(""));
 		run.properties.put("flowcellPosition", new PropertySingleValue(""));
 		run.properties.put("rtaVersion", new PropertySingleValue(""));
 		run.properties.put("flowcellVersion", new PropertySingleValue(""));
