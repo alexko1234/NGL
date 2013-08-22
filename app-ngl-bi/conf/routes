@@ -5,7 +5,7 @@
 # Home page
 GET     /                           				controllers.main.tpl.Main.home()
 
-#ngs-rs api
+#ngs-rg api
 GET		/api/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
 GET		/api/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experiments()
 GET		/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: java.lang.String)
