@@ -48,8 +48,7 @@ public class Run extends DBObject implements IValidation {
     @Override
     public void validate(ContextValidation contextValidation) {
             
-
-        contextValidation.putObject("_id",this._id);
+        	contextValidation.putObject("_id",this._id);
             
 
         	if(ValidationHelper.required(contextValidation.errors, this.code, ValidationHelper.getKey(contextValidation.rootKeyName,"code"))){        
@@ -64,14 +63,8 @@ public class Run extends DBObject implements IValidation {
             
             this.instrumentUsed.validate(contextValidation); 
                 
-
         	contextValidation.putObject("run", this);
-
-
             InstanceValidationHelper.validationLanes(this.lanes, contextValidation);
-            
-
-
 
             String rootKeyNameProp = ValidationHelper.getKey("",".properties");
             ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getRunPropertyDefinitions(), rootKeyNameProp);
@@ -88,11 +81,9 @@ public class Run extends DBObject implements IValidation {
         flowcellVersion
         controlLane
         mismatch
-     */
-    
-    /*
-    id du depot flowcell ???
-    id du type de sequençage ???
+
+	    id du depot flowcell ???
+	    id du type de sequençage ???
     */
     
 }
