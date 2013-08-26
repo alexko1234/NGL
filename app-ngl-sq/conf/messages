@@ -63,6 +63,12 @@ experiments.status = Statut
 experiments.intrumentUsedType = Type d'instrument
 experiments.tabs.search = Recherche
 experiments.generateOutput = Generer tube sortie
+experiment.noComments = Pas de commentaire
+experiment.leaveComment = Laissez votre commentaire
+experiment.addComment = Ajouter un commentaire
+experiment.seeComments = Voir les commentaires
+experiment.sendComment = Envoyer
+experiment.cancelComment = Annuler
 
 experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée

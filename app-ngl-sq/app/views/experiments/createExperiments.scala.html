@@ -291,8 +291,8 @@ th {
 					<div class="row">
 						<form class="form-inline" style="padding-left: 10%" ng-init="setExperimentProperties(@experimentProperties)">
 							<div class="span3">
-								<div class="control-group" ng-repeat="expp in experiment.experimentProperties.inputs" ng-switch on="expp.level.code">
-								<div ng-switch-when="Experiment">
+								<div class="control-group" ng-repeat="expp in experiment.experimentProperties.inputs" ng-switch on="getLevel(expp.levels,'Experiment')">
+								<div ng-switch-when="true">
 								<label class="control-label">{{expp.name}}</label>
 									<div class="controls"  ng-switch on="expp.choiceInList">
 										<input type="text" ng-switch-when="false" class="input-small"
@@ -344,8 +344,8 @@ th {
 											<hr>
 								</form>	
 						<form class="form-inline" style="padding-left: 10%">
-							<div ng-repeat="instp in experiment.instrumentProperties.inputs"  ng-switch on="instp.level.code">
-								<div class="control-group" ng-switch-when="Instrument">
+							<div ng-repeat="instp in experiment.instrumentProperties.inputs"  ng-switch on="getLevel(instp.levels,'Instrument')">
+								<div class="control-group" ng-switch-when="true">
 									<label class="control-label">{{instp.name}}</label>
 									<div class="controls"  ng-switch on="instp.choiceInList">
 										<input type="text" ng-switch-when="false" class="input-small"
@@ -384,10 +384,8 @@ th {
 					<div class="accordion-group">
 						<div class="accordion-heading">
 							<a data-target="#myModal" role="button"
-								class="btn btn-small btn-primary pull-right" data-toggle="modal">Add
-								comment</a> <a class="accordion-toggle" data-toggle="collapse"
-								data-parent="#comments" data-target="#collapseFour"> See
-								comments </a>
+								class="btn btn-small btn-primary pull-right" data-toggle="modal">@Messages("experiment.addComment")</a> <a class="accordion-toggle" data-toggle="collapse"
+								data-parent="#comments" data-target="#collapseFour"> @Messages("experiment.seeComments")</a>
 						</div>
 						<div id="collapseFour" class="accordion-body collapse out">
 							<div class="accordion-inner">
@@ -406,7 +404,7 @@ th {
 								</div>
 								
 								<div ng-switch-when="true">
-									<h2>No comments</h2>
+									<h2>@Messages("experiment.noComments")</h2>
 								
 								</div>
 								</div>
@@ -421,15 +419,15 @@ th {
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">×</button>
-					<h3 id="myModalLabel">Adding comment</h3>
+					<h3 id="myModalLabel">@Messages("experiment.addComment")</h3>
 				</div>
 				<div class="modal-body">
-					Leave your comment here:<br>
+					@Messages("experiment.leaveComment"): <br>
 					<textarea rows="15" ng-model="experiment.comment" style="width: 489px;"></textarea>
 				</div>
 				<div class="modal-footer">
-					<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+					<button class="btn" data-dismiss="modal" aria-hidden="true">@Messages("experiment.cancelComment")</button>
 					<button data-dismiss="modal" class="btn btn-primary"
-						ng-click="experiment.comments.save();">Post</button>
+						ng-click="experiment.comments.save();">@Messages("experiment.sendComment")</button>
 				</div>
 			</div>

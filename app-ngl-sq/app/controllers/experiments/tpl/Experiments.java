@@ -56,39 +56,6 @@ public class Experiments extends Controller{
 	}
 	
 	public static Result editExperiment(String experimentTypeCode){
-			 
-		//TODO: Multi header datatable
-		//TODO: Datatable with tubes
-		/*List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, false));	
-		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes"), true, false, false));	
-		columns.add(DatatableHelpers.getColumn("mesuredVolume.value", Messages.get("experiments.table.volume.value"),true, true, false));	
-		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("containers.table.sampleCodes"), true, false, false));		
-		columns.add(DatatableHelpers.getColumn("valid", Messages.get("containers.table.valid"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("containers.table.stateCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes"), true, false, false));
-			
-		List<PropertyDefinition> props = experimentProperties(experimentTypeCode);
-		
-		DatatableConfig config = new DatatableConfig(columns);
-		config.button = true;
-		config.edit = true;
-		
-		List<String> ids = new ArrayList<String>();
-		ids.add("experimentProperties");
-		List<String> ids2 = new ArrayList<String>();
-		ids2.add("instrumentProperties");
-		List<String> ids3 = new ArrayList<String>();
-		ids3.add("inputContainer");
-		List<String> ids4 = new ArrayList<String>();
-		ids4.add("outputContainer");
-		
-		DatatableHelpers.addExtraHeaders(config, 1,DatatableHelpers.getDynamicHeader("Instrument", ids2));
-		DatatableHelpers.addExtraHeaders(config, 1,DatatableHelpers.getDynamicHeader("Experiment", ids));
-		DatatableHelpers.addExtraHeaders(config, 0,DatatableHelpers.getDynamicHeader("Inputs", ids3));
-		DatatableHelpers.addExtraHeaders(config, 0,DatatableHelpers.getDynamicHeader("Outputs", ids4));
-		*/
 		ExperimentType experimentType = null;
 		try{
 			experimentType = ExperimentType.find.findByCode(experimentTypeCode);
@@ -152,7 +119,9 @@ public class Experiments extends Controller{
   	    		controllers.experiments.api.routes.javascript.Experiments.updateContainers(),
   	    		controllers.lists.api.routes.javascript.Lists.protocols(),
   	    		controllers.lists.api.routes.javascript.Lists.resolutions(),
-  	    		controllers.experiments.tpl.routes.javascript.Experiments.getEditExperimentColumns()
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.getEditExperimentColumns(),
+  	    		controllers.experiments.api.routes.javascript.Experiments.create()
+  	    		
   	      )	  	      
   	    );
   	}

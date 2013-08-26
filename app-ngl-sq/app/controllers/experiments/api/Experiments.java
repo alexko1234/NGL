@@ -239,6 +239,23 @@ public class Experiments extends CommonController{
 		}
 	}
 
+	
+	public static Result create(){
+		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
+		Experiment exp = experimentFilledForm.get();
+		
+		if(exp._id == null){
+			exp.code = CodeHelper.generateExperiementCode(exp);
+			exp.stateCode = "N";
+		}
+		
+		exp = traceInformation(exp);
+		
+		exp = (Experiment) MongoDBDAO.save(Constants.EXPERIMENT_COLL_NAME, exp);
+		
+		return ok(Json.toJson(exp));
+	}
+	
 	/**
 	 * Add/Create trace informations to the experiment object
 	 * @param exp: the Experiment object
@@ -252,7 +269,7 @@ public class Experiments extends CommonController{
 		} else {
 			exp.traceInformation.setTraceInformation(PermissionHelper.getCurrentUser(session()));
 		}
-
+		
 		return exp;
 	}
 }

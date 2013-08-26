@@ -1,10 +1,4 @@
 function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
-	
-	$scope.INSTRUMENTPROPERTIES = "instrumentProperties",
-	$scope.EXPERIMENTPROPERTIES = "experimentProperties",
-	$scope.INPUT = "inputContainer",
-	$scope.OUTPUT = "outputContainer",
-	
 	$scope.experiment = {
 			value: {
 				code:"",
@@ -189,13 +183,15 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 						
 					}else{
 						$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties = $scope.datatable.displayResult[i].inputExperimentProperties;
-						if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany"){
-							for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].length;j++){
-								$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].experimentProperties = $scope.datatable.displayResult[i].outputExperimentProperties;
-								i++;
+						if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds!=undefined){
+							if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany"){
+								for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].length;j++){
+									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].experimentProperties = $scope.datatable.displayResult[i].outputExperimentProperties;
+									i++;
+								}
+							}else{
+								$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties = $scope.datatable.displayResult[i].outputExperimentProperties;					
 							}
-						}else{
-							$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties = $scope.datatable.displayResult[i].outputExperimentProperties;					
 						}
 					}
 				}
@@ -366,7 +362,7 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		}
 		
 		for(var i=0; i<data.length;i++){
-			if(data[i].level != undefined && data[i].level.code.indexOf('ContainerOut') != -1){						
+			if($scope.getLevel( data[i].levels,"ContainerOut")){	 					
 				if(data[i].choiceInList){
 					var possibleValues = $scope.possibleValuesToSelect(data[i].possibleValues);
 				}
@@ -377,13 +373,23 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		
 	},
 	
+	$scope.getLevel = function(levels,level){
+		if(levels != undefined){
+			for(var i=0;i<levels.length;i++){
+				if(levels[i].code === level){
+					return true;
+				}
+			}
+		}
+		return false;
+	},
+	
 	$scope.addExperimentPropertiesInputsColumns = function(){
 		var data = $scope.experiment.experimentProperties.inputs;
 	
 		for(var i=0; i<data.length;i++){
-			if(data[i].level != undefined && data[i].level.code.indexOf('ContainerIn') != -1){
+			if($scope.getLevel( data[i].levels, "ContainerIn")){		
 				if(data[i].choiceInList){
-					alert(data[i].possibleValues);
 					var possibleValues = $scope.possibleValuesToMap(data[i].possibleValues);
 				}
 				$scope.datatable.addColumn(2,$scope.datatable.newColumn(data[i].name,"inputExperimentProperties."+data[i].code+".value",true, true,true,String.class,data[i].choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"}));
@@ -399,7 +405,7 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		}
 
 		for(var i=0; i<data.length;i++){
-			if(data[i].level != undefined && data[i].level.code.indexOf('ContainerOut') != -1){
+			if($scope.getLevel( data[i].levels, "ContainerOut")){
 				if(data[i].choiceInList){
 					var possibleValues = $scope.possibleValuesToSelect(data[i].possibleValues);
 				}
@@ -462,7 +468,7 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 			
 			//Initialisation of the experiment
 			if($scope.experiment.value.code === ""){
-				$http.post(jsRoutes.controllers.experiments.api.Experiments.save($scope.getForm().experimentTypes.selected.code).url, $scope.experiment.value)
+				$http.post(jsRoutes.controllers.experiments.api.Experiments.create().url, $scope.experiment.value)
 				.success(function(data, status, headers, config) {
 					$scope.clearMessages();
 					if(data!=null){
