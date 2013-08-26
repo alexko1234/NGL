@@ -1,0 +1,18 @@
+#format date
+datetime.format=dd/MM/yyyy HH:mm:ss
+date.format=dd/MM/yyyy
+
+#page field label
+page.search.label.search = Recherche
+
+#panier
+button.addbasket = Ajouter au panier
+
+#validation error
+error.valuenotauthorized = Valeur non authorisée : {0}
+error.badtype = Mauvais type : {0} / {1}
+error.notactive = Propriété non active 
+error.notdefined = Propriété non définie
+error.required = Propriété obligatoire
+
+error.codeNotFound= L'objet {0} de type {1} n'a pas ete trouvé

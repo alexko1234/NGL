@@ -1,0 +1,89 @@
+application.name = NGL-SQ
+index.title = Welcome to NGL-SQ
+#Containers
+containers.title = Containers
+containers.menu = Containers
+containers.menu.creation = Création
+containers.menu.search = Rechercher
+
+#Containers table
+containers.table.code = Code Container
+containers.table.categoryCode = Code Catégorie
+containers.table.projectCodes = Codes Projets
+containers.table.sampleCodes = Codes Echantillons
+containers.table.fromExperimentTypeCodes = Type d'Expérience
+containers.table.stateCode = Statut
+containers.table.support.name = Support
+containers.table.stateCode = Code Etat
+containers.table.valid = Valide
+
+containers.select.state =  -- selectionner un état --
+containers.select.categoryCode =  -- selectionner un type --
+
+#processes
+processes.title = Processus
+processes.menu = Processus
+processes.menu.creation = Création
+processes.menu.search = Rechercher
+processes.create = Crée un processus
+processes.save = Sauvegarder
+
+processes.table.code = Code Processus
+processes.table.typeCode = Type de Processus
+processes.table.projectCode = Code Projet
+processes.table.sampleCode = Code Sample
+processes.table.containerInputCode = Code Container Initial
+processes.table.stateCode = Code Etat
+processes.table.resolutionCode = Code resolution
+processes.table.creationDate = Date creation
+processes.table.comments = Commentaires
+processes.table.currentExperimentTypeCode = Code du type experience courante
+
+processes.select.processType = -- selectionner un type de processus --
+processes.select.project = -- selectionner un projet --
+processes.select.sample = -- selectionner un échantillon --
+
+
+#experiments
+experiments.title = Experiences
+experiments.menu = Experiences
+experiments.menu.creation = Création
+experiments.menu.search = Rechercher
+experiments.create = Créer une experience
+experiments.save = Sauvegarder
+experiments.save_all = Sauvegarder tout
+experiments.edit = Editer
+experiments.unedit = Désactiver l''édition
+experiments.noCode = Aucun code
+experiments.addqc = Ajouter QC
+experiments.addpurif = Ajouter purification
+experiments.state = Etat
+experiments.intrument = Instrument
+experiments.status = Statut
+experiments.intrumentUsedType = Type d'instrument
+experiments.tabs.search = Recherche
+experiments.generateOutput = Generer tube sortie
+
+experiments.msg.save.sucess = Sauvegarde réussie
+experiments.msg.save.error = Sauvegarde echouée
+experiments.msg.details = [détails]
+
+experiments.select.experimentType = -- selectionner un type d'experience --
+experiments.select.instrument = -- Selectionner un instrument --
+experiments.select.resolutions = -- Selectionner une resolution --
+experiments.select.protocols = -- Selectionner un protocole --
+experiments.select.intrumentUsedType = -- Selectionner un Type d'instrument --
+
+button.newexperiment = Créer une experience
+
+#baskets
+baskets = Panier
+baskets.new = Créer un panier
+baskets.add = Ajouter au panier
+
+error.codeNotExist=Le code {0} n'existe pas
+error.propertyNotExist=La propriété {0} n'existe pas pour {1}
+limsdao.error.emptymapping =Pas de correspondance avec les paramètres suivants :{0}
+
+#initialdata
+initialdata.error.sampleNotExist=Le container {0} 

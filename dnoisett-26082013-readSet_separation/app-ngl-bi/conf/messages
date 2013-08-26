@@ -1,0 +1,18 @@
+#application
+application.name=NGL-BI
+index.title=Welcome to NGL-BI
+
+#page title
+title.runs=Runs
+title.run=Run
+title.archives=Archives
+
+#menu
+menu.runs = Runs
+menu.archives = Archives
+
+#page field value
+page.archives.fvalue.archive.0 = Tout
+page.archives.fvalue.archive.1 = Archivés
+page.archives.fvalue.archive.2 = Non Archivés
+

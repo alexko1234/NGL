@@ -1,0 +1,12 @@
+@(scripts: Html = Html(""))
+ <!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="@helper.getAsset("javascript","json","2.0","json_2.0.js")" type="text/javascript" charset="utf-8"></script>
+<![endif]-->
+<script src="@helper.getAsset("javascripts","angular","1.1.4","angular_1.1.4.min.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@helper.getAsset("javascripts","angular","1.1.4","angular-resource_1.1.4.min.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@helper.getAsset("javascripts","jquery","1.9.1","jquery_1.9.1.min.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@helper.getAsset("javascripts","bootstrap","2.3.2","bootstrap_2.3.2.min.js")" type="text/javascript" charset="utf-8"></script>
+<script src="/messages.js" type="text/javascript"  charset="utf-8"></script> 
+@scripts
+    
