@@ -1,8 +1,0 @@
-@(datatableName:String, column: views.components.datatable.DatatableColumn)
-
-
-@if(column.isDate()){
-{{value.@column.property | date:'@Messages("datetime.format")'}}
-}else{
-{{value.@column.property}}	
-}
