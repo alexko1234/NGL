@@ -973,7 +973,7 @@ angular.module('datatableServices', []).
 			    				this.config.extraHeaders.list = {};
 			    				var count = 0;//Number of undefined extraHeader column beetween two defined ones
 			    				//Every level of header
-			    				for(var i=(this.config.extraHeaders.number-1);i>=0;i--){
+			    				for(var i=0;i<this.config.extraHeaders.number;i++){
 			    					var header = undefined;
 			    					//Every column
 				    				for(var j=0;j<this.config.columns.length;j++){
@@ -998,8 +998,9 @@ angular.module('datatableServices', []).
 				    								//We have a new header
 				    								//adding the current one
 				    								this.addToExtraHeaderConfig(i, header);
-				    								//and create the new one with colspan 0
-				    								header =  {"label":this.config.columns[j].extraHeaders[i],"colspan":0};
+				    								//and create the new one with colspan 1
+				    								//colspan = 1 because we're already on the first column who have this header
+				    								header =  {"label":this.config.columns[j].extraHeaders[i],"colspan":1};
 				    							}
 				    						
 				    						}else if(header != undefined){
