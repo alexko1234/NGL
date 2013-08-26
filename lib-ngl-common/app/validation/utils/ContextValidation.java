@@ -57,17 +57,12 @@ public class ContextValidation {
 	 * @param arguments : message args
 	 */
 	public void addErrors(String property, String message, Object...arguments) {
-		
-		//String key = getKey(property);
 		this.addKeyToRootKeyName(property);
 		String key = this.rootKeyName;
-				
 		if (!errors.containsKey(key)) {
 			errors.put(key, new ArrayList<ValidationError>());
 		}		
 		errors.get(key).add(new ValidationError(key, message,  java.util.Arrays.asList(arguments)));
-		
-		//new
 		this.removeKeyFromRootKeyName(property);
 	}
 
@@ -152,13 +147,8 @@ public class ContextValidation {
 				strNewRoot = this.rootKeyName.substring(0, this.rootKeyName.length()-key.length()-1); 
 			}		
 			else {
-				if (this.rootKeyName.startsWith(key)) {
-					strNewRoot = this.rootKeyName.substring(key.length()+1);
-				}
-				else {
-					// in the case ...
-					strNewRoot = "N.A";
-				}
+				// just for debug in this case ...
+				strNewRoot = "N.A";
 			}
 		}
 		this.rootKeyName = strNewRoot;
