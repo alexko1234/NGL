@@ -50,21 +50,22 @@ public class Lane implements IValidation{
 		
 		Run run = (Run) contextValidation.getObject("run");
 		
-		if(ValidationHelper.required(contextValidation, this.number, contextValidation.getKey("number"))){
+		if(ValidationHelper.required(contextValidation, this.number, "number")) { 
+			
 			//Validate unique lane.number if run already exist
 			if(null != run._id ){
 				Run runExist = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", run.code).is("lanes.number", this.number));
 				//TODO : update case not managed
 				if (runExist != null) {
-					contextValidation.addErrors(contextValidation.getKey("code"),ValidationConstants.ERROR_NOTUNIQUE,this.number);
+					contextValidation.addErrors("code",ValidationConstants.ERROR_NOTUNIQUE, this.number);
 				}
 			}
 		}
 		
-		contextValidation.rootKeyName = contextValidation.getKey("properties");
+		contextValidation.addKeyToRootKeyName("properties");
 		ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getLanePropertyDefinitions(), "");
+		contextValidation.removeKeyFromRootKeyName("properties");
 		
-		contextValidation.rootKeyName = contextValidation.removeKey("properties");
 		contextValidation.putObject("lane", this);
 		InstanceValidationHelper.validationReadSets(this.readsets, contextValidation);
 

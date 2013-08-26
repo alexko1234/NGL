@@ -45,6 +45,7 @@ public class BusinessValidationHelper {
 		if(contextValidation.getObject("_id") == null){
 			if(null!=code && MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
 				contextValidation.addErrors( FIELD_CODE, ERROR_NOTUNIQUE, code);
+				//contextValidation.removeKeyFromRootKeyName(FIELD_CODE);
 				return false;
 			}else if (code!=null){
 				return false;

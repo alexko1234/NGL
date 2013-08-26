@@ -45,11 +45,11 @@ public class File extends DBObject implements IValidation {
 		ValidationHelper.required(contextValidation, this.extension, "extension");
 		ValidationHelper.required(contextValidation, this.fullname, "fullname");
 		ValidationHelper.required(contextValidation, this.typeCode, "typeCode");
-		ValidationHelper.required(contextValidation, this.usable, "usable");	
+		ValidationHelper.required(contextValidation, this.usable, "usable");
 		
-		contextValidation.rootKeyName = contextValidation.getKey("properties");
+		contextValidation.addKeyToRootKeyName("properties");
 		ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getFilePropertyDefinitions(), "");
-		contextValidation.rootKeyName = contextValidation.removeKey("properties");
+		contextValidation.removeKeyFromRootKeyName("properties");
 		
 	}
 

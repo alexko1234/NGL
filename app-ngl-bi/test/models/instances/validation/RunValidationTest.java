@@ -67,14 +67,14 @@ public class RunValidationTest extends AbstractTests {
 			 
 			 HashMap<String, List<ValidationError>> e = new HashMap<String, List<ValidationError>>();
 			 ContextValidation ctxVal = new ContextValidation(e);   
-			 ctxVal.rootKeyName = "";
+			 ctxVal.setRootKeyName("");
 			 
 			 run.validate(ctxVal); 
 
 			 System.out.println("------------------------------------------------------");
 					 
-			 for (Map.Entry entry : ctxVal.errors.entrySet()) {
-			     System.out.println(entry.getKey() + "---------------------------------->" + entry.getValue());
+			 for (Map.Entry<String, List<ValidationError>> entry : ctxVal.errors.entrySet()) {
+			     System.out.println(entry.getKey() + "---------------------------------->" + entry.getValue().toString());
 			 }
 			 
 			 System.out.println("-------------------------------------------------------");
@@ -95,7 +95,7 @@ public class RunValidationTest extends AbstractTests {
 		}});
 	 }
 	
-	@Test
+	 @Test
 	 public void testNoDuplicatesLanesValidationOk() {
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
@@ -239,7 +239,7 @@ public class RunValidationTest extends AbstractTests {
 			 run.lanes = l;		 
 			 ContextValidation ctxVal = new ContextValidation();
 			 if (run != null) {
-					 ctxVal.rootKeyName ="lanes[0]";
+					 ctxVal.setRootKeyName("lanes[0]");
 					 ctxVal.putObject("run", run);
 			 }		 
 			 run.lanes.get(0).validate(ctxVal);
@@ -267,7 +267,7 @@ public class RunValidationTest extends AbstractTests {
 			 ContextValidation ctxVal = new ContextValidation();
 			 ctxVal.putObject("run",run);
 			 ctxVal.putObject("lane",lane);		 
-			 ctxVal.rootKeyName = "lanes[0].readsets[0]";
+			 ctxVal.setRootKeyName("lanes[0].readsets[0]");
 			 r.validate(ctxVal);
 			 
 			 assertThat(ctxVal.errors).hasSize(0);
@@ -312,16 +312,17 @@ public class RunValidationTest extends AbstractTests {
 				 ContextValidation ctxVal = new ContextValidation();
 				 ctxVal.putObject("run",run);
 				 ctxVal.putObject("lane",lane);
-				 ctxVal.rootKeyName = "lanes[1].readsets[0]";
+				 ctxVal.setRootKeyName("lanes[1].readsets[0]");
 				 readset.validate(ctxVal);
 			
 				 Map<String, List<ValidationError>> errorToFind = new HashMap<String, List<ValidationError>>();
 				 List<Object> vaArg = new ArrayList<Object>();
 				 vaArg.add(readset.code);
-				 ValidationError ve = new  ValidationError(ctxVal.rootKeyName + ".code", ValidationConstants.ERROR_NOTUNIQUE, vaArg);
+				 ctxVal.addKeyToRootKeyName("code"); 
+				 ValidationError ve = new  ValidationError(ctxVal.getRootKeyName(), ValidationConstants.ERROR_NOTUNIQUE, vaArg);
 				 ArrayList<ValidationError> al = new ArrayList<ValidationError>();
 				 al.add(ve);
-				 errorToFind.put(ctxVal.rootKeyName + ".code", al);
+				 errorToFind.put(ctxVal.getRootKeyName(), al);
 				
 				 assertThat(ctxVal.errors).hasSize(1);
 				 //assertThat(ctxVal.errors.toString()).isEqualTo(errorToFind.toString());
@@ -363,7 +364,7 @@ public class RunValidationTest extends AbstractTests {
 			
 			 ContextValidation ctxVal = new ContextValidation();
 			 ctxVal.putObject("run",run);
-			 ctxVal.rootKeyName = "lanes[0].readsets[0].files[0]";
+			 ctxVal.setRootKeyName("lanes[0].readsets[0].files[0]");
 			 file.validate(ctxVal);
 			 
 			 assertThat(ctxVal.errors).hasSize(0);		 
@@ -404,6 +405,7 @@ public class RunValidationTest extends AbstractTests {
 		 ContextValidation ctxVal = new ContextValidation();
 		 ctxVal.putObject("run",run);
 		 File file = getExistingFile();
+		 ctxVal.setRootKeyName("");
 		 file.validate(ctxVal);
 		 
 		 Map<String, List<ValidationError>> errorToFind = new HashMap<String, List<ValidationError>>();
@@ -417,29 +419,6 @@ public class RunValidationTest extends AbstractTests {
 		 assertThat(ctxVal.errors).hasSize(1);
 		 assertThat(ctxVal.errors.toString()).isEqualTo(errorToFind.toString()); 
 	 }
-	
-	 
-	
-	private Lane getExistingLane(){
-		
-		Lane lane = new Lane();
-		lane.number = 2;
-		
-		lane.properties.put("nbCycleRead1",new PropertySingleValue("1056"));
-		lane.properties.put("nbCycleReadIndex1",new PropertySingleValue("1056"));
-		lane.properties.put("nbCycleRead2",new PropertySingleValue("1056"));
-		lane.properties.put("nbCycleReadIndex2",new PropertySingleValue("1056"));
-		lane.properties.put("nbCluster",new PropertySingleValue("1056"));
-		lane.properties.put("nbBaseInternalAndIlluminaFilter",new PropertySingleValue("1056"));
-		lane.properties.put("phasing",new PropertySingleValue("phasing"));
-		lane.properties.put("prephasing",new PropertySingleValue("prephasing"));
-		lane.properties.put("nbClusterInternalAndIlluminaFilter",new PropertySingleValue("1056"));
-		lane.properties.put("nbClusterIlluminaFilter",new PropertySingleValue("1056"));
-		lane.properties.put("percentClusterIlluminaFilter",new PropertySingleValue("99.99"));		
-		lane.properties.put("percentClusterInternalAndIlluminaFilter",new PropertySingleValue("99.99"));
-		
-		return lane;
-	}
 	
 	
 	private Lane getLane(){
@@ -549,40 +528,6 @@ public class RunValidationTest extends AbstractTests {
 
 		return readSet;
 	}
-	
-	
-	private ReadSet getExistingReadSet() {
-		ReadSet readSet = new ReadSet();
-		readSet.code = "ReadSetBasicWithRun3";
-		readSet.path = "/path/test";
-		readSet.projectCode = "PCODE"; 
-		readSet.sampleCode = "SPCODE";
-		readSet.sampleContainerCode = "SPCONTCODE";
-		//readSet.properties.put("insertLength", new PropertySingleValue("1056"));
-		readSet.properties.put("nbUsableBase", new PropertySingleValue("4565456465"));
-		readSet.properties.put("nbUsableCluster", new PropertySingleValue("132132132132"));
-		readSet.properties.put("q30",new PropertySingleValue("10.23"));
-		readSet.properties.put("score", new PropertySingleValue("0.636"));
-		readSet.properties.put("nbRead", new PropertySingleValue("33"));
-		
-		readSet.properties.put("nbClusterInternalAndIlluminaFilter", new PropertySingleValue("4565456465"));
-		readSet.properties.put("nbBaseInternalAndIlluminaFilter", new PropertySingleValue("4565456465"));
-		readSet.properties.put("fraction", new PropertySingleValue("0.2"));
-
-		return readSet;
-	}
-	
-	 private File getFile() {
-		File file = new File();
-		file.extension = "fst";
-		file.fullname = "fullname.fst";
-		file.typeCode = "RAW";
-		file.usable = Boolean.FALSE;
-		
-		file.properties.put("asciiEncoding", new PropertySingleValue("33"));
-		file.properties.put("label", new PropertySingleValue("READ1"));		
-		return file;
-	}
 	 
 	 private File getEmptyFile() {
 		File file = new File();
@@ -645,8 +590,7 @@ public class RunValidationTest extends AbstractTests {
 		
 		run.traceInformation = new TraceInformation();
 		run.traceInformation.setTraceInformation("test");
-		
-		
+	
 		//run.properties.put("nbCycle", new PropertyValue(""));		
 		run.properties.put("nbClusterTotal", new PropertySingleValue(""));
 		run.properties.put("nbClusterIlluminaFilter", new PropertySingleValue(""));

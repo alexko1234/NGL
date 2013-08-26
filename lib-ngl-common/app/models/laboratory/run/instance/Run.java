@@ -45,9 +45,10 @@ public class Run extends DBObject implements IValidation {
     public void validate(ContextValidation contextValidation) {
             
         	contextValidation.putObject("_id",this._id);
+        	
+        	contextValidation.setRootKeyName("");
 
         	if(ValidationHelper.required(contextValidation, this.code, "code")){        
-        
                 BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Run.class, InstanceConstants.RUN_ILLUMINA_COLL_NAME);		
             }
 
@@ -61,8 +62,9 @@ public class Run extends DBObject implements IValidation {
         	contextValidation.putObject("run", this);
             InstanceValidationHelper.validationLanes(this.lanes, contextValidation);
 
-            contextValidation.rootKeyName = "properties";
+            contextValidation.setRootKeyName("properties");
             ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getRunPropertyDefinitions(), "");
+            contextValidation.setRootKeyName("");
 		
     }
 

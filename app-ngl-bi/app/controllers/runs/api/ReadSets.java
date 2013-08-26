@@ -39,21 +39,21 @@ public class ReadSets extends CommonController{
 			
 			//beginning code for validation
 			ctxVal.putObject("run", run);
-			String rootKeyName1 = "lanes";
+			String rootKeyName1 = "";
 			String rootKeyName2 = "";
-			String rootKeyName3 = "";
 			for(int i = 0; i < run.lanes.size(); i++){
 				Lane l = run.lanes.get(i);
-				rootKeyName2 = rootKeyName1+"["+i+"]";
+				rootKeyName1 = "lanes["+i+"]";
 				if(l.number.equals(laneNumber)){ 
 					ctxVal.putObject("lane",l);
 					for(int j=0; l.readsets != null && j < l.readsets.size() ; j++){
-						rootKeyName3 = rootKeyName2 + ".readsets["+j+"]"; 
+						rootKeyName2 = rootKeyName1 + ".readsets["+j+"]"; 
+						
 					}
 					break;
 				}
 			}
-			ctxVal.rootKeyName = rootKeyName3;
+			ctxVal.setRootKeyName(rootKeyName2);
 			readsetValue.validate(ctxVal);
 			//end
 			
@@ -105,21 +105,19 @@ public class ReadSets extends CommonController{
 				
 				//beginning code for validation
 				ctxVal.putObject("run", run);
-				String rootKeyName1 = "lanes";
-				String rootKeyName2 = "";
+				String rootKeyName = "";
 				boolean flagReadSet = false;
 				for(int i=0; i<run.lanes.size() && !flagReadSet; i++){
 					for(int j=0;j<run.lanes.get(i).readsets.size() && !flagReadSet; j++) {
 						if(run.lanes.get(i).readsets.get(j).code.equals(readsetValue.code)){
 							//ReadSet find
 							flagReadSet = true;		
-							ctxVal.rootKeyName = rootKeyName1+"["+i+"]";
-							rootKeyName2 = ctxVal.getKey("readsets["+j+"]");
+							rootKeyName = "lanes["+i+"].readsets["+j+"]";
 							ctxVal.putObject("lane",run.lanes.get(i));
 						}
 					}
 				}
-				ctxVal.rootKeyName = rootKeyName2;
+				ctxVal.setRootKeyName(rootKeyName);
 				readsetValue.validate(ctxVal);
 				//end
 				

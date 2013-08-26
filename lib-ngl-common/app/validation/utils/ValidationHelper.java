@@ -98,6 +98,7 @@ public class ValidationHelper {
 		if(validateNotDefined){
 			for(String key : inputProperties.keySet()){
 				contextValidation.addErrors(key, "error.notdefined");
+				//contextValidation.removeKeyFromRootKeyName(key);
 			}
 		}
 	}

@@ -32,14 +32,13 @@ public class Lanes extends CommonController{
 			}
 			Lane laneValue = filledForm.get();
 			
-			//BusinessValidationHelper.validateLane(filledForm.errors(), run,laneValue, Constants.RUN_ILLUMINA_COLL_NAME, null);
 			ctxVal.putObject("run", run);
-			String rootKeyName = "lanes";
-			
+			//String rootKeyName = "lanes";
 			int laneNumber = laneValue.number;
 			int index = 0;
 			for(int i = 0;run.lanes != null &&  i < run.lanes.size(); i++){
-				ctxVal.rootKeyName = rootKeyName+"["+index+++"]";
+				//ctxVal.rootKeyName = rootKeyName+"["+index+++"]";
+				ctxVal.setRootKeyName("lanes"+"["+index+++"]");
 				if(run.lanes.get(i).number.equals(laneNumber)){
 					break;
 				}

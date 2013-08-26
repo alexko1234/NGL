@@ -25,7 +25,11 @@ public class ContextValidation {
 		contextObjects= new TreeMap<String, Object>();
 	}
 
-	
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public Object getObject(String key){
 		if(contextObjects.containsKey(key)) {
 			return contextObjects.get(key);
@@ -36,6 +40,11 @@ public class ContextValidation {
 	}
 	
 	
+	/**
+	 * 
+	 * @param key
+	 * @param value
+	 */
 	public void putObject(String key, Object value){
 		contextObjects.put(key, value);
 	}
@@ -48,11 +57,18 @@ public class ContextValidation {
 	 * @param arguments : message args
 	 */
 	public void addErrors(String property, String message, Object...arguments) {
-		String key = getKey(property);
+		
+		//String key = getKey(property);
+		this.addKeyToRootKeyName(property);
+		String key = this.rootKeyName;
+				
 		if (!errors.containsKey(key)) {
 			errors.put(key, new ArrayList<ValidationError>());
 		}		
 		errors.get(key).add(new ValidationError(key, message,  java.util.Arrays.asList(arguments)));
+		
+		//new
+		this.removeKeyFromRootKeyName(property);
 	}
 
 	/**
@@ -60,6 +76,7 @@ public class ContextValidation {
 	 * @param rootKeyName
 	 * @param property
 	 * @return
+	 * @deprecated
 	 */
 	public String getKey(String property) {
 		return (StringUtils.isBlank(rootKeyName))?property: rootKeyName+"."+property;
@@ -70,6 +87,7 @@ public class ContextValidation {
 	 * 
 	 * @param property
 	 * @return
+	 * @deprecated use removeKeyFromRootKeyName
 	 */	
 	public String removeKey(String property) {
 		// TODO Auto-generated method stub
@@ -85,4 +103,66 @@ public class ContextValidation {
 		}
 		return strReturn;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getRootKeyName() {
+		return this.rootKeyName;
+	}
+	
+	/**
+	 * 
+	 * @param rootKeyName
+	 */
+	public void setRootKeyName(String rootKeyName) {
+		this.rootKeyName = rootKeyName;
+	}
+	
+	/**
+	 * 
+	 * @param key
+	 */
+	public void addKeyToRootKeyName(String key) {
+		String strNewRoot = "";
+		if (StringUtils.isBlank(this.rootKeyName)) {
+			strNewRoot = key;
+		}
+		else {
+			strNewRoot = this.rootKeyName + "." + key;
+		}
+		this.rootKeyName = strNewRoot;
+	}
+	
+	/**
+	 * 
+	 * @param key
+	 */
+	public void removeKeyFromRootKeyName(String key) {
+		String strNewRoot = "";
+		if (StringUtils.isBlank(this.rootKeyName)) {
+			strNewRoot = "";
+		}
+		if (this.rootKeyName == key ) {
+			strNewRoot = "";
+		}
+		else {
+			if (this.rootKeyName.endsWith(key)) {
+				strNewRoot = this.rootKeyName.substring(0, this.rootKeyName.length()-key.length()-1); 
+			}		
+			else {
+				if (this.rootKeyName.startsWith(key)) {
+					strNewRoot = this.rootKeyName.substring(key.length()+1);
+				}
+				else {
+					// in the case ...
+					strNewRoot = "N.A";
+				}
+			}
+		}
+		this.rootKeyName = strNewRoot;
+	}
+	
+
 }

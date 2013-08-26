@@ -97,16 +97,16 @@ public class InstanceValidationHelper {
 		//TODO number of lanes (depends of the type run and the mode incremental insert or full insert !!!)
 		//TODO validate lane number
 		if(null != lanes ) {
-			String rootKeyName = contextValidation.getKey("lanes");
 			int index = 0;			
 			Set<Integer> laneNumbers = new TreeSet<Integer>();
 			for (Lane lane : lanes) {
-				contextValidation.rootKeyName = rootKeyName+"["+index+++"]";
+				contextValidation.addKeyToRootKeyName("lanes"+"["+index+++"]");
 				lane.validate(contextValidation);
 				if(laneNumbers.contains(lane.number)){
 					contextValidation.addErrors("number", ValidationConstants.ERROR_NOTUNIQUE,lane.number);
 				}				
-				laneNumbers.add(lane.number);				
+				laneNumbers.add(lane.number);			
+				contextValidation.removeKeyFromRootKeyName("lanes"+"["+index+++"]");
 			}
 		}
 
@@ -114,11 +114,11 @@ public class InstanceValidationHelper {
 	
 	public static void validationReadSets(List<ReadSet> readsets, ContextValidation contextValidation) {
 		if(null != readsets) {
-			String rootKeyName = contextValidation.getKey("readsets");
 			int index = 0;
 			for (ReadSet readSet : readsets) {
-				contextValidation.rootKeyName = rootKeyName+"["+index+++"]";
+				contextValidation.addKeyToRootKeyName("readsets["+index+++"]"); 
 				readSet.validate(contextValidation);
+				contextValidation.removeKeyFromRootKeyName("readsets["+index+++"]");
 			}
 		}
 		
@@ -126,11 +126,11 @@ public class InstanceValidationHelper {
 	
 	public static void validationFiles(List<File> files, ContextValidation contextValidation) {
 		if(null != files) {	
-			String rootKeyName = contextValidation.getKey("files");
 			int index = 0;
 			for (File file : files) {
-				contextValidation.rootKeyName = rootKeyName+"["+index+++"]";
+				contextValidation.addKeyToRootKeyName("files["+index+++"]"); 
 				file.validate(contextValidation);
+				contextValidation.removeKeyFromRootKeyName("files["+index+++"]");
 			}
 		}
 

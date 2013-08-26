@@ -69,7 +69,7 @@ public class Runs extends CommonController {
 				runValue.traceInformation.setTraceInformation("ngsrg");
 			}
 			
-			ctxVal.rootKeyName = "";
+			ctxVal.setRootKeyName("");
 			runValue.validate(ctxVal);
 			
 			

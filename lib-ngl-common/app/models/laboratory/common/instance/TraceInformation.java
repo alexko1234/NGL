@@ -44,16 +44,16 @@ public class TraceInformation implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		if (contextValidation.getObject("_id") != null) {
-			if(ValidationHelper.required(contextValidation.errors, this, "traceInformation")){
-				ValidationHelper.required(contextValidation.errors, createUser, "traceInformation.createUser");
-				ValidationHelper.required(contextValidation.errors, creationDate, "traceInformation.creationDate");
-				ValidationHelper.required(contextValidation.errors, modifyUser, "traceInformation.modifyUser");
-				ValidationHelper.required(contextValidation.errors, modifyDate, "traceInformation.modifyDate");
+			if(ValidationHelper.required(contextValidation, this, "traceInformation")){
+				ValidationHelper.required(contextValidation, createUser, "traceInformation.createUser");
+				ValidationHelper.required(contextValidation, creationDate, "traceInformation.creationDate");
+				ValidationHelper.required(contextValidation, modifyUser, "traceInformation.modifyUser");
+				ValidationHelper.required(contextValidation, modifyDate, "traceInformation.modifyDate");
 			}
 		} else {
-			if(ValidationHelper.required(contextValidation.errors, this, "traceInformation")){
-				ValidationHelper.required(contextValidation.errors, createUser, "traceInformation.createUser");
-				ValidationHelper.required(contextValidation.errors, creationDate, "traceInformation.creationDate");
+			if(ValidationHelper.required(contextValidation, this, "traceInformation")){
+				ValidationHelper.required(contextValidation, createUser, "traceInformation.modifyUser");
+				ValidationHelper.required(contextValidation, creationDate, "traceInformation.modifyDate");
 			}
 		}
 	}
