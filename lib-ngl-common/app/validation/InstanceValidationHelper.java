@@ -76,8 +76,10 @@ public class InstanceValidationHelper {
 
 	public static void validationComments(List<Comment> comments,
 			ContextValidation contextValidation) {
-		for(Comment comment:comments){
-			comment.validate(contextValidation);
+		if(comments != null){
+			for(Comment comment:comments){
+				comment.validate(contextValidation);
+			}
 		}
 	}
 
