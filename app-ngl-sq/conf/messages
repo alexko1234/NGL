@@ -5,6 +5,7 @@ containers.title = Containers
 containers.menu = Containers
 containers.menu.creation = Création
 containers.menu.search = Rechercher
+containers.tabs.search = Recherche
 
 #Containers table
 containers.table.code = Code Container
@@ -25,6 +26,7 @@ processes.title = Processus
 processes.menu = Processus
 processes.menu.creation = Création
 processes.menu.search = Rechercher
+processes.tabs.search = Recherche
 processes.create = Crée un processus
 processes.save = Sauvegarder
 
