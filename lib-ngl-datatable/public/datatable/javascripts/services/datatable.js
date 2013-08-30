@@ -1326,7 +1326,7 @@ angular.module('datatableServices', []).
 	        		  	    			if(col.listStyle==1){
 	            		  	    			newElement = $compile('<label ng-repeat="opt in col.possibleValues"  ng-show="'+ngShow+'"  for="radio{{col.id}}"><input id="radio{{col.id}}" html-filter="{{col.type}}" type="radio"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" value="{{opt.name}}">{{opt.name}}<br></label>'+valueElement)(scope);
 	            		  	    		}else{
-	            		  	    			newElement = $compile('<select html-filter="{{col.type}}" ng-show="'+ngShow+'" ng-options="opt.name for opt in col.possibleValues"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>'+valueElement)(scope);
+	            		  	    			newElement = $compile('<select html-filter="{{col.type}}" ng-show="'+ngShow+'" ng-options="opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>'+valueElement)(scope);
 	            		  	    		}
 	        		  	    		}
         		  	    	}else if(col.edit && col.type =="Boolean"){
