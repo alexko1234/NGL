@@ -102,7 +102,7 @@ angular.module('datatableServices', []).
 								}
 							},
 							showTotalNumberRecords:true,
-							compact:false //mode compact pour le nom des bouttons
+							compact:true //mode compact pour le nom des bouttons
 						},
 						config:undefined,
     					configMaster:undefined,
@@ -854,6 +854,8 @@ angular.module('datatableServices', []).
 			    					if(columns[i].edit && !this.config.edit.active){
 			    						columns[i].edit = false;
 			    					}
+			    					
+			    					columns[i].cells = [];//Init
 			    				}
 			    				
 			    				this.config.columns = columns;
@@ -945,18 +947,8 @@ angular.module('datatableServices', []).
 		    			 * Remove a column at position
 		    			 */
 		    			deleteColumn : function(position){
-		    				var tbl = document.getElementById(this.config.name);
-		    				for (var i=0; i<tbl.rows.length; i++) {
-		    					tbl.rows[i].deleteCell(position-1);
-		    				}
-		    			},
-		    			columnFormatter:function(col){
-		    				var format = "";
-		    				if(col.type == "date"){
-		    					format += '| date:\'Messages("datetime.format")\'';
-							}
-		    				
-		    				return format;
+		    				this.config.columns.splice(position, 1);
+		    				this.newExtraHeaderConfig();
 		    			},
 		    			addToExtraHeaderConfig:function(pos,header){
 		    				if(!angular.isDefined(this.config.extraHeaders.list[pos])){
@@ -1082,18 +1074,18 @@ angular.module('datatableServices', []).
 		    			var buttonsSelect = '<div class="btn-group" ng-switch on="'+config.name+'.config.select.isSelectAll"><button class="btn" ng-click="'+config.name+'.selectAll(true)"  ng-show="'+config.name+'.showButton(\'select\')"  ng-switch-when="false" data-toggle="tooltip" title="'+Messages("datatable.button.selectall")+'"><i class="icon-check icon-large"></i>';
 		    			
 		    			if(!config.compact){ 
-		    				buttonsSelect+= Messages("datatable.button.selectall");
+		    				buttonsSelect+=  " "+Messages("datatable.button.selectall");
 		    			}
 		    			
 		    			buttonsSelect += '</button><button class="btn" ng-click="'+config.name+'.selectAll(false)" ng-show="'+config.name+'.showButton(\'select\')"  ng-switch-when="true" data-toggle="tooltip" title="'+Messages("datatable.button.unselectall")+'"><i class="icon-check-empty icon-large"></i>';
 		    			
 		    			if(!config.compact){
-		    				buttonsSelect += Messages("datatable.button.unselectall");
+		    				buttonsSelect +=  " "+Messages("datatable.button.unselectall");
 		    			}
 		    			
 		    			buttonsSelect += '</button><button class="btn" ng-click="'+config.name+'.cancel()"  ng-show="'+config.name+'.showButton(\'cancel\')" data-toggle="tooltip" title="'+Messages("datatable.button.cancel")+'"><i class="icon-undo icon-large"></i>';
 		    			if(!config.compact){ 
-		    				buttonsSelect += Messages("datatable.button.cancel");
+		    				buttonsSelect +=  " "+Messages("datatable.button.cancel");
 		    			}
 		    			buttonsSelect += '</button></div>';
 		    			angular.element(divButtons).append(buttons);
@@ -1102,7 +1094,7 @@ angular.module('datatableServices', []).
 		    			if(config.show){
 		    				var buttonsShow = '<button class="btn" ng-click="'+config.name+'.show()" ng-disabled="!'+config.name+'.isSelect()" ng-show="'+config.name+'.showButton(\'show\')" data-toggle="tooltip" title="'+Messages("datatable.button.show")+'"><i class="icon-pushpin icon-large"></i>';
 		    				if(!config.compact){
-		    					buttonsShow +=  Messages("datatable.button.show");
+		    					buttonsShow +=   " "+Messages("datatable.button.show");
 		    				}
 		    				buttonsShow += '</button>';
 		    				angular.element(buttons).append(buttonsShow);
@@ -1114,7 +1106,7 @@ angular.module('datatableServices', []).
 		    						
 		    						var buttonEdit = '<button class="btn" ng-click="'+config.name+'.setEditColumn()" ng-disabled="!'+config.name+'.canEdit()"  ng-show="'+config.name+'.showButton(\'edit\')" data-toggle="tooltip" title="'+Messages("datatable.button.edit")+'"><i class="icon-edit icon-large"></i>';
 		    						if(!config.compact){ 
-		    							buttonEdit += Messages("datatable.button.edit");
+		    							buttonEdit += " "+Messages("datatable.button.edit");
 		    						}
 		    						
 		    						buttonEdit += '</button>';
@@ -1126,7 +1118,7 @@ angular.module('datatableServices', []).
 		    						var buttonSave = '<button class="btn" ng-click="'+config.name+'.save()" ng-disabled="!'+config.name+'.canSave()" ng-show="'+config.name+'.showButton(\'save\')"  data-toggle="tooltip" title="'+Messages("datatable.button.save")+'" ><i class="icon-save icon-large"></i>';
 		    						
 		    						if(!config.compact){ 
-		    							buttonSave+= Messages("datatable.button.save");
+		    							buttonSave+=  " "+Messages("datatable.button.save");
 		    							}
 		    						buttonSave+= '</button>';
 		    						angular.element(divCrud).append(buttonSave);
@@ -1135,7 +1127,7 @@ angular.module('datatableServices', []).
 		    					if(config.remove.active){
 		    						var buttonRemove = '<button class="btn" ng-click="'+config.name+'.remove()" ng-disabled="!'+config.name+'.canRemove()" ng-show="'+config.name+'.showButton(\'remove\')"  data-toggle="tooltip" title="'+Messages("datatable.button.remove")+'"><i class="icon-trash icon-large"></i>';
 		    						if(!config.compact){ 
-		    							buttonRemove += Messages("datatable.button.remove");
+		    							buttonRemove +=  " "+Messages("datatable.button.remove");
 		    							}
 		    						
 		    						buttonRemove += '</button>';
@@ -1149,7 +1141,7 @@ angular.module('datatableServices', []).
 		    				var divHide = angular.element('<div class="btn-group" ng-show="'+config.name+'.config.hide.active"></div>');
 		    				var buttonHide = '<button data-toggle="dropdown" class="btn dropdown-toggle" data-toggle="tooltip" title="'+Messages("datatable.button.hide")+'"><i class="icon-eye-close icon-large"></i>';
 		    				if(!config.compact){ 
-		    					buttonHide+= Messages("datatable.button.hide");
+		    					buttonHide+= " "+Messages("datatable.button.hide");
 		    				}
 		    				buttonHide+= '<span class="caret"></span></button>';
 		    				var dropdown = '<ul class="dropdown-menu"><li ng-repeat="column in '+config.name+'.getHideColumns()"><a href="#" ng-click="'+config.name+'.setHideColumn(column.id)"><i class="icon-eye-open" ng-show="'+config.name+'.isHide(column.id)""></i><i class="icon-eye-close" ng-hide="'+config.name+'.isHide(column.id)"></i> {{column.header}}</a></li></ul>';
@@ -1163,23 +1155,27 @@ angular.module('datatableServices', []).
 
 			    		angular.element(toolbar).append(divButtons);
 			    		
+			    		var divPagination = angular.element('<div class="span4"></div>');
+			    		var paginationToolBar = angular.element('<div class="btn-toolbar pull-right" ng-show="'+config.name+'.isShowToolbarRight()"></div>');
+			    		var paginationButtonTotal = '	<button class="btn btn-info" disabled="disabled" ng-show="'+config.name+'.config.showTotalNumberRecords">'+Messages("datatable.totalNumberRecords", "{{"+config.name+".totalNumberRecords}}")+'</button>';
+			    		angular.element(paginationToolBar).append(paginationButtonTotal);
 			    		//Pagination Section
 			    		if(config.pagination.active){
-							var divPagination = angular.element('<div class="span4"></div>');
+							
 							var pagination = '<div class="span7"><div class="pagination pagination-right" ng-show="'+config.name+'.isShowPagination()"><ul><li ng-repeat="page in '+config.name+'.config.pagination.pageList" ng-class="page.clazz"><a href="#" ng-click="'+config.name+'.setPageNumber(page)">{{page.label}}</a></li></ul></div></div>';
 							var divPaginationButton = angular.element('<div class="span5"></div>');
-							var paginationToolBar = angular.element('<div class="btn-toolbar pull-right" ng-show="'+config.name+'.isShowToolbarRight()"></div>');
-							var paginationButtonTotal = '	<button class="btn btn-info" disabled="disabled" ng-show="'+config.name+'.config.showTotalNumberRecords">'+Messages("datatable.totalNumberRecords", "{{"+config.name+".totalNumberRecords}}")+'</button>';
 							var paginationDropDown = '<div class="btn-group" ng-show="'+config.name+'.config.pagination.active"><button data-toggle="dropdown" class="btn dropdown-toggle">'+Messages("datatable.button.length", "{{"+config.name+".config.pagination.numberRecordsPerPage}}")+' <span class="caret"></span></button><ul class="dropdown-menu pull-right"><li	ng-repeat="elt in '+config.name+'.config.pagination.numberRecordsPerPageList" class={{elt.clazz}}><a href="#" ng-click="'+config.name+'.setNumberRecordsPerPage(elt)">{{elt.number}}</a></li></ul></div>';
 							
-							angular.element(paginationToolBar).append(paginationButtonTotal);
 							angular.element(paginationToolBar).append(paginationDropDown);
-							angular.element(divPaginationButton).append(paginationToolBar);
 							angular.element(divPagination).append(pagination);
 							angular.element(divPagination).append(divPaginationButton);
 							
-							angular.element(toolbar).append(divPagination);	
 			    		}
+			    	
+			    		
+						angular.element(divPagination).append(paginationToolBar);
+			    		angular.element(toolbar).append(divPagination);	
+			    		
 						//Messages Section
 			    		var messages = '<div class="row-fluid" ng-show="'+config.name+'.config.messages.active"><div ng-class="'+config.name+'.config.messages.clazz" ng-show="'+config.name+'.config.messages.text !== undefined"><strong>{{'+config.name+'.config.messages.text}}</strong></div></div>';
 			    		
@@ -1210,7 +1206,7 @@ angular.module('datatableServices', []).
 						tableHead += '</div></th></tr></thead>';
 						
 						var tableBody = '<tbody><tr ng-show="'+config.name+'.isEdit()"><td ng-repeat="col in '+config.name+'.config.columns" ng-hide="'+config.name+'.isHide(col.id)"><div class="controls" ><div html-input="col" header></div></div></td></tr>';
-						tableBody += '<tr ng-repeat="value in '+config.name+'.displayResult | orderBy:'+config.name+'.config.orderBy:'+config.name+'.config.orderReverse" ng-click="'+config.name+'.select(value)" ng-class="value.trClass"><td ng-hide="'+config.name+'.isHide(col.id)" ng-repeat="col in '+config.name+'.config.columns"> <div class="controls" ><div html-input="col"></div></div></td></tr></tbody>';
+						tableBody += '<tr ng-repeat="value in '+config.name+'.displayResult | orderBy:'+config.name+'.config.orderBy:'+config.name+'.config.orderReverse" ng-click="'+config.name+'.select(value)" ng-class="value.trClass"><td rowspan="{{col.cells[$parent.$index].rowSpan}}" ng-hide="'+config.name+'.isHide(col.id)" ng-repeat="col in '+config.name+'.config.columns"> <div class="controls" ><div html-input="col"></div></div></td></tr></tbody>';
 	
 				    	table.html(tableHead+tableBody);
 				    	
@@ -1267,69 +1263,77 @@ angular.module('datatableServices', []).
         			    	
         			    	return  "value."+col.property;
     			    	};
-    			    	
+    			    	var columnFormatter = function(col){
+		    				var format = "";
+		    				if(col.type == "Date"){
+		    					format += "| date:'"+Messages("datetime.format")+"'";
+							}
+		    				
+		    				return format;
+		    			};
     			    	var addHtmlElement = function(col){
     			    		var newElement = "";
-							var valueElement = '<span ng-show="!'+name+'.isEdit(col.id,value)" >{{value.'+col.property+'}}</span>';
+    			    		
+							var valueElement = '<span ng-show="!'+name+'.isEdit(col.id,value)" >{{value.'+col.property+' '+columnFormatter(col)+'}}</span>';
         		  	    	if(col.edit && col.type === "String" || col.type === undefined || col.type === "Number"
         		  	    		|| col.type === "Month" || col.type === "Week"  || col.type === "Time" || col.type === "DateTime"
         		  	    		|| col.type === "Range" || col.type === "Color" || col.type === "Mail" || col.type === "Tel"
         		  	    		|| col.type === "Url" || col.type === "Date"){
-	        		  	    		if(!col.choiceInList){
+        		  	    			if(!col.choiceInList){
 	        		  	    			switch (col.type) 
 	        		  	    			{ 
 		        		  	    			case "String": 
-		        		  	    				newElement = $compile('<input type="text" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="text" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break; 
 		        		  	    			case "Number": 
-		        		  	    				newElement = $compile('<input type="number" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="number" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break; 
 		        		  	    			case "Month": 
-		        		  	    				newElement = $compile('<input type="month" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="month" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break; 
 		        		  	    			case "Week": 
-		        		  	    				newElement = $compile('<input type="week" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="week" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break;
 		        		  	    			case "Time": 
-		        		  	    				newElement = $compile('<input type="time" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="time" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break;
 		        		  	    			case "DateTime": 
-		        		  	    				newElement = $compile('<input type="datetime" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="datetime" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break;
 		        		  	    			case "Range": 
-		        		  	    				newElement = $compile('<input type="datetime" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="datetime" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break;
 		        		  	    			case "Color": 
-		        		  	    				newElement = $compile('<input type="color" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="color" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break;
 		        		  	    			case "Mail": 
-		        		  	    				newElement = $compile('<input type="mail" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="mail" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break;
 		        		  	    			case "Tel": 
-		        		  	    				newElement = $compile('<input type="tel" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="tel" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break;
 		        		  	    			case "Url": 
-		        		  	    				newElement = $compile('<input type="url" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="url" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break;
 		        		  	    			case "Date": 
-		        		  	    				newElement = $compile('<input type="date" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="date" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break;
 		        		  	    			default: 
-		        		  	    				newElement = $compile('<input type="text" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="text" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break; 
 	        		  	    			}
 	        		  	    		}else{
 	        		  	    			if(col.listStyle==1){
-	            		  	    			newElement = $compile('<label ng-repeat="opt in col.possibleValues"  ng-show="'+ngShow+'"  for="radio{{col.id}}"><input id="radio{{col.id}}" type="radio"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" value="{{opt.name}}">{{opt.name}}<br></label>'+valueElement)(scope);
+	            		  	    			newElement = $compile('<label ng-repeat="opt in col.possibleValues"  ng-show="'+ngShow+'"  for="radio{{col.id}}"><input id="radio{{col.id}}" html-filter="{{col.type}}" type="radio"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" value="{{opt.name}}">{{opt.name}}<br></label>'+valueElement)(scope);
 	            		  	    		}else{
-	            		  	    			newElement = $compile('<select ng-show="'+ngShow+'" ng-options="opt.name for opt in col.possibleValues"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>'+valueElement)(scope);
+	            		  	    			newElement = $compile('<select html-filter="{{col.type}}" ng-show="'+ngShow+'" ng-options="opt.name for opt in col.possibleValues"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>'+valueElement)(scope);
 	            		  	    		}
 	        		  	    		}
         		  	    	}else if(col.edit && col.type =="Boolean"){
-        		  	    			newElement = $compile('<input type="checkbox" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+        		  	    			newElement = $compile('<input html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
         		  	    	}
 	        		  	    else if(!col.edit){
-        		  	    		newElement  = $compile('<span >{{value.'+col.property+'}}</span>')(scope);
+	        		  	    	newElement  = $compile('<span >{{value.'+col.property+' '+columnFormatter(col)+'}}</span>')(scope);
         		  	    	}
         		  	    	
         		  	    	element.html("");
@@ -1345,4 +1349,32 @@ angular.module('datatableServices', []).
 
     			    },
     			  };
+    			}).directive("htmlFilter", function() {
+    				return {
+    					  require: 'ngModel',
+    					  link: function(scope, element, attrs, ngModelController) {
+    						  
+    						  ngModelController.$parsers.push(function(data) {
+    					      //view to model
+    						   var convertedData = data;
+   					    	
+   					    	   if(attrs.htmlFilter == "Date"){
+   					    			convertedData = $filter('date')(convertedData, Messages("datetime.format"));
+   					    	   }
+   					    	
+   					    	   return convertedData;
+    					   	});
+
+    					    ngModelController.$formatters.push(function(data) {
+    					      //model to view
+    					    	var convertedData = data;
+    					    	
+    					    	if(attrs.htmlFilter == "Date"){
+    					    		convertedData = $filter('date')(convertedData, Messages("datetime.format"));
+    					    	}
+    					    	
+    					    	return convertedData;
+    					    });   
+    					  }
+    					}
     			});
