@@ -1043,10 +1043,10 @@ angular.module('datatableServices', []).
 			    		var divs = angular.element(element).children("div");
 			    		for(var i=0;i<divs.length;i++){
 			    			if(divs[i].id === "datatableFormConfiguration"){
-			    				formConfig = divs[i].innerHTML;
+			    				formConfig += divs[i].innerHTML;
 			    			}
 			    			if(divs[i].id === "datatableButtonsConfiguration"){
-			    				buttonsConfig = divs[i].innerHTML;
+			    				buttonsConfig += divs[i].innerHTML;
 			    			}
 			    		}
 			    	};
@@ -1267,6 +1267,8 @@ angular.module('datatableServices', []).
 		    				var format = "";
 		    				if(col.type == "Date"){
 		    					format += "| date:'"+Messages("datetime.format")+"'";
+							}else if(col.type == "Number"){
+								format += "| number";
 							}
 		    				
 		    				return format;
@@ -1371,6 +1373,8 @@ angular.module('datatableServices', []).
     					    	
     					    	if(attrs.htmlFilter == "Date"){
     					    		convertedData = $filter('date')(convertedData, Messages("datetime.format"));
+    					    	}else if(attrs.htmlFilter == "Number"){
+    					    		$filter('number')(convertedData);
     					    	}
     					    	
     					    	return convertedData;
