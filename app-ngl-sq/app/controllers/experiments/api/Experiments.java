@@ -201,7 +201,7 @@ public class Experiments extends CommonController{
 		Workflows.setExperimentStateCode(exp,new ContextValidation(experimentFilledForm.errors()));
 		if (!experimentFilledForm.hasErrors()) {	 	
 			Builder builder = new DBUpdate.Builder();
-			builder = builder.set("stateCode",exp.stateCode);//TODO: validation? buisness validation
+			builder = builder.set("stateCode",exp.stateCode);//TODO: validation? Business validation
 
 			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
