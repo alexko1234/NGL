@@ -22,7 +22,7 @@ public class Global extends GlobalSettings {
 	}
 
 	@Override
-	public  play.api.mvc.Handler	onRouteRequest(Http.RequestHeader request) {
+	public  play.api.mvc.Handler onRouteRequest(Http.RequestHeader request) {
 		return super.onRouteRequest(request);
 	}
 
