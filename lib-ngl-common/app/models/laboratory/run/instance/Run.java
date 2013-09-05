@@ -33,7 +33,7 @@ public class Run extends DBObject implements IValidation {
     public TBoolean abort = TBoolean.UNSET;
     public Date abortDate;
     
-
+    
     public Map<String, PropertyValue> properties = new HashMap<String, PropertyValue>();
 
     public InstrumentUsed instrumentUsed;

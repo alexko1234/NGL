@@ -120,38 +120,24 @@ public class ContextValidation {
 	 * @param key
 	 */
 	public void addKeyToRootKeyName(String key) {
-		String strNewRoot = "";
 		if (StringUtils.isBlank(this.rootKeyName)) {
-			strNewRoot = key;
+			this.rootKeyName = key;
 		}
 		else {
-			strNewRoot = this.rootKeyName + "." + key;
-		}
-		this.rootKeyName = strNewRoot;
+			this.rootKeyName += "." + key;
+		}		
 	}
 	
 	/**
 	 * 
 	 * @param key
 	 */
-	public void removeKeyFromRootKeyName(String key) {
-		String strNewRoot = "";
-		if (StringUtils.isBlank(this.rootKeyName)) {
-			strNewRoot = "";
-		}
-		if (this.rootKeyName == key ) {
-			strNewRoot = "";
-		}
-		else {
-			if (this.rootKeyName.endsWith(key)) {
-				strNewRoot = this.rootKeyName.substring(0, this.rootKeyName.length()-key.length()-1); 
-			}		
-			else {
-				// just for debug in this case ...
-				strNewRoot = "N.A";
-			}
-		}
-		this.rootKeyName = strNewRoot;
+	public void removeKeyFromRootKeyName(String key) {		
+		if(StringUtils.isNotBlank(this.rootKeyName) && this.rootKeyName.equals(key)){
+			this.rootKeyName = null;
+		}else if(StringUtils.isNotBlank(this.rootKeyName) && this.rootKeyName.endsWith(key)){
+			this.rootKeyName = this.rootKeyName.substring(0, this.rootKeyName.length()-key.length()-1);
+		}		
 	}
 	
 

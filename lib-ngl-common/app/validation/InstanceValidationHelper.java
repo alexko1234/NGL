@@ -102,13 +102,14 @@ public class InstanceValidationHelper {
 			int index = 0;			
 			Set<Integer> laneNumbers = new TreeSet<Integer>();
 			for (Lane lane : lanes) {
-				contextValidation.addKeyToRootKeyName("lanes"+"["+index+++"]");
+				contextValidation.addKeyToRootKeyName("lanes"+"["+index+"]");
 				lane.validate(contextValidation);
 				if(laneNumbers.contains(lane.number)){
 					contextValidation.addErrors("number", ValidationConstants.ERROR_NOTUNIQUE,lane.number);
 				}				
 				laneNumbers.add(lane.number);			
-				contextValidation.removeKeyFromRootKeyName("lanes"+"["+index+++"]");
+				contextValidation.removeKeyFromRootKeyName("lanes"+"["+index+"]");
+				index++;
 			}
 		}
 
@@ -118,9 +119,10 @@ public class InstanceValidationHelper {
 		if(null != readsets) {
 			int index = 0;
 			for (ReadSet readSet : readsets) {
-				contextValidation.addKeyToRootKeyName("readsets["+index+++"]"); 
+				contextValidation.addKeyToRootKeyName("readsets["+index+"]"); 
 				readSet.validate(contextValidation);
-				contextValidation.removeKeyFromRootKeyName("readsets["+index+++"]");
+				contextValidation.removeKeyFromRootKeyName("readsets["+index+"]");
+				index++;
 			}
 		}
 		
@@ -130,9 +132,10 @@ public class InstanceValidationHelper {
 		if(null != files) {	
 			int index = 0;
 			for (File file : files) {
-				contextValidation.addKeyToRootKeyName("files["+index+++"]"); 
+				contextValidation.addKeyToRootKeyName("files["+index+"]"); 
 				file.validate(contextValidation);
-				contextValidation.removeKeyFromRootKeyName("files["+index+++"]");
+				contextValidation.removeKeyFromRootKeyName("files["+index+"]");
+				index++;
 			}
 		}
 
