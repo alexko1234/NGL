@@ -44,7 +44,7 @@ public class LimsRunDAO {
 	    	String sql = "SELECT m.pc_name as code, min(w.start_date) as date, mt.name as categoryCode, f.nb_cycles" //, mt.type as seq_type, m.model as seq_model
 	    				+" FROM t_flowcell f"
 	    				+" JOIN t_workflow w on w.flowcell_id=f.id"
-	    				+" JOIN t_stage s on w.stage_id=s.id and ( s.workflow='SEQ' and s.name='Read1')"
+	    				//+" JOIN t_stage s on w.stage_id=s.id and ( s.workflow='SEQ' and s.name='Read1')" après passage 2500
 	    				+" JOIN t_machine m on w.machine_id=m.id"
 	    				+" JOIN t_machine_type mt on ( m.type_id=mt.id AND mt.type IN ('GA','HS','H2','MS') )"
 	    				+" WHERE f.barcode=? and w.start_date between ? and ?"
@@ -56,7 +56,7 @@ public class LimsRunDAO {
     		String sql = "SELECT m.pc_name as code,  min(w.start_date) as date, mt.name as categoryCode, f.nb_cycles" //, mt.type as seq_type, m.model as seq_model
     				+" FROM t_flowcell f"
     				+" JOIN t_workflow w on w.flowcell_id=f.id"
-    				+" JOIN t_stage s on w.stage_id=s.id and ( s.workflow='SEQ' and s.name='Read1')"
+    				//+" JOIN t_stage s on w.stage_id=s.id and ( s.workflow='SEQ' and s.name='Read1')" après passage 2500
     				+" JOIN t_machine m on w.machine_id=m.id"
     				+" JOIN t_machine_type mt on  ( m.type_id=mt.id AND mt.type IN ('GA','HS','H2','MS') )"
     				+" WHERE f.barcode=?"
