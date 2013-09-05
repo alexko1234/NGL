@@ -17,12 +17,12 @@ import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
  */
 @JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="@type", defaultImpl=models.laboratory.common.instance.property.PropertySingleValue.class)
 @JsonSubTypes({
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertySingleValue.class, name = "PropertySingleValue"),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyListValue.class, name = "PropertyListValue"),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyFileValue.class, name = "PropertyFileValue"),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyMapValue.class, name = "PropertyMapValue"),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectValue.class, name = "PropertyObjectValue"),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectListValue.class, name = "PropertyObjectListValue")
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertySingleValue.class, name = "single"),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyListValue.class, name = "list"),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyFileValue.class, name = "file"),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyMapValue.class, name = "map"),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectValue.class, name = "object"),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectListValue.class, name = "object_list")
 })
 public abstract class PropertyValue<T> implements IValidation {
 	
