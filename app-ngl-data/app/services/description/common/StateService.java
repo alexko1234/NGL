@@ -43,6 +43,9 @@ public class StateService {
 		l.add(newState("En Stock", "IS", true, 7, getStateCategories(StateCategory.CODE.Container)));
 		l.add(newState("Indisponible", "UA", true, 8, getStateCategories(StateCategory.CODE.Container)));
 		l.add(newState("Finie", "F", true, 9, getStateCategories(StateCategory.CODE.Project, StateCategory.CODE.Experiment,StateCategory.CODE.Process)));			
+		l.add(newState("En attente Purification", "IWP", true, 10, getStateCategories(StateCategory.CODE.Container)));			
+		l.add(newState("En attente Contrôle Qualité", "IWQC", true, 11, getStateCategories(StateCategory.CODE.Container)));			
+		l.add(newState("En attente Validation", "IWV", true, 12, getStateCategories(StateCategory.CODE.Container)));			
 		
 		DAOHelpers.saveModels(State.class, l, errors);
 		
