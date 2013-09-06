@@ -1,7 +1,5 @@
 package models;
 
-import static validation.utils.ValidationHelper.addErrors;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -20,7 +18,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import play.Logger;
-import play.data.validation.ValidationError;
+import validation.utils.ContextValidation;
 
 @Repository
 public class TaraDAO {
@@ -34,7 +32,8 @@ public class TaraDAO {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);              
 	}
 
-	public Map<String,PropertyValue> findTaraSample(Integer limsCode,Map<String,List<ValidationError>> errors){
+	@SuppressWarnings("rawtypes")
+	public Map<String,PropertyValue> findTaraSample(Integer limsCode,ContextValidation contextValidation){
 
 		List<Map<String,PropertyValue>> results =  this.jdbcTemplate.query("   SELECT"+
 				"  cast(AREA.AREA_CODE as SIGNED INT) as station ,"+
@@ -77,7 +76,7 @@ public class TaraDAO {
 		if(results.size()==1){
 			return results.get(0);
 		} else {
-			addErrors(errors,"taraRefId","limsdao.error.code.notexist","Tara Reference Id", limsCode);
+			contextValidation.addErrors("taraRefId","limsdao.error.code.notexist","Tara Reference Id", limsCode);
 			return null;
 		}
 
