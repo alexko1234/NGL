@@ -1,14 +1,14 @@
 package validation.utils;
 
 import static validation.utils.ValidationHelper.addErrors;
-import static validation.utils.ValidationHelper.getKey;
 import static validation.utils.ValidationHelper.required;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
-import play.Logger;
 import play.data.validation.ValidationError;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
@@ -68,11 +68,11 @@ public class BusinessValidationHelper {
 	 * @return boolean
 	 */
 	
-	public static <T extends DBObject> boolean validateUniqueFieldValue(Map<String, List<ValidationError>> errors,
+	public static <T extends DBObject> boolean validateUniqueFieldValue(ContextValidation contextValidation,
 			String key, String keyValue, Class<T> type, String collectionName){
 		
 		if(null!=keyValue && MongoDBDAO.checkObjectExist(collectionName, type, key, keyValue)){
-			addErrors(errors, key, ERROR_NOTUNIQUE, keyValue);
+			contextValidation.addErrors(key, ValidationConstants.ERROR_NOTUNIQUE,keyValue);
 			return false;
 		}else if (keyValue!=null){
 			return false;
@@ -82,9 +82,9 @@ public class BusinessValidationHelper {
 	}
 	
 	
-	public static <T> void validateRequiredDescriptionCode(Map<String, List<ValidationError>> errors, String code, String key,
+	public static <T> void validateRequiredDescriptionCode(ContextValidation contextValidation, String code, String key,
 			Finder<T> find) {
-		 validateRequiredDescriptionCode(errors, code, key, find,false);
+		 validateRequiredDescriptionCode(contextValidation, code, key, find,false);
 	}
 
 	/**
@@ -96,11 +96,11 @@ public class BusinessValidationHelper {
 	 * @param returnObject
 	 * @return object de T or null if returnObject is false
 	 */
-	public static <T> T validateRequiredDescriptionCode(Map<String, List<ValidationError>> errors, String code, String key,
+	public static <T> T validateRequiredDescriptionCode(ContextValidation contextValidation, String code, String key,
 			Finder<T> find, boolean returnObject) {
 		T o = null;
-		if(required(errors, code, key)){
-			o = validateExistDescriptionCode(errors, code, key, find, returnObject);
+		if(required(contextValidation, code, key)){
+			o = validateExistDescriptionCode(contextValidation, code, key, find, returnObject);
 		}
 		return o;		
 	}
@@ -116,9 +116,9 @@ public class BusinessValidationHelper {
 	 * @return void
 	 */
 	public static <T> void validateExistDescriptionCode(
-			Map<String, List<ValidationError>> errors, String code, String key,
+			ContextValidation contextValidation, String code, String key,
 			Finder<T> find) {
-		 validateExistDescriptionCode(errors, code, key, find, false);
+		 validateExistDescriptionCode(contextValidation, code, key, find, false);
 	}
 
 	/***
@@ -131,18 +131,19 @@ public class BusinessValidationHelper {
 	 * @return object de T or null if returnObject is false
 	 */
 	public static <T> T validateExistDescriptionCode(
-			Map<String, List<ValidationError>> errors, String code, String key,
+			ContextValidation contextValidation, String code, String key,
 			Finder<T> find, boolean returnObject) {
 		T o = null;
 		try {
 			if(code != "" && null != code && returnObject){
 				o = find.findByCode(code);
 				if(o == null){
-					addErrors(errors, key, ERROR_NOTEXIST, code);
+
+					contextValidation.addErrors(key, ERROR_NOTEXIST, code);
 				}
 			}else if(code != "" && null != code ){
 				if( !find.isCodeExist(code))
-				addErrors(errors, key, ERROR_NOTEXIST, code);
+				contextValidation.addErrors(key, ERROR_NOTEXIST, code);
 			}
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
@@ -150,10 +151,10 @@ public class BusinessValidationHelper {
 		return o;
 	}
 
-	public static <T extends DBObject> void validateRequiredInstanceCode(Map<String, List<ValidationError>> errors,
+	public static <T extends DBObject> void validateRequiredInstanceCode(ContextValidation contextValidation,
 			String code, String key, Class<T> type, String collectionName) {
-		if(required(errors, code, key)){
-			validateExistInstanceCode(errors, code, key, type,collectionName);
+		if(required(contextValidation, code, key)){
+			validateExistInstanceCode(contextValidation, code, key, type,collectionName);
 		}
 	}
 
@@ -167,11 +168,11 @@ public class BusinessValidationHelper {
 	 * @param returnObject
 	 * @return
 	 */
-	public static <T extends DBObject> T validateRequiredInstanceCode(Map<String, List<ValidationError>> errors,
+	public static <T extends DBObject> T validateRequiredInstanceCode(ContextValidation contextValidation,
 			String code, String key, Class<T> type, String collectionName, boolean returnObject) {
 		T o = null;
-		if(required(errors, code, key)){
-			o = validateExistInstanceCode(errors, code, key, type,collectionName, returnObject);
+		if(required(contextValidation, code, key)){
+			o = validateExistInstanceCode(contextValidation, code, key, type,collectionName, returnObject);
 		}
 		return o;	
 	}
@@ -187,13 +188,13 @@ public class BusinessValidationHelper {
 	 * @param returnObject
 	 * @return
 	 */
-	public static <T extends DBObject> List<T> validateRequiredInstanceCodes(Map<String, List<ValidationError>> errors,
+	public static <T extends DBObject> List<T> validateRequiredInstanceCodes(ContextValidation contextValidation,
 			List<String> codes, String key, Class<T> type, String collectionName, boolean returnObject) {
 
 		List<T> l = null;
 		
-		if(required(errors, codes, key)){
-			l=validateExistInstanceCodes(errors, codes, key, type, collectionName, returnObject);
+		if(required(contextValidation, codes, key)){
+			l=validateExistInstanceCodes(contextValidation, codes, key, type, collectionName, returnObject);
 		}
 		return l;
 		
@@ -211,14 +212,14 @@ public class BusinessValidationHelper {
 	 * @param returnObject
 	 * @return
 	 */
-	public static <T extends DBObject> List<T> validateExistInstanceCodes(Map<String, List<ValidationError>> errors,
+	public static <T extends DBObject> List<T> validateExistInstanceCodes(ContextValidation contextValidation,
 			List<String> codes, String key, Class<T> type, String collectionName, boolean returnObject) {
 		List<T> l = null;
 		if(null != codes && codes.size() > 0){
 			l = (returnObject)?new ArrayList<T>():null;
 
 			for(String code: codes){
-				T o =validateExistInstanceCode(errors, code, key, type, collectionName, returnObject) ;
+				T o =validateExistInstanceCode(contextValidation, code, key, type, collectionName, returnObject) ;
 				if(returnObject){
 					l.add(o);
 				}
@@ -229,9 +230,9 @@ public class BusinessValidationHelper {
 
 	
 	
-	public static <T extends DBObject> void validateExistInstanceCode(Map<String, List<ValidationError>> errors,
+	public static <T extends DBObject> void validateExistInstanceCode(ContextValidation contextValidation,
 			String code, String key, Class<T> type, String collectionName) {
-		validateExistInstanceCode(errors, code, key, type, collectionName, false);
+		validateExistInstanceCode(contextValidation, code, key, type, collectionName, false);
 	}
 	/**
 	 * Validate a code of a MongoDB Collection
@@ -243,17 +244,17 @@ public class BusinessValidationHelper {
 	 * @param returnObject
 	 * @return
 	 */
-	public static <T extends DBObject> T validateExistInstanceCode(Map<String, List<ValidationError>> errors,
+	public static <T extends DBObject> T validateExistInstanceCode(ContextValidation contextValidation,
 			String code, String key, Class<T> type, String collectionName, boolean returnObject) {
 		T o = null;
 
 		if(null != code && returnObject){
 			o =  MongoDBDAO.findByCode(collectionName, type, code);
 			if(o == null){
-				addErrors(errors, key, ERROR_NOTEXIST, code);
+				contextValidation.addErrors(key, ERROR_NOTEXIST, code);
 			}
 		}else if(null != code && !MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
-			addErrors(errors, key, ERROR_NOTEXIST, code);
+			contextValidation.addErrors( key, ERROR_NOTEXIST, code);
 		}
 
 		return o;

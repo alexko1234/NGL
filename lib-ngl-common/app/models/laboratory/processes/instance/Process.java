@@ -1,8 +1,5 @@
 package models.laboratory.processes.instance;
 
-import static validation.utils.ValidationHelper.addErrors;
-import static validation.utils.ValidationHelper.getKey;
-
 import java.util.List;
 import java.util.Map;
 
@@ -100,14 +97,13 @@ public class Process extends DBObject implements IValidation{
 
 		contextValidation.putObject("_id",this._id);
 		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Process.class,InstanceConstants.CONTAINER_COLL_NAME);
-		
+		InstanceValidationHelper.validationContainerCode(containerInputCode, contextValidation);
 		//??????????
-		if(this._id == null){
-			Container container = BusinessValidationHelper.validateRequiredInstanceCode(contextValidation.errors, this.containerInputCode,"containerInputCode",Container.class,InstanceConstants.CONTAINER_COLL_NAME,true);
+		/*if(this._id == null){
 			if(!container.stateCode.equals("A")){
-				addErrors(contextValidation.errors,this.containerInputCode, getKey(null,"containerNotIWPOrN"));
+				contextValidation.addErrors(contextValidation.errors,this.containerInputCode, getKey(null,"containerNotIWPOrN"));
 			}
-		}
+		}*/
 		InstanceValidationHelper.validationSampleCode(sampleCode, contextValidation);
 		InstanceValidationHelper.validationProjectCode(projectCode, contextValidation);
 		DescriptionValidationHelper.validationStateCode(stateCode, contextValidation);

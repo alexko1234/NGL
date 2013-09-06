@@ -37,7 +37,6 @@ public class InstrumentUsed implements IValidation {
 	public void validate(ContextValidation contextValidation) {
 		DescriptionValidationHelper.validationInstrumentCode(code,contextValidation);
 		DescriptionValidationHelper.validationInstrumentCategoryCode(code,contextValidation);
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, categoryCode, "instrument.categoryCode", InstrumentCategory.find);
 	}
 
 }

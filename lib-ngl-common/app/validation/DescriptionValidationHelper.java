@@ -38,22 +38,22 @@ public class DescriptionValidationHelper {
 	
 	public static void validationProtocol(String protocolCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateExistDescriptionCode(contextValidation.errors, protocolCode, "protocolCode", Protocol.find);
+		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, protocolCode, "protocolCode", Protocol.find);
 	}
 
 	public static void validationInstrumentUsedTypeCode(
 			String instrumentUsedTypeCode, ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, instrumentUsedTypeCode, "instrumentUsedTypeCode", InstrumentUsedType.find);		
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsedTypeCode, "instrumentUsedTypeCode", InstrumentUsedType.find);		
 	}
 	
 	public static void validationExperimentTypeCode(
 			String experimentTypeCode, ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, experimentTypeCode, "experimentTypeCode", ExperimentType.find);		
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, experimentTypeCode, "experimentTypeCode", ExperimentType.find);		
 	}
 
 	public static void validationExperimentType(
 			String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
-		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, typeCode, "typeCode", ExperimentType.find,true);
+		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,true);
 		if(exType!=null){
 			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), contextValidation.rootKeyName,true);
 		}
@@ -61,58 +61,58 @@ public class DescriptionValidationHelper {
 	
 	public static void validationExperimentCategoryCode(String categoryCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, categoryCode, "categoryCode", ExperimentCategory.find,false);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ExperimentCategory.find,false);
 	}
 
 	public static void validationInstrumentCode(String code,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, code, "instrumentUsed.code", Instrument.find);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, code, "instrumentUsed.code", Instrument.find);
 		
 	}
 
 	public static void validationInstrumentCategoryCode(String categoryCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, categoryCode, "instrumentUsed.categoryCode", InstrumentCategory.find);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "instrumentUsed.categoryCode", InstrumentCategory.find);
 	}
 
 	public static void validationProcessTypeCode(String typeCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, typeCode,"typeCode", ProcessType.find);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode,"typeCode", ProcessType.find);
 
 	}
 
 	public static void validationProjectCategoryCode(String categoryCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, categoryCode, "categoryCode", ProjectCategory.find);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ProjectCategory.find);
 
 	}
 
 	public static void validationReagentTypeCode(String reagentTypeCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, reagentTypeCode, "reagentTypeCode", ReagentType.find);		
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, reagentTypeCode, "reagentTypeCode", ReagentType.find);		
 	}
 
 	public static void validationSampleCategoryCode(String categoryCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, categoryCode, "categoryCode", SampleCategory.find,false);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", SampleCategory.find,false);
 
 	}
 
 	public static void validationContainerCategoryCode(String categoryCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, categoryCode, "categoryCode", ContainerCategory.find,false);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ContainerCategory.find,false);
 
 	}
 
 	public static void validationContainerSupportCategoryCode(
 			String categoryCode, ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, categoryCode, "categoryCode", ContainerSupportCategory.find,false);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ContainerSupportCategory.find,false);
 
 	}
 
 	public static void validationSampleTypeCode(String typeCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, typeCode, "typeCode",SampleType.find,false);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode",SampleType.find,false);
 	}
 
 	public static void validationRunTypeCode(String typeCode,
@@ -120,7 +120,7 @@ public class DescriptionValidationHelper {
 		if(ValidationHelper.required(contextValidation, typeCode, "typeCode")){
 			//TODO add controles si le type existe int�rrogation de la partie sgbd
 			//TODO : quand runType sera dans le mod�le description
-			//BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.typeCode, "typeCode", RunType.find, false);
+			//BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, this.typeCode, "typeCode", RunType.find, false);
 			
 			//getRunPropertyDefinitions
 			
@@ -144,7 +144,7 @@ public class DescriptionValidationHelper {
 			String containerSupportCode, ContextValidation contextValidation) {		
 		if(ValidationHelper.required(contextValidation, containerSupportCode, "containerSupportCode")){
 			//TODO add controles si le container existe dans mongo db
-			//BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.containerSupportCode, "containerSupportCode", ContainerSupportCode.find, false);
+			//BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, this.containerSupportCode, "containerSupportCode", ContainerSupportCode.find, false);
 		}		 
 	}
 	
@@ -152,7 +152,7 @@ public class DescriptionValidationHelper {
 	public static void validationProject(String typeCode,
 			Map<String, PropertyValue> properties,
 			ContextValidation contextValidation) {
-		ProjectType projectType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, typeCode, "typeCode", ProjectType.find,true);
+		ProjectType projectType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ProjectType.find,true);
 		if(projectType!=null){
 		ValidationHelper.validateProperties(contextValidation, properties, projectType.getPropertiesDefinitionDefaultLevel());
 		}
@@ -162,7 +162,7 @@ public class DescriptionValidationHelper {
 	public static void validationProcess(String typeCode,
 			Map<String, PropertyValue> properties,
 			ContextValidation contextValidation) {
-		ProcessType processType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, typeCode, "typeCode", ProcessType.find,true);
+		ProcessType processType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ProcessType.find,true);
 		if(processType!=null){
 			ValidationHelper.validateProperties(contextValidation, properties, processType.getPropertiesDefinitionDefaultLevel());
 		}
@@ -172,7 +172,7 @@ public class DescriptionValidationHelper {
 	public static void validationInstrumentUsed(String typeCode,
 			Map<String, PropertyValue> properties,
 			ContextValidation contextValidation) {
-		InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, typeCode, "typeCode", InstrumentUsedType.find,true);
+		InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", InstrumentUsedType.find,true);
 		if(instrumentUsedType!=null){
 			ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel());
 		}
@@ -184,8 +184,8 @@ public class DescriptionValidationHelper {
 			ContextValidation contextValidation) {
 		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
 
-		SampleType sampleType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, typeCode, "typeCode", SampleType.find,true);
-		ImportType importType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, importTypeCode,"importTypeCode", ImportType.find,true);
+		SampleType sampleType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", SampleType.find,true);
+		ImportType importType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, importTypeCode,"importTypeCode", ImportType.find,true);
 
 		proDefinitions.addAll(sampleType.getPropertiesDefinitionDefaultLevel());
 		proDefinitions.addAll(importType.getPropertiesDefinitionSampleLevel());
@@ -197,12 +197,12 @@ public class DescriptionValidationHelper {
 	
 	
 	public static void validationStateCode(String stateCode,ContextValidation contextValidation){
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, stateCode,"stateCode", State.find);
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, stateCode,"stateCode", State.find);
 	}
 
 	public static void validationResolutionCode(String resolutionCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateExistDescriptionCode(contextValidation.errors, resolutionCode,"resolutionCode", Resolution.find);		
+		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, resolutionCode,"resolutionCode", Resolution.find);		
 	}
 	
 }

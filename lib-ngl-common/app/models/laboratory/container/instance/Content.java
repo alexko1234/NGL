@@ -34,7 +34,7 @@ public class Content implements IValidation{
 	public void validate(ContextValidation contextValidation) {
 		
 		if(sampleUsed==null){
-			ValidationHelper.addErrors(contextValidation.errors,"sampleUsed", "error.codeNotFound");
+			contextValidation.addErrors("sampleUsed", "error.codeNotFound");
 		}else {
 			sampleUsed.validate(contextValidation);
 		}
