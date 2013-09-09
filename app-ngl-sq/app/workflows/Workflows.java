@@ -52,23 +52,23 @@ public class Workflows {
 	 */
 	public static void setExperimentStateCode(Experiment experiment, ContextValidation  contextValidation){
 		if(experiment.stateCode.equals("N")) {
-			required(contextValidation.errors, experiment.typeCode, "typeCode");
+			required(contextValidation,experiment.typeCode, "typeCode");
 		} else if(experiment.stateCode.equals("IP")) {
-			required(contextValidation.errors, experiment.typeCode, "typeCode"); 
-			required(contextValidation.errors, experiment.resolutionCode, "resolutionCode");
-			required(contextValidation.errors, experiment.protocolCode, "protocolCode");
-			required(contextValidation.errors, experiment.instrument.code, "instrument");
+			required(contextValidation, experiment.typeCode, "typeCode"); 
+			required(contextValidation, experiment.resolutionCode, "resolutionCode");
+			required(contextValidation, experiment.protocolCode, "protocolCode");
+			required(contextValidation, experiment.instrument.code, "instrument");
 		} else if(experiment.stateCode.equals("F")) {
-			required(contextValidation.errors, experiment.typeCode, "typeCode"); 
-			required(contextValidation.errors, experiment.resolutionCode, "resolutionCode");
-			required(contextValidation.errors, experiment.protocolCode, "protocolCode");
-			required(contextValidation.errors, experiment.instrument.code, "instrument");
-			required(contextValidation.errors, experiment.atomicTransfertMethods, "atomicTransfertMethods");
+			required(contextValidation, experiment.typeCode, "typeCode"); 
+			required(contextValidation, experiment.resolutionCode, "resolutionCode");
+			required(contextValidation, experiment.protocolCode, "protocolCode");
+			required(contextValidation, experiment.instrument.code, "instrument");
+			required(contextValidation, experiment.atomicTransfertMethods, "atomicTransfertMethods");
 				
-			validateProperties(contextValidation, experiment.experimentProperties, experiment.getExperimentType().propertiesDefinitions, getKey(null,"nullPropertiesDefinitions"));
+			validateProperties(contextValidation, experiment.experimentProperties, experiment.getExperimentType().propertiesDefinitions, "nullPropertiesDefinitions");
 			
 		}else{
-			addErrors(contextValidation.errors,experiment.stateCode, getKey(null,"InvalidthisStateCode"));
+			contextValidation.addErrors(experiment.stateCode, "InvalidthisStateCode");
 		}	
 	}
 }
