@@ -8,7 +8,7 @@ import play.data.Form;
 import static play.data.Form.form;
 import play.libs.Json;
 import play.mvc.Result;
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 import controllers.CommonController;

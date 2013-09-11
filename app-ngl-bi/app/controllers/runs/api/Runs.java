@@ -16,14 +16,14 @@ import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
 import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-
+import controllers.utils.FormUtils;
 /**
  * Controller around Run object
  * @author galbini
@@ -37,7 +37,7 @@ public class Runs extends CommonController {
 	public static Result list(){
 		DynamicForm filledForm =  listForm.bindFromRequest();
 		MongoDBResult<Run> results = MongoDBDAO.find(Constants.RUN_ILLUMINA_COLL_NAME, Run.class)
-				.sort(DatatableHelpers.getOrderBy(filledForm), CommonController.getMongoDBOrderSense(filledForm))
+				.sort(DatatableHelpers.getOrderBy(filledForm), FormUtils.getMongoDBOrderSense(filledForm))
 				.page(DatatableHelpers.getPageNumber(filledForm), DatatableHelpers.getNumberRecordsPerPage(filledForm)); 
 		List<Run> runs = results.toList();
 		return ok(Json.toJson(new DatatableResponse(runs, results.count())));

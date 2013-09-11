@@ -18,7 +18,6 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import net.vz.mongodb.jackson.DBQuery;
 import play.data.validation.ValidationError;
-import validation.utils.ContextValidation;
 
 import com.mongodb.MongoException;
 

@@ -11,7 +11,7 @@ import net.vz.mongodb.jackson.DBUpdate;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 import controllers.CommonController;
 import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
