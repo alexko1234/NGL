@@ -15,7 +15,6 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
-import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.property.PropertyListValue;
 import models.laboratory.common.instance.property.PropertyMapValue;
 import models.laboratory.common.instance.property.PropertyObjectListValue;
@@ -32,8 +31,10 @@ import com.google.common.collect.Multimap;
 import play.Logger;
 import play.data.validation.ValidationError;
 import validation.ContextValidation;
+import static validation.utils.ValidationConstants.*;
 
 public class ValidationHelper {
+	
 	
 	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, String rootKeyName,Boolean validateNotDefined) {
 		Map<String, PropertyValue> inputProperties = new HashMap<String, PropertyValue>(0);
@@ -98,7 +99,7 @@ public class ValidationHelper {
 		//treat other property not defined
 		if(validateNotDefined){
 			for(String key : inputProperties.keySet()){
-				contextValidation.addErrors(key, "error.notdefined");
+				contextValidation.addErrors(key, ERROR_NOTDEFINED_MSG);
 				//contextValidation.removeKeyFromRootKeyName(key);
 			}
 		}
@@ -254,7 +255,7 @@ public class ValidationHelper {
         }
         
         if(!isValid){
-        	addErrors(errors, key, "error.required",object);
+        	addErrors(errors, key, ERROR_REQUIRED_MSG,object);
         }        
         return isValid;		
 	}
@@ -285,33 +286,7 @@ public class ValidationHelper {
 		return (StringUtils.isBlank(rootKeyName))?property: rootKeyName+"."+property;
 	}
 	
-	/**
-	 * Validate TraceInformation 
-	 * Check createUser and creationDate is not null if _id is null
-	 * Check createUser, creationDate, modifyUser, modifyDate is not null if _id is null
-	 * 
-	 * @param errors
-	 * @param trace
-	 * @param id
-	 * @deprecated used TraceInformation.validate
-	 */
-	public static void validateTraceInformation(
-			Map<String, List<ValidationError>> errors, TraceInformation trace,
-			String id) {
-		if (id != null) {
-			if(required(errors, trace, "traceInformation")){
-				required(errors, trace.createUser, "traceInformation.createUser");
-				required(errors, trace.creationDate, "traceInformation.creationDate");
-				required(errors, trace.modifyUser, "traceInformation.modifyUser");
-				required(errors, trace.modifyDate, "traceInformation.modifyDate");
-			}
-		} else {
-			if(required(errors, trace, "traceInformation")){
-				required(errors, trace.createUser, "traceInformation.createUser");
-				required(errors, trace.creationDate, "traceInformation.creationDate");
-			}
-		}
-	}
+	
 
 	/**
 	 * Transform the value of propertyValue to the good type
@@ -328,7 +303,7 @@ public class ValidationHelper {
 			}
 		}catch(Throwable e){
 			Logger.error(e.getMessage(),e);
-			contextValidation.addErrors(propertyDefinition.code, "error.badtype", propertyDefinition.valueType, propertyValue.value);
+			contextValidation.addErrors(propertyDefinition.code, ERROR_BADTYPE_MSG, propertyDefinition.valueType, propertyValue.value);
 			return false;
 		}
 		return true;
@@ -354,7 +329,7 @@ public class ValidationHelper {
 			propertyValue.value = newList;
 		}catch(Throwable e){
 			Logger.error(e.getMessage(),e);
-			contextValidation.addErrors(propertyDefinition.code, "error.badtype", propertyDefinition.valueType, propertyValue.value);
+			contextValidation.addErrors(propertyDefinition.code, ERROR_BADTYPE_MSG, propertyDefinition.valueType, propertyValue.value);
 			return false;
 		}
 		return true;
@@ -381,7 +356,7 @@ public class ValidationHelper {
 			propertyValue.value = newMap;
 		}catch(Throwable e){
 			Logger.error(e.getMessage(),e);
-			contextValidation.addErrors(propertyDefinition.code, "error.badtype", propertyDefinition.valueType, propertyValue.value);
+			contextValidation.addErrors(propertyDefinition.code, ERROR_BADTYPE_MSG, propertyDefinition.valueType, propertyValue.value);
 			return false;
 		}
 		return true;
@@ -408,7 +383,7 @@ public class ValidationHelper {
 
 		}catch(Throwable e){
 			Logger.error(e.getMessage(),e);
-			contextValidation.addErrors(codes[0]+".value."+codes[1], "error.badtype", propertyDefinition.valueType, propertyValue.value);
+			contextValidation.addErrors(codes[0]+".value."+codes[1], ERROR_BADTYPE_MSG, propertyDefinition.valueType, propertyValue.value);
 			return false;
 		}
 		return true;
@@ -437,7 +412,7 @@ public class ValidationHelper {
 			
 		}catch(Throwable e){
 			Logger.error(e.getMessage(),e);
-			contextValidation.addErrors(codes[0]+".value."+codes[1], "error.badtype", propertyDefinition.valueType, propertyValue.value);
+			contextValidation.addErrors(codes[0]+".value."+codes[1], ERROR_BADTYPE_MSG, propertyDefinition.valueType, propertyValue.value);
 			return false;
 		}
 		return true;
@@ -479,7 +454,7 @@ public class ValidationHelper {
 				}	
 	        }else{
 	        	isValid = false;
-	        	contextValidation.addErrors(propertyDefinition.code+".value", "error.required",propertyValue.value);
+	        	contextValidation.addErrors(propertyDefinition.code+".value", ERROR_REQUIRED_MSG,propertyValue.value);
 	        }			
 			return isValid;
 		}else if(propertyDefinition.required){
@@ -507,7 +482,7 @@ public class ValidationHelper {
 				}	
 	        }else{
 	        	isValid = false;
-	        	contextValidation.addErrors(propertyDefinition.code+".value", "error.required",propertyValue.value);
+	        	contextValidation.addErrors(propertyDefinition.code+".value", ERROR_REQUIRED_MSG,propertyValue.value);
 	        }			
 			return isValid;
 		}else if(propertyDefinition.required){
@@ -600,7 +575,7 @@ public class ValidationHelper {
         }
         
         if(!isValid){
-        	contextValidation.addErrors(property, "error.required",object);
+        	contextValidation.addErrors(property, ERROR_REQUIRED_MSG,object);
         }        
         return isValid;		
 	}
@@ -614,7 +589,7 @@ public class ValidationHelper {
 	 */
 	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertySingleValue propertyValue, PropertyDefinition propertyDefinition){
 		if(propertyDefinition.choiceInList && !checkIfExistInTheList(propertyDefinition, propertyValue.value.toString())){
-			contextValidation.addErrors(propertyDefinition.code+".value", "error.valuenotauthorized", propertyValue.value);
+			contextValidation.addErrors(propertyDefinition.code+".value", ERROR_VALUENOTAUTHORIZED_MSG, propertyValue.value);
 			return false;
 		}else{
 			return true;
@@ -633,7 +608,7 @@ public class ValidationHelper {
 			int i = 0;
 			for(Object value : propertyValue.value){
 				if(!checkIfExistInTheList(propertyDefinition, value.toString())){
-					contextValidation.addErrors(propertyDefinition.code+".value["+i+++"]", "error.valuenotauthorized", value);
+					contextValidation.addErrors(propertyDefinition.code+".value["+i+++"]", ERROR_VALUENOTAUTHORIZED_MSG, value);
 				}
 			}
 			
@@ -655,7 +630,7 @@ public class ValidationHelper {
 			for(Entry<String, ?> entryValue : propertyValue.value.entrySet()){
 				Object value = entryValue.getValue();
 				if(!checkIfExistInTheList(propertyDefinition, value.toString())){
-					contextValidation.addErrors(propertyDefinition.code+".value."+entryValue.getKey(), "error.valuenotauthorized", value);
+					contextValidation.addErrors(propertyDefinition.code+".value."+entryValue.getKey(), ERROR_VALUENOTAUTHORIZED_MSG, value);
 				}
 			}			
 			return false;
@@ -697,9 +672,9 @@ public class ValidationHelper {
 		}else{
 			String[] codes = splitCodePropertyDefinition(propertyDefinition);
 			if(codes.length == 1){ //simple case
-				contextValidation.addErrors(propertyDefinition.code, "error.notactive");
+				contextValidation.addErrors(propertyDefinition.code, ERROR_NOTACTIVE);
 			}else{ // object case
-				contextValidation.addErrors(codes[0]+".value."+codes[1], "error.notactive");
+				contextValidation.addErrors(codes[0]+".value."+codes[1], ERROR_NOTACTIVE);
 			}
 			return false;			
 		}

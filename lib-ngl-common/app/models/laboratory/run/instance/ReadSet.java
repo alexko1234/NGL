@@ -75,18 +75,18 @@ public class ReadSet implements IValidation{
 			Run runExist = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("lanes.readsets.code", this.code));
 			
 			if(runExist != null && run._id == null){ //when new run 
-				contextValidation.addErrors("code",ValidationConstants.ERROR_NOTUNIQUE, this.code);
+				contextValidation.addErrors("code",ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, this.code);
 				
 			} else if(runExist != null && run._id != null) { //when run exist
 				if(!runExist.code.equals(run.code) || !runExist._id.equals(run._id)) {
-					contextValidation.addErrors("code", ValidationConstants.ERROR_NOTUNIQUE, this.code);
+					contextValidation.addErrors("code", ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, this.code);
 				}else if(lane.number != -1){
 					for(Lane l:run.lanes){
 						if(l.readsets!=null){ 
 							for(ReadSet r: l.readsets){
 								if(r.code.equals(this.code)){
 									if(l.number != lane.number){
-										contextValidation.addErrors("code", ValidationConstants.ERROR_NOTUNIQUE, this.code);
+										contextValidation.addErrors("code", ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, this.code);
 										break;
 									}
 								}

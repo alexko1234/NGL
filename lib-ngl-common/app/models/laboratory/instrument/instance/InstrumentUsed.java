@@ -36,7 +36,7 @@ public class InstrumentUsed implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		DescriptionValidationHelper.validationInstrumentCode(code,contextValidation);
-		DescriptionValidationHelper.validationInstrumentCategoryCode(code,contextValidation);
+		DescriptionValidationHelper.validationInstrumentCategoryCode(categoryCode,contextValidation);
 	}
 
 }

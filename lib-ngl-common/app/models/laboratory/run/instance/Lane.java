@@ -57,7 +57,7 @@ public class Lane implements IValidation{
 				Run runExist = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", run.code).is("lanes.number", this.number));
 				//TODO : update case not managed
 				if (runExist != null) {
-					contextValidation.addErrors("number",ValidationConstants.ERROR_NOTUNIQUE, this.number);
+					contextValidation.addErrors("number",ValidationConstants.ERROR_NOTUNIQUE_MSG, this.number);
 				}
 			}
 		}

@@ -484,12 +484,7 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 		DescriptionValidationHelper.validationProcess(null, null, contextValidation);		
 	}
 	
-	//TODO revoir le nom ??
-	public void validationInstrumentUsedTest() {
-		ContextValidation contextValidation=new ContextValidation();
-		DescriptionValidationHelper.validationInstrumentUsed(null, null, contextValidation);		
-		
-	}
+	
 
 	//TODO
 	public void validationSampleTypeTest(){

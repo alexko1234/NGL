@@ -168,16 +168,6 @@ public class DescriptionValidationHelper {
 		
 	}
 	
-	public static void validationInstrumentUsed(String typeCode,
-			Map<String, PropertyValue> properties,
-			ContextValidation contextValidation) {
-		InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", InstrumentUsedType.find,true);
-		if(instrumentUsedType!=null){
-			ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel());
-		}
-		
-	}
-
 	public static void validationSampleType(String typeCode,
 			String importTypeCode, Map<String, PropertyValue> properties,
 			ContextValidation contextValidation) {

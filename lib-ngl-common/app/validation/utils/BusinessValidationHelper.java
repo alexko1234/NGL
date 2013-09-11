@@ -73,7 +73,7 @@ public class BusinessValidationHelper {
 			String key, String keyValue, Class<T> type, String collectionName){
 		
 		if(null!=keyValue && MongoDBDAO.checkObjectExist(collectionName, type, key, keyValue)){
-			contextValidation.addErrors(key, ValidationConstants.ERROR_NOTUNIQUE,keyValue);
+			contextValidation.addErrors(key, ValidationConstants.ERROR_NOTUNIQUE_MSG,keyValue);
 			return false;
 		}else if (keyValue!=null){
 			return false;

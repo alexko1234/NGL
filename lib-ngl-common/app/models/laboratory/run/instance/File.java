@@ -39,7 +39,7 @@ public class File extends DBObject implements IValidation {
 		//Validate unique file.code if not already exists
 		Run runExist = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("lanes.readsets.files.fullname", this.fullname));
 		if (runExist != null && run._id == null) { //when new run
-			contextValidation.addErrors("fullname",ValidationConstants.ERROR_NOTUNIQUE, this.fullname);
+			contextValidation.addErrors("fullname",ValidationConstants.ERROR_NOTUNIQUE_MSG, this.fullname);
 		}
 		 
 		ValidationHelper.required(contextValidation, this.extension, "extension");
