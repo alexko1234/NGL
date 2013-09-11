@@ -4,17 +4,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import validation.ContextValidation;
 import validation.DescriptionValidationHelper;
+import validation.IValidation;
 import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.ContextValidation;
 import validation.utils.RunPropertyDefinitionHelper;
 import validation.utils.ValidationHelper;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.InstrumentUsed;
-import models.utils.IValidation;
 import models.utils.InstanceConstants;
 import fr.cea.ig.DBObject;
 

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import models.laboratory.common.description.PropertyDefinition;
 
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 
 

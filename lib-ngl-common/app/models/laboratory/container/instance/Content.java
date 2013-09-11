@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
-import models.utils.IValidation;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import validation.ContextValidation;
+import validation.IValidation;
 import validation.utils.ValidationHelper;
-import validation.utils.ContextValidation;
 
 public class Content implements IValidation{
 		

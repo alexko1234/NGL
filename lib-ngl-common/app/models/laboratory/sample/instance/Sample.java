@@ -15,7 +15,6 @@ import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.HelperObjects;
-import models.utils.IValidation;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.MongoCollection;
 
@@ -24,11 +23,12 @@ import org.hibernate.validator.internal.metadata.core.ConstraintHelper;
 
 
 import play.Logger;
+import validation.ContextValidation;
 import validation.DescriptionValidationHelper;
+import validation.IValidation;
 import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
-import validation.utils.ContextValidation;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;

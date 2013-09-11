@@ -7,13 +7,14 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
-import models.utils.IValidation;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonTypeInfo.As;
 import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
+
+import validation.IValidation;
 
 
 @JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="class")

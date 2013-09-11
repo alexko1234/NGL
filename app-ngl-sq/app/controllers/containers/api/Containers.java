@@ -25,6 +25,7 @@ import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
 import controllers.Constants;
+import controllers.utils.FormUtils;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import models.laboratory.processes.description.ProcessType;
@@ -42,7 +43,7 @@ public class Containers extends CommonController {
 		ContainersSearchForm containersSearch = containerFilledForm.get();
 		DBQuery.Query query = getQuery(containersSearch);
 	    MongoDBResult<Container> results = MongoDBDAO.find(Constants.CONTAINER_COLL_NAME, Container.class, query)
-				.sort(DatatableHelpers.getOrderBy(containerFilledForm), getMongoDBOrderSense(containerFilledForm))
+				.sort(DatatableHelpers.getOrderBy(containerFilledForm), FormUtils.getMongoDBOrderSense(containerFilledForm))
 				.page(DatatableHelpers.getPageNumber(containerFilledForm), DatatableHelpers.getNumberRecordsPerPage(containerFilledForm)); 
 		List<Container> containers = results.toList();
 		

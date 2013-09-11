@@ -10,6 +10,7 @@ import java.util.Map;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 import play.data.validation.ValidationError;
+import validation.ContextValidation;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 

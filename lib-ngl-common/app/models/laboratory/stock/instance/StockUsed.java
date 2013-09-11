@@ -4,11 +4,11 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
+import validation.IValidation;
 
 
 
-import models.utils.IValidation;
 
 public class StockUsed implements IValidation{
 	//Support ref

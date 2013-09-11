@@ -25,7 +25,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import views.html.dataload.sampleload;
 import au.com.bytecode.opencsv.CSVReader;

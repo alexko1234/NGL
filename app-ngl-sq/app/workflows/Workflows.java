@@ -13,7 +13,7 @@ import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import play.Logger;
 import play.data.validation.ValidationError;
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 

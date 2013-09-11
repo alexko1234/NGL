@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
+import validation.IValidation;
 
 
 
-import models.utils.IValidation;
 import net.vz.mongodb.jackson.MongoCollection;
 import fr.cea.ig.DBObject;
 

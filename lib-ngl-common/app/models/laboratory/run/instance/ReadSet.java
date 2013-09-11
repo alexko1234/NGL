@@ -13,11 +13,11 @@ import fr.cea.ig.MongoDBDAO;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
-import models.utils.IValidation;
 import models.utils.InstanceConstants;
 import play.data.validation.Constraints.Required;
+import validation.ContextValidation;
+import validation.IValidation;
 import validation.InstanceValidationHelper;
-import validation.utils.ContextValidation;
 import validation.utils.RunPropertyDefinitionHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 
 import models.laboratory.common.description.PropertyDefinition;

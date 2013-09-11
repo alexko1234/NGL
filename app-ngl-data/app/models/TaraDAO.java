@@ -18,7 +18,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import play.Logger;
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 
 @Repository
 public class TaraDAO {

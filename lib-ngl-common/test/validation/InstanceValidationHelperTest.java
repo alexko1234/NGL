@@ -20,7 +20,6 @@ import org.junit.Test;
 import play.test.Helpers;
 import utils.AbstractTests;
 import validation.InstanceValidationHelper;
-import validation.utils.ContextValidation;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 

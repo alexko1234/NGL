@@ -2,6 +2,7 @@ package controllers.utils;
 
 import java.util.List;
 
+@Deprecated
 public class DataTableForm {
 	public String sEcho;
 	public Integer iColumns;
@@ -20,5 +21,7 @@ public class DataTableForm {
 	public List<Boolean> bSortable;
 	public List<Integer> iSortCol;
 	public List<String> sSortDir;
+	
+	
 	
 }

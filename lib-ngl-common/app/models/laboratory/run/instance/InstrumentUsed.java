@@ -1,8 +1,9 @@
 package models.laboratory.run.instance;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import models.utils.IValidation;
-import validation.utils.ContextValidation;
+
+import validation.ContextValidation;
+import validation.IValidation;
 import validation.utils.ValidationHelper;
 
 public class InstrumentUsed implements IValidation {

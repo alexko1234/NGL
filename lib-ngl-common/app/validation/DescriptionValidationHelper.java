@@ -31,7 +31,6 @@ import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
-import validation.utils.ContextValidation;
 import validation.utils.ValidationHelper;
 
 public class DescriptionValidationHelper {

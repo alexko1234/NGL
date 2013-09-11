@@ -3,10 +3,10 @@ package models.laboratory.container.instance;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
+import validation.IValidation;
 
 
-import models.utils.IValidation;
 import net.vz.mongodb.jackson.MongoCollection;
 
 /*

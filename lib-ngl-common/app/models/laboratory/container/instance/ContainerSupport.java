@@ -4,15 +4,15 @@ package models.laboratory.container.instance;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.stock.instance.Stock;
 import models.utils.HelperObjects;
-import models.utils.IValidation;
 import models.utils.InstanceConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import validation.ContextValidation;
 import validation.DescriptionValidationHelper;
+import validation.IValidation;
 import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.ContextValidation;
 
 
 

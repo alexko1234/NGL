@@ -18,7 +18,8 @@ import org.apache.commons.collections.Transformer;
 
 import play.data.validation.ValidationError;
 import play.mvc.Http;
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
+import validation.IValidation;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 

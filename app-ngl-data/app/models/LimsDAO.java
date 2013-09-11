@@ -34,7 +34,7 @@ import org.springframework.stereotype.Repository;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.validation.ValidationError;
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 
 
 @Repository

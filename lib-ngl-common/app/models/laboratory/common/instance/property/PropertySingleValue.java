@@ -3,7 +3,7 @@ package models.laboratory.common.instance.property;
 import java.util.Collection;
 import java.util.Collections;
 
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;

@@ -29,7 +29,6 @@ import play.Logger;
 import play.data.validation.ValidationError;
 
 import utils.AbstractTests;
-import validation.utils.ContextValidation;
 import validation.utils.ValidationHelper;
 
 public class ValidationHelperTests extends AbstractTests {

@@ -5,17 +5,17 @@ import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
-import models.utils.IValidation;
 import models.utils.InstanceConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 
 import play.Logger;
+import validation.ContextValidation;
 import validation.DescriptionValidationHelper;
+import validation.IValidation;
 import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.ContextValidation;
 
 public class SampleUsed implements IValidation{
 

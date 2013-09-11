@@ -1,6 +1,6 @@
 package models.laboratory.common.instance.property;
 
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 import models.laboratory.common.instance.PropertyValue;
 
 

@@ -1,11 +1,12 @@
 package models.laboratory.common.instance;
 
-import models.utils.IValidation;
 
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonTypeInfo.As;
 import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
+
+import validation.IValidation;
 
 
 /**

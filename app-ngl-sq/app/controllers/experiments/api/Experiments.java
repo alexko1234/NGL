@@ -24,7 +24,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 import workflows.Workflows;
 import controllers.CodeHelper;
 import controllers.CommonController;

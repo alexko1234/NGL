@@ -16,15 +16,15 @@ import models.laboratory.project.instance.Project;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
-import models.utils.IValidation;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import validation.ContextValidation;
 import validation.DescriptionValidationHelper;
+import validation.IValidation;
 import validation.InstanceValidationHelper;
-import validation.utils.ContextValidation;
 import fr.cea.ig.DBObject;
 
 

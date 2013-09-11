@@ -3,11 +3,11 @@ package models.laboratory.common.instance;
 import java.util.Date;
 
 import models.utils.HelperObjects;
-import models.utils.IValidation;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
+import validation.IValidation;
 
 import controllers.administration.authentication.User;
 

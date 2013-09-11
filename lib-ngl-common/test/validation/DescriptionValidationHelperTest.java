@@ -25,7 +25,6 @@ import org.junit.Test;
 import play.test.Helpers;
 import utils.AbstractTests;
 import validation.DescriptionValidationHelper;
-import validation.utils.ContextValidation;
 
 public class DescriptionValidationHelperTest extends AbstractTests{
 	

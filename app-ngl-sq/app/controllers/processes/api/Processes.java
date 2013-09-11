@@ -19,7 +19,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.BusinessValidationHelper;
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
@@ -27,6 +27,7 @@ import controllers.CodeHelper;
 import controllers.CommonController;
 import controllers.Constants;
 import controllers.authorisation.PermissionHelper;
+import controllers.utils.FormUtils;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -87,7 +88,7 @@ public class Processes extends CommonController{
 		ProcessesSearchForm processSearch = processesSearchFilledForm.get();
 		DBQuery.Query query = getQuery(processSearch);
 	    MongoDBResult<Process> results = MongoDBDAO.find(Constants.PROCESS_COLL_NAME, Process.class, query)
-				.sort(DatatableHelpers.getOrderBy(processesSearchFilledForm), getMongoDBOrderSense(processesSearchFilledForm))
+				.sort(DatatableHelpers.getOrderBy(processesSearchFilledForm), FormUtils.getMongoDBOrderSense(processesSearchFilledForm))
 				.page(DatatableHelpers.getPageNumber(processesSearchFilledForm), DatatableHelpers.getNumberRecordsPerPage(processesSearchFilledForm)); 
 		List<Process> process = results.toList();
 		return ok(Json.toJson(new DatatableResponse(process, results.count())));

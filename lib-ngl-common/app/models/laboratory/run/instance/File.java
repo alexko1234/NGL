@@ -1,5 +1,7 @@
 package models.laboratory.run.instance;
 
+import validation.ContextValidation;
+import validation.IValidation;
 import validation.utils.ValidationHelper;
 
 import java.util.HashMap;
@@ -8,9 +10,7 @@ import java.util.Map;
 import net.vz.mongodb.jackson.DBQuery;
 
 import models.laboratory.common.instance.PropertyValue;
-import models.utils.IValidation;
 import models.utils.InstanceConstants;
-import validation.utils.ContextValidation;
 import validation.utils.RunPropertyDefinitionHelper;
 import validation.utils.ValidationConstants;
 import fr.cea.ig.DBObject;

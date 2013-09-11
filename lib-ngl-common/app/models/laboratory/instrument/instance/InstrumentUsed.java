@@ -4,13 +4,13 @@ package models.laboratory.instrument.instance;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.utils.HelperObjects;
-import models.utils.IValidation;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import validation.ContextValidation;
 import validation.DescriptionValidationHelper;
+import validation.IValidation;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.ContextValidation;
 
 public class InstrumentUsed implements IValidation {
 

@@ -24,7 +24,7 @@ import models.utils.instance.ContainerHelper;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.validation.ValidationError;
-import validation.utils.ContextValidation;
+import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 
 public class ImportDataRun implements Runnable {

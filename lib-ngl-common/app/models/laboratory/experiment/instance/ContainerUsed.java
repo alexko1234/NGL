@@ -5,15 +5,15 @@ import java.util.Map;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.utils.HelperObjects;
-import models.utils.IValidation;
 import models.utils.InstanceConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 
+import validation.ContextValidation;
+import validation.IValidation;
 import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.ContextValidation;
 
 
 public class ContainerUsed implements IValidation{

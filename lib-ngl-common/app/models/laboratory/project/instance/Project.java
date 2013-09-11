@@ -10,18 +10,18 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 import models.utils.HelperObjects;
-import models.utils.IValidation;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 
+import validation.ContextValidation;
 import validation.DescriptionValidationHelper;
+import validation.IValidation;
 import validation.InstanceValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
-import validation.utils.ContextValidation;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;

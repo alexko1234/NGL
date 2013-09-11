@@ -5,11 +5,11 @@ import java.util.Map;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 
+import validation.ContextValidation;
+import validation.IValidation;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.ContextValidation;
 
 import models.laboratory.common.instance.PropertyValue;
-import models.utils.IValidation;
 
 
 /*
