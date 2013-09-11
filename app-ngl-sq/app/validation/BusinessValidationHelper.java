@@ -4,7 +4,6 @@ import static validation.utils.ValidationHelper.addErrors;
 import static validation.utils.ValidationHelper.getKey;
 import static validation.utils.ValidationHelper.required;
 import static validation.utils.ValidationHelper.validateProperties;
-import static validation.utils.ValidationHelper.validateTraceInformation;
 import java.util.List;
 import java.util.Map;
 
