@@ -131,7 +131,7 @@ public class RunValidationTest extends AbstractTests {
 			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
 			 
 			 assertThat(ctxVal.errors).hasSize(1);
-			 assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG); 
+			 assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_NOTUNIQUE_MSG); 
 		 }});
 	 }
 
@@ -220,7 +220,7 @@ public class RunValidationTest extends AbstractTests {
 			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
 			 
 			 assertThat(ctxVal.errors).hasSize(1);
-			 assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG); 
+			 assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_NOTUNIQUE_MSG); 
 		 
 		 }});
 		 
@@ -411,7 +411,7 @@ public class RunValidationTest extends AbstractTests {
 		 Map<String, List<ValidationError>> errorToFind = new HashMap<String, List<ValidationError>>();
 		 List<Object> vaArg = new ArrayList<Object>();
 		 vaArg.add(file.fullname);
-		 ValidationError ve = new  ValidationError("fullname", ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, vaArg);
+		 ValidationError ve = new  ValidationError("fullname", ValidationConstants.ERROR_NOTUNIQUE_MSG, vaArg);
 		 ArrayList<ValidationError> al = new ArrayList<ValidationError>();
 		 al.add(ve);
 		 errorToFind.put("fullname", al);

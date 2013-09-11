@@ -107,7 +107,7 @@ public class InstanceValidationHelper {
 				contextValidation.addKeyToRootKeyName("lanes"+"["+index+"]");
 				lane.validate(contextValidation);
 				if(laneNumbers.contains(lane.number)){
-					contextValidation.addErrors("number", ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG,lane.number);
+					contextValidation.addErrors("number", ValidationConstants.ERROR_NOTUNIQUE_MSG,lane.number);
 				}				
 				laneNumbers.add(lane.number);			
 				contextValidation.removeKeyFromRootKeyName("lanes"+"["+index+"]");
