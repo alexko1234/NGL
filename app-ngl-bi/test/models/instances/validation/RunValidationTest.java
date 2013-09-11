@@ -131,7 +131,7 @@ public class RunValidationTest extends AbstractTests {
 			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
 			 
 			 assertThat(ctxVal.errors).hasSize(1);
-			 assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_NOTUNIQUE); 
+			 assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG); 
 		 }});
 	 }
 
@@ -220,7 +220,7 @@ public class RunValidationTest extends AbstractTests {
 			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
 			 
 			 assertThat(ctxVal.errors).hasSize(1);
-			 assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_NOTUNIQUE); 
+			 assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG); 
 		 
 		 }});
 		 
@@ -319,14 +319,14 @@ public class RunValidationTest extends AbstractTests {
 				 List<Object> vaArg = new ArrayList<Object>();
 				 vaArg.add(readset.code);
 				 ctxVal.addKeyToRootKeyName("code"); 
-				 ValidationError ve = new  ValidationError(ctxVal.getRootKeyName(), ValidationConstants.ERROR_NOTUNIQUE, vaArg);
+				 ValidationError ve = new  ValidationError(ctxVal.getRootKeyName(), ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, vaArg);
 				 ArrayList<ValidationError> al = new ArrayList<ValidationError>();
 				 al.add(ve);
 				 errorToFind.put(ctxVal.getRootKeyName(), al);
 				
 				 assertThat(ctxVal.errors).hasSize(1);
 				 //assertThat(ctxVal.errors.toString()).isEqualTo(errorToFind.toString());
-				 assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_NOTUNIQUE);
+				 assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG);
 			 
 		   }});
 	 }
@@ -411,7 +411,7 @@ public class RunValidationTest extends AbstractTests {
 		 Map<String, List<ValidationError>> errorToFind = new HashMap<String, List<ValidationError>>();
 		 List<Object> vaArg = new ArrayList<Object>();
 		 vaArg.add(file.fullname);
-		 ValidationError ve = new  ValidationError("fullname", ValidationConstants.ERROR_NOTUNIQUE, vaArg);
+		 ValidationError ve = new  ValidationError("fullname", ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, vaArg);
 		 ArrayList<ValidationError> al = new ArrayList<ValidationError>();
 		 al.add(ve);
 		 errorToFind.put("fullname", al);
