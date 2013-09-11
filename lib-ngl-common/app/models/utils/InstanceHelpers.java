@@ -120,7 +120,7 @@ public class InstanceHelpers {
 		
 	}
 
-	public static DBObject save(String collectionName,IValidation obj, ContextValidation contextError) {
+	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError) {
 		ContextValidation localContextError=new ContextValidation();
 		localContextError.errors=new HashMap<String, List<ValidationError>>();
 
@@ -128,6 +128,7 @@ public class InstanceHelpers {
 			obj.validate(localContextError);
 		else {
 			return null;
+			//TODO Exception
 		}
 
 		if(localContextError.errors.size()==0){
