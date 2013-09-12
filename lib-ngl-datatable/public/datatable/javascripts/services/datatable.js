@@ -1362,8 +1362,12 @@ angular.module('datatableServices', []).
     					      //view to model
     						   var convertedData = data;
    					    	
-   					    	   if(attrs.htmlFilter == "Date"){
-   					    			convertedData = $filter('date')(convertedData, Messages("datetime.format"));
+   					    	   if(attrs.htmlFilter.toLowerCase() == "datetime"){
+   					    		   convertedData = $filter('date')(convertedData, Messages("datetime.format"));
+   					    	   }else if(attrs.htmlFilter.toLowerCase() == "date"){
+   					    		   convertedData = $filter('date')(convertedData, Messages("date.format"));
+   					    	   }else if(attrs.htmlFilter.toLowerCase() == "number"){
+   					    		   convertedData = $filter('number')(convertedData);
    					    	   }
    					    	
    					    	   return convertedData;
@@ -1373,11 +1377,13 @@ angular.module('datatableServices', []).
     					      //model to view
     					    	var convertedData = data;
     					    	
-    					    	if(attrs.htmlFilter == "Date"){
-    					    		convertedData = $filter('date')(convertedData, Messages("datetime.format"));
-    					    	}else if(attrs.htmlFilter == "Number"){
-    					    		$filter('number')(convertedData);
-    					    	}
+    					    	  if(attrs.htmlFilter.toLowerCase() == "datetime"){
+     					    			convertedData = $filter('date')(convertedData, Messages("datetime.format"));
+     					    	   }else if(attrs.htmlFilter.toLowerCase() == "date"){
+     					    		convertedData = $filter('date')(convertedData, Messages("date.format"));
+     					    	   }else if(attrs.htmlFilter == "Number"){
+     					    		$filter('number')(convertedData);
+     					    	   }
     					    	
     					    	return convertedData;
     					    });   
