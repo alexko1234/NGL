@@ -11,8 +11,8 @@ angular.module('datatableServices', []).
 								number:0,
 								list:{},
 								dynamic:true
-							},
-							columns : [], //ex : [{id:'',header:'',order:true,hide:false,edit:true}]
+							},//ex: extraHeaders:{number:2,dynamic:false,list:{0:[{"label":"test","colspan":"1"},{"label":"a","colspan":"1"}],1:[{"label":"test2","colspan":"5"}]}}
+							columns : [], //ex : {"header":"Code Container","property":"code","id":'',"edit":false,"hide":true,"order":true,"type":"String","choiceInList":false,"listStyle":0,"possibleValues":null,"extraHeaders":{"0":"Inputs"},"date":false}
 							columnsUrl:undefined, //Load columns config
 							search : {
 								active:true,
@@ -1266,8 +1266,10 @@ angular.module('datatableServices', []).
     			    	var columnFormatter = function(col){
 		    				var format = "";
 		    				if(col.type == "Date"){
+		    					format += "| date:'"+Messages("date.format")+"'";
+		    				}else if(col.type == "Datetime"){
 		    					format += "| date:'"+Messages("datetime.format")+"'";
-							}else if(col.type == "Number"){
+		    				}else if(col.type == "Number"){
 								format += "| number";
 							}
 		    				
