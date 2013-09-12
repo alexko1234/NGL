@@ -12,7 +12,7 @@ angular.module('datatableServices', []).
 								list:{},
 								dynamic:true
 							},//ex: extraHeaders:{number:2,dynamic:false,list:{0:[{"label":"test","colspan":"1"},{"label":"a","colspan":"1"}],1:[{"label":"test2","colspan":"5"}]}}
-							columns : [], //ex : {"header":"Code Container","property":"code","id":'',"edit":false,"hide":true,"order":true,"type":"String","choiceInList":false,"listStyle":0,"possibleValues":null,"extraHeaders":{"0":"Inputs"},"date":false}
+							columns : [], //ex : {"header":"Code Container","property":"code","id":'',"edit":false,"hide":true,"order":true,"type":"String"/"Number"/"Month"/"Week"/"Time"/"DateTime"/"Range"/"Color"/"Mail"/"Tel"/"Url"/"Date","choiceInList":false,"listStyle":0,"possibleValues":null,"extraHeaders":{"0":"Inputs"},"date":false}
 							columnsUrl:undefined, //Load columns config
 							search : {
 								active:true,
