@@ -1267,7 +1267,7 @@ angular.module('datatableServices', []).
 		    				var format = "";
 		    				if(col.type == "Date"){
 		    					format += "| date:'"+Messages("date.format")+"'";
-		    				}else if(col.type == "Datetime"){
+		    				}else if(col.type == "DateTime"){
 		    					format += "| date:'"+Messages("datetime.format")+"'";
 		    				}else if(col.type == "Number"){
 								format += "| number";

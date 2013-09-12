@@ -21,6 +21,6 @@ public class DatatableColumn {
 	public Map<Integer, String> extraHeaders = null;//Headers of the column
 	
 	public Boolean isDate(){
-		return type.equals("Date");
+		return type.equals("Date")  || type.equals("DateTime");
 	}
 }
