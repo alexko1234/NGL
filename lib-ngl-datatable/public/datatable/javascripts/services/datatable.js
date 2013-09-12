@@ -1305,7 +1305,7 @@ angular.module('datatableServices', []).
 		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="datetime" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break;
 		        		  	    			case "Range": 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="datetime" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="range" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
 		        		  	    			break;
 		        		  	    			case "Color": 
 		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="color" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
