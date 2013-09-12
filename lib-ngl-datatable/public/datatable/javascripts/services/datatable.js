@@ -1380,9 +1380,9 @@ angular.module('datatableServices', []).
     					    	  if(attrs.htmlFilter.toLowerCase() == "datetime"){
      					    			convertedData = $filter('date')(convertedData, Messages("datetime.format"));
      					    	   }else if(attrs.htmlFilter.toLowerCase() == "date"){
-     					    		convertedData = $filter('date')(convertedData, Messages("date.format"));
+     					    		   	convertedData = $filter('date')(convertedData, Messages("date.format"));
      					    	   }else if(attrs.htmlFilter == "Number"){
-     					    		$filter('number')(convertedData);
+     					    		   	convertedData = $filter('number')(convertedData);
      					    	   }
     					    	
     					    	return convertedData;
