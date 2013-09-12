@@ -46,9 +46,9 @@ public abstract class AbstractTests {
 		config.put("db.lims.logStatements", "true");
 		config.put("db.lims.jndiName", "lims");	
 				
-		config.put("mongodb.database","NGL-COMMON-TEST");
-		config.put("mongodb.credentials","ngl:ngl");
-		config.put("mongodb.servers","gsphere.genoscope.cns.fr:27017");
+		config.put("mongodb.database","NGL-TESTU");
+		config.put("mongodb.credentials","testu:testu");
+		config.put("mongodb.servers","mongodev:27017");
 		config.put("ehcacheplugin", "disabled");
 	
 		return config;
