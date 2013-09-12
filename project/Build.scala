@@ -59,6 +59,7 @@ object ApplicationBuild extends Build {
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
         "net.sf.opencsv" % "opencsv" % "2.0",
+		"commons-collections" % "commons-collections" % "3.2.1",
 		"org.springframework" % "spring-test" % "3.0.7.RELEASE",
 		"com.github.julienrf" %% "play-jsmessages" % "1.4.1"
     	)	
