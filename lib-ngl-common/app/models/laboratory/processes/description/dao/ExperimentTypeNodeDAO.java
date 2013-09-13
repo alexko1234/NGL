@@ -11,7 +11,7 @@ import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
-import org.apache.commons.lang.NotImplementedException;
+
 import org.springframework.stereotype.Repository;
 @Repository
 public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNode>{
@@ -113,7 +113,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 	@Override
 	public void update(ExperimentTypeNode value) throws DAOException {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

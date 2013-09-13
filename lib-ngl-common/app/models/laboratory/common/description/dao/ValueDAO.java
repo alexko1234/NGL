@@ -8,7 +8,7 @@ import models.laboratory.common.description.Value;
 import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 
-import org.apache.commons.lang.NotImplementedException;
+
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -45,7 +45,8 @@ public class ValueDAO extends AbstractDAO<Value>{
 
 	@Override
 	public Value findByCode(String code) throws DAOException {
-		throw new NotImplementedException("Value does not have a code");
+		throw new UnsupportedOperationException("Value does not have a code");
+		
 	}
 	
 	

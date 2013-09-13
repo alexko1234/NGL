@@ -11,7 +11,6 @@ import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
@@ -46,7 +45,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	 */
 	public PropertyDefinition findByCode(String code) throws DAOException
 	{
-		throw new NotImplementedException("PropertyDefinition does not have a unique code, pass bu type to retrieve PropertyDefinitions");
+		throw new UnsupportedOperationException("PropertyDefinition does not have a unique code, pass bu type to retrieve PropertyDefinitions");
 	}
 	public PropertyDefinition save(PropertyDefinition propertyDefinition, long idCommonInfoType) throws DAOException
 	{

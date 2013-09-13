@@ -7,10 +7,13 @@ import org.codehaus.jackson.annotate.JsonAnyGetter;
 import org.codehaus.jackson.annotate.JsonAnySetter;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import validation.ContextValidation;
+import validation.IValidation;
+
 import models.laboratory.common.instance.PropertyValue;
 
 
-public class Treatment {
+public class Treatment implements IValidation{
 	
 	public Treatment() {
 		super();
@@ -27,6 +30,7 @@ public class Treatment {
 
 
 	public String typeCode;
+	public String categoryCode;
 	
 	@JsonIgnore
 	public Map<String, Map<String, PropertyValue>> results = new HashMap<String, Map<String, PropertyValue>>();
@@ -40,5 +44,11 @@ public class Treatment {
     public void set(String name, Map<String,PropertyValue> value) {
     	results.put(name, value);
     }
+
+	@Override
+	public void validate(ContextValidation contextValidation) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

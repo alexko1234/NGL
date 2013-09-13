@@ -15,6 +15,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.utils.InstanceConstants;
 import play.data.validation.Constraints.Required;
+
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.InstanceValidationHelper;
@@ -46,6 +47,8 @@ public class ReadSet implements IValidation{
 	
 	public Map<String, PropertyValue> properties= new HashMap<String, PropertyValue>();
 	
+	public Map<String,Treatment> treatments = new HashMap<String,Treatment>();
+	
 	/*
 
 	indexSequence 			tag lié au ls
@@ -67,16 +70,14 @@ public class ReadSet implements IValidation{
 	public void validate(ContextValidation contextValidation) {
 		
 		if(ValidationHelper.required(contextValidation, this.code, "code")){
-			
-			Lane lane = (Lane) contextValidation.getObject("lane");
 			Run run = (Run) contextValidation.getObject("run");
+			Lane lane = (Lane) contextValidation.getObject("lane");
 			
 			//Validate unique readSet.code if not already exist
 			Run runExist = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("lanes.readsets.code", this.code));
 			
 			if(runExist != null && run._id == null){ //when new run 
 				contextValidation.addErrors("code",ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, this.code);
-				
 			} else if(runExist != null && run._id != null) { //when run exist
 				if(!runExist.code.equals(run.code) || !runExist._id.equals(run._id)) {
 					contextValidation.addErrors("code", ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, this.code);
