@@ -55,12 +55,12 @@ object ApplicationBuild extends Build {
 		javaCore, javaJdbc,javaEbean,
 		"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
 		"fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
-		"org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
         "net.sf.opencsv" % "opencsv" % "2.0",
 		"commons-collections" % "commons-collections" % "3.2.1",
-		"org.springframework" % "spring-test" % "3.0.7.RELEASE",
+		"org.springframework" % "spring-jdbc" % "3.2.1.RELEASE",		
+		"org.springframework" % "spring-test" % "3.2.1.RELEASE",
 		"com.github.julienrf" %% "play-jsmessages" % "1.4.1"
     	)	
    	val ngldatatableDependencies = Seq(
@@ -72,28 +72,28 @@ object ApplicationBuild extends Build {
    	val nglbiDependencies = Seq(
 	        // Add your project dependencies here,
 	      javaCore, javaJdbc,
-			"commons-collections" % "commons-collections" % "3.2.1",
-	        "org.apache.commons" % "commons-lang3" % "3.1",
-	       "fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
-	        "org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
-	        "mysql" % "mysql-connector-java" % "5.1.18",
+			//"commons-collections" % "commons-collections" % "3.2.1",
+	        //"org.apache.commons" % "commons-lang3" % "3.1",
+	        //"fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
+	        //"org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
+	        //"mysql" % "mysql-connector-java" % "5.1.18",
 	        "postgresql" % "postgresql" % "8.3-603.jdbc4",
-	        "net.sourceforge.jtds" % "jtds" % "1.2.4",      	
-	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
-	        "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
+	        //"net.sourceforge.jtds" % "jtds" % "1.2.4",      	
+	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
+	        //"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
 			)
     	
     	val nglsqDependencies = Seq(
 			javaCore, javaJdbc,
 		      // Add your project dependencies here,
-		      "fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
-		      "net.sourceforge.jtds" % "jtds" % "1.2.4",
-		      "org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
-		      "mysql" % "mysql-connector-java" % "5.1.18",
-		      "net.sourceforge.jtds" % "jtds" % "1.2.2",
+		      //"fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
+		      //"net.sourceforge.jtds" % "jtds" % "1.2.4",
+		      //"org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
+		      //"mysql" % "mysql-connector-java" % "5.1.18",
+		      //"net.sourceforge.jtds" % "jtds" % "1.2.2",
 		      "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
-		      "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
-		      "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"  
+		      "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
+		      //"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"  
 		 	)
     	
     	val nglauthDependencies = Seq(
@@ -105,13 +105,13 @@ object ApplicationBuild extends Build {
 
 
        val nglplaquesDependencies = Seq(
-              javaCore, javaJdbc,
+              javaCore, javaJdbc
               // Add your project dependencies here,
-              "commons-collections" % "commons-collections" % "3.2.1",
-              "fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
-              "net.sourceforge.jtds" % "jtds" % "1.2.4",
-              "org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
-              "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
+              //"commons-collections" % "commons-collections" % "3.2.1",
+              //"fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
+              //"net.sourceforge.jtds" % "jtds" % "1.2.4",
+              //"org.springframework" % "spring-jdbc" % "3.0.7.RELEASE",
+              //"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
        )
         
        val ngldevguideDependencies = Seq(
