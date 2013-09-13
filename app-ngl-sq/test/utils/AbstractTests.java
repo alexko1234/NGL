@@ -45,9 +45,9 @@ public abstract class AbstractTests {
 		config.put("casRenew","false");
 		config.put("casMode","debug");
 		
-		config.put("mongodb.database","NGL-SQ-TEST");
-		config.put("mongodb.credentials","ngl:ngl");
-		config.put("mongodb.servers","gsphere.genoscope.cns.fr:27017");
+		config.put("mongodb.database","NGL-TESTU");
+		config.put("mongodb.credentials","testu:testu");
+		config.put("mongodb.servers","mongodev:27018");
 		config.put("ehcacheplugin", "disabled");
 		config.put("mongodbJacksonMapperCloseOnStop", "disabled");
 		
