@@ -8,11 +8,24 @@ angular.module('datatableServices', []).
 						configDefault:{
 							name:"datatable",
 							extraHeaders:{
-								number:0,
-								list:{},
-								dynamic:true
+								number:0,// Number of extra headers
+								list:{},//if dynamic=false
+								dynamic:true //if dynamic=true, the headers will be auto generated
 							},//ex: extraHeaders:{number:2,dynamic:false,list:{0:[{"label":"test","colspan":"1"},{"label":"a","colspan":"1"}],1:[{"label":"test2","colspan":"5"}]}}
-							columns : [], //ex : {"header":"Code Container","property":"code","id":'',"edit":false,"hide":true,"order":true,"type":"String"/"Number"/"Month"/"Week"/"Time"/"DateTime"/"Range"/"Color"/"Mail"/"Tel"/"Url"/"Date","choiceInList":false,"listStyle":0,"possibleValues":null,"extraHeaders":{"0":"Inputs"},"date":false}
+							columns : [], /*ex : 
+												{
+													"header":"Code Container", //the title
+													"property":"code", //the property to bind
+													"id":'', //the column id
+													"edit":false, //can be edited or not
+													"hide":true, //can be hidden or not
+													"order":true, //can be ordered or not
+													"type":"String"/"Number"/"Month"/"Week"/"Time"/"DateTime"/"Range"/"Color"/"Mail"/"Tel"/"Url"/"Date", //the column type
+													"choiceInList":false, //when the column is in edit mode, the edition is a list of choices or not
+													"listStyle":0, //if choiceInList=true, listStyle=0 is a select input, listStyle=1 is a radio input
+													"possibleValues":null, //The list of possible choices
+													"extraHeaders":{"0":"Inputs"}, //the extraHeaders list
+												  }*/
 							columnsUrl:undefined, //Load columns config
 							search : {
 								active:true,
