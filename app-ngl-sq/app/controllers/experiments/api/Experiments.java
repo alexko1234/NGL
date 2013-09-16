@@ -75,7 +75,7 @@ public class Experiments extends CommonController{
 
 			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 
-			InstanceHelpers.save(Constants.EXPERIMENT_COLL_NAME, containers,new ContextValidation( experimentFilledForm.errors()));
+			InstanceHelpers.save(Constants.CONTAINER_COLL_NAME, containers,new ContextValidation( experimentFilledForm.errors()));
 			return ok(Json.toJson(exp));
 		}
 
