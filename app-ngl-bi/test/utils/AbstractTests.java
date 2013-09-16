@@ -38,7 +38,7 @@ public abstract class AbstractTests {
 		Map<String,String> config = new HashMap<String,String>();
 		config.put("mongodb.database", "NGL-TESTU");
 		config.put("mongodb.credentials", "testu:testu");
-		config.put("mongodb.servers", "mongodev:27018");
+		config.put("mongodb.servers", "mongodev.genoscope.cns.fr:27017");
 		
 		
 		config.put("db.lims.driver", "org.postgresql.Driver");
