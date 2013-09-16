@@ -48,7 +48,7 @@ public abstract class AbstractTests {
 				
 		config.put("mongodb.database","NGL-TESTU");
 		config.put("mongodb.credentials","testu:testu");
-		config.put("mongodb.servers","mongodev:27018");
+		config.put("mongodb.servers","mongodev.genoscope.cns.fr:27017");
 		config.put("ehcacheplugin", "disabled");
 	
 		return config;
