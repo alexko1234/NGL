@@ -24,6 +24,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
+import play.Logger;
 import play.api.modules.spring.Spring;
 
 import models.utils.ListObject;
@@ -193,4 +194,13 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 		return initializeMapping(sql, new SqlParameter("p.fk_process_type", Type.LONG)).execute(id);
 	}
 
+	public List<ListObject> findByCategoryCode(String categoryCode){
+		String sql = "SELECT c.code AS code, c.name AS name "+
+				"FROM experiment_category ec,experiment_type as et JOIN common_info_type as c ON c.id=et.fk_common_info_type " +
+				"WHERE fk_experiment_category=ec.id AND ec.code='"+categoryCode+"'";
+		Logger.info(sql);
+		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
+		return this.jdbcTemplate.query(sql, mapper);
+	}
+	
 }
