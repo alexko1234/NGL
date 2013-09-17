@@ -1182,9 +1182,9 @@ angular.module('datatableServices', []).
 							angular.element(divPagination).append(pagination);
 							
 			    		}
-			    	
-			    		
-						angular.element(divPagination).append(paginationToolBar);
+			    		var divPaginationButton =  angular.element('<div class="span5"></div>');
+			    		angular.element(divPaginationButton).append(paginationToolBar);
+						angular.element(divPagination).append(divPaginationButton);
 			    		angular.element(toolbar).append(divPagination);	
 			    		
 						//Messages Section
@@ -1364,7 +1364,7 @@ angular.module('datatableServices', []).
 
     			    },
     			  };
-    			}).directive("htmlFilter", function() {
+    			}).directive("htmlFilter", function($filter) {
     				return {
     					  require: 'ngModel',
     					  link: function(scope, element, attrs, ngModelController) {
