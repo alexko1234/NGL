@@ -54,6 +54,14 @@ public class Runs extends CommonController {
 		}
 	}
 	
+	public static Result head(String code){
+		if(MongoDBDAO.checkObjectExistByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code)){			
+			return ok();					
+		}else{
+			return notFound();
+		}
+	}
+	
 	
 	public static Result save() {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);

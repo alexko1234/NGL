@@ -5,6 +5,7 @@ import java.util.List;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.laboratory.run.instance.Treatment;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
 import net.vz.mongodb.jackson.DBUpdate;
@@ -23,6 +24,7 @@ import fr.cea.ig.MongoDBDAO;
 public class ReadSets extends CommonController{
 
 	final static Form<ReadSet> readSetForm = form(ReadSet.class);
+	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	
 	public static Result save(String code, Integer laneNumber){
 		
@@ -200,6 +202,58 @@ public class ReadSets extends CommonController{
 		}
 	}
 	
+	public static Result saveTreatment(String readSetCode, String treatmentCode){
+		Query object = DBQuery.is("lanes.readsets.code", readSetCode);
+		Run run =  MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, object);	
+		if(run==null){
+			return badRequest();
+		}
+		
+		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
+		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		
+		Treatment treatment = filledForm.get();
+		treatment.validate(ctxVal);
+		if(!ctxVal.hasErrors()){
+			boolean flagReadSet = false;
+			for(int i=0; i<run.lanes.size() && !flagReadSet;i++){
+				for(int j=0;j<run.lanes.get(i).readsets.size() && !flagReadSet;j++) {
+					if(run.lanes.get(i).readsets.get(j).code.equals(readSetCode)){
+						//ReadSet find
+						flagReadSet = true;								
+						MongoDBDAO.updateSet(Constants.RUN_ILLUMINA_COLL_NAME, run, "lanes."+i+".readsets."+j+".treatments."+treatmentCode, treatment);
+					}
+				}
+			}
+			
+		}
+		if (!filledForm.hasErrors()) {
+			return ok(Json.toJson(filledForm.get()));			
+		} else {
+			return badRequest(filledForm.errorsAsJson());			
+		}		
+	}
 	
+	public static Result getTreatment(String readSetCode, String treatmentCode){
+		Query object = DBQuery.is("lanes.readsets.code", readSetCode);
+		Run run =  MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, object);	
+		if(run==null){
+			return badRequest();
+		}
+		Treatment treatment = null;
+		for(int i=0; i<run.lanes.size();i++){
+			for(int j=0;j<run.lanes.get(i).readsets.size();j++) {
+				if(run.lanes.get(i).readsets.get(j).code.equals(readSetCode)){
+					ReadSet readSet = run.lanes.get(i).readsets.get(j);
+					treatment = readSet.treatments.get(treatmentCode);
+				}
+			}
+		}
+		if(treatment != null){
+			return ok(Json.toJson(treatment));					
+		}else{
+			return notFound();
+		}
+	}
 	
 }
