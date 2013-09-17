@@ -179,6 +179,7 @@ th {
 														ng-model="experiment.value.stateCode" 
 														ng-readonly="!experiment.experimentInformation.enabled"
 														ng-disabled="!experiment.experimentInformation.enabled"
+														ng-change="changeState()"
 														id="workflow">
 													<option value="N">New</option>
 													<option value="IP" >In progress</option>
@@ -372,8 +373,8 @@ th {
 			<i class="icon-save icon-large"></i>
 			</button>-->
 			<div class="btn-group">
-			<button class="btn btn btn-info" ng-click="" data-toggle="tooltip" title="@Messages("experiments.addpurif")">@(Messages("experiments.addpurif"))</button>
-			<button class="btn btn btn-info" ng-click="" data-toggle="tooltip" title="@Messages("experiments.addqc")">@(Messages("experiments.addqc"))</button>
+			<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != 'F'" title="@Messages("experiments.addpurif")">@(Messages("experiments.addpurif"))</button>
+			<button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != 'F'" title="@Messages("experiments.addqc")">@(Messages("experiments.addqc"))</button>
 			</div>
 		}
 		@views.html.components.datatable.datatable(datatableConfig,null,button)

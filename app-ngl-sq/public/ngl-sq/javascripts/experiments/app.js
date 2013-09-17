@@ -24,6 +24,12 @@ angular.module('home', ['datatableServices','basketServices', 'comboListsService
 		controller : 'CreateNewCtrl'
 	});
 	
+	$routeProvider.when('/experiments/:newExperiment/home', {
+		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.searchContainers(params.newExperiment).url},
+		controller : 'SearchContainerCtrl'
+	});
+	
+	
 	$routeProvider.otherwise({redirectTo: '/experiments/new/home'});
 
 	// configure html5 to get links working with bookmarked

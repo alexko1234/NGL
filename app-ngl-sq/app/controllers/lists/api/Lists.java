@@ -17,6 +17,7 @@ import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.dao.StateDAO;
 import models.laboratory.container.description.ContainerCategory;
+import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
@@ -53,6 +54,23 @@ public class Lists extends Controller{
 			List<ListObject> exp = Spring.getBeanOfType(ExperimentTypeDAO.class).findAllForList();	
 			return Results.ok(Json.toJson(exp));
 	}
+	
+	public static Result experimentTypesByCategory(String categoryCode){
+		List<ListObject> exp = Spring.getBeanOfType(ExperimentTypeDAO.class).findByCategoryCode(categoryCode);	
+		return Results.ok(Json.toJson(exp));
+	}
+	
+	public static Result experimentCategories(){
+		List<ExperimentCategory> exp = null;
+		try {
+			exp = ExperimentCategory.find.findAll();
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
+		return Results.ok(Json.toJson(exp));
+}
 	
 	public static Result containerStates(){		
 		List<ListObject> states = Spring.getBeanOfType(StateDAO.class).findAllForContainerList();			

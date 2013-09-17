@@ -1,4 +1,4 @@
-function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
+function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 	$scope.experiment = {
 			value: {
 				code:"",
@@ -61,22 +61,11 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		extraHeaders:{
 			number:2,
 			dynamic:true,
-			list:{0:[{
-				"label":"test",
-				"colspan":"1"
-				
-			},{
-				"label":"a",
-				"colspan":"1"
-				
-			}],
-			1:[{
-				"label":"test2",
-				"colspan":"5"
-				
-			}]}
-		},
+	}
 	};
+	
+	$scope.inputContainersResolutions = [{"code":"IS","name":"IS"},{"code":"UA","name":"UA"}];
+	$scope.ouputContainersResolutions = [{"code":"IWP","name":"IWP"},{"code":"A","name":"A"},{"code":"UA","name":"UA"}];
 	
 	$scope.experiment.experimentInformation = {
 		protocols:{},
@@ -469,6 +458,14 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		}
 	};
 	
+	$scope.newQc = function(){
+		$window.location.href = "/experiments/newqc/home";
+	};
+	
+	$scope.newPurif = function(){
+		$window.location.href = "/experiments/newp/home";
+	};
+	
 	$scope.saveAll = function(){		
 		$scope.experiment.experimentInformation.save();
 		
@@ -481,12 +478,43 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		$scope.saveContainers();
 	};
 	
+	$scope.changeState = function(){
+		$scope.clearMessages();
+		if(($scope.experiment.value.stateCode == "IP" && $scope.state == "N") || ($scope.experiment.value.stateCode == "F" && $scope.state == "IP")){
+		$http.post(jsRoutes.controllers.experiments.api.Experiments.updateStateCode().url, $scope.experiment.value)
+		.success(function(data, status, headers, config) {
+			if(data!=null){
+				$scope.message.clazz="alert alert-success";
+				$scope.message.text=Messages('experiments.msg.save.sucess')
+				$scope.experiment.value = data;
+				$scope.state=$scope.experiment.value.stateCode;
+				if($scope.experiment.value.stateCode == "F"){
+					//ajout des colonnes de selection de resolution pour chaque tube
+					$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Resolution","resolutionCode",true, true,true,"String",true,$scope.ouputContainersResolutions,{"0":"Outputs","1":"Resolution"}));
+				}else if($scope.experiment.value.stateCode == "IP"){
+					$scope.datatable.addColumn(2,$scope.datatable.newColumn("Resolution","resolutionCode",true, true,true,"String",true,$scope.inputContainersResolutions,{"0":"Inputs","1":"Resolution"}));
+				}
+			}
+		})
+		.error(function(data, status, headers, config) {
+			$scope.message.clazz = "alert alert-error";
+			$scope.message.text = Messages('experiments.msg.save.error');
+			$scope.experiment.value.stateCode = $scope.state;
+			$scope.message.details = data;
+			$scope.message.isDetails = true;
+		});
+	}else{
+		$scope.experiment.value.stateCode = $scope.state;
+	}
+	};
+	
 	$scope.init = function(experimentType){
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		$scope.basket = $scope.getBasket();
 		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
 		$scope.comboLists = comboLists;
 		$scope.form = $scope.getForm();
+		$scope.state=$scope.experiment.value.stateCode;
 		if(angular.isUndefined($scope.getForm().experiment)) {
 			$scope.form.experiment = $scope.experiment;
 			$scope.setForm($scope.form);
@@ -544,4 +572,4 @@ function CreateNewCtrl($scope, datatable, $http,comboLists,$parse) {
 		}
 	}	
 }
-CreateNewCtrl.$inject = ['$scope', 'datatable','$http','comboLists','$parse'];
+CreateNewCtrl.$inject = ['$scope', '$window','datatable','$http','comboLists','$parse'];

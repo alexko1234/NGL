@@ -33,6 +33,20 @@ public class Workflows {
 	}
 	
 	/**
+	 * Set a state of a container to IU (In Use)
+	 * @param containerCode: the code of the container
+	 */
+	public static void setInUse(List<ContainerUsed> inputContainers){
+		for(ContainerUsed containerUsed:inputContainers){
+			Container container = MongoDBDAO.findByCode(Constants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
+			
+			if(container != null && (container.stateCode.equals("IWE"))){
+				MongoDBDAO.updateSet(Constants.CONTAINER_COLL_NAME, container,"stateCode", "IU");
+			}
+		}	
+	}
+	
+	/**
 	 * Set a state of a container to IWE (In Waiting Experiment)
 	 * @param inputContainers: list of containerUsed
 	 */
@@ -58,6 +72,7 @@ public class Workflows {
 			required(contextValidation, experiment.resolutionCode, "resolutionCode");
 			required(contextValidation, experiment.protocolCode, "protocolCode");
 			required(contextValidation, experiment.instrument.code, "instrument");
+			
 		} else if(experiment.stateCode.equals("F")) {
 			required(contextValidation, experiment.typeCode, "typeCode"); 
 			required(contextValidation, experiment.resolutionCode, "resolutionCode");

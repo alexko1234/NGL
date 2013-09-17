@@ -53,6 +53,19 @@ angular.module('comboListsServices', ['ngResource']).
 						query: {method:'GET', isArray:true}
 					});
 				},
+				/**
+				 * Return the list of experiment types with name and code properties only
+				 */
+				getExperimentTypesByCategory :  function(code){
+					return $resource(jsRoutes.controllers.lists.api.Lists.experimentTypesByCategory(code).url, {}, {
+						query: {method:'GET', isArray:true}
+					});
+				},
+				getExperimentCategories :  function(){
+					return $resource(jsRoutes.controllers.lists.api.Lists.experimentCategories().url, {}, {
+						query: {method:'GET', isArray:true}
+					});
+				},
 				getInstrumentUsedTypes : function(experimentTypeCode){
 					return $resource(jsRoutes.controllers.lists.api.Lists.instrumentUsedTypes(experimentTypeCode).url, {}, {
 						query: {method:'GET', isArray:true}

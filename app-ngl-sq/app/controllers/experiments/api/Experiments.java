@@ -61,24 +61,24 @@ public class Experiments extends CommonController{
 	public static Result generateOutput(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
-
-		exp = traceInformation(exp);
-		List<Container> containers = null;
-		if (!experimentFilledForm.hasErrors()) {
-			for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-				containers = exp.atomicTransfertMethods.get(i).createOutputContainerUsed(exp);
+		if(exp.stateCode.equals("IP")){			
+			List<Container> containers = null;
+			if (!experimentFilledForm.hasErrors()) {
+				for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+					containers = exp.atomicTransfertMethods.get(i).createOutputContainerUsed(exp);
+				}
+	
+	
+				Builder builder = new DBUpdate.Builder();
+				builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
+	
+				MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+				
+				exp = traceInformation(exp);
+				InstanceHelpers.save(Constants.CONTAINER_COLL_NAME, containers,new ContextValidation( experimentFilledForm.errors()));
+				return ok(Json.toJson(exp));
 			}
-
-
-			Builder builder = new DBUpdate.Builder();
-			builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
-
-			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
-
-			InstanceHelpers.save(Constants.CONTAINER_COLL_NAME, containers,new ContextValidation( experimentFilledForm.errors()));
-			return ok(Json.toJson(exp));
 		}
-
 		return badRequest(experimentFilledForm.errorsAsJson());
 	}
 
@@ -194,15 +194,17 @@ public class Experiments extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
-		exp = traceInformation(exp);
-
-
 		//TODO if first experiment in the processus then processus state to IP
 		Workflows.setExperimentStateCode(exp,new ContextValidation(experimentFilledForm.errors()));
 		if (!experimentFilledForm.hasErrors()) {	 	
 			Builder builder = new DBUpdate.Builder();
 			builder = builder.set("stateCode",exp.stateCode);//TODO: validation? Business validation
-
+			if(exp.stateCode.equals("IP")){
+				for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+					Workflows.setInUse(exp.atomicTransfertMethods.get(i).getInputContainers());
+				}
+			}
+			exp = traceInformation(exp);
 			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 		}
