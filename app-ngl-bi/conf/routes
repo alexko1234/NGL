@@ -20,6 +20,7 @@ GET		/tpl/runs/js-routes							controllers.runs.tpl.Runs.javascriptRoutes()
 #run api
 GET    	/api/runs                					controllers.runs.api.Runs.list()
 GET    	/api/runs/:code               				controllers.runs.api.Runs.get(code: java.lang.String)
+HEAD	/api/runs/:code               				controllers.runs.api.Runs.head(code: java.lang.String)
 POST   	/api/runs									controllers.runs.api.Runs.save()
 POST 	/api/runs/:code/dispatch					controllers.runs.api.Runs.dispatch(code: java.lang.String)
 DELETE	/api/runs/:code								controllers.runs.api.Runs.delete(code:java.lang.String)
@@ -33,9 +34,12 @@ POST  	/api/runs/:code								controllers.runs.api.Lanes.save(code: java.lang.St
 #run readset
 POST   	/api/runs/:code/:laneNumber					controllers.runs.api.ReadSets.save(code: java.lang.String, laneNumber:java.lang.Integer)
 #readset
-GET	   	/api/readsets/:readSetCode					controllers.runs.api.ReadSets.get(readSetCode:java.lang.String)
-PUT    	/api/readsets/:readSetCode					controllers.runs.api.ReadSets.update(readSetCode:java.lang.String)
-DELETE	/api/readsets/:readSetCode					controllers.runs.api.ReadSets.delete(readSetCode: java.lang.String)
+GET	   	/api/readsets/:code							controllers.runs.api.ReadSets.get(code)
+PUT    	/api/readsets/:code							controllers.runs.api.ReadSets.update(code)
+DELETE	/api/readsets/:code							controllers.runs.api.ReadSets.delete(code: java.lang.String)
+GET		/api/readsets/:code/treatments/:trCode		controllers.runs.api.ReadSets.getTreatment(code: java.lang.String, trCode: java.lang.String)
+POST	/api/readsets/:code/treatments/:trCode		controllers.runs.api.ReadSets.saveTreatment(code: java.lang.String, trCode: java.lang.String)
+
 
 #file
 GET     /api/readsets/:code/files/:fullname			controllers.runs.api.Files.get(code: java.lang.String, fullname: java.lang.String)
