@@ -1176,12 +1176,10 @@ angular.module('datatableServices', []).
 			    		if(config.pagination.active){
 							
 							var pagination = '<div class="span7"><div class="pagination pagination-right" ng-show="'+config.name+'.isShowPagination()"><ul><li ng-repeat="page in '+config.name+'.config.pagination.pageList" ng-class="page.clazz"><a href="#" ng-click="'+config.name+'.setPageNumber(page)">{{page.label}}</a></li></ul></div></div>';
-							var divPaginationButton = angular.element('<div class="span5"></div>');
 							var paginationDropDown = '<div class="btn-group" ng-show="'+config.name+'.config.pagination.active"><button data-toggle="dropdown" class="btn dropdown-toggle">'+Messages("datatable.button.length", "{{"+config.name+".config.pagination.numberRecordsPerPage}}")+' <span class="caret"></span></button><ul class="dropdown-menu pull-right"><li	ng-repeat="elt in '+config.name+'.config.pagination.numberRecordsPerPageList" class={{elt.clazz}}><a href="#" ng-click="'+config.name+'.setNumberRecordsPerPage(elt)">{{elt.number}}</a></li></ul></div>';
 							
 							angular.element(paginationToolBar).append(paginationDropDown);
 							angular.element(divPagination).append(pagination);
-							angular.element(divPagination).append(divPaginationButton);
 							
 			    		}
 			    	
