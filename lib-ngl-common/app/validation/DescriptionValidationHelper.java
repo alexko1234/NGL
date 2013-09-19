@@ -76,7 +76,7 @@ public class DescriptionValidationHelper {
 
 	public static void validationProcessTypeCode(String typeCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode,"typeCode", ProcessType.find);
+		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, typeCode,"processTypeCode", ProcessType.find);
 
 	}
 
