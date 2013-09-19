@@ -59,7 +59,7 @@ public class ContainerSupport implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 
-		BusinessValidationHelper.validateUniqueFieldValue(contextValidation, "support.barCode", barCode, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
+		BusinessValidationHelper.validateUniqueFieldValue(contextValidation, "barCode", barCode, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
 		DescriptionValidationHelper.validationContainerSupportCategoryCode(categoryCode, contextValidation);
 		InstanceValidationHelper.validationStockCode(stockCode, contextValidation);
 
