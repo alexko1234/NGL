@@ -52,8 +52,8 @@ public class TraceInformation implements IValidation {
 			}
 		} else {
 			if(ValidationHelper.required(contextValidation, this, "traceInformation")){
-				ValidationHelper.required(contextValidation, createUser, "traceInformation.modifyUser");
-				ValidationHelper.required(contextValidation, creationDate, "traceInformation.modifyDate");
+				ValidationHelper.required(contextValidation, createUser, "traceInformation.createUser");
+				ValidationHelper.required(contextValidation, creationDate, "traceInformation.createDate");
 			}
 		}
 	}
