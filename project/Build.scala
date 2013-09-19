@@ -57,7 +57,8 @@ object ApplicationBuild extends Build {
 		"fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
-        "net.sf.opencsv" % "opencsv" % "2.0",
+        	"net.sf.opencsv" % "opencsv" % "2.0",
+        	"commons-collections" % "commons-collections" % "3.2.1",
 		"org.springframework" % "spring-jdbc" % "3.2.1.RELEASE",		
 		"org.springframework" % "spring-test" % "3.2.1.RELEASE",
 		"com.github.julienrf" %% "play-jsmessages" % "1.4.1"
@@ -71,7 +72,7 @@ object ApplicationBuild extends Build {
    	val nglbiDependencies = Seq(
 	        // Add your project dependencies here,
 	      javaCore, javaJdbc,
-			 "postgresql" % "postgresql" % "8.3-603.jdbc4",
+		"postgresql" % "postgresql" % "8.3-603.jdbc4",
 	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
 			)
     	
