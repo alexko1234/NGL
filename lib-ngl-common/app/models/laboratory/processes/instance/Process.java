@@ -110,6 +110,7 @@ public class Process extends DBObject implements IValidation{
 		DescriptionValidationHelper.validationProcess(typeCode,properties,contextValidation);
 		
 		traceInformation.validate(contextValidation);
+		InstanceValidationHelper.validationComments(comments, contextValidation);
 	}
 	
 }

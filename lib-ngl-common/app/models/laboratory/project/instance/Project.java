@@ -77,6 +77,7 @@ public class Project extends DBObject implements IValidation{
 	public void validate(ContextValidation contextValidation) {
 		
 		contextValidation.putObject("_id",this._id);
+
 		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, code, Project.class, InstanceConstants.PROJECT_COLL_NAME);
 
 		DescriptionValidationHelper.validationProjectCategoryCode(categoryCode,contextValidation);
@@ -85,9 +86,9 @@ public class Project extends DBObject implements IValidation{
 		DescriptionValidationHelper.validationProject(typeCode,properties, contextValidation);
 		
 		traceInformation.validate(contextValidation);
-		for(Comment comment:comments){
-			comment.validate(contextValidation);
-		}
+		
+		InstanceValidationHelper.validationComments(comments, contextValidation);
+
 	}
 
 }

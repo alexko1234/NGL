@@ -106,11 +106,9 @@ public class Sample extends DBObject implements IValidation{
 		
 		traceInformation.validate(contextValidation);
 	
-		for(Comment comment:comments){
-			comment.validate(contextValidation);
-		}
-		
-		//TODO validation taxon 
+		InstanceValidationHelper.validationComments(comments, contextValidation);
+
+		//TODO validation taxon
 	}
 
 
