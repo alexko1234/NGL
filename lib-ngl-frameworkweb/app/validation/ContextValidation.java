@@ -13,7 +13,7 @@ public class ContextValidation {
 	
 	public String rootKeyName;
 	public Map<String,List<ValidationError>> errors;
-	private Map<String,Object> contextObjects;
+	public Map<String,Object> contextObjects;
 	
 	public ContextValidation(){
 		errors= new TreeMap<String, List<ValidationError>>();
@@ -25,6 +25,7 @@ public class ContextValidation {
 		contextObjects= new TreeMap<String, Object>();
 	}
 
+	
 	/**
 	 * 
 	 * @param key
@@ -143,5 +144,14 @@ public class ContextValidation {
 	public boolean hasErrors() {
         return !errors.isEmpty();
     }
+	
+	/***
+	 *
+	 */
+	public void clear(){
+		errors.clear();
+		rootKeyName=null;
+		contextObjects.clear();
+	}
 
 }
