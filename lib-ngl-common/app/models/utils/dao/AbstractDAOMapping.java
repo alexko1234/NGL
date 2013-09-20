@@ -4,7 +4,6 @@ import java.sql.Types;
 import java.util.List;
 
 import models.laboratory.common.description.CommonInfoType;
-import models.utils.Model;
 
 import org.springframework.asm.Type;
 import org.springframework.dao.DataAccessException;
@@ -52,7 +51,7 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
-		String sql = sqlCommon+" WHERE code = ? ";		
+		String sql = sqlCommon+" WHERE code = ? ";
 		return initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
 	}
 
@@ -65,7 +64,8 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 		}
 		try {
 			String sql= null;
-			if(entityClass.getSuperclass().getClass().isInstance(CommonInfoType.class)){
+			
+			if(entityClass.getSuperclass().equals(CommonInfoType.class)){
 				sql = "select id from common_info_type WHERE code=?";
 			}
 			else{
