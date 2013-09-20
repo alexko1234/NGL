@@ -65,12 +65,17 @@ public class InstanceValidationHelper {
 
 	public static void validationContents(List<Content> contents,
 			ContextValidation contextValidation) {
-
-		if(ValidationHelper.required(contextValidation, contents, "container.contents")){
-			for(Content content :contents){
-				content.validate(contextValidation);
+		String rootKeyName=null;
+		if(ValidationHelper.required(contextValidation, contents, "contents")){
+			
+			for(int i=0; i<contents.size();i++){
+				rootKeyName="content"+"["+i+"]";
+				contextValidation.addKeyToRootKeyName(rootKeyName);
+				contents.get(i).validate(contextValidation);
+				contextValidation.removeKeyFromRootKeyName(rootKeyName);
 			}
 		}
+		
 	}
 
 	public static void validationComments(List<Comment> comments,
@@ -84,11 +89,11 @@ public class InstanceValidationHelper {
 
 	public static void validationContainerSupport(ContainerSupport support,
 			ContextValidation contextValidation) {
-		contextValidation.addKeyToRootKeyName("container.support");
-		if(ValidationHelper.required(contextValidation, support, "container.support")) {
+		contextValidation.addKeyToRootKeyName("containersupport");
+		if(ValidationHelper.required(contextValidation, support, "containersupport")) {
 			support.validate(contextValidation);
 		}
-		
+		contextValidation.removeKeyFromRootKeyName("containersupport");
 	}
 	
 	public static void validationReagentInstanceCode(String reagentInstanceCode, ContextValidation contextValidation) {
