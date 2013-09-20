@@ -29,6 +29,11 @@ import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
+import models.laboratory.run.description.RunCategory;
+import models.laboratory.run.description.RunType;
+import models.laboratory.run.description.TreatmentCategory;
+import models.laboratory.run.description.TreatmentContext;
+import models.laboratory.run.description.TreatmentType;
 import models.laboratory.sample.description.ImportCategory;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
@@ -290,6 +295,43 @@ public class DescriptionFactory {
 		st.objectType = ObjectType.find.findByCode(ObjectType.CODE.Project.name());
 		st.propertiesDefinitions = propertiesDefinitions;
 		return st;
+	}
+	
+	
+	
+	public static RunType newRunType(String name, String code, RunCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException {
+		RunType rt = new RunType();
+		rt.code =code.toLowerCase();
+		rt.name =name;
+		rt.category = category;
+		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Run.name());
+		rt.propertiesDefinitions = propertiesDefinitions;
+		
+		//rt.states = null; // State.find.findByCategoryCode(StateCategory.CODE.Experiment.name());
+		//rt.resolutions = null; // Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Experiment.name());
+		
+		return rt;
+	}
+	
+	
+	public static TreatmentContext newTreatmentContext(String name, String code) throws DAOException {
+		TreatmentContext tc = new TreatmentContext();
+		tc.code = code.toLowerCase();
+		tc.name = name;
+		return tc;
+	}
+	
+	public static TreatmentType newTreatmentType(String name, String code, TreatmentCategory category, String names, List<PropertyDefinition> propertiesDefinitions, List<TreatmentContext>  contexts) throws DAOException {
+		TreatmentType tt = new TreatmentType();
+		tt.code = code.toLowerCase();
+		tt.name = name;
+		tt.category = category;
+		tt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Treatment.name());
+		// A VOIR
+		//tt.propertiesDefinitions = propertiesDefinitions; 
+		tt.names = names;
+		tt.contexts = contexts;
+		return tt;
 	}
 	
 
