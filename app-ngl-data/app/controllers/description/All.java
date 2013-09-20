@@ -18,7 +18,7 @@ import services.description.experiment.ExperimentService;
 import services.description.instrument.InstrumentService;
 import services.description.process.ProcessService;
 import services.description.project.ProjectService;
-dnimport services.description.run.RunService;
+import services.description.run.RunService;
 import services.description.sample.ImportService;
 import services.description.sample.SampleService;
 import controllers.CommonController;
