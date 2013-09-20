@@ -10,7 +10,7 @@ import models.utils.Model;
  */
 public class ObjectType extends Model<ObjectType>{
 	
-	public enum CODE {Project,Process,Sample,Instrument,Reagent,Experiment,Import}; 
+	public enum CODE {Project,Process,Sample,Instrument,Reagent,Experiment,Import, Run, Treatment}; 
 	
 	public static Finder<ObjectType> find = new Finder<ObjectType>(ObjectTypeDAO.class.getName()); 
 
