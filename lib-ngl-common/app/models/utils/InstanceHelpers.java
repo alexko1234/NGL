@@ -16,7 +16,6 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
 
-import play.data.validation.ValidationError;
 import play.mvc.Http;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -60,8 +59,18 @@ public class InstanceHelpers {
 
 
 	public static void updateTraceInformation(TraceInformation traceInformation){
-		traceInformation.modifyUser=InstanceHelpers.getUser();
-		traceInformation.modifyDate=new Date();
+		
+		if (traceInformation.createUser==null){
+			traceInformation.createUser=InstanceHelpers.getUser();
+		}else {
+			traceInformation.modifyUser=InstanceHelpers.getUser();
+		}
+
+		if(traceInformation.creationDate==null){
+			traceInformation.creationDate=new Date();
+		}else {
+			traceInformation.modifyDate=new Date();
+		}
 
 	}
 
@@ -120,15 +129,17 @@ public class InstanceHelpers {
 		
 	}
 
-	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError) {
+	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError,Boolean keepRootKeyName) {
 		ContextValidation localContextError=new ContextValidation();
-		localContextError.errors=new HashMap<String, List<ValidationError>>();
-
+		if(keepRootKeyName){
+			localContextError.rootKeyName=contextError.rootKeyName;
+		}
+		localContextError.contextObjects=contextError.contextObjects;
+		
 		if(obj!=null)
 			obj.validate(localContextError);
 		else {
-			return null;
-			//TODO Exception
+			throw new IllegalArgumentException("Object is null");
 		}
 
 		if(localContextError.errors.size()==0){
@@ -139,7 +150,10 @@ public class InstanceHelpers {
 			return null;
 		}
 	}
-
+	
+	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError) {
+		return save(collectionName, obj, contextError, false);
+	}
 
 
 	public static  <T extends DBObject> List<T> save(String collectionName,List<T> objects, ContextValidation contextErrors) {
