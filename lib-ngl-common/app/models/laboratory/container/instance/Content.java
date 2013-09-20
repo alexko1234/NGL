@@ -36,7 +36,9 @@ public class Content implements IValidation{
 		if(sampleUsed==null){
 			contextValidation.addErrors("sampleUsed", "error.codeNotFound");
 		}else {
+			contextValidation.addKeyToRootKeyName("sampleUsed");
 			sampleUsed.validate(contextValidation);
+			contextValidation.removeKeyFromRootKeyName("sampleUsed");
 		}
 			
 	}
