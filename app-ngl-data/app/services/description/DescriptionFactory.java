@@ -63,7 +63,7 @@ public class DescriptionFactory {
 		pd.name = name;
 		pd.code = code;
 		pd.active = true;
-		pd.levels = levels;;
+		pd.levels = levels;
 		pd.valueType = type.getName();
 		pd.required = required;
 		pd.choiceInList = false;		
@@ -306,10 +306,6 @@ public class DescriptionFactory {
 		rt.category = category;
 		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Run.name());
 		rt.propertiesDefinitions = propertiesDefinitions;
-		
-		//rt.states = null; // State.find.findByCategoryCode(StateCategory.CODE.Experiment.name());
-		//rt.resolutions = null; // Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Experiment.name());
-		
 		return rt;
 	}
 	
@@ -327,8 +323,7 @@ public class DescriptionFactory {
 		tt.name = name;
 		tt.category = category;
 		tt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Treatment.name());
-		// A VOIR
-		//tt.propertiesDefinitions = propertiesDefinitions; 
+		tt.propertiesDefinitions = propertiesDefinitions; 
 		tt.names = names;
 		tt.contexts = contexts;
 		return tt;
