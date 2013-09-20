@@ -144,8 +144,13 @@ public class Experiment extends DBObject implements IValidation {
 
 		DescriptionValidationHelper.validationExperimentType(typeCode, experimentProperties, contextValidation);
 		
+		
+		String rootKeyName=null;
 		for(int i=0;i<atomicTransfertMethods.size();i++){
+			rootKeyName="atomictransfertmethod"+"["+i+"]";
+			contextValidation.addKeyToRootKeyName(rootKeyName);
 			atomicTransfertMethods.get(i).validate(contextValidation);
+			contextValidation.removeKeyFromRootKeyName(rootKeyName);
 		}
 		
 		instrument.validate(contextValidation);
@@ -154,12 +159,11 @@ public class Experiment extends DBObject implements IValidation {
 				reagentUsed.validate(contextValidation);
 			}
 		}
+		
 		traceInformation.validate(contextValidation);
-		if(comments != null){
-			for(Comment comment :comments){
-				comment.validate(contextValidation);
-			}
-		}
+		InstanceValidationHelper.validationComments(comments, contextValidation);
+		
+
 	}
 
 	
