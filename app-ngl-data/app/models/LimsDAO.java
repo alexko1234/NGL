@@ -37,6 +37,10 @@ import play.data.validation.ValidationError;
 import validation.ContextValidation;
 
 
+/**
+ * @author mhaquell
+ *
+ */
 @Repository
 public class LimsDAO {
 
@@ -48,8 +52,14 @@ public class LimsDAO {
 	private static final String LIMS_CODE="limsCode";
 	private static final String SAMPLE_ADPATER="isAdapters";
 	private static final String RECEPTION_DATE ="receptionDate";
+	
 	protected static final String PROJECT_CATEGORY_CODE = "default";
+	protected static final String PROJECT_TYPE_CODE_FG = "france-genomique";
+	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
+	protected static final String PROJECT_PROPERTIES_FG_GROUP="fgGroup";
 
+	protected static final String IMPORT_CATEGORY_CODE="sample-import";
+	
 	
 	@Autowired
 	@Qualifier("lims")
@@ -58,6 +68,12 @@ public class LimsDAO {
 	}
 
 
+	/**
+	 * Find Tube Lims who have flag 'tubinNGL=0' ( this flag is update to 1 when Tube exists in NGL database)
+	 * 
+	 * @param contextError
+	 * @return
+	 */
 	public List<Container> findContainersToCreate(ContextValidation contextError){
 
 		List<Container> results = this.jdbcTemplate.query("pl_TubeToNGL ",new Object[]{} 
@@ -88,7 +104,6 @@ public class LimsDAO {
 				container.properties.put(LIMS_CODE,new PropertySingleValue(rs.getInt("tubco")));
 				container.properties.put(RECEPTION_DATE,new PropertySingleValue(rs.getString(RECEPTION_DATE)));
 
-				
 				container.mesuredConcentration=new PropertySingleValue(rs.getFloat("tubconcr"), "ng/µl");
 				container.mesuredVolume=new PropertySingleValue(rs.getFloat("tubvolr"), "µl");
 				container.mesuredQuantity=new PropertySingleValue(rs.getFloat("tubqtr"), "ng");
@@ -125,13 +140,14 @@ public class LimsDAO {
 				sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 				String tadco = rs.getString("tadco");
 				String tprco = rs.getString("tprco");
-				//String codeLims = rs.getString(LIMS_CODE);
-				//	Logger.debug("Code Materiel (adnco) :"+codeLims" , Type Materiel (tadco) :"+tadco +", Type Projet (tprco) :"+tprco);
+				sample.code=rs.getString("code");
+				
+				Logger.debug("Code Materiel (adnco) :"+rs.getString(LIMS_CODE)+" , Type Materiel (tadco) :"+tadco +", Type Projet (tprco) :"+tprco);
 
 				String sampleTypeCode=getSampleTypeFromLims(tadco,tprco);
 
 				if(sampleTypeCode==null){
-					contextError.addErrors( "import.sample.typeCode", "limsdao.error.emptymapping",tadco);
+					contextError.addErrors( "typeCode", "limsdao.error.emptymapping", tadco, sample.code);
 					return null;
 				}
 
@@ -145,14 +161,14 @@ public class LimsDAO {
 
 
 				if( sampleType==null ){
-					contextError.addErrors("sampleType.code", "error.codeNotExist", sampleTypeCode);
+					contextError.addErrors("code", "error.codeNotExist", sampleTypeCode, sample.code);
 					return null;
 				}
 
 				//Logger.debug("Sample Type :"+sampleTypeCode);
 
 				sample.typeCode=sampleTypeCode;
-				sample.code=rs.getString("code");
+			
 
 				sample.projectCodes=new ArrayList<String>();
 				sample.projectCodes.add(rs.getString("project"));
@@ -176,7 +192,7 @@ public class LimsDAO {
 						sample.properties.put(propertyDefinition.code, new PropertySingleValue(code));
 
 					}catch (SQLException e) {
-						Logger.debug("Property "+propertyDefinition.code+" not exist in pl_MaterielToNGL");
+						Logger.info("Property "+propertyDefinition.code+" not exist in pl_MaterielToNGL");
 					}
 
 				}
@@ -189,16 +205,16 @@ public class LimsDAO {
 
 				if(tara){
 
-					Logger.debug("Tara sample");
+					Logger.debug("Tara sample "+sample.code);
+					
 					TaraDAO  taraServices = Spring.getBeanOfType(TaraDAO.class);
 					if(sample.properties==null){ sample.properties=new HashMap<String, PropertyValue>();}
 
-					Map<String, PropertyValue> map=taraServices.findTaraSample(rs.getInt(LIMS_CODE),contextError);
+					Map<String, PropertyValue> map=taraServices.findTaraSampleFromLimsCode(rs.getInt(LIMS_CODE),contextError);
 
 					if(map!=null){
-						Logger.debug("Nb properties :"+map.size());
 						sample.properties.putAll(map);
-					}else { Logger.debug("Map tara null");}
+					}
 
 				}
 				//Logger.debug("Adpatateur :"+sample.properties.get("adaptateur").value.toString());
@@ -209,7 +225,7 @@ public class LimsDAO {
 				}
 				
 				sample.importTypeCode=getImportTypeCode(tara,adapter);
-				Logger.debug("Import Type "+sample.importTypeCode);
+				//Logger.debug("Import Type "+sample.importTypeCode);
 				return sample;
 			}
 
@@ -235,18 +251,20 @@ public class LimsDAO {
 			@SuppressWarnings("rawtypes")
 			public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
 
+				
 				Project project = new Project(rs.getString(2).trim(),rs.getString(1));
 				String fgGroupe=rs.getString("groupefg");
 				if(fgGroupe==null){
-					project.typeCode="default-project";
+					project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
 				}
 				else {
-					project.typeCode="france-genomique";
+					project.typeCode=PROJECT_TYPE_CODE_FG;
 					project.properties= new HashMap<String, PropertyValue>();
-					project.properties.put("fgGroup", new PropertySingleValue(fgGroupe));
+					project.properties.put(PROJECT_PROPERTIES_FG_GROUP, new PropertySingleValue(fgGroupe));
 				}
 			
 				project.categoryCode=PROJECT_CATEGORY_CODE;
+				project.stateCode="IP";
 				InstanceHelpers.updateTraceInformation(project.traceInformation);
 				return project;
 			}
@@ -257,8 +275,8 @@ public class LimsDAO {
 	
 	private String getImportTypeCode(boolean tara, boolean adapter) {
 		
-		Logger.debug("Adaptateur "+adapter);
-		Logger.debug("Tara "+tara);
+		//Logger.debug("Adaptateur "+adapter);
+		//Logger.debug("Tara "+tara);
 		if(adapter){
 			if(tara){
 				return "tara-library";
@@ -319,14 +337,19 @@ public class LimsDAO {
 	public void updateTubeLims(List<Container> containers,ContextValidation contextError) {
 
 		String limsCode=null;
+		String rootKeyName=null;
+		
+		contextError.addKeyToRootKeyName("updateTubeLims");
 		
 		for(Container container:containers){
 
+			rootKeyName="container["+container.code+"]";
+			contextError.addKeyToRootKeyName(rootKeyName);
 			limsCode=container.properties.get(LIMS_CODE).value.toString();
 
 			if(container.properties==null || limsCode==null)
 			{
-				contextError.addErrors("container.properties.limsCode","error.PropertyNotExist",LIMS_CODE,container.support.barCode);
+				contextError.addErrors("limsCode","error.PropertyNotExist",LIMS_CODE,container.support.barCode);
 
 			}else {
 				try{
@@ -336,14 +359,17 @@ public class LimsDAO {
 
 				} catch(DataAccessException e){
 
-					contextError.addErrors("limsdao.updateTubeLims",e.getMessage(), container.support.barCode);
+					contextError.addErrors("",e.getMessage(), container.support.barCode);
 				}
 			}
 
 		}
+		
+		contextError.addKeyToRootKeyName("updateTubeLims");
 	}
 
-	public List<Container> findContainersToUpdate(Map<String, List<ValidationError>> errors){
+	//TODO
+	public List<Container> findContainersToUpdate(ContextValidation contexValidation){
 
 		List<Container> results = this.jdbcTemplate.query("pl_TubeUpdateToNGL ",new Object[]{} 
 		,new RowMapper<Container>() {
