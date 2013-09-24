@@ -1,6 +1,5 @@
 package models.laboratory.run.description;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import models.laboratory.run.description.dao.TreatmentContextDAO;
 import models.utils.Model;
