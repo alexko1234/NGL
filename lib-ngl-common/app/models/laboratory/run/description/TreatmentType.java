@@ -22,6 +22,6 @@ public class TreatmentType extends CommonInfoType{
 	}
 	
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
-		return getPropertyDefinitionByLevel(Level.CODE.Treatment);
+		return getPropertyDefinitionByLevel(Level.CODE.ReadSet);
 	}
 }
