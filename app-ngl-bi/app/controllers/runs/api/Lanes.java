@@ -96,12 +96,12 @@ public class Lanes extends CommonController{
 				laneValue = lane;
 				
 				// set the lane to null	
-				MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.and(DBQuery.is("code",code),DBQuery.is("lanes.number",laneNumber)),DBUpdate.unset("lanes.$"));
+				MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.and(DBQuery.is("code",code),DBQuery.is("lanes.number",laneNumber)),DBUpdate.unset("lanes.$"));
 				break;
 			}
 		}
 		// remove null
-		MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",code),DBUpdate.pull("lanes",null));
+		MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",code),DBUpdate.pull("lanes",null));
 		
 		
 		if(laneValue == null) {

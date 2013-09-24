@@ -119,12 +119,12 @@ public class Files extends CommonController{
 						if(f.fullname.equals(fullname)) {
 							 bUpdate = true;		
 							// vide
-							MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.is("code",runCode), DBUpdate.unset("lanes."+i+".readsets."+j+".files."+k));		
+							MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.is("code",runCode), DBUpdate.unset("lanes."+i+".readsets."+j+".files."+k));		
 						}
 						
 					}
 					//supprime
-					MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",runCode),DBUpdate.pull("lanes."+i+".readsets."+j+".files",null));	
+					MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",runCode),DBUpdate.pull("lanes."+i+".readsets."+j+".files",null));	
 							
 				}
 	 			if (bUpdate) break;

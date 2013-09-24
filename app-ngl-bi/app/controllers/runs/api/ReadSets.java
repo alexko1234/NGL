@@ -186,12 +186,12 @@ public class ReadSets extends CommonController{
 			for(int j=0;run.lanes.get(i).readsets != null && j<run.lanes.get(i).readsets.size();j++){
 				// vide
 				if (run.lanes.get(i).readsets.get(j).code.equals(readSetCode) ) {
-					MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",runCode),DBUpdate.unset("lanes."+i+".readsets."+j));
+					MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",runCode),DBUpdate.unset("lanes."+i+".readsets."+j));
 					bUpdate = true;
 				}
 			}
 			//supprime
-			MongoDBDAO.updateSetArray(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",runCode),DBUpdate.pull("lanes."+i+".readsets",null));	
+			MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",runCode),DBUpdate.pull("lanes."+i+".readsets",null));	
 
 		}		
 		if (bUpdate) {
