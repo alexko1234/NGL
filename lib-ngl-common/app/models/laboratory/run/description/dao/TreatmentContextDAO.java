@@ -26,10 +26,11 @@ public class TreatmentContextDAO extends AbstractDAOMapping<TreatmentContext>{
 	public List<TreatmentContext> findByTreatmentTypeId(long id) {
 		String sql = sqlCommon+
 				" JOIN treatment_type_context as ttc ON ttc.fk_treatment_context=t.id "+
-				"WHERE fk_treatment_type = ? ";
+				"WHERE ttc.fk_treatment_type = ? ";
 		TreatmentContextMappingQuery treatmentContextMappingQuery=new TreatmentContextMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return treatmentContextMappingQuery.execute(id);
 	}
+
 	
 	
 
@@ -53,8 +54,10 @@ public class TreatmentContextDAO extends AbstractDAOMapping<TreatmentContext>{
 	
 	
 	private void removeTreatmentTypes(Long id) {
+		//old
 		String sql = "DELETE FROM treatment_type_context WHERE fk_treatment_context=?";
 		jdbcTemplate.update(sql, id);
+		
 	}
 	
 
@@ -68,6 +71,13 @@ public class TreatmentContextDAO extends AbstractDAOMapping<TreatmentContext>{
 	@Override
 	public void remove(TreatmentContext treatmentContext) throws DAOException {
 		//Remove contexts for this treatmentType
+		if (treatmentContext != null) {
+			System.out.println("treatmentContext" + treatmentContext.toString());
+		}
+		else {
+			System.out.println("treatmentContext is null !!!!!!!!!!"); 
+		}
+		
 		removeTreatmentTypes(treatmentContext.id);
 		//Remove treatmentType
 		super.remove(treatmentContext);
