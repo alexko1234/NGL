@@ -3,9 +3,7 @@ package models.laboratory.common.description;
 import java.util.List;
 
 import models.laboratory.common.description.dao.ResolutionDAO;
-import models.laboratory.common.description.dao.StateDAO;
 import models.utils.Model;
-import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 
 
