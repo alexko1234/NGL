@@ -3,7 +3,6 @@ package models.laboratory.common.description;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import models.laboratory.common.description.dao.PropertyDefinitionDAO;
 import models.laboratory.common.instance.property.PropertySingleValue;
