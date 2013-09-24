@@ -7,7 +7,6 @@ import java.util.Map;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
-import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
