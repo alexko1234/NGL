@@ -51,7 +51,7 @@ public class Experiments extends CommonController{
 			builder=builder.set("resolutionCode",exp.resolutionCode);
 			builder=builder.set("protocolCode",exp.protocolCode);
 
-			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.update(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 		}
 
@@ -72,7 +72,7 @@ public class Experiments extends CommonController{
 				Builder builder = new DBUpdate.Builder();
 				builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
 	
-				MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+				MongoDBDAO.update(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 				
 				exp = traceInformation(exp);
 				InstanceHelpers.save(Constants.CONTAINER_COLL_NAME, containers,new ContextValidation( experimentFilledForm.errors()));
@@ -93,7 +93,7 @@ public class Experiments extends CommonController{
 			Builder builder = new DBUpdate.Builder();
 			builder = builder.set("instrument",exp.instrument);
 
-			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.update(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 		}
 
@@ -111,7 +111,7 @@ public class Experiments extends CommonController{
 			Builder builder = new DBUpdate.Builder();
 			builder = builder.set("experimentProperties",exp.experimentProperties);
 
-			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.update(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 		}
 
@@ -129,7 +129,7 @@ public class Experiments extends CommonController{
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("instrumentProperties",exp.instrumentProperties);
 
-			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.update(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 		}
 
@@ -161,7 +161,7 @@ public class Experiments extends CommonController{
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("comments",exp.comments);
 
-			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.update(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 		}
 
@@ -183,7 +183,7 @@ public class Experiments extends CommonController{
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
 
-			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.update(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 		}
 
@@ -205,7 +205,7 @@ public class Experiments extends CommonController{
 				}
 			}
 			exp = traceInformation(exp);
-			MongoDBDAO.updateSetArray(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.update(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 		}
 
