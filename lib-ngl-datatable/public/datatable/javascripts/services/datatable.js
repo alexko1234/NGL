@@ -508,8 +508,8 @@ angular.module('datatableServices', []).
 			    						this.displayResult[i].trClass = undefined;					    				
 			    						if(this.isRemoteMode(this.config.save.mode)){
 			    							this.saveRemote(this.displayResult[i], i);
-			    						} else{		    									    		    				
-			    							this.saveLocal(i);
+			    						} else{	
+			    							this.saveLocal(this.displayResult[i],i);
 			    						}
 			    					}						
 			    				}
