@@ -2,6 +2,7 @@ package controllers.experiments.api;
 
 import static play.data.Form.form;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
 import net.vz.mongodb.jackson.DBUpdate.Builder;
 import play.Logger;
+import play.api.data.validation.ValidationError;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
@@ -78,7 +80,12 @@ public class Experiments extends CommonController{
 				InstanceHelpers.save(Constants.CONTAINER_COLL_NAME, containers,new ContextValidation( experimentFilledForm.errors()));
 				return ok(Json.toJson(exp));
 			}
+		}else{
+			//TODO: Add errors to form (state not IP)
+
 		}
+		
+		
 		return badRequest(experimentFilledForm.errorsAsJson());
 	}
 
@@ -193,7 +200,7 @@ public class Experiments extends CommonController{
 	public static Result updateStateCode(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
-
+		
 		//TODO if first experiment in the processus then processus state to IP
 		Workflows.setExperimentStateCode(exp,new ContextValidation(experimentFilledForm.errors()));
 		if (!experimentFilledForm.hasErrors()) {	 	
@@ -205,7 +212,7 @@ public class Experiments extends CommonController{
 				}
 			}
 			exp = traceInformation(exp);
-			MongoDBDAO.update(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.update(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code),builder);
 			return ok(Json.toJson(exp));
 		}
 
