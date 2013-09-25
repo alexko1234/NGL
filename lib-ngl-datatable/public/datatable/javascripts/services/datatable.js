@@ -1348,7 +1348,7 @@ angular.module('datatableServices', []).
         		  	    			newElement = $compile('<input html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
         		  	    	}
 	        		  	    else if(!col.edit){
-	        		  	    	newElement  = $compile('<span >{{value.'+col.property+' '+columnFormatter(col)+'}}</span>')(scope);
+	        		  	    	newElement  = $compile('<span >{{'+getNgModel(col)+' '+columnFormatter(col)+'}}</span>')(scope);
         		  	    	}
         		  	    	
         		  	    	element.html("");
