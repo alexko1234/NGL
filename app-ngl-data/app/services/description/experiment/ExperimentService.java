@@ -103,8 +103,8 @@ public class ExperimentService {
 		l.add(newExperimentType("Amplification","amplification",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand","thermo"),"OneToOne"));
 		
 		//qc
-		l.add(newExperimentType("Bioanalyzer Non Ampli","bioanalyzer-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("agilent-2100"),"OneToOne"));
-		l.add(newExperimentType("Bioanalyzer Ampli","bioanalyzer-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("agilent-2100"),"OneToOne"));
+		l.add(newExperimentType("Bioanalyzer Non Ampli","bioanalyzer-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), null, getInstrumentUsedTypes("agilent-2100"),"OneToOne"));
+		l.add(newExperimentType("Bioanalyzer Ampli","bioanalyzer-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), null, getInstrumentUsedTypes("agilent-2100"),"OneToOne"));
 		l.add(newExperimentType("QuBit","qubit",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("iqubit"),"OneToOne"));
 		l.add(newExperimentType("qPCR","qpcr",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("iqpcr"),"OneToOne"));
 		
@@ -151,6 +151,20 @@ public class ExperimentService {
         propertyDefinitions.add(newPropertiesDefinition("Libelle 1","Key1", LevelService.getLevels(Level.CODE.Experiment),Double.class, false,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb")));
 		propertyDefinitions.add(newPropertiesDefinition("Libelle 2", "Key2", LevelService.getLevels(Level.CODE.ContainerOut),String.class, false));
 		propertyDefinitions.add(newPropertiesDefinition("Libelle 3", "Key3", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false));
+		return propertyDefinitions;
+	}
+	
+	//TODO
+	// Propriete taille en output et non en input ?
+	// Valider les keys
+	public static List<PropertyDefinition> getPropertyDefinitionsBioanalyzer() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		// A supprimer une fois le type de support category sera géré
+        propertyDefinitions.add(newPropertiesDefinition("Position","location", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true));
+        propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "committedVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true));		
+		propertyDefinitions.add(newPropertiesDefinition("Taille", "size", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb")));
+		// Voir avec Guillaume comment gérer les fichiers
+        propertyDefinitions.add(newPropertiesDefinition("Profil DNA HS", "fileResult", LevelService.getLevels(Level.CODE.ContainerOut),String.class, true));
 		return propertyDefinitions;
 	}
 	
