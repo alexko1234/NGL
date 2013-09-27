@@ -60,7 +60,8 @@ public class SampleService {
 		l.add(newSampleType("ARN total", "total-RNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN()));
 		l.add(newSampleType("ARNm", "mRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN()));
 		l.add(newSampleType("Small RNA", "sRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN()));
-		
+		l.add(newSampleType("ARN déplété", "RNAdeplete", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN()));
+
 		l.add(newSampleType("cDNA", "cDNA", SampleCategory.find.findByCode("cDNA"), getPropertyDefinitionscDNA()));
 		
 		
