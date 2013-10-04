@@ -6,6 +6,7 @@ import java.util.Map;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.description.RunCategory;
 import models.laboratory.run.description.RunType;
 import models.laboratory.run.description.TreatmentCategory;
@@ -22,7 +23,7 @@ public class RunService {
 	
 	public static void main(Map<String, List<ValidationError>> errors)  throws DAOException{
 		
-
+		DAOHelpers.removeAll(ReadSetType.class, ReadSetType.find);
 		DAOHelpers.removeAll(RunType.class, RunType.find);
 		DAOHelpers.removeAll(RunCategory.class, RunCategory.find);
 		DAOHelpers.removeAll(TreatmentContext.class, TreatmentContext.find);
@@ -30,6 +31,7 @@ public class RunService {
 		DAOHelpers.removeAll(TreatmentCategory.class, TreatmentCategory.find);
 				
 
+		saveReadSetType(errors);
 		
 		saveRunCategories(errors);
 		
@@ -45,21 +47,30 @@ public class RunService {
 	
 	
 	
+	public static void saveReadSetType(Map<String, List<ValidationError>> errors) throws DAOException {
+		List<ReadSetType> l = new ArrayList<ReadSetType>();
+		//newReadSetType(name, code, List<PropertyDefinition> propertiesDefinitions)
+		l.add(DescriptionFactory.newReadSetType("default","d",  getReadSetRGropertyDefinitions()));
+		l.add(DescriptionFactory.newReadSetType("readSet","r", getReadSetRGropertyDefinitions()));
+		
+		DAOHelpers.saveModels(ReadSetType.class, l, errors);
+	}
+
+
+
 	public static void saveRunCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunCategory> l = new ArrayList<RunCategory>();
 		// name, code
 		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Illumina", "rhs"));
-		//l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Myseq", "rx"));
 		
 		DAOHelpers.saveModels(RunCategory.class, l, errors);
 	}
 	
 	public static void saveRunType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunType> l = new ArrayList<RunType>();
-		//newRunType(String name, String code, RunCategory category, List<PropertyDefinition> propertiesDefinitions)
-		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", RunCategory.find.findByCode("rhs"), getRunRGropertyDefinitions()));
-		l.add(DescriptionFactory.newRunType("RHS2005","RHS2005", RunCategory.find.findByCode("rhs"), null));
-		//l.add(DescriptionFactory.newRunType("RX2","rx2",RunCategory.find.findByCode("rx"),null ));
+		//newRunType(String name, String code, Integer nbLanes, RunCategory category, List<PropertyDefinition> propertiesDefinitions)
+		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", 8, RunCategory.find.findByCode("rhs"), getRunRGropertyDefinitions()));
+		l.add(DescriptionFactory.newRunType("RHS2500","RHS2500", 8, RunCategory.find.findByCode("rhs"), getRunRGropertyDefinitions()));
 		
 		DAOHelpers.saveModels(RunType.class, l, errors);
 	}
@@ -158,7 +169,9 @@ public class RunService {
 	
 	//Data Test
 	public static List<PropertyDefinition> getRunRGropertyDefinitions() throws DAOException {
-
+        return null;
+	}
+	public static List<PropertyDefinition> getReadSetRGropertyDefinitions() throws DAOException {
         return null;
 	}
 	
