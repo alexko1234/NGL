@@ -17,17 +17,15 @@ public class RunTypeDAO extends AbstractDAOMapping<RunType>{
 
 	protected RunTypeDAO() {
 		super("run_type", RunType.class, RunTypeMappingQuery.class, 
-				"SELECT t.id, fk_common_info_type, fk_run_category "+
+				"SELECT t.id, t.nb_lanes, fk_common_info_type, fk_run_category "+
 						"FROM run_type as t "+
 						"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
 	}
 
 	@Override
-	public long save(RunType runType) throws DAOException
-	{
-		
+	public long save(RunType runType) throws DAOException {
 		if(null == runType){
-			throw new DAOException("ProjectType is mandatory");
+			throw new DAOException("RunType is mandatory");
 		}
 		
 		//Check if category exist
@@ -42,6 +40,7 @@ public class RunTypeDAO extends AbstractDAOMapping<RunType>{
 		//Create new runType
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("id", runType.id);
+		parameters.put("nb_lanes", runType.nbLanes);
 		parameters.put("fk_common_info_type", runType.id);
 		parameters.put("fk_run_category", runType.category.id);
 		jdbcInsert.execute(parameters);
