@@ -29,6 +29,7 @@ import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
+import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.description.RunCategory;
 import models.laboratory.run.description.RunType;
 import models.laboratory.run.description.TreatmentCategory;
@@ -298,11 +299,21 @@ public class DescriptionFactory {
 	}
 	
 	
-	
-	public static RunType newRunType(String name, String code, RunCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException {
-		RunType rt = new RunType();
+	public static ReadSetType newReadSetType(String name, String code, /*ReadSetCategory category,*/ List<PropertyDefinition> propertiesDefinitions) throws DAOException {
+		ReadSetType rt = new ReadSetType();
 		rt.code =code.toLowerCase();
 		rt.name =name;
+		//rt.category = category;
+		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.ReadSet.name());
+		rt.propertiesDefinitions = propertiesDefinitions;
+		return rt;
+	}
+	
+	public static RunType newRunType(String name, String code, Integer nbLanes, RunCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException {
+		RunType rt = new RunType();
+		rt.code = code.toLowerCase();
+		rt.name = name;
+		rt.nbLanes = nbLanes;
 		rt.category = category;
 		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Run.name());
 		rt.propertiesDefinitions = propertiesDefinitions;
