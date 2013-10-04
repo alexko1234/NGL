@@ -10,6 +10,7 @@ import models.laboratory.run.description.dao.RunTypeDAO;
 
 public class RunType extends CommonInfoType{
 	public RunCategory category;
+	public Integer nbLanes;
 
 	public static Finder<RunType> find = new Finder<RunType>(RunTypeDAO.class.getName()); 
 	
