@@ -18,12 +18,10 @@ import play.api.modules.spring.Spring;
 
 public class RunTypeMappingQuery extends MappingSqlQuery<RunType>{
 
-	public RunTypeMappingQuery()
-	{
+	public RunTypeMappingQuery() {
 		super();
 	}
-	public RunTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
-	{
+	public RunTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter) {
 		super(ds,sql);
 		if(sqlParameter!=null)
 			super.declareParameter(sqlParameter);
@@ -35,7 +33,7 @@ public class RunTypeMappingQuery extends MappingSqlQuery<RunType>{
 			RunType runType = new RunType();
 			
 			runType.id = rs.getLong("id");
-			
+			runType.nbLanes = rs.getInt("nb_lanes");
 			long idCommonInfoType = rs.getLong("fk_common_info_type");
 			long idRunCategory = rs.getLong("fk_run_category");
 			
@@ -60,7 +58,6 @@ public class RunTypeMappingQuery extends MappingSqlQuery<RunType>{
 			//Set category
 			runType.category = runCategory;
 			return runType;
-
 	}
 
 }
