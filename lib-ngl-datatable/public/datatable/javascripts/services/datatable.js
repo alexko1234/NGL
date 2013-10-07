@@ -4,7 +4,6 @@ angular.module('datatableServices', []).
     	factory('datatable', ['$http','$filter','$parse','$compile', function($http, $filter,$parse,$compile){ //service to manage datatable
     		var constructor = function($scope, iConfig){
 				var datatable = {
-						
 						configDefault:{
 							name:"datatable",
 							extraHeaders:{
@@ -1064,6 +1063,20 @@ angular.module('datatableServices', []).
 			    		}
 			    	};
 
+			    		
+			    	var MessagesDatatable = function(message,arg){
+			    		if(typeof Messages == 'function'){
+			    			if(arg==null || arg==undefined){
+			    				return Messages(message);
+			    			}else{
+			    				return Messages(message,arg);
+			    			}
+			    		}
+			    		
+			    		return message;
+			    	};
+			    	
+			    	
 			    	var setConfig = function(newConfig){
 			    		config = newConfig;
 			    	};
@@ -1084,30 +1097,30 @@ angular.module('datatableServices', []).
 			    		var divButtons = angular.element('<div class="span8"></div>');
 			    		
 		    			var buttons = angular.element('<div class="btn-toolbar pull-left" ng-show="'+config.name+'.isShowToolbarLeft()"></div>  ');
-		    			var buttonsSelect = '<div class="btn-group" ng-switch on="'+config.name+'.config.select.isSelectAll"><button class="btn" ng-click="'+config.name+'.selectAll(true)"  ng-show="'+config.name+'.showButton(\'select\')"  ng-switch-when="false" data-toggle="tooltip" title="'+Messages("datatable.button.selectall")+'"><i class="icon-check icon-large"></i>';
+		    			var buttonsSelect = '<div class="btn-group" ng-switch on="'+config.name+'.config.select.isSelectAll"><button class="btn" ng-click="'+config.name+'.selectAll(true)"  ng-show="'+config.name+'.showButton(\'select\')"  ng-switch-when="false" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.selectall")+'"><i class="icon-check icon-large"></i>';
 		    			
 		    			if(!config.compact){ 
-		    				buttonsSelect+=  " "+Messages("datatable.button.selectall");
+		    				buttonsSelect+=  " "+MessagesDatatable("datatable.button.selectall");
 		    			}
 		    			
-		    			buttonsSelect += '</button><button class="btn" ng-click="'+config.name+'.selectAll(false)" ng-show="'+config.name+'.showButton(\'select\')"  ng-switch-when="true" data-toggle="tooltip" title="'+Messages("datatable.button.unselectall")+'"><i class="icon-check-empty icon-large"></i>';
+		    			buttonsSelect += '</button><button class="btn" ng-click="'+config.name+'.selectAll(false)" ng-show="'+config.name+'.showButton(\'select\')"  ng-switch-when="true" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.unselectall")+'"><i class="icon-check-empty icon-large"></i>';
 		    			
 		    			if(!config.compact){
-		    				buttonsSelect +=  " "+Messages("datatable.button.unselectall");
+		    				buttonsSelect +=  " "+MessagesDatatable("datatable.button.unselectall");
 		    			}
 		    			
-		    			buttonsSelect += '</button><button class="btn" ng-click="'+config.name+'.cancel()"  ng-show="'+config.name+'.showButton(\'cancel\')" data-toggle="tooltip" title="'+Messages("datatable.button.cancel")+'"><i class="icon-undo icon-large"></i>';
+		    			buttonsSelect += '</button><button class="btn" ng-click="'+config.name+'.cancel()"  ng-show="'+config.name+'.showButton(\'cancel\')" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.cancel")+'"><i class="icon-undo icon-large"></i>';
 		    			if(!config.compact){ 
-		    				buttonsSelect +=  " "+Messages("datatable.button.cancel");
+		    				buttonsSelect +=  " "+MessagesDatatable("datatable.button.cancel");
 		    			}
 		    			buttonsSelect += '</button></div>';
 		    			angular.element(divButtons).append(buttons);
 		    			angular.element(buttons).append(buttonsSelect);
 		    			
 		    			if(config.show){
-		    				var buttonsShow = '<button class="btn" ng-click="'+config.name+'.show()" ng-disabled="!'+config.name+'.isSelect()" ng-show="'+config.name+'.showButton(\'show\')" data-toggle="tooltip" title="'+Messages("datatable.button.show")+'"><i class="icon-pushpin icon-large"></i>';
+		    				var buttonsShow = '<button class="btn" ng-click="'+config.name+'.show()" ng-disabled="!'+config.name+'.isSelect()" ng-show="'+config.name+'.showButton(\'show\')" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.show")+'"><i class="icon-pushpin icon-large"></i>';
 		    				if(!config.compact){
-		    					buttonsShow +=   " "+Messages("datatable.button.show");
+		    					buttonsShow +=   " "+MessagesDatatable("datatable.button.show");
 		    				}
 		    				buttonsShow += '</button>';
 		    				angular.element(buttons).append(buttonsShow);
@@ -1117,9 +1130,9 @@ angular.module('datatableServices', []).
 		    				var divCrud = angular.element('<div class="btn-group"></div>');
 		    					if(config.edit.active){
 		    						
-		    						var buttonEdit = '<button class="btn" ng-click="'+config.name+'.setEditColumn()" ng-disabled="!'+config.name+'.canEdit()"  ng-show="'+config.name+'.showButton(\'edit\')" data-toggle="tooltip" title="'+Messages("datatable.button.edit")+'"><i class="icon-edit icon-large"></i>';
+		    						var buttonEdit = '<button class="btn" ng-click="'+config.name+'.setEditColumn()" ng-disabled="!'+config.name+'.canEdit()"  ng-show="'+config.name+'.showButton(\'edit\')" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.edit")+'"><i class="icon-edit icon-large"></i>';
 		    						if(!config.compact){ 
-		    							buttonEdit += " "+Messages("datatable.button.edit");
+		    							buttonEdit += " "+MessagesDatatable("datatable.button.edit");
 		    						}
 		    						
 		    						buttonEdit += '</button>';
@@ -1128,19 +1141,19 @@ angular.module('datatableServices', []).
 		    					}
 		    					
 		    					if(config.save.active){
-		    						var buttonSave = '<button class="btn" ng-click="'+config.name+'.save()" ng-disabled="!'+config.name+'.canSave()" ng-show="'+config.name+'.showButton(\'save\')"  data-toggle="tooltip" title="'+Messages("datatable.button.save")+'" ><i class="icon-save icon-large"></i>';
+		    						var buttonSave = '<button class="btn" ng-click="'+config.name+'.save()" ng-disabled="!'+config.name+'.canSave()" ng-show="'+config.name+'.showButton(\'save\')"  data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.save")+'" ><i class="icon-save icon-large"></i>';
 		    						
 		    						if(!config.compact){ 
-		    							buttonSave+=  " "+Messages("datatable.button.save");
+		    							buttonSave+=  " "+MessagesDatatable("datatable.button.save");
 		    							}
 		    						buttonSave+= '</button>';
 		    						angular.element(divCrud).append(buttonSave);
 		    					}
 		    					
 		    					if(config.remove.active){
-		    						var buttonRemove = '<button class="btn" ng-click="'+config.name+'.remove()" ng-disabled="!'+config.name+'.canRemove()" ng-show="'+config.name+'.showButton(\'remove\')"  data-toggle="tooltip" title="'+Messages("datatable.button.remove")+'"><i class="icon-trash icon-large"></i>';
+		    						var buttonRemove = '<button class="btn" ng-click="'+config.name+'.remove()" ng-disabled="!'+config.name+'.canRemove()" ng-show="'+config.name+'.showButton(\'remove\')"  data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.remove")+'"><i class="icon-trash icon-large"></i>';
 		    						if(!config.compact){ 
-		    							buttonRemove +=  " "+Messages("datatable.button.remove");
+		    							buttonRemove +=  " "+MessagesDatatable("datatable.button.remove");
 		    							}
 		    						
 		    						buttonRemove += '</button>';
@@ -1152,9 +1165,9 @@ angular.module('datatableServices', []).
 		    			
 		    			if(config.hide.active){
 		    				var divHide = angular.element('<div class="btn-group" ng-show="'+config.name+'.config.hide.active"></div>');
-		    				var buttonHide = '<button data-toggle="dropdown" class="btn dropdown-toggle" data-toggle="tooltip" title="'+Messages("datatable.button.hide")+'"><i class="icon-eye-close icon-large"></i>';
+		    				var buttonHide = '<button data-toggle="dropdown" class="btn dropdown-toggle" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.hide")+'"><i class="icon-eye-close icon-large"></i>';
 		    				if(!config.compact){ 
-		    					buttonHide+= " "+Messages("datatable.button.hide");
+		    					buttonHide+= " "+MessagesDatatable("datatable.button.hide");
 		    				}
 		    				buttonHide+= '<span class="caret"></span></button>';
 		    				var dropdown = '<ul class="dropdown-menu"><li ng-repeat="column in '+config.name+'.getHideColumns()"><a href="#" ng-click="'+config.name+'.setHideColumn(column.id)"><i class="icon-eye-open" ng-show="'+config.name+'.isHide(column.id)""></i><i class="icon-eye-close" ng-hide="'+config.name+'.isHide(column.id)"></i> {{column.header}}</a></li></ul>';
@@ -1170,13 +1183,13 @@ angular.module('datatableServices', []).
 			    		
 			    		var divPagination = angular.element('<div class="span4"></div>');
 			    		var paginationToolBar = angular.element('<div class="btn-toolbar pull-right" ng-show="'+config.name+'.isShowToolbarRight()"></div>');
-			    		var paginationButtonTotal = '	<button class="btn btn-info" disabled="disabled" ng-show="'+config.name+'.config.showTotalNumberRecords">'+Messages("datatable.totalNumberRecords", "{{"+config.name+".totalNumberRecords}}")+'</button>';
+			    		var paginationButtonTotal = '	<button class="btn btn-info" disabled="disabled" ng-show="'+config.name+'.config.showTotalNumberRecords">'+MessagesDatatable("datatable.totalNumberRecords", "{{"+config.name+".totalNumberRecords}}")+'</button>';
 			    		angular.element(paginationToolBar).append(paginationButtonTotal);
 			    		//Pagination Section
 			    		if(config.pagination.active){
 							
 							var pagination = '<div class="span7"><div class="pagination pagination-right" ng-show="'+config.name+'.isShowPagination()"><ul><li ng-repeat="page in '+config.name+'.config.pagination.pageList" ng-class="page.clazz"><a href="#" ng-click="'+config.name+'.setPageNumber(page)">{{page.label}}</a></li></ul></div></div>';
-							var paginationDropDown = '<div class="btn-group" ng-show="'+config.name+'.config.pagination.active"><button data-toggle="dropdown" class="btn dropdown-toggle">'+Messages("datatable.button.length", "{{"+config.name+".config.pagination.numberRecordsPerPage}}")+' <span class="caret"></span></button><ul class="dropdown-menu pull-right"><li	ng-repeat="elt in '+config.name+'.config.pagination.numberRecordsPerPageList" class={{elt.clazz}}><a href="#" ng-click="'+config.name+'.setNumberRecordsPerPage(elt)">{{elt.number}}</a></li></ul></div>';
+							var paginationDropDown = '<div class="btn-group" ng-show="'+config.name+'.config.pagination.active"><button data-toggle="dropdown" class="btn dropdown-toggle">'+MessagesDatatable("datatable.button.length", "{{"+config.name+".config.pagination.numberRecordsPerPage}}")+' <span class="caret"></span></button><ul class="dropdown-menu pull-right"><li	ng-repeat="elt in '+config.name+'.config.pagination.numberRecordsPerPageList" class={{elt.clazz}}><a href="#" ng-click="'+config.name+'.setNumberRecordsPerPage(elt)">{{elt.number}}</a></li></ul></div>';
 							
 							angular.element(paginationToolBar).append(paginationDropDown);
 							angular.element(divPagination).append(pagination);
@@ -1206,13 +1219,13 @@ angular.module('datatableServices', []).
 				    	}
 				    	tableHead+= '>{{column.header}} <div class="btn-group pull-right">';
 				    	if(config.editColumn){
-				    		tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setEditColumn(column.id)" ng-show="column.edit" ng-disabled="!'+config.name+'.canEdit()" data-toggle="tooltip" title="'+Messages("datatable.button.edit")+'"><i class="icon-edit"></i></button>'
+				    		tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setEditColumn(column.id)" ng-show="column.edit" ng-disabled="!'+config.name+'.canEdit()" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.edit")+'"><i class="icon-edit"></i></button>'
 						}
 						if(config.order){
-							tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setOrderColumn(column.property, column.id)" ng-show="column.order" ng-disabled="!'+config.name+'.canOrder()" data-toggle="tooltip" title="'+Messages("datatable.button.sort")+'"><i ng-class="'+config.name+'.getOrderColumnClass(column.id)"></i></button>'
+							tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setOrderColumn(column.property, column.id)" ng-show="column.order" ng-disabled="!'+config.name+'.canOrder()" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.sort")+'"><i ng-class="'+config.name+'.getOrderColumnClass(column.id)"></i></button>'
 						}
 						if(config.hidding){
-							tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setHideColumn(column.id)" ng-show="column.hide" data-toggle="tooltip" title="'+Messages("datatable.button.hide")+'"><i class="icon-eye-close"></i></button>'
+							tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setHideColumn(column.id)" ng-show="column.hide" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.hide")+'"><i class="icon-eye-close"></i></button>'
 						}			
 						tableHead += '</div></th></tr></thead>';
 						
