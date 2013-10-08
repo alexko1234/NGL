@@ -274,9 +274,9 @@ public class RunPropertyDefinitionHelper {
 	public static List<String> getRunStateCodes() {
 		if(null == runStatesCode){
 			runStatesCode = new ArrayList<String>();
-			runStatesCode.add("IP_S");
-			runStatesCode.add("IP_RG");
-			runStatesCode.add("F_RG");
+			runStatesCode.add("IP-S");
+			runStatesCode.add("IP-RG");
+			runStatesCode.add("F-RG");
 			runStatesCode.add("F");			
 		}
 		return runStatesCode;
@@ -286,10 +286,10 @@ public class RunPropertyDefinitionHelper {
 	public static List<String> getReadSetStateCodes() {
 		if(null == readSetStatesCode){
 			readSetStatesCode = new ArrayList<String>();
-			readSetStatesCode.add("IP_RG");
-			readSetStatesCode.add("F_RG");
-			readSetStatesCode.add("IW_QC");
-			readSetStatesCode.add("F_QC");
+			readSetStatesCode.add("IP-RG");
+			readSetStatesCode.add("F-RG");
+			readSetStatesCode.add("IW-QC");
+			readSetStatesCode.add("F-QC");
 			readSetStatesCode.add("A");
 			readSetStatesCode.add("UA");
 		}
