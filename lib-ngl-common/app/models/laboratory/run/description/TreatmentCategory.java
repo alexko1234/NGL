@@ -7,7 +7,7 @@ import models.laboratory.run.description.dao.TreatmentCategoryDAO;
 
 public class TreatmentCategory extends AbstractCategory<TreatmentCategory>{
 	
-	public static enum CODE {Quality_QC, Quality_SAV};
+	public static enum CODE {ngsrg, global, sequencing};
 
 	public static Finder<TreatmentCategory> find = new Finder<TreatmentCategory>(TreatmentCategoryDAO.class.getName());
 	
