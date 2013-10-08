@@ -38,8 +38,6 @@ public class RunService {
 		//getReadSetGlobalPropertyDefinitions : 
 		"usefulSequences","usefulSequences",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class
 		"usefulBases","usefulBases",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class
-		
-
 	 */
 
 	
@@ -82,7 +80,6 @@ public class RunService {
 		List<RunCategory> l = new ArrayList<RunCategory>();
 		// name, code
 		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Illumina", "rhs"));
-		
 		DAOHelpers.saveModels(RunCategory.class, l, errors);
 	}
 	
@@ -119,8 +116,8 @@ public class RunService {
 		List<TreatmentType> l = new ArrayList<TreatmentType>();
 		//newTreatmentType(String name, String code, TreatmentCategory category, String names, List<PropertyDefinition> propertiesDefinitions, List<TreatmentContext>  contexts)
 		l.add(DescriptionFactory.newTreatmentType("ngsrg-illumina","ngsrg-illumina", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "ngsrg-illumina", getNGSRGropertyDefinitions(), getTreatmentContexts("default", "read1", "read2", "pairs", "single")));
-		l.add(DescriptionFactory.newTreatmentType("global","global", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.global.name()), "global", getReadSetGlobalPropertyDefinitions(), getTreatmentContexts("default", "read1", "read2", "pairs", "single")));
-		l.add(DescriptionFactory.newTreatmentType("sav","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", getLaneSAVPropertyDefinitions(), getTreatmentContexts("default", "read1", "read2", "pairs", "single")));
+		l.add(DescriptionFactory.newTreatmentType("global","global", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.global.name()), "global", getReadSetGlobalPropertyDefinitions(), getTreatmentContexts("read1", "read2")));
+		l.add(DescriptionFactory.newTreatmentType("sav","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", getLaneSAVPropertyDefinitions(), getTreatmentContexts("default")));
 		DAOHelpers.saveModels(TreatmentType.class, l, errors);
 	}
 	
@@ -148,7 +145,6 @@ public class RunService {
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("controlLane","controlLane", LevelService.getLevels(Level.CODE.Run), Integer.class, true));
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rtaVersion","rtaVersion", LevelService.getLevels(Level.CODE.Run), String.class, true));
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbClusterTotal","nbClusterTotal", LevelService.getLevels(Level.CODE.Run), Long.class, true));
-		
         // Lane level
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("prephasing","prephasing", LevelService.getLevels(Level.CODE.Lane), String.class, true));
         //propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbClusterIlluminaFilter","nbClusterIlluminaFilter", LevelService.getLevels(Level.CODE.Lane), Long.class, true));
@@ -163,7 +159,6 @@ public class RunService {
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("percentClusterIlluminaFilter","percentClusterIlluminaFilter", LevelService.getLevels(Level.CODE.Lane), Double.class, true));
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbBaseInternalAndIlluminaFilter","nbBaseInternalAndIlluminaFilter", LevelService.getLevels(Level.CODE.Lane), Long.class, true));
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbClusterInternalAndIlluminaFilter","nbClusterInternalAndIlluminaFilter", LevelService.getLevels(Level.CODE.Lane), Long.class, true));
-        
         // ReadSet level		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbCluster","nbCluster", LevelService.getLevels(Level.CODE.ReadSet), Long.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Q30","Q30", LevelService.getLevels(Level.CODE.ReadSet), Double.class, true));
@@ -171,28 +166,23 @@ public class RunService {
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("fraction","fraction", LevelService.getLevels(Level.CODE.ReadSet), Double.class, true));
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualityScore","qualityScore", LevelService.getLevels(Level.CODE.ReadSet), Double.class, true));
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbReadIllumina","nbReadIllumina", LevelService.getLevels(Level.CODE.ReadSet), Integer.class, true));
-        
         // file level
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("label","label", LevelService.getLevels(Level.CODE.File), String.class, true));
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("asciiEncoding","asciiEncoding", LevelService.getLevels(Level.CODE.File), String.class, true));
-        
         return propertyDefinitions;
 	}
 	
 	public static List<PropertyDefinition> getReadSetGlobalPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-
         // just readset level
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("usefulSequences","usefulSequences", LevelService.getLevels(Level.CODE.ReadSet), Long.class, true));
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("usefulBases","usefulBases", LevelService.getLevels(Level.CODE.ReadSet), Long.class, true));
-        
         return propertyDefinitions;
 	}
 	
 	
 	public static List<PropertyDefinition> getLaneSAVPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("clusterDensity","clusterDensity",LevelService.getLevels(Level.CODE.Lane), Long.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("clusterDensityStd","clusterDensityStd",LevelService.getLevels(Level.CODE.Lane), Long.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("clusterPFPerc","clusterPFPerc",LevelService.getLevels(Level.CODE.Lane), Float.class, true));
@@ -217,7 +207,6 @@ public class RunService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("intensityCycle1Std","intensityCycle1Std",LevelService.getLevels(Level.CODE.Lane), Float.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("intensityCycle20Perc","intensityCycle20Perc",LevelService.getLevels(Level.CODE.Lane), Float.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("intensityCycle20PercStd","intensityCycle20PercStd",LevelService.getLevels(Level.CODE.Lane), Float.class, true));
-		
 		return propertyDefinitions;
 	}
 	
@@ -229,7 +218,6 @@ public class RunService {
 	public static List<PropertyDefinition> getReadSetRGropertyDefinitions() throws DAOException {
         return null;
 	}
-	
 	
 }
 
