@@ -13,6 +13,8 @@ import services.description.DescriptionFactory;
 import static services.description.DescriptionFactory.*;
 public class StateService {
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{		
+		DAOHelpers.removeAll(State.class, State.find);
+		
 		saveStateCategories(errors);	
 		saveStates(errors);	
 	}
@@ -34,30 +36,29 @@ public class StateService {
 	public static void saveStates(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<State> l = new ArrayList<State>();
 		
-		l.add(newState("Nouveau", "N", true, 1, getStateCategories(StateCategory.CODE.Project, StateCategory.CODE.Container,StateCategory.CODE.Experiment,StateCategory.CODE.Process)));
-		l.add(newState("En Cours", "IP", true, 2, getStateCategories(StateCategory.CODE.Project, StateCategory.CODE.Experiment,StateCategory.CODE.Process)));
-		l.add(newState("En Attente Processus", "IWP", true, 3,getStateCategories(StateCategory.CODE.Container)));
-		l.add(newState("Disponible", "A", true, 4, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.ReadSet)));
-		l.add(newState("En Attente Expérience", "IWE", true, 5, getStateCategories(StateCategory.CODE.Container)));
-		l.add(newState("En Cours d'Utilisation", "IU", true, 6,getStateCategories(StateCategory.CODE.Container)));
-		l.add(newState("En Stock", "IS", true, 7, getStateCategories(StateCategory.CODE.Container)));
-		l.add(newState("Indisponible", "UA", true, 8, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.ReadSet)));
-		l.add(newState("Finie", "F", true, 9, getStateCategories(StateCategory.CODE.Project, StateCategory.CODE.Experiment, StateCategory.CODE.Process, StateCategory.CODE.Run)));			
-		l.add(newState("En attente Purification", "IWP", true, 10, getStateCategories(StateCategory.CODE.Container)));			
-		l.add(newState("En attente Contrôle Qualité", "IWQC", true, 11, getStateCategories(StateCategory.CODE.Container)));			
-		l.add(newState("En attente Validation", "IWV", true, 12, getStateCategories(StateCategory.CODE.Container)));
+		l.add(newState("Nouveau", "N", true, 10, getStateCategories(StateCategory.CODE.Project, StateCategory.CODE.Container,StateCategory.CODE.Experiment,StateCategory.CODE.Process)));
+		l.add(newState("En Cours", "IP", true, 20, getStateCategories(StateCategory.CODE.Project, StateCategory.CODE.Experiment,StateCategory.CODE.Process)));
+		l.add(newState("En Attente Processus", "IW-P", true, 30, getStateCategories(StateCategory.CODE.Container)));
+		l.add(newState("Disponible", "A", true, 75, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.ReadSet)));
+		l.add(newState("En Attente Expérience", "IW-E", true, 50, getStateCategories(StateCategory.CODE.Container)));
+		l.add(newState("En Cours d'Utilisation", "IU", true, 60, getStateCategories(StateCategory.CODE.Container)));
+		l.add(newState("En Stock", "IS", true, 70, getStateCategories(StateCategory.CODE.Container)));
+		l.add(newState("Indisponible", "UA", true, 80, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.ReadSet)));
+		l.add(newState("Finie", "F", true, 90, getStateCategories(StateCategory.CODE.Project, StateCategory.CODE.Experiment, StateCategory.CODE.Process, StateCategory.CODE.Run)));			
+		//l.add(newState("En attente Purification", "IWP", true, 100, getStateCategories(StateCategory.CODE.Container)));			
+		l.add(newState("En attente Contrôle Qualité", "IWQC", true, 110, getStateCategories(StateCategory.CODE.Container)));			
+		l.add(newState("En attente Validation", "IW-V", true, 120, getStateCategories(StateCategory.CODE.Container)));
 		
-		l.add(newState("IP_S", "IP_S", true, 6, getStateCategories(StateCategory.CODE.Run)));	
-		l.add(newState("IP_RG", "IP_RG", true, 2, getStateCategories(StateCategory.CODE.Run, StateCategory.CODE.ReadSet)));
-		l.add(newState("F_RG", "F_RG", true, 3, getStateCategories(StateCategory.CODE.Run, StateCategory.CODE.ReadSet)));
-		l.add(newState("F_QC", "F_QC", true, 6, getStateCategories(StateCategory.CODE.ReadSet)));	
+		l.add(newState("IP-S", "IP-S", true, 60, getStateCategories(StateCategory.CODE.Run)));	
+		l.add(newState("IP-RG", "IP-RG", true, 20, getStateCategories(StateCategory.CODE.Run, StateCategory.CODE.ReadSet)));
+		l.add(newState("F-RG", "F-RG", true, 30, getStateCategories(StateCategory.CODE.Run, StateCategory.CODE.ReadSet)));
+		l.add(newState("F-QC", "F-QC", true, 60, getStateCategories(StateCategory.CODE.ReadSet)));	
 		// TODO : see IWQC
-		l.add(newState("IW_QC", "IW_QC", true, 7, getStateCategories(StateCategory.CODE.ReadSet)));	
-		
+		l.add(newState("IW-QC", "IW-QC", true, 70, getStateCategories(StateCategory.CODE.ReadSet)));	
 		
 		DAOHelpers.saveModels(State.class, l, errors);
-		
 	}
+	
 	private static List<StateCategory> getStateCategories(CODE...codes) throws DAOException {
 		List<StateCategory> categories = new ArrayList<StateCategory>();
 		for(CODE code: codes){
