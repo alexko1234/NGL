@@ -163,7 +163,7 @@ public class DescriptionFactory {
 	}
 
 	/**
-	 * Crée un nouvel etat
+	 * Create a new state
 	 * @param name
 	 * @param code
 	 * @param active
@@ -306,6 +306,8 @@ public class DescriptionFactory {
 		//rt.category = category;
 		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.ReadSet.name());
 		rt.propertiesDefinitions = propertiesDefinitions;
+		//new
+		rt.states = State.find.findByCategoryCode(StateCategory.CODE.ReadSet.name());
 		return rt;
 	}
 	
@@ -317,6 +319,8 @@ public class DescriptionFactory {
 		rt.category = category;
 		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Run.name());
 		rt.propertiesDefinitions = propertiesDefinitions;
+		//new
+		rt.states = State.find.findByCategoryCode(StateCategory.CODE.Run.name());
 		return rt;
 	}
 	
@@ -339,6 +343,97 @@ public class DescriptionFactory {
 		tt.contexts = contexts;
 		return tt;
 	}
+	
+	
+	/*
+	 * 	public static List<String> getTreatmentCodes() {
+		if(null == treatmentCodes){
+			treatmentCodes = new ArrayList<String>();
+			treatmentCodes.add("ngsrg");
+			treatmentCodes.add("global");
+			treatmentCodes.add("sav");			
+		}
+		return treatmentCodes;
+	}
+
+	
+	static List<String> treatmentTypeCodes = null;
+
+	public static List<String> getTreatmentTypeCodes() {
+		if(null == treatmentTypeCodes){
+			treatmentTypeCodes = new ArrayList<String>();
+			treatmentTypeCodes.add("ngsrg-illumina");
+			treatmentTypeCodes.add("global");
+			treatmentTypeCodes.add("sav");			
+		}
+		return treatmentTypeCodes;
+	}
+	
+	
+	static List<String> treatmentCatTypeCodes = null;
+
+	public static List<String> getTreatmentCatTypeCodes() {
+		if(null == treatmentCatTypeCodes){
+			treatmentCatTypeCodes = new ArrayList<String>();
+			treatmentCatTypeCodes.add("ngsrg");
+			treatmentCatTypeCodes.add("global");
+			treatmentCatTypeCodes.add("sequencing");			
+		}
+		return treatmentCatTypeCodes;
+	}
+	
+	static List<String> treatmentContextCodes = null;
+	public static List<String> getTreatmentContextCodes() {
+		if(null == treatmentContextCodes){
+			treatmentContextCodes = new ArrayList<String>();
+			treatmentContextCodes.add("default");
+			treatmentContextCodes.add("read1");
+			treatmentContextCodes.add("read2");
+			treatmentContextCodes.add("pairs");
+			treatmentContextCodes.add("single");
+			
+		}
+		return treatmentContextCodes;
+	}
+	
+	
+	static List<String> runStatesCode = null;
+	public static List<String> getRunStateCodes() {
+		if(null == runStatesCode){
+			runStatesCode = new ArrayList<String>();
+			runStatesCode.add("IP_S");
+			runStatesCode.add("IP_RG");
+			runStatesCode.add("F_RG");
+			runStatesCode.add("F");			
+		}
+		return runStatesCode;
+	}
+	
+	static List<String> readSetStatesCode = null;
+	public static List<String> getReadSetStateCodes() {
+		if(null == readSetStatesCode){
+			readSetStatesCode = new ArrayList<String>();
+			readSetStatesCode.add("IP_RG");
+			readSetStatesCode.add("F_RG");
+			readSetStatesCode.add("IW_QC");
+			readSetStatesCode.add("F_QC");
+			readSetStatesCode.add("A");
+			readSetStatesCode.add("UA");
+		}
+		return readSetStatesCode;
+	}
+	
+	static List<String> runTypeCode = null;
+	public static List<String> getRunTypeCodes() {
+		if(null == runTypeCode){
+			runTypeCode = new ArrayList<String>();
+			runTypeCode.add("RHS2000");
+			runTypeCode.add("RHS2500");
+			runTypeCode.add("RHS2500R");			
+		}
+		return runTypeCode;
+	}
+	 */
 	
 
 }
