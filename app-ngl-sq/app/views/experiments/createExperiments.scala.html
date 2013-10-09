@@ -1,5 +1,5 @@
 @(experimentType:org.codehaus.jackson.JsonNode,datatableConfig: views.components.datatable.DatatableConfig,
-experimentProperties: org.codehaus.jackson.JsonNode)
+experimentProperties: org.codehaus.jackson.JsonNode,experiment:org.codehaus.jackson.JsonNode)
 <style type="text/css">
 #sub_body {
 	margin-top: 20px;
@@ -144,7 +144,8 @@ th {
     	</ul>	
 	</div>
 </div>
-<div id="sub_body" class="container-fluid" ng-init="init(@experimentType)">
+
+<div id="sub_body" class="container-fluid" ng-init="init('@experimentType','@experiment')">
 	<div class="row-fluid">
 		<div class="span2">
 			<div class="accordion" id="accordionExp">
@@ -169,7 +170,7 @@ th {
 									<div class="control-group">
 										<label class="control-label">Experiment Type:</label>
 										<div class="controls">
-												<b>{{form.experimentTypes.selected.name}}</b>
+												<b>{{experiment.value.typeCode}}</b>
 										</div>
 									</div>
 									<div class="control-group">
@@ -191,9 +192,9 @@ th {
 										<label class="control-label">Resolution:</label>
 										<div class="controls">
 										<select class="input-medium "
-											ng-model="experiment.experimentInformation.resolutions.selected"
+											ng-model="experiment.value.resolutionCode"
 											ng-readonly="!experiment.experimentInformation.enabled"
-											ng-options="resolution.name for resolution in experiment.experimentInformation.resolutions.options"
+											ng-options="resolution.code as resolution.name for resolution in experiment.experimentInformation.resolutions.options"
 											ng-disabled="!experiment.experimentInformation.enabled">
 												<option value="">@Messages("experiments.select.resolutions")</option>
 										</select>
@@ -203,9 +204,9 @@ th {
 										<label class="control-label">Protocole:</label>
 										<div class="controls">
 											<select class="input-medium "
-											ng-model="experiment.experimentInformation.protocols.selected"
+											ng-model="experiment.value.protocolCode"
 											ng-readonly="!experiment.experimentInformation.enabled"
-											ng-options="protocol.name for protocol in experiment.experimentInformation.protocols.options"
+											ng-options="protocol.code as protocol.name for protocol in experiment.experimentInformation.protocols.options"
 											ng-disabled="!experiment.experimentInformation.enabled">
 												<option value="">@Messages("experiments.select.protocols")</option>
 										</select>
@@ -342,6 +343,18 @@ th {
 											>
 												<option value="">@Messages("experiments.select.instrument")</option>
 											</select>
+											
+											
+								<br>	<label class="control-label" style="margin-left:20px;" ng-hide="!experiment.instrumentInformation.instrumentUsedTypes.selected">@Messages("experiments.intrumentCategory"): </label>
+								<select class="input-medium "
+									ng-model="experiment.instrumentInformation.instrumentCategorys.selected"
+									ng-readonly="!experiment.instrumentInformation.enabled"
+									ng-options="instrumentCategory.name for instrumentCategory in experiment.instrumentInformation.instrumentCategorys.options"
+									ng-disabled="!experiment.instrumentInformation.enabled"
+									ng-hide="!experiment.instrumentInformation.instrumentUsedTypes.selected"
+									>
+										<option value="">@Messages("experiments.select.instrumentCategory")</option>
+									</select>
 											<hr>
 								</form>	
 						<form class="form-inline" style="padding-left: 10%">

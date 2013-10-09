@@ -85,6 +85,11 @@ angular.module('comboListsServices', ['ngResource']).
 					return $resource(jsRoutes.controllers.lists.api.Lists.resolutions().url, {}, {
 						query: {method:'GET', isArray:true}
 					});
+				},
+				getCategoryCodes : function(instrumentTypeCode){
+					return $resource(jsRoutes.controllers.lists.api.Lists.categoryCodes(instrumentTypeCode).url, {}, {
+						query: {method:'GET', isArray:true}
+					});
 				}
 		};
 		return functions;

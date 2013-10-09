@@ -27,7 +27,7 @@ function ListNewCtrl($scope, datatable) {
 	
 	$scope.newExperiment = function(){
 		if(this.basket.length() > 0 && $scope.getTabs().length === 2){
-			$scope.addTabs({label:$scope.form.experimentTypes.selected.name+" config",href:"/experiments/edit/"+$scope.getForm().experimentTypes.selected.code,remove:false});
+			$scope.addTabs({label:$scope.form.experimentTypes.selected.name+" config",href:"/experiments/create/"+$scope.getForm().experimentTypes.selected.code,remove:false});
 		}
 	}
 	

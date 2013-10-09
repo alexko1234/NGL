@@ -81,6 +81,9 @@ experiments.select.instrument = -- Selectionner un instrument --
 experiments.select.resolutions = -- Selectionner une resolution --
 experiments.select.protocols = -- Selectionner un protocole --
 experiments.select.intrumentUsedType = -- Selectionner un Type d'instrument --
+experiments.select.intrumentCategory = -- Selectionner un Type de contenant --
+
+experiments.intrumentCategory = Contenant sortie
 
 button.newexperiment = Créer une experience
 

@@ -9,9 +9,14 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBQuery.Query;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.avaje.ebeaninternal.server.persist.Constant;
+
+
+import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
@@ -19,10 +24,11 @@ import play.mvc.Result;
 import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
-import controllers.Constants;
 import controllers.utils.FormUtils;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import models.utils.InstanceConstants;
+
 
 
 
@@ -34,7 +40,7 @@ public class Containers extends CommonController {
 		Form<ContainersSearchForm> containerFilledForm = containerForm.bindFromRequest();
 		ContainersSearchForm containersSearch = containerFilledForm.get();
 		DBQuery.Query query = getQuery(containersSearch);
-	    MongoDBResult<Container> results = MongoDBDAO.find(Constants.CONTAINER_COLL_NAME, Container.class, query)
+	    MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query)
 				.sort(DatatableHelpers.getOrderBy(containerFilledForm), FormUtils.getMongoDBOrderSense(containerFilledForm))
 				.page(DatatableHelpers.getPageNumber(containerFilledForm), DatatableHelpers.getNumberRecordsPerPage(containerFilledForm)); 
 		List<Container> containers = results.toList();
@@ -74,13 +80,16 @@ public class Containers extends CommonController {
 	    
 	    if(StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
 			try {
-				
 				List<ExperimentType> previous = Spring.getBeanOfType(ExperimentTypeDAO.class).findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.experimentTypeCode);
 				List<String> previousString = new ArrayList<String>();
 				for(ExperimentType e:previous){
+					
 					previousString.add(e.code);
 				}
-				queryElts.add(DBQuery.in("fromExperimentTypeCodes", previousString));
+
+				if(previousString.size() != 0){//If there is no previous, we take all the containers Available
+					queryElts.add(DBQuery.in("fromExperimentTypeCodes", previousString));
+				}
 				
 			} catch (Exception e) {
 				e.printStackTrace();

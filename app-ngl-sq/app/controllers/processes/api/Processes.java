@@ -8,6 +8,7 @@ import java.util.List;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.processes.instance.Process;
+import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOHelpers;
 import net.vz.mongodb.jackson.DBQuery;
@@ -25,7 +26,6 @@ import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 import controllers.CodeHelper;
 import controllers.CommonController;
-import controllers.Constants;
 import controllers.authorisation.PermissionHelper;
 import controllers.utils.FormUtils;
 import fr.cea.ig.MongoDBDAO;
@@ -52,11 +52,11 @@ public class Processes extends CommonController{
 				//the default status
 				value.stateCode = "N";
 				
-				Container container = MongoDBDAO.findByCode("Container", Container.class, value.containerInputCode);
+				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, value.containerInputCode);
 				if(container.fromExperimentTypeCodes == null || container.fromExperimentTypeCodes.size() == 0){
 					container.fromExperimentTypeCodes = new ArrayList<String>();
 					container.fromExperimentTypeCodes.add(value.getProcessType().voidExperimentType.code);
-					MongoDBDAO.save(Constants.CONTAINER_COLL_NAME,container);
+					MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
 				}
 				
 				//code and name generation
@@ -72,7 +72,7 @@ public class Processes extends CommonController{
 					Workflows.setAvailable(value.containerInputCode,value.typeCode);
 				}
 				
-				value = (Process) InstanceHelpers.save(Constants.PROCESS_COLL_NAME,value, new ContextValidation(filledForm.errors()));
+				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, new ContextValidation(filledForm.errors()));
 			}
 		}
 		if (!filledForm.hasErrors()) {
@@ -87,7 +87,7 @@ public class Processes extends CommonController{
 		Form<ProcessesSearchForm> processesSearchFilledForm = processesSearchForm.bindFromRequest();
 		ProcessesSearchForm processSearch = processesSearchFilledForm.get();
 		DBQuery.Query query = getQuery(processSearch);
-	    MongoDBResult<Process> results = MongoDBDAO.find(Constants.PROCESS_COLL_NAME, Process.class, query)
+	    MongoDBResult<Process> results = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, query)
 				.sort(DatatableHelpers.getOrderBy(processesSearchFilledForm), FormUtils.getMongoDBOrderSense(processesSearchFilledForm))
 				.page(DatatableHelpers.getPageNumber(processesSearchFilledForm), DatatableHelpers.getNumberRecordsPerPage(processesSearchFilledForm)); 
 		List<Process> process = results.toList();

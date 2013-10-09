@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mongodb.BasicDBObject;
 
+import play.Logger;
 import play.Routes;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -17,10 +18,12 @@ import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.dao.StateDAO;
 import models.laboratory.container.description.ContainerCategory;
+import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
@@ -115,7 +118,8 @@ public class Lists extends Controller{
 	public static Result instrumentUsedTypes(String experimentTypeCode){
 		List<ListObject> list = new ArrayList<ListObject>();
 		try {
-			List<InstrumentUsedType> listInstruUsed = ExperimentType.find.findByCode(experimentTypeCode).instrumentUsedTypes;
+			ExperimentType e =  ExperimentType.find.findByCode(experimentTypeCode);
+			List<InstrumentUsedType> listInstruUsed = e.instrumentUsedTypes;
 			for(InstrumentUsedType instruUsedType: listInstruUsed){
 				list.add(new ListObject(instruUsedType.code,instruUsedType.name));
 			}
@@ -179,6 +183,26 @@ public class Lists extends Controller{
 			return Results.ok(Json.toJson(list));
 			
 		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		
+		return  Results.internalServerError();
+	}
+	
+	public static Result categoryCodes(String instrumentUsedTypeCode){
+		List<ListObject> list = new ArrayList<ListObject>();
+		List<ContainerSupportCategory> containerSupportCategorys = null;
+		try {
+			InstrumentUsedType i = InstrumentUsedType.find.findByCode(instrumentUsedTypeCode);
+			containerSupportCategorys = i.outContainerSupportCategories;
+		
+			for(ContainerSupportCategory c: containerSupportCategorys){
+				list.add(new ListObject(c.code, c.name));
+			}
+			
+			return Results.ok(Json.toJson(list));
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -19,8 +19,13 @@ angular.module('home', ['datatableServices','basketServices', 'comboListsService
 		controller : 'SearchCtrl'
 	});
 	
-	$routeProvider.when('/experiments/edit/:experimentTypeCode', {
-		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.editExperiment(params.experimentTypeCode).url},
+	$routeProvider.when('/experiments/create/:experimentTypeCode', {
+		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.firstEditExperiment(params.experimentTypeCode).url},
+		controller : 'CreateNewCtrl'
+	});
+	
+	$routeProvider.when('/experiments/edit/:experimentCode', {
+		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.editExperiment(params.experimentCode).url},
 		controller : 'CreateNewCtrl'
 	});
 	
