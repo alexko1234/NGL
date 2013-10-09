@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.container.description.ContainerSupportCategory;
+import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -18,6 +20,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
+import play.Logger;
 import play.api.modules.spring.Spring;
 
 @Repository
@@ -84,10 +87,60 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 
 		//Add instruments list
 		saveInstruments(instrumentUsedType.id, instrumentUsedType.instruments, false);
+		saveContainerSupportCategoryOut(instrumentUsedType.id,instrumentUsedType.outContainerSupportCategories,false);
+		saveContainerSupportCategoryIn(instrumentUsedType.id,instrumentUsedType.inContainerSupportCategories,false);
 		return instrumentUsedType.id;
 	}
 
+
+	private void saveContainerSupportCategoryIn(Long id,List<ContainerSupportCategory> containerSupportCategories, boolean deleteBefore) throws DAOException {
+		if(deleteBefore){
+			removeContainerSupportCategoryIn(id);
+		}
+		//Add resolutions list		
+		if(containerSupportCategories!=null && containerSupportCategories.size()>0){
+			String sql = "INSERT INTO instrument_ut_in_container_support_cat (fk_instrument_used_type,fk_container_support_category) VALUES(?,?)";
+			for(ContainerSupportCategory containerSupportCategory:containerSupportCategories){
+				if(containerSupportCategory == null || containerSupportCategory.id == null ){
+					throw new DAOException("containerSupportCategory is mandatory");
+				}
+				jdbcTemplate.update(sql, id,containerSupportCategory.id);
+			}
+		}
+		
+	}
 	
+	private void saveContainerSupportCategoryOut(Long id,List<ContainerSupportCategory> containerSupportCategories,  boolean deleteBefore) throws DAOException {
+		if(deleteBefore){
+			removeContainerSupportCategoryOut(id);
+		}
+		
+		//Add resolutions list		
+		if(containerSupportCategories!=null && containerSupportCategories.size()>0){
+			String sql = "INSERT INTO instrument_ut_out_container_support_cat (fk_instrument_used_type,fk_container_support_category) VALUES(?,?)";
+			for(ContainerSupportCategory containerSupportCategory:containerSupportCategories){
+				Logger.debug("Out container support type save "+containerSupportCategory);
+				if(containerSupportCategory == null || containerSupportCategory.id == null ){
+					throw new DAOException("containerSupportCategory is mandatory");
+				}
+				jdbcTemplate.update(sql, id,containerSupportCategory.id);
+			}
+		}
+		
+	}
+
+	private void removeContainerSupportCategoryOut(Long id) {
+	
+			String sql = "DELETE FROM instrument_ut_out_container_support_cat WHERE fk_instrument_used_type=?";
+			jdbcTemplate.update(sql, id);
+	}
+	
+	private void removeContainerSupportCategoryIn(Long id) {
+		
+		String sql = "DELETE FROM instrument_ut_in_container_support_cat WHERE fk_instrument_used_type=?";
+		jdbcTemplate.update(sql, id);
+}
+
 
 	@Override
 	public void update(InstrumentUsedType instrumentUsedType) throws DAOException 
@@ -98,6 +151,8 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		
 		//Update instrument list
 		saveInstruments(instrumentUsedType.id, instrumentUsedType.instruments, true);
+		saveContainerSupportCategoryIn(instrumentUsedType.id, instrumentUsedType.inContainerSupportCategories, true);
+		saveContainerSupportCategoryOut(instrumentUsedType.id, instrumentUsedType.outContainerSupportCategories, true);
 	}
 
 	@Override
@@ -108,12 +163,8 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		//remove instruments
 		removeInstruments(instrumentUsedType.id);
 		
-		String sqlContainerIn = "DELETE FROM instrument_ut_in_container_support_cat WHERE fk_instrument_used_type=?";
-		jdbcTemplate.update(sqlContainerIn, instrumentUsedType.id);
-		//Remove outContainerSupport from instrument category
-		String sqlContainerOut = "DELETE FROM instrument_ut_out_container_support_cat WHERE fk_instrument_used_type=?";
-		jdbcTemplate.update(sqlContainerOut, instrumentUsedType.id);
-		
+		removeContainerSupportCategoryIn(instrumentUsedType.id);
+		removeContainerSupportCategoryOut(instrumentUsedType.id);
 		//remove instrument used type
 		super.remove(instrumentUsedType);
 		//remove common_info_type
