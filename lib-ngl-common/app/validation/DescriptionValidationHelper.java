@@ -51,6 +51,13 @@ public class DescriptionValidationHelper {
 			String experimentTypeCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, experimentTypeCode, "experimentTypeCode", ExperimentType.find);		
 	}
+	
+	public static void validationExperimentTypeCodes(
+			List<String> experimentTypeCodes, ContextValidation contextValidation) {
+			for(String s: experimentTypeCodes){
+				BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, s, "experimentTypeCode", ExperimentType.find);
+			}
+	}
 
 	public static void validationExperimentType(
 			String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation) {

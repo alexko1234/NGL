@@ -66,13 +66,13 @@ public class ContainerHelper {
 		outputContainer.contents.addAll(inputContainer.contents);
 		outputContainer.projectCodes=InstanceHelpers.addCodesList(inputContainer.projectCodes,outputContainer.projectCodes);
 		outputContainer.sampleCodes=InstanceHelpers.addCodesList(inputContainer.sampleCodes,outputContainer.sampleCodes);
-
+		outputContainer.categoryCode = "tube";
+		
 		if(experiment.categoryCode.equals("transformation")){
 			outputContainer.fromExperimentTypeCodes=InstanceHelpers.addCode(experiment.typeCode ,outputContainer.fromExperimentTypeCodes);
 		}else{
 			outputContainer.fromExperimentTypeCodes=InstanceHelpers.addCodesList(inputContainer.fromExperimentTypeCodes,outputContainer.fromExperimentTypeCodes);
-		}
-		
+		}	
 	}
 	
 	//TODO 
@@ -120,9 +120,9 @@ public class ContainerHelper {
 	public static void generateCode(Container outputContainer) {
 		if(outputContainer.code==null){
 			if(outputContainer.projectCodes.size()==1 && outputContainer.sampleCodes.size()==1){
-				outputContainer.code=outputContainer.projectCodes.get(0)+"/"+outputContainer.sampleCodes.get(0)+"/"+(new SimpleDateFormat("yyyyMMddHHmmss")).format(new Date()).toUpperCase();		
+				outputContainer.code=outputContainer.projectCodes.get(0)+"/"+outputContainer.sampleCodes.get(0)+"/"+(new SimpleDateFormat("yyyyMMddHHmmss.SSS")).format(new Date()).toUpperCase();		
 			} else  {
-				outputContainer.code="MULTI"+(new SimpleDateFormat("yyyyMMddHHmmss")).format(new Date()).toUpperCase();
+				outputContainer.code="MULTI"+(new SimpleDateFormat("yyyyMMddHHmmss.SSS")).format(new Date()).toUpperCase();
 			}
 		}
 		

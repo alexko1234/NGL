@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import controllers.authorisation.PermissionHelper;
+
 import validation.ContextValidation;
 
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
 import models.utils.instance.ContainerHelper;
@@ -19,12 +24,20 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 	public ContainerUsed inputContainerUsed;
 	public ContainerUsed outputContainerUsed;
 
+	public OneToOneContainer(){
+		super();
+	}
 	
 	@Override
 	public List<Container> createOutputContainerUsed(Experiment experiment) {
 		
+		
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.containerCode);
 		Container outputContainer = new Container();
+		outputContainer.traceInformation = new TraceInformation();
+		outputContainer.traceInformation.setTraceInformation(experiment.traceInformation.modifyUser);
+		
+		
 		
 		ContainerHelper.addContent(container, outputContainer, experiment);
 		
@@ -47,10 +60,18 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 		inputContainerUsed.validate(contextValidation);
 		outputContainerUsed.validate(contextValidation);
 	}
-	
+	@JsonIgnore
 	public List<ContainerUsed> getInputContainers(){
 		List<ContainerUsed> cu = new ArrayList<ContainerUsed>();
 		cu.add(inputContainerUsed);
 		return cu;
 	}
+	
+	@JsonIgnore
+	public List<ContainerUsed> getOutputContainers(){
+		List<ContainerUsed> cu = new ArrayList<ContainerUsed>();
+		cu.add(outputContainerUsed);
+		return cu;
+	}
+	
 }

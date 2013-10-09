@@ -17,7 +17,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
 import validation.IValidation;
 
 
-@JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="class")
+@JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="class", defaultImpl= models.laboratory.experiment.instance.OneToOneContainer.class)
 @JsonSubTypes({
 	@JsonSubTypes.Type(value =  models.laboratory.experiment.instance.ManytoOneContainer.class, name = "ManyToOne"),
 	@JsonSubTypes.Type(value =  models.laboratory.experiment.instance.OneToManyContainer.class, name = "OneToMany"),
@@ -25,9 +25,14 @@ import validation.IValidation;
 })
 public abstract class AtomicTransfertMethod implements IValidation {
 
+	public AtomicTransfertMethod() {
+		super();
+	}
+	
 	public int position;
 	public Comment comment;
 	public abstract List<Container> createOutputContainerUsed(Experiment experiment);
 	@JsonIgnore
 	public abstract List<ContainerUsed> getInputContainers();
+	public abstract List<ContainerUsed> getOutputContainers();
 }

@@ -2,6 +2,7 @@ package models.laboratory.experiment.instance;
 
 import java.util.Map;
 
+import models.laboratory.common.description.Resolution;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.utils.HelperObjects;
@@ -26,6 +27,8 @@ public class ContainerUsed implements IValidation{
 	// Proprietes a renseigner en fonction du type d'experiment ou d'instrument
 	public Map<String,PropertyValue> experimentProperties;
 	public Map<String,PropertyValue> instrumentProperties;
+	
+	public String resolutionCode;
 	
 	public ContainerUsed() {
 		

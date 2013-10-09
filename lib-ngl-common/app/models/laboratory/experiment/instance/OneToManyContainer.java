@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import validation.ContextValidation;
 
 
@@ -20,6 +22,9 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	public ContainerUsed inputContainerUsed;
 	public List<ContainerUsed> outputContainerUseds;
 	
+	public OneToManyContainer(){
+		super();
+	}
 	
 	@Override
 	public List<Container> createOutputContainerUsed(Experiment experiment) {
@@ -58,10 +63,14 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 			containerUsed.validate(contextValidation);
 		}
 	}
-	
+	@JsonIgnore
 	public List<ContainerUsed> getInputContainers(){
 		List<ContainerUsed> cu = new ArrayList<ContainerUsed>();
 		cu.add(inputContainerUsed);
 		return cu;
+	}
+	@JsonIgnore
+	public List<ContainerUsed> getOutputContainers(){
+		return outputContainerUseds;
 	}
 }

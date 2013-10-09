@@ -16,6 +16,8 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
 
+import play.Logger;
+import play.libs.Json;
 import play.mvc.Http;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -147,6 +149,7 @@ public class InstanceHelpers {
 		}
 		else {
 			contextError.errors.putAll(localContextError.errors);
+			Logger.info("erreur output :: "+contextError.errors.toString());
 			return null;
 		}
 	}
