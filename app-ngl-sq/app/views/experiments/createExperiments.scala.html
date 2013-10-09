@@ -347,9 +347,9 @@ th {
 											
 								<br>	<label class="control-label" style="margin-left:20px;" ng-hide="!experiment.instrumentInformation.instrumentUsedTypes.selected">@Messages("experiments.intrumentCategory"): </label>
 								<select class="input-medium "
-									ng-model="experiment.instrumentInformation.instrumentCategorys.selected"
+									ng-model="experiment.value.instrument.outContainerSupportCategoryCode"
 									ng-readonly="!experiment.instrumentInformation.enabled"
-									ng-options="instrumentCategory.name for instrumentCategory in experiment.instrumentInformation.instrumentCategorys.options"
+									ng-options="instrumentCategory.code as instrumentCategory.name for instrumentCategory in experiment.instrumentInformation.instrumentCategorys.options"
 									ng-disabled="!experiment.instrumentInformation.enabled"
 									ng-hide="!experiment.instrumentInformation.instrumentUsedTypes.selected"
 									>

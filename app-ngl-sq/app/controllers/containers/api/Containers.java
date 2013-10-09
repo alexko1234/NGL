@@ -99,8 +99,8 @@ public class Containers extends CommonController {
 	   if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
 	    	queryElts.add(DBQuery.is("processTypeCode", containersSearch.processTypeCode));
 	   }
-	   
-		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+	
+	   return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}
 	
 }
