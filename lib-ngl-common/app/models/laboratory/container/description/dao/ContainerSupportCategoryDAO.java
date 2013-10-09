@@ -5,20 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.State;
-import models.laboratory.common.description.dao.ResolutionMappingQuery;
 import models.laboratory.container.description.ContainerSupportCategory;
-import models.utils.dao.AbstractDAO;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
-
-import play.Logger;
 
 @Repository
 public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSupportCategory>{
@@ -75,22 +67,22 @@ public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSup
 	}
 
 	
-	public List<ContainerSupportCategory> findInByInstrumentCategory(Long idInstrumentCategory) throws DAOException {
-		if(null == idInstrumentCategory){
-			throw new DAOException("idInstrumentCategory is mandatory");
+	public List<ContainerSupportCategory> findInByInstrumentUsedType(Long idInstrumentUsedType) throws DAOException {
+		if(null == idInstrumentUsedType){
+			throw new DAOException("idInstrumentUsedType is mandatory");
 		}
 		String sql = sqlCommon+" inner join instrument_ut_in_container_support_cat ON fk_container_support_category=t.id" +
 				" WHERE fk_instrument_used_type=? ";
-		return initializeMapping(sql, new SqlParameter("fk_instrument_category", Types.BIGINT)).execute(idInstrumentCategory);		
+		return initializeMapping(sql, new SqlParameter("fk_instrument_used_type", Types.BIGINT)).execute(idInstrumentUsedType);		
 	}
 	
-	public List<ContainerSupportCategory> findOutByInstrumentCategory(Long idInstrumentCategory) throws DAOException {
-		if(null == idInstrumentCategory){
-			throw new DAOException("idInstrumentCategory is mandatory");
+	public List<ContainerSupportCategory> findOutByInstrumentUsedType(Long idInstrumentUsedType) throws DAOException {
+		if(null == idInstrumentUsedType){
+			throw new DAOException("idInstrumentUsedType is mandatory");
 		}
 		String sql = sqlCommon+" inner join instrument_ut_out_container_support_cat ON fk_container_support_category=t.id" +
 				" WHERE fk_instrument_used_type=? ";
-		return initializeMapping(sql, new SqlParameter("fk_instrument_category", Types.BIGINT)).execute(idInstrumentCategory);		
+		return initializeMapping(sql, new SqlParameter("fk_instrument_used_type", Types.BIGINT)).execute(idInstrumentUsedType);		
 	}
 	
 }
