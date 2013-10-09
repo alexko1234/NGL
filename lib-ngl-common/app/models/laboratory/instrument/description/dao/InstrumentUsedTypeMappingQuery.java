@@ -59,9 +59,9 @@ public class InstrumentUsedTypeMappingQuery extends MappingSqlQuery<InstrumentUs
 			
 			ContainerSupportCategoryDAO containerSupportCategoryDAO = Spring.getBeanOfType(ContainerSupportCategoryDAO.class);
 			//Find inContainerSupportCategories
-			instrumentUsedType.inContainerSupportCategories = containerSupportCategoryDAO.findInByInstrumentCategory(instrumentCategory.id);
+			instrumentUsedType.inContainerSupportCategories = containerSupportCategoryDAO.findInByInstrumentUsedType(instrumentUsedType.id);
 			//Find outContainerSupportCategorie
-			instrumentUsedType.outContainerSupportCategories = containerSupportCategoryDAO.findOutByInstrumentCategory(instrumentCategory.id);
+			instrumentUsedType.outContainerSupportCategories = containerSupportCategoryDAO.findOutByInstrumentUsedType(instrumentUsedType.id);
 		
 			return instrumentUsedType;
 		} catch (DAOException e) {
