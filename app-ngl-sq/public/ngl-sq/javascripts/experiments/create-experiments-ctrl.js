@@ -8,7 +8,8 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 				stateCode:"N",
 				instrument:{
 					code:"",
-					categoryCode:""
+					categoryCode:"",
+					outContainerSupportCategoryCode:""
 				},
 				atomicTransfertMethods:[],
 				comments:[],
@@ -77,22 +78,22 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 					for(var i=0;i<$scope.datatable.displayResult.length &&  $scope.datatable.displayResult[i].inputResolutionCode != null;i++){
 						if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
 							for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.length;j++){
-								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed[j].resolutionCode = $scope.datatable.displayResult[i].inputResolutionCode.code;
+								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed[j].resolutionCode = $scope.datatable.displayResult[i].inputResolutionCode;
 							}
 							i += j;
 						}else{
-							$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCode =  $scope.datatable.displayResult[i].inputResolutionCode.code;
+							$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCode =  $scope.datatable.displayResult[i].inputResolutionCode;
 						}
 					}
 
 					for(var i=0;i<$scope.datatable.displayResult.length &&  $scope.datatable.displayResult[i].outputResolutionCode != null;i++){
 						if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
 							for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds.length;j++){
-								$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].resolutionCode = $scope.datatable.displayResult[i].outputResolutionCode.code;
+								$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].resolutionCode = $scope.datatable.displayResult[i].outputResolutionCode;
 							}
 							i += j;
 						}else{
-							$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCode =  $scope.datatable.displayResult[i].outputResolutionCode.code;
+							$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCode =  $scope.datatable.displayResult[i].outputResolutionCode;
 						}
 					}
 
@@ -456,7 +457,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 					var possibleValues = $scope.possibleValuesToSelect(data[i].possibleValues);
 				}
 
-				$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data[i].name,"outputInstrumentProperties."+data[i].code+".code",true, true,true,"String",data[i].choiceInList,possibleValues,{"0":"Outputs","1":"Instruments"}));
+				$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data[i].name,"outputInstrumentProperties."+data[i].code+".value",true, true,true,"String",data[i].choiceInList,possibleValues,{"0":"Outputs","1":"Instruments"}));
 			}
 		}
 
@@ -499,7 +500,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 					var possibleValues = $scope.possibleValuesToSelect(data[i].possibleValues);
 				}
 
-				$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data[i].name,"outputExperimentProperties."+data[i].code+".value",false, true,true,"String",data[i].choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"}));
+				$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data[i].name,"outputExperimentProperties."+data[i].code+".value",true, true,true,"String",data[i].choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"}));
 			}
 		}
 	},
@@ -560,9 +561,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 	$scope.changeState = function(){
 		$scope.clearMessages();
 
-		if((($scope.experiment.value.stateCode == "IP" && $scope.state == "N") || ($scope.experiment.value.stateCode == "F" && $scope.state == "IP")) && $scope.experiment.experimentInformation.protocols.selected &&  $scope.experiment.experimentInformation.resolutions.selected.code && $scope.experiment.instrumentInformation.instruments.selected.code){
-			$scope.experiment.value.protocolCode = $scope.experiment.experimentInformation.protocols.selected.code;
-			$scope.experiment.value.resolutionCode = $scope.experiment.experimentInformation.resolutions.selected.code;
+		if((($scope.experiment.value.stateCode == "IP" && $scope.state == "N") || ($scope.experiment.value.stateCode == "F" && $scope.state == "IP")) && $scope.experiment.instrumentInformation.instruments.selected.code){
 			$scope.experiment.value.instrument.code = $scope.experiment.instrumentInformation.instruments.selected.code;
 			$http.post(jsRoutes.controllers.experiments.api.Experiments.updateStateCode($scope.experiment.value.code).url, $scope.experiment.value)
 			.success(function(data, status, headers, config) {
