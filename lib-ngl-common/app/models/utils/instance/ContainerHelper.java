@@ -66,7 +66,7 @@ public class ContainerHelper {
 		outputContainer.contents.addAll(inputContainer.contents);
 		outputContainer.projectCodes=InstanceHelpers.addCodesList(inputContainer.projectCodes,outputContainer.projectCodes);
 		outputContainer.sampleCodes=InstanceHelpers.addCodesList(inputContainer.sampleCodes,outputContainer.sampleCodes);
-		outputContainer.categoryCode = "tube";
+		outputContainer.categoryCode = experiment.instrument.outContainerSupportCategoryCode;
 		
 		if(experiment.categoryCode.equals("transformation")){
 			outputContainer.fromExperimentTypeCodes=InstanceHelpers.addCode(experiment.typeCode ,outputContainer.fromExperimentTypeCodes);
