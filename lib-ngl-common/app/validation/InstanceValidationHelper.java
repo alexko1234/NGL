@@ -100,7 +100,7 @@ public class InstanceValidationHelper {
 		if(ValidationHelper.required(contextValidation, support, "containersupport")) {
 			support.validate(contextValidation);
 		}
-
+		contextValidation.removeKeyFromRootKeyName("containersupport");
 	}
 
 	public static void validationReagentInstanceCode(String reagentInstanceCode, ContextValidation contextValidation) {
