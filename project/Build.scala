@@ -74,7 +74,7 @@ object ApplicationBuild extends Build {
 	      javaCore, javaJdbc,
 		"postgresql" % "postgresql" % "8.3-603.jdbc4",
 	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
-			)
+		)
     	
     	val nglsqDependencies = Seq(
 			javaCore, javaJdbc,

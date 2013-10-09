@@ -14,11 +14,11 @@ import java.util.Date;
 import fr.cea.ig.DBObject;
 
 public class UserAction extends DBObject{
-	
+	public Date date;
 	public String login;
 	public String params;
 	public String action;
-	public Date date;
+	
 	
 	
 	//default constructor for mongodb
