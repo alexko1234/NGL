@@ -5,48 +5,59 @@ import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.charset;
 import static play.test.Helpers.contentType;
+import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.fakeRequest;
+import static play.test.Helpers.running;
 import static play.test.Helpers.status;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBUpdate;
 
 import org.junit.Test;
 
+import play.Logger;
 import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
-import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 
 public class FilesTests extends AbstractTests{
 	
-	
-	
 	@Test
 	 public void testFileCreate() {
-		Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
+		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
 		if(runDelete!=null){
-			MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+		}
+		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
+		if(readSetDelete!=null){
+			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+		}
+		ReadSet ReadSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("fullname","newfiletest"));
+		if(ReadSet!=null){
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, DBQuery.is("code","rdCode"), DBUpdate.unset("files"));
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, DBQuery.is("code","rdCode"), DBUpdate.pull("files",null));	
 		}
 	
 		Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET2");
-		run.dispatch = true; // For the archive test
-		Lane lane = RunMockHelper.newLane(1);
-		List<ReadSet> readsets =  new ArrayList<ReadSet>();
+		run.dispatch = true; 
+
 		
-		Random r = new Random();
-		int rVal = 1 + r.nextInt(100- 1);
-		String readSetCode = "test" + rVal;		
-		readsets.add(RunMockHelper.newReadSet(readSetCode)); // like that, we have a unique code !
-		lane.readsets = readsets;
+		ReadSet rd = RunMockHelper.newReadSet("rdCode"); 
+		rd.runCode = run.code;
+		
+		Lane lane = RunMockHelper.newLane(1);
+		lane.readSetCodes = null;
 		
 		Lane lane2 = RunMockHelper.newLane(2);
 		List<Lane> lanes = new ArrayList<Lane>();
@@ -55,252 +66,286 @@ public class FilesTests extends AbstractTests{
 		run.lanes = lanes;
 		 
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-		
+        assertThat(status(result)).isEqualTo(OK);
+        
+        result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(rd)));
         assertThat(status(result)).isEqualTo(OK);
         
         File file =  RunMockHelper.newFile("newfiletest");
         List<File> files =  new ArrayList<File>();
         files.add(file);
-        run.lanes.get(0).readsets.get(0).files = files; 
+        rd.files = files; 
 		
-		result = callAction(controllers.runs.api.routes.ref.Files.save(readSetCode),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
+		result = callAction(controllers.readsets.api.routes.ref.Files.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
 	 	
         assertThat(status(result)).isEqualTo(OK);
         assertThat(contentType(result)).isEqualTo("application/json");
         assertThat(charset(result)).isEqualTo("utf-8");
+        
+	    //query for control
+        ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("files.fullname",file.fullname));
+        assertThat(readSet.files.size()).isEqualTo(1);
+        assertThat(readSet.files.get(0).fullname).isEqualTo(file.fullname);
+        
+        
+				}});
 	 }
 	
 	
-	 @Test
-	 public void testFileUpdate() {
-		 Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
-		 String readSetCode = "";
-		 if(runDelete==null){ 
+	@Test
+	 public void testFileExtensionUpdate() {
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
+
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
+			if(runDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			}
+			ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
+			if(readSetDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+			}
+			ReadSet fileDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("fullname","newfiletest"));
+			if(fileDelete!=null){
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, DBQuery.is("code","rdCode"), DBUpdate.unset("files"));
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, DBQuery.is("code","rdCode"), DBUpdate.pull("files",null));	
+			}
+			
+			Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET2");
+			run.dispatch = true; // For the archive test
+			Lane lane = RunMockHelper.newLane(1);
+			lane.readSetCodes = null;	
+			
+			ReadSet rd = RunMockHelper.newReadSet("rdCode");
+			rd.runCode = run.code;
+			
+			Lane lane2 = RunMockHelper.newLane(2);
+			List<Lane> lanes = new ArrayList<Lane>();
+			lanes.add(lane);
+			lanes.add(lane2);
+			run.lanes = lanes;
 			 
-			 //code de testFileCreate
-			 	Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET2");
-				run.dispatch = true; // For the archive test
-				Lane lane = RunMockHelper.newLane(1);
-				List<ReadSet> readsets =  new ArrayList<ReadSet>();
-				
-				Random r = new Random();
-				int rVal = 1 + r.nextInt(100- 1);
-				readSetCode = "test" + rVal;		
-				readsets.add(RunMockHelper.newReadSet(readSetCode)); // like that, we have a unique code !
-				lane.readsets = readsets;
-				
-				Lane lane2 = RunMockHelper.newLane(2);
-				List<Lane> lanes = new ArrayList<Lane>();
-				lanes.add(lane);
-				lanes.add(lane2);
-				run.lanes = lanes;
-				 
-				callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-				
-		        File file =  RunMockHelper.newFile("newfiletest");
-		        List<File> files =  new ArrayList<File>();
-		        files.add(file);
-		        run.lanes.get(0).readsets.get(0).files = files; 
-				
-				callAction(controllers.runs.api.routes.ref.Files.save(readSetCode),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
-				
-		 }
-		 else {
-			 ReadSet readset = runDelete.lanes.get(0).readsets.get(0); 
-			 readSetCode = readset.code;
-			 
-			 if (readset.files == null || (readset.files.size() == 0)) {
-				 
-			        File file =  RunMockHelper.newFile("newfiletest");
-			        List<File> files =  new ArrayList<File>();
-			        files.add(file);
-			        runDelete.lanes.get(0).readsets.get(0).files = files; 
-					
-					callAction(controllers.runs.api.routes.ref.Files.save(readSetCode),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
-			 }
-		 } 
-		 
-		  File file = RunMockHelper.newFile("newfiletest");
-		  file.extension = "IMG";
-	      List<File> files =  new ArrayList<File>();
-	      files.add(file);
-	      runDelete.lanes.get(0).readsets.get(0).files = files; 
+			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+	        assertThat(status(result)).isEqualTo(OK);
 	        
-		  Result result = callAction(controllers.runs.api.routes.ref.Files.save(readSetCode),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
-		  //System.out.println(contentAsString(result));
+	        result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(rd)));
+	        assertThat(status(result)).isEqualTo(OK);
+	        
+	        File file =  RunMockHelper.newFile("newfiletest");
+	        file.extension = "DOC";
+	        List<File> files =  new ArrayList<File>();
+	        files.add(file);
+	        rd.files = files; 
+			
+			result = callAction(controllers.readsets.api.routes.ref.Files.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
+		 	
+	        assertThat(status(result)).isEqualTo(OK);
+	        assertThat(contentType(result)).isEqualTo("application/json");
+	        assertThat(charset(result)).isEqualTo("utf-8");
+	        
+		  file.extension = "IMG";
+
+		  	result = callAction(controllers.readsets.api.routes.ref.Files.update("rdCode", "newfiletest"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
 	      assertThat(status(result)).isEqualTo(OK);
 	      assertThat(contentType(result)).isEqualTo("application/json");
 	      assertThat(charset(result)).isEqualTo("utf-8");
+	      
+		    //query for control
+	        ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("files.fullname",file.fullname));
+	        assertThat(readSet.files.size()).isEqualTo(1);
+	        assertThat(readSet.files.get(0).extension).isEqualTo(file.extension );
+	        
+	      
+				}});
 	 }
 	
 	 
 	 @Test
 	 public void testFileShow() {
-		 Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
-		 String readSetCode = "";
-		 if(runDelete==null){ 
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
+
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
+			if(runDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			}
+			ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
+			if(readSetDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+			}
+			ReadSet fileDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("fullname","newfiletest"));
+			if(fileDelete!=null){
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, DBQuery.is("code","rdCode"), DBUpdate.unset("files"));
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, DBQuery.is("code","rdCode"), DBUpdate.pull("files",null));	
+			}
+		
+			Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET2");
+			run.dispatch = true; // For the archive test
+			Lane lane = RunMockHelper.newLane(1);
+			lane.readSetCodes = null;	
+			
+			ReadSet rd = RunMockHelper.newReadSet("rdCode"); 
+			rd.runCode = run.code;
+			
+			Lane lane2 = RunMockHelper.newLane(2);
+			List<Lane> lanes = new ArrayList<Lane>();
+			lanes.add(lane);
+			lanes.add(lane2);
+			run.lanes = lanes;
 			 
-			//code de testFileCreate
-			 	Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET2");
-				run.dispatch = true; // For the archive test
-				Lane lane = RunMockHelper.newLane(1);
-				List<ReadSet> readsets =  new ArrayList<ReadSet>();
-				
-				Random r = new Random();
-				int rVal = 1 + r.nextInt(100- 1);
-				readSetCode = "test" + rVal;		
-				readsets.add(RunMockHelper.newReadSet(readSetCode)); // like that, we have a unique code !
-				lane.readsets = readsets;
-				
-				Lane lane2 = RunMockHelper.newLane(2);
-				List<Lane> lanes = new ArrayList<Lane>();
-				lanes.add(lane);
-				lanes.add(lane2);
-				run.lanes = lanes;
-				 
-				callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-				
-		        File file =  RunMockHelper.newFile("newfiletest");
-		        List<File> files =  new ArrayList<File>();
-		        files.add(file);
-		        run.lanes.get(0).readsets.get(0).files = files; 
-				
-				callAction(controllers.runs.api.routes.ref.Files.save(readSetCode),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
-				
-		 }
-		 else {
-			 ReadSet readset = runDelete.lanes.get(0).readsets.get(0); 
-			 readSetCode = readset.code;
-			 
-			 if (readset.files == null || (readset.files.size() == 0)) {
-				 
-			        File file =  RunMockHelper.newFile("newfiletest");
-			        List<File> files =  new ArrayList<File>();
-			        files.add(file);
-			        runDelete.lanes.get(0).readsets.get(0).files = files; 
-					
-					callAction(controllers.runs.api.routes.ref.Files.save(readSetCode),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
-			 }
-		 }
+			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+	        assertThat(status(result)).isEqualTo(OK);
+	        
+	        result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(rd)));
+	        assertThat(status(result)).isEqualTo(OK);
+	        
+	        File file =  RunMockHelper.newFile("newfiletest");
+	        List<File> files =  new ArrayList<File>();
+	        files.add(file);
+	        rd.files = files; 
+			
+			result = callAction(controllers.readsets.api.routes.ref.Files.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
+		 	
+	        assertThat(status(result)).isEqualTo(OK);
+	        assertThat(contentType(result)).isEqualTo("application/json");
+	        assertThat(charset(result)).isEqualTo("utf-8");
 		 
 		 
-		 
-		  Result result = callAction(controllers.runs.api.routes.ref.Files.get(readSetCode,"newfiletest"),fakeRequest());
-		   //  System.out.println(contentAsString(result));
-	      assertThat(status(result)).isEqualTo(OK);
-	      assertThat(contentType(result)).isEqualTo("application/json");
-	      assertThat(charset(result)).isEqualTo("utf-8");
+		    // specific code
+			  result = callAction(controllers.readsets.api.routes.ref.Files.get("rdCode","newfiletest"),fakeRequest());
+		      assertThat(status(result)).isEqualTo(OK);
+		      assertThat(contentType(result)).isEqualTo("application/json");
+		      assertThat(charset(result)).isEqualTo("utf-8");
+		      
+				}});
 	 }
 	 
 	 
 	 @Test
 	 public void testDeleteFile(){
-		 Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
-		 String readSetCode = "";
-		 if(runDelete==null){ 
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
+	
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
+			if(runDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			}
+			ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
+			if(readSetDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+			}
+			ReadSet fileDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("fullname","newfiletest"));
+			if(fileDelete!=null){
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, DBQuery.is("code","rdCode"), DBUpdate.unset("files"));
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, DBQuery.is("code","rdCode"), DBUpdate.pull("files",null));	
+			}
+		
+			Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET2");
+			run.dispatch = true; // For the archive test
+			Lane lane = RunMockHelper.newLane(1);
+			lane.readSetCodes = null;	
+			
+			ReadSet rd = RunMockHelper.newReadSet("rdCode");
+			rd.runCode = run.code;
+			
+			Lane lane2 = RunMockHelper.newLane(2);
+			List<Lane> lanes = new ArrayList<Lane>();
+			lanes.add(lane);
+			lanes.add(lane2);
+			run.lanes = lanes;
 			 
-			//code de testFileCreate
-			 	Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET2");
-				run.dispatch = true; // For the archive test
-				Lane lane = RunMockHelper.newLane(1);
-				List<ReadSet> readsets =  new ArrayList<ReadSet>();
-				
-				Random r = new Random();
-				int rVal = 1 + r.nextInt(100- 1);
-				readSetCode = "test" + rVal;		
-				readsets.add(RunMockHelper.newReadSet(readSetCode)); // like that, we have a unique code !
-				lane.readsets = readsets;
-				
-				Lane lane2 = RunMockHelper.newLane(2);
-				List<Lane> lanes = new ArrayList<Lane>();
-				lanes.add(lane);
-				lanes.add(lane2);
-				run.lanes = lanes;
-				 
-				callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-				
-		        File file =  RunMockHelper.newFile("newfiletest");
-		        List<File> files =  new ArrayList<File>();
-		        files.add(file);
-		        run.lanes.get(0).readsets.get(0).files = files; 
-				
-				callAction(controllers.runs.api.routes.ref.Files.save(readSetCode),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
-				
-		 }
-		 else {
-			 ReadSet readset = runDelete.lanes.get(0).readsets.get(0); 
-			 readSetCode = readset.code;
-			 
-			 if (readset.files == null || (readset.files.size() == 0)) {
-				 
-			        File file =  RunMockHelper.newFile("newfiletest");
-			        List<File> files =  new ArrayList<File>();
-			        files.add(file);
-			        runDelete.lanes.get(0).readsets.get(0).files = files; 
-					
-					callAction(controllers.runs.api.routes.ref.Files.save(readSetCode),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
-			 }
-		 } 
+			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+	        assertThat(status(result)).isEqualTo(OK);
+	        
+	        result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(rd)));
+	        assertThat(status(result)).isEqualTo(OK);
+	        
+	        File file =  RunMockHelper.newFile("newfiletest");
+	        List<File> files =  new ArrayList<File>();
+	        files.add(file);
+	        rd.files = files; 
+			
+			result = callAction(controllers.readsets.api.routes.ref.Files.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
+		 	
+	        assertThat(status(result)).isEqualTo(OK);
+	        assertThat(contentType(result)).isEqualTo("application/json");
+	        assertThat(charset(result)).isEqualTo("utf-8");
 		 
-		 Result result = callAction(controllers.runs.api.routes.ref.Files.delete(readSetCode,"newfiletest"),fakeRequest());
-         assertThat(status(result)).isEqualTo(OK);
+	        // specific code
+			 result = callAction(controllers.readsets.api.routes.ref.Files.delete("rdCode","newfiletest"),fakeRequest());
+	         assertThat(status(result)).isEqualTo(OK);
+	         
+	         
+	 	    //query for control
+	         ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,rd.code);
+	         assertThat(readSet.files.size()).isEqualTo(0);
+	         
+	         
+				}});
 	 }
 	 
 	 
 	 @Test
 	 public void testRemoveFiles(){
-		 Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
-		 String readSetCode = "";
-		 if(runDelete==null){ 
-			 
-			//code de testFileCreate
-			 	Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET2");
-				run.dispatch = true; // For the archive test
-				Lane lane = RunMockHelper.newLane(1);
-				List<ReadSet> readsets =  new ArrayList<ReadSet>();
-				
-				Random r = new Random();
-				int rVal = 1 + r.nextInt(100- 1);
-				readSetCode = "test" + rVal;		
-				readsets.add(RunMockHelper.newReadSet(readSetCode)); // like that, we have a unique code !
-				lane.readsets = readsets;
-				
-				Lane lane2 = RunMockHelper.newLane(2);
-				List<Lane> lanes = new ArrayList<Lane>();
-				lanes.add(lane);
-				lanes.add(lane2);
-				run.lanes = lanes;
-				 
-				callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-				
-		        File file =  RunMockHelper.newFile("newfiletest");
-		        List<File> files =  new ArrayList<File>();
-		        files.add(file);
-		        run.lanes.get(0).readsets.get(0).files = files; 
-				
-				callAction(controllers.runs.api.routes.ref.Files.save(readSetCode),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
-				
-		 }
-		 else {
-			 ReadSet readset = runDelete.lanes.get(0).readsets.get(0); 
-			 
-			 if (readset.files == null || (readset.files.size() == 0)) {
-				 
-			        File file =  RunMockHelper.newFile("newfiletest");
-			        List<File> files =  new ArrayList<File>();
-			        files.add(file);
-			        runDelete.lanes.get(0).readsets.get(0).files = files; 
-					
-					callAction(controllers.runs.api.routes.ref.Files.save(readSetCode),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
-			 }
-		 }
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
 	 
-		 Result result = callAction(controllers.runs.api.routes.ref.Runs.deleteFiles("YANN_TEST1FORREADSET2"),fakeRequest());
-		  //Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
-		  // System.out.println(Json.toJson(runDelete).toString());
-		  //assertThat(runDelete).isNull();
-          assertThat(status(result)).isEqualTo(OK);
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
+			if(runDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			}
+			ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
+			if(readSetDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+			}
+			ReadSet fileDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("fullname","newfiletest"));
+			if(fileDelete!=null){
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, DBQuery.is("code","rdCode"), DBUpdate.unset("files"));
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, DBQuery.is("code","rdCode"), DBUpdate.pull("files",null));	
+			}
+		
+			Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET2");
+			run.dispatch = true; // For the archive test
+			Lane lane = RunMockHelper.newLane(1);
+			lane.readSetCodes = null;
+			
+			ReadSet rd = RunMockHelper.newReadSet("rdCode");
+			rd.runCode = run.code;
+			
+			Lane lane2 = RunMockHelper.newLane(2);
+			List<Lane> lanes = new ArrayList<Lane>();
+			lanes.add(lane);
+			lanes.add(lane2);
+			run.lanes = lanes;
+			 
+			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+	        assertThat(status(result)).isEqualTo(OK);
+	        
+	        result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(rd)));
+	        assertThat(status(result)).isEqualTo(OK);
+	        
+	        File file =  RunMockHelper.newFile("newfiletest");
+	        File file2 =  RunMockHelper.newFile("newfiletest2");
+	        List<File> files =  new ArrayList<File>();
+	        files.add(file);
+	        files.add(file2);
+	        rd.files = files; 
+			
+			result = callAction(controllers.readsets.api.routes.ref.Files.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
+	        assertThat(status(result)).isEqualTo(OK);
+	        
+			result = callAction(controllers.readsets.api.routes.ref.Files.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file2)));
+	        assertThat(status(result)).isEqualTo(OK);
+	 
+		     // specific code
+			 result = callAction(controllers.readsets.api.routes.ref.Files.deleteByRunCode("YANN_TEST1FORREADSET2"),fakeRequest());
+	         assertThat(status(result)).isEqualTo(OK);
+	         
+		 	    //query for control
+	         ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,rd.code);
+	         assertThat(readSet.files).isNull();
+	         
+				}});
 	 }
 	 
-
 }

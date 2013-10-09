@@ -21,13 +21,11 @@ public class InstrumentUsed implements IValidation {
 		//DescriptionValidationHelper.validationInstrumentCode(code,contextValidation);
 		//DescriptionValidationHelper.validationInstrumentCategoryCode(code,contextValidation);
 		
-		if(ValidationHelper.required(contextValidation, this, "instrumentUsed")){
-			if(ValidationHelper.required(contextValidation, this.code, "instrumentUsed.code")){
-				//TODO valid if exist
-			}
-			if(ValidationHelper.required(contextValidation, this.categoryCode, "instrumentUsed.categoryCode")){
-				//TODO valid if exist
-			}
+		if(ValidationHelper.required(contextValidation, this.code, "code")){
+			//TODO valid if exist
+		}
+		if(ValidationHelper.required(contextValidation, this.categoryCode, "categoryCode")){
+			//TODO valid if exist
 		}
 	}
 

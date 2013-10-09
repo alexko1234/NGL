@@ -10,16 +10,24 @@ import org.apache.commons.lang3.StringUtils;
 import play.data.validation.ValidationError;
 
 public class ContextValidation {
+
 	
-	public String rootKeyName;
+	private enum Mode {
+		CREATION, UPDATE, DELETE, NOT_DEFINED;
+	}
+
+	private Mode mode = Mode.NOT_DEFINED;
+	
+	
+	private String rootKeyName;
 	public Map<String,List<ValidationError>> errors;
-	public Map<String,Object> contextObjects;
-	
+	private Map<String,Object> contextObjects;
+
 	public ContextValidation(){
 		errors= new TreeMap<String, List<ValidationError>>();
 		contextObjects= new TreeMap<String, Object>();
 	}
-	
+
 	public ContextValidation(Map<String,List<ValidationError>> errors){
 		this.errors= errors;
 		contextObjects= new TreeMap<String, Object>();
@@ -27,7 +35,7 @@ public class ContextValidation {
 
 	
 	/**
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
@@ -39,18 +47,26 @@ public class ContextValidation {
 			return null;
 		}
 	}
-	
-	
+
+	public Map<String,Object> getContextObjects() {
+		return this.contextObjects;
+	}
+
+
+	public void setContextObjects(Map<String,Object> contextObjects) {
+		this.contextObjects = contextObjects;
+	}
+
 	/**
-	 * 
+	 *
 	 * @param key
 	 * @param value
 	 */
 	public void putObject(String key, Object value){
 		contextObjects.put(key, value);
 	}
-	
-	
+
+
 	/**
 	 * add an error message
 	 * @param key : property key
@@ -58,66 +74,42 @@ public class ContextValidation {
 	 * @param arguments : message args
 	 */
 	public void addErrors(String property, String message, Object...arguments) {
-		this.addKeyToRootKeyName(property);
-		String key = this.rootKeyName;
+		String key = getKey(property);
 		if (!errors.containsKey(key)) {
 			errors.put(key, new ArrayList<ValidationError>());
-		}		
-		errors.get(key).add(new ValidationError(key, message,  java.util.Arrays.asList(arguments)));
-		this.removeKeyFromRootKeyName(property);
+		}
+		errors.get(key).add(new ValidationError(key, message,  java.util.Arrays.asList(arguments)));		
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rootKeyName
 	 * @param property
 	 * @return
-	 * @deprecated
 	 */
-	public String getKey(String property) {
+	private String getKey(String property) {
 		return (StringUtils.isBlank(rootKeyName))?property: rootKeyName+"."+property;
 	}
 
-	
+
 	/**
-	 * 
-	 * @param property
-	 * @return
-	 * @deprecated use removeKeyFromRootKeyName
-	 */	
-	public String removeKey(String property) {
-		// TODO Auto-generated method stub
-		String strReturn = "";
-		if (StringUtils.isBlank(rootKeyName)) {
-			strReturn = "";
-		}
-		if (rootKeyName == property ) {
-			strReturn = "";
-		}
-		else {
-			strReturn = rootKeyName.substring(0, rootKeyName.length()-property.length()-1); 
-		}
-		return strReturn;
-	}
-	
-	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getRootKeyName() {
 		return this.rootKeyName;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param rootKeyName
 	 */
 	public void setRootKeyName(String rootKeyName) {
 		this.rootKeyName = rootKeyName;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param key
 	 */
 	public void addKeyToRootKeyName(String key) {
@@ -126,24 +118,57 @@ public class ContextValidation {
 		}
 		else {
 			this.rootKeyName += "." + key;
-		}		
+		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param key
 	 */
-	public void removeKeyFromRootKeyName(String key) {		
+	public void removeKeyFromRootKeyName(String key) {
 		if(StringUtils.isNotBlank(this.rootKeyName) && this.rootKeyName.equals(key)){
 			this.rootKeyName = null;
 		}else if(StringUtils.isNotBlank(this.rootKeyName) && this.rootKeyName.endsWith(key)){
 			this.rootKeyName = this.rootKeyName.substring(0, this.rootKeyName.length()-key.length()-1);
-		}		
+		}
 	}
-	
+
 	public boolean hasErrors() {
         return !errors.isEmpty();
     }
+	
+	public void setCreationMode(){
+		this.mode = Mode.CREATION;
+	}
+	
+	public void setUpdateMode(){
+		this.mode = Mode.UPDATE;
+	}
+	
+	public void setDeleteMode(){
+		this.mode = Mode.DELETE;
+	}
+	
+	private boolean isMode(Mode mode){
+		return mode.equals(this.mode);
+	}
+	
+	public boolean isUpdateMode(){
+		return isMode(Mode.UPDATE);
+	}
+	
+	public boolean isCreationMode(){
+		return isMode(Mode.CREATION);
+	}
+	
+	public boolean isDeleteMode(){
+		return isMode(Mode.DELETE);
+	}
+	
+	public boolean isNotDefined(){
+		return isMode(Mode.NOT_DEFINED);
+	}
+	
 	
 	/***
 	 *

@@ -5,52 +5,60 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.Valid;
-
 import net.vz.mongodb.jackson.DBQuery;
 
+import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.TraceInformation;
 import models.utils.InstanceConstants;
 import play.data.validation.Constraints.Required;
 
 import validation.ContextValidation;
+import validation.DescriptionValidationHelper;
 import validation.IValidation;
 import validation.InstanceValidationHelper;
+import validation.utils.BusinessValidationHelper;
+import validation.ContextValidation;
 import validation.utils.RunPropertyDefinitionHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
-import static validation.utils.ValidationHelper.*;
 
-public class ReadSet implements IValidation{
+public class ReadSet extends DBObject implements IValidation{
 
+	public String typeCode;
+	public String stateCode;
+	public List<String> resolutionCode;
 	
-
-	@Required
-	public String code;
-	@Required
+	public String runCode;
+	public Integer laneNumber;
+	public Boolean dispatch;
 	public String sampleContainerCode; //code bar de la banque ou est l'echantillon
-	@Required
 	public String sampleCode; //nom de l'ind / ech
-	@Required
 	public String projectCode;
-	public TBoolean abort = TBoolean.UNSET;
-	public Date abortDate;	
-	@Required
-	public String path;	
+	public TBoolean validProduction = TBoolean.UNSET;
+    public Date validProductionDate;
+    public TBoolean validBioinformatic = TBoolean.UNSET;
+    public Date validBioinformaticDate;
+    
+	public String path;
 	public String archiveId;
 	public Date archiveDate;
-	@Valid
-	public List<File> files;
-	
+	public TraceInformation traceInformation;
+	public Map<String,Treatment> treatments = new HashMap<String,Treatment>();
 	public Map<String, PropertyValue> properties= new HashMap<String, PropertyValue>();
 	
-	public Map<String,Treatment> treatments = new HashMap<String,Treatment>();
+	public List<File> files;
 	
 	/*
+	 * for "archives" optimization purpose (query links)
+	*/
+	
 
+	/*
 	indexSequence 			tag lié au ls
 	nbRead 					nombre de read de sequencage du ls
 	???						ssid du ls (archivage)
@@ -63,59 +71,73 @@ public class ReadSet implements IValidation{
 	nbUsefulCluster			nombre de clusters utiles passant les filtres du ls
 	q30 					q30 du ls
 	score					score qualite moyen du ls
-
 	 */
-	
+
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		InstanceValidationHelper.validateId(this, contextValidation);
+		InstanceValidationHelper.validateCode(this, InstanceConstants.READSET_ILLUMINA_COLL_NAME, contextValidation);
 		
-		if(ValidationHelper.required(contextValidation, this.code, "code")){
-			Run run = (Run) contextValidation.getObject("run");
-			Lane lane = (Lane) contextValidation.getObject("lane");
-			
-			//Validate unique readSet.code if not already exist
-			Run runExist = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("lanes.readsets.code", this.code));
-			
-			if(runExist != null && run._id == null){ //when new run 
-				contextValidation.addErrors("code",ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, this.code);
-			} else if(runExist != null && run._id != null) { //when run exist
-				if(!runExist.code.equals(run.code) || !runExist._id.equals(run._id)) {
-					contextValidation.addErrors("code", ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, this.code);
-				}else if(lane.number != -1){
-					for(Lane l:run.lanes){
-						if(l.readsets!=null){ 
-							for(ReadSet r: l.readsets){
-								if(r.code.equals(this.code)){
-									if(l.number != lane.number){
-										contextValidation.addErrors("code", ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, this.code);
-										break;
-									}
-								}
-							}
-						}
-					}
-				}
+		if(contextValidation.isUpdateMode() && !checkReadSetInRun()){
+				contextValidation.addErrors("code",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, this.code);
+		}			
+				
+		if(ValidationHelper.required(contextValidation, this.stateCode, "stateCode")){
+			if(!RunPropertyDefinitionHelper.getReadSetStateCodes().contains(this.stateCode)){
+				contextValidation.addErrors("stateCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, this.stateCode);
 			}
-			
+		}
+		
+		DescriptionValidationHelper.validationReadSetTypeCode(this.typeCode, contextValidation);
+		
+		InstanceValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
+		
+		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, this.runCode, "runCode",  Run.class, InstanceConstants.RUN_ILLUMINA_COLL_NAME);
+		
+		if(ValidationHelper.required(contextValidation, this.runCode, "runCode") && 
+				ValidationHelper.required(contextValidation, this.laneNumber, "laneNumber")){
+			if(!isLaneExist(contextValidation)){
+				contextValidation.addErrors("runCode",ValidationConstants.ERROR_NOTEXISTS_MSG, this.runCode);
+				contextValidation.addErrors("laneNumber",ValidationConstants.ERROR_NOTEXISTS_MSG, this.laneNumber);
+			}
 		}
 		
 		if(ValidationHelper.required(contextValidation, this.projectCode, "projectCode")){
-			//TODO validate if exist readSet.projectCode
+			//TODO validate if exist projectCode
 		}
 		if(ValidationHelper.required(contextValidation, this.sampleCode, "sampleCode")){
-			//TODO validate if exist
+			//TODO validate if exist sampleCode
 		}
 		if(ValidationHelper.required(contextValidation, this.sampleContainerCode, "sampleContainerCode")){
-			//TODO validate if exist
+			//TODO validate if exist sampleContainerCode
 		}
 		ValidationHelper.required(contextValidation, this.path, "path");
+
 		
 		contextValidation.addKeyToRootKeyName("properties");
-		validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getReadSetPropertyDefinitions(), "");
+		ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getReadSetPropertyDefinitions());
 		contextValidation.removeKeyFromRootKeyName("properties");
 		
-		contextValidation.putObject("readset", this);
+		contextValidation.putObject("readSet", this);
+		contextValidation.putObject("level", Level.CODE.ReadSet);
+		InstanceValidationHelper.validationTreatments(this.treatments, contextValidation);
 		InstanceValidationHelper.validationFiles(this.files, contextValidation);
+	}
+
+
+	private boolean checkReadSetInRun() {
+		return MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+				DBQuery.and(
+						DBQuery.is("code", this.runCode), 
+						DBQuery.elemMatch("lanes", 
+							DBQuery.and(
+								DBQuery.is("number", this.laneNumber),
+								DBQuery.is("readSetCodes", this.code)))));
+	}
+	
+	private boolean isLaneExist(ContextValidation contextValidation) {		
+		return MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+				DBQuery.and(DBQuery.is("code", this.runCode), DBQuery.is("lanes.number", this.laneNumber)));
 		
 	}
 }

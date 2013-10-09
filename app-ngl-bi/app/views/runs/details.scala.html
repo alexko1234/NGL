@@ -5,18 +5,15 @@
 	           
 <dl class="dl-horizontal">
 	<dt>@Messages("runs.dt.nb_cluster_total")</dt>
-	<!--dd>{{run.properties.nbClusterTotal.value / 1000000000}}</dd-->
-	<dd>{{run.properties.nbClusterTotal.value | number}}</dd>
+	<dd>{{run.treatments.ngsrg["default"].nbClusterTotal.value | number}}</dd>
 </dl>
 <dl class="dl-horizontal">
 	<dt>@Messages("runs.dt.nb_cluster_illumina")</dt>
-	<!-- dd>{{run.properties.nbClusterIlluminaFilter.value / 1000000000}}</dd-->
-	<dd>{{run.properties.nbClusterIlluminaFilter.value | number}}</dd>
+	<dd>{{run.treatments.ngsrg["default"].nbClusterIlluminaFilter.value | number}}</dd>
 </dl>
 <dl class="dl-horizontal">
 	<dt>@Messages("runs.dt.nb_bases_en_gb")</dt>
-	<!--dd>{{run.properties.nbBase.value / 1000000000}}</dd-->
-	<dd>{{run.properties.nbBase.value | number}}</dd>
+	<dd>{{run.treatments.ngsrg["default"].nbBase.value | number}}</dd>
 </dl>
 <dl class="dl-horizontal">
   <dt>@Messages("runs.dt.lanes")</dt>					
@@ -33,7 +30,7 @@
 		{{lane.number}}
 	   </td>
 	   <td>	
-		{{lane.readsets.length}}
+		{{lane.readSetCodes.length}}
 	   </td>
 	   <td>	
 		{{computeLost(lane) | number:2 }}
@@ -53,28 +50,28 @@
        <th>@Messages("runs.table.q30")</th>
       </tr>
      </thead>
-	 <tbody id="{{run.code}}" ng-repeat="lane in run.lanes | orderBy:'number'">
-      <tr ng-repeat="readset in lane.readsets">
+	 <tbody id="{{readSet.runCode}}" ng-repeat="readSet in readSets | orderBy:'laneNumber'">
+      <tr >
        <td>	
-		{{lane.number}}
+		{{readSet.laneNumber}}
 	   </td>
 	   <td>	
-		{{readset.code}}
+		{{readSet.code}}
 	   </td>
 	   <td>	
-		{{readset.sampleContainerCode}}
+		{{readSet.sampleContainerCode}}
 	   </td>
 	   <td>	
-		{{readset.projectCode}}
+		{{readSet.projectCode}}
 	   </td>
 	   <td>	
-		{{readset.properties.nbClusterInternalAndIlluminaFilter.value | number}}
+		{{readSet.treatments.ngsrg.default.nbCluster.value | number}}
 	   </td>		
 	   <td>
-		{{readset.properties.nbBaseInternalAndIlluminaFilter.value | number}}
+		{{readSet.treatments.ngsrg.default.nbBases.value | number}}
 	   </td>
 	   <td>
-		{{readset.properties.q30.value}}
+		{{readSet.treatments.ngsrg.default.Q30.value}}
 	   </td>
 	  </tr>
      </tbody>

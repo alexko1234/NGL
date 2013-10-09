@@ -61,4 +61,3 @@ public class RunTypeMappingQuery extends MappingSqlQuery<RunType>{
 	}
 
 }
-

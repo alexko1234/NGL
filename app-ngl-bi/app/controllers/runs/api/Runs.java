@@ -6,10 +6,16 @@ import java.util.List;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.Run;
+import models.laboratory.run.instance.Lane;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Treatment;
+import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
+import net.vz.mongodb.jackson.WriteResult;
 
 import org.codehaus.jackson.JsonNode;
+import controllers.utils.FormUtils;
 
 import play.Logger;
 import play.data.DynamicForm;
@@ -19,43 +25,44 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
+import workflows.Workflows;
 import controllers.CommonController;
-import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import controllers.utils.FormUtils;
 /**
  * Controller around Run object
- * @author galbini
+ * @authors galbini, dnoisett
  *
  */
 public class Runs extends CommonController {
 	
 	final static Form<Run> runForm = form(Run.class);
 	final static DynamicForm listForm = new DynamicForm();
+	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	
 	public static Result list(){
 		DynamicForm filledForm =  listForm.bindFromRequest();
-		MongoDBResult<Run> results = MongoDBDAO.find(Constants.RUN_ILLUMINA_COLL_NAME, Run.class)
+		MongoDBResult<Run> results = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class) 
 				.sort(DatatableHelpers.getOrderBy(filledForm), FormUtils.getMongoDBOrderSense(filledForm))
 				.page(DatatableHelpers.getPageNumber(filledForm), DatatableHelpers.getNumberRecordsPerPage(filledForm)); 
 		List<Run> runs = results.toList();
-		return ok(Json.toJson(new DatatableResponse(runs, results.count())));
+		return ok(Json.toJson(new DatatableResponse<Run>(runs, results.count())));
 	}
 	
 	
-
-	public static Result get(String code){
-		Run runValue = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
-		if(runValue != null){			
+	
+	public static Result get(String code) {
+		Run runValue = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
+		if (runValue != null) {		
 			return ok(Json.toJson(runValue));					
-		}else{
+		} else {
 			return notFound();
 		}
 	}
 	
 	public static Result head(String code){
-		if(MongoDBDAO.checkObjectExistByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code)){			
+		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code)){			
 			return ok();					
 		}else{
 			return notFound();
@@ -65,94 +72,98 @@ public class Runs extends CommonController {
 	
 	public static Result save() {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
-		
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
-		
-		if (!filledForm.hasErrors()) {
-			Run runValue = filledForm.get();
-			if (null == runValue._id) {
-				runValue.traceInformation = new TraceInformation();
-				runValue.traceInformation.setTraceInformation("ngsrg");
-			} else {
-				runValue.traceInformation.setTraceInformation("ngsrg");
-			}
+		Run runValue = filledForm.get();
 			
-			ctxVal.setRootKeyName("");
-			runValue.validate(ctxVal);
-			
-			
-			if (!filledForm.hasErrors()) {
-				runValue = MongoDBDAO.save(Constants.RUN_ILLUMINA_COLL_NAME,runValue);
-				filledForm = filledForm.fill(runValue);
-			}
+		if (null == runValue._id) { 
+			runValue.traceInformation = new TraceInformation();
+			runValue.traceInformation.setTraceInformation("ngsrg");
+		} else {
+			return badRequest("use PUT method to update the readset");
 		}
 		
-		if (!filledForm.hasErrors()) {
-			return ok(Json.toJson(filledForm.get()));
+		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		ctxVal.setCreationMode();
+		runValue.validate(ctxVal);
+		
+		if (!ctxVal.hasErrors()) {
+			runValue = MongoDBDAO.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runValue);
+			return ok(Json.toJson(runValue));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
 		}
 	}
 	
 	
-	public static Result delete(String code){
-		Run run = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
-		if(run == null){
-			return badRequest();
-		}		
-		MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, run);		
-		return ok();
+	public static Result update(String code) {
+		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
+		if (run == null) {
+			return badRequest("Run with code "+code+" not exist");
+		}
+		
+		Form<Run> filledForm = getFilledForm(runForm, Run.class);
+		Run runValue = filledForm.get();
+		if (code.equals(runValue.code)) {
+			if(null != runValue.traceInformation){
+				runValue.traceInformation.setTraceInformation("ngsrg");
+			}else{
+				Logger.error("traceInformation is null !!");
+			}
+			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 			
+			ctxVal.setUpdateMode();
+			runValue.validate(ctxVal);
+			if (!ctxVal.hasErrors()) {
+				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runValue);
+				return ok(Json.toJson(run));
+			}else {
+				return badRequest(filledForm.errorsAsJson());
+			}
+		}else{
+			return badRequest("run code are not the same");
+		}
+		
 	}
 	
 	
-	public static Result deleteReadsets(String code){
-		Run run  = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
-		if(run==null){
+	
+	public static Result delete(String code) {
+		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
+		if (run == null) {
+			return badRequest();
+		}		
+		MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);	
+		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", code));
+		
+		return ok();
+	}
+	
+	public static Result workflow(String code, String stateCode){
+		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
+		if (run == null) {
 			return badRequest();
 		}
-		for(int i=0;run.lanes!=null && i<run.lanes.size();i++){
-			for(int j=0;run.lanes.get(i).readsets != null && j<run.lanes.get(i).readsets.size();j++){
-				// vide
-				MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",code),DBUpdate.unset("lanes."+i+".readsets."+j));
-			}
-			//supprime
-			MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",code),DBUpdate.pull("lanes."+i+".readsets",null));	
-		}		
-		return ok();
-	}
-	
-
-	public static Result deleteFiles(String code){
-		Run run  = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
-		if(run==null){
-
-			return badRequest();
+		DynamicForm f = Form.form();
+		ContextValidation ctxVal = new ContextValidation(f.errors());
+		Workflows.setRunState(ctxVal, run, stateCode);
+		if (!ctxVal.hasErrors()) {
+			return ok();
+		}else {
+			return badRequest(f.errorsAsJson());
 		}
-		for(int i=0;run.lanes!=null && i<run.lanes.size();i++){
-			for(int j=0;run.lanes.get(i).readsets != null && j<run.lanes.get(i).readsets.size();j++){
-				for(int k=0;run.lanes.get(i).readsets.get(j).files!=null && k<run.lanes.get(i).readsets.get(j).files.size();k++){
-					MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",code),DBUpdate.unset("lanes."+i+".readsets."+j+".files."+k));
-				}
-				MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",code),DBUpdate.pull("lanes."+i+".readsets."+j+".files",null));
-				
-			}
-			
-		}		
-		return ok();
 	}
 	
-	
-	public static Result dispatch(String code){
-		Run run = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);		
-		if(run != null){
+	@Deprecated
+	public static Result dispatch(String code) {
+		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);		
+		if (run != null) {
 			JsonNode json = request().body().asJson();
 			Logger.info("Dispatch run : "+code);
 			boolean dispatch = json.get("dispatch").asBoolean();
-			MongoDBDAO.updateSet(Constants.RUN_ILLUMINA_COLL_NAME, run, "dispatch", dispatch);
-		}else{
+			MongoDBDAO.updateSet(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, "dispatch", dispatch);
+			//TODO ReadSet dispatch
+		} else {
 			return badRequest();
 		}		
 		return ok();	
 	}
-
+	
 }

@@ -63,4 +63,3 @@ public class TreatmentTypeMappingQuery extends MappingSqlQuery<TreatmentType>{
 	}
 
 }
-

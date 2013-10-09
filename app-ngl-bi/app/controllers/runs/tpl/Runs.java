@@ -23,11 +23,10 @@ public class Runs extends Controller {
 	}
 	
 	public static Result get(String code) {
-		return ok(views.html.runs.home.render("search"));
+		return ok(home.render("search")); 
 	}
 	
 	public static Result search() {
-		
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("runs.table.code"), true, false, false));
 		columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("runs.table.creationdate"), true, false, false));
@@ -51,6 +50,7 @@ public class Runs extends Controller {
   	    		controllers.runs.tpl.routes.javascript.Runs.home(),  
   	    		controllers.runs.tpl.routes.javascript.Runs.get(),  
   	    		controllers.runs.api.routes.javascript.Runs.get(),
+  	    		controllers.readsets.api.routes.javascript.ReadSets.list(),
   	    		controllers.runs.api.routes.javascript.Runs.list()  	    		
   	      )	  	      
   	    );

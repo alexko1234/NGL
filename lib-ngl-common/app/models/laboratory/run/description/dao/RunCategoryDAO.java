@@ -12,3 +12,5 @@ public class RunCategoryDAO extends AbstractDAO<RunCategory>{
 	}
 }
 
+
+

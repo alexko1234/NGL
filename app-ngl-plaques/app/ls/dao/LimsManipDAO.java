@@ -31,26 +31,26 @@ import play.Logger;
 @Repository
 public class LimsManipDAO {
         private JdbcTemplate jdbcTemplate;
-   
+
 
     @Autowired
     public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);              
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
 
     public List<Manip> findManips(Integer emnco, Integer ematerielco,String prsco){
     	Logger.info("pl_MaterielmanipChoisi @prsco='"+prsco+"', @emnco="+emnco+", @ematerielco="+ematerielco+", @plaque=1 ");
-        List<Manip> results = this.jdbcTemplate.query("pl_MaterielmanipChoisi @prsco=?, @emnco=?, @ematerielco=?, @plaque=?", 
-        		new Object[]{prsco, emnco, ematerielco, 1},new BeanPropertyRowMapper<Manip>(Manip.class));        
+        List<Manip> results = this.jdbcTemplate.query("pl_MaterielmanipChoisi @prsco=?, @emnco=?, @ematerielco=?, @plaque=?",
+        		new Object[]{prsco, emnco, ematerielco, 1},new BeanPropertyRowMapper<Manip>(Manip.class));
         return results;
     }
-    
+
     public void createPlate(Plate plate){
     	Logger.info("pc_PlaqueSolexa @plaqueId="+plate.code+", @emnco="+plate.typeCode);
-    	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?", new Object[]{plate.code, plate.typeCode});    	
+    	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?", new Object[]{plate.code, plate.typeCode});
     }
-       
+
     public void updatePlate(Plate plate){
     	Logger.info("ps_MaterielmanipPlaque @plaqueId="+plate.code);
     	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
@@ -69,7 +69,7 @@ public class LimsManipDAO {
 	        	plate.code = rs.getString("plaqueId");
 	        	plate.typeCode = rs.getInt("emnco");
 	        	plate.typeName = rs.getString("emnnom");
-	        	plate.nbWells = rs.getInt("nombrePuitUtilises");	        	
+	        	plate.nbWells = rs.getInt("nombrePuitUtilises");
 	            return plate;
 	        }
 	    });
@@ -89,12 +89,12 @@ public class LimsManipDAO {
 	        	plate.code = rs.getString("plaqueId");
 	        	plate.typeCode = rs.getInt("emnco");
 	        	plate.typeName = rs.getString("emnnom");
-	        	plate.nbWells = rs.getInt("nombrePuitUtilises");		        	
+	        	plate.nbWells = rs.getInt("nombrePuitUtilises");
 	            return plate;
 	        }
 	    });
-		
-		
+
+
 		if(plates.size() == 1){
 			Plate plate = plates.get(0);
 			Logger.info("pl_MaterielmanipPlaque @plaqueId="+plate.code);
@@ -104,33 +104,33 @@ public class LimsManipDAO {
 		        	well.name = rs.getString("matmanom");
 		        	well.code = rs.getInt("matmaco");
 		        	well.x = rs.getString("plaqueX");
-		        	well.y = rs.getString("plaqueY");	
+		        	well.y = rs.getString("plaqueY");
 		        	well.typeCode = rs.getInt("emnco");
 		        	well.typeName = rs.getString("emnnom");
 		            return well;
 		        }
 		    });
-		
-			plate.wells = wells.toArray(new Well[wells.size()]);
+
+			//plate.wells = wells.toArray(new Well[wells.size()]);
 			return plate;
 		}else{
 			return null;
 		}
 	}
-    
+
 
 	public boolean isPlateExist(String code) {
 		Logger.info("pl_PlaqueSolexa @plaqueId="+code);
 		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
 	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	Plate plate = new Plate();
-	        	plate.code = rs.getString("plaqueId");	        		        
+	        	plate.code = rs.getString("plaqueId");
 	            return plate;
 	        }
 	    });
 		return (plates.size() > 0);
 	}
-	
+
 	public List<ListObject> getListObjectFromProcedureLims(String procedure) {
 		List<ListObject> listObjects = this.jdbcTemplate.query(procedure,
 				new RowMapper<ListObject>() {
@@ -152,6 +152,6 @@ public class LimsManipDAO {
 	}
 
 
-	
+
 }
 

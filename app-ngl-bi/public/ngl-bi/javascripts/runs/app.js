@@ -9,6 +9,7 @@ angular.module('home', ['datatableServices'], function($routeProvider, $location
 		templateUrl : '/tpl/runs/details',
 		controller : 'DetailsCtrl'
 	});
+
 	$routeProvider.otherwise({redirectTo: '/runs/search/home'});
 
 	// configure html5 to get links working with bookmarked

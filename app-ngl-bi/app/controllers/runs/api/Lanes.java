@@ -1,15 +1,19 @@
 package controllers.runs.api;
 
+
 import models.laboratory.run.instance.Lane;
+import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.laboratory.run.instance.Treatment;
+import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
+import play.Logger;
 import play.data.Form;
 import static play.data.Form.form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
-import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
 import controllers.CommonController;
 
@@ -18,98 +22,129 @@ import controllers.CommonController;
 public class Lanes extends CommonController{
 	
 	final static Form<Lane> laneForm = form(Lane.class);
+	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	
-	public static Result save(String code){
-		
-		Form<Lane> filledForm = getFilledForm(laneForm, Lane.class);		
-		
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
-		
-		if(!filledForm.hasErrors()) {
-			Run run = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
-			if(run == null){
-				return notFound();
-			}
-			Lane laneValue = filledForm.get();
-			
-			ctxVal.putObject("run", run);
-			int laneNumber = laneValue.number;
-			int index = 0;
-			for(int i = 0;run.lanes != null &&  i < run.lanes.size(); i++){
-				ctxVal.setRootKeyName("lanes"+"["+index+++"]");
-				if(run.lanes.get(i).number.equals(laneNumber)){
-					break;
-				}
-			}
-			laneValue.validate(ctxVal);
-			
-			
-			if(!filledForm.hasErrors()) {
-				//Logger.debug("Insert lane OK :"+laneValue.number);
-				//MongoDBDAO.createOrUpdateInArray(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,"code" , code, "lanes", "number", laneValue.number,laneValue);
-				boolean isFind = false;
-				for(int i = 0;run.lanes != null &&  i < run.lanes.size(); i++){
-					Lane l = run.lanes.get(i);
-					if(l.number.equals(laneNumber)){
-						
-						isFind = true;
-						MongoDBDAO.updateSet(Constants.RUN_ILLUMINA_COLL_NAME, run, "lanes."+i, laneValue);
-						break;
-					}
-				}
-				if(!isFind){MongoDBDAO.updatePush(Constants.RUN_ILLUMINA_COLL_NAME, run, "lanes", laneValue);}
-				
-				filledForm = filledForm.fill(laneValue);
+	public static Result list(String code) {
+		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
+		if(run == null){
+			return badRequest();
+		}
+		return ok(Json.toJson(run.lanes));		
+	}
+	
+	public static Result get(String code, Integer laneNumber) {
+		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+				DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)));
+		if(run == null){
+			return badRequest();
+		}
+		for(Lane lane: run.lanes) {
+			if(lane.number.equals(laneNumber)) {
+				return ok(Json.toJson(lane));	
 			}
 		}
+		return notFound();
+	}
+	
+	public static Result head(String code, Integer laneNumber){
+		if(MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+				DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)))){			
+			return ok();					
+		}else{
+			return notFound();
+		}
+	}
+	
+	public static Result save(String code) {
+		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
+		if(run == null){
+			return badRequest();
+		}
+				
+		Form<Lane> filledForm = getFilledForm(laneForm, Lane.class);			
+		Lane laneValue = filledForm.get();
 		
-		if (!filledForm.hasErrors() ) {
-			return ok(Json.toJson(filledForm.get()));			
+		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+		ctxVal.putObject("run", run);
+		ctxVal.setCreationMode();
+		laneValue.validate(ctxVal);
+		
+		if(!ctxVal.hasErrors()) {
+			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+					DBQuery.is("code", code),
+					DBUpdate.push("lanes", laneValue));
+			return ok(Json.toJson(laneValue));	
 		} else {
+			Logger.error(filledForm.errorsAsJson().toString());
 			return badRequest(filledForm.errorsAsJson());
 		}		
 	}
-
 	
-	public static Result get(String code,Integer laneNumber){
-		Run runValue = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
-		Lane laneValue = null;
-		for(Lane lane:runValue.lanes) {
-			if(lane.number.equals(laneNumber)){
-				laneValue = lane;
+	
+	
+	public static Result update(String code, Integer laneNumber){
+		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+				DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)));
+		if(run == null){
+			return badRequest();
+		}
+		Form<Lane> filledForm = getFilledForm(laneForm, Lane.class);			
+		Lane laneValue = filledForm.get();
+		if (laneNumber.equals(laneValue.number)) {				
+			ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+			ctxVal.putObject("run", run);
+			ctxVal.setUpdateMode();
+			laneValue.validate(ctxVal);
+			
+			if(!ctxVal.hasErrors()) {
+				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+						DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)),
+						DBUpdate.set("lanes.$", laneValue)); 
+				return ok(Json.toJson(laneValue));
+			} else {
+				return badRequest(filledForm.errorsAsJson());
 			}
+		}else{
+			return badRequest("lane number are not the same");
+		}
+	}
+		
+	public static Result delete(String code, Integer laneNumber) { 
+		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+				DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)));
+		if(run == null){
+			return badRequest();
 		}
 		
-		if(laneValue != null){
-			return ok(Json.toJson(laneValue));				
-		}else{
-			return notFound();
-		}		
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.and(DBQuery.is("code",code),DBQuery.is("lanes.number",laneNumber)), DBUpdate.unset("lanes.$"));
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.is("code",code), DBUpdate.pull("lanes", null));
+		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("runCode", code), DBQuery.is("laneNumber",laneNumber)));
+		return ok();
+	
 	}
 	
-	public static Result delete(String code,Integer laneNumber) { 
-		Run runValue = MongoDBDAO.findByCode(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
-		Lane laneValue = null;
-		
-		for(Lane lane:runValue.lanes) {
-			if(lane.number.equals(laneNumber)){
-				laneValue = lane;
-				
-				// set the lane to null	
-				MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.and(DBQuery.is("code",code),DBQuery.is("lanes.number",laneNumber)),DBUpdate.unset("lanes.$"));
-				break;
-			}
+	public static Result deleteByRunCode(String code) {
+		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
+		if (run==null) {
+			return badRequest();
 		}
-		// remove null
-		MongoDBDAO.update(Constants.RUN_ILLUMINA_COLL_NAME,  Run.class,DBQuery.is("code",code),DBUpdate.pull("lanes",null));
-		
-		
-		if(laneValue == null) {
-			return notFound();
-		}
-		else{
-			return ok();
-		}
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.is("code",code), DBUpdate.unset("lanes"));
+		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("runCode", code)));
+		return ok();
+	}
+	
+	public static Result workflow(String code, Integer laneNumber, String stateCode){
+		return badRequest("Not implemented");
+	}
+	
+	
+	@Deprecated
+	public static Result saveOld(String code) {
+		return save(code);
+	}
+	@Deprecated
+	public static Result getOld(String code, Integer laneNumber) {
+		return get(code, laneNumber);
 	}
 
 }

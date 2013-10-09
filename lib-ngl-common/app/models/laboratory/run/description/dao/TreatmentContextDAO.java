@@ -84,3 +84,4 @@ public class TreatmentContextDAO extends AbstractDAOMapping<TreatmentContext>{
 	}
 
 }
+

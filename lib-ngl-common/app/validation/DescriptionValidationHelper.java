@@ -30,6 +30,8 @@ import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import validation.utils.BusinessValidationHelper;
+import validation.utils.RunPropertyDefinitionHelper;
+import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 import validation.utils.ValidationHelper;
 
@@ -54,7 +56,7 @@ public class DescriptionValidationHelper {
 			String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
 		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,true);
 		if(exType!=null){
-			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), contextValidation.rootKeyName,true);
+			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), true);
 		}
 	}
 	
@@ -117,23 +119,10 @@ public class DescriptionValidationHelper {
 	public static void validationRunTypeCode(String typeCode,
 			ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, typeCode, "typeCode")){
-			//TODO add controles si le type existe int�rrogation de la partie sgbd
-			//TODO : quand runType sera dans le mod�le description
-			//BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, this.typeCode, "typeCode", RunType.find, false);
-			
-			//getRunPropertyDefinitions
-			
-			/*
-			 * 		proDefinitions.addAll(sampleType.propertiesDefinitions);
-		
-				for(PropertyDefinition propertyDefinition:importType.propertiesDefinitions){
-					if(propertyDefinition.level.code.contains(LEVEL_SEARCH)){
-						proDefinitions.add(propertyDefinition);
-					}
-				}
-				
-				ConstraintsHelper.validateProperties(contextValidation, this.properties, proDefinitions);
-			 */
+			if(!RunPropertyDefinitionHelper.getRunTypeCodes().contains(typeCode)){
+				contextValidation.addErrors("typeCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, typeCode);
+			}
+			//TODO interroge la base de données
 			
 		}
 		
@@ -192,6 +181,17 @@ public class DescriptionValidationHelper {
 	public static void validationResolutionCode(String resolutionCode,
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, resolutionCode,"resolutionCode", Resolution.find);		
+	}
+
+	public static void validationReadSetTypeCode(String typeCode,
+			ContextValidation contextValidation) {
+		if(ValidationHelper.required(contextValidation, typeCode, "typeCode")){
+			if(!"default-readset".equals(typeCode)){
+				contextValidation.addErrors("typeCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, typeCode);
+			}		
+			
+		}
+		
 	}
 	
 }

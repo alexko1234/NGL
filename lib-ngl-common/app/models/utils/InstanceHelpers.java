@@ -86,7 +86,7 @@ public class InstanceHelpers {
 	}
 
 
-	// Add unique codes from list to list 
+	// Add unique codes from list to list
 	public static List<String> addCodesList(List<String> codes, List<String> listCodes){
 		if(listCodes==null){
 			listCodes=new ArrayList<String>();
@@ -103,7 +103,7 @@ public class InstanceHelpers {
 
 
 
-	public static void copyPropertyValueFromPropertiesDefinition(List<PropertyDefinition> propertyDefinitions, 
+	public static void copyPropertyValueFromPropertiesDefinition(List<PropertyDefinition> propertyDefinitions,
 			Map<String,PropertyValue> propertiesInput,Map<String,PropertyValue> propertiesOutPut){
 
 		for(PropertyDefinition propertyDefinition : propertyDefinitions){
@@ -120,26 +120,26 @@ public class InstanceHelpers {
 		}
 
 	}
-	
+
 	public static void copyPropertyValueFromLevel(
 			Map<String, PropertyDefinition> propertyDefinitions,
 			Level.CODE level, Map<String, PropertyValue> propertyValues,
 			Map<String, PropertyValue> properties) {
-	
-		
+
+
 	}
 
 	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError,Boolean keepRootKeyName) {
 		ContextValidation localContextError=new ContextValidation();
 		if(keepRootKeyName){
-			localContextError.rootKeyName=contextError.rootKeyName;
+			localContextError.addKeyToRootKeyName(contextError.getRootKeyName());
 		}
-		localContextError.contextObjects=contextError.contextObjects;
+		localContextError.setContextObjects(contextError.getContextObjects());
 		
-		if(obj!=null)
+		if (obj != null) {
 			obj.validate(localContextError);
-		else {
-			throw new IllegalArgumentException("Object is null");
+		} else {
+			throw new IllegalArgumentException("missing obj");
 		}
 
 		if(localContextError.errors.size()==0){

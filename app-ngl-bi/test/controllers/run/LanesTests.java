@@ -5,17 +5,19 @@ import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.charset;
 import static play.test.Helpers.contentType;
+import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.fakeRequest;
-import static play.test.Helpers.status;
+import static play.test.Helpers.running;
+import static play.test.Helpers.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.Test;
@@ -23,137 +25,272 @@ import org.junit.Test;
 import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
-import controllers.Constants;
 import fr.cea.ig.MongoDBDAO;
+
 
 public class LanesTests extends AbstractTests {
 	
 	@Test
-	public void testNewLaneOnNewRun(){
-		Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
+	public void testAddLaneOnARunWithALaneOK() {
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
 		if(runDelete!=null){
-			MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 		}
-	
 		Run run = RunMockHelper.newRun("YANN_TEST1FORLANES");
-	
-	 	callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-	 	
-		Random r = new Random();
-		int rVal = 3 + r.nextInt(97);
-		
-		Lane lane = RunMockHelper.newLane(rVal);
+		Lane lane = RunMockHelper.newLane(1);
 		List<Lane> lanes = new ArrayList<Lane>();
-		lanes.add(lane);
+	 	lanes.add(lane);
 		run.lanes = lanes;
-	 	lane.abort = TBoolean.TRUE;
+		
+		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+	 	assertThat(status(result)).isEqualTo(OK);
+	 			
+		lane = RunMockHelper.newLane(2);
+	 	lane.valid = TBoolean.TRUE;
+	 	lanes.add(lane);
+		run.lanes = lanes;
 	 	
-	 	Result result = callAction(controllers.runs.api.routes.ref.Lanes.save("YANN_TEST1FORLANES"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
-	 	
-		//System.out.println(contentAsString(result));
-	    assertThat(status(result)).isEqualTo(OK);
-        assertThat(contentType(result)).isEqualTo("application/json");
-        assertThat(charset(result)).isEqualTo("utf-8");
+	 	result = callAction(controllers.runs.api.routes.ref.Lanes.save(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
+	    assertThat(status(result)).isEqualTo(OK);  
+	    
+	    //query for control
+        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+        assertThat(run.lanes.size()).isEqualTo(2);
+        
+	    }});
 	}
 	 
 	 @Test
-	 public void testNewLaneWithRunNotAssociated(){
-			Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
+	 public void testAddLaneOnAEmptyRunOK(){
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
 			if(runDelete!=null){
-				MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 			}
-		
 			Run run = RunMockHelper.newRun("YANN_TEST1FORLANES");
-		 	callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+			assertThat(run).isNotNull(); 
+		 	assertThat(status(result)).isEqualTo(OK);
 	        
 		 	Lane lane = RunMockHelper.newLane(1);
-		 	Result result = callAction(controllers.runs.api.routes.ref.Lanes.save("YANN_TEST1FORLANES"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
+		 	result = callAction(controllers.runs.api.routes.ref.Lanes.save(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
 		 	
-			//System.out.println(contentAsString(result));
+		 	assertThat(lane).isNotNull(); 
 		    assertThat(status(result)).isEqualTo(OK);
 	        assertThat(contentType(result)).isEqualTo("application/json");
 	        assertThat(charset(result)).isEqualTo("utf-8");
+	        
+		    //query for control
+	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+	        assertThat(run.lanes.size()).isEqualTo(1);
+	        
+		    }});
 		}
 	 
 	 
 	 @Test
-	 public void testNewLaneWithNewReadSetOnTheRun(){
-		 
-			Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
+	 public void testAddLaneKO(){
+		 //verify that we can't save lanes which refers to readsets which don't exist ! (test KO)
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
 			if(runDelete!=null){
-				MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 			}
+			ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","ReadSetLanes2"));
+			if(readSetDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+			}	
+			readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","ReadSetLanes3"));
+			if(readSetDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+			}
+			readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","ReadSetLanes4"));
+			if(readSetDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+			}
+			
+			Run run = RunMockHelper.newRun("YANN_TEST1FORLANES");
+		 	Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		 	assertThat(status(result)).isEqualTo(OK);
 		
-			Lane lane = RunMockHelper.newLane(2);
-			ReadSet readset = RunMockHelper.newReadSet("ReadSetLanes2");
-			List<ReadSet> readsets = new ArrayList<ReadSet>();
-			readsets.add(readset);
-			lane.readsets = readsets;
+			Lane lane = RunMockHelper.newLane(1);
+			ReadSet r = RunMockHelper.newReadSet("ReadSetLanes2");
+			r.runCode = run.code;
+			ReadSet r2 = RunMockHelper.newReadSet("ReadSetLanes3");
+			r2.runCode = run.code;
+			ReadSet r3 = RunMockHelper.newReadSet("ReadSetLanes4");
+			r3.runCode = run.code;
+			
+			List<String> a = new ArrayList<String>();
+			a.add(r.code);
+			a.add(r2.code);
+			lane.readSetCodes = a;
+			
+			List<Lane> c = new ArrayList<Lane>();
+			c.add(lane);
+			run.lanes = c;
 		 	
-		 	Result result = callAction(controllers.runs.api.routes.ref.Lanes.save("YANN_TEST1FORLANES"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
+			result = callAction(controllers.runs.api.routes.ref.Lanes.save(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
+			assertThat(status(result)).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);
+			
+			//query for control
+	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+	        assertThat(run.lanes).isNull(); 
+			
+		    }});
+		}
+	 
+	 
+	 @Test
+	 public void testAddLaneAddReadSetOK(){
+		 //verify that we can save lanes because readsets exist (test OK) !
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
+			if(runDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			}
+			ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","ReadSetLanes2"));
+			if(readSetDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+			}	
+			readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","ReadSetLanes3"));
+			if(readSetDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+			}
+			
+			Run run = RunMockHelper.newRun("YANN_TEST1FORLANES");
+		 	Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		 	assertThat(status(result)).isEqualTo(OK);
+		
+			Lane lane = RunMockHelper.newLane(1);
+			ReadSet r = RunMockHelper.newReadSet("ReadSetLanes2");
+			r.runCode = run.code;
+			ReadSet r2 = RunMockHelper.newReadSet("ReadSetLanes3");
+			r2.runCode = run.code;
+			
+			List<String> a = new ArrayList<String>();
+			a.add(r.code);
+			a.add(r2.code);
+			//lane.readSetCodes = a;
+			
+			
+			List<Lane> c = new ArrayList<Lane>();
+			c.add(lane);
+			run.lanes = c;
+			
+			result = callAction(controllers.runs.api.routes.ref.Lanes.save(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
+			assertThat(status(result)).isEqualTo(OK);
+			
+			result =  callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(r)));
+			assertThat(status(result)).isEqualTo(OK);
+			
+			result =  callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(r2)));
+			assertThat(status(result)).isEqualTo(OK);
+			
+			//query for control
+	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+	        assertThat(run.lanes.size()).isEqualTo(1);
+			
+		    }});
+		}
+	 
+	 
+	  
+	 @Test
+	 public void testAdd2LanesWithSameLaneNumberKO(){
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
+			if(runDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			}
+			Run run = RunMockHelper.newRun("YANN_TEST1FORLANES");
+			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+			assertThat(run).isNotNull(); 
+		 	assertThat(status(result)).isEqualTo(OK);
+	        
+		 	Lane lane = RunMockHelper.newLane(1);
+		 	Lane lane2 = RunMockHelper.newLane(1);
+		 	result = callAction(controllers.runs.api.routes.ref.Lanes.save(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
 		 	
-		 	//System.out.println(contentAsString(result));
-		    assertThat(status(result)).isEqualTo(play.mvc.Http.Status.NOT_FOUND);
+		 	assertThat(lane).isNotNull(); 
+		    assertThat(status(result)).isEqualTo(OK);
+	        assertThat(contentType(result)).isEqualTo("application/json");
+	        assertThat(charset(result)).isEqualTo("utf-8");
+	        
+	        
+		 	result = callAction(controllers.runs.api.routes.ref.Lanes.save(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane2)));
+		    assertThat(status(result)).isNotEqualTo(OK);
+	        
+		    //query for control
+	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+	        assertThat(run.lanes.size()).isEqualTo(1);
+	        
+		    }});
 		}
 	 
 	 
-	@Test
-	public void testLaneOnRunWithSameReadSet(){
-		Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
-		if(runDelete!=null){
-			MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
-		}
-	
-		Run run = RunMockHelper.newRun("YANN_TEST1FORLANES");
-		Lane lane = RunMockHelper.newLane(1);
-		ReadSet readset = RunMockHelper.newReadSet("ReadSetLanes");
-		List<ReadSet> readsets = new ArrayList<ReadSet>();
-		readsets.add(readset);
-		lane.readsets = readsets;
+	 @Test
+	 public void testAddLanesWithSameReadSetCodesKO(){
+		 //verify that we can't save a lane witch refers to a readset on another lane !
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
+			if(runDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			}
+			ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","ReadSetLanes2"));
+			if(readSetDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+			}	
+			readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","ReadSetLanes3"));
+			if(readSetDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+			}
+			
+			Run run = RunMockHelper.newRun("YANN_TEST1FORLANES");
+		 	Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		 	assertThat(status(result)).isEqualTo(OK);
 		
-	 	callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-	 	
-		lane = RunMockHelper.newLane(1);
-		lane.readsets = readsets;
-	 	
-	 	Result result = callAction(controllers.runs.api.routes.ref.Lanes.save("YANN_TEST1FORLANES"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
-	 	
-	 	//System.out.println(contentAsString(result));
-	    assertThat(status(result)).isEqualTo(OK);
-        assertThat(contentType(result)).isEqualTo("application/json");
-        assertThat(charset(result)).isEqualTo("utf-8");
-	}
-	 
-	 
-	@Test
-	public void testLanesOnRunWithSameReadSet(){
-		Run runDelete = MongoDBDAO.findOne(Constants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
-		if(runDelete!=null){
-			MongoDBDAO.delete(Constants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			Lane lane = RunMockHelper.newLane(1);
+			Lane lane2 = RunMockHelper.newLane(2);
+			ReadSet r = RunMockHelper.newReadSet("ReadSetLanes2");
+			r.runCode = run.code;
+			ReadSet r2 = RunMockHelper.newReadSet("ReadSetLanes3");
+			r2.runCode = run.code;
+			
+			List<String> a = new ArrayList<String>();
+			a.add(r.code);
+			a.add(r2.code);
+			//lane.readSetCodes = a;
+			
+			List<Lane> c = new ArrayList<Lane>();
+			c.add(lane);
+			run.lanes = c;
+			
+			result = callAction(controllers.runs.api.routes.ref.Lanes.save(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
+			assertThat(status(result)).isEqualTo(OK);
+			
+			result =  callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(r)));
+			assertThat(status(result)).isEqualTo(OK);
+			
+			result =  callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(r2)));
+			assertThat(status(result)).isEqualTo(OK);
+			
+			lane2.readSetCodes = a; // the same readSet codes are affected to the lane2 !
+			
+			result = callAction(controllers.runs.api.routes.ref.Lanes.save(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane2)));
+			assertThat(status(result)).isNotEqualTo(OK);
+			
+			//query for control
+	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+	        assertThat(run.lanes.size()).isEqualTo(1);
+			
+		    }});
 		}
-	
-		Run run = RunMockHelper.newRun("YANN_TEST1FORLANES");
-		Lane lane = RunMockHelper.newLane(1);
-		List<Lane> lanes = new ArrayList<Lane>();
-		lanes.add(lane);
-		run.lanes = lanes;
-		ReadSet readset = RunMockHelper.newReadSet("ReadSetLanes");
-		List<ReadSet> readsets = new ArrayList<ReadSet>();
-		readsets.add(readset);
-		lane.readsets = readsets;
-		
-	 	callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-	 	
-		lane = RunMockHelper.newLane(2);
-		lane.readsets = readsets;
-	 	
-	 	Result result = callAction(controllers.runs.api.routes.ref.Lanes.save("YANN_TEST1FORLANES"),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
-	 	
-	 	//System.out.println(contentAsString(result));
-	    assertThat(status(result)).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);
-        assertThat(contentType(result)).isEqualTo("application/json");
-        assertThat(charset(result)).isEqualTo("utf-8");
-	} 
-
-
 }

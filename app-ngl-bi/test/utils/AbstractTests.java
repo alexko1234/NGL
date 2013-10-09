@@ -40,6 +40,9 @@ public abstract class AbstractTests {
 		config.put("mongodb.credentials", "testu:testu");
 		config.put("mongodb.servers", "mongodev.genoscope.cns.fr:27017");
 		
+		//config.put("mongodb.database", "NGL-BI-TEST");
+		//config.put("mongodb.credentials", "ngl-bi:NglBiPassWT");
+		//config.put("mongodb.servers", "gsphere.genoscope.cns.fr:27017");
 		
 		config.put("db.lims.driver", "org.postgresql.Driver");
 		config.put("db.lims.url", "jdbc:postgresql://db.cng.fr/solexaprod");
@@ -47,7 +50,9 @@ public abstract class AbstractTests {
 		config.put("db.lims.password", "N3wG3nLim5");
 		config.put("db.lims.jndiName", "lims");
 		
-		config.put("asset.url","http://192.168.243.231:9001");
+		//config.put("asset.url","http://192.168.243.231:9001");
+		
+		config.put("asset.url","http://localhost:9000");
 		
 		// to delete errors messages;
 		config.put("casUrlValidator", "https://cas.genoscope.cns.fr:8443/cas/serviceValidate");

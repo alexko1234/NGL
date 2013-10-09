@@ -1,17 +1,9 @@
 package models.laboratory.common.instance;
 
 import java.util.Date;
-
-import models.utils.HelperObjects;
-
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonIgnore;
-
-import play.Logger;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.utils.ValidationHelper;
-import controllers.administration.authentication.User;
 
 /**
  * 
@@ -32,29 +24,24 @@ public class TraceInformation implements IValidation {
 	public void setTraceInformation(String user){
 		if (createUser==null){
 			createUser=user;
+			creationDate = new Date();
 		} else {
 			modifyUser=user;
-		}
-		
-		if(creationDate==null) {
-			creationDate = new Date();
-		} else { modifyDate=new Date(); }		
+			modifyDate=new Date();
+		}				
 	}
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		if (contextValidation.getObject("_id") != null) {
-			if(ValidationHelper.required(contextValidation, this, "traceInformation")){
-				ValidationHelper.required(contextValidation, createUser, "traceInformation.createUser");
-				ValidationHelper.required(contextValidation, creationDate, "traceInformation.creationDate");
-				ValidationHelper.required(contextValidation, modifyUser, "traceInformation.modifyUser");
-				ValidationHelper.required(contextValidation, modifyDate, "traceInformation.modifyDate");
-			}
+		//backward compatibility
+		if (contextValidation.isUpdateMode() || (contextValidation.isNotDefined() && contextValidation.getObject("_id") != null)) {
+			ValidationHelper.required(contextValidation, createUser, "createUser");
+			ValidationHelper.required(contextValidation, creationDate, "creationDate");
+			ValidationHelper.required(contextValidation, modifyUser, "modifyUser");
+			ValidationHelper.required(contextValidation, modifyDate, "modifyDate");
 		} else {
-			if(ValidationHelper.required(contextValidation, this, "traceInformation")){
-				ValidationHelper.required(contextValidation, createUser, "traceInformation.createUser");
-				ValidationHelper.required(contextValidation, creationDate, "traceInformation.createDate");
-			}
+			ValidationHelper.required(contextValidation, createUser, "createUser");
+			ValidationHelper.required(contextValidation, creationDate, "createDate");
 		}
 	}
 	

@@ -16,41 +16,46 @@ import validation.utils.ValidationConstants;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
-public class File extends DBObject implements IValidation {
-	
-	//concatenation de flotseqname + flotseqext	
+public class File implements IValidation {
+
+	//concatenation de flotseqname + flotseqext
 	public String fullname;
 	public String extension;
 	public Boolean usable = Boolean.FALSE;
 	public String typeCode; //id du type de fichier
-	
+	public String stateCode;
 	public Map<String, PropertyValue> properties = new HashMap<String, PropertyValue>();
-	
+
 	/*
 	asciiEncoding	encodage ascii du fichier
-	label			id du label du fichier READ1 / READ2 / SINGLETON	
+	label			id du label du fichier READ1 / READ2 / SINGLETON
 	*/
-	
+
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		
-		Run run = (Run) contextValidation.getObject("run");
-		
-		//Validate unique file.code if not already exists
-		Run runExist = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("lanes.readsets.files.fullname", this.fullname));
-		if (runExist != null && run._id == null) { //when new run
-			contextValidation.addErrors("fullname",ValidationConstants.ERROR_NOTUNIQUE_MSG, this.fullname);
+		ReadSet readSet = (ReadSet) contextValidation.getObject("readSet");
+		if(ValidationHelper.required(contextValidation, this.fullname, "fullname")) {
+			//Validate unique file.code if not already exists
+			if(contextValidation.isCreationMode() && MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+					DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", this.fullname)))){
+				contextValidation.addErrors("fullname",ValidationConstants.ERROR_NOTUNIQUE_MSG, this.fullname);
+			}			
 		}
-		 
+
+		if(ValidationHelper.required(contextValidation, this.stateCode, "stateCode")){
+			if(!RunPropertyDefinitionHelper.getReadSetStateCodes().contains(this.stateCode)){
+				contextValidation.addErrors("stateCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, this.stateCode);
+			}
+		}
+		
 		ValidationHelper.required(contextValidation, this.extension, "extension");
-		ValidationHelper.required(contextValidation, this.fullname, "fullname");
 		ValidationHelper.required(contextValidation, this.typeCode, "typeCode");
 		ValidationHelper.required(contextValidation, this.usable, "usable");
-		
+
 		contextValidation.addKeyToRootKeyName("properties");
-		ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getFilePropertyDefinitions(), "");
+		ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getFilePropertyDefinitions());
 		contextValidation.removeKeyFromRootKeyName("properties");
-		
+
 	}
 
 }

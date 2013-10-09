@@ -21,7 +21,7 @@ import play.api.modules.spring.Spring;
 public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition>{
 
 	protected PropertyDefinitionDAO() {
-		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.class, 
+		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.class,
 				"SELECT id,code,name,required,active,type,display_format,display_order,default_value,description,"
 						+ "choice_in_list,fk_measure_category,fk_save_measure_unit,fk_display_measure_unit,fk_common_info_type "
 				+" FROM property_definition as t",true);
@@ -49,7 +49,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	public PropertyDefinition save(PropertyDefinition propertyDefinition, long idCommonInfoType) throws DAOException
 	{
 		if(null == propertyDefinition.levels || propertyDefinition.levels.size()==0){
-			throw new DAOException("level does not exist or level.id is null) !! - "+propertyDefinition.code);				
+			throw new DAOException("level does not exist or level.id is null) !! - "+propertyDefinition.code);
 		}
 		//Create propertyDefinition
 		Map<String, Object> parameters = new HashMap<String, Object>();
@@ -64,29 +64,29 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		parameters.put("display_order", propertyDefinition.displayOrder);
 		parameters.put("default_value", propertyDefinition.defaultValue);
 		parameters.put("fk_common_info_type", idCommonInfoType);
-	
-		
+
+
 		if(null != propertyDefinition.measureCategory){
 			if(null ==  propertyDefinition.measureCategory.id){
-				throw new DAOException("measureCategory does not exist (id is null) !!");				
+				throw new DAOException("measureCategory does not exist (id is null) !!");
 			}
 			parameters.put("fk_measure_category", propertyDefinition.measureCategory.id);
 		}
-		
+
 		if(null != propertyDefinition.saveMeasureValue){
 			if(null ==  propertyDefinition.saveMeasureValue.id){
-				throw new DAOException("saveMeasureValue does not exist (id is null) !!");				
+				throw new DAOException("saveMeasureValue does not exist (id is null) !!");
 			}
 			parameters.put("fk_save_measure_unit", propertyDefinition.saveMeasureValue.id);
 		}
-		
+
 		if(null != propertyDefinition.displayMeasureValue){
 			if(null ==  propertyDefinition.displayMeasureValue.id){
-				throw new DAOException("displayMeasureValue does not exist (id is null) !!");				
+				throw new DAOException("displayMeasureValue does not exist (id is null) !!");
 			}
 			parameters.put("fk_display_measure_unit", propertyDefinition.displayMeasureValue.id);
 		}
-				
+
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		propertyDefinition.id = newId;
 
@@ -95,7 +95,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		return propertyDefinition;
 	}
 
-	
+
 
 	public void update(PropertyDefinition propertyDefinition) throws DAOException
 	{
@@ -103,36 +103,36 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 				"active=?,choice_in_list=?, type=?, display_format=?, " +
 				"display_order=?, default_value=? " +
 				" WHERE id=?";
-		jdbcTemplate.update(sql, propertyDefinition.name, propertyDefinition.description, propertyDefinition.required, 
-				propertyDefinition.active, propertyDefinition.choiceInList, propertyDefinition.valueType, propertyDefinition.displayFormat, 
-				propertyDefinition.displayOrder, propertyDefinition.defaultValue, 
+		jdbcTemplate.update(sql, propertyDefinition.name, propertyDefinition.description, propertyDefinition.required,
+				propertyDefinition.active, propertyDefinition.choiceInList, propertyDefinition.valueType, propertyDefinition.displayFormat,
+				propertyDefinition.displayOrder, propertyDefinition.defaultValue,
 				propertyDefinition.id);
 
 		//Update measure category
-		String sqlCategory = "UPDATE property_definition SET fk_measure_category=? WHERE id=?";		
-		if(propertyDefinition.measureCategory != null  ){			
+		String sqlCategory = "UPDATE property_definition SET fk_measure_category=? WHERE id=?";
+		if(propertyDefinition.measureCategory != null  ){
 			jdbcTemplate.update(sqlCategory, propertyDefinition.measureCategory.id, propertyDefinition.id);
 		}else{
 			jdbcTemplate.update(sqlCategory, null, propertyDefinition.id);
 		}
 
-		String sqlMeasureValue = "UPDATE property_definition SET fk_save_measure_value=? WHERE id=?";		
+		String sqlMeasureValue = "UPDATE property_definition SET fk_save_measure_value=? WHERE id=?";
 		if(propertyDefinition.saveMeasureValue != null){
 			//Update propertyDefinition
 			jdbcTemplate.update(sqlMeasureValue, propertyDefinition.saveMeasureValue.id, propertyDefinition.id);
 		}else{
 			jdbcTemplate.update(sqlMeasureValue, null, propertyDefinition.id);
 		}
-		
+
 		//Update displayMeasureValue
-		String sqlValue = "UPDATE property_definition SET fk_display_measure_value=? WHERE id=?";		
+		String sqlValue = "UPDATE property_definition SET fk_display_measure_value=? WHERE id=?";
 		if(propertyDefinition.displayMeasureValue!=null){
 			//Update propertyDefinition
 			jdbcTemplate.update(sqlValue, propertyDefinition.displayMeasureValue.id, propertyDefinition.id);
 		}else{
 			jdbcTemplate.update(sqlValue, null, propertyDefinition.id);
 		}
-		
+
 		insertValues(propertyDefinition.possibleValues, propertyDefinition.id, true);
 		insertPropertyDefinitionLevel(propertyDefinition.levels, propertyDefinition.id, true);
 	}
@@ -150,13 +150,13 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 			}
 		}
 	}
-	
-	
+
+
 	private void insertPropertyDefinitionLevel(List<Level> levels, Long id, boolean deleteBefore)  throws DAOException {
 		if(deleteBefore){
 			removePropertyDefinitionLevel(id);
 		}
-		//Add resolutions list		
+		//Add resolutions list
 		if(levels!=null && levels.size()>0){
 			String sql = "INSERT INTO property_definition_level (fk_property_definition, fk_level) VALUES(?,?)";
 			for(Level level:levels){
@@ -165,16 +165,16 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 				}
 				jdbcTemplate.update(sql, id,level.id);
 			}
-		}		
+		}
 	}
-	
-	
+
+
 	private void removePropertyDefinitionLevel(Long id) {
 		String sqlState = "DELETE FROM property_definition_level WHERE fk_property_definition_id=?";
 		jdbcTemplate.update(sqlState, id);
 	}
 
-	
+
 	@Override
 	public void remove(PropertyDefinition propertyDefinition) throws DAOException {
 		//Delete value
@@ -186,5 +186,5 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		//Delete property_definition
 		super.remove(propertyDefinition);
 	}
-		
+
 }

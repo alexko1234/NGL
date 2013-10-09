@@ -42,21 +42,31 @@ function DetailsCtrl($scope, $http, $routeParams) {
 	
 	$scope.computeLost=function(lane){
 		var count = [0];
-		angular.forEach(lane.readsets, function(value, key){
-			this[0]+=value.properties.nbClusterInternalAndIlluminaFilter.value;
+		if($scope.readSets){
+		angular.forEach($scope.readSets, function(value, key){
+			if (value.laneNumber == lane.number) { 
+				this[0]+=value.treatments.ngsrg["default"].nbCluster.value;
+			}
 			}, count);
-		return (1 - (count[0]/lane.properties.nbClusterInternalAndIlluminaFilter.value))*100;
+		return (1 - (count[0]/lane.treatments.ngsrg["default"].nbClusterInternalAndIlluminaFilter.value))*100;
+		}else{
+			return -1;
+		}
 	};
 	
 	$scope.init = function(){
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
-			if($scope.getTabs().length == 0){
-				$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:false});
-				$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.get($scope.run.code).url,remove:true})
-				$scope.activeTab($scope.getTabs(1));
-			}
 			
+			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list($routeParams.code).url + "?runCode=" + $scope.run.code).success(function(dataReadSets) {
+				$scope.readSets = dataReadSets;
+				
+				if($scope.getTabs().length == 0){
+					$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:false});
+					$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.get($scope.run.code).url,remove:true})
+					$scope.activeTab($scope.getTabs(1));
+				}
+			});
 		});
 	}
 	

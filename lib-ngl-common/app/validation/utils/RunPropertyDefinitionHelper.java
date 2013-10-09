@@ -300,9 +300,9 @@ public class RunPropertyDefinitionHelper {
 	public static List<String> getRunTypeCodes() {
 		if(null == runTypeCode){
 			runTypeCode = new ArrayList<String>();
-			runTypeCode.add("RHS2000");
-			runTypeCode.add("RHS2500");
-			runTypeCode.add("RHS2500R");			
+			runTypeCode.add("RHS2000"); //nb lane = 8
+			runTypeCode.add("RHS2500"); //nb lane = 8
+			runTypeCode.add("RHS2500R");	//nb lane = 2		 
 		}
 		return runTypeCode;
 	}

@@ -79,9 +79,11 @@ public class Workflows {
 			required(contextValidation, experiment.protocolCode, "protocolCode");
 			required(contextValidation, experiment.instrument.code, "instrument");
 			required(contextValidation, experiment.atomicTransfertMethods, "atomicTransfertMethods");
-				
-			validateProperties(contextValidation, experiment.experimentProperties, experiment.getExperimentType().propertiesDefinitions, "nullPropertiesDefinitions");
+			contextValidation.setRootKeyName("experimentProperties");
+			validateProperties(contextValidation, experiment.experimentProperties, experiment.getExperimentType().propertiesDefinitions);
+			contextValidation.removeKeyFromRootKeyName("experimentProperties");
 			
+
 		}else{
 			contextValidation.addErrors(experiment.stateCode, "InvalidthisStateCode");
 		}	

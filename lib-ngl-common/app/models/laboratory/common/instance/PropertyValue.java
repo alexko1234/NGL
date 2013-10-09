@@ -16,7 +16,7 @@ import validation.IValidation;
  * @author mhaquell
  *
  */
-@JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="@type", defaultImpl=models.laboratory.common.instance.property.PropertySingleValue.class)
+@JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="_type", defaultImpl=models.laboratory.common.instance.property.PropertySingleValue.class)
 @JsonSubTypes({
 	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertySingleValue.class, name = "single"),
 	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyListValue.class, name = "list"),

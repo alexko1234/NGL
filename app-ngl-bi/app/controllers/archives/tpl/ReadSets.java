@@ -22,7 +22,7 @@ public class ReadSets extends Controller {
 	}
 	
 	public static Result get(String code) {
-		return ok(views.html.archives.home.render("search"));
+		return ok(home.render(code));
 	}
 	
 	public static Result search() {

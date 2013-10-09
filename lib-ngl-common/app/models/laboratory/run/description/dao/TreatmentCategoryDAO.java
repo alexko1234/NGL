@@ -11,3 +11,4 @@ public class TreatmentCategoryDAO extends AbstractDAO<TreatmentCategory>{
 		super("treatment_category",TreatmentCategory.class,true);
 	}
 }
+

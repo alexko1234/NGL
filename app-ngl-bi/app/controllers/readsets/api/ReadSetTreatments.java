@@ -1,0 +1,117 @@
+package controllers.readsets.api;
+
+import static play.data.Form.form;
+import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBUpdate;
+import models.laboratory.common.description.Level;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Treatment;
+import models.utils.InstanceConstants;
+import play.data.Form;
+import play.libs.Json;
+import play.mvc.Result;
+import validation.ContextValidation;
+import controllers.CommonController;
+import fr.cea.ig.MongoDBDAO;
+
+public class ReadSetTreatments extends CommonController{
+
+	final static Form<Treatment> treatmentForm = form(Treatment.class);
+	
+	public static Result list(String readSetCode){
+		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,DBQuery.is("code", readSetCode));
+		if (readSet != null) {
+			return ok(Json.toJson(readSet.treatments));
+		} else{
+			return notFound();
+		}		
+	}
+	
+	
+	
+	public static Result get(String readSetCode, String treatmentCode){
+		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
+		if (readSet != null) {
+			return ok(Json.toJson(readSet.treatments.get(treatmentCode)));
+		} else{
+			return notFound();
+		}		
+	}
+	
+	public static Result head(String readSetCode, String treatmentCode){
+		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)))){
+			return ok();
+		}else{
+			return notFound();
+		}
+	}
+
+	public static Result save(String readSetCode){
+		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
+		if (readSet == null) {
+			return badRequest();
+		}		
+		
+		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
+		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		
+		Treatment treatment = filledForm.get();
+		ctxVal.setCreationMode();
+		ctxVal.putObject("level", Level.CODE.ReadSet);
+		ctxVal.putObject("readSet", readSet);
+		treatment.validate(ctxVal);
+		if(!ctxVal.hasErrors()){
+			MongoDBDAO.updateSet(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet, "treatments."+treatment.code, treatment);			
+		}
+		if (!filledForm.hasErrors()) {
+			return ok(Json.toJson(filledForm.get()));			
+		} else {
+			return badRequest(filledForm.errorsAsJson());			
+		}		
+	}
+
+	public static Result update(String readSetCode, String treatmentCode){
+		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
+		if (readSet == null) {
+			return badRequest();
+		}	
+		
+		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
+		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		
+		Treatment treatment = filledForm.get();
+		if (treatmentCode.equals(treatment.code)) {
+			ctxVal.setUpdateMode();
+			ctxVal.putObject("level", Level.CODE.ReadSet);
+			ctxVal.putObject("readSet", readSet);
+			treatment.validate(ctxVal);
+			if(!ctxVal.hasErrors()){
+				MongoDBDAO.updateSet(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet, "treatments."+treatment.code, treatment);			
+			}
+			if (!filledForm.hasErrors()) {
+				return ok(Json.toJson(filledForm.get()));			
+			} else {
+				return badRequest(filledForm.errorsAsJson());			
+			}
+		}else{
+			return badRequest("treatment code are not the same");
+		}
+	}
+	
+	public static Result delete(String readSetCode, String treatmentCode){
+		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
+		if (readSet == null) {
+			return badRequest();
+		}	
+		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+				DBQuery.is("code", readSetCode), DBUpdate.unset("treatments."+treatmentCode));			
+		return ok();		
+	}
+	
+	
+
+}

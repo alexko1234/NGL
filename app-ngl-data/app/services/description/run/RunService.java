@@ -54,7 +54,7 @@ public class RunService {
 		saveReadSetType(errors);
 		
 		saveRunCategories(errors);
-		
+
 		saveRunType(errors);
 		
 		saveTreatmentCategory(errors);
@@ -62,7 +62,7 @@ public class RunService {
 		saveTreatmentContext(errors);
 		
 		saveTreatmentType(errors);
-		
+	
 	}
 	
 	

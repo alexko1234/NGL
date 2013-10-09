@@ -59,6 +59,7 @@ object ApplicationBuild extends Build {
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
         	"net.sf.opencsv" % "opencsv" % "2.0",
         	"commons-collections" % "commons-collections" % "3.2.1",
+		"commons-collections" % "commons-collections" % "3.2.1",
 		"org.springframework" % "spring-jdbc" % "3.2.1.RELEASE",		
 		"org.springframework" % "spring-test" % "3.2.1.RELEASE",
 		"com.github.julienrf" %% "play-jsmessages" % "1.4.1"
@@ -74,7 +75,7 @@ object ApplicationBuild extends Build {
 	      javaCore, javaJdbc,
 		"postgresql" % "postgresql" % "8.3-603.jdbc4",
 	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
-		)
+			)
     	
     	val nglsqDependencies = Seq(
 			javaCore, javaJdbc,

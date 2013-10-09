@@ -36,7 +36,7 @@ import static validation.utils.ValidationConstants.*;
 public class ValidationHelper {
 	
 	
-	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, String rootKeyName,Boolean validateNotDefined) {
+	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions,Boolean validateNotDefined) {
 		Map<String, PropertyValue> inputProperties = new HashMap<String, PropertyValue>(0);
 		if(null != properties){
 			inputProperties = new HashMap<String, PropertyValue>(properties);		
@@ -100,7 +100,6 @@ public class ValidationHelper {
 		if(validateNotDefined){
 			for(String key : inputProperties.keySet()){
 				contextValidation.addErrors(key, ERROR_NOTDEFINED_MSG);
-				//contextValidation.removeKeyFromRootKeyName(key);
 			}
 		}
 	}
@@ -124,15 +123,9 @@ public class ValidationHelper {
 	}
 
 	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions){
-		if( propertyDefinitions != null && !propertyDefinitions.isEmpty()){
-			validateProperties(contextValidation, properties, propertyDefinitions, contextValidation.rootKeyName, true);
-		}
+		validateProperties(contextValidation, properties, propertyDefinitions, true);		
 	}
 
-	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, String rootKeyName){
-		validateProperties(contextValidation, properties, propertyDefinitions, rootKeyName,true);
-	}
-	
 	
 	
 	private static <T> Class<T> getClass(String className) {

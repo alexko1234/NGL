@@ -2,7 +2,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.jboss.logging.FormatWith;
 
 import play.Application;
 import play.GlobalSettings;
@@ -31,7 +30,7 @@ public class Global extends GlobalSettings {
      * Formatter for <code>java.util.Date</code> values.
      * Override the default formatter to manage the date in milliseconds from 1970
      */
-	
+
     public static class DateFormatter extends Formatters.SimpleFormatter<Date> {
         
         private final String pattern;
