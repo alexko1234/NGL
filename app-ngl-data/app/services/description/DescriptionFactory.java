@@ -238,7 +238,8 @@ public class DescriptionFactory {
 		return ic;
 	}
 
-	public static InstrumentUsedType newInstrumentUsedType(String name, String code, InstrumentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Instrument> instruments) throws DAOException{
+	public static InstrumentUsedType newInstrumentUsedType(String name, String code, InstrumentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Instrument> instruments,
+			List<ContainerSupportCategory> inContainerSupportCategories, List<ContainerSupportCategory> outContainerSupportCategories) throws DAOException{
 		InstrumentUsedType iut = new InstrumentUsedType();
 		iut.code =code;
 		iut.name =name;
@@ -246,7 +247,8 @@ public class DescriptionFactory {
 		iut.objectType = ObjectType.find.findByCode(ObjectType.CODE.Instrument.name());
 		iut.propertiesDefinitions = propertiesDefinitions;
 		iut.instruments = instruments;
-		
+		iut.inContainerSupportCategories = inContainerSupportCategories;
+		iut.outContainerSupportCategories = outContainerSupportCategories;
 		return iut; 
 	}
 

@@ -11,6 +11,8 @@ import java.util.Map;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.container.description.ContainerSupportCategory;
+import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -50,14 +52,14 @@ public class InstrumentService {
 	public static void saveInstrumentUsedTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		
 		List<InstrumentUsedType> l = new ArrayList<InstrumentUsedType>();
-		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, getIntruments(new String[]{"Main"})));
-		l.add(newInstrumentUsedType("Covaris S2", "covaris-s2", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), getIntruments(new String[]{"Covaris 1", "Covaris 2"})));
-		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), getIntruments(new String[]{"Covaris 3", "Covaris 4"})));
-		l.add(newInstrumentUsedType("Spri", "spri", InstrumentCategory.find.findByCode("spri"), getSpriProperties(), getIntruments(new String[]{"Spri 1", "Spri 2", "Spri 3"})));
-		l.add(newInstrumentUsedType("Thermo", "thermo", InstrumentCategory.find.findByCode("thermo"), getThermoProperties(), getIntruments(new String[]{"Thermo s1", "Thermo s2", "Thermo s3"})));
-		l.add(newInstrumentUsedType("Agilent 2100", "agilent-2100", InstrumentCategory.find.findByCode("agilent"), getAgilentProperties(), getIntruments(new String[]{"BioAnalyzer 1", "BioAnalyzer 2"})));
-		l.add(newInstrumentUsedType("iQuBit", "iqubit", InstrumentCategory.find.findByCode("qubit"), getQuBitProperties(), getIntruments(new String[]{"QuBit 1", "QuBit 2"})));
-		l.add(newInstrumentUsedType("iqPCR", "iqpcr", InstrumentCategory.find.findByCode("qpcr"), getQPCRProperties(), getIntruments(new String[]{"qPCR 1"})));
+		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, getIntruments(new String[]{"Main"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"})));
+		l.add(newInstrumentUsedType("Covaris S2", "covaris-s2", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), getIntruments(new String[]{"Covaris 1", "Covaris 2"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"})));
+		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), getIntruments(new String[]{"Covaris 3", "Covaris 4"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"})));
+		l.add(newInstrumentUsedType("Spri", "spri", InstrumentCategory.find.findByCode("spri"), getSpriProperties(), getIntruments(new String[]{"Spri 1", "Spri 2", "Spri 3"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"})));
+		l.add(newInstrumentUsedType("Thermo", "thermo", InstrumentCategory.find.findByCode("thermo"), getThermoProperties(), getIntruments(new String[]{"Thermo s1", "Thermo s2", "Thermo s3"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"})));
+		l.add(newInstrumentUsedType("Agilent 2100", "agilent-2100", InstrumentCategory.find.findByCode("agilent"), getAgilentProperties(), getIntruments(new String[]{"BioAnalyzer 1", "BioAnalyzer 2"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"})));
+		l.add(newInstrumentUsedType("iQuBit", "iqubit", InstrumentCategory.find.findByCode("qubit"), getQuBitProperties(), getIntruments(new String[]{"QuBit 1", "QuBit 2"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"})));
+		l.add(newInstrumentUsedType("iqPCR", "iqpcr", InstrumentCategory.find.findByCode("qpcr"), getQPCRProperties(), getIntruments(new String[]{"qPCR 1"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"})));
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
@@ -112,6 +114,10 @@ public class InstrumentService {
 		
 		
 		return l;
+	}
+	
+	private static List<ContainerSupportCategory> getContainerSupportCategories(String[] codes) throws DAOException{		
+		return DAOHelpers.getModelByCodes(ContainerSupportCategory.class,ContainerSupportCategory.find, codes);
 	}
 
 }
