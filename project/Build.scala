@@ -140,17 +140,22 @@ object ApplicationBuild extends Build {
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish) 
      ).dependsOn(nglcommon) 
+	 
+	val ngldatacng = play.Project(appName + "-data-cng", appVersion, nglsqDependencies, path = file("app-ngl-data-cng"),settings = buildSettings).settings(
+       // Add your own project settings here      
+       resolvers := Seq(nexusig),
+       publishArtifact in makePom := false,
+       publishTo := Some(nexusigpublish) 
+     ).dependsOn(nglcommon)
     
-    
-   val nglsq = play.Project(appName + "-sq", appVersion, nglsqDependencies, path = file("app-ngl-sq"),settings = buildSettings).settings(
+	val nglsq = play.Project(appName + "-sq", appVersion, nglsqDependencies, path = file("app-ngl-sq"),settings = buildSettings).settings(
           // Add your own project settings here      
           resolvers := Seq(nexusig),
           publishArtifact in makePom := false,
           publishTo := Some(nexusigpublish) 
     ).dependsOn(nglcommon)
-   
-   
-   val nglauth = play.Project(appName + "-authorization", appVersion, nglauthDependencies, path = file("app-ngl-authorization"),settings = buildSettings).settings(
+	
+    val nglauth = play.Project(appName + "-authorization", appVersion, nglauthDependencies, path = file("app-ngl-authorization"),settings = buildSettings).settings(
              // Add your own project settings here      
              resolvers := Seq(nexusig),
              publishArtifact in makePom := false,
@@ -186,7 +191,7 @@ object ApplicationBuild extends Build {
       publishArtifact in makePom := false,
       publishTo := Some(nexusigpublish)
     ).aggregate(
-     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglauth,nglassets,nglplates,ngldata
+     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglauth,nglassets,nglplates,ngldata,ngldatacng
     )
 
 }
