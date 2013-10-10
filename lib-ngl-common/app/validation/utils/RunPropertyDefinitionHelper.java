@@ -1,5 +1,6 @@
 package validation.utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -192,6 +193,24 @@ public class RunPropertyDefinitionHelper {
 		return propertyDefinitions;
 		
 	}
+	
+public static List<PropertyDefinition> getReadQualityPropertyDefinitions(){
+		
+		
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(getPropertyDefinition("sampleInput","sampleInput",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class));
+		propertyDefinitions.add(getPropertyDefinition("qualScore","qualScore",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, File.class));
+		propertyDefinitions.add(getPropertyDefinition("nuclDistribution","nuclDistribution",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, File.class));
+		propertyDefinitions.add(getPropertyDefinition("readwithNpercent","readwithNpercent",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, File.class));
+		propertyDefinitions.add(getPropertyDefinition("readSizeDistribution","readSizeDistribution",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, File.class));
+		propertyDefinitions.add(getPropertyDefinition("adapterContamination","adapterContamination",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, File.class));
+		propertyDefinitions.add(getPropertyDefinition("adapters","adapters",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, String.class));
+		propertyDefinitions.add(getPropertyDefinition("GCDistribution","GCDistribution",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, File.class));
+		propertyDefinitions.add(getPropertyDefinition("positionN","positionN",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, File.class));
+		
+		return propertyDefinitions;
+		
+	}
 
 	public static List<PropertyDefinition> getTreatmentPropertyDefinitions(String treatmentCode, CODE levelCode) {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -201,6 +220,8 @@ public class RunPropertyDefinitionHelper {
 				propertyDefinitions = getReadSetNGSRGPropertyDefinitions();
 			}else if(treatmentCode.equalsIgnoreCase("global")){
 				propertyDefinitions = getReadSetGlobalPropertyDefinitions();
+			}else if(treatmentCode.equalsIgnoreCase("readQualityRaw") || treatmentCode.equalsIgnoreCase("readQualityClean")){
+				propertyDefinitions = getReadQualityPropertyDefinitions();
 			}
 		}else if(Level.CODE.Lane.equals(levelCode)){
 			if(treatmentCode.equalsIgnoreCase("ngsrg")){
@@ -224,7 +245,9 @@ public class RunPropertyDefinitionHelper {
 			treatmentCodes = new ArrayList<String>();
 			treatmentCodes.add("ngsrg");
 			treatmentCodes.add("global");
-			treatmentCodes.add("sav");			
+			treatmentCodes.add("sav");
+			treatmentCodes.add("readQualityRaw");
+			treatmentCodes.add("readQualityClean");
 		}
 		return treatmentCodes;
 	}
@@ -237,7 +260,8 @@ public class RunPropertyDefinitionHelper {
 			treatmentTypeCodes = new ArrayList<String>();
 			treatmentTypeCodes.add("ngsrg-illumina");
 			treatmentTypeCodes.add("global");
-			treatmentTypeCodes.add("sav");			
+			treatmentTypeCodes.add("sav");	
+			treatmentTypeCodes.add("read-quality");	
 		}
 		return treatmentTypeCodes;
 	}
@@ -250,7 +274,8 @@ public class RunPropertyDefinitionHelper {
 			treatmentCatTypeCodes = new ArrayList<String>();
 			treatmentCatTypeCodes.add("ngsrg");
 			treatmentCatTypeCodes.add("global");
-			treatmentCatTypeCodes.add("sequencing");			
+			treatmentCatTypeCodes.add("sequencing");
+			treatmentCatTypeCodes.add("quality");
 		}
 		return treatmentCatTypeCodes;
 	}
