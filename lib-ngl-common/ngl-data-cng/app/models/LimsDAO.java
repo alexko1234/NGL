@@ -74,7 +74,7 @@ public class LimsDAO {
 
 
 	// ok
-	public Sample findSampleToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {
+	public Sample findSamplesToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {
 
 		List<Sample> results = this.jdbcTemplate.query("fn_sampletongl",new Object[]{sampleCode} 
 		,new RowMapper<Sample>() {
@@ -159,7 +159,7 @@ public class LimsDAO {
 
 	
 	// OK
-	public List<Project> findProjectToCreate(final ContextValidation contextError) throws SQLException, DAOException {
+	public List<Project> findProjectsToCreate(final ContextValidation contextError) throws SQLException, DAOException {
 		List<Project> results = this.jdbcTemplate.query("fn_projetongl",new Object[]{} 
 		,new RowMapper<Project>() {
 
@@ -192,7 +192,7 @@ public class LimsDAO {
 	
 	
 	// ok
-	public List<ContainerSupport> findFlowcellToCreate(final ContextValidation contextError) throws SQLException, DAOException {
+	public List<ContainerSupport> findFlowcellsToCreate(final ContextValidation contextError) throws SQLException, DAOException {
 		List<ContainerSupport> results = this.jdbcTemplate.query("fn_FlowcellToNGL",new Object[]{} 
 		,new RowMapper<ContainerSupport>() {
 
@@ -214,6 +214,9 @@ public class LimsDAO {
 				cs.x = "1";
 				
 				cs.y = rs.getString("y");
+				
+				// rs contains "idx" column (index) && "code_sample" (code du sample)
+				
 
 				return cs;
 			}
