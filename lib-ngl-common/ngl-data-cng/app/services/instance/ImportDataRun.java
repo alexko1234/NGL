@@ -27,47 +27,39 @@ public class ImportDataRun implements Runnable {
 	public void run() {
 		contextError.clear();
 		contextError.addKeyToRootKeyName("import");
-		
 		Logger.info("ImportData execution");
-		
 		try{
 			Logger.info(" Import Projects ");
-			createProjectFromLims();
-			//Logger.info(" Import Containers and Samples ");
-			//createContainersSamples()
+			createProjectsFromLims();
 		}catch (Exception e) {
 			Logger.debug("",e);
 		}
 		contextError.removeKeyFromRootKeyName("import");
 		
-			
 		/* Display error messages */
 		Iterator entries = contextError.errors.entrySet().iterator();
 		while (entries.hasNext()) {
 			 Entry thisEntry = (Entry) entries.next();
 			 String key = (String) thisEntry.getKey();
 			 List<ValidationError> value = (List<ValidationError>) thisEntry.getValue();	  
-
 			for(ValidationError validationError:value){
 				Logger.error( key+ " : "+Messages.get(validationError.message(),validationError.arguments()));
 			}
-
 		}
-		
 	    Logger.info("ImportData End");
 	}
 
 
     /***
-     * Delete and create in NGL active projects from Lims
+     * Delete and create in NGL active projects from CNG
      * 
      * @return List of Projects
      * @throws SQLException
      * @throws DAOException
      */
-	public static List<Project> createProjectFromLims() throws SQLException, DAOException{
+	public static List<Project> createProjectsFromLims() throws SQLException, DAOException{
 
-		List<Project> projects = limsServices.findProjectToCreate(contextError) ;
+		List<Project> projects = limsServices.findProjectsToCreate(contextError) ;
 		
 		for(Project project:projects){
 			
