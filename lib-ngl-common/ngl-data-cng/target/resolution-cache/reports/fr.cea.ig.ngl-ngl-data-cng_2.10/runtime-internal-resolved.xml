@@ -7,7 +7,7 @@
 		revision="1.0-SNAPSHOT"
 		conf="runtime-internal"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom"
-		date="20131009160020"/>
+		date="20131010162401"/>
 	<dependencies>
 		<module organisation="fr.cea.ig" name="casplugin_2.10">
 			<revision name="1.0-SNAPSHOT" status="integration" pubdate="20130912161711" resolver="Nexus repository" artresolver="Nexus repository" homepage="" downloaded="false" searched="true" default="false" conf="default(compile), default, compile, runtime, master" position="123">
@@ -78,7 +78,7 @@
 			</revision>
 		</module>
 		<module organisation="fr.cea.ig.ngl" name="ngl-common_2.10">
-			<revision name="1.0-SNAPSHOT" status="integration" pubdate="20131009160020" resolver="inter-project" artresolver="inter-project" downloaded="false" searched="false" default="false" conf="default(compile), compile" position="0">
+			<revision name="1.0-SNAPSHOT" status="integration" pubdate="20131010162354" resolver="inter-project" artresolver="inter-project" downloaded="false" searched="false" default="false" conf="default(compile), compile" position="0">
 				<metadata-artifact status="failed" details="" size="0" time="0" searched="false"/>
 				<caller organisation="fr.cea.ig.ngl" name="ngl-data-cng_2.10" conf="optional, compile, runtime, runtime-internal" rev="1.0-SNAPSHOT" rev-constraint-default="1.0-SNAPSHOT" rev-constraint-dynamic="1.0-SNAPSHOT" callerrev="1.0-SNAPSHOT"/>
 				<artifacts>
@@ -493,7 +493,7 @@
 			</revision>
 		</module>
 		<module organisation="fr.cea.ig" name="datatable_2.10">
-			<revision name="1.0-SNAPSHOT" status="integration" pubdate="20131009160020" resolver="inter-project" artresolver="inter-project" downloaded="false" searched="false" default="false" conf="default(compile), compile" position="46">
+			<revision name="1.0-SNAPSHOT" status="integration" pubdate="20131010162354" resolver="inter-project" artresolver="inter-project" downloaded="false" searched="false" default="false" conf="default(compile), compile" position="46">
 				<metadata-artifact status="failed" details="" size="0" time="0" searched="false"/>
 				<caller organisation="fr.cea.ig.ngl" name="ngl-common_2.10" conf="compile" rev="1.0-SNAPSHOT" rev-constraint-default="1.0-SNAPSHOT" rev-constraint-dynamic="1.0-SNAPSHOT" callerrev="1.0-SNAPSHOT"/>
 				<artifacts>
@@ -501,7 +501,7 @@
 			</revision>
 		</module>
 		<module organisation="fr.cea.ig" name="lib-frameworkweb_2.10">
-			<revision name="1.0-SNAPSHOT" status="integration" pubdate="20131009160020" resolver="inter-project" artresolver="inter-project" downloaded="false" searched="false" default="false" conf="default(compile), compile" position="1">
+			<revision name="1.0-SNAPSHOT" status="integration" pubdate="20131010162353" resolver="inter-project" artresolver="inter-project" downloaded="false" searched="false" default="false" conf="default(compile), compile" position="1">
 				<metadata-artifact status="failed" details="" size="0" time="0" searched="false"/>
 				<caller organisation="fr.cea.ig.ngl" name="ngl-common_2.10" conf="compile" rev="1.0-SNAPSHOT" rev-constraint-default="1.0-SNAPSHOT" rev-constraint-dynamic="1.0-SNAPSHOT" callerrev="1.0-SNAPSHOT"/>
 				<artifacts>
