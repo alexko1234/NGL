@@ -17,15 +17,16 @@ public class Global extends GlobalSettings {
 	public void onStart(Application app) {
 		Logger.info("NGL has started");
 		
-	/*	Akka.system().scheduler().schedule(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.SECONDS)
+		Akka.system().scheduler().schedule(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.SECONDS)
                 , new ImportDataRun(), Akka.system().dispatcher()
 				); 
-		*/
+		/*
 		Akka.system().scheduler().schedule(
 				Duration.create(nextExecutionInSeconds(22,13), TimeUnit.SECONDS),
                 Duration.create(24, TimeUnit.HOURS)
                 , new ImportDataRun(), Akka.system().dispatcher()
-				); 
+				);
+	 	*/
 	}
 
 	@Override
