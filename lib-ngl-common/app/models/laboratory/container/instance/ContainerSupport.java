@@ -60,6 +60,8 @@ public class ContainerSupport implements IValidation {
 	public void validate(ContextValidation contextValidation) {
 
 		BusinessValidationHelper.validateUniqueFieldValue(contextValidation, "barCode", barCode, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
+		//TODO
+		//Unicite de la position du container dans le support ( x,y,barCode )
 		DescriptionValidationHelper.validationContainerSupportCategoryCode(categoryCode, contextValidation);
 		InstanceValidationHelper.validationStockCode(stockCode, contextValidation);
 
