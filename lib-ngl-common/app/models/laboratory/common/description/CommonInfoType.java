@@ -75,11 +75,16 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
 
 		for(PropertyDefinition propertyDefinition:this.propertiesDefinitions){
+			boolean containsAll = true;
 			for(int i=0;i<levels.length;i++){
 				Level level = new Level(levels[i]);
-				if(propertyDefinition.levels.contains(level)){
-					proDefinitions.add(propertyDefinition);
+				if(!propertyDefinition.levels.contains(level)){
+					containsAll = false;
+					break;
 				}						
+			}
+			if(containsAll){
+				proDefinitions.add(propertyDefinition);
 			}
 		}	
 		
