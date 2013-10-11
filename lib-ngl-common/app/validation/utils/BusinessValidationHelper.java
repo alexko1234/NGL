@@ -24,7 +24,7 @@ import fr.cea.ig.MongoDBDAO;
  */
 public class BusinessValidationHelper {
 	public static final String FIELD_CODE = "code";
-	
+
 	/**
 	 * Validate if code is unique in MongoDB collection
 	 * Unique code is validate if key "_id" not in map contextObjects or if value of key "_id" is null else no code validation
@@ -36,7 +36,7 @@ public class BusinessValidationHelper {
 
 	public static <T extends DBObject> boolean validateUniqueInstanceCode(ContextValidation contextValidation,
 			String code, Class<T> type, String collectionName){
-	
+
 		if (null != code) {
 			if (MongoDBDAO.checkObjectExistByCode(collectionName, type, code)) {
 				contextValidation.addErrors(FIELD_CODE,	ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, code);
@@ -47,11 +47,11 @@ public class BusinessValidationHelper {
 		} else {
 			throw new IllegalArgumentException("code is null");
 		}
-		
-		
+
+
 	}
-	
-	
+
+
 	/**
 	 * Validate if field value is unique in MongoDB collection
 	 * @param errors
@@ -62,7 +62,7 @@ public class BusinessValidationHelper {
 	 * @param returnObject
 	 * @return boolean
 	 */
-	
+
 	public static <T extends DBObject> boolean validateUniqueFieldValue(ContextValidation contextValidation,
 			String key, String keyValue, Class<T> type, String collectionName){
 		if(null != key && null != keyValue){
@@ -77,11 +77,11 @@ public class BusinessValidationHelper {
 		}
 
 	}
-	
-	
+
+
 	public static <T> void validateRequiredDescriptionCode(ContextValidation contextValidation, String code, String key,
 			Finder<T> find) {
-		 validateRequiredDescriptionCode(contextValidation, code, key, find,false);
+		validateRequiredDescriptionCode(contextValidation, code, key, find,false);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class BusinessValidationHelper {
 	public static <T> void validateExistDescriptionCode(
 			ContextValidation contextValidation, String code, String key,
 			Finder<T> find) {
-		 validateExistDescriptionCode(contextValidation, code, key, find, false);
+		validateExistDescriptionCode(contextValidation, code, key, find, false);
 	}
 
 	/***
@@ -140,7 +140,7 @@ public class BusinessValidationHelper {
 				}
 			}else if(code != "" && null != code ){
 				if( !find.isCodeExist(code))
-				contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
+					contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
 			}
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
@@ -148,8 +148,8 @@ public class BusinessValidationHelper {
 		return o;
 	}
 
-	
-	
+
+
 	public static <T extends DBObject> void validateRequiredInstanceCode(ContextValidation contextValidation,
 			String code, String key, Class<T> type, String collectionName) {
 		if(required(contextValidation, code, key)){
@@ -191,16 +191,16 @@ public class BusinessValidationHelper {
 			List<String> codes, String key, Class<T> type, String collectionName, boolean returnObject) {
 
 		List<T> l = null;
-		
+
 		if(required(contextValidation, codes, key)){
 			l = validateExistInstanceCodes(contextValidation, codes, key, type, collectionName, returnObject);
 		}
 		return l;
-		
+
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
@@ -227,13 +227,13 @@ public class BusinessValidationHelper {
 		return l;
 	}
 
-	
-	
+
+
 	public static <T extends DBObject> void validateExistInstanceCode(ContextValidation contextValidation,
 			String code, String key, Class<T> type, String collectionName) {
 		validateExistInstanceCode(contextValidation, code, key, type, collectionName, false);
 	}
-	
+
 	/**
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
@@ -246,24 +246,27 @@ public class BusinessValidationHelper {
 	 */
 	public static <T extends DBObject> T validateExistInstanceCode(ContextValidation contextValidation,
 			String code, String key, Class<T> type, String collectionName, boolean returnObject) {
-		if(null != code && null != key){
-			T o = null;
-			if(returnObject){
-				o =  MongoDBDAO.findByCode(collectionName, type, code);
-				if(o == null){
-					contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
+		if(code!=null){
+			if( null != key){
+				T o = null;
+				if(returnObject){
+					o =  MongoDBDAO.findByCode(collectionName, type, code);
+					if(o == null){
+						contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
+					}
+				}else if(!MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
+					contextValidation.addErrors( key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
 				}
-			}else if(!MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
-				contextValidation.addErrors( key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
-			}
 
-			return o;
-		}else{
-			throw new IllegalArgumentException("key or code is null : "+key+"/"+code);
+				return o;
+			}else{
+				throw new IllegalArgumentException("key is null : "+key+"/"+code);
+			}
 		}
+		return null;
 	}	
-	
-	
+
+
 	/**
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
@@ -276,7 +279,7 @@ public class BusinessValidationHelper {
 			String code, Class<T> type, String collectionName) {
 		validateExistInstanceCode(contextValidation, code, type, collectionName, false);
 	}
-	
+
 	/**
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
@@ -289,10 +292,10 @@ public class BusinessValidationHelper {
 	public static <T extends DBObject> T validateExistInstanceCode(ContextValidation contextValidation,
 			String code, Class<T> type, String collectionName, boolean returnObject) {
 		return validateExistInstanceCode(contextValidation, code, FIELD_CODE, type, collectionName, returnObject);
-		
+
 	}	
-	
-	
-	
-	
+
+
+
+
 }
