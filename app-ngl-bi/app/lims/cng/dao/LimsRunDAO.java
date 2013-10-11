@@ -10,6 +10,7 @@ import lims.models.experiment.Experiment;
 import lims.models.instrument.Instrument;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,7 @@ public class LimsRunDAO {
 	private SimpleJdbcTemplate jdbcTemplate;
 	
     @Autowired
+    @Qualifier("lims")
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);       
     }

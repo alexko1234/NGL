@@ -2,18 +2,19 @@ package workflows;
 
 import java.util.List;
 
-import play.Logger;
+
+
 import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
-import net.vz.mongodb.jackson.WriteResult;
 import fr.cea.ig.MongoDBDAO;
+import models.laboratory.common.description.State;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
+import models.utils.dao.DAOException;
 import validation.ContextValidation;
-import validation.utils.RunPropertyDefinitionHelper;
+
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 
@@ -27,7 +28,8 @@ public class Workflows {
 	 */
 	public static void setRunState(ContextValidation contextValidation, Run run, String stateCode){
 		if(ValidationHelper.required(contextValidation, stateCode, "stateCode")){
-			if(!RunPropertyDefinitionHelper.getRunStateCodes().contains(stateCode)){
+			
+			if(!isStateCodeExist(stateCode)){
 				contextValidation.addErrors("stateCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, stateCode);
 				return;
 			}
@@ -74,6 +76,14 @@ public class Workflows {
 			
 			
 		}		
+	}
+
+	private static Boolean isStateCodeExist(String stateCode) {
+		try {
+			return State.find.isCodeExist(stateCode);
+		} catch (DAOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 
