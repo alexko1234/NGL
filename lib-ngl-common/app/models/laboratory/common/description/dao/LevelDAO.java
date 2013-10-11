@@ -18,12 +18,12 @@ public class LevelDAO extends AbstractDAO<Level>{
 	public List<Level> findByPropertyDefinitionID(Long id) {
 		
 		String sql = "SELECT le.id, le.code, le.name "+
-				"FROM level as le ";
-	//			"JOIN property_definition_level as p ON p.fk_level=le.id " +
-	//			"WHERE p.fk_property_definition = ? ";
+				"FROM level as le "+
+				"INNER JOIN property_definition_level as p ON p.fk_level=le.id " +
+				"WHERE p.fk_property_definition = ? ";
 		
 		BeanPropertyRowMapper<Level> mapper = new BeanPropertyRowMapper<Level>(Level.class);
-		return this.jdbcTemplate.query(sql, mapper);
+		return this.jdbcTemplate.query(sql, mapper, id);
 		
 	}
 
