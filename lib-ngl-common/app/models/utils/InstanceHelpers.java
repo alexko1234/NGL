@@ -78,11 +78,13 @@ public class InstanceHelpers {
 
 	// Add unique code to list
 	public static List<String> addCode(String code,List<String> listCodes){
+	
 		if(listCodes==null){
 			listCodes=new ArrayList<String>();
 		}
-		if(!listCodes.contains(code)){
-			listCodes.add(code);
+		
+		if(code!= null && !listCodes.contains(code)){
+				listCodes.add(code);
 		}
 		return listCodes;
 	}
