@@ -27,6 +27,16 @@ public class ContainerHelper {
 		containerSupport.y="1";
 		return containerSupport;
 	}
+	
+	
+	public static ContainerSupport getContainerSupportLane(String barCode){
+		ContainerSupport containerSupport=new ContainerSupport();
+		containerSupport.barCode=barCode;	
+		containerSupport.categoryCode="lane";
+		containerSupport.x="1";
+		containerSupport.y="1";
+		return containerSupport;
+	}
 
 
 	public static void addContent(Container container,Sample sample) throws DAOException{
