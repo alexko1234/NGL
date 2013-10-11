@@ -84,5 +84,15 @@ public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSup
 				" WHERE fk_instrument_used_type=? ";
 		return initializeMapping(sql, new SqlParameter("fk_instrument_used_type", Types.BIGINT)).execute(idInstrumentUsedType);		
 	}
+
+	
+	public List<ContainerSupportCategory> findByContainerCategoryCode(String categoryCode) throws DAOException{
+		if(null == categoryCode){
+			throw new DAOException("categoryCode is mandatory");
+		}
+		String sql = sqlCommon+" inner join container_category as c ON fk_container_category=c.id" +
+				" WHERE c.code=? ";
+		return initializeMapping(sql, new SqlParameter("categoryCode", Types.VARCHAR)).execute(categoryCode);
+	}
 	
 }
