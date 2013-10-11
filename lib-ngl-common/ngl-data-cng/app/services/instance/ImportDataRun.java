@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import models.LimsDAO;
 import models.laboratory.project.instance.Project;
+import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
@@ -29,8 +30,8 @@ public class ImportDataRun implements Runnable {
 		contextError.addKeyToRootKeyName("import");
 		Logger.info("ImportData execution");
 		try{
-			Logger.info(" Import Projects ");
-			createProjectsFromLims();
+			Logger.info(" Import Samples ");
+			createSamplesFromLims();
 		}catch (Exception e) {
 			Logger.debug("",e);
 		}
@@ -72,5 +73,25 @@ public class ImportDataRun implements Runnable {
 		List<Project> projs=InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError);
 		return projs;
 	}
+	
+	
+	
+	
+	public static List<Sample> createSamplesFromLims() throws SQLException, DAOException{
+
+		List<Sample> samples = limsServices.findSamplesToCreate(contextError) ;
+		
+		for(Sample sample:samples){
+			
+			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code)){
+				MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
+				//Logger.debug("Sample to create :"+sample.code);
+			}
+		}
+		
+		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError);
+		return samps;
+	}
+	
 
 }
