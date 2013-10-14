@@ -31,7 +31,7 @@ public class ImportDataRun implements Runnable {
 		Logger.info("ImportData execution");
 		try{
 			Logger.info(" Import Samples ");
-			createSamplesFromLims();
+			testTri();
 		}catch (Exception e) {
 			Logger.debug("",e);
 		}
@@ -74,7 +74,29 @@ public class ImportDataRun implements Runnable {
 		return projs;
 	}
 	
+	public void testTri() {
+		List<Sample> samples = limsServices.testTri();
+		for (Sample sample : samples) {
+			Logger.info("Sample created :"+ sample.code);
+			if (sample.projectCodes != null) {
+				Logger.info("Nb Projects for the sample :"+ sample.projectCodes.size());
+			}
+			else {
+				Logger.info("No projects associated with the sample"); 
+			}
+				
+		}
+	}
 	
+	public static void deleteSamplesFromLims() throws SQLException, DAOException{
+		List<Sample> samples = limsServices.findSamplesToCreate(contextError) ;
+		for(Sample sample:samples){
+			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code)){
+				MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
+				//Logger.debug("Sample to create :"+sample.code);
+			}
+		}
+	}
 	
 	
 	public static List<Sample> createSamplesFromLims() throws SQLException, DAOException{
