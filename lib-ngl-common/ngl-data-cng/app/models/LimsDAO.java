@@ -112,15 +112,18 @@ public class LimsDAO {
 		return results;
 	}
 	
+
+	
+	
 	
 	public List<Sample> findSamplesToCreate(final ContextValidation contextError) throws SQLException, DAOException {
-
+		
 		List<Sample> results = this.jdbcTemplate.query("select * from v_sampletongl;",new Object[]{} 
 		,new RowMapper<Sample>() {
 
 			@SuppressWarnings("rawtypes")
 			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
-
+				
 				Sample sample = new Sample();
 				sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 
@@ -190,15 +193,108 @@ public class LimsDAO {
 				//}
 				
 
-				sample.importTypeCode=getImportTypeCode();
+				sample.importTypeCode="default-import";
 				//Logger.debug("Import Type "+sample.importTypeCode);
 				return sample;
 			}
 
-		});        
-
+		});     
+		
+		//affect all the project codes to a same sample 
+		/// required to have an ordered list (see ORDER BY clause in the sql of the view)
+		int pos = 0;
+		int x=1;
+		int posNext = 0;
+		int listSize  =  results.size(); 
+		while (pos < listSize-1    )   {
+			posNext = pos+x;
+			while (  results.get(pos).code.equals( results.get(posNext).code ) ) {
+				// difference between the two project codes
+				if (! results.get(pos).projectCodes.get(0).equals(results.get(posNext).projectCodes.get(0))) {
+					results.get(pos).projectCodes.add( results.get(posNext).projectCodes.get(0) ); 
+				}
+				// difference between the two comments
+				if (! results.get(pos).comments.get(0).equals(results.get(posNext).comments.get(0))) {
+					results.get(pos).comments.add( results.get(posNext).comments.get(0) ); 
+				}
+				// all the difference have been reported on the first sample found (at the position pos)
+				// so we can delete the sample at the position (posNext)
+				results.remove(posNext);
+				listSize--;
+			}
+			pos++;
+		}
+		
 		return results;
 	}
+	
+	
+	
+	public List<Sample> testTri() { 
+		List<Sample> results = new ArrayList<Sample>();
+		
+		Sample s0 = new Sample();
+		s0.code = "c0";
+		s0.projectCodes = null;
+		Sample s1 = new Sample();
+		s1.code = "c1";
+		s1.projectCodes = null;
+		Sample s2 = new Sample();
+		s2.code = "c2";
+		s2.projectCodes=new ArrayList<String>();
+		s2.projectCodes.add("p0");
+		Sample s3 = new Sample();
+		s3.code = "c2";
+		s3.projectCodes=new ArrayList<String>();
+		s3.projectCodes.add("p1");
+		Sample s4 = new Sample();
+		s4.code = "c2";
+		s4.projectCodes=new ArrayList<String>();
+		s4.projectCodes.add("p2");
+		Sample s5 = new Sample();
+		s5.code = "c5";
+		
+		results.add(s0);
+		results.add(s1);
+		results.add(s2);
+		results.add(s3);
+		results.add(s4);
+		results.add(s5);
+	
+		//affect all the project codes to a same sample 
+		/// required to have an ordered list (see ORDER BY clause in the sql of the view)
+		int pos = 0;
+		int x=1;
+		int posNext = 0;
+		int listSize  =  results.size(); 
+		while (pos < listSize-1    )   {
+			System.out.println("pos = "+ pos); 
+			posNext = pos+x;
+			System.out.println("posNext = "+ posNext); 
+			
+			while (  results.get(pos).code.equals( results.get(posNext).code ) ) {
+				// difference between the two project codes
+				if (! results.get(pos).projectCodes.get(0).equals(results.get(posNext).projectCodes.get(0))) {
+					results.get(pos).projectCodes.add( results.get(posNext).projectCodes.get(0) ); 
+				}
+				// difference between the two comments
+				//if (! results.get(pos).comments.get(0).equals(results.get(posNext).comments.get(0))) {
+				//	results.get(pos).comments.add( results.get(posNext).comments.get(0) ); 
+				//}
+				// all the difference have been reported on the first sample found (at the position pos)
+				// so we can delete the sample at the position (posNext)
+				results.remove(posNext);
+				listSize--;
+				System.out.println("listSize = " + listSize); 
+				//x++;
+			}
+			//x=1;
+			pos++;
+			System.out.println("pos = "+ pos); 
+		}
+		return results;
+	}
+	
 	
 	
 	
@@ -218,7 +314,7 @@ public class LimsDAO {
 				
 				cs.barCode = rs.getString("barcode");
 				
-				cs.categoryCode = "flowcell " + rs.getInt("y");
+				cs.categoryCode = "flowcell " + rs.getString("y");
 				
 				cs.stockCode = null;
 				
@@ -306,12 +402,6 @@ public class LimsDAO {
 	
 	
 
-	
-	
-	
-	private String getImportTypeCode() {
-			 return "default-import";
-	}
 	
 
 		
