@@ -30,35 +30,28 @@ public class TreatmentTypeMappingQuery extends MappingSqlQuery<TreatmentType>{
 	
 	@Override
 	protected TreatmentType mapRow(ResultSet rs, int rowNum) throws SQLException {
+		try {	
 			TreatmentType treatmentType = new TreatmentType();
-			
 			treatmentType.id = rs.getLong("id");
 			treatmentType.names = rs.getString("names");  
-			
-			long idCommonInfoType = rs.getLong("fk_common_info_type");
-			long idTreatmentCategory = rs.getLong("fk_treatment_category");
-			
+						
 			//Get commonInfoType
+			long idCommonInfoType = rs.getLong("fk_common_info_type");			
 			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-			CommonInfoType commonInfoType = null;
-			try {
-				 commonInfoType = (CommonInfoType) commonInfoTypeDAO.findById(idCommonInfoType);
-			} catch (DAOException e) {
-				throw new SQLException(e);
-			}
-			//Set commonInfoType
-			treatmentType.setCommonInfoType(commonInfoType);
+			treatmentType.setCommonInfoType(commonInfoTypeDAO.findById(idCommonInfoType));
+			
 			//Get category
+			long idTreatmentCategory = rs.getLong("fk_treatment_category");			
 			TreatmentCategoryDAO treatmentCategoryDAO = Spring.getBeanOfType(TreatmentCategoryDAO.class);
-			TreatmentCategory treatmentCategory=null;
-			try {
-				treatmentCategory = (TreatmentCategory) treatmentCategoryDAO.findById(idTreatmentCategory);
-			} catch (DAOException e) {
-				throw new SQLException(e);
-			}
-			//Set category
-			treatmentType.category = treatmentCategory;
+			treatmentType.category = (TreatmentCategory) treatmentCategoryDAO.findById(idTreatmentCategory);
+			
+			TreatmentContextDAO treatmentContextDAO =  Spring.getBeanOfType(TreatmentContextDAO.class);
+			treatmentType.contexts = treatmentContextDAO.findByTreatmentTypeId(treatmentType.id);
+			
 			return treatmentType;
+		} catch (DAOException e) {
+			throw new SQLException(e);
+		}
 
 	}
 

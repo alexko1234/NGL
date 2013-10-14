@@ -17,8 +17,9 @@ public class Level extends Model<Level>{
 	
 	public Level(CODE code) {
 		super(LevelDAO.class.getName());
+		this.code = code.name();
 		this.name = code.name();
-		this.code = this.name;
+		
 	}
 
 	public String name;

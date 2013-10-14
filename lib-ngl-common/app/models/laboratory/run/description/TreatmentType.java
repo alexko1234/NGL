@@ -21,7 +21,4 @@ public class TreatmentType extends CommonInfoType{
 		super(TreatmentTypeDAO.class.getName());
 	}
 	
-	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
-		return getPropertyDefinitionByLevel(Level.CODE.ReadSet);
-	}
 }

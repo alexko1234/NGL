@@ -1,30 +1,17 @@
 package models.laboratory.run.instance;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import play.Logger;
-
-import net.vz.mongodb.jackson.DBQuery;
-
-import fr.cea.ig.MongoDBDAO;
-
-import validation.DescriptionValidationHelper;
-import validation.InstanceValidationHelper;
-import validation.utils.BusinessValidationHelper;
-import validation.ContextValidation;
-import validation.IValidation;
-import validation.utils.RunPropertyDefinitionHelper;
-import validation.utils.ValidationConstants;
-import validation.utils.ValidationHelper;
-
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
-import models.utils.InstanceConstants;
+import validation.ContextValidation;
+import validation.IValidation;
+import validation.run.instance.LaneValidationHelper;
+import validation.run.instance.TreatmentValidationHelper;
 
 public class Lane implements IValidation{
 
@@ -61,57 +48,14 @@ public class Lane implements IValidation{
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-
-		if (ValidationHelper.required(contextValidation, this.number, "number")) {
-			//Validate unique lane.number if run already exist
-			if (contextValidation.isCreationMode() && isLaneExist(contextValidation)) {
-					contextValidation.addErrors("number",ValidationConstants.ERROR_NOTUNIQUE_MSG, this.number);
-			}else if(contextValidation.isUpdateMode() && !isLaneExist(contextValidation)){
-				contextValidation.addErrors("number",ValidationConstants.ERROR_NOTEXISTS_MSG, this.number);				
-			}
-			
-			
-		}
-
-		if(this.readSetCodes != null && this.readSetCodes.size() > 0){
-			List<String> readSetCodesTreat = new ArrayList<String>();
-			for(int i=0; i< this.readSetCodes.size(); i++){
-				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, this.readSetCodes.get(i));
-				if(null == readSet || !number.equals(readSet.laneNumber)){
-					contextValidation.addErrors("readSetCodes["+i+"]",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG,  this.readSetCodes.get(i), "ReadSet");
-				}
-				
-				if(readSetCodesTreat.contains(this.readSetCodes.get(i))){
-					contextValidation.addErrors("readSetCodes["+i+"]",ValidationConstants.ERROR_CODE_DOUBLE_MSG,  this.readSetCodes.get(i));
-				}
-				readSetCodesTreat.add(this.readSetCodes.get(i));
-			}
-		}
-		
-		
-		if(ValidationHelper.required(contextValidation, this.stateCode, "stateCode")){
-			if(!RunPropertyDefinitionHelper.getRunStateCodes().contains(this.stateCode)){
-				contextValidation.addErrors("stateCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, this.stateCode);
-			}
-		}
-		
+		LaneValidationHelper.validationLaneNumber(this.number,contextValidation);
+		LaneValidationHelper.validationLaneReadSetCodes(this.number, this.readSetCodes, contextValidation);
+		LaneValidationHelper.validateStateCode(this.stateCode, contextValidation);
 		contextValidation.putObject("lane", this);
 		contextValidation.putObject("level", Level.CODE.Lane);
-		InstanceValidationHelper.validationTreatments(this.treatments, contextValidation);
-		
-		
-		contextValidation.addKeyToRootKeyName("properties");
-		ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getLanePropertyDefinitions());
-		contextValidation.removeKeyFromRootKeyName("properties");
-
-
-
+		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);
+		LaneValidationHelper.validationLaneProperties(this.properties, contextValidation);		
 	}
 
-	private boolean isLaneExist(ContextValidation contextValidation) {
-		Run run = (Run) contextValidation.getObject("run");
-		return MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-				DBQuery.and(DBQuery.is("code", run.code), DBQuery.is("lanes.number", this.number)));
-		
-	}
+	
 }

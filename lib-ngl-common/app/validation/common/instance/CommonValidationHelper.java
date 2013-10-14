@@ -1,28 +1,22 @@
-package validation.utils;
-
+package validation.common.instance;
 
 import static validation.utils.ValidationHelper.required;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-
+import models.laboratory.common.description.State;
+import models.laboratory.common.instance.TraceInformation;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 
 import validation.ContextValidation;
+import validation.utils.ValidationConstants;
+import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
-/**
- * Helper to validate MongoDB Object Used before insert or update a MongoDB
- * object
- * 
- * @author galbini
- * 
- */
-public class BusinessValidationHelper {
+public class CommonValidationHelper {
 	public static final String FIELD_CODE = "code";
 	
 	/**
@@ -148,8 +142,7 @@ public class BusinessValidationHelper {
 
 	
 	
-	public static <T extends DBObject> void validateRequiredInstanceCode(ContextValidation contextValidation,
-			String code, String key, Class<T> type, String collectionName) {
+	public static <T extends DBObject> void validateRequiredInstanceCode(String code, String key, Class<T> type, String collectionName,ContextValidation contextValidation) {
 		if(required(contextValidation, code, key)){
 			validateExistInstanceCode(contextValidation, code, key, type,collectionName);
 		}
@@ -288,9 +281,55 @@ public class BusinessValidationHelper {
 			String code, Class<T> type, String collectionName, boolean returnObject) {
 		return validateExistInstanceCode(contextValidation, code, FIELD_CODE, type, collectionName, returnObject);
 		
-	}	
+	}
 	
+	/**
+	 * Validate the id of dbObject
+	 * @param dbObject
+	 * @param contextValidation
+	 */
+	public static void validateId(DBObject dbObject, ContextValidation contextValidation) {
+		if(contextValidation.isUpdateMode()){
+    		ValidationHelper.required(contextValidation, dbObject._id, "_id");
+    	}else if(contextValidation.isCreationMode() && null != dbObject._id){
+    		contextValidation.addErrors("_id", ValidationConstants.ERROR_ID_NOTNULL_MSG);
+    	}
+	}
+	/**
+	 * Validate the code of an dbObject. the code is the NGL identifier
+	 * @param dbObject
+	 * @param collectionName
+	 * @param contextValidation
+	 */
+	public static void validateCode(DBObject dbObject, String collectionName, ContextValidation contextValidation) {
+		if(ValidationHelper.required(contextValidation, dbObject.code, "code")){
+		    if (contextValidation.isCreationMode()) {
+				validateUniqueInstanceCode(contextValidation, dbObject.code, dbObject.getClass(), collectionName);		
+			}else if(contextValidation.isUpdateMode()){
+				validateExistInstanceCode(contextValidation, dbObject.code, dbObject.getClass(), collectionName);
+			}
+		}
+		
+	}
+
+	public static void validateTraceInformation(TraceInformation traceInformation, ContextValidation contextValidation) {
+		if(ValidationHelper.required(contextValidation, traceInformation, "traceInformation")){
+			contextValidation.addKeyToRootKeyName("traceInformation");
+			traceInformation.validate(contextValidation);
+			contextValidation.removeKeyFromRootKeyName("traceInformation");
+		}		
+	}
 	
+	public static void validateStateCode(String stateCode,ContextValidation contextValidation){
+		validateRequiredDescriptionCode(contextValidation, stateCode,"stateCode", State.find);
+	}
 	
-	
+	@SuppressWarnings("unchecked")
+	public static <T> T getObjectFromContext(String key, Class<T> clazz, ContextValidation contextValidation) {
+		T o = (T) contextValidation.getObject(key);
+		if(null == o){
+			throw new RuntimeException(clazz.getName()+" form contextValidation is null");
+		}
+		return o;
+	}
 }

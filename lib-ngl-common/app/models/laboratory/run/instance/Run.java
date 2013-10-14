@@ -7,19 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import validation.ContextValidation;
-import validation.DescriptionValidationHelper;
-import validation.IValidation;
-import validation.InstanceValidationHelper;
-import validation.utils.RunPropertyDefinitionHelper;
-import validation.utils.ValidationConstants;
-import validation.utils.ValidationHelper;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.run.instance.InstrumentUsed;
 import models.utils.InstanceConstants;
+import validation.ContextValidation;
+import validation.IValidation;
+import validation.run.instance.LaneValidationHelper;
+import validation.run.instance.RunValidationHelper;
+import validation.run.instance.TreatmentValidationHelper;
 import fr.cea.ig.DBObject;
 
 
@@ -43,40 +40,23 @@ public class Run extends DBObject implements IValidation {
     @Override
     public void validate(ContextValidation contextValidation) {
     	
-    	InstanceValidationHelper.validateId(this, contextValidation);
-    	InstanceValidationHelper.validateCode(this, InstanceConstants.RUN_ILLUMINA_COLL_NAME, contextValidation);
-		
-		if(ValidationHelper.required(contextValidation, this.stateCode, "stateCode")){
-			if(!RunPropertyDefinitionHelper.getRunStateCodes().contains(this.stateCode)){
-				contextValidation.addErrors("stateCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, this.stateCode);
-			}
-		}
-		
-		InstanceValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
-		
-		
-		
-		DescriptionValidationHelper.validationRunTypeCode(this.typeCode, contextValidation); 
-		DescriptionValidationHelper.validationContainerSupportCode(this.containerSupportCode, contextValidation); 
-		
-		if(ValidationHelper.required(contextValidation, this.instrumentUsed, "instrumentUsed")){
-			contextValidation.addKeyToRootKeyName("instrumentUsed");
-			this.instrumentUsed.validate(contextValidation); 
-			contextValidation.removeKeyFromRootKeyName("instrumentUsed");
-		}
-		
+    	RunValidationHelper.validateId(this, contextValidation);
+    	RunValidationHelper.validateCode(this, InstanceConstants.RUN_ILLUMINA_COLL_NAME, contextValidation);
+    	RunValidationHelper.validateRunType(this.typeCode, this.properties, contextValidation);
+    	RunValidationHelper.validateStateCode(this.stateCode, contextValidation);
+    	RunValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
+    	RunValidationHelper.validationContainerSupportCode(this.containerSupportCode, contextValidation); 
+    	RunValidationHelper.validateRunInstrumentUsed(this.instrumentUsed, contextValidation);		
 		contextValidation.putObject("run", this);
 		contextValidation.putObject("level", Level.CODE.Run);
 		//WARN DON'T CHANGE THE ORDER OF VALIDATION
-		InstanceValidationHelper.validationTreatments(this.treatments, contextValidation);
-		InstanceValidationHelper.validationLanes(this.lanes, contextValidation);
-		
-		
-		contextValidation.addKeyToRootKeyName("properties");
-		ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getRunPropertyDefinitions());
-		contextValidation.removeKeyFromRootKeyName("properties");            
+		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);
+		LaneValidationHelper.validationLanes(this.lanes, contextValidation);
 		
     }
+
+
+	
 
 
     /*

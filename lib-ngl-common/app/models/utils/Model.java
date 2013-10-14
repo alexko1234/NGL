@@ -63,6 +63,7 @@ public class Model<T> {
     
     public static class Finder<T>
     {
+		
 		private String className;
 
 		@JsonIgnore
@@ -99,6 +100,10 @@ public class Model<T> {
 			} catch (ClassNotFoundException e) {
 				throw new DAOException(e);
 			}
+		}
+		
+		public String getClassName() {
+			return className;
 		}
     }
 

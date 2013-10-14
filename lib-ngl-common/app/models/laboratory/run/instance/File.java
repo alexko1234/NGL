@@ -1,20 +1,13 @@
 package models.laboratory.run.instance;
 
-import validation.ContextValidation;
-import validation.IValidation;
-import validation.utils.ValidationHelper;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import net.vz.mongodb.jackson.DBQuery;
-
 import models.laboratory.common.instance.PropertyValue;
-import models.utils.InstanceConstants;
-import validation.utils.RunPropertyDefinitionHelper;
-import validation.utils.ValidationConstants;
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
+import validation.ContextValidation;
+import validation.IValidation;
+import validation.run.instance.FileValidationHelper;
+import validation.utils.ValidationHelper;
 
 public class File implements IValidation {
 
@@ -33,29 +26,12 @@ public class File implements IValidation {
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		ReadSet readSet = (ReadSet) contextValidation.getObject("readSet");
-		if(ValidationHelper.required(contextValidation, this.fullname, "fullname")) {
-			//Validate unique file.code if not already exists
-			if(contextValidation.isCreationMode() && MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-					DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", this.fullname)))){
-				contextValidation.addErrors("fullname",ValidationConstants.ERROR_NOTUNIQUE_MSG, this.fullname);
-			}			
-		}
-
-		if(ValidationHelper.required(contextValidation, this.stateCode, "stateCode")){
-			if(!RunPropertyDefinitionHelper.getReadSetStateCodes().contains(this.stateCode)){
-				contextValidation.addErrors("stateCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, this.stateCode);
-			}
-		}
-		
+		FileValidationHelper.validateFileFullName(this.fullname, contextValidation);
+		FileValidationHelper.validateStateCode(this.stateCode, contextValidation);
 		ValidationHelper.required(contextValidation, this.extension, "extension");
 		ValidationHelper.required(contextValidation, this.typeCode, "typeCode");
 		ValidationHelper.required(contextValidation, this.usable, "usable");
-
-		contextValidation.addKeyToRootKeyName("properties");
-		ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getFilePropertyDefinitions());
-		contextValidation.removeKeyFromRootKeyName("properties");
-
+		FileValidationHelper.validateFileProperties(this.properties, contextValidation);		
 	}
 
 }

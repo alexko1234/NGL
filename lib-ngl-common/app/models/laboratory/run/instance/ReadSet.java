@@ -5,27 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.vz.mongodb.jackson.DBQuery;
-
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
-
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.utils.InstanceConstants;
-import play.data.validation.Constraints.Required;
-
 import validation.ContextValidation;
-import validation.DescriptionValidationHelper;
 import validation.IValidation;
-import validation.InstanceValidationHelper;
-import validation.utils.BusinessValidationHelper;
-import validation.ContextValidation;
-import validation.utils.RunPropertyDefinitionHelper;
-import validation.utils.ValidationConstants;
+import validation.run.instance.FileValidationHelper;
+import validation.run.instance.ReadSetValidationHelper;
+import validation.run.instance.TreatmentValidationHelper;
 import validation.utils.ValidationHelper;
+import fr.cea.ig.DBObject;
 
 public class ReadSet extends DBObject implements IValidation{
 
@@ -75,32 +66,15 @@ public class ReadSet extends DBObject implements IValidation{
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		InstanceValidationHelper.validateId(this, contextValidation);
-		InstanceValidationHelper.validateCode(this, InstanceConstants.READSET_ILLUMINA_COLL_NAME, contextValidation);
+		ReadSetValidationHelper.validateId(this, contextValidation);
+		ReadSetValidationHelper.validateCode(this, InstanceConstants.READSET_ILLUMINA_COLL_NAME, contextValidation);
+		ReadSetValidationHelper.validateReadSetType(this.typeCode, this.properties, contextValidation);
+		ReadSetValidationHelper.validateStateCode(this.stateCode, contextValidation);
+		ReadSetValidationHelper.validateReadSetCodeInRunLane(this.code, this.runCode, this.laneNumber, contextValidation);
+		ReadSetValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
+		ReadSetValidationHelper.validateReadSetRunCode(this.runCode ,contextValidation);
+		ReadSetValidationHelper.validateReadSetLaneNumber(this.runCode, this.laneNumber ,contextValidation);
 		
-		if(contextValidation.isUpdateMode() && !checkReadSetInRun()){
-				contextValidation.addErrors("code",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, this.code);
-		}			
-				
-		if(ValidationHelper.required(contextValidation, this.stateCode, "stateCode")){
-			if(!RunPropertyDefinitionHelper.getReadSetStateCodes().contains(this.stateCode)){
-				contextValidation.addErrors("stateCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, this.stateCode);
-			}
-		}
-		
-		DescriptionValidationHelper.validationReadSetTypeCode(this.typeCode, contextValidation);
-		
-		InstanceValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
-		
-		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, this.runCode, "runCode",  Run.class, InstanceConstants.RUN_ILLUMINA_COLL_NAME);
-		
-		if(ValidationHelper.required(contextValidation, this.runCode, "runCode") && 
-				ValidationHelper.required(contextValidation, this.laneNumber, "laneNumber")){
-			if(!isLaneExist(contextValidation)){
-				contextValidation.addErrors("runCode",ValidationConstants.ERROR_NOTEXISTS_MSG, this.runCode);
-				contextValidation.addErrors("laneNumber",ValidationConstants.ERROR_NOTEXISTS_MSG, this.laneNumber);
-			}
-		}
 		
 		if(ValidationHelper.required(contextValidation, this.projectCode, "projectCode")){
 			//TODO validate if exist projectCode
@@ -112,32 +86,11 @@ public class ReadSet extends DBObject implements IValidation{
 			//TODO validate if exist sampleContainerCode
 		}
 		ValidationHelper.required(contextValidation, this.path, "path");
-
-		
-		contextValidation.addKeyToRootKeyName("properties");
-		ValidationHelper.validateProperties(contextValidation, this.properties, RunPropertyDefinitionHelper.getReadSetPropertyDefinitions());
-		contextValidation.removeKeyFromRootKeyName("properties");
-		
 		contextValidation.putObject("readSet", this);
 		contextValidation.putObject("level", Level.CODE.ReadSet);
-		InstanceValidationHelper.validationTreatments(this.treatments, contextValidation);
-		InstanceValidationHelper.validationFiles(this.files, contextValidation);
+		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);
+		FileValidationHelper.validationFiles(this.files, contextValidation);
 	}
 
-
-	private boolean checkReadSetInRun() {
-		return MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-				DBQuery.and(
-						DBQuery.is("code", this.runCode), 
-						DBQuery.elemMatch("lanes", 
-							DBQuery.and(
-								DBQuery.is("number", this.laneNumber),
-								DBQuery.is("readSetCodes", this.code)))));
-	}
 	
-	private boolean isLaneExist(ContextValidation contextValidation) {		
-		return MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-				DBQuery.and(DBQuery.is("code", this.runCode), DBQuery.is("lanes.number", this.laneNumber)));
-		
-	}
 }

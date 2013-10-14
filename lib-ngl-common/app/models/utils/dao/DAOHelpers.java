@@ -74,6 +74,8 @@ public class DAOHelpers {
 		if (t == null) {
 			Logger.debug("save "+type.getName() + " : "+model.code);
 			model.save();
+		}else{
+			Logger.debug("allready exist "+type.getName() + " : "+model.code);
 		}
 	}
 	

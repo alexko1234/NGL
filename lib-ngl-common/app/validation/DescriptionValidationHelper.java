@@ -26,6 +26,7 @@ import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.reagent.description.ReagentType;
+import models.laboratory.run.description.RunType;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
@@ -125,25 +126,13 @@ public class DescriptionValidationHelper {
 
 	public static void validationRunTypeCode(String typeCode,
 			ContextValidation contextValidation) {
-		if(ValidationHelper.required(contextValidation, typeCode, "typeCode")){
-			if(!RunPropertyDefinitionHelper.getRunTypeCodes().contains(typeCode)){
-				contextValidation.addErrors("typeCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, typeCode);
-			}
-			//TODO interroge la base de données
-			
-		}
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", RunType.find,false);		
 		
 	}
 
-	public static void validationContainerSupportCode(
-			String containerSupportCode, ContextValidation contextValidation) {		
-		if(ValidationHelper.required(contextValidation, containerSupportCode, "containerSupportCode")){
-			//TODO add controles si le container existe dans mongo db
-			//BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, this.containerSupportCode, "containerSupportCode", ContainerSupportCode.find, false);
-		}		 
-	}
 	
-
+	
+	//TODO a déplacer et a revoir ?
 	public static void validationProject(String typeCode,
 			Map<String, PropertyValue> properties,
 			ContextValidation contextValidation) {
@@ -153,7 +142,7 @@ public class DescriptionValidationHelper {
 		}
 		
 	}
-
+	//TODO a déplacer et a revoir ?
 	public static void validationProcess(String typeCode,
 			Map<String, PropertyValue> properties,
 			ContextValidation contextValidation) {
@@ -163,7 +152,7 @@ public class DescriptionValidationHelper {
 		}
 		
 	}
-	
+	//TODO a déplacer et a revoir ?
 	public static void validationSampleType(String typeCode,
 			String importTypeCode, Map<String, PropertyValue> properties,
 			ContextValidation contextValidation) {
@@ -179,8 +168,12 @@ public class DescriptionValidationHelper {
 
 	}
 	
-	
-	
+	/**
+	 * 
+	 * @param stateCode
+	 * @param contextValidation
+	 * @deprecated "used InstanceValidationHelper.validationStateCode"
+	 */
 	public static void validationStateCode(String stateCode,ContextValidation contextValidation){
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, stateCode,"stateCode", State.find);
 	}
@@ -190,15 +183,6 @@ public class DescriptionValidationHelper {
 		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, resolutionCode,"resolutionCode", Resolution.find);		
 	}
 
-	public static void validationReadSetTypeCode(String typeCode,
-			ContextValidation contextValidation) {
-		if(ValidationHelper.required(contextValidation, typeCode, "typeCode")){
-			if(!"default-readset".equals(typeCode)){
-				contextValidation.addErrors("typeCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, typeCode);
-			}		
-			
-		}
-		
-	}
+	
 	
 }

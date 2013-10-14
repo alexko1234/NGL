@@ -6,6 +6,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcOperations;
@@ -48,6 +49,7 @@ public abstract class AbstractCommonDAO<T> {
 	}
 
 	@Autowired
+	@Qualifier("ngl")
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource=dataSource;
 		jdbcTemplate = new SimpleJdbcTemplate(dataSource);   

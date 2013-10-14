@@ -93,11 +93,7 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 			throw new DAOException("code is mandatory");
 		}
 		try {
-			
 			String sql = getSQLSelect()+" WHERE code=?";
-	
-			//Logger.debug(sql+" "+code);
-					
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 			return this.jdbcTemplate.queryForObject(sql, mapper, code);
 		} catch (DataAccessException e) {

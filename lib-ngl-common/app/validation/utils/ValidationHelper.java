@@ -36,7 +36,7 @@ import static validation.utils.ValidationConstants.*;
 public class ValidationHelper {
 	
 	
-	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions,Boolean validateNotDefined) {
+	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
 		Map<String, PropertyValue> inputProperties = new HashMap<String, PropertyValue>(0);
 		if(null != properties){
 			inputProperties = new HashMap<String, PropertyValue>(properties);		
