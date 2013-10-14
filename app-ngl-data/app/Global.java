@@ -21,11 +21,13 @@ public class Global extends GlobalSettings {
                 , new ImportDataRun(), Akka.system().dispatcher()
 				); 
 		*/
+		/*
 		Akka.system().scheduler().schedule(
 				Duration.create(nextExecutionInSeconds(22,13), TimeUnit.SECONDS),
                 Duration.create(24, TimeUnit.HOURS)
                 , new ImportDataRun(), Akka.system().dispatcher()
-				); 
+				);
+		*/ 
 	}
 
 	@Override

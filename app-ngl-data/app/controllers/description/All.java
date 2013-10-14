@@ -19,6 +19,7 @@ import services.description.instrument.InstrumentService;
 import services.description.process.ProcessService;
 import services.description.project.ProjectService;
 import services.description.run.RunService;
+import services.description.run.TreatmentService;
 import services.description.sample.ImportService;
 import services.description.sample.SampleService;
 import controllers.CommonController;
@@ -42,7 +43,7 @@ public class All extends CommonController {
 			SampleService.main(errors);
 			RunService.main(errors);
 			ImportService.main(errors);
-			
+			TreatmentService.main(errors);
 			if (errors.size() > 0) {
 				return badRequest(Json.toJson(errors));
 			} else {

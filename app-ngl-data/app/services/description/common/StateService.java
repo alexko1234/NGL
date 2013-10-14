@@ -35,26 +35,33 @@ public class StateService {
 
 	public static void saveStates(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<State> l = new ArrayList<State>();
+		//COMMON
+		l.add(newState("Disponible", "A", true, 1000, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.ReadSet, StateCategory.CODE.File)));
+		l.add(newState("Indisponible", "UA", true, 1000, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.ReadSet, StateCategory.CODE.File)));
+		l.add(newState("Finie", "F", true, 1000, getStateCategories(StateCategory.CODE.Project, StateCategory.CODE.Experiment, StateCategory.CODE.Process, StateCategory.CODE.Run, StateCategory.CODE.Lane)));			
+		l.add(newState("Evalué", "E", true, 1000, getStateCategories(StateCategory.CODE.Run, StateCategory.CODE.Lane)));			
 		
-		l.add(newState("Nouveau", "N", true, 10, getStateCategories(StateCategory.CODE.Project, StateCategory.CODE.Container,StateCategory.CODE.Experiment,StateCategory.CODE.Process)));
-		l.add(newState("En Cours", "IP", true, 20, getStateCategories(StateCategory.CODE.Project, StateCategory.CODE.Experiment,StateCategory.CODE.Process)));
-		l.add(newState("En Attente Processus", "IW-P", true, 30, getStateCategories(StateCategory.CODE.Container)));
-		l.add(newState("Disponible", "A", true, 75, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.ReadSet)));
-		l.add(newState("En Attente Expérience", "IW-E", true, 50, getStateCategories(StateCategory.CODE.Container)));
-		l.add(newState("En Cours d'Utilisation", "IU", true, 60, getStateCategories(StateCategory.CODE.Container)));
-		l.add(newState("En Stock", "IS", true, 70, getStateCategories(StateCategory.CODE.Container)));
-		l.add(newState("Indisponible", "UA", true, 80, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.ReadSet)));
-		l.add(newState("Finie", "F", true, 90, getStateCategories(StateCategory.CODE.Project, StateCategory.CODE.Experiment, StateCategory.CODE.Process, StateCategory.CODE.Run)));			
-		//l.add(newState("En attente Purification", "IWP", true, 100, getStateCategories(StateCategory.CODE.Container)));			
-		l.add(newState("En attente Contrôle Qualité", "IWQC", true, 110, getStateCategories(StateCategory.CODE.Container)));			
-		l.add(newState("En attente Validation", "IW-V", true, 120, getStateCategories(StateCategory.CODE.Container)));
+		l.add(newState("En Attente Contrôle Qualité", "IW-QC", true, 401, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.ReadSet, StateCategory.CODE.File)));	
+		l.add(newState("En Cours Contrôle Qualité", "IP-QC", true, 450, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.ReadSet, StateCategory.CODE.File)));	
+		l.add(newState("Fin Contrôle Qualité", "F-QC", true, 500, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.ReadSet, StateCategory.CODE.File)));	
+		l.add(newState("En Attente Validation", "IW-V", true, 601, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.Run, StateCategory.CODE.Lane, StateCategory.CODE.ReadSet, StateCategory.CODE.File)));
+		l.add(newState("En Cours Validation", "IP-V", true, 651, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.Run, StateCategory.CODE.Lane, StateCategory.CODE.ReadSet, StateCategory.CODE.File)));
+		l.add(newState("Fin Validation", "F-V", true, 701, getStateCategories(StateCategory.CODE.Container, StateCategory.CODE.Run, StateCategory.CODE.Lane, StateCategory.CODE.ReadSet, StateCategory.CODE.File)));
+				
 		
-		l.add(newState("IP-S", "IP-S", true, 60, getStateCategories(StateCategory.CODE.Run)));	
-		l.add(newState("IP-RG", "IP-RG", true, 20, getStateCategories(StateCategory.CODE.Run, StateCategory.CODE.ReadSet)));
-		l.add(newState("F-RG", "F-RG", true, 30, getStateCategories(StateCategory.CODE.Run, StateCategory.CODE.ReadSet)));
-		l.add(newState("F-QC", "F-QC", true, 60, getStateCategories(StateCategory.CODE.ReadSet)));	
+		//NGL-SQ
+		l.add(newState("Nouveau", "N", true, 0, getStateCategories(StateCategory.CODE.Project, StateCategory.CODE.Container,StateCategory.CODE.Experiment,StateCategory.CODE.Process)));
+		l.add(newState("En Cours", "IP", true, 500, getStateCategories(StateCategory.CODE.Project, StateCategory.CODE.Experiment,StateCategory.CODE.Process)));
+		l.add(newState("En Attente Processus", "IW-P", true, 101, getStateCategories(StateCategory.CODE.Container)));
+		l.add(newState("En Attente Expérience", "IW-E", true, 201, getStateCategories(StateCategory.CODE.Container)));
+		l.add(newState("En Cours d'Utilisation", "IU", true, 250, getStateCategories(StateCategory.CODE.Container)));
+		l.add(newState("En Stock", "IS", true, 900, getStateCategories(StateCategory.CODE.Container)));
+				
+		//NGL-BI
+		l.add(newState("En Cours Séquençage", "IP-S", true, 150, getStateCategories(StateCategory.CODE.Run, StateCategory.CODE.Lane)));	
+		l.add(newState("En Cours Read Génération", "IP-RG", true, 250, getStateCategories(StateCategory.CODE.Run, StateCategory.CODE.Lane, StateCategory.CODE.ReadSet, StateCategory.CODE.File)));
+		l.add(newState("Fin Read Génération", "F-RG", true, 300, getStateCategories(StateCategory.CODE.Run, StateCategory.CODE.Lane, StateCategory.CODE.ReadSet, StateCategory.CODE.File)));
 		// TODO : see IWQC
-		l.add(newState("IW-QC", "IW-QC", true, 70, getStateCategories(StateCategory.CODE.ReadSet)));	
 		
 		DAOHelpers.saveModels(State.class, l, errors);
 	}

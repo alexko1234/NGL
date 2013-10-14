@@ -1,13 +1,12 @@
 package services.description;
 
-import static services.description.DescriptionFactory.newPropertiesDefinition;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import play.Logger;
-import services.description.common.LevelService;
-import services.description.common.MeasureService;
+import org.apache.commons.codec.binary.StringUtils;
+
+import com.google.common.base.CaseFormat;
+
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
@@ -44,6 +43,7 @@ import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
+import play.Logger;
 
 public class DescriptionFactory {
 
@@ -286,7 +286,7 @@ public class DescriptionFactory {
 	
 	public static ImportType newImportType(String name, String code, ImportCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException{
 		ImportType st = new ImportType();
-		st.code = code;
+		st.code = code.toLowerCase();
 		st.name = name;
 		st.category = category;
 		st.objectType = ObjectType.find.findByCode(ObjectType.CODE.Import.name());
@@ -296,7 +296,7 @@ public class DescriptionFactory {
 	
 	public static ProjectType newProjectType(String name, String code, ProjectCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException{
 		ProjectType st = new ProjectType();
-		st.code = code;
+		st.code = code.toLowerCase();
 		st.name = name;
 		st.category = category;
 		st.objectType = ObjectType.find.findByCode(ObjectType.CODE.Project.name());
@@ -319,7 +319,7 @@ public class DescriptionFactory {
 	
 	public static RunType newRunType(String name, String code, Integer nbLanes, RunCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException {
 		RunType rt = new RunType();
-		rt.code = code.toLowerCase();
+		rt.code = code;
 		rt.name = name;
 		rt.nbLanes = nbLanes;
 		rt.category = category;

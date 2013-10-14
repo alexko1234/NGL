@@ -19,6 +19,7 @@ GET		/api/description/experiments			controllers.description.experiments.Experime
 GET		/api/description/processes				controllers.description.processes.Processes.save()
 
 GET		/api/description/runs					controllers.description.runs.Runs.save()
+GET		/api/description/treatments				controllers.description.runs.Treatments.save()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               			controllers.Assets.at(path="/public", file)
