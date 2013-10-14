@@ -22,4 +22,8 @@ public class Application extends Controller {
 	 public static Result modules(String name) {
 		 return ok(modules.render(name));	       
 	 }
+	 
+	 public static Result datatable() {
+		 return ok(datatableDoc.render());	       
+	 }
 }
