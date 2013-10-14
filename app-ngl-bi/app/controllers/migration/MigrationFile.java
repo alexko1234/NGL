@@ -31,7 +31,7 @@ import controllers.migration.models.ReadSetOld;
 import controllers.migration.models.RunOld;
 import fr.cea.ig.MongoDBDAO;
 
-public class Migration extends CommonController {
+public class MigrationFile extends CommonController {
 	
 	private static final String RUN_ILLUMINA_COLL_NAME_BCKP = "run.illumina.backup";
 	private static final String RUN_ILLUMINA_COLL_NAME_OLD = "run.illumina";
@@ -40,29 +40,21 @@ public class Migration extends CommonController {
 	public static Result migration(){
 		nbReadSet = 0;
 		JacksonDBCollection<RunOld, String> runsCollBck = MongoDBDAO.getCollection(RUN_ILLUMINA_COLL_NAME_BCKP, RunOld.class);
-		if(runsCollBck.count() == 0){
-			Logger.info("Migration start");
-			backup();
-			List<RunOld> runs = MongoDBDAO.find(RUN_ILLUMINA_COLL_NAME_BCKP, RunOld.class).toList();
-			Logger.debug("migre "+runs.size()+" runs");
-			DynamicForm f = Form.form();
-			ContextValidation contextValidation = new ContextValidation(f.errors());
-			for(RunOld run : runs){
-				contextValidation.addKeyToRootKeyName(run.code);
-				migre(run, contextValidation);
-				contextValidation.removeKeyFromRootKeyName(run.code);
-			}
-			if(!contextValidation.hasErrors()){
-				check();
-				Logger.info("Migration finish");
-				return ok("Migration Finish");
-			}else{
-				return badRequest(Json.toJson(f.errorsAsJson()));
-			}
-			
-			
+		List<RunOld> runs = MongoDBDAO.find(RUN_ILLUMINA_COLL_NAME_BCKP, RunOld.class).toList();
+		Logger.debug("migre "+runs.size()+" runs");
+		DynamicForm f = Form.form();
+		ContextValidation contextValidation = new ContextValidation(f.errors());
+		for(RunOld run : runs){
+			contextValidation.addKeyToRootKeyName(run.code);
+			migre(run, contextValidation);
+			contextValidation.removeKeyFromRootKeyName(run.code);
+		}
+		if(!contextValidation.hasErrors()){
+			check();
+			Logger.info("Migration finish");
+			return ok("Migration Finish");
 		}else{
-			return ok("Migration already execute !");
+			return badRequest(Json.toJson(f.errorsAsJson()));
 		}
 	}
 
@@ -104,17 +96,19 @@ public class Migration extends CommonController {
 			Logger.error("RUN :"+run.code+" without Lanes");
 		}
 		
-		run.validate(contextValidation);
 		if(!contextValidation.hasErrors()){
-			MongoDBDAO.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);
-			Logger.debug("save "+readSets.size()+" readsets");
-			nbReadSet += readSets.size();
 			for(ReadSet rs : readSets){
-				rs.validate(contextValidation);
-				if(!contextValidation.hasErrors()){
-					MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, rs);
-					updateLane(rs);					
+				for(File file: rs.files){
+					contextValidation.putObject("readSet", rs);
+					contextValidation.setCreationMode();
+					file.validate(contextValidation);
+					if (!contextValidation.hasErrors()) {
+						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+								DBQuery.is("code", rs.code),
+								DBUpdate.push("files", file));
+					}
 				}
+				
 			}			
 		}
 	}

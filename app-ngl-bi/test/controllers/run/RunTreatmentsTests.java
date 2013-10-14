@@ -63,7 +63,7 @@ public class RunTreatmentsTests extends AbstractTests {
 		m.put("flowcellVersion", new PropertySingleValue("v1"));
 		m.put("controlLane", new PropertySingleValue(90));
 		m.put("mismatch", new PropertySingleValue(true));
-		t.set("read1", m);
+		t.set("default", m);
 		
 		return t;
 	}
@@ -115,8 +115,8 @@ public class RunTreatmentsTests extends AbstractTests {
 			m2.put("controlLane", new PropertySingleValue(66));
 			m2.put("mismatch", new PropertySingleValue(false));
 			
-			t.results().remove("read1");
-			t.set("read1", m2);
+			t.results().remove("default");
+			t.set("default", m2);
 			
 			result = callAction(controllers.runs.api.routes.ref.RunTreatments.update("DIDIER_TESTFORTRT", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
 			assertThat(status(result)).isEqualTo(OK);
@@ -126,7 +126,7 @@ public class RunTreatmentsTests extends AbstractTests {
 	        assertThat(r.treatments.size()).isEqualTo(1);
 	        Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
 	        assertThat(entry.getKey()).isEqualTo("ngsrg");
-	        assertThat(entry.getValue().results().get("read1").get("nbClusterTotal").value.toString()).isEqualTo("299");
+	        assertThat(entry.getValue().results().get("default").get("nbClusterTotal").value.toString()).isEqualTo("299");
 			
 		}}); 
 	}

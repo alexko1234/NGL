@@ -74,7 +74,7 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 		m.put("Q30", new PropertySingleValue(100));
 		m.put("qualityScore", new PropertySingleValue(100));
 		m.put("nbReadIllumina", new PropertySingleValue(100));
-		t.set("read1", m);
+		t.set("default", m);
 		
 		return t;
 	}
@@ -121,8 +121,8 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 			m2.put("qualityScore", new PropertySingleValue(18));
 			m2.put("nbReadIllumina", new PropertySingleValue(18));
 			
-			t.results().remove("read1");
-			t.set("read1", m2);
+			t.results().remove("default");
+			t.set("default", m2);
 			
 			result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.update("rdCode", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
 			assertThat(status(result)).isEqualTo(OK);
@@ -132,7 +132,7 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 	        assertThat(r.treatments.size()).isEqualTo(1);
 	        Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
 	        assertThat(entry.getKey()).isEqualTo("ngsrg");
-	        assertThat(entry.getValue().results().get("read1").get("nbCluster").value.toString()).isEqualTo("18");
+	        assertThat(entry.getValue().results().get("default").get("nbCluster").value.toString()).isEqualTo("18");
 			
 		}}); 
 	}

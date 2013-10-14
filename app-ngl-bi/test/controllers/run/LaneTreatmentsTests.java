@@ -6,12 +6,14 @@ import static play.test.Helpers.callAction;
 import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.running;
-import static play.test.Helpers.status;
+import static play.test.Helpers.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.text.AbstractDocument.Content;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -23,6 +25,7 @@ import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.Test;
 
+import play.Logger;
 import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
@@ -66,7 +69,7 @@ public class LaneTreatmentsTests extends AbstractTests {
 		m.put("nbClusterIlluminaFilter", new PropertySingleValue(546723));
 		m.put("percentClusterIlluminaFilter", new PropertySingleValue(50.03));
 		m.put("percentClusterInternalAndIlluminaFilter", new PropertySingleValue(52.12));
-		t.set("read1", m);
+		t.set("default", m);
 		
 		return t;
 	}
@@ -82,6 +85,7 @@ public class LaneTreatmentsTests extends AbstractTests {
 			Treatment t = getNewTreatmentForLane();
 			
 			Result result = callAction(controllers.runs.api.routes.ref.LaneTreatments.save("DIDIER_TESTFORTRT", 1),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+			Logger.debug(contentAsString(result));
 			assertThat(status(result)).isEqualTo(OK);
 			
 			//query for control
@@ -120,8 +124,8 @@ public class LaneTreatmentsTests extends AbstractTests {
 			m2.put("percentClusterIlluminaFilter", new PropertySingleValue(1.23));
 			m2.put("percentClusterInternalAndIlluminaFilter", new PropertySingleValue(2.345));
 			
-			t.results().remove("read1");
-			t.set("read1", m2);
+			t.results().remove("default");
+			t.set("default", m2);
 			
 			result = callAction(controllers.runs.api.routes.ref.LaneTreatments.update("DIDIER_TESTFORTRT", 1, t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
 			assertThat(status(result)).isEqualTo(OK);
@@ -131,7 +135,7 @@ public class LaneTreatmentsTests extends AbstractTests {
 	        assertThat(r.lanes.get(0).treatments.size()).isEqualTo(1);
 	        Map.Entry<String, Treatment> entry = r.lanes.get(0).treatments.entrySet().iterator().next();
 	        assertThat(entry.getKey()).isEqualTo("ngsrg");
-	        assertThat(entry.getValue().results().get("read1").get("nbCycleReadIndex1").value.toString()).isEqualTo("120");
+	        assertThat(entry.getValue().results().get("default").get("nbCycleReadIndex1").value.toString()).isEqualTo("120");
 			
 		}}); 
 	}

@@ -35,6 +35,8 @@ import utils.AbstractTests;
 import utils.RunMockHelper;
 import validation.ContextValidation;
 import validation.InstanceValidationHelper;
+import validation.run.instance.LaneValidationHelper;
+import validation.run.instance.RunValidationHelper;
 import validation.utils.ValidationConstants;
 import fr.cea.ig.MongoDBDAO;
 
@@ -180,7 +182,7 @@ public class RunValidationTest extends AbstractTests {
 			m.put("flowcellVersion", new PropertySingleValue("v1"));
 			m.put("controlLane", new PropertySingleValue(90));
 			m.put("mismatch", new PropertySingleValue(true));
-			t1.set("read1", m);
+			t1.set("default", m);
 			 
 			 Map<String, Treatment> mT = new HashMap<String, Treatment>();
 			 mT.put("ngsrg", t1);
@@ -221,7 +223,7 @@ public class RunValidationTest extends AbstractTests {
 			m.put("flowcellVersion", new PropertySingleValue("v1"));
 			m.put("controlLane", new PropertySingleValue(90));
 			m.put("mismatch", new PropertySingleValue(true));
-			t1.set("read1", m);
+			t1.set("default", m);
 			
 			 Treatment t2 = new Treatment();
 			 t2.code = "sav";
@@ -269,7 +271,7 @@ public class RunValidationTest extends AbstractTests {
 			m.put("flowcellVersion", new PropertySingleValue("v1"));
 			m.put("controlLane", new PropertySingleValue(90));
 			m.put("mismatch", new PropertySingleValue(true));
-			t1.set("read1", m);
+			t1.set("default", m);
 			
 			 Treatment t2 = new Treatment();
 			 t2.code = "ngsrg";
@@ -286,7 +288,7 @@ public class RunValidationTest extends AbstractTests {
 			m.put("flowcellVersion", new PropertySingleValue("v1"));
 			m.put("controlLane", new PropertySingleValue(90));
 			m.put("mismatch", new PropertySingleValue(true));
-			t2.set("read1", m);
+			t2.set("default", m);
 			
 			 Map<String, Treatment> mT = new HashMap<String, Treatment>();
 			 mT.put("ngsrg", t1);
@@ -388,7 +390,7 @@ public class RunValidationTest extends AbstractTests {
 			 ContextValidation ctxVal = new ContextValidation(); 
 			 ctxVal.putObject("run", run);
 			 ctxVal.setCreationMode();
-			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
+			 LaneValidationHelper.validationLanes(run.lanes, ctxVal);
 			 assertThat(ctxVal.errors).hasSize(0);
 		 }});
 	 }
@@ -433,7 +435,7 @@ public class RunValidationTest extends AbstractTests {
 			 ContextValidation ctxVal = new ContextValidation(); 
 			 ctxVal.putObject("run", run);
 			 ctxVal.setCreationMode();
-			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
+			 LaneValidationHelper.validationLanes(run.lanes, ctxVal);
 			 
 			 assertThat(ctxVal.errors).hasSize(1);
 			 assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_NOTUNIQUE_MSG); 
@@ -476,7 +478,7 @@ public class RunValidationTest extends AbstractTests {
 			ContextValidation ctxVal = new ContextValidation(); 
 			 ctxVal.putObject("run", run);
 			 ctxVal.setCreationMode();
-			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
+			 LaneValidationHelper.validationLanes(run.lanes, ctxVal);
 			 assertThat(ctxVal.errors).hasSize(0);
 			
 			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
@@ -497,7 +499,7 @@ public class RunValidationTest extends AbstractTests {
 			 ctxVal = new ContextValidation(); 
 			 ctxVal.putObject("run", run);
 			  ctxVal.setUpdateMode();
-			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
+			  LaneValidationHelper.validationLanes(run.lanes, ctxVal);
 			 assertThat(ctxVal.errors).hasSize(0);
 			 
 		 }});
@@ -541,7 +543,7 @@ public class RunValidationTest extends AbstractTests {
 			ContextValidation ctxVal = new ContextValidation(); 
 			 ctxVal.putObject("run", run);
 			 ctxVal.setCreationMode();
-			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
+			 LaneValidationHelper.validationLanes(run.lanes, ctxVal);
 			 assertThat(ctxVal.errors).hasSize(0);
 			
 			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
@@ -563,7 +565,7 @@ public class RunValidationTest extends AbstractTests {
 			 ctxVal = new ContextValidation(); 
 			 ctxVal.putObject("run", run);
 			  ctxVal.setUpdateMode();
-			 InstanceValidationHelper.validationLanes(run.lanes, ctxVal);
+			  LaneValidationHelper.validationLanes(run.lanes, ctxVal);
 			 assertThat(ctxVal.errors).hasSize(1);
 			 assertThat(ctxVal.errors.toString()).contains("stateCode");
 			 assertThat(ctxVal.errors.toString()).contains("valuenotauthorized");
