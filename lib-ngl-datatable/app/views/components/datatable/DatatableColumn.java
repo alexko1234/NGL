@@ -16,7 +16,7 @@ public class DatatableColumn {
 	public boolean choiceInList = Boolean.FALSE;//Constraint choice with a list
 	public int listStyle = 0;//0=select, 1=radio
 	
-	public Map<String,String> possibleValues = null;//The possible value, can be null if choiceInList=false
+	public List<Object> possibleValues = null;//The possible value, can be null if choiceInList=false
 	
 	public Map<Integer, String> extraHeaders = null;//Headers of the column
 	
