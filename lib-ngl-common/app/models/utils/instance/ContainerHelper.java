@@ -34,7 +34,6 @@ public class ContainerHelper {
 		containerSupport.barCode=barCode;	
 		containerSupport.categoryCode="lane";
 		containerSupport.x="1";
-		containerSupport.y="1";
 		return containerSupport;
 	}
 
