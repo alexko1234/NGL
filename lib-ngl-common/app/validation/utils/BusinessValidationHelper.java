@@ -244,22 +244,21 @@ public class BusinessValidationHelper {
 	 */
 	public static <T extends DBObject> T validateExistInstanceCode(ContextValidation contextValidation,
 			String code, String key, Class<T> type, String collectionName, boolean returnObject) {
-		if(code!=null){
-			if(null != key){
-			T o = null;
-			if(returnObject){
-				o =  MongoDBDAO.findByCode(collectionName, type, code);
-				if(o == null){
-					contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
+		if(code!=null) {
+			if(null != key) {
+				T o = null;
+				if(returnObject){
+					o =  MongoDBDAO.findByCode(collectionName, type, code);
+					if(o == null){
+						contextValidation.addErrors(key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
+					}
+				}else if(!MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
+					contextValidation.addErrors( key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
 				}
-			}else if(!MongoDBDAO.checkObjectExistByCode(collectionName, type, code)){
-				contextValidation.addErrors( key, ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
+				return o;
+			}else {
+				throw new IllegalArgumentException("key is null for "+code);
 			}
-
-			return o;
-		}else{
-			throw new IllegalArgumentException("key is null for "+code);
-		}
 		}
 		return null;
 	}	
