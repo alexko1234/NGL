@@ -233,7 +233,7 @@ public class BusinessValidationHelper {
 	}
 	
 	/**
-	 * Validate a code of a MongoDB Collection
+	 * Validate a code of a MongoDB Collection, code is not required and can be null
 	 * @param errors
 	 * @param code
 	 * @param key
@@ -244,7 +244,8 @@ public class BusinessValidationHelper {
 	 */
 	public static <T extends DBObject> T validateExistInstanceCode(ContextValidation contextValidation,
 			String code, String key, Class<T> type, String collectionName, boolean returnObject) {
-		if(null != code && null != key){
+		if(code!=null){
+			if(null != key){
 			T o = null;
 			if(returnObject){
 				o =  MongoDBDAO.findByCode(collectionName, type, code);
@@ -257,8 +258,10 @@ public class BusinessValidationHelper {
 
 			return o;
 		}else{
-			throw new IllegalArgumentException("key or code is null : "+key+"/"+code);
+			throw new IllegalArgumentException("key is null for "+code);
 		}
+		}
+		return null;
 	}	
 	
 	
