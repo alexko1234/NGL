@@ -9,6 +9,7 @@ import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import play.data.Form;
 import play.libs.Json;
+import play.mvc.BodyParser;
 import play.mvc.Result;
 import validation.ContextValidation;
 import controllers.CommonController;
@@ -47,12 +48,15 @@ public class ReadSetTreatments extends CommonController{
 			return notFound();
 		}
 	}
-
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 500 * 1024)
 	public static Result save(String readSetCode){
 		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
 		if (readSet == null) {
 			return badRequest();
-		}		
+		}else if(request().body().isMaxSizeExceeded()){
+			return badRequest("Max size exceeded");
+		}
+		
 		
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
