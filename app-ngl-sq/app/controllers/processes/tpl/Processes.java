@@ -1,29 +1,30 @@
 package controllers.processes.tpl;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.ning.http.client.providers.apache.ApacheAsyncHttpProvider;
-
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.description.Value;
 import models.laboratory.processes.description.ProcessType;
+import models.utils.ListObject;
 import models.utils.dao.DAOException;
 
-import controllers.processes.tpl.routes.javascript;
+import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
 import play.Routes;
 import play.i18n.Messages;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.components.datatable.DatatableColumn;
 import views.components.datatable.DatatableConfig;
 import views.components.datatable.DatatableHelpers;
-
-import views.html.processes.*;
+import views.html.processes.home;
+import views.html.processes.newProcesses;
+import views.html.processes.search;
+import views.html.processes.searchContainers;
 
 public class Processes extends Controller{
 	
@@ -82,6 +83,7 @@ public class Processes extends Controller{
 		config.edit = true;
 		config.remove = true;
 		config.button = true;
+		
 		return ok(newProcesses.render(config));
 	}
 	
@@ -95,7 +97,20 @@ public class Processes extends Controller{
 				if(processType != null && processType.propertiesDefinitions != null) {
 					List<PropertyDefinition> propertyDefinition = processType.propertiesDefinitions;
 					for(PropertyDefinition p : propertyDefinition) {
-						columns.add(DatatableHelpers.getColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false));
+						if(!p.choiceInList){
+							columns.add(DatatableHelpers.getColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false));
+						}else{
+							DatatableColumn c = DatatableHelpers.getColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false,p.choiceInList);
+							c.listStyle=0;
+							if(p.possibleValues != null){
+								c.possibleValues = new ArrayList<Object>();
+								for(Value v: p.possibleValues){
+									ListObject l = new ListObject(v.value,v.value);
+									c.possibleValues.add(l);
+								}
+							}
+							columns.add(c);
+						}
 					}
 				}
 			} catch (DAOException e) {
