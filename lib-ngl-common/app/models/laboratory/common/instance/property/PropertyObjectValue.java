@@ -16,6 +16,10 @@ import validation.utils.ValidationHelper;
  */
 public class PropertyObjectValue extends PropertyMapValue{
 	
+	public PropertyObjectValue() {
+		super();		
+	}
+	
 	public PropertyObjectValue(Map<String, ?> value) {
 		super(value);		
 	}
