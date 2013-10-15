@@ -61,7 +61,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 
 	//Temporairement en dur (à mettre dans la base)
 	$scope.inputContainersResolutions = [{"code":"IS","name":"IS"},{"code":"UA","name":"UA"}];
-	$scope.ouputContainersResolutions = [{"code":"IWP","name":"IWP"},{"code":"A","name":"A"},{"code":"UA","name":"UA"}];
+	$scope.ouputContainersResolutions = [{"code":"IW-P","name":"IW-P"},{"code":"A","name":"A"},{"code":"UA","name":"UA"}];
 
 	$scope.experiment.experimentInformation = {
 			protocols:{},
@@ -97,7 +97,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 						}
 					}
 
-					$http.post(jsRoutes.controllers.experiments.api.Experiments.updateExperimentInformations($scope.experiment.value.code).url, $scope.experiment.value)
+					$http.put(jsRoutes.controllers.experiments.api.Experiments.updateExperimentInformations($scope.experiment.value.code).url, $scope.experiment.value)
 					.success(function(data, status, headers, config) {
 						if(data!=null){
 							$scope.message.clazz="alert alert-success";
@@ -119,7 +119,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 
 	$scope.saveContainers = function(){
 		$scope.clearMessages();
-		$http.post(jsRoutes.controllers.experiments.api.Experiments.updateContainers($scope.experiment.value.code).url, $scope.experiment.value)
+		$http.put(jsRoutes.controllers.experiments.api.Experiments.updateContainers($scope.experiment.value.code).url, $scope.experiment.value)
 		.success(function(data, status, headers, config) {
 			if(data!=null){
 				$scope.message.clazz="alert alert-success";
@@ -153,7 +153,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 				$scope.clearMessages();
 				if(this.instruments.selected){
 					$scope.experiment.value.instrument.code = this.instruments.selected.code;
-					$http.post(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentInformations($scope.experiment.value.code).url, $scope.experiment.value)
+					$http.put(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentInformations($scope.experiment.value.code).url, $scope.experiment.value)
 					.success(function(data, status, headers, config) {
 						if(data!=null){
 							$scope.message.clazz="alert alert-success";
@@ -261,7 +261,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 							}
 						}
 					}
-					$http.post(jsRoutes.controllers.experiments.api.Experiments.updateExperimentProperties($scope.experiment.value.code).url, $scope.experiment.value)
+					$http.put(jsRoutes.controllers.experiments.api.Experiments.updateExperimentProperties($scope.experiment.value.code).url, $scope.experiment.value)
 					.success(function(data, status, headers, config) {
 						if(data!=null){
 							$scope.message.clazz="alert alert-success";
@@ -288,7 +288,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 				this.enabled = !this.enabled;
 			},
 			save:function(){
-				if(this.enabled && $scope.experiment.instrumentInformation.instrumentUsedTypes.selected){
+				if(this.enabled && $scope.experiment.value.instrument.code){
 					$scope.clearMessages();
 					for(var i=0;i<$scope.datatable.displayResult.length;i++){
 						if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
@@ -315,7 +315,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 							}
 						}
 					}
-					$http.post(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentProperties($scope.experiment.value.code).url, $scope.experiment.value)
+					$http.put(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentProperties($scope.experiment.value.code).url, $scope.experiment.value)
 					.success(function(data, status, headers, config) {
 						if(data!=null){
 							$scope.message.clazz="alert alert-success";
@@ -345,7 +345,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 			save:function(){
 				$scope.clearMessages();
 				$scope.experiment.value.comments.push({"comment":$scope.experiment.comment});
-				$http.post(jsRoutes.controllers.experiments.api.Experiments.updateComments($scope.experiment.value.code).url, $scope.experiment.value)
+				$http.put(jsRoutes.controllers.experiments.api.Experiments.updateComments($scope.experiment.value.code).url, $scope.experiment.value)
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						$scope.message.clazz="alert alert-success";
@@ -364,7 +364,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 	};
 
 	$scope.outputGeneration = function(){
-		$http.post(jsRoutes.controllers.experiments.api.Experiments.generateOutput($scope.experiment.value.code).url, $scope.experiment.value)
+		$http.put(jsRoutes.controllers.experiments.api.Experiments.generateOutput($scope.experiment.value.code).url, $scope.experiment.value)
 		.success(function(data, status, headers, config) {
 			if(data!=null){
 				$scope.clearMessages();
@@ -507,7 +507,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 
 
 	$scope.getInstruments = function(){
-		if($scope.experiment.instrumentInformation.instrumentUsedTypes.selected === null){
+		if($scope.experiment.value.instrument.categoryCode === null){
 			$scope.experiment.instrumentProperties.inputs = [];
 			$scope.experiment.instrumentInformation.instrumentCategorys.inputs = [];
 		}
@@ -520,18 +520,18 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 		}
 
 		$scope.experiment.value.instrumentProperties = {};
-
-		for(var i=0;i< $scope.getBasket().get().length;i++){
+		
+		for(var i=0;i< $scope.datatable.getData().length;i++){
 			if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
 				$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.instrumentProperties = {};
 			}else{
 				$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties = {};
 			}	
 		}
-		if($scope.experiment.instrumentInformation.instrumentUsedTypes.selected != null ){
-			$scope.experiment.instrumentInformation.instruments.options = $scope.comboLists.getInstruments($scope.experiment.instrumentInformation.instrumentUsedTypes.selected.code).query();
-			$scope.experiment.instrumentInformation.instrumentCategorys.options =  $scope.comboLists.getCategoryCodes($scope.experiment.instrumentInformation.instrumentUsedTypes.selected.code).query();
-			$scope.getInstrumentProperties($scope.experiment.instrumentInformation.instrumentUsedTypes.selected.code);
+		if($scope.experiment.value.instrument.categoryCode != null ){
+			$scope.experiment.instrumentInformation.instruments.options = $scope.comboLists.getInstruments($scope.experiment.value.instrument.categoryCode).query();
+			$scope.experiment.instrumentInformation.instrumentCategorys.options =  $scope.comboLists.getCategoryCodes($scope.experiment.value.instrument.categoryCode).query();
+			$scope.getInstrumentProperties($scope.experiment.value.instrument.categoryCode);
 		}
 	};
 
@@ -561,14 +561,13 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 	$scope.changeState = function(){
 		$scope.clearMessages();
 
-		if((($scope.experiment.value.stateCode == "IP" && $scope.state == "N") || ($scope.experiment.value.stateCode == "F" && $scope.state == "IP")) && $scope.experiment.instrumentInformation.instruments.selected.code){
-			$scope.experiment.value.instrument.code = $scope.experiment.instrumentInformation.instruments.selected.code;
-			$http.post(jsRoutes.controllers.experiments.api.Experiments.updateStateCode($scope.experiment.value.code).url, $scope.experiment.value)
+		if((($scope.experiment.value.stateCode == "IP" && $scope.state == "N") || ($scope.experiment.value.stateCode == "F" && $scope.state == "IP")) && $scope.experiment.value.instrument.code){
+			$http.put(jsRoutes.controllers.experiments.api.Experiments.updateStateCode($scope.experiment.value.code,$scope.experiment.value.stateCode).url)
 			.success(function(data, status, headers, config) {
 				if(data!=null){
 					$scope.message.clazz="alert alert-success";
 					$scope.message.text=Messages('experiments.msg.save.sucess')
-					$scope.experiment.value = data;
+					//$scope.experiment.value = data;
 					$scope.state=$scope.experiment.value.stateCode;
 					if($scope.experiment.value.stateCode == "F"){
 						//ajout des colonnes de selection de resolution pour chaque tube
@@ -664,6 +663,9 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse) {
 				$scope.experiment.experimentInformation.protocols.options = $scope.comboLists.getProtocols($scope.experiment.value.typeCode).query();
 				$scope.experiment.experimentInformation.resolutions.options = $scope.comboLists.getResolution().query();
 				
+				
+				
+				$scope.getInstruments();
 				//$scope.datatable.setData($scope.experiment.value,$scope.basket.get().length);
 			}
 		}	

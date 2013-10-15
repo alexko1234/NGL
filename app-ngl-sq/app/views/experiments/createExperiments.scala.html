@@ -326,20 +326,20 @@ th {
 												<label class="control-label">@Messages("experiments.intrumentUsedType"): </label>
 											<select class="input-medium "
 											ng-change="getInstruments()"
-											ng-model="experiment.instrumentInformation.instrumentUsedTypes.selected"
+											ng-model="experiment.value.instrument.categoryCode"
 											ng-readonly="!experiment.instrumentInformation.enabled"
-											ng-options="instrumentUsedType.name for instrumentUsedType in experiment.instrumentInformation.instrumentUsedTypes.options"
+											ng-options="instrumentUsedType.code as instrumentUsedType.name for instrumentUsedType in experiment.instrumentInformation.instrumentUsedTypes.options"
 											ng-disabled="!experiment.instrumentInformation.enabled">
 												<option value="">@Messages("experiments.select.intrumentUsedType")</option>
 										</select>
 										
 									<label class="control-label" style="margin-left:20px;" ng-hide="!experiment.instrumentInformation.instrumentUsedTypes.selected">@Messages("experiments.intrument"): </label>
 										<select class="input-medium "
-											ng-model="experiment.instrumentInformation.instruments.selected"
+											ng-model="experiment.value.instrument.code"
 											ng-readonly="!experiment.instrumentInformation.enabled"
-											ng-options="instrumentInformation.name for instrumentInformation in experiment.instrumentInformation.instruments.options"
+											ng-options="instrumentInformation.code as instrumentInformation.name for instrumentInformation in experiment.instrumentInformation.instruments.options"
 											ng-disabled="!experiment.instrumentInformation.enabled"
-											ng-hide="!experiment.instrumentInformation.instrumentUsedTypes.selected"
+											ng-hide="!experiment.value.instrument.categoryCode"
 											>
 												<option value="">@Messages("experiments.select.instrument")</option>
 											</select>
@@ -351,7 +351,7 @@ th {
 									ng-readonly="!experiment.instrumentInformation.enabled"
 									ng-options="instrumentCategory.code as instrumentCategory.name for instrumentCategory in experiment.instrumentInformation.instrumentCategorys.options"
 									ng-disabled="!experiment.instrumentInformation.enabled"
-									ng-hide="!experiment.instrumentInformation.instrumentUsedTypes.selected"
+									ng-hide="!experiment.value.instrument.categoryCode"
 									>
 										<option value="">@Messages("experiments.select.instrumentCategory")</option>
 									</select>

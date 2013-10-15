@@ -50,8 +50,6 @@ public class Experiments extends CommonController{
 
 		exp = traceInformation(exp);
 
-		Workflows.setExperimentStateCode(exp,new ContextValidation(experimentFilledForm.errors()));	
-
 		if (!experimentFilledForm.hasErrors()) {
 
 			Builder builder = new DBUpdate.Builder();
@@ -207,15 +205,16 @@ public class Experiments extends CommonController{
 		return badRequest(experimentFilledForm.errorsAsJson());
 	}
 
-	public static Result updateStateCode(String code){
-		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
-		Experiment exp = experimentFilledForm.get();
+	public static Result updateStateCode(String code, String stateCode){
+		//Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
+		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
 		
 		//TODO if first experiment in the processus then processus state to IP
-		Workflows.setExperimentStateCode(exp,new ContextValidation(experimentFilledForm.errors()));
-		if (!experimentFilledForm.hasErrors()) {	 	
+		ContextValidation ctxValidation = new ContextValidation();
+		Workflows.setExperimentStateCode(exp,stateCode,ctxValidation);
+		if (!ctxValidation.hasErrors()) {	 	
 			Builder builder = new DBUpdate.Builder();
-			builder = builder.set("stateCode",exp.stateCode);//TODO: validation? Business validation
+			builder = builder.set("stateCode",stateCode);
 			if(exp.stateCode.equals("IP")){
 				for(int i=0;i<exp.atomicTransfertMethods.size();i++){
 					Workflows.setInUse(exp.atomicTransfertMethods.get(i).getInputContainers());
@@ -228,11 +227,12 @@ public class Experiments extends CommonController{
 			}
 			exp = traceInformation(exp);
 
-			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code),builder);
-			return ok(Json.toJson(exp));
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			
+			return ok();
 		}
 
-		return badRequest(experimentFilledForm.errorsAsJson());
+		return badRequest(Json.toJson(ctxValidation.errors));
 	}
 
 

@@ -27,7 +27,7 @@ public class Workflows {
 	public static void setAvailable(String containerCode,String processTypeCode){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerCode);
 		
-		if(container != null && (container.stateCode.equals("IWP") || container.stateCode.equals("N"))){
+		if(container != null && (container.stateCode.equals("IW-P") || container.stateCode.equals("N"))){
 			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"stateCode", "A");
 			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"processTypeCode", processTypeCode);
 		}
@@ -40,7 +40,7 @@ public class Workflows {
 	public static void setAvailable(ContainerUsed containerUsed){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
 		
-		if(container != null && (container.stateCode.equals("IWP") || container.stateCode.equals("N"))){
+		if(container != null && (container.stateCode.equals("IW-P") || container.stateCode.equals("N"))){
 			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"stateCode", "A");
 		}
 	}
@@ -119,33 +119,33 @@ public class Workflows {
 	 * Set a state of an experiment 
 	 * @param experiment: the experiment, errors: the filledForm errors
 	 */
-	public static void setExperimentStateCode(Experiment experiment, ContextValidation  contextValidation){
+	public static void setExperimentStateCode(Experiment experiment, String state, ContextValidation ctxValidation){
 		if(experiment.stateCode.equals("N")) {
-			required(contextValidation,experiment.typeCode, "typeCode");
+			required(ctxValidation,experiment.typeCode, "typeCode");
 		} else if(experiment.stateCode.equals("IP")) {
-			required(contextValidation, experiment.typeCode, "typeCode"); 
-			required(contextValidation, experiment.resolutionCode, "resolutionCode");
-			required(contextValidation, experiment.protocolCode, "protocolCode");
-			required(contextValidation, experiment.instrument.code, "instrument");
+			required(ctxValidation, experiment.typeCode, "typeCode"); 
+			required(ctxValidation, experiment.resolutionCode, "resolutionCode");
+			required(ctxValidation, experiment.protocolCode, "protocolCode");
+			required(ctxValidation, experiment.instrument.code, "instrument");
 			
 		} else if(experiment.stateCode.equals("F")) {
-			required(contextValidation, experiment.typeCode, "typeCode"); 
-			required(contextValidation, experiment.resolutionCode, "resolutionCode");
-			required(contextValidation, experiment.protocolCode, "protocolCode");
-			required(contextValidation, experiment.instrument.code, "instrument");
-			required(contextValidation, experiment.atomicTransfertMethods, "atomicTransfertMethods");
+			required(ctxValidation, experiment.typeCode, "typeCode"); 
+			required(ctxValidation, experiment.resolutionCode, "resolutionCode");
+			required(ctxValidation, experiment.protocolCode, "protocolCode");
+			required(ctxValidation, experiment.instrument.code, "instrument");
+			required(ctxValidation, experiment.atomicTransfertMethods, "atomicTransfertMethods");
 
 			for(int i=0;i<experiment.atomicTransfertMethods.size();i++){
-				required(contextValidation, experiment.atomicTransfertMethods.get(i).getOutputContainers(), "outputContainer");
+				required(ctxValidation, experiment.atomicTransfertMethods.get(i).getOutputContainers(), "outputContainer");
 			}
 			
-			contextValidation.setRootKeyName("experimentProperties");
-			validateProperties(contextValidation, experiment.experimentProperties, experiment.getExperimentType().propertiesDefinitions);
-			contextValidation.removeKeyFromRootKeyName("experimentProperties");
+			ctxValidation.setRootKeyName("experimentProperties");
+			validateProperties(ctxValidation, experiment.experimentProperties, experiment.getExperimentType().propertiesDefinitions);
+			ctxValidation.removeKeyFromRootKeyName("experimentProperties");
 			
 
 		}else{
-			contextValidation.addErrors(experiment.stateCode, "InvalidthisStateCode");
+			ctxValidation.addErrors(experiment.stateCode, "InvalidthisStateCode");
 		}	
 	}
 }

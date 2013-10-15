@@ -75,7 +75,7 @@ function SearchContainerCtrl($scope, datatable,basket, comboLists) {
 	$scope.search = function(){
 		if($scope.form.processTypes.selected){ 		
 			var jsonSearch = {};			
-			jsonSearch.stateCode = "IWP";	//default state code for containers		
+			jsonSearch.stateCode = "IW-P";	//default state code for containers		
 			if($scope.form.projects.selected){
 				jsonSearch.projectCode = $scope.form.projects.selected.code;
 			}			
