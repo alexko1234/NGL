@@ -2,13 +2,17 @@ package services.instance;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import controllers.description.samples.Samples;
+
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
+import net.vz.mongodb.jackson.DBUpdate;
 
 import models.LimsDAO;
 import models.TaraDAO;
@@ -42,110 +46,71 @@ public class ImportDataRun implements Runnable {
 		contextError.addKeyToRootKeyName("import");
 		Logger.info("ImportData execution");
 		try{
-	//		Logger.info(" Import Projects ");
-	//		List<Project> projects=createProjectFromLims();
+			Logger.info(" Import Projects ");
+			createProjectFromLims();
 			Logger.info(" Import Containers and Samples ");
-			createContainersSamples();
-
-		contextError.removeKeyFromRootKeyName("import");
+			createContainers(contextError,"pl_TubeToNGL ","tube","IW-P",null,null); 
+			createContainers(contextError,"pl_PrepaflowcellToNGL","lane","F",null,"pl_BanquesolexaUneLane @nom_lane=?");
+			updateSampleFromTara();
+			contextError.removeKeyFromRootKeyName("import");
 		}catch (Exception e) {
 			Logger.debug("",e);
 		}
-		
-			
-			/* Display error messages */
-			Iterator entries = contextError.errors.entrySet().iterator();
-			while (entries.hasNext()) {
-				 Entry thisEntry = (Entry) entries.next();
-				 String key = (String) thisEntry.getKey();
-				 List<ValidationError> value = (List<ValidationError>) thisEntry.getValue();	  
-	
-				for(ValidationError validationError:value){
-					Logger.error( key+ " : "+Messages.get(validationError.message(),validationError.arguments()));
-				}
-	
-			}
-		
-	      Logger.info("ImportData End");
+
+		/* Display error messages  */
+		contextError.displayErrors();
+		/* Logger send an email */
+		Logger.info("ImportData End");
 	}
 
 
-    /***
-     * Delete and create in NGL active projects from Lims
-     * 
-     * @return List of Projects
-     * @throws SQLException
-     * @throws DAOException
-     */
+	/***
+	 * Delete and create in NGL active projects from Lims
+	 * 
+	 * @return List of Projects
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
 	public static List<Project> createProjectFromLims() throws SQLException, DAOException{
 
 		List<Project> projects = limsServices.findProjectToCreate(contextError) ;
-		
+
 		for(Project project:projects){
-			
+
 			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code)){
 				MongoDBDAO.deleteByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code);
 				//Logger.debug("Project to create :"+project.code);
 			}
 		}
-		
+
 		List<Project> projs=InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError);
 		return projs;
 	}
 
 
-
-	public	static void createContainersSamples() throws SQLException, DAOException{
-				
-		List<Container> containers = limsServices.findContainersToCreate(contextError); 
-		List<Container> listContainers = new ArrayList<Container>(containers);
-		
-		Sample sample =null;
-		Sample newSample =null;
+	/**
+	 * 
+	 * Create containers, contents and samples from 2 sql queries 
+	 * @param contextError
+	 * @param sqlContainer
+	 * @param containerCategoryCode
+	 * @param containerStateCode
+	 * @param experimentTypeCode
+	 * @param sqlContent
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
+	public	static void createContainers(ContextValidation contextError, String sqlContainer,String containerCategoryCode,  String containerStateCode, String experimentTypeCode, String sqlContent) throws SQLException, DAOException{
 		String rootKeyName=null;
+
+		List<Container> containers=	limsServices.findContainersToCreate(sqlContainer,contextError, containerCategoryCode,containerStateCode,experimentTypeCode);
 		
-		for(Container container :listContainers){
-
-			//Logger.debug("Container :"+container.code);
-			
-			Content content= container.contents.get(0);
-		
-			/* Sample content not in MongoDB */
-			if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, content.sampleUsed.sampleCode)){
-				
-				rootKeyName="sample["+content.sampleUsed.sampleCode+"]";
-				contextError.addKeyToRootKeyName(rootKeyName);
-				sample = limsServices.findSampleToCreate(contextError,container.contents.get(0).sampleUsed.sampleCode);
-
-				if(sample!=null){
-					newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
-				}
-				contextError.removeKeyFromRootKeyName(rootKeyName);
-				
-			}else {	
-				/* Find sample in Mongodb */
-				newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, content.sampleUsed.sampleCode);	
-			}			
-			
-			rootKeyName="container["+container.code+"]";
-			contextError.addKeyToRootKeyName(rootKeyName);
-			
-			/* Error : No sample, remove container from list to create */
-			if(newSample==null){
-				containers.remove(container);
-				contextError.addErrors("sample","error.codeNotExist", content.sampleUsed.sampleCode);
-			}
-			else{
-				/* From sample, add content in container */
-				Map<String,PropertyValue> properties=container.contents.get(0).properties;
-				container.contents.clear();
-				ContainerHelper.addContent(container,newSample);
-				container.contents.get(0).properties.putAll(properties);
-			}
-			contextError.removeKeyFromRootKeyName(rootKeyName);
-
+		if(sqlContent!=null){
+			createContentsFromContainers(containers,sqlContent);
 		}
 		
+		saveSampleFromContainer(containers);
+
 		List<Container> newContainers=new ArrayList<Container>();
 
 		for(Container container:containers){
@@ -158,9 +123,81 @@ public class ImportDataRun implements Runnable {
 			}
 			contextError.removeKeyFromRootKeyName(rootKeyName);
 		}
-				
-		limsServices.updateTubeLims(newContainers,contextError);
-		
+
+		limsServices.updateMaterielmanipLims(newContainers,contextError);
+
+	}
+
+
+	private static void createContentsFromContainers(List<Container> containers,
+			String sqlContent) {
+
+		for(Container container:containers){
+			if(container.contents==null){
+
+				if(sqlContent==null){
+						//add error
+				}else {
+					container.contents=new ArrayList<Content>(limsServices.findContentsFromContainer(sqlContent,container.code));
+					//Logger.debug("Container.contents :"+container.contents.size());
+				}
+			}
+		}
+
+	}
+
+
+	private static void saveSampleFromContainer(List<Container> containers) throws SQLException, DAOException{
+		List<Container> listContainers = new ArrayList<Container>(containers);
+
+		//
+		Sample sample =null;
+		Sample newSample =null;
+		String rootKeyName=null;
+
+		for(Container container :listContainers){
+
+			//Logger.debug("Container :"+container.code);
+
+			List<Content> contents=new ArrayList<Content>(container.contents);
+			for(Content content : contents){
+
+				/* Sample content not in MongoDB */
+				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, content.sampleUsed.sampleCode)){
+
+					rootKeyName="sample["+content.sampleUsed.sampleCode+"]";
+					contextError.addKeyToRootKeyName(rootKeyName);
+					sample = limsServices.findSampleToCreate(contextError,content.sampleUsed.sampleCode);
+
+					if(sample!=null){
+						newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
+					}
+					contextError.removeKeyFromRootKeyName(rootKeyName);
+
+				}else {	
+					/* Find sample in Mongodb */
+					newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, content.sampleUsed.sampleCode);	
+				}			
+
+				rootKeyName="container["+container.code+"]";
+				contextError.addKeyToRootKeyName(rootKeyName);
+
+				/* Error : No sample, remove container from list to create */
+				if(newSample==null){
+					containers.remove(container);
+					contextError.addErrors("sample","error.codeNotExist", content.sampleUsed.sampleCode);
+				}
+				else{
+					/* From sample, add content in container */
+					container.contents.remove(content);
+					ContainerHelper.addContent(container,newSample,content.properties);
+					
+				}
+				contextError.removeKeyFromRootKeyName(rootKeyName);
+
+			}
+		}
+
 	}
 
 	//TODO
@@ -172,26 +209,49 @@ public class ImportDataRun implements Runnable {
 	//TODO
 	//Maj referenceCollab and resolution ???	
 	public static void updateSampleFromLims() throws SQLException, DAOException{
-	
+
 	}
-	
-	//TODO
-	/*
+
 	public static void updateSampleFromTara() throws SQLException, DAOException{
-		
+
 		List<Map<String, PropertyValue>> taraPropertyList = taraServices.findTaraSampleUpdated();
+
 		for(Map<String,PropertyValue> taraProperties : taraPropertyList){
-			if(taraProperties.containsKey("limsCode")){
-				contextError.addErrors("","", null);
+
+			Integer limsCode=Integer.valueOf(taraProperties.get(LimsDAO.LIMS_CODE).value.toString());
+			Logger.debug("Tara lims Code :"+limsCode);
+			if(!taraProperties.containsKey(LimsDAO.LIMS_CODE)){
+				contextError.addErrors(LimsDAO.LIMS_CODE,"error.codeNotExist","");
 			}else {
-				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("properties.limsCode.value",taraProperties.get("limsCode").value.toString())).toList();
+
+				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("properties.limsCode.value",limsCode)).toList();
+
 				if(samples.size()!=1 ) {
-					contextError.addErrors("","", null);
+					contextError.addErrors("sample."+LimsDAO.LIMS_CODE,"error.noObject",limsCode);
 				}else {
 					Sample sample =samples.get(0);
+
+					for(Entry taraEntry :taraProperties.entrySet()){
+
+						if(!taraEntry.getKey().equals(LimsDAO.LIMS_CODE)){
+							String importTypeCode=LimsDAO.getImportTypeCode(true,Boolean.valueOf(sample.properties.get("isAdapters").value.toString()));
+
+							if(!importTypeCode.equals(sample.importTypeCode)){
+								MongoDBDAO.updateSet(InstanceConstants.SAMPLE_COLL_NAME, sample, "importTypeCode", importTypeCode);
+							}
+
+							MongoDBDAO.updateSet(InstanceConstants.SAMPLE_COLL_NAME, sample, "properties."+taraEntry.getKey()+".value",taraEntry.getValue());
+							InstanceHelpers.updateTraceInformation(sample.traceInformation);
+							MongoDBDAO.updateSet(InstanceConstants.SAMPLE_COLL_NAME, sample, "traceInformation", sample.traceInformation);
+							MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("samples",sample.code), DBUpdate.set("properties"+taraEntry.getKey()+".value",taraEntry.getValue()));
+						}
+					}
+
 				}
 			}
-			
+
+
 		}
-	}*/
+
+	}
 }

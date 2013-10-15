@@ -36,14 +36,17 @@ public class TaraDAO {
 			"  LOCUS.LOCUS_NAME as profondeur,"+
 			"  MATERIAL.MATERIAL_CODE,"+
 			"  MATERIAL.MATERIAL_NAME as materiel,"+
-			"  CROSS_REF.REF_ID as ref_id"+
+			"  CROSS_REF.REF_ID as ref_id,"+
+			"  COLLAB_INFOS.INFO as codebarre"+
 			" FROM "+
 			" AREA INNER JOIN SAMPLE ON (AREA.AREA_ID=SAMPLE.AREA_ID)"+
 			"  INNER JOIN CROSS_REF ON (SAMPLE.SAMPLE_ID=CROSS_REF.SAMPLE_ID)"+
 			"  INNER JOIN FRACTION ON (SAMPLE.FRACTION_ID=FRACTION.FRACTION_ID)"+
 			"  INNER JOIN ITERATION ON (ITERATION.ITERATION_ID=SAMPLE.ITERATION_ID)"+
 			"  INNER JOIN LOCUS ON (SAMPLE.LOCUS_ID=LOCUS.LOCUS_ID)"+
-			"  INNER JOIN MATERIAL ON (MATERIAL.MATERIAL_ID=SAMPLE.MATERIAL_ID)" ;
+			"  LEFT JOIN COLLAB_INFOS ON (COLLAB_INFOS.SAMPLE_ID=SAMPLE.SAMPLE_ID )"+
+			"  INNER JOIN MATERIAL ON (MATERIAL.MATERIAL_ID=SAMPLE.MATERIAL_ID)"+
+			"  LEFT JOIN INFOS_TYPE on (INFOS_TYPE.INFOS_TYPE_ID=COLLAB_INFOS.INFOS_TYPE_ID AND INFOS_TYPE.TYPE_CODE=1)";
 
 	@Autowired
 	@Qualifier("tara")
@@ -78,8 +81,10 @@ public class TaraDAO {
 	@SuppressWarnings("rawtypes")
 	public List<Map<String,PropertyValue>> findTaraSampleUpdated(){
 
+		Logger.debug("Query :"+SELECT_MATERIEL_TARA);
 		List<Map<String,PropertyValue>> results =  this.jdbcTemplate.query(SELECT_MATERIEL_TARA +
-				"  WHERE TO_DAYS(NOW()) - TO_DAYS(CROSS_REF.LAST_UPDATE) <= 10 AND REF_DB='lims' "
+				"  WHERE TO_DAYS(NOW()) - TO_DAYS(SAMPLE.LAST_UPD_TARA_DB) <= 20"
+				//" WHERE CROSS_REF.REF_ID=15242"
 				,new RowMapper<Map<String,PropertyValue>>() {
 
 			public Map<String,PropertyValue> mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -106,6 +111,9 @@ public class TaraDAO {
 		properMap.put("taraFilter", new PropertySingleValue(rs.getString("filtre")));
 		properMap.put("taraIteration", new PropertySingleValue(rs.getString("iteration")));
 		properMap.put("taraSample", new PropertySingleValue(rs.getString("materiel")));
+		if(rs.getString("codebarre")!=null){
+			properMap.put("taraBarCode", new PropertySingleValue(rs.getString("codebarre")));
+		}
 		return properMap;
 	}
 	

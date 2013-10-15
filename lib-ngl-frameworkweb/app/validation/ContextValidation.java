@@ -1,13 +1,17 @@
 package validation;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
+import play.Logger;
 import play.data.validation.ValidationError;
+import play.i18n.Messages;
 
 public class ContextValidation {
 
@@ -177,6 +181,21 @@ public class ContextValidation {
 		errors.clear();
 		rootKeyName=null;
 		contextObjects.clear();
+	}
+
+	
+	public void displayErrors() {
+		Iterator entries = this.errors.entrySet().iterator();
+		while (entries.hasNext()) {
+			Entry thisEntry = (Entry) entries.next();
+			String key = (String) thisEntry.getKey();
+			List<ValidationError> value = (List<ValidationError>) thisEntry.getValue();	  
+
+			for(ValidationError validationError:value){
+				Logger.error( key+ " : "+Messages.get(validationError.message(),validationError.arguments()));
+			}
+		}
+		
 	}
 
 }

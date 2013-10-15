@@ -49,10 +49,9 @@ public class LimsDAO {
 	private static final String CONTAINER_CATEGORY_CODE= "tube";
 	private static final String CONTAINER_STATE_CODE="IWP";
 	private static final String CONTAINER_PROPERTIES_BQ="tag";
-	private static final String LIMS_CODE="limsCode";
+	public static final String LIMS_CODE="limsCode";
 	private static final String SAMPLE_ADPATER="isAdapters";
 	private static final String RECEPTION_DATE ="receptionDate";
-	
 	protected static final String PROJECT_CATEGORY_CODE = "default";
 	protected static final String PROJECT_TYPE_CODE_FG = "france-genomique";
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
@@ -74,51 +73,21 @@ public class LimsDAO {
 	 * @param contextError
 	 * @return
 	 */
-	public List<Container> findContainersToCreate(ContextValidation contextError){
+	public List<Container> findContainersToCreate(String procedure,ContextValidation contextError, final String containerCategoryCode, final String containerStateCode, final String experimentTypeCode){
 
-		List<Container> results = this.jdbcTemplate.query("pl_TubeToNGL ",new Object[]{} 
+		List<Container> results = this.jdbcTemplate.query(procedure,new Object[]{} 
 		,new RowMapper<Container>() {
 
 			@SuppressWarnings("rawtypes")
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-				Container container = new Container();
-				container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
-				//Logger.debug("Container :"+rs.getString("code"));
-				container.code=rs.getString("code");
-				container.categoryCode=CONTAINER_CATEGORY_CODE;
-				container.projectCodes=new ArrayList<String>();				
-				container.projectCodes.add(rs.getString("prsco"));
-
-				container.sampleCodes=new ArrayList<String>();
-				container.sampleCodes.add(rs.getString("sampleCode"));
-
-				container.comments=new ArrayList<Comment>();				
-				container.comments.add(new Comment(rs.getString("comment")));
-				container.stateCode=CONTAINER_STATE_CODE;
-				container.valid=null;
-
-				container.support=ContainerHelper.getContainerSupportTube(rs.getString("code"));
-
-				container.properties= new HashMap<String, PropertyValue>();
-				container.properties.put(LIMS_CODE,new PropertySingleValue(rs.getInt("tubco")));
-				container.properties.put(RECEPTION_DATE,new PropertySingleValue(rs.getString(RECEPTION_DATE)));
-
-				container.mesuredConcentration=new PropertySingleValue(rs.getFloat("tubconcr"), "ng/µl");
-				container.mesuredVolume=new PropertySingleValue(rs.getFloat("tubvolr"), "µl");
-				container.mesuredQuantity=new PropertySingleValue(rs.getFloat("tubqtr"), "ng");
-
-				Content content = new Content();
-				content.sampleUsed=new SampleUsed();
-				content.sampleUsed.sampleCode=rs.getString("sampleCode");
-				container.contents=new ArrayList<Content>();
-				container.contents.add(content);
-
-				if(rs.getString("indexBq")!=null){
-					content.properties = new HashMap<String, PropertyValue>();
-					content.properties.put(CONTAINER_PROPERTIES_BQ,new PropertySingleValue(rs.getString("indexBq")));
+				Container container = null;
+				try {
+					container = ContainerHelper.createContainerFromResultSet(rs, containerCategoryCode,containerStateCode,experimentTypeCode);
+				} catch (DAOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-
 				return container;
 			}
 
@@ -137,7 +106,7 @@ public class LimsDAO {
 			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Sample sample = new Sample();
-				sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
+				InstanceHelpers.updateTraceInformation(sample.traceInformation);
 				String tadco = rs.getString("tadco");
 				String tprco = rs.getString("tprco");
 				sample.code=rs.getString("code");
@@ -165,7 +134,7 @@ public class LimsDAO {
 					return null;
 				}
 
-				//Logger.debug("Sample Type :"+sampleTypeCode);
+				Logger.debug("Sample Type :"+sampleTypeCode);
 
 				sample.typeCode=sampleTypeCode;
 			
@@ -189,7 +158,9 @@ public class LimsDAO {
 						code=rs.getString(propertyDefinition.code);
 
 						if(sample.properties==null){ sample.properties=new HashMap<String, PropertyValue>();}
-						sample.properties.put(propertyDefinition.code, new PropertySingleValue(code));
+						if(code!=null){
+							sample.properties.put(propertyDefinition.code, new PropertySingleValue(code));
+						}
 
 					}catch (SQLException e) {
 						Logger.info("Property "+propertyDefinition.code+" not exist in pl_MaterielToNGL");
@@ -214,6 +185,8 @@ public class LimsDAO {
 
 					if(map!=null){
 						sample.properties.putAll(map);
+					} else {
+						tara=false;
 					}
 
 				}
@@ -225,10 +198,9 @@ public class LimsDAO {
 				}
 				
 				sample.importTypeCode=getImportTypeCode(tara,adapter);
-				//Logger.debug("Import Type "+sample.importTypeCode);
+				Logger.debug("Import Type "+sample.importTypeCode);
 				return sample;
 			}
-
 
 
 		});        
@@ -273,7 +245,7 @@ public class LimsDAO {
 		return results;
 	}
 	
-	private String getImportTypeCode(boolean tara, boolean adapter) {
+	public static String getImportTypeCode(boolean tara, boolean adapter) {
 		
 		//Logger.debug("Adaptateur "+adapter);
 		//Logger.debug("Tara "+tara);
@@ -303,6 +275,8 @@ public class LimsDAO {
 		else
 		if(tadnco.equals("1") && tprco.equals("11")) return "MeTa-DNA";
 		else
+		if(tadnco.equals("16")) return "gDNA";
+		else
 		if(tadnco.equals("19") || tadnco.equals("6")) return "amplicon";
 		else
 		if(tadnco.equals("12")) return "cDNA";
@@ -314,6 +288,9 @@ public class LimsDAO {
 		if(tadnco.equals("10")) return "mRNA";
 		else
 		if(tadnco.equals("17")) return "chIP";
+		else
+		if(tadnco.equals("20")) return "depletedRNA";
+
 		//Logger.debug("Erreur mapping Type materiel ("+tadnco+")/Type projet ("+tprco+") et Sample Type");
 		return null;
 	}
@@ -334,12 +311,12 @@ public class LimsDAO {
 	}
 
 
-	public void updateTubeLims(List<Container> containers,ContextValidation contextError) {
+	public void updateMaterielmanipLims(List<Container> containers,ContextValidation contextError) {
 
 		String limsCode=null;
 		String rootKeyName=null;
 		
-		contextError.addKeyToRootKeyName("updateTubeLims");
+		contextError.addKeyToRootKeyName("updateMaterielmanipLims");
 		
 		for(Container container:containers){
 
@@ -354,18 +331,22 @@ public class LimsDAO {
 			}else {
 				try{
 			
-					Logger.debug("pm_TubeidentInNGL @tubco="+limsCode);
-					this.jdbcTemplate.update("pm_TubeidentInNGL @tubco=?", Integer.parseInt(limsCode));
+					String sql="pm_MaterielmanipInNGL @matmaco=?";
+					Logger.debug(sql+limsCode);
+					this.jdbcTemplate.update(sql, Integer.parseInt(limsCode));
 
 				} catch(DataAccessException e){
 
 					contextError.addErrors("",e.getMessage(), container.support.barCode);
 				}
 			}
+			
+			contextError.removeKeyFromRootKeyName(rootKeyName);
+
 
 		}
 		
-		contextError.addKeyToRootKeyName("updateTubeLims");
+		contextError.removeKeyFromRootKeyName("updateMaterielmanipLims");
 	}
 
 	//TODO
@@ -386,6 +367,33 @@ public class LimsDAO {
 		return results;
 	}
 
+
+	/**
+	 *  Find contents from a container code 
+	 *  
+	 *  */
+	public List<Content> findContentsFromContainer(String sqlContent, String code) {
+
+		List<Content> results = this.jdbcTemplate.query(sqlContent,new Object[]{code} 
+		,new RowMapper<Content>() {
+
+			@SuppressWarnings("rawtypes")
+			public Content mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+				SampleUsed sampleUsed = new SampleUsed(rs.getString("sampleCode"),null,null);
+				Content content= new Content(sampleUsed);
+				// Todo add properties from ExperimentType
+				content.properties=new HashMap<String, PropertyValue>();
+				content.properties.put("perPiste", new PropertySingleValue(rs.getFloat("perPiste")));
+				content.properties.put("indexBq",new PropertySingleValue(rs.getString("indexBq")));
+				return content;
+			}
+
+		});        
+
+		return results;
+		
+	}
 
 }
 
