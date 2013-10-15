@@ -75,30 +75,31 @@ object ApplicationBuild extends Build {
 	      javaCore, javaJdbc,
 		"postgresql" % "postgresql" % "8.3-603.jdbc4",
 	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
-			)
-    	
-    	val nglsqDependencies = Seq(
-			javaCore, javaJdbc,
-		      // Add your project dependencies here,
-		      "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
-		      "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
-		 	)
-    	
-    	val nglauthDependencies = Seq(
-		javaCore, javaJdbc,javaEbean,
-			"fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
-			"fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
 		)
-
-
-       val nglplaquesDependencies = Seq(
-              javaCore, javaJdbc
-        
-       )
-        
-       val ngldevguideDependencies = Seq(
-           javaCore
-       )
+	val nglsqDependencies = Seq(
+		javaCore, javaJdbc,
+		  // Add your project dependencies here,
+		  "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
+		  "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
+		)
+	val nglauthDependencies = Seq(
+	javaCore, javaJdbc,javaEbean,
+		"fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
+		"fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
+		)
+   val nglplaquesDependencies = Seq(
+		  javaCore, javaJdbc
+		)
+   val ngldevguideDependencies = Seq(
+	   javaCore
+		)
+   val ngldatacngDependencies = Seq(
+		// Add your project dependencies here,
+	  javaCore, javaJdbc,
+	"postgresql" % "postgresql" % "8.3-603.jdbc4",
+		"fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
+		)
+	
    }
    
   
@@ -141,7 +142,7 @@ object ApplicationBuild extends Build {
        publishTo := Some(nexusigpublish) 
      ).dependsOn(nglcommon) 
 	 
-	val ngldatacng = play.Project(appName + "-data-cng", appVersion, nglsqDependencies, path = file("app-ngl-data-cng"),settings = buildSettings).settings(
+	val ngldatacng = play.Project(appName + "-data-cng", appVersion, ngldatacngDependencies, path = file("app-ngl-data-cng"),settings = buildSettings).settings(
        // Add your own project settings here      
        resolvers := Seq(nexusig),
        publishArtifact in makePom := false,
