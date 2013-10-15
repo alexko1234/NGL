@@ -50,7 +50,7 @@ public class Lane implements IValidation{
 	public void validate(ContextValidation contextValidation) {
 		LaneValidationHelper.validationLaneNumber(this.number,contextValidation);
 		LaneValidationHelper.validationLaneReadSetCodes(this.number, this.readSetCodes, contextValidation);
-		LaneValidationHelper.validateStateCode(this.stateCode, contextValidation);
+		LaneValidationHelper.validateLaneStateCode(this.stateCode, contextValidation);
 		contextValidation.putObject("lane", this);
 		contextValidation.putObject("level", Level.CODE.Lane);
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);

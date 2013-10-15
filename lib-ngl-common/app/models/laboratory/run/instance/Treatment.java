@@ -5,6 +5,7 @@ import java.util.Map;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.run.description.TreatmentType;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 
@@ -47,10 +48,11 @@ public class Treatment implements IValidation{
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		TreatmentValidationHelper.validateTreatmentType(this.code, this.typeCode, this.results, contextValidation);
-		TreatmentValidationHelper.validateTreatmentCategoryCode(this.categoryCode, contextValidation);		
+		TreatmentType treatmentType = TreatmentValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", TreatmentType.find,true);
+		if(null != treatmentType){
+			TreatmentValidationHelper.validateCode(treatmentType, code, contextValidation);
+			TreatmentValidationHelper.validateTreatmentCategoryCode(treatmentType, categoryCode, contextValidation);
+			TreatmentValidationHelper.validateResults(treatmentType, results, contextValidation);						
+		}					
 	}
-
-	
-
 }

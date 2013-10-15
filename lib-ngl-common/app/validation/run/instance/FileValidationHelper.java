@@ -71,4 +71,11 @@ public class FileValidationHelper extends CommonValidationHelper {
 			throw new RuntimeException(e);
 		}		
 	}
+
+
+	public static void validateFileStateCode(String stateCode,
+			ContextValidation contextValidation) {
+		ReadSet readSet = getReadSetFromContext(contextValidation);
+		validateStateCode(readSet.typeCode, stateCode, contextValidation);
+	}
 }

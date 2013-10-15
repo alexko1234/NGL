@@ -43,7 +43,7 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 
 	public List<T> findAll() throws DAOException
 	{
-		return initializeMapping(sqlCommon, null).execute();
+		return initializeMapping(sqlCommon).execute();
 	}
 
 	public T findByCode(String code) throws DAOException
@@ -56,7 +56,6 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 	}
 
 
-	@SuppressWarnings("unchecked")
 	public Boolean isCodeExist(String code) throws DAOException
 	{
 		if(null == code){
@@ -90,14 +89,17 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 	}
 
 
-	protected MappingSqlQuery<T> initializeMapping(String sql, SqlParameter sqlParam) throws DAOException
+	protected MappingSqlQuery<T> initializeMapping(String sql, SqlParameter...sqlParams) throws DAOException
 	{
 		try {
 			MappingSqlQuery<T> mapping = classMapping.newInstance();
 			mapping.setDataSource(dataSource);
 			mapping.setSql(sql);
-			if(sqlParam!=null)
-				mapping.declareParameter(sqlParam);
+			if(sqlParams!=null && sqlParams.length > 0){
+				for(SqlParameter sqlParam: sqlParams){
+					mapping.declareParameter(sqlParam);
+				}
+			}
 			mapping.compile();
 			return mapping;
 		} catch (InvalidDataAccessApiUsageException e) {

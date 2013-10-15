@@ -29,17 +29,24 @@ public class State extends Model<State>{
 	}
 	
 	
-	 public static class StateFinder extends Finder<State> {
+	public static class StateFinder extends Finder<State> {
 
 		public StateFinder() {
-			super(StateDAO.class.getName());			
+			super(StateDAO.class.getName());
 		}
-		 
-		 public List<State> findByCategoryCode(String code) throws DAOException
-	        {
-	        	return ((StateDAO)getInstance()).findByCategoryCode(code);
-	        }
-	 }
+
+		public List<State> findByCategoryCode(String code) throws DAOException {
+			return ((StateDAO) getInstance()).findByCategoryCode(code);
+		}
+
+		public List<State> findByTypeCode(String typeCode) throws DAOException {
+			return ((StateDAO) getInstance()).findByTypeCode(typeCode);
+		}
+		
+		public boolean isCodeExistForTypeCode(String code, String typeCode)  throws DAOException {
+			return ((StateDAO) getInstance()).isCodeExistForTypeCode(code, typeCode);
+		}
+	}
 	
 
 }

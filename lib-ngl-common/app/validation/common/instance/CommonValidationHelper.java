@@ -324,6 +324,19 @@ public class CommonValidationHelper {
 		validateRequiredDescriptionCode(contextValidation, stateCode,"stateCode", State.find);
 	}
 	
+	public static void validateStateCode(String typeCode, String stateCode, ContextValidation contextValidation){
+		try{
+			if(required(contextValidation, stateCode, "stateCode")){
+				if(!State.find.isCodeExistForTypeCode(stateCode, typeCode)){
+					contextValidation.addErrors("stateCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, stateCode);
+				}
+			}
+		}catch(DAOException e){
+			throw new RuntimeException(e);
+		}
+		
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static <T> T getObjectFromContext(String key, Class<T> clazz, ContextValidation contextValidation) {
 		T o = (T) contextValidation.getObject(key);

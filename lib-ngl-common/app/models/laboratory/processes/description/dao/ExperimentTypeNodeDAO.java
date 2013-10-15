@@ -60,7 +60,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 	@Override
 	public List<ExperimentTypeNode> findAll() throws DAOException {
-		return initializeMapping(sqlCommon + " order by id DESC", null).execute();
+		return initializeMapping(sqlCommon + " order by id DESC").execute();
 	}
 
 	private void insertPrevious(

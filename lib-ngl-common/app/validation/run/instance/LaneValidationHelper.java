@@ -103,4 +103,11 @@ public class LaneValidationHelper extends CommonValidationHelper {
 		return getObjectFromContext("run", Run.class, contextValidation);
 	}
 
+	public static void validateLaneStateCode(String stateCode,
+			ContextValidation contextValidation) {
+		Run run = getRunFromContext(contextValidation);
+		validateStateCode(run.typeCode, stateCode, contextValidation);	
+		
+	}
+
 }

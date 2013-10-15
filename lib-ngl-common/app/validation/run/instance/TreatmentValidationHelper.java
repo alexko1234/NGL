@@ -57,7 +57,7 @@ public class TreatmentValidationHelper extends CommonValidationHelper {
 	
 	
 
-	private static void validateCode(TreatmentType treatmentType, String code, ContextValidation contextValidation) {
+	public static void validateCode(TreatmentType treatmentType, String code, ContextValidation contextValidation) {
 	 if(ValidationHelper.required(contextValidation, code, "code")){
 		if (contextValidation.isCreationMode() && isTreatmentExist(code, contextValidation)) {
 	    	contextValidation.addErrors("code",ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, code);		    	
@@ -98,9 +98,28 @@ public class TreatmentValidationHelper extends CommonValidationHelper {
 		return false;
 	}
 
-	private static void validateResults(TreatmentType treatmentType, Map<String, Map<String, PropertyValue>> results, ContextValidation contextValidation) {
+	public static void validateResults(TreatmentType treatmentType, Map<String, Map<String, PropertyValue>> results, ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, results, "results")){
 			Level.CODE levelCode = getLevelFromContext(contextValidation);
+			//validate all treatment key in input
+			for(Map.Entry<String, Map<String, PropertyValue>> entry : results.entrySet()){
+				TreatmentContext context = getTreatmentContext(entry);
+				if(!treatmentType.contexts.contains(context)){
+					contextValidation.addErrors(entry.getKey(),ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, entry.getKey());
+				}				
+			}
+			//validate if all treatment context are present
+			for(TreatmentContext context : treatmentType.contexts){
+				if(results.containsKey(context.code)){
+					Map<String, PropertyValue> props = results.get(context.code);
+					contextValidation.addKeyToRootKeyName(context.code);
+					ValidationHelper.validateProperties(contextValidation, props, treatmentType.getPropertyDefinitionByLevel(Level.CODE.valueOf(context.name), levelCode));
+					contextValidation.removeKeyFromRootKeyName(context.code);
+				}else{
+					contextValidation.addErrors(context.code,ValidationConstants.ERROR_REQUIRED_MSG, context.code);
+				}
+			}
+			
 			for(Map.Entry<String, Map<String, PropertyValue>> entry : results.entrySet()){
 				TreatmentContext context = getTreatmentContext(entry);
 				if(!treatmentType.contexts.contains(context)){
@@ -121,18 +140,14 @@ public class TreatmentValidationHelper extends CommonValidationHelper {
 			throw new RuntimeException(e);
 		}
 	}
+	
 
-	public static void validateTreatmentType(String code, String typeCode, Map<String, Map<String, PropertyValue>> results, ContextValidation contextValidation) {
-		TreatmentType treatmentType = validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", TreatmentType.find,true);
-		if(null != treatmentType){
-			validateCode(treatmentType, code, contextValidation);
-			validateResults(treatmentType, results, contextValidation);						
-		}		
-	}
-
-	public static void validateTreatmentCategoryCode(String categoryCode, ContextValidation contextValidation) {
+	public static void validateTreatmentCategoryCode(TreatmentType treatmentType, String categoryCode, ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, categoryCode, "categoryCode")){
-			validateExistDescriptionCode(contextValidation, categoryCode, "categoryCode", TreatmentCategory.find);			
+			TreatmentCategory tc = validateExistDescriptionCode(contextValidation, categoryCode, "categoryCode", TreatmentCategory.find, true);
+			if(!treatmentType.category.equals(tc)){
+				contextValidation.addErrors("categoryCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, categoryCode);
+			}
 		}
 		
 	}
