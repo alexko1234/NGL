@@ -39,8 +39,8 @@ public class PropertySingleValue extends PropertyValue<Object>{
 		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
 		if(ValidationHelper.checkIfActive(contextValidation, propertyDefinition)){
 			if(ValidationHelper.required(contextValidation, this, propertyDefinition)){				
-				if(ValidationHelper.convertPropertyValue(contextValidation, this, propertyDefinition)){
-					ValidationHelper.checkIfExistInTheList(contextValidation, this, propertyDefinition);
+				if(ValidationHelper.checkIfExistInTheList(contextValidation, this, propertyDefinition)){
+					ValidationHelper.convertPropertyValue(contextValidation, this, propertyDefinition);
 					//TODO FORMAT AND UNIT
 				}
 			}
