@@ -15,8 +15,7 @@ public abstract class CommonController extends Controller{
 	 * @param clazz
 	 * @return
 	 */
-	protected static <T> Form<T> getFilledForm(Form<T> form, Class<T> clazz) {
-		Logger.info("Request: "+request().body().toString());
+	protected static <T> Form<T> getFilledForm(Form<T> form, Class<T> clazz) {		
 		JsonNode json = request().body().asJson();
 		T input = Json.fromJson(json, clazz);
 		Form<T> filledForm = form.fill(input); 
