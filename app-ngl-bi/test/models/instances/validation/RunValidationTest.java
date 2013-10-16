@@ -150,7 +150,7 @@ public class RunValidationTest extends AbstractTests {
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 
-			 assertThat(ctxVal.errors).hasSize(1);
+			 assertThat(ctxVal.errors).hasSize(2);
 			 assertThat(ctxVal.errors.toString()).contains("typeCode");
 			 
 		}});
@@ -338,7 +338,7 @@ public class RunValidationTest extends AbstractTests {
 			 ctxVal.setUpdateMode();
 			 run.validate(ctxVal);
 			 
-			 assertThat(ctxVal.errors).hasSize(1);
+			 assertThat(ctxVal.errors).hasSize(2);
 			 assertThat(ctxVal.errors.toString()).contains("typeCode");
 			 
 		}});
@@ -1042,7 +1042,7 @@ public class RunValidationTest extends AbstractTests {
 		readSet.sampleCode = "";
 		readSet.sampleContainerCode = "";
 		readSet.stateCode = "F-QC";
-	
+		readSet.typeCode = "default-readset";
 		TraceInformation ti = new TraceInformation();
 		ti.createUser = "dnoisett";
 		ti.creationDate = new Date(); 		
@@ -1059,7 +1059,7 @@ public class RunValidationTest extends AbstractTests {
 		file.usable = null;	
 		file.properties.put("asciiEncoding", new PropertySingleValue(""));
 		file.properties.put("label", new PropertySingleValue(""));
-		file.stateCode = "F";
+		file.stateCode = "A";
 		return file;
 	}
 	  

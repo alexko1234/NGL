@@ -36,8 +36,7 @@ public class RunValidationHelper extends CommonValidationHelper {
 			contextValidation.addKeyToRootKeyName("properties");
 			ValidationHelper.validateProperties(contextValidation, properties, runType.getPropertyDefinitionByLevel(Level.CODE.Run), true);
 			contextValidation.removeKeyFromRootKeyName("properties");
-		}
-		
+		}		
 	}
 	
 	public static void validationContainerSupportCode(

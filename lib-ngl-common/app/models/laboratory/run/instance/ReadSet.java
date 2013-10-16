@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Validation;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -30,10 +33,18 @@ public class ReadSet extends DBObject implements IValidation{
 	public String sampleContainerCode; //code bar de la banque ou est l'echantillon
 	public String sampleCode; //nom de l'ind / ech
 	public String projectCode;
+	
+	public Validation validationProduction;
+	public Validation validationBioinformatic;
+	
+	@JsonIgnore
 	public TBoolean validProduction = TBoolean.UNSET;
-    public Date validProductionDate;
-    public TBoolean validBioinformatic = TBoolean.UNSET;
-    public Date validBioinformaticDate;
+	@JsonIgnore
+	public Date validProductionDate;
+	@JsonIgnore
+	public TBoolean validBioinformatic = TBoolean.UNSET;
+	@JsonIgnore
+	public Date validBioinformaticDate;
     
 	public String path;
 	public String archiveId;

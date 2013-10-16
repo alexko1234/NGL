@@ -5,9 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.Validation;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.run.instance.LaneValidationHelper;
@@ -18,8 +21,13 @@ public class Lane implements IValidation{
 	public Integer number;
 	public String stateCode;
 	public List<String> resolutionCode;
+	
+	public Validation validation;
+	
+	@JsonIgnore
     public TBoolean valid = TBoolean.UNSET;
-    public Date validDate;
+	@JsonIgnore
+	public Date validDate;
     
 
 	//public List<ReadSet> readsets;

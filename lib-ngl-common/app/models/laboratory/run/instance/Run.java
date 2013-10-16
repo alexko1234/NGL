@@ -7,16 +7,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Validation;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.run.instance.LaneValidationHelper;
 import validation.run.instance.RunValidationHelper;
 import validation.run.instance.TreatmentValidationHelper;
+import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
 
 
@@ -27,8 +31,14 @@ public class Run extends DBObject implements IValidation {
 	public List<String> resolutionCode;
 	public String containerSupportCode; //id flowcell
     public Boolean dispatch = Boolean.FALSE;
+    
+    @JsonIgnore
     public TBoolean valid = TBoolean.UNSET;
+    @JsonIgnore
     public Date validDate;
+    
+    public Validation validation;
+    
     
     public TraceInformation traceInformation;
     public InstrumentUsed instrumentUsed;

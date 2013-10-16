@@ -42,7 +42,13 @@ public class TreatmentTypeContextDAO extends AbstractDAO<TreatmentTypeContext>{
 				"WHERE ttc.fk_treatment_type = ? and t.code = ?";
 		
 		BeanPropertyRowMapper<TreatmentTypeContext> mapper = new BeanPropertyRowMapper<TreatmentTypeContext>(TreatmentTypeContext.class);
-		return this.jdbcTemplate.queryForObject(sql, mapper, id, code);
+		List<TreatmentTypeContext> result = this.jdbcTemplate.query(sql, mapper, id, code);
+		if(result != null && result.size() == 1){
+			return result.get(0);
+		}else{
+			return null;
+		}
+		
 		
 	}
 	

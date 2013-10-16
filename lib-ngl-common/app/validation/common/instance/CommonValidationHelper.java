@@ -341,7 +341,7 @@ public class CommonValidationHelper {
 	public static <T> T getObjectFromContext(String key, Class<T> clazz, ContextValidation contextValidation) {
 		T o = (T) contextValidation.getObject(key);
 		if(null == o){
-			throw new RuntimeException(clazz.getName()+" form contextValidation is null");
+			throw new IllegalArgumentException(clazz.getName()+" form contextValidation is null");
 		}
 		return o;
 	}

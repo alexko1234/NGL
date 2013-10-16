@@ -60,7 +60,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		m.put("Q30", new PropertySingleValue(100));
 		m.put("qualityScore", new PropertySingleValue(100));
 		m.put("nbReadIllumina", new PropertySingleValue(100));
-		t.set("read1", m);
+		t.set("default", m);
 		
 		return t;
 	}
@@ -112,7 +112,7 @@ public class TreatmentValidationTest extends AbstractTests {
 			t.validate(ctxVal);
 			
 			assertThat(ctxVal.errors).hasSize(0);
-			assertThat(t.results().get("read1").get("nbReadIllumina").value.toString()).contains("1");
+			assertThat(t.results().get("default").get("nbReadIllumina").value.toString()).contains("1");
 		}
 		else {
 			System.out.println("Missing readSet rdCode !");
@@ -173,17 +173,10 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		ctxVal.setCreationMode();
 		
-		try {
 			t.validate(ctxVal);
-		}
-		catch(NullPointerException e) {
-			System.out.println(e.toString());
-			b = true;
-			msgErreur = "Null Pointer Exception";
-		}
-		
-		assertThat(b).isEqualTo(true);
-		assertThat(msgErreur).isEqualTo("Null Pointer Exception");
+			assertThat(ctxVal.errors.size()).isGreaterThan(0);
+			assertThat(ctxVal.errors.toString()).contains(ERROR_REQUIRED_MSG);
+			assertThat(ctxVal.errors.toString()).contains("code");
 	}
 	
 	
@@ -206,7 +199,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		t.validate(ctxVal);
 		
-		assertThat(ctxVal.errors).hasSize(7);
+		assertThat(ctxVal.errors.size()).isGreaterThan(0);
 		assertThat(ctxVal.errors.toString()).contains(ERROR_REQUIRED_MSG);
 		assertThat(ctxVal.errors.toString()).contains("code");
 	}
@@ -333,7 +326,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		m.put("Q30", new PropertySingleValue(33.33));
 		m.put("qualityScore", new PropertySingleValue(33.33));
 		m.put("nbReadIllumina", new PropertySingleValue(10));
-		t1.set("read1", m);
+		t1.set("default", m);
 				
 		Map<String, Treatment> mT = new HashMap<String, Treatment>();  
 		mT.put("ngsrg", t1);
@@ -398,7 +391,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		Treatment t = getNewTreatmentForReadSet();
 
-		t.results().get("read1").put("bad", new PropertySingleValue("Ouh la la"));
+		t.results().get("default").put("bad", new PropertySingleValue("Ouh la la"));
 		
 				
 		ContextValidation ctxVal = new ContextValidation(); 
@@ -427,9 +420,9 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		Treatment t = getNewTreatmentForReadSet();
 		
-		t.results().get("read1").remove("nbReadIllumina");
+		t.results().get("default").remove("nbReadIllumina");
 		//must generate a error (because of a bad value)
-		t.results().get("read1").put("nbReadIllumina", new PropertySingleValue("un"));
+		t.results().get("default").put("nbReadIllumina", new PropertySingleValue("un"));
 				
 		ContextValidation ctxVal = new ContextValidation(); 
 		
