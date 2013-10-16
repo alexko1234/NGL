@@ -21,7 +21,7 @@ import play.Logger;
 public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 
 	
-	protected AbstractDAO(String tableName, Class<T> entityClass,boolean useGeneratedKey) {
+	protected AbstractDAO(String tableName, Class<T> entityClass, boolean useGeneratedKey) {
 		super(tableName, entityClass,useGeneratedKey);
 	}
 

@@ -7,6 +7,7 @@ import java.util.Map;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.TreatmentContext;
 import models.laboratory.run.description.TreatmentType;
+import models.laboratory.run.description.TreatmentTypeContext;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -64,7 +65,7 @@ public class TreatmentTypeDAO extends AbstractDAOMapping<TreatmentType>{
 	}
 	
 	
-	private void insertTreatmentContexts(List<TreatmentContext> contexts, Long id, boolean deleteBefore) throws DAOException {
+	private void insertTreatmentContexts(List<TreatmentTypeContext> contexts, Long id, boolean deleteBefore) throws DAOException {
 		if (deleteBefore) {
 			removeTreatmentContexts(id);
 		}
@@ -72,49 +73,22 @@ public class TreatmentTypeDAO extends AbstractDAOMapping<TreatmentType>{
 		if (contexts!=null && contexts.size()>0) {
 			//String sql = null;
 			Map<String, Object> parameters = null;
-			TreatmentContextDAO treatmentContextDAO = null;
 			
-			for (TreatmentContext context : contexts) {
+			for (TreatmentTypeContext context : contexts) {
 				if (context == null) {
 					throw new DAOException("context is mandatory");
-				}
-				else {
-					if (context.id == null) {
-						//search the id with the code
-						treatmentContextDAO = Spring.getBeanOfType(TreatmentContextDAO.class);
-						TreatmentContext treatmentContext = null;
-						try {
-							treatmentContext = treatmentContextDAO.findByCode(context.code);
-						} catch (DAOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						parameters = new HashMap<String, Object>();
-						parameters.put("fk_treatment_type", id);
-						parameters.put("fk_treatment_context", treatmentContext.id);
-						// set the table name to the name of the link table
-						 SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(dataSource)
-				         .withTableName("treatment_type_context");
-						jdbcInsert.execute(parameters);
-					}
-					else {
-						//deprecated
-						//sql = "INSERT INTO treatment_type_context (fk_treatment_type, fk_treatment_context) VALUES(?,?)";
-						//jdbcTemplate.update(sql, id, context.id);
-						
-						parameters = new HashMap<String, Object>();
-						parameters.put("fk_treatment_type", id);
-						parameters.put("fk_treatment_context", context.id);
-						// set the table name to the name of the link table
-						 SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(dataSource)
-				         .withTableName("treatment_type_context");
-						jdbcInsert.execute(parameters);
-					}
-				}
-				
+				} else {
+					parameters = new HashMap<String, Object>();
+					parameters.put("fk_treatment_type", id);
+					parameters.put("fk_treatment_context", context.id);
+					parameters.put("required", context.required);
+					// set the table name to the name of the link table
+					 SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(dataSource)
+			         .withTableName("treatment_type_context");
+					jdbcInsert.execute(parameters);
+				}				
 			}
-		}
-		else {
+		} else {
 			throw new DAOException("contexts null or empty");
 		}
 		
@@ -130,7 +104,6 @@ public class TreatmentTypeDAO extends AbstractDAOMapping<TreatmentType>{
 	public void update(TreatmentType treatmentType) throws DAOException {
 		//Update contexts
 		insertTreatmentContexts(treatmentType.contexts, treatmentType.id, true);
-		
 		String sql = "UPDATE treatment_type SET names=? WHERE id=?";
 		jdbcTemplate.update(sql, treatmentType.names, treatmentType.id);
 	}

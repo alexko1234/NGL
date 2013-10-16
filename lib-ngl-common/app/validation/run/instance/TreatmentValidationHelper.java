@@ -11,6 +11,7 @@ import models.laboratory.run.description.RunType;
 import models.laboratory.run.description.TreatmentCategory;
 import models.laboratory.run.description.TreatmentContext;
 import models.laboratory.run.description.TreatmentType;
+import models.laboratory.run.description.TreatmentTypeContext;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -103,39 +104,30 @@ public class TreatmentValidationHelper extends CommonValidationHelper {
 			Level.CODE levelCode = getLevelFromContext(contextValidation);
 			//validate all treatment key in input
 			for(Map.Entry<String, Map<String, PropertyValue>> entry : results.entrySet()){
-				TreatmentContext context = getTreatmentContext(entry);
-				if(!treatmentType.contexts.contains(context)){
+				TreatmentTypeContext context = getTreatmentTypeContext(entry.getKey(), treatmentType.id);
+				if(context == null){
 					contextValidation.addErrors(entry.getKey(),ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, entry.getKey());
 				}				
 			}
 			//validate if all treatment context are present
-			for(TreatmentContext context : treatmentType.contexts){
+			for(TreatmentTypeContext context : treatmentType.contexts){
 				if(results.containsKey(context.code)){
 					Map<String, PropertyValue> props = results.get(context.code);
 					contextValidation.addKeyToRootKeyName(context.code);
 					ValidationHelper.validateProperties(contextValidation, props, treatmentType.getPropertyDefinitionByLevel(Level.CODE.valueOf(context.name), levelCode));
 					contextValidation.removeKeyFromRootKeyName(context.code);
-				}else{
+				}else if(context.required){
 					contextValidation.addErrors(context.code,ValidationConstants.ERROR_REQUIRED_MSG, context.code);
 				}
 			}
 			
-			for(Map.Entry<String, Map<String, PropertyValue>> entry : results.entrySet()){
-				TreatmentContext context = getTreatmentContext(entry);
-				if(!treatmentType.contexts.contains(context)){
-					contextValidation.addErrors(entry.getKey(),ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, entry.getKey());
-				}
-				contextValidation.addKeyToRootKeyName(context.code);
-				ValidationHelper.validateProperties(contextValidation, entry.getValue(), treatmentType.getPropertyDefinitionByLevel(Level.CODE.valueOf(context.name), levelCode));
-				contextValidation.removeKeyFromRootKeyName(context.code);
-			}
 		}
 		
 	}
-
-	private static TreatmentContext getTreatmentContext(Map.Entry<String, Map<String, PropertyValue>> entry) {
+	
+	private static TreatmentTypeContext getTreatmentTypeContext(String contextCode, Long typeId) {
 		try {
-			return TreatmentContext.find.findByCode(entry.getKey());
+			return TreatmentTypeContext.find.findByTreatmentTypeId(contextCode, typeId);
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
 		}

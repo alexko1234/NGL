@@ -13,7 +13,7 @@ public class TreatmentType extends CommonInfoType{
 	public TreatmentCategory category;
 	public String names;
 	
-	public List<TreatmentContext> contexts = new ArrayList<TreatmentContext>();
+	public List<TreatmentTypeContext> contexts = new ArrayList<TreatmentTypeContext>();
 
 	public static Finder<TreatmentType> find = new Finder<TreatmentType>(TreatmentTypeDAO.class.getName()); 
 	

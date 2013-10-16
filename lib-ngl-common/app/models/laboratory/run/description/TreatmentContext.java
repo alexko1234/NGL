@@ -18,6 +18,13 @@ public class TreatmentContext extends Model<TreatmentContext> {
 		this.code = name;
 	}
 	
+	protected TreatmentContext(Long id, String code, String name) {
+		super(TreatmentContextDAO.class.getName());
+		this.id = id;
+		this.name = name;
+		this.code = code;
+	}
+	
 
 	public static Finder<TreatmentContext> find = new Finder<TreatmentContext>(TreatmentContextDAO.class.getName());
 

@@ -5,7 +5,6 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.TreatmentCategory;
 import models.laboratory.run.description.TreatmentType;
@@ -45,7 +44,7 @@ public class TreatmentTypeMappingQuery extends MappingSqlQuery<TreatmentType>{
 			TreatmentCategoryDAO treatmentCategoryDAO = Spring.getBeanOfType(TreatmentCategoryDAO.class);
 			treatmentType.category = (TreatmentCategory) treatmentCategoryDAO.findById(idTreatmentCategory);
 			
-			TreatmentContextDAO treatmentContextDAO =  Spring.getBeanOfType(TreatmentContextDAO.class);
+			TreatmentTypeContextDAO treatmentContextDAO =  Spring.getBeanOfType(TreatmentTypeContextDAO.class);
 			treatmentType.contexts = treatmentContextDAO.findByTreatmentTypeId(treatmentType.id);
 			
 			return treatmentType;
