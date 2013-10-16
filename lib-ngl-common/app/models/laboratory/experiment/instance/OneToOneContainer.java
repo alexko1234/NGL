@@ -52,13 +52,16 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 		
 		List<Container> containers = new ArrayList<Container>();
 		containers.add(outputContainer);
+		
 		return containers;
 	}
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		inputContainerUsed.validate(contextValidation);
-		outputContainerUsed.validate(contextValidation);
+		if(outputContainerUsed != null){
+			outputContainerUsed.validate(contextValidation);
+		}
 	}
 	@JsonIgnore
 	public List<ContainerUsed> getInputContainers(){

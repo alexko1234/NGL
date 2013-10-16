@@ -36,6 +36,15 @@ public class Containers extends CommonController {
 	
 	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
 	
+	public static Result get(String code){
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code);
+		if(container != null){
+			return ok(Json.toJson(container));
+		}
+		
+		return badRequest();
+	}
+	
 	public static Result list(){
 		Form<ContainersSearchForm> containerFilledForm = containerForm.bindFromRequest();
 		ContainersSearchForm containersSearch = containerFilledForm.get();

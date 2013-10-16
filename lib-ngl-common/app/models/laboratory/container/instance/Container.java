@@ -159,7 +159,7 @@ public class Container extends DBObject implements IValidation {
 		//TODO pbl key
 		DescriptionValidationHelper.validationExperimentTypeCodes(fromExperimentTypeCodes, contextValidation);
 		//TODO pbl key
-		InstanceValidationHelper.validationExperimentCode(fromPurifingCode, contextValidation);
+		//InstanceValidationHelper.validationExperimentCode(fromPurifingCode, contextValidation);//bug here
 
 		DescriptionValidationHelper.validationResolutionCode(resolutionCode, contextValidation);
 		
@@ -167,7 +167,7 @@ public class Container extends DBObject implements IValidation {
 		
 		InstanceValidationHelper.validationContents(contents,contextValidation);
 		
-		InstanceValidationHelper.validationContainerSupport(support,contextValidation);
+		//InstanceValidationHelper.validationContainerSupport(support,contextValidation);//bug here
 		
 		traceInformation.validate(contextValidation);
 		

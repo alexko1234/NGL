@@ -150,6 +150,7 @@ public class Experiments extends Controller{
   	        // Routes
   	    		controllers.experiments.tpl.routes.javascript.Experiments.searchContainers(),
   	    		controllers.containers.api.routes.javascript.Containers.list(),
+  	    		controllers.containers.api.routes.javascript.Containers.get(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.search(),
   	    		controllers.lists.api.routes.javascript.Lists.projects(),
   	    		controllers.lists.api.routes.javascript.Lists.samples(),

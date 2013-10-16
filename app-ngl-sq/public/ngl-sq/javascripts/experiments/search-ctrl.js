@@ -3,6 +3,12 @@
 function SearchCtrl($scope,$location,$routeParams, datatable, comboLists) {
 	
 	$scope.datatableConfig = {	
+			show:{
+				active:true,
+				add :function(line){
+					$scope.addTabs({label:line.code,href:"/experiments/edit/"+line.code,remove:true});
+				}
+			},
 			search:{
 				url:jsRoutes.controllers.experiments.api.Experiments.list()
 				

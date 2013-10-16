@@ -206,7 +206,6 @@ public class Experiments extends CommonController{
 	}
 
 	public static Result updateStateCode(String code, String stateCode){
-		//Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
 		
 		//TODO if first experiment in the processus then processus state to IP
@@ -245,7 +244,7 @@ public class Experiments extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
-		if(exp._id == null){
+		if(exp._id == null && exp.code == null){
 			exp.code = CodeHelper.generateExperiementCode(exp);
 			exp.typeCode = experimentType;
 			exp.stateCode = "N";
@@ -254,7 +253,8 @@ public class Experiments extends CommonController{
 		exp = traceInformation(exp);
 
 		if (!experimentFilledForm.hasErrors()) {	 	
-			exp = (Experiment) InstanceHelpers.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp, new ContextValidation(experimentFilledForm.errors()));
+			//exp = (Experiment) InstanceHelpers.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp, new ContextValidation(experimentFilledForm.errors()));
+			exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 		}
 		
 		if (!experimentFilledForm.hasErrors()) {
@@ -276,7 +276,7 @@ public class Experiments extends CommonController{
 		
 		exp = traceInformation(exp);
 		
-		exp = (Experiment) MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+		//exp = (Experiment) MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 		
 		return ok(Json.toJson(exp));
 	}

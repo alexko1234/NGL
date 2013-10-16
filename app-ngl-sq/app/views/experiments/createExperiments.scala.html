@@ -333,7 +333,7 @@ th {
 												<option value="">@Messages("experiments.select.intrumentUsedType")</option>
 										</select>
 										
-									<label class="control-label" style="margin-left:20px;" ng-hide="!experiment.instrumentInformation.instrumentUsedTypes.selected">@Messages("experiments.intrument"): </label>
+									<label class="control-label" style="margin-left:20px;" ng-hide="!experiment.value.instrument.categoryCode">@Messages("experiments.intrument"): </label>
 										<select class="input-medium "
 											ng-model="experiment.value.instrument.code"
 											ng-readonly="!experiment.instrumentInformation.enabled"
@@ -345,7 +345,7 @@ th {
 											</select>
 											
 											
-								<br>	<label class="control-label" style="margin-left:20px;" ng-hide="!experiment.instrumentInformation.instrumentUsedTypes.selected">@Messages("experiments.intrumentCategory"): </label>
+								<br><br>	<label class="control-label" ng-hide="!experiment.value.instrument.categoryCode">@Messages("experiments.intrumentCategory"): </label>
 								<select class="input-medium "
 									ng-model="experiment.value.instrument.outContainerSupportCategoryCode"
 									ng-readonly="!experiment.instrumentInformation.enabled"
@@ -366,8 +366,8 @@ th {
 											ng-readonly="!experiment.instrumentInformation.enabled"
 											ng-model="experiment.value.instrumentProperties[instp.code].value" />
 										
-										<select  ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" ng-model="experiment.value.instrumentProperties[instp.code].value" ng-switch-when="true" >
-											<option ng-repeat="opt in instp.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
+										<select ng-options="opt.value as opt.value for opt in instp.possibleValues"  ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" ng-model="experiment.value.instrumentProperties[instp.code].value" ng-switch-when="true" >
+									    <option value="">@Messages("experiments.select.property")</option>
 									    </select>
 									</div>
 								</div>
