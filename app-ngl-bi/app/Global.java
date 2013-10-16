@@ -1,3 +1,4 @@
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -7,6 +8,8 @@ import play.Application;
 import play.GlobalSettings;
 import play.Logger;
 import play.data.format.Formatters;
+import play.mvc.Action;
+import play.mvc.Http.Request;
 
 
 public class Global extends GlobalSettings {
@@ -26,6 +29,19 @@ public class Global extends GlobalSettings {
 	}  
 
 	
+	
+	
+	@Override
+	public Action onRequest(Request request, Method actionMethod) {
+		//if(Integer.valueOf(request.getHeader("Content-Length")).intValue() < (100*1024) ){
+			Logger.debug("Request: "+request.body().toString());
+		//}
+		return super.onRequest(request, actionMethod);
+	}
+
+
+
+
 	/**
      * Formatter for <code>java.util.Date</code> values.
      * Override the default formatter to manage the date in milliseconds from 1970
