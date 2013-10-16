@@ -31,7 +31,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class FilesTests extends AbstractTests{
 	
-	@Test
+		@Test
 	 public void testFileCreate() {
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
 		     public void run() {
@@ -234,26 +234,28 @@ public class FilesTests extends AbstractTests{
 			if(readSetDelete!=null){
 				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
 			}
+			/*
 			ReadSet fileDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class, DBQuery.is("files.fullname","newfiletest"));
 			if(fileDelete!=null){
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, DBQuery.is("code","rdCode"), DBUpdate.unset("files"));
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, DBQuery.is("code","rdCode"), DBUpdate.pull("files",null));	
 			}
+			*/
 		
 			Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET2");
 			run.dispatch = true; // For the archive test
 			Lane lane = RunMockHelper.newLane(1);
 			lane.readSetCodes = null;	
-			
-			ReadSet rd = RunMockHelper.newReadSet("rdCode");
-			rd.runCode = run.code;
-			
 			Lane lane2 = RunMockHelper.newLane(2);
 			List<Lane> lanes = new ArrayList<Lane>();
 			lanes.add(lane);
 			lanes.add(lane2);
 			run.lanes = lanes;
-			 
+			
+			ReadSet rd = RunMockHelper.newReadSet("rdCode");
+			rd.runCode = run.code;
+			
+			
 			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 	        assertThat(status(result)).isEqualTo(OK);
 	        
@@ -263,8 +265,7 @@ public class FilesTests extends AbstractTests{
 	        File file =  RunMockHelper.newFile("newfiletest");
 	        List<File> files =  new ArrayList<File>();
 	        files.add(file);
-	        rd.files = files; 
-			
+	        
 			result = callAction(controllers.readsets.api.routes.ref.Files.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonFile(file)));
 		 	
 	        assertThat(status(result)).isEqualTo(OK);
@@ -277,7 +278,7 @@ public class FilesTests extends AbstractTests{
 	         
 	         
 	 	    //query for control
-	         ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,"rdCode");
+	         ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
 	         assertThat(readSet.files.size()).isEqualTo(0);
 	         
 	         
