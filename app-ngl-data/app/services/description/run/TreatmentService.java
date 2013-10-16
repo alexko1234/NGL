@@ -86,6 +86,13 @@ public class TreatmentService {
 		l.add(DescriptionFactory.newTreatmentType("Read Quality","read-quality", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "readQualityRaw,readQualityClean", getReadQualityTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2")));
 		l.add(DescriptionFactory.newTreatmentType("Duplicates","duplicates", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "duplicatesRaw,duplicatesClean", getDuplicatesTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2", "pairs")));
 		
+		l.add(DescriptionFactory.newTreatmentType("Trimming","trimming", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "trimming", getTrimmingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2", "pairs", "single")));
+		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationPhiX", getContaminationPhiXTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs", "single")));
+		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", getTaxonomyTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1")));
+		l.add(DescriptionFactory.newTreatmentType("Sorting Ribo","sorting-ribo", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sortingRibo", getSortingRiboTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2", "pairs")));
+		l.add(DescriptionFactory.newTreatmentType("Mapping","mapping", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mapping", getMappingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs")));
+		l.add(DescriptionFactory.newTreatmentType("Merging","merging", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "merging", getMergingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs")));
+		
 		DAOHelpers.saveModels(TreatmentType.class, l, errors);
 	}
 	
@@ -208,14 +215,147 @@ public class TreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Long.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimateDuplicatedReads","estimateDuplicatedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Long.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimateDuplicatedReadsPercent","estimateDuplicatedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Float.class, true));
-		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimateDuplicatedReadsNtimes.times","estimateDuplicatedReadsNtimes.times",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Integer.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimateDuplicatedReadsNtimes.percent","estimateDuplicatedReadsNtimes.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Float.class, true));
-		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimateUniqueReads","estimateUniqueReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Long.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimateUniqueReadsPercent","estimateUniqueReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Float.class, true));
 		
+		return propertyDefinitions;		
+	}
+	
+	public static List<PropertyDefinition> getTrimmingTreatmentPropertyDefinitions() throws DAOException{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sizeRange","sizeRange",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsInput","readsInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsOutput","readsOutput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsNoTrim","readsNoTrim",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, false));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsNoTrimPercent","readsNoTrimPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, false));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsTrim","readsTrim",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsTrimPercent","readsTrimPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nucleotidesTrim","nucleotidesTrim",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("trimRejectedShort ","trimRejectedShort",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("trimRejectedLength0","trimRejectedLength0",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("trimStored","trimStored",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, false));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("storedPairs","storedPairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rejectedPairs","rejectedPairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, false));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("storedSingleton","storedSingleton",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Single), Long.class, true));
+		
+		return propertyDefinitions;		
+	}
+	
+	public static List<PropertyDefinition> getContaminationPhiXTreatmentPropertyDefinitions() throws DAOException{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsInput","readsInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs, Level.CODE.Single), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("removedReads","removedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs, Level.CODE.Single), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("remainingReads","remainingReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs, Level.CODE.Single), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("removedReadsPercent","removedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs, Level.CODE.Single), Float.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("remainingNucleotides","remainingNucleotides",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, false));
+		
+		return propertyDefinitions;		
+	}
+	
+	public static List<PropertyDefinition> getTaxonomyTreatmentPropertyDefinitions() throws DAOException{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		/*
+		sampleInput
+		organism
+		taxonomie
+		taxonBilan
+		divisionBilan
+		keywordBilan
+		krona
+		*/
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("organism","organism",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("taxonomie","taxonomie",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("taxonBilan.taxon","taxonBilan.taxon",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("taxonBilan.nbSeq","taxonBilan.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("taxonBilan.percent","taxonBilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("divisionBilan.division","divisionBilan.division",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true,
+				DescriptionFactory.newValues("eukaryota","bacteria","cellular organisms","archaea","viruses")));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("divisionBilan.nbSeq","divisionBilan.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("divisionBilan.percent","divisionBilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("keywordBilan.keyword","keywordBilan.keyword",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true, 
+				DescriptionFactory.newValues("mitochondri","virus","chloroplast","transposase",	"BAC")));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("keywordBilan.nbSeq","keywordBilan.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("keywordBilan.percent","keywordBilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("krona","krona",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), File.class, true));
+		
+		return propertyDefinitions;		
+	}
+	
+	public static List<PropertyDefinition> getSortingRiboTreatmentPropertyDefinitions() throws DAOException{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		/*
+		readsInput
+		no_rRNA
+		rRNA
+		rRNAPercent
+		detail_rRNAPercent
+		 */
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsInput","readsInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("no_rRNA","no_rRNA",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNA","rRNA",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNAPercent","rRNAPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Float.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("detail_rRNA.type","detail_rRNA.type",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), String.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("detail_rRNA.percent","detail_rRNA.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, true));
+		
+		/*
+		usefulSequences
+		usefulBases
+
+		 */
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("usefulSequences","usefulSequences",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("usefulBases","usefulBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, false));
+
+		
+		return propertyDefinitions;		
+	}
+	
+	public static List<PropertyDefinition> getMappingTreatmentPropertyDefinitions() throws DAOException{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nonChimericAlignedReads","nonChimericAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("FRAlignedReads","FRAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("RFAlignedReads","RFAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("FFAlignedReads","FFAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("RRAlignedReads","RRAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("transAlignedReads","transAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("singleAlignedReads","singleAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nonChimericAlignedReadsPercent","nonChimericAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("FRAlignedReadsPercent","FRAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("RFAlignedReadsPercent","RFAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("FFAlignedReadsPercent","FFAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("RRAlignedReadsPercent","RRAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("transAlignedReadsPercent","transAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("singleAlignedReadsPercent","singleAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("MPReadDistanceSeparation","MPReadDistanceSeparation",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), File.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("PEReadDistanceSeparation","PEReadDistanceSeparation",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), File.class, true));
+		
+		return propertyDefinitions;		
+	}
+	
+	public static List<PropertyDefinition> getMergingTreatmentPropertyDefinitions() throws DAOException{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mergedReads","mergedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mergedReadsPercent","mergedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("medianeSize","medianeSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("avgSize","avgSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("minSize","minSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("maxSize","maxSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("distribMerge","distribMerge",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), File.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("distribChevauchement","distribChevauchement",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), File.class, true));
 		
 		return propertyDefinitions;		
 	}
