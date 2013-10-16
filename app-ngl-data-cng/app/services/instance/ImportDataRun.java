@@ -95,6 +95,17 @@ public class ImportDataRun implements Runnable {
 		return samps;
 	}
 	
+	
+	public static void deleteContainersFromLims() throws SQLException, DAOException{
+		List<Container> containers = limsServices.findContainersToCreate(contextError) ;
+		for(Container container:containers){
+			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Container.class, container.code)){
+				MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Container.class, container.code);
+				//Logger.debug("Sample to create :"+sample.code);
+			}
+		}
+	}
+	
 	public static List<Container> createContainersFromLims() throws SQLException, DAOException{
 		List<Container> containers = limsServices.findContainersToCreate(contextError) ;
 		for(Container container:containers){
@@ -103,7 +114,7 @@ public class ImportDataRun implements Runnable {
 				//Logger.debug("Container to create :"+container.code);
 			}
 		}
-		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, containers, contextError);
+		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError);
 		return ctrs;
 	}
 	
