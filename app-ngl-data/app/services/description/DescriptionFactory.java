@@ -38,6 +38,7 @@ import models.laboratory.run.description.RunType;
 import models.laboratory.run.description.TreatmentCategory;
 import models.laboratory.run.description.TreatmentContext;
 import models.laboratory.run.description.TreatmentType;
+import models.laboratory.run.description.TreatmentTypeContext;
 import models.laboratory.sample.description.ImportCategory;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
@@ -338,7 +339,7 @@ public class DescriptionFactory {
 		return tc;
 	}
 	
-	public static TreatmentType newTreatmentType(String name, String code, TreatmentCategory category, String names, List<PropertyDefinition> propertiesDefinitions, List<TreatmentContext>  contexts) throws DAOException {
+	public static TreatmentType newTreatmentType(String name, String code, TreatmentCategory category, String names, List<PropertyDefinition> propertiesDefinitions, List<TreatmentTypeContext>  contexts) throws DAOException {
 		TreatmentType tt = new TreatmentType();
 		tt.code = code.toLowerCase();
 		tt.name = name;
