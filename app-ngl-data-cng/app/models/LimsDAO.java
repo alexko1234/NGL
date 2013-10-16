@@ -1,25 +1,16 @@
 package models;
 
-import static services.description.DescriptionFactory.newPropertiesDefinition;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import javax.sql.DataSource;
-
-import models.laboratory.common.description.Level;
-import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureUnit;
-import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.SampleUsed;
 import models.laboratory.project.instance.Project;
@@ -29,17 +20,12 @@ import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerSupportHelper;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import play.Logger;
-import services.description.common.LevelService;
-import services.description.common.MeasureService;
 import validation.ContextValidation;
 
 
@@ -53,23 +39,14 @@ public class LimsDAO {
 	private JdbcTemplate jdbcTemplate;
 
 	private static final String CONTAINER_CATEGORY_CODE= "lane";
-	private static final String CONTAINER_STATE_CODE="IWP";
-	private static final String CONTAINER_PROPERTIES_BQ="tag";
+	private static final String CONTAINER_STATE_CODE="F";
 	private static final String LIMS_CODE="limsCode";
-	private static final String SAMPLE_ADPATER="isAdapters";
-	private static final String RECEPTION_DATE ="receptionDate";
-	
 	protected static final String PROJECT_CATEGORY_CODE = "default";
-	//protected static final String PROJECT_TYPE_CODE_FG = "france-genomique";
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
 	protected static final String PROJECT_PROPERTIES_FG_GROUP="fgGroup";
-
 	protected static final String IMPORT_CATEGORY_CODE="sample-import";
-	
 	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "unknown";
 	protected static final String SAMPLE_CATEGORY_CODE = "default";
-	
-	protected static final String FLOWCELL_CATEGORY_CODE = "flowcell 1";
 	
 	
 	@Autowired
@@ -134,10 +111,10 @@ public class LimsDAO {
 				String sampleTypeCode=SAMPLE_TYPE_CODE_DEFAULT;
 				//Logger.debug("Sample Type :"+sampleTypeCode);
 
-				if(sampleTypeCode==null){
-					contextError.addErrors( "typeCode", "limsdao.error.emptymapping", sample.code);
-					return null;
-				}
+				//if(sampleTypeCode==null){
+				//	contextError.addErrors( "typeCode", "limsdao.error.emptymapping", sample.code);
+				//	return null;
+				//}
 				
 				SampleType sampleType=null;
 				try {
@@ -227,13 +204,11 @@ public class LimsDAO {
 	 */
 	public List<Container> findContainersToCreate(ContextValidation contextError){
 
-		List<Container> results = this.jdbcTemplate.query("select distinct * from v_flowcelltongl;",new Object[]{} 
+		List<Container> results = this.jdbcTemplate.query("select * from v_flowcelltongl;",new Object[]{} 
 		,new RowMapper<Container>() {
 
 			@SuppressWarnings("rawtypes")
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
-				
-				/* flowcell_id, lane_id, name1, code, barcode, y, code_sample, idx*/ 
 
 				Container container = new Container();
 				
@@ -252,7 +227,7 @@ public class LimsDAO {
 				container.sampleCodes=new ArrayList<String>();
 				container.sampleCodes.add(rs.getString("code_sample"));
 				
-				//container.fromExperimentTypeCodes = new ArrayList<String>(); //not required
+				container.fromExperimentTypeCodes = new ArrayList<String>(); //not required
 				
 				container.fromPurifingCode = null; // not required
 				
@@ -278,7 +253,7 @@ public class LimsDAO {
 				
 				// define container support attributes
 				try {
-					container.support=ContainerSupportHelper.getContainerSupport("lane", rs.getInt("nb_lanes"),rs.getString("barcode"),"1",rs.getString("y")); 
+					container.support=ContainerSupportHelper.getContainerSupport("lane", rs.getInt("nb_lanes"),rs.getString("barcode"),"1",rs.getString("lane_number")); 
 				}
 				catch(DAOException e) {
 					Logger.info("Can't get container support !"); 
@@ -290,8 +265,6 @@ public class LimsDAO {
 				container.comments=new ArrayList<Comment>();	
 				//just one comment for one lane (container)
 				container.comments.add(new Comment(rs.getString("comments")));
-				
-				
 				
 				// TODO : to verify
 				/*
@@ -320,8 +293,6 @@ public class LimsDAO {
 				//container.mesuredQuantity=new PropertySingleValue((float) 0); 
 				//container.calculedVolume =new PropertySingleValue((float) 0);  
 
-
-			
 				return container;
 			}
 
