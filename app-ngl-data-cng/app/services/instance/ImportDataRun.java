@@ -68,27 +68,39 @@ public class ImportDataRun implements Runnable {
 		List<Project> projs=InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError);
 		
 		//update projects by block (define by the blockSize)
-		String lProjectsCodes = "(";
+		updateLimsProjects(projs, 100);
+		
+		return projs;
+	}
+	
+	/**
+	 * Function to update ngl_importDate for a list of projects (instead of update them one by one)
+	 * 
+	 * @param projects
+	 * @param blockSize
+	 * @throws DAOException
+	 */
+	public static void updateLimsProjects(List<Project> projects, int blockSize) throws DAOException {
+		
+		String sProjectsCodes = " (";
 		int i = 0;
-		int blockSize = 100;
 		while (i < projects.size()) {
 			 int maxIndex = Math.min(i+blockSize, projects.size()-1); 
 			 List<Project> projectsToUpdate = projects.subList(i, maxIndex); 
 			 for (Project project:projectsToUpdate) {
 				if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code)){
 					//add code to list of codes to update
-					lProjectsCodes += project.code + ",";
+					sProjectsCodes += project.code + ",";
 				    i++;
 				}
 			 }
-			 lProjectsCodes += lProjectsCodes.substring(0, lProjectsCodes.length()-1 ) + ")";
-			 
-			//for debug		
-			Logger.debug("lProjectsCodes :"+lProjectsCodes);
+			 sProjectsCodes = sProjectsCodes.substring(0, sProjectsCodes.length()-1 ) + ")";
+			 		
+			Logger.debug("sProjectsCodes :"+sProjectsCodes);
 			
-			limsServices.updateImportDateForProjects(lProjectsCodes, contextError);
+			limsServices.updateImportDateForProjects(sProjectsCodes, contextError);
 		}		
-		return projs;
+		
 	}
 	
 
