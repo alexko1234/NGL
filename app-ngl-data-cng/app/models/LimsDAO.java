@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import javax.sql.DataSource;
+
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -19,9 +21,11 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -30,7 +34,7 @@ import validation.ContextValidation;
 
 
 /**
- * @author dnoisett
+ * @author dnoisett, 16-10-2013
  *
  */
 @Repository
@@ -43,7 +47,6 @@ public class LimsDAO {
 	private static final String LIMS_CODE="limsCode";
 	protected static final String PROJECT_CATEGORY_CODE = "default";
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
-	protected static final String PROJECT_PROPERTIES_FG_GROUP="fgGroup";
 	protected static final String IMPORT_CATEGORY_CODE="sample-import";
 	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "unknown";
 	protected static final String SAMPLE_CATEGORY_CODE = "default";
@@ -58,27 +61,18 @@ public class LimsDAO {
 
 	public List<Project> findProjectsToCreate(final ContextValidation contextError) throws SQLException, DAOException {
 		
-		//use view v_projectstongl
-		List<Project> results = this.jdbcTemplate.query("select * from v_projectstongl;",new Object[]{} ,new RowMapper<Project>() {
+		//use view v_project_tongl
+		List<Project> results = this.jdbcTemplate.query("select * from v_project_tongl;",new Object[]{} ,new RowMapper<Project>() {
 
 			@SuppressWarnings("rawtypes")
 			public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-				Project project = new Project(rs.getString("code"), rs.getString("name1").trim());
-				//String fgGroupe=rs.getString("groupefg");
-				//if(fgGroupe==null){
-					project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
-				//}
-				//else {
-				//	project.typeCode=PROJECT_TYPE_CODE_FG;
-					project.properties= new HashMap<String, PropertyValue>();
-				//	project.properties.put(PROJECT_PROPERTIES_FG_GROUP, new PropertySingleValue(fgGroupe));
-				//}
-			
+				Project project = new Project(rs.getString("code"), rs.getString("name").trim());
+				project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
+				project.properties= new HashMap<String, PropertyValue>();
 				project.categoryCode=PROJECT_CATEGORY_CODE;
 				project.stateCode="IP";
 				InstanceHelpers.updateTraceInformation(project.traceInformation);
-				
 				project.comments = new ArrayList<Comment>(); 
 				// just one comment for one project
 				InstanceHelpers.addComment(rs.getString("comments"), project.comments);
@@ -86,88 +80,96 @@ public class LimsDAO {
 				return project;
 			}
 		});
-		
 		return results;
 	}
 	
 
 	
 	
-	
-	public List<Sample> findSamplesToCreate(final ContextValidation contextError) throws SQLException, DAOException {
-		
-		List<Sample> results = this.jdbcTemplate.query("select * from v_sampletongl;",new Object[]{} 
-		,new RowMapper<Sample>() {
-
-			@SuppressWarnings("rawtypes")
-			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
-				
-				Sample sample = new Sample();
-				sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
-
-				sample.code=rs.getString("code"); //barcode
-				//Logger.debug("Sample code :"+sample.code);
-				
-				String sampleTypeCode=SAMPLE_TYPE_CODE_DEFAULT;
-				//Logger.debug("Sample Type :"+sampleTypeCode);
-
-				//if(sampleTypeCode==null){
-				//	contextError.addErrors( "typeCode", "limsdao.error.emptymapping", sample.code);
-				//	return null;
-				//}
-				
-				SampleType sampleType=null;
-				try {
-					sampleType = SampleType.find.findByCode(sampleTypeCode);
-				} catch (DAOException e) {
-					Logger.debug("",e);
-					return null;
-				}
-				if( sampleType==null ){
-					contextError.addErrors("code", "error.codeNotExist", sampleTypeCode, sample.code);
-					return null;
-				}
-				
-				sample.typeCode=sampleTypeCode;
-				sample.categoryCode=sampleType.category.code;
+	public Sample commonSampleMapRow(ResultSet rs, int rowNum, ContextValidation contextError) throws SQLException {
 			
-				sample.projectCodes=new ArrayList<String>();
-				sample.projectCodes.add(rs.getString("project_code")); // jointure t_project.name
+			Sample sample = new Sample();
+			sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 
-				sample.name=rs.getString("name1"); // barcode
-				sample.referenceCollab= null; // stockbarcode ?
-				sample.taxonCode=rs.getString("taxoncode"); // t_org.ncbi_taxon_id
-
-				sample.comments=new ArrayList<Comment>(); // comments
-				sample.comments.add(new Comment(rs.getString("comments")));
-
-				//pb : column with different types (not only varchar) !
-				//for(PropertyDefinition propertyDefinition :sampleType.propertiesDefinitions) {
-				//	String code=null;
-				//	try{
-				//		value=rs.getString(propertyDefinition.code.toLowerCase());
-				//		Logger.info("code of property : " + value);
-						
-						if(sample.properties==null){ 
-							sample.properties=new HashMap<String, PropertyValue>();
-						}
-					    sample.properties.put("taxonSize", new PropertySingleValue(rs.getDouble("taxonsize")));
-					    sample.properties.put("isFragmented", new PropertySingleValue(rs.getBoolean("isfragmented")));
-					    sample.properties.put("isAdapters", new PropertySingleValue(rs.getBoolean("isadapters")));
-					    sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("limscode")));
-						
-				//	}catch (SQLException e) {
-				//		Logger.info("Property "+propertyDefinition.code+" not exists in v_sampletongl");
-				//	}
-				//}
-				
-
-				sample.importTypeCode="default-import";
-				//Logger.debug("Import Type "+sample.importTypeCode);
-				return sample;
+			sample.code=rs.getString("code"); //barcode
+			//Logger.debug("Sample code :"+sample.code);
+			
+			String sampleTypeCode=SAMPLE_TYPE_CODE_DEFAULT;
+			if(sampleTypeCode==null){
+				contextError.addErrors( "typeCode", "limsdao.error.emptymapping", sample.code);
+				return null;
 			}
+			
+			SampleType sampleType=null;
+			try {
+				sampleType = SampleType.find.findByCode(sampleTypeCode);
+			} catch (DAOException e) {
+				Logger.debug("",e);
+				return null;
+			}
+			if( sampleType==null ){
+				contextError.addErrors("code", "error.codeNotExist", sampleTypeCode, sample.code);
+				return null;
+			}
+			
+			sample.typeCode=sampleTypeCode;
+			sample.categoryCode=sampleType.category.code;
+		
+			sample.projectCodes=new ArrayList<String>();
+			sample.projectCodes.add(rs.getString("project")); // jointure t_project.name
 
-		});     
+			sample.name=rs.getString("name"); // barcode
+			sample.referenceCollab= null; // stockbarcode ?
+			sample.taxonCode=rs.getString("taxon_code"); // t_org.ncbi_taxon_id
+
+			sample.comments=new ArrayList<Comment>(); // comment
+			sample.comments.add(new Comment(rs.getString("comment")));
+					
+			if(sample.properties==null){ 
+				sample.properties=new HashMap<String, PropertyValue>();
+			}
+		    sample.properties.put("taxonSize", new PropertySingleValue(rs.getDouble("taxonsize")));
+		    sample.properties.put("isFragmented", new PropertySingleValue(rs.getBoolean("isfragmented")));
+		    sample.properties.put("isAdapters", new PropertySingleValue(rs.getBoolean("isadapters")));
+		    sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("limscode")));
+					
+			sample.importTypeCode="default-import";
+			return sample;
+	}
+	
+	
+	public List<Sample> findSamplesToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {
+		
+		List<Sample> results = null;
+		
+		if (sampleCode != null) { // mass loading
+			results = this.jdbcTemplate.query("select * from v_sample_tongl;",new Object[]{sampleCode}
+			,new RowMapper<Sample>() {
+				@SuppressWarnings("rawtypes")
+				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
+					ResultSet rs0 = rs;
+					int rowNum0 = rowNum;
+					ContextValidation ctxErr = contextError; 
+					@SuppressWarnings("rawtypes")
+					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
+					return s;
+				}
+			});
+		}
+		else {
+			results = this.jdbcTemplate.query("select * from v_sample_tongl;",new Object[]{}
+			,new RowMapper<Sample>() {
+				@SuppressWarnings("rawtypes")
+				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
+					ResultSet rs0 = rs;
+					int rowNum0 = rowNum;
+					ContextValidation ctxErr = contextError; 
+					@SuppressWarnings("rawtypes")
+					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
+					return s;
+				}
+			});			
+		}
 		
 		//affect all the project codes to a same sample 
 		/// required to have an ordered list (see ORDER BY clause in the sql of the view)
@@ -197,14 +199,15 @@ public class LimsDAO {
 	
 	
 	/**
-	 * TODO :  find lanes who have flag 'available=0' ( this flag is update to 1 when lane exists in NGL database)
+	 * TODO :  find lanes who have flag 'available=true'
 	 * 
+	 * method for mass loading
 	 * @param contextError
 	 * @return
 	 */
 	public List<Container> findContainersToCreate(ContextValidation contextError){
 
-		List<Container> results = this.jdbcTemplate.query("select * from v_flowcelltongl;",new Object[]{} 
+		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where available = true;",new Object[]{} 
 		,new RowMapper<Container>() {
 
 			@SuppressWarnings("rawtypes")
@@ -212,7 +215,7 @@ public class LimsDAO {
 
 				Container container = new Container();
 				
-				container.code=String.valueOf(rs.getInt("lane_id"));
+				container.code=rs.getString("code");
 				Logger.debug("Container :"+rs.getString("code"));
 				
 				container.categoryCode=CONTAINER_CATEGORY_CODE;
@@ -221,8 +224,7 @@ public class LimsDAO {
 				
 				container.projectCodes=new ArrayList<String>();
 				// TODO : change test value 
-				//container.projectCodes.add(rs.getString("project_code"));
-				container.projectCodes.add("UNKNOWN"); 
+				container.projectCodes.add(rs.getString("project"));
 				
 				container.sampleCodes=new ArrayList<String>();
 				container.sampleCodes.add(rs.getString("code_sample"));
@@ -249,11 +251,12 @@ public class LimsDAO {
 				container.contents.add(content);
 				
 				content.properties = new HashMap<String, PropertyValue>();
-				content.properties.put("index",new PropertySingleValue(rs.getString("idx")));
+				content.properties.put("indexBq",new PropertySingleValue(rs.getString("tag")));
+				content.properties.put("percentPerLane",new PropertySingleValue(rs.getString("percent_per_lane")));
 				
 				// define container support attributes
 				try {
-					container.support=ContainerSupportHelper.getContainerSupport("lane", rs.getInt("nb_lanes"),rs.getString("barcode"),"1",rs.getString("lane_number")); 
+					container.support=ContainerSupportHelper.getContainerSupport("lane", rs.getInt("nb_container"),rs.getString("code_support"),"1",rs.getString("column")); 
 				}
 				catch(DAOException e) {
 					Logger.info("Can't get container support !"); 
@@ -261,31 +264,14 @@ public class LimsDAO {
 				
 				container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 				
-
 				container.comments=new ArrayList<Comment>();	
 				//just one comment for one lane (container)
-				container.comments.add(new Comment(rs.getString("comments")));
+				container.comments.add(new Comment(rs.getString("comment")));
 				
-				// TODO : to verify
-				/*
-				switch (rs.getInt("control")) {
-				case 0: 
-					container.valid= TBoolean.FALSE;
-					break; 
-				case 1: 
-					container.valid= TBoolean.TRUE;
-					break; 
-				case 2: 
-					container.valid= TBoolean.UNSET;
-					break; 
-				default: 
-					container.valid= TBoolean.UNSET;
-					break; 
-				}
-				*/
+				container.valid=null;
 
 				container.properties= new HashMap<String, PropertyValue>();
-				container.properties.put(LIMS_CODE,new PropertySingleValue(rs.getInt("lane_id")));
+				container.properties.put(LIMS_CODE,new PropertySingleValue(rs.getInt("lims_code")));
 
 				//TODO: get measures;
 				//container.mesuredConcentration=new PropertySingleValue((float) 0);
@@ -295,7 +281,6 @@ public class LimsDAO {
 
 				return container;
 			}
-
 		});       
 		
 		//affect all the project codes /samples to the first container 
@@ -320,6 +305,57 @@ public class LimsDAO {
 			}
 			pos++;
 		}
+		return results;
+	}
+	
+	
+	/**
+	 * 
+	 * @param projects
+	 * @param contextError
+	 */
+	public void updateImportDateForProjects(String clauseWhere, ContextValidation contextError) {
+		
+		String rootKeyName=null;
+		contextError.addKeyToRootKeyName("updateImportDateForProjects");
+		
+		try{
+			String sql="UPDATE t_projects SET ngl_importdate = null WHERE name in " + clauseWhere;
+			Logger.debug("sql = "+ sql);
+			this.jdbcTemplate.update(sql);
+		} catch(DataAccessException e){
+			contextError.addErrors("",e.getMessage(), "");
+		}
+		contextError.removeKeyFromRootKeyName("updateImportDateForProjects");
+	}
+	
+	
+	/**
+	 * 
+	 * @param contextError
+	 * @return
+	 */
+	public List<Container> findContainersToCreate(String procedure,ContextValidation contextError, final String containerCategoryCode, final String containerStateCode, final String experimentTypeCode){
+
+		List<Container> results = this.jdbcTemplate.query(procedure,new Object[]{} 
+		,new RowMapper<Container>() {
+
+			@SuppressWarnings("rawtypes")
+			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+				Container container = null;
+				try {
+					//TODO : modify createContainerFromResultSet for running with PostgresSql
+					container = ContainerHelper.createContainerFromResultSet(rs, containerCategoryCode,containerStateCode,experimentTypeCode);
+				} catch (DAOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return container;
+			}
+
+		});        
+
 		return results;
 	}
 
