@@ -3,7 +3,10 @@ package services.description;
 import java.util.ArrayList;
 import java.util.List;
 
-import play.Logger;
+import org.apache.commons.codec.binary.StringUtils;
+
+import com.google.common.base.CaseFormat;
+
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
@@ -35,11 +38,13 @@ import models.laboratory.run.description.RunType;
 import models.laboratory.run.description.TreatmentCategory;
 import models.laboratory.run.description.TreatmentContext;
 import models.laboratory.run.description.TreatmentType;
+import models.laboratory.run.description.TreatmentTypeContext;
 import models.laboratory.sample.description.ImportCategory;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
+import play.Logger;
 
 public class DescriptionFactory {
 
@@ -238,7 +243,8 @@ public class DescriptionFactory {
 		return ic;
 	}
 
-	public static InstrumentUsedType newInstrumentUsedType(String name, String code, InstrumentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Instrument> instruments) throws DAOException{
+	public static InstrumentUsedType newInstrumentUsedType(String name, String code, InstrumentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Instrument> instruments,
+			List<ContainerSupportCategory> inContainerSupportCategories, List<ContainerSupportCategory> outContainerSupportCategories) throws DAOException{
 		InstrumentUsedType iut = new InstrumentUsedType();
 		iut.code =code;
 		iut.name =name;
@@ -246,7 +252,8 @@ public class DescriptionFactory {
 		iut.objectType = ObjectType.find.findByCode(ObjectType.CODE.Instrument.name());
 		iut.propertiesDefinitions = propertiesDefinitions;
 		iut.instruments = instruments;
-		
+		iut.inContainerSupportCategories = inContainerSupportCategories;
+		iut.outContainerSupportCategories = outContainerSupportCategories;
 		return iut; 
 	}
 
@@ -280,7 +287,7 @@ public class DescriptionFactory {
 	
 	public static ImportType newImportType(String name, String code, ImportCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException{
 		ImportType st = new ImportType();
-		st.code = code;
+		st.code = code.toLowerCase();
 		st.name = name;
 		st.category = category;
 		st.objectType = ObjectType.find.findByCode(ObjectType.CODE.Import.name());
@@ -290,7 +297,7 @@ public class DescriptionFactory {
 	
 	public static ProjectType newProjectType(String name, String code, ProjectCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException{
 		ProjectType st = new ProjectType();
-		st.code = code;
+		st.code = code.toLowerCase();
 		st.name = name;
 		st.category = category;
 		st.objectType = ObjectType.find.findByCode(ObjectType.CODE.Project.name());
@@ -313,7 +320,7 @@ public class DescriptionFactory {
 	
 	public static RunType newRunType(String name, String code, Integer nbLanes, RunCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException {
 		RunType rt = new RunType();
-		rt.code = code.toLowerCase();
+		rt.code = code;
 		rt.name = name;
 		rt.nbLanes = nbLanes;
 		rt.category = category;
@@ -332,7 +339,7 @@ public class DescriptionFactory {
 		return tc;
 	}
 	
-	public static TreatmentType newTreatmentType(String name, String code, TreatmentCategory category, String names, List<PropertyDefinition> propertiesDefinitions, List<TreatmentContext>  contexts) throws DAOException {
+	public static TreatmentType newTreatmentType(String name, String code, TreatmentCategory category, String names, List<PropertyDefinition> propertiesDefinitions, List<TreatmentTypeContext>  contexts) throws DAOException {
 		TreatmentType tt = new TreatmentType();
 		tt.code = code.toLowerCase();
 		tt.name = name;
@@ -345,95 +352,7 @@ public class DescriptionFactory {
 	}
 	
 	
-	/*
-	 * 	public static List<String> getTreatmentCodes() {
-		if(null == treatmentCodes){
-			treatmentCodes = new ArrayList<String>();
-			treatmentCodes.add("ngsrg");
-			treatmentCodes.add("global");
-			treatmentCodes.add("sav");			
-		}
-		return treatmentCodes;
-	}
 
-	
-	static List<String> treatmentTypeCodes = null;
-
-	public static List<String> getTreatmentTypeCodes() {
-		if(null == treatmentTypeCodes){
-			treatmentTypeCodes = new ArrayList<String>();
-			treatmentTypeCodes.add("ngsrg-illumina");
-			treatmentTypeCodes.add("global");
-			treatmentTypeCodes.add("sav");			
-		}
-		return treatmentTypeCodes;
-	}
-	
-	
-	static List<String> treatmentCatTypeCodes = null;
-
-	public static List<String> getTreatmentCatTypeCodes() {
-		if(null == treatmentCatTypeCodes){
-			treatmentCatTypeCodes = new ArrayList<String>();
-			treatmentCatTypeCodes.add("ngsrg");
-			treatmentCatTypeCodes.add("global");
-			treatmentCatTypeCodes.add("sequencing");			
-		}
-		return treatmentCatTypeCodes;
-	}
-	
-	static List<String> treatmentContextCodes = null;
-	public static List<String> getTreatmentContextCodes() {
-		if(null == treatmentContextCodes){
-			treatmentContextCodes = new ArrayList<String>();
-			treatmentContextCodes.add("default");
-			treatmentContextCodes.add("read1");
-			treatmentContextCodes.add("read2");
-			treatmentContextCodes.add("pairs");
-			treatmentContextCodes.add("single");
-			
-		}
-		return treatmentContextCodes;
-	}
-	
-	
-	static List<String> runStatesCode = null;
-	public static List<String> getRunStateCodes() {
-		if(null == runStatesCode){
-			runStatesCode = new ArrayList<String>();
-			runStatesCode.add("IP_S");
-			runStatesCode.add("IP_RG");
-			runStatesCode.add("F_RG");
-			runStatesCode.add("F");			
-		}
-		return runStatesCode;
-	}
-	
-	static List<String> readSetStatesCode = null;
-	public static List<String> getReadSetStateCodes() {
-		if(null == readSetStatesCode){
-			readSetStatesCode = new ArrayList<String>();
-			readSetStatesCode.add("IP_RG");
-			readSetStatesCode.add("F_RG");
-			readSetStatesCode.add("IW_QC");
-			readSetStatesCode.add("F_QC");
-			readSetStatesCode.add("A");
-			readSetStatesCode.add("UA");
-		}
-		return readSetStatesCode;
-	}
-	
-	static List<String> runTypeCode = null;
-	public static List<String> getRunTypeCodes() {
-		if(null == runTypeCode){
-			runTypeCode = new ArrayList<String>();
-			runTypeCode.add("RHS2000");
-			runTypeCode.add("RHS2500");
-			runTypeCode.add("RHS2500R");			
-		}
-		return runTypeCode;
-	}
-	 */
 	
 
 }
