@@ -2,9 +2,7 @@ package services.instance;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import models.LimsDAO;
 import models.laboratory.container.instance.Container;
@@ -16,9 +14,8 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import play.Logger;
+import play.Play;
 import play.api.modules.spring.Spring;
-import play.data.validation.ValidationError;
-import play.i18n.Messages;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 
@@ -26,6 +23,8 @@ public class ImportDataRun implements Runnable {
 
 	static ContextValidation contextError = new ContextValidation();
 	static LimsDAO  limsServices = Spring.getBeanOfType(LimsDAO.class);
+	
+	private static final int blockSize = Integer.parseInt(Play.application().configuration().getString("db.lims.update.blockSize")); 
 
 
 	@Override
@@ -35,7 +34,7 @@ public class ImportDataRun implements Runnable {
 		Logger.info("ImportData execution : ");
 		try{
 			Logger.info(" Import Containers ... ");
-			createSamplesFromLims();
+			createContainersFromLims();
 			//Maud's code
 			//createContainers(contextError,"select * from v_sampletongl;","lane","F",null,null); 
 		}catch (Exception e) {
@@ -64,7 +63,7 @@ public class ImportDataRun implements Runnable {
 		List<Project> projs=InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError);
 		
 		//update project's dates by block (define by the blockSize)
-		updateLimsProjects(projs, 10);
+		updateLimsProjects(projs, blockSize);
 		
 		return projs;
 	}
@@ -80,6 +79,7 @@ public class ImportDataRun implements Runnable {
 		
 		Logger.debug("start of updateLimsProjects"); 
 		int i = 0;
+
 		List<String> codesToUpdate = new ArrayList<String>();
 
 		while (i < projects.size()) {
@@ -111,9 +111,8 @@ public class ImportDataRun implements Runnable {
 		List<Sample> samples = limsServices.findSamplesToCreate(contextError, null); // 2nd parameter null for mass loading
 
 		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError);
-		
-		//update project's dates by block (define by the blockSize)
-		updateLimsSamples(samps, 500);
+			
+		updateLimsSamples(samps, blockSize);
 		
 		return samps;
 	}
@@ -152,14 +151,33 @@ public class ImportDataRun implements Runnable {
 	
 	public static List<Container> createContainersFromLims() throws SQLException, DAOException{
 		List<Container> containers = limsServices.findContainersToCreate(contextError) ;
-		for(Container container:containers){
-			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code)){
-				MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code);
-				//Logger.debug("Container to create :"+container.code);
-			}
-		}
+
 		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError);
+		
+		updateLimsContainers(ctrs, blockSize);
+		
 		return ctrs;
+	}
+	
+	
+	public static void updateLimsContainers(List<Container> ts, int blockSize) throws DAOException {
+		
+		Logger.debug("start of updateLimsContainers"); 
+		int i = 0;
+		List<String> codesToUpdate = new ArrayList<String>();
+
+		while (i < ts.size()) {
+			
+			codesToUpdate.clear();
+			 for (Container t : ts.subList(i, Math.min(i+blockSize, ts.size()))) {
+				 //codesToUpdate.add(Integer.parseInt(t.properties.get("limsCode").value.toString()));
+				 codesToUpdate.add(t.code);
+			 }
+
+			 i = i + blockSize; 
+			limsServices.updateImportDate( "t_lane", "(f.barcode::text || '_'::text) || l.number", codesToUpdate.toArray(new String[blockSize]), contextError);
+		}	
+		Logger.debug("end of updateLimsContainers"); 
 	}
 	
 	
