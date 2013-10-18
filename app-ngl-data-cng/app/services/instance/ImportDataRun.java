@@ -35,7 +35,7 @@ public class ImportDataRun implements Runnable {
 		Logger.info("ImportData execution : ");
 		try{
 			Logger.info(" Import Containers ... ");
-			createProjectsFromLims();
+			createSamplesFromLims();
 			//Maud's code
 			//createContainers(contextError,"select * from v_sampletongl;","lane","F",null,null); 
 		}catch (Exception e) {
@@ -59,16 +59,12 @@ public class ImportDataRun implements Runnable {
      */
 	public static List<Project> createProjectsFromLims() throws SQLException, DAOException{
 		List<Project> projects = limsServices.findProjectsToCreate(contextError) ;
-		for(Project project:projects){
-			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code)){
-				MongoDBDAO.deleteByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code);
-				//Logger.debug("Project to create :"+project.code);
-			}
-		}
+
+		//save projects
 		List<Project> projs=InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError);
 		
-		//update projects by block (define by the blockSize)
-		updateLimsProjects(projs, 100);
+		//update project's dates by block (define by the blockSize)
+		updateLimsProjects(projs, 10);
 		
 		return projs;
 	}
@@ -82,25 +78,21 @@ public class ImportDataRun implements Runnable {
 	 */
 	public static void updateLimsProjects(List<Project> projects, int blockSize) throws DAOException {
 		
-		String sProjectsCodes = " (";
+		Logger.debug("start of updateLimsProjects"); 
 		int i = 0;
+		List<String> codesToUpdate = new ArrayList<String>();
+
 		while (i < projects.size()) {
-			 int maxIndex = Math.min(i+blockSize, projects.size()-1); 
-			 List<Project> projectsToUpdate = projects.subList(i, maxIndex); 
-			 for (Project project:projectsToUpdate) {
-				if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code)){
-					//add code to list of codes to update
-					sProjectsCodes += project.code + ",";
-				    i++;
-				}
-			 }
-			 sProjectsCodes = sProjectsCodes.substring(0, sProjectsCodes.length()-1 ) + ")";
-			 		
-			Logger.debug("sProjectsCodes :"+sProjectsCodes);
 			
-			limsServices.updateImportDateForProjects(sProjectsCodes, contextError);
-		}		
-		
+			codesToUpdate.clear();
+			 for (Project project : projects.subList(i, Math.min(i+blockSize, projects.size()))) {
+				 codesToUpdate.add(project.code);
+			 }
+
+			 i = i + blockSize; 
+			limsServices.updateImportDate( "t_project", "name", codesToUpdate.toArray(new String[blockSize]), contextError);
+		}	
+		Logger.debug("end of updateLimsProjects"); 
 	}
 	
 
@@ -117,15 +109,35 @@ public class ImportDataRun implements Runnable {
 	
 	public static List<Sample> createSamplesFromLims() throws SQLException, DAOException{
 		List<Sample> samples = limsServices.findSamplesToCreate(contextError, null); // 2nd parameter null for mass loading
-		for(Sample sample:samples){
-			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code)){
-				MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
-				//Logger.debug("Sample to create :"+sample.code);
-			}
-		}
+
 		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError);
+		
+		//update project's dates by block (define by the blockSize)
+		updateLimsSamples(samps, 500);
+		
 		return samps;
 	}
+	
+
+	public static void updateLimsSamples(List<Sample> ts, int blockSize) throws DAOException {
+		
+		Logger.debug("start of updateLimsSamples"); 
+		int i = 0;
+		List<String> codesToUpdate = new ArrayList<String>();
+
+		while (i < ts.size()) {
+			
+			codesToUpdate.clear();
+			 for (Sample t : ts.subList(i, Math.min(i+blockSize, ts.size()))) {
+				 codesToUpdate.add(t.code);
+			 }
+
+			 i = i + blockSize; 
+			limsServices.updateImportDate( "t_sample", "stock_barcode", codesToUpdate.toArray(new String[blockSize]), contextError);
+		}	
+		Logger.debug("end of updateLimsSamples"); 
+	}
+	
 	
 	
 	public static void deleteContainersFromLims() throws SQLException, DAOException{
