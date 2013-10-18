@@ -1,8 +1,12 @@
 package models;
 
 
+import java.util.Date;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +29,10 @@ import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 import play.Logger;
 import validation.ContextValidation;
@@ -92,7 +97,7 @@ public class LimsDAO {
 			sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 
 			sample.code=rs.getString("code"); //barcode
-			//Logger.debug("Sample code :"+sample.code);
+			Logger.debug("Sample code :"+sample.code);
 			
 			String sampleTypeCode=SAMPLE_TYPE_CODE_DEFAULT;
 			if(sampleTypeCode==null){
@@ -116,14 +121,14 @@ public class LimsDAO {
 			sample.categoryCode=sampleType.category.code;
 		
 			sample.projectCodes=new ArrayList<String>();
-			sample.projectCodes.add(rs.getString("project")); // jointure t_project.name
+			sample.projectCodes.add(rs.getString("project")); // t_project.name
 
 			sample.name=rs.getString("name"); // barcode
 			sample.referenceCollab= null; // stockbarcode ?
 			sample.taxonCode=rs.getString("taxon_code"); // t_org.ncbi_taxon_id
 
-			sample.comments=new ArrayList<Comment>(); // comment
-			sample.comments.add(new Comment(rs.getString("comment")));
+			sample.comments=new ArrayList<Comment>(); // comments
+			sample.comments.add(new Comment(rs.getString("comments")));
 					
 			if(sample.properties==null){ 
 				sample.properties=new HashMap<String, PropertyValue>();
@@ -131,7 +136,7 @@ public class LimsDAO {
 		    sample.properties.put("taxonSize", new PropertySingleValue(rs.getDouble("taxonsize")));
 		    sample.properties.put("isFragmented", new PropertySingleValue(rs.getBoolean("isfragmented")));
 		    sample.properties.put("isAdapters", new PropertySingleValue(rs.getBoolean("isadapters")));
-		    sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("limscode")));
+		    sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("lims_code")));
 					
 			sample.importTypeCode="default-import";
 			return sample;
@@ -142,7 +147,7 @@ public class LimsDAO {
 		
 		List<Sample> results = null;
 		
-		if (sampleCode != null) { // mass loading
+		if (sampleCode != null) { 
 			results = this.jdbcTemplate.query("select * from v_sample_tongl;",new Object[]{sampleCode}
 			,new RowMapper<Sample>() {
 				@SuppressWarnings("rawtypes")
@@ -156,7 +161,7 @@ public class LimsDAO {
 				}
 			});
 		}
-		else {
+		else { // mass loading
 			results = this.jdbcTemplate.query("select * from v_sample_tongl;",new Object[]{}
 			,new RowMapper<Sample>() {
 				@SuppressWarnings("rawtypes")
@@ -309,24 +314,37 @@ public class LimsDAO {
 	}
 	
 	
+	
 	/**
 	 * 
 	 * @param projects
 	 * @param contextError
 	 */
-	public void updateImportDateForProjects(String clauseWhere, ContextValidation contextError) {
+	public void updateImportDate(String tableName, String keyColumn, String[] keyCodes, ContextValidation contextError) {
 		
-		String rootKeyName=null;
-		contextError.addKeyToRootKeyName("updateImportDateForProjects");
+		contextError.addKeyToRootKeyName("updateImportDateForSamples");
 		
-		try{
-			String sql="UPDATE t_projects SET ngl_importdate = null WHERE name in " + clauseWhere;
-			Logger.debug("sql = "+ sql);
-			this.jdbcTemplate.update(sql);
-		} catch(DataAccessException e){
-			contextError.addErrors("",e.getMessage(), "");
+		String sql="UPDATE " + tableName + " SET nglimport_date = ? WHERE " + keyColumn + " = ANY (?)";
+		//alternative sql
+		//String sql="UPDATE " + tableName + " SET nglimport_date = ? WHERE name IN (SELECT UNNEST(?::VARCHAR[]))" ; 
+		
+		Logger.debug("sql = "+ sql);
+		
+		try {
+			Connection conn = this.jdbcTemplate.getDataSource().getConnection();
+			PreparedStatement pst = conn.prepareStatement(sql);
+			
+			pst.setObject(1, new Date(), Types.TIMESTAMP);
+			pst.setArray(2, conn.createArrayOf("text", keyCodes));
+			//arrayLiteral = "{A,\"B \", C,D}"
+			//pst.setString(2, arrayLiteral)
+            pst.execute();
+            pst.close();
 		}
-		contextError.removeKeyFromRootKeyName("updateImportDateForProjects");
+		catch(Exception e) {
+			contextError.addErrors("",e.getMessage(), sql, new Date(), keyCodes);
+		}
+		contextError.removeKeyFromRootKeyName("updateImportDateForSamples");
 	}
 	
 	
