@@ -212,7 +212,7 @@ public class LimsDAO {
 	 */
 	public List<Container> findContainersToCreate(ContextValidation contextError){
 
-		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where available = true;",new Object[]{} 
+		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true;",new Object[]{} 
 		,new RowMapper<Container>() {
 
 			@SuppressWarnings("rawtypes")
@@ -256,7 +256,7 @@ public class LimsDAO {
 				container.contents.add(content);
 				
 				content.properties = new HashMap<String, PropertyValue>();
-				content.properties.put("indexBq",new PropertySingleValue(rs.getString("tag")));
+				content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
 				content.properties.put("percentPerLane",new PropertySingleValue(rs.getString("percent_per_lane")));
 				
 				// define container support attributes
@@ -320,7 +320,7 @@ public class LimsDAO {
 	 * @param projects
 	 * @param contextError
 	 */
-	public void updateImportDate(String tableName, String keyColumn, String[] keyCodes, ContextValidation contextError) {
+	public void updateImportDate(String tableName, String keyColumn, String[] values, ContextValidation contextError) {
 		
 		contextError.addKeyToRootKeyName("updateImportDateForSamples");
 		
@@ -335,14 +335,15 @@ public class LimsDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			
 			pst.setObject(1, new Date(), Types.TIMESTAMP);
-			pst.setArray(2, conn.createArrayOf("text", keyCodes));
+			//other possible : "integer"
+			pst.setArray(2, conn.createArrayOf("text", values));
 			//arrayLiteral = "{A,\"B \", C,D}"
 			//pst.setString(2, arrayLiteral)
             pst.execute();
             pst.close();
 		}
 		catch(Exception e) {
-			contextError.addErrors("",e.getMessage(), sql, new Date(), keyCodes);
+			contextError.addErrors("",e.getMessage(), sql, new Date(), values);
 		}
 		contextError.removeKeyFromRootKeyName("updateImportDateForSamples");
 	}
