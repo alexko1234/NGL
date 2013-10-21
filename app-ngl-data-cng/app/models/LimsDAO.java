@@ -326,7 +326,7 @@ public class LimsDAO {
 	 * @param projects
 	 * @param contextError
 	 */
-	public void updateImportDate(String tableName, String keyColumn, String[] values, ContextValidation contextError) {
+	public void updateImportDate(String tableName, String keyColumn, String keyColumnType, String[] values, ContextValidation contextError) {
 		
 		contextError.addKeyToRootKeyName("updateImportDateForSamples");
 		
@@ -342,7 +342,7 @@ public class LimsDAO {
 			
 			pst.setObject(1, new Date(), Types.TIMESTAMP);
 			//other possible : "integer"
-			pst.setArray(2, conn.createArrayOf("text", values));
+			pst.setArray(2, conn.createArrayOf(keyColumnType, values));
 			//arrayLiteral = "{A,\"B \", C,D}"
 			//pst.setString(2, arrayLiteral)
             pst.execute();
