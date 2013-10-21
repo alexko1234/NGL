@@ -264,7 +264,7 @@ public class LimsDAO {
 					container.projectCodes.add(rs.getString("project"));
 				}
 				
-				if(rs.getString("sampleCode")!=null){
+				if(rs.getString("code_sample")!=null){
 					Content content = new Content();
 					content.sampleUsed=new SampleUsed();
 					content.sampleUsed.sampleCode=rs.getString("code_sample");
