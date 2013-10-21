@@ -24,7 +24,7 @@ public class ImportDataRun implements Runnable {
 	static ContextValidation contextError = new ContextValidation();
 	static LimsDAO  limsServices = Spring.getBeanOfType(LimsDAO.class);
 	
-	private static final int blockSize = Integer.parseInt(Play.application().configuration().getString("db.lims.update.blockSize")); 
+	private static final int blockSize = Integer.parseInt(Play.application().configuration().getString("database.lims.update.blockSize")); 
 
 
 	@Override
@@ -175,7 +175,7 @@ public class ImportDataRun implements Runnable {
 			 }
 
 			 i = i + blockSize; 
-			limsServices.updateImportDate( "t_lane", "(f.barcode::text || '_'::text) || l.number", codesToUpdate.toArray(new String[blockSize]), contextError);
+			limsServices.updateImportDate( "t_lane", "(barcode::text || '_'::text) || l.number", codesToUpdate.toArray(new String[blockSize]), contextError);
 		}	
 		Logger.debug("end of updateLimsContainers"); 
 	}
