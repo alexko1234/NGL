@@ -250,7 +250,7 @@ public class LimsDAO {
 				//	container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));
 				//}
 				
-				//TODO: get measures;
+				//set to 0 ?
 				//container.mesuredConcentration=new PropertySingleValue((float) 0);
 				//container.mesuredVolume=new PropertySingleValue((float) 0);
 				//container.mesuredQuantity=new PropertySingleValue((float) 0); 
