@@ -49,7 +49,6 @@ public class LimsDAO {
 
 	private static final String CONTAINER_CATEGORY_CODE= "lane";
 	private static final String CONTAINER_STATE_CODE="F";
-	private static final String LIMS_CODE="limsCode";
 	protected static final String PROJECT_CATEGORY_CODE = "default";
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
 	protected static final String IMPORT_CATEGORY_CODE="sample-import";
@@ -220,44 +219,21 @@ public class LimsDAO {
 
 				Container container = new Container();
 				
+				container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
+				
 				container.code=rs.getString("code");
 				Logger.debug("Container :"+rs.getString("code"));
 				
 				container.categoryCode=CONTAINER_CATEGORY_CODE;
 				
-				container.processTypeCode = null;
-				
-				container.projectCodes=new ArrayList<String>();
-				// TODO : change test value 
-				container.projectCodes.add(rs.getString("project"));
-				
-				container.sampleCodes=new ArrayList<String>();
-				container.sampleCodes.add(rs.getString("code_sample"));
-				
-				container.fromExperimentTypeCodes = new ArrayList<String>(); //not required
-				
-				container.fromPurifingCode = null; // not required
-				
-				
-				container.resolutionCode = null; // not required
+				if (rs.getString("comment") != null) {
+					container.comments=new ArrayList<Comment>();	
+					//just one comment for one lane (container)
+					container.comments.add(new Comment(rs.getString("comment")));
+				}
 				
 				container.stateCode=CONTAINER_STATE_CODE; // required
-				
-				//define content
-				Content content = new Content();
-				content.sampleUsed=new SampleUsed();
-				content.sampleUsed.sampleCode=rs.getString("code_sample");
-				
-				//TODO : change default value
-				content.sampleUsed.categoryCode = "unknown"; // required
-				content.sampleUsed.typeCode = "unknown"; // required
-				
-				container.contents=new ArrayList<Content>();
-				container.contents.add(content);
-				
-				content.properties = new HashMap<String, PropertyValue>();
-				content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
-				content.properties.put("percentPerLane",new PropertySingleValue(rs.getString("percent_per_lane")));
+				container.valid=null;
 				
 				// define container support attributes
 				try {
@@ -267,22 +243,52 @@ public class LimsDAO {
 					Logger.info("Can't get container support !"); 
 				}
 				
-				container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
-				
-				container.comments=new ArrayList<Comment>();	
-				//just one comment for one lane (container)
-				container.comments.add(new Comment(rs.getString("comment")));
-				
-				container.valid=null;
-
 				container.properties= new HashMap<String, PropertyValue>();
-				container.properties.put(LIMS_CODE,new PropertySingleValue(rs.getInt("lims_code")));
-
+				container.properties.put("limsCode",new PropertySingleValue(rs.getInt("lims_code")));
+				
+				//if(rs.getString("receptionDate")!=null){
+				//	container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));
+				//}
+				
 				//TODO: get measures;
 				//container.mesuredConcentration=new PropertySingleValue((float) 0);
 				//container.mesuredVolume=new PropertySingleValue((float) 0);
 				//container.mesuredQuantity=new PropertySingleValue((float) 0); 
 				//container.calculedVolume =new PropertySingleValue((float) 0);  
+				
+				container.fromExperimentTypeCodes = new ArrayList<String>(); //not required
+				
+				
+				if(rs.getString("project")!=null) { // a signaler a maud
+					container.projectCodes=new ArrayList<String>();
+					container.projectCodes.add(rs.getString("project"));
+				}
+				
+				if(rs.getString("sampleCode")!=null){
+					Content content = new Content();
+					content.sampleUsed=new SampleUsed();
+					content.sampleUsed.sampleCode=rs.getString("code_sample");
+					//TODO : change default value
+					content.sampleUsed.categoryCode = "unknown"; // required
+					content.sampleUsed.typeCode = "unknown"; // required
+					
+					container.contents=new ArrayList<Content>();
+					container.contents.add(content);
+					
+					container.sampleCodes=new ArrayList<String>();
+					container.sampleCodes.add(rs.getString("code_sample"));
+					
+					if (rs.getString("tag") != null || rs.getString("percent_per_lane") != null) {
+						content.properties = new HashMap<String, PropertyValue>();
+						content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+						content.properties.put("percentPerLane",new PropertySingleValue(rs.getString("percent_per_lane")));
+					}
+				}
+			
+				//
+				container.processTypeCode = null; // not required
+				container.fromPurifingCode = null; // not required				
+				container.resolutionCode = null; // not required
 
 				return container;
 			}
