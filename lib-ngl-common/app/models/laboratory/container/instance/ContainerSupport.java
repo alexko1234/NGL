@@ -9,9 +9,8 @@ import models.utils.InstanceConstants;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import validation.ContextValidation;
-import validation.DescriptionValidationHelper;
 import validation.IValidation;
-import validation.InstanceValidationHelper;
+import validation.container.instance.ContainerSupportValidationHelper;
 import validation.utils.BusinessValidationHelper;
 
 
@@ -19,11 +18,11 @@ import validation.utils.BusinessValidationHelper;
 /**
  * 
  * Embedded data in collection Container
- * Associate support and container with a position (x,y)
+ * Associate support and container with a position (column, line)
  * 
- * If container category is  tube, the position is (x,y)=(1,1) and support category is 'VIDE'
+ * If container category is  tube, the position is (column,line)=(1,1) and support category is 'VIDE'
  * 
- * A support intance defines by unique barcode or name ?? are in many container support with different position 
+ * A support intance defines by unique barcode /line/column, a barCode can be referenced in many container.support 
  * 
  * @author mhaquell
  *
@@ -33,14 +32,14 @@ public class ContainerSupport implements IValidation {
 	// Support name
 	public String name;
 	public String barCode;
-	
+		
 	public String categoryCode;
 
 	public String stockCode;
 	
-	// Position
-	public String x;
-	public String y;
+	// Container Position in support
+	public String column;
+	public String line;
 	
 	@JsonIgnore
 	public ContainerSupportCategory getContainerSupportCategory(){
@@ -59,11 +58,9 @@ public class ContainerSupport implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 
-		BusinessValidationHelper.validateUniqueFieldValue(contextValidation, "barCode", barCode, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
-		//TODO
-		//Unicite de la position du container dans le support ( x,y,barCode )
-		DescriptionValidationHelper.validationContainerSupportCategoryCode(categoryCode, contextValidation);
-		InstanceValidationHelper.validationStockCode(stockCode, contextValidation);
+		ContainerSupportValidationHelper.validateUniqueBarCodePosition(this, contextValidation);
+		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(categoryCode, contextValidation);
+		ContainerSupportValidationHelper.validateStockCode(stockCode, contextValidation);
 
 	}
 
