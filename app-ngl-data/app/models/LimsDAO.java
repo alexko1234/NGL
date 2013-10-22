@@ -384,8 +384,8 @@ public class LimsDAO {
 				Content content= new Content(sampleUsed);
 				// Todo add properties from ExperimentType
 				content.properties=new HashMap<String, PropertyValue>();
-				content.properties.put("perPiste", new PropertySingleValue(rs.getFloat("perPiste")));
-				content.properties.put("indexBq",new PropertySingleValue(rs.getString("indexBq")));
+				content.properties.put("percentPerLane", new PropertySingleValue(rs.getFloat("percentPerLane")));
+				content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
 				return content;
 			}
 
