@@ -12,9 +12,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import play.Logger;
 import validation.ContextValidation;
-import validation.DescriptionValidationHelper;
 import validation.IValidation;
 import validation.InstanceValidationHelper;
+import validation.common.instance.CommonValidationHelper;
+import validation.container.instance.SampleUsedValidationHelper;
 import validation.utils.BusinessValidationHelper;
 
 public class SampleUsed implements IValidation{
@@ -61,12 +62,9 @@ public class SampleUsed implements IValidation{
 	@Override
 	public void validate(ContextValidation contextValidation) {
 
-		InstanceValidationHelper.validationSampleCode(sampleCode, contextValidation);
-		DescriptionValidationHelper.validationSampleCategoryCode(categoryCode,contextValidation);
-		DescriptionValidationHelper.validationSampleTypeCode(typeCode,contextValidation);
-		//DescriptionValidation.validationCategoryCode(categoryCode, contextValidation, SampleCategory.find);
-		//DescriptionValidation.validationRequiredTypeCode(typeCode, contextValidation, SampleType.find);
-
+		SampleUsedValidationHelper.validateSampleCode(sampleCode, contextValidation);
+		SampleUsedValidationHelper.validateSampleCategoryCode(categoryCode,contextValidation);
+		SampleUsedValidationHelper.validateSampleTypeCode(typeCode,contextValidation);
 	}
 
 }

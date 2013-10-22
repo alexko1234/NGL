@@ -14,8 +14,8 @@ public class ContainerSupportHelper {
 		ContainerSupport containerSupport=new ContainerSupport();
 		containerSupport.barCode=barCode;	
 		containerSupport.categoryCode="tube";
-		containerSupport.x="1";
-		containerSupport.y="1";
+		containerSupport.column="1";
+		containerSupport.line="1";
 		return containerSupport;
 	}
 
@@ -29,8 +29,8 @@ public class ContainerSupportHelper {
 		ContainerSupport containerSupport=new ContainerSupport();
 		containerSupport.barCode=barCode;	
 		containerSupport.categoryCode=containerSupportCategories.get(0).code;
-		containerSupport.x=x;
-		containerSupport.y=y;
+		containerSupport.column=x;
+		containerSupport.line=y;
 		return containerSupport;
 	}
 

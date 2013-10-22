@@ -2,9 +2,13 @@ package utils;
 
 
 import static play.test.Helpers.fakeApplication;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import play.test.FakeApplication;
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 
 //@RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractTests {
@@ -55,5 +59,13 @@ public abstract class AbstractTests {
 		
 	}
 	
-	
+	public static <T extends DBObject> T saveDBOject(Class<T> type, String collectionName,String code)
+			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+
+		String collection=type.getSimpleName();
+		T object = (T) Class.forName (type.getName()).newInstance();
+		object.code=code;
+		object=MongoDBDAO.save(collectionName, object);
+		return object;
+	}
 }

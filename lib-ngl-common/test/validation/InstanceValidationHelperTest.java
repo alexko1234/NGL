@@ -20,6 +20,9 @@ import org.junit.Test;
 import play.test.Helpers;
 import utils.AbstractTests;
 import validation.InstanceValidationHelper;
+import validation.common.instance.CommonValidationHelper;
+import validation.container.instance.ContainerSupportValidationHelper;
+import validation.container.instance.ContainerValidationHelper;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
@@ -32,9 +35,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	static Sample sample;
 	static Sample sample1;
 	
-	static Experiment experiment;
-	static Experiment experiment1;
-
+	
 	static Stock stock;
 	
 	static Container container;
@@ -63,8 +64,6 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		sample=saveDBOject(Sample.class,InstanceConstants.SAMPLE_COLL_NAME,"sample");
 		sample1=saveDBOject(Sample.class,InstanceConstants.SAMPLE_COLL_NAME,"sample1");
 		
-		experiment=saveDBOject(Experiment.class,InstanceConstants.EXPERIMENT_COLL_NAME,"experiment");
-		experiment1=saveDBOject(Experiment.class,InstanceConstants.EXPERIMENT_COLL_NAME,"experiment1");
 		
 		stock=saveDBOject(Stock.class,InstanceConstants.STOCK_COLL_NAME,"stock");
 		
@@ -82,9 +81,6 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
 		MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample1);
 
-		MongoDBDAO.delete(InstanceConstants.EXPERIMENT_COLL_NAME, experiment);
-		MongoDBDAO.delete(InstanceConstants.EXPERIMENT_COLL_NAME, experiment1);
-
 		MongoDBDAO.delete(InstanceConstants.STOCK_COLL_NAME, stock);
 		
 		MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
@@ -99,7 +95,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		List<String> projects=new ArrayList<String>();
 		projects.add(project.code);
 		projects.add(project1.code);
-		InstanceValidationHelper.validationProjectCodes(projects,contextValidation );
+		CommonValidationHelper.validateProjectCodes(projects,contextValidation );
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
@@ -107,7 +103,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	public  void validationProjectCodesRequiredTest(){
 		ContextValidation contextValidation=new ContextValidation();
 		List<String> projects=new ArrayList<String>();
-		InstanceValidationHelper.validationProjectCodes(projects,contextValidation );
+		CommonValidationHelper.validateProjectCodes(projects,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
@@ -116,7 +112,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		ContextValidation contextValidation=new ContextValidation();
 		List<String> projects=new ArrayList<String>();
 		projects.add("notexist");
-		InstanceValidationHelper.validationProjectCodes(projects,contextValidation );
+		CommonValidationHelper.validateProjectCodes(projects,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 
@@ -149,7 +145,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		List<String> samples=new ArrayList<String>();
 		samples.add(sample.code);
 		samples.add(sample1.code);
-		InstanceValidationHelper.validationSampleCodes(samples,contextValidation );
+		CommonValidationHelper.validateSampleCodes(samples,contextValidation );
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
@@ -157,7 +153,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	public  void validationSampleCodesRequiredTest(){
 		ContextValidation contextValidation=new ContextValidation();
 		List<String> samples=new ArrayList<String>();
-		InstanceValidationHelper.validationSampleCodes(samples,contextValidation );
+		CommonValidationHelper.validateSampleCodes(samples,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
@@ -166,7 +162,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		ContextValidation contextValidation=new ContextValidation();
 		List<String> samples=new ArrayList<String>();
 		samples.add("notexist");
-		InstanceValidationHelper.validationSampleCodes(samples,contextValidation );
+		CommonValidationHelper.validateSampleCodes(samples,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 
@@ -192,54 +188,13 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 
-	@Test
-	public  void validationExperimentCodesTest(){
-		ContextValidation contextValidation=new ContextValidation();
-		List<String> experiments=new ArrayList<String>();
-		experiments.add(experiment.code);
-		experiments.add(experiment1.code);
-		InstanceValidationHelper.validationExperimentCodes(experiments,contextValidation );
-		assertThat(contextValidation.errors.size()).isEqualTo(0);
-	}
+
+
 	
-	
-	@Test
-	public  void validationExperimentCodesNotExistTest(){
-		ContextValidation contextValidation=new ContextValidation();
-		List<String> experiments=new ArrayList<String>();
-		experiments.add("notexist");
-		InstanceValidationHelper.validationExperimentCodes(experiments,contextValidation );
-		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
-	}
-
-
-	@Test
-	public  void validationExperimentCodeTest(){
-		ContextValidation contextValidation=new ContextValidation();
-		InstanceValidationHelper.validationExperimentCode(experiment.code, contextValidation);
-		assertThat(contextValidation.errors.size()).isEqualTo(0);
-	}
-
-
-	@Test
-	public  void validationExperimentNotRequiredCodeTest(){
-		ContextValidation contextValidation=new ContextValidation();
-		InstanceValidationHelper.validationExperimentCode(null, contextValidation);
-		assertThat(contextValidation.errors.size()).isEqualTo(0);
-	}
-	
-	@Test
-	public  void validationExperimentNotExistCodeTest(){
-		ContextValidation contextValidation=new ContextValidation();
-		InstanceValidationHelper.validationExperimentCode("notexist", contextValidation);
-		assertThat(contextValidation.errors.size()).isEqualTo(1);
-	}
-
-
 	@Test
 	public  void validationStockCodeTest(){
 		ContextValidation contextValidation=new ContextValidation();
-		InstanceValidationHelper.validationStockCode(stock.code, contextValidation);
+		ContainerSupportValidationHelper.validateStockCode(stock.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
@@ -247,14 +202,14 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validationStockNotRequiredCodeTest(){
 		ContextValidation contextValidation=new ContextValidation();
-		InstanceValidationHelper.validationStockCode(null, contextValidation);
+		ContainerSupportValidationHelper.validateStockCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public  void validationStockNotExistCodeTest(){
 		ContextValidation contextValidation=new ContextValidation();
-		InstanceValidationHelper.validationStockCode("notexist", contextValidation);
+		ContainerSupportValidationHelper.validateStockCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
 
@@ -304,15 +259,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	}
 
 	
-	public static <T extends DBObject> T saveDBOject(Class<T> type, String collectionName,String code)
-			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-
-		String collection=type.getSimpleName();
-		T object = (T) Class.forName (type.getName()).newInstance();
-		object.code=code;
-		object=MongoDBDAO.save(collection, object);
-		return object;
-	}
+	
 	
 	
 }

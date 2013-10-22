@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import play.data.validation.ValidationError;
-import models.laboratory.container.description.ContainerCategory;
-import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
@@ -28,7 +26,6 @@ import models.laboratory.project.description.ProjectType;
 import models.laboratory.reagent.description.ReagentType;
 import models.laboratory.run.description.RunType;
 import models.laboratory.sample.description.ImportType;
-import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.RunPropertyDefinitionHelper;
@@ -53,13 +50,6 @@ public class DescriptionValidationHelper {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, experimentTypeCode, "experimentTypeCode", ExperimentType.find);		
 	}
 	
-	public static void validationExperimentTypeCodes(
-			List<String> experimentTypeCodes, ContextValidation contextValidation) {
-			for(String s: experimentTypeCodes){
-				BusinessValidationHelper.validateExistDescriptionCode(contextValidation, s, "experimentTypeCode", ExperimentType.find);
-			}
-	}
-
 	public static void validationExperimentType(
 			String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
 		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,true);
@@ -84,12 +74,6 @@ public class DescriptionValidationHelper {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "instrumentUsed.categoryCode", InstrumentCategory.find);
 	}
 
-	public static void validationProcessTypeCode(String typeCode,
-			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, typeCode,"processTypeCode", ProcessType.find);
-
-	}
-
 	public static void validationProjectCategoryCode(String categoryCode,
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ProjectCategory.find);
@@ -99,29 +83,6 @@ public class DescriptionValidationHelper {
 	public static void validationReagentTypeCode(String reagentTypeCode,
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, reagentTypeCode, "reagentTypeCode", ReagentType.find);		
-	}
-
-	public static void validationSampleCategoryCode(String categoryCode,
-			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", SampleCategory.find,false);
-
-	}
-
-	public static void validationContainerCategoryCode(String categoryCode,
-			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ContainerCategory.find,false);
-
-	}
-
-	public static void validationContainerSupportCategoryCode(
-			String categoryCode, ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ContainerSupportCategory.find,false);
-
-	}
-
-	public static void validationSampleTypeCode(String typeCode,
-			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode",SampleType.find,false);
 	}
 
 	public static void validationRunTypeCode(String typeCode,

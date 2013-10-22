@@ -27,6 +27,8 @@ import validation.ContextValidation;
 import validation.DescriptionValidationHelper;
 import validation.IValidation;
 import validation.InstanceValidationHelper;
+import validation.common.instance.CommonValidationHelper;
+import validation.container.instance.SampleUsedValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
 
@@ -99,8 +101,8 @@ public class Sample extends DBObject implements IValidation{
 		
 		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Sample.class, InstanceConstants.SAMPLE_COLL_NAME);
 
-		DescriptionValidationHelper.validationSampleCategoryCode(categoryCode,contextValidation);
-		InstanceValidationHelper.validationProjectCodes(this.projectCodes, contextValidation);
+		SampleUsedValidationHelper.validateSampleCategoryCode(categoryCode,contextValidation);
+		CommonValidationHelper.validateProjectCodes(this.projectCodes, contextValidation);
 
 		DescriptionValidationHelper.validationSampleType(typeCode,importTypeCode,properties,contextValidation);
 		

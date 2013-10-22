@@ -53,7 +53,7 @@ public class ContainerHelper {
 		container.valid=null;
 
 		//TODO 
-		container.support=ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nbContainer"),rs.getString("codeSupport"),rs.getString("x"),rs.getString("y"));
+		container.support=ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nbContainer"),rs.getString("codeSupport"),rs.getString("column"),rs.getString("line"));
 
 		container.properties= new HashMap<String, PropertyValue>();
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("limsCode")));
@@ -85,9 +85,9 @@ public class ContainerHelper {
 			container.sampleCodes.add(rs.getString("sampleCode"));
 
 
-			if(rs.getString("indexBq")!=null){
+			if(rs.getString("tag")!=null){
 				content.properties = new HashMap<String, PropertyValue>();
-				content.properties.put("indexBq",new PropertySingleValue(rs.getString("indexBq")));
+				content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
 			}
 
 		}
@@ -164,8 +164,8 @@ public class ContainerHelper {
 			ContainerSupport containerSupport=new ContainerSupport();
 			containerSupport.barCode=getBarCode(experiment.instrument.outContainerSupportCategoryCode);	
 			containerSupport.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
-			containerSupport.x="?";
-			containerSupport.y="?";
+			containerSupport.column="?";
+			containerSupport.line="?";
 		}
 	}
 

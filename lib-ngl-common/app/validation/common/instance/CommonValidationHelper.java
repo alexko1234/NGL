@@ -7,10 +7,14 @@ import java.util.List;
 
 import models.laboratory.common.description.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.project.instance.Project;
+import models.laboratory.sample.instance.Sample;
+import models.utils.InstanceConstants;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 
 import validation.ContextValidation;
+import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
@@ -344,5 +348,15 @@ public class CommonValidationHelper {
 			throw new IllegalArgumentException(clazz.getName()+" form contextValidation is null");
 		}
 		return o;
+	}
+
+
+	public static void validateProjectCodes(List<String> projectCodes,ContextValidation contextValidation){
+		BusinessValidationHelper.validateRequiredInstanceCodes(contextValidation, projectCodes, "projectCodes",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
+	}
+
+
+	public static void validateSampleCodes(List<String> sampleCodes,ContextValidation contextValidation){
+		BusinessValidationHelper.validateRequiredInstanceCodes(contextValidation, sampleCodes,"sampleCodes",Sample.class,InstanceConstants.SAMPLE_COLL_NAME,false);
 	}
 }

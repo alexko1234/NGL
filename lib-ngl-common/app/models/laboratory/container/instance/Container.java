@@ -23,9 +23,11 @@ import net.vz.mongodb.jackson.MongoCollection;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import validation.ContextValidation;
-import validation.DescriptionValidationHelper;
 import validation.IValidation;
 import validation.InstanceValidationHelper;
+import validation.common.instance.CommonValidationHelper;
+import validation.container.instance.ContainerValidationHelper;
+import validation.run.instance.RunValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import fr.cea.ig.DBObject;
 
@@ -144,36 +146,28 @@ public class Container extends DBObject implements IValidation {
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation){
-
-		contextValidation.putObject("_id",this._id);
 		
-		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
+    	ContainerValidationHelper.validateId(this, contextValidation);
+		ContainerValidationHelper.validateCode(this, InstanceConstants.CONTAINER_COLL_NAME, contextValidation);
+		ContainerValidationHelper.validateStateCode(this.stateCode, contextValidation);
+		//TODO
+		//ContainerValidationHelper.validateResolution(this.resolutionCode,contextValidation);
+		ContainerValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
+		ContainerValidationHelper.validateContainerCategoryCode(categoryCode, contextValidation);
+		ContainerValidationHelper.validateProcessTypeCode(processTypeCode, contextValidation);
+		ContainerValidationHelper.validateProjectCodes(projectCodes, contextValidation);
+		ContainerValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
+		ContainerValidationHelper.validateExperimentTypeCodes(fromExperimentTypeCodes, contextValidation);
+		ContainerValidationHelper.validateExperimentCode(fromPurifingCode, contextValidation);//bug here Yann
+		ContainerValidationHelper.validateContents(contents,contextValidation);
+		ContainerValidationHelper.validateContainerSupport(support,contextValidation);//bug here Yann
 		
-		DescriptionValidationHelper.validationContainerCategoryCode(categoryCode, contextValidation);
-		
-		DescriptionValidationHelper.validationProcessTypeCode(processTypeCode, contextValidation);
-		
-		InstanceValidationHelper.validationProjectCodes(projectCodes, contextValidation);
-		
-		InstanceValidationHelper.validationSampleCodes(sampleCodes, contextValidation);
-		//TODO pbl key
-		DescriptionValidationHelper.validationExperimentTypeCodes(fromExperimentTypeCodes, contextValidation);
-		//TODO pbl key
-		//InstanceValidationHelper.validationExperimentCode(fromPurifingCode, contextValidation);//bug here
-
-		DescriptionValidationHelper.validationResolutionCode(resolutionCode, contextValidation);
-		
-		DescriptionValidationHelper.validationStateCode(stateCode, contextValidation);
-		
-		InstanceValidationHelper.validationContents(contents,contextValidation);
-		
-		//InstanceValidationHelper.validationContainerSupport(support,contextValidation);//bug here
-		
-		traceInformation.validate(contextValidation);
-		
-		InstanceValidationHelper.validationComments(comments,contextValidation);
+		//InstanceValidationHelper.validationComments(comments,contextValidation);
 		
 		//TODO validate properties
+		
+		
+		
 	}
 
 }
