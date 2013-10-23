@@ -11,11 +11,11 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
-import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
+import play.Logger;
 import play.api.modules.spring.Spring;
 
 public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
@@ -34,7 +34,7 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 	@Override
 	protected CommonInfoType mapRow(ResultSet rs, int rowNumber)
 			throws SQLException {
-		try{
+		
 			CommonInfoType commonInfoType = new CommonInfoType();
 			commonInfoType.id = rs.getLong("cId");
 			commonInfoType.name = rs.getString("name");
@@ -46,11 +46,6 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			objectType.generic =rs.getBoolean("generic");
 			commonInfoType.objectType = objectType;
 	
-			//Get variables State
-			StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-			List<State> states = stateDAO.findByCommonInfoType(commonInfoType.id);
-			commonInfoType.states = states;
-	
 			//Get Resolutions
 			ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
 			List<Resolution> resolutions = resolutionDAO.findByCommonInfoType(commonInfoType.id);
@@ -60,10 +55,15 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			PropertyDefinitionDAO propertyDefinitionDAO = Spring.getBeanOfType(PropertyDefinitionDAO.class);
 			List<PropertyDefinition> properties = propertyDefinitionDAO.findByCommonInfoType(commonInfoType.id);
 			commonInfoType.propertiesDefinitions=properties;
+			
+			//Get states
+			StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
+			List<State> states = stateDAO.findByCommonInfoType(commonInfoType.id);
+			Logger.debug(stateDAO.toString());
+			Logger.debug(" state size "+states.size()); 
+			commonInfoType.objectType.states = states;
+
 			return commonInfoType;
-		}catch(DAOException e){
-			throw new SQLException(e);
-		}
 	}
 
 }
