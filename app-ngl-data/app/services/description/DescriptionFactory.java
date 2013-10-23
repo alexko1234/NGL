@@ -2,11 +2,6 @@ package services.description;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.codec.binary.StringUtils;
-
-import com.google.common.base.CaseFormat;
-
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
@@ -140,10 +135,25 @@ public class DescriptionFactory {
 		return l;
 	}
 	
-	public static ObjectType newObjectType(String name, String code) {
+	public static ObjectType newObjectType(String name, String code, List<State> states) {
 		ObjectType l = new ObjectType();
 		l.code = code;
 		l.generic = false;
+		l.states = states;
+
+		return l;
+	}
+	
+	public static ObjectType setStatesToObjectType(String code, List<State> states) {
+		ObjectType l = new ObjectType();
+		try {
+			l = l.find.findByCode(code);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		l.generic = false;
+		l.states = states;
 		return l;
 	}
 	
@@ -159,12 +169,21 @@ public class DescriptionFactory {
 	}
 
 	public static Resolution newResolution(String name, String code,
-			ResolutionCategory category) {
+		ResolutionCategory category) {
 		Resolution r = new Resolution();
 		r.code = code;
 		r.name = name;
 		r.category = category;
 		return r;
+	}
+	
+	public static State newState(String name, String code, boolean active,	int position) {
+		State s = new State();
+		s.code = code;
+		s.name = name;
+		s.active =active;
+		s.position = position;
+		return s;
 	}
 
 	/**
@@ -183,6 +202,7 @@ public class DescriptionFactory {
 		s.active =active;
 		s.position = position;
 		s.categories = categories;
+	
 		return s;
 	}
 
@@ -204,7 +224,7 @@ public class DescriptionFactory {
 		et.propertiesDefinitions = propertiesDefinitions;
 		et.protocols = protocols;
 		et.instrumentUsedTypes = instrumentUsedTypes;
-		et.states = State.find.findByCategoryCode(StateCategory.CODE.Experiment.name());
+		et.objectType.states = State.find.findByTypeCode(ObjectType.CODE.Experiment.name());
 		et.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Experiment.name());
 		et.atomicTransfertMethod=atomicTransfertMethod;
 		return et;
@@ -259,19 +279,19 @@ public class DescriptionFactory {
 
 	public static ProcessType newProcessType(String name, String code, ProcessCategory category, List<PropertyDefinition> propertiesDefinitions, 
 			List<ExperimentType> experimentTypes, ExperimentType firstExperimentType, ExperimentType lastExperimentType, ExperimentType voidExperimentType) throws DAOException {
-		ProcessType et = new ProcessType();
-		et.code =code.toLowerCase();
-		et.name =name;
-		et.category = category;
-		et.objectType = ObjectType.find.findByCode(ObjectType.CODE.Process.name());
-		et.propertiesDefinitions = propertiesDefinitions;
-		et.states = State.find.findByCategoryCode(StateCategory.CODE.Process.name());
-		et.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Process.name());
-		et.firstExperimentType = firstExperimentType;
-		et.lastExperimentType = lastExperimentType;
-		et.voidExperimentType = voidExperimentType;
-		et.experimentTypes = experimentTypes;
-		return et;
+		ProcessType pt = new ProcessType();
+		pt.code =code.toLowerCase();
+		pt.name =name;
+		pt.category = category;
+		pt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Process.name());
+		pt.propertiesDefinitions = propertiesDefinitions;
+		pt.objectType.states = State.find.findByTypeCode(ObjectType.CODE.Process.name());
+		pt.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Process.name());
+		pt.firstExperimentType = firstExperimentType;
+		pt.lastExperimentType = lastExperimentType;
+		pt.voidExperimentType = voidExperimentType;
+		pt.experimentTypes = experimentTypes;
+		return pt;
 	}
 
 	
@@ -286,23 +306,23 @@ public class DescriptionFactory {
 	}
 	
 	public static ImportType newImportType(String name, String code, ImportCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException{
-		ImportType st = new ImportType();
-		st.code = code.toLowerCase();
-		st.name = name;
-		st.category = category;
-		st.objectType = ObjectType.find.findByCode(ObjectType.CODE.Import.name());
-		st.propertiesDefinitions = propertiesDefinitions;
-		return st;
+		ImportType it = new ImportType();
+		it.code = code.toLowerCase();
+		it.name = name;
+		it.category = category;
+		it.objectType = ObjectType.find.findByCode(ObjectType.CODE.Import.name());
+		it.propertiesDefinitions = propertiesDefinitions;
+		return it;
 	}
 	
 	public static ProjectType newProjectType(String name, String code, ProjectCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException{
-		ProjectType st = new ProjectType();
-		st.code = code.toLowerCase();
-		st.name = name;
-		st.category = category;
-		st.objectType = ObjectType.find.findByCode(ObjectType.CODE.Project.name());
-		st.propertiesDefinitions = propertiesDefinitions;
-		return st;
+		ProjectType pt = new ProjectType();
+		pt.code = code.toLowerCase();
+		pt.name = name;
+		pt.category = category;
+		pt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Project.name());
+		pt.propertiesDefinitions = propertiesDefinitions;
+		return pt;
 	}
 	
 	
@@ -313,8 +333,7 @@ public class DescriptionFactory {
 		//rt.category = category;
 		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.ReadSet.name());
 		rt.propertiesDefinitions = propertiesDefinitions;
-		//new
-		rt.states = State.find.findByCategoryCode(StateCategory.CODE.ReadSet.name());
+		rt.objectType.states = State.find.findByTypeCode(ObjectType.CODE.ReadSet.name());
 		return rt;
 	}
 	
@@ -326,8 +345,7 @@ public class DescriptionFactory {
 		rt.category = category;
 		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Run.name());
 		rt.propertiesDefinitions = propertiesDefinitions;
-		//new
-		rt.states = State.find.findByCategoryCode(StateCategory.CODE.Run.name());
+		rt.objectType.states = State.find.findByTypeCode(ObjectType.CODE.Run.name());
 		return rt;
 	}
 	
