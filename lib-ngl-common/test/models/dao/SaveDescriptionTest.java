@@ -278,9 +278,9 @@ public class SaveDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(commonInfoType.id);
 		Assert.assertNotNull(commonInfoType.code);
 		Assert.assertNotNull(commonInfoType.name);
-		Assert.assertNotNull(commonInfoType.states);
-		Assert.assertTrue(commonInfoType.states.size()>0);
-		for(State state : commonInfoType.states){
+		Assert.assertNotNull(commonInfoType.objectType.states);
+		Assert.assertTrue(commonInfoType.objectType.states.size()>0);
+		for(State state : commonInfoType.objectType.states){
 			checkState(state);
 		}
 		Assert.assertNotNull(commonInfoType.resolutions);
@@ -303,7 +303,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		CommonInfoType commonInfoType=new CommonInfoType();
 		commonInfoType.code=code;
 		commonInfoType.name=name;
-		commonInfoType.states=variableStates;
+		commonInfoType.objectType.states=variableStates;
 		commonInfoType.resolutions=resolutions;
 		commonInfoType.propertiesDefinitions=propertiesDefinitions;
 		commonInfoType.objectType=objectType;
