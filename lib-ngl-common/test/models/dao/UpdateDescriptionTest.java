@@ -81,6 +81,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		checkObjectType(objectType);
 
 	}
+	
 	private void checkObjectType(ObjectType type)
 	{
 		Assert.assertNotNull(type);
@@ -174,9 +175,9 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(commonInfoType.id);
 		Assert.assertNotNull(commonInfoType.code);
 		Assert.assertNotNull(commonInfoType.name);
-		Assert.assertNotNull(commonInfoType.states);
-		Assert.assertTrue(commonInfoType.states.size()>0);
-		for(State state : commonInfoType.states){
+		Assert.assertNotNull(commonInfoType.objectType.states);
+		Assert.assertTrue(commonInfoType.objectType.states.size()>0);
+		for(State state : commonInfoType.objectType.states){
 			checkState(state);
 		}
 		Assert.assertNotNull(commonInfoType.resolutions);
@@ -735,7 +736,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		CommonInfoType commonInfoType=new CommonInfoType();
 		commonInfoType.code=code;
 		commonInfoType.name=name;
-		commonInfoType.states=variableStates;
+		commonInfoType.objectType.states=variableStates;
 		commonInfoType.resolutions=resolutions;
 		commonInfoType.propertiesDefinitions=propertiesDefinitions;
 		commonInfoType.objectType=objectType;
@@ -752,7 +753,6 @@ public class UpdateDescriptionTest extends AbstractTests{
 		return newValue;
 	}
 
-
 	private ContainerSupportCategory createContainerSupportCategory(String code, String name, int nbLine, int nbColumn, int nbUsableContainer)
 	{
 		ContainerSupportCategory containerSupportCategory = new ContainerSupportCategory();
@@ -764,7 +764,6 @@ public class UpdateDescriptionTest extends AbstractTests{
 		return containerSupportCategory;
 	
 	}
-
 
 	private Instrument createInstrument(String code, String name)
 	{
@@ -806,6 +805,8 @@ public class UpdateDescriptionTest extends AbstractTests{
 		protocolCategory.name=name;
 		return protocolCategory;
 	}
+	
+	
 	
 	
 
