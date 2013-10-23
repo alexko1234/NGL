@@ -8,12 +8,6 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.instance.PropertyValue;
-import java.util.List;
-
-import java.util.List;
-import java.util.Map;
-
-import play.data.validation.ValidationError;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
@@ -28,9 +22,6 @@ import models.laboratory.run.description.RunType;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.RunPropertyDefinitionHelper;
-import validation.utils.ValidationConstants;
-import validation.utils.ValidationHelper;
 import validation.utils.ValidationHelper;
 
 public class DescriptionValidationHelper {
