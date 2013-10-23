@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
 import models.laboratory.experiment.description.Protocol;
@@ -31,11 +33,10 @@ public class StateDAO extends AbstractDAOMapping<State>{
 
 	
 	@Override
-	public void remove(State state) throws DAOException
-	{
+	public void remove(State state) throws DAOException	{
 		removeCategories(state.id);
-		//Remove list state for common_info_type
-		String sqlState = "DELETE FROM common_info_type_state WHERE fk_state=?";
+		//Remove list state for object_type
+		String sqlState = "DELETE FROM state_object_type WHERE fk_state=?";
 		jdbcTemplate.update(sqlState, state.id);
 		//remove resolution
 		super.remove(state);
@@ -74,11 +75,34 @@ public class StateDAO extends AbstractDAOMapping<State>{
 			}
 		}				
 	}
+	
+	
+	
+	private void insertObjectTypes(List<ObjectType> objectTypes, Long id,
+			boolean deleteBefore) throws DAOException {
+		if(deleteBefore){
+			removeObjectTypes(id);
+		}
+		//Add resolutions list		
+		if(objectTypes!=null && objectTypes.size()>0){
+			String sql = "INSERT INTO state_object_type (fk_state, fk_object_type) VALUES(?,?)";
+			for(ObjectType objectType:objectTypes){
+				if(objectType == null || objectType.id == null ){
+					throw new DAOException("objectType is mandatory");
+				}
+				jdbcTemplate.update(sql, id, objectType.id);
+			}
+		}				
+	}
 
 	private void removeCategories(Long id) {
 		String sql = "DELETE FROM state_category_state WHERE fk_state=?";
 		jdbcTemplate.update(sql, id);
-		
+	}
+	
+	private void removeObjectTypes(Long id) {
+		String sql = "DELETE FROM state_object_type WHERE fk_state=?";
+		jdbcTemplate.update(sql, id);
 	}
 	
 	@Override
@@ -88,11 +112,14 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	}
 	
 	public List<ListObject> findAllForContainerList(){
-		String sql = "SELECT t.code, t.name FROM state t inner join state_category_state scs on scs.fk_state = t.id" +
-				" inner join state_category s on s.id = scs.fk_state_category WHERE s.code = ? ";
+		//find data with object_type instead of state_category...
+		//String sql = "SELECT t.code, t.name FROM state t inner join state_category_state scs on scs.fk_state = t.id" +
+		//		" inner join state_category s on s.id = scs.fk_state_category WHERE s.code = ? ";
+		String sql = "SELECT t.code, t.name FROM state t inner join state_object_state sos on sos.fk_state = t.id" +
+				" inner join object_type o on o.id = sos.fk_object_type WHERE o.code = ? ";
 		
 		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
-		return this.jdbcTemplate.query(sql, mapper, StateCategory.CODE.Container.name());
+		return this.jdbcTemplate.query(sql, mapper, ObjectType.CODE.Container.name());
 	}
 
 	public List<State> findByCategoryCode(String code) throws DAOException {
@@ -104,29 +131,39 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		return initializeMapping(sql, new SqlParameter("code", Types.VARCHAR)).execute(code);		
 	}
 	
-	public List<State> findByCommonInfoType(long idCommonInfoType) throws DAOException {
+	public List<State> findByObjectType(long idObjectType) throws DAOException {
 		String sql = sqlCommon+
-				"JOIN common_info_type_state ON fk_state=id "+
-				"WHERE fk_common_info_type=?";		
-		return initializeMapping(sql, new SqlParameter("fk_common_info_type", Type.LONG)).execute(idCommonInfoType);		
+				"JOIN state_object_type ON fk_state=id "+
+				"WHERE fk_object_type=?";		
+		return initializeMapping(sql, new SqlParameter("fk_object_type", Type.LONG)).execute(idObjectType);		
 	}
 
 
-	public List<State> findByTypeCode(String typeCode)  throws DAOException {
+	public List<State> findByObjectTypeCode(String objectCode)  throws DAOException {
 		String sql = sqlCommon+
-				"JOIN common_info_type_state cs ON cs.fk_state=id "+
-				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
-				"WHERE cs.code = ?";
-		return initializeMapping(sql, new SqlParameter("code", Types.VARCHAR)).execute(typeCode);	
+				"JOIN state_object_type so ON so.fk_state=id "+
+				"JOIN object_type o on o.id =so.fk_object_type "+
+				"WHERE o.code = ?";
+		return initializeMapping(sql, new SqlParameter("code", Types.VARCHAR)).execute(objectCode);	
 	}
 	
-	public boolean isCodeExistForTypeCode(String code, String typeCode)  throws DAOException {
+	public boolean isCodeExistForObjectTypeCode(String code, String objectCode)  throws DAOException {
 		String sql = sqlCommon+
-				"JOIN common_info_type_state cs ON cs.fk_state=id "+
-				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
-				"WHERE c.code = ? and t.code = ?";
-		return( initializeMapping(sql, new SqlParameter("c.code", Types.VARCHAR),
-				 new SqlParameter("t.code", Types.VARCHAR)).findObject(typeCode, code) != null )? true : false;	
+				"JOIN state_object_type so ON so.fk_state=id "+
+				"JOIN object_type o on c.id =so.fk_object_type "+
+				"WHERE o.code = ? and t.code = ?";
+		return( initializeMapping(sql, new SqlParameter("o.code", Types.VARCHAR),
+				 new SqlParameter("t.code", Types.VARCHAR)).findObject(objectCode, code) != null ) ? true : false;	
+	}
+	
+	
+	public List<State> findByCommonInfoType(long idCommonInfoType) {
+		String sql = "SELECT st.id, st.name, st.code "+
+				"FROM state st,  state_object_type sot,  common_info_type cit "+
+				"WHERE sot.fk_state=st.id AND sot.fk_object_type = cit.fk_object_type "+
+				"AND cit.id=?";
+		BeanPropertyRowMapper<State> mapper = new BeanPropertyRowMapper<State>(State.class);
+		return this.jdbcTemplate.query(sql, mapper, idCommonInfoType);
 	}
 
 }
