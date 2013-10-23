@@ -12,7 +12,6 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
-
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
