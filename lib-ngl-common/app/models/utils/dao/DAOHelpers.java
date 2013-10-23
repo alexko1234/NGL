@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import models.laboratory.experiment.description.Protocol;
 import models.utils.HelperObjects;
 import models.utils.Model;
 import models.utils.Model.Finder;
 import play.Logger;
 import play.data.validation.ValidationError;
-import validation.utils.ValidationHelper;
 
 public class DAOHelpers {
 	
@@ -60,7 +58,7 @@ public class DAOHelpers {
 	public static <T extends Model> List<T> getModelByCodes(Class<T> type, Finder<T> finder, String...codes) throws DAOException {
 		List<T> l = new ArrayList<T>();
 		for(String code : codes){
-			Logger.debug("load "+type.getName() + " : "+code);
+			Logger.debug("Load "+type.getName() + " : "+code);
 			l.add(finder.findByCode(code));
 		}
 		return l;
@@ -76,10 +74,10 @@ public class DAOHelpers {
 	public static <T extends Model> void saveModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
 		T t = (T) model.getInstance().findByCode(model.code);
 		if (t == null) {
-			Logger.debug("save "+type.getName() + " : "+model.code);
+			Logger.debug("Save "+type.getName() + " : "+model.code);
 			model.save();
 		}else{
-			Logger.debug("allready exist "+type.getName() + " : "+model.code);
+			Logger.debug("Allready exists "+type.getName() + " : "+model.code);
 		}
 	}
 	
@@ -93,6 +91,28 @@ public class DAOHelpers {
 	public static <T extends Model> void saveModels(Class<T> type, List<T> models, Map<String,List<ValidationError>> errors) throws DAOException {
 		for(T model : models){
 			saveModel(type, model, errors);
+		}		
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @param model
+	 * @param errors
+	 * @throws DAOException
+	 */
+	public static <T extends Model> void updateModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
+		T t = (T) model.getInstance().findByCode(model.code);
+		if (t != null) {
+			model.update();
+		}else{
+			Logger.debug("Not exists "+type.getName() + " : "+model.code);
+		}
+	}
+	
+	public static <T extends Model> void updateModels(Class<T> type, List<T> models, Map<String,List<ValidationError>> errors) throws DAOException {
+		for(T model : models){
+			updateModel(type, model, errors);
 		}		
 	}
 }
