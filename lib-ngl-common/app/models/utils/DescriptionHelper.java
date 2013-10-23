@@ -102,7 +102,7 @@ public class DescriptionHelper {
 		CommonInfoType commonInfoType=new CommonInfoType();
 		commonInfoType.name=name;
 		commonInfoType.code=code;
-		commonInfoType.states = variableStates;
+		commonInfoType.objectType.states = variableStates;
 		commonInfoType.resolutions = resolutions;
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
 		ObjectTypeDAO objectTypeDAO=Spring.getBeanOfType(ObjectTypeDAO.class);
@@ -126,7 +126,6 @@ public class DescriptionHelper {
 
 
 	public static State getState(String code) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
-
 		State state = null;
 		try {
 			state = State.find.findByCode(code);
@@ -137,42 +136,31 @@ public class DescriptionHelper {
 				state.code=code;
 				state.name=code;
 				state.position=0;
-				
 			}
-
-
 		} catch (DAOException e) {
-
 			e.printStackTrace();
 		}
 		return state;
 	}
 
 	public static Resolution getResolution(String code){
-
 		Resolution resolution = null;
 		try {
 			resolution = Resolution.find.findByCode(code);
-
 			if(resolution==null){
 				resolution = new Resolution();
 				resolution.code=code;
 				resolution.name=code;
 				//resolution.save();
 			}
-
-
 		} catch (DAOException e) {
-
 			e.printStackTrace();
 		}
 		return resolution;
 	}
 
 
-	public static SampleType getSampleType(String codeType, String nameType,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException
-	{
-
+	public static SampleType getSampleType(String codeType, String nameType,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		List<State> states = new ArrayList<State>();
 		states.add(DescriptionHelper.getState("Etat"+codeType));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
@@ -181,7 +169,7 @@ public class DescriptionHelper {
 		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeType,nameType, "Sample", null, null, null, "Sample");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
 		commonInfoType.resolutions=resolutions;
-		commonInfoType.states=states;
+		commonInfoType.objectType.states=states;
 
 		SampleType sampleType = new SampleType();
 		sampleType.setCommonInfoType(commonInfoType);
@@ -208,7 +196,7 @@ public class DescriptionHelper {
 
 		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeType,nameType, "Experiment", null, null, null, "Experiment");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
-		commonInfoType.states=states;
+		commonInfoType.objectType.states=states;
 		commonInfoType.resolutions=resolutions;
 
 		ExperimentType experimentType = new ExperimentType();
@@ -241,7 +229,6 @@ public class DescriptionHelper {
 
 
 	public static MeasureCategory getMeasureCategory(String code,String name,String codeValue,String valueValue){
-
 		MeasureCategory measureCategory = null;
 		try {
 			measureCategory = MeasureCategory.find.findByCode(code);
@@ -249,11 +236,8 @@ public class DescriptionHelper {
 				measureCategory = new MeasureCategory();
 				measureCategory.code=code;
 				measureCategory.name=name;
-
 			}
-
 		} catch (DAOException e) {
-
 			e.printStackTrace();
 		}
 		return measureCategory;
@@ -282,9 +266,7 @@ public class DescriptionHelper {
 		return listIndex;
 	}
 
-	public static ImportType getImportType(String codeImport, String nameImport,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException
-	{
-
+	public static ImportType getImportType(String codeImport, String nameImport,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		List<State> states = new ArrayList<State>();
 		states.add(DescriptionHelper.getState("Etat"+codeImport));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
@@ -292,7 +274,7 @@ public class DescriptionHelper {
 
 		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeImport,nameImport, "Import", null, null, null, "Import");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
-		commonInfoType.states=states;
+		commonInfoType.objectType.states=states;
 		commonInfoType.resolutions=resolutions;
 
 		ImportType importType = new ImportType();
@@ -304,9 +286,7 @@ public class DescriptionHelper {
 	}
 
 
-	public static ProjectType getProjectType(String codeProject, String nameProject,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException
-	{
-
+	public static ProjectType getProjectType(String codeProject, String nameProject,String codeCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		List<State> states = new ArrayList<State>();
 		states.add(DescriptionHelper.getState("Etat"+codeProject));
 		List<Resolution> resolutions = new ArrayList<Resolution>();
@@ -314,7 +294,7 @@ public class DescriptionHelper {
 
 		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeProject,nameProject, "Project", null, null, null, "Project");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
-		commonInfoType.states=states;
+		commonInfoType.objectType.states=states;
 		commonInfoType.resolutions=resolutions;
 
 		ProjectType projectType =new ProjectType();
@@ -327,7 +307,6 @@ public class DescriptionHelper {
 
 
 	public static <T extends AbstractCategory<T>> T getCategory(Class<T> type,String codeCategory) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-
 		Finder<T> find = new Finder<T>(type.getName().replaceAll("description", "description.dao")+"DAO");
 		T objectCategory=find.findByCode(codeCategory);
 		if(objectCategory==null){
@@ -336,7 +315,6 @@ public class DescriptionHelper {
 			objectCategory.code=codeCategory;
 			objectCategory.name=codeCategory;
 		}
-
 		return objectCategory;
 	}
 
@@ -390,18 +368,14 @@ public class DescriptionHelper {
 		ins.name=instrument;
 		instrumentUsedType.instruments.add(ins);
 
-		
 		instrumentUsedType.category=getCategory(InstrumentCategory.class, instrumentCategory);
 
 		return instrumentUsedType;
 	}
 
 	public static InstrumentUsedType getInstrumentUsedType(String instrumentUsedTypeCode, List<Instrument> instrument, String instrumentCategory,List<PropertyDefinition> propertyDefinitions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-
 		InstrumentUsedType instrumentUsedType=DescriptionHelper.getInstrumentUsedType(instrumentUsedTypeCode, "", instrumentCategory, propertyDefinitions);
-
 		instrumentUsedType.instruments=instrument;
-
 		return instrumentUsedType;
 	}
 
