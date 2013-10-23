@@ -33,7 +33,7 @@ import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
-public class ImportDataRun implements Runnable {
+public class ImportDataCNS extends AbstractImportData{
 
 	static ContextValidation contextError = new ContextValidation();
 	static LimsDAO  limsServices = Spring.getBeanOfType(LimsDAO.class);
