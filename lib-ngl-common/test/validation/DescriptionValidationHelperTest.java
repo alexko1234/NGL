@@ -28,6 +28,7 @@ import validation.DescriptionValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
 import validation.container.instance.SampleUsedValidationHelper;
+import validation.sample.instance.SampleValidationHelper;
 
 public class DescriptionValidationHelperTest extends AbstractTests{
 	
@@ -324,74 +325,26 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	@Test
 	public void validationSampleCategoryCode() {
 		ContextValidation contextValidation=new ContextValidation();
-		SampleUsedValidationHelper.validateSampleCategoryCode(sampleCategory.code, contextValidation);
+		SampleValidationHelper.validateSampleCategoryCode(sampleCategory.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationSampleCategoryRequired() {
 		ContextValidation contextValidation=new ContextValidation();
-		SampleUsedValidationHelper.validateSampleCategoryCode(null, contextValidation);
+		SampleValidationHelper.validateSampleCategoryCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public void validationSampleCategoryNotExist() {
 		ContextValidation contextValidation=new ContextValidation();
-		SampleUsedValidationHelper.validateSampleCategoryCode("notexist", contextValidation);
+		SampleValidationHelper.validateSampleCategoryCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}	
 	
-	/**
-	 * 
-	 * SampleType
-	 */
-
-	@Test
-	public void validationSampleTypeCode() {
-		ContextValidation contextValidation=new ContextValidation();
-		SampleUsedValidationHelper.validateSampleTypeCode(sampleType.code, contextValidation);
-		assertThat(contextValidation.errors.size()).isEqualTo(0);
-	}
 	
-	@Test
-	public void validationSampleTypeRequired() {
-		ContextValidation contextValidation=new ContextValidation();
-		SampleUsedValidationHelper.validateSampleTypeCode(null, contextValidation);
-		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
-	}
 	
-	@Test
-	public void validationSampleTypeNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
-		SampleUsedValidationHelper.validateSampleTypeCode("notexist", contextValidation);
-		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
-	}
-
-	/**
-	 *  State Code
-	 */
-	
-	@Test
-	public void validationStateCode() {
-		ContextValidation contextValidation=new ContextValidation();
-		DescriptionValidationHelper.validationStateCode(state.code, contextValidation);
-		assertThat(contextValidation.errors.size()).isEqualTo(0);
-	}
-	
-	@Test
-	public void validationStateRequired() {
-		ContextValidation contextValidation=new ContextValidation();
-		DescriptionValidationHelper.validationStateCode(null, contextValidation);
-		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
-	}
-	
-	@Test
-	public void validationStateNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
-		DescriptionValidationHelper.validationStateCode("notexist", contextValidation);
-		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
-	}
 	
 
 	/**
@@ -430,14 +383,6 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	public void validationProcessTest() {
 		ContextValidation contextValidation=new ContextValidation();
 		DescriptionValidationHelper.validationProcess(null, null, contextValidation);		
-	}
-	
-	
-
-	//TODO
-	public void validationSampleTypeTest(){
-		ContextValidation contextValidation=new ContextValidation();
-		DescriptionValidationHelper.validationSampleType(null, null, null, contextValidation);
 	}
 	
 	

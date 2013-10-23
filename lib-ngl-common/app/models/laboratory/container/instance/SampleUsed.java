@@ -16,6 +16,7 @@ import validation.IValidation;
 import validation.InstanceValidationHelper;
 import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.SampleUsedValidationHelper;
+import validation.sample.instance.SampleValidationHelper;
 import validation.utils.BusinessValidationHelper;
 
 public class SampleUsed implements IValidation{
@@ -63,7 +64,7 @@ public class SampleUsed implements IValidation{
 	public void validate(ContextValidation contextValidation) {
 
 		SampleUsedValidationHelper.validateSampleCode(sampleCode, contextValidation);
-		SampleUsedValidationHelper.validateSampleCategoryCode(categoryCode,contextValidation);
+		SampleValidationHelper.validateSampleCategoryCode(categoryCode,contextValidation);
 		SampleUsedValidationHelper.validateSampleTypeCode(typeCode,contextValidation);
 	}
 

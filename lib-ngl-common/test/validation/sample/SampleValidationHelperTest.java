@@ -1,8 +1,7 @@
-package validation.container;
+package validation.sample;
 
 import static org.fest.assertions.Assertions.assertThat;
 import models.laboratory.sample.description.SampleCategory;
-import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 
 import org.junit.AfterClass;
@@ -12,10 +11,10 @@ import org.junit.Test;
 import play.test.Helpers;
 import utils.AbstractTests;
 import validation.ContextValidation;
-import validation.container.instance.SampleUsedValidationHelper;
 import validation.sample.instance.SampleValidationHelper;
 
-public class SampleUsedValidationHelperTest extends AbstractTests{
+public class SampleValidationHelperTest extends AbstractTests {
+
 	
 	@BeforeClass
 	public static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
@@ -37,60 +36,58 @@ public class SampleUsedValidationHelperTest extends AbstractTests{
 	}
 
 	private static void deleteData() {
-	
 	}
 	
 	/**
-	 * Sample category code 
-	 * @throws DAOException 
+	 *  SampleCategory
+	 * 
 	 */
 	@Test
 	public void validateSampleCategoryCode() throws DAOException {
 		ContextValidation contextValidation=new ContextValidation();
-		SampleValidationHelper.validateSampleCategoryCode(SampleCategory.find.findAll().get(0).code,contextValidation);
+		SampleValidationHelper.validateSampleCategoryCode(SampleCategory.find.findAll().get(0).code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
 	@Test
 	public void validateSampleCategoryCodeRequired() {
 		ContextValidation contextValidation=new ContextValidation();
-		SampleValidationHelper.validateSampleCategoryCode(null,contextValidation);
+		SampleValidationHelper.validateSampleCategoryCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
 
 	@Test
-	public void validateSampleCategoryNotExist() {
+	public void validateSampleCategoryCodeNotExist() {
 		ContextValidation contextValidation=new ContextValidation();
-		SampleValidationHelper.validateSampleCategoryCode("notexist",contextValidation);
-		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
-	}	
+		SampleValidationHelper.validateSampleCategoryCode(null, contextValidation);
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
+	}
 	
 	/**
-	 * 
-	 * Sample Type
-	 * @throws DAOException 
+	 *  SampleCategory
 	 * 
 	 */
 	@Test
-	public void validateSampleTypeCode() throws DAOException {
+	public void validateSampleTypeCodesRequired() throws DAOException {
 		ContextValidation contextValidation=new ContextValidation();
-		SampleUsedValidationHelper.validateSampleTypeCode(SampleType.find.findAll().get(0).code,contextValidation);
-		assertThat(contextValidation.errors.size()).isEqualTo(0);
+		SampleValidationHelper.validateSampleType(null,null,null, contextValidation);
+		assertThat(contextValidation.errors.size()).isEqualTo(2);
 	}
 
 	@Test
-	public void validateSampleTypeCodeRequired() {
+	public void validateSampleTypeCodesNotExist() throws DAOException {
 		ContextValidation contextValidation=new ContextValidation();
-		SampleUsedValidationHelper.validateSampleTypeCode(null,contextValidation);
+		SampleValidationHelper.validateSampleType("notexist","notexist",null, contextValidation);
+		assertThat(contextValidation.errors.size()).isEqualTo(2);
+	}
+
+	
+	//@Test 
+	//TODO
+	public void validateSampleTypeValidateProperties() {
+		ContextValidation contextValidation=new ContextValidation();
+		SampleValidationHelper.validateSampleCategoryCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
-
-	@Test
-	public void validateSampleTypeNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
-		SampleUsedValidationHelper.validateSampleTypeCode("notexist",contextValidation);
-		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
-	}	
 	
-
 }

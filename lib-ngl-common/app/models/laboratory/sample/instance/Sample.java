@@ -1,17 +1,13 @@
 package models.laboratory.sample.instance;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Level;
-import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
-import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.HelperObjects;
@@ -19,21 +15,12 @@ import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.hibernate.validator.internal.metadata.core.ConstraintHelper;
 
-
-import play.Logger;
 import validation.ContextValidation;
-import validation.DescriptionValidationHelper;
 import validation.IValidation;
-import validation.InstanceValidationHelper;
-import validation.common.instance.CommonValidationHelper;
-import validation.container.instance.SampleUsedValidationHelper;
-import validation.utils.BusinessValidationHelper;
-import validation.utils.ValidationHelper;
-
+import validation.container.instance.ContainerValidationHelper;
+import validation.sample.instance.SampleValidationHelper;
 import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
 
 /**
  * 
@@ -97,19 +84,14 @@ public class Sample extends DBObject implements IValidation{
 	@Override
 	public void validate(ContextValidation contextValidation) {
 
-		contextValidation.putObject("_id",this._id);
-		
-		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Sample.class, InstanceConstants.SAMPLE_COLL_NAME);
+    	ContainerValidationHelper.validateId(this, contextValidation);
+		ContainerValidationHelper.validateCode(this, InstanceConstants.SAMPLE_COLL_NAME, contextValidation);
 
-		SampleUsedValidationHelper.validateSampleCategoryCode(categoryCode,contextValidation);
-		CommonValidationHelper.validateProjectCodes(this.projectCodes, contextValidation);
+		SampleValidationHelper.validateSampleCategoryCode(categoryCode,contextValidation);
+		SampleValidationHelper.validateProjectCodes(this.projectCodes, contextValidation);
 
-		DescriptionValidationHelper.validationSampleType(typeCode,importTypeCode,properties,contextValidation);
-		
-		traceInformation.validate(contextValidation);
-	
-		InstanceValidationHelper.validationComments(comments, contextValidation);
-
+		SampleValidationHelper.validateSampleType(typeCode,importTypeCode,properties,contextValidation);
+		SampleValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		//TODO validation taxon
 	}
 
