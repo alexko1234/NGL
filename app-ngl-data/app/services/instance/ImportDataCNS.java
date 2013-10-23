@@ -14,7 +14,7 @@ import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
 import net.vz.mongodb.jackson.DBUpdate;
 
-import models.LimsDAO;
+import models.LimsCNSDAO;
 import models.TaraDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
@@ -36,7 +36,7 @@ import fr.cea.ig.MongoDBResult;
 public class ImportDataCNS extends AbstractImportData{
 
 	static ContextValidation contextError = new ContextValidation();
-	static LimsDAO  limsServices = Spring.getBeanOfType(LimsDAO.class);
+	static LimsCNSDAO  limsServices = Spring.getBeanOfType(LimsCNSDAO.class);
 	static TaraDAO taraServices = Spring.getBeanOfType(TaraDAO.class);
 
 
@@ -218,23 +218,23 @@ public class ImportDataCNS extends AbstractImportData{
 
 		for(Map<String,PropertyValue> taraProperties : taraPropertyList){
 
-			Integer limsCode=Integer.valueOf(taraProperties.get(LimsDAO.LIMS_CODE).value.toString());
+			Integer limsCode=Integer.valueOf(taraProperties.get(LimsCNSDAO.LIMS_CODE).value.toString());
 			Logger.debug("Tara lims Code :"+limsCode);
-			if(!taraProperties.containsKey(LimsDAO.LIMS_CODE)){
-				contextError.addErrors(LimsDAO.LIMS_CODE,"error.codeNotExist","");
+			if(!taraProperties.containsKey(LimsCNSDAO.LIMS_CODE)){
+				contextError.addErrors(LimsCNSDAO.LIMS_CODE,"error.codeNotExist","");
 			}else {
 
 				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("properties.limsCode.value",limsCode)).toList();
 
 				if(samples.size()!=1 ) {
-					contextError.addErrors("sample."+LimsDAO.LIMS_CODE,"error.noObject",limsCode);
+					contextError.addErrors("sample."+LimsCNSDAO.LIMS_CODE,"error.noObject",limsCode);
 				}else {
 					Sample sample =samples.get(0);
 
 					for(Entry taraEntry :taraProperties.entrySet()){
 
-						if(!taraEntry.getKey().equals(LimsDAO.LIMS_CODE)){
-							String importTypeCode=LimsDAO.getImportTypeCode(true,Boolean.valueOf(sample.properties.get("isAdapters").value.toString()));
+						if(!taraEntry.getKey().equals(LimsCNSDAO.LIMS_CODE)){
+							String importTypeCode=LimsCNSDAO.getImportTypeCode(true,Boolean.valueOf(sample.properties.get("isAdapters").value.toString()));
 
 							if(!importTypeCode.equals(sample.importTypeCode)){
 								MongoDBDAO.updateSet(InstanceConstants.SAMPLE_COLL_NAME, sample, "importTypeCode", importTypeCode);

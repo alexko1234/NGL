@@ -42,7 +42,7 @@ import validation.ContextValidation;
  *
  */
 @Repository
-public class LimsDAO {
+public class LimsCNSDAO {
 
 	private JdbcTemplate jdbcTemplate;
 
