@@ -30,11 +30,11 @@ public class All extends CommonController {
 	public static Result save(){
 		try {
 			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
+			StateService.main(errors); //before objectType cause objectType have states now !
 			ObjectTypeService.main(errors);
 			LevelService.main(errors);
 			MeasureService.main(errors);
 			ResolutionService.main(errors);
-			StateService.main(errors);
 			ContainerService.main(errors);
 			InstrumentService.main(errors);			
 			ExperimentService.main(errors);
@@ -54,5 +54,4 @@ public class All extends CommonController {
 			return internalServerError(e.getMessage());
 		}				
 	}
-
 }
