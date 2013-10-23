@@ -35,7 +35,13 @@ import static validation.utils.ValidationConstants.*;
 
 public class ValidationHelper {
 	
-	
+	/**
+	 * 
+	 * @param contextValidation
+	 * @param properties
+	 * @param propertyDefinitions
+	 * @param validateNotDefined
+	 */
 	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
 		Map<String, PropertyValue> inputProperties = new HashMap<String, PropertyValue>(0);
 		if(null != properties){
@@ -127,12 +133,22 @@ public class ValidationHelper {
 		return multimap;
 	}
 
+	/**
+	 * 
+	 * @param contextValidation
+	 * @param properties
+	 * @param propertyDefinitions
+	 */
 	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions){
 		validateProperties(contextValidation, properties, propertyDefinitions, true);		
 	}
 
 	
-	
+	/**
+	 * 
+	 * @param className
+	 * @return
+	 */
 	private static <T> Class<T> getClass(String className) {
 		Class<T> clazz;
 		try {
@@ -257,6 +273,7 @@ public class ValidationHelper {
         }        
         return isValid;		
 	}
+	
 	/**
 	 * add an error message
 	 * @param errors : list of errors
@@ -637,17 +654,34 @@ public class ValidationHelper {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param contextValidation
+	 * @param propertyValue
+	 * @param propertyDefinition
+	 */
 	public static void checkIfExistInTheList(ContextValidation contextValidation, PropertyObjectValue propertyValue, PropertyDefinition propertyDefinition) {
 		//TODO !
 		Logger.error("checkIfExistInTheList not implemented");
 	}
 	
+	/**
+	 * 
+	 * @param contextValidation
+	 * @param propertyValue
+	 * @param propertyDefinition
+	 */
 	public static void checkIfExistInTheList(ContextValidation contextValidation, PropertyObjectListValue propertyValue, PropertyDefinition propertyDefinition) {
 		//TODO !
 		Logger.error("checkIfExistInTheList not implemented");
 	}
 	
-	
+	/**
+	 * 
+	 * @param propertyDefinition
+	 * @param value
+	 * @return
+	 */
 	public static boolean checkIfExistInTheList(
 			PropertyDefinition propertyDefinition, String value) {
 		for(Value possibleValue : propertyDefinition.possibleValues){
@@ -659,7 +693,7 @@ public class ValidationHelper {
 	}
 	
 	/**
-	 * Check if the propertydefinition is active
+	 * Check if the propertyDefinition is active
 	 * @param contextValidation
 	 * @param propertyDefinition
 	 * @return
@@ -678,6 +712,5 @@ public class ValidationHelper {
 		}
 	}
 
-	
 	
 }
