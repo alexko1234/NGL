@@ -28,12 +28,11 @@ public class BusinessValidationHelper {
 	/**
 	 * Validate if code is unique in MongoDB collection
 	 * Unique code is validate if key "_id" not in map contextObjects or if value of key "_id" is null else no code validation
-	 * @param contextValidatin
+	 * @param contextValidation
 	 * @param code
 	 * @param type
-	 * @return collctionName
+	 * @return collectionName
 	 */
-
 	public static <T extends DBObject> boolean validateUniqueInstanceCode(ContextValidation contextValidation,
 			String code, Class<T> type, String collectionName){
 	
@@ -78,7 +77,13 @@ public class BusinessValidationHelper {
 
 	}
 	
-	
+	/**
+	 * 
+	 * @param contextValidation
+	 * @param code
+	 * @param key
+	 * @param find
+	 */
 	public static <T> void validateRequiredDescriptionCode(ContextValidation contextValidation, String code, String key,
 			Finder<T> find) {
 		 validateRequiredDescriptionCode(contextValidation, code, key, find,false);
@@ -147,7 +152,14 @@ public class BusinessValidationHelper {
 	}
 
 	
-	
+	/**
+	 * 
+	 * @param contextValidation
+	 * @param code
+	 * @param key
+	 * @param type
+	 * @param collectionName
+	 */
 	public static <T extends DBObject> void validateRequiredInstanceCode(ContextValidation contextValidation,
 			String code, String key, Class<T> type, String collectionName) {
 		if(required(contextValidation, code, key)){
@@ -226,7 +238,14 @@ public class BusinessValidationHelper {
 	}
 
 	
-	
+	/**
+	 * 
+	 * @param contextValidation
+	 * @param code
+	 * @param key
+	 * @param type
+	 * @param collectionName
+	 */
 	public static <T extends DBObject> void validateExistInstanceCode(ContextValidation contextValidation,
 			String code, String key, Class<T> type, String collectionName) {
 		validateExistInstanceCode(contextValidation, code, key, type, collectionName, false);
@@ -289,7 +308,6 @@ public class BusinessValidationHelper {
 	public static <T extends DBObject> T validateExistInstanceCode(ContextValidation contextValidation,
 			String code, Class<T> type, String collectionName, boolean returnObject) {
 		return validateExistInstanceCode(contextValidation, code, FIELD_CODE, type, collectionName, returnObject);
-		
 	}	
 	
 	
