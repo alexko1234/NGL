@@ -58,9 +58,7 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			
 			//Get states
 			StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-			List<State> states = stateDAO.findByCommonInfoType(commonInfoType.id);
-			Logger.debug(stateDAO.toString());
-			Logger.debug(" state size "+states.size()); 
+			List<State> states = stateDAO.findByCommonInfoType(commonInfoType.id); 
 			commonInfoType.objectType.states = states;
 
 			return commonInfoType;
