@@ -57,15 +57,17 @@ object ApplicationBuild extends Build {
 		"fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
-        	"net.sf.opencsv" % "opencsv" % "2.0",
+	        "net.sf.opencsv" % "opencsv" % "2.0",
         	"commons-collections" % "commons-collections" % "3.2.1",
 		"commons-collections" % "commons-collections" % "3.2.1",
 		"org.springframework" % "spring-jdbc" % "3.2.1.RELEASE",		
 		"org.springframework" % "spring-test" % "3.2.1.RELEASE",
-		"com.github.julienrf" %% "play-jsmessages" % "1.4.1"
+		"com.github.julienrf" %% "play-jsmessages" % "1.4.1",
+		"javax.mail" % "mail" % "1.4.2"
     	)	
    	val ngldatatableDependencies = Seq(
-   	    javaCore
+   	    javaCore,
+	    "janino" % "janino" % "2.5.15"
    	    )
    	val nglframeworkwebDependencies = Seq(
    	    javaCore
