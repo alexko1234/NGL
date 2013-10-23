@@ -139,7 +139,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	}
 
 
-	public List<State> findByObjectTypeCode(String objectCode)  throws DAOException {
+	public List<State> findByTypeCode(String objectCode)  throws DAOException {
 		String sql = sqlCommon+
 				"JOIN state_object_type so ON so.fk_state=id "+
 				"JOIN object_type o on o.id =so.fk_object_type "+
@@ -147,13 +147,13 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		return initializeMapping(sql, new SqlParameter("code", Types.VARCHAR)).execute(objectCode);	
 	}
 	
-	public boolean isCodeExistForObjectTypeCode(String code, String objectCode)  throws DAOException {
+	public boolean isCodeExistForTypeCode(String code, String typeCode)  throws DAOException {
 		String sql = sqlCommon+
-				"JOIN state_object_type so ON so.fk_state=id "+
-				"JOIN object_type o on c.id =so.fk_object_type "+
-				"WHERE o.code = ? and t.code = ?";
+				"JOIN state_object_type so ON so.fk_state=t.id "+
+				"JOIN common_info_type cit on cit.fk_object_type =so.fk_object_type "+
+				"WHERE cit.code = ? and t.code = ?";
 		return( initializeMapping(sql, new SqlParameter("o.code", Types.VARCHAR),
-				 new SqlParameter("t.code", Types.VARCHAR)).findObject(objectCode, code) != null ) ? true : false;	
+				 new SqlParameter("t.code", Types.VARCHAR)).findObject(typeCode, code) != null ) ? true : false;	
 	}
 	
 	
