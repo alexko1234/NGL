@@ -1,10 +1,7 @@
 package models.laboratory.common.description;
 
-import java.util.List;
-
 import models.laboratory.common.description.dao.InstituteDAO;
 import models.utils.Model;
-import models.utils.dao.DAOException;
 
 
 /**
@@ -18,6 +15,7 @@ public class Institute extends Model<Institute>{
 	
 	public String name;
 	
+	public static Finder<Institute> find = new Finder<Institute>(InstituteDAO.class.getName()); 
 	
 	public Institute() {
 		super(InstituteDAO.class.getName());
