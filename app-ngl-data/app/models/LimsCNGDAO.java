@@ -61,10 +61,9 @@ public class LimsCNGDAO {
 	}
 
 
-	public List<Project> findProjectsToCreate(final ContextValidation contextError) throws SQLException, DAOException {
+	public List<Project> findProjectsToCreate(ContextValidation contextError) throws SQLException, DAOException {
 		
-		//use view v_project_tongl
-		List<Project> results = this.jdbcTemplate.query("select * from v_project_tongl;",new Object[]{} ,new RowMapper<Project>() {
+		List<Project> results = this.jdbcTemplate.query("select * from v_project_tongl", new Object[]{}, new RowMapper<Project>() {
 
 			@SuppressWarnings("rawtypes")
 			public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -145,7 +144,7 @@ public class LimsCNGDAO {
 		List<Sample> results = null;
 		
 		if (sampleCode != null) { 
-			results = this.jdbcTemplate.query("select * from v_sample_tongl;",new Object[]{sampleCode}
+			results = this.jdbcTemplate.query("select * from v_sample_tongl",new Object[]{sampleCode}
 			,new RowMapper<Sample>() {
 				@SuppressWarnings("rawtypes")
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -159,7 +158,7 @@ public class LimsCNGDAO {
 			});
 		}
 		else { // mass loading
-			results = this.jdbcTemplate.query("select * from v_sample_tongl;",new Object[]{}
+			results = this.jdbcTemplate.query("select * from v_sample_tongl",new Object[]{}
 			,new RowMapper<Sample>() {
 				@SuppressWarnings("rawtypes")
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -209,7 +208,7 @@ public class LimsCNGDAO {
 	 */
 	public List<Container> findContainersToCreate(ContextValidation contextError){
 
-		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true;",new Object[]{} 
+		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true",new Object[]{} 
 		,new RowMapper<Container>() {
 
 			@SuppressWarnings("rawtypes")
@@ -318,19 +317,23 @@ public class LimsCNGDAO {
 	}
 	
 	
+	public void testUpdate(ContextValidation contextError) {
+		Logger.debug("begin testUpdate !!!!!!!!!!!!!!!!!!!!!!"); 
+		String sql="UPDATE t_lane SET nglimport_date = CURRENT_TIMESTAMP WHERE id = 5005";
+		this.jdbcTemplate.update(sql);
+		Logger.debug("end testUpdate !!!!!!!!!!!!!!!!!!!!!!!!!");
+	}
 	
 	/**
 	 * 
 	 * @param projects
 	 * @param contextError
 	 */
-	public void updateImportDate(String tableName, String keyColumn, String keyColumnType, String[] values, ContextValidation contextError) {
+	public void updateImportDate(String tableName, String keyColumn, String keyColumnType, String[] sValues, ContextValidation contextError) {
 		
-		contextError.addKeyToRootKeyName("updateImportDateForSamples");
+		contextError.addKeyToRootKeyName("updateImportDate");
 		
 		String sql="UPDATE " + tableName + " SET nglimport_date = ? WHERE " + keyColumn + " = ANY (?)";
-		//alternative sql
-		//String sql="UPDATE " + tableName + " SET nglimport_date = ? WHERE name IN (SELECT UNNEST(?::VARCHAR[]))" ; 
 		
 		Logger.debug("sql = "+ sql);
 		
@@ -339,18 +342,31 @@ public class LimsCNGDAO {
 			PreparedStatement pst = conn.prepareStatement(sql);
 			
 			pst.setObject(1, new Date(), Types.TIMESTAMP);
-			//other possible : "integer"
-			pst.setArray(2, conn.createArrayOf(keyColumnType, values));
-			//arrayLiteral = "{A,\"B \", C,D}"
-			//pst.setString(2, arrayLiteral)
+
+			if (keyColumnType.equals("text")) {
+				pst.setArray(2, conn.createArrayOf(keyColumnType, sValues));
+			}
+			if (keyColumnType.equals("integer")) {
+				Integer[] iValues = new Integer[sValues.length];
+				int tmp;
+				for (int i=0; i<sValues.length; i++) {
+					tmp = Integer.parseInt(sValues[i]);
+					iValues[i] = (Integer) tmp; 
+				}
+				pst.setArray(2, conn.createArrayOf(keyColumnType, iValues));
+			}			
             pst.execute();
             pst.close();
+            
+            Logger.debug("execute ok"); 
 		}
 		catch(Exception e) {
-			contextError.addErrors("",e.getMessage(), sql, new Date(), values);
+			contextError.addErrors("",e.getMessage(), sql, sValues);
 		}
-		contextError.removeKeyFromRootKeyName("updateImportDateForSamples");
+		contextError.removeKeyFromRootKeyName("updateImportDate");
 	}
+	
+
 	
 	
 	/**
