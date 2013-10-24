@@ -3,6 +3,7 @@ package services.description;
 import java.util.ArrayList;
 import java.util.List;
 import models.laboratory.common.description.AbstractCategory;
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
@@ -176,6 +177,13 @@ public class DescriptionFactory {
 		r.category = category;
 		return r;
 	}
+	
+	public static Institute newInstitute(String name, String code) {
+			Institute i = new Institute();
+			i.code = code;
+			i.name = name;
+			return i;
+		}
 	
 	public static State newState(String name, String code, boolean active,	int position) {
 		State s = new State();
