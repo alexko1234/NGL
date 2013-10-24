@@ -34,7 +34,8 @@ public class ImportDataCNG extends AbstractImportData {
 		Logger.info("ImportData execution : ");
 		try{
 			Logger.info(" Import Containers ... ");
-			createContainersFromLims();
+			createContainersFromLims(contextError);
+			//testUpdate(contextError);
 			//Maud's code
 			//createContainers(contextError,"select * from v_sampletongl;","lane","F",null,null); 
 		}catch (Exception e) {
@@ -56,14 +57,14 @@ public class ImportDataCNG extends AbstractImportData {
      * @throws SQLException
      * @throws DAOException
      */
-	public static List<Project> createProjectsFromLims() throws SQLException, DAOException{
+	public static List<Project> createProjectsFromLims(ContextValidation contextError) throws SQLException, DAOException{
 		List<Project> projects = limsServices.findProjectsToCreate(contextError) ;
 
 		//save projects
 		List<Project> projs=InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError);
 		
 		//update project's dates by block (define by the blockSize)
-		updateLimsProjects(projs, blockSize);
+		updateLimsProjects(projs, blockSize, contextError);
 		
 		return projs;
 	}
@@ -75,7 +76,7 @@ public class ImportDataCNG extends AbstractImportData {
 	 * @param blockSize
 	 * @throws DAOException
 	 */
-	public static void updateLimsProjects(List<Project> projects, int blockSize) throws DAOException {
+	public static void updateLimsProjects(List<Project> projects, int blockSize, ContextValidation contextError) throws DAOException {
 		
 		Logger.debug("start of updateLimsProjects"); 
 		int i = 0;
@@ -96,7 +97,7 @@ public class ImportDataCNG extends AbstractImportData {
 	}
 	
 
-	public static void deleteSamplesFromLims() throws SQLException, DAOException{
+	public static void deleteSamplesFromLims(ContextValidation contextError) throws SQLException, DAOException{
 		List<Sample> samples = limsServices.findSamplesToCreate(contextError, null); // 2nd parameter null for mass loading 
 		for(Sample sample:samples){
 			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code)){
@@ -107,18 +108,18 @@ public class ImportDataCNG extends AbstractImportData {
 	}
 	
 	
-	public static List<Sample> createSamplesFromLims() throws SQLException, DAOException{
+	public static List<Sample> createSamplesFromLims(ContextValidation contextError) throws SQLException, DAOException{
 		List<Sample> samples = limsServices.findSamplesToCreate(contextError, null); // 2nd parameter null for mass loading
 
 		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError);
 			
-		updateLimsSamples(samps, blockSize);
+		updateLimsSamples(samps, blockSize, contextError);
 		
 		return samps;
 	}
 	
 
-	public static void updateLimsSamples(List<Sample> ts, int blockSize) throws DAOException {
+	public static void updateLimsSamples(List<Sample> ts, int blockSize, ContextValidation contextError) throws DAOException {
 		
 		Logger.debug("start of updateLimsSamples"); 
 		int i = 0;
@@ -139,7 +140,7 @@ public class ImportDataCNG extends AbstractImportData {
 	
 	
 	
-	public static void deleteContainersFromLims() throws SQLException, DAOException{
+	public static void deleteContainersFromLims(ContextValidation contextError) throws SQLException, DAOException{
 		List<Container> containers = limsServices.findContainersToCreate(contextError) ;
 		for(Container container:containers){
 			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code)){
@@ -149,18 +150,22 @@ public class ImportDataCNG extends AbstractImportData {
 		}
 	}
 	
-	public static List<Container> createContainersFromLims() throws SQLException, DAOException{
+	public static List<Container> createContainersFromLims(ContextValidation contextError) throws SQLException, DAOException{
 		List<Container> containers = limsServices.findContainersToCreate(contextError) ;
 
 		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError);
 		
-		updateLimsContainers(ctrs, blockSize);
+		updateLimsContainers(ctrs, blockSize, contextError);
 		
 		return ctrs;
 	}
 	
+	//TODO : remove
+	public static void testUpdate(ContextValidation contextError) throws DAOException {
+		limsServices.testUpdate(contextError);
+	}
 	
-	public static void updateLimsContainers(List<Container> ts, int blockSize) throws DAOException {
+	public static void updateLimsContainers(List<Container> ts, int blockSize, ContextValidation contextError) throws DAOException {
 		
 		Logger.debug("start of updateLimsContainers"); 
 		int i = 0;
@@ -170,8 +175,7 @@ public class ImportDataCNG extends AbstractImportData {
 			
 			codesToUpdate.clear();
 			 for (Container t : ts.subList(i, Math.min(i+blockSize, ts.size()))) {
-				 //codesToUpdate.add(Integer.parseInt(t.properties.get("limsCode").value.toString()));
-				 codesToUpdate.add(t.code);
+				 codesToUpdate.add(t.properties.get("limsCode").value.toString());
 			 }
 
 			 i = i + blockSize; 
