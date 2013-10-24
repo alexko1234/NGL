@@ -8,6 +8,7 @@ import java.util.Map;
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
+import models.laboratory.common.description.Institute;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -27,10 +28,8 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 				"JOIN object_type as o ON o.id=t.fk_object_type ",true);
 	}
 
-	public long save(CommonInfoType cit) throws DAOException
-	{
+	public long save(CommonInfoType cit) throws DAOException {
 		//Check if objectType exist
-		
 		if(null == cit){
 			throw new DAOException("CommonInfoType is mandatory");
 		}
@@ -49,16 +48,17 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 
 		insertResolution(cit.resolutions, cit.id, false);
 		insertProperties(cit.propertiesDefinitions, cit.id, false);
+		
+		insertInstitutes(cit.institutes, cit.id, false);
+		
 		return cit.id;
 	}
 
 	
-	public void update(CommonInfoType cit) throws DAOException
-	{
+	public void update(CommonInfoType cit) throws DAOException {
 		if(null == cit || cit.id == null){
 			throw new DAOException("CommonInfoType is mandatory");
 		}
-		
 		CommonInfoType citDB = findById(cit.id);
 		if(null == citDB){
 			throw new DAOException("CommonInfoType does not exist");
@@ -66,6 +66,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		String sql = "UPDATE common_info_type SET name=? WHERE id=?";
 		jdbcTemplate.update(sql, cit.name, cit.id);
 		insertResolution(cit.resolutions, cit.id, true);
+		insertInstitutes(cit.institutes, cit.id, true);
 		insertProperties(cit.propertiesDefinitions, cit.id, true);
 	}
 
@@ -75,12 +76,19 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		removeResolution(commonInfoType.id);
 		//Delete property_definition
 		removeProperties(commonInfoType.id);
+		
+		removeInstitutes(commonInfoType.id);
 		super.remove(commonInfoType);
 	}
 
 	private void removeResolution( Long citId) {
 		String sqlResol = "DELETE FROM common_info_type_resolution WHERE fk_common_info_type=?";
 		jdbcTemplate.update(sqlResol, citId);
+	}
+	
+	private void removeInstitutes( Long citId) {
+		String sqlInstit = "DELETE FROM common_info_type_institute WHERE fk_common_info_type=?";
+		jdbcTemplate.update(sqlInstit, citId);
 	}
 
 	private void removeProperties(Long citId)
@@ -128,6 +136,24 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 			}
 		}
 	}
+	
+	
+	private void insertInstitutes(List<Institute> institutes, Long citId, boolean deleteBefore)
+			throws DAOException {
+		if(deleteBefore){
+			removeInstitutes(citId);
+		}
+		//Add institutes list		
+		if(institutes!=null && institutes.size()>0){
+			String sql = "INSERT INTO common_info_type_institute (fk_common_info_type, fk_institute) VALUES(?,?)";
+			for(Institute institute:institutes){
+				if(institute == null || institute.id == null ){
+					throw new DAOException("institute is mandatory");
+				}
+				jdbcTemplate.update(sql, citId, institute.id);
+			}
+		}
+	}
 
 
 	public List<CommonInfoType> findByName(String typeName) {
@@ -139,13 +165,13 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 
 	}
 
-	public List<CommonInfoType> findByTypeNameAndType(String typeName, long idobjectType) {
+	public List<CommonInfoType> findByTypeNameAndType(String typeName, long idObjectType) {
 		String sql = sqlCommon+
 				"WHERE name like \'%"+typeName+"%\' "+
 				"AND fk_object_type=? "+
 				"ORDER by name asc";
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("fk_object_type",Type.LONG));
-		return commonInfoTypeMappingQuery.execute(idobjectType);
+		return commonInfoTypeMappingQuery.execute(idObjectType);
 
 	}
 	
