@@ -35,7 +35,6 @@ public class ImportDataCNG extends AbstractImportData {
 		try{
 			Logger.info(" Import Containers ... ");
 			createContainersFromLims(contextError);
-			//testUpdate(contextError);
 			//Maud's code
 			//createContainers(contextError,"select * from v_sampletongl;","lane","F",null,null); 
 		}catch (Exception e) {
@@ -89,9 +88,8 @@ public class ImportDataCNG extends AbstractImportData {
 			 for (Project project : projects.subList(i, Math.min(i+blockSize, projects.size()))) {
 				 codesToUpdate.add(project.code);
 			 }
-
+			limsServices.updateImportDate( "t_project", "text", "name", codesToUpdate.toArray(new String[codesToUpdate.size()]), contextError);
 			 i = i + blockSize; 
-			limsServices.updateImportDate( "t_project", "text", "name", codesToUpdate.toArray(new String[blockSize]), contextError);
 		}	
 		Logger.debug("end of updateLimsProjects"); 
 	}
@@ -131,9 +129,8 @@ public class ImportDataCNG extends AbstractImportData {
 			 for (Sample t : ts.subList(i, Math.min(i+blockSize, ts.size()))) {
 				 codesToUpdate.add(t.code);
 			 }
-
-			 i = i + blockSize; 
-			limsServices.updateImportDate( "t_sample", "text", "stock_barcode", codesToUpdate.toArray(new String[blockSize]), contextError);
+			limsServices.updateImportDate( "t_sample", "text", "stock_barcode", codesToUpdate.toArray(new String[codesToUpdate.size()]), contextError);
+			i = i + blockSize; 
 		}	
 		Logger.debug("end of updateLimsSamples"); 
 	}
@@ -159,11 +156,7 @@ public class ImportDataCNG extends AbstractImportData {
 		
 		return ctrs;
 	}
-	
-	//TODO : remove
-	public static void testUpdate(ContextValidation contextError) throws DAOException {
-		limsServices.testUpdate(contextError);
-	}
+
 	
 	public static void updateLimsContainers(List<Container> ts, int blockSize, ContextValidation contextError) throws DAOException {
 		
@@ -177,9 +170,9 @@ public class ImportDataCNG extends AbstractImportData {
 			 for (Container t : ts.subList(i, Math.min(i+blockSize, ts.size()))) {
 				 codesToUpdate.add(t.properties.get("limsCode").value.toString());
 			 }
-
-			 i = i + blockSize; 
-			limsServices.updateImportDate( "t_lane", "id", "integer", codesToUpdate.toArray(new String[blockSize]), contextError);
+ 
+			limsServices.updateImportDate( "t_lane", "id", "integer", codesToUpdate.toArray(new String[codesToUpdate.size()]), contextError);
+			 i = i + blockSize;
 		}	
 		Logger.debug("end of updateLimsContainers"); 
 	}
