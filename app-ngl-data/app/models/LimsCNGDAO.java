@@ -96,10 +96,10 @@ public class LimsCNGDAO {
 			Logger.debug("Sample code :"+sample.code);
 			
 			String sampleTypeCode=SAMPLE_TYPE_CODE_DEFAULT;
-			if(sampleTypeCode==null){
+			/*if(sampleTypeCode==null){
 				contextError.addErrors( "typeCode", "limsdao.error.emptymapping", sample.code);
 				return null;
-			}
+			}*/
 			
 			SampleType sampleType=null;
 			try {
@@ -317,13 +317,6 @@ public class LimsCNGDAO {
 	}
 	
 	
-	public void testUpdate(ContextValidation contextError) {
-		Logger.debug("begin testUpdate !!!!!!!!!!!!!!!!!!!!!!"); 
-		String sql="UPDATE t_lane SET nglimport_date = CURRENT_TIMESTAMP WHERE id = 5005";
-		this.jdbcTemplate.update(sql);
-		Logger.debug("end testUpdate !!!!!!!!!!!!!!!!!!!!!!!!!");
-	}
-	
 	/**
 	 * 
 	 * @param projects
@@ -361,7 +354,7 @@ public class LimsCNGDAO {
             Logger.debug("execute ok"); 
 		}
 		catch(Exception e) {
-			contextError.addErrors("",e.getMessage(), sql, sValues);
+			contextError.addErrors("", sValues.toString());
 		}
 		contextError.removeKeyFromRootKeyName("updateImportDate");
 	}
