@@ -15,7 +15,7 @@ import play.api.modules.spring.Spring;
  * Represented by a table in the database with its own id
  * The subclasses are represented by tables in the database with the same id as the parent class
  * Relations with the protocols and instruments are accessible by the common_info_type table for the experiment subclasses (experimentType, qualityCcontrolType ...)
- * @author ejacoby
+ * @author ejacoby, dnoisett
  *
  */
 public class CommonInfoType extends Model<CommonInfoType>{
@@ -27,6 +27,9 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	public List<PropertyDefinition> propertiesDefinitions=new ArrayList<PropertyDefinition>();
 
 	public ObjectType objectType;
+	
+	public List<Institute> institutes = new ArrayList<Institute>();
+	
 
 	public static Finder<CommonInfoType> find = new Finder<CommonInfoType>(CommonInfoTypeDAO.class.getName()); 
 
@@ -66,12 +69,12 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		this.resolutions=commonInfoType.resolutions;
 		this.propertiesDefinitions=commonInfoType.propertiesDefinitions;
 		this.objectType=commonInfoType.objectType;
+		this.institutes=commonInfoType.institutes;
 	}
 
 	public List<PropertyDefinition> getPropertyDefinitionByLevel(Level.CODE...levels){
 
 		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
-
 		for(PropertyDefinition propertyDefinition:this.propertiesDefinitions){
 			boolean containsAll = true;
 			for(int i=0;i<levels.length;i++){
@@ -85,7 +88,6 @@ public class CommonInfoType extends Model<CommonInfoType>{
 				proDefinitions.add(propertyDefinition);
 			}
 		}	
-		
 		return proDefinitions;
 	}
 
