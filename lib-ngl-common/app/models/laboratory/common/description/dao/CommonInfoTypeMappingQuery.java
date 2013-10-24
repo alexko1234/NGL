@@ -10,6 +10,7 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.State;
 
 import org.springframework.jdbc.core.SqlParameter;
@@ -45,6 +46,7 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			objectType.code = rs.getString("codeObject");
 			objectType.generic =rs.getBoolean("generic");
 			commonInfoType.objectType = objectType;
+			
 	
 			//Get Resolutions
 			ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
@@ -60,6 +62,11 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
 			List<State> states = stateDAO.findByCommonInfoType(commonInfoType.id); 
 			commonInfoType.objectType.states = states;
+			
+			//Get Institutes
+			InstituteDAO instituteDAO = Spring.getBeanOfType(InstituteDAO.class);
+			List<Institute> institutes = instituteDAO.findByCommonInfoType(commonInfoType.id);
+			commonInfoType.institutes = institutes;
 
 			return commonInfoType;
 	}
