@@ -6,13 +6,11 @@ import java.util.List;
 
 import models.LimsCNGDAO;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.Content;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-import models.utils.instance.ContainerHelper;
 import play.Logger;
 import play.Play;
 import play.api.modules.spring.Spring;
@@ -177,7 +175,7 @@ public class ImportDataCNG extends AbstractImportData {
 		Logger.debug("end of updateLimsContainers"); 
 	}
 	
-	
+	/*
 	public	static void createContainers(ContextValidation contextError, String sqlContainer,String containerCategoryCode,  String containerStateCode, String experimentTypeCode, String sqlContent) throws SQLException, DAOException{
 		String rootKeyName=null;
 
@@ -218,7 +216,7 @@ public class ImportDataCNG extends AbstractImportData {
 			List<Content> contents=new ArrayList<Content>(container.contents);
 			for(Content content : contents){
 
-				/* Sample content not in MongoDB */
+				// Sample content not in MongoDB 
 				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, content.sampleUsed.sampleCode)){
 
 					rootKeyName="sample["+content.sampleUsed.sampleCode+"]";
@@ -237,20 +235,20 @@ public class ImportDataCNG extends AbstractImportData {
 					contextError.removeKeyFromRootKeyName(rootKeyName);
 
 				}else {	
-					/* Find sample in Mongodb */
+					// Find sample in Mongodb
 					newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, content.sampleUsed.sampleCode);	
 				}			
 
 				rootKeyName="container["+container.code+"]";
 				contextError.addKeyToRootKeyName(rootKeyName);
 
-				/* Error : No sample, remove container from list to create */
+				// Error : No sample, remove container from list to create
 				if(newSample==null){
 					containers.remove(container);
 					contextError.addErrors("sample","error.codeNotExist", content.sampleUsed.sampleCode);
 				}
 				else{
-					/* From sample, add content in container */
+					// From sample, add content in container 
 					container.contents.remove(content);
 					ContainerHelper.addContent(container,newSample,content.properties);
 					
@@ -261,6 +259,7 @@ public class ImportDataCNG extends AbstractImportData {
 		}
 
 	}
+	*/
 	
 
 }
