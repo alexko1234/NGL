@@ -17,6 +17,7 @@ import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
+import play.Logger;
 import play.api.modules.spring.Spring;
 
 @Repository
@@ -144,8 +145,12 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		}
 		if(states!=null && states.size()>0){
 			String sql = "INSERT INTO common_info_type_state (fk_common_info_type,fk_state) VALUES(?,?)";
+			Logger.debug("!!!!!!!!!!!!!");
+			Logger.debug("!!!!! ESSAI INSERT common_info_type_state !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			Logger.debug("!!!!!!!!!!!!!");
 			for(State state : states){
 				if(state == null || state.id == null ){
+					Logger.debug("!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ");
 					throw new DAOException("state is mandatory");
 				}
 				jdbcTemplate.update(sql, citId,state.id);
@@ -213,7 +218,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 	 */
 	public CommonInfoType findByCode(String code) throws DAOException {
 		String sql = sqlCommon+
-				"WHERE codeSearch = ? ";
+				"WHERE t.code = ? ";
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
 		return commonInfoTypeMappingQuery.findObject(code);
 	}
