@@ -145,12 +145,8 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		}
 		if(states!=null && states.size()>0){
 			String sql = "INSERT INTO common_info_type_state (fk_common_info_type,fk_state) VALUES(?,?)";
-			Logger.debug("!!!!!!!!!!!!!");
-			Logger.debug("!!!!! ESSAI INSERT common_info_type_state !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-			Logger.debug("!!!!!!!!!!!!!");
 			for(State state : states){
 				if(state == null || state.id == null ){
-					Logger.debug("!!!!! ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ");
 					throw new DAOException("state is mandatory");
 				}
 				jdbcTemplate.update(sql, citId,state.id);
