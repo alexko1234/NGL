@@ -395,6 +395,15 @@ public class DescriptionFactory {
 	}
 	
 	
+	public static List<Institute> getInstitutes(Institute.CODE...codes) throws DAOException {
+		List<Institute> institutes = new ArrayList<Institute>();
+		for(Institute.CODE code : codes){
+			institutes.add(Institute.find.findByCode(code.name()));
+		}
+		return institutes;
+	}
+	
+	
 
 	
 
