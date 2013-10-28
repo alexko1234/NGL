@@ -22,6 +22,7 @@ import models.utils.dao.DAOHelpers;
 import play.Logger;
 import play.data.validation.ValidationError;
 import services.description.common.LevelService;
+import services.description.DescriptionFactory;
 
 public class InstrumentService {
 	
@@ -53,14 +54,14 @@ public class InstrumentService {
 	public static void saveInstrumentUsedTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		
 		List<InstrumentUsedType> l = new ArrayList<InstrumentUsedType>();
-		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, getIntruments(new String[]{"Main"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("Covaris S2", "covaris-s2", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), getIntruments(new String[]{"Covaris 1", "Covaris 2"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), getIntruments(new String[]{"Covaris 3", "Covaris 4"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("Spri", "spri", InstrumentCategory.find.findByCode("spri"), getSpriProperties(), getIntruments(new String[]{"Spri 1", "Spri 2", "Spri 3"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("Thermo", "thermo", InstrumentCategory.find.findByCode("thermo"), getThermoProperties(), getIntruments(new String[]{"Thermo s1", "Thermo s2", "Thermo s3"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("Agilent 2100", "agilent-2100", InstrumentCategory.find.findByCode("agilent"), getAgilentProperties(), getIntruments(new String[]{"BioAnalyzer 1", "BioAnalyzer 2"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("iQuBit", "iqubit", InstrumentCategory.find.findByCode("qubit"), getQuBitProperties(), getIntruments(new String[]{"QuBit 1", "QuBit 2"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("iqPCR", "iqpcr", InstrumentCategory.find.findByCode("qpcr"), getQPCRProperties(), getIntruments(new String[]{"qPCR 1"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, getIntruments(new String[]{"Main"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("Covaris S2", "covaris-s2", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), getIntruments(new String[]{"Covaris 1", "Covaris 2"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), getIntruments(new String[]{"Covaris 3", "Covaris 4"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("Spri", "spri", InstrumentCategory.find.findByCode("spri"), getSpriProperties(), getIntruments(new String[]{"Spri 1", "Spri 2", "Spri 3"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("Thermo", "thermo", InstrumentCategory.find.findByCode("thermo"), getThermoProperties(), getIntruments(new String[]{"Thermo s1", "Thermo s2", "Thermo s3"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("Agilent 2100", "agilent-2100", InstrumentCategory.find.findByCode("agilent"), getAgilentProperties(), getIntruments(new String[]{"BioAnalyzer 1", "BioAnalyzer 2"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("iQuBit", "iqubit", InstrumentCategory.find.findByCode("qubit"), getQuBitProperties(), getIntruments(new String[]{"QuBit 1", "QuBit 2"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("iqPCR", "iqpcr", InstrumentCategory.find.findByCode("qpcr"), getQPCRProperties(), getIntruments(new String[]{"qPCR 1"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
@@ -120,13 +121,6 @@ public class InstrumentService {
 	private static List<ContainerSupportCategory> getContainerSupportCategories(String[] codes) throws DAOException{		
 		return DAOHelpers.getModelByCodes(ContainerSupportCategory.class,ContainerSupportCategory.find, codes);
 	}
-	
-	public static List<Institute> getInstitutes(Institute.CODE...codes) throws DAOException {
-		List<Institute> institutes = new ArrayList<Institute>();
-		for(Institute.CODE code : codes){
-			institutes.add(Institute.find.findByCode(code.name()));
-		}
-		return institutes;
-	}
+
 
 }
