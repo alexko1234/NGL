@@ -3,9 +3,6 @@ package controllers.description.commons;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import models.utils.dao.DAOException;
-
 import play.Logger;
 import play.data.validation.ValidationError;
 import play.libs.Json;
