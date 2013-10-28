@@ -7,11 +7,12 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.State;
+import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
@@ -46,8 +47,18 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			objectType.code = rs.getString("codeObject");
 			objectType.generic =rs.getBoolean("generic");
 			commonInfoType.objectType = objectType;
-			
-	
+
+			//Get variables State
+			StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
+			List<State> states = null;
+			try {
+				states = stateDAO.findByCommonInfoType(commonInfoType.id);
+			} catch (DAOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			commonInfoType.states = states;
+				
 			//Get Resolutions
 			ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
 			List<Resolution> resolutions = resolutionDAO.findByCommonInfoType(commonInfoType.id);
@@ -58,10 +69,6 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			List<PropertyDefinition> properties = propertyDefinitionDAO.findByCommonInfoType(commonInfoType.id);
 			commonInfoType.propertiesDefinitions=properties;
 			
-			//Get states
-			StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
-			List<State> states = stateDAO.findByCommonInfoType(commonInfoType.id); 
-			commonInfoType.objectType.states = states;
 			
 			//Get Institutes
 			InstituteDAO instituteDAO = Spring.getBeanOfType(InstituteDAO.class);
