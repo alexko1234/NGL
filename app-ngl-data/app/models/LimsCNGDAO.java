@@ -22,9 +22,7 @@ import models.laboratory.project.instance.Project;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceHelpers;
-import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,12 +69,15 @@ public class LimsCNGDAO {
 				Project project = new Project(rs.getString("code"), rs.getString("name").trim());
 				project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
 				project.properties= new HashMap<String, PropertyValue>();
+				//TODO : property franceGenomique 
 				project.categoryCode=PROJECT_CATEGORY_CODE;
 				project.stateCode="IP";
 				InstanceHelpers.updateTraceInformation(project.traceInformation);
 				project.comments = new ArrayList<Comment>(); 
 				// just one comment for one project
-				InstanceHelpers.addComment(rs.getString("comments"), project.comments);
+				if (rs.getString("comments") != null ) {
+					InstanceHelpers.addComment(rs.getString("comments"), project.comments);
+				}
 				
 				return project;
 			}
@@ -130,8 +131,8 @@ public class LimsCNGDAO {
 				sample.properties=new HashMap<String, PropertyValue>();
 			}
 		    sample.properties.put("taxonSize", new PropertySingleValue(rs.getDouble("taxonsize")));
-		    sample.properties.put("isFragmented", new PropertySingleValue(rs.getBoolean("isfragmented")));
-		    sample.properties.put("isAdapters", new PropertySingleValue(rs.getBoolean("isadapters")));
+		    sample.properties.put("isFragmented", null); // TODO : verify
+		    sample.properties.put("isAdapters", null); // TODO : verify
 		    sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("lims_code")));
 					
 			sample.importTypeCode="default-import";
@@ -181,11 +182,15 @@ public class LimsCNGDAO {
 			while ( (pos < listSize-1) && (results.get(pos).code.equals( results.get(pos+x).code ))   ) {
 				// difference between the two project codes
 				if (! results.get(pos).projectCodes.get(0).equals(results.get(pos+x).projectCodes.get(0))) {
-					results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.get(0) ); 
+					if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.get(0))) {
+						results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.get(0) ); 
+					}
 				}
 				// difference between the two comments
 				if (! results.get(pos).comments.get(0).equals(results.get(pos+x).comments.get(0))) {
-					results.get(pos).comments.add( results.get(pos+x).comments.get(0) ); 
+					if (! results.get(pos).comments.contains(results.get(pos+x).comments.get(0))) {
+						results.get(pos).comments.add( results.get(pos+x).comments.get(0) ); 
+					}
 				}
 				// all the difference have been reported on the first sample found (at the position pos)
 				// so we can delete the sample at the position (posNext)
@@ -208,7 +213,7 @@ public class LimsCNGDAO {
 	 */
 	public List<Container> findContainersToCreate(ContextValidation contextError){
 
-		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true",new Object[]{} 
+		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true and code in ('C01BBACXX_1','D0358ACXX_3') order by code, project, code_sample, tag",new Object[]{} 
 		,new RowMapper<Container>() {
 
 			@SuppressWarnings("rawtypes")
@@ -269,17 +274,22 @@ public class LimsCNGDAO {
 					content.sampleUsed.categoryCode = "unknown"; // required
 					content.sampleUsed.typeCode = "unknown"; // required
 					
+					content.properties = new HashMap<String, PropertyValue>();
+					
+					if(rs.getString("tag")!=null) { 
+						content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+					}
+					else {
+						content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparaison, suppress it at the end of the function...
+					}
+					content.properties.put("percentPerLane",new PropertySingleValue(rs.getString("percent_per_lane")));
+					
 					container.contents=new ArrayList<Content>();
 					container.contents.add(content);
 					
 					container.sampleCodes=new ArrayList<String>();
 					container.sampleCodes.add(rs.getString("code_sample"));
 					
-					if (rs.getString("tag") != null || rs.getString("percent_per_lane") != null) {
-						content.properties = new HashMap<String, PropertyValue>();
-						content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
-						content.properties.put("percentPerLane",new PropertySingleValue(rs.getString("percent_per_lane")));
-					}
 				}
 			
 				//
@@ -291,28 +301,86 @@ public class LimsCNGDAO {
 			}
 		});       
 		
-		//affect all the project codes /samples to the first container 
+		//"demultiplexage"
+		//affect all the project codes /samples /tags to the same container (for having unique codes of containers) 
 		/// required to have an ordered list (see ORDER BY clause in the sql of the view)
 		int pos = 0;
 		int x=1;
 		int listSize  =  results.size(); 
+		Boolean insertContent = false;
+		
 		while (pos < listSize-1    )   {
-			while ( (pos < listSize-1) && (results.get(pos).code.equals( results.get(pos+x).code ))   ) {
-				// difference between the two project codes
+			
+			while ( (pos < listSize-1) && (results.get(pos).code.equals( results.get(pos+x).code))   ) {
+				
+				insertContent = false;
+				// difference between the two projectCode
 				if (! results.get(pos).projectCodes.get(0).equals(results.get(pos+x).projectCodes.get(0))) {
-					results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.get(0) ); 
+					if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.get(0))) {
+						results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.get(0) ); 
+					}
 				}
-				// difference between the two comments
+				// difference between the two sampleCode
 				if (! results.get(pos).sampleCodes.get(0).equals(results.get(pos+x).sampleCodes.get(0))) {
-					results.get(pos).sampleCodes.add( results.get(pos+x).sampleCodes.get(0) ); 
+					if (! results.get(pos).sampleCodes.contains(results.get(pos+x).sampleCodes.get(0))) {
+							
+						results.get(pos).sampleCodes.add( results.get(pos+x).sampleCodes.get(0) );
+						
+						Content content = new Content();
+						content.sampleUsed=new SampleUsed();
+						content.sampleUsed.sampleCode= results.get(pos+x).sampleCodes.get(0);
+						//TODO : change default value
+						content.sampleUsed.categoryCode = "unknown"; // required
+						content.sampleUsed.typeCode = "unknown"; // required
+						
+						content.properties = new HashMap<String, PropertyValue>();
+						content.properties.put("tag",new PropertySingleValue( results.get(pos+x).contents.get(0).properties.get("tag").value  ));
+						content.properties.put("percentPerLane",new PropertySingleValue( results.get(pos+x).contents.get(0).properties.get("percentPerLane").value ));
+					
+						results.get(pos).contents.add(content); 
+						
+						insertContent = true;
+					}
 				}
+				
+				// difference between the two tag (and same sampleCode)
+				if (!  results.get(pos).contents.get(0).properties.get("tag").value.equals(  results.get(pos+x).contents.get(0).properties.get("tag").value  ) ) {
+					if (!insertContent) {
+						
+						Content content = new Content();
+						content.sampleUsed=new SampleUsed();
+						content.sampleUsed.sampleCode= results.get(pos+x).sampleCodes.get(0);
+						//TODO : change default value
+						content.sampleUsed.categoryCode = "unknown"; // required
+						content.sampleUsed.typeCode = "unknown"; // required
+						
+						content.properties = new HashMap<String, PropertyValue>();
+						content.properties.put("tag",new PropertySingleValue( results.get(pos+x).contents.get(0).properties.get("tag").value  ));
+						content.properties.put("percentPerLane",new PropertySingleValue( results.get(pos+x).contents.get(0).properties.get("percentPerLane").value ));
+						
+						results.get(pos).contents.add(content); 
+					}
+					
+				}
+				
 				// all the difference have been reported on the first sample found (at the position pos)
 				// so we can delete the sample at the position (posNext)
 				results.remove(pos+x);
+				//ajust list size
 				listSize--;
 			}
 			pos++;
+		}	
+		
+		//for suppress null tags
+		for (Container r : results) {
+			for (int i=0; i<r.contents.size(); i++) {
+				if (r.contents.get(i).properties.get("tag").value.equals("-1")) {
+					r.contents.get(i).properties.get("tag").value = null;
+				}
+			}
 		}
+		
 		return results;
 	}
 	
@@ -362,11 +430,7 @@ public class LimsCNGDAO {
 
 	
 	
-	/**
-	 * 
-	 * @param contextError
-	 * @return
-	 */
+/*
 	public List<Container> findContainersToCreate(String procedure,ContextValidation contextError, final String containerCategoryCode, final String containerStateCode, final String experimentTypeCode){
 
 		List<Container> results = this.jdbcTemplate.query(procedure,new Object[]{} 
@@ -405,7 +469,7 @@ public class LimsCNGDAO {
 		});
 		return listObjects;
 	}
-
+*/
 		
 
 }
