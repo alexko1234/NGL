@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.project.description.ProjectCategory;
@@ -35,8 +36,8 @@ public class ProjectService {
 	public static void saveProjectTypes(Map<String, List<ValidationError>> errors) throws DAOException{
 		List<ProjectType> l = new ArrayList<ProjectType>();
 		
-		l.add(newProjectType("Defaut", "default-project", ProjectCategory.find.findByCode("default"), null));
-		l.add(newProjectType("France Génomique", "france-genomique", ProjectCategory.find.findByCode("default"), getFGPropertyDefinitions()));
+		l.add(newProjectType("Defaut", "default-project", ProjectCategory.find.findByCode("default"), null, getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newProjectType("France Génomique", "france-genomique", ProjectCategory.find.findByCode("default"), getFGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(ProjectType.class, l, errors);
 		
@@ -46,6 +47,14 @@ public class ProjectService {
 		List<PropertyDefinition> pds = new ArrayList<PropertyDefinition>();
 		pds.add(newPropertiesDefinition("Groupe", "fgGroup", LevelService.getLevels(Level.CODE.Project), String.class, true));
 		return pds;
+	}
+	
+	public static List<Institute> getInstitutes(Institute.CODE...codes) throws DAOException {
+		List<Institute> institutes = new ArrayList<Institute>();
+		for(Institute.CODE code : codes){
+			institutes.add(Institute.find.findByCode(code.name()));
+		}
+		return institutes;
 	}
 	
 	
