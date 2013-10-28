@@ -1,8 +1,6 @@
 package services.description.process;
 
-import static services.description.DescriptionFactory.newProcessType;
-import static services.description.DescriptionFactory.newPropertiesDefinition;
-import static services.description.DescriptionFactory.newValues;
+import services.description.DescriptionFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +20,8 @@ import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
+
+
 public class ProcessService {
 	public static void main(Map<String, List<ValidationError>> errors)  throws DAOException{
 		DAOHelpers.removeAll(ProcessType.class, ProcessType.find);
@@ -42,8 +42,8 @@ public class ProcessService {
 	
 	private static void saveProcessTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessType> l = new ArrayList<ProcessType>();
-		l.add(newProcessType("Banque 300-600", "lib-300-600", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie","amplification"), 
-				getExperimentTypes("fragmentation").get(0), getExperimentTypes("amplification").get(0), getExperimentTypes("void-lib-300-600").get(0), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newProcessType("Banque 300-600", "lib-300-600", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie","amplification"), 
+				getExperimentTypes("fragmentation").get(0), getExperimentTypes("amplification").get(0), getExperimentTypes("void-lib-300-600").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
 	
@@ -56,21 +56,15 @@ public class ProcessService {
 	public static List<PropertyDefinition> getPropertyDefinitionsLib300600() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//Valeur par defaut SPRI
-        propertyDefinitions.add(newPropertiesDefinition("Robot","robotUsing", LevelService.getLevels(Level.CODE.Process),String.class, true,newValues("SPRI")));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Robot","robotUsing", LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SPRI")));
      // //Measure par defaut ng
-        propertyDefinitions.add(newPropertiesDefinition("Quantité à engager", "quantityUsing", LevelService.getLevels(Level.CODE.Process),Double.class, true,newValues("250","500")));		
-		propertyDefinitions.add(newPropertiesDefinition("Objectif Expérience ", "goalExperiment", LevelService.getLevels(Level.CODE.Process),String.class, true,newValues("PE_400","Fragm_cDNA")));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Quantité à engager", "quantityUsing", LevelService.getLevels(Level.CODE.Process),Double.class, true, DescriptionFactory.newValues("250","500")));		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Objectif Expérience ", "goalExperiment", LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("PE_400","Fragm_cDNA")));
 		//Valeur par defaut 300-600pb
-        propertyDefinitions.add(newPropertiesDefinition("Objectif Taille", "goalSize", LevelService.getLevels(Level.CODE.Process),String.class, true));
-        propertyDefinitions.add(newPropertiesDefinition("Catégorie imputation", "imputationCategory", LevelService.getLevels(Level.CODE.Process),String.class, true,newValues("PRODUCTION","DEVELOPPEMENT")));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Objectif Taille", "goalSize", LevelService.getLevels(Level.CODE.Process),String.class, true));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Catégorie imputation", "imputationCategory", LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("PRODUCTION","DEVELOPPEMENT")));
 		return propertyDefinitions;
 	}
 	
-	public static List<Institute> getInstitutes(Institute.CODE...codes) throws DAOException {
-		List<Institute> institutes = new ArrayList<Institute>();
-		for(Institute.CODE code : codes){
-			institutes.add(Institute.find.findByCode(code.name()));
-		}
-		return institutes;
-	}
+
 }
