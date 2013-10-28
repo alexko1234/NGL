@@ -10,8 +10,10 @@ GET     /naming-rules                controllers.Application.namingRules(submenu
 GET     /naming-rules/:submenu       controllers.Application.namingRules(submenu:String)
 GET     /technologies                controllers.Application.technologies()
 GET     /modules/:name                	controllers.Application.modules(name:String)
+
 GET     /datatable                 controllers.Application.datatable()
 GET     /datatable/demo            controllers.Application.datatableDemo()
+GET     /datatable/get-examples            controllers.Datatable.getExamples()
 
 ###############
 #Example Pages

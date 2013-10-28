@@ -4,7 +4,7 @@ function DemoCtrl($scope,datatable) {
 
 	
 	$scope.datatableConfig = {
-			columns : [{	header:"Code Container", //the title
+			columns : [{	header:"Code", //the title
 							property:"code", //the property to bind
 							id:'test', //the column id
 							edit:false, //can be edited or not
@@ -29,8 +29,7 @@ function DemoCtrl($scope,datatable) {
 				active:true
 			},		
 			search:{
-				url:"",
-				active:false
+				url:"/datatable/get-examples"
 			},
 			order:{
 				mode:'local', //or 
@@ -59,7 +58,7 @@ function DemoCtrl($scope,datatable) {
 			},
 			name:"datatable"
 	};
-	
+
 	
 	$scope.init = function(){
 		$scope.datatable = new datatable($scope, $scope.datatableConfig);
@@ -69,10 +68,14 @@ function DemoCtrl($scope,datatable) {
 	
 	$scope.apply = function(){
 		$scope.datatable.setConfig(JSON.parse($scope.config));
-		//$scope.config = JSON.stringify($scope.datatable.config);
 	};
 	
 	$scope.refresh = function(){
+		$scope.config = JSON.stringify($scope.datatable.config);
+	};
+	
+	$scope.search = function(){
+		$scope.datatable.search();
 		$scope.config = JSON.stringify($scope.datatable.config);
 	};
 	
