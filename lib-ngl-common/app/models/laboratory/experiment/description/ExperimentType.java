@@ -3,8 +3,6 @@ package models.laboratory.experiment.description;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.qos.logback.classic.Level;
-
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
