@@ -3,6 +3,7 @@ package services.description;
 import java.util.ArrayList;
 import java.util.List;
 import models.laboratory.common.description.AbstractCategory;
+import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
@@ -148,10 +149,10 @@ public class DescriptionFactory {
 	public static ObjectType setStatesToObjectType(String code, List<State> states) {
 		ObjectType l = new ObjectType();
 		try {
-			l = l.find.findByCode(code);
-		} catch (DAOException e) {
+			l = ObjectType.find.findByCode(code);
+		} catch (DAOException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
 		l.generic = false;
 		l.states = states;
@@ -223,7 +224,7 @@ public class DescriptionFactory {
 		return csc;
 	}
 
-	public static ExperimentType newExperimentType(String name, String code, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Protocol> protocols, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod) throws DAOException {
+	public static ExperimentType newExperimentType(String name, String code, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Protocol> protocols, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, List<Institute> institutes) throws DAOException {
 		ExperimentType et = new ExperimentType();
 		et.code =code.toLowerCase();
 		et.name =name;
@@ -235,6 +236,8 @@ public class DescriptionFactory {
 		et.objectType.states = State.find.findByTypeCode(ObjectType.CODE.Experiment.name());
 		et.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Experiment.name());
 		et.atomicTransfertMethod=atomicTransfertMethod;
+		
+		et.institutes = institutes;
 		return et;
 	}
 
@@ -272,7 +275,7 @@ public class DescriptionFactory {
 	}
 
 	public static InstrumentUsedType newInstrumentUsedType(String name, String code, InstrumentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Instrument> instruments,
-			List<ContainerSupportCategory> inContainerSupportCategories, List<ContainerSupportCategory> outContainerSupportCategories) throws DAOException{
+			List<ContainerSupportCategory> inContainerSupportCategories, List<ContainerSupportCategory> outContainerSupportCategories, List<Institute> institutes) throws DAOException{
 		InstrumentUsedType iut = new InstrumentUsedType();
 		iut.code =code;
 		iut.name =name;
@@ -282,11 +285,13 @@ public class DescriptionFactory {
 		iut.instruments = instruments;
 		iut.inContainerSupportCategories = inContainerSupportCategories;
 		iut.outContainerSupportCategories = outContainerSupportCategories;
+		
+		iut.institutes = institutes;
 		return iut; 
 	}
 
 	public static ProcessType newProcessType(String name, String code, ProcessCategory category, List<PropertyDefinition> propertiesDefinitions, 
-			List<ExperimentType> experimentTypes, ExperimentType firstExperimentType, ExperimentType lastExperimentType, ExperimentType voidExperimentType) throws DAOException {
+			List<ExperimentType> experimentTypes, ExperimentType firstExperimentType, ExperimentType lastExperimentType, ExperimentType voidExperimentType, List<Institute> institutes) throws DAOException {
 		ProcessType pt = new ProcessType();
 		pt.code =code.toLowerCase();
 		pt.name =name;
@@ -299,42 +304,50 @@ public class DescriptionFactory {
 		pt.lastExperimentType = lastExperimentType;
 		pt.voidExperimentType = voidExperimentType;
 		pt.experimentTypes = experimentTypes;
+		
+		pt.institutes = institutes;
 		return pt;
 	}
 
 	
-	public static SampleType newSampleType(String name, String code, SampleCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException{
+	public static SampleType newSampleType(String name, String code, SampleCategory category, List<PropertyDefinition> propertiesDefinitions, List<Institute> institutes) throws DAOException{
 		SampleType st = new SampleType();
 		st.code = code;
 		st.name = name;
 		st.category = category;
 		st.objectType = ObjectType.find.findByCode(ObjectType.CODE.Sample.name());
 		st.propertiesDefinitions = propertiesDefinitions;
+		
+		st.institutes = institutes;
 		return st;
 	}
 	
-	public static ImportType newImportType(String name, String code, ImportCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException{
+	public static ImportType newImportType(String name, String code, ImportCategory category, List<PropertyDefinition> propertiesDefinitions, List<Institute> institutes) throws DAOException{
 		ImportType it = new ImportType();
 		it.code = code.toLowerCase();
 		it.name = name;
 		it.category = category;
 		it.objectType = ObjectType.find.findByCode(ObjectType.CODE.Import.name());
 		it.propertiesDefinitions = propertiesDefinitions;
+		
+		it.institutes = institutes;
 		return it;
 	}
 	
-	public static ProjectType newProjectType(String name, String code, ProjectCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException{
+	public static ProjectType newProjectType(String name, String code, ProjectCategory category, List<PropertyDefinition> propertiesDefinitions, List<Institute> institutes) throws DAOException{
 		ProjectType pt = new ProjectType();
 		pt.code = code.toLowerCase();
 		pt.name = name;
 		pt.category = category;
 		pt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Project.name());
 		pt.propertiesDefinitions = propertiesDefinitions;
+		
+		pt.institutes = institutes;
 		return pt;
 	}
 	
 	
-	public static ReadSetType newReadSetType(String name, String code, /*ReadSetCategory category,*/ List<PropertyDefinition> propertiesDefinitions) throws DAOException {
+	public static ReadSetType newReadSetType(String name, String code, /*ReadSetCategory category,*/ List<PropertyDefinition> propertiesDefinitions, List<Institute> institutes) throws DAOException {
 		ReadSetType rt = new ReadSetType();
 		rt.code =code.toLowerCase();
 		rt.name =name;
@@ -342,10 +355,11 @@ public class DescriptionFactory {
 		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.ReadSet.name());
 		rt.propertiesDefinitions = propertiesDefinitions;
 		rt.objectType.states = State.find.findByTypeCode(ObjectType.CODE.ReadSet.name());
+		rt.institutes = institutes; 
 		return rt;
 	}
 	
-	public static RunType newRunType(String name, String code, Integer nbLanes, RunCategory category, List<PropertyDefinition> propertiesDefinitions) throws DAOException {
+	public static RunType newRunType(String name, String code, Integer nbLanes, RunCategory category, List<PropertyDefinition> propertiesDefinitions, List<Institute> institutes) throws DAOException {
 		RunType rt = new RunType();
 		rt.code = code;
 		rt.name = name;
@@ -354,6 +368,7 @@ public class DescriptionFactory {
 		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Run.name());
 		rt.propertiesDefinitions = propertiesDefinitions;
 		rt.objectType.states = State.find.findByTypeCode(ObjectType.CODE.Run.name());
+		rt.institutes = institutes;
 		return rt;
 	}
 	
@@ -365,7 +380,7 @@ public class DescriptionFactory {
 		return tc;
 	}
 	
-	public static TreatmentType newTreatmentType(String name, String code, TreatmentCategory category, String names, List<PropertyDefinition> propertiesDefinitions, List<TreatmentTypeContext>  contexts) throws DAOException {
+	public static TreatmentType newTreatmentType(String name, String code, TreatmentCategory category, String names, List<PropertyDefinition> propertiesDefinitions, List<TreatmentTypeContext>  contexts, List<Institute> institutes) throws DAOException {
 		TreatmentType tt = new TreatmentType();
 		tt.code = code.toLowerCase();
 		tt.name = name;
@@ -374,6 +389,8 @@ public class DescriptionFactory {
 		tt.propertiesDefinitions = propertiesDefinitions; 
 		tt.names = names;
 		tt.contexts = contexts;
+		
+		tt.institutes = institutes;
 		return tt;
 	}
 	
