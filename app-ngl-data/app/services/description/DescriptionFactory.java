@@ -159,6 +159,19 @@ public class DescriptionFactory {
 		return l;
 	}
 	
+	
+	public static CommonInfoType setStatesToCommonInfoType(String code, List<State> states) {
+		CommonInfoType cit = new CommonInfoType();
+		try {
+			cit = CommonInfoType.find.findByCode(code);
+		} catch (DAOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		cit.states = states;
+		return cit;
+	}
+	
 	public static MeasureUnit newMeasureUnit(String code, String value,
 			boolean defaultUnit, MeasureCategory category) {
 		MeasureUnit measureUnit = new MeasureUnit();
@@ -401,6 +414,14 @@ public class DescriptionFactory {
 			institutes.add(Institute.find.findByCode(code.name()));
 		}
 		return institutes;
+	}
+	
+	public static List<State> getStates(String...codes) throws DAOException {
+		List<State> states = new ArrayList<State>();
+		for(String code: codes){
+			states.add(State.find.findByCode(code));
+		}
+		return states;
 	}
 	
 	
