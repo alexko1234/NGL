@@ -23,3 +23,8 @@
 .datatable .well{
 	margin-bottom: 10px;
 }
+
+.table th,.table td {
+	text-align: center;
+}
+
