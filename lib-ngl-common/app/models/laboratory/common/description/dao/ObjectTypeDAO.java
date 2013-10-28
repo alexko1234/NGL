@@ -69,6 +69,9 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 	private void removeStates(Long otId) {
 		String sqlState = "DELETE FROM state_object_type WHERE fk_object_type=?";
 		jdbcTemplate.update(sqlState, otId);
+		
+		sqlState = "DELETE FROM common_info_type_state WHERE fk_object_type=?";
+		jdbcTemplate.update(sqlState, otId);
 	}
 
 
@@ -86,9 +89,15 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 				}
 				jdbcTemplate.update(sql, otId, state.id);
 			}
+			sql = "INSERT INTO common_info_type_state (fk_common_info_type, fk_state) VALUES (?,?)";
+			for(State state : states){
+				if(state == null || state.id == null ){
+					throw new DAOException("state is mandatory");
+				}
+				jdbcTemplate.update(sql, otId, state.id);
+			}
 		}
 	}
-
 
 	
 	/**
