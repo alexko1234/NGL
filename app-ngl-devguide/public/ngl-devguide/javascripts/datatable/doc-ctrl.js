@@ -1,6 +1,6 @@
 "use strict"
 
-function DemoCtrl($scope,datatable) {
+function DocCtrl($scope,datatable) {
 
 	
 	$scope.datatableConfig = {
@@ -63,19 +63,8 @@ function DemoCtrl($scope,datatable) {
 	
 	$scope.init = function(){
 		$scope.datatable = new datatable($scope, $scope.datatableConfig);
-		$scope.config = JSON.stringify($scope.datatable.config);
-	};
-	
-	
-	$scope.apply = function(){
-		$scope.datatable.setConfig(JSON.parse($scope.config));
-		//$scope.config = JSON.stringify($scope.datatable.config);
-	};
-	
-	$scope.refresh = function(){
-		$scope.config = JSON.stringify($scope.datatable.config);
 	};
 	
 }
 
-DemoCtrl.$inject = ['$scope','datatable'];
+DocCtrl.$inject = ['$scope','datatable'];

@@ -26,4 +26,8 @@ public class Application extends Controller {
 	 public static Result datatable() {
 		 return ok(datatableDoc.render());	       
 	 }
+	 
+	 public static Result datatableDemo() {
+		 return ok(datatableDoc.render());	       
+	 }
 }

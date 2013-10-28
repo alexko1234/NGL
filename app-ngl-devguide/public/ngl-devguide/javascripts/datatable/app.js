@@ -2,9 +2,14 @@
  
 angular.module('home', ['directives','datatableServices'], function($routeProvider, $locationProvider) {
 	
+	$routeProvider.when('/datatable/demo', {
+		templateUrl : '/assets/ngl-devguide/html/datatable/demo.html',
+		controller : 'DemoCtrl'
+	});	
+	
 	$routeProvider.when('/datatable', {
 		templateUrl : '/assets/ngl-devguide/html/datatable/documentation.html',
-		controller : 'DemoCtrl'
+		controller : 'DocCtrl'
 	});	
 	
 	$routeProvider.otherwise({redirectTo: '/'});
