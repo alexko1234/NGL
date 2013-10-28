@@ -12,7 +12,7 @@ function DemoCtrl($scope,datatable) {
 							order:true, //can be ordered or not
 							type:"String", //the column type
 							choiceInList:false, //when the column is in edit mode, the edition is a list of choices or not
-							//extraHeaders:{"0":"Inputs"}, //the extraHeaders list
+							extraHeaders:{"0":"Inputs","1":"prop2"}, //the extraHeaders list
 						},
 						{	header:"test 1", //the title
 							property:"test", //the property to bind
@@ -22,7 +22,7 @@ function DemoCtrl($scope,datatable) {
 							order:true, //can be ordered or not
 							type:"String", //the column type
 							choiceInList:false, //when the column is in edit mode, the edition is a list of choices or not
-							//extraHeaders:{"0":"Inputs"}, //the extraHeaders list
+							extraHeaders:{"0":"Inputs","1":"prop"}, //the extraHeaders list
 						}],
 			compact:false,
 			pagination:{
@@ -53,7 +53,7 @@ function DemoCtrl($scope,datatable) {
 				active:true
 			},
 			extraHeaders:{
-				number:0,
+				number:2,
 				dynamic:true,
 			},
 			name:"datatable"
