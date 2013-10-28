@@ -833,26 +833,35 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse,$q) {
 					for(i=0;i<$scope.datatable.getData().length;i++){
 						if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToOne"){
 							$scope.datatable.displayResult[i].outputContainerUsed = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed;
+							$scope.datatable.displayResult[i].outputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCode;
+							$scope.datatable.displayResult[i].inputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCode;
 						}else if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany"){
 							$scope.datatable.displayResult[i].outputContainerUseds = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds;
-							//In process -  gestion du rowspan
-							//example
-							//$scope.datatable.config.columns[0].cells[0] = {"rowSpan":2};
-							/*for(var j=0;j<$scope.datatable.config.columns.length;j++){
-								if($scope.datatable.config.columns[j].extraHeaders[0] == "Outputs"){
-									$scope.datatable.config.columns[j].cells[i] = {"rowSpan":$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length};
-								}
-							}*/
+							$scope.datatable.displayResult[i].outputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds.resolutionCode;
+							$scope.datatable.displayResult[i].inputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCode;
+						}else if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
+							$scope.datatable.displayResult[i].outputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCode;
+							$scope.datatable.displayResult[i].inputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.resolutionCode;
 						}
-
+						
 						if(($scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany" && $scope.datatable.displayResult[i].outputContainerUseds.length > 0) || ($scope.experiment.value.atomicTransfertMethods[i].class == "OneToOne" && $scope.datatable.displayResult[i].outputContainerUsed)){
 							outputGenerated = true;
 						}
 					}
+					
+					
 					if(outputGenerated){
 						$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Code","outputContainerUsed.containerCode",true, true,true,"String",false,undefined,{"0":"Outputs"}));
 						$scope.addExperimentPropertiesOutputsColumns();
 						$scope.addInstrumentPropertiesOutputsColumns();
+					}
+					
+					if($scope.experiment.value.stateCode == "F"){
+						//ajout des colonnes de selection de resolution pour chaque tube
+						$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Resolution","outputResolutionCode",true, true,true,"String",true,$scope.ouputContainersResolutions,{"0":"Outputs","1":"Resolution"}));
+						$scope.datatable.addColumn(2,$scope.datatable.newColumn("Resolution","inputResolutionCode",true, true,true,"String",true,$scope.inputContainersResolutions,{"0":"Inputs","1":"Resolution"}));
+					}else if($scope.experiment.value.stateCode == "IP"){
+						$scope.datatable.addColumn(2,$scope.datatable.newColumn("Resolution","inputResolutionCode",true, true,true,"String",true,$scope.inputContainersResolutions,{"0":"Inputs","1":"Resolution"}));
 					}
 				});
 			}
