@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
@@ -98,23 +99,23 @@ public class ExperimentService {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
 		//transformation
-		l.add(newExperimentType("Fragmentation","fragmentation",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsFragmentation(), getProtocols("fragmentation_ptr_sox140_1"), getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne"));
-		l.add(newExperimentType("Librairie","librairie",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne"));
-		l.add(newExperimentType("Amplification","amplification",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand","thermo"),"OneToOne"));
+		l.add(newExperimentType("Fragmentation","fragmentation",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsFragmentation(), getProtocols("fragmentation_ptr_sox140_1"), getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
+		l.add(newExperimentType("Librairie","librairie",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newExperimentType("Amplification","amplification",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand","thermo"),"OneToOne", getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
 		//qc
-		l.add(newExperimentType("Bioanalyzer Non Ampli","bioanalyzer-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), null, getInstrumentUsedTypes("agilent-2100"),"OneToOne"));
-		l.add(newExperimentType("Bioanalyzer Ampli","bioanalyzer-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), null, getInstrumentUsedTypes("agilent-2100"),"OneToOne"));
-		l.add(newExperimentType("QuBit","qubit",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("iqubit"),"OneToOne"));
-		l.add(newExperimentType("qPCR","qpcr",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("iqpcr"),"OneToOne"));
+		l.add(newExperimentType("Bioanalyzer Non Ampli","bioanalyzer-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), null, getInstrumentUsedTypes("agilent-2100"),"OneToOne", getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newExperimentType("Bioanalyzer Ampli","bioanalyzer-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), null, getInstrumentUsedTypes("agilent-2100"),"OneToOne", getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newExperimentType("QuBit","qubit",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("iqubit"),"OneToOne", getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newExperimentType("qPCR","qpcr",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("iqpcr"),"OneToOne", getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
 		//purif
-		l.add(newExperimentType("Ampure Non Ampli","ampure-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, getInstrumentUsedTypes("hand"),"OneToOne"));
-		l.add(newExperimentType("Ampure Ampli","ampure-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, getInstrumentUsedTypes("hand"),"OneToOne"));
+		l.add(newExperimentType("Ampure Non Ampli","ampure-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, getInstrumentUsedTypes("hand"),"OneToOne", getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newExperimentType("Ampure Ampli","ampure-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, getInstrumentUsedTypes("hand"),"OneToOne", getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
 		
 		//void
-		l.add(newExperimentType("Void Banque 300-600","void-lib-300-600",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne"));
+		l.add(newExperimentType("Void Banque 300-600","void-lib-300-600",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
 		
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
@@ -168,5 +169,12 @@ public class ExperimentService {
 		return propertyDefinitions;
 	}
 	
+	public static List<Institute> getInstitutes(Institute.CODE...codes) throws DAOException {
+		List<Institute> institutes = new ArrayList<Institute>();
+		for(Institute.CODE code : codes){
+			institutes.add(Institute.find.findByCode(code.name()));
+		}
+		return institutes;
+	}
 	
 }
