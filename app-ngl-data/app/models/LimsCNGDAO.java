@@ -213,7 +213,8 @@ public class LimsCNGDAO {
 	 */
 	public List<Container> findContainersToCreate(ContextValidation contextError){
 
-		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true and code in ('C01BBACXX_1','D0358ACXX_3') order by code, project, code_sample, tag",new Object[]{} 
+		//verification OK for codes in ('C01BBACXX_1','D0358ACXX_3') 
+		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true order by code, project, code_sample, tag",new Object[]{} 
 		,new RowMapper<Container>() {
 
 			@SuppressWarnings("rawtypes")
@@ -261,7 +262,7 @@ public class LimsCNGDAO {
 				container.fromExperimentTypeCodes = new ArrayList<String>(); //not required
 				
 				
-				if(rs.getString("project")!=null) { // a signaler a maud
+				if(rs.getString("project")!=null) {
 					container.projectCodes=new ArrayList<String>();
 					container.projectCodes.add(rs.getString("project"));
 				}
@@ -301,7 +302,6 @@ public class LimsCNGDAO {
 			}
 		});       
 		
-		//"demultiplexage"
 		//affect all the project codes /samples /tags to the same container (for having unique codes of containers) 
 		/// required to have an ordered list (see ORDER BY clause in the sql of the view)
 		int pos = 0;
