@@ -1,7 +1,6 @@
 package services.description.project;
 
-import static services.description.DescriptionFactory.newProjectType;
-import static services.description.DescriptionFactory.newPropertiesDefinition;
+import services.description.DescriptionFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ import models.laboratory.project.description.ProjectType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
-import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 public class ProjectService {
 	
@@ -36,8 +34,8 @@ public class ProjectService {
 	public static void saveProjectTypes(Map<String, List<ValidationError>> errors) throws DAOException{
 		List<ProjectType> l = new ArrayList<ProjectType>();
 		
-		l.add(newProjectType("Defaut", "default-project", ProjectCategory.find.findByCode("default"), null, getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(newProjectType("France Génomique", "france-genomique", ProjectCategory.find.findByCode("default"), getFGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newProjectType("Defaut", "default-project", ProjectCategory.find.findByCode("default"), null, DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newProjectType("France Génomique", "france-genomique", ProjectCategory.find.findByCode("default"), getFGPropertyDefinitions(), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(ProjectType.class, l, errors);
 		
@@ -45,18 +43,9 @@ public class ProjectService {
 
 	private static List<PropertyDefinition> getFGPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> pds = new ArrayList<PropertyDefinition>();
-		pds.add(newPropertiesDefinition("Groupe", "fgGroup", LevelService.getLevels(Level.CODE.Project), String.class, true));
+		pds.add(DescriptionFactory.newPropertiesDefinition("Groupe", "fgGroup", LevelService.getLevels(Level.CODE.Project), String.class, true));
 		return pds;
 	}
-	
-	public static List<Institute> getInstitutes(Institute.CODE...codes) throws DAOException {
-		List<Institute> institutes = new ArrayList<Institute>();
-		for(Institute.CODE code : codes){
-			institutes.add(Institute.find.findByCode(code.name()));
-		}
-		return institutes;
-	}
-	
 	
 	
 	
