@@ -153,7 +153,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		String sql = sqlCommon+
 				"JOIN common_info_type_state cs ON cs.fk_state=id "+
 				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
-				"WHERE cs.code = ?";
+				"WHERE c.code = ?";
 		return initializeMapping(sql, new SqlParameter("code", Types.VARCHAR)).execute(typeCode);	
 	}
 	
