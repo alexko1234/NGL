@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.description.RunCategory;
 import models.laboratory.run.description.RunType;
-import models.laboratory.run.description.TreatmentCategory;
-import models.laboratory.run.description.TreatmentContext;
-import models.laboratory.run.description.TreatmentType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
@@ -19,19 +17,7 @@ import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 
 public class RunService {
-	
-	/*
-			
-			runStatesCode : IP_S, IP_RG, F_RG, F			
 
-			readSetStatesCode : IP_RG, F_RG, IW_QC, F_QC, A, UA
-
-			runTypeCode : RHS2000, RHS2500, RHS2500R	
-			
-		//getReadSetGlobalPropertyDefinitions : 
-		"usefulSequences","usefulSequences",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class
-		"usefulBases","usefulBases",Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, Long.class
-	 */
 
 	
 	public static void main(Map<String, List<ValidationError>> errors)  throws DAOException{
@@ -49,7 +35,8 @@ public class RunService {
 	
 	public static void saveReadSetType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ReadSetType> l = new ArrayList<ReadSetType>();
-		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions()));
+		//new dnoisett, 24/10/2013 : add institute
+		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions(),  getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
 		DAOHelpers.saveModels(ReadSetType.class, l, errors);
 	}
 
@@ -64,10 +51,10 @@ public class RunService {
 	
 	public static void saveRunType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunType> l = new ArrayList<RunType>();
-		//newRunType(String name, String code, Integer nbLanes, RunCategory category, List<PropertyDefinition> propertiesDefinitions)
-		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), getRunPropertyDefinitions()));
-		l.add(DescriptionFactory.newRunType("RHS2500","RHS2500", 8, RunCategory.find.findByCode("illumina"), getRunPropertyDefinitions()));
-		l.add(DescriptionFactory.newRunType("RHS2500R","RHS2500R", 2, RunCategory.find.findByCode("illumina"), getRunPropertyDefinitions()));
+		//new dnoisett, 24/10/2013 : add institute
+		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), getRunPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newRunType("RHS2500","RHS2500", 8, RunCategory.find.findByCode("illumina"), getRunPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newRunType("RHS2500R","RHS2500R", 2, RunCategory.find.findByCode("illumina"), getRunPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		DAOHelpers.saveModels(RunType.class, l, errors);
 	}
 	
@@ -82,6 +69,14 @@ public class RunService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("asciiEncoding","asciiEncoding",LevelService.getLevels(Level.CODE.File), String.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("label","label",LevelService.getLevels(Level.CODE.File), String.class, true));
 		return propertyDefinitions;
+	}
+	
+	public static List<Institute> getInstitutes(Institute.CODE...codes) throws DAOException {
+		List<Institute> institutes = new ArrayList<Institute>();
+		for(Institute.CODE code : codes){
+			institutes.add(Institute.find.findByCode(code.name()));
+		}
+		return institutes;
 	}
 	
 }
