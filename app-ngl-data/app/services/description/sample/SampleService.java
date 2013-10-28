@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
@@ -46,27 +47,27 @@ public class SampleService {
 	public static void saveSampleTypes(Map<String, List<ValidationError>> errors) throws DAOException{
 		List<SampleType> l = new ArrayList<SampleType>();
 		
-		l.add(newSampleType("BAC", "BAC", SampleCategory.find.findByCode("cloned-DNA"), getPropertyDefinitionsADNClone()));
-		l.add(newSampleType("Plasmide", "plasmid", SampleCategory.find.findByCode("cloned-DNA"), getPropertyDefinitionsADNClone()));
-		l.add(newSampleType("Fosmide", "fosmid", SampleCategory.find.findByCode("cloned-DNA"), getPropertyDefinitionsADNClone()));
+		l.add(newSampleType("BAC", "BAC", SampleCategory.find.findByCode("cloned-DNA"), getPropertyDefinitionsADNClone(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newSampleType("Plasmide", "plasmid", SampleCategory.find.findByCode("cloned-DNA"), getPropertyDefinitionsADNClone(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newSampleType("Fosmide", "fosmid", SampleCategory.find.findByCode("cloned-DNA"), getPropertyDefinitionsADNClone(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
-		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getPropertyDefinitionsADNGenomic()));
-		l.add(newSampleType("ADN Métagénomique", "MeTa-DNA", SampleCategory.find.findByCode("DNA"), getPropertyDefinitionsADN()));
+		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getPropertyDefinitionsADNGenomic(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newSampleType("ADN Métagénomique", "MeTa-DNA", SampleCategory.find.findByCode("DNA"), getPropertyDefinitionsADN(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
-		l.add(newSampleType("Amplicon", "amplicon", SampleCategory.find.findByCode("amplicon"), getPropertyDefinitionsAmplicon()));
+		l.add(newSampleType("Amplicon", "amplicon", SampleCategory.find.findByCode("amplicon"), getPropertyDefinitionsAmplicon(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
-		l.add(newSampleType("Indéterminé", "unknown", SampleCategory.find.findByCode("unknown"), getSampleCommonPropertyDefinitions()));
+		l.add(newSampleType("Indéterminé", "unknown", SampleCategory.find.findByCode("unknown"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
-		l.add(newSampleType("ARN total", "total-RNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN()));
-		l.add(newSampleType("ARNm", "mRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN()));
-		l.add(newSampleType("Small RNA", "sRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN()));
-		l.add(newSampleType("ARN déplété", "depletedRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN()));
+		l.add(newSampleType("ARN total", "total-RNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newSampleType("ARNm", "mRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newSampleType("Small RNA", "sRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newSampleType("ARN déplété", "depletedRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 
-		l.add(newSampleType("cDNA", "cDNA", SampleCategory.find.findByCode("cDNA"), getPropertyDefinitionscDNA()));
+		l.add(newSampleType("cDNA", "cDNA", SampleCategory.find.findByCode("cDNA"), getPropertyDefinitionscDNA(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
 		
-		l.add(newSampleType("ChIP", "chIP", SampleCategory.find.findByCode("IP-sample"), getSampleCommonPropertyDefinitions()));
-		l.add(newSampleType("ClIP", "clIP", SampleCategory.find.findByCode("IP-sample"), getSampleCommonPropertyDefinitions()));
+		l.add(newSampleType("ChIP", "chIP", SampleCategory.find.findByCode("IP-sample"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newSampleType("ClIP", "clIP", SampleCategory.find.findByCode("IP-sample"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(SampleType.class, l, errors);
 	}
@@ -132,5 +133,13 @@ public class SampleService {
 	public static SampleCategory newSampleCategory(String name, String code) {
 		SampleCategory sc = DescriptionFactory.newSimpleCategory(SampleCategory.class,name, code);
 		return sc;
+	}
+	
+	public static List<Institute> getInstitutes(Institute.CODE...codes) throws DAOException {
+		List<Institute> institutes = new ArrayList<Institute>();
+		for(Institute.CODE code : codes){
+			institutes.add(Institute.find.findByCode(code.name()));
+		}
+		return institutes;
 	}
 }
