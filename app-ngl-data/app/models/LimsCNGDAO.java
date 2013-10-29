@@ -214,7 +214,8 @@ public class LimsCNGDAO {
 	public List<Container> findContainersToCreate(ContextValidation contextError){
 
 		//verification OK for codes in ('C01BBACXX_1','D0358ACXX_3') 
-		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true order by code, project, code_sample, tag",new Object[]{} 
+		//suppression des samples bizarres avec le code "UNKNOWN"
+		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true and code_sample <> 'UNKNOWN' order by code, project, code_sample, tag",new Object[]{} 
 		,new RowMapper<Container>() {
 
 			@SuppressWarnings("rawtypes")
