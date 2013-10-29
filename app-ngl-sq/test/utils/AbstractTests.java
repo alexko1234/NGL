@@ -21,7 +21,7 @@ public abstract class AbstractTests {
 		config.put("application.secret","0Qj/s6}212-e$B|s6GFQ-`yo[(; 66c2v7z3}U|y[&sn!41eN0{f<49n8Qh.J5OYo.f9-Xj1S1U5YFla");
 		config.put("evolutionplugin", "disabled");
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");
-		config.put("db.default.url", "jdbc:mysql://mysql.genoscope.cns.fr:3307/NGL");
+		config.put("db.default.url", "jdbc:mysql://mysqlcns.genoscope.cns.fr:3307/NGL");
 		config.put("db.default.user", "ngl");
 		config.put("db.default.password", "ngl@dmin");
 		config.put("db.default.partitionCount", "1");
