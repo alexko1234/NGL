@@ -2,6 +2,7 @@ package controllers.runs.api;
 
 import static play.data.Form.form;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.common.instance.TraceInformation;
@@ -13,7 +14,9 @@ import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
 import net.vz.mongodb.jackson.WriteResult;
+import net.vz.mongodb.jackson.DBQuery.Query;
 
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import controllers.utils.FormUtils;
 
@@ -43,14 +46,26 @@ public class Runs extends CommonController {
 	
 	public static Result list(){
 		DynamicForm filledForm =  listForm.bindFromRequest();
-		MongoDBResult<Run> results = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class) 
+		MongoDBResult<Run> results = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, getQuery(filledForm)) 
 				.sort(DatatableHelpers.getOrderBy(filledForm), FormUtils.getMongoDBOrderSense(filledForm))
 				.page(DatatableHelpers.getPageNumber(filledForm), DatatableHelpers.getNumberRecordsPerPage(filledForm)); 
 		List<Run> runs = results.toList();
 		return ok(Json.toJson(new DatatableResponse<Run>(runs, results.count())));
 	}
 	
-	
+	private static Query getQuery(DynamicForm filledForm) {
+		List<Query> queries = new ArrayList<Query>();
+		Query query = null;
+		if (StringUtils.isNotBlank(filledForm.get("stateCode"))) { //all
+			queries.add(DBQuery.is("state.code", filledForm.get("stateCode")));
+		}
+		
+		if(queries.size() > 0){
+			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
+		}
+		
+		return query;
+	}
 	
 	public static Result get(String code) {
 		Run runValue = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
