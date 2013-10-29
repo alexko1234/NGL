@@ -47,15 +47,14 @@ public class LimsCNGDAO {
 	private static final String CONTAINER_CATEGORY_CODE= "lane";
 	private static final String CONTAINER_STATE_CODE="A";
 	
-	//protected static final String PROJECT_CATEGORY_CODE = "default";
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
 	
 	protected static final String IMPORT_CATEGORY_CODE="sample-import";
 	
-	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "defaultSampleCNG";
+	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "default-sample-cng";
 	
-	protected static final String SAMPLE_USED_CATEGORY_CODE = "unknown";
-	protected static final String SAMPLE_USED_TYPE_CODE = "defaultSampleCNG";	
+	protected static final String SAMPLE_USED_CATEGORY_CODE = "default"; //old : "unknown";
+	protected static final String SAMPLE_USED_TYPE_CODE = "default-sample-cng";	
 	
 	protected static final String IMPORT_TYPE_CODE_DEFAULT = "default-import";
 	
@@ -256,8 +255,9 @@ public class LimsCNGDAO {
 	 * method for mass loading
 	 * @param contextError
 	 * @return
+	 * @throws DAOException 
 	 */
-	public List<Container> findContainersToCreate(ContextValidation contextError){
+	public List<Container> findContainersToCreate(final ContextValidation contextError) throws DAOException{
 
 		//verification OK for codes in ('C01BBACXX_1','D0358ACXX_3') 
 		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true order by code, project, code_sample, tag",new Object[]{} 
@@ -318,9 +318,25 @@ public class LimsCNGDAO {
 					Content content = new Content();
 					content.sampleUsed=new SampleUsed();
 					content.sampleUsed.sampleCode=rs.getString("code_sample");
+					
 					//TODO : change default value
-					content.sampleUsed.categoryCode = SAMPLE_USED_CATEGORY_CODE; // required
-					content.sampleUsed.typeCode = SAMPLE_USED_TYPE_CODE; // required
+					//content.sampleUsed.categoryCode = SAMPLE_USED_CATEGORY_CODE; // required
+					//content.sampleUsed.typeCode = SAMPLE_USED_TYPE_CODE; // required
+							
+					SampleType sampleType=null;
+					try {
+						sampleType = SampleType.find.findByCode(SAMPLE_USED_TYPE_CODE);
+					} catch (DAOException e) {
+						Logger.debug("",e);
+						return null;
+					}
+					if( sampleType==null ){
+						contextError.addErrors("code", "error.codeNotExist", SAMPLE_USED_TYPE_CODE, content.sampleUsed.sampleCode);
+						return null;
+					}		
+					
+					content.sampleUsed.typeCode = sampleType.code;
+					content.sampleUsed.categoryCode = sampleType.category.code;
 					
 					content.properties = new HashMap<String, PropertyValue>();
 					
@@ -345,7 +361,6 @@ public class LimsCNGDAO {
 				container.sampleCodes=new ArrayList<String>();
 				container.sampleCodes.add(rs.getString("code_sample"));
 			
-				//
 				container.fromPurifingCode = null; // not required				
 				container.resolutionCode = null; // not required
 
@@ -378,7 +393,7 @@ public class LimsCNGDAO {
 							
 						results.get(pos).sampleCodes.add( results.get(pos+x).sampleCodes.get(0) );
 						
-						createContent(results, pos+x); 
+						createContent(results, pos, pos+x); 
 						
 						insertContent = true;
 					}
@@ -388,7 +403,7 @@ public class LimsCNGDAO {
 				if (!  results.get(pos).contents.get(0).properties.get("tag").value.equals(  results.get(pos+x).contents.get(0).properties.get("tag").value  ) ) {
 					if (!insertContent) {
 						
-						createContent(results, pos+x);
+						createContent(results, pos, pos+x);
 						
 					}					
 				}
@@ -418,19 +433,23 @@ public class LimsCNGDAO {
 	}
 	
 	
-	private List<Container>  createContent(List<Container> results, int pos) {
+	private List<Container>  createContent(List<Container> results, int posCurrent, int posNext) throws DAOException{
 		Content content = new Content();
 		content.sampleUsed=new SampleUsed();
-		content.sampleUsed.sampleCode= results.get(pos).sampleCodes.get(0);
+		content.sampleUsed.sampleCode= results.get(posNext).sampleCodes.get(0);
 		//TODO : change defaults values
-		content.sampleUsed.categoryCode = SAMPLE_USED_CATEGORY_CODE; // required
-		content.sampleUsed.typeCode = SAMPLE_USED_TYPE_CODE; // required
+		
+		SampleType sampleType=null;
+		sampleType = SampleType.find.findByCode(SAMPLE_USED_TYPE_CODE);	
+		content.sampleUsed.typeCode = sampleType.code;
+		content.sampleUsed.categoryCode = sampleType.category.code;
+		
 		
 		content.properties = new HashMap<String, PropertyValue>();
-		content.properties.put("tag",new PropertySingleValue( results.get(pos).contents.get(0).properties.get("tag").value  ));
-		content.properties.put("percentPerLane",new PropertySingleValue( results.get(pos).contents.get(0).properties.get("percentPerLane").value ));
+		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
+		content.properties.put("percentPerLane",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("percentPerLane").value ));
 		
-		results.get(pos).contents.add(content); 
+		results.get(posCurrent).contents.add(content); 
 		
 		return results;
 	}
