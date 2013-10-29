@@ -813,6 +813,7 @@ angular.module('datatableServices', []).
 		    				if(angular.isUndefined(params)){
 	    						params = {};
 	    					}
+		    				params.datatable = true;
 		    				if(this.config.pagination.active && this.isRemoteMode(this.config.pagination.mode)){
 		    					params.pageNumber = this.config.pagination.pageNumber;
 		    					params.numberRecordsPerPage = this.config.pagination.numberRecordsPerPage;		    					
