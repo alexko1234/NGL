@@ -7,15 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.ObjectType;
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
-import models.laboratory.experiment.description.Protocol;
 import models.utils.ListObject;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
@@ -141,17 +138,31 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		return initializeMapping(sql, new SqlParameter("fk_common_info_type", Type.LONG)).execute(idCommonInfoType);		
 	}
 	
-	public List<State> findByObjectType(long idObjectType) throws DAOException {
+	public List<State> findByObjectTypeCode(String objectTypeCode) throws DAOException {
+		if(null == objectTypeCode){
+			throw new DAOException("code is mandatory");
+		}
+		String sql = sqlCommon+
+				"JOIN state_object_type ON fk_state=t.id "+
+				"JOIN object_type o ON fk_object_type=o.id "+
+				"WHERE o.code=?";		
+		return initializeMapping(sql, new SqlParameter("fk_object_type", Types.VARCHAR)).execute(objectTypeCode);		
+	}
+	
+	public List<State> findByObjectTypeId(Long id) throws DAOException {
+		if(null == id){
+			throw new DAOException("id is mandatory");
+		}
 		String sql = sqlCommon+
 				"JOIN state_object_type ON fk_state=id "+
 				"WHERE fk_object_type=?";		
-		return initializeMapping(sql, new SqlParameter("fk_object_type", Type.LONG)).execute(idObjectType);		
+		return initializeMapping(sql, new SqlParameter("fk_object_type", Type.LONG)).execute(id);		
 	}
 
 
 	public List<State> findByTypeCode(String typeCode)  throws DAOException {
 		String sql = sqlCommon+
-				"JOIN common_info_type_state cs ON cs.fk_state=id "+
+				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
 				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
 				"WHERE c.code = ?";
 		return initializeMapping(sql, new SqlParameter("code", Types.VARCHAR)).execute(typeCode);	
@@ -159,11 +170,11 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	
 	public boolean isCodeExistForTypeCode(String code, String typeCode)  throws DAOException {
 		String sql = sqlCommon+
-				"JOIN common_info_type_state cs ON cs.fk_state=id "+
+				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
 				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
-				"WHERE c.code = ? and t.code = ?";
-		return( initializeMapping(sql, new SqlParameter("c.code", Types.VARCHAR),
-				 new SqlParameter("t.code", Types.VARCHAR)).findObject(typeCode, code) != null )? true : false;	
+				"WHERE t.code = ? and c.code = ?";
+		return( initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR),
+				 new SqlParameter("c.code", Types.VARCHAR)).findObject(typeCode, code) != null )? true : false;	
 	}
 
 }
