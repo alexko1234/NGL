@@ -146,7 +146,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 				"JOIN state_object_type ON fk_state=t.id "+
 				"JOIN object_type o ON fk_object_type=o.id "+
 				"WHERE o.code=?";		
-		return initializeMapping(sql, new SqlParameter("fk_object_type", Types.VARCHAR)).execute(objectTypeCode);		
+		return initializeMapping(sql, new SqlParameter("o.code", Types.VARCHAR)).execute(objectTypeCode);		
 	}
 	
 	public List<State> findByObjectTypeId(Long id) throws DAOException {
@@ -165,7 +165,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
 				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
 				"WHERE c.code = ?";
-		return initializeMapping(sql, new SqlParameter("code", Types.VARCHAR)).execute(typeCode);	
+		return initializeMapping(sql, new SqlParameter("c.code", Types.VARCHAR)).execute(typeCode);	
 	}
 	
 	public boolean isCodeExistForTypeCode(String code, String typeCode)  throws DAOException {
