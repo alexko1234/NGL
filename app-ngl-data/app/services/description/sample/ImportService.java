@@ -44,9 +44,9 @@ public class ImportService {
 		List<ImportType> l = new ArrayList<ImportType>();
 		
 		l.add(newImportType("Defaut", "default-import", ImportCategory.find.findByCode("sample-import"), getCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(newImportType("Banque", "library", ImportCategory.find.findByCode("sample-import"), getLibraryPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(newImportType("Tara", "tara-default", ImportCategory.find.findByCode("sample-import"), getTaraPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(newImportType("Banque tara", "tara-library", ImportCategory.find.findByCode("sample-import"), getLibraryTaraPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(newImportType("Banque", "library", ImportCategory.find.findByCode("sample-import"), getLibraryPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
+		l.add(newImportType("Tara", "tara-default", ImportCategory.find.findByCode("sample-import"), getTaraPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
+		l.add(newImportType("Banque tara", "tara-library", ImportCategory.find.findByCode("sample-import"), getLibraryTaraPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(ImportType.class, l, errors);
 		
