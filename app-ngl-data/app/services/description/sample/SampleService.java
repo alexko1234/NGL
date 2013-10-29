@@ -36,7 +36,7 @@ public class SampleService {
 		l.add(newSampleCategory("ADN Clone", "cloned-DNA"));
 		l.add(newSampleCategory("Materiel Immunoprecipite","IP-sample"));
 		l.add(newSampleCategory("Amplicon", "amplicon"));
-		l.add(newSampleCategory("Inconnu", "unknown"));
+		l.add(newSampleCategory("Inconnu", "default")); //old : "unknown"
 		l.add(newSampleCategory("ADN", "DNA"));
 		l.add(newSampleCategory("ARN", "RNA"));
 		l.add(newSampleCategory("cDNA", "cDNA"));
@@ -70,7 +70,7 @@ public class SampleService {
 		l.add(newSampleType("ClIP", "clIP", SampleCategory.find.findByCode("IP-sample"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
 		
 		//dnoisett, new, for CNG import
-		l.add(newSampleType("Indéterminé", "defaultSampleCNG", SampleCategory.find.findByCode("unknown"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
+		l.add(newSampleType("Indéterminé", "default-sample-cng", SampleCategory.find.findByCode("default"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
 		
 		DAOHelpers.saveModels(SampleType.class, l, errors);
 	}
