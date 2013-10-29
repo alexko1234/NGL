@@ -69,6 +69,15 @@ public class ContextValidation {
 	public void putObject(String key, Object value){
 		contextObjects.put(key, value);
 	}
+	
+	/**
+	 *
+	 * @param key
+	 * @param value
+	 */
+	public void removeObject(String key){
+		contextObjects.remove(key);
+	}
 
 
 	/**
