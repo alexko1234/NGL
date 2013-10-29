@@ -182,7 +182,7 @@ public class RunsTests extends AbstractTests {
 			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 			assertThat(status(result)).isEqualTo(OK);
 	        
-			lane.valid = TBoolean.TRUE;
+			lane.validation = RunMockHelper.getValidation(TBoolean.TRUE);
 			
 			result = callAction(controllers.runs.api.routes.ref.Lanes.update(run.code, lane.number),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
 			assertThat(status(result)).isEqualTo(OK);
@@ -190,7 +190,7 @@ public class RunsTests extends AbstractTests {
 			
 		 	//query for control
 		 	run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
-		 	assertThat(lane.valid).isEqualTo(TBoolean.TRUE);
+		 	assertThat(lane.validation.valid).isEqualTo(TBoolean.TRUE);
 		 	
 		     }}); 
 	}

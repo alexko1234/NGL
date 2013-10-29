@@ -44,7 +44,7 @@ public abstract class AbstractTests {
 		//config.put("mongodb.credentials", "ngl-bi:NglBiPassWT");
 		//config.put("mongodb.servers", "gsphere.genoscope.cns.fr:27017");
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");
-		config.put("db.default.url", "jdbc:mysql://mysql.genoscope.cns.fr:3307/NGL");
+		config.put("db.default.url", "jdbc:mysql://mysqlcns.genoscope.cns.fr:3307/NGL");
 		config.put("db.default.user", "ngl");
 		config.put("db.default.password", "ngl@dmin");
 		config.put("db.default.jndiName", "ngl");

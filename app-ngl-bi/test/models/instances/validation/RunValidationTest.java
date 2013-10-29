@@ -16,8 +16,10 @@ import java.util.Map;
 
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Validation;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.Lane;
@@ -34,12 +36,10 @@ import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
 import validation.ContextValidation;
-import validation.InstanceValidationHelper;
 import validation.run.instance.LaneValidationHelper;
-import validation.run.instance.RunValidationHelper;
 import validation.utils.ValidationConstants;
 import fr.cea.ig.MongoDBDAO;
-
+import static utils.RunMockHelper.*;
 
 public class RunValidationTest extends AbstractTests {
 	
@@ -363,7 +363,7 @@ public class RunValidationTest extends AbstractTests {
 			 
 			 assertThat(ctxVal.errors).hasSize(8);
 			 assertThat(ctxVal.errors.toString()).contains("code"); //1
-			 assertThat(ctxVal.errors.toString()).contains("stateCode"); //1
+			 assertThat(ctxVal.errors.toString()).contains("state.code"); //1
 			 assertThat(ctxVal.errors.toString()).contains("traceInformation"); //2
 			 assertThat(ctxVal.errors.toString()).contains("typeCode"); //1
 			 assertThat(ctxVal.errors.toString()).contains("containerSupportCode"); //1
@@ -470,7 +470,7 @@ public class RunValidationTest extends AbstractTests {
 			
 			List<String> r = new ArrayList<String>();
 			lane.readSetCodes = r;
-
+			lane.validation = RunMockHelper.getValidation(TBoolean.TRUE);
 			lanes.add(lane);
 			lanes.add(lane2);
 			run.lanes = lanes;
@@ -484,28 +484,27 @@ public class RunValidationTest extends AbstractTests {
 			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 			assertThat(status(result)).isEqualTo(OK);
 			
-			 if (lane.valid.equals(TBoolean.TRUE)) {
-				 lane.valid = TBoolean.TRUE;
-			 }
-			 else {
-				lane.valid = TBoolean.FALSE;
+			 if (lane.validation.valid.equals(TBoolean.TRUE)) {
+				 lane.validation.valid = TBoolean.TRUE;
+			 } else {
+				lane.validation.valid = TBoolean.FALSE;
 			 }
 			 	 
 			 result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readSet)));
 			 assertThat(status(result)).isEqualTo(OK);
-			 
-			 lane.stateCode = "F-RG";
-			 
+			 lane.state = getState("F-RG");
 			 ctxVal = new ContextValidation(); 
 			 ctxVal.putObject("run", run);
 			  ctxVal.setUpdateMode();
 			  LaneValidationHelper.validationLanes(run.lanes, ctxVal);
 			 assertThat(ctxVal.errors).hasSize(0);
 			 
-		 }});
+		 }
+
+			});
 		 
 	 }
-	 
+	
 	
 	 @Test
 	 public void testUpdateLaneValidationErrorBadState() { 
@@ -549,31 +548,32 @@ public class RunValidationTest extends AbstractTests {
 			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 			assertThat(status(result)).isEqualTo(OK);
 			
-			 if (lane.valid.equals(TBoolean.TRUE)) {
-				 lane.valid = TBoolean.TRUE;
-			 }
-			 else {
-				lane.valid = TBoolean.FALSE;
+			if (lane.validation.valid.equals(TBoolean.TRUE)) {
+				 lane.validation.valid = TBoolean.TRUE;
+			 } else {
+				lane.validation.valid = TBoolean.FALSE;
 			 }
 			 
 			 
 			 result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readSet)));
 			 assertThat(status(result)).isEqualTo(OK);
 			 
-			 lane.stateCode = "A";
-			 
+			 lane.state = getState("A");
 			 ctxVal = new ContextValidation(); 
 			 ctxVal.putObject("run", run);
 			  ctxVal.setUpdateMode();
 			  LaneValidationHelper.validationLanes(run.lanes, ctxVal);
 			 assertThat(ctxVal.errors).hasSize(1);
-			 assertThat(ctxVal.errors.toString()).contains("stateCode");
+			 assertThat(ctxVal.errors.toString()).contains("state.code");
 			 assertThat(ctxVal.errors.toString()).contains("valuenotauthorized");
 			 		 
-		 }});
+		 }
+
+			});
 		 
 	 }
 	
+	 
 
 	 @Test
 	 public void testUpdateLaneValidationErrorBadLaneNumber() {
@@ -768,8 +768,7 @@ public class RunValidationTest extends AbstractTests {
 			ArrayList<Lane> l = new ArrayList<Lane>();
 			 Lane lane = getLane(); //lane.number = 1
 			 // correct value
-			 lane.stateCode = "F";
-			 
+			 lane.state = getState("F"); 
 			 ReadSet r = getNewReadSet();
 			 ArrayList<String> a = new ArrayList<String>();
 			 //a.add(r.code);			 
@@ -824,15 +823,13 @@ public class RunValidationTest extends AbstractTests {
 			Run run = getFullRun();
 			ArrayList<Lane> l = new ArrayList<Lane>();
 			 Lane lane = getLane();
-			 lane.stateCode = "F";
-			 
+			 lane.state = getState("F");
 			 ReadSet r = getNewReadSet();
 			 r.runCode = run.code;
 			 r.laneNumber = 1;
 			 ArrayList<String> a = new ArrayList<String>();
 			 //a.add(r.code);			 
 			 lane.readSetCodes = a;
-			 lane.stateCode = "F";
 			 l.add(lane);
 			 run.lanes = l;
 
@@ -982,12 +979,9 @@ public class RunValidationTest extends AbstractTests {
 		
 		Lane lane = new Lane();
 		lane.number = 1;
-		lane.stateCode = "F";
-		List<String> l = new ArrayList<String>();
-		l.add("valeur1");
-		l.add("valeur2");
- 		lane.resolutionCode = l;
-		lane.valid = TBoolean.TRUE;
+		 lane.state = getState("F");
+		
+		lane.validation = RunMockHelper.getValidation(TBoolean.TRUE);
 		lane.readSetCodes = null;
 		return lane;
 	}
@@ -999,7 +993,7 @@ public class RunValidationTest extends AbstractTests {
 		List<String> r = new ArrayList<String>();
 		r.add("X"); 
 		lane.readSetCodes = r;
-		lane.stateCode = "F";
+		 lane.state = getState("F");
 		return lane;
 	}
 	
@@ -1007,7 +1001,7 @@ public class RunValidationTest extends AbstractTests {
 		
 		Lane lane = new Lane();
 		lane.number = 3;
-		lane.stateCode = "F";
+		 lane.state = getState("F");
 		return lane;
 	}
 	
@@ -1018,16 +1012,12 @@ public class RunValidationTest extends AbstractTests {
 		readSet.projectCode = "PCODE"; 
 		readSet.sampleCode = "SPCODE";
 		readSet.sampleContainerCode = "SPCONTCODE";
-		readSet.stateCode = "F-QC";
+		readSet.state = getState("F-QC");
 		readSet.traceInformation = new TraceInformation();
 		readSet.traceInformation.setTraceInformation("ngsrg");
 		readSet.laneNumber = 1;
 		readSet.dispatch = true;
 		
-		List<String> l = new ArrayList<String>();
-		l.add("reso1");
-		l.add("reso2");
-		readSet.resolutionCode = l;  
 		
 		readSet.typeCode = "default-readset";
 		
@@ -1041,7 +1031,7 @@ public class RunValidationTest extends AbstractTests {
 		readSet.projectCode = ""; 
 		readSet.sampleCode = "";
 		readSet.sampleContainerCode = "";
-		readSet.stateCode = "F-QC";
+		readSet.state = getState("F-QC");
 		readSet.typeCode = "default-readset";
 		TraceInformation ti = new TraceInformation();
 		ti.createUser = "dnoisett";
@@ -1059,7 +1049,7 @@ public class RunValidationTest extends AbstractTests {
 		file.usable = null;	
 		file.properties.put("asciiEncoding", new PropertySingleValue(""));
 		file.properties.put("label", new PropertySingleValue(""));
-		file.stateCode = "A";
+		file.state = getState("A");
 		return file;
 	}
 	  
@@ -1075,8 +1065,11 @@ public class RunValidationTest extends AbstractTests {
 			List<String> lResos = new ArrayList<String>();
 			lResos.add("reso1");
 			lResos.add("reso2");
-			run.resolutionCode = lResos;
-			run.stateCode = "F";
+			State state = new State();
+			run.state = state;
+			run.state.code = "F";
+			run.state.user = "tests";
+			run.state.date = new Date();
 			run.traceInformation = new TraceInformation();
 			run.traceInformation.setTraceInformation("test");
 			Map<String, Treatment> lT = new HashMap<String, Treatment>();
@@ -1085,8 +1078,10 @@ public class RunValidationTest extends AbstractTests {
 			ngsrg.categoryCode = "ngsrg";
 			ngsrg.typeCode = "ngsrg-illumina";
 			run.typeCode = "RHS2000";
-			run.valid = TBoolean.TRUE;
-			run.validDate = new Date(); 
+			run.validation = new Validation();
+			run.validation.user = "test";
+			run.validation.valid = TBoolean.TRUE;
+			run.validation.date = new Date(); 
 
 			return run;
 		}
@@ -1101,8 +1096,11 @@ public class RunValidationTest extends AbstractTests {
 		run.instrumentUsed.categoryCode = "";
 		run.typeCode = "";
 		List<String> lResos = new ArrayList<String>();
-		run.resolutionCode = lResos;
-		run.stateCode = "";
+		State state = new State();
+		run.state = state;
+		run.state.code = "";
+		run.state.user = "tests";
+		run.state.date = new Date();
 		run.traceInformation = new TraceInformation();
 		Map<String, Treatment> lT = new HashMap<String, Treatment>();
 		Treatment ngsrg = new Treatment(); 
@@ -1110,8 +1108,8 @@ public class RunValidationTest extends AbstractTests {
 		ngsrg.categoryCode = "";
 		ngsrg.typeCode = "";
 		run.typeCode = "";
-		run.valid = null;
-		run.validDate = null; 
+		run.validation = new Validation();
+		
 	
 		return run;
 	}

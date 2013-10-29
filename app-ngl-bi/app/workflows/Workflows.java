@@ -1,12 +1,13 @@
 package workflows;
 
+import java.util.Date;
 import java.util.List;
 
 
 
 import net.vz.mongodb.jackson.DBQuery;
 import fr.cea.ig.MongoDBDAO;
-import models.laboratory.common.description.State;
+import models.laboratory.common.instance.State;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -38,12 +39,14 @@ public class Workflows {
 				stateCode = "F";
 			}
 			
-			run.stateCode = stateCode;
-			if("F".equals(run.stateCode)){
+			State state = getState(stateCode);
+			
+			run.state = state;
+			if("F".equals(state.code)){
 				run.dispatch = true;
 			}
 			for(Lane lane:run.lanes){
-				lane.stateCode = stateCode;
+				lane.state = state;
 			}
 			run.traceInformation.setTraceInformation("ngsrg");
 			contextValidation.setUpdateMode();
@@ -51,17 +54,17 @@ public class Workflows {
 			
 			List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code)).toList();
 			for(ReadSet readSet: readSets){
-				if("F".equals(run.stateCode)){
-					readSet.stateCode = "A";
+				if("F".equals(state.code)){
+					readSet.state = getState("A");
 					readSet.dispatch = Boolean.TRUE;
 					for(File file: readSet.files){
-						file.stateCode = "A";
+						file.state = getState("A");
 					}
 				}else{
-					readSet.stateCode = stateCode;
+					readSet.state = getState(stateCode);
 					readSet.dispatch = Boolean.FALSE;
 					for(File file: readSet.files){
-						file.stateCode = stateCode;
+						file.state = getState("A");
 					}
 				}
 				readSet.traceInformation.setTraceInformation("ngsrg");
@@ -78,9 +81,17 @@ public class Workflows {
 		}		
 	}
 
+	private static State getState(String stateCode) {
+		State state = new State();
+		state.code = stateCode;
+		state.date = new Date();
+		state.user = "ngsrg"; //TODO change pour prendre le user authentifié
+		return state;
+	}
+
 	private static Boolean isStateCodeExist(String stateCode) {
 		try {
-			return State.find.isCodeExist(stateCode);
+			return models.laboratory.common.description.State.find.isCodeExist(stateCode);
 		} catch (DAOException e) {
 			throw new RuntimeException(e);
 		}

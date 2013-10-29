@@ -48,7 +48,6 @@ public class LanesTests extends AbstractTests {
 	 	assertThat(status(result)).isEqualTo(OK);
 	 			
 		lane = RunMockHelper.newLane(2);
-	 	lane.valid = TBoolean.TRUE;
 	 	lanes.add(lane);
 		run.lanes = lanes;
 	 	

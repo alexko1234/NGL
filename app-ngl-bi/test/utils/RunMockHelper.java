@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Validation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.File;
@@ -57,11 +59,15 @@ public class RunMockHelper {
 		
 		run.typeCode = "RHS2000";
 		
-		run.stateCode = "F";
+		State state = new State();
+		run.state = state;
+		run.state.code = "F";
+		run.state.user = "tests";
+		run.state.date = new Date();
+		
 		List<String> lResos = new ArrayList<String>();
 		lResos.add("reso1");
 		lResos.add("reso2");
-		run.resolutionCode = lResos;
 		
 		TraceInformation ti = new TraceInformation(); 
 		ti.setTraceInformation("dnoisett");
@@ -84,12 +90,14 @@ public class RunMockHelper {
 		List<String> lResos = new ArrayList<String>();
 		lResos.add("reso1");
 		lResos.add("reso2");
-		lane.resolutionCode = lResos;
 		
-		lane.valid = TBoolean.FALSE;
-		lane.validDate = new Date();
-		
-		lane.stateCode = "F";
+		State state = new State();
+		lane.state = state;
+		lane.state.code = "F";
+		lane.state.user = "tests";
+		lane.state.date = new Date();
+				
+		lane.validation = getValidation(TBoolean.UNSET);
 		
 		lane.readSetCodes = null;
 				
@@ -110,7 +118,7 @@ public class RunMockHelper {
 		r.laneNumber = 1;
 		
 		
-		r.stateCode = "F-QC";
+		r.state = getState("F-QC");
 				
 		TraceInformation ti = new TraceInformation(); 
 		ti.setTraceInformation("dnoisett");
@@ -119,17 +127,12 @@ public class RunMockHelper {
 		List<String> lResos = new ArrayList<String>();
 		lResos.add("reso1");
 		lResos.add("reso2");
-		r.resolutionCode = lResos;
 		
 		r.typeCode = "default-readset"; 
 		
-		r.validBioinformatic = TBoolean.TRUE;
+		r.validationBioinformatic = getValidation(TBoolean.TRUE);
 		
-		r.validBioinformaticDate = new Date();
-		
-		r.validProduction = TBoolean.TRUE;
-		
-		r.validProductionDate = new Date();
+		r.validationProduction = getValidation(TBoolean.TRUE);
 		
 		
 		return r;
@@ -149,7 +152,7 @@ public class RunMockHelper {
 		file.typeCode = "42";
 		file.usable = true;
 		
-		file.stateCode = "F-QC";
+		file.state = getState("F-QC");
 		
 		file.properties.put("label", new PropertySingleValue("thelabel"));
 		file.properties.put("asciiEncoding", new PropertySingleValue("xxx"));
@@ -165,7 +168,7 @@ public class RunMockHelper {
 		file.typeCode = "42";
 		file.usable = true;
 		
-		file.stateCode = "F-QC";
+		file.state = getState("F-QC");
 		
 		file.properties.put("label", new PropertySingleValue("thelabel"));
 		file.properties.put("asciiEncoding", new PropertySingleValue("xxx"));
@@ -173,5 +176,19 @@ public class RunMockHelper {
 		return file;
 		
 	}
-		
+	public static Validation getValidation(TBoolean b) {
+			Validation v = new Validation();
+			v.valid = b;
+			v.date = new Date();
+			v.user = "test";
+			return v;
+	}
+	
+	public static State getState(String code) {
+		State state = new State();
+		state.code = code;
+		state.user = "tests";
+		state.date = new Date();
+		return state;
+}
 }
