@@ -9,7 +9,7 @@ import models.utils.dao.DAOException;
 
 /**
  * Value of the possible state of type
- * @author ejacoby
+ * @author ejacoby, dnoisett
  *
  */
 public class State extends Model<State>{
@@ -45,6 +45,10 @@ public class State extends Model<State>{
 		
 		public boolean isCodeExistForTypeCode(String code, String typeCode)  throws DAOException {
 			return ((StateDAO) getInstance()).isCodeExistForTypeCode(code, typeCode);
+		}
+
+		public List<State> findByObjectTypeCode(String code) throws DAOException {
+			return ((StateDAO) getInstance()).findByObjectTypeCode(code);
 		}
 	}
 	
