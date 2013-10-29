@@ -33,8 +33,6 @@ public class ImportDataCNG extends AbstractImportData {
 		try{
 			Logger.info(" Import Containers ... ");
 			createContainersFromLims(contextError);
-			//Maud's code
-			//createContainers(contextError,"select * from v_sampletongl;","lane","F",null,null); 
 		}catch (Exception e) {
 			Logger.debug("",e);
 		}
@@ -86,7 +84,7 @@ public class ImportDataCNG extends AbstractImportData {
 			 for (Project project : projects.subList(i, Math.min(i+blockSize, projects.size()))) {
 				 codesToUpdate.add(project.code);
 			 }
-			limsServices.updateImportDate( "t_project", "text", "name", codesToUpdate.toArray(new String[codesToUpdate.size()]), contextError);
+			limsServices.updateImportDate( "t_project", "name", "text", codesToUpdate.toArray(new String[codesToUpdate.size()]), contextError);
 			 i = i + blockSize; 
 		}	
 		Logger.debug("end of updateLimsProjects"); 
@@ -127,7 +125,7 @@ public class ImportDataCNG extends AbstractImportData {
 			 for (Sample t : ts.subList(i, Math.min(i+blockSize, ts.size()))) {
 				 codesToUpdate.add(t.code);
 			 }
-			limsServices.updateImportDate( "t_sample", "text", "stock_barcode", codesToUpdate.toArray(new String[codesToUpdate.size()]), contextError);
+			limsServices.updateImportDate( "t_sample", "stock_barcode", "text", codesToUpdate.toArray(new String[codesToUpdate.size()]), contextError);
 			i = i + blockSize; 
 		}	
 		Logger.debug("end of updateLimsSamples"); 
