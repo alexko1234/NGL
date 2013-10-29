@@ -296,7 +296,6 @@ public class LimsCNGDAO {
 				}
 			
 				//
-				container.processTypeCode = null; // not required
 				container.fromPurifingCode = null; // not required				
 				container.resolutionCode = null; // not required
 

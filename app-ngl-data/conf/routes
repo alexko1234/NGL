@@ -10,6 +10,8 @@ GET		/api/description/commons/states			controllers.description.commons.States.sa
 GET		/api/description/commons/resolutions	controllers.description.commons.Resolutions.save()
 GET		/api/description/commons/measures		controllers.description.commons.Measures.save()
 GET		/api/description/commons/levels			controllers.description.commons.Levels.save()
+GET		/api/description/commons/institutes		controllers.description.commons.Institutes.save()
+
 
 GET		/api/description/projects				controllers.description.projects.Projects.save()
 GET		/api/description/samples				controllers.description.samples.Samples.save()
@@ -21,7 +23,6 @@ GET		/api/description/processes				controllers.description.processes.Processes.s
 GET		/api/description/runs					controllers.description.runs.Runs.save()
 GET		/api/description/treatments				controllers.description.runs.Treatments.save()
 
-GET		/api/description/commons/institutes		controllers.description.commons.Institutes.save()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               			controllers.Assets.at(path="/public", file)

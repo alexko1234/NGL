@@ -90,7 +90,7 @@ public class TreatmentService {
 		l.add(DescriptionFactory.newTreatmentType("Trimming","trimming", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "trimming", getTrimmingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2", "pairs", "single"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationPhiX", getContaminationPhiXTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs", "single"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", getTaxonomyTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newTreatmentType("Sorting Ribo","sorting-ribo", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sortingRibo", getSortingRiboTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2", "pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newTreatmentType("Sorting Ribo","sorting-ribo", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sortingRibo", getSortingRiboTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2", "pairs", "single"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newTreatmentType("Mapping","mapping", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mapping", getMappingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newTreatmentType("Merging","merging", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "merging", getMergingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
@@ -273,7 +273,7 @@ public class TreatmentService {
 		*/
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("organism","organism",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("taxonomie","taxonomie",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("taxonomy","taxonomie",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("taxonBilan.taxon","taxonBilan.taxon",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("taxonBilan.nbSeq","taxonBilan.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("taxonBilan.percent","taxonBilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true));
@@ -307,8 +307,8 @@ public class TreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNA","rRNA",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNAPercent","rRNAPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Float.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNABilan.type","rRNABilan.type",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), String.class, true,
-				DescriptionFactory.newValues("Phi", "Eukaryotic 18S", "Eukaryotic 28S", "Bacteria 16S", "Bacteria 23S", "Archeae 16S", "Archeae 23S", "rfam-5.8s", "rfam-5s")));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNABilan.percent","rRNABilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, true));
+				DescriptionFactory.newValues("PhiX", "Eukaryotic 18S", "Eukaryotic 28S", "Bacteria 16S", "Bacteria 23S", "Archeae 16S", "Archeae 23S", "Rfam 5.8S", "Rfam 5S")));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNABilan.percent","rRNABilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Float.class, true));
 		
 		/*
 		usefulSequences
@@ -356,8 +356,8 @@ public class TreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("avgSize","avgSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("minSize","minSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("maxSize","maxSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("distribMerge","distribMerge",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), File.class, true));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("distribChevauchement","distribChevauchement",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), File.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mergedReadsDistrib","mergedReadsDistrib",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), File.class, false));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("overlapDistrib","overlapDistrib",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), File.class, true));
 		
 		return propertyDefinitions;		
 	}
