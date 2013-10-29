@@ -11,6 +11,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Validation;
@@ -26,18 +27,15 @@ import fr.cea.ig.DBObject;
 
 public class Run extends DBObject implements IValidation {
         
-    public String typeCode;
-    public String stateCode;
-	public List<String> resolutionCode;
+	public String typeCode;
+	
+	public State state;
+	
 	public String containerSupportCode; //id flowcell
     public Boolean dispatch = Boolean.FALSE;
     
-    @JsonIgnore
-    public TBoolean valid = TBoolean.UNSET;
-    @JsonIgnore
-    public Date validDate;
-    
     public Validation validation;
+   
     
     
     public TraceInformation traceInformation;
@@ -49,15 +47,17 @@ public class Run extends DBObject implements IValidation {
 
     @Override
     public void validate(ContextValidation contextValidation) {
-    	
+    	contextValidation.putObject("run", this);
+		
     	RunValidationHelper.validateId(this, contextValidation);
     	RunValidationHelper.validateCode(this, InstanceConstants.RUN_ILLUMINA_COLL_NAME, contextValidation);
     	RunValidationHelper.validateRunType(this.typeCode, this.properties, contextValidation);
-    	RunValidationHelper.validateStateCode(this.typeCode, this.stateCode, contextValidation);
+    	
+    	RunValidationHelper.validateState(this.typeCode, this.state, contextValidation);
+    	
     	RunValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
     	RunValidationHelper.validationContainerSupportCode(this.containerSupportCode, contextValidation); 
     	RunValidationHelper.validateRunInstrumentUsed(this.instrumentUsed, contextValidation);		
-		contextValidation.putObject("run", this);
 		contextValidation.putObject("level", Level.CODE.Run);
 		//WARN DON'T CHANGE THE ORDER OF VALIDATION
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);

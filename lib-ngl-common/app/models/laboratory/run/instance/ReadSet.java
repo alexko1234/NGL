@@ -9,6 +9,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Validation;
@@ -24,8 +25,8 @@ import fr.cea.ig.DBObject;
 public class ReadSet extends DBObject implements IValidation{
 
 	public String typeCode;
-	public String stateCode;
-	public List<String> resolutionCode;
+	
+	public State state;
 	
 	public String runCode;
 	public Integer laneNumber;
@@ -37,14 +38,6 @@ public class ReadSet extends DBObject implements IValidation{
 	public Validation validationProduction;
 	public Validation validationBioinformatic;
 	
-	@JsonIgnore
-	public TBoolean validProduction = TBoolean.UNSET;
-	@JsonIgnore
-	public Date validProductionDate;
-	@JsonIgnore
-	public TBoolean validBioinformatic = TBoolean.UNSET;
-	@JsonIgnore
-	public Date validBioinformaticDate;
     
 	public String path;
 	public String archiveId;
@@ -80,7 +73,7 @@ public class ReadSet extends DBObject implements IValidation{
 		ReadSetValidationHelper.validateId(this, contextValidation);
 		ReadSetValidationHelper.validateCode(this, InstanceConstants.READSET_ILLUMINA_COLL_NAME, contextValidation);
 		ReadSetValidationHelper.validateReadSetType(this.typeCode, this.properties, contextValidation);
-		ReadSetValidationHelper.validateStateCode(this.typeCode, this.stateCode, contextValidation);
+		ReadSetValidationHelper.validateState(this.typeCode, this.state, contextValidation);
 		ReadSetValidationHelper.validateReadSetCodeInRunLane(this.code, this.runCode, this.laneNumber, contextValidation);
 		ReadSetValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
 		ReadSetValidationHelper.validateReadSetRunCode(this.runCode ,contextValidation);

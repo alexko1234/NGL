@@ -6,6 +6,7 @@ import java.util.Map;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
@@ -73,9 +74,9 @@ public class FileValidationHelper extends CommonValidationHelper {
 	}
 
 
-	public static void validateFileStateCode(String stateCode,
+	public static void validateFileState(State state,
 			ContextValidation contextValidation) {
 		ReadSet readSet = getReadSetFromContext(contextValidation);
-		validateStateCode(readSet.typeCode, stateCode, contextValidation);
+		validateState(readSet.typeCode, state, contextValidation);
 	}
 }

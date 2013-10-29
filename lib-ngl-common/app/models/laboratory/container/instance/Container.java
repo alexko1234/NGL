@@ -91,7 +91,7 @@ public class Container extends DBObject implements IValidation {
 	public String fromPurifingCode;
 	//public String fromExtractionTypeCode;
 	//process
-	public String processTypeCode;
+	public String processTypeCode; //TODO GA : est ce bien utile comme info ?
 
 
 	public Container(){

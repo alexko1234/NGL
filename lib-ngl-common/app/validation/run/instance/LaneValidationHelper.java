@@ -8,6 +8,7 @@ import java.util.TreeSet;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.run.description.RunType;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -103,10 +104,10 @@ public class LaneValidationHelper extends CommonValidationHelper {
 		return getObjectFromContext("run", Run.class, contextValidation);
 	}
 
-	public static void validateLaneStateCode(String stateCode,
+	public static void validateLaneState(State state,
 			ContextValidation contextValidation) {
 		Run run = getRunFromContext(contextValidation);
-		validateStateCode(run.typeCode, stateCode, contextValidation);	
+		validateState(run.typeCode, state, contextValidation);	
 		
 	}
 

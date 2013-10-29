@@ -3,7 +3,10 @@ package models.laboratory.run.instance;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.run.instance.FileValidationHelper;
@@ -16,7 +19,8 @@ public class File implements IValidation {
 	public String extension;
 	public Boolean usable = Boolean.FALSE;
 	public String typeCode; //id du type de fichier
-	public String stateCode;
+	public State state;
+	
 	public Map<String, PropertyValue> properties = new HashMap<String, PropertyValue>();
 
 	/*
@@ -27,7 +31,7 @@ public class File implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		FileValidationHelper.validateFileFullName(this.fullname, contextValidation);
-		FileValidationHelper.validateFileStateCode(this.stateCode, contextValidation);
+		FileValidationHelper.validateFileState(this.state, contextValidation);
 		ValidationHelper.required(contextValidation, this.extension, "extension");
 		ValidationHelper.required(contextValidation, this.typeCode, "typeCode");
 		ValidationHelper.required(contextValidation, this.usable, "usable");

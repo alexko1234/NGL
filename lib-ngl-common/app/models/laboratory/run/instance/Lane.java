@@ -9,6 +9,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Validation;
 import validation.ContextValidation;
@@ -19,17 +20,10 @@ import validation.run.instance.TreatmentValidationHelper;
 public class Lane implements IValidation{
 
 	public Integer number;
-	public String stateCode;
-	public List<String> resolutionCode;
 	
+	public State state;
 	public Validation validation;
 	
-	@JsonIgnore
-    public TBoolean valid = TBoolean.UNSET;
-	@JsonIgnore
-	public Date validDate;
-    
-
 	//public List<ReadSet> readsets;
 	// dnoisett, the lane doesn't contain the entire readset anymore, just a code to refer it;
 	public List<String> readSetCodes;
@@ -58,7 +52,7 @@ public class Lane implements IValidation{
 	public void validate(ContextValidation contextValidation) {
 		LaneValidationHelper.validationLaneNumber(this.number,contextValidation);
 		LaneValidationHelper.validationLaneReadSetCodes(this.number, this.readSetCodes, contextValidation);
-		LaneValidationHelper.validateLaneStateCode(this.stateCode, contextValidation);
+		LaneValidationHelper.validateLaneState(this.state, contextValidation);
 		contextValidation.putObject("lane", this);
 		contextValidation.putObject("level", Level.CODE.Lane);
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);

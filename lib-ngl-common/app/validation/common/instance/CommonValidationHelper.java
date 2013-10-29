@@ -5,7 +5,7 @@ import static validation.utils.ValidationHelper.required;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.laboratory.common.description.State;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
@@ -21,7 +21,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class CommonValidationHelper {
 	public static final String FIELD_CODE = "code";
-	
+	public static final String FIELD_TYPE_CODE = "typeCode";
 	/**
 	 * Validate if code is unique in MongoDB collection
 	 * Unique code is validate if key "_id" not in map contextObjects or if value of key "_id" is null else no code validation
@@ -324,14 +324,30 @@ public class CommonValidationHelper {
 	}
 	
 	public static void validateStateCode(String stateCode,ContextValidation contextValidation){
-		validateRequiredDescriptionCode(contextValidation, stateCode,"stateCode", State.find);
+		if(contextValidation.getContextObjects().containsKey(FIELD_TYPE_CODE)){
+			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
+			validateStateCode(typeCode, stateCode, contextValidation);
+		}else{
+			validateRequiredDescriptionCode(contextValidation, stateCode,"code", models.laboratory.common.description.State.find);
+		}
 	}
 	
-	public static void validateStateCode(String typeCode, String stateCode, ContextValidation contextValidation){
+	
+	public static void validateState(String typeCode, State state, ContextValidation contextValidation) {
+		if(ValidationHelper.required(contextValidation, state, "state")){
+			contextValidation.putObject(FIELD_TYPE_CODE, typeCode);
+			contextValidation.addKeyToRootKeyName("state");
+			state.validate(contextValidation);
+			contextValidation.removeKeyFromRootKeyName("state");
+			contextValidation.removeObject(FIELD_TYPE_CODE);
+		}		
+	}
+	
+	private static void validateStateCode(String typeCode, String stateCode, ContextValidation contextValidation){
 		try{
-			if(required(contextValidation, stateCode, "stateCode")){
-				if(!State.find.isCodeExistForTypeCode(stateCode, typeCode)){
-					contextValidation.addErrors("stateCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, stateCode);
+			if(required(contextValidation, stateCode, "code")){
+				if(!models.laboratory.common.description.State.find.isCodeExistForTypeCode(stateCode, typeCode)){
+					contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, stateCode);
 				}
 			}
 		}catch(DAOException e){
@@ -339,6 +355,8 @@ public class CommonValidationHelper {
 		}
 		
 	}
+	
+	
 	
 	@SuppressWarnings("unchecked")
 	public static <T> T getObjectFromContext(String key, Class<T> clazz, ContextValidation contextValidation) {
