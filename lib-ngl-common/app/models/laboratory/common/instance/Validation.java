@@ -12,13 +12,18 @@ public class Validation implements IValidation {
 	public TBoolean valid = TBoolean.UNSET;
     public Date date;
     public String user;
-    public List<String> resolutionCode;
+    public List<String> resolutionCodes;
     
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		ValidationHelper.required(contextValidation, valid, "valid");
-		ValidationHelper.required(contextValidation, date, "date");
-		ValidationHelper.required(contextValidation, user, "user");		
+		if(!TBoolean.UNSET.equals(valid)){
+			ValidationHelper.required(contextValidation, date, "date");
+			ValidationHelper.required(contextValidation, user, "user");
+			
+		}
+		
+		//todo resolution si different de zero
 	}
 
 }

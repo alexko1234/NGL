@@ -13,7 +13,7 @@ public class State implements IValidation {
 	public String code;
 	public Date date;
     public String user;
-    public List<String> resolutionCode;
+    public List<String> resolutionCodes;
     
 	@Override
 	public void validate(ContextValidation contextValidation) {
