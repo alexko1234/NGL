@@ -41,7 +41,7 @@ public class ObjectTypeMappingQuery extends MappingSqlQuery<ObjectType>{
 			StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
 			List<State> states = null;
 			try {
-				states = stateDAO.findByObjectType(objectType.id);
+				states = stateDAO.findByObjectTypeId(objectType.id);
 			} catch (DAOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
