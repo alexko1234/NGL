@@ -18,6 +18,7 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.SampleUsed;
+import models.laboratory.project.description.ProjectType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
@@ -44,15 +45,19 @@ public class LimsCNGDAO {
 	private JdbcTemplate jdbcTemplate;
 
 	private static final String CONTAINER_CATEGORY_CODE= "lane";
-	private static final String CONTAINER_STATE_CODE="F";
-	protected static final String PROJECT_CATEGORY_CODE = "default";
+	private static final String CONTAINER_STATE_CODE="A";
+	
+	//protected static final String PROJECT_CATEGORY_CODE = "default";
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
+	
 	protected static final String IMPORT_CATEGORY_CODE="sample-import";
-	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "unknown";
-	protected static final String SAMPLE_CATEGORY_CODE = "default";
+	
+	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "defaultSampleCNG";
 	
 	protected static final String SAMPLE_USED_CATEGORY_CODE = "unknown";
-	protected static final String SAMPLE_USED_TYPE_CODE = "unknown";	
+	protected static final String SAMPLE_USED_TYPE_CODE = "defaultSampleCNG";	
+	
+	protected static final String IMPORT_TYPE_CODE_DEFAULT = "default-import";
 	
 	
 	@Autowired
@@ -62,7 +67,7 @@ public class LimsCNGDAO {
 	}
 
 
-	public List<Project> findProjectsToCreate(ContextValidation contextError) throws SQLException, DAOException {
+	public List<Project> findProjectsToCreate(final ContextValidation contextError) throws SQLException, DAOException {
 		
 		List<Project> results = this.jdbcTemplate.query("select * from v_project_tongl", new Object[]{}, new RowMapper<Project>() {
 
@@ -71,17 +76,31 @@ public class LimsCNGDAO {
 
 				Project project = new Project(rs.getString("code"), rs.getString("name").trim());
 				project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
-				project.properties= new HashMap<String, PropertyValue>();
-				//TODO : property franceGenomique 
-				project.categoryCode=PROJECT_CATEGORY_CODE;
-				project.stateCode="IP";
-				InstanceHelpers.updateTraceInformation(project.traceInformation);
-				project.comments = new ArrayList<Comment>(); 
-				// just one comment for one project
-				if (rs.getString("comments") != null ) {
-					InstanceHelpers.addComment(rs.getString("comments"), project.comments);
+				
+				//project.properties= new HashMap<String, PropertyValue>();
+				
+				ProjectType projectType=null;
+				try {
+					projectType = ProjectType.find.findByCode(project.typeCode);
+				} catch (DAOException e) {
+					Logger.debug("",e);
+					return null;
+				}
+				if( projectType==null ){
+					contextError.addErrors("code", "error.codeNotExist", project.typeCode, project.code);
+					return null;
 				}
 				
+				project.categoryCode=projectType.category.code;
+				
+				project.stateCode="IP";
+				InstanceHelpers.updateTraceInformation(project.traceInformation);
+
+				// just one comment for one project
+				if (rs.getString("comments") != null ) {
+					project.comments = new ArrayList<Comment>(); 
+					InstanceHelpers.addComment(rs.getString("comments"), project.comments);
+				}
 				return project;
 			}
 		});
@@ -121,24 +140,33 @@ public class LimsCNGDAO {
 			sample.categoryCode=sampleType.category.code;
 		
 			sample.projectCodes=new ArrayList<String>();
-			sample.projectCodes.add(rs.getString("project")); // t_project.name
+			if (rs.getString("project") != null) {
+				sample.projectCodes.add(rs.getString("project")); // t_project.name
+			}
+			else {
+				sample.projectCodes.add(" "); 
+			}
 
 			sample.name=rs.getString("name"); // barcode
-			sample.referenceCollab= null; // stockbarcode ?
+			
+			//sample.referenceCollab= rs.getString("ref_collab"); // to add to the view by Fernando
+			
 			sample.taxonCode=rs.getString("taxon_code"); // t_org.ncbi_taxon_id
-
+			
+			
 			sample.comments=new ArrayList<Comment>(); // comments
-			sample.comments.add(new Comment(rs.getString("comments")));
-					
-			if(sample.properties==null){ 
-				sample.properties=new HashMap<String, PropertyValue>();
+			
+			if (rs.getString("comments") != null) {
+				sample.comments.add(new Comment(rs.getString("comments")));
 			}
-		    sample.properties.put("taxonSize", new PropertySingleValue(rs.getDouble("taxonsize")));
-		    sample.properties.put("isFragmented", null); // TODO : verify
-		    sample.properties.put("isAdapters", null); // TODO : verify
-		    sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("lims_code")));
+			else {
+				sample.comments.add(new Comment(" ")); 
+			}
 					
-			sample.importTypeCode="default-import";
+			sample.properties=new HashMap<String, PropertyValue>();
+			sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("lims_code")));
+	
+			sample.importTypeCode=IMPORT_TYPE_CODE_DEFAULT;
 			return sample;
 	}
 	
@@ -148,7 +176,8 @@ public class LimsCNGDAO {
 		List<Sample> results = null;
 		
 		if (sampleCode != null) { 
-			results = this.jdbcTemplate.query("select * from v_sample_tongl",new Object[]{sampleCode}
+			//TODO : a tester
+			results = this.jdbcTemplate.query("select * from v_sample_tongl order by code, project, comments",new Object[]{sampleCode}
 			,new RowMapper<Sample>() {
 				@SuppressWarnings("rawtypes")
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -162,7 +191,7 @@ public class LimsCNGDAO {
 			});
 		}
 		else { // mass loading
-			results = this.jdbcTemplate.query("select * from v_sample_tongl",new Object[]{}
+			results = this.jdbcTemplate.query("select * from v_sample_tongl order by code, project, comments",new Object[]{}
 			,new RowMapper<Sample>() {
 				@SuppressWarnings("rawtypes")
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -202,6 +231,21 @@ public class LimsCNGDAO {
 			}
 			pos++;
 		}
+		
+		//for remove null comment or project
+		for (Sample s : results) {
+			for (int i=0; i<s.comments.size(); i++) {
+				if (s.comments.get(i).equals(" ")) {
+					s.comments.remove(i);
+				}
+			}
+			for (int i=0; i<s.projectCodes.size(); i++) {
+				if (s.projectCodes.get(i).equals(" ")) {
+					s.projectCodes.remove(i);
+				}
+			}
+		}
+		
 		return results;
 	}
 	
@@ -238,6 +282,7 @@ public class LimsCNGDAO {
 				}
 				
 				container.stateCode=CONTAINER_STATE_CODE; // required
+				
 				container.valid=null;
 				
 				// define container support attributes
@@ -251,17 +296,17 @@ public class LimsCNGDAO {
 				container.properties= new HashMap<String, PropertyValue>();
 				container.properties.put("limsCode",new PropertySingleValue(rs.getInt("lims_code")));
 				
-				//if(rs.getString("receptionDate")!=null){
-				//	container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));
-				//}
+				///if(rs.getString("receptionDate")!=null){
+				///	container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));
+				///}
 				
-				//set to 0 ?
-				//container.mesuredConcentration=new PropertySingleValue((float) 0);
-				//container.mesuredVolume=new PropertySingleValue((float) 0);
-				//container.mesuredQuantity=new PropertySingleValue((float) 0); 
-				//container.calculedVolume =new PropertySingleValue((float) 0);  
+				///set to 0 ?
+				///container.mesuredConcentration=new PropertySingleValue((float) 0);
+				///container.mesuredVolume=new PropertySingleValue((float) 0);
+				///container.mesuredQuantity=new PropertySingleValue((float) 0); 
+				///container.calculedVolume =new PropertySingleValue((float) 0);  
 				
-				container.fromExperimentTypeCodes = new ArrayList<String>(); //not required
+				//container.fromExperimentTypeCodes = new ArrayList<String>(); //not required
 				
 				
 				if(rs.getString("project")!=null) {
@@ -285,15 +330,20 @@ public class LimsCNGDAO {
 					else {
 						content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparaison, suppress it at the end of the function...
 					}
-					content.properties.put("percentPerLane",new PropertySingleValue(rs.getString("percent_per_lane")));
+					
+					if(rs.getString("percent_per_lane")!=null) { 
+						content.properties.put("percentPerLane",new PropertySingleValue(rs.getString("percent_per_lane")));
+					}
+					else {
+						content.properties.put("percentPerLane",new PropertySingleValue("-1")); 
+					}
 					
 					container.contents=new ArrayList<Content>();
-					container.contents.add(content);
-					
-					container.sampleCodes=new ArrayList<String>();
-					container.sampleCodes.add(rs.getString("code_sample"));
-					
+					container.contents.add(content);					
 				}
+				
+				container.sampleCodes=new ArrayList<String>();
+				container.sampleCodes.add(rs.getString("code_sample"));
 			
 				//
 				container.fromPurifingCode = null; // not required				
@@ -318,6 +368,7 @@ public class LimsCNGDAO {
 				// difference between the two projectCode
 				if (! results.get(pos).projectCodes.get(0).equals(results.get(pos+x).projectCodes.get(0))) {
 					if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.get(0))) {
+						
 						results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.get(0) ); 
 					}
 				}
@@ -339,8 +390,7 @@ public class LimsCNGDAO {
 						
 						createContent(results, pos+x);
 						
-					}
-					
+					}					
 				}
 				
 				// all the difference have been reported on the first sample found (at the position pos)
@@ -352,11 +402,14 @@ public class LimsCNGDAO {
 			pos++;
 		}	
 		
-		//for suppress null tags
+		//for remove null tags
 		for (Container r : results) {
 			for (int i=0; i<r.contents.size(); i++) {
 				if (r.contents.get(i).properties.get("tag").value.equals("-1")) {
-					r.contents.get(i).properties.get("tag").value = null;
+					r.contents.get(i).properties.remove("tag");
+				}
+				if (r.contents.get(i).properties.get("percentPerLane").value.equals("-1")) {
+					r.contents.get(i).properties.remove("percentPerLane");
 				}
 			}
 		}
