@@ -8,6 +8,7 @@ import play.Logger;
 import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.Result;
+import services.description.common.InstituteService;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 import services.description.common.ObjectTypeService;
@@ -30,6 +31,7 @@ public class All extends CommonController {
 	public static Result save(){
 		try {
 			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
+			InstituteService.main(errors);
 			StateService.main(errors); //before objectType cause objectType have states now !
 			ObjectTypeService.main(errors);
 			LevelService.main(errors);
