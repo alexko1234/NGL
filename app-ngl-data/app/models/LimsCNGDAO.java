@@ -51,6 +51,9 @@ public class LimsCNGDAO {
 	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "unknown";
 	protected static final String SAMPLE_CATEGORY_CODE = "default";
 	
+	protected static final String SAMPLE_USED_CATEGORY_CODE = "unknown";
+	protected static final String SAMPLE_USED_TYPE_CODE = "unknown";	
+	
 	
 	@Autowired
 	@Qualifier("lims")
@@ -205,7 +208,6 @@ public class LimsCNGDAO {
 	
 	
 	/**
-	 * TODO :  find lanes who have flag 'available=true'
 	 * 
 	 * method for mass loading
 	 * @param contextError
@@ -214,8 +216,7 @@ public class LimsCNGDAO {
 	public List<Container> findContainersToCreate(ContextValidation contextError){
 
 		//verification OK for codes in ('C01BBACXX_1','D0358ACXX_3') 
-		//suppression des samples bizarres avec le code "UNKNOWN"
-		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true and code_sample <> 'UNKNOWN' order by code, project, code_sample, tag",new Object[]{} 
+		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true order by code, project, code_sample, tag",new Object[]{} 
 		,new RowMapper<Container>() {
 
 			@SuppressWarnings("rawtypes")
@@ -273,8 +274,8 @@ public class LimsCNGDAO {
 					content.sampleUsed=new SampleUsed();
 					content.sampleUsed.sampleCode=rs.getString("code_sample");
 					//TODO : change default value
-					content.sampleUsed.categoryCode = "unknown"; // required
-					content.sampleUsed.typeCode = "unknown"; // required
+					content.sampleUsed.categoryCode = SAMPLE_USED_CATEGORY_CODE; // required
+					content.sampleUsed.typeCode = SAMPLE_USED_TYPE_CODE; // required
 					
 					content.properties = new HashMap<String, PropertyValue>();
 					
@@ -327,18 +328,7 @@ public class LimsCNGDAO {
 							
 						results.get(pos).sampleCodes.add( results.get(pos+x).sampleCodes.get(0) );
 						
-						Content content = new Content();
-						content.sampleUsed=new SampleUsed();
-						content.sampleUsed.sampleCode= results.get(pos+x).sampleCodes.get(0);
-						//TODO : change default value
-						content.sampleUsed.categoryCode = "unknown"; // required
-						content.sampleUsed.typeCode = "unknown"; // required
-						
-						content.properties = new HashMap<String, PropertyValue>();
-						content.properties.put("tag",new PropertySingleValue( results.get(pos+x).contents.get(0).properties.get("tag").value  ));
-						content.properties.put("percentPerLane",new PropertySingleValue( results.get(pos+x).contents.get(0).properties.get("percentPerLane").value ));
-					
-						results.get(pos).contents.add(content); 
+						createContent(results, pos+x); 
 						
 						insertContent = true;
 					}
@@ -348,18 +338,8 @@ public class LimsCNGDAO {
 				if (!  results.get(pos).contents.get(0).properties.get("tag").value.equals(  results.get(pos+x).contents.get(0).properties.get("tag").value  ) ) {
 					if (!insertContent) {
 						
-						Content content = new Content();
-						content.sampleUsed=new SampleUsed();
-						content.sampleUsed.sampleCode= results.get(pos+x).sampleCodes.get(0);
-						//TODO : change default value
-						content.sampleUsed.categoryCode = "unknown"; // required
-						content.sampleUsed.typeCode = "unknown"; // required
+						createContent(results, pos+x);
 						
-						content.properties = new HashMap<String, PropertyValue>();
-						content.properties.put("tag",new PropertySingleValue( results.get(pos+x).contents.get(0).properties.get("tag").value  ));
-						content.properties.put("percentPerLane",new PropertySingleValue( results.get(pos+x).contents.get(0).properties.get("percentPerLane").value ));
-						
-						results.get(pos).contents.add(content); 
 					}
 					
 				}
@@ -381,6 +361,24 @@ public class LimsCNGDAO {
 				}
 			}
 		}
+		
+		return results;
+	}
+	
+	
+	private List<Container>  createContent(List<Container> results, int pos) {
+		Content content = new Content();
+		content.sampleUsed=new SampleUsed();
+		content.sampleUsed.sampleCode= results.get(pos).sampleCodes.get(0);
+		//TODO : change defaults values
+		content.sampleUsed.categoryCode = SAMPLE_USED_CATEGORY_CODE; // required
+		content.sampleUsed.typeCode = SAMPLE_USED_TYPE_CODE; // required
+		
+		content.properties = new HashMap<String, PropertyValue>();
+		content.properties.put("tag",new PropertySingleValue( results.get(pos).contents.get(0).properties.get("tag").value  ));
+		content.properties.put("percentPerLane",new PropertySingleValue( results.get(pos).contents.get(0).properties.get("percentPerLane").value ));
+		
+		results.get(pos).contents.add(content); 
 		
 		return results;
 	}
