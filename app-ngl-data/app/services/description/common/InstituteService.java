@@ -24,7 +24,7 @@ public class InstituteService {
 		List<Institute> l = new ArrayList<Institute>();
 				
 		l.add(newInstitute("Centre National de Génomique","CNG"));
-		l.add(newInstitute("Centre National Scientique","CNS"));
+		l.add(newInstitute("Centre National Scientifique","CNS"));
 		
 		DAOHelpers.saveModels(Institute.class, l, errors);
 	}
