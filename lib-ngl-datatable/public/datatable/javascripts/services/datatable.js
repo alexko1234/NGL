@@ -1304,10 +1304,10 @@ angular.module('datatableServices', []).
     			    		var newElement = "";
     			    		
 							var valueElement = '<span ng-show="!'+name+'.isEdit(col.id,value)" >{{value.'+col.property+' '+columnFormatter(col)+'}}</span>';
-        		  	    	if(col.edit && col.type === "String" || col.type === undefined || col.type === "Number"
+        		  	    	if(col.edit && (col.type === "String" || col.type === undefined || col.type === "Number"
         		  	    		|| col.type === "Month" || col.type === "Week"  || col.type === "Time" || col.type === "DateTime"
         		  	    		|| col.type === "Range" || col.type === "Color" || col.type === "Mail" || col.type === "Tel"
-        		  	    		|| col.type === "Url" || col.type === "Date"){
+        		  	    		|| col.type === "Url" || col.type === "Date")){
         		  	    			if(!col.choiceInList){
 	        		  	    			switch (col.type) 
 	        		  	    			{ 
