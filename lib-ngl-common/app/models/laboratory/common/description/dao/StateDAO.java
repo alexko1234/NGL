@@ -167,12 +167,6 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	
 	public boolean isCodeExistForTypeCode(String code, String typeCode)  throws DAOException {
 		String sql = sqlCommon + " AND t.code = ? and c.code = ?";
-		Logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		Logger.debug("sql =" + sql);
-		Logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		Logger.debug("t.code =" + code);
-		Logger.debug("c.code =" + typeCode);
-		Logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		return( initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR),
 				 new SqlParameter("c.code", Types.VARCHAR)).findObject(code, typeCode) != null )? true : false;	
 	}
