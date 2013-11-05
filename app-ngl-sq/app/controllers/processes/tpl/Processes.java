@@ -101,7 +101,6 @@ public class Processes extends Controller{
 							columns.add(DatatableHelpers.getColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false));
 						}else{
 							DatatableColumn c = DatatableHelpers.getColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false,p.choiceInList);
-							c.listStyle=0;
 							if(p.possibleValues != null){
 								c.possibleValues = new ArrayList<Object>();
 								for(Value v: p.possibleValues){
