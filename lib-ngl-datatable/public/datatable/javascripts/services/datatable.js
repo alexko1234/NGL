@@ -21,7 +21,7 @@ angular.module('datatableServices', []).
 													"order":true, //can be ordered or not
 													"type":"String"/"Number"/"Month"/"Week"/"Time"/"DateTime"/"Range"/"Color"/"Mail"/"Tel"/"Url"/"Date", //the column type
 													"choiceInList":false, //when the column is in edit mode, the edition is a list of choices or not
-													"listStyle":0, //if choiceInList=true, listStyle=0 is a select input, listStyle=1 is a radio input
+													"listStyle":"select"/"radio", //if choiceInList=true, listStyle="select" is a select input, listStyle="radio" is a radio input
 													"possibleValues":null, //The list of possible choices
 													"extraHeaders":{"0":"Inputs"}, //the extraHeaders list
 												  }*/
@@ -62,6 +62,7 @@ angular.module('datatableServices', []).
 								active:false,
 								withoutSelect:false, //edit all line
 								showButton : true,
+								columnMode : true,
 								start : false,
 								all : false,
 								columns : {}, //columnIndex : {edit : true/false, value:undefined}
@@ -126,7 +127,14 @@ angular.module('datatableServices', []).
     					totalNumberRecords:undefined,
     					lastSearchParams : undefined, //used with pagination when length or page change
     					inc:0, //used for unique column ids
-    					
+    					configColumnDefault:{
+								edit:false, //can be edited or not
+								hide:true, //can be hidden or not
+								order:true, //can be ordered or not
+								type:"String", //the column type
+								choiceInList:false, //when the column is in edit mode, the edition is a list of choices or not
+								extraHeaders:{}
+    					},
     					
     					//search functions
     					/**
@@ -870,7 +878,7 @@ angular.module('datatableServices', []).
 		    			 */
 		    			setColumnsConfig: function(columns){
 		    				if(columns!= undefined){
-			    				for(var i = 0 ; i < columns.length; i++){
+		    					for(var i = 0 ; i < columns.length; i++){
 			    					if(columns[i].id == null){
 			    						columns[i].id = this.generateColumnId();
 			    					}
@@ -884,11 +892,20 @@ angular.module('datatableServices', []).
 			    						columns[i].edit = false;
 			    					}
 			    					
+			    					if(columns[i].choiceInList && columns[i].listStyle===undefined){
+			    						columns[i].listStyle = "select";
+			    					}
+			    					
+			    					if(columns[i].choiceInList && !columns[i].possibleValues){
+			    						columns[i].possibleValues = [];
+			    					}
+			    					
 			    					columns[i].cells = [];//Init
 			    				}
-			    				
-			    				this.config.columns = columns;
-			    				this.configMaster.columns = angular.copy(columns);
+		    					
+		    					var settings = $.extend(true, [], this.configColumnDefault, columns);
+			    	    		this.config.columns = angular.copy(settings);
+			    	    		this.configMaster.columns = angular.copy(settings);
 		    			    }
 		    			},
 		    			setColumnsConfigWithUrl : function(){
@@ -1235,7 +1252,7 @@ angular.module('datatableServices', []).
 				    		tableHead += ' ng-hide="'+config.name+'.isHide(column.id)"';
 				    	}
 				    	tableHead+= '>{{column.header}} <div class="btn-group pull-right">';
-				    	if(config.editColumn){
+				    	if(config.edit.columnMode){
 				    		tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setEditColumn(column.id)" ng-show="column.edit" ng-disabled="!'+config.name+'.canEdit()" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.edit")+'"><i class="icon-edit"></i></button>'
 						}
 						if(config.order){
@@ -1371,7 +1388,8 @@ angular.module('datatableServices', []).
 		        		  	    			break; 
 	        		  	    			}
 	        		  	    		}else{
-	        		  	    			if(col.listStyle==1){
+	        		  	    			alert(col.listStyle);
+	        		  	    			if(col.listStyle == "radio"){
 	            		  	    			newElement = $compile('<label ng-repeat="opt in col.possibleValues"  ng-show="'+ngShow+'"  for="radio{{col.id}}"><input id="radio{{col.id}}" html-filter="{{col.type}}" type="radio"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" value="{{opt.name}}">{{opt.name}}<br></label>'+valueElement)(scope);
 	            		  	    		}else{
 	            		  	    			newElement = $compile('<select html-filter="{{col.type}}" ng-show="'+ngShow+'" ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>'+valueElement)(scope);
