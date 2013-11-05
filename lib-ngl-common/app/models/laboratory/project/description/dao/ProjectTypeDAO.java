@@ -6,6 +6,7 @@ import java.util.Map;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
+import models.utils.DescriptionHelper;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -18,9 +19,11 @@ public class ProjectTypeDAO extends AbstractDAOMapping<ProjectType>{
 
 	protected ProjectTypeDAO() {
 		super("project_type", ProjectType.class, ProjectTypeMappingQuery.class, 
-				"SELECT t.id, fk_common_info_type, fk_project_category "+
+				"SELECT t.id, t.fk_common_info_type, t.fk_project_category "+
 						"FROM project_type as t "+
-						"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
+						"JOIN common_info_type as c ON c.id=fk_common_info_type "+
+						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
+						"JOIN institute i ON i.id = ci.fk_institute WHERE i.code=" + DescriptionHelper.getInstitute(), false);
 	}
 
 	@Override
