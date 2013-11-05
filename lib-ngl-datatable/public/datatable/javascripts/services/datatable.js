@@ -72,10 +72,12 @@ angular.module('datatableServices', []).
 								showButton : true,
 								mode:'remote', //or local
 								url:undefined,
-								callback : undefined, //used to have a callback after save all element. the datatable is pass to callback method
-								start : false, //if save started
-								number : 0, //number of element in progress
-								error : 0
+								method:'post',
+								value:undefined, //used to transform the value send to the server
+								callback:undefined, //used to have a callback after save all element. the datatable is pass to callback method
+								start:false, //if save started
+								number:0, //number of element in progress
+								error:0
 							},
 							remove:{
 								active:false,
@@ -133,7 +135,7 @@ angular.module('datatableServices', []).
 		    			search : function(params){
 		    				if(this.config.search.active && this.isRemoteMode(this.config.search.mode)){
 			    				this.lastSearchParams = params;
-			    				var url = this.getUrl(this.config.search.url);
+			    				var url = this.getUrlFunction(this.config.search.url);
 			    				if(url){
 			    					$http.get(url(),{params:this.getParams(params), datatable:this}).success(function(data, status, headers, config) {		    						
 			    						config.datatable.setData(data.data, data.recordsNumber);		    						
@@ -425,12 +427,15 @@ angular.module('datatableServices', []).
 		    				if(this.config.edit.active){
 			    				var find = false;
 			    				for(var i = 0; i < this.displayResult.length; i++){
+			    					
 			    					if(this.displayResult[i].selected || this.config.edit.withoutSelect){
 			    						this.displayResult[i].edit=true;			    						
 			    						find = true;			    					
 			    					}else{
 			    						this.displayResult[i].edit=false;
 			    					}
+			    					this.displayResult[i].trClass = undefined;
+			    					this.displayResult[i].selected = undefined;		    						
 			    				}
 			    				if(find){
 			    					this.config.edit.start = true;			
@@ -502,9 +507,9 @@ angular.module('datatableServices', []).
 			    					if(this.displayResult[i].edit || this.config.save.withoutEdit){
 			    						//remove datatable properties
 			    						this.config.save.number++;
-			    						this.displayResult[i].selected = undefined;
-			    						this.displayResult[i].edit = undefined;
-			    						this.displayResult[i].trClass = undefined;					    				
+			    						this.displayResult[i].trClass = undefined;
+				    					this.displayResult[i].selected = undefined;
+				    					
 			    						if(this.isRemoteMode(this.config.save.mode)){
 			    							this.saveRemote(this.displayResult[i], i);
 			    						} else{	
@@ -521,10 +526,11 @@ angular.module('datatableServices', []).
 		    				}
 		    			},
 		    			saveRemote : function(value, i){
-		    				var url = this.getUrl(this.config.save.url);
-			    			if(url){
+		    				var urlFunction = this.getUrlFunction(this.config.save.url);
+		    				if(urlFunction){
+		    					var valueFunction = this.getValueFunction(this.config.save.value);				    			
 			    				//call url
-			    				$http.post(url(value), value, {datatable:this,index:i})
+			    				$http[this.config.save.method](urlFunction(value), valueFunction(value), {datatable:this,index:i})
 				    				.success(function(data, status, headers, config) {
 				    					config.datatable.saveLocal(data, config.index);
 				    					config.datatable.saveFinish();
@@ -547,6 +553,9 @@ angular.module('datatableServices', []).
 		    			 */
 		    			saveLocal: function(data, i){
 		    				if(this.config.save.active){
+		    					this.config.edit.start = false;
+		    					this.displayResult[i].edit = undefined;
+	    						
 		    					if(data){
 		    						this.displayResult[i] = data;
 		    					}
@@ -580,9 +589,7 @@ angular.module('datatableServices', []).
 			    				}
 		    					
 		    					this.config.save.error = 0;
-		    					this.config.save.start = false;
-								this.config.edit.start = false;
-		    						    					
+		    					this.config.save.start = false;		    					
 		    				}
 	    					
 		    			},		    			
@@ -653,7 +660,7 @@ angular.module('datatableServices', []).
 		    			
 		    			removeRemote : function(value){
 		    				if(this.config.remove.active && this.config.remove.start){
-			    				var url = this.getUrl(this.config.remove.url);
+			    				var url = this.getUrlFunction(this.config.remove.url);
 				    			if(url){
 				    				$http['delete'](url(value), {datatable:this,value:value})
 					    				.success(function(data, status, headers, config) {
@@ -722,7 +729,7 @@ angular.module('datatableServices', []).
 			    					}
 									else{
 										line.selected=false;
-			    						line.trClass="";
+			    						line.trClass=undefined;
 									}
 			    				}
 							}else{
@@ -741,7 +748,7 @@ angular.module('datatableServices', []).
 			    						this.displayResult[i].trClass="info";
 			    					}else{
 			    						this.displayResult[i].selected=false;
-			    						this.displayResult[i].trClass="";
+			    						this.displayResult[i].trClass=undefined;
 			    					}
 		    					}
 		    				}else{
@@ -827,17 +834,26 @@ angular.module('datatableServices', []).
 		    			/**
 		    			 * Return an url from play js object or string
 		    			 */
-		    			getUrl : function(url){
+		    			getUrlFunction : function(url){
 		    				if(angular.isObject(url)){
 		    					if(angular.isDefined(url.url)){
 		    						return function(value){return url.url};
 		    					}
 		    				}else if(angular.isString(url)){
-		    					return function(value){return url};;
+		    					return function(value){return url};
 		    				} else if(angular.isFunction(url)){
 		    					return url;
 		    				}
 		    				return undefined;
+		    			},
+		    			/**
+		    			 * Return a function to transform value if exist or the default mode
+		    			 */
+		    			getValueFunction : function(valueFunction){
+		    				if(angular.isFunction(valueFunction)){
+		    					return valueFunction;
+		    				}
+		    				return function(value){return value};
 		    			},
 		    			/**
 		    			 * test is remote mode
