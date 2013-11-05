@@ -36,7 +36,7 @@ import play.Logger;
 import validation.ContextValidation;
 
 /**
- * @author dnoisett
+ * @author dnoisett, v1
  *
  */
 @Repository
@@ -53,7 +53,6 @@ public class LimsCNGDAO {
 	
 	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "default-sample-cng";
 	
-	protected static final String SAMPLE_USED_CATEGORY_CODE = "default"; //old : "unknown";
 	protected static final String SAMPLE_USED_TYPE_CODE = "default-sample-cng";	
 	
 	protected static final String IMPORT_TYPE_CODE_DEFAULT = "default-import";
@@ -146,9 +145,9 @@ public class LimsCNGDAO {
 				sample.projectCodes.add(" "); 
 			}
 
-			sample.name=rs.getString("name"); // barcode
+			sample.name=rs.getString("name"); // t_sample.barcode
 			
-			//sample.referenceCollab= rs.getString("ref_collab"); // to add to the view by Fernando
+			sample.referenceCollab= rs.getString("ref_collab"); // t_individual_id.name
 			
 			sample.taxonCode=rs.getString("taxon_code"); // t_org.ncbi_taxon_id
 			
