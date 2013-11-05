@@ -1,6 +1,5 @@
 package views.components.datatable;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +13,7 @@ public class DatatableColumn {
 	public Boolean order = Boolean.FALSE;//Can be ordered
 	public String type = "String";//"String", "Number", "Month", "Week", "Time", "DateTime", "Range", "Color", "Mail", "Tel", "Url", "Date"
 	public boolean choiceInList = Boolean.FALSE;//Constraint choice with a list
-	public int listStyle = 0;//0=select, 1=radio
+	public String listStyle = "select";//select/radio/multiselect
 	
 	public List<Object> possibleValues = null;//The possible value, can be null if choiceInList=false
 	
