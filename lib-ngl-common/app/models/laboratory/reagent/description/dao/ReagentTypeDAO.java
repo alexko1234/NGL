@@ -6,6 +6,7 @@ import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.reagent.description.ReagentType;
+import models.utils.DescriptionHelper;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -21,17 +22,18 @@ public class ReagentTypeDAO extends AbstractDAOMapping<ReagentType>{
 
 	protected ReagentTypeDAO() {
 		super("reagent_type", ReagentType.class, ReagentTypeMappingQuery.class, 
-				"SELECT t.id, fk_common_info_type "+
+				"SELECT t.id, t.fk_common_info_type "+
 						"FROM reagent_type as t "+
-						"JOIN common_info_type as c ON c.id=fk_common_info_type ",false);
+						"JOIN common_info_type as c ON c.id=t.fk_common_info_type "+
+						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
+						"JOIN institute i ON i.id = ci.fk_institute WHERE i.code=" + DescriptionHelper.getInstitute(), false);
 	}
 
 	public List<ReagentType> findByProtocol(long idProtocol)
 	{
-		String sql = "SELECT id, fk_common_info_type "+
-				"FROM reagent_type "+
-				"JOIN protocol_reagent_type ON fk_reagent_type=id "+
-				"WHERE fk_protocol = ? ";
+		String sql = "SELECT id, fk_common_info_type FROM ("+ sqlCommon + ") a,"+
+				"(select fk_reagent_type, fk_protocol from protocol_reagent_type) b WHERE b.fk_reagent_type=a.id "+
+				"AND b.fk_protocol = ?";
 		ReagentTypeMappingQuery reagentTypeMappingQuery=new ReagentTypeMappingQuery(dataSource,sql,new SqlParameter("id", Type.LONG));
 		return reagentTypeMappingQuery.execute(idProtocol);
 	}
