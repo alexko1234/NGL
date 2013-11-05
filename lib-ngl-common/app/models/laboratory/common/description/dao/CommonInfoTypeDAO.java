@@ -19,15 +19,20 @@ import org.springframework.stereotype.Repository;
 
 import play.Logger;
 import play.api.modules.spring.Spring;
+import models.utils.DescriptionHelper;
+
 
 @Repository
 public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 
 	public CommonInfoTypeDAO() {
 		super("common_info_type", CommonInfoType.class, CommonInfoTypeMappingQuery.class, 
-				"SELECT t.id as cId, t.name, t.code as codeSearch, o.id as oId, o.code as codeObject, o.generic "+
+				"SELECT t.id as cId, t.name, t.code as codeSearch, o.id as oId, o.code as codeObject, o.generic, t.code as codeCit, i.code as codeIns "+
 				"FROM common_info_type as t "+
-				"JOIN object_type as o ON o.id=t.fk_object_type ",true);
+				"JOIN object_type as o ON o.id=t.fk_object_type "+
+				"JOIN common_info_type_institute ci ON t.id=ci.fk_common_info_type "+
+				"JOIN institute i ON i.id = ci.fk_institute AND i.code =" + DescriptionHelper.getInstitute()  , true);
+				
 	}
 
 	public long save(CommonInfoType cit) throws DAOException
@@ -192,8 +197,8 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 
 	public List<CommonInfoType> findByName(String typeName) {
 		String sql = sqlCommon+
-				"WHERE name like \'%"+typeName+"%\' "+
-				"ORDER by name asc";
+				" WHERE name like \'%"+typeName+"%\' "+
+				" ORDER by name asc";
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, null);
 		return commonInfoTypeMappingQuery.execute();
 
@@ -201,9 +206,9 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 
 	public List<CommonInfoType> findByTypeNameAndType(String typeName, long idoObjectType) {
 		String sql = sqlCommon+
-				"WHERE name like \'%"+typeName+"%\' "+
+				" WHERE name like \'%"+typeName+"%\' "+
 				"AND fk_object_type=? "+
-				"ORDER by name asc";
+				" ORDER by name asc";
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("fk_object_type",Type.LONG));
 		return commonInfoTypeMappingQuery.execute(idoObjectType);
 
@@ -214,7 +219,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 	 */
 	public CommonInfoType findByCode(String code) throws DAOException {
 		String sql = sqlCommon+
-				"WHERE t.code = ? ";
+				" WHERE t.code = ? ";
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
 		return commonInfoTypeMappingQuery.findObject(code);
 	}
