@@ -32,56 +32,69 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 		this.sqlCommon=sqlCommon;
 	}
 
-	public T findById(Long id) throws DAOException
-	{
+	public T findById(Long id) throws DAOException {
 		if(null == id){
 			throw new DAOException("id is mandatory");
 		}
-		String sql = sqlCommon+" WHERE t.id = ? ";
+		String sql = sqlCommon;
+		if (entityClass.getSuperclass().equals(CommonInfoType.class) || entityClass.getSimpleName().equals("CommonInfoType")) {
+			sql += " AND t.id = ? ";
+		}
+		else {
+			sql += " WHERE t.id = ? ";
+		}
 		return initializeMapping(sql, new SqlParameter("id", Type.LONG)).findObject(id);
 	}
 
-	public List<T> findAll() throws DAOException
-	{
+	
+	public List<T> findAll() throws DAOException {
 		return initializeMapping(sqlCommon).execute();
 	}
 
-	public T findByCode(String code) throws DAOException
-	{
+	
+	public T findByCode(String code) throws DAOException {
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
-		String sql = sqlCommon+" WHERE code = ? ";
+		String sql = sqlCommon;
+		if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
+			sql += " AND c.code = ? "; //must take the code in the common_info_type table aliased by "c"
+		}
+		else {
+			if ( entityClass.getSimpleName().equals("CommonInfoType") ) {
+				sql += " AND t.code = ? "; //must take t for alias !
+			}
+			else {
+				sql += " WHERE t.code = ? ";
+			}
+		}
 		return initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
 	}
 
 
-	public Boolean isCodeExist(String code) throws DAOException
-	{
+	public Boolean isCodeExist(String code) throws DAOException {
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
 		try {
 			String sql= null;
 			
-			if(entityClass.getSuperclass().equals(CommonInfoType.class)){
-				sql = "select id from common_info_type WHERE code=?";
+			if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
+				sql = "SELECT id FROM common_info_type WHERE code=?";
 			}
-			else{
-				sql = "select id from "+tableName+" WHERE code=?";
+			else {
+				sql = "SELECT id FROM "+tableName+" WHERE code=?";
 			}
-			try{
+			try {
 				long id =  this.jdbcTemplate.queryForLong(sql, code);
-				if(id > 0){
+				if(id > 0) {
 					return Boolean.TRUE;
 				}else{
 					return Boolean.FALSE;
 				}
-
-			}catch (EmptyResultDataAccessException e ) {
+			} catch (EmptyResultDataAccessException e) {
 				return Boolean.FALSE;
 			}
-
 		} catch (DataAccessException e) {
 			Logger.warn(e.getMessage());
 			return null;
