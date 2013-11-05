@@ -100,7 +100,7 @@ object ApplicationBuild extends Build {
 		  // Add your project dependencies here,
 		  "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
 		  "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
-		  	"postgresql" % "postgresql" % "8.3-603.jdbc4",
+		  	"postgresql" % "postgresql" % "8.3-603.jdbc4"
 		)		
 	
    }
