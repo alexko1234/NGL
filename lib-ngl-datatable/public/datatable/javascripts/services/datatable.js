@@ -1230,8 +1230,8 @@ angular.module('datatableServices', []).
 						}			
 						tableHead += '</div></th></tr></thead>';
 						
-						var tableBody = '<tbody><tr ng-show="'+config.name+'.isEdit()"><td ng-repeat="col in '+config.name+'.config.columns" ng-hide="'+config.name+'.isHide(col.id)"><div class="controls" ><div html-input="col" header></div></div></td></tr>';
-						tableBody += '<tr ng-repeat="value in '+config.name+'.displayResult | orderBy:'+config.name+'.config.orderBy:'+config.name+'.config.orderReverse" ng-click="'+config.name+'.select(value)" ng-class="value.trClass"><td rowspan="{{col.cells[$parent.$index].rowSpan}}" ng-hide="'+config.name+'.isHide(col.id)" ng-repeat="col in '+config.name+'.config.columns"> <div class="controls" ><div html-input="col"></div></div></td></tr></tbody>';
+						var tableBody = '<tbody><tr ng-show="'+config.name+'.isEdit()"><td ng-repeat="col in '+config.name+'.config.columns" ng-hide="'+config.name+'.isHide(col.id)"><div class="controls" ><div  html-input="col" datatable-name="'+config.name+'" header></div></div></td></tr>';
+						tableBody += '<tr ng-repeat="value in '+config.name+'.displayResult | orderBy:'+config.name+'.config.orderBy:'+config.name+'.config.orderReverse" ng-click="'+config.name+'.select(value)" ng-class="value.trClass"><td rowspan="{{col.cells[$parent.$index].rowSpan}}" ng-hide="'+config.name+'.isHide(col.id)" ng-repeat="col in '+config.name+'.config.columns"> <div class="controls" ><div datatable-name="'+config.name+'"  html-input="col"></div></div></td></tr></tbody>';
 	
 				    	table.html(tableHead+tableBody);
 				    	
@@ -1271,8 +1271,8 @@ angular.module('datatableServices', []).
     			    	
     			    	var ngChange = "";
     			    	var ngShow = name+".isEdit(col.id,value)";
-    			    	
-    			    	if(attrs.datatableName){
+
+    			    	if(attrs.datatableName != undefined){
     			    		name=attrs.datatableName;
     			    	}
     			    	
@@ -1302,7 +1302,10 @@ angular.module('datatableServices', []).
 		    			};
     			    	var addHtmlElement = function(col){
     			    		var newElement = "";
-    			    		
+    			    		if(attrs.datatableName != undefined){
+        			    		name=attrs.datatableName;
+        			    		ngShow = name+".isEdit(col.id,value)";
+        			    	}
 							var valueElement = '<span ng-show="!'+name+'.isEdit(col.id,value)" >{{value.'+col.property+' '+columnFormatter(col)+'}}</span>';
         		  	    	if(col.edit && (col.type === "String" || col.type === undefined || col.type === "Number"
         		  	    		|| col.type === "Month" || col.type === "Week"  || col.type === "Time" || col.type === "DateTime"
@@ -1375,6 +1378,7 @@ angular.module('datatableServices', []).
     		                	addHtmlElement(newValue);
     		                }
     		            });
+
 
     			    },
     			  };
