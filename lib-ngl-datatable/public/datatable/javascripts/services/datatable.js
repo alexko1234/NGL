@@ -1388,11 +1388,12 @@ angular.module('datatableServices', []).
 		        		  	    			break; 
 	        		  	    			}
 	        		  	    		}else{
-	        		  	    			alert(col.listStyle);
 	        		  	    			if(col.listStyle == "radio"){
 	            		  	    			newElement = $compile('<label ng-repeat="opt in col.possibleValues"  ng-show="'+ngShow+'"  for="radio{{col.id}}"><input id="radio{{col.id}}" html-filter="{{col.type}}" type="radio"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" value="{{opt.name}}">{{opt.name}}<br></label>'+valueElement)(scope);
-	            		  	    		}else{
+	            		  	    		}else if(col.listStyle == "select"){
 	            		  	    			newElement = $compile('<select html-filter="{{col.type}}" ng-show="'+ngShow+'" ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>'+valueElement)(scope);
+	            		  	    		}else if(col.listStyle == "multiselect"){
+	            		  	    			newElement = $compile('<select multiple html-filter="{{col.type}}" ng-show="'+ngShow+'" ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>'+valueElement)(scope);
 	            		  	    		}
 	        		  	    		}
         		  	    	}else if(col.edit && col.type =="Boolean"){
