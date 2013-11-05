@@ -34,7 +34,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 				"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
 				"JOIN institute i ON i.id = ci.fk_institute "+
 				"JOIN state_object_type so ON so.fk_state=t.id "+
-				"JOIN object_type o ON c.fk_object_type=o.id WHERE i.code=" + DescriptionHelper.getInstitute(), true);
+				"JOIN object_type o ON c.fk_object_type=o.id  and o.id=so.fk_object_type WHERE i.code=" + DescriptionHelper.getInstitute(), true);
 	}
 
 	
@@ -166,7 +166,13 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	}
 	
 	public boolean isCodeExistForTypeCode(String code, String typeCode)  throws DAOException {
-		String sql = sqlCommon + "AND t.code = ? and c.code = ?";
+		String sql = sqlCommon + " AND t.code = ? and c.code = ?";
+		Logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		Logger.debug("sql =" + sql);
+		Logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		Logger.debug("t.code =" + code);
+		Logger.debug("c.code =" + typeCode);
+		Logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		return( initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR),
 				 new SqlParameter("c.code", Types.VARCHAR)).findObject(code, typeCode) != null )? true : false;	
 	}
