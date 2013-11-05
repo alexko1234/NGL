@@ -8,6 +8,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import play.Logger;
+import play.Play;
 import play.test.Helpers;
 import utils.AbstractTests;
 import validation.ContextValidation;
@@ -89,5 +91,27 @@ public class SampleValidationHelperTest extends AbstractTests {
 		SampleValidationHelper.validateSampleCategoryCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
+	
+	
+	@Test
+	public void validateSampleTypeCodeExistsByInstitute() throws DAOException {
+		ContextValidation contextValidation=new ContextValidation();
+		SampleValidationHelper.validateSampleType("BAC","default-import",null, contextValidation);
+		
+		if (Play.application().configuration().getString("institute").equals("CNS")) {
+			// the sampleType and the importType are defined in the db
+			assertThat(contextValidation.errors.size()).isEqualTo(3);
+			assertThat(contextValidation.errors.toString()).contains("isAdapters");
+			assertThat(contextValidation.errors.toString()).contains("isFragmented");
+			assertThat(contextValidation.errors.toString()).contains("taxonSize");
+		}
+		else {
+			//only the import type exists so the sample type generate a error 
+			assertThat(contextValidation.errors.size()).isEqualTo(1);
+			assertThat(contextValidation.errors.toString()).contains("codenotexists");
+			assertThat(contextValidation.errors.toString()).contains("BAC");
+		}
+	}
+	
 	
 }
