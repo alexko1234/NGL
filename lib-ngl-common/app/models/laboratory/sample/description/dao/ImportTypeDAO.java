@@ -6,6 +6,7 @@ import java.util.Map;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.sample.description.ImportCategory;
 import models.laboratory.sample.description.ImportType;
+import models.utils.DescriptionHelper;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -19,8 +20,12 @@ public class ImportTypeDAO extends AbstractDAOMapping<ImportType>{
 
 	protected ImportTypeDAO() {
 		super("import_type", ImportType.class, ImportTypeMappingQuery.class, 
-				"SELECT t.id, fk_common_info_type, fk_import_category "+
-						"FROM import_type as t JOIN common_info_type as c ON c.id=fk_common_info_type ",false);
+				"SELECT t.id, t.fk_common_info_type, fk_import_category, c.code as codeCit, i.code as codeIns "+
+				"FROM import_type as t "+
+				"JOIN common_info_type as c ON c.id=fk_common_info_type "+
+				"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
+				"JOIN institute i ON i.id = ci.fk_institute WHERE i.code=" + DescriptionHelper.getInstitute(), false);
+						
 	}
 
 	@Override
