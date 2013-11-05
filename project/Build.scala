@@ -95,12 +95,13 @@ object ApplicationBuild extends Build {
    val ngldevguideDependencies = Seq(
 	   javaCore
 		)
-   val ngldatacngDependencies = Seq(
-		// Add your project dependencies here,
-	  javaCore, javaJdbc,
-	"postgresql" % "postgresql" % "8.3-603.jdbc4",
-		"fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
-		)
+	val ngldataDependencies = Seq(
+		javaCore, javaJdbc,
+		  // Add your project dependencies here,
+		  "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
+		  "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
+		  	"postgresql" % "postgresql" % "8.3-603.jdbc4",
+		)		
 	
    }
    
@@ -137,19 +138,12 @@ object ApplicationBuild extends Build {
        publishTo := Some(nexusigpublish) 
      ).dependsOn(nglcommon)
    
-    val ngldata = play.Project(appName + "-data", appVersion, nglsqDependencies, path = file("app-ngl-data"),settings = buildSettings).settings(
+    val ngldata = play.Project(appName + "-data", appVersion, ngldataDependencies, path = file("app-ngl-data"),settings = buildSettings).settings(
        // Add your own project settings here      
        resolvers := Seq(nexusig),
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish) 
      ).dependsOn(nglcommon) 
-	 
-	val ngldatacng = play.Project(appName + "-data-cng", appVersion, ngldatacngDependencies, path = file("app-ngl-data-cng"),settings = buildSettings).settings(
-       // Add your own project settings here      
-       resolvers := Seq(nexusig),
-       publishArtifact in makePom := false,
-       publishTo := Some(nexusigpublish) 
-     ).dependsOn(nglcommon)
     
 	val nglsq = play.Project(appName + "-sq", appVersion, nglsqDependencies, path = file("app-ngl-sq"),settings = buildSettings).settings(
           // Add your own project settings here      
@@ -194,7 +188,7 @@ object ApplicationBuild extends Build {
       publishArtifact in makePom := false,
       publishTo := Some(nexusigpublish)
     ).aggregate(
-     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglauth,nglassets,nglplates,ngldata,ngldatacng
+     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglauth,nglassets,nglplates,ngldata
     )
 
 }
