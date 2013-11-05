@@ -6,6 +6,7 @@ import java.util.Map;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
+import models.utils.DescriptionHelper;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -18,8 +19,11 @@ public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
 
 	protected SampleTypeDAO() {
 		super("sample_type", SampleType.class, SampleTypeMappingQuery.class, 
-				"SELECT t.id, fk_common_info_type, fk_sample_category "+
-						"FROM sample_type as t JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
+				"SELECT t.id, t.fk_common_info_type, fk_sample_category, c.code as codeCit, i.code as codeIns "+
+				"FROM sample_type as t "+
+				"JOIN common_info_type as c ON c.id=fk_common_info_type "+
+				"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
+				"JOIN institute i ON i.id = ci.fk_institute WHERE i.code=" + DescriptionHelper.getInstitute(), false);
 	}
 
 	@Override
