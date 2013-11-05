@@ -33,10 +33,13 @@ import models.laboratory.sample.description.SampleType;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 import play.Logger;
+import play.Play;
 import play.db.DB;
 import play.api.modules.spring.Spring;
 
 public class DescriptionHelper {
+	
+	static String institute;
 
 
 	public static PropertyDefinition getPropertyDefinition(String keyCode, String keyName, Boolean required, Boolean active, Boolean choiceInList,
@@ -405,5 +408,12 @@ public class DescriptionHelper {
 		ins.code=name;
 		ins.name=name;
 		return ins;
+	}
+	
+	public static String getInstitute() {
+		if (institute == null) {
+			institute = "'" + Play.application().configuration().getString("institute") + "'";
+		}
+		return institute;
 	}
 }
