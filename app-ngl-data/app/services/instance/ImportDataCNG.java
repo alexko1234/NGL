@@ -32,7 +32,7 @@ public class ImportDataCNG extends AbstractImportData {
 		Logger.info("ImportData execution : ");
 		try{
 			Logger.info(" Import Containers ... ");
-			createContainersFromLims(contextError);
+			createSamplesFromLims(contextError);
 		}catch (Exception e) {
 			Logger.debug("",e);
 		}
