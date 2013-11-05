@@ -8,6 +8,7 @@ import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.TreatmentContext;
 import models.laboratory.run.description.TreatmentType;
 import models.laboratory.run.description.TreatmentTypeContext;
+import models.utils.DescriptionHelper;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -24,16 +25,17 @@ public class TreatmentTypeDAO extends AbstractDAOMapping<TreatmentType>{
 
 	protected TreatmentTypeDAO() {
 		super("treatment_type", TreatmentType.class, TreatmentTypeMappingQuery.class, 
-				"SELECT t.id, t.names, fk_common_info_type, fk_treatment_category "+
+				"SELECT t.id, t.names, t.fk_common_info_type, fk_treatment_category, c.code as codeCit, i.code as codeIns "+
 						"FROM treatment_type as t "+
-						"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
+						"JOIN common_info_type as c ON c.id=t.fk_common_info_type "+
+						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
+						"JOIN institute i ON i.id = ci.fk_institute WHERE i.code=" + DescriptionHelper.getInstitute(), false);
 	}
 	
-	public List<TreatmentType> findByTreatmentContextId(long id)
-	{
-		String sql = sqlCommon+
-				" JOIN treatment_type_context as ttc ON ttc.fk_treatment_type=t.id "+
-				"WHERE fk_treatment_context = ? ";
+	public List<TreatmentType> findByTreatmentContextId(long id) {
+		String sql = "select * from (" + sqlCommon + ") a," +
+				"(select fk_treatment_type, fk_treatment_context from treatment_type_context) b WHERE b.fk_treatment_type=a.id "+
+				"AND b.fk_treatment_context = ?";
 		TreatmentTypeMappingQuery treatmentTypeMappingQuery=new TreatmentTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return treatmentTypeMappingQuery.execute(id);
 	}
