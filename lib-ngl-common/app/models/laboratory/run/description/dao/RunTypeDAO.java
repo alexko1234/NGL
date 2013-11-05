@@ -5,6 +5,7 @@ import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.RunType;
+import models.utils.DescriptionHelper;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -17,9 +18,12 @@ public class RunTypeDAO extends AbstractDAOMapping<RunType>{
 
 	protected RunTypeDAO() {
 		super("run_type", RunType.class, RunTypeMappingQuery.class, 
-				"SELECT t.id, t.nb_lanes, fk_common_info_type, fk_run_category "+
+				//new
+				"SELECT t.id, t.nb_lanes, t.fk_common_info_type, t.fk_run_category, c.code as codeCit, i.code as codeIns "+
 						"FROM run_type as t "+
-						"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
+						"JOIN common_info_type as c ON c.id=t.fk_common_info_type "+
+						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
+						"JOIN institute i ON i.id = ci.fk_institute WHERE i.code=" + DescriptionHelper.getInstitute(), false);
 	}
 
 	@Override
