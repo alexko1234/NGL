@@ -162,8 +162,7 @@ public class LimsCNGDAO {
 		List<Sample> results = null;
 		
 		if (sampleCode != null) { 
-			//TODO : test with one sampleCode
-			results = this.jdbcTemplate.query("select * from v_sample_tongl order by code, project, comments",new Object[]{sampleCode}
+			results = this.jdbcTemplate.query("select * from v_sample_tongl where code=? order by code, project, comments", new Object[]{sampleCode}
 			,new RowMapper<Sample>() {
 				@SuppressWarnings("rawtypes")
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
