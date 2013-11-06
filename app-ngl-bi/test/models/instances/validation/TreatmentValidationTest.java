@@ -388,28 +388,29 @@ public class TreatmentValidationTest extends AbstractTests {
 
 	@Test
 	 public void testValidateTreatmentErrorValueNotDefined() {
-		
-		Treatment t = getNewTreatmentForReadSet();
-
-		t.results().get("default").put("bad", new PropertySingleValue("Ouh la la"));
-		
-				
-		ContextValidation ctxVal = new ContextValidation(); 
-		
-		Level.CODE levelCode = Level.CODE.ReadSet; 
-		ctxVal.putObject("level", levelCode);
-		
-		//add readset to ctxVal
-		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		ctxVal.putObject("readSet", readset);
-		
-		ctxVal.setCreationMode();
-		
-		t.validate(ctxVal);
-		
-		assertThat(ctxVal.errors).hasSize(1);
-		assertThat(ctxVal.errors.toString()).contains(ERROR_NOTDEFINED_MSG);
-		
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+			Treatment t = getNewTreatmentForReadSet();
+	
+			t.results().get("default").put("bad", new PropertySingleValue("Ouh la la"));
+			
+					
+			ContextValidation ctxVal = new ContextValidation(); 
+			
+			Level.CODE levelCode = Level.CODE.ReadSet; 
+			ctxVal.putObject("level", levelCode);
+			
+			//add readset to ctxVal
+			ReadSet readset = RunMockHelper.newReadSet("rdCode");
+			ctxVal.putObject("readSet", readset);
+			
+			ctxVal.setCreationMode();
+			
+			t.validate(ctxVal);
+			
+			assertThat(ctxVal.errors).hasSize(1);
+			assertThat(ctxVal.errors.toString()).contains(ERROR_NOTDEFINED_MSG);
+		       }});
 	}
 	
 	
@@ -417,7 +418,8 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	@Test
 	 public void testValidateTreatmentErrorBadTypeValue() {
-		
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 		Treatment t = getNewTreatmentForReadSet();
 		
 		t.results().get("default").remove("nbReadIllumina");
@@ -439,14 +441,15 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		assertThat(ctxVal.errors).hasSize(1);
 		assertThat(ctxVal.errors.toString()).contains(ERROR_BADTYPE_MSG);
-		
+		       }});
 	}
 	
 	
 	
 	@Test
 	 public void testValidateTreatmentErrorBadContext() {
-		
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 		Treatment t = getNewTreatmentForReadSet();
 		
 		// new bad context
@@ -475,6 +478,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		assertThat(ctxVal.errors).hasSize(1);
 		assertThat(ctxVal.errors.toString()).contains(ERROR_VALUENOTAUTHORIZED_MSG);	
+		       }});
 	}
 	 
 }
