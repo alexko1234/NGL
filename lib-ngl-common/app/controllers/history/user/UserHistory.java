@@ -1,5 +1,6 @@
 package controllers.history.user;
 import fr.cea.ig.MongoDBDAO;
+import play.Logger;
 import play.data.DynamicForm;
 import play.mvc.Action;
 import play.mvc.Http;
@@ -33,13 +34,14 @@ public class UserHistory extends Action.Simple{
 		
 		action = context.request().toString();
 		
+		long start = System.currentTimeMillis();
 		Result res = delegate.call(context);
+		long timeRequest = (System.currentTimeMillis() - start);
+		Logger.debug(action + " -> " + (System.currentTimeMillis() - start) + " ms.");
 		
 		//after request
-		if(res.toString().indexOf("SimpleResult(200,") != -1){
-			//ecriture de l'info
-			MongoDBDAO.save("userHistory", new UserAction(login,params,action));
-		}
+		//ecriture de l'info
+		MongoDBDAO.save("userHistory", new UserAction(login,params,action,timeRequest));
 		
 		return res;
 	}

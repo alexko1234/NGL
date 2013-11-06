@@ -18,6 +18,7 @@ public class UserAction extends DBObject{
 	public String login;
 	public String params;
 	public String action;
+	public long timeRequest;
 	
 	
 	
@@ -26,13 +27,15 @@ public class UserAction extends DBObject{
 		this.login = "";
 		this.params = "";
 		this.action = "";
+		this.timeRequest = 0;
 	    this.date = new Date();
 	}
 	
-	public UserAction(String varLogin,String varParams, String varAction){
+	public UserAction(String varLogin,String varParams, String varAction, long varTimeRequest){
 		this.login = varLogin;
 		this.params = varParams;
 		this.action = varAction;
+	    this.timeRequest = varTimeRequest;
 	    this.date = new Date();
 	}
 }
