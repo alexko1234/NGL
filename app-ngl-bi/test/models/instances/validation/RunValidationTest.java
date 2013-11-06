@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -31,6 +32,7 @@ import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.Test;
 
+import play.Play;
 import play.data.validation.ValidationError;
 import play.mvc.Result;
 import utils.AbstractTests;
@@ -42,6 +44,7 @@ import fr.cea.ig.MongoDBDAO;
 import static utils.RunMockHelper.*;
 
 public class RunValidationTest extends AbstractTests {
+	
 	
 	@Test
 	 public void testEntireRunValidationTraceAllErrors() {
@@ -104,7 +107,6 @@ public class RunValidationTest extends AbstractTests {
 			 assertThat(ctxVal.errors).hasSize(0);
 		}});
 	 }
-	
 	
 	 @Test
 	 public void testUpdateRunValidationOK() {
@@ -504,7 +506,6 @@ public class RunValidationTest extends AbstractTests {
 			});
 		 
 	 }
-	
 	
 	 @Test
 	 public void testUpdateLaneValidationErrorBadState() { 
@@ -975,30 +976,26 @@ public class RunValidationTest extends AbstractTests {
 	
 	
 	 
-	private Lane getLane() {
-		
+	private Lane getLane() {	
 		Lane lane = new Lane();
 		lane.number = 1;
-		 lane.state = getState("F");
-		
+		lane.state = getState("F");
 		lane.validation = RunMockHelper.getValidation(TBoolean.TRUE);
 		lane.readSetCodes = null;
 		return lane;
 	}
 	
 	private Lane getEmptyLane(){
-		
 		Lane lane = new Lane();
 		lane.number = 0;
 		List<String> r = new ArrayList<String>();
 		r.add("X"); 
 		lane.readSetCodes = r;
-		 lane.state = getState("F");
+		lane.state = getState("F");
 		return lane;
 	}
 	
 	private Lane getLane2(){
-		
 		Lane lane = new Lane();
 		lane.number = 3;
 		 lane.state = getState("F");
@@ -1017,10 +1014,7 @@ public class RunValidationTest extends AbstractTests {
 		readSet.traceInformation.setTraceInformation("ngsrg");
 		readSet.laneNumber = 1;
 		readSet.dispatch = true;
-		
-		
 		readSet.typeCode = "default-readset";
-		
 		return readSet;
 	}
 	
@@ -1037,7 +1031,6 @@ public class RunValidationTest extends AbstractTests {
 		ti.createUser = "dnoisett";
 		ti.creationDate = new Date(); 		
 		readSet.traceInformation = new TraceInformation(); 
-
 		return readSet;
 	}
 	 
@@ -1082,9 +1075,9 @@ public class RunValidationTest extends AbstractTests {
 			run.validation.user = "test";
 			run.validation.valid = TBoolean.TRUE;
 			run.validation.date = new Date(); 
-
 			return run;
 		}
+	
 	
 	private Run getEmptyRun() {
 		Run run = new Run();
@@ -1109,8 +1102,6 @@ public class RunValidationTest extends AbstractTests {
 		ngsrg.typeCode = "";
 		run.typeCode = "";
 		run.validation = new Validation();
-		
-	
 		return run;
 	}
 }
