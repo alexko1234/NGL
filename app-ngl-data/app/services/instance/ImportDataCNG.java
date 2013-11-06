@@ -31,8 +31,18 @@ public class ImportDataCNG extends AbstractImportData {
 		contextError.addKeyToRootKeyName("import");
 		Logger.info("ImportData execution : ");
 		try{
-			Logger.info(" Import Containers ... ");
+			Logger.info(" Import Projects ... ");
+			createProjectsFromLims(contextError);
+			Logger.info("End Import Projects !");
+			
+			Logger.info(" Import Samples ... ");
 			createSamplesFromLims(contextError);
+			Logger.info("End Import Samples !");
+			
+			Logger.info(" Import Containers ... ");
+			createContainersFromLims(contextError);
+			Logger.info("End Import Containers !");
+			
 		}catch (Exception e) {
 			Logger.debug("",e);
 		}
@@ -53,10 +63,13 @@ public class ImportDataCNG extends AbstractImportData {
      * @throws DAOException
      */
 	public static List<Project> createProjectsFromLims(ContextValidation contextError) throws SQLException, DAOException{
+		
+		Logger.info("Start loading projects ..."); 
 		List<Project> projects = limsServices.findProjectsToCreate(contextError) ;
 
 		//save projects
 		List<Project> projs=InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError);
+		Logger.info("End of load projects !"); 
 		
 		//update project's dates by block (define by the blockSize)
 		updateLimsProjects(projs, blockSize, contextError);
@@ -73,7 +86,7 @@ public class ImportDataCNG extends AbstractImportData {
 	 */
 	public static void updateLimsProjects(List<Project> projects, int blockSize, ContextValidation contextError) throws DAOException {
 		
-		Logger.debug("start of updateLimsProjects"); 
+		Logger.info("Start of update import date ..."); 
 		int i = 0;
 
 		List<String> codesToUpdate = new ArrayList<String>();
@@ -87,7 +100,7 @@ public class ImportDataCNG extends AbstractImportData {
 			limsServices.updateImportDate( "t_project", "name", "text", codesToUpdate.toArray(new String[codesToUpdate.size()]), contextError);
 			 i = i + blockSize; 
 		}	
-		Logger.debug("end of updateLimsProjects"); 
+		Logger.info("End of update import date !"); 
 	}
 	
 
@@ -103,9 +116,11 @@ public class ImportDataCNG extends AbstractImportData {
 	
 	
 	public static List<Sample> createSamplesFromLims(ContextValidation contextError) throws SQLException, DAOException{
+		Logger.info("Start loading samples ..."); 
 		List<Sample> samples = limsServices.findSamplesToCreate(contextError, null); // 2nd parameter null for mass loading
 
 		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError);
+		Logger.info("End of load samples !");
 			
 		updateLimsSamples(samps, blockSize, contextError);
 		
@@ -115,7 +130,7 @@ public class ImportDataCNG extends AbstractImportData {
 
 	public static void updateLimsSamples(List<Sample> ts, int blockSize, ContextValidation contextError) throws DAOException {
 		
-		Logger.debug("start of updateLimsSamples"); 
+		Logger.info("Start of update import date ..."); 
 		int i = 0;
 		List<String> codesToUpdate = new ArrayList<String>();
 
@@ -128,7 +143,7 @@ public class ImportDataCNG extends AbstractImportData {
 			limsServices.updateImportDate( "t_sample", "stock_barcode", "text", codesToUpdate.toArray(new String[codesToUpdate.size()]), contextError);
 			i = i + blockSize; 
 		}	
-		Logger.debug("end of updateLimsSamples"); 
+		Logger.info("End of update import date !"); 
 	}
 	
 	
@@ -144,9 +159,11 @@ public class ImportDataCNG extends AbstractImportData {
 	}
 	
 	public static List<Container> createContainersFromLims(ContextValidation contextError) throws SQLException, DAOException{
+		Logger.info("Start loading containers ..."); 
 		List<Container> containers = limsServices.findContainersToCreate(contextError) ;
 
 		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError);
+		Logger.info("End of load containers !"); 
 		
 		updateLimsContainers(ctrs, blockSize, contextError);
 		
@@ -156,7 +173,7 @@ public class ImportDataCNG extends AbstractImportData {
 	
 	public static void updateLimsContainers(List<Container> ts, int blockSize, ContextValidation contextError) throws DAOException {
 		
-		Logger.debug("start of updateLimsContainers"); 
+		Logger.info("Start of update import date ..."); 
 		int i = 0;
 		List<String> codesToUpdate = new ArrayList<String>();
 
@@ -170,94 +187,8 @@ public class ImportDataCNG extends AbstractImportData {
 			limsServices.updateImportDate( "t_lane", "id", "integer", codesToUpdate.toArray(new String[codesToUpdate.size()]), contextError);
 			 i = i + blockSize;
 		}	
-		Logger.debug("end of updateLimsContainers"); 
+		Logger.info("End of update import date !"); 
 	}
-	
-	/*
-	public	static void createContainers(ContextValidation contextError, String sqlContainer,String containerCategoryCode,  String containerStateCode, String experimentTypeCode, String sqlContent) throws SQLException, DAOException{
-		String rootKeyName=null;
-
-		List<Container> containers=	limsServices.findContainersToCreate(sqlContainer,contextError, containerCategoryCode,containerStateCode,experimentTypeCode);
-		saveSampleFromContainer(containers);
-
-		List<Container> newContainers=new ArrayList<Container>();
-
-		for(Container container:containers){
-
-			rootKeyName="container["+container.code+"]";
-			contextError.addKeyToRootKeyName(rootKeyName);
-			Container result=(Container) InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,container, contextError,true);
-			if(result!=null){
-				newContainers.add(result);
-			}
-			contextError.removeKeyFromRootKeyName(rootKeyName);
-		}
-
-		//limsServices.updateMaterielmanipLims(newContainers,contextError);
-
-	}
-	
-	
-	
-	private static void saveSampleFromContainer(List<Container> containers) throws SQLException, DAOException{
-		List<Container> listContainers = new ArrayList<Container>(containers);
-
-		//
-		Sample sample =null;
-		Sample newSample =null;
-		String rootKeyName=null;
-
-		for(Container container :listContainers){
-
-			//Logger.debug("Container :"+container.code);
-
-			List<Content> contents=new ArrayList<Content>(container.contents);
-			for(Content content : contents){
-
-				// Sample content not in MongoDB 
-				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, content.sampleUsed.sampleCode)){
-
-					rootKeyName="sample["+content.sampleUsed.sampleCode+"]";
-					contextError.addKeyToRootKeyName(rootKeyName);
-					List<Sample> samples = limsServices.findSamplesToCreate(contextError,content.sampleUsed.sampleCode);
-					if (samples.size() == 1) {
-						newSample = samples.get(0); 
-					}
-					else {
-						newSample = null;
-					}
-
-					if(sample!=null){
-						newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
-					}
-					contextError.removeKeyFromRootKeyName(rootKeyName);
-
-				}else {	
-					// Find sample in Mongodb
-					newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, content.sampleUsed.sampleCode);	
-				}			
-
-				rootKeyName="container["+container.code+"]";
-				contextError.addKeyToRootKeyName(rootKeyName);
-
-				// Error : No sample, remove container from list to create
-				if(newSample==null){
-					containers.remove(container);
-					contextError.addErrors("sample","error.codeNotExist", content.sampleUsed.sampleCode);
-				}
-				else{
-					// From sample, add content in container 
-					container.contents.remove(content);
-					ContainerHelper.addContent(container,newSample,content.properties);
-					
-				}
-				contextError.removeKeyFromRootKeyName(rootKeyName);
-
-			}
-		}
-
-	}
-	*/
 	
 
 }
