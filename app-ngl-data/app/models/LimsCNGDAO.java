@@ -36,7 +36,7 @@ import play.Logger;
 import validation.ContextValidation;
 
 /**
- * @author dnoisett, v1
+ * @author dnoisett
  *
  */
 @Repository
@@ -46,15 +46,10 @@ public class LimsCNGDAO {
 
 	private static final String CONTAINER_CATEGORY_CODE= "lane";
 	private static final String CONTAINER_STATE_CODE="A";
-	
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
-	
 	protected static final String IMPORT_CATEGORY_CODE="sample-import";
-	
 	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "default-sample-cng";
-	
 	protected static final String SAMPLE_USED_TYPE_CODE = "default-sample-cng";	
-	
 	protected static final String IMPORT_TYPE_CODE_DEFAULT = "default-import";
 	
 	
@@ -74,8 +69,6 @@ public class LimsCNGDAO {
 
 				Project project = new Project(rs.getString("code"), rs.getString("name").trim());
 				project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
-				
-				//project.properties= new HashMap<String, PropertyValue>();
 				
 				ProjectType projectType=null;
 				try {
@@ -117,10 +110,6 @@ public class LimsCNGDAO {
 			Logger.debug("Sample code :"+sample.code);
 			
 			String sampleTypeCode=SAMPLE_TYPE_CODE_DEFAULT;
-			/*if(sampleTypeCode==null){
-				contextError.addErrors( "typeCode", "limsdao.error.emptymapping", sample.code);
-				return null;
-			}*/
 			
 			SampleType sampleType=null;
 			try {
@@ -129,12 +118,12 @@ public class LimsCNGDAO {
 				Logger.debug("",e);
 				return null;
 			}
-			if( sampleType==null ){
+			if ( sampleType==null ) {
 				contextError.addErrors("code", "error.codeNotExist", sampleTypeCode, sample.code);
 				return null;
 			}
 			
-			sample.typeCode=sampleTypeCode;
+			sample.typeCode=sampleType.code;
 			sample.categoryCode=sampleType.category.code;
 		
 			sample.projectCodes=new ArrayList<String>();
@@ -150,7 +139,6 @@ public class LimsCNGDAO {
 			sample.referenceCollab= rs.getString("ref_collab"); // t_individual_id.name
 			
 			sample.taxonCode=rs.getString("taxon_code"); // t_org.ncbi_taxon_id
-			
 			
 			sample.comments=new ArrayList<Comment>(); // comments
 			
@@ -174,7 +162,7 @@ public class LimsCNGDAO {
 		List<Sample> results = null;
 		
 		if (sampleCode != null) { 
-			//TODO : a tester
+			//TODO : test with one sampleCode
 			results = this.jdbcTemplate.query("select * from v_sample_tongl order by code, project, comments",new Object[]{sampleCode}
 			,new RowMapper<Sample>() {
 				@SuppressWarnings("rawtypes")
@@ -295,42 +283,27 @@ public class LimsCNGDAO {
 				container.properties= new HashMap<String, PropertyValue>();
 				container.properties.put("limsCode",new PropertySingleValue(rs.getInt("lims_code")));
 				
-				///if(rs.getString("receptionDate")!=null){
-				///	container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));
-				///}
 				
-				///set to 0 ?
-				///container.mesuredConcentration=new PropertySingleValue((float) 0);
-				///container.mesuredVolume=new PropertySingleValue((float) 0);
-				///container.mesuredQuantity=new PropertySingleValue((float) 0); 
-				///container.calculedVolume =new PropertySingleValue((float) 0);  
-				
-				//container.fromExperimentTypeCodes = new ArrayList<String>(); //not required
-				
-				
-				if(rs.getString("project")!=null) {
+				if (rs.getString("project")!=null) {
 					container.projectCodes=new ArrayList<String>();
 					container.projectCodes.add(rs.getString("project"));
 				}
 				
-				if(rs.getString("code_sample")!=null){
+				if (rs.getString("code_sample")!=null) {
 					Content content = new Content();
 					content.sampleUsed=new SampleUsed();
 					content.sampleUsed.sampleCode=rs.getString("code_sample");
 					
-					//TODO : change default value
-					//content.sampleUsed.categoryCode = SAMPLE_USED_CATEGORY_CODE; // required
-					//content.sampleUsed.typeCode = SAMPLE_USED_TYPE_CODE; // required
-							
+					String sampleTypeCode = SAMPLE_USED_TYPE_CODE;
 					SampleType sampleType=null;
 					try {
-						sampleType = SampleType.find.findByCode(SAMPLE_USED_TYPE_CODE);
+						sampleType = SampleType.find.findByCode(sampleTypeCode);
 					} catch (DAOException e) {
 						Logger.debug("",e);
 						return null;
 					}
 					if( sampleType==null ){
-						contextError.addErrors("code", "error.codeNotExist", SAMPLE_USED_TYPE_CODE, content.sampleUsed.sampleCode);
+						contextError.addErrors("code", "error.codeNotExist", sampleTypeCode, content.sampleUsed.sampleCode);
 						return null;
 					}		
 					
@@ -436,7 +409,6 @@ public class LimsCNGDAO {
 		Content content = new Content();
 		content.sampleUsed=new SampleUsed();
 		content.sampleUsed.sampleCode= results.get(posNext).sampleCodes.get(0);
-		//TODO : change defaults values
 		
 		SampleType sampleType=null;
 		sampleType = SampleType.find.findByCode(SAMPLE_USED_TYPE_CODE);	
@@ -465,8 +437,6 @@ public class LimsCNGDAO {
 		
 		String sql="UPDATE " + tableName + " SET nglimport_date = ? WHERE " + keyColumn + " = ANY (?)";
 		
-		Logger.debug("sql = "+ sql);
-		
 		try {
 			Connection conn = this.jdbcTemplate.getDataSource().getConnection();
 			PreparedStatement pst = conn.prepareStatement(sql);
@@ -487,58 +457,12 @@ public class LimsCNGDAO {
 			}			
             pst.execute();
             pst.close();
-            
-            Logger.debug("execute ok"); 
 		}
 		catch(Exception e) {
 			contextError.addErrors("", sValues.toString());
 		}
 		contextError.removeKeyFromRootKeyName("updateImportDate");
 	}
-	
-
-	
-	
-/*
-	public List<Container> findContainersToCreate(String procedure,ContextValidation contextError, final String containerCategoryCode, final String containerStateCode, final String experimentTypeCode){
-
-		List<Container> results = this.jdbcTemplate.query(procedure,new Object[]{} 
-		,new RowMapper<Container>() {
-
-			@SuppressWarnings("rawtypes")
-			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
-
-				Container container = null;
-				try {
-					//TODO : modify createContainerFromResultSet for running with PostgresSql
-					container = ContainerHelper.createContainerFromResultSet(rs, containerCategoryCode,containerStateCode,experimentTypeCode);
-				} catch (DAOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return container;
-			}
-
-		});        
-
-		return results;
-	}
-
-
-	public List<ListObject> getListObjectFromProcedureLims(String procedure) {
-		List<ListObject> listObjects = this.jdbcTemplate.query(procedure,
-				new RowMapper<ListObject>() {
-			public ListObject mapRow(ResultSet rs, int rowNum)
-					throws SQLException {
-				ListObject value = new ListObject();
-				value.name = rs.getString(1);
-				value.code = rs.getString(2);
-				return value;
-			}
-		});
-		return listObjects;
-	}
-*/
 		
 
 }
