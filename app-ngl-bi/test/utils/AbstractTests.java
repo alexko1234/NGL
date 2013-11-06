@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 
 import play.test.FakeApplication;
 import play.test.Helpers;
@@ -17,24 +19,24 @@ import play.test.Helpers;
 
 public abstract class AbstractTests {
 	
-	FakeApplication app;
-	@Before
-	public void start(){
+	static FakeApplication app;
+	@BeforeClass
+	public static void start(){
 		 app = getFakeApplication();
 		 Helpers.start(app);
 	}
 	
-	@After
-	public void stop(){
+	@AfterClass
+	public static void stop(){
 		Helpers.stop(app);
 	}
 	
-	public FakeApplication getFakeApplication(){
+	public static FakeApplication getFakeApplication(){
 		return fakeApplication(fakeConfiguration());
 	}
 	
 	
-	public Map<String,String> fakeConfiguration(){
+	public static  Map<String,String> fakeConfiguration(){
 		Map<String,String> config = new HashMap<String,String>();
 		config.put("mongodb.database", "NGL-TESTU");
 		config.put("mongodb.credentials", "testu:testu");
@@ -69,6 +71,8 @@ public abstract class AbstractTests {
 		config.put("casRenew", "false");
 	    config.put("casMode", "debug");
 		
+	    config.put("institute", "CNG");
+	    
 		return config;
 		
 	}
