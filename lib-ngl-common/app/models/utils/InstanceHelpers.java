@@ -144,7 +144,7 @@ public class InstanceHelpers {
 		if (obj != null) {
 			obj.validate(localContextError);
 		} else {
-			throw new IllegalArgumentException("missing obj");
+			throw new IllegalArgumentException("missing object to validate");
 		}
 		
 		if(localContextError.errors.size()==0){
@@ -152,7 +152,7 @@ public class InstanceHelpers {
 		}
 		else {
 			contextError.errors.putAll(localContextError.errors);
-			Logger.info("erreur output :: "+contextError.errors.toString());
+			Logger.info("error(s) on output :: "+contextError.errors.toString());
 			return null;
 		}
 	}
