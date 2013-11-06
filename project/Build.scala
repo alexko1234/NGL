@@ -57,17 +57,16 @@ object ApplicationBuild extends Build {
 		"fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
-	        "net.sf.opencsv" % "opencsv" % "2.0",
-        	"commons-collections" % "commons-collections" % "3.2.1",
-		"commons-collections" % "commons-collections" % "3.2.1",
+	     "net.sf.opencsv" % "opencsv" % "2.0",
+        "commons-collections" % "commons-collections" % "3.2.1",
 		"org.springframework" % "spring-jdbc" % "3.2.1.RELEASE",		
 		"org.springframework" % "spring-test" % "3.2.1.RELEASE",
 		"com.github.julienrf" %% "play-jsmessages" % "1.4.1",
-		"javax.mail" % "mail" % "1.4.2"
+		"javax.mail" % "mail" % "1.4.2",
+	    "janino" % "janino" % "2.5.15"
     	)	
    	val ngldatatableDependencies = Seq(
-   	    javaCore,
-	    "janino" % "janino" % "2.5.15"
+   	    javaCore
    	    )
    	val nglframeworkwebDependencies = Seq(
    	    javaCore
@@ -76,7 +75,7 @@ object ApplicationBuild extends Build {
 	        // Add your project dependencies here,
 	      javaCore, javaJdbc,
 		"postgresql" % "postgresql" % "8.3-603.jdbc4",
-	        "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
+	     "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
 		)
 	val nglsqDependencies = Seq(
 		javaCore, javaJdbc,
@@ -100,7 +99,7 @@ object ApplicationBuild extends Build {
 		  // Add your project dependencies here,
 		  "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
 		  "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
-		  	"postgresql" % "postgresql" % "8.3-603.jdbc4"
+		  "postgresql" % "postgresql" % "8.3-603.jdbc4"
 		)		
 	
    }
