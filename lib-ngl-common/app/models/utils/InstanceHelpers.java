@@ -135,6 +135,7 @@ public class InstanceHelpers {
 
 	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError,Boolean keepRootKeyName) {
 		ContextValidation localContextError=new ContextValidation();
+		localContextError.setMode(contextError);
 		if(keepRootKeyName){
 			localContextError.addKeyToRootKeyName(contextError.getRootKeyName());
 		}
@@ -145,7 +146,7 @@ public class InstanceHelpers {
 		} else {
 			throw new IllegalArgumentException("missing obj");
 		}
-
+		
 		if(localContextError.errors.size()==0){
 			return MongoDBDAO.save(collectionName,(DBObject) obj);
 		}
@@ -168,6 +169,22 @@ public class InstanceHelpers {
 		for(DBObject object:objects){
 			@SuppressWarnings("unchecked")
 			T result=(T) InstanceHelpers.save(collectionName,(IValidation) object, contextErrors);
+			if(result!=null){
+				dbObjects.add(result);
+			}
+		}
+
+		return (List<T>) dbObjects;
+	}
+	
+	
+	public static  <T extends DBObject> List<T> save(String collectionName,List<T> objects, ContextValidation contextErrors, Boolean keepRootKeyName) {
+
+		List<T> dbObjects=new ArrayList<T>();
+
+		for(DBObject object:objects){
+			@SuppressWarnings("unchecked")
+			T result=(T) InstanceHelpers.save(collectionName,(IValidation) object, contextErrors, keepRootKeyName);
 			if(result!=null){
 				dbObjects.add(result);
 			}
