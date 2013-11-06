@@ -38,11 +38,13 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 
 	public List<InstrumentUsedType> findByExperimentId(long id)
 	{
-		//TODO A REFAIRE INSTITUTE
+		//TODO A REFAIRE INSTITUTE : DONE
 		String sql = "SELECT it.id, it.fk_common_info_type, it.fk_instrument_category "+
 				"FROM instrument_used_type as it "+
-				"JOIN experiment_type_instrument_type as cit ON fk_instrument_used_type=id " +
-				"WHERE cit.fk_experiment_type = ? ";
+				"JOIN experiment_type_instrument_type as cit ON fk_instrument_used_type=it.id and cit.fk_experiment_type = ? " +
+				"JOIN common_info_type as c ON c.id=it.fk_common_info_type "+
+				"JOIN common_info_type_institute ci on c.id =ci.fk_common_info_type "+
+				"JOIN institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute();
 		InstrumentUsedTypeMappingQuery instrumentUsedTypeMappingQuery = new InstrumentUsedTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return instrumentUsedTypeMappingQuery.execute(id);
 	}
