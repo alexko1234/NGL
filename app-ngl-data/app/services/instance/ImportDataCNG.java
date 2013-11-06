@@ -32,15 +32,15 @@ public class ImportDataCNG extends AbstractImportData {
 		Logger.info("ImportData execution : ");
 		try{
 			Logger.info(" Import Projects ... ");
-			createProjectsFromLims(contextError);
+			//createProjectsFromLims(contextError);
 			Logger.info("End Import Projects !");
 			
 			Logger.info(" Import Samples ... ");
-			createSamplesFromLims(contextError);
+			createSamplesFromLims(contextError, "26136024");
 			Logger.info("End Import Samples !");
 			
 			Logger.info(" Import Containers ... ");
-			createContainersFromLims(contextError);
+			//createContainersFromLims(contextError);
 			Logger.info("End Import Containers !");
 			
 		}catch (Exception e) {
@@ -104,7 +104,7 @@ public class ImportDataCNG extends AbstractImportData {
 	}
 	
 
-	public static void deleteSamplesFromLims(ContextValidation contextError) throws SQLException, DAOException{
+	public static void deleteSamplesFromLims(ContextValidation contextError, String sampleCode) throws SQLException, DAOException{
 		List<Sample> samples = limsServices.findSamplesToCreate(contextError, null); // 2nd parameter null for mass loading 
 		for(Sample sample:samples){
 			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code)){
@@ -115,9 +115,9 @@ public class ImportDataCNG extends AbstractImportData {
 	}
 	
 	
-	public static List<Sample> createSamplesFromLims(ContextValidation contextError) throws SQLException, DAOException{
+	public static List<Sample> createSamplesFromLims(ContextValidation contextError, String sampleCode) throws SQLException, DAOException{
 		Logger.info("Start loading samples ..."); 
-		List<Sample> samples = limsServices.findSamplesToCreate(contextError, null); // 2nd parameter null for mass loading
+		List<Sample> samples = limsServices.findSamplesToCreate(contextError, sampleCode); // 2nd parameter null for mass loading
 
 		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError);
 		Logger.info("End of load samples !");
