@@ -7,6 +7,7 @@ import java.util.Map;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
+import models.utils.DescriptionHelper;
 import models.utils.ListObject;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
@@ -15,19 +16,17 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
 import play.api.modules.spring.Spring;
-import models.utils.DescriptionHelper;
-
 
 @Repository
 public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 
 	protected ProcessTypeDAO() {
 		super("process_type", ProcessType.class, ProcessTypeMappingQuery.class, 
-				"SELECT t.id, t.fk_common_info_type, t.fk_process_category, fk_void_experiment_type, fk_first_experiment_type, fk_last_experiment_type, c.code as codeCit, c.name as nameCit "+
+				"SELECT t.id, fk_common_info_type, fk_process_category, fk_void_experiment_type, fk_first_experiment_type, fk_last_experiment_type "+
 						"FROM process_type as t  "+
 						"JOIN common_info_type as c ON c.id=fk_common_info_type "+
 						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
-						"JOIN institute i ON i.id = ci.fk_institute WHERE i.code=" + DescriptionHelper.getInstitute(), false);
+						"JOIN institute i ON i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute(), false);
 	}
 
 	/**
@@ -45,11 +44,11 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 	public long save(ProcessType processType) throws DAOException
 	{
 		
-		if(null == processType) {
+		if(null == processType){
 			throw new DAOException("ProcessType is mandatory");
 		}
 		//Check if category exist
-		if(processType.category == null || processType.category.id == null) {
+		if(processType.category == null || processType.category.id == null){
 			throw new DAOException("ProcessCategory is not present !!");
 		}
 		//Add commonInfoType

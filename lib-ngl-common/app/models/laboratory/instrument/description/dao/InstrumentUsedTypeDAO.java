@@ -24,7 +24,6 @@ import play.Logger;
 import play.api.modules.spring.Spring;
 import models.utils.DescriptionHelper;
 
-
 @Repository
 public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType>{
 
@@ -34,15 +33,17 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 						"FROM instrument_used_type as t "+
 						"JOIN common_info_type as c ON c.id=t.fk_common_info_type "+
 						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
-						"JOIN institute i ON i.id = ci.fk_institute WHERE i.code=" + DescriptionHelper.getInstitute(), false);
+						"JOIN institute i ON i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute(), false);
 	}
 
 	public List<InstrumentUsedType> findByExperimentId(long id)
 	{
-		String sql = "select * from ("+ sqlCommon + ") a," +
-				"(select cit.fk_experiment_type from experiment_type_instrument_type as cit) b WHERE b.fk_instrument_used_type=a.id " +
-				"AND b.fk_experiment_type = ?";
-		InstrumentUsedTypeMappingQuery instrumentUsedTypeMappingQuery = new InstrumentUsedTypeMappingQuery(dataSource, sql, new SqlParameter("id", Type.LONG));
+		//TODO A REFAIRE INSTITUTE
+		String sql = "SELECT it.id, it.fk_common_info_type, it.fk_instrument_category "+
+				"FROM instrument_used_type as it "+
+				"JOIN experiment_type_instrument_type as cit ON fk_instrument_used_type=id " +
+				"WHERE cit.fk_experiment_type = ? ";
+		InstrumentUsedTypeMappingQuery instrumentUsedTypeMappingQuery = new InstrumentUsedTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return instrumentUsedTypeMappingQuery.execute(id);
 	}
 

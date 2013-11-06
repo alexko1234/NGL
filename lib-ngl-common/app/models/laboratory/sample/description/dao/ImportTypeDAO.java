@@ -20,11 +20,11 @@ public class ImportTypeDAO extends AbstractDAOMapping<ImportType>{
 
 	protected ImportTypeDAO() {
 		super("import_type", ImportType.class, ImportTypeMappingQuery.class, 
-				"SELECT t.id, t.fk_common_info_type, fk_import_category, c.code as codeCit, i.code as codeIns "+
+				"SELECT t.id, t.fk_common_info_type, fk_import_category "+
 				"FROM import_type as t "+
 				"JOIN common_info_type as c ON c.id=fk_common_info_type "+
 				"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
-				"JOIN institute i ON i.id = ci.fk_institute WHERE i.code=" + DescriptionHelper.getInstitute(), false);
+				"JOIN institute i ON i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute(), false);
 						
 	}
 

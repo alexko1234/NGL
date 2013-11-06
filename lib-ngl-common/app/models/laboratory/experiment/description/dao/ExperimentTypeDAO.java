@@ -36,13 +36,12 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 
 	public ExperimentTypeDAO() {
 		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.class,
-				"SELECT t.id, t.fk_experiment_category, t.fk_common_info_type, t.atomic_transfert_method, c.code as codeCit, i.code as codeIns, c.name as nameCit, c.id as idCit "+
-					"FROM experiment_type as t "+
+				"SELECT t.id, t.fk_experiment_category, t.fk_common_info_type, t.atomic_transfert_method "+
+						"FROM experiment_type as t "+
 					"JOIN common_info_type as c ON c.id=t.fk_common_info_type "+
 					"JOIN common_info_type_institute as ci ON c.id=ci.fk_common_info_type "+
 					"JOIN institute as i ON i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute(), false);
 	}
-	
 	@Override
 	public long save(ExperimentType experimentType) throws DAOException
 	{
@@ -158,15 +157,17 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 	
 	public List<ExperimentType> findByProcessTypeId(long id) throws DAOException
 	{
-		String sql = "SELECT id, fk_experiment_category, fk_common_info_type, atomic_transfert_method FROM (" + sqlCommon + ") a,"+
-				"(select * from process_experiment_type) b WHERE b.fk_experiment_type=a.id and b.fk_process_type = ?";
-		return initializeMapping(sql, new SqlParameter("fk_process_type", Type.LONG)).execute(id);		
+		String sql = sqlCommon + "inner join process_experiment_type as p ON p.fk_experiment_type=t.id "+
+				"WHERE p.fk_process_type = ?";
+		return initializeMapping(sql, new SqlParameter("p.fk_process_type", Type.LONG)).execute(id);		
 	}
 
 	public List<String> findVoidProcessExperimentTypeCode(String processTypeCode){
-		String query = "SELECT codeCit FROM (" + sqlCommon + ") a, " +
-				" (select c.code, p.id, c.id as idC from process_type p, common_info_type c where p.fk_common_info_type = c.id) b "+
-				"WHERE b.idC = a.idCit AND b.code=?"; 
+		//TODO A REFAIRE INSTITUTE
+		String query = "SELECT c.code FROM experiment_type as t " +
+				" inner join common_info_type as c ON c.id=t.fk_common_info_type"+  
+				" inner join process_type as p on p.fk_void_experiment_type = t.id " +
+				" inner join common_info_type as cp on cp.id= p.id where cp.code = ?";
 		
 		List<String> list = jdbcTemplate.query(
 				query,
@@ -182,28 +183,26 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 	}
 	
 	public List<ExperimentType> findPreviousExperimentTypeForAnExperimentTypeCode(String code) throws DAOException{
-		String sql = "select * from (" + sqlCommon +") a, "+
-				"(select cp.code, n.fk_experiment_type from experiment_type_node as n  "+
-                "join previous_nodes as p on p.fk_previous_node = n.id "+
-                "join experiment_type_node as np on np.id = p.fk_node "+
-                "join common_info_type as cp on cp.id = np.fk_experiment_type) b  "+
-                "where b.fk_experiment_type = a.id "+
-                "and b.code = ?";
-		return initializeMapping(sql, new SqlParameter("b.code", Types.VARCHAR)).execute(code);
+		String sql = sqlCommon +" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+
+                " inner join previous_nodes as p on p.fk_previous_node = n.id"+
+                " inner join experiment_type_node as np on np.id = p.fk_node"+
+                " inner join  common_info_type as cp on cp.id = np.fk_experiment_type"+
+                " where cp.code = ?";
+		return initializeMapping(sql, new SqlParameter("cp.code", Types.VARCHAR)).execute(code);
 	}
 	
 	public List<ExperimentType> findSatelliteExperimentByNodeId(Long id) throws DAOException {
-		String sql = "select * from (" + sqlCommon + ") a, "+
-				"(select s.fk_experiment_type from satellite_experiment_type as s) b "+
-				"where b.fk_experiment_type= a.id "+
-				"and b.fk_experiment_type_node = ?";
-		return initializeMapping(sql, new SqlParameter("b.fk_experiment_type_node", Type.LONG)).execute(id);
+		String sql = sqlCommon + "inner join satellite_experiment_type as s ON s.fk_experiment_type=t.id "+
+				"WHERE s.fk_experiment_type_node = ?";
+		return initializeMapping(sql, new SqlParameter("p.fk_process_type", Type.LONG)).execute(id);
 	}
 
 	public List<ListObject> findByCategoryCode(String categoryCode){
-		String sql = "SELECT codeCit AS code, nameCit AS name  from (" + sqlCommon + ") a, "+
-				"(select ec.id, ec.code FROM experiment_category ec) b "+
-				"WHERE a.fk_experiment_category=b.id and b.code='"+categoryCode+"'";
+		//TODO A REFAIRE INSTITUTE
+		String sql = "SELECT c.code AS code, c.name AS name "+
+				"FROM experiment_category ec,experiment_type as et JOIN common_info_type as c ON c.id=et.fk_common_info_type " +
+				"WHERE fk_experiment_category=ec.id AND ec.code='"+categoryCode+"'";
+		Logger.info(sql);
 		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
 		return this.jdbcTemplate.query(sql, mapper);
 	}

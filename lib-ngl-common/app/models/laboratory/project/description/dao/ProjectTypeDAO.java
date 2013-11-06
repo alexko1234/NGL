@@ -23,7 +23,7 @@ public class ProjectTypeDAO extends AbstractDAOMapping<ProjectType>{
 						"FROM project_type as t "+
 						"JOIN common_info_type as c ON c.id=fk_common_info_type "+
 						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
-						"JOIN institute i ON i.id = ci.fk_institute WHERE i.code=" + DescriptionHelper.getInstitute(), false);
+						"JOIN institute i ON i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute(), false);
 	}
 
 	@Override

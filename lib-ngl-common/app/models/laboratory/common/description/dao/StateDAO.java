@@ -112,9 +112,6 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	}
 	
 	public List<ListObject> findAllForContainerList(){
-		//find data with object_type instead of state_category...
-		//String sql = "SELECT t.code, t.name FROM state t inner join state_category_state scs on scs.fk_state = t.id" +
-		//		" inner join state_category s on s.id = scs.fk_state_category WHERE s.code = ? ";
 		String sql = "SELECT t.code, t.name FROM state t inner join state_object_state sos on sos.fk_state = t.id" +
 				" inner join object_type o on o.id = sos.fk_object_type WHERE o.code = ? ";
 		
@@ -132,6 +129,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	}
 	
 	public List<State> findByCommonInfoType(long idCommonInfoType) throws DAOException {
+		//TODO A REFAIRE INSTITUTE
 		String sql = sqlCommon+
 				"JOIN common_info_type_state ON fk_state=id "+
 				"WHERE fk_common_info_type=?";		
@@ -161,6 +159,8 @@ public class StateDAO extends AbstractDAOMapping<State>{
 
 
 	public List<State> findByTypeCode(String typeCode)  throws DAOException {
+		//TODO A REFAIRE INSTITUTE
+		
 		String sql = sqlCommon+
 				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
 				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
@@ -169,6 +169,8 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	}
 	
 	public boolean isCodeExistForTypeCode(String code, String typeCode)  throws DAOException {
+		//TODO A REFAIRE INSTITUTE
+		
 		String sql = sqlCommon+
 				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
 				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+

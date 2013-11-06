@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import play.Logger;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -44,17 +46,16 @@ public class Run extends DBObject implements IValidation {
     public Map<String, PropertyValue> properties = new HashMap<String, PropertyValue>();
     public List<Lane> lanes;
     
+    //TODO Samples, Projects
 
     @Override
     public void validate(ContextValidation contextValidation) {
     	contextValidation.putObject("run", this);
-		
     	RunValidationHelper.validateId(this, contextValidation);
     	RunValidationHelper.validateCode(this, InstanceConstants.RUN_ILLUMINA_COLL_NAME, contextValidation);
     	RunValidationHelper.validateRunType(this.typeCode, this.properties, contextValidation);
     	
     	RunValidationHelper.validateState(this.typeCode, this.state, contextValidation);
-    	
     	RunValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
     	RunValidationHelper.validationContainerSupportCode(this.containerSupportCode, contextValidation); 
     	RunValidationHelper.validateRunInstrumentUsed(this.instrumentUsed, contextValidation);		

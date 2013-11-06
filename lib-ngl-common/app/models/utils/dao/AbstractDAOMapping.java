@@ -36,13 +36,7 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 		if(null == id){
 			throw new DAOException("id is mandatory");
 		}
-		String sql = sqlCommon;
-		if (entityClass.getSuperclass().equals(CommonInfoType.class) || entityClass.getSimpleName().equals("CommonInfoType")) {
-			sql += " AND t.id = ? ";
-		}
-		else {
-			sql += " WHERE t.id = ? ";
-		}
+		String sql = sqlCommon+" WHERE t.id = ? ";
 		return initializeMapping(sql, new SqlParameter("id", Type.LONG)).findObject(id);
 	}
 
@@ -56,18 +50,7 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
-		String sql = sqlCommon;
-		if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
-			sql += " AND c.code = ? "; //must take the code in the common_info_type table aliased by "c"
-		}
-		else {
-			if ( entityClass.getSimpleName().equals("CommonInfoType") ) {
-				sql += " AND t.code = ? "; //must take t for alias !
-			}
-			else {
-				sql += " WHERE t.code = ? ";
-			}
-		}
+		String sql = sqlCommon+" WHERE code = ? ";
 		return initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
 	}
 
