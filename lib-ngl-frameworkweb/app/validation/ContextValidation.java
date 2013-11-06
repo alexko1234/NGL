@@ -182,6 +182,10 @@ public class ContextValidation {
 		return isMode(Mode.NOT_DEFINED);
 	}
 	
+	public void setMode(ContextValidation ctx) {
+		this.mode = ctx.mode;
+	}
+	
 	
 	/***
 	 *
@@ -190,6 +194,7 @@ public class ContextValidation {
 		errors.clear();
 		rootKeyName=null;
 		contextObjects.clear();
+		mode=Mode.NOT_DEFINED;
 	}
 
 	
