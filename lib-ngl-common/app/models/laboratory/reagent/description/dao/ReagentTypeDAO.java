@@ -31,11 +31,14 @@ public class ReagentTypeDAO extends AbstractDAOMapping<ReagentType>{
 
 	public List<ReagentType> findByProtocol(long idProtocol)
 	{
-		//TODO A REFAIRE INSTITUTE
-		String sql = "SELECT id, fk_common_info_type "+
-				"FROM reagent_type "+
-				"JOIN protocol_reagent_type ON fk_reagent_type=id "+
-				"WHERE fk_protocol = ? ";
+		//TODO A REFAIRE INSTITUTE : DONE
+		String sql = "SELECT t.id, t.fk_common_info_type "+
+				"FROM reagent_type t "+
+				"JOIN protocol_reagent_type prt ON prt.fk_reagent_type=t.id "+
+				"JOIN common_info_type as c ON c.id=t.fk_common_info_type "+
+				"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
+				"JOIN institute i ON i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute() + " " +
+				"WHERE fk_protocol = ?";
 		ReagentTypeMappingQuery reagentTypeMappingQuery=new ReagentTypeMappingQuery(dataSource,sql,new SqlParameter("id", Type.LONG));
 		return reagentTypeMappingQuery.execute(idProtocol);
 	}
