@@ -50,7 +50,16 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
-		String sql = sqlCommon+" WHERE code = ? ";
+		
+		String sql= null;
+		
+		if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
+			sql = sqlCommon+" WHERE c.code = ? ";
+		}
+		else {
+			sql = sqlCommon+" WHERE t.code = ? ";
+		}
+		
 		return initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
 	}
 

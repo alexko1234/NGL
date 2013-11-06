@@ -22,11 +22,11 @@ public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
 
 	protected ProcessTypeDAO() {
 		super("process_type", ProcessType.class, ProcessTypeMappingQuery.class, 
-				"SELECT t.id, fk_common_info_type, fk_process_category, fk_void_experiment_type, fk_first_experiment_type, fk_last_experiment_type "+
+				"SELECT t.id, t.fk_common_info_type, t.fk_process_category, t.fk_void_experiment_type, t.fk_first_experiment_type, t.fk_last_experiment_type "+
 						"FROM process_type as t  "+
 						"JOIN common_info_type as c ON c.id=fk_common_info_type "+
 						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
-						"JOIN institute i ON i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute(), false);
+						"JOIN institute i ON i.id = ci.fk_institute AND i.code= " + DescriptionHelper.getInstitute(), false);
 	}
 
 	/**

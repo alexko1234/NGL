@@ -19,7 +19,7 @@ public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
 
 	protected SampleTypeDAO() {
 		super("sample_type", SampleType.class, SampleTypeMappingQuery.class, 
-				"SELECT t.id, t.fk_common_info_type, fk_sample_category "+
+				"SELECT t.id, t.fk_common_info_type, t.fk_sample_category "+
 				"FROM sample_type as t "+
 				"JOIN common_info_type as c ON c.id=fk_common_info_type "+
 				"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+

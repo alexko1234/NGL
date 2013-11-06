@@ -25,7 +25,7 @@ public class TreatmentTypeDAO extends AbstractDAOMapping<TreatmentType>{
 
 	protected TreatmentTypeDAO() {
 		super("treatment_type", TreatmentType.class, TreatmentTypeMappingQuery.class, 
-				"SELECT t.id, t.names, fk_common_info_type, fk_treatment_category "+
+				"SELECT t.id, t.names, t.fk_common_info_type, t.fk_treatment_category "+
 						"FROM treatment_type as t "+
 						"JOIN common_info_type as c ON c.id=t.fk_common_info_type "+
 						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+

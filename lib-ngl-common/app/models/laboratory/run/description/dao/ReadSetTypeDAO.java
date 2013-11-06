@@ -18,7 +18,7 @@ public class ReadSetTypeDAO extends AbstractDAOMapping<ReadSetType>{
 
 	protected ReadSetTypeDAO() {
 		super("readset_type", ReadSetType.class, ReadSetTypeMappingQuery.class, 
-				"SELECT t.id, fk_common_info_type "+ /*, fk_reaset_category */ 
+				"SELECT t.id, t.fk_common_info_type "+ /*, fk_reaset_category */ 
 						"FROM readset_type as t "+
 						"JOIN common_info_type as c ON c.id=t.fk_common_info_type "+
 						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+

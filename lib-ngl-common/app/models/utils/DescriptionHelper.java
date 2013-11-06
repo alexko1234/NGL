@@ -412,7 +412,12 @@ public class DescriptionHelper {
 	
 	public static String getInstitute() {
 		if (institute == null) {
-			institute = "'" + Play.application().configuration().getString("institute") + "'";
+			institute = Play.application().configuration().getString("institute");
+			if(null == institute){
+				throw new RuntimeException("Institut is not defined !");
+			}else{
+				institute = "'"+institute+"'";
+			}
 		}
 		return institute;
 	}
