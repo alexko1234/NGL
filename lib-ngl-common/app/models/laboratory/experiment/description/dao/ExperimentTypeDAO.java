@@ -163,11 +163,13 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 	}
 
 	public List<String> findVoidProcessExperimentTypeCode(String processTypeCode){
-		//TODO A REFAIRE INSTITUTE
+		//TODO A REFAIRE INSTITUTE : DONE
 		String query = "SELECT c.code FROM experiment_type as t " +
-				" inner join common_info_type as c ON c.id=t.fk_common_info_type"+  
-				" inner join process_type as p on p.fk_void_experiment_type = t.id " +
-				" inner join common_info_type as cp on cp.id= p.id where cp.code = ?";
+				"join common_info_type as c ON c.id=t.fk_common_info_type "+  
+				"join process_type as p on p.fk_void_experiment_type = t.id " +
+				"join common_info_type as cp on cp.id= p.id and cp.code = ? "+
+				"join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
+				"join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute();
 		
 		List<String> list = jdbcTemplate.query(
 				query,
@@ -198,11 +200,14 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 	}
 
 	public List<ListObject> findByCategoryCode(String categoryCode){
-		//TODO A REFAIRE INSTITUTE
+		//TODO A REFAIRE INSTITUTE : DONE
 		String sql = "SELECT c.code AS code, c.name AS name "+
-				"FROM experiment_category ec,experiment_type as et JOIN common_info_type as c ON c.id=et.fk_common_info_type " +
-				"WHERE fk_experiment_category=ec.id AND ec.code='"+categoryCode+"'";
-		Logger.info(sql);
+				"FROM experiment_category ec "+
+				"JOIN experiment_type et ON et.fk_experiment_category=ec.id AND ec.code='"+categoryCode+"' "+
+				"JOIN common_info_type as c ON c.id=et.fk_common_info_type "+
+				"JOIN common_info_type_institute ci on c.id =ci.fk_common_info_type "+
+				"JOIN institute i on i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute();
+		//Logger.info(sql);
 		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
 		return this.jdbcTemplate.query(sql, mapper);
 	}
