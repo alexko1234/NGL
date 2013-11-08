@@ -38,9 +38,7 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.class,
 				"SELECT t.id, t.fk_experiment_category, t.fk_common_info_type, t.atomic_transfert_method "+
 						"FROM experiment_type as t "+
-					"JOIN common_info_type as c ON c.id=t.fk_common_info_type "+
-					"JOIN common_info_type_institute as ci ON c.id=ci.fk_common_info_type "+
-					"JOIN institute as i ON i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute(), false);
+					"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
 	}
 	@Override
 	public long save(ExperimentType experimentType) throws DAOException
@@ -185,10 +183,13 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 	}
 	
 	public List<ExperimentType> findPreviousExperimentTypeForAnExperimentTypeCode(String code) throws DAOException{
+		//use by a controller api
 		String sql = sqlCommon +" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+
                 " inner join previous_nodes as p on p.fk_previous_node = n.id"+
                 " inner join experiment_type_node as np on np.id = p.fk_node"+
                 " inner join  common_info_type as cp on cp.id = np.fk_experiment_type"+
+                " join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
+				" join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute() + " " + 
                 " where cp.code = ?";
 		return initializeMapping(sql, new SqlParameter("cp.code", Types.VARCHAR)).execute(code);
 	}

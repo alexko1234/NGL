@@ -20,9 +20,7 @@ public class RunTypeDAO extends AbstractDAOMapping<RunType>{
 		super("run_type", RunType.class, RunTypeMappingQuery.class, 
 				"SELECT t.id, t.nb_lanes, t.fk_common_info_type, t.fk_run_category "+
 						"FROM run_type as t "+
-						"JOIN common_info_type as c ON c.id=t.fk_common_info_type "+
-						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
-						"JOIN institute i ON i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute(), false);
+						"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
 	}
 
 	@Override

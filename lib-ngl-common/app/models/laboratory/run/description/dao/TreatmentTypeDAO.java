@@ -27,9 +27,7 @@ public class TreatmentTypeDAO extends AbstractDAOMapping<TreatmentType>{
 		super("treatment_type", TreatmentType.class, TreatmentTypeMappingQuery.class, 
 				"SELECT t.id, t.names, t.fk_common_info_type, t.fk_treatment_category "+
 						"FROM treatment_type as t "+
-						"JOIN common_info_type as c ON c.id=t.fk_common_info_type "+
-						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
-						"JOIN institute i ON i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute(), false);
+						"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
 	}
 	
 	public List<TreatmentType> findByTreatmentContextId(long id)

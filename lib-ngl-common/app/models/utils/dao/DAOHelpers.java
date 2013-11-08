@@ -59,7 +59,7 @@ public class DAOHelpers {
 		List<T> l = new ArrayList<T>();
 		for(String code : codes){
 			Logger.debug("Load "+type.getName() + " : "+code);
-			l.add(finder.findByCode(code));
+			l.add(finder.findByCode(code, false));
 		}
 		return l;
 	}
@@ -72,7 +72,7 @@ public class DAOHelpers {
 	 * @throws DAOException
 	 */
 	public static <T extends Model> void saveModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
-		T t = (T) model.getInstance().findByCode(model.code);
+		T t = (T) model.getInstance().findByCode(model.code, Boolean.FALSE);
 		if (t == null) {
 			Logger.debug("Save "+type.getName() + " : "+model.code);
 			model.save();
@@ -102,7 +102,7 @@ public class DAOHelpers {
 	 * @throws DAOException
 	 */
 	public static <T extends Model> void updateModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
-		T t = (T) model.getInstance().findByCode(model.code);
+		T t = (T) model.getInstance().findByCode(model.code, Boolean.FALSE);
 		if (t != null) {
 			model.update();
 		}else{

@@ -12,6 +12,8 @@ import models.utils.dao.AbstractDAO;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
+import play.Logger;
+
 @Repository
 public class InstrumentDAO extends AbstractDAO<Instrument>{
 

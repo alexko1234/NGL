@@ -132,10 +132,11 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	}
 	
 	public List<State> findByCommonInfoType(long idCommonInfoType) throws DAOException {
-		//TODO A REFAIRE INSTITUTE
-		String sql = sqlCommon+
-				"JOIN common_info_type_state ON fk_state=id "+
-				"WHERE fk_common_info_type=?";		
+		//TODO A REFAIRE INSTITUTE : 
+		//? : method use by DAO (internal use) not exposed for validation 
+		String sql = sqlCommon +
+				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
+				"JOIN common_info_type c ON cs.fk_common_info_type=c.id and c.id =?";		
 		return initializeMapping(sql, new SqlParameter("fk_common_info_type", Type.LONG)).execute(idCommonInfoType);		
 	}
 	
@@ -144,8 +145,8 @@ public class StateDAO extends AbstractDAOMapping<State>{
 			throw new DAOException("code is mandatory");
 		}
 		String sql = sqlCommon+
-				"JOIN state_object_type ON fk_state=t.id "+
-				"JOIN object_type o ON fk_object_type=o.id "+
+				"JOIN state_object_type so ON so.fk_state=t.id "+
+				"JOIN object_type o ON so.fk_object_type=o.id "+
 				"WHERE o.code=?";		
 		return initializeMapping(sql, new SqlParameter("o.code", Types.VARCHAR)).execute(objectTypeCode);		
 	}

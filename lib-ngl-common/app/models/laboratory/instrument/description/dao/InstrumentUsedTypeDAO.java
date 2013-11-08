@@ -31,9 +31,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		super("instrument_used_type", InstrumentUsedType.class, InstrumentUsedTypeMappingQuery.class, 
 				"SELECT t.id, t.fk_common_info_type, t.fk_instrument_category "+
 						"FROM instrument_used_type as t "+
-						"JOIN common_info_type as c ON c.id=t.fk_common_info_type "+
-						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
-						"JOIN institute i ON i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute(), false);
+						"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
 	}
 
 	public List<InstrumentUsedType> findByExperimentId(long id)
@@ -168,7 +166,6 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 		jdbcTemplate.update(sqlExp, instrumentUsedType.id);
 		//remove instruments
 		removeInstruments(instrumentUsedType.id);
-		
 		removeContainerSupportCategoryIn(instrumentUsedType.id);
 		removeContainerSupportCategoryOut(instrumentUsedType.id);
 		//remove instrument used type

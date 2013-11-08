@@ -68,9 +68,11 @@ public abstract class AbstractCommonDAO<T> {
 
 	public abstract List<T> findAll() throws DAOException;
 
-	public abstract T findById(Long id) throws DAOException;;
-
+	public abstract T findById(Long id) throws DAOException;
+	
 	public abstract T findByCode(String code) throws DAOException;
+	
+	public abstract T findByCode(String code, Boolean forCurrentInstitute) throws DAOException;
 
 
 	public abstract long save(T value) throws DAOException;
@@ -99,6 +101,7 @@ public abstract class AbstractCommonDAO<T> {
 			return null;
 		}
 	}
+
 
 
 	

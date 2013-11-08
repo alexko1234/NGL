@@ -69,7 +69,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
-		String sql = sqlCommon+" inner join resolution_category r on r.id = t.fk_resolution_category WHERE r.code = ? ";
+		String sql = sqlCommon+" inner join resolution_category r on r.id = t.fk_resolution_category and r.code = ? ";
 		return initializeMapping(sql, new SqlParameter("code", Types.VARCHAR)).execute(code);		
 	}
 

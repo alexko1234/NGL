@@ -102,6 +102,11 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 		}
 	}
 	
+	public T findByCode(String code,Boolean forCurrentInstitute) throws DAOException {
+		return findByCode(code);
+	}
+	
+
 	public long save(T value) throws DAOException
 	{
 		if(null == value){

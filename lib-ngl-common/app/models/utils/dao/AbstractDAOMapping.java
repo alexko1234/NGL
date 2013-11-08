@@ -4,6 +4,7 @@ import java.sql.Types;
 import java.util.List;
 
 import models.laboratory.common.description.CommonInfoType;
+import models.utils.DescriptionHelper;
 
 import org.springframework.asm.Type;
 import org.springframework.dao.DataAccessException;
@@ -45,20 +46,56 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 		return initializeMapping(sqlCommon).execute();
 	}
 
-	
+	 
 	public T findByCode(String code) throws DAOException {
+		return findByCode(code, true); 
+	}
+	
+	public T findByCode(String code, Boolean forCurrentInstitute) throws DAOException {
+		
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
 		
-		String sql= null;
+		String sql= sqlCommon;
 		
-		if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
-			sql = sqlCommon+" WHERE c.code = ? ";
+		if (forCurrentInstitute && entityClass.getSuperclass().equals(CommonInfoType.class) ) {
+			sql += " and  c.code = ?  " + 
+					"join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
+					"join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute();
 		}
 		else {
-			sql = sqlCommon+" WHERE t.code = ? ";
+			if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
+				sql += " WHERE c.code = ?";
+			}
+			else {
+				sql += " WHERE t.code = ?";
+			}
 		}
+		
+		/*
+		if (!forCurrentInstitute) {
+			sql = sqlCommon ;
+			if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
+				sql += " WHERE c.code = ?";
+			}
+			else {
+				sql += " WHERE t.code = ?";
+			}
+		}
+		else {
+			if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
+				sql += " and  c.code = ?  " + 
+						"join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
+						"join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute();
+			}
+			else {
+				Logger.warn("Can't find institute for this object !, no dependency with CommonInfoType !");
+				sql += " WHERE t.code = ?";
+				Logger.debug("SQL =" + sql);
+			}
+		}
+		*/ 
 		
 		return initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
 	}
@@ -72,7 +109,8 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 			String sql= null;
 			
 			if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
-				sql = "SELECT id FROM common_info_type WHERE code=?";
+				sql = "SELECT id FROM common_info_type c join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
+				"join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute() + " and c.code=?";
 			}
 			else {
 				sql = "SELECT id FROM "+tableName+" WHERE code=?";

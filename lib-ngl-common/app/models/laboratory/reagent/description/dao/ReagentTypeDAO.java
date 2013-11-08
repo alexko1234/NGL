@@ -24,9 +24,7 @@ public class ReagentTypeDAO extends AbstractDAOMapping<ReagentType>{
 		super("reagent_type", ReagentType.class, ReagentTypeMappingQuery.class, 
 				"SELECT t.id, t.fk_common_info_type "+
 						"FROM reagent_type as t "+
-						"JOIN common_info_type as c ON c.id=t.fk_common_info_type "+
-						"JOIN common_info_type_institute ci ON c.id=ci.fk_common_info_type "+
-						"JOIN institute i ON i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute(), false);
+						"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
 	}
 
 	public List<ReagentType> findByProtocol(long idProtocol)

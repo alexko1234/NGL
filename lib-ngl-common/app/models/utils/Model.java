@@ -71,6 +71,18 @@ public class Model<T> {
 			this.className = className;
 		}
 
+		/**
+		 * @author dnoisett
+		 * @param code
+		 * @param forCurrentInstitute
+		 * @return
+		 * @throws DAOException
+		 */
+		@JsonIgnore
+		public T findByCode(String code, Boolean forCurrentInstitute) throws DAOException {
+			return getInstance().findByCode(code, forCurrentInstitute);
+		}
+		
 		@JsonIgnore
 		public T findByCode(String code) throws DAOException {
 			return getInstance().findByCode(code);
