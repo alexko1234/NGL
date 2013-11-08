@@ -6,8 +6,6 @@ import java.util.Map;
 
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
-import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.ResolutionCategory;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
@@ -48,22 +46,22 @@ public class MeasureService {
 	 */
 	public static void saveMesureUnits(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<MeasureUnit> l = new ArrayList<MeasureUnit>();
-		l.add(newMeasureUnit("mL","mL", true, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_VOLUME)));
-		l.add(newMeasureUnit("µL","µL", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_VOLUME)));
-		l.add(newMeasureUnit("nL","nL", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_VOLUME)));
-		l.add(newMeasureUnit("pL","pL", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_VOLUME)));
+		l.add(newMeasureUnit("mL","mL", true, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_VOLUME, false)));
+		l.add(newMeasureUnit("µL","µL", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_VOLUME, false)));
+		l.add(newMeasureUnit("nL","nL", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_VOLUME, false)));
+		l.add(newMeasureUnit("pL","pL", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_VOLUME, false)));
 		
-		l.add(newMeasureUnit("µmol","µmol", true, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_QUANTITY)));
-		l.add(newMeasureUnit("nmol","nmol", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_QUANTITY)));
-		l.add(newMeasureUnit("pmol","pmol", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_QUANTITY)));
-		l.add(newMeasureUnit("ng","ng", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_QUANTITY)));
+		l.add(newMeasureUnit("µmol","µmol", true, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_QUANTITY, false)));
+		l.add(newMeasureUnit("nmol","nmol", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_QUANTITY, false)));
+		l.add(newMeasureUnit("pmol","pmol", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_QUANTITY, false)));
+		l.add(newMeasureUnit("ng","ng", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_QUANTITY, false)));
 		
-		l.add(newMeasureUnit("ng/µl","ng/µl", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_CONCENTRATION)));
+		l.add(newMeasureUnit("ng/µl","ng/µl", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_CONCENTRATION, false)));
 		
 		
-		l.add(newMeasureUnit("pb","pb", true,  MeasureCategory.find.findByCode(MEASURE_CAT_CODE_SIZE)));
-		l.add(newMeasureUnit("Mb","Mb", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_SIZE)));
-		l.add(newMeasureUnit("kb","kb", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_SIZE)));
+		l.add(newMeasureUnit("pb","pb", true,  MeasureCategory.find.findByCode(MEASURE_CAT_CODE_SIZE, false)));
+		l.add(newMeasureUnit("Mb","Mb", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_SIZE, false)));
+		l.add(newMeasureUnit("kb","kb", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_SIZE, false)));
 		
 		
 		DAOHelpers.saveModels(MeasureUnit.class, l, errors);

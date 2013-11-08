@@ -6,12 +6,12 @@ import java.util.Map;
 
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.ResolutionCategory;
-import models.laboratory.common.description.StateCategory;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
 import static services.description.DescriptionFactory.*;
+
 public class ResolutionService {
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{		
 		saveResolutionCategories(errors);	

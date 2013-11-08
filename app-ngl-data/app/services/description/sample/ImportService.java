@@ -18,6 +18,7 @@ import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
+
 public class ImportService {
 	public static void main(Map<String, List<ValidationError>> errors)  throws DAOException{
 		DAOHelpers.removeAll(ImportType.class, ImportType.find);

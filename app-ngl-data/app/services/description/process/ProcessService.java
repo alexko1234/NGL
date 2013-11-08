@@ -8,8 +8,6 @@ import java.util.Map;
 
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
@@ -17,9 +15,7 @@ import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
-import services.description.DescriptionFactory;
 import services.description.common.LevelService;
-import services.description.common.MeasureService;
 
 
 public class ProcessService {

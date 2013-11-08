@@ -29,8 +29,9 @@ public class InstrumentService {
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{
 		Logger.debug("Begin remove Instrument Used TYpe");
 		DAOHelpers.removeAll(InstrumentUsedType.class, InstrumentUsedType.find);
+		Logger.debug("Begin remove Instrument CAtegory !!!");
 		DAOHelpers.removeAll(InstrumentCategory.class, InstrumentCategory.find);
-		Logger.debug("End Remove");
+		Logger.debug("End Remove categories and types ");
 		saveInstrumentCategories(errors);
 		Logger.debug("End Inst category");
 		saveInstrumentUsedTypes(errors);	

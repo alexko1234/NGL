@@ -29,14 +29,18 @@ public class ImportDataCNG extends AbstractImportData {
 	public void run() {
 		contextError.clear();
 		contextError.addKeyToRootKeyName("import");
+		
+		contextError.setCreationMode();
+		
 		Logger.info("ImportData execution : ");
 		try{
 			Logger.info(" Import Projects ... ");
-			//createProjectsFromLims(contextError);
+			createProjectsFromLims(contextError);
 			Logger.info("End Import Projects !");
 			
 			Logger.info(" Import Samples ... ");
-			createSamplesFromLims(contextError, "26136024");
+			//createSamplesFromLims(contextError, "26136024");
+			//createSamplesFromLims(contextError, null);
 			Logger.info("End Import Samples !");
 			
 			Logger.info(" Import Containers ... ");
@@ -68,7 +72,7 @@ public class ImportDataCNG extends AbstractImportData {
 		List<Project> projects = limsServices.findProjectsToCreate(contextError) ;
 
 		//save projects
-		List<Project> projs=InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError);
+		List<Project> projs=InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError, true);
 		Logger.info("End of load projects !"); 
 		
 		//update project's dates by block (define by the blockSize)
@@ -117,9 +121,11 @@ public class ImportDataCNG extends AbstractImportData {
 	
 	public static List<Sample> createSamplesFromLims(ContextValidation contextError, String sampleCode) throws SQLException, DAOException{
 		Logger.info("Start loading samples ..."); 
+		
 		List<Sample> samples = limsServices.findSamplesToCreate(contextError, sampleCode); // 2nd parameter null for mass loading
 
-		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError);
+		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError, true);
+		
 		Logger.info("End of load samples !");
 			
 		updateLimsSamples(samps, blockSize, contextError);
@@ -162,7 +168,7 @@ public class ImportDataCNG extends AbstractImportData {
 		Logger.info("Start loading containers ..."); 
 		List<Container> containers = limsServices.findContainersToCreate(contextError) ;
 
-		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError);
+		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError, true);
 		Logger.info("End of load containers !"); 
 		
 		updateLimsContainers(ctrs, blockSize, contextError);

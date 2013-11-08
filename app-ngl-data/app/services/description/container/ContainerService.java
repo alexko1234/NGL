@@ -6,14 +6,12 @@ import java.util.Map;
 
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
-import models.laboratory.instrument.description.InstrumentCategory;
-import models.utils.Model;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
-import play.Logger;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
 import static services.description.DescriptionFactory.*;
+
 public class ContainerService {
 	
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{
@@ -46,12 +44,12 @@ public class ContainerService {
 	 */
 	public static void saveContainerSupportCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ContainerSupportCategory> l = new ArrayList<ContainerSupportCategory>();
-		l.add(newContainerSupportCategory("Tube", "tube", 1, 1, 1, ContainerCategory.find.findByCode("tube")));
-		l.add(newContainerSupportCategory("Sheet 96", "sheet-96",12, 8, 96, ContainerCategory.find.findByCode("well")));
-		l.add(newContainerSupportCategory("Sheet 384", "sheet-384",24,96,384, ContainerCategory.find.findByCode("well")));
-		l.add(newContainerSupportCategory("Flowcell 8", "flowcell-8",8,1,8, ContainerCategory.find.findByCode("lane")));
-		l.add(newContainerSupportCategory("Flowcell 2", "flowcell-2",2,1,2, ContainerCategory.find.findByCode("lane")));
-		l.add(newContainerSupportCategory("Flowcell 1", "flowcell-1",1,1,1, ContainerCategory.find.findByCode("lane")));
+		l.add(newContainerSupportCategory("Tube", "tube", 1, 1, 1, ContainerCategory.find.findByCode("tube", false)));
+		l.add(newContainerSupportCategory("Sheet 96", "sheet-96",12, 8, 96, ContainerCategory.find.findByCode("well", false)));
+		l.add(newContainerSupportCategory("Sheet 384", "sheet-384",24,96,384, ContainerCategory.find.findByCode("well", false)));
+		l.add(newContainerSupportCategory("Flowcell 8", "flowcell-8",8,1,8, ContainerCategory.find.findByCode("lane", false)));
+		l.add(newContainerSupportCategory("Flowcell 2", "flowcell-2",2,1,2, ContainerCategory.find.findByCode("lane", false)));
+		l.add(newContainerSupportCategory("Flowcell 1", "flowcell-1",1,1,1, ContainerCategory.find.findByCode("lane", false)));
 		DAOHelpers.saveModels(ContainerSupportCategory.class, l, errors);
 		
 	}

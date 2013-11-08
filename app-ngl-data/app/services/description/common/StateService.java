@@ -83,19 +83,5 @@ public class StateService {
 		return categories;
 	}
 	
-	/**
-	 * 
-	 * @param codes
-	 * @return
-	 * @throws DAOException
-	 */
-	private static List<ObjectType> getObjectTypes(ObjectType.CODE...codes) throws DAOException {
-		List<ObjectType> objects = new ArrayList<ObjectType>();
-		for(ObjectType.CODE code: codes){
-			objects.add(ObjectType.find.findByCode(code.name()));
-		}
-		return objects;
-	}
-	
 
 }
