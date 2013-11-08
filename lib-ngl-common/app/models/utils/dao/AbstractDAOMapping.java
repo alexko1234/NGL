@@ -109,7 +109,7 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 			String sql= null;
 			
 			if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
-				sql = "SELECT id FROM common_info_type c join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
+				sql = "SELECT c.id FROM common_info_type c join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
 				"join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute() + " and c.code=?";
 			}
 			else {
