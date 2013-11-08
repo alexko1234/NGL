@@ -7,6 +7,7 @@ import java.util.List;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.container.instance.Container;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
@@ -343,7 +344,7 @@ public class CommonValidationHelper {
 		}		
 	}
 	
-	private static void validateStateCode(String typeCode, String stateCode, ContextValidation contextValidation){
+	public static void validateStateCode(String typeCode, String stateCode, ContextValidation contextValidation){
 		try{
 			if(required(contextValidation, stateCode, "code")){
 				if(!models.laboratory.common.description.State.find.isCodeExistForTypeCode(stateCode, typeCode)){
@@ -375,5 +376,24 @@ public class CommonValidationHelper {
 
 	public static void validateSampleCodes(List<String> sampleCodes,ContextValidation contextValidation){
 		BusinessValidationHelper.validateRequiredInstanceCodes(contextValidation, sampleCodes,"sampleCodes",Sample.class,InstanceConstants.SAMPLE_COLL_NAME,false);
+	}
+
+
+	public static void validateContainerCode(String containerCode,
+			ContextValidation contextValidation) {
+		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, "containerCode", Container.class,InstanceConstants.CONTAINER_COLL_NAME);
+	}
+
+
+	public static void validateSampleCode(String sampleCode,
+			ContextValidation contextValidation) {
+		BusinessValidationHelper.validateExistInstanceCode(contextValidation, sampleCode, "sampleCode", Sample.class, InstanceConstants.SAMPLE_COLL_NAME, false);
+	
+	}
+
+
+	public static void validateProjectCode(String projectCode,
+			ContextValidation contextValidation) {
+		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, projectCode,"projectCode",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
 	}
 }

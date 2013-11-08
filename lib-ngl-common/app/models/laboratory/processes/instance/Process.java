@@ -19,9 +19,11 @@ import net.vz.mongodb.jackson.MongoCollection;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import validation.ContextValidation;
-import validation.DescriptionValidationHelper;
 import validation.IValidation;
 import validation.InstanceValidationHelper;
+import validation.common.instance.CommonValidationHelper;
+import validation.container.instance.ContainerValidationHelper;
+import validation.processes.instance.ProcessValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import fr.cea.ig.DBObject;
 
@@ -91,26 +93,16 @@ public class Process extends DBObject implements IValidation{
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		if(this == null){
-			throw new IllegalArgumentException("Process is null");
-		}
-
-		contextValidation.putObject("_id",this._id);
-		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Process.class,InstanceConstants.CONTAINER_COLL_NAME);
-		InstanceValidationHelper.validationContainerCode(containerInputCode, contextValidation);
-		//??????????
-		/*if(this._id == null){
-			if(!container.stateCode.equals("A")){
-				contextValidation.addErrors(contextValidation.errors,this.containerInputCode, getKey(null,"containerNotIWPOrN"));
-			}
-		}*/
-		InstanceValidationHelper.validationSampleCode(sampleCode, contextValidation);
-		InstanceValidationHelper.validationProjectCode(projectCode, contextValidation);
-		//DescriptionValidationHelper.validationStateCode(stateCode, contextValidation);
-		DescriptionValidationHelper.validationProcess(typeCode,properties,contextValidation);
 		
-		traceInformation.validate(contextValidation);
-		InstanceValidationHelper.validationComments(comments, contextValidation);
+		ProcessValidationHelper.validateId(this, contextValidation);
+		ProcessValidationHelper.validateCode(this, InstanceConstants.PROCESS_COLL_NAME, contextValidation);
+		ProcessValidationHelper.validateProcessType(typeCode,properties,contextValidation);
+		ProcessValidationHelper.validateStateCode(typeCode,stateCode, contextValidation);
+		ProcessValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+		ProcessValidationHelper.validateContainerCode(containerInputCode, contextValidation);
+		ProcessValidationHelper.validateSampleCode(sampleCode, contextValidation);
+		ProcessValidationHelper.validateProjectCode(projectCode, contextValidation);
+	
 	}
 	
 }

@@ -1,38 +1,21 @@
 package models.dao;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.State;
-import models.laboratory.common.description.CommonInfoType;
 import models.utils.dao.DAOException;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-
-import play.api.modules.spring.Spring;
-import play.test.Helpers;
-
-import java.util.*;
 
 import utils.AbstractTests;
 
 public class FindCommonInfoTypeTest extends AbstractTests {
-	
-	
-	@BeforeClass
-	public static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
-		app = getFakeApplication();
-		Helpers.start(app);
-	}
-
-	@AfterClass
-	public static void endTest(){
-		app = getFakeApplication();
-		Helpers.stop(app);
-	}
 	
 	
 	@Test

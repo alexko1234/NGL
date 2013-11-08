@@ -4,42 +4,15 @@ import static org.fest.assertions.Assertions.assertThat;
 import models.laboratory.sample.description.SampleCategory;
 import models.utils.dao.DAOException;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import play.Logger;
 import play.Play;
-import play.test.Helpers;
 import utils.AbstractTests;
 import validation.ContextValidation;
 import validation.sample.instance.SampleValidationHelper;
 
 public class SampleValidationHelperTest extends AbstractTests {
 
-	
-	@BeforeClass
-	public static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
-		app = getFakeApplication();
-		Helpers.start(app);
-		initData();
-	}
-
-	@AfterClass
-	public static void endTest(){
-		app = getFakeApplication();
-		deleteData();
-		Helpers.stop(app);
-	}
-
-
-	public static void initData() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-		
-	}
-
-	private static void deleteData() {
-	}
-	
 	/**
 	 *  SampleCategory
 	 * 
@@ -61,7 +34,7 @@ public class SampleValidationHelperTest extends AbstractTests {
 	@Test
 	public void validateSampleCategoryCodeNotExist() {
 		ContextValidation contextValidation=new ContextValidation();
-		SampleValidationHelper.validateSampleCategoryCode(null, contextValidation);
+		SampleValidationHelper.validateSampleCategoryCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
 	

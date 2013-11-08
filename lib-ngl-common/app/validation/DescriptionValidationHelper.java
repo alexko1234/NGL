@@ -11,9 +11,6 @@ import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.processes.description.ProcessType;
-import models.laboratory.project.description.ProjectCategory;
-import models.laboratory.project.description.ProjectType;
 import models.laboratory.reagent.description.ReagentType;
 import models.laboratory.run.description.RunType;
 import validation.utils.BusinessValidationHelper;
@@ -60,12 +57,6 @@ public class DescriptionValidationHelper {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "instrumentUsed.categoryCode", InstrumentCategory.find);
 	}
 
-	public static void validationProjectCategoryCode(String categoryCode,
-			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ProjectCategory.find);
-
-	}
-
 	public static void validationReagentTypeCode(String reagentTypeCode,
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, reagentTypeCode, "reagentTypeCode", ReagentType.find);		
@@ -79,26 +70,6 @@ public class DescriptionValidationHelper {
 
 	
 	
-	//TODO a déplacer et a revoir ?
-	public static void validationProject(String typeCode,
-			Map<String, PropertyValue> properties,
-			ContextValidation contextValidation) {
-		ProjectType projectType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ProjectType.find,true);
-		if(projectType!=null){
-		ValidationHelper.validateProperties(contextValidation, properties, projectType.getPropertiesDefinitionDefaultLevel());
-		}
-		
-	}
-	//TODO a déplacer et a revoir ?
-	public static void validationProcess(String typeCode,
-			Map<String, PropertyValue> properties,
-			ContextValidation contextValidation) {
-		ProcessType processType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ProcessType.find,true);
-		if(processType!=null){
-			ValidationHelper.validateProperties(contextValidation, properties, processType.getPropertiesDefinitionDefaultLevel());
-		}
-		
-	}
 	/**
 	 * 
 	 * @param stateCode

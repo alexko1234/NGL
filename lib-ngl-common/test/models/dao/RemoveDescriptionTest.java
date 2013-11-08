@@ -15,12 +15,9 @@ import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import play.test.Helpers;
 import utils.AbstractTests;
 
 
@@ -32,17 +29,8 @@ import utils.AbstractTests;
 
 public class RemoveDescriptionTest extends AbstractTests{
 	
-	@BeforeClass
-	public static void start(){
-		 app = getFakeApplication();
-		 Helpers.start(app);		
-	}
 	
 	
-	@AfterClass
-	public static void stop(){
-		Helpers.stop(app);
-	}
 	
 	@Test
 	public void removeProcessType() throws DAOException

@@ -1,10 +1,7 @@
 package models.dao;
 
 
-import java.util.List;
-
 import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.StateCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
@@ -17,13 +14,10 @@ import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.dao.SampleCategoryDAO;
 import models.utils.dao.DAOException;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import play.api.modules.spring.Spring;
-import play.test.Helpers;
 import utils.AbstractTests;
 
 
@@ -35,17 +29,8 @@ import utils.AbstractTests;
 
 public class RemoveCatDescriptionTest extends AbstractTests{
 	
-	@BeforeClass
-	public static void start(){
-		 app = getFakeApplication();
-		 Helpers.start(app);		
-	}
 	
-	
-	@AfterClass
-	public static void stop(){
-		Helpers.stop(app);
-	}
+
 	
 	@Test
 	public void removeContainerSupportCategory() throws DAOException

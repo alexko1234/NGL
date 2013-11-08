@@ -15,16 +15,11 @@ import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-
 import validation.ContextValidation;
-import validation.DescriptionValidationHelper;
 import validation.IValidation;
 import validation.InstanceValidationHelper;
-import validation.utils.BusinessValidationHelper;
-import validation.utils.ValidationHelper;
-
+import validation.project.instance.ProjectValidationHelper;
 import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
 
 
 
@@ -75,19 +70,13 @@ public class Project extends DBObject implements IValidation{
 	@Override
 	@JsonIgnore
 	public void validate(ContextValidation contextValidation) {
-		
-		contextValidation.putObject("_id",this._id);
-
-		BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, code, Project.class, InstanceConstants.PROJECT_COLL_NAME);
-
-		DescriptionValidationHelper.validationProjectCategoryCode(categoryCode,contextValidation);
-		DescriptionValidationHelper.validationStateCode(stateCode, contextValidation);
-		
-		DescriptionValidationHelper.validationProject(typeCode,properties, contextValidation);
-		
-		traceInformation.validate(contextValidation);
-		
-		InstanceValidationHelper.validationComments(comments, contextValidation);
+				
+		ProjectValidationHelper.validateId(this, contextValidation);
+		ProjectValidationHelper.validateCode(this, InstanceConstants.PROJECT_COLL_NAME, contextValidation);
+		ProjectValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+		ProjectValidationHelper.validateProjectCategoryCode(categoryCode,contextValidation);
+		//ProjectValidationHelper.validateStateCode(typeCode,stateCode, contextValidation);
+		ProjectValidationHelper.validateProjectType(typeCode,properties, contextValidation);
 
 	}
 

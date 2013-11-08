@@ -2,8 +2,6 @@ package validation;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -12,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
@@ -21,18 +18,14 @@ import models.laboratory.common.instance.property.PropertyMapValue;
 import models.laboratory.common.instance.property.PropertyObjectListValue;
 import models.laboratory.common.instance.property.PropertyObjectValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
-import models.utils.dao.DAOException;
 
 import org.junit.Test;
 
-import play.Logger;
 import play.data.validation.ValidationError;
-
 import utils.AbstractTests;
 import validation.utils.ValidationHelper;
 
 public class ValidationHelperTests extends AbstractTests {
-	
 	
 	@Test
 	public void validatePropertiesRequired() {
@@ -290,6 +283,9 @@ public class ValidationHelperTests extends AbstractTests {
 		propertyDefinitions.add(newPropertiesDefinition("Object.Double", "Object.2", PropertyObjectValue.class, Double.class, true));		
 		return propertyDefinitions;
 	}
+
+
+
 	
 	
 }

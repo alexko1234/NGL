@@ -14,7 +14,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import play.test.Helpers;
 import utils.AbstractTests;
 import validation.ContextValidation;
 import validation.container.instance.ContainerSupportValidationHelper;
@@ -25,22 +24,7 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 	static Project project;
 	static Stock stock;
 	
-	
 	@BeforeClass
-	public static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
-		app = getFakeApplication();
-		Helpers.start(app);
-		initData();
-	}
-
-	@AfterClass
-	public static void endTest(){
-		app = getFakeApplication();
-		deleteData();
-		Helpers.stop(app);
-	}
-
-
 	public static void initData() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 		stock=saveDBOject(Stock.class, InstanceConstants.STOCK_COLL_NAME, "stock");
 		
@@ -50,7 +34,8 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 
 	}
 
-	private static void deleteData() {
+	@AfterClass
+	public static void deleteData() {
 		MongoDBDAO.getCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class).drop();
 		MongoDBDAO.getCollection(InstanceConstants.STOCK_COLL_NAME,Stock.class).drop();
 

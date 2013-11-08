@@ -3,8 +3,6 @@ package validation;
 import static org.fest.assertions.Assertions.assertThat;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
-import models.laboratory.container.description.ContainerCategory;
-import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
@@ -18,16 +16,13 @@ import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import play.test.Helpers;
 import utils.AbstractTests;
-import validation.DescriptionValidationHelper;
-import validation.container.instance.ContainerSupportValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
-import validation.container.instance.SampleUsedValidationHelper;
+import validation.processes.instance.ProcessValidationHelper;
+import validation.project.instance.ProjectValidationHelper;
 import validation.sample.instance.SampleValidationHelper;
 
 public class DescriptionValidationHelperTest extends AbstractTests{
@@ -48,22 +43,7 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	static State state;
 	static Resolution resolution;
 	
-	
 	@BeforeClass
-	public static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
-		app = getFakeApplication();
-		Helpers.start(app);
-		initData();
-	}
-
-	@AfterClass
-	public static void endTest(){
-		app = getFakeApplication();
-		deleteData();
-		Helpers.stop(app);
-	}
-	
-	
 	public static void initData() throws DAOException{
 		proto=Protocol.find.findAll().get(0);
 		
@@ -90,10 +70,6 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 		state=State.find.findAll().get(0);
 		
 		resolution=Resolution.find.findAll().get(0);
-	}
-
-	private static void deleteData() {
-		//NOthing
 	}
 
 	@Test
@@ -275,21 +251,21 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	@Test
 	public void validationProjectCategoryCode() {
 		ContextValidation contextValidation=new ContextValidation();
-		DescriptionValidationHelper.validationProjectCategoryCode(projectCategory.code, contextValidation);
+		ProjectValidationHelper.validateProjectCategoryCode(projectCategory.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationProjectCategoryRequired() {
 		ContextValidation contextValidation=new ContextValidation();
-		DescriptionValidationHelper.validationProjectCategoryCode(null, contextValidation);
+		ProjectValidationHelper.validateProjectCategoryCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public void validationProjectCategoryNotExist() {
 		ContextValidation contextValidation=new ContextValidation();
-		DescriptionValidationHelper.validationProjectCategoryCode("notexist", contextValidation);
+		ProjectValidationHelper.validateProjectCategoryCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
@@ -382,7 +358,7 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	//TODO
 	public void validationProcessTest() {
 		ContextValidation contextValidation=new ContextValidation();
-		DescriptionValidationHelper.validationProcess(null, null, contextValidation);		
+		ProcessValidationHelper.validateProcessType(null, null, contextValidation);		
 	}
 	
 	

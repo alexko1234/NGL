@@ -36,16 +36,14 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.DescriptionHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
+import models.utils.dao.DAOException;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import play.Logger;
 import play.data.validation.ValidationError;
-import play.test.Helpers;
 import utils.AbstractTests;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
@@ -65,37 +63,9 @@ public class InstanceTest extends AbstractTests{
 	static State sState;
 	static Resolution sResolution;
 
-
-	@BeforeClass
-	public static void startTest(){
-		app = getFakeApplication();
-		Helpers.start(app);
-		initData();
-		Helpers.stop(app);
-	}
-
 	@AfterClass
-	public static void endTest(){
-		app = getFakeApplication();
-		Helpers.start(app);
-		deleteData();
-		Helpers.stop(app);
-	}
-	
-	
-	@Before
-	public void start(){
-		 app = getFakeApplication();
-		 Helpers.start(app);
-	}
-	
-	@After
-	public void stop(){
-		Helpers.stop(app);
-	}	
-
-
-	private static void deleteData(){
+	public static  void deleteData() throws DAOException, InstantiationException,
+	IllegalAccessException, ClassNotFoundException{
 		try {
 
 		/*	for(Class t:classTest){
@@ -127,7 +97,10 @@ public class InstanceTest extends AbstractTests{
 
 	}
 
-	private static void initData() {
+	@BeforeClass
+	public static  void initData() throws DAOException, InstantiationException,
+			IllegalAccessException, ClassNotFoundException {
+
 		try {
 
 			//ProjectType

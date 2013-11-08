@@ -19,6 +19,7 @@ import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -50,22 +51,8 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	static Content content1;
 
 	static ContainerSupport containerSupport;
-	
+
 	@BeforeClass
-	public static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
-		app = getFakeApplication();
-		Helpers.start(app);
-		initData();
-	}
-
-	@AfterClass
-	public static void endTest(){
-		app = getFakeApplication();
-		deleteData();
-		Helpers.stop(app);
-	}
-
-
 	public static void initData() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 
 		containerCategory=ContainerCategory.find.findAll().get(0);
@@ -100,7 +87,8 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		containerSupport.column="1";
 	}
 
-	private static void deleteData() {
+	@AfterClass
+	public static void deleteData() {
 		MongoDBDAO.getCollection(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class).drop();
 		MongoDBDAO.getCollection(InstanceConstants.SAMPLE_COLL_NAME,Experiment.class).drop();
 	}

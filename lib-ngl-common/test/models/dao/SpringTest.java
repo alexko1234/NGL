@@ -7,15 +7,12 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.State;
 import models.utils.dao.DAOException;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import play.api.modules.spring.Spring;
-import play.test.Helpers;
 import utils.AbstractTests;
 
 
@@ -26,22 +23,8 @@ import utils.AbstractTests;
  */
 
 public class SpringTest extends AbstractTests{
-	
-	@BeforeClass
-	public static void start(){
-		 app = getFakeApplication();
-		 Helpers.start(app);
-		/*  Map<String, String> flashData = Collections.emptyMap();
-		  Map<String, Object> listeNull = Collections.emptyMap();
-	      Http.Context context = new Http.Context(new Long(5),null,request, flashData, flashData,listeNull);
-	      Http.Context.current.set(context);*/
-	}
-	
-	
-	@AfterClass
-	public static void stop(){
-		Helpers.stop(app);
-	}
+
+
 	
 	private void checkObjectType(ObjectType type)
 	{

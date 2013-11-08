@@ -6,20 +6,34 @@ import static play.test.Helpers.fakeApplication;
 import java.util.HashMap;
 import java.util.Map;
 
+import models.utils.dao.DAOException;
+
+import org.hibernate.validator.internal.util.privilegedactions.GetClassLoader;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+
+import play.Logger;
 import play.test.FakeApplication;
+import play.test.Helpers;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
-//@RunWith(MockitoJUnitRunner.class)
 public abstract class AbstractTests {
 	
-	//@Mock
-	//private Http.Request request;
-
 	protected static FakeApplication app;
 	
-	
-	
+	@BeforeClass
+	public  static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
+		app = getFakeApplication();
+		Helpers.start(app);
+	}
+
+	@AfterClass
+	public  static void endTest() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+		app = getFakeApplication();
+		Helpers.stop(app);
+	}
+
 	
 	public static FakeApplication getFakeApplication(){
 		return fakeApplication(fakeConfiguration());
@@ -71,4 +85,6 @@ public abstract class AbstractTests {
 		object=MongoDBDAO.save(collectionName, object);
 		return object;
 	}
+
+
 }

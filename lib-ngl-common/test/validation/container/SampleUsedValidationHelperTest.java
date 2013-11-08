@@ -5,11 +5,8 @@ import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import play.test.Helpers;
 import utils.AbstractTests;
 import validation.ContextValidation;
 import validation.container.instance.SampleUsedValidationHelper;
@@ -17,28 +14,7 @@ import validation.sample.instance.SampleValidationHelper;
 
 public class SampleUsedValidationHelperTest extends AbstractTests{
 	
-	@BeforeClass
-	public static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
-		app = getFakeApplication();
-		Helpers.start(app);
-		initData();
-	}
-
-	@AfterClass
-	public static void endTest(){
-		app = getFakeApplication();
-		deleteData();
-		Helpers.stop(app);
-	}
-
-
-	public static void initData() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-		
-	}
-
-	private static void deleteData() {
 	
-	}
 	
 	/**
 	 * Sample category code 

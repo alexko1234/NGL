@@ -34,12 +34,9 @@ import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import play.test.Helpers;
 import utils.AbstractTests;
 
 
@@ -50,23 +47,7 @@ import utils.AbstractTests;
  */
 
 public class SaveDescriptionTest extends AbstractTests{
-	
-	@BeforeClass
-	public static void start(){
-		 app = getFakeApplication();
-		 Helpers.start(app);
-		/*  Map<String, String> flashData = Collections.emptyMap();
-		  Map<String, Object> listeNull = Collections.emptyMap();
-	      Http.Context context = new Http.Context(new Long(5),null,request, flashData, flashData,listeNull);
-	      Http.Context.current.set(context);*/
-	}
-	
-	
-	@AfterClass
-	public static void stop(){
-		Helpers.stop(app);
-	}
-	
+		
 	
 	
 	/**
@@ -1056,7 +1037,8 @@ public class SaveDescriptionTest extends AbstractTests{
 		importCategory.code=code;
 		return importCategory;
 	}
-	
+
+
 	
 
 }
