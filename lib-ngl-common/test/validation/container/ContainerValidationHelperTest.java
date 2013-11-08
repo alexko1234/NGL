@@ -55,16 +55,16 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@BeforeClass
 	public static void initData() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 
-		containerCategory=ContainerCategory.find.findAll().get(0);
+		containerCategory=ContainerCategory.find.findAllByInstitute().get(0);
 
-		containerSupportCategory=ContainerSupportCategory.find.findAll().get(0);
+		containerSupportCategory=ContainerSupportCategory.find.findAllByInstitute().get(0);
 
-		processType=ProcessType.find.findAll().get(0);
+		processType=ProcessType.find.findAllByInstitute().get(0);
 
-		sampleType=SampleType.find.findAll().get(0);
+		sampleType=SampleType.find.findAllByInstitute().get(0);
 		
-		experimentType=ExperimentType.find.findAll().get(0);
-		experimentType1=ExperimentType.find.findAll().get(1);
+		experimentType=ExperimentType.find.findAllByInstitute().get(0);
+		experimentType1=ExperimentType.find.findAllByInstitute().get(1);
 
 		experiment=saveDBOject(Experiment.class,InstanceConstants.EXPERIMENT_COLL_NAME,"experiment");
 		experiment1=saveDBOject(Experiment.class,InstanceConstants.EXPERIMENT_COLL_NAME,"experiment1");
@@ -82,7 +82,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		
 		containerSupport=new ContainerSupport();
 		containerSupport.barCode="test";
-		containerSupport.categoryCode=ContainerSupportCategory.find.findAll().get(0).code;
+		containerSupport.categoryCode=ContainerSupportCategory.find.findAllByInstitute().get(0).code;
 		containerSupport.line="1";
 		containerSupport.column="1";
 	}

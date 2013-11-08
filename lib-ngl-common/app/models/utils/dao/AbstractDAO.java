@@ -73,6 +73,10 @@ public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
 		}
 	}
 
+	public List<T> findAllByInstitute() throws DAOException{
+		return findAll();
+	}
+	
 	public T findById(Long id) throws DAOException
 	{
 		if(null == id){

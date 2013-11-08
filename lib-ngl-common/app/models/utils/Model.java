@@ -97,6 +97,11 @@ public class Model<T> {
 		public List<T> findAll() throws DAOException {
 			return getInstance().findAll();
 		}
+		
+		@JsonIgnore
+		public List<T> findAllByInstitute() throws DAOException {
+			return getInstance().findAllByInstitute();
+		}
 
 		@JsonIgnore
 		public T findById(Long id) throws DAOException {

@@ -67,6 +67,8 @@ public abstract class AbstractCommonDAO<T> {
 	}
 
 	public abstract List<T> findAll() throws DAOException;
+	
+	public abstract List<T> findAllByInstitute() throws DAOException;
 
 	public abstract T findById(Long id) throws DAOException;
 	

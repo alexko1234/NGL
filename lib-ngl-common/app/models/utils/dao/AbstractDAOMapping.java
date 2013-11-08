@@ -46,7 +46,20 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 		return initializeMapping(sqlCommon).execute();
 	}
 
-	 
+	public List<T> findAllByInstitute() throws DAOException {
+		String sql=sqlCommon;
+		if( entityClass.getSuperclass().equals(CommonInfoType.class)){		
+			sql=sqlCommon+getSQLByInstitute();
+		}
+		return initializeMapping(sql).execute();
+	}
+	
+	private String getSQLByInstitute(){
+		return " join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
+				" join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute();
+	}
+	
+	
 	public T findByCode(String code) throws DAOException {
 		return findByCode(code, true); 
 	}
@@ -60,9 +73,8 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 		String sql= sqlCommon;
 		
 		if (forCurrentInstitute && entityClass.getSuperclass().equals(CommonInfoType.class) ) {
-			sql += " and  c.code = ?  " + 
-					"join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
-					"join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute();
+			sql += " and  c.code = ?  " + getSQLByInstitute();
+					;
 		}
 		else {
 			if (entityClass.getSuperclass().equals(CommonInfoType.class)) {

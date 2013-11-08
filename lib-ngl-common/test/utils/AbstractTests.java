@@ -69,8 +69,7 @@ public abstract class AbstractTests {
 		config.put("mongodb.servers","mongodev.genoscope.cns.fr:27017");
 		config.put("ehcacheplugin", "disabled");
 		
-		
-		config.put("institute", "CNG");
+		config.put("institute", "CNS");
 	
 		return config;
 		
