@@ -62,7 +62,7 @@ angular.module('datatableServices', []).
 								active:false,
 								withoutSelect:false, //edit all line
 								showButton : true,
-								columnMode : true,
+								columnMode : false,
 								start : false,
 								all : false,
 								columns : {}, //columnIndex : {edit : true/false, value:undefined}
@@ -441,10 +441,9 @@ angular.module('datatableServices', []).
 			    						find = true;			    					
 			    					}else{
 			    						this.displayResult[i].edit=false;
-			    					}
-			    					this.displayResult[i].trClass = undefined;
-			    					this.displayResult[i].selected = undefined;		    						
+			    					}			    					   					
 			    				}
+			    				this.selectAll(false);
 			    				if(find){
 			    					this.config.edit.start = true;			
 			    					if(columnId){  
@@ -813,7 +812,10 @@ angular.module('datatableServices', []).
 		    				return (this.isShowToolbarLeft() || this.isShowToolbarRight());
 		    			},
 		    			isShowToolbarLeft: function(){
-		    				return (  this.config.edit.active ||  this.config.save.active || this.config.remove.active || this.config.hide.active || this.config.show.active || this.config.otherButtons.active);
+		    				return (  (this.config.edit.active && this.config.edit.showButton) 
+		    						||  (this.config.save.active && this.config.save.showButton) || (this.config.remove.active && this.config.remove.showButton) 
+		    						|| this.config.hide.active  || (this.config.show.active && this.config.show.showButton) 
+		    						|| this.config.otherButtons.active);
 		    			},
 		    			isShowToolbarRight: function(){
 		    				return (this.isShowPagination() || this.config.showTotalNumberRecords);
@@ -1120,11 +1122,7 @@ angular.module('datatableServices', []).
 			    		getOtherConfig();//Loading divs for other buttons and forms
 			    		//Form Section
 			    		//var formDiv = angular.element('<div class="datatable" ng-init="'+config.name+'.setColumnsConfig('+config+')"></div>');
-			    		var formHead = angular.element('<div class="row-fluid"></div>');
-			    		if(formConfig){
-			    			formHead.append(formConfig);//Adding the form
-				    		//formDiv.append(form);
-			    		}
+			    		
 			    		
 			    		//Buttons Section
 			    		var toolbar = angular.element('<div class="row-fluid" ng-show="'+config.name+'.isShowToolbar()"></div>');
@@ -1264,7 +1262,7 @@ angular.module('datatableServices', []).
 						tableHead += '</div></th></tr></thead>';
 						
 						var tableBody = '<tbody><tr ng-show="'+config.name+'.isEdit()"><td ng-repeat="col in '+config.name+'.config.columns" ng-hide="'+config.name+'.isHide(col.id)"><div class="controls" ><div  html-input="col" datatable-name="'+config.name+'" header></div></div></td></tr>';
-						tableBody += '<tr ng-repeat="value in '+config.name+'.displayResult | orderBy:'+config.name+'.config.orderBy:'+config.name+'.config.orderReverse" ng-click="'+config.name+'.select(value)" ng-class="value.trClass"><td rowspan="{{col.cells[$parent.$index].rowSpan}}" ng-hide="'+config.name+'.isHide(col.id)" ng-repeat="col in '+config.name+'.config.columns"> <div class="controls" ><div datatable-name="'+config.name+'"  html-input="col"></div></div></td></tr></tbody>';
+						tableBody += '<tr ng-repeat="value in '+config.name+'.displayResult | orderBy:'+config.name+'.config.orderBy:'+config.name+'.config.orderReverse" ng-click="'+config.name+'.select(value)" ng-class="value.trClass"><td rowspan="{{col.cells[$parent.$index].rowSpan}}" ng-hide="'+config.name+'.isHide(col.id)" ng-repeat="col in '+config.name+'.config.columns"> <div class="controls" ><div datatable-name="'+config.name+'"  html-input="col" index="{{$index}}"></div></div></td></tr></tbody>';
 	
 				    	table.html(tableHead+tableBody);
 				    	
@@ -1281,7 +1279,11 @@ angular.module('datatableServices', []).
 				    	
 				    	//Adding all to the DOM
 				    	//element.append($compile(formDiv)(scope));
-				    	element.append($compile(formHead)(scope));
+				    	if(formConfig){
+			    			var formHead = angular.element('<div class="row-fluid"></div>');
+			    			formHead.append(formConfig);//Adding the form
+			    			element.append($compile(formHead)(scope));					    	
+			    		}
 				    	element.append($compile(toolbar)(scope));
 				    	element.append($compile(messages)(scope));
 				    	element.append($compile(datatable)(scope));
@@ -1318,8 +1320,11 @@ angular.module('datatableServices', []).
         			    	if(attrs.header != undefined){
         			    		return   name+".config.edit.columns."+col.id+".value";
         			    	}
-        			    	
-        			    	return  "value."+col.property;
+        			    	if(angular.isFunction(col.property)){
+        			    		return name+".config.columns."+attrs.index+".property(value)";
+        			    	}else{
+        			    		return "value."+col.property;
+        			    	}
     			    	};
     			    	var columnFormatter = function(col){
 		    				var format = "";
