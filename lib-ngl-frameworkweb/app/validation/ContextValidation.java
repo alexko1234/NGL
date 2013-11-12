@@ -182,8 +182,12 @@ public class ContextValidation {
 		return isMode(Mode.NOT_DEFINED);
 	}
 	
-	public void setMode(ContextValidation ctx) {
-		this.mode = ctx.mode;
+	public void setMode(Mode mode) {
+		this.mode = mode;
+	}
+	
+	public Mode getMode() {
+		return this.mode;
 	}
 	
 	
