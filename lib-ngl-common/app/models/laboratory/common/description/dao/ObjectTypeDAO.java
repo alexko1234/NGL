@@ -55,8 +55,8 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 		if(null == otDB){
 			throw new DAOException("ObjectType doesn't exist");
 		}		
-		String sql = "UPDATE object_type SET code=? WHERE id=?";
-		jdbcTemplate.update(sql, ot.code, ot.id);
+		String sql = "UPDATE object_type SET code=?, generic=? WHERE id=?";
+		jdbcTemplate.update(sql, ot.code, ot.generic, ot.id);
 		
 		insertStates(ot.states, ot.id, true);
 	}
