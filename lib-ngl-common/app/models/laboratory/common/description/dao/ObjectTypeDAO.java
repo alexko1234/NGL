@@ -31,6 +31,9 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 		//Create new ot
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("code", ot.code);
+		//field generic can not be null
+		parameters.put("generic", ot.generic);
+		
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		ot.id = newId;
 
