@@ -204,11 +204,11 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 		//TODO A REFAIRE INSTITUTE : DONE
 		String sql = "SELECT c.code AS code, c.name AS name "+
 				"FROM experiment_category ec "+
-				"JOIN experiment_type et ON et.fk_experiment_category=ec.id AND ec.code='"+categoryCode+"' "+
+				"JOIN experiment_type et ON et.fk_experiment_category=ec.id "+
 				"JOIN common_info_type as c ON c.id=et.fk_common_info_type "+
 				"JOIN common_info_type_institute ci on c.id =ci.fk_common_info_type "+
-				"JOIN institute i on i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute();
-		//Logger.info(sql);
+				"JOIN institute i on i.id = ci.fk_institute AND i.code=" + DescriptionHelper.getInstitute() + " "+
+				"WHERE ec.code='"+categoryCode+"'";
 		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
 		return this.jdbcTemplate.query(sql, mapper);
 	}
