@@ -14,9 +14,10 @@ public class ObjectTypeService {
 	
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{
 		
+		//Can not be removed cause integrity constraints ...
 		//DAOHelpers.removeAll(ObjectType.class, ObjectType.find);
 		
-		//saveObjectTypes(errors);
+		saveObjectTypes(errors);
 		
 		updateStatesObjectTypes(errors);
 	}
@@ -24,60 +25,68 @@ public class ObjectTypeService {
 
 	
 	public static void saveObjectTypes(Map<String,List<ValidationError>> errors) throws DAOException{
-		List<ObjectType> l = new ArrayList<ObjectType>();
-		
-		l.add(DescriptionFactory.newObjectType(ObjectType.CODE.Container.name(), ObjectType.CODE.Container.name(), DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "N", "IW-P", "IW-E", "IU","IS" ) ));
-		
-		l.add(DescriptionFactory.newObjectType(ObjectType.CODE.Project.name(), ObjectType.CODE.Project.name(), DescriptionFactory.getStates("F", "N", "IP") ));
-		
-		l.add(DescriptionFactory.newObjectType(ObjectType.CODE.Experiment.name(), ObjectType.CODE.Experiment.name(), DescriptionFactory.getStates("F", "N", "IP") ));
-		
-		l.add(DescriptionFactory.newObjectType(ObjectType.CODE.Process.name(), ObjectType.CODE.Process.name(), DescriptionFactory.getStates("F", "N", "IP") ));
-		
-		l.add(DescriptionFactory.newObjectType(ObjectType.CODE.Run.name(), ObjectType.CODE.Run.name(), DescriptionFactory.getStates("F", "E","IW-V", "IP-V", "F-V", "IP-S", "IP-RG", "F-RG") ));
-		
-		l.add(DescriptionFactory.newObjectType(ObjectType.CODE.Lane.name(), ObjectType.CODE.Lane.name(), DescriptionFactory.getStates("F", "E","IW-V", "IP-V", "F-V", "IP-S", "IP-RG", "F-RG") ));
-		
-		l.add(DescriptionFactory.newObjectType(ObjectType.CODE.ReadSet.name(), ObjectType.CODE.ReadSet.name(), DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "IP-RG", "F-RG") ));
-		
-		l.add(DescriptionFactory.newObjectType(ObjectType.CODE.File.name(), ObjectType.CODE.File.name(), DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "IP-RG", "F-RG") ));
-		
-		
-		DAOHelpers.saveModels(ObjectType.class, l, errors);
-		
+			
+			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Container.name()), errors);
+			
+			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Container.name() ), errors);
+			
+			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Project.name() ), errors);
+			
+			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Experiment.name() ), errors);
+			
+			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Process.name() ), errors);
+			
+			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Run.name() ), errors);
+			
+			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Lane.name() ), errors);
+			
+			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.ReadSet.name() ), errors);
+			
+			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.File.name() ), errors);
+
+			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Sample.name() ), errors);
+			
+			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Instrument.name() ), errors);
+			
+			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Reagent.name() ), errors);
+			
+			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Import.name() ), errors);
+			
+			DAOHelpers.saveModel(ObjectType.class,DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Treatment.name() ), errors);
+			
 	}
 	
 	
 	public static void updateStatesObjectTypes(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<ObjectType> l = new ArrayList<ObjectType>();
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Container.name(), DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "N", "IW-P", "IW-E", "IU","IS" ) ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Container.name(), false, DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "N", "IW-P", "IW-E", "IU","IS" ) ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Project.name(), DescriptionFactory.getStates("F", "N", "IP") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Project.name(), true, DescriptionFactory.getStates("F", "N", "IP") ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Experiment.name(), DescriptionFactory.getStates("F", "N", "IP") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Experiment.name(), true, DescriptionFactory.getStates("F", "N", "IP") ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Process.name(), DescriptionFactory.getStates("F", "N", "IP") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Process.name(), true, DescriptionFactory.getStates("F", "N", "IP") ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Run.name(), DescriptionFactory.getStates("F", "E","IW-V", "IP-V", "F-V", "IP-S", "IP-RG", "F-RG") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Run.name(), false, DescriptionFactory.getStates("F", "E","IW-V", "IP-V", "F-V", "IP-S", "IP-RG", "F-RG") ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Lane.name(), DescriptionFactory.getStates("F", "E","IW-V", "IP-V", "F-V", "IP-S", "IP-RG", "F-RG") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Lane.name(), false, DescriptionFactory.getStates("F", "E","IW-V", "IP-V", "F-V", "IP-S", "IP-RG", "F-RG") ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.ReadSet.name(), DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "IP-RG", "F-RG") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.ReadSet.name(), false, DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "IP-RG", "F-RG") ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.File.name(), DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "IP-RG", "F-RG") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.File.name(), false, DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "IP-RG", "F-RG") ));
 		
 		//default values
 		//TODO : define values
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Sample.name(), DescriptionFactory.getStates("F", "N", "IP") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Sample.name(), true, DescriptionFactory.getStates("F", "N", "IP") ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Instrument.name(), DescriptionFactory.getStates("F", "N", "IP") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Instrument.name(), false, DescriptionFactory.getStates("F", "N", "IP") ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Reagent.name(), DescriptionFactory.getStates("F", "N", "IP") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Reagent.name(), true, DescriptionFactory.getStates("F", "N", "IP") ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Import.name(), DescriptionFactory.getStates("F", "N", "IP") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Import.name(), true, DescriptionFactory.getStates("F", "N", "IP") ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Treatment.name(), DescriptionFactory.getStates("F", "N", "IP") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Treatment.name(), false, DescriptionFactory.getStates("F", "N", "IP") ));
 		
 		
 		DAOHelpers.updateModels(ObjectType.class, l, errors);	
