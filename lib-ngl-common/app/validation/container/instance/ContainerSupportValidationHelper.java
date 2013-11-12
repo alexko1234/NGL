@@ -18,10 +18,10 @@ public class ContainerSupportValidationHelper extends CommonValidationHelper{
 	public static void validateUniqueBarCodePosition(ContainerSupport containerSupport,ContextValidation contextValidation) {
 
 		if(contextValidation.isCreationMode()){
-			Query query=DBQuery.is("support.line",containerSupport.line)
-					.is("support.column", containerSupport.column)
-					.is("support.barCode",containerSupport.barCode);
-			if(MongoDBDAO.getCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class).count(query)!=0 ){
+			Query query=DBQuery.and(DBQuery.is("support.line",containerSupport.line),
+					DBQuery.is("support.column", containerSupport.column),
+					DBQuery.is("support.barCode",containerSupport.barCode));
+			if (MongoDBDAO.getCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class).count(query)!=0 ) {
 				//TODO revoir le message d'erreur
 				contextValidation.addErrors("barCode.line.column", ValidationConstants.ERROR_NOTUNIQUE_MSG, containerSupport.barCode,containerSupport.line,containerSupport.column);		
 			}
