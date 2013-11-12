@@ -137,16 +137,15 @@ public class DescriptionFactory {
 		return l;
 	}
 	
-	public static ObjectType newObjectType(String name, String code, List<State> states) {
+	public static ObjectType newDefaultObjectType(String code) {
 		ObjectType l = new ObjectType();
 		l.code = code;
 		l.generic = false;
-		l.states = states;
 
 		return l;
 	}
 	
-	public static ObjectType setStatesToObjectType(String code, List<State> states) {
+	public static ObjectType setStatesToObjectType(String code, Boolean generic, List<State> states) {
 		ObjectType l = new ObjectType();
 		try {
 			l = ObjectType.find.findByCode(code);
@@ -154,7 +153,7 @@ public class DescriptionFactory {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		l.generic = false;
+		l.generic = generic;
 		l.states = states;
 		return l;
 	}
