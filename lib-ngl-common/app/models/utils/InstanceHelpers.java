@@ -135,7 +135,7 @@ public class InstanceHelpers {
 
 	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError,Boolean keepRootKeyName) {
 		ContextValidation localContextError=new ContextValidation();
-		localContextError.setMode(contextError);
+		localContextError.setMode(contextError.getMode());
 		if(keepRootKeyName){
 			localContextError.addKeyToRootKeyName(contextError.getRootKeyName());
 		}
