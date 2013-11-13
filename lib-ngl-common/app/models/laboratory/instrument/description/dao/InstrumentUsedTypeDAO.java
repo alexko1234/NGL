@@ -36,7 +36,6 @@ public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType
 
 	public List<InstrumentUsedType> findByExperimentId(long id)
 	{
-		//TODO A REFAIRE INSTITUTE : DONE
 		String sql = "SELECT it.id, it.fk_common_info_type, it.fk_instrument_category "+
 				"FROM instrument_used_type as it "+
 				"JOIN experiment_type_instrument_type as cit ON fk_instrument_used_type=it.id " +

@@ -161,13 +161,14 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 	}
 
 	public List<String> findVoidProcessExperimentTypeCode(String processTypeCode){
-		//TODO A REFAIRE INSTITUTE : DONE
+		//TODO A REFAIRE INSTITUTE
 		String query = "SELECT c.code FROM experiment_type as t " +
-				"join common_info_type as c ON c.id=t.fk_common_info_type "+  
-				"join process_type as p on p.fk_void_experiment_type = t.id " +
-				"join common_info_type as cp on cp.id= p.id and cp.code = ? "+
-				"join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
-				"join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute();
+				" inner join common_info_type as c ON c.id=t.fk_common_info_type"+  
+				" inner join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
+				" inner join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute()+
+				" inner join process_type as p on p.fk_void_experiment_type = t.id " +
+				" inner join common_info_type as cp on cp.id= p.id "+
+				" where cp.code = ?";
 		
 		List<String> list = jdbcTemplate.query(
 				query,
@@ -183,13 +184,10 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 	}
 	
 	public List<ExperimentType> findPreviousExperimentTypeForAnExperimentTypeCode(String code) throws DAOException{
-		//use by a controller api
 		String sql = sqlCommon +" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+
                 " inner join previous_nodes as p on p.fk_previous_node = n.id"+
                 " inner join experiment_type_node as np on np.id = p.fk_node"+
                 " inner join  common_info_type as cp on cp.id = np.fk_experiment_type"+
-                " join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
-				" join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute() + " " + 
                 " where cp.code = ?";
 		return initializeMapping(sql, new SqlParameter("cp.code", Types.VARCHAR)).execute(code);
 	}
@@ -201,7 +199,6 @@ public class ExperimentTypeDAO extends AbstractDAOMapping<ExperimentType>{
 	}
 
 	public List<ListObject> findByCategoryCode(String categoryCode){
-		//TODO A REFAIRE INSTITUTE : DONE
 		String sql = "SELECT c.code AS code, c.name AS name "+
 				"FROM experiment_category ec "+
 				"JOIN experiment_type et ON et.fk_experiment_category=ec.id "+

@@ -18,8 +18,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-import play.Logger;
-
 import com.avaje.ebean.enhance.asm.Type;
 
 @Repository
@@ -132,11 +130,10 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	}
 	
 	public List<State> findByCommonInfoType(long idCommonInfoType) throws DAOException {
-		//TODO A REFAIRE INSTITUTE : 
-		//? : method use by DAO (internal use) not exposed for validation 
-		String sql = sqlCommon +
-				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
-				"JOIN common_info_type c ON cs.fk_common_info_type=c.id and c.id =?";		
+		//TODO A REFAIRE INSTITUTE
+		String sql = sqlCommon+
+				"JOIN common_info_type_state ON fk_state=id "+
+				"WHERE fk_common_info_type=?";		
 		return initializeMapping(sql, new SqlParameter("fk_common_info_type", Type.LONG)).execute(idCommonInfoType);		
 	}
 	
@@ -163,8 +160,6 @@ public class StateDAO extends AbstractDAOMapping<State>{
 
 
 	public List<State> findByTypeCode(String typeCode)  throws DAOException {
-		//TODO A REFAIRE INSTITUTE : DONE
-		
 		String sql = sqlCommon+
 				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
 				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
@@ -175,8 +170,6 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	}
 	
 	public boolean isCodeExistForTypeCode(String code, String typeCode)  throws DAOException {
-		//TODO A REFAIRE INSTITUTE : DONE
-		
 		String sql = sqlCommon+
 				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
 				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+

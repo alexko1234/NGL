@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Resolution;
+import models.laboratory.common.description.State;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -55,6 +56,16 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		
 	}
 	
+	public List<Resolution> findByTypeCode(String typeCode)  throws DAOException {
+		
+		String sql = sqlCommon+
+				"JOIN common_info_type_resolution cr ON cr.fk_resolution=t.id "+
+				"JOIN common_info_type c on c.id =cr.fk_common_info_type "+
+				"WHERE c.code = ?";
+		return initializeMapping(sql, new SqlParameter("c.code", Types.VARCHAR)).execute(typeCode);	
+	}
+	
+	
 	public List<Resolution> findByCommonInfoType(long idCommonInfoType)
 	{
 		String sql = "SELECT id,name,code "+
@@ -69,7 +80,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
-		String sql = sqlCommon+" inner join resolution_category r on r.id = t.fk_resolution_category and r.code = ? ";
+		String sql = sqlCommon+" inner join resolution_category r on r.id = t.fk_resolution_category WHERE r.code = ? ";
 		return initializeMapping(sql, new SqlParameter("code", Types.VARCHAR)).execute(code);		
 	}
 
