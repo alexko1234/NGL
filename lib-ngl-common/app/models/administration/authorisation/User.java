@@ -53,6 +53,9 @@ public class User extends Model{
 		@ManyToMany(cascade={CascadeType.ALL})
 		public List<Team> teams;
 		
+		@ManyToMany(cascade={CascadeType.ALL})
+		public List<Application> applications;
+		
 		public static Finder<Integer,User> find = new Finder<Integer,User>(Integer.class, User.class);
 		
 		public  Map<String,List<ValidationError>> validate() {
