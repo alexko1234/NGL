@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import models.administration.authorisation.Application;
 import models.administration.authorisation.Permission;
 import models.administration.authorisation.Role;
 import models.administration.authorisation.Team;
@@ -183,8 +184,17 @@ public class PermissionHelper {
 		return models.administration.authorisation.Role.find.all();
 	}
 	
+	public static List<Application> getAllApplication() {
+		return models.administration.authorisation.Application.find.all();
+	}
+	
 	public static models.administration.authorisation.Role getRole(int id) {
 		return models.administration.authorisation.Role.find.byId(id);
+	}
+	
+	
+	public static Application getApplication(int id) {
+		return models.administration.authorisation.Application.find.byId(id);
 	}
 	
 	public static models.administration.authorisation.Team getTeam(int id) {
@@ -198,6 +208,10 @@ public class PermissionHelper {
 	
 	public static Permission getpermission(String code) {
 		return models.administration.authorisation.Permission.find.where("code LIKE "+code).findUnique();
+	}
+	
+	public static Application getapplication(String code) {
+		return models.administration.authorisation.Application.find.where("code LIKE "+code).findUnique();
 	}
 	
 	public static User getUser(int id) {
@@ -228,6 +242,15 @@ public class PermissionHelper {
 		List<models.administration.authorisation.Team> liste = getAllTeam();
 		for(models.administration.authorisation.Team team: liste)
 				map.put(String.valueOf(team.id), team.nom);
+		
+		return map;
+	}
+	
+	public static Map<String,String> getMapApplication() {
+		Map<String,String> map = new HashMap<String,String>();
+		List<models.administration.authorisation.Application> liste = getAllApplication();
+		for(models.administration.authorisation.Application app: liste)
+				map.put(String.valueOf(app.id), app.label);
 		
 		return map;
 	}
