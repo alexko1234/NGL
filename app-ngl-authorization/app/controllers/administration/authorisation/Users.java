@@ -97,6 +97,15 @@ public class Users extends Controller {
 					}
 				}
 				
+				for(int i = 0;i<bean.applications.size();i++) {
+					if(bean.applications.get(i).id!=null) 
+						bean.applications.set(i, PermissionHelper.getApplication(bean.applications.get(i).id));
+					else {
+						bean.applications.remove(i);
+						i--;
+					}
+				}
+				
 				if(bean.id == null){
 					bean.save();
 				}else{

@@ -39,13 +39,14 @@
 				<a class="brand" href="@routes.Application.index("home")">NGL</a>
 				
 					<ul class="nav">	
-					<li class="dropdown @("active".when(nav == "permissions" || nav == "roles" || nav == "users"))">
+					<li class="dropdown @("active".when(nav == "permissions" || nav == "roles" || nav == "users" || nav == "applications"))">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="admin">Administration<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="admin"> 
 								<li class="@("active".when(nav == "permissions"))"><a href="@controllers.administration.authorisation.routes.Permissions.home()">Permissions</a></li>
 								<li  class="@("active".when(nav == "roles"))"><a href="@controllers.administration.authorisation.routes.Roles.home()">Roles</a></li>					
 								<li  class="@("active".when(nav == "users"))"><a href="@controllers.administration.authorisation.routes.Users.home()">Users</a></li>	
-								<li  class="@("active".when(nav == "equipes"))"><a href="@controllers.administration.authorisation.routes.Teams.home()">Teams</a></li>														
+								<li  class="@("active".when(nav == "equipes"))"><a href="@controllers.administration.authorisation.routes.Teams.home()">Teams</a></li>	
+								<li  class="@("active".when(nav == "applications"))"><a href="@controllers.administration.authorisation.routes.Applications.home()">Applications</a></li>														
 							</ul>
   						</li>
 </ul>

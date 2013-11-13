@@ -33,7 +33,10 @@ public class Application extends Controller {
 	  	        controllers.administration.authorisation.routes.javascript.Roles.remove(),
 	  	        controllers.administration.authorisation.routes.javascript.Permissions.remove(),
 	  	        controllers.administration.authorisation.routes.javascript.Teams.remove(),
-	  	        controllers.administration.authentication.routes.javascript.User.logOut()
+	  	        controllers.administration.authentication.routes.javascript.User.logOut(),
+	  	      controllers.administration.authorisation.routes.javascript.Applications.createOrUpdate(),
+	  	        controllers.administration.authorisation.routes.javascript.Applications.show(),
+	  	      controllers.administration.authorisation.routes.javascript.Applications.remove()
 	  	      )
 	  	    );
 	  	  }

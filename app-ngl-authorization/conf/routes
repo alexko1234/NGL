@@ -37,6 +37,14 @@ GET	   	/admin/teams/:id	    			controllers.administration.authorisation.Teams.s
 DELETE 	/admin/teams/:id					controllers.administration.authorisation.Teams.remove(id : java.lang.Integer)
 GET		/admin/teams/:id/edit				controllers.administration.authorisation.Teams.edit(id:java.lang.Integer)
 
+GET		/admin/applications/home					controllers.administration.authorisation.Applications.home()
+GET		/admin/applications						controllers.administration.authorisation.Applications.list()
+POST	/admin/applications						controllers.administration.authorisation.Applications.createOrUpdate(format: java.lang.String ?= "html")
+GET 	/admin/applications/add					controllers.administration.authorisation.Applications.add()
+GET	   	/admin/applications/:id	    			controllers.administration.authorisation.Applications.show(id: java.lang.Integer)
+DELETE 	/admin/applications/:id					controllers.administration.authorisation.Applications.remove(id : java.lang.Integer)
+GET		/admin/applications/:id/edit				controllers.administration.authorisation.Applications.edit(id:java.lang.Integer)
+
 GET	   /logout								controllers.administration.authentication.User.logOut()
 
 POST	/authentification		controllers.administration.authentication.User.authenticate()
