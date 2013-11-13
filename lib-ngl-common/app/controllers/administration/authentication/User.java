@@ -35,13 +35,13 @@ public class User extends Controller{
 				java.util.Date date= new java.util.Date();
 				int timeStamp =  (int)date.getTime();
 				
-				context.session().put("CAS_FILTER_USER", id);
-				context.session().put("CAS_FILTER_TIMEOUT", String.valueOf(timeStamp));
+				context.session().put("NGL_FILTER_USER", id);
+				context.session().put("NGL_FILTER_TIMEOUT", String.valueOf(timeStamp));
 		}
 		
 		public static Result logOut(){
-			Http.Context.current().session().remove("CAS_FILTER_USER");
-			Http.Context.current().session().remove("CAS_FILTER_TIMEOUT");
+			Http.Context.current().session().remove("NGL_FILTER_USER");
+			Http.Context.current().session().remove("NGL_FILTER_TIMEOUT");
 			return ok();//portail d'application
 		}
 }
