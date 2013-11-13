@@ -34,17 +34,18 @@ public class ImportDataCNG extends AbstractImportData {
 		
 		Logger.info("ImportData execution : ");
 		try{
+			/*
 			Logger.info(" Import Projects ... ");
 			createProjectsFromLims(contextError);
 			Logger.info("End Import Projects !");
 			
 			Logger.info(" Import Samples ... ");
 			//createSamplesFromLims(contextError, "26136024");
-			//createSamplesFromLims(contextError, null);
+			createSamplesFromLims(contextError, null);
 			Logger.info("End Import Samples !");
-			
+			*/
 			Logger.info(" Import Containers ... ");
-			//createContainersFromLims(contextError);
+			createContainersFromLims(contextError);
 			Logger.info("End Import Containers !");
 			
 		}catch (Exception e) {
