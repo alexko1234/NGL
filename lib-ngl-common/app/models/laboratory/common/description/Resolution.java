@@ -36,6 +36,11 @@ public class Resolution extends Model<Resolution>{
 				throws DAOException {
 			return ((ResolutionDAO) getInstance()).findByCategoryCode(code);
 		}
+		
+		public List<Resolution> findByTypeCode(String code)
+				throws DAOException {
+			return ((ResolutionDAO) getInstance()).findByTypeCode(code);
+		}
 	}
 	
 }
