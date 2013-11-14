@@ -111,9 +111,6 @@ public class RunMockHelper {
 		r.path = "/";
 		r.sampleCode = "samplecode1";
 		r.projectCode = "42";
-		r.sampleContainerCode = "container1";
-
-
 		r.dispatch = false;
 		r.laneNumber = 1;
 		
