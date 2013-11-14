@@ -268,8 +268,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	@Test
 	 public void testValidateTreatmentErrorCodeNotUnique() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {		    	   
+				    	   
 		Treatment t = getNewTreatmentForReadSet();
 		
 		// create treatment
@@ -295,7 +294,6 @@ public class TreatmentValidationTest extends AbstractTests {
 			assertThat(ctxVal.errors.toString()).contains(ERROR_CODE_NOTUNIQUE_MSG);
 		}
 		
-		}});
 	}
 	
 	private void createSameTrt() {
@@ -353,8 +351,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	@Test
 	 public void testValidateTreatmentErrorCodeNotExists() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {		    	   
+				    	   
 		Treatment t = getNewTreatmentForReadSet();
 		
 		// create treatment
@@ -383,8 +380,6 @@ public class TreatmentValidationTest extends AbstractTests {
 		else {
 			System.out.println("method deleteRdCode() doesn't run normally !");
 		}
-		
-		       }});
 
 	}
 	
@@ -392,8 +387,6 @@ public class TreatmentValidationTest extends AbstractTests {
 
 	@Test
 	 public void testValidateTreatmentErrorValueNotDefined() {
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
 			Treatment t = getNewTreatmentForReadSet();
 	
 			t.results().get("default").put("bad", new PropertySingleValue("Ouh la la"));
@@ -414,25 +407,18 @@ public class TreatmentValidationTest extends AbstractTests {
 			
 			assertThat(ctxVal.errors).hasSize(1);
 			assertThat(ctxVal.errors.toString()).contains(ERROR_NOTDEFINED_MSG);
-		       }});
 	}
 	
-	/*
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
+	
 
 	
 	
-	@Test(expected=java.lang.NumberFormatException.class)
-	 public void testValidateTreatmentErrorBadTypeValue() throws Exception {
-		   
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
+	//@Test(expected=java.lang.NumberFormatException.class)
+	@Test
+	 public void testValidateTreatmentErrorBadTypeValue() {
 		
 		    	Treatment t = null; 
-	    		ContextValidation ctxVal = new ContextValidation(); 
-	    		
-		    	try {   
+	    		ContextValidation ctxVal = new ContextValidation();  
 						   
 					t = getNewTreatmentForReadSet();
 					
@@ -451,30 +437,18 @@ public class TreatmentValidationTest extends AbstractTests {
 		    		ctxVal.setCreationMode();
 		    		
 		    		t.validate(ctxVal);
-				
-		    	}
-		    	catch(NumberFormatException e) {
-		    		e.notify();
-		    	}
-		    	finally {
 
-		
 		    		assertThat(ctxVal.errors).hasSize(1);
 		    		assertThat(ctxVal.errors.toString()).contains(ERROR_BADTYPE_MSG);
-		    		
-		    	}
-		
-		 }});
+
 	}
-	*/
+	
 	
 
 
 	
 	@Test
 	 public void testValidateTreatmentErrorBadContext() {
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
 		Treatment t = getNewTreatmentForReadSet();
 		
 		// new bad context
@@ -503,7 +477,6 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		assertThat(ctxVal.errors).hasSize(1);
 		assertThat(ctxVal.errors.toString()).contains(ERROR_VALUENOTAUTHORIZED_MSG);	
-		       }});
 	}
 	 
 }
