@@ -29,4 +29,7 @@ public class ReadSetOld extends ReadSet{
 	public TBoolean validBioinformatic = TBoolean.UNSET;
 	public Date validBioinformaticDate;
 	public List<FileOld> files;
+	
+	//new field to remove
+	public String sampleContainerCode;
 }
