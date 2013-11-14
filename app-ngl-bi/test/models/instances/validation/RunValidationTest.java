@@ -1008,7 +1008,7 @@ public class RunValidationTest extends AbstractTests {
 		readSet.path = "/path/test";
 		readSet.projectCode = "PCODE"; 
 		readSet.sampleCode = "SPCODE";
-		readSet.sampleContainerCode = "SPCONTCODE";
+		//readSet.sampleContainerCode = "SPCONTCODE";
 		readSet.state = getState("F-QC");
 		readSet.traceInformation = new TraceInformation();
 		readSet.traceInformation.setTraceInformation("ngsrg");
@@ -1024,7 +1024,7 @@ public class RunValidationTest extends AbstractTests {
 		readSet.path = "";
 		readSet.projectCode = ""; 
 		readSet.sampleCode = "";
-		readSet.sampleContainerCode = "";
+		//readSet.sampleContainerCode = "";
 		readSet.state = getState("F-QC");
 		readSet.typeCode = "default-readset";
 		TraceInformation ti = new TraceInformation();
