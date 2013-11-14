@@ -1,27 +1,21 @@
 package controllers.migration;		
 
-import java.util.Date;
 import java.util.List;
 
 import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Validation;
-import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
 import net.vz.mongodb.jackson.JacksonDBCollection;
 import play.Logger;
-import play.data.DynamicForm;
-import play.data.Form;
-import play.libs.Json;
 import play.mvc.Result;
-import validation.ContextValidation;
 import controllers.CommonController;
 import controllers.migration.models.FileOld;
 import controllers.migration.models.LaneOld;
 import controllers.migration.models.ReadSetOld;
+import controllers.migration.models.ReadSetOldDidier;
 import controllers.migration.models.RunOld;
 import fr.cea.ig.MongoDBDAO;
 
@@ -29,6 +23,7 @@ public class Migration extends CommonController {
 	
 	private static final String RUN_ILLUMINA_BCK = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_BCK";
 	private static final String READSET_ILLUMINA_BCK = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK";
+	
 	
 	public static Result migration(){
 		JacksonDBCollection<RunOld, String> runsCollBck = MongoDBDAO.getCollection(RUN_ILLUMINA_BCK, RunOld.class);
@@ -80,6 +75,14 @@ public class Migration extends CommonController {
 				DBUpdate.unset("stateCode").unset("validProduction").unset("validProductionDate").unset("validBioinformatic").unset("validBioinformaticDate")
 				.set("validationProduction", validation).set("validationBioinformatic", validation).set("state", state));
 		
+		//migration sampleContainerCode to sampleCode + remove field sampleContainerCode;
+		String sampleContainerCode = readSet.sampleContainerCode;
+		
+		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld.class, 
+				DBQuery.is("code", readSet.code), 
+				DBUpdate.unset("sampleContainerCode").set("sampleCode", sampleContainerCode));
+		//end migration sampleContainerCode
+		
 		if(null != readSet.files){
 			for(FileOld fileOld : readSet.files){
 				
@@ -94,6 +97,8 @@ public class Migration extends CommonController {
 		}
 		
 	}
+
+	
 
 	private static void migreRun(RunOld run) {
 		
