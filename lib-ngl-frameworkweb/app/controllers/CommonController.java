@@ -9,6 +9,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.With;
+import play.mvc.Http.Context;
 
 @With(UserHistory.class)
 public abstract class CommonController extends Controller{
@@ -26,5 +27,8 @@ public abstract class CommonController extends Controller{
 		return filledForm;
 	}
 
+	public static String getCurrentUser(){
+		return Context.current().session().get("NGL_FILTER_USER");
+	}
 
 }
