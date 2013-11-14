@@ -27,14 +27,14 @@
 	 	} else {
 	   @helper.tbMultipleCheckBox(formUser("roles"), formUser.get.roles.map(v => v.id.toString()).toList,play.libs.Scala.asScala(PermissionHelper.getMapRole()),"id",'_label->"User Roles",disabled) <br>
 	   }
-		</div>
+		</div><br><br>
 		 <div style="width:400px;height:80px;overflow: auto;">
 	   @if(formUser("id").value == null || formUser("id").value == "") {
 		 @helper.tbMultipleCheckBox(formUser("teams"),Nil,play.libs.Scala.asScala(PermissionHelper.getMapTeam()),"id",'_label->"User teams",disabled)
 	 	} else {
 	   @helper.tbMultipleCheckBox(formUser("teams"), formUser.get.teams.map(v => v.id.toString()).toList,play.libs.Scala.asScala(PermissionHelper.getMapTeam()),"id",'_label->"User teams",disabled) <br>
 	   }
-		</div>
+		</div><br><br>
 	  <div style="width:400px;height:80px;overflow: auto;">
 	   @if(formUser("id").value == null || formUser("id").value == "") {
 		 @helper.tbMultipleCheckBox(formUser("applications"),Nil,play.libs.Scala.asScala(PermissionHelper.getMapApplication()),"id",'_label->"User applications",disabled)
