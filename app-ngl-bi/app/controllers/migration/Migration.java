@@ -15,7 +15,6 @@ import controllers.CommonController;
 import controllers.migration.models.FileOld;
 import controllers.migration.models.LaneOld;
 import controllers.migration.models.ReadSetOld;
-import controllers.migration.models.ReadSetOldDidier;
 import controllers.migration.models.RunOld;
 import fr.cea.ig.MongoDBDAO;
 
