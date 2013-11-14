@@ -31,7 +31,7 @@ public class ReadSet extends DBObject implements IValidation{
 	public String runCode;
 	public Integer laneNumber;
 	public Boolean dispatch;
-	public String sampleContainerCode; //code bar de la banque ou est l'echantillon
+	//public String sampleContainerCode; //code bar de la banque ou est l'echantillon
 	public String sampleCode; //nom de l'ind / ech
 	public String projectCode;
 	
@@ -85,9 +85,9 @@ public class ReadSet extends DBObject implements IValidation{
 		if(ValidationHelper.required(contextValidation, this.sampleCode, "sampleCode")){
 			//TODO validate if exist sampleCode
 		}
-		if(ValidationHelper.required(contextValidation, this.sampleContainerCode, "sampleContainerCode")){
+		//if(ValidationHelper.required(contextValidation, this.sampleContainerCode, "sampleContainerCode")){
 			//TODO validate if exist sampleContainerCode
-		}
+		//}
 		ValidationHelper.required(contextValidation, this.path, "path");
 		contextValidation.putObject("readSet", this);
 		contextValidation.putObject("level", Level.CODE.ReadSet);
