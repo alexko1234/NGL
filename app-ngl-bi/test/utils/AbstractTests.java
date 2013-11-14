@@ -72,7 +72,7 @@ public abstract class AbstractTests {
 		config.put("casUrlValidator", "https://cas.genoscope.cns.fr:8443/cas/serviceValidate");
 		config.put("casUrlLogin", "https://cas.genoscope.cns.fr:8443/cas/login");
 		config.put("casRenew", "false");
-	    config.put("casMode", "debug");
+	    config.put("authPluginMode", "debug");
 		
 	    config.put("institute", "CNG");
 	    config.put("applicationCode", "ngl-bi");
