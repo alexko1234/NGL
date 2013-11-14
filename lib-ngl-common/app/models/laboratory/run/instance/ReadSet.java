@@ -78,16 +78,12 @@ public class ReadSet extends DBObject implements IValidation{
 		ReadSetValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
 		ReadSetValidationHelper.validateReadSetRunCode(this.runCode ,contextValidation);
 		ReadSetValidationHelper.validateReadSetLaneNumber(this.runCode, this.laneNumber ,contextValidation);
-		
 		if(ValidationHelper.required(contextValidation, this.projectCode, "projectCode")){
 			//TODO validate if exist projectCode
 		}
 		if(ValidationHelper.required(contextValidation, this.sampleCode, "sampleCode")){
 			//TODO validate if exist sampleCode
 		}
-		//if(ValidationHelper.required(contextValidation, this.sampleContainerCode, "sampleContainerCode")){
-			//TODO validate if exist sampleContainerCode
-		//}
 		ValidationHelper.required(contextValidation, this.path, "path");
 		contextValidation.putObject("readSet", this);
 		contextValidation.putObject("level", Level.CODE.ReadSet);
