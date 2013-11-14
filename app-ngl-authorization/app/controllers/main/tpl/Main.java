@@ -1,4 +1,4 @@
-package controllers;
+package controllers.main.tpl;
 
 import play.Logger;
 import play.Routes;
@@ -10,9 +10,9 @@ import play.mvc.Http.Context;
 import controllers.authorisation.Permission;
 
 
-public class Application extends Controller {
+public class Main extends Controller {
 
-  public static Result index(String id) {
+  public static Result home(String id) {
     return ok(index.render("Welcome to the Next LIMS Generation",id));
   }
 

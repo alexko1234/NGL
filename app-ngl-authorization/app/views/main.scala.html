@@ -23,7 +23,7 @@
         
         <script src="@routes.Assets.at("javascripts/ZeroClipboard.js")" type="text/javascript" charset="utf-8"></script>
         <script src="@routes.Assets.at("javascripts/ngl.js")" type="text/javascript" charset="utf-8"></script>
-        <script src="@routes.Application.javascriptRoutes" type="text/javascript"></script>
+        <script src="@controllers.main.tpl.routes.Main.javascriptRoutes" type="text/javascript"></script>
         @scripts
     </head>
     <body data-spy="scroll" data-target=".subnav" data-offset="50">
@@ -36,7 +36,7 @@
 		<div class="navbar-inner">
 			<div class="container-fluid">
 				
-				<a class="brand" href="@routes.Application.index("home")">NGL</a>
+				<a class="brand" href="@controllers.main.tpl.routes.Main.home("home")">NGL</a>
 				
 					<ul class="nav">	
 					<li class="dropdown @("active".when(nav == "permissions" || nav == "roles" || nav == "users" || nav == "applications"))">
