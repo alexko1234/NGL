@@ -2,6 +2,8 @@ package controllers.runs.tpl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import controllers.CommonController;
 import play.Routes;
 import play.i18n.Messages;
 import play.mvc.Controller;
@@ -16,7 +18,7 @@ import views.html.runs.*;
  * @author galbini
  *
  */
-public class Runs extends Controller {
+public class Runs extends CommonController {
 	
 	public static Result home(String homecode) {
 		return ok(home.render(homecode));

@@ -1,2 +1,2 @@
-0:play.modules.cas.CasPlugin
+0:play.modules.activeDirectory.ActiveDirectoryPlugin
 1:controllers.resources.AssetPlugin

@@ -1,12 +1,13 @@
 package controllers.main.tpl;
 
+import controllers.CommonController;
 import jsmessages.JsMessages;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.home ;
 
 
-public class Main extends Controller {
+public class Main extends CommonController {
 
 
    public static Result home() {

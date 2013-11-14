@@ -2,6 +2,8 @@ package controllers.archives.tpl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import controllers.CommonController;
 import play.Routes;
 import play.i18n.Messages;
 import play.mvc.Controller;
@@ -15,7 +17,7 @@ import views.html.archives.*;
  * @author galbini
  *
  */
-public class ReadSets extends Controller {
+public class ReadSets extends CommonController {
 	
 	public static Result home(String homecode) {
 		return ok(home.render(homecode));

@@ -4,9 +4,12 @@ import java.lang.reflect.Method;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
+import play.modules.cas.CasAuthentication;
 import play.mvc.Action;
 import play.mvc.Http;
+import play.mvc.Result;
 import play.mvc.Http.Request;
+import play.modules.Authenticate;
 
 public class Global extends GlobalSettings {
 
@@ -14,11 +17,9 @@ public class Global extends GlobalSettings {
 	public void onStart(Application app) {
 		Logger.info("NGL has started");
 	}
-
-	@Override
+	
 	public Action onRequest(Request request, Method actionMethod) {
-		//call CAS module
-		return new play.modules.cas.CasAuthentication();
+		return new play.modules.Authenticate();
 	}
 
 	@Override

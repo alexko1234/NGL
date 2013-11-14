@@ -29,31 +29,28 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import models.utils.InstanceConstants;
 
-
-
-
 public class Containers extends CommonController {
-	
+
 	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
-	
+
 	public static Result get(String code){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code);
 		if(container != null){
 			return ok(Json.toJson(container));
 		}
-		
+
 		return badRequest();
 	}
-	
+
 	public static Result list(){
 		Form<ContainersSearchForm> containerFilledForm = containerForm.bindFromRequest();
 		ContainersSearchForm containersSearch = containerFilledForm.get();
 		DBQuery.Query query = getQuery(containersSearch);
-	    MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query)
+		MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query)
 				.sort(DatatableHelpers.getOrderBy(containerFilledForm), FormUtils.getMongoDBOrderSense(containerFilledForm))
 				.page(DatatableHelpers.getPageNumber(containerFilledForm), DatatableHelpers.getNumberRecordsPerPage(containerFilledForm)); 
 		List<Container> containers = results.toList();
-		
+
 		return ok(Json.toJson(new DatatableResponse(containers, results.count())));
 	}
 
@@ -66,50 +63,50 @@ public class Containers extends CommonController {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		if(StringUtils.isNotEmpty(containersSearch.projectCode)){
 			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCode));
-	    }
-	   
-	    if(StringUtils.isNotEmpty(containersSearch.stateCode)){
-	    	queryElts.add(DBQuery.is("stateCode", containersSearch.stateCode));
-	    }
-	    
-	    if(StringUtils.isNotEmpty(containersSearch.categoryCode)){
-	    	queryElts.add(DBQuery.is("categoryCode", containersSearch.categoryCode));
-	    }
-	   
-	    if(StringUtils.isNotEmpty(containersSearch.sampleCode)){
-	    	queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
-	    }
-	    
-	    if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isEmpty(containersSearch.experimentTypeCode)){
-	    	List<String> listePrevious = Spring.getBeanOfType(ExperimentTypeDAO.class).findVoidProcessExperimentTypeCode(containersSearch.processTypeCode);
-	    	if(null != listePrevious && listePrevious.size() > 0){
-	    		queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious),DBQuery.notExists("fromExperimentTypeCodes")));
-	    	}	    		    	
-	    }
-	    
-	    if(StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
+		}
+
+		if(StringUtils.isNotEmpty(containersSearch.stateCode)){
+			queryElts.add(DBQuery.is("stateCode", containersSearch.stateCode));
+		}
+
+		if(StringUtils.isNotEmpty(containersSearch.categoryCode)){
+			queryElts.add(DBQuery.is("categoryCode", containersSearch.categoryCode));
+		}
+
+		if(StringUtils.isNotEmpty(containersSearch.sampleCode)){
+			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
+		}
+
+		if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isEmpty(containersSearch.experimentTypeCode)){
+			List<String> listePrevious = Spring.getBeanOfType(ExperimentTypeDAO.class).findVoidProcessExperimentTypeCode(containersSearch.processTypeCode);
+			if(null != listePrevious && listePrevious.size() > 0){
+				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious),DBQuery.notExists("fromExperimentTypeCodes")));
+			}	    		    	
+		}
+
+		if(StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
 			try {
 				List<ExperimentType> previous = Spring.getBeanOfType(ExperimentTypeDAO.class).findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.experimentTypeCode);
 				List<String> previousString = new ArrayList<String>();
 				for(ExperimentType e:previous){
-					
+
 					previousString.add(e.code);
 				}
 
 				if(previousString.size() != 0){//If there is no previous, we take all the containers Available
 					queryElts.add(DBQuery.in("fromExperimentTypeCodes", previousString));
 				}
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-	    }
-	    
-	   if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
-	    	queryElts.add(DBQuery.is("processTypeCode", containersSearch.processTypeCode));
-	   }
-	
-	   return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+		}
+
+		if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
+			queryElts.add(DBQuery.is("processTypeCode", containersSearch.processTypeCode));
+		}
+
+		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}
-	
+
 }

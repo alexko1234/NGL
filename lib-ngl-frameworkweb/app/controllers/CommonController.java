@@ -2,11 +2,15 @@ package controllers;
 
 import org.codehaus.jackson.JsonNode;
 
+import controllers.history.UserHistory;
+
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
+import play.mvc.With;
 
+@With(UserHistory.class)
 public abstract class CommonController extends Controller{
 	
 	/**

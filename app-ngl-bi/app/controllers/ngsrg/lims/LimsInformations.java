@@ -2,6 +2,8 @@ package controllers.ngsrg.lims;
 
 import java.util.List;
 
+import controllers.CommonController;
+
 import lims.cng.services.LimsRunServices;
 import lims.models.experiment.ContainerSupport;
 import lims.models.experiment.Experiment;
@@ -18,7 +20,7 @@ import static play.data.Form.form;
  * @author galbini
  *
  */
-public class LimsInformations  extends Controller {
+public class LimsInformations  extends CommonController {
 	
 	final static Form<Experiment> experimentForm = form(Experiment.class);
 	

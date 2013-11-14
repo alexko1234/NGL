@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import controllers.CommonController;
+
 import fr.cea.ig.MongoDBDAO;
 
 import models.laboratory.common.description.PropertyDefinition;
@@ -27,7 +29,7 @@ import views.html.experiments.newExperiments;
 import views.html.experiments.searchContainers;
 import views.html.experiments.search;
 
-public class Experiments extends Controller{
+public class Experiments extends CommonController{
 	public static Result home(String code){
 		return ok(home.render(code));
 	}

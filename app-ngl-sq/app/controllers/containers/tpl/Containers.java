@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import play.Routes;
-import play.mvc.Controller;
+import play.i18n.Messages;
 import play.mvc.Result;
 import views.components.datatable.DatatableColumn;
 import views.components.datatable.DatatableConfig;
 import views.components.datatable.DatatableHelpers;
-import views.html.container.*;
-import play.i18n.Messages;
+import views.html.container.home;
+import views.html.container.search;
+import controllers.CommonController;
 
-public class Containers extends Controller {
+public class Containers extends CommonController {
 
 	public static Result home(String code){
 		return ok(home.render(code));

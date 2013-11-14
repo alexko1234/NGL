@@ -29,12 +29,13 @@ import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import views.html.dataload.sampleload;
 import au.com.bytecode.opencsv.CSVReader;
+import controllers.CommonController;
 import controllers.utils.DataTableForm;
 import data.bean.InputLoadData;
 import data.utils.LoadDataHelper;
 import fr.cea.ig.MongoDBDAO;
 
-public class SampleLoad extends Controller{
+public class SampleLoad extends CommonController{
 
 	final static Form<InputLoadData> inputLoadData = form(InputLoadData.class);
 	final static Form<DataTableForm> datatableForm = form(DataTableForm.class);

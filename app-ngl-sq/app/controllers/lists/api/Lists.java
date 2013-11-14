@@ -3,19 +3,7 @@ package controllers.lists.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mongodb.BasicDBObject;
-
-import play.Logger;
-import play.Routes;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.Results;
-import net.vz.mongodb.jackson.DBQuery;
-
-import play.api.modules.spring.Spring;
-import play.libs.Json;
 import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.State;
 import models.laboratory.common.description.dao.StateDAO;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -23,26 +11,25 @@ import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
-import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
+import play.api.modules.spring.Spring;
 import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
 
 import com.mongodb.BasicDBObject;
 
+import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
-public class Lists extends Controller{
+public class Lists extends CommonController{
 	public static Result projects(){
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("_id", 0);//Don't need the _id field

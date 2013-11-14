@@ -53,7 +53,6 @@ object ApplicationBuild extends Build {
    object Dependencies {
    	val nglcommonDependencies = Seq(
 		javaCore, javaJdbc,javaEbean,
-		"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
 		"fr.cea.ig" %% "play-spring-module" % "1.1-SNAPSHOT",
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
@@ -63,13 +62,15 @@ object ApplicationBuild extends Build {
 		"org.springframework" % "spring-test" % "3.2.1.RELEASE",
 		"com.github.julienrf" %% "play-jsmessages" % "1.4.1",
 		"javax.mail" % "mail" % "1.4.2",
-	    "janino" % "janino" % "2.5.15"
+	    "janino" % "janino" % "2.5.15",
+		"fr.cea.ig" %% "authentificationplugin" % "1.0-SNAPSHOT"
     	)	
    	val ngldatatableDependencies = Seq(
    	    javaCore
    	    )
    	val nglframeworkwebDependencies = Seq(
-   	    javaCore
+   	    javaCore,
+		"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
    	    )
    	val nglbiDependencies = Seq(
 	        // Add your project dependencies here,
