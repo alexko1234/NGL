@@ -43,7 +43,6 @@ public abstract class AbstractTests {
 		config.put("mongodb.servers", "mongodev.genoscope.cns.fr:27017");
 		
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");
-		
 		//TESTU must be updated
 		//config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST");
 		//config.put("db.default.user", "NGL_user");
@@ -76,6 +75,7 @@ public abstract class AbstractTests {
 	    config.put("casMode", "debug");
 		
 	    config.put("institute", "CNG");
+	    config.put("applicationCode", "ngl-bi");
 	    
 		return config;
 		
