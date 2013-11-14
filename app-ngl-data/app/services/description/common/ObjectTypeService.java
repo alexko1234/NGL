@@ -38,11 +38,11 @@ public class ObjectTypeService {
 			
 			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Run.name() ), errors);
 			
-			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Lane.name() ), errors);
+			//DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Lane.name() ), errors);
 			
 			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.ReadSet.name() ), errors);
 			
-			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.File.name() ), errors);
+			//DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.File.name() ), errors);
 
 			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Sample.name() ), errors);
 			
@@ -70,11 +70,11 @@ public class ObjectTypeService {
 		
 		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Run.name(), false, DescriptionFactory.getStates("F", "E","IW-V", "IP-V", "F-V", "IP-S", "IP-RG", "F-RG") ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Lane.name(), false, DescriptionFactory.getStates("F", "E","IW-V", "IP-V", "F-V", "IP-S", "IP-RG", "F-RG") ));
+		//l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Lane.name(), false, DescriptionFactory.getStates("F", "E","IW-V", "IP-V", "F-V", "IP-S", "IP-RG", "F-RG") ));
 		
 		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.ReadSet.name(), false, DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "IP-RG", "F-RG") ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.File.name(), false, DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "IP-RG", "F-RG") ));
+		//l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.File.name(), false, DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "IP-RG", "F-RG") ));
 		
 		//default values
 		//TODO : define values

@@ -47,6 +47,14 @@ public class ResolutionService {
 		l.add(newResolution("reso2","proj_reso2",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Project.name())));
 		l.add(newResolution("reso3","proj_reso3",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Project.name())));
 		
+		l.add(newResolution("reso1","run_reso1",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Run.name())));
+		l.add(newResolution("reso2","run_reso2",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Run.name())));
+		l.add(newResolution("reso3","run_reso3",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Run.name())));
+		
+		l.add(newResolution("reso1","readset_reso1",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.ReadSet.name())));
+		l.add(newResolution("reso2","readset_reso2",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.ReadSet.name())));
+		l.add(newResolution("reso3","readset_reso3",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.ReadSet.name())));
+		
 		
 		DAOHelpers.saveModels(Resolution.class, l, errors);
 	}

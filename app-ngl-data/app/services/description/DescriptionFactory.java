@@ -368,6 +368,7 @@ public class DescriptionFactory {
 		rt.propertiesDefinitions = propertiesDefinitions;
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.ReadSet.name());
 		rt.institutes = institutes; 
+		rt.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.ReadSet.name());
 		return rt;
 	}
 	
@@ -381,6 +382,7 @@ public class DescriptionFactory {
 		rt.propertiesDefinitions = propertiesDefinitions;
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Run.name());
 		rt.institutes = institutes;
+		rt.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Run.name());
 		return rt;
 	}
 	
