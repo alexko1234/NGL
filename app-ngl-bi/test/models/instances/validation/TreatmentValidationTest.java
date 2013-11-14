@@ -21,10 +21,14 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
+import models.utils.dao.AbstractDAOMapping;
 import net.vz.mongodb.jackson.DBQuery;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import play.Play;
 import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
@@ -413,38 +417,59 @@ public class TreatmentValidationTest extends AbstractTests {
 		       }});
 	}
 	
+	/*
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
+
 	
 	
-	
-	@Test
-	 public void testValidateTreatmentErrorBadTypeValue() {
+	@Test(expected=java.lang.NumberFormatException.class)
+	 public void testValidateTreatmentErrorBadTypeValue() throws Exception {
+		   
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
-		Treatment t = getNewTreatmentForReadSet();
 		
-		t.results().get("default").remove("nbReadIllumina");
-		//must generate a error (because of a bad value)
-		t.results().get("default").put("nbReadIllumina", new PropertySingleValue("un"));
+		    	Treatment t = null; 
+	    		ContextValidation ctxVal = new ContextValidation(); 
+	    		
+		    	try {   
+						   
+					t = getNewTreatmentForReadSet();
+					
+					t.results().get("default").remove("nbReadIllumina");
+					//must generate a error (because of a bad value)
+					t.results().get("default").put("nbReadIllumina", new PropertySingleValue("un"));	
+					
+
+		    		Level.CODE levelCode = Level.CODE.ReadSet; 
+		    		ctxVal.putObject("level", levelCode);
+		    		
+		    		//add readset to ctxVal
+		    		ReadSet readset = RunMockHelper.newReadSet("rdCode");
+		    		ctxVal.putObject("readSet", readset);
+		    		
+		    		ctxVal.setCreationMode();
+		    		
+		    		t.validate(ctxVal);
 				
-		ContextValidation ctxVal = new ContextValidation(); 
+		    	}
+		    	catch(NumberFormatException e) {
+		    		e.notify();
+		    	}
+		    	finally {
+
 		
-		Level.CODE levelCode = Level.CODE.ReadSet; 
-		ctxVal.putObject("level", levelCode);
+		    		assertThat(ctxVal.errors).hasSize(1);
+		    		assertThat(ctxVal.errors.toString()).contains(ERROR_BADTYPE_MSG);
+		    		
+		    	}
 		
-		//add readset to ctxVal
-		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		ctxVal.putObject("readSet", readset);
-		
-		ctxVal.setCreationMode();
-		
-		t.validate(ctxVal);
-		
-		assertThat(ctxVal.errors).hasSize(1);
-		assertThat(ctxVal.errors.toString()).contains(ERROR_BADTYPE_MSG);
-		       }});
+		 }});
 	}
+	*/
 	
-	
+
+
 	
 	@Test
 	 public void testValidateTreatmentErrorBadContext() {
