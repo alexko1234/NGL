@@ -44,7 +44,6 @@ public class RunService {
 
 	public static void saveRunCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunCategory> l = new ArrayList<RunCategory>();
-		// name, code
 		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Illumina", "illumina"));
 		DAOHelpers.saveModels(RunCategory.class, l, errors);
 	}
@@ -58,7 +57,6 @@ public class RunService {
 	}
 	
 	
-	//Data Test
 	private static List<PropertyDefinition> getRunPropertyDefinitions() throws DAOException {
 		return null;
 	}
