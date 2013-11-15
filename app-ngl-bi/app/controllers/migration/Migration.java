@@ -72,15 +72,7 @@ public class Migration extends CommonController {
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld.class, 
 				DBQuery.is("code", readSet.code), 
 				DBUpdate.unset("stateCode").unset("validProduction").unset("validProductionDate").unset("validBioinformatic").unset("validBioinformaticDate")
-				.set("validationProduction", validation).set("validationBioinformatic", validation).set("state", state));
-		
-		//migration sampleContainerCode to sampleCode + remove field sampleContainerCode;
-		String sampleContainerCode = readSet.sampleContainerCode;
-		
-		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld.class, 
-				DBQuery.is("code", readSet.code), 
-				DBUpdate.unset("sampleContainerCode").set("sampleCode", sampleContainerCode));
-		//end migration sampleContainerCode
+				.unset("sampleContainerCode").set("validationProduction", validation).set("validationBioinformatic", validation).set("state", state).set("sampleCode", readSet.sampleContainerCode));
 		
 		if(null != readSet.files){
 			for(FileOld fileOld : readSet.files){
