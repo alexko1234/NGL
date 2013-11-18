@@ -78,7 +78,7 @@ POST	   /createtemplate												controllers.dataload.SampleLoad.createTemplat
 
 GET	   /logout															controllers.administration.authentication.User.logOut()
 
-->  /authentification authentificationplugin.Routes
+->  /authentication authentication.Routes
 
 # Home page
 

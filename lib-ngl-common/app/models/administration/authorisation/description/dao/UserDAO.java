@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
 import play.Logger;
-import play.modules.html.IAuthenticate;
+import fr.cea.ig.authentication.html.IAuthenticate;
 
 @Repository
 public class UserDAO extends AbstractDAODefault<User> implements IAuthenticate{ 

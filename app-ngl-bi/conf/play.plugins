@@ -1,2 +1,2 @@
-0:play.modules.cas.CasPlugin
+0:fr.cea.ig.authentication.cas.CasPlugin
 1:controllers.resources.AssetPlugin

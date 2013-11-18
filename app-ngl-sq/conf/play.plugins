@@ -1,2 +1,2 @@
-0:play.modules.activeDirectory.ActiveDirectoryPlugin
+0:fr.cea.ig.authentication.activedirectory.ActiveDirectoryPlugin
 1:controllers.resources.AssetPlugin

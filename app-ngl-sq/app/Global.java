@@ -4,12 +4,11 @@ import java.lang.reflect.Method;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
-import play.modules.cas.CasAuthentication;
 import play.mvc.Action;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Http.Request;
-import play.modules.Authenticate;
+import fr.cea.ig.authentication.Authenticate;
 
 public class Global extends GlobalSettings {
 
@@ -19,7 +18,7 @@ public class Global extends GlobalSettings {
 	}
 	
 	public Action onRequest(Request request, Method actionMethod) {
-		return new play.modules.Authenticate();
+		return new fr.cea.ig.authentication.Authenticate();
 	}
 
 	@Override
