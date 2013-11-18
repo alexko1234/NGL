@@ -69,8 +69,22 @@ public class ReadSetValidationHelper extends CommonValidationHelper {
 	private static boolean isLaneExist(String runCode, Integer laneNumber, ContextValidation contextValidation) {		
 		return MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.is("lanes.number", laneNumber)));
-		
 	}
+	
+	
+	public static void validateProjectCode(String projectCode, ContextValidation contextValidation) {
+		if(ValidationHelper.required(contextValidation, projectCode, "projectCode")) {
+			CommonValidationHelper.validateProjectCode(projectCode, contextValidation);
+		}
+	}
+		
+		
+	public static void validateSampleCode(String sampleCode, ContextValidation contextValidation) {
+		if(ValidationHelper.required(contextValidation, sampleCode, "sampleCode")) {
+			CommonValidationHelper.validateSampleCode(sampleCode, contextValidation);
+		}
+	}
+
 	
 	
 	
