@@ -41,7 +41,6 @@ public abstract class AbstractTests {
 		config.put("mongodb.database", "NGL-TESTU");
 		config.put("mongodb.credentials", "testu:testu");
 		config.put("mongodb.servers", "mongodev.genoscope.cns.fr:27017");
-		
 		config.put("application.secret", "ezfzzefzefz");
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");
 		//TESTU must be updated
