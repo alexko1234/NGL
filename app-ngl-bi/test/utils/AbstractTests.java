@@ -69,13 +69,13 @@ public abstract class AbstractTests {
 		config.put("asset.url","http://localhost:9000");
 		
 		// to delete errors messages;
-		config.put("casUrlValidator", "https://cas.genoscope.cns.fr:8443/cas/serviceValidate");
-		config.put("casUrlLogin", "https://cas.genoscope.cns.fr:8443/cas/login");
-		config.put("casRenew", "false");
-	    config.put("authPluginMode", "debug");
+		config.put("auth.cas.urlvalidator", "https://cas.genoscope.cns.fr:8443/cas/serviceValidate");
+		config.put("auth.cas.urllogin", "https://cas.genoscope.cns.fr:8443/cas/login");
+		config.put("auth.cas.renew", "false");
+	    config.put("auth.mode", "debug");
 		
 	    config.put("institute", "CNG");
-	    config.put("applicationCode", "ngl-bi");
+	    config.put("auth.application", "ngl-bi");
 	    
 		return config;
 		
