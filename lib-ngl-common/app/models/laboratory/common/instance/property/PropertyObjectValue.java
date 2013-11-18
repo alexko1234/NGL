@@ -44,10 +44,10 @@ public class PropertyObjectValue extends PropertyMapValue{
 			PropertyDefinition propertyDefinition = propertyDefinitions.next();
 			if(ValidationHelper.checkIfActive(contextValidation, propertyDefinition)){
 				if(ValidationHelper.required(contextValidation, this, propertyDefinition)){				
-					//if(ValidationHelper.checkIfExistInTheList(contextValidation, this, propertyDefinition)){
+					if(ValidationHelper.checkIfExistInTheList(contextValidation, this, propertyDefinition)){
 						ValidationHelper.convertPropertyValue(contextValidation, this, propertyDefinition);
 						//TODO FORMAT AND UNIT
-					//}
+					}
 				}
 			}
 		}
