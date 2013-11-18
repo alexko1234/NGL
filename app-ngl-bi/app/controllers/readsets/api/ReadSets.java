@@ -69,6 +69,10 @@ public class ReadSets extends CommonController{
 			queries.add(DBQuery.is("sampleCode", inputForm.get("sampleCode")));
 		}
 		
+		if (StringUtils.isNotBlank(inputForm.get("stateCode"))) { //all
+			queries.add(DBQuery.is("state.code", inputForm.get("stateCode")));
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}

@@ -13,8 +13,10 @@ GET		/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.co
 #run tpl
 GET	   	/runs/:homecode/home						controllers.runs.tpl.Runs.home(homecode: java.lang.String)
 GET	   	/runs/:code									controllers.runs.tpl.Runs.get(code: java.lang.String)
-GET		/tpl/runs/search							controllers.runs.tpl.Runs.search()
-GET		/tpl/runs/details							controllers.runs.tpl.Runs.details()
+GET	   	/runs/:code/validation						controllers.runs.tpl.Runs.validation(code: java.lang.String)
+GET		/tpl/runs/search/:type						controllers.runs.tpl.Runs.search(type: java.lang.String)
+GET		/tpl/runs/details/default					controllers.runs.tpl.Runs.detailsDefault()
+GET		/tpl/runs/details/validation				controllers.runs.tpl.Runs.detailsValidation()
 GET		/tpl/runs/js-routes							controllers.runs.tpl.Runs.javascriptRoutes()
 #run api
 GET    	/api/runs               					controllers.runs.api.Runs.list()
@@ -23,7 +25,9 @@ HEAD	/api/runs/:code               				controllers.runs.api.Runs.head(code: java
 POST   	/api/runs									controllers.runs.api.Runs.save()
 PUT   	/api/runs/:code 							controllers.runs.api.Runs.update(code: java.lang.String)
 DELETE	/api/runs/:code								controllers.runs.api.Runs.delete(code:java.lang.String)
-PUT		/api/runs/:code/workflow/:stateCode			controllers.runs.api.Runs.workflow(code:java.lang.String, stateCode:java.lang.String)
+PUT		/api/runs/:code/state/:stateCode			controllers.runs.api.Runs.state(code:java.lang.String, stateCode:java.lang.String)
+PUT		/api/runs/:code/workflow/:stateCode			controllers.runs.api.Runs.state(code:java.lang.String, stateCode:java.lang.String)
+PUT		/api/runs/:code/validation/:valid 			controllers.runs.api.Runs.validation(code:java.lang.String, valid:java.lang.String)
 
 #deprecated
 POST 	/api/runs/:code/dispatch					controllers.runs.api.Runs.dispatch(code: java.lang.String)
@@ -44,7 +48,9 @@ POST  	/api/runs/:code/lanes								controllers.runs.api.Lanes.save(code: java.l
 PUT  	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.update(code: java.lang.String, number:java.lang.Integer)
 DELETE 	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.delete(code: java.lang.String, number:java.lang.Integer)
 DELETE	/api/runs/:code/lanes								controllers.runs.api.Lanes.deleteByRunCode(code: java.lang.String)
-PUT		/api/runs/:code/lanes/:number/workflow/:stateCode	controllers.runs.api.Lanes.workflow(code:java.lang.String, number:java.lang.Integer, stateCode:java.lang.String)
+PUT		/api/runs/:code/lanes/:number/state/:stateCode		controllers.runs.api.Lanes.state(code:java.lang.String, number:java.lang.Integer, stateCode:java.lang.String)
+PUT		/api/runs/:code/lanes/:number/workflow/:stateCode	controllers.runs.api.Lanes.state(code:java.lang.String, number:java.lang.Integer, stateCode:java.lang.String)
+PUT		/api/runs/:code/lanes/:number/validation/:valid		controllers.runs.api.Lanes.validation(code:java.lang.String, number:java.lang.Integer, valid:java.lang.String)
 
 GET		/api/runs/:code/lanes/:laneNumber/treatments				controllers.runs.api.LaneTreatments.list(code: java.lang.String, laneNumber:java.lang.Integer)
 GET		/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.api.LaneTreatments.get(code: java.lang.String, laneNumber:java.lang.Integer, trCode: java.lang.String)
@@ -58,6 +64,11 @@ DELETE	/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.ap
 #POST  		/api/runs/:code								controllers.runs.api.Lanes.saveOld(code: java.lang.String)
 
 #run readset
+GET	   	/readsets/:homecode/home					controllers.readsets.tpl.ReadSets.home(homecode: java.lang.String)
+GET	   	/readsets/:code								controllers.readsets.tpl.ReadSets.get(code: java.lang.String)
+GET		/tpl/readsets/search/:type					controllers.readsets.tpl.ReadSets.search(type: java.lang.String)
+
+
 GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list()
 GET	   	/api/readsets/:code							controllers.readsets.api.ReadSets.get(code)
 HEAD   	/api/readsets/:code							controllers.readsets.api.ReadSets.head(code)
@@ -100,8 +111,13 @@ GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list()
 #migration
 GET		/migration									controllers.migration.Migration.migration()
 
+
+#list
+GET		/api/lists/resolutions				controllers.lists.api.Lists.resolutions()
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               				controllers.Assets.at(path="/public", file)
 GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
+GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
 
 

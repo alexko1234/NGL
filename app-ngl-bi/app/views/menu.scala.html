@@ -7,11 +7,27 @@
 		<div class="navbar-inner">
 			<div class="container-fluid">
 				
-				<a class="brand" href="@controllers.main.tpl.routes.Main.home()">@Messages("application.name")</a>				
+				<a class="brand" href="@controllers.main.tpl.routes.Main.home()">@Messages("application.name")</a>
 					<ul class="nav">
-						<li class="@("active".when(nav == "runs.search"))"><a href="@controllers.runs.tpl.routes.Runs.home("search")">@Messages("menu.runs.search")</a>
-						</li>						
-					</ul>
+						<li class="dropdown @("active".when(nav.endsWith("validation")))">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="validation">@Messages("validation.menu")<b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="validation">
+								<li class="@("active".when(nav == "runs.validation"))"><a href="@controllers.runs.tpl.routes.Runs.home("validation")">@Messages("validation.menu.runs")</a></li>																				
+								<li class="@("active".when(nav == "readsets.validation"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("validation")">@Messages("validation.menu.readsets")</a></li>
+							</ul>
+  						</li>
+  						
+  						
+  						<li class="dropdown @("active".when(nav.startsWith("runs")))">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="runs">@Messages("runs.menu")<b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="runs">
+								<li class="@("active".when(nav == "runs.search"))"><a href="@controllers.runs.tpl.routes.Runs.home("search")">@Messages("runs.menu.search")</a></li>																				
+								<li class="@("active".when(nav == "runs.validation"))"><a href="@controllers.runs.tpl.routes.Runs.home("validation")">@Messages("runs.menu.validation")</a></li>																												
+								<li class="@("active".when(nav == "runs.state"))"><a href="@controllers.runs.tpl.routes.Runs.home("state")">@Messages("runs.menu.state")</a></li>
+							</ul>
+  						</li>
+  					</ul>	
+  					
 					<ul class="nav">
 						<li class="@("active".when(nav == "archives.search"))"><a href="@controllers.archives.tpl.routes.ReadSets.home("search")">@Messages("menu.archives.search")</a>
 						</li>						

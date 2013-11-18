@@ -1,6 +1,9 @@
 package controllers.runs.api;
 
 
+import java.util.Date;
+
+import models.laboratory.common.instance.Validation;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -23,6 +26,14 @@ public class Lanes extends CommonController{
 	
 	final static Form<Lane> laneForm = form(Lane.class);
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
+	final static Form<Validation> validationForm = form(Validation.class);
+	
+	private static Run getRun(String code, Integer laneNumber) {
+		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+				DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)));
+		return run;
+	}
+	
 	
 	public static Result list(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
@@ -33,8 +44,7 @@ public class Lanes extends CommonController{
 	}
 	
 	public static Result get(String code, Integer laneNumber) {
-		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-				DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)));
+		Run run = getRun(code, laneNumber);
 		if(run == null){
 			return badRequest();
 		}
@@ -45,6 +55,8 @@ public class Lanes extends CommonController{
 		}
 		return notFound();
 	}
+
+	
 	
 	public static Result head(String code, Integer laneNumber){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
@@ -83,8 +95,7 @@ public class Lanes extends CommonController{
 	
 	
 	public static Result update(String code, Integer laneNumber){
-		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-				DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)));
+		Run run = getRun(code, laneNumber);
 		if(run == null){
 			return badRequest();
 		}
@@ -110,8 +121,7 @@ public class Lanes extends CommonController{
 	}
 		
 	public static Result delete(String code, Integer laneNumber) { 
-		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-				DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)));
+		Run run = getRun(code, laneNumber);
 		if(run == null){
 			return badRequest();
 		}
@@ -133,10 +143,34 @@ public class Lanes extends CommonController{
 		return ok();
 	}
 	
-	public static Result workflow(String code, Integer laneNumber, String stateCode){
+	public static Result state(String code, Integer laneNumber, String stateCode){
 		return badRequest("Not implemented");
 	}
 	
+	public static Result validation(String code, Integer laneNumber, String validCode){
+		Run run = getRun(code, laneNumber);
+		if(run == null){
+			return badRequest();
+		}
+		Form<Validation> filledForm = validationForm.bindFromRequest();
+		Validation validation = filledForm.get();
+		validation.date = new Date();
+		validation.user = "default";
+		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+		ctxVal.putObject("run", run);
+		ctxVal.setUpdateMode();
+		validation.validate(ctxVal);
+			
+		if(!ctxVal.hasErrors()) {
+			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+					DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)),
+					DBUpdate.set("lanes.$.validation", validation)); 
+			return ok();
+		} else {
+			return badRequest(filledForm.errorsAsJson());
+		}
+		
+	}
 	
 	@Deprecated
 	public static Result saveOld(String code) {

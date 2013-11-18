@@ -16,7 +16,6 @@ function SearchCtrl($scope, $routeParams, datatable) {
 	};
 	
 	
-	
 	$scope.init = function(){
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){

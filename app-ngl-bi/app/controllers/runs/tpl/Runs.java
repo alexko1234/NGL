@@ -28,19 +28,32 @@ public class Runs extends CommonController {
 		return ok(home.render("search")); 
 	}
 	
-	public static Result search() {
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("runs.table.code"), true, false, false));
-		columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("runs.table.creationdate"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("dispatch", Messages.get("runs.table.dispatch"), true, false, false));
-		DatatableConfig config = new DatatableConfig(columns);
-		config.show = true;
-		config.button = true;
+	public static Result validation(String code) {
+		return ok(home.render("validation")); 
+	}
+	
+	public static Result search(String type) {
+		DatatableConfig config = new DatatableConfig();
+		if(!"state".equals(type)){
+			
+			List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
+			columns.add(DatatableHelpers.getColumn("code", Messages.get("runs.table.code"), true, false, false));
+			columns.add(DatatableHelpers.getColumn("typeCode", Messages.get("runs.table.typeCode"), true, false, false));
+			columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("runs.table.creationdate"), true, false, false));
+			columns.add(DatatableHelpers.getColumn("state.code", Messages.get("runs.table.stateCode"), true, false, false));
+			columns.add(DatatableHelpers.getColumn("validation.valid", Messages.get("runs.table.validation.valid"), true, false, false));
+			
+			config = new DatatableConfig(columns);	
+		}
 		return ok(search.render(config));
 	}
 	
-	public static Result details() {
+	public static Result detailsDefault() {
 		return ok(details.render());
+	}
+	
+	public static Result detailsValidation() {
+		return ok(validation.render());
 	}
 	
 	
@@ -50,10 +63,15 @@ public class Runs extends CommonController {
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
   	    		controllers.runs.tpl.routes.javascript.Runs.home(),  
-  	    		controllers.runs.tpl.routes.javascript.Runs.get(),  
+  	    		controllers.runs.tpl.routes.javascript.Runs.get(), 
+  	    		controllers.runs.tpl.routes.javascript.Runs.validation(),
   	    		controllers.runs.api.routes.javascript.Runs.get(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.list(),
-  	    		controllers.runs.api.routes.javascript.Runs.list()  	    		
+  	    		controllers.runs.api.routes.javascript.Runs.list(),
+  	    		controllers.runs.api.routes.javascript.Runs.state(),
+  	    		controllers.runs.api.routes.javascript.Runs.validation(),  	    		
+  	    		controllers.runs.api.routes.javascript.Lanes.validation(),  	    		
+  	    		controllers.lists.api.routes.javascript.Lists.resolutions()
   	      )	  	      
   	    );
   	  }

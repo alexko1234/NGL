@@ -28,9 +28,7 @@ import controllers.CommonController;
  *
  */
 public class ReadSets extends CommonController{
-
-	static DynamicForm form = new DynamicForm();
-	/**
+/**
 	 *
 	 * @param archive : default 2
 	 * @return

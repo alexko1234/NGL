@@ -29,6 +29,10 @@ runs.table.code=Code
 runs.table.creationdate=Date de création
 # a vérifier
 runs.table.dispatch=Dispatch
+runs.table.typeCode = Type
+runs.table.stateCode = Etat
+
+
 runs.dt.nb_cluster_total=Nb clusters (total)
 runs.dt.nb_cluster_illumina=Nb clusters (filtre Illumina)
 runs.dt.nb_bases_en_gb=Nombre de bases (Gb)
