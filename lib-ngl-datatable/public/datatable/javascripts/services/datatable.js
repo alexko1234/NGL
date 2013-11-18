@@ -532,6 +532,7 @@ angular.module('datatableServices', []).
 			    						this.config.save.number++;
 			    						this.displayResult[i].trClass = undefined;
 				    					this.displayResult[i].selected = undefined;
+				    					this.displayResult[i].edit = undefined;
 				    					
 			    						if(this.isRemoteMode(this.config.save.mode)){
 			    							this.saveRemote(this.displayResult[i], i);
@@ -1431,6 +1432,8 @@ angular.module('datatableServices', []).
 	            		  	    			editElement = '<select html-filter="{{col.type}}" data-width="auto" title="" ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" bs-select></select>';
 	            		  	    		}else if(col.listStyle == "bs-select-multiple"){
 	            		  	    			editElement = '<select html-filter="{{col.type}}" data-width="auto" title="" multiple ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" bs-select></select>';
+	            		  	    		}else{
+	            		  	    			editElement = '<select html-filter="{{col.type}}" ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
 	            		  	    		}
 	        		  	    		}
         		  	    	}else if(col.edit && col.type =="Boolean"){
