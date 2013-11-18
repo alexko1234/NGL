@@ -1010,9 +1010,8 @@ public class RunValidationTest extends AbstractTests {
 		ReadSet readSet = new ReadSet();
 		readSet.code = "CORE_R1";
 		readSet.path = "/path/test";
-		readSet.projectCode = "PCODE"; 
-		readSet.sampleCode = "SPCODE";
-		//readSet.sampleContainerCode = "SPCONTCODE";
+		readSet.projectCode = "ProjectCode"; //ProjectCode
+		readSet.sampleCode = "SampleCode"; // SampleCode
 		readSet.state = getState("F-QC");
 		Validation v = new Validation();
 		readSet.validationBioinformatic = v;
@@ -1023,6 +1022,17 @@ public class RunValidationTest extends AbstractTests {
 		readSet.laneNumber = 1;
 		readSet.dispatch = true;
 		readSet.typeCode = "default-readset";
+		
+		readSet.validationProduction = new Validation();
+		readSet.validationProduction.user = "dnoisett";
+		readSet.validationProduction.date = new Date();
+		readSet.validationProduction.resolutionCodes = null;
+		
+		readSet.validationBioinformatic = new Validation();
+		readSet.validationBioinformatic.user = "dnoisett";
+		readSet.validationBioinformatic.date = new Date();
+		readSet.validationBioinformatic.resolutionCodes = null;
+		
 		return readSet;
 	}
 	
@@ -1032,7 +1042,6 @@ public class RunValidationTest extends AbstractTests {
 		readSet.path = "";
 		readSet.projectCode = ""; 
 		readSet.sampleCode = "";
-		//readSet.sampleContainerCode = "";
 		readSet.state = getState("F-QC");
 		readSet.typeCode = "default-readset";
 		
