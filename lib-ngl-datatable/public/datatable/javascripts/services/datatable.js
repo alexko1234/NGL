@@ -47,7 +47,7 @@ angular.module('datatableServices', []).
 								reverse : false,
 								columns:{}//key is the column index
 							},
-							show :{
+							show : {
 								active:false,
 								showButton : true,
 								add:function(line){
@@ -60,22 +60,25 @@ angular.module('datatableServices', []).
 							},
 							edit : {
 								active:false,
-								withoutSelect:false, //edit all line
+								withoutSelect:false, //edit all line without selected it
 								showButton : true,
 								columnMode : false,
+								byDefault : false, //put in edit mode when the datatable is build 
 								start : false,
 								all : false,
 								columns : {}, //columnIndex : {edit : true/false, value:undefined}
 							},
 							save :{
 								active:false,
-								withoutEdit:false,
+								withoutEdit:false, //usable only for active/inactive save button by default !!!
+								keepEdit:false, //keep in edit mode after safe
 								showButton : true,
+								changeClass : true, //change class to success or error
 								mode:'remote', //or local
 								url:undefined,
 								method:'post',
 								value:undefined, //used to transform the value send to the server
-								callback:undefined, //used to have a callback after save all element. the datatable is pass to callback method
+								callback:undefined, //used to have a callback after save all element. the datatable is pass to callback method and number of error
 								start:false, //if save started
 								number:0, //number of element in progress
 								error:0
@@ -86,7 +89,7 @@ angular.module('datatableServices', []).
 								showButton : true,
 								mode:'remote', //or local
 								url:undefined, //function with object in parameter !!!
-								callback : undefined, //used to have a callback after remove all element. the datatable is pass to callback method
+								callback : undefined, //used to have a callback after remove all element. the datatable is pass to callback method and number of error
 								start:false,
 								counter:0,
 								number:0, //number of element in progress
@@ -152,7 +155,7 @@ angular.module('datatableServices', []).
 			    					throw 'no url define for search ! ';
 			    				}
 		    				}else{
-		    					console.log("search is not active !!")
+		    					//console.log("search is not active !!")
 		    				}
 		    			},
 		    			/**
@@ -213,6 +216,12 @@ angular.module('datatableServices', []).
 		    				}else{ //to manage all records or server pagination
 		    					this.displayResult = angular.copy(this.allResult);		    					
 		    				}
+		    				
+		    				if(this.config.edit.byDefault){
+		    					this.config.edit.withoutSelect = true;
+		    					this.setEdit();
+		    				}
+		    				
 		    				this.displayResultMaster = angular.copy(this.displayResult);		    				
 		    			},
 		    			//pagination functions
@@ -256,7 +265,7 @@ angular.module('datatableServices', []).
 		    						configPagination.pageList.push({number:nbPages-1, label:'>>',  clazz:(currentPageNumber!=max-1)?'':'disabled'});
 		    					}		    					
 		    				}else{
-		    					console.log("pagination is not active !!!");
+		    					//console.log("pagination is not active !!!");
 		    				}		    				
 		    			},
     					/**
@@ -287,7 +296,7 @@ angular.module('datatableServices', []).
 	    							}
 	    						}
     						}else{
-		    					console.log("pagination is not active !!!");
+		    					//console.log("pagination is not active !!!");
 		    				}	
     					},
     					/**
@@ -311,7 +320,7 @@ angular.module('datatableServices', []).
 									}
 	    						}
     						}else{
-		    					console.log("pagination is not active !!!");
+		    					//console.log("pagination is not active !!!");
 		    				}
     					},
     					isShowPagination: function(){
@@ -360,7 +369,7 @@ angular.module('datatableServices', []).
 			    					this.searchWithLastParams();
 			    				}		    					
 		    				} else{
-		    					console.log("order is not active !!!");
+		    					//console.log("order is not active !!!");
 		    				}
 		    			},
 		    			getOrderColumnClass : function(columnId){
@@ -371,7 +380,7 @@ angular.module('datatableServices', []).
 			    						"else if(config.order.columns."+columnId+" && config.order.reverse) {return 'icon-sort-down';}");
 			    				return fn(this.config);			    						    					    					
 		    				} else{
-		    					console.log("order is not active !!!");
+		    					//console.log("order is not active !!!");
 		    				}
 		    			},
 		    			/**
@@ -393,7 +402,7 @@ angular.module('datatableServices', []).
 			    					}						
 			    				}		    			
 		    				}else{
-		    					console.log("show is not active !");
+		    					//console.log("show is not active !");
 		    				}
 		    			},
 		    			//Hide a column
@@ -408,7 +417,7 @@ angular.module('datatableServices', []).
 			    				fn(this.config);
 			    				this.newExtraHeaderConfig();
 		    				}else{
-		    					console.log("hide is not active !");
+		    					//console.log("hide is not active !");
 		    				}
 		    				
 		    			},
@@ -421,7 +430,7 @@ angular.module('datatableServices', []).
 				    			var fn = new Function("config", "if(config.hide.columns."+columnId+") return config.hide.columns."+columnId+";else return false;");
 				    			return fn(this.config);
 		    				}else{
-		    					console.log("hide is not active !");
+		    					//console.log("hide is not active !");
 		    					return false;
 		    				}
 		    			},		    			
@@ -431,7 +440,7 @@ angular.module('datatableServices', []).
 		    			 * set Edit all column or just one
 		    			 * @param editColumnName : column name
 		    			 */
-		    			setEditColumn : function(columnId){	
+		    			setEdit : function(columnId){	
 		    				if(this.config.edit.active){
 			    				var find = false;
 			    				for(var i = 0; i < this.displayResult.length; i++){
@@ -453,8 +462,16 @@ angular.module('datatableServices', []).
 			    					else this.config.edit.all = true;
 			    				}
 		    				}else{
-		    					console.log("edit is not active !");
+		    					//console.log("edit is not active !");
 		    				}
+		    			},
+		    			/**
+		    			 * set Edit all column or just one
+		    			 * @param editColumnName : column name
+		    			 * @deprecated
+		    			 */
+		    			setEditColumn : function(columnId){	
+		    				this.setEdit(columnId);
 		    			},
 		    			/**
 		    			 * Test if a column must be in edition mode
@@ -462,22 +479,21 @@ angular.module('datatableServices', []).
 		    			 * @param line : the line in the table
 		    			 */
 		    			isEdit : function(columnId, line){
+		    				var isEdit = false;
 		    				if(this.config.edit.active){
-			    				if(columnId && line){
+		    					if(columnId && line){
 			    					(new Function("config","if(angular.isUndefined(config.edit.columns."+columnId+"))config.edit.columns."+columnId+"={}"))(this.config);			    								    							    					
 			    					var columnEdit = (new Function("config","return config.edit.columns."+columnId+".edit"))(this.config);
-			    					return (line.edit && columnEdit) || (line.edit && this.config.edit.all);
+			    					isEdit = (line.edit && columnEdit) || (line.edit && this.config.edit.all);
 			    				}else if(columnId){
 			    					(new Function("config","if(angular.isUndefined(config.edit.columns."+columnId+"))config.edit.columns."+columnId+"={}"))(this.config);			    								    								    					
 			    					var columnEdit = (new Function("config","return config.edit.columns."+columnId+".edit"))(this.config);			    					
-			    					return (columnEdit || this.config.edit.all);
+			    					isEdit = (columnEdit || this.config.edit.all);
 			    				}else{
-			    					return this.config.edit.start;
+			    					isEdit = this.config.edit.start;
 			    				}
-		    				}else{
-		    					console.log("edit is not active !");
-		    					return false;
 		    				}
+		    				return isEdit;
 		    			},
 		    			/**
 		    			 * indicate if at least one line is selected
@@ -498,7 +514,7 @@ angular.module('datatableServices', []).
 			    					}
 			    				}
 		    				}else{
-		    					console.log("edit is not active !");		    				
+		    					//console.log("edit is not active !");		    				
 		    				}
 		    			},
 		    			//save
@@ -529,7 +545,7 @@ angular.module('datatableServices', []).
 	    							this.saveFinish();
 	    						}
 		    				}else{
-		    					console.log("save is not active !");		    				
+		    					//console.log("save is not active !");		    				
 		    				}
 		    			},
 		    			saveRemote : function(value, i){
@@ -543,7 +559,9 @@ angular.module('datatableServices', []).
 				    					config.datatable.saveFinish();
 				    				})
 				    				.error(function(data, status, headers, config) {
-				    					config.datatable.displayResult[config.index].trClass = "error";
+				    					if(this.config.save.changeClass){
+				    						config.datatable.displayResult[config.index].trClass = "error";
+				    					}
 				    					config.datatable.displayResult[config.index].edit = true;
 				    					config.datatable.config.save.error++;
 				    					config.datatable.config.save.number--;
@@ -560,9 +578,10 @@ angular.module('datatableServices', []).
 		    			 */
 		    			saveLocal: function(data, i){
 		    				if(this.config.save.active){
-		    					this.config.edit.start = false;
-		    					this.displayResult[i].edit = undefined;
-	    						
+		    					if(!this.config.save.keepEdit){
+		    						this.config.edit.start = false;
+		    						this.displayResult[i].edit = undefined;
+		    					}
 		    					if(data){
 		    						this.displayResult[i] = data;
 		    					}
@@ -572,10 +591,12 @@ angular.module('datatableServices', []).
 									j = i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage);
 								}
 								this.allResult[j] = angular.copy(this.displayResult[i]);
-								this.displayResult[i].trClass = "success";
+								if(this.config.save.changeClass){
+									this.displayResult[i].trClass = "success";
+								}
 								this.config.save.number--;
 		    				}else{
-		    					console.log("save is not active !");		    				
+		    					//console.log("save is not active !");		    				
 		    				}
 		    			},
 		    			/**
@@ -592,14 +613,14 @@ angular.module('datatableServices', []).
 		    					}
 		    					
 		    					if(angular.isFunction(this.config.save.callback)){
-			    					this.config.save.callback(this);
+			    					this.config.save.callback(this, this.config.save.error);
 			    				}
 		    					
 		    					this.config.save.error = 0;
 		    					this.config.save.start = false;		    					
 		    				}
 	    					
-		    			},		    			
+		    			},
 		    			/**
 		    			 * Test if save mode can be enable
 		    			 */
@@ -633,7 +654,7 @@ angular.module('datatableServices', []).
 		    						this.removeFinish();
 		    					}
 		    				}else{
-		    					console.log("remove is not active !");		    				
+		    					//console.log("remove is not active !");		    				
 		    				}
 		    			},
 		    			
@@ -661,7 +682,7 @@ angular.module('datatableServices', []).
 	    						}
 								
 		    				} else{
-		    					console.log("remove is not active !");		    				
+		    					//console.log("remove is not active !");		    				
 		    				}
 		    			},
 		    			
@@ -683,7 +704,7 @@ angular.module('datatableServices', []).
 			    					throw  'no url define for remove ! ';
 			    				}
 		    				} else{
-		    					console.log("remove is not active !");		    				
+		    					//console.log("remove is not active !");		    				
 		    				}		    				
 		    			},
 		    			/**
@@ -700,7 +721,7 @@ angular.module('datatableServices', []).
 		    					}
 		    					
 		    					if(angular.isFunction(this.config.remove.callback)){
-			    					this.config.remove.callback(this);
+			    					this.config.remove.callback(this,this.config.remove.error);
 			    				}	
 		    					
 		    					this.computePaginationList();		    					
@@ -719,7 +740,7 @@ angular.module('datatableServices', []).
 		    						if(this.displayResult[i].selected && (!this.displayResult[i].edit || this.config.remove.withEdit))return true;	    						
 		    					}
 		    				}else{
-		    					console.log("remove is not active !");
+		    					//console.log("remove is not active !");
 		    					return false;
 		    				}
 		    			},
@@ -740,7 +761,7 @@ angular.module('datatableServices', []).
 									}
 			    				}
 							}else{
-								console.log("select is not active");
+								//console.log("select is not active");
 							}
 		    			},
 		    			/**
@@ -759,7 +780,7 @@ angular.module('datatableServices', []).
 			    					}
 		    					}
 		    				}else{
-								console.log("select is not active");
+								//console.log("select is not active");
 							}
 		    			},	    			
 		    			
@@ -773,7 +794,7 @@ angular.module('datatableServices', []).
 		    						//unselect selection
 		    						if(unselect){
 		    							this.displayResult[i].selected = false;
-		    							this.displayResult[i].trClass="";
+		    							this.displayResult[i].trClass=undefined;
 		    						}
 		    						selection.push(angular.copy(this.displayResult[i]));
 		    					}
@@ -879,7 +900,7 @@ angular.module('datatableServices', []).
 		    			 * Set columns configuration
 		    			 */
 		    			setColumnsConfig: function(columns){
-		    				if(columns!= undefined){
+		    				if(angular.isDefined(columns)){
 		    					for(var i = 0 ; i < columns.length; i++){
 			    					if(columns[i].id == null){
 			    						columns[i].id = this.generateColumnId();
@@ -894,11 +915,11 @@ angular.module('datatableServices', []).
 			    						columns[i].edit = false;
 			    					}
 			    					
-			    					if(columns[i].choiceInList && columns[i].listStyle===undefined){
+			    					if(columns[i].choiceInList && !angular.isDefined(columns[i].listStyle)){
 			    						columns[i].listStyle = "select";
 			    					}
 			    					
-			    					if(columns[i].choiceInList && !columns[i].possibleValues){
+			    					if(columns[i].choiceInList && !angular.isDefined(columns[i].possibleValues)){
 			    						columns[i].possibleValues = [];
 			    					}
 			    					
@@ -917,6 +938,15 @@ angular.module('datatableServices', []).
 		    			},
 		    			getColumnsConfig: function(){
 		    				return this.config.columns;		    				
+		    			},
+		    			getColumn : function(props){
+		    				if(angular.isDefined(this.config.columns)){
+			    				for(var i = 0 ; i < this.config.columns.length; i++){
+			    					if(angular.isDefined(props.property) && this.config.columns[i].property === props.property){
+			    						return this.config.columns[i];
+			    					}
+			    				}
+		    				}
 		    			},
 		    			getConfig: function(){
 		    				return this.config;		    				
@@ -1303,21 +1333,19 @@ angular.module('datatableServices', []).
     			    restrict: 'A',
     			    link: function(scope, element, attrs) {
     			    	var name="datatable";
-    			    	
-    			    	var ngChange = "";
-    			    	var ngShow = name+".isEdit(col.id,value)";
-
     			    	if(attrs.datatableName != undefined){
-    			    		name=attrs.datatableName;
+    			    		name=attrs.datatableName;    			    		
     			    	}
     			    	
-    			    	if(attrs.header != undefined){
+    			    	var ngChange = "";
+    			    	var ngShow = name+".isEdit(col.id,value)";   			    	
+    			    	if(angular.isDefined(attrs.header)){
     			    		ngChange = name+".updateColumn(col.property, col.id)";
     			    		ngShow = name+".isEdit(col.id)";
     			    	}
     			    	
     			    	var getNgModel = function(col){
-        			    	if(attrs.header != undefined){
+        			    	if(angular.isDefined(attrs.header)){
         			    		return   name+".config.edit.columns."+col.id+".value";
         			    	}
         			    	if(angular.isFunction(col.property)){
@@ -1338,14 +1366,14 @@ angular.module('datatableServices', []).
 		    				
 		    				return format;
 		    			};
-    			    	var addHtmlElement = function(col){
-    			    		var newElement = "";
-    			    		if(attrs.datatableName != undefined){
-        			    		name=attrs.datatableName;
-        			    		ngShow = name+".isEdit(col.id,value)";
-        			    	}
-							var valueElement = '<span ng-show="!'+name+'.isEdit(col.id,value)" >{{value.'+col.property+' '+columnFormatter(col)+'}}</span>';
-        		  	    	if(col.edit && (col.type === "String" || col.type === undefined || col.type === "Number"
+		    			
+		    			var getValueElement = function(col){
+		    				return '<span ng-bind-html-unsafe="'+getNgModel(col)+' '+columnFormatter(col)+'"></span>';		    				
+		    			};
+		    			
+		    			var getEditElement = function(col){
+		    				var editElement = "";
+		    				if(col.edit && (col.type === "String" || col.type === undefined || col.type === "Number"
         		  	    		|| col.type === "Month" || col.type === "Week"  || col.type === "Time" || col.type === "DateTime"
         		  	    		|| col.type === "Range" || col.type === "Color" || col.type === "Mail" || col.type === "Tel"
         		  	    		|| col.type === "Url" || col.type === "Date")){
@@ -1353,61 +1381,76 @@ angular.module('datatableServices', []).
 	        		  	    			switch (col.type) 
 	        		  	    			{ 
 		        		  	    			case "String": 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="text" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="text" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break; 
 		        		  	    			case "Number": 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="number" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="number" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break; 
 		        		  	    			case "Month": 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="month" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="month" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break; 
 		        		  	    			case "Week": 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="week" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="week" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Time": 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="time" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="time" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "DateTime": 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="datetime" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="datetime" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Range": 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="range" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="range" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Color": 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="color" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="color" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Mail": 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="mail" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="mail" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Tel": 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="tel" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="tel" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Url": 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="url" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="url" class="input-small" ng-model="'+getNgModel(col)+'"  ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Date": 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="date" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="date" class="input-small" ng-model="'+getNgModel(col)+'"  ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			default: 
-		        		  	    				newElement = $compile('<input html-filter="{{col.type}}" type="text" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="text" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break; 
 	        		  	    			}
 	        		  	    		}else{
 	        		  	    			if(col.listStyle == "radio"){
-	            		  	    			newElement = $compile('<label ng-repeat="opt in col.possibleValues"  ng-show="'+ngShow+'"  for="radio{{col.id}}"><input id="radio{{col.id}}" html-filter="{{col.type}}" type="radio"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" value="{{opt.name}}">{{opt.name}}<br></label>'+valueElement)(scope);
+	        		  	    				editElement = '<label ng-repeat="opt in col.possibleValues"  for="radio{{col.id}}"><input id="radio{{col.id}}" html-filter="{{col.type}}" type="radio"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" value="{{opt.name}}">{{opt.name}}<br></label>';
 	            		  	    		}else if(col.listStyle == "select"){
-	            		  	    			newElement = $compile('<select html-filter="{{col.type}}" ng-show="'+ngShow+'" ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>'+valueElement)(scope);
+	            		  	    			editElement = '<select html-filter="{{col.type}}" ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
 	            		  	    		}else if(col.listStyle == "multiselect"){
-	            		  	    			newElement = $compile('<select multiple html-filter="{{col.type}}" ng-show="'+ngShow+'" ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>'+valueElement)(scope);
+	            		  	    			editElement = '<select multiple html-filter="{{col.type}}"  ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
+	            		  	    		}else if(col.listStyle == "bs-select"){
+	            		  	    			editElement = '<select html-filter="{{col.type}}" data-width="auto" title="" ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" bs-select></select>';
+	            		  	    		}else if(col.listStyle == "bs-select-multiple"){
+	            		  	    			editElement = '<select html-filter="{{col.type}}" data-width="auto" title="" multiple ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" bs-select></select>';
 	            		  	    		}
 	        		  	    		}
         		  	    	}else if(col.edit && col.type =="Boolean"){
-        		  	    			newElement = $compile('<input html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+getNgModel(col)+'" ng-show="'+ngShow+'" ng-change="'+ngChange+'"/>'+valueElement)(scope);
+        		  	    		editElement = '<input html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
         		  	    	}
-	        		  	    else if(!col.edit){
-	        		  	    	newElement  = $compile('<span >{{'+getNgModel(col)+' '+columnFormatter(col)+'}}</span>')(scope);
-        		  	    	}
-        		  	    	
+		    				return editElement;
+		    			};
+		    			
+    			    	var addHtmlElement = function(col){
+    			    		var newElement = undefined;
+    			    		if(!angular.isDefined(attrs.header)){
+	    			    		if(col.edit){
+	    			    			newElement = '<div ng-switch on="'+ngShow+'"><div ng-switch-when="true">'+getEditElement(col)+'</div><div ng-switch-default>'+getValueElement(col)+'</div></div>';
+	    			    		}else{
+	    			    			newElement = getValueElement(col);
+	    			    		}
+    			    		}else{
+    			    			newElement = getEditElement(col);
+    			    		}
+    			    		newElement = $compile(newElement)(scope);
         		  	    	element.html("");
         		  	    	element.append(newElement);
     			    	};
