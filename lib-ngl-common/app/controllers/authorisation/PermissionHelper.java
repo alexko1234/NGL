@@ -24,7 +24,7 @@ import play.mvc.Http.Session;
 import com.avaje.ebean.Query;
 
 public class PermissionHelper {
-	private static final String COOKIE_SESSION = "CAS_FILTER_USER";
+	private static final String COOKIE_SESSION = "NGL_FILTER_USER";
 	
 	/**
 	 * 

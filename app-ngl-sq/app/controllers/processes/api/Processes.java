@@ -48,7 +48,7 @@ public class Processes extends CommonController{
 				//the trace
 				value.traceInformation = new TraceInformation();
 			
-				value.traceInformation.setTraceInformation(PermissionHelper.getCurrentUser(session()));
+				value.traceInformation.setTraceInformation(getCurrentUser());
 				//the default status
 				value.stateCode = "N";
 				
@@ -63,7 +63,7 @@ public class Processes extends CommonController{
 				value.code = CodeHelper.generateProcessCode(value);
 				Logger.info("New process code : "+value.code);
 			} else {
-				value.traceInformation.setTraceInformation(PermissionHelper.getCurrentUser(session()));
+				value.traceInformation.setTraceInformation(getCurrentUser());
 			}
 			
 			if (!filledForm.hasErrors()) {
