@@ -8,12 +8,16 @@ import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.running;
 import static play.test.Helpers.status;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Level;
+import models.laboratory.common.instance.property.PropertyListValue;
+import models.laboratory.common.instance.property.PropertyObjectListValue;
+import models.laboratory.common.instance.property.PropertyObjectValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.run.instance.Lane;
@@ -64,9 +68,151 @@ public class TreatmentValidationTest extends AbstractTests {
 		m.put("Q30", new PropertySingleValue(100));
 		m.put("qualityScore", new PropertySingleValue(100));
 		m.put("nbReadIllumina", new PropertySingleValue(100));
-		t.set("default", m);
+		t.set("default", m);	
+		return t;
+	}
+	
+	private Treatment getNewTreatmentTaxonomyOK() {
+		Treatment t = new Treatment();
+		t.code =  "taxonomy";		
+		t.typeCode =  "taxonomy";
+		t.categoryCode = "quality";
+		
+		//define map of property values
+		Map<String,PropertyValue> m = new HashMap<String,PropertyValue>();
+		
+		m.put("sampleInput", new PropertySingleValue(100)); //Long.class, required=true
+		m.put("organism",new PropertySingleValue("titi")); // String.class, true
+		m.put("taxonomie",new PropertySingleValue("trucBizarre")); // String.class, true
+		
+		
+		PropertyObjectValue p = new PropertyObjectValue(); // Map<String, ?>
+		HashMap<String, Object> m2 = new HashMap<String, Object>(); 
+		m2.put("taxon", "leTaxon");
+		m2.put("nbSeq", 1000000);
+		m2.put("percent", 10.52);
+		p.value=m2;
+		m.put("taxonBilan", p);
+		
+		p = new PropertyObjectValue();
+		m2 = new HashMap<String, Object>(); 
+		m2.put("division", "eukaryota"); //value OK
+		m2.put("nbSeq", 1000000);
+		m2.put("percent", 10.52);
+		p.value=m2;
+		m.put("divisionBilan", p);
+		
+		p = new PropertyObjectValue();
+		m2 = new HashMap<String, Object>(); 
+		m2.put("keyword", "virus"); //value OK
+		m2.put("nbSeq", 1000000);
+		m2.put("percent", 1320.52);
+		p.value=m2;
+		m.put("keywordBilan", p);
+
+		
+		File f = new File("krona");
+		m.put("krona",new PropertySingleValue(f)); // File.class, true
+		
+		t.set("read1", m);
 		
 		return t;
+	}
+	
+	
+	private Treatment getNewTreatmentTaxonomyBad() {
+		Treatment t = new Treatment();
+		t.code =  "taxonomy";		
+		t.typeCode =  "taxonomy";
+		t.categoryCode = "quality";
+		
+		//define map of property values
+		Map<String,PropertyValue> m = new HashMap<String,PropertyValue>();
+		
+		m.put("sampleInput", new PropertySingleValue(100)); //Long.class, required=true
+		m.put("organism",new PropertySingleValue("titi")); // String.class, true
+		m.put("taxonomie",new PropertySingleValue("trucBizarre")); // String.class, true
+		
+		
+		PropertyObjectValue p = new PropertyObjectValue(); // Map<String, ?>
+		HashMap<String, Object> m2 = new HashMap<String, Object>(); 
+		m2.put("taxon", "leTaxon");
+		m2.put("nbSeq", 1000000);
+		m2.put("percent", 10.52);
+		p.value=m2;
+		m.put("taxonBilan", p);
+		
+		
+		p = new PropertyObjectValue();
+		m2 = new HashMap<String, Object>(); 
+		m2.put("division", "toto"); // not authorized, possible value : "eukaryota"
+		m2.put("nbSeq", 1000000);
+		m2.put("percent", 10.52);
+		p.value=m2;
+		m.put("divisionBilan", p);
+		
+		
+		p = new PropertyObjectValue();
+		m2 = new HashMap<String, Object>(); 
+		m2.put("keyword", "titi"); // not authorized, possible value : "virus"
+		m2.put("nbSeq", 1000000);
+		m2.put("percent", 1320.52);
+		p.value=m2;
+		m.put("keywordBilan", p);
+
+		
+		File f = new File("krona");
+		m.put("krona",new PropertySingleValue(f)); // File.class, true
+		
+		t.set("read1", m);
+		
+		return t;
+	}
+	
+	
+	
+	@Test
+	public void testValidatePropertyChoiceInListOK() {
+		Treatment t = getNewTreatmentTaxonomyOK();
+		
+		ContextValidation ctxVal = new ContextValidation(); 
+		
+		Level.CODE levelCode = Level.CODE.ReadSet; 
+		ctxVal.putObject("level", levelCode);
+		
+		//add readset to ctxVal
+		ReadSet readset = RunMockHelper.newReadSet("rdCode");
+		ctxVal.putObject("readSet", readset);
+		
+		ctxVal.setCreationMode();
+		
+		t.validate(ctxVal);
+		
+		assertThat(ctxVal.errors).hasSize(0);
+	}
+	
+	
+	
+	@Test
+	public void testValidatePropertyChoiceInListBad() {
+		Treatment t = getNewTreatmentTaxonomyBad();
+		
+		ContextValidation ctxVal = new ContextValidation(); 
+		
+		Level.CODE levelCode = Level.CODE.ReadSet; 
+		ctxVal.putObject("level", levelCode);
+		
+		//add readset to ctxVal
+		ReadSet readset = RunMockHelper.newReadSet("rdCode");
+		ctxVal.putObject("readSet", readset);
+		
+		ctxVal.setCreationMode();
+		
+		t.validate(ctxVal);
+		
+		assertThat(ctxVal.errors).hasSize(2);
+		
+		assertThat(ctxVal.errors.toString()).contains(ERROR_VALUENOTAUTHORIZED_MSG);
 	}
 	
 	
@@ -90,8 +236,10 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		assertThat(ctxVal.errors).hasSize(0);
 	}
-	 
-	@Test
+	
+	
+	
+    @Test
 	 public void testValidateTreatmentUpdatedOK() {
 		    	   
 		Treatment t = getNewTreatmentForReadSet();
@@ -157,6 +305,8 @@ public class TreatmentValidationTest extends AbstractTests {
 		assertThat(msgErreur).isEqualTo("missing level parameter");
 	}
 	
+	 
+	 
 	@Test
 	 public void testValidationTreatmentErrorMissingCode() {	
 		
@@ -177,10 +327,10 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		ctxVal.setCreationMode();
 		
-			t.validate(ctxVal);
-			assertThat(ctxVal.errors.size()).isGreaterThan(0);
-			assertThat(ctxVal.errors.toString()).contains(ERROR_REQUIRED_MSG);
-			assertThat(ctxVal.errors.toString()).contains("code");
+		t.validate(ctxVal);
+		assertThat(ctxVal.errors.size()).isGreaterThan(0);
+		assertThat(ctxVal.errors.toString()).contains(ERROR_REQUIRED_MSG);
+		assertThat(ctxVal.errors.toString()).contains("code");
 	}
 	
 	
@@ -384,11 +534,16 @@ public class TreatmentValidationTest extends AbstractTests {
 	}
 	
 
-
+	
 	@Test
 	 public void testValidateTreatmentErrorValueNotDefined() {
 			Treatment t = getNewTreatmentForReadSet();
-	
+			
+			/*Map<String, PropertyValue> m = t.results().get("default");
+			m.put("bad", new PropertySingleValue("Ouh la la"));
+			t.results = null;
+			t.set("default", m); */ 	
+			
 			t.results().get("default").put("bad", new PropertySingleValue("Ouh la la"));
 			
 					
@@ -420,33 +575,32 @@ public class TreatmentValidationTest extends AbstractTests {
 		    	Treatment t = null; 
 	    		ContextValidation ctxVal = new ContextValidation();  
 						   
-					t = getNewTreatmentForReadSet();
-					
-					t.results().get("default").remove("nbReadIllumina");
-					//must generate a error (because of a bad value)
-					t.results().get("default").put("nbReadIllumina", new PropertySingleValue("un"));	
-					
+				t = getNewTreatmentForReadSet();
+				
+				t.results().get("default").remove("nbReadIllumina");
+				//must generate a error (because of a bad value)
+				t.results().get("default").put("nbReadIllumina", new PropertySingleValue("un"));	
+				
 
-		    		Level.CODE levelCode = Level.CODE.ReadSet; 
-		    		ctxVal.putObject("level", levelCode);
-		    		
-		    		//add readset to ctxVal
-		    		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		    		ctxVal.putObject("readSet", readset);
-		    		
-		    		ctxVal.setCreationMode();
-		    		
-		    		t.validate(ctxVal);
+	    		Level.CODE levelCode = Level.CODE.ReadSet; 
+	    		ctxVal.putObject("level", levelCode);
+	    		
+	    		//add readset to ctxVal
+	    		ReadSet readset = RunMockHelper.newReadSet("rdCode");
+	    		ctxVal.putObject("readSet", readset);
+	    		
+	    		ctxVal.setCreationMode();
+	    		
+	    		t.validate(ctxVal);
 
-		    		assertThat(ctxVal.errors).hasSize(1);
-		    		assertThat(ctxVal.errors.toString()).contains(ERROR_BADTYPE_MSG);
+	    		assertThat(ctxVal.errors).hasSize(1);
+	    		assertThat(ctxVal.errors.toString()).contains(ERROR_BADTYPE_MSG);
 
 	}
 	
 	
 
 
-	
 	@Test
 	 public void testValidateTreatmentErrorBadContext() {
 		Treatment t = getNewTreatmentForReadSet();
