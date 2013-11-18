@@ -170,8 +170,8 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	}
 	
 	public boolean isCodeExistForTypeCode(String code, String typeCode)  throws DAOException {
-		String sql = "select t.code,c.code from "+tableName+
-				" t JOIN common_info_type_state cs ON cs.fk_state=t.id "+
+		String sql = sqlCommon +
+				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
 				" JOIN common_info_type c on c.id =cs.fk_common_info_type "+
 				 DAOHelpers.getSQLForInstitute().replace("t.","c.")+
 				" and t.code=? and c.code=?";
