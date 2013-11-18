@@ -16,6 +16,7 @@ import models.laboratory.common.instance.Validation;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.common.instance.CommonValidationHelper;
 import validation.run.instance.FileValidationHelper;
 import validation.run.instance.ReadSetValidationHelper;
 import validation.run.instance.TreatmentValidationHelper;
@@ -79,12 +80,12 @@ public class ReadSet extends DBObject implements IValidation{
 		ReadSetValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
 		ReadSetValidationHelper.validateReadSetRunCode(this.runCode ,contextValidation);
 		ReadSetValidationHelper.validateReadSetLaneNumber(this.runCode, this.laneNumber ,contextValidation);
-		if(ValidationHelper.required(contextValidation, this.projectCode, "projectCode")){
-			//TODO validate if exist projectCode
-		}
-		if(ValidationHelper.required(contextValidation, this.sampleCode, "sampleCode")){
-			//TODO validate if exist sampleCode
-		}
+		
+		ReadSetValidationHelper.validateProjectCode(this.projectCode, contextValidation);
+		
+		ReadSetValidationHelper.validateSampleCode(this.sampleCode, contextValidation);
+		
+		
 		ValidationHelper.required(contextValidation, this.path, "path");
 		contextValidation.putObject("readSet", this);
 		contextValidation.putObject("level", Level.CODE.ReadSet);
