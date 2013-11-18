@@ -992,6 +992,8 @@ public class RunValidationTest extends AbstractTests {
 		r.add("X"); 
 		lane.readSetCodes = r;
 		lane.state = getState("F");
+		Validation v = new Validation();
+		 lane.validation = v;
 		return lane;
 	}
 	
@@ -999,6 +1001,8 @@ public class RunValidationTest extends AbstractTests {
 		Lane lane = new Lane();
 		lane.number = 3;
 		 lane.state = getState("F");
+		 Validation v = new Validation();
+		 lane.validation = v;
 		return lane;
 	}
 	
@@ -1010,6 +1014,10 @@ public class RunValidationTest extends AbstractTests {
 		readSet.sampleCode = "SPCODE";
 		//readSet.sampleContainerCode = "SPCONTCODE";
 		readSet.state = getState("F-QC");
+		Validation v = new Validation();
+		readSet.validationBioinformatic = v;
+		readSet.validationProduction = v;
+		
 		readSet.traceInformation = new TraceInformation();
 		readSet.traceInformation.setTraceInformation("ngsrg");
 		readSet.laneNumber = 1;
@@ -1027,6 +1035,11 @@ public class RunValidationTest extends AbstractTests {
 		//readSet.sampleContainerCode = "";
 		readSet.state = getState("F-QC");
 		readSet.typeCode = "default-readset";
+		
+		Validation v = new Validation();
+		readSet.validationBioinformatic = v;
+		readSet.validationProduction = v;
+		
 		TraceInformation ti = new TraceInformation();
 		ti.createUser = "dnoisett";
 		ti.creationDate = new Date(); 		
@@ -1063,6 +1076,10 @@ public class RunValidationTest extends AbstractTests {
 			run.state.code = "F";
 			run.state.user = "tests";
 			run.state.date = new Date();
+			
+			Validation v = new Validation();
+			run.validation = v;
+			
 			run.traceInformation = new TraceInformation();
 			run.traceInformation.setTraceInformation("test");
 			Map<String, Treatment> lT = new HashMap<String, Treatment>();
@@ -1094,6 +1111,10 @@ public class RunValidationTest extends AbstractTests {
 		run.state.code = "";
 		run.state.user = "tests";
 		run.state.date = new Date();
+		
+		Validation v = new Validation();
+		run.validation = v;
+		
 		run.traceInformation = new TraceInformation();
 		Map<String, Treatment> lT = new HashMap<String, Treatment>();
 		Treatment ngsrg = new Treatment(); 

@@ -7,6 +7,7 @@ import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.running;
 import static play.test.Helpers.status;
+import static play.test.Helpers.contentAsString;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Level;
-import models.laboratory.common.instance.property.PropertyListValue;
-import models.laboratory.common.instance.property.PropertyObjectListValue;
 import models.laboratory.common.instance.property.PropertyObjectValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.common.instance.PropertyValue;
@@ -216,32 +215,37 @@ public class TreatmentValidationTest extends AbstractTests {
 	}
 	
 	
+		
+	
 	@Test
 	 public void testValidateTreatmentCreationOK() {
-
-		Treatment t = getNewTreatmentForReadSet();
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+				Treatment t = getNewTreatmentForReadSet();
+						
+				ContextValidation ctxVal = new ContextValidation(); 
 				
-		ContextValidation ctxVal = new ContextValidation(); 
-		
-		Level.CODE levelCode = Level.CODE.ReadSet; 
-		ctxVal.putObject("level", levelCode);
-		
-		//add readset to ctxVal
-		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		ctxVal.putObject("readSet", readset);
-		
-		ctxVal.setCreationMode();
-		
-		t.validate(ctxVal);
-		
-		assertThat(ctxVal.errors).hasSize(0);
+				Level.CODE levelCode = Level.CODE.ReadSet; 
+				ctxVal.putObject("level", levelCode);
+				
+				//add readset to ctxVal
+				ReadSet readset = RunMockHelper.newReadSet("rdCode");
+				ctxVal.putObject("readSet", readset);
+				
+				ctxVal.setCreationMode();
+				
+				t.validate(ctxVal);
+				
+				assertThat(ctxVal.errors).hasSize(0);
+		       }});
 	}
 	
 	
 	
     @Test
 	 public void testValidateTreatmentUpdatedOK() {
-		    	   
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {    	   
 		Treatment t = getNewTreatmentForReadSet();
 		
 		// create treatment
@@ -269,14 +273,15 @@ public class TreatmentValidationTest extends AbstractTests {
 		else {
 			System.out.println("Missing readSet rdCode !");
 		}
-
+		       }});
 	}
 	 
 	
 	
 	@Test
 	 public void testValidateTreatmentErrorMissingLevel() {
-
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 		Boolean b = false;
 		String msgErreur = "";
 		
@@ -303,13 +308,13 @@ public class TreatmentValidationTest extends AbstractTests {
 		}		
 		assertThat(b).isEqualTo(true);
 		assertThat(msgErreur).isEqualTo("missing level parameter");
+		       }});
 	}
 	
-	 
-	 
 	@Test
 	 public void testValidationTreatmentErrorMissingCode() {	
-		
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 		Boolean b = false;
 		String msgErreur = "";
 		
@@ -331,12 +336,16 @@ public class TreatmentValidationTest extends AbstractTests {
 		assertThat(ctxVal.errors.size()).isGreaterThan(0);
 		assertThat(ctxVal.errors.toString()).contains(ERROR_REQUIRED_MSG);
 		assertThat(ctxVal.errors.toString()).contains("code");
+		       }});
 	}
 	
 	
 	
 	@Test
 	 public void testValidateTreatmentErrorCodeRequired() {	
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+	
 		Treatment t = getNewTreatmentForReadSet();
 		t.code =  ""; //empty!		
 		
@@ -356,13 +365,15 @@ public class TreatmentValidationTest extends AbstractTests {
 		assertThat(ctxVal.errors.size()).isGreaterThan(0);
 		assertThat(ctxVal.errors.toString()).contains(ERROR_REQUIRED_MSG);
 		assertThat(ctxVal.errors.toString()).contains("code");
+		       }});
 	}
 	
 	
 	
 	@Test
 	 public void testValidationTreatmentErrorTypeCodeRequired() {	
-		
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 		deleteRdCode();
 		
 		Treatment t = getNewTreatmentForReadSet();	
@@ -384,13 +395,15 @@ public class TreatmentValidationTest extends AbstractTests {
 		assertThat(ctxVal.errors).hasSize(1);
 		assertThat(ctxVal.errors.toString()).contains(ERROR_REQUIRED_MSG);
 		assertThat(ctxVal.errors.toString()).contains("typeCode");
+		       }});
 	}
 	
 	
 	
 	@Test
 	 public void testValidateTreatmentErrorCategoryCodeRequired() {
-		
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 		deleteRdCode(); 
 		
 		Treatment t = getNewTreatmentForReadSet();
@@ -412,13 +425,15 @@ public class TreatmentValidationTest extends AbstractTests {
 		assertThat(ctxVal.errors).hasSize(1);
 		assertThat(ctxVal.errors.toString()).contains(ERROR_REQUIRED_MSG);
 		assertThat(ctxVal.errors.toString()).contains("categoryCode");
+		       }});
 	}
 	 
 	 
 	
 	@Test
 	 public void testValidateTreatmentErrorCodeNotUnique() {
-				    	   
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {		    	   
 		Treatment t = getNewTreatmentForReadSet();
 		
 		// create treatment
@@ -444,6 +459,7 @@ public class TreatmentValidationTest extends AbstractTests {
 			assertThat(ctxVal.errors.toString()).contains(ERROR_CODE_NOTUNIQUE_MSG);
 		}
 		
+		}});
 	}
 	
 	private void createSameTrt() {
@@ -501,7 +517,8 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	@Test
 	 public void testValidateTreatmentErrorCodeNotExists() {
-				    	   
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {		    	   
 		Treatment t = getNewTreatmentForReadSet();
 		
 		// create treatment
@@ -530,20 +547,19 @@ public class TreatmentValidationTest extends AbstractTests {
 		else {
 			System.out.println("method deleteRdCode() doesn't run normally !");
 		}
+		
+		       }});
 
 	}
 	
 
-	
+
 	@Test
 	 public void testValidateTreatmentErrorValueNotDefined() {
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 			Treatment t = getNewTreatmentForReadSet();
-			
-			/*Map<String, PropertyValue> m = t.results().get("default");
-			m.put("bad", new PropertySingleValue("Ouh la la"));
-			t.results = null;
-			t.set("default", m); */ 	
-			
+	
 			t.results().get("default").put("bad", new PropertySingleValue("Ouh la la"));
 			
 					
@@ -562,6 +578,7 @@ public class TreatmentValidationTest extends AbstractTests {
 			
 			assertThat(ctxVal.errors).hasSize(1);
 			assertThat(ctxVal.errors.toString()).contains(ERROR_NOTDEFINED_MSG);
+		       }});
 	}
 	
 	
@@ -571,38 +588,43 @@ public class TreatmentValidationTest extends AbstractTests {
 	//@Test(expected=java.lang.NumberFormatException.class)
 	@Test
 	 public void testValidateTreatmentErrorBadTypeValue() {
-		
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 		    	Treatment t = null; 
 	    		ContextValidation ctxVal = new ContextValidation();  
 						   
-				t = getNewTreatmentForReadSet();
-				
-				t.results().get("default").remove("nbReadIllumina");
-				//must generate a error (because of a bad value)
-				t.results().get("default").put("nbReadIllumina", new PropertySingleValue("un"));	
-				
+					t = getNewTreatmentForReadSet();
+					
+					t.results().get("default").remove("nbReadIllumina");
+					//must generate a error (because of a bad value)
+					t.results().get("default").put("nbReadIllumina", new PropertySingleValue("un"));	
+					
 
-	    		Level.CODE levelCode = Level.CODE.ReadSet; 
-	    		ctxVal.putObject("level", levelCode);
-	    		
-	    		//add readset to ctxVal
-	    		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-	    		ctxVal.putObject("readSet", readset);
-	    		
-	    		ctxVal.setCreationMode();
-	    		
-	    		t.validate(ctxVal);
+		    		Level.CODE levelCode = Level.CODE.ReadSet; 
+		    		ctxVal.putObject("level", levelCode);
+		    		
+		    		//add readset to ctxVal
+		    		ReadSet readset = RunMockHelper.newReadSet("rdCode");
+		    		ctxVal.putObject("readSet", readset);
+		    		
+		    		ctxVal.setCreationMode();
+		    		
+		    		t.validate(ctxVal);
 
-	    		assertThat(ctxVal.errors).hasSize(1);
-	    		assertThat(ctxVal.errors.toString()).contains(ERROR_BADTYPE_MSG);
+		    		assertThat(ctxVal.errors).hasSize(1);
+		    		assertThat(ctxVal.errors.toString()).contains(ERROR_BADTYPE_MSG);
+		    		 }});
 
 	}
 	
 	
 
 
+	
 	@Test
 	 public void testValidateTreatmentErrorBadContext() {
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 		Treatment t = getNewTreatmentForReadSet();
 		
 		// new bad context
@@ -631,6 +653,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		assertThat(ctxVal.errors).hasSize(1);
 		assertThat(ctxVal.errors.toString()).contains(ERROR_VALUENOTAUTHORIZED_MSG);	
+		       }});
 	}
 	 
 }

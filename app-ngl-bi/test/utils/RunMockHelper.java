@@ -65,6 +65,8 @@ public class RunMockHelper {
 		run.state.user = "tests";
 		run.state.date = new Date();
 		
+		run.validation = getValidation(TBoolean.UNSET);
+		
 		List<String> lResos = new ArrayList<String>();
 		lResos.add("reso1");
 		lResos.add("reso2");
