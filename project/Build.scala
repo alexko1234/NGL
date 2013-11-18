@@ -63,7 +63,7 @@ object ApplicationBuild extends Build {
 		"com.github.julienrf" %% "play-jsmessages" % "1.4.1",
 		"javax.mail" % "mail" % "1.4.2",
 	    "janino" % "janino" % "2.5.15",
-		"fr.cea.ig" %% "authentificationplugin" % "1.0-SNAPSHOT"
+		"fr.cea.ig.modules" %% "authentication" % "1.0-SNAPSHOT"
     	)	
    	val ngldatatableDependencies = Seq(
    	    javaCore
@@ -75,19 +75,16 @@ object ApplicationBuild extends Build {
    	val nglbiDependencies = Seq(
 	        // Add your project dependencies here,
 	      javaCore, javaJdbc,
-		"postgresql" % "postgresql" % "8.3-603.jdbc4",
-	     "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
+		"postgresql" % "postgresql" % "8.3-603.jdbc4"
 		)
 	val nglsqDependencies = Seq(
 		javaCore, javaJdbc,
 		  // Add your project dependencies here,
-		  "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
-		  "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
+		  "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT"
 		)
 	val nglauthDependencies = Seq(
 	javaCore, javaJdbc,javaEbean,
-		"fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
-		"fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT"
+		"fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT"
 		)
    val nglplaquesDependencies = Seq(
 		  javaCore, javaJdbc
@@ -99,7 +96,6 @@ object ApplicationBuild extends Build {
 		javaCore, javaJdbc,
 		  // Add your project dependencies here,
 		  "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
-		  "fr.cea.ig" %% "casplugin" % "1.0-SNAPSHOT",
 		  "postgresql" % "postgresql" % "8.3-603.jdbc4"
 		)		
 	
