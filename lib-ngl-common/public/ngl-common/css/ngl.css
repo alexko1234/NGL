@@ -6,3 +6,8 @@ body {
 .nav-tabs > li > a > .close{
    margin-left: 5px;
 }
+
+.bootstrap-select.btn-group,
+.bootstrap-select.btn-group[class*="span"] {
+   margin-bottom: 0px;
+}
