@@ -15,6 +15,7 @@ import models.laboratory.common.instance.Validation;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.run.instance.LaneValidationHelper;
+import validation.run.instance.RunValidationHelper;
 import validation.run.instance.TreatmentValidationHelper;
 
 public class Lane implements IValidation{
@@ -53,6 +54,7 @@ public class Lane implements IValidation{
 		LaneValidationHelper.validationLaneNumber(this.number,contextValidation);
 		LaneValidationHelper.validationLaneReadSetCodes(this.number, this.readSetCodes, contextValidation);
 		LaneValidationHelper.validateLaneState(this.state, contextValidation);
+		LaneValidationHelper.validateLaneValidation(this.validation, contextValidation);
 		contextValidation.putObject("lane", this);
 		contextValidation.putObject("level", Level.CODE.Lane);
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);

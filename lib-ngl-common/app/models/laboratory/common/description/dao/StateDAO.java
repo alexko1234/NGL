@@ -18,6 +18,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
+import play.Logger;
+
 import com.avaje.ebean.enhance.asm.Type;
 
 @Repository
@@ -164,7 +166,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
 				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
 				"JOIN common_info_type_institute ci on c.id =ci.fk_common_info_type "+
-				"JOIN institute i on i.id = ci.fk_institute AND i.code =" +  DescriptionHelper.getInstitute() + " "+
+				"JOIN institute i on i.id = ci.fk_institute AND i.code = " +  DescriptionHelper.getInstitute() + " "+
 				"WHERE c.code=?";
 		return initializeMapping(sql, new SqlParameter("c.code", Types.VARCHAR)).execute(typeCode);	
 	}
@@ -175,7 +177,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
 				"JOIN common_info_type_institute ci on c.id =ci.fk_common_info_type "+
 				"JOIN institute i on i.id = ci.fk_institute AND i.code =" + DescriptionHelper.getInstitute() + " "+
-				"WHERE t.code=? and c.code=?";
+				"WHERE t.code=? and c.code=?";		
 		return( initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR),
 				 new SqlParameter("c.code", Types.VARCHAR)).findObject(code, typeCode) != null )? true : false;	
 	}

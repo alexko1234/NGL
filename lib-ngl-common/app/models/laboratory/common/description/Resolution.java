@@ -41,6 +41,10 @@ public class Resolution extends Model<Resolution>{
 				throws DAOException {
 			return ((ResolutionDAO) getInstance()).findByTypeCode(code);
 		}
+
+		public boolean isCodeExistForTypeCode(String code, String typeCode) throws DAOException {
+			return ((ResolutionDAO) getInstance()).isCodeExistForTypeCode(code, typeCode);
+		}
 	}
 	
 }

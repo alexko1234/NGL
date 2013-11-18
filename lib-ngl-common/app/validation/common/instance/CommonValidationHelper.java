@@ -7,6 +7,7 @@ import java.util.List;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Validation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
@@ -357,10 +358,32 @@ public class CommonValidationHelper {
 		
 	}
 	
+	public static void validateResolutionCodes(String typeCode, List<String> resoCodes, ContextValidation contextValidation){
+		try{
+			if(null != resoCodes){
+				for(String resoCode: resoCodes){
+					if(!models.laboratory.common.description.Resolution.find.isCodeExistForTypeCode(resoCode, typeCode)){
+						contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, resoCode);
+					}
+				}
+			}
+		}catch(DAOException e){
+			throw new RuntimeException(e);
+		}
+	}
 	
+	public static void validateValidation(String typeCode, Validation validation, ContextValidation contextValidation) {
+		if(ValidationHelper.required(contextValidation, validation, "validation")){
+			contextValidation.putObject(FIELD_TYPE_CODE, typeCode);
+			contextValidation.addKeyToRootKeyName("validation");
+			validation.validate(contextValidation);
+			contextValidation.removeKeyFromRootKeyName("validation");
+			contextValidation.removeObject(FIELD_TYPE_CODE);
+		}		
+	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> T getObjectFromContext(String key, Class<T> clazz, ContextValidation contextValidation) {
+	protected static <T> T getObjectFromContext(String key, Class<T> clazz, ContextValidation contextValidation) {
 		T o = (T) contextValidation.getObject(key);
 		if(null == o){
 			throw new IllegalArgumentException(clazz.getName()+" form contextValidation is null");

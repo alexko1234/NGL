@@ -56,6 +56,7 @@ public class Run extends DBObject implements IValidation {
     	RunValidationHelper.validateRunType(this.typeCode, this.properties, contextValidation);
     	
     	RunValidationHelper.validateState(this.typeCode, this.state, contextValidation);
+    	RunValidationHelper.validateValidation(this.typeCode, this.validation, contextValidation);
     	RunValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
     	RunValidationHelper.validationContainerSupportCode(this.containerSupportCode, contextValidation); 
     	RunValidationHelper.validateRunInstrumentUsed(this.instrumentUsed, contextValidation);		

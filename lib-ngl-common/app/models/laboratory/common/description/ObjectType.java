@@ -13,7 +13,7 @@ import models.utils.Model;
  */
 public class ObjectType extends Model<ObjectType>{
 	public enum CODE {Project, Process, Sample, Container, Instrument, Reagent,
-		Experiment, Import, Run, Treatment, Lane, File, ReadSet}; 
+		Experiment, Import, Run, Treatment, ReadSet}; 
 	
 	public List<State> states = new ArrayList<State>();
 	

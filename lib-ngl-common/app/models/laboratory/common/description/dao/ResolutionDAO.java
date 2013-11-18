@@ -7,9 +7,11 @@ import java.util.Map;
 
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
+import models.utils.DescriptionHelper;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
@@ -82,6 +84,17 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		}
 		String sql = sqlCommon+" inner join resolution_category r on r.id = t.fk_resolution_category WHERE r.code = ? ";
 		return initializeMapping(sql, new SqlParameter("code", Types.VARCHAR)).execute(code);		
+	}
+
+	public boolean isCodeExistForTypeCode(String code, String typeCode) throws DAOException {
+		String sql = sqlCommon+
+				"JOIN common_info_type_resolution cr ON cr.fk_resolution=t.id "+
+				"JOIN common_info_type c on c.id =cr.fk_common_info_type "+
+				"JOIN institute i on i.id = ci.fk_institute AND i.code =" + DescriptionHelper.getInstitute() + 
+				" WHERE t.code=? and c.code=?";
+	
+		return( initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR),
+				 new SqlParameter("c.code", Types.VARCHAR)).findObject(code, typeCode) != null )? true : false;	
 	}
 
 

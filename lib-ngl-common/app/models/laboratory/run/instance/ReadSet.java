@@ -31,7 +31,6 @@ public class ReadSet extends DBObject implements IValidation{
 	public String runCode;
 	public Integer laneNumber;
 	public Boolean dispatch;
-	//public String sampleContainerCode; //code bar de la banque ou est l'echantillon
 	public String sampleCode; //nom de l'ind / ech
 	public String projectCode;
 	
@@ -74,6 +73,8 @@ public class ReadSet extends DBObject implements IValidation{
 		ReadSetValidationHelper.validateCode(this, InstanceConstants.READSET_ILLUMINA_COLL_NAME, contextValidation);
 		ReadSetValidationHelper.validateReadSetType(this.typeCode, this.properties, contextValidation);
 		ReadSetValidationHelper.validateState(this.typeCode, this.state, contextValidation);
+		ReadSetValidationHelper.validateValidation(this.typeCode, this.validationBioinformatic, contextValidation);
+		ReadSetValidationHelper.validateValidation(this.typeCode, this.validationProduction, contextValidation);
 		ReadSetValidationHelper.validateReadSetCodeInRunLane(this.code, this.runCode, this.laneNumber, contextValidation);
 		ReadSetValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
 		ReadSetValidationHelper.validateReadSetRunCode(this.runCode ,contextValidation);
