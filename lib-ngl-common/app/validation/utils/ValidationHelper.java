@@ -660,9 +660,19 @@ public class ValidationHelper {
 	 * @param propertyValue
 	 * @param propertyDefinition
 	 */
-	public static void checkIfExistInTheList(ContextValidation contextValidation, PropertyObjectValue propertyValue, PropertyDefinition propertyDefinition) {
-		//TODO !
-		Logger.error("checkIfExistInTheList not implemented");
+	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertyObjectValue propertyValue, PropertyDefinition propertyDefinition) {
+		//TODO : DONE
+		if(propertyDefinition.choiceInList){
+			for(Entry<String, ?> entryValue : propertyValue.value.entrySet()){
+				Object value = entryValue.getValue();
+				if((propertyDefinition.code.endsWith(entryValue.getKey())) && !checkIfExistInTheList(propertyDefinition, value.toString())){
+					contextValidation.addErrors(propertyDefinition.code+".value."+entryValue.getKey(), ERROR_VALUENOTAUTHORIZED_MSG, value);
+				}
+			}			
+			return false;
+		}else{
+			return true;
+		}
 	}
 	
 	/**
