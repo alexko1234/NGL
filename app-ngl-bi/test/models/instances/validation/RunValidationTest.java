@@ -853,6 +853,8 @@ public class RunValidationTest extends AbstractTests {
 			 r.validate(ctxVal);
 			 assertThat(ctxVal.errors).hasSize(0);
 			 
+			 /*
+			 
 			result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(r)));
 			assertThat(status(result)).isEqualTo(OK);
 					  
@@ -870,6 +872,8 @@ public class RunValidationTest extends AbstractTests {
 			 r.validate(ctxVal);
 			 assertThat(ctxVal.errors).hasSize(1); // error.codenotunique [CORE_R1]		 
 			 assertThat(ctxVal.errors.toString()).contains("CORE_R1");
+			 
+			 */ 
 		   }});
 	 }
 	 
@@ -1010,8 +1014,9 @@ public class RunValidationTest extends AbstractTests {
 		ReadSet readSet = new ReadSet();
 		readSet.code = "CORE_R1";
 		readSet.path = "/path/test";
-		readSet.projectCode = "ProjectCode"; //ProjectCode
-		readSet.sampleCode = "SampleCode"; // SampleCode
+		readSet.projectCode = "ProjectCode"; 
+		readSet.sampleCode = "SampleCode";
+		//readSet.sampleContainerCode = "SPCONTCODE";
 		readSet.state = getState("F-QC");
 		Validation v = new Validation();
 		readSet.validationBioinformatic = v;
@@ -1022,17 +1027,6 @@ public class RunValidationTest extends AbstractTests {
 		readSet.laneNumber = 1;
 		readSet.dispatch = true;
 		readSet.typeCode = "default-readset";
-		
-		readSet.validationProduction = new Validation();
-		readSet.validationProduction.user = "dnoisett";
-		readSet.validationProduction.date = new Date();
-		readSet.validationProduction.resolutionCodes = null;
-		
-		readSet.validationBioinformatic = new Validation();
-		readSet.validationBioinformatic.user = "dnoisett";
-		readSet.validationBioinformatic.date = new Date();
-		readSet.validationBioinformatic.resolutionCodes = null;
-		
 		return readSet;
 	}
 	
@@ -1040,8 +1034,8 @@ public class RunValidationTest extends AbstractTests {
 		ReadSet readSet = new ReadSet();
 		readSet.code = "X";
 		readSet.path = "";
-		readSet.projectCode = ""; 
-		readSet.sampleCode = "";
+		readSet.projectCode = "ProjectCode"; 
+		readSet.sampleCode = "SampleCode";
 		readSet.state = getState("F-QC");
 		readSet.typeCode = "default-readset";
 		
