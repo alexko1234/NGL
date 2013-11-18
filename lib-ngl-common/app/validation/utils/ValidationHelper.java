@@ -661,7 +661,6 @@ public class ValidationHelper {
 	 * @param propertyDefinition
 	 */
 	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertyObjectValue propertyValue, PropertyDefinition propertyDefinition) {
-		//TODO : DONE
 		if(propertyDefinition.choiceInList){
 			for(Entry<String, ?> entryValue : propertyValue.value.entrySet()){
 				Object value = entryValue.getValue();
