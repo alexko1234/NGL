@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.sample.description.ImportCategory;
 import models.laboratory.sample.description.ImportType;
-import models.utils.DescriptionHelper;
-import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
 
 import org.springframework.stereotype.Repository;
@@ -15,14 +13,13 @@ import org.springframework.stereotype.Repository;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class ImportTypeDAO extends AbstractDAOMapping<ImportType>{
+public class ImportTypeDAO extends AbstractDAOCommonInfoType<ImportType>{
 
 
 	protected ImportTypeDAO() {
 		super("import_type", ImportType.class, ImportTypeMappingQuery.class, 
-				"SELECT t.id, t.fk_common_info_type, t.fk_import_category "+
-				"FROM import_type as t "+
-				"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
+				"SELECT distinct c.id, c.fk_common_info_type, c.fk_import_category ",
+				"FROM import_type as c "+sqlCommonInfoType, false);
 						
 	}
 

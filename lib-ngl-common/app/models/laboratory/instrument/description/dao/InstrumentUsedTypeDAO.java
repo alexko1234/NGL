@@ -1,70 +1,44 @@
 package models.laboratory.instrument.description.dao;
 
-import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.container.description.ContainerSupportCategory;
-import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.description.Instrument;
-import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
-import models.utils.ListObject;
-import models.utils.dao.AbstractDAOMapping;
+import models.utils.DescriptionHelper;
+import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
+import models.utils.dao.DAOHelpers;
 
 import org.springframework.asm.Type;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
 import play.Logger;
 import play.api.modules.spring.Spring;
-import models.utils.DescriptionHelper;
 
 @Repository
-public class InstrumentUsedTypeDAO extends AbstractDAOMapping<InstrumentUsedType>{
+public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentUsedType>{
 
 	protected InstrumentUsedTypeDAO() {
 		super("instrument_used_type", InstrumentUsedType.class, InstrumentUsedTypeMappingQuery.class, 
-				"SELECT t.id, t.fk_common_info_type, t.fk_instrument_category "+
-						"FROM instrument_used_type as t "+
-						"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
+				"SELECT distinct c.id, c.fk_common_info_type, c.fk_instrument_category ",
+						"FROM instrument_used_type as c "+sqlCommonInfoType, false);
 	}
 
 	public List<InstrumentUsedType> findByExperimentId(long id)
 	{
-		String sql = "SELECT it.id, it.fk_common_info_type, it.fk_instrument_category "+
-				"FROM instrument_used_type as it "+
-				"JOIN experiment_type_instrument_type as cit ON fk_instrument_used_type=it.id " +
-				"JOIN common_info_type as c ON c.id=it.fk_common_info_type "+
-				"JOIN common_info_type_institute ci on c.id =ci.fk_common_info_type "+
-				"JOIN institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute() + " "+
-				"WHERE cit.fk_experiment_type = ? ";
+		String sql=sqlCommonSelect+sqlCommonFrom+
+				"JOIN experiment_type_instrument_type as cit ON fk_instrument_used_type=c.id " +
+				DAOHelpers.getSQLForInstitute()+
+				"and cit.fk_experiment_type = ?";
 		InstrumentUsedTypeMappingQuery instrumentUsedTypeMappingQuery = new InstrumentUsedTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return instrumentUsedTypeMappingQuery.execute(id);
 	}
 
-	/*
-	public void save(List<InstrumentUsedType> instrumentUsedTypes, long idCommonInfoType) throws DAOException
-	{
-		if(instrumentUsedTypes!=null && instrumentUsedTypes.size()>0){
-			for(InstrumentUsedType instrumentUsedType : instrumentUsedTypes){
-				save(instrumentUsedType, idCommonInfoType);
-			}
-		}
-	}
-
-	public void save(InstrumentUsedType instrumentUsedType, long idCommonInfoType) throws DAOException
-	{
-		String sql = "INSERT INTO common_info_type_instrument_type(fk_common_info_type, fk_instrument_type) VALUES(?,?)";
-		if(instrumentUsedType.code!=null && InstrumentUsedType.find.findByCode(instrumentUsedType.code)==null)
-			instrumentUsedType.id = save(instrumentUsedType);
-		jdbcTemplate.update(sql, idCommonInfoType, instrumentUsedType.id);
-	}
-*/
 	@Override
 	public long save(InstrumentUsedType instrumentUsedType) throws DAOException
 	{

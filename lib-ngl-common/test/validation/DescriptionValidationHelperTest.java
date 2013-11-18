@@ -230,10 +230,10 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	}
 	
 	@Test
-	public void validationProcessTypeRequired() {
+	public void validationProcessTypeNotRequired() {
 		ContextValidation contextValidation=new ContextValidation();
 		ContainerValidationHelper.validateProcessTypeCode(null, contextValidation);
-		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
+		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test

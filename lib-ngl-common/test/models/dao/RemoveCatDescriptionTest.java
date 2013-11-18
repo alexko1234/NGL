@@ -32,7 +32,7 @@ public class RemoveCatDescriptionTest extends AbstractTests{
 	
 
 	
-	@Test
+	//@Test
 	public void removeContainerSupportCategory() throws DAOException
 	{
 		ContainerSupportCategory containerSupportCategory = ContainerSupportCategory.find.findByCode("support1");
@@ -52,7 +52,7 @@ public class RemoveCatDescriptionTest extends AbstractTests{
 
 	
 
-	@Test
+	//@Test
 	public void removeInstrumentCategory() throws DAOException
 	{
 		InstrumentCategory instrumentCategory = InstrumentCategory.find.findByCode("InstCat1");
@@ -62,7 +62,7 @@ public class RemoveCatDescriptionTest extends AbstractTests{
 		instrumentCategory.remove();
 	}
 	
-	@Test
+	//@Test
 	public void removeProtocolCategory() throws DAOException
 	{
 		ProtocolCategory protocolCategory = ProtocolCategory.find.findByCode("protoCat1");
@@ -77,7 +77,7 @@ public class RemoveCatDescriptionTest extends AbstractTests{
 
 	}
 
-	@Test
+	//@Test
 	public void removeStateCategory() throws DAOException
 	{
 		StateCategory stateCategory = StateCategory.find.findByCode("catState1");
@@ -87,7 +87,7 @@ public class RemoveCatDescriptionTest extends AbstractTests{
 	
 	
 	
-	@Test
+	//@Test
 	public void removeExperimentCategory() throws DAOException
 	{
 		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
@@ -95,7 +95,7 @@ public class RemoveCatDescriptionTest extends AbstractTests{
 		Assert.assertNull(ExperimentCategory.find.findByCode("expCat1"));
 	}
 
-	@Test
+	//@Test
 	public void removeProcessCategory() throws DAOException
 	{
 		ProcessCategory processCategory = ProcessCategory.find.findByCode("processCat1");
@@ -103,7 +103,7 @@ public class RemoveCatDescriptionTest extends AbstractTests{
 		Assert.assertNull(ProcessCategory.find.findByCode("processCat1"));
 	}
 
-	@Test
+	//@Test
 	public void removeSampleCategory() throws DAOException
 	{
 		SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
@@ -112,7 +112,7 @@ public class RemoveCatDescriptionTest extends AbstractTests{
 		Assert.assertNull(sampleCategoryDAO.findByCode("sampleCat1"));
 	}
 	
-	@Test
+	//@Test
 	public void removeProjectCategory() throws DAOException
 	{
 		ProjectCategory projectCategory = ProjectCategory.find.findByCode("projectCat1");
@@ -120,7 +120,7 @@ public class RemoveCatDescriptionTest extends AbstractTests{
 		Assert.assertNull(ProjectCategory.find.findByCode("projectCat1"));
 	}
 
-	@Test
+	//@Test
 	public void removeImportCategory() throws DAOException
 	{
 		ImportCategory importCategory = ImportCategory.find.findByCode("import1");
@@ -128,7 +128,7 @@ public class RemoveCatDescriptionTest extends AbstractTests{
 		Assert.assertNull(ImportCategory.find.findByCode("sampleCat1"));
 	}
 	
-	@Test
+	//@Test
 	public void removeMeasureCategory() throws DAOException
 	{
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat1");

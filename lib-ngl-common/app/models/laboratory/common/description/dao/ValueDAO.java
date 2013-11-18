@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Value;
-import models.utils.dao.AbstractDAO;
+import models.utils.dao.AbstractDAODefault;
 import models.utils.dao.DAOException;
 
 
@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ValueDAO extends AbstractDAO<Value>{
+public class ValueDAO extends AbstractDAODefault<Value>{
 
 	protected ValueDAO() {
 		super("value", Value.class,true);
@@ -46,6 +46,12 @@ public class ValueDAO extends AbstractDAO<Value>{
 	@Override
 	public Value findByCode(String code) throws DAOException {
 		throw new UnsupportedOperationException("Value does not have a code");
+		
+	}
+	
+	@Override
+	public List<Value> findAll() throws DAOException {
+		throw new UnsupportedOperationException("Value can be listed");
 		
 	}
 

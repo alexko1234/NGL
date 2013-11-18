@@ -5,8 +5,11 @@ import models.laboratory.common.description.State;
 import models.laboratory.sample.instance.Sample;
 import models.utils.dao.DAOException;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import play.Logger;
 import utils.AbstractTests;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
@@ -15,13 +18,16 @@ import fr.cea.ig.MongoDBDAO;
 public class CommonValidationHelperTest extends AbstractTests {
 	
 	
-	private static final String COLLECTION_NAME = "test";
+	private static final String COLLECTION_NAME = "commonvalidationhelpertest";
 
-	public  void initData() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+	@BeforeClass
+	public static  void initData() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 		
 	}
 
-	public  void deleteData() {
+	@AfterClass
+	public static  void deleteData() {
+			Logger.debug("Delete collection "+COLLECTION_NAME);
 			MongoDBDAO.getCollection(COLLECTION_NAME, Sample.class).drop();
 	}
 	
@@ -98,12 +104,13 @@ public class CommonValidationHelperTest extends AbstractTests {
 		sample.code="validateExistCode";
     	CommonValidationHelper.validateCode(sample, COLLECTION_NAME, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
-
-		contextValidation.errors.clear();
+		
+		contextValidation.clear();
+		contextValidation.setUpdateMode();
 		sample=saveDBOject(Sample.class,COLLECTION_NAME, "validateExistCode");
 		CommonValidationHelper.validateCode(sample, COLLECTION_NAME, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
-
+		
 	}
 	
 	/**

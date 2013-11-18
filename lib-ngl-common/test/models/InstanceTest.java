@@ -166,7 +166,7 @@ public class InstanceTest extends AbstractTests{
 	}	
 
 
-	@Test 
+	//@Test 
 	public void saveInstanceMongo() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
 
 		for(Class t:classTest){
@@ -175,7 +175,7 @@ public class InstanceTest extends AbstractTests{
 	}
 
 
-	@Test
+	//@Test
 	public void updateProject(){
 
 		Project project=findObject(Project.class);
@@ -207,7 +207,7 @@ public class InstanceTest extends AbstractTests{
 
 	}
 
-	@Test
+	//@Test
 	public void updateSample(){
 		Sample sample=findObject(Sample.class);
 
@@ -242,7 +242,7 @@ public class InstanceTest extends AbstractTests{
 
 	}
 
-	@Test
+	//@Test
 	public void updateContainer(){
 		Container container=findObject(Container.class);
 
@@ -305,7 +305,7 @@ public class InstanceTest extends AbstractTests{
 	}
 
 
-	@Test
+	//@Test
 	public void updateExperience(){
 		Experiment experiment=findObject(Experiment.class);
 
@@ -376,7 +376,7 @@ public class InstanceTest extends AbstractTests{
 
 
 
-	//@Test
+	////@Test
 	public void removeInstanceMongo(){
 		for(Class t:classTest){
 			removeDBOject(t);

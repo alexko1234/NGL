@@ -6,12 +6,13 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.sample.description.dao.SampleTypeDAO;
+import models.utils.dao.AbstractDAOCommonInfoType.CommonInfoTypeFinder;
 
 public class SampleType extends CommonInfoType{
 
 	public SampleCategory category;
 
-	public static Finder<SampleType> find = new Finder<SampleType>(SampleTypeDAO.class.getName());
+	public static CommonInfoTypeFinder<SampleTypeDAO,SampleType> find = new CommonInfoTypeFinder<SampleTypeDAO,SampleType>(SampleTypeDAO.class);
 	
 	public SampleType() {
 		super(SampleTypeDAO.class.getName());

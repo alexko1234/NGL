@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import models.utils.dao.AbstractCommonDAO;
+import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 import play.api.modules.spring.Spring;
 
@@ -48,10 +48,10 @@ public class Model<T> {
     }
 	@JsonIgnore
     @SuppressWarnings("unchecked")
-	public AbstractCommonDAO<T> getInstance() throws DAOException
+	public AbstractDAO<T> getInstance() throws DAOException
     {
     	try {
-			return (AbstractCommonDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
+			return (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			throw new DAOException(e);
@@ -70,18 +70,6 @@ public class Model<T> {
 		public Finder(String className) {
 			this.className = className;
 		}
-
-		/**
-		 * @author dnoisett
-		 * @param code
-		 * @param forCurrentInstitute
-		 * @return
-		 * @throws DAOException
-		 */
-		@JsonIgnore
-		public T findByCode(String code, Boolean forCurrentInstitute) throws DAOException {
-			return getInstance().findByCode(code, forCurrentInstitute);
-		}
 		
 		@JsonIgnore
 		public T findByCode(String code) throws DAOException {
@@ -97,11 +85,6 @@ public class Model<T> {
 		public List<T> findAll() throws DAOException {
 			return getInstance().findAll();
 		}
-		
-		@JsonIgnore
-		public List<T> findAllByInstitute() throws DAOException {
-			return getInstance().findAllByInstitute();
-		}
 
 		@JsonIgnore
 		public T findById(Long id) throws DAOException {
@@ -110,9 +93,9 @@ public class Model<T> {
 
 		@JsonIgnore
 		@SuppressWarnings("unchecked")
-		public AbstractCommonDAO<T> getInstance() throws DAOException {
+		public AbstractDAO<T> getInstance() throws DAOException {
 			try {
-				return (AbstractCommonDAO<T>) Spring.getBeanOfType(Class
+				return (AbstractDAO<T>) Spring.getBeanOfType(Class
 						.forName(className));
 			} catch (ClassNotFoundException e) {
 				throw new DAOException(e);

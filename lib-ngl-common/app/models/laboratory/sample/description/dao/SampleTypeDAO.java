@@ -7,6 +7,7 @@ import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.DescriptionHelper;
+import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -15,13 +16,12 @@ import org.springframework.stereotype.Repository;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class SampleTypeDAO extends AbstractDAOMapping<SampleType>{
+public class SampleTypeDAO extends AbstractDAOCommonInfoType<SampleType>{
 
 	protected SampleTypeDAO() {
 		super("sample_type", SampleType.class, SampleTypeMappingQuery.class, 
-				"SELECT t.id, t.fk_common_info_type, t.fk_sample_category "+
-				"FROM sample_type as t "+
-				"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
+				"SELECT distinct c.id, c.fk_common_info_type, c.fk_sample_category ",
+				"FROM sample_type as c "+sqlCommonInfoType, false);
 	}
 
 	@Override

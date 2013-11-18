@@ -1,13 +1,13 @@
 package models.laboratory.run.description.dao;
 
 import models.laboratory.run.description.TreatmentContext;
-import models.utils.dao.AbstractDAO;
+import models.utils.dao.AbstractDAODefault;
 import models.utils.dao.DAOException;
 
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TreatmentContextDAO extends AbstractDAO<TreatmentContext>{
+public class TreatmentContextDAO extends AbstractDAODefault<TreatmentContext>{
 
 	protected TreatmentContextDAO() {
 		super("treatment_context",TreatmentContext.class,true);

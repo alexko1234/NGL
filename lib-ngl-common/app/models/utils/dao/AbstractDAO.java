@@ -1,138 +1,104 @@
 package models.utils.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import models.utils.ListObject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.support.JdbcUtils;
-import org.springframework.jdbc.support.MetaDataAccessException;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import play.Logger;
 
 /**
- * Generic operations for SimpleDAO
+ * Common operations between Simple DAO et DAO Using mappingQuery
+ * Must not implement an interface for transactional context because
+ * If implements interface Spring creates an instance for the application and get not that class but a Java Dynamic Proxy that implements that classes interface
+ * Because of this, you cannot cast that object to the original type.
+ * If there aren't interfaces to implement, it will give a CGLib proxy of the class, which is basically just a runtime modified version of the class and so is assignable to the class itself
  * @author ejacoby
  *
  * @param <T>
  */
-public abstract class AbstractDAO<T> extends AbstractCommonDAO<T>{
+@Transactional(readOnly=false, rollbackFor=DAOException.class)
+public abstract class AbstractDAO<T> {
 
-	
+
+	protected String tableName;
+	protected DataSource dataSource;
+	protected SimpleJdbcTemplate jdbcTemplate;
+	protected SimpleJdbcInsert jdbcInsert;
+	protected Class<T> entityClass;
+	//Use automatic key id generation 
+	//False for type because id provided by commonInfoType
+	protected boolean useGeneratedKey;
+
 	protected AbstractDAO(String tableName, Class<T> entityClass, boolean useGeneratedKey) {
-		super(tableName, entityClass,useGeneratedKey);
+		this.tableName = tableName;
+		this.entityClass = entityClass;
+		this.useGeneratedKey=useGeneratedKey;
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<String> getColumns() throws MetaDataAccessException
-	{
-		return (List<String>)JdbcUtils.extractDatabaseMetaData(dataSource, new ColumnMetaDataCallback(tableName));
+	@Autowired
+	@Qualifier("ngl")
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource=dataSource;
+		jdbcTemplate = new SimpleJdbcTemplate(dataSource);   
+		if(useGeneratedKey)
+			jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName(tableName).usingGeneratedKeyColumns("id");
+		else
+			jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName(tableName);
 	}
 
-	private String getSQLSelect() throws DAOException 
+	public void remove(T value) throws DAOException
 	{
-		try {
-			String sql = "SELECT ";
-			for(String column : getColumns()){
-				sql+=column+", ";
-			}
-			sql = sql.substring(0, sql.lastIndexOf(","));
-			sql+=" FROM "+tableName;
-			return sql;
-		} catch (MetaDataAccessException e) {
-			throw new DAOException(e);
-		}
+		String sql = "DELETE FROM "+tableName+" WHERE id=:id";
+		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
+		jdbcTemplate.update(sql, ps);
 	}
+
+	public abstract List<T> findAll() throws DAOException;
+		
+	public abstract T findById(Long id) throws DAOException;
 	
-	private String getSQLUpdate() throws DAOException
-	{
-		try {
-			String sql = "UPDATE "+tableName+" SET ";
-			for(String column : getColumns()){
-				if(!column.equals("id"))
-					sql+=column+"=:"+column+", ";
-			}
-			sql = sql.substring(0, sql.lastIndexOf(","));
-			sql += " WHERE id=:id";
-			return sql;
-		} catch (MetaDataAccessException e) {
-			throw new DAOException(e);
-		}
-	}
+	public abstract T findByCode(String code) throws DAOException;
 
-	public List<T> findAll() throws DAOException
-	{
-		try {
-			String sql = getSQLSelect()+" ORDER by code";
-			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
-			return this.jdbcTemplate.query(sql, mapper);
-		} catch (DataAccessException e) {
-			return new ArrayList<T>();
-		}
-	}
+	public abstract long save(T value) throws DAOException;
 
-	public List<T> findAllByInstitute() throws DAOException{
-		return findAll();
-	}
-	
-	public T findById(Long id) throws DAOException
-	{
-		if(null == id){
-			throw new DAOException("id is mandatory");
-		}
-		try {
-			String sql = getSQLSelect()+" WHERE id=?";
-			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
-			return this.jdbcTemplate.queryForObject(sql, mapper, id);
-		} catch (DataAccessException e) {
-			return null;
-		}
-	}
+	public abstract void update(T value) throws DAOException;
 
-	public T findByCode(String code) throws DAOException
+	public Boolean isCodeExist(String code) throws DAOException
 	{
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
 		try {
-			String sql = getSQLSelect()+" WHERE code=?";
-			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
-			return this.jdbcTemplate.queryForObject(sql, mapper, code);
+			try{
+				String sql = "select id from "+tableName+" WHERE code=?";
+				long id =  this.jdbcTemplate.queryForLong(sql, code);
+				if(id > 0){
+					return Boolean.TRUE;
+				}else{
+					return Boolean.FALSE;
+				}
+			}catch (EmptyResultDataAccessException e ) {
+				return Boolean.FALSE;
+			}
 		} catch (DataAccessException e) {
 			Logger.warn(e.getMessage());
 			return null;
 		}
 	}
+
+
+
 	
-	public T findByCode(String code,Boolean forCurrentInstitute) throws DAOException {
-		return findByCode(code);
-	}
-	
-
-	public long save(T value) throws DAOException
-	{
-		if(null == value){
-			throw new DAOException("value is mandatory");
-		}
-		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
-		long id  = (Long) jdbcInsert.executeAndReturnKey(ps);
-		return id;
-	}
-
-
-	public void update(T value) throws DAOException
-	{
-		if(null == value){
-			throw new DAOException("value is mandatory");
-		}
-		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
-		jdbcTemplate.update(getSQLUpdate(), ps);
-	}
-
-
-
-
-
 }

@@ -3,17 +3,11 @@ package models.utils.dao;
 import java.sql.Types;
 import java.util.List;
 
-import models.laboratory.common.description.CommonInfoType;
-import models.utils.DescriptionHelper;
-
 import org.springframework.asm.Type;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
-import play.Logger;
 
 /**
  *Generic operation DAO with MappingSQL object 
@@ -21,7 +15,7 @@ import play.Logger;
  *
  * @param <T>
  */
-public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
+public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 
 	//table of class <T> must be named as "t" and "code" field must be unique
 	protected String sqlCommon;
@@ -37,7 +31,7 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 		if(null == id){
 			throw new DAOException("id is mandatory");
 		}
-		String sql = sqlCommon+" WHERE t.id = ? ";
+		String sql = sqlCommon+" where t.id = ? ";
 		return initializeMapping(sql, new SqlParameter("id", Type.LONG)).findObject(id);
 	}
 
@@ -45,102 +39,16 @@ public abstract class AbstractDAOMapping<T> extends AbstractCommonDAO<T> {
 	public List<T> findAll() throws DAOException {
 		return initializeMapping(sqlCommon).execute();
 	}
-
-	public List<T> findAllByInstitute() throws DAOException {
-		String sql=sqlCommon;
-		if( entityClass.getSuperclass().equals(CommonInfoType.class)){		
-			sql=sqlCommon+getSQLByInstitute();
-		}
-		return initializeMapping(sql).execute();
-	}
-	
-	private String getSQLByInstitute(){
-		return " join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
-				" join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute();
-	}
 	
 	
 	public T findByCode(String code) throws DAOException {
-		return findByCode(code, true); 
-	}
-	
-	public T findByCode(String code, Boolean forCurrentInstitute) throws DAOException {
 		
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
 		
-		String sql= sqlCommon;
-		
-		if (forCurrentInstitute && entityClass.getSuperclass().equals(CommonInfoType.class) ) {
-			sql += " and  c.code = ?  " + getSQLByInstitute();
-					;
-		}
-		else {
-			if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
-				sql += " WHERE c.code = ?";
-			}
-			else {
-				sql += " WHERE t.code = ?";
-			}
-		}
-		
-		/*
-		if (!forCurrentInstitute) {
-			sql = sqlCommon ;
-			if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
-				sql += " WHERE c.code = ?";
-			}
-			else {
-				sql += " WHERE t.code = ?";
-			}
-		}
-		else {
-			if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
-				sql += " and  c.code = ?  " + 
-						"join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
-						"join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute();
-			}
-			else {
-				Logger.warn("Can't find institute for this object !, no dependency with CommonInfoType !");
-				sql += " WHERE t.code = ?";
-				Logger.debug("SQL =" + sql);
-			}
-		}
-		*/ 
-		
+		String sql= sqlCommon+" where t.code = ?";
 		return initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
-	}
-
-
-	public Boolean isCodeExist(String code) throws DAOException {
-		if(null == code){
-			throw new DAOException("code is mandatory");
-		}
-		try {
-			String sql= null;
-			
-			if (entityClass.getSuperclass().equals(CommonInfoType.class)) {
-				sql = "SELECT c.id FROM common_info_type c join common_info_type_institute ci on c.id =ci.fk_common_info_type "+
-				"join institute i on i.id = ci.fk_institute and i.code=" + DescriptionHelper.getInstitute() + " and c.code=?";
-			}
-			else {
-				sql = "SELECT id FROM "+tableName+" WHERE code=?";
-			}
-			try {
-				long id =  this.jdbcTemplate.queryForLong(sql, code);
-				if(id > 0) {
-					return Boolean.TRUE;
-				}else{
-					return Boolean.FALSE;
-				}
-			} catch (EmptyResultDataAccessException e) {
-				return Boolean.FALSE;
-			}
-		} catch (DataAccessException e) {
-			Logger.warn(e.getMessage());
-			return null;
-		}
 	}
 
 

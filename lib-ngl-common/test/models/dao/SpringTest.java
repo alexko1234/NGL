@@ -33,24 +33,9 @@ public class SpringTest extends AbstractTests{
 		Assert.assertNotNull(type.code);
 		Assert.assertNotNull(type.generic);
 	}
-
-	
-	/**
-	 * Use to drop and create database schema
-	 * Obsolete with remove test
-	 * //
-	 */
-	@Test
-	public void initializeDB()
-	{
-		ExecuteSQLDAO initializeDatabaseDAO = Spring.getBeanOfType(ExecuteSQLDAO.class);
-		Resource resource = new ClassPathResource("/schemaInnoDB.sql");
-		initializeDatabaseDAO.executeScript(resource);
-	}
 	
 	
-	
-	@Test
+	//@Test
 	public void testType() throws DAOException
 	{
 		ObjectType type = ObjectType.find.findByCode("Experiment");
@@ -59,7 +44,7 @@ public class SpringTest extends AbstractTests{
 
 
 
-	@Test
+	//@Test
 	public void testAllTypes() throws DAOException
 	{
 		List<ObjectType> types = ObjectType.find.findAll();
@@ -69,7 +54,7 @@ public class SpringTest extends AbstractTests{
 		}
 	}
 
-	@Test
+	//@Test
 	public void testDeleteType() throws DAOException
 	{
 		ObjectType type = ObjectType.find.findByCode("UpdateTest");
@@ -78,7 +63,7 @@ public class SpringTest extends AbstractTests{
 		Assert.assertNull(objectType);
 	}
 
-	@Test
+	//@Test
 	public void testStateAll() throws DAOException
 	{
 		List<State> states = State.find.findAll();

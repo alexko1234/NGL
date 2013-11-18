@@ -70,8 +70,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 	
 	public List<Resolution> findByCommonInfoType(long idCommonInfoType)
 	{
-		String sql = "SELECT id,name,code "+
-				"FROM resolution "+
+		String sql = sqlCommon+
 				"JOIN common_info_type_resolution ON fk_resolution=id "+
 				"WHERE fk_common_info_type=?";
 		BeanPropertyRowMapper<Resolution> mapper = new BeanPropertyRowMapper<Resolution>(Resolution.class);

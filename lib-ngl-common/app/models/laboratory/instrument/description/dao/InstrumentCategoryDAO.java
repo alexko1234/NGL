@@ -3,7 +3,7 @@ package models.laboratory.instrument.description.dao;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.description.dao.ContainerSupportCategoryDAO;
 import models.laboratory.instrument.description.InstrumentCategory;
-import models.utils.dao.AbstractDAO;
+import models.utils.dao.AbstractDAODefault;
 import models.utils.dao.DAOException;
 
 import org.springframework.stereotype.Repository;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class InstrumentCategoryDAO extends AbstractDAO<InstrumentCategory>{
+public class InstrumentCategoryDAO extends AbstractDAODefault<InstrumentCategory>{
 
 	public InstrumentCategoryDAO() {
 		super("instrument_category",InstrumentCategory.class,true);

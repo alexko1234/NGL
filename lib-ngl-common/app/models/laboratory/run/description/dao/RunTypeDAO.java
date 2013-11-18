@@ -5,8 +5,7 @@ import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.RunType;
-import models.utils.DescriptionHelper;
-import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
 
 import org.springframework.stereotype.Repository;
@@ -14,13 +13,12 @@ import org.springframework.stereotype.Repository;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class RunTypeDAO extends AbstractDAOMapping<RunType>{
+public class RunTypeDAO extends AbstractDAOCommonInfoType<RunType>{
 
 	protected RunTypeDAO() {
 		super("run_type", RunType.class, RunTypeMappingQuery.class, 
-				"SELECT t.id, t.nb_lanes, t.fk_common_info_type, t.fk_run_category "+
-						"FROM run_type as t "+
-						"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
+				"SELECT distinct c.id, c.nb_lanes, c.fk_common_info_type, c.fk_run_category ",
+						"FROM run_type as c "+sqlCommonInfoType, false);
 	}
 
 	@Override

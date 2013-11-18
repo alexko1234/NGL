@@ -12,6 +12,7 @@ import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.laboratory.processes.description.dao.ProcessTypeDAO;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import models.utils.dao.AbstractDAOCommonInfoType.CommonInfoTypeFinder;
 
 
 /**
@@ -29,7 +30,7 @@ public class InstrumentUsedType extends CommonInfoType{
 	public List<ContainerSupportCategory> outContainerSupportCategories;
 	
 	
-	public static Finder<InstrumentUsedType> find = new Finder<InstrumentUsedType>(InstrumentUsedTypeDAO.class.getName()); 
+	public static CommonInfoTypeFinder<InstrumentUsedTypeDAO,InstrumentUsedType> find = new CommonInfoTypeFinder<InstrumentUsedTypeDAO,InstrumentUsedType>(InstrumentUsedTypeDAO.class); 
 	
 	public InstrumentUsedType() {
 		super(InstrumentUsedTypeDAO.class.getName());

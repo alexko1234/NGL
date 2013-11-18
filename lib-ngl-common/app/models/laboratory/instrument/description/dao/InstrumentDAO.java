@@ -7,7 +7,7 @@ import java.util.Map;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.instrument.description.Instrument;
 import models.utils.ListObject;
-import models.utils.dao.AbstractDAO;
+import models.utils.dao.AbstractDAODefault;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import play.Logger;
 
 @Repository
-public class InstrumentDAO extends AbstractDAO<Instrument>{
+public class InstrumentDAO extends AbstractDAODefault<Instrument>{
 
 	protected InstrumentDAO() {
 		super("instrument", Instrument.class, true);
@@ -27,12 +27,7 @@ public class InstrumentDAO extends AbstractDAO<Instrument>{
 		BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
 		return this.jdbcTemplate.query(sql, mapper, idInstrumentUsedType);
 	}
-	
-	public List<ListObject> findAllForList(){
-		String sql = "SELECT code , name,  FROM instrument";
-		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
-		return this.jdbcTemplate.query(sql, mapper);
-	}
+
 	
 	public Instrument save(Instrument instrument, long idInstrumentUsedType)
 	{

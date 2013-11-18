@@ -7,6 +7,9 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.utils.ListObject;
+import models.utils.dao.AbstractDAOCommonInfoType.CommonInfoTypeFinder;
+import models.utils.dao.DAOException;
 
 /**
  * Parent class categories not represented by a table in the database
@@ -26,10 +29,30 @@ public class ExperimentType extends CommonInfoType{
 		super(ExperimentTypeDAO.class.getName());		
 	}
 	
-	public static Finder<ExperimentType> find = new Finder<ExperimentType>(ExperimentTypeDAO.class.getName());
+	public static ExperimentTypeFinder find = new ExperimentTypeFinder();
 	
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
 		return getPropertyDefinitionByLevel(models.laboratory.common.description.Level.CODE.Experiment);
+	}
+	
+	public static class ExperimentTypeFinder extends CommonInfoTypeFinder<ExperimentTypeDAO, ExperimentType>{
+
+		public ExperimentTypeFinder() {
+			super(ExperimentTypeDAO.class);
+		}
+		
+		public List<String> findVoidProcessExperimentTypeCode(String processTypeCode) throws DAOException{
+			return ((ExperimentTypeDAO)getInstance()).findVoidProcessExperimentTypeCode(processTypeCode);
+		}
+		
+		public List<ExperimentType> findPreviousExperimentTypeForAnExperimentTypeCode(String code) throws DAOException{
+			return ((ExperimentTypeDAO)getInstance()).findPreviousExperimentTypeForAnExperimentTypeCode(code);
+		}
+		
+		public List<ListObject> findByCategoryCode(String categoryCode) throws DAOException{
+			return ((ExperimentTypeDAO)getInstance()).findByCategoryCode(categoryCode);
+		}
+
 	}
 	
 }

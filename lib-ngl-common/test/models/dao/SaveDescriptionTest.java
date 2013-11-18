@@ -54,7 +54,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST OBJECT_TYPE
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveObjectType() throws DAOException
 	{
 		ObjectType objectType = new ObjectType();
@@ -81,7 +81,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST RESOLUTION
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveResolution() throws DAOException
 	{
 		Resolution resolution = createResolution("Resol1", "Resol1");
@@ -110,7 +110,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST STATE_CATEGORY
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveStateCategory() throws DAOException
 	{
 		StateCategory stateCategory = createStateCategory("catState1", "catState1");
@@ -131,7 +131,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST STATE
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveState() throws DAOException
 	{
 		//StateCategory stateCategory = StateCategory.find.findByCode("catState1");
@@ -170,7 +170,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST MEASURE_CATEGORY
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveMeasureCategory() throws DAOException
 	{
 		MeasureCategory measureCategory = createMeasureCategory("cat1", "cat1");
@@ -224,7 +224,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST REAGENT_TYPE
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveReagentType() throws DAOException
 	{
 		ReagentType reagentType = new ReagentType();
@@ -363,7 +363,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST PROTOCOL_CATEGORY
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveProtocolCategory() throws DAOException
 	{
 		ProtocolCategory protocolCategory = createProtocolCategory("protoCat1", "protoCat1");
@@ -391,7 +391,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST PROTOCOL
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveProtocol() throws DAOException
 	{
 		List<ReagentType> reagentTypes = new ArrayList<ReagentType>();
@@ -433,7 +433,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST CONTAINER_SUPPORT_CATEGORY
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveContainerSupportCategory() throws DAOException
 	{
 		ContainerSupportCategory containerSupportCategory = createContainerSupportCategory("support1", "support1", 10, 10, 10);
@@ -465,7 +465,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST INSTRUMENT_CATEGORY
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveInstrumentCategory() throws DAOException
 	{
 		List<ContainerSupportCategory> inContainerSupportCategories = new ArrayList<ContainerSupportCategory>();
@@ -513,7 +513,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST INSTRUMENT_USED_TYPE
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveInstrumentUsedType() throws DAOException
 	{
 		//Create commonInfoType
@@ -608,7 +608,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST EXPERIMENT_CATEGORY
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveExperimentCategory() throws DAOException
 	{
 		ExperimentCategory experimentCategory = createExperimentCategory("expCat1", "expCat2");
@@ -630,7 +630,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST QUALITY_CONTROL_TYPE
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveQualityControlType() throws DAOException
 	{
 		//Create commonInfoType
@@ -669,7 +669,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST EXPERIMENT_TYPE
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveExperimentType() throws DAOException
 	{
 		//Create commonInfoType
@@ -714,7 +714,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST PURIFICATION_METHOD_TYPE
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void savePurificationMethodType() throws DAOException
 	{
 		//Create commonInfoType
@@ -771,7 +771,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST PROCESS_CATEGORY
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveProcessCategory() throws DAOException
 	{
 		ProcessCategory processCategory = createProcessCategory("processCat1", "processCat1");
@@ -791,7 +791,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST PROCESS_TYPE
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveProcessType() throws DAOException
 	{
 		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
@@ -848,7 +848,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST PROJECT_CATEGORY
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveProjectCategory() throws DAOException
 	{
 		ProjectCategory projectCategory = createProjectCategory("projectCat1", "projectCat1");
@@ -868,7 +868,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST PROJECT_TYPE
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveProjectType() throws DAOException
 	{
 		ProjectCategory projectCategory = ProjectCategory.find.findByCode("projectCat1");
@@ -909,7 +909,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST SAMPLE_CATEGORY
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveSampleCategory() throws DAOException
 	{
 		SampleCategory sampleCategory = createSampleCategory("sampleCat1", "sampleCat1");
@@ -929,7 +929,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * TEST SAMPLE_TYPE
 	 * @throws DAOException 
 	 */
-	@Test
+	//@Test
 	public void saveSampleType() throws DAOException
 	{
 		SampleCategory sampleCategory = SampleCategory.find.findByCode("sampleCat1");
@@ -966,7 +966,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		checkAbstractCategory(sampleType.category);
 	}
 
-	@Test
+	//@Test
 	public void saveImportCategory() throws DAOException
 	{
 		ImportCategory importCategory = createImportCategory("import1", "import1");
@@ -975,7 +975,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		checkAbstractCategory(importCategory);
 	}
 
-	@Test
+	//@Test
 	public void saveImportType() throws DAOException
 	{
 		ImportCategory importCategory = ImportCategory.find.findByCode("import1");
@@ -1012,7 +1012,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		checkAbstractCategory(importType.category);
 	}
 	
-	@Test
+	//@Test
 	public void saveContainerCategory() throws DAOException
 	{
 		ContainerCategory containerCategory = createContainerCategory("container1", "container1");

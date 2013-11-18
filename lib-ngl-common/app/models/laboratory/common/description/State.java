@@ -4,6 +4,7 @@ package models.laboratory.common.description;
 import java.util.List;
 
 import models.laboratory.common.description.dao.StateDAO;
+import models.utils.ListObject;
 import models.utils.Model;
 import models.utils.dao.DAOException;
 
@@ -49,6 +50,10 @@ public class State extends Model<State>{
 
 		public List<State> findByObjectTypeCode(String code) throws DAOException {
 			return ((StateDAO) getInstance()).findByObjectTypeCode(code);
+		}
+		
+		public List<ListObject> findAllForContainerList() throws DAOException {
+			return ((StateDAO) getInstance()).findAllForContainerList();
 		}
 	}
 	

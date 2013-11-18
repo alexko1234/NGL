@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import models.laboratory.common.description.AbstractCategory;
@@ -34,12 +35,12 @@ import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 import play.Logger;
 import play.Play;
-import play.db.DB;
 import play.api.modules.spring.Spring;
+import play.db.DB;
 
 public class DescriptionHelper {
-	
-	static String institute;
+
+	static List<String> institute;
 
 
 	public static PropertyDefinition getPropertyDefinition(String keyCode, String keyName, Boolean required, Boolean active, Boolean choiceInList,
@@ -335,9 +336,9 @@ public class DescriptionHelper {
 	}
 
 
-	
-	
-	
+
+
+
 	public static <T extends Model> List<T> arrayToListType(Class<T> type, String[] listString) throws DAOException{
 		List<T> listType = new ArrayList<T>();
 		Finder<T> find = new Finder<T>(type.getName().replaceAll("description", "description.dao")+"DAO");
@@ -345,9 +346,9 @@ public class DescriptionHelper {
 		for(String i:listString){
 			object=find.findByCode(i);
 			if(object!=null)
-			listType.add(object);
+				listType.add(object);
 		}
-		
+
 		return listType;
 	}
 
@@ -410,14 +411,26 @@ public class DescriptionHelper {
 		return ins;
 	}
 	
-	public static String getInstitute() {
+	public static void initInstitute(){
+		institute=null;
+	}
+
+	public static List<String> getInstitute() {
 		if (institute == null) {
-			institute = Play.application().configuration().getString("institute");
-			if(null == institute){
-				throw new RuntimeException("Institut is not defined !");
-			}else{
-				institute = "'"+institute+"'";
+
+			String appInstitute=Play.application().configuration().getString("institute");
+
+			if(appInstitute==null){
+
+					throw new RuntimeException("institute is not defined !");
 			}
+			
+			if(!appInstitute.equals("")){
+				institute = Arrays.asList(appInstitute.split("\\s*,\\s*"));
+			}else {
+				institute=new ArrayList<String>();
+			}
+
 		}
 		return institute;
 	}

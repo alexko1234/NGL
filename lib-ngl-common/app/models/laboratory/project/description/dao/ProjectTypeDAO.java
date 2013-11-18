@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
-import models.utils.DescriptionHelper;
-import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
 
 import org.springframework.stereotype.Repository;
@@ -15,13 +13,12 @@ import org.springframework.stereotype.Repository;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class ProjectTypeDAO extends AbstractDAOMapping<ProjectType>{
+public class ProjectTypeDAO extends AbstractDAOCommonInfoType<ProjectType>{
 
 	protected ProjectTypeDAO() {
 		super("project_type", ProjectType.class, ProjectTypeMappingQuery.class, 
-				"SELECT t.id, t.fk_common_info_type, t.fk_project_category "+
-						"FROM project_type as t "+
-						"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
+				"SELECT distinct c.id, c.fk_common_info_type, c.fk_project_category ",
+						"FROM project_type as c "+sqlCommonInfoType, false);
 	}
 
 	@Override

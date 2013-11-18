@@ -5,7 +5,8 @@ import java.util.List;
 import models.laboratory.run.description.TreatmentContext;
 import models.laboratory.run.description.TreatmentType;
 import models.laboratory.run.description.TreatmentTypeContext;
-import models.utils.dao.AbstractDAO;
+import models.utils.ListObject;
+import models.utils.dao.AbstractDAODefault;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Repository;
 import com.avaje.ebean.enhance.asm.Type;
 
 @Repository
-public class TreatmentTypeContextDAO extends AbstractDAO<TreatmentTypeContext>{
+public class TreatmentTypeContextDAO extends AbstractDAODefault<TreatmentTypeContext>{
 
 	protected TreatmentTypeContextDAO() {
 		super("treatment_context", TreatmentTypeContext.class, true);	
@@ -81,8 +82,11 @@ public class TreatmentTypeContextDAO extends AbstractDAO<TreatmentTypeContext>{
 	public TreatmentTypeContext findByCode(String code) throws DAOException {
 		throw new RuntimeException("Pas implémenter cat table de liaison");
 	}
-
 	
+	@Override
+	public List<ListObject> findAllForList(){
+		throw new RuntimeException("Pas implémenter cat table de liaison");
+	}
 	
 }
 

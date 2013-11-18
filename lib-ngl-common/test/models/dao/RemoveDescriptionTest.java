@@ -32,7 +32,7 @@ public class RemoveDescriptionTest extends AbstractTests{
 	
 	
 	
-	@Test
+	//@Test
 	public void removeProcessType() throws DAOException
 	{
 		ProcessType processType = ProcessType.find.findByCode("process1");
@@ -40,7 +40,7 @@ public class RemoveDescriptionTest extends AbstractTests{
 		Assert.assertNull(ProcessType.find.findByCode("process1"));
 	}
 
-	@Test
+	//@Test
 	public void removeProjectType() throws DAOException
 	{
 		ProjectType projectType = ProjectType.find.findByCode("project1");
@@ -48,7 +48,7 @@ public class RemoveDescriptionTest extends AbstractTests{
 		Assert.assertNull(ProjectType.find.findByCode("project1"));
 	}
 	
-	@Test
+	//@Test
 	public void removeSampleType() throws DAOException
 	{
 		SampleType sampleType = SampleType.find.findByCode("sample1");
@@ -56,7 +56,7 @@ public class RemoveDescriptionTest extends AbstractTests{
 		Assert.assertNull(SampleType.find.findByCode("sample1"));
 	}
 
-	@Test
+	//@Test
 	public void removeImportType() throws DAOException
 	{
 		ImportType importType = ImportType.find.findByCode("import1");
@@ -66,7 +66,7 @@ public class RemoveDescriptionTest extends AbstractTests{
 
 	
 
-	@Test
+	//@Test
 	public void removeResolution() throws DAOException
 	{
 		Resolution resol = Resolution.find.findByCode("resol1");
@@ -75,7 +75,7 @@ public class RemoveDescriptionTest extends AbstractTests{
 
 	}
 
-	@Test
+	//@Test
 	public void removeState() throws DAOException
 	{
 		State state = State.find.findByCode("state1");
@@ -84,7 +84,7 @@ public class RemoveDescriptionTest extends AbstractTests{
 		Assert.assertNull(state);
 	}
 
-	@Test
+	//@Test
 	public void removeInstrumentUsedType() throws DAOException
 	{
 		InstrumentUsedType instrumentUsedType = InstrumentUsedType.find.findByCode("inst1");
@@ -95,7 +95,7 @@ public class RemoveDescriptionTest extends AbstractTests{
 	
 	
 	
-	@Test
+	//@Test
 	public void removeExperimentType() throws DAOException
 	{
 		List<ExperimentType> experimentTypes = ExperimentType.find.findAll();
@@ -106,7 +106,7 @@ public class RemoveDescriptionTest extends AbstractTests{
 	}
 
 
-	@Test
+	//@Test
 	public void removeReagentType() throws DAOException
 	{
 		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
@@ -114,7 +114,7 @@ public class RemoveDescriptionTest extends AbstractTests{
 		Assert.assertNull(ReagentType.find.findByCode("reagent1"));
 	}
 
-	@Test
+	//@Test
 	public void removeProtocol() throws DAOException
 	{
 		Protocol protocol = Protocol.find.findByCode("updateProto1");

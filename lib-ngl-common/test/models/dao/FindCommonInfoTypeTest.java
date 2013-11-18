@@ -18,7 +18,7 @@ import utils.AbstractTests;
 public class FindCommonInfoTypeTest extends AbstractTests {
 	
 	
-	@Test
+	//@Test
 	public void testCommonInfoType() throws DAOException {
 		
 		List<CommonInfoType> lcit = new ArrayList<CommonInfoType>();
@@ -41,7 +41,7 @@ public class FindCommonInfoTypeTest extends AbstractTests {
 		}
 	}
 
-	//@Test
+	////@Test
 	public void printObjectStates() throws DAOException {
 		
 		// states

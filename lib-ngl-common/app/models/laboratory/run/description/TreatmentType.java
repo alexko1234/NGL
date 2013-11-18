@@ -7,6 +7,7 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.run.description.dao.TreatmentTypeDAO;
+import models.utils.dao.AbstractDAOCommonInfoType.CommonInfoTypeFinder;
 
 
 public class TreatmentType extends CommonInfoType{
@@ -15,7 +16,7 @@ public class TreatmentType extends CommonInfoType{
 	
 	public List<TreatmentTypeContext> contexts = new ArrayList<TreatmentTypeContext>();
 
-	public static Finder<TreatmentType> find = new Finder<TreatmentType>(TreatmentTypeDAO.class.getName()); 
+	public static CommonInfoTypeFinder<TreatmentTypeDAO,TreatmentType> find = new CommonInfoTypeFinder<TreatmentTypeDAO,TreatmentType>(TreatmentTypeDAO.class); 
 	
 	public TreatmentType() {
 		super(TreatmentTypeDAO.class.getName());

@@ -9,6 +9,7 @@ import models.laboratory.run.description.TreatmentContext;
 import models.laboratory.run.description.TreatmentType;
 import models.laboratory.run.description.TreatmentTypeContext;
 import models.utils.DescriptionHelper;
+import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -21,19 +22,19 @@ import com.avaje.ebean.enhance.asm.Type;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class TreatmentTypeDAO extends AbstractDAOMapping<TreatmentType>{
+public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 
 	protected TreatmentTypeDAO() {
 		super("treatment_type", TreatmentType.class, TreatmentTypeMappingQuery.class, 
-				"SELECT t.id, t.names, t.fk_common_info_type, t.fk_treatment_category "+
-						"FROM treatment_type as t "+
-						"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
+				"SELECT distinct c.id, c.names, c.fk_common_info_type, c.fk_treatment_category ",
+						"FROM treatment_type as c "+sqlCommonInfoType, false);
 	}
 	
+	//TODO
 	public List<TreatmentType> findByTreatmentContextId(long id)
 	{
 		String sql = sqlCommon+
-				" JOIN treatment_type_context as ttc ON ttc.fk_treatment_type=t.id "+
+				" JOIN treatment_type_context as ttc ON ttc.fk_treatment_type=c.id "+
 				"WHERE fk_treatment_context = ? ";
 		TreatmentTypeMappingQuery treatmentTypeMappingQuery=new TreatmentTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return treatmentTypeMappingQuery.execute(id);

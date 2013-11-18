@@ -9,6 +9,7 @@ import models.laboratory.common.description.dao.StateDAO;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.dao.ProcessTypeDAO;
 import models.utils.ListObject;
+import models.utils.dao.AbstractDAOCommonInfoType.CommonInfoTypeFinder;
 import models.utils.dao.DAOException;
 import play.api.modules.spring.Spring;
 
@@ -25,19 +26,10 @@ public class ProcessType extends CommonInfoType{
 	public ExperimentType lastExperimentType;
 	
 
-	public static Finder<ProcessType> find = new Finder<ProcessType>(ProcessTypeDAO.class.getName()); 
+	public static CommonInfoTypeFinder<ProcessTypeDAO,ProcessType> find = new CommonInfoTypeFinder<ProcessTypeDAO,ProcessType>(ProcessTypeDAO.class); 
 	
 	public ProcessType() {
 		super(ProcessTypeDAO.class.getName());
-	}
-	
-	/**
-	 * Return a list of ListObject that help populating the <select> input
-	 * @return List<ListObject>
-	 */
-	public static List<ListObject> findAllForList() throws DAOException{
-		ProcessTypeDAO processTypeDAO = Spring.getBeanOfType(ProcessTypeDAO.class);
-		return processTypeDAO.findAllForList();
 	}
 	
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){

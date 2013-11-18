@@ -3,13 +3,13 @@ package models.laboratory.common.description.dao;
 import java.util.List;
 
 import models.laboratory.common.description.Level;
-import models.utils.dao.AbstractDAO;
+import models.utils.dao.AbstractDAODefault;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class LevelDAO extends AbstractDAO<Level>{
+public class LevelDAO extends AbstractDAODefault<Level>{
 
 	protected LevelDAO() {
 		super("level", Level.class, true);

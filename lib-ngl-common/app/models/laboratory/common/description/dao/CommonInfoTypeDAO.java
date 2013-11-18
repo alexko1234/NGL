@@ -17,9 +17,7 @@ import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-import play.Logger;
 import play.api.modules.spring.Spring;
-import models.utils.DescriptionHelper;
 
 @Repository
 public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{

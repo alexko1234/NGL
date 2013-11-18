@@ -5,8 +5,7 @@ import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.ReadSetType;
-import models.utils.DescriptionHelper;
-import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
 
 import org.springframework.stereotype.Repository;
@@ -14,13 +13,12 @@ import org.springframework.stereotype.Repository;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class ReadSetTypeDAO extends AbstractDAOMapping<ReadSetType>{
+public class ReadSetTypeDAO extends AbstractDAOCommonInfoType<ReadSetType>{
 
 	protected ReadSetTypeDAO() {
 		super("readset_type", ReadSetType.class, ReadSetTypeMappingQuery.class, 
-				"SELECT t.id, t.fk_common_info_type "+ /*, fk_reaset_category */ 
-						"FROM readset_type as t "+
-						"JOIN common_info_type as c ON c.id=t.fk_common_info_type ", false);
+				"SELECT distinct c.id, c.fk_common_info_type ", 
+						"FROM readset_type as c "+sqlCommonInfoType, false);
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import static services.description.DescriptionFactory.*;
 public class InstituteService {
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{		
 		
-		DAOHelpers.removeAll(Institute.class, Institute.find);
+		//DAOHelpers.removeAll(Institute.class, Institute.find);
 
 		saveInstitutes(errors);	
 	}

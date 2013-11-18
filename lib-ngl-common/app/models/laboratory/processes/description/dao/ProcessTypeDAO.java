@@ -7,9 +7,8 @@ import java.util.Map;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
-import models.utils.DescriptionHelper;
 import models.utils.ListObject;
-import models.utils.dao.AbstractDAOMapping;
+import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -18,24 +17,12 @@ import org.springframework.stereotype.Repository;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class ProcessTypeDAO extends AbstractDAOMapping<ProcessType>{
+public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 
 	protected ProcessTypeDAO() {
 		super("process_type", ProcessType.class, ProcessTypeMappingQuery.class, 
-				"SELECT t.id, t.fk_common_info_type, t.fk_process_category, t.fk_void_experiment_type, t.fk_first_experiment_type, t.fk_last_experiment_type "+
-						"FROM process_type as t  "+
-						"JOIN common_info_type as c ON c.id=fk_common_info_type ", false);
-	}
-
-	/**
-	 * Return a list of ListObject that help populating the <select> input
-	 * @return List<ListObject>
-	 */
-	public List<ListObject> findAllForList(){
-		String sql = "SELECT id, codeCit, nameCit from ("+ sqlCommon + ")";
-		
-		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
-		return this.jdbcTemplate.query(sql, mapper);
+				"SELECT distinct c.id, c.fk_common_info_type, c.fk_process_category, c.fk_void_experiment_type, c.fk_first_experiment_type, c.fk_last_experiment_type ",
+						"FROM process_type as c  "+sqlCommonInfoType, false);
 	}
 	
 	@Override

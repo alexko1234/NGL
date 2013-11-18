@@ -52,7 +52,7 @@ import utils.AbstractTests;
 public class UpdateDescriptionTest extends AbstractTests{
 	
 	
-	@Test
+	//@Test
 	public void updateObjectType() throws DAOException
 	{
 		ObjectType objectType = ObjectType.find.findByCode("Test");
@@ -72,7 +72,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(type.generic);
 	}
 
-	@Test
+	//@Test
 	public void updateResolution() throws DAOException
 	{
 		Resolution resolution = Resolution.find.findByCode("Resol1");
@@ -93,7 +93,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(resolution.code);
 	}
 
-	@Test
+	//@Test
 	public void updateStateCategory() throws DAOException
 	{
 		StateCategory stateCategory = StateCategory.find.findByCode("catState1");
@@ -105,7 +105,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		checkAbstractCategory(stateCategory);
 		Assert.assertTrue(stateCategory.name.equals("updateCatStat1"));
 	}
-	//////////@Test
+	////////////@Test
 	public void updateState() throws DAOException
 	{
 		State state = State.find.findByCode("state1");
@@ -141,7 +141,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(measureValue.defaultUnit);
 	}
 
-	@Test
+	//@Test
 	public void updateReagentType() throws DAOException
 	{
 		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
@@ -212,7 +212,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(value.defaultValue);
 	}
 
-	@Test
+	//@Test
 	public void updateProtocolCategory() throws DAOException
 	{
 		ProtocolCategory protocolCategory = ProtocolCategory.find.findByCode("protoCat1");
@@ -233,7 +233,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(abstractCategory.name);
 	}
 
-	@Test
+	//@Test
 	public void updateProtocol() throws DAOException
 	{
 		Protocol protocol = Protocol.find.findByCode("proto1");
@@ -258,7 +258,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertTrue(protocol.reagentTypes.size()>0);
 
 	}
-	@Test
+	//@Test
 	public void updateContainerSupportCategory() throws DAOException
 	{
 		ContainerSupportCategory containerSupportCategory = ContainerSupportCategory.find.findByCode("support1");
@@ -279,7 +279,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(containerSupportCategory.nbUsableContainer);
 	}
 
-	@Test
+	//@Test
 	public void updateInstrumentCategory() throws DAOException
 	{
 		InstrumentCategory instrumentCategory = InstrumentCategory.find.findByCode("InstCat1");
@@ -317,7 +317,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		*/
 	}
 
-	@Test
+	//@Test
 	public void updateInstrumentUsedType() throws DAOException
 	{
 		InstrumentUsedType instrumentUsedType = InstrumentUsedType.find.findByCode("inst1");
@@ -371,7 +371,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		}
 	}
 
-	@Test
+	//@Test
 	public void updateExperimentCategory() throws DAOException
 	{
 		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
@@ -382,7 +382,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		checkAbstractCategory(experimentCategory);
 		Assert.assertTrue(experimentCategory.name.equals("updateExpCat1"));
 	}
-	@Test
+	//@Test
 	public void updateQualityControlType() throws DAOException
 	{
 		ExperimentType qualityControlType = ExperimentType.find.findByCode("qc1");
@@ -427,7 +427,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 
 	
 	
-	@Test
+	//@Test
 	public void updateExperimentType() throws DAOException
 	{
 		ExperimentType experimentType = ExperimentType.find.findByCode("exp1");
@@ -484,7 +484,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 	}
 
 	
-	@Test
+	//@Test
 	public void updatePurificationMethodType() throws DAOException
 	{
 		ExperimentType purificationMethodType = ExperimentType.find.findByCode("purif1");
@@ -535,7 +535,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		checkAbstractExperiment(experimentType);
 	}
 
-	@Test
+	//@Test
 	public void updateProcessCategory() throws DAOException
 	{
 		ProcessCategory processCategory = ProcessCategory.find.findByCode("processCat1");
@@ -547,7 +547,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertTrue(processCategory.name.equals("updateProcessCat1"));
 	}
 
-	@Test
+	//@Test
 	public void updateProcessType() throws DAOException
 	{
 		ProcessType processType = ProcessType.find.findByCode("process1");
@@ -576,7 +576,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(processType.lastExperimentType.id);
 	}
 
-	@Test
+	//@Test
 	public void updateProjectCategory() throws DAOException
 	{
 		ProjectCategory projectCategory = ProjectCategory.find.findByCode("projectCat1");
@@ -588,7 +588,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertTrue(projectCategory.name.equals("updateProjectCat1"));
 	}
 
-	@Test
+	//@Test
 	public void updateProjectType() throws DAOException
 	{
 		ProjectType projectType = ProjectType.find.findByCode("project1");
@@ -607,7 +607,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		checkAbstractCategory(projectType.category);
 	}
 
-	@Test
+	//@Test
 	public void updateSampleCategory() throws DAOException
 	{
 		SampleCategory sampleCategory = SampleCategory.find.findByCode("sampleCat1");
@@ -619,7 +619,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertTrue(sampleCategory.name.equals("updateSampleCat1"));
 	}
 
-	@Test
+	//@Test
 	public void updateSampleType() throws DAOException
 	{
 		SampleType sampleType = SampleType.find.findByCode("sample1");
@@ -638,7 +638,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		checkAbstractCategory(sampleType.category);
 	}
 
-	@Test
+	//@Test
 	public void updateImportCategory() throws DAOException
 	{
 		ImportCategory importCategory = ImportCategory.find.findByCode("import1");
@@ -650,7 +650,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertTrue(importCategory.name.equals("updateImport1"));
 	}
 
-	@Test
+	//@Test
 	public void updateImportType() throws DAOException
 	{
 		ImportType importType = ImportType.find.findByCode("import1");
@@ -668,7 +668,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		checkAbstractCategory(importType.category);
 	}
 	
-	@Test
+	//@Test
 	public void updateContainerCategory() throws DAOException
 	{
 		ContainerCategory containerCategory = ContainerCategory.find.findByCode("container1");

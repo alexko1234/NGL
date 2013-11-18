@@ -3,7 +3,7 @@ package models.administration.authorisation.description.dao;
 import java.util.List;
 
 import models.administration.authorisation.User;
-import models.utils.dao.AbstractDAO;
+import models.utils.dao.AbstractDAODefault;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ import play.Logger;
 import play.modules.html.IAuthenticate;
 
 @Repository
-public class UserDAO extends AbstractDAO<User> implements IAuthenticate{ 
+public class UserDAO extends AbstractDAODefault<User> implements IAuthenticate{ 
 
 	protected UserDAO() {
 		super("user", User.class, true);

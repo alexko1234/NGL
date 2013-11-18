@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import models.utils.DescriptionHelper;
 import models.utils.HelperObjects;
 import models.utils.Model;
 import models.utils.Model.Finder;
@@ -13,8 +14,10 @@ import play.Logger;
 import play.data.validation.ValidationError;
 
 public class DAOHelpers {
-	
-	
+
+
+	private static String SQLInsitute = null;
+
 	/**
 	 * Save an object Model in the description DB
 	 * @param type
@@ -31,7 +34,7 @@ public class DAOHelpers {
 			if(samp != null){
 				samp.remove(); //TODO Remove ???
 			}
-			
+
 			Logger.debug(" Before save :"+model.getValue().code);
 			model.getValue().save();
 			Logger.debug(" After save :"+model.getValue().code);
@@ -41,8 +44,8 @@ public class DAOHelpers {
 
 		return errors;
 	}
-	
-	
+
+
 	public static <T extends Model> void removeAll(Class<T> type, Finder<T> finder) throws DAOException {
 		List<T> list = finder.findAll();
 		for(T t : list){
@@ -50,16 +53,16 @@ public class DAOHelpers {
 			t.remove();
 		}		
 	}
-	
+
 	public static <T extends Model> T getModelByCode(Class<T> type, Finder<T> finder, String code) throws DAOException {
 		return getModelByCodes(type, finder, code).get(0);
 	}
-	
+
 	public static <T extends Model> List<T> getModelByCodes(Class<T> type, Finder<T> finder, String...codes) throws DAOException {
 		List<T> l = new ArrayList<T>();
 		for(String code : codes){
 			Logger.debug("Load "+type.getName() + " : "+code);
-			l.add(finder.findByCode(code, false));
+			l.add(finder.findByCode(code));
 		}
 		return l;
 	}
@@ -72,7 +75,7 @@ public class DAOHelpers {
 	 * @throws DAOException
 	 */
 	public static <T extends Model> void saveModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
-		T t = (T) model.getInstance().findByCode(model.code, Boolean.FALSE);
+		T t = (T) model.getInstance().findByCode(model.code);
 		if (t == null) {
 			Logger.debug("Save "+type.getName() + " : "+model.code);
 			model.save();
@@ -80,7 +83,7 @@ public class DAOHelpers {
 			Logger.debug("Allready exists "+type.getName() + " : "+model.code);
 		}
 	}
-	
+
 	/**
 	 * Save a list of models
 	 * @param type
@@ -93,7 +96,7 @@ public class DAOHelpers {
 			saveModel(type, model, errors);
 		}		
 	}
-	
+
 	/**
 	 * 
 	 * @param type
@@ -102,17 +105,43 @@ public class DAOHelpers {
 	 * @throws DAOException
 	 */
 	public static <T extends Model> void updateModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
-		T t = (T) model.getInstance().findByCode(model.code, Boolean.FALSE);
+		T t = (T) model.getInstance().findByCode(model.code);
 		if (t != null) {
 			model.update();
 		}else{
 			Logger.debug("Not exists "+type.getName() + " : "+model.code);
 		}
 	}
-	
+
 	public static <T extends Model> void updateModels(Class<T> type, List<T> models, Map<String,List<ValidationError>> errors) throws DAOException {
 		for(T model : models){
 			updateModel(type, model, errors);
 		}		
+	}
+
+	public static String getSQLForInstitute(){
+		if(SQLInsitute==null){
+			List<String> institutes=DescriptionHelper.getInstitute();
+			SQLInsitute=" join common_info_type_institute ci on t.id =ci.fk_common_info_type "+
+						" join institute i on i.id = ci.fk_institute where ";
+			//Prend en compte tous les instituts
+			if(institutes.size()==0){
+				return SQLInsitute ="where 1=1 ";
+				//Si un seul institut
+			}else if(institutes.size()==1){
+				return SQLInsitute+= " i.code='" + DescriptionHelper.getInstitute().get(0)+"'";
+			}else {
+				// Si plusieurs instituts (clause in)
+				SQLInsitute+=" i.code in (";
+				String comma="";
+				for(int i=0;i<institutes.size();i++){
+					if(i==1) comma=",";
+					SQLInsitute+=comma+"'"+institutes.get(i)+"'";
+				}
+				return SQLInsitute+=")";
+			}
+
+		}
+		return SQLInsitute;
 	}
 }

@@ -40,8 +40,8 @@ public class Lists extends CommonController{
 		return Results.ok(Json.toJson(ListObject.projectToJsonObject(projects)));	
 	}
 	
-	public static Result experimentTypes(){
-			List<ListObject> exp = Spring.getBeanOfType(ExperimentTypeDAO.class).findAllForList();	
+	public static Result experimentTypes() throws DAOException{
+			List<ListObject> exp = ExperimentType.find.findAllForList();	
 			return Results.ok(Json.toJson(exp));
 	}
 	
@@ -62,8 +62,9 @@ public class Lists extends CommonController{
 		return Results.ok(Json.toJson(exp));
 }
 	
-	public static Result containerStates(){		
-		List<ListObject> states = Spring.getBeanOfType(StateDAO.class).findAllForContainerList();			
+	public static Result containerStates() throws DAOException{		
+		List<ListObject> states = null;
+//State.find.findAllForContainerList();			
 		return Results.ok(Json.toJson(states));		
 	}
 
@@ -79,7 +80,7 @@ public class Lists extends CommonController{
 	
 	public static Result processTypes(){
 		try {
-			List<ListObject> processusType = ProcessType.findAllForList();
+			List<ListObject> processusType = ProcessType.find.findAllForList();
 			
 			return Results.ok(Json.toJson(processusType));
 			
