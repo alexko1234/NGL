@@ -111,8 +111,8 @@ public class RunMockHelper {
 		ReadSet r = new ReadSet();
 		r.code = code;
 		r.path = "/";
-		r.sampleCode = "samplecode1";
-		r.projectCode = "42";
+		r.sampleCode = "SampleCode";
+		r.projectCode = "ProjectCode";
 		r.dispatch = false;
 		r.laneNumber = 1;
 		
