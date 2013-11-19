@@ -15,10 +15,12 @@ import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
+import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 
@@ -41,6 +43,21 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 		if(readSetDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,readSetDelete._id);
 		}
+		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code","SampleCode"));
+		if (sample!= null) {
+			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sample._id);
+		}
+		Project project = MongoDBDAO.findOne(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code","ProjectCode"));
+		if (project!= null) {
+			MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, project._id);
+		}
+		
+		sample = RunMockHelper.newSample("SampleCode");
+		project = RunMockHelper.newProject("ProjectCode");
+		
+		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
+		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
+		
 		Run run = RunMockHelper.newRun("DIDIER_TESTFORTRT");
 		run.dispatch = true; // For the archive test
 		Lane lane = RunMockHelper.newLane(1);
