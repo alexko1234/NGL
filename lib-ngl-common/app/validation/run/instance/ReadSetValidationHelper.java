@@ -84,17 +84,15 @@ public class ReadSetValidationHelper extends CommonValidationHelper {
 			CommonValidationHelper.validateSampleCode(sampleCode, contextValidation); // verify exist code
 
 			//verify projectCode in relation to sampleCode
-			 List<Sample> samps =  MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sampleCode)).toList();
-			 Boolean bFind = false;
-			 for (Sample sample : samps) {
-				 if ((sample != null) && (sample.projectCodes != null) && (sample.projectCodes.contains(projectCode))) {
-					 bFind = true;
-				 }
-			 }
-			 if (!bFind) {
+			 //List<Sample> samps =  MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sampleCode)).toList();
+			Sample sample =  MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sampleCode);
+			Boolean bFindProjectCode = false;
+			if ((sample != null) && (sample.projectCodes != null) && (sample.projectCodes.contains(projectCode))) {
+				bFindProjectCode = true;
+			}
+			if (!bFindProjectCode) {
 				 contextValidation.addErrors("projectCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, projectCode);
-			 }
-
+			}
 		}
 	}
 
