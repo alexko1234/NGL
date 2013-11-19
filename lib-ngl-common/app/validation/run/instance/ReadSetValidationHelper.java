@@ -8,8 +8,11 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.instance.File;
+import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
+import models.laboratory.sample.description.SampleType;
+import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 import validation.ContextValidation;
@@ -17,6 +20,7 @@ import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
+import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
 
@@ -71,22 +75,28 @@ public class ReadSetValidationHelper extends CommonValidationHelper {
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.is("lanes.number", laneNumber)));
 	}
 	
-	
-	public static void validateProjectCode(String projectCode, ContextValidation contextValidation) {
-		if(ValidationHelper.required(contextValidation, projectCode, "projectCode")) {
-			CommonValidationHelper.validateProjectCode(projectCode, contextValidation);
-		}
-	}
 		
 		
-	public static void validateSampleCode(String sampleCode, ContextValidation contextValidation) {
+	public static void validateSampleAndProjectCode(String projectCode, String sampleCode, ContextValidation contextValidation) {
+		CommonValidationHelper.validateProjectCode(projectCode, contextValidation); // verify required property
+		
 		if(ValidationHelper.required(contextValidation, sampleCode, "sampleCode")) {
-			CommonValidationHelper.validateSampleCode(sampleCode, contextValidation);
+			CommonValidationHelper.validateSampleCode(sampleCode, contextValidation); // verify exist code
+
+			//verify projectCode in relation to sampleCode
+			 List<Sample> samps =  MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sampleCode)).toList();
+			 Boolean bFind = false;
+			 for (Sample sample : samps) {
+				 if ((sample != null) && (sample.projectCodes != null) && (sample.projectCodes.contains(projectCode))) {
+					 bFind = true;
+				 }
+			 }
+			 if (!bFind) {
+				 contextValidation.addErrors("projectCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, projectCode);
+			 }
+
 		}
 	}
 
-	
-	
-	
 
 }
