@@ -6,6 +6,7 @@ import java.util.Map;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.project.instance.Project;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
@@ -80,11 +81,12 @@ public class ReadSetValidationHelper extends CommonValidationHelper {
 	public static void validateSampleAndProjectCode(String projectCode, String sampleCode, ContextValidation contextValidation) {
 		CommonValidationHelper.validateProjectCode(projectCode, contextValidation); // verify required property
 		
+		BusinessValidationHelper.validateExistInstanceCode(contextValidation, projectCode, "projectCode", Project.class, InstanceConstants.PROJECT_COLL_NAME, false);
+		
 		if(ValidationHelper.required(contextValidation, sampleCode, "sampleCode")) {
 			CommonValidationHelper.validateSampleCode(sampleCode, contextValidation); // verify exist code
 
 			//verify projectCode in relation to sampleCode
-			 //List<Sample> samps =  MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sampleCode)).toList();
 			Sample sample =  MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sampleCode);
 			Boolean bFindProjectCode = false;
 			if ((sample != null) && (sample.projectCodes != null) && (sample.projectCodes.contains(projectCode))) {
