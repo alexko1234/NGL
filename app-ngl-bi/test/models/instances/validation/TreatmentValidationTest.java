@@ -19,10 +19,12 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.property.PropertyObjectValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
+import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.dao.AbstractDAOMapping;
 import net.vz.mongodb.jackson.DBQuery;
@@ -472,11 +474,26 @@ public class TreatmentValidationTest extends AbstractTests {
 		if(readSetDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,readSetDelete._id);
 		}
+		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code","SampleCode"));
+		if (sample!= null) {
+			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sample._id);
+		}
+		Project project = MongoDBDAO.findOne(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code","ProjectCode"));
+		if (project!= null) {
+			MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, project._id);
+		}
+		
+		sample = RunMockHelper.newSample("SampleCode");
+		project = RunMockHelper.newProject("ProjectCode");
+		
+		
 		Run run = RunMockHelper.newRun("DIDIER_TESTFORTRT");
 		run.dispatch = true; // For the archive test
 		Lane lane = RunMockHelper.newLane(1);
 		Lane lane2 = RunMockHelper.newLane(2);
 		List<Lane> lanes = new ArrayList<Lane>();
+		
+
 		
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
 		readset.runCode = run.code;
@@ -504,6 +521,9 @@ public class TreatmentValidationTest extends AbstractTests {
 		lanes.add(lane);
 		lanes.add(lane2);
 		run.lanes = lanes;
+		
+		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
+		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
 		
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 		assertThat(status(result)).isEqualTo(OK);
@@ -593,27 +613,27 @@ public class TreatmentValidationTest extends AbstractTests {
 		    	Treatment t = null; 
 	    		ContextValidation ctxVal = new ContextValidation();  
 						   
-					t = getNewTreatmentForReadSet();
-					
-					t.results().get("default").remove("nbReadIllumina");
-					//must generate a error (because of a bad value)
-					t.results().get("default").put("nbReadIllumina", new PropertySingleValue("un"));	
-					
+				t = getNewTreatmentForReadSet();
+				
+				t.results().get("default").remove("nbReadIllumina");
+				//must generate a error (because of a bad value)
+				t.results().get("default").put("nbReadIllumina", new PropertySingleValue("un"));	
+				
 
-		    		Level.CODE levelCode = Level.CODE.ReadSet; 
-		    		ctxVal.putObject("level", levelCode);
-		    		
-		    		//add readset to ctxVal
-		    		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		    		ctxVal.putObject("readSet", readset);
-		    		
-		    		ctxVal.setCreationMode();
-		    		
-		    		t.validate(ctxVal);
+	    		Level.CODE levelCode = Level.CODE.ReadSet; 
+	    		ctxVal.putObject("level", levelCode);
+	    		
+	    		//add readset to ctxVal
+	    		ReadSet readset = RunMockHelper.newReadSet("rdCode");
+	    		ctxVal.putObject("readSet", readset);
+	    		
+	    		ctxVal.setCreationMode();
+	    		
+	    		t.validate(ctxVal);
 
-		    		assertThat(ctxVal.errors).hasSize(1);
-		    		assertThat(ctxVal.errors.toString()).contains(ERROR_BADTYPE_MSG);
-		    		 }});
+	    		assertThat(ctxVal.errors).hasSize(1);
+	    		assertThat(ctxVal.errors.toString()).contains(ERROR_BADTYPE_MSG);
+		 }});
 
 	}
 	
@@ -625,34 +645,34 @@ public class TreatmentValidationTest extends AbstractTests {
 	 public void testValidateTreatmentErrorBadContext() {
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
-		Treatment t = getNewTreatmentForReadSet();
-		
-		// new bad context
-		Map<String,PropertyValue> m3 = new HashMap<String,PropertyValue>();
-		m3.put("nbCluster", new PropertySingleValue(10));
-		m3.put("nbBases", new PropertySingleValue(100));
-		m3.put("fraction", new PropertySingleValue(33.33));
-		m3.put("Q30", new PropertySingleValue(33.33));
-		m3.put("qualityScore", new PropertySingleValue(33.33));
-		m3.put("nbReadIllumina", new PropertySingleValue(1));
-
-		t.set("read3", m3);
-		
-		ContextValidation ctxVal = new ContextValidation(); 
-		
-		Level.CODE levelCode = Level.CODE.ReadSet; 
-		ctxVal.putObject("level", levelCode);
-		
-		//add readset to ctxVal
-		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		ctxVal.putObject("readSet", readset);
-		
-		ctxVal.setCreationMode();
-		
-		t.validate(ctxVal);
-		
-		assertThat(ctxVal.errors).hasSize(1);
-		assertThat(ctxVal.errors.toString()).contains(ERROR_VALUENOTAUTHORIZED_MSG);	
+			Treatment t = getNewTreatmentForReadSet();
+			
+			// new bad context
+			Map<String,PropertyValue> m3 = new HashMap<String,PropertyValue>();
+			m3.put("nbCluster", new PropertySingleValue(10));
+			m3.put("nbBases", new PropertySingleValue(100));
+			m3.put("fraction", new PropertySingleValue(33.33));
+			m3.put("Q30", new PropertySingleValue(33.33));
+			m3.put("qualityScore", new PropertySingleValue(33.33));
+			m3.put("nbReadIllumina", new PropertySingleValue(1));
+	
+			t.set("read3", m3);
+			
+			ContextValidation ctxVal = new ContextValidation(); 
+			
+			Level.CODE levelCode = Level.CODE.ReadSet; 
+			ctxVal.putObject("level", levelCode);
+			
+			//add readset to ctxVal
+			ReadSet readset = RunMockHelper.newReadSet("rdCode");
+			ctxVal.putObject("readSet", readset);
+			
+			ctxVal.setCreationMode();
+			
+			t.validate(ctxVal);
+			
+			assertThat(ctxVal.errors).hasSize(1);
+			assertThat(ctxVal.errors.toString()).contains(ERROR_VALUENOTAUTHORIZED_MSG);	
 		       }});
 	}
 	 
