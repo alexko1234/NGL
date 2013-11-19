@@ -114,8 +114,8 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	
 	public List<ListObject> findAllForContainerList(){
 		String sql = "SELECT t.code, t.name FROM state t "+
-	"inner join state_object_state sos on sos.fk_state = t.id" +
-				" inner join object_type o on o.id = sos.fk_object_type WHERE o.code = ? ";
+	"inner join state_object_type sot on sot.fk_state = t.id" +
+				" inner join object_type o on o.id = sot.fk_object_type WHERE o.code = ? ";
 		
 		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
 		return this.jdbcTemplate.query(sql, mapper, ObjectType.CODE.Container.name());
