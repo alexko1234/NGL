@@ -9,7 +9,6 @@ import play.GlobalSettings;
 import play.Logger;
 import play.libs.Akka;
 import scala.concurrent.duration.Duration;
-import services.instance.ImportDataCNS;
 import services.instance.ImportDataFactory;
 
 
@@ -18,19 +17,12 @@ public class Global extends GlobalSettings {
 	@Override
 	public void onStart(Application app) {
 		Logger.info("NGL has started");
-		
-		/*Akka.system().scheduler().schedule(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES)
-                , (new ImportDataFactory()).getImportData(), Akka.system().dispatcher()
-				); 
-		
-		
+
 		Akka.system().scheduler().schedule(
-
-				Duration.create(nextExecutionInSeconds(22,13), TimeUnit.SECONDS),
+				Duration.create(nextExecutionInSeconds(1, 0), TimeUnit.SECONDS),
                 Duration.create(24, TimeUnit.HOURS)
-                , new ImportDataRun(), Akka.system().dispatcher()
-
-				);*/ 
+                , (new ImportDataFactory()).getImportData(), Akka.system().dispatcher()
+		); 
 	}
 
 	@Override
