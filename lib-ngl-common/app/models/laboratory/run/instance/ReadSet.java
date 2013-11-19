@@ -81,9 +81,9 @@ public class ReadSet extends DBObject implements IValidation{
 		ReadSetValidationHelper.validateReadSetRunCode(this.runCode ,contextValidation);
 		ReadSetValidationHelper.validateReadSetLaneNumber(this.runCode, this.laneNumber ,contextValidation);
 		
-		ReadSetValidationHelper.validateProjectCode(this.projectCode, contextValidation);
+		//ReadSetValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		
-		ReadSetValidationHelper.validateSampleCode(this.sampleCode, contextValidation);
+		ReadSetValidationHelper.validateSampleAndProjectCode(this.projectCode, this.sampleCode, contextValidation);
 		
 		
 		ValidationHelper.required(contextValidation, this.path, "path");
