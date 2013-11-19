@@ -9,12 +9,14 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Validation;
 import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
+import models.laboratory.sample.instance.Sample;
 
 import org.codehaus.jackson.JsonNode;
 
@@ -106,6 +108,38 @@ public class RunMockHelper {
 		return lane;
 	}
 	
+	
+	public static Sample newSample(String code) {
+		Sample s = new Sample();
+		s.code = "SampleCode";
+		s.typeCode = "sampleType";
+		s.categoryCode = "sampleCategory";
+		s.name = "sampleName";
+		s.referenceCollab = "Ref collab";
+		s.valid = TBoolean.UNSET;
+		
+		List<String> lp = new ArrayList<String>();
+		lp.add("ProjectCode");
+		s.projectCodes = lp;
+		
+		TraceInformation ti = new TraceInformation(); 
+		ti.setTraceInformation("dnoisett");
+		s.traceInformation = ti;
+		
+		return s;
+	}
+	
+	
+	public static Project newProject(String code) {
+		Project p = new Project();
+		
+		p.code = "ProjectCode";
+		TraceInformation ti = new TraceInformation(); 
+		ti.setTraceInformation("dnoisett");
+		p.traceInformation = ti;
+		
+		return p;
+	}
 	
 	public static ReadSet newReadSet(String code){
 		ReadSet r = new ReadSet();
