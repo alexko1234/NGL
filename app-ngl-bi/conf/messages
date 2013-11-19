@@ -54,6 +54,7 @@ runs.dt.validation.userdate = Validé par {0} le {1}
 
 runs.table.lane.code = Numéro de Piste
 runs.table.lane.nbCluster = Nb Cluster
+runs.table.validation.valid = Valide ?
 runs.table.lane.percentClusterIlluminaFilter = % Cluster (filtre illumina)
 runs.table.lane.nbClusterIlluminaFilter = Nb Cluster (filtre illumina)
 runs.table.lane.percentClusterInternalAndIlluminaFilter = % Cluster (filtre interne)

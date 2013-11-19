@@ -3,14 +3,12 @@
 <div class="page-header" ng-init="init()">
  <h1 ng-switch on="run.validation.valid">
 
- @Messages("title.run") :	
  	<span ng-switch-when="FALSE" class="text-error">{{run.code}}</span> 
  	<span ng-switch-when="TRUE" class="text-success">{{run.code}}</span> 
  	<span ng-switch-default class="mute">{{run.code}}</span> 
 
  <small>
- <span ng-model="run.validation.valid" codes="validation"></span>
-  
+   
  <span ng-model="run.state.code" codes="state"/>
  </small>
  <div class="btn-toolbar pull-right">

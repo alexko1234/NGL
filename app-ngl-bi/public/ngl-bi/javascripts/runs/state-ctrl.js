@@ -36,6 +36,9 @@ function SearchStateCtrl($scope, datatable) {
 			    	order:true
 				},
 				{	property:"state.code",
+					render:function(value){
+						return Codes("state."+value.state.code);
+					},
 					header: Messages("runs.table.stateCode"),
 					type :"String",
 					edit:true,
@@ -45,6 +48,9 @@ function SearchStateCtrl($scope, datatable) {
 			    	possibleValues:[{code:"IW-V",name:"IW-V"},{code:"E",name:"E"}, {code:"F",name:"F"}]				
 				},
 				{	property:"validation.valid",
+					render:function(value){
+						return Codes("validation."+value.validation.valid);
+					},
 					header: Messages("runs.table.validation.valid"),
 					type :"String",
 			    	order:true

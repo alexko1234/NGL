@@ -153,7 +153,6 @@ public class Runs extends CommonController {
 	}
 	
 	
-	
 	public static Result delete(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -244,6 +243,10 @@ public class Runs extends CommonController {
 			return badRequest();
 		}		
 		return ok();	
+	}
+	
+	public static Result checkRules(String code, String rulesCode){
+		return ok();
 	}
 	
 }

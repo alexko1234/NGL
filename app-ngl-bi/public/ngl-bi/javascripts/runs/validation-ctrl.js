@@ -89,17 +89,23 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages)
 			},
 						
 			columns : [
-			    {  	property:function(value){
+			    {  	property:"number",
+			    	render:function(value){
 			    		if(value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
 			    			value.trClass = "warning";
 			    		}
-			    		return "<strong>"+value.number+"</strong>";},
+			    		return "<strong>"+value.number+"</strong>";
+			    	},
 			    	header: Messages("runs.table.lane.code"),
 			    	type :"String",
 			    	order:false
 				},
 				{  	property:function(value){
-						return value.treatments.ngsrg.default.nbCycleRead1.value +','+value.treatments.ngsrg.default.nbCycleRead2.value;
+						if(angular.isDefined(value.treatments.ngsrg.default.nbCycleRead2)){
+							return value.treatments.ngsrg.default.nbCycleRead1.value +','+value.treatments.ngsrg.default.nbCycleRead2.value;
+						}else{
+							return value.treatments.ngsrg.default.nbCycleRead1.value
+						}
 					},
 			    	header: Messages("runs.table.lane.nbCycles"),
 			    	type :"Sring",
