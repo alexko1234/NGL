@@ -74,7 +74,7 @@ public class RunTreatmentsTests extends AbstractTests {
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
 		     public void run() {
 		    	 
-		    	 createRunCode();
+		    createRunCode();
 		    	 
 		    Treatment t =	 getNewTreatment();
 			    	 
