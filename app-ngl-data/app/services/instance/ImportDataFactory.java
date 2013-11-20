@@ -7,7 +7,7 @@ public class ImportDataFactory {
 	public AbstractImportData getImportData(){
 
 		try {
-			String institute=play.Play.application().configuration().getString("institute");
+			String institute=play.Play.application().configuration().getString("import.institute");
 
 			if(institute.equals("CNG")){
 				return new ImportDataCNG();

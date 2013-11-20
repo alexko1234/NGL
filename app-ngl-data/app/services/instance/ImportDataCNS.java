@@ -21,6 +21,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
+import models.util.DataMappingCNS;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
@@ -46,13 +47,16 @@ public class ImportDataCNS extends AbstractImportData{
 		contextError.addKeyToRootKeyName("import");
 		Logger.info("ImportData execution");
 		try{
-			Logger.info(" Import Projects ");
+			/*Logger.info(" Import Projects ");
+			contextError.setCreationMode();
 			createProjectFromLims();
 			Logger.info(" Import Containers and Samples ");
 			createContainers(contextError,"pl_TubeToNGL ","tube","IW-P",null,null); 
 			createContainers(contextError,"pl_PrepaflowcellToNGL","lane","F",null,"pl_BanquesolexaUneLane @nom_lane=?");
-			updateSampleFromTara();
+			contextError.setUpdateMode();
+			//updateSampleFromTara();*/
 			contextError.removeKeyFromRootKeyName("import");
+		
 		}catch (Exception e) {
 			Logger.debug("",e);
 		}
@@ -234,7 +238,7 @@ public class ImportDataCNS extends AbstractImportData{
 					for(Entry taraEntry :taraProperties.entrySet()){
 
 						if(!taraEntry.getKey().equals(LimsCNSDAO.LIMS_CODE)){
-							String importTypeCode=LimsCNSDAO.getImportTypeCode(true,Boolean.valueOf(sample.properties.get("isAdapters").value.toString()));
+							String importTypeCode=DataMappingCNS.getImportTypeCode(true,Boolean.valueOf(sample.properties.get("isAdapters").value.toString()));
 
 							if(!importTypeCode.equals(sample.importTypeCode)){
 								MongoDBDAO.updateSet(InstanceConstants.SAMPLE_COLL_NAME, sample, "importTypeCode", importTypeCode);

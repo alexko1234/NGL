@@ -18,11 +18,13 @@ public class Global extends GlobalSettings {
 	public void onStart(Application app) {
 		Logger.info("NGL has started");
 
-		Akka.system().scheduler().schedule(
-				Duration.create(nextExecutionInSeconds(1, 0), TimeUnit.SECONDS),
-                Duration.create(24, TimeUnit.HOURS)
-                , (new ImportDataFactory()).getImportData(), Akka.system().dispatcher()
-		); 
+		if(play.Play.application().configuration().getBoolean("import.data")){
+			Akka.system().scheduler().schedule(
+					Duration.create(nextExecutionInSeconds(1, 0), TimeUnit.SECONDS),
+	                Duration.create(24, TimeUnit.HOURS)
+	                , (new ImportDataFactory()).getImportData(), Akka.system().dispatcher()
+			); 
+		}
 	}
 
 	@Override
