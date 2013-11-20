@@ -5,6 +5,8 @@ import static validation.utils.ValidationHelper.required;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.vz.mongodb.jackson.DBQuery;
+
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Validation;
@@ -20,6 +22,7 @@ import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 
 public class CommonValidationHelper {
 	public static final String FIELD_CODE = "code";
@@ -408,10 +411,18 @@ public class CommonValidationHelper {
 	}
 
 
-	public static void validateSampleCode(String sampleCode,
-			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateExistInstanceCode(contextValidation, sampleCode, "sampleCode", Sample.class, InstanceConstants.SAMPLE_COLL_NAME, false);
-	
+	public static void validateSampleCode(String sampleCode, String projectCode, ContextValidation contextValidation) {
+		if(ValidationHelper.required(contextValidation, sampleCode, "sampleCode")) {
+			Sample sample =  MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,  sampleCode);
+			if (sample == null)  {
+				contextValidation.addErrors("sampleCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, sampleCode);
+			}
+			else {
+				if ((sample.projectCodes == null) || (!sample.projectCodes.contains(projectCode))) {
+					contextValidation.addErrors("projectCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, projectCode);
+				}
+			}
+		}
 	}
 
 
