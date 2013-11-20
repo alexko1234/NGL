@@ -50,47 +50,47 @@ import fr.cea.ig.MongoDBResult;
  *
  */
 public class Runs extends CommonController {
-	
+
 	final static Form<Run> runForm = form(Run.class);
 	final static DynamicForm listForm = new DynamicForm();
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	final static Form<Validation> validationForm = form(Validation.class);
 	final static Form<State> stateForm = form(State.class);
-	
+
 	private static ActorRef rulesActor = Akka.system().actorOf(new Props(RulesActor.class));
-	
+
 	public static Result list(){
 		DynamicForm filledForm =  listForm.bindFromRequest();
 		MongoDBResult<Run> results = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, getQuery(filledForm)) 
 				.sort(DatatableHelpers.getOrderBy(filledForm), FormUtils.getMongoDBOrderSense(filledForm))
 				.page(DatatableHelpers.getPageNumber(filledForm), DatatableHelpers.getNumberRecordsPerPage(filledForm)); 
 		List<Run> runs = results.toList();
-		
+
 		if(filledForm.get("datatable") != null){
 			return ok(Json.toJson(new DatatableResponse<Run>(runs, results.count())));
 		}else{
 			return ok(Json.toJson(runs));
 		}
 	}
-	
+
 	private static Query getQuery(DynamicForm filledForm) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
 		if (StringUtils.isNotBlank(filledForm.get("stateCode"))) { //all
 			queries.add(DBQuery.is("state.code", filledForm.get("stateCode")));
 		}
-		
+
 		if (StringUtils.isNotBlank(filledForm.get("validCode"))) { //all
 			queries.add(DBQuery.is("validation.valid", TBoolean.valueOf(filledForm.get("validCode"))));
 		}
-		
+
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
-		
+
 		return query;
 	}
-	
+
 	public static Result get(String code) {
 		Run runValue = getRun(code);
 		if (runValue != null) {		
@@ -99,7 +99,7 @@ public class Runs extends CommonController {
 			return notFound();
 		}
 	}
-	
+
 	public static Result head(String code){
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code)){			
 			return ok();					
@@ -107,23 +107,23 @@ public class Runs extends CommonController {
 			return notFound();
 		}
 	}
-	
-	
+
+
 	public static Result save() {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
 		Run runValue = filledForm.get();
-			
+
 		if (null == runValue._id) { 
 			runValue.traceInformation = new TraceInformation();
 			runValue.traceInformation.setTraceInformation("ngsrg");
 		} else {
 			return badRequest("use PUT method to update the readset");
 		}
-		
+
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
 		ctxVal.setCreationMode();
 		runValue.validate(ctxVal);
-		
+
 		if (!ctxVal.hasErrors()) {
 			runValue = MongoDBDAO.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runValue);
 			return ok(Json.toJson(runValue));
@@ -131,14 +131,14 @@ public class Runs extends CommonController {
 			return badRequest(filledForm.errorsAsJson());
 		}
 	}
-	
-	
+
+
 	public static Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
 			return badRequest("Run with code "+code+" not exist");
 		}
-		
+
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
 		Run runValue = filledForm.get();
 		if (code.equals(runValue.code)) {
@@ -159,10 +159,10 @@ public class Runs extends CommonController {
 		}else{
 			return badRequest("run code are not the same");
 		}
-		
+
 	}
-	
-	
+
+
 	public static Result delete(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -170,10 +170,10 @@ public class Runs extends CommonController {
 		}		
 		MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);	
 		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", code));
-		
+
 		return ok();
 	}
-	
+
 	public static Result state(String code, String stateCode){
 		Run run = getRun(code);
 		if (run == null) {
@@ -197,7 +197,7 @@ public class Runs extends CommonController {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		return run;
 	}
-	
+
 	public static Result validation(String code, String validCode){
 		Run run = getRun(code);
 		if(run == null){
@@ -211,7 +211,7 @@ public class Runs extends CommonController {
 		ctxVal.putObject("run", run);
 		ctxVal.setUpdateMode();
 		validation.validate(ctxVal);
-			
+
 		if(!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", code)),
@@ -225,10 +225,10 @@ public class Runs extends CommonController {
 			return badRequest(filledForm.errorsAsJson());
 		}
 	}
-	
-	
+
+
 	private static boolean isRunCompletelyEvaluate(Run run) {
-		
+
 		if(run.validation.valid.equals(TBoolean.UNSET)){
 			return false;
 		}
@@ -254,16 +254,19 @@ public class Runs extends CommonController {
 		}		
 		return ok();	
 	}
-	
+
 	public static Result checkRules(String code, String rulesCode){
-		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-				DBQuery.is("code", code));
-		//Send run fact
-		ArrayList<Object> facts = new ArrayList<Object>();
-		facts.add(run);
-		// Outside of an actor and if no reply is needed the second argument can be null
-		rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("keyRules"),rulesCode),null);
+		Run run = getRun(code);
+		if(run!=null){
+			//Send run fact
+			ArrayList<Object> facts = new ArrayList<Object>();
+			facts.add(run);
+			// Outside of an actor and if no reply is needed the second argument can be null
+			rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("rules.key"),rulesCode),null);
+		}else
+			return badRequest();
+		
 		return ok();
 	}
-	
+
 }

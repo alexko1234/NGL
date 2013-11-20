@@ -131,7 +131,7 @@ public class AlertSAVTests extends AbstractTests{
 		RulesServices rulesServices = new RulesServices();
 
 		StatefulKnowledgeSession kSession = rulesServices.getKnowledgeBase().newStatefulKnowledgeSession();
-		List<Object> factsAfterRules = rulesServices.callRules(ConfigFactory.load().getString("keyRules"), "sav", facts, kSession);
+		List<Object> factsAfterRules = rulesServices.callRules(ConfigFactory.load().getString("rules.key"), "sav", facts, kSession);
 		kSession.dispose();
 
 		//Get AlertInfo to send mail after rules alert done

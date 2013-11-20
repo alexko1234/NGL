@@ -23,7 +23,7 @@ import play.Logger;
 
 public class RulesServices 
 {
-	private static final String pathChangesets = ConfigFactory.load().getString("changesets");
+	private static final String pathChangesets = ConfigFactory.load().getString("rules.changesets");
 	private static KnowledgeBase knowledgeBase;
 	
 	public RulesServices() {

@@ -16,7 +16,7 @@ import play.Logger;
 
 public class MailServices {
 
-	private static final String mailSmtpHost = ConfigFactory.load().getString("mailSmtpHost");
+	private static final String mailSmtpHost = ConfigFactory.load().getString("mail.smtp.host");
 	
 	public void sendMail(String from, Set<String> to, String subject, String message) throws MailServiceException {
 
