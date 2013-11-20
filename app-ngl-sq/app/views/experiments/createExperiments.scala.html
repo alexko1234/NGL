@@ -272,7 +272,7 @@ th {
 					class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="#" ng-click="outputGeneration();">@Messages("experiments.generateOutput")</a></li>
+					<li><a href="#" ng-click="outputGeneration();" ng-enabled="!experiment.outputGenerated">@Messages("experiments.generateOutput")</a></li>
 				</ul>
 			<button class="btn btn-primary" ng-click="saveAll();" data-toggle="tooltip" title="@Messages("experiments.save_all")">
 				<i class="icon-save icon-large"></i>

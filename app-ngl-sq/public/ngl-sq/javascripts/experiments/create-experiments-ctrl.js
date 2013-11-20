@@ -1,5 +1,6 @@
 function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse,$q) {
 	$scope.experiment = {
+			outputGenerated:false,
 			value: {
 				code:"",
 				typeCode:"",
@@ -396,41 +397,49 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse,$q) {
 	};
 
 	$scope.outputGeneration = function(){
-		$http.put(jsRoutes.controllers.experiments.api.Experiments.generateOutput($scope.experiment.value.code).url, $scope.experiment.value)
-		.success(function(data, status, headers, config) {
-			if(data!=null){
-				$scope.clearMessages();
-				$scope.message.clazz="alert alert-success";
-				$scope.message.text=Messages('experiments.msg.save.sucess');
-				$scope.experiment.value = data;
-				for(var i=0;i<$scope.datatable.getData().length;i++){
-					if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToOne"){
-						$scope.datatable.displayResult[i].outputContainerUsed = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed;
-					}else if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
-						$scope.datatable.displayResult[i].outputContainerUseds = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds;
-						//In process -  gestion du rowspan
-						//example
-						//$scope.datatable.config.columns[0].cells[0] = {"rowSpan":2};
-						/*for(var j=0;j<$scope.datatable.config.columns.length;j++){
-							if($scope.datatable.config.columns[j].extraHeaders[0] == "Outputs"){
-								$scope.datatable.config.columns[j].cells[i] = {"rowSpan":$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length};
-							}
-						}*/
-					}
-				}
-				$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Code","outputContainerUsed.containerCode",true, true,true,"String",false,undefined,{"0":"Outputs"}));
-				
-				$scope.addExperimentPropertiesOutputsColumns();
-				$scope.addInstrumentPropertiesOutputsColumns();
+		
+		for (var j=1; j<$scope.datatable.getData().length+1; j++) {
+			if($scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUsed != null){
+				$scope.experiment.outputGenerated = true;
 			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.message.clazz = "alert alert-error";
-			$scope.message.text = Messages('experiments.msg.save.error');
-
-			$scope.message.details = data;
-			$scope.message.isDetails = true;
-		});
+		}
+		if(!$scope.experiment.outputGenerated){
+			$http.put(jsRoutes.controllers.experiments.api.Experiments.generateOutput($scope.experiment.value.code).url, $scope.experiment.value)
+			.success(function(data, status, headers, config) {
+				if(data!=null){
+					$scope.clearMessages();
+					$scope.message.clazz="alert alert-success";
+					$scope.message.text=Messages('experiments.msg.save.sucess');
+					$scope.experiment.value = data;
+					for(var i=0;i<$scope.datatable.getData().length;i++){
+						if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToOne"){
+							$scope.datatable.displayResult[i].outputContainerUsed = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed;
+						}else if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
+							$scope.datatable.displayResult[i].outputContainerUseds = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds;
+							//In process -  gestion du rowspan
+							//example
+							//$scope.datatable.config.columns[0].cells[0] = {"rowSpan":2};
+							/*for(var j=0;j<$scope.datatable.config.columns.length;j++){
+								if($scope.datatable.config.columns[j].extraHeaders[0] == "Outputs"){
+									$scope.datatable.config.columns[j].cells[i] = {"rowSpan":$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length};
+								}
+							}*/
+						}
+					}
+					$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Code","outputContainerUsed.containerCode",true, true,true,"String",false,undefined,{"0":"Outputs"}));
+					
+					$scope.addExperimentPropertiesOutputsColumns();
+					$scope.addInstrumentPropertiesOutputsColumns();
+				}
+			})
+			.error(function(data, status, headers, config) {
+				$scope.message.clazz = "alert alert-error";
+				$scope.message.text = Messages('experiments.msg.save.error');
+	
+				$scope.message.details = data;
+				$scope.message.isDetails = true;
+			});
+		}
 	};
 
 	$scope.getInstrumentProperties = function(code,loaded){
@@ -833,24 +842,30 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse,$q) {
 					for(i=0;i<$scope.datatable.getData().length;i++){
 						if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToOne"){
 							$scope.datatable.displayResult[i].outputContainerUsed = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed;
-							$scope.datatable.displayResult[i].outputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCode;
+							if($scope.datatable.displayResult[i].outputContainerUsed != undefined){
+								$scope.datatable.displayResult[i].outputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCode;
+							}
 							$scope.datatable.displayResult[i].inputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCode;
 						}else if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany"){
 							$scope.datatable.displayResult[i].outputContainerUseds = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds;
-							$scope.datatable.displayResult[i].outputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds.resolutionCode;
+							if($scope.datatable.displayResult[i].outputContainerUseds != undefined){
+								$scope.datatable.displayResult[i].outputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds.resolutionCode;
+							}
 							$scope.datatable.displayResult[i].inputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCode;
 						}else if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
-							$scope.datatable.displayResult[i].outputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCode;
+							if($scope.datatable.displayResult[i].outputContainerUsed != undefined){
+								$scope.datatable.displayResult[i].outputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCode;
+							}
 							$scope.datatable.displayResult[i].inputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.resolutionCode;
 						}
 						
 						if(($scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany" && $scope.datatable.displayResult[i].outputContainerUseds.length > 0) || ($scope.experiment.value.atomicTransfertMethods[i].class == "OneToOne" && $scope.datatable.displayResult[i].outputContainerUsed)){
-							outputGenerated = true;
+							$scope.experiment.outputGenerated = true;
 						}
 					}
 					
 					
-					if(outputGenerated){
+					if($scope.experiment.outputGenerated){
 						$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Code","outputContainerUsed.containerCode",true, true,true,"String",false,undefined,{"0":"Outputs"}));
 						$scope.addExperimentPropertiesOutputsColumns();
 						$scope.addInstrumentPropertiesOutputsColumns();
