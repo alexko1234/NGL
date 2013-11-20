@@ -16,6 +16,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import play.Logger;
+
 import utils.AbstractTests;
 import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
@@ -29,7 +31,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	
 	static Sample sample;
 	static Sample sample1;
-	
+	static Sample sample2;
 	
 	static Stock stock;
 	
@@ -44,6 +46,15 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		
 		sample=saveDBOject(Sample.class,InstanceConstants.SAMPLE_COLL_NAME,"sample");
 		sample1=saveDBOject(Sample.class,InstanceConstants.SAMPLE_COLL_NAME,"sample1");
+		
+		
+		sample2 = new Sample(); 
+		sample2.code = "SampleCode";
+		List<String> l =new ArrayList<String>();
+		l.add("ProjectCode"); 
+		sample2.projectCodes = l;
+		
+		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample2);
 		
 		
 		stock=saveDBOject(Stock.class,InstanceConstants.STOCK_COLL_NAME,"stock");
@@ -61,6 +72,8 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		
 		MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
 		MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample1);
+		
+		MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample2);
 
 		MongoDBDAO.delete(InstanceConstants.STOCK_COLL_NAME, stock);
 		
@@ -151,21 +164,24 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validationSampleCodeTest(){
 		ContextValidation contextValidation=new ContextValidation();
-		CommonValidationHelper.validateSampleCode(sample.code,contextValidation );
+		Logger.debug("sample2.code=" + sample2.code);
+		Logger.debug("sample2.projectCodes.get(0)=" + sample2.projectCodes.get(0));
+		CommonValidationHelper.validateSampleCode(sample2.code, sample2.projectCodes.get(0), contextValidation );
+		Logger.debug(contextValidation.errors.toString());
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public  void validationSampleCodeNotRequiredTest(){
 		ContextValidation contextValidation=new ContextValidation();
-		CommonValidationHelper.validateSampleCode(null,contextValidation );
-		assertThat(contextValidation.errors.size()).isEqualTo(0);
+		CommonValidationHelper.validateSampleCode(null,null, contextValidation );
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
 	
 	@Test
 	public  void validationSampleCodeNotExistTest(){
 		ContextValidation contextValidation=new ContextValidation();
-		CommonValidationHelper.validateSampleCode("notexist",contextValidation );
+		CommonValidationHelper.validateSampleCode("notexist","notexist", contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 
