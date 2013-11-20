@@ -1,1 +1,2 @@
-0:controllers.resources.AssetPlugin
+0:fr.cea.ig.authentication.AuthenticatePlugin
+1:controllers.resources.AssetPlugin
