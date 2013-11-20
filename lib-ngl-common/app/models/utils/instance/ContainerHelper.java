@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import play.Logger;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -157,15 +159,18 @@ public class ContainerHelper {
 			container.support=new ContainerSupport();
 		}
 
-		if(experiment.instrument.outContainerSupportCategoryCode==null){
+		if(experiment.instrument.outContainerSupportCategoryCode==null || experiment.instrument.outContainerSupportCategoryCode.equals("tube")){
 			container.support=ContainerSupportHelper.getContainerSupportTube(container.code);
 		}else{
 			//TODO 
-			ContainerSupport containerSupport=new ContainerSupport();
+			/*ContainerSupport containerSupport=new ContainerSupport();
 			containerSupport.barCode=getBarCode(experiment.instrument.outContainerSupportCategoryCode);	
 			containerSupport.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
 			containerSupport.column="?";
 			containerSupport.line="?";
+			
+			container.support = containerSupport;*/
+			Logger.info("Not implemented");
 		}
 	}
 
