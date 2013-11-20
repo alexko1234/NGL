@@ -100,9 +100,8 @@ public class Process extends DBObject implements IValidation{
 		ProcessValidationHelper.validateStateCode(typeCode,stateCode, contextValidation);
 		ProcessValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		ProcessValidationHelper.validateContainerCode(containerInputCode, contextValidation);
-		ProcessValidationHelper.validateSampleCode(sampleCode, contextValidation);
 		ProcessValidationHelper.validateProjectCode(projectCode, contextValidation);
-	
+		ProcessValidationHelper.validateSampleCode(sampleCode, projectCode, contextValidation);
 	}
 	
 }
