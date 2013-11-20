@@ -22,6 +22,7 @@ import views.components.datatable.DatatableResponse;
 import fr.cea.ig.MongoDBDAO;
 
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 /**
  * Controller that manage the readset archive
  * @author galbini
@@ -33,7 +34,8 @@ public class ReadSets extends CommonController{
 	 * @param archive : default 2
 	 * @return
 	 */
-
+	 
+	@Permission(value={"reading"})
 	public static Result list(){
 
 		Integer archive = getArchiveValue();
@@ -91,6 +93,7 @@ public class ReadSets extends CommonController{
 		return archive;
 	}
 
+	@Permission(value={"archiving"})
 	public static Result save(String readSetCode) {
 		JsonNode json = request().body().asJson();
 		String archiveId = json.get("archiveId").asText();

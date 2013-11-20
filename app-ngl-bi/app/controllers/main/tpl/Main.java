@@ -18,7 +18,7 @@ import views.html.home ;
 
 public class Main extends CommonController {
 
-
+	
    public static Result home() {
 	   return ok(home.render());
         

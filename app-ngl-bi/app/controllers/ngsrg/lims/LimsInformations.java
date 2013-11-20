@@ -3,6 +3,7 @@ package controllers.ngsrg.lims;
 import java.util.List;
 
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 
 import lims.cng.services.LimsRunServices;
 import lims.models.experiment.ContainerSupport;
@@ -28,6 +29,7 @@ public class LimsInformations  extends CommonController {
 	 * Return the list of sequencers
 	 * @return
 	 */
+	@Permission(value={"read_generation"})
 	public static Result instruments() {
 		LimsRunServices  limsRunServices = Spring.getBeanOfType(LimsRunServices.class);  
 		List<Instrument> intruments = limsRunServices.getInstruments();		
@@ -40,6 +42,7 @@ public class LimsInformations  extends CommonController {
 	 * @param barcode
 	 * @return
 	 */
+	@Permission(value={"read_generation"})
 	public static Result experiments() {
 		LimsRunServices  limsRunServices = Spring.getBeanOfType(LimsRunServices.class);
 		Form<Experiment> inputExpForm = experimentForm.bindFromRequest();
@@ -60,6 +63,7 @@ public class LimsInformations  extends CommonController {
 	 * @param barcode
 	 * @return
 	 */
+	@Permission(value={"read_generation"})
 	public static Result containerSupport(String barcode) {
 		LimsRunServices  limsRunServices = Spring.getBeanOfType(LimsRunServices.class);  		
 		ContainerSupport containerSupport = limsRunServices.getContainerSupport(barcode);

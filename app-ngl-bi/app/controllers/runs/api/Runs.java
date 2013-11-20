@@ -41,6 +41,7 @@ import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 import controllers.utils.FormUtils;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -59,6 +60,7 @@ public class Runs extends CommonController {
 
 	private static ActorRef rulesActor = Akka.system().actorOf(new Props(RulesActor.class));
 
+	@Permission(value={"reading"})
 	public static Result list(){
 		DynamicForm filledForm =  listForm.bindFromRequest();
 		MongoDBResult<Run> results = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, getQuery(filledForm)) 
@@ -90,7 +92,8 @@ public class Runs extends CommonController {
 
 		return query;
 	}
-
+	
+	@Permission(value={"reading"})
 	public static Result get(String code) {
 		Run runValue = getRun(code);
 		if (runValue != null) {		
@@ -100,6 +103,7 @@ public class Runs extends CommonController {
 		}
 	}
 
+	@Permission(value={"reading"})
 	public static Result head(String code){
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code)){			
 			return ok();					
@@ -108,7 +112,7 @@ public class Runs extends CommonController {
 		}
 	}
 
-
+	@Permission(value={"creation_update_run_lane"})
 	public static Result save() {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
 		Run runValue = filledForm.get();
@@ -132,7 +136,7 @@ public class Runs extends CommonController {
 		}
 	}
 
-
+	@Permission(value={"creation_update_run_lane"})
 	public static Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -174,6 +178,7 @@ public class Runs extends CommonController {
 		return ok();
 	}
 
+	@Permission(value={"workflow_run_lane"})
 	public static Result state(String code, String stateCode){
 		Run run = getRun(code);
 		if (run == null) {
@@ -197,7 +202,8 @@ public class Runs extends CommonController {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		return run;
 	}
-
+	
+	@Permission(value={"validation_run_lane"})
 	public static Result validation(String code, String validCode){
 		Run run = getRun(code);
 		if(run == null){

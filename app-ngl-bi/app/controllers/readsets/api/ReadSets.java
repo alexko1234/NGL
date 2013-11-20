@@ -25,6 +25,7 @@ import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 
 
@@ -34,6 +35,7 @@ public class ReadSets extends CommonController{
 	final static Form<ReadSet> readSetForm = form(ReadSet.class);
 	final static DynamicForm form = new DynamicForm();
 	
+	@Permission(value={"reading"})
 	public static Result list() {
 		Query q = getQuery();
 		if(null != q){
@@ -80,6 +82,7 @@ public class ReadSets extends CommonController{
 		return query;
 	}
 	
+	@Permission(value={"reading"})
 	public static Result get(String readSetCode) {
 		ReadSet readSet =  MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);		
 		if(readSet != null) {
@@ -90,6 +93,7 @@ public class ReadSets extends CommonController{
 		}		
 	}
 	
+	@Permission(value={"reading"})
 	public static Result head(String readSetCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode)){			
 			return ok();					
@@ -158,6 +162,7 @@ public class ReadSets extends CommonController{
 		}		
 	}
 		
+	@Permission(value={"delete_readset"})
 	public static Result delete(String readSetCode) { 
 		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
 		if (readSet == null) {
@@ -170,6 +175,7 @@ public class ReadSets extends CommonController{
 		return ok();
 	}
 	
+	@Permission(value={"delete_readset"})
 	public static Result deleteByRunCode(String runCode) {
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {

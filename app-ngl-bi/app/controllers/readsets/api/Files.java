@@ -14,6 +14,7 @@ import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 
 
 
@@ -21,6 +22,7 @@ public class Files extends CommonController {
 
 	final static Form<File> fileForm = form(File.class);
 
+	@Permission(value={"reading"})
 	public static Result list(String readsetCode) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readsetCode));
 		if (null == readSet) {
@@ -29,6 +31,7 @@ public class Files extends CommonController {
 		return ok(Json.toJson(readSet.files));
 	}
 
+	@Permission(value={"reading"})
 	public static Result get(String readsetCode, String fullname) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)));
 		if (null == readSet) {
@@ -42,6 +45,7 @@ public class Files extends CommonController {
 		return notFound();
 	}
 	
+	@Permission(value={"reading"})
 	public static Result head(String readsetCode, String fullname) {
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)))){			
 			return ok();					
@@ -50,6 +54,7 @@ public class Files extends CommonController {
 		}		
 	}
 	
+	@Permission(value={"creation_update _files"})
 	public static Result save(String readsetCode) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readsetCode));
 		if (null == readSet) {
@@ -73,6 +78,7 @@ public class Files extends CommonController {
 		}
 	}
 	
+	@Permission(value={"creation_update _files"})
 	public static Result update(String readsetCode, String fullname) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)));
 		if (null == readSet) {
@@ -101,6 +107,7 @@ public class Files extends CommonController {
 		}
 	}
 
+	@Permission(value={"delete_files"})
 	public static Result delete(String readsetCode, String fullname) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)));
 		if (null == readSet) {
@@ -111,6 +118,7 @@ public class Files extends CommonController {
 		return ok();
 	}
 
+	@Permission(value={"delete_files"})
 	public static Result deleteByRunCode(String runCode) { 
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {
