@@ -533,6 +533,7 @@ angular.module('datatableServices', []).
 			    						this.config.save.number++;
 			    						this.displayResult[i].trClass = undefined;
 				    					this.displayResult[i].selected = undefined;
+				    					this.displayResult[i].edit = undefined;
 				    					
 			    						if(this.isRemoteMode(this.config.save.mode)){
 			    							this.saveRemote(this.displayResult[i], i);
