@@ -7,7 +7,6 @@ import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.running;
 import static play.test.Helpers.status;
-import static play.test.Helpers.contentAsString;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,9 +25,9 @@ import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import models.utils.dao.AbstractDAOMapping;
 import net.vz.mongodb.jackson.DBQuery;
 
+import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -43,6 +42,17 @@ import static validation.utils.ValidationConstants.*;
 
 
 public class TreatmentValidationTest extends AbstractTests {
+	
+	@AfterClass
+	public static void deleteData(){
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+		for (Sample sample : samples) {
+			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
+		}
+		       }});
+	}
 	
 	
 	private void deleteRdCode() {
