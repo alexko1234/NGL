@@ -24,6 +24,7 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import play.Logger;
@@ -33,6 +34,17 @@ import utils.RunMockHelper;
 import fr.cea.ig.MongoDBDAO;
 
 public class ReadSetTreatmentsTests extends AbstractTests {
+	
+	@AfterClass
+	public static void deleteData(){
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+		for (Sample sample : samples) {
+			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
+		}
+		       }});
+	}
 	
 	private void createRdCode() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","DIDIER_TESTFORTRT"));
