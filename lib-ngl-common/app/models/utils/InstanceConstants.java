@@ -12,6 +12,6 @@ public interface InstanceConstants {
 	
 	public static final String RUN_ILLUMINA_COLL_NAME = "ngl_bi.RunIllumina";
 	public static final String READSET_ILLUMINA_COLL_NAME = "ngl_bi.ReadSetIllumina";
-	public static final String RUN_ILLUMINA_COLL_NAME_BACKUP = "ngl_bi.run.illumina.backup";
+
 
 }
