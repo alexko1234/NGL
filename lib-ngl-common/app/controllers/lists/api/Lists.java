@@ -26,6 +26,8 @@ import play.mvc.Results;
 
 import com.mongodb.BasicDBObject;
 
+import controllers.authorisation.Permission;
+
 import fr.cea.ig.MongoDBDAO;
 
 public class Lists extends Controller{
@@ -182,6 +184,7 @@ public class Lists extends Controller{
 	}
 
 
+	@Permission(value={"reading"})
 	public static Result resolutions(){
 		try {
 			DynamicForm inputForm = form.bindFromRequest();
