@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Institute;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -32,9 +31,9 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
-import play.Play;
 import play.data.validation.ValidationError;
 import play.mvc.Result;
 import utils.AbstractTests;
@@ -46,6 +45,17 @@ import fr.cea.ig.MongoDBDAO;
 import static utils.RunMockHelper.*;
 
 public class RunValidationTest extends AbstractTests {
+	
+	@AfterClass
+	public static void deleteData(){
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+		for (Sample sample : samples) {
+			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
+		}
+		       }});
+	}
 	
 	
 	@Test
