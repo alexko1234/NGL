@@ -15,6 +15,7 @@ angular.module('datatableServices', []).
 												{
 													"header":"Code Container", //the title
 													"property":"code", //the property to bind
+													"render" : function() //render the column
 													"id":'', //the column id
 													"edit":false, //can be edited or not
 													"hide":true, //can be hidden or not
@@ -528,11 +529,10 @@ angular.module('datatableServices', []).
 		    					this.config.save.start = true;
 		    					for(var i = 0; i < this.displayResult.length; i++){
 			    					if(this.displayResult[i].edit || this.config.save.withoutEdit){
-			    						//remove datatable properties
+			    						//remove datatable properties to avoid this data are retrieve in the json
 			    						this.config.save.number++;
 			    						this.displayResult[i].trClass = undefined;
 				    					this.displayResult[i].selected = undefined;
-				    					this.displayResult[i].edit = undefined;
 				    					
 			    						if(this.isRemoteMode(this.config.save.mode)){
 			    							this.saveRemote(this.displayResult[i], i);
@@ -579,12 +579,14 @@ angular.module('datatableServices', []).
 		    			 */
 		    			saveLocal: function(data, i){
 		    				if(this.config.save.active){
+		    					if(data){
+		    						this.displayResult[i] = data;
+		    					}
 		    					if(!this.config.save.keepEdit){
 		    						this.config.edit.start = false;
 		    						this.displayResult[i].edit = undefined;
-		    					}
-		    					if(data){
-		    						this.displayResult[i] = data;
+		    					}else{
+		    						this.displayResult[i].edit = true;
 		    					}
 			    				//update in the all result table
 								var j = i;
@@ -1348,8 +1350,7 @@ angular.module('datatableServices', []).
     			    	var getNgModel = function(col){
         			    	if(angular.isDefined(attrs.header)){
         			    		return   name+".config.edit.columns."+col.id+".value";
-        			    	}
-        			    	if(angular.isFunction(col.property)){
+        			    	}else if(angular.isFunction(col.property)){
         			    		return name+".config.columns."+attrs.index+".property(value)";
         			    	}else{
         			    		return "value."+col.property;
@@ -1369,7 +1370,12 @@ angular.module('datatableServices', []).
 		    			};
 		    			
 		    			var getValueElement = function(col){
-		    				return '<span ng-bind-html-unsafe="'+getNgModel(col)+' '+columnFormatter(col)+'"></span>';		    				
+		    				if(angular.isDefined(col.render)){
+		    					return '<span ng-bind-html-unsafe="'+name+".config.columns."+attrs.index+".render(value)"+'"></span>';
+		    				}else{
+		    					return '<span ng-bind-html-unsafe="'+getNgModel(col)+' '+columnFormatter(col)+'"></span>';
+		    				}
+		    						    				
 		    			};
 		    			
 		    			var getEditElement = function(col){
