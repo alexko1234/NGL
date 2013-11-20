@@ -68,7 +68,7 @@ public class ObjectTypeService {
 		
 		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Process.name(), true, DescriptionFactory.getStates("F", "N", "IP") ));
 		
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Run.name(), false, DescriptionFactory.getStates("F", "E","IW-V", "IP-V", "F-V", "IP-S", "IP-RG", "F-RG") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Run.name(), false, DescriptionFactory.getStates("F", "IW-V", "IP-V", "F-V", "IP-S", "IP-RG", "F-RG") ));
 		
 		//l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Lane.name(), false, DescriptionFactory.getStates("F", "E","IW-V", "IP-V", "F-V", "IP-S", "IP-RG", "F-RG") ));
 		
