@@ -23,6 +23,7 @@ import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import play.Logger;
@@ -32,6 +33,17 @@ import utils.RunMockHelper;
 import fr.cea.ig.MongoDBDAO;
 
 public class FilesTests extends AbstractTests{
+	
+	@AfterClass
+	public static void deleteData(){
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+		for (Sample sample : samples) {
+			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
+		}
+		       }});
+	}
 	
 		@Test
 	 public void testFileCreate() {
