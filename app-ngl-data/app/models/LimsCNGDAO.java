@@ -456,9 +456,11 @@ public class LimsCNGDAO {
 			}			
             pst.execute();
             pst.close();
+            
+            conn.close(); // to avoid error : timeout waiting for available connection
 		}
 		catch(Exception e) {
-			contextError.addErrors("", sValues.toString());
+			contextError.addErrors(tableName, e.getMessage().toString());
 		}
 		contextError.removeKeyFromRootKeyName("updateImportDate");
 	}
