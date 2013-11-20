@@ -218,7 +218,7 @@ public class Runs extends CommonController {
 					DBUpdate.set("validation", validation));			
 			run.validation = validation;
 			if(isRunCompletelyEvaluate(run)){
-				return state(code, "E");
+				return state(code, "F-V");
 			}
 			return ok();
 		} else {

@@ -45,7 +45,7 @@ function SearchStateCtrl($scope, datatable) {
 					order:true,
 			    	choiceInList:true,
 			    	listStyle:'bs-select',
-			    	possibleValues:[{code:"IW-V",name:"IW-V"},{code:"E",name:"E"}, {code:"F",name:"F"}]				
+			    	possibleValues:[{code:"IW-V",name:"IW-V"},{code:"F-E",name:"F-E"}, {code:"F",name:"F"}]				
 				},
 				{	property:"validation.valid",
 					render:function(value){

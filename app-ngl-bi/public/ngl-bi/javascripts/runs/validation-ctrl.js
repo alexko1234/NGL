@@ -71,6 +71,7 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages)
 					return line.validation;
 				},
 				callback:function(datatable, nbError){
+					
 					if(nbError == 0){
 						$http.put(jsRoutes.controllers.runs.api.Runs.validation($scope.run.code, $scope.run.validation.valid).url, $scope.run.validation).
 							success(function(data, status, headers, config){
@@ -82,6 +83,7 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages)
 					}else{
 						$scope.messages.setError("save");
 					}
+					
 				}
 			},
 			cancel : {
