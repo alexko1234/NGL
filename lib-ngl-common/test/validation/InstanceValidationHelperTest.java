@@ -164,8 +164,6 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validationSampleCodeTest(){
 		ContextValidation contextValidation=new ContextValidation();
-		Logger.debug("sample2.code=" + sample2.code);
-		Logger.debug("sample2.projectCodes.get(0)=" + sample2.projectCodes.get(0));
 		CommonValidationHelper.validateSampleCode(sample2.code, sample2.projectCodes.get(0), contextValidation );
 		Logger.debug(contextValidation.errors.toString());
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
