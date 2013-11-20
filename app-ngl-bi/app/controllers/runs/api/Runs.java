@@ -23,11 +23,19 @@ import net.vz.mongodb.jackson.DBUpdate;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 
+import com.typesafe.config.ConfigFactory;
+
+import akka.actor.ActorRef;
+import akka.actor.Props;
+
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
+import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
+import rules.services.RulesActor;
+import rules.services.RulesMessage;
 import validation.ContextValidation;
 import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
@@ -48,6 +56,8 @@ public class Runs extends CommonController {
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	final static Form<Validation> validationForm = form(Validation.class);
 	final static Form<State> stateForm = form(State.class);
+	
+	private static ActorRef rulesActor = Akka.system().actorOf(new Props(RulesActor.class));
 	
 	public static Result list(){
 		DynamicForm filledForm =  listForm.bindFromRequest();
@@ -246,6 +256,13 @@ public class Runs extends CommonController {
 	}
 	
 	public static Result checkRules(String code, String rulesCode){
+		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+				DBQuery.is("code", code));
+		//Send run fact
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.add(run);
+		// Outside of an actor and if no reply is needed the second argument can be null
+		rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("keyRules"),rulesCode),null);
 		return ok();
 	}
 	

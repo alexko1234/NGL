@@ -77,6 +77,9 @@ public abstract class AbstractTests {
 	    config.put("institute", "CNG");
 	    config.put("auth.application", "ngl-bi");
 	    
+	    config.put("mailSmtpHost", "smtp.genoscope.cns.fr");
+	    
+	    
 		return config;
 		
 	}

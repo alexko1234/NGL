@@ -70,7 +70,10 @@ object ApplicationBuild extends Build {
    	    )
    	val nglframeworkwebDependencies = Seq(
    	    javaCore,
-		"fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT"
+   	    "javax.mail" % "mail" % "1.4.2",
+   	    "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
+   	    "org.drools" % "drools-core" % "5.5.0.Final",
+	     "org.drools" % "drools-compiler" % "5.5.0.Final"
    	    )
    	val nglbiDependencies = Seq(
 	        // Add your project dependencies here,
@@ -131,7 +134,7 @@ object ApplicationBuild extends Build {
        // Add your own project settings here      
        resolvers := Seq(nexusig),
        publishArtifact in makePom := false,
-       publishTo := Some(nexusigpublish) 
+       publishTo := Some(nexusigpublish)
      ).dependsOn(nglcommon)
    
     val ngldata = play.Project(appName + "-data", appVersion, ngldataDependencies, path = file("app-ngl-data"),settings = buildSettings).settings(

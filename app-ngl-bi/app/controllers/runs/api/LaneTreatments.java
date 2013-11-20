@@ -1,14 +1,13 @@
 package controllers.runs.api;
 
 import static play.data.Form.form;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
 import models.laboratory.common.description.Level;
 import models.laboratory.run.instance.Lane;
-import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
+import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBUpdate;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -19,6 +18,7 @@ import fr.cea.ig.MongoDBDAO;
 public class LaneTreatments extends CommonController{
 
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
+	
 	
 	
 	public static Result list(String runCode, Integer laneNumber){
@@ -79,12 +79,16 @@ public class LaneTreatments extends CommonController{
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", runCode), DBQuery.is("lanes.number", laneNumber)),
 					DBUpdate.set("lanes.$.treatments."+treatment.code, treatment));	
+			
+			
+			
 			return ok(Json.toJson(treatment));
 		} else {
 			return badRequest(filledForm.errorsAsJson());			
 		}
 			
 	}
+	
 	
 	public static Result update(String runCode, Integer laneNumber, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
