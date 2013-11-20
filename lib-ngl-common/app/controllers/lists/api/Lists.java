@@ -15,6 +15,7 @@ import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
+import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
@@ -39,7 +40,7 @@ public class Lists extends Controller{
 		keys.put("_id", 0);//Don't need the _id field
 		keys.put("name", 1);
 		keys.put("code", 1);
-		List<Project> projects = MongoDBDAO.find("Project", Project.class,DBQuery.exists("_id"),keys).sort("code").toList();
+		List<Project> projects = MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class,DBQuery.exists("_id"),keys).sort("code").toList();
 
 		return Results.ok(Json.toJson(ListObject.projectToJsonObject(projects)));	
 	}
@@ -98,7 +99,7 @@ public class Lists extends Controller{
 		keys.put("_id", 0);//Don't need the _id field
 		keys.put("name", 1);
 		keys.put("code", 1);
-		List<Sample> samples = MongoDBDAO.find("Sample", Sample.class,DBQuery.is("projectCodes", projectCode),keys).sort("code").toList();
+		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.is("projectCodes", projectCode),keys).sort("code").toList();
 
 		return Results.ok(Json.toJson(ListObject.sampleToJsonObject(samples)));
 	}
