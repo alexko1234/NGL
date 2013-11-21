@@ -34,10 +34,13 @@ public class RunTreatmentsTests extends AbstractTests {
 	
 	@AfterClass
 	public static void deleteData(){
-		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
-		for (Sample sample : samples) {
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
-		}
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
+			List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+			for (Sample sample : samples) {
+				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
+			}
+		}});	
 	}
 	
 	private void createRunCode() {
@@ -81,6 +84,8 @@ public class RunTreatmentsTests extends AbstractTests {
 	
 	@Test
 	public void testSave() {	 
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
 	    createRunCode();
 	    	 
 	    Treatment t = getNewTreatment();
@@ -93,12 +98,15 @@ public class RunTreatmentsTests extends AbstractTests {
         assertThat(r.treatments.size()).isEqualTo(1);
         Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
         assertThat(entry.getKey()).isEqualTo("ngsrg");
+		}});	
 	}
 	
 	
 	
 	@Test
 	public void testUpdate() {
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
 	    createRunCode();
 		    	 
 	    Treatment t = getNewTreatment();
@@ -130,12 +138,15 @@ public class RunTreatmentsTests extends AbstractTests {
         Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
         assertThat(entry.getKey()).isEqualTo("ngsrg");
         assertThat(entry.getValue().results().get("default").get("nbClusterTotal").value.toString()).isEqualTo("299");
+		}});	
 	}
 	
 	
 	
 	@Test
 	public void testDelete() { 
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
 	    createRunCode();
 		    	 
 	    Treatment t =	 getNewTreatment();
@@ -150,11 +161,14 @@ public class RunTreatmentsTests extends AbstractTests {
 		//query for control
         Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code","DIDIER_TESTFORTRT"));
         assertThat(r.treatments.size()).isEqualTo(0);
+		}});	        
 	}
 	
 	
 	@Test
 	public void testGet() {
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
 		createRunCode();
 		    	 
 	    Treatment t =	 getNewTreatment();
@@ -165,11 +179,14 @@ public class RunTreatmentsTests extends AbstractTests {
 		
 		result = callAction(controllers.runs.api.routes.ref.RunTreatments.get("DIDIER_TESTFORTRT", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
 		assertThat(status(result)).isEqualTo(OK);
+		}});			
 	}
 	
 	
 	@Test
 	public void testHead() {
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
 	    createRunCode();
 		    	 
 	    Treatment t =	 getNewTreatment();
@@ -179,6 +196,7 @@ public class RunTreatmentsTests extends AbstractTests {
 		
 		result = callAction(controllers.runs.api.routes.ref.RunTreatments.head("DIDIER_TESTFORTRT", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
 		assertThat(status(result)).isEqualTo(OK);
+		}});			
 	}
 	
 }

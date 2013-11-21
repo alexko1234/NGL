@@ -35,14 +35,19 @@ public class ReadSetsTests extends AbstractTests {
 	
 	@AfterClass
 	public static void deleteData(){
-		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
-		for (Sample sample : samples) {
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
-		}
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
+			List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+			for (Sample sample : samples) {
+				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
+			}
+		}});
 	}
 	
 	 @Test
 	 public void testReadSetsCreate() { 
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
 		 // create a run with two readsets associated to this run
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
 		if(runDelete!=null){
@@ -98,11 +103,14 @@ public class ReadSetsTests extends AbstractTests {
 	    //query for control
         List<ReadSet> lr = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.in("code","rdCode", "rdCode2")).toList();
         assertThat(lr.size()).isEqualTo(2); 
+		}});
 	 }
 	 
 	 
 	 @Test
-	 public void testArchiveReadSet(){
+	 public void testArchiveReadSet() {
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
 		if(runDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -154,11 +162,14 @@ public class ReadSetsTests extends AbstractTests {
          ReadSet r = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code",readset.code));
          assertThat(r).isNotNull();
          assertThat(r.archiveId).isNotNull(); //means that this is a archive
+		}});
 	 }
 	 
 
 	@Test
 	 public void testAchiveList(){
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
 		if(runDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -221,11 +232,14 @@ public class ReadSetsTests extends AbstractTests {
          assertThat(status(result)).isEqualTo(OK);
       	Logger.debug(contentAsString(result));
       	assertThat(contentAsString(result)).isNotEqualTo("[]").contains(readset.code);
+		}});      	
 	 }
 	 
 
 	@Test
 	 public void testDeleteReadsets(){
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
 		if(runDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -289,11 +303,14 @@ public class ReadSetsTests extends AbstractTests {
         
         readset = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("runCode",run.code));
         assertThat(readset).isNull(); 
+		}});
 	 }
 	 	
 	 
 	@Test 
 	public void testRemoveReadset(){
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
 		if(runDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -345,6 +362,7 @@ public class ReadSetsTests extends AbstractTests {
         
         readset = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("runCode",run.code));
         assertThat(readset).isNull(); 
+		}});
 	}
 
 }

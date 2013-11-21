@@ -35,41 +35,49 @@ public class LanesTests extends AbstractTests {
 	
 	@AfterClass
 	public static void deleteData(){
-		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
-		for (Sample sample : samples) {
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
-		}
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
+			List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+			for (Sample sample : samples) {
+				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
+			}
+		}});
 	}
 	
 	@Test
 	public void testAddLaneOnARunWithALaneOK() {
-		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
-		if(runDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
-		}
-		Run run = RunMockHelper.newRun("YANN_TEST1FORLANES");
-		Lane lane = RunMockHelper.newLane(1);
-		List<Lane> lanes = new ArrayList<Lane>();
-	 	lanes.add(lane);
-		run.lanes = lanes;
-		
-		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-	 	assertThat(status(result)).isEqualTo(OK);
-	 			
-		lane = RunMockHelper.newLane(2);
-	 	lanes.add(lane);
-		run.lanes = lanes;
-	 	
-	 	result = callAction(controllers.runs.api.routes.ref.Lanes.save(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
-	    assertThat(status(result)).isEqualTo(OK);  
-	    
-	    //query for control
-        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
-        assertThat(run.lanes.size()).isEqualTo(2);
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
+			if(runDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			}
+			Run run = RunMockHelper.newRun("YANN_TEST1FORLANES");
+			Lane lane = RunMockHelper.newLane(1);
+			List<Lane> lanes = new ArrayList<Lane>();
+		 	lanes.add(lane);
+			run.lanes = lanes;
+			
+			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		 	assertThat(status(result)).isEqualTo(OK);
+		 			
+			lane = RunMockHelper.newLane(2);
+		 	lanes.add(lane);
+			run.lanes = lanes;
+		 	
+		 	result = callAction(controllers.runs.api.routes.ref.Lanes.save(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
+		    assertThat(status(result)).isEqualTo(OK);  
+		    
+		    //query for control
+	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+	        assertThat(run.lanes.size()).isEqualTo(2);
+		}});
 	}
 	 
 	 @Test
 	 public void testAddLaneOnAEmptyRunOK(){
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
 			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
 			if(runDelete!=null){
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -90,12 +98,15 @@ public class LanesTests extends AbstractTests {
 		    //query for control
 	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
 	        assertThat(run.lanes.size()).isEqualTo(1);
+			}});
 		}
 	 
 	 
 	 @Test
 	 public void testAddLaneKO(){
-		 //verify that we can't save lanes which refers to readsets which don't exist ! (test KO)
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {
+		    //verify that we can't save lanes which refers to readsets which don't exist ! (test KO)
 			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
 			if(runDelete!=null){
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -154,12 +165,15 @@ public class LanesTests extends AbstractTests {
 			//query for control
 	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
 	        assertThat(run.lanes).isNull(); 
+			}});
 		}
 	 
 	 
 	 @Test
 	 public void testAddLaneAddReadSetOK(){
-		 //verify that we can save lanes because readsets exist (test OK) !
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {		 
+		    //verify that we can save lanes because readsets exist (test OK) !
 			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
 			if(runDelete!=null){
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -219,12 +233,15 @@ public class LanesTests extends AbstractTests {
 			//query for control
 	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
 	        assertThat(run.lanes.size()).isEqualTo(1);
+			}});
 		}
 	 
 	 
 	  
 	 @Test
 	 public void testAdd2LanesWithSameLaneNumberKO(){
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {		 
 			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
 			if(runDelete!=null){
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -250,12 +267,15 @@ public class LanesTests extends AbstractTests {
 		    //query for control
 	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
 	        assertThat(run.lanes.size()).isEqualTo(1);
-		}
+		}});
+	}
 	 
 	 
 	 @Test
 	 public void testAddLanesWithSameReadSetCodesKO(){
-		 //verify that we can't save a lane witch refers to a readset on another lane !
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		     public void run() {		 
+		    //verify that we can't save a lane witch refers to a readset on another lane !
 			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORLANES"));
 			if(runDelete!=null){
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -320,5 +340,6 @@ public class LanesTests extends AbstractTests {
 			//query for control
 	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
 	        assertThat(run.lanes.size()).isEqualTo(1);
+		    }});
 		}
 }
