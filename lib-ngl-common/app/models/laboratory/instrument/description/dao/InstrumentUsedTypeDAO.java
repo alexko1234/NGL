@@ -31,9 +31,8 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 
 	public List<InstrumentUsedType> findByExperimentId(long id)
 	{
-		String sql=sqlCommonSelect+sqlCommonFrom+
+		String sql=sqlCommon+
 				"JOIN experiment_type_instrument_type as cit ON fk_instrument_used_type=c.id " +
-				DAOHelpers.getSQLForInstitute()+
 				"and cit.fk_experiment_type = ?";
 		InstrumentUsedTypeMappingQuery instrumentUsedTypeMappingQuery = new InstrumentUsedTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return instrumentUsedTypeMappingQuery.execute(id);

@@ -28,7 +28,7 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 			Class<? extends MappingSqlQuery<T>> classMapping, String sqlCommonSelect, String sqlCommonFrom,
 					boolean useGeneratedKey) {
 		super(tableName, entityClass, classMapping, sqlCommonSelect+sqlCommonFrom+DAOHelpers.getSQLForInstitute(), useGeneratedKey);
-		this.sqlCommonFrom=sqlCommonFrom;
+		this.sqlCommonFrom=sqlCommonFrom+DAOHelpers.getSQLForInstitute();
 		this.sqlCommonSelect=sqlCommonSelect;		
 	}
 	

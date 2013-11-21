@@ -130,11 +130,11 @@ public class FindDAOTest extends AbstractTests {
 		State cTypeId = State.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(State.find.isCodeExist(""));
-		//Assert.assertNotNull(State.find.findAllForContainerList());
+		Assert.assertNotNull(State.find.findAllForContainerList());
 		Assert.assertNotNull(State.find.findByCategoryCode(""));
 		Assert.assertNotNull(State.find.findByObjectTypeCode("Sample"));
 		Assert.assertNotNull(State.find.findByTypeCode(""));
-		Assert.assertNotNull(State.find.isCodeExistForTypeCode("",""));
+		Assert.assertFalse(State.find.isCodeExistForTypeCode("",""));
 	}
 
 }

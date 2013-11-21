@@ -123,16 +123,16 @@ public class DAOHelpers {
 		if(SQLInstitute==null){
 			List<String> institutes=DescriptionHelper.getInstitute();
 			SQLInstitute=" join common_info_type_institute ci on "+aliasCommonInfoType+".id =ci.fk_common_info_type "+
-						" join institute i on i.id = ci.fk_institute where ";
+						" join institute i on i.id = ci.fk_institute ";
 			//Prend en compte tous les instituts
 			if(institutes.size()==0){
-				return SQLInstitute ="where 1=1 ";
+				return SQLInstitute ="";
 				//Si un seul institut
 			}else if(institutes.size()==1){
-				return SQLInstitute+= " i.code='" + DescriptionHelper.getInstitute().get(0)+"'";
+				return SQLInstitute+= " and i.code='" + DescriptionHelper.getInstitute().get(0)+"'";
 			}else {
 				// Si plusieurs instituts (clause in)
-				SQLInstitute+=" i.code in (";
+				SQLInstitute+="  and i.code in (";
 				String comma="";
 				for(int i=0;i<institutes.size();i++){
 					if(i==1) comma=",";

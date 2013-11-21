@@ -29,9 +29,8 @@ public class ReagentTypeDAO extends AbstractDAOCommonInfoType<ReagentType>{
 
 	public List<ReagentType> findByProtocol(long idProtocol)
 	{
-		String sql = sqlCommonSelect+
-				sqlCommonFrom+
-				" INNER JOIN protocol_reagent_type prt ON prt.fk_reagent_type=t.id "+ DAOHelpers.getSQLForInstitute()+
+		String sql = sqlCommon+
+				" INNER JOIN protocol_reagent_type prt ON prt.fk_reagent_type=t.id "+
 				" and fk_protocol = ?";
 		ReagentTypeMappingQuery reagentTypeMappingQuery=new ReagentTypeMappingQuery(dataSource,sql,new SqlParameter("id", Type.LONG));
 		return reagentTypeMappingQuery.execute(idProtocol);
