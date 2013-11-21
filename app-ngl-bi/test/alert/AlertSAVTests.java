@@ -12,18 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.alert.instance.Alert;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
+import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.drools.runtime.StatefulKnowledgeSession;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import play.Logger;
 import play.mvc.Result;
 
 import com.typesafe.config.ConfigFactory;
@@ -45,6 +49,17 @@ public class AlertSAVTests extends AbstractTests{
 	{
 		runData = MongoDBDAO.findOne("ngl_bi.RunIllumina_initData", Run.class, DBQuery.is("code", "121023_HISEQ10_C177JACXX"));
 	}
+	
+	@AfterClass
+	public static void deleteAlert()
+	{
+		List<Alert> alerts = MongoDBDAO.find(InstanceConstants.ALERT_COLL_NAME, Alert.class).toList();
+		for(Alert alert : alerts){
+			MongoDBDAO.delete(InstanceConstants.ALERT_COLL_NAME, alert);
+		}
+		
+	}
+
 
 	@Test
 	public void testCompletBadAndFlag() throws RulesException
@@ -131,7 +146,7 @@ public class AlertSAVTests extends AbstractTests{
 		RulesServices rulesServices = new RulesServices();
 
 		StatefulKnowledgeSession kSession = rulesServices.getKnowledgeBase().newStatefulKnowledgeSession();
-		List<Object> factsAfterRules = rulesServices.callRules(ConfigFactory.load().getString("rules.key"), "sav", facts, kSession);
+		List<Object> factsAfterRules = rulesServices.callRules(ConfigFactory.load().getString("rules.key"), "sav_1", facts, kSession);
 		kSession.dispose();
 
 		//Get AlertInfo to send mail after rules alert done
@@ -170,7 +185,60 @@ public class AlertSAVTests extends AbstractTests{
 
 			}
 		}
-
+		
+		//Check alert info in database
+		List<Alert> alerts = MongoDBDAO.find(InstanceConstants.ALERT_COLL_NAME,Alert.class).toList();
+		Assert.assertTrue(alerts.size()>0);
+		int nbCheck=0;
+		for(Alert alert : alerts){
+			Assert.assertTrue(alert.code.contains(runData.code));
+			Assert.assertTrue(alert.code.contains("read"));
+			Assert.assertEquals(alert.ruleName,"sav_1");
+			if(alert.code.equals(runData.code+".1.read1")){
+				Logger.debug("Check alert "+alert.code);
+				Assert.assertTrue(alert.propertiesAlert.containsKey(AlertSAVInfo.alertBAD));
+				List<String> keyBadAlerts = alert.propertiesAlert.get(AlertSAVInfo.alertBAD);
+				Assert.assertTrue(keyBadAlerts.contains("clusterDensity"));
+				Assert.assertTrue(keyBadAlerts.contains("clusterPFPerc"));
+				Assert.assertTrue(keyBadAlerts.contains("greaterQ30Perc"));
+				Assert.assertTrue(keyBadAlerts.contains("phasing"));
+				Assert.assertTrue(keyBadAlerts.contains("prephasing"));
+				Assert.assertTrue(keyBadAlerts.contains("alignedPerc"));
+				Assert.assertTrue(keyBadAlerts.contains("errorRatePerc"));
+				Assert.assertTrue(keyBadAlerts.contains("errorRatePercCycle35"));
+				Assert.assertTrue(keyBadAlerts.contains("errorRatePercCycle100"));
+				nbCheck++;
+			}else if(alert.code.equals(runData.code+".1.read2")){
+				Logger.debug("Check alert "+alert.code);
+				Assert.assertTrue(alert.propertiesAlert.containsKey(AlertSAVInfo.alertBAD));
+				List<String> keyBadAlerts = alert.propertiesAlert.get(AlertSAVInfo.alertBAD);
+				Assert.assertTrue(keyBadAlerts.contains("clusterDensity"));
+				Assert.assertTrue(alert.propertiesAlert.containsKey(AlertSAVInfo.alertFLAG));
+				List<String> keyFlagAlerts = alert.propertiesAlert.get(AlertSAVInfo.alertFLAG);
+				Assert.assertTrue(keyFlagAlerts.contains("clusterPFPerc"));
+				Assert.assertTrue(keyFlagAlerts.contains("greaterQ30Perc"));
+				Assert.assertTrue(keyFlagAlerts.contains("phasing"));
+				Assert.assertTrue(keyFlagAlerts.contains("prephasing"));
+				Assert.assertTrue(keyFlagAlerts.contains("alignedPerc"));
+				Assert.assertTrue(keyFlagAlerts.contains("errorRatePerc"));
+				Assert.assertTrue(keyFlagAlerts.contains("errorRatePercCycle35"));
+				Assert.assertTrue(keyFlagAlerts.contains("errorRatePercCycle75"));
+				nbCheck++;
+			}else if(alert.code.equals(runData.code+".2.read1")){
+				Logger.debug("Check alert "+alert.code);
+				Assert.assertTrue(alert.propertiesAlert.containsKey(AlertSAVInfo.alertFLAG));
+				List<String> keyFlagAlerts = alert.propertiesAlert.get(AlertSAVInfo.alertFLAG);
+				Assert.assertTrue(keyFlagAlerts.contains("clusterDensity"));
+				nbCheck++;
+			}else if(alert.code.equals(runData.code+".2.read2")){
+				Logger.debug("Check alert "+alert.code);
+				Assert.assertTrue(alert.propertiesAlert.containsKey(AlertSAVInfo.alertFLAG));
+				List<String> keyFlagAlerts = alert.propertiesAlert.get(AlertSAVInfo.alertFLAG);
+				Assert.assertTrue(keyFlagAlerts.contains("clusterDensity"));
+				nbCheck++;
+			}
+		}
+		Assert.assertEquals(nbCheck,4);
 	}
 
 }

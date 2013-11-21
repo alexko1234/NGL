@@ -6,6 +6,7 @@ import java.util.Locale;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
+import play.api.Play;
 import play.data.format.Formatters;
 import play.mvc.Action;
 import play.mvc.Http.Request;
@@ -28,8 +29,10 @@ public class Global extends GlobalSettings {
 			rulesServices.buildKnowledgeBase();
 			
 		} catch (RulesException e) {
-			// TODO Quel consequence?
+			Logger.error("Error Load knowledge base");
 			e.printStackTrace();
+			//Shutdown application
+			Play.stop();
 		}
 	}  
 

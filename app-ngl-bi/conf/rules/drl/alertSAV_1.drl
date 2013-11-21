@@ -5,20 +5,25 @@ package rules
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.Treatment;
+import models.laboratory.alert.instance.Alert;
+import models.utils.InstanceConstants;
 import models.laboratory.common.instance.PropertyValue;
+import fr.cea.ig.MongoDBDAO;
+import alert.AlertSAVInfo;
+import mail.MailServices;
 import play.Logger;
+import com.typesafe.config.ConfigFactory;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Map.Entry;
-import alert.AlertSAVInfo;
-import mail.MailServices;
 import java.util.Arrays;
-import com.typesafe.config.ConfigFactory;
+
 
 rule "Insert AlertSAVInfo"
-	@nglBI( sav )
+	@nglBI( sav_1 )
 	dialect "java"
 	salience 700
 	no-loop
@@ -31,7 +36,7 @@ rule "Insert AlertSAVInfo"
 end
 
 rule "BAD alerte"
-	@nglBI( sav )
+	@nglBI( sav_1 )
 	dialect "java"
 	salience 500
 	no-loop
@@ -62,7 +67,7 @@ rule "BAD alerte"
 end
 
 rule "FLAG alerte"
-	@nglBI( sav )
+	@nglBI( sav_1 )
 	dialect "java"
 	salience 400
 	no-loop
@@ -94,7 +99,7 @@ end
 
 
 rule "Send alert info"
-	@nglBI( sav )
+	@nglBI( sav_1 )
 	dialect "java"
 	salience 100
     when
@@ -106,4 +111,17 @@ rule "Send alert info"
        Set<String> destinataires = new HashSet<String>();
        destinataires.addAll(Arrays.asList(alertMailDest.split(",")));
        mailService.sendMail(alertMailExp, destinataires, "ALERT SAV", $alertSAVInfo.toString());
+end
+
+rule "Save alert info"
+	@nglBI( sav_1 )
+	dialect "java"
+	salience 50
+	when
+        $alertSAVInfo : AlertSAVInfo(allResults.size()>0)
+    then
+    	//Convert AlertInfo to instance Alert
+    	List<Alert> alerts = $alertSAVInfo.convertToAlert("sav_1");
+    	//Save Alert in database
+    	MongoDBDAO.save(InstanceConstants.ALERT_COLL_NAME,alerts);
 end

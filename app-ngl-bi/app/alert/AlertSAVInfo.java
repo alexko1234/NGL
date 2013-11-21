@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.alert.instance.Alert;
+
+
 /**
  * Class collecting the alerts to display
  * @author ejacoby
@@ -64,6 +67,30 @@ public class AlertSAVInfo implements Serializable{
 		cyclesErrRatedResults.put(lane, result);
 	}
 
+	public List<Alert> convertToAlert(String ruleName)
+	{
+		List<Alert> alerts = new ArrayList<Alert>();
+		
+		for(String keyRead : allResults.keySet()){
+			Map<String, Map<String, Map<String,String>>> mapLane = allResults.get(keyRead);
+			for(String keyLane : mapLane.keySet()){
+				Alert alert = new Alert();
+				//Code alerte runCode.laneNumber.read
+				alert.code=runCode+"."+keyLane+"."+keyRead;
+				//Rule name
+				alert.ruleName=ruleName;
+				//Map propertiesAlert
+				alert.propertiesAlert = new HashMap<String,List<String>>();
+				Map<String, Map<String,String>> mapAlert = mapLane.get(keyLane);
+				for(String keyAlert : mapAlert.keySet()){
+					alert.propertiesAlert.put(keyAlert, new ArrayList<String>(mapAlert.get(keyAlert).keySet()));
+				}
+				alerts.add(alert);
+			}
+		}
+		return alerts;
+	}
+	
 	public Map<String, Map<String, Map<String, Map<String, String>>>> getAllResults() {
 		return allResults;
 	}
