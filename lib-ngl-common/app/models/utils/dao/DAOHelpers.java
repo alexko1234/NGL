@@ -16,7 +16,7 @@ import play.data.validation.ValidationError;
 public class DAOHelpers {
 
 
-	private static String SQLInsitute = null;
+	private static String SQLInstitute = null;
 
 	/**
 	 * Save an object Model in the description DB
@@ -119,29 +119,32 @@ public class DAOHelpers {
 		}		
 	}
 
-	public static String getSQLForInstitute(){
-		if(SQLInsitute==null){
+	public static String getSQLForInstitute(String aliasCommonInfoType){
+		if(SQLInstitute==null){
 			List<String> institutes=DescriptionHelper.getInstitute();
-			SQLInsitute=" join common_info_type_institute ci on t.id =ci.fk_common_info_type "+
+			SQLInstitute=" join common_info_type_institute ci on "+aliasCommonInfoType+".id =ci.fk_common_info_type "+
 						" join institute i on i.id = ci.fk_institute where ";
 			//Prend en compte tous les instituts
 			if(institutes.size()==0){
-				return SQLInsitute ="where 1=1 ";
+				return SQLInstitute ="where 1=1 ";
 				//Si un seul institut
 			}else if(institutes.size()==1){
-				return SQLInsitute+= " i.code='" + DescriptionHelper.getInstitute().get(0)+"'";
+				return SQLInstitute+= " i.code='" + DescriptionHelper.getInstitute().get(0)+"'";
 			}else {
 				// Si plusieurs instituts (clause in)
-				SQLInsitute+=" i.code in (";
+				SQLInstitute+=" i.code in (";
 				String comma="";
 				for(int i=0;i<institutes.size();i++){
 					if(i==1) comma=",";
-					SQLInsitute+=comma+"'"+institutes.get(i)+"'";
+					SQLInstitute+=comma+"'"+institutes.get(i)+"'";
 				}
-				return SQLInsitute+=")";
+				return SQLInstitute+=")";
 			}
 
 		}
-		return SQLInsitute;
+		return SQLInstitute;
+	}
+	public static String getSQLForInstitute(){
+		return getSQLForInstitute("t");
 	}
 }

@@ -29,7 +29,7 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 					boolean useGeneratedKey) {
 		super(tableName, entityClass, classMapping, sqlCommonSelect+sqlCommonFrom+DAOHelpers.getSQLForInstitute(), useGeneratedKey);
 		this.sqlCommonFrom=sqlCommonFrom;
-		this.sqlCommonSelect=sqlCommonSelect;
+		this.sqlCommonSelect=sqlCommonSelect;		
 	}
 	
 	public Boolean isCodeExist(String code) throws DAOException {
