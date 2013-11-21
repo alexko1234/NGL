@@ -33,7 +33,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 	{
 		String sql=sqlCommon+
 				"JOIN experiment_type_instrument_type as cit ON fk_instrument_used_type=c.id " +
-				"and cit.fk_experiment_type = ?";
+				"where cit.fk_experiment_type = ?";
 		InstrumentUsedTypeMappingQuery instrumentUsedTypeMappingQuery = new InstrumentUsedTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return instrumentUsedTypeMappingQuery.execute(id);
 	}

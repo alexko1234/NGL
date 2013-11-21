@@ -140,7 +140,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	public List<ExperimentType> findByProcessTypeId(long id) throws DAOException
 	{
 		String sql = sqlCommon + "inner join process_experiment_type as p ON p.fk_experiment_type=c.id "+
-				"and p.fk_process_type = ?";
+				"where p.fk_process_type = ?";
 		return initializeMapping(sql, new SqlParameter("p.fk_process_type", Type.LONG)).execute(id);		
 	}
 
@@ -148,7 +148,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		String query = "SELECT distinct t.code "+sqlCommonFrom+
 				"inner join process_type as p on p.fk_void_experiment_type = t.id " +
 				"inner join common_info_type as cp on p.fk_common_info_type=cp.id "+
-				" and cp.code=?";
+				" where cp.code=?";
 
 		List<String> list = jdbcTemplate.query(
 				query,
@@ -169,7 +169,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				" inner join previous_nodes as p on p.fk_previous_node = n.id "+
 				" inner join experiment_type_node as np on np.id = p.fk_node "+
 				" inner join  common_info_type as cp on cp.id = np.fk_experiment_type "+
-				" and cp.code=?";
+				" where cp.code=?";
 		return initializeMapping(sql, new SqlParameter("cp.code", Types.VARCHAR)).execute(code);
 	}
 
@@ -184,7 +184,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		String sql = "SELECT t.code AS code, t.name AS name "+
 				 sqlCommonFrom+
 				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
-				+"and ec.code='"+categoryCode+"'";
+				+"where ec.code='"+categoryCode+"'";
 		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
 		return this.jdbcTemplate.query(sql, mapper);
 	}
