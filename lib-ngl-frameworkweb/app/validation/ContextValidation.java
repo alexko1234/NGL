@@ -22,6 +22,8 @@ public class ContextValidation {
 
 	private Mode mode = Mode.NOT_DEFINED;
 	
+	private String criteria;
+	
 	
 	private String rootKeyName;
 	public Map<String,List<ValidationError>> errors;
@@ -188,6 +190,14 @@ public class ContextValidation {
 	
 	public Mode getMode() {
 		return this.mode;
+	}
+	
+	public void setCriteria(String criteria) {
+		this.criteria = criteria;
+	}
+	
+	public String getCriteria() {
+		return this.criteria;
 	}
 	
 	
