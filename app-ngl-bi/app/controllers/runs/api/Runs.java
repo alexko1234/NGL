@@ -60,7 +60,7 @@ public class Runs extends CommonController {
 
 	private static ActorRef rulesActor = Akka.system().actorOf(new Props(RulesActor.class));
 
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result list(){
 		DynamicForm filledForm =  listForm.bindFromRequest();
 		MongoDBResult<Run> results = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, getQuery(filledForm)) 
@@ -93,7 +93,7 @@ public class Runs extends CommonController {
 		return query;
 	}
 	
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result get(String code) {
 		Run runValue = getRun(code);
 		if (runValue != null) {		
@@ -103,7 +103,7 @@ public class Runs extends CommonController {
 		}
 	}
 
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result head(String code){
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code)){			
 			return ok();					
@@ -112,7 +112,7 @@ public class Runs extends CommonController {
 		}
 	}
 
-	@Permission(value={"creation_update_run_lane"})
+	//@Permission(value={"creation_update_run_lane"})
 	public static Result save() {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
 		Run runValue = filledForm.get();
@@ -136,7 +136,7 @@ public class Runs extends CommonController {
 		}
 	}
 
-	@Permission(value={"creation_update_run_lane"})
+	//@Permission(value={"creation_update_run_lane"})
 	public static Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -178,7 +178,7 @@ public class Runs extends CommonController {
 		return ok();
 	}
 
-	@Permission(value={"workflow_run_lane"})
+	//@Permission(value={"workflow_run_lane"})
 	public static Result state(String code, String stateCode){
 		Run run = getRun(code);
 		if (run == null) {

@@ -35,7 +35,7 @@ public class Lanes extends CommonController{
 		return run;
 	}
 	
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result list(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(run == null){
@@ -44,7 +44,7 @@ public class Lanes extends CommonController{
 		return ok(Json.toJson(run.lanes));		
 	}
 	
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result get(String code, Integer laneNumber) {
 		Run run = getRun(code, laneNumber);
 		if(run == null){
@@ -58,7 +58,7 @@ public class Lanes extends CommonController{
 		return notFound();
 	}
 
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result head(String code, Integer laneNumber){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)))){			
@@ -68,7 +68,7 @@ public class Lanes extends CommonController{
 		}
 	}
 	
-	@Permission(value={"creation_update_run_lane"})
+	//@Permission(value={"creation_update_run_lane"})
 	public static Result save(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(run == null){
@@ -94,7 +94,7 @@ public class Lanes extends CommonController{
 		}		
 	}
 	
-	@Permission(value={"creation_update_run_lane"})
+	//@Permission(value={"creation_update_run_lane"})
 	public static Result update(String code, Integer laneNumber){
 		Run run = getRun(code, laneNumber);
 		if(run == null){
@@ -144,7 +144,7 @@ public class Lanes extends CommonController{
 		return ok();
 	}
 	
-	@Permission(value={"workflow_run_lane"})
+	//@Permission(value={"workflow_run_lane"})
 	public static Result state(String code, Integer laneNumber, String stateCode){
 		return badRequest("Not implemented");
 	}

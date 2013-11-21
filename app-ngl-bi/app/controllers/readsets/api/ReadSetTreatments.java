@@ -20,7 +20,7 @@ public class ReadSetTreatments extends CommonController{
 
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result list(String readSetCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,DBQuery.is("code", readSetCode));
 		if (readSet != null) {
@@ -30,7 +30,7 @@ public class ReadSetTreatments extends CommonController{
 		}		
 	}
 	
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result get(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
@@ -41,7 +41,7 @@ public class ReadSetTreatments extends CommonController{
 		}		
 	}
 	
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result head(String readSetCode, String treatmentCode){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)))){
@@ -51,7 +51,7 @@ public class ReadSetTreatments extends CommonController{
 		}
 	}
 	
-	@Permission(value={"creation_update_treatments"})
+	//@Permission(value={"creation_update_treatments"})
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 500 * 1024)
 	public static Result save(String readSetCode){
 		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
@@ -80,7 +80,7 @@ public class ReadSetTreatments extends CommonController{
 		}		
 	}
 
-	@Permission(value={"creation_update_treatments"})
+	//@Permission(value={"creation_update_treatments"})
 	public static Result update(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));

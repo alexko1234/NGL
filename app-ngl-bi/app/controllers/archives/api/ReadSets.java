@@ -35,7 +35,7 @@ public class ReadSets extends CommonController{
 	 * @return
 	 */
 	 
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result list(){
 
 		Integer archive = getArchiveValue();
@@ -93,7 +93,7 @@ public class ReadSets extends CommonController{
 		return archive;
 	}
 
-	@Permission(value={"archiving"})
+	//@Permission(value={"archiving"})
 	public static Result save(String readSetCode) {
 		JsonNode json = request().body().asJson();
 		String archiveId = json.get("archiveId").asText();

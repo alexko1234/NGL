@@ -35,7 +35,7 @@ public class ReadSets extends CommonController{
 	final static Form<ReadSet> readSetForm = form(ReadSet.class);
 	final static DynamicForm form = new DynamicForm();
 	
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result list() {
 		Query q = getQuery();
 		if(null != q){
@@ -82,7 +82,7 @@ public class ReadSets extends CommonController{
 		return query;
 	}
 	
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result get(String readSetCode) {
 		ReadSet readSet =  MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);		
 		if(readSet != null) {
@@ -93,7 +93,7 @@ public class ReadSets extends CommonController{
 		}		
 	}
 	
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result head(String readSetCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode)){			
 			return ok();					

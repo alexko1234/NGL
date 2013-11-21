@@ -20,7 +20,7 @@ public class RunTreatments extends CommonController{
 
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result list(String runCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", runCode));
 		if (run != null) {
@@ -30,7 +30,7 @@ public class RunTreatments extends CommonController{
 		}		
 	}
 	
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result get(String runCode, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode)));
@@ -41,7 +41,7 @@ public class RunTreatments extends CommonController{
 		}		
 	}
 	
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result head(String runCode, String treatmentCode){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode)))){
@@ -51,7 +51,7 @@ public class RunTreatments extends CommonController{
 		}
 	}
 
-	@Permission(value={"creation_update_treatments"})
+	//@Permission(value={"creation_update_treatments"})
 	public static Result save(String runCode){
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {
@@ -76,7 +76,7 @@ public class RunTreatments extends CommonController{
 		}		
 	}
 
-	@Permission(value={"creation_update_treatments"})
+	//@Permission(value={"creation_update_treatments"})
 	public static Result update(String runCode, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode)));

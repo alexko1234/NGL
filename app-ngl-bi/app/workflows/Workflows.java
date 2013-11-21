@@ -38,11 +38,11 @@ public class Workflows {
 				contextValidation.addErrors("stateCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, state.code);
 				return;
 			}
-			
+			/*
 			if("F-RG".equals(state.code)){
 				state.code = "F";
 			}
-			
+			*/
 			run.traceInformation.setTraceInformation("ngsrg");
 			run.state = state;
 			
