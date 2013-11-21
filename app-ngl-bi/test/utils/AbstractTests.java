@@ -44,13 +44,13 @@ public abstract class AbstractTests {
 		config.put("application.secret", "ezfzzefzefz");
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");
 		//TESTU must be updated
-		//config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST");
-		//config.put("db.default.user", "NGL_user");
-		//config.put("db.default.password", "NGL_passwd");
+		config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST");
+		config.put("db.default.user", "NGL_user");
+		config.put("db.default.password", "NGL_passwd");
 		
-		config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL");
-		config.put("db.default.user", "ngl");
-		config.put("db.default.password", "ngl");
+		//config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL");
+		//config.put("db.default.user", "ngl");
+		//config.put("db.default.password", "ngl");
 		
 		config.put("db.default.partitionCount", "1");
 		config.put("db.default.maxConnectionsPerPartition", "10");
@@ -74,12 +74,13 @@ public abstract class AbstractTests {
 		config.put("auth.cas.renew", "false");
 	    config.put("auth.mode", "debug");
 	    config.put("auth.method", "cas");
-	    
-	    config.put("institute", "CNG");
 	    config.put("auth.application", "ngl-bi");
 	    
-	    config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
+	    config.put("institute", "CNG");
 	    
+	    config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
+	    config.put("rules.key", "nglBI");
+	    config.put("rules.changesets", "rules/changesets/changesets.xml");
 	    
 		return config;
 		

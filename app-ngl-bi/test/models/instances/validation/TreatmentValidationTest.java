@@ -7,6 +7,7 @@ import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.running;
 import static play.test.Helpers.status;
+import static play.test.Helpers.contentAsString;
 
 import java.io.File;
 import java.util.ArrayList;
