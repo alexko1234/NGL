@@ -126,7 +126,7 @@ public class LaneTreatments extends CommonController{
 		}		
 	}
 	
-	@Permission(value={"delete_treatments"})
+	//@Permission(value={"delete_treatments"})
 	public static Result delete(String runCode,  Integer laneNumber, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), 

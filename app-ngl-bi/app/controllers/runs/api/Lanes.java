@@ -149,7 +149,7 @@ public class Lanes extends CommonController{
 		return badRequest("Not implemented");
 	}
 	
-	@Permission(value={"validation_run_lane"})
+	//@Permission(value={"validation_run_lane"})
 	public static Result validation(String code, Integer laneNumber, String validCode){
 		Run run = getRun(code, laneNumber);
 		if(run == null){

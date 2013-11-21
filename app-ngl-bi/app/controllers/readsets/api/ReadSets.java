@@ -162,7 +162,7 @@ public class ReadSets extends CommonController{
 		}		
 	}
 		
-	@Permission(value={"delete_readset"})
+	//@Permission(value={"delete_readset"})
 	public static Result delete(String readSetCode) { 
 		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
 		if (readSet == null) {
@@ -175,7 +175,7 @@ public class ReadSets extends CommonController{
 		return ok();
 	}
 	
-	@Permission(value={"delete_readset"})
+	//@Permission(value={"delete_readset"})
 	public static Result deleteByRunCode(String runCode) {
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {

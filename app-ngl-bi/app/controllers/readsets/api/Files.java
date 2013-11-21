@@ -107,7 +107,7 @@ public class Files extends CommonController {
 		}
 	}
 
-	@Permission(value={"delete_files"})
+	//@Permission(value={"delete_files"})
 	public static Result delete(String readsetCode, String fullname) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)));
 		if (null == readSet) {
@@ -118,7 +118,7 @@ public class Files extends CommonController {
 		return ok();
 	}
 
-	@Permission(value={"delete_files"})
+	//@Permission(value={"delete_files"})
 	public static Result deleteByRunCode(String runCode) { 
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {

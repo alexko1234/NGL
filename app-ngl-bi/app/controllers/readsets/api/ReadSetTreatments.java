@@ -110,7 +110,7 @@ public class ReadSetTreatments extends CommonController{
 		}
 	}
 	
-	@Permission(value={"delete_treatments"})
+	//@Permission(value={"delete_treatments"})
 	public static Result delete(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));

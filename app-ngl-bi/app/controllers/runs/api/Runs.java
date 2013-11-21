@@ -203,7 +203,7 @@ public class Runs extends CommonController {
 		return run;
 	}
 	
-	@Permission(value={"validation_run_lane"})
+	//@Permission(value={"validation_run_lane"})
 	public static Result validation(String code, String validCode){
 		Run run = getRun(code);
 		if(run == null){
