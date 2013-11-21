@@ -4,6 +4,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import models.laboratory.container.instance.Container;
 import models.laboratory.project.instance.Project;
@@ -38,18 +39,26 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	static Container container;
 
 	static ReagentInstance reagentInstance;
+	
+	static int randomInt;
 		
 	@BeforeClass
 	public static  void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		project=saveDBOject(Project.class,InstanceConstants.PROJECT_COLL_NAME,"project");
-		project1=saveDBOject(Project.class,InstanceConstants.PROJECT_COLL_NAME,"project1");
 		
-		sample=saveDBOject(Sample.class,InstanceConstants.SAMPLE_COLL_NAME,"sample");
-		sample1=saveDBOject(Sample.class,InstanceConstants.SAMPLE_COLL_NAME,"sample1");
+		//use a random int to avoid concurrency acces to this test
+		 Random randomGenerator = new Random();
+		 int randomInt = randomGenerator.nextInt(10000);
+		
+		
+		project=saveDBOject(Project.class,InstanceConstants.PROJECT_COLL_NAME,"project" + randomInt);
+		project1=saveDBOject(Project.class,InstanceConstants.PROJECT_COLL_NAME,"project1" + randomInt);
+		
+		sample=saveDBOject(Sample.class,InstanceConstants.SAMPLE_COLL_NAME,"sample" + randomInt);
+		sample1=saveDBOject(Sample.class,InstanceConstants.SAMPLE_COLL_NAME,"sample1" + randomInt);
 		
 		
 		sample2 = new Sample(); 
-		sample2.code = "SampleCode";
+		sample2.code = "SampleCode" + randomInt;
 		List<String> l =new ArrayList<String>();
 		l.add("ProjectCode"); 
 		sample2.projectCodes = l;
@@ -57,11 +66,11 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample2);
 		
 		
-		stock=saveDBOject(Stock.class,InstanceConstants.STOCK_COLL_NAME,"stock");
+		stock=saveDBOject(Stock.class,InstanceConstants.STOCK_COLL_NAME,"stock" + randomInt);
 		
-		container=saveDBOject(Container.class,InstanceConstants.CONTAINER_COLL_NAME,"container");
+		container=saveDBOject(Container.class,InstanceConstants.CONTAINER_COLL_NAME,"container" + randomInt);
 		
-		reagentInstance=saveDBOject(ReagentInstance.class, InstanceConstants.REAGENT_INSTANCE_COLL_NAME, "reagent");
+		reagentInstance=saveDBOject(ReagentInstance.class, InstanceConstants.REAGENT_INSTANCE_COLL_NAME, "reagent" + randomInt);
 
 	}
 	
