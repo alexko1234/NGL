@@ -27,8 +27,8 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 	protected AbstractDAOCommonInfoType(String tableName, Class<T> entityClass,
 			Class<? extends MappingSqlQuery<T>> classMapping, String sqlCommonSelect, String sqlCommonFrom,
 					boolean useGeneratedKey) {
-		super(tableName, entityClass, classMapping, sqlCommonSelect+sqlCommonFrom+DAOHelpers.getSQLForInstitute(), useGeneratedKey);
-		this.sqlCommonFrom=sqlCommonFrom+DAOHelpers.getSQLForInstitute();
+		super(tableName, entityClass, classMapping, sqlCommonSelect+sqlCommonFrom+DAOHelpers.getDefaultSQLForInstitute(), useGeneratedKey);
+		this.sqlCommonFrom=sqlCommonFrom+DAOHelpers.getDefaultSQLForInstitute();
 		this.sqlCommonSelect=sqlCommonSelect;		
 	}
 	
@@ -37,7 +37,7 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 			throw new DAOException("code is mandatory");
 		}
 		try {
-			String	sql = "SELECT t.id FROM common_info_type t "+DAOHelpers.getSQLForInstitute()+" and t.code=?";
+			String	sql = "SELECT t.id FROM common_info_type t "+DAOHelpers.getDefaultSQLForInstitute()+" where t.code=?";
 			try {
 				long id =  this.jdbcTemplate.queryForLong(sql, code);
 				if(id > 0) {
@@ -58,7 +58,7 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 		if(null == id){
 			throw new DAOException("id is mandatory");
 		}
-		String sql = sqlCommon+" and t.id = ? ";
+		String sql = sqlCommon+" where t.id = ? ";
 		return initializeMapping(sql, new SqlParameter("id", Type.LONG)).findObject(id);
 	}
 
@@ -69,7 +69,7 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 			throw new DAOException("code is mandatory");
 		}
 
-		String sql= sqlCommon+" and t.code = ?";
+		String sql= sqlCommon+" where t.code = ?";
 		return initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
 	}
 

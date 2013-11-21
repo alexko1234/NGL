@@ -18,6 +18,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
+import play.Logger;
+
 import com.avaje.ebean.enhance.asm.Type;
 
 @Repository
@@ -162,19 +164,20 @@ public class StateDAO extends AbstractDAOMapping<State>{
 
 	public List<State> findByTypeCode(String typeCode)  throws DAOException {
 		String sql = sqlCommon+
-				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
-				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
-				 DAOHelpers.getSQLForInstitute("c")+
-				"AND c.code=?";
+				" JOIN common_info_type_state cs ON cs.fk_state=t.id "+
+				" JOIN common_info_type c on c.id =cs.fk_common_info_type "+
+				  DAOHelpers.getSQLForInstitute("c")+
+				" where c.code=?";
 		return initializeMapping(sql, new SqlParameter("c.code", Types.VARCHAR)).execute(typeCode);	
 	}
 	
 	public boolean isCodeExistForTypeCode(String code, String typeCode)  throws DAOException {
 		String sql = sqlCommon +
 				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
-				" JOIN common_info_type c on c.id =cs.fk_common_info_type "+
-				 DAOHelpers.getSQLForInstitute("c")+
-				" and t.code=? and c.code=?";
+				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
+				  DAOHelpers.getSQLForInstitute("c")+
+				" where t.code=? and c.code=?";
+		Logger.debug(sql);
 		return( initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR),
 				 new SqlParameter("c.code", Types.VARCHAR)).findObject(code, typeCode) != null )? true : false;	
 	}
