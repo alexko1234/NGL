@@ -1,10 +1,7 @@
 package models;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -425,45 +422,56 @@ public class LimsCNGDAO {
 	}
 	
 	
-	/**
-	 * 
-	 * @param projects
-	 * @param contextError
-	 */
-	public void updateImportDate(String tableName, String keyColumn, String keyColumnType, String[] sValues, ContextValidation contextError) {
-		
+
+	
+	
+	
+	public void updateLimsProjects(List<Project> projects, ContextValidation contextError) throws DAOException {
 		contextError.addKeyToRootKeyName("updateImportDate");
 		
-		String sql="UPDATE " + tableName + " SET nglimport_date = ? WHERE " + keyColumn + " = ANY (?)";
+		String sql = "UPDATE t_project SET nglimport_date = ? WHERE name = ?";
 		
-		try {
-			Connection conn = this.jdbcTemplate.getDataSource().getConnection();
-			PreparedStatement pst = conn.prepareStatement(sql);
-			
-			pst.setObject(1, new Date(), Types.TIMESTAMP);
-
-			if (keyColumnType.equals("text")) {
-				pst.setArray(2, conn.createArrayOf(keyColumnType, sValues));
-			}
-			if (keyColumnType.equals("integer")) {
-				Integer[] iValues = new Integer[sValues.length];
-				int tmp;
-				for (int i=0; i<sValues.length; i++) {
-					tmp = Integer.parseInt(sValues[i]);
-					iValues[i] = (Integer) tmp; 
-				}
-				pst.setArray(2, conn.createArrayOf(keyColumnType, iValues));
-			}			
-            pst.execute();
-            pst.close();
-            
-            conn.close(); // to avoid error : timeout waiting for available connection
+		List<Object[]> parameters = new ArrayList<Object[]>();
+		for (Project project : projects) {
+	        parameters.add(new Object[] {new Date(), project.code}); 
 		}
-		catch(Exception e) {
-			contextError.addErrors(tableName, e.getMessage().toString());
-		}
+		
+		this.jdbcTemplate.batchUpdate(sql, parameters);  
+		
 		contextError.removeKeyFromRootKeyName("updateImportDate");
 	}
+	
+	
+	public void updateLimsSamples(List<Sample> samples, ContextValidation contextError) throws DAOException {
+		contextError.addKeyToRootKeyName("updateImportDate");
+		
+		String sql = "UPDATE t_sample SET nglimport_date = ? WHERE stock_barcode = ?";
+		
+		List<Object[]> parameters = new ArrayList<Object[]>();
+		for (Sample sample : samples) {
+	        parameters.add(new Object[] {new Date(), sample.code}); 
+		}
+		
+		this.jdbcTemplate.batchUpdate(sql, parameters);  
+		
+		contextError.removeKeyFromRootKeyName("updateImportDate");
+	}
+	
+	public void updateLimsContainers(List<Container> containers, ContextValidation contextError) throws DAOException {
+		contextError.addKeyToRootKeyName("updateImportDate");
+		
+		String sql = "UPDATE t_lane SET nglimport_date = ? WHERE id = ?";
+		
+		List<Object[]> parameters = new ArrayList<Object[]>();
+		for (Container container : containers) {
+	        parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
+		}
+		
+		this.jdbcTemplate.batchUpdate(sql, parameters);  
+		
+		contextError.removeKeyFromRootKeyName("updateImportDate");
+	}
+	
 		
 
 }
