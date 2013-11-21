@@ -37,13 +37,10 @@ public class LaneTreatmentsTests extends AbstractTests {
 	
 	@AfterClass
 	public static void deleteData(){
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
 		for (Sample sample : samples) {
 			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
 		}
-		       }});
 	}
 	
 	private void createRunWithLaneCode() {
@@ -90,128 +87,106 @@ public class LaneTreatmentsTests extends AbstractTests {
 	
 	@Test
 	public void testSave() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
+	    createRunWithLaneCode();
 		    	 
-		    createRunWithLaneCode();
-			    	 
-			Treatment t = getNewTreatmentForLane();
-			
-			Result result = callAction(controllers.runs.api.routes.ref.LaneTreatments.save("DIDIER_TESTFORTRT", 1),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			Logger.debug(contentAsString(result));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			//query for control
-	        Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code","DIDIER_TESTFORTRT"));
-	        assertThat(r.lanes.get(0).treatments.size()).isEqualTo(1);
-	        Map.Entry<String, Treatment> entry = r.lanes.get(0).treatments.entrySet().iterator().next();
-	        assertThat(entry.getKey()).isEqualTo("ngsrg");
-		}}); 
+		Treatment t = getNewTreatmentForLane();
+		
+		Result result = callAction(controllers.runs.api.routes.ref.LaneTreatments.save("DIDIER_TESTFORTRT", 1),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		Logger.debug(contentAsString(result));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		//query for control
+        Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code","DIDIER_TESTFORTRT"));
+        assertThat(r.lanes.get(0).treatments.size()).isEqualTo(1);
+        Map.Entry<String, Treatment> entry = r.lanes.get(0).treatments.entrySet().iterator().next();
+        assertThat(entry.getKey()).isEqualTo("ngsrg");
 	}
 	
 	
 	@Test
-	public void testUpdate() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
+	public void testUpdate() { 
+	    createRunWithLaneCode();
 		    	 
-		    createRunWithLaneCode();
-			    	 
-			Treatment t = getNewTreatmentForLane();
-			
-			Result result = callAction(controllers.runs.api.routes.ref.LaneTreatments.save("DIDIER_TESTFORTRT", 1),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			//define map of single property values
-			Map<String,PropertyValue> m2 = new HashMap<String,PropertyValue>();
-			m2.put("nbCycleRead1", new PropertySingleValue(80)); // valeur simple
-			m2.put("nbCycleReadIndex1", new PropertySingleValue(120));
-			m2.put("nbCycleRead2", new PropertySingleValue(130));
-			m2.put("nbCycleReadIndex2", new PropertySingleValue(77));
-			m2.put("nbCluster", new PropertySingleValue(92929));
-			m2.put("nbBaseInternalAndIlluminaFilter", new PropertySingleValue(123456));
-			m2.put("phasing", new PropertySingleValue("KO"));
-			m2.put("prephasing", new PropertySingleValue("MOYEN"));
-			m2.put("nbClusterInternalAndIlluminaFilter", new PropertySingleValue(654321));
-			m2.put("nbClusterIlluminaFilter", new PropertySingleValue(123987));
-			m2.put("percentClusterIlluminaFilter", new PropertySingleValue(1.23));
-			m2.put("percentClusterInternalAndIlluminaFilter", new PropertySingleValue(2.345));
-			
-			t.results().remove("default");
-			t.set("default", m2);
-			
-			result = callAction(controllers.runs.api.routes.ref.LaneTreatments.update("DIDIER_TESTFORTRT", 1, t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			//query for control
-	        Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code","DIDIER_TESTFORTRT"));
-	        assertThat(r.lanes.get(0).treatments.size()).isEqualTo(1);
-	        Map.Entry<String, Treatment> entry = r.lanes.get(0).treatments.entrySet().iterator().next();
-	        assertThat(entry.getKey()).isEqualTo("ngsrg");
-	        assertThat(entry.getValue().results().get("default").get("nbCycleReadIndex1").value.toString()).isEqualTo("120");
-			
-		}}); 
+		Treatment t = getNewTreatmentForLane();
+		
+		Result result = callAction(controllers.runs.api.routes.ref.LaneTreatments.save("DIDIER_TESTFORTRT", 1),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		//define map of single property values
+		Map<String,PropertyValue> m2 = new HashMap<String,PropertyValue>();
+		m2.put("nbCycleRead1", new PropertySingleValue(80)); // valeur simple
+		m2.put("nbCycleReadIndex1", new PropertySingleValue(120));
+		m2.put("nbCycleRead2", new PropertySingleValue(130));
+		m2.put("nbCycleReadIndex2", new PropertySingleValue(77));
+		m2.put("nbCluster", new PropertySingleValue(92929));
+		m2.put("nbBaseInternalAndIlluminaFilter", new PropertySingleValue(123456));
+		m2.put("phasing", new PropertySingleValue("KO"));
+		m2.put("prephasing", new PropertySingleValue("MOYEN"));
+		m2.put("nbClusterInternalAndIlluminaFilter", new PropertySingleValue(654321));
+		m2.put("nbClusterIlluminaFilter", new PropertySingleValue(123987));
+		m2.put("percentClusterIlluminaFilter", new PropertySingleValue(1.23));
+		m2.put("percentClusterInternalAndIlluminaFilter", new PropertySingleValue(2.345));
+		
+		t.results().remove("default");
+		t.set("default", m2);
+		
+		result = callAction(controllers.runs.api.routes.ref.LaneTreatments.update("DIDIER_TESTFORTRT", 1, t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		//query for control
+        Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code","DIDIER_TESTFORTRT"));
+        assertThat(r.lanes.get(0).treatments.size()).isEqualTo(1);
+        Map.Entry<String, Treatment> entry = r.lanes.get(0).treatments.entrySet().iterator().next();
+        assertThat(entry.getKey()).isEqualTo("ngsrg");
+        assertThat(entry.getValue().results().get("default").get("nbCycleReadIndex1").value.toString()).isEqualTo("120");
 	}
 	
 	
 	
 	@Test
-	public void testDelete() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
+	public void testDelete() { 
+	    createRunWithLaneCode();
 		    	 
-		    	 createRunWithLaneCode();
-			    	 
-			Treatment t = getNewTreatmentForLane();
-			
-			Result result = callAction(controllers.runs.api.routes.ref.LaneTreatments.save("DIDIER_TESTFORTRT", 1),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			
-			result = callAction(controllers.runs.api.routes.ref.LaneTreatments.delete("DIDIER_TESTFORTRT", 1, t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			//query for control
-	        Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code","DIDIER_TESTFORTRT"));
-	        assertThat(r.lanes.get(0).treatments.size()).isEqualTo(0);
-			
-		 }}); 
+		Treatment t = getNewTreatmentForLane();
+		
+		Result result = callAction(controllers.runs.api.routes.ref.LaneTreatments.save("DIDIER_TESTFORTRT", 1),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		
+		result = callAction(controllers.runs.api.routes.ref.LaneTreatments.delete("DIDIER_TESTFORTRT", 1, t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		//query for control
+        Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code","DIDIER_TESTFORTRT"));
+        assertThat(r.lanes.get(0).treatments.size()).isEqualTo(0);
 	}
 	
 	
 	@Test
-	public void testGet() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
+	public void testGet() { 
+	    createRunWithLaneCode();
 		    	 
-		    createRunWithLaneCode();
-			    	 
-			Treatment t = getNewTreatmentForLane();
-			
-			Result result = callAction(controllers.runs.api.routes.ref.LaneTreatments.save("DIDIER_TESTFORTRT", 1),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			result = callAction(controllers.runs.api.routes.ref.LaneTreatments.get("DIDIER_TESTFORTRT", 1, t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-		}}); 
+		Treatment t = getNewTreatmentForLane();
+		
+		Result result = callAction(controllers.runs.api.routes.ref.LaneTreatments.save("DIDIER_TESTFORTRT", 1),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		result = callAction(controllers.runs.api.routes.ref.LaneTreatments.get("DIDIER_TESTFORTRT", 1, t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
 	}
 	
 	
 	@Test
 	public void testHead() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
+	    createRunWithLaneCode();
 		    	 
-		    createRunWithLaneCode();
-			    	 
-			Treatment t = getNewTreatmentForLane();
+		Treatment t = getNewTreatmentForLane();
 
-			Result result = callAction(controllers.runs.api.routes.ref.LaneTreatments.save("DIDIER_TESTFORTRT", 1),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			result = callAction(controllers.runs.api.routes.ref.LaneTreatments.head("DIDIER_TESTFORTRT", 1, t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-		}}); 
+		Result result = callAction(controllers.runs.api.routes.ref.LaneTreatments.save("DIDIER_TESTFORTRT", 1),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		result = callAction(controllers.runs.api.routes.ref.LaneTreatments.head("DIDIER_TESTFORTRT", 1, t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
 	}
 	
 	

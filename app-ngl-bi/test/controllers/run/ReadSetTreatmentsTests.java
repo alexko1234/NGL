@@ -37,13 +37,10 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 	
 	@AfterClass
 	public static void deleteData(){
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
 		for (Sample sample : samples) {
 			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
 		}
-		       }});
 	}
 	
 	private void createRdCode() {
@@ -110,118 +107,96 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 	
 	@Test
 	public void testSave() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
+		createRdCode();
 		    	 
-			createRdCode();
-			    	 
-			Treatment t = getNewTreatmentForReadSet();
+		Treatment t = getNewTreatmentForReadSet();
 
-			Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			//query for control
-	        ReadSet r = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"));
-	        assertThat(r.treatments.size()).isEqualTo(1);
-	        Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
-	        assertThat(entry.getKey()).isEqualTo("ngsrg");
-		}}); 
+		Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		//query for control
+        ReadSet r = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"));
+        assertThat(r.treatments.size()).isEqualTo(1);
+        Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
+        assertThat(entry.getKey()).isEqualTo("ngsrg");
 	}
 	
 	
 	
 	@Test
 	public void testUpdate() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
+	    createRdCode();
 		    	 
-		    createRdCode();
-			    	 
-			Treatment t = getNewTreatmentForReadSet();
-			
-			Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));		
-			assertThat(status(result)).isEqualTo(OK);
-			
-			Map<String,PropertyValue> m2 = new HashMap<String,PropertyValue>();
-			m2.put("nbCluster", new PropertySingleValue(18)); // valeur simple
-			m2.put("nbBases", new PropertySingleValue(18));
-			m2.put("fraction", new PropertySingleValue(18));
-			m2.put("Q30", new PropertySingleValue(18));
-			m2.put("qualityScore", new PropertySingleValue(18));
-			m2.put("nbReadIllumina", new PropertySingleValue(18));
-			
-			t.results().remove("default");
-			t.set("default", m2);
-			
-			result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.update("rdCode", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			//query for control
-	        ReadSet r = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, "rdCode");
-	        assertThat(r.treatments.size()).isEqualTo(1);
-	        Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
-	        assertThat(entry.getKey()).isEqualTo("ngsrg");
-	        assertThat(entry.getValue().results().get("default").get("nbCluster").value.toString()).isEqualTo("18");
-			
-		}}); 
+		Treatment t = getNewTreatmentForReadSet();
+		
+		Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));		
+		assertThat(status(result)).isEqualTo(OK);
+		
+		Map<String,PropertyValue> m2 = new HashMap<String,PropertyValue>();
+		m2.put("nbCluster", new PropertySingleValue(18)); // valeur simple
+		m2.put("nbBases", new PropertySingleValue(18));
+		m2.put("fraction", new PropertySingleValue(18));
+		m2.put("Q30", new PropertySingleValue(18));
+		m2.put("qualityScore", new PropertySingleValue(18));
+		m2.put("nbReadIllumina", new PropertySingleValue(18));
+		
+		t.results().remove("default");
+		t.set("default", m2);
+		
+		result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.update("rdCode", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		//query for control
+        ReadSet r = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, "rdCode");
+        assertThat(r.treatments.size()).isEqualTo(1);
+        Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
+        assertThat(entry.getKey()).isEqualTo("ngsrg");
+        assertThat(entry.getValue().results().get("default").get("nbCluster").value.toString()).isEqualTo("18"); 
 	}
 	
 	
 	@Test
-	public void testDelete() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
+	public void testDelete() {		    	 
+	    createRdCode();
 		    	 
-		    createRdCode();
-			    	 
-			Treatment t = getNewTreatmentForReadSet();
-			
-			Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			
-			result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.delete("rdCode", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			//query for control
-	        ReadSet r = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"));
-	        assertThat(r.treatments.size()).isEqualTo(0);
-			
-		 }}); 
+		Treatment t = getNewTreatmentForReadSet();
+		
+		Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		
+		result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.delete("rdCode", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		//query for control
+        ReadSet r = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"));
+        assertThat(r.treatments.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void testGet() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
+	    createRdCode();
 		    	 
-		    createRdCode();
-			    	 
-			Treatment t = getNewTreatmentForReadSet();
-			
-			Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.get("rdCode", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-		}}); 
+		Treatment t = getNewTreatmentForReadSet();
+		
+		Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.get("rdCode", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
 	}
 	
 	@Test
 	public void testHead() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
+	    createRdCode();
 		    	 
-		    createRdCode();
-			    	 
-			Treatment t = getNewTreatmentForReadSet();
-			
-			Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.head("rdCode", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-			assertThat(status(result)).isEqualTo(OK);
-		}}); 
+		Treatment t = getNewTreatmentForReadSet();
+		
+		Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.head("rdCode", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
 	}
 		
 }
