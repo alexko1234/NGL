@@ -185,6 +185,8 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	@Test
 	public void testValidatePropertyChoiceInListOK() {
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {	
 		Treatment t = getNewTreatmentTaxonomyOK();
 		
 		ContextValidation ctxVal = new ContextValidation(); 
@@ -201,12 +203,15 @@ public class TreatmentValidationTest extends AbstractTests {
 		t.validate(ctxVal);
 		
 		assertThat(ctxVal.errors).hasSize(0);
+		}});
 	}
 	
 	
 	
 	@Test
 	public void testValidatePropertyChoiceInListBad() {
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
 		Treatment t = getNewTreatmentTaxonomyBad();
 		
 		ContextValidation ctxVal = new ContextValidation(); 
@@ -225,6 +230,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		assertThat(ctxVal.errors).hasSize(2);
 		
 		assertThat(ctxVal.errors.toString()).contains(ERROR_VALUENOTAUTHORIZED_MSG);
+		}});
 	}
 	
 	
@@ -234,23 +240,23 @@ public class TreatmentValidationTest extends AbstractTests {
 	 public void testValidateTreatmentCreationOK() {
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
-				Treatment t = getNewTreatmentForReadSet();
-						
-				ContextValidation ctxVal = new ContextValidation(); 
-				
-				Level.CODE levelCode = Level.CODE.ReadSet; 
-				ctxVal.putObject("level", levelCode);
-				
-				//add readset to ctxVal
-				ReadSet readset = RunMockHelper.newReadSet("rdCode");
-				ctxVal.putObject("readSet", readset);
-				
-				ctxVal.setCreationMode();
-				
-				t.validate(ctxVal);
-				
-				assertThat(ctxVal.errors).hasSize(0);
-		       }});
+			Treatment t = getNewTreatmentForReadSet();
+					
+			ContextValidation ctxVal = new ContextValidation(); 
+			
+			Level.CODE levelCode = Level.CODE.ReadSet; 
+			ctxVal.putObject("level", levelCode);
+			
+			//add readset to ctxVal
+			ReadSet readset = RunMockHelper.newReadSet("rdCode");
+			ctxVal.putObject("readSet", readset);
+			
+			ctxVal.setCreationMode();
+			
+			t.validate(ctxVal);
+			
+			assertThat(ctxVal.errors).hasSize(0);
+		 }});
 	}
 	
 	
