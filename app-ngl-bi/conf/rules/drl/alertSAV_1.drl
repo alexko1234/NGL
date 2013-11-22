@@ -2,26 +2,6 @@
 #Rules for SAV alerting
 package rules
 
-import models.laboratory.run.instance.Run;
-import models.laboratory.run.instance.Lane;
-import models.laboratory.run.instance.Treatment;
-import models.laboratory.alert.instance.Alert;
-import models.utils.InstanceConstants;
-import models.laboratory.common.instance.PropertyValue;
-import fr.cea.ig.MongoDBDAO;
-import alert.AlertSAVInfo;
-import mail.MailServices;
-import play.Logger;
-import com.typesafe.config.ConfigFactory;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Arrays;
-
-
 rule "Insert AlertSAVInfo"
 	@nglBI( sav_1 )
 	dialect "java"
@@ -30,6 +10,7 @@ rule "Insert AlertSAVInfo"
 	when
         $run : Run( )
     then
+    	Logger.debug("Insert alertSAVInfo");
     	AlertSAVInfo AlertSAVInfo = new AlertSAVInfo($run.getCode());
     	insert(AlertSAVInfo);
 
@@ -42,7 +23,7 @@ rule "BAD alerte"
 	no-loop
     when
         $run : Run( )
-        $lane : Lane( $treatment : treatments["sav"] ) from $run.lanes
+        $lane : Lane( $treatment : treatments["sav"], $treatment!=null) from $run.lanes
         $result : Entry () from $treatment.results.entrySet()
         $mapValue : Map() from $result.getValue()
         $alertValue : Entry($keyAlert : key, $toEval : ((PropertyValue)value).getValue()) from $mapValue.entrySet()
@@ -73,7 +54,7 @@ rule "FLAG alerte"
 	no-loop
     when
         $run : Run( )
-        $lane : Lane( $treatment : treatments["sav"] ) from $run.lanes
+        $lane : Lane( $treatment : treatments["sav"], $treatment != null) from $run.lanes
         $result : Entry () from $treatment.results.entrySet()
         $mapValue : Map() from $result.getValue()
         $alertValue : Entry($keyAlert : key, $toEval : ((PropertyValue)value).getValue()) from $mapValue.entrySet()
