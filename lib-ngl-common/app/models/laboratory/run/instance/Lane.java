@@ -22,7 +22,6 @@ public class Lane implements IValidation{
 
 	public Integer number;
 	
-	public State state;
 	public Validation validation;
 	
 	//public List<ReadSet> readsets;
@@ -53,7 +52,6 @@ public class Lane implements IValidation{
 	public void validate(ContextValidation contextValidation) {
 		LaneValidationHelper.validationLaneNumber(this.number,contextValidation);
 		LaneValidationHelper.validationLaneReadSetCodes(this.number, this.readSetCodes, contextValidation);
-		LaneValidationHelper.validateLaneState(this.state, contextValidation);
 		LaneValidationHelper.validateLaneValidation(this.validation, contextValidation);
 		contextValidation.putObject("lane", this);
 		contextValidation.putObject("level", Level.CODE.Lane);
