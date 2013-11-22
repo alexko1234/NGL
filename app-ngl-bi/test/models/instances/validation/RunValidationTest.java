@@ -20,6 +20,8 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Validation;
+import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.InstrumentUsed;
@@ -32,6 +34,7 @@ import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import play.data.validation.ValidationError;
@@ -46,6 +49,22 @@ import static utils.RunMockHelper.*;
 
 public class RunValidationTest extends AbstractTests {
 	
+	static Container c;
+	
+	@BeforeClass
+	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+		   Container c = new Container();
+		   c.code ="containerTest1";
+		   c.support = new ContainerSupport(); 
+		   c.support.barCode = "containerName"; 
+		   
+		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
+		       }}); 
+	}
+	
+	
 	@AfterClass
 	public static void deleteData(){
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
@@ -54,7 +73,11 @@ public class RunValidationTest extends AbstractTests {
 		for (Sample sample : samples) {
 			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
 		}
-		       }});
+		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
+		for (Container container : containers) {
+			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
+		}
+		       }}); 
 	}
 	
 	
@@ -566,88 +589,7 @@ public class RunValidationTest extends AbstractTests {
 		 
 	 }
 	
-	 @Test
-	 public void testUpdateLaneValidationErrorBadState() { 
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
-			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
-			if(runDelete!=null){
-				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
-			}
-			ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","ReadSetBasicWithRun"));
-			if(readSetDelete!=null){
-				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
-			}
-			Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code","SampleCode"));
-			if (sample!= null) {
-				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sample._id);
-			}
-			Project project = MongoDBDAO.findOne(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code","ProjectCode"));
-			if (project!= null) {
-				MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, project._id);
-			}
-			
-			sample = RunMockHelper.newSample("SampleCode");
-			project = RunMockHelper.newProject("ProjectCode");
-			
-			MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
-			MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
-			
-			Run run = getFullRun();
-			run.dispatch = true; // For the archive test
-			
-			Lane lane = RunMockHelper.newLane(1);
-			Lane lane2 = RunMockHelper.newLane(2);
-			List<Lane> lanes = new ArrayList<Lane>();
-			
-			ReadSet readSet = RunMockHelper.newReadSet("ReadSetBasicWithRun");
-			readSet.runCode = run.code;
-			readSet.laneNumber = 1;
-			readSet.dispatch = false;
-			
-			
-			List<String> r = new ArrayList<String>();
-			lane.readSetCodes = r;
-
-			lanes.add(lane);
-			lanes.add(lane2);
-			run.lanes = lanes;
-			
-			ContextValidation ctxVal = new ContextValidation(); 
-			 ctxVal.putObject("run", run);
-			 ctxVal.setCreationMode();
-			 LaneValidationHelper.validationLanes(run.lanes, ctxVal);
-			 assertThat(ctxVal.errors).hasSize(0);
-			
-			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-			assertThat(status(result)).isEqualTo(OK);
-			
-			if (lane.validation.valid.equals(TBoolean.TRUE)) {
-				 lane.validation.valid = TBoolean.TRUE;
-			 } else {
-				lane.validation.valid = TBoolean.FALSE;
-			 }
-			 
-			 
-			 result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readSet)));
-			 assertThat(status(result)).isEqualTo(OK);
-			 
-			 //lane.state = getState("A");
-			 ctxVal = new ContextValidation(); 
-			 ctxVal.putObject("run", run);
-			  ctxVal.setUpdateMode();
-			  LaneValidationHelper.validationLanes(run.lanes, ctxVal);
-			 assertThat(ctxVal.errors).hasSize(1);
-			 assertThat(ctxVal.errors.toString()).contains("state.code");
-			 assertThat(ctxVal.errors.toString()).contains("valuenotauthorized");
-			 		 
-		 }
-
-			});
 		 
-	 }
-	
-	 
 
 	 @Test
 	 public void testUpdateLaneValidationErrorBadLaneNumber() {

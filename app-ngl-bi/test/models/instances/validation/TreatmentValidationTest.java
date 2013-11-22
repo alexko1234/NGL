@@ -19,6 +19,8 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.property.PropertyObjectValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -29,6 +31,7 @@ import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -45,6 +48,23 @@ import static validation.utils.ValidationConstants.*;
 
 public class TreatmentValidationTest extends AbstractTests {
 	
+	
+	static Container c;
+	
+	@BeforeClass
+	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+		   Container c = new Container();
+		   c.code ="containerTest1";
+		   c.support = new ContainerSupport(); 
+		   c.support.barCode = "containerName"; 
+		   
+		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
+		       }}); 
+	}
+	
+	
 	@AfterClass
 	public static void deleteData(){
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
@@ -53,7 +73,11 @@ public class TreatmentValidationTest extends AbstractTests {
 		for (Sample sample : samples) {
 			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
 		}
-		       }});
+		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
+		for (Container container : containers) {
+			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
+		}
+		       }}); 
 	}
 	
 	
@@ -184,10 +208,10 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	
 	
-	//@Test
+	@Test
 	public void testValidatePropertyChoiceInListOK() {
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {	
+		       public void run() {
 		Treatment t = getNewTreatmentTaxonomyOK();
 		
 		ContextValidation ctxVal = new ContextValidation(); 
@@ -204,12 +228,12 @@ public class TreatmentValidationTest extends AbstractTests {
 		t.validate(ctxVal);
 		
 		assertThat(ctxVal.errors).hasSize(0);
-		}});
+		       }});
 	}
 	
 	
 	
-	//@Test
+	@Test
 	public void testValidatePropertyChoiceInListBad() {
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
@@ -231,16 +255,16 @@ public class TreatmentValidationTest extends AbstractTests {
 		assertThat(ctxVal.errors).hasSize(2);
 		
 		assertThat(ctxVal.errors.toString()).contains(ERROR_VALUENOTAUTHORIZED_MSG);
-		}});
+		       }});
 	}
 	
 	
 		
 	
-	//@Test
+	@Test
 	 public void testValidateTreatmentCreationOK() {
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
+			running(fakeApplication(fakeConfiguration()), new Runnable() {
+			       public void run() {
 			Treatment t = getNewTreatmentForReadSet();
 					
 			ContextValidation ctxVal = new ContextValidation(); 
@@ -257,15 +281,15 @@ public class TreatmentValidationTest extends AbstractTests {
 			t.validate(ctxVal);
 			
 			assertThat(ctxVal.errors).hasSize(0);
-		 }});
+			       }});
 	}
 	
 	
 	
     @Test
-	 public void testValidateTreatmentUpdatedOK() {
+	 public void testValidateTreatmentUpdatedOK() { 	 
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {    	   
+		       public void run() {
 		Treatment t = getNewTreatmentForReadSet();
 		
 		// create treatment
@@ -298,7 +322,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	 
 	
 	
-	//@Test
+	@Test
 	 public void testValidateTreatmentErrorMissingLevel() {
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
@@ -331,7 +355,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		       }});
 	}
 	
-	//@Test
+	@Test
 	 public void testValidationTreatmentErrorMissingCode() {	
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
@@ -361,7 +385,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	
 	
-	//@Test
+	@Test
 	 public void testValidateTreatmentErrorCodeRequired() {	
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
@@ -390,7 +414,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	
 	
-	//@Test
+	@Test
 	 public void testValidationTreatmentErrorTypeCodeRequired() {	
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
@@ -420,7 +444,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	
 	
-	//@Test
+	@Test
 	 public void testValidateTreatmentErrorCategoryCodeRequired() {
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
@@ -450,7 +474,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	 
 	 
 	
-	//@Test
+	@Test
 	 public void testValidateTreatmentErrorCodeNotUnique() {
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {		    	   
@@ -556,7 +580,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	
 	
-	//@Test
+	@Test
 	 public void testValidateTreatmentErrorCodeNotExists() {
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {		    	   
@@ -595,7 +619,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 
 
-	//@Test
+	@Test
 	 public void testValidateTreatmentErrorValueNotDefined() {
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
@@ -626,8 +650,8 @@ public class TreatmentValidationTest extends AbstractTests {
 
 	
 	
-	////@Test(expected=java.lang.NumberFormatException.class)
-	//@Test
+	//@Test(expected=java.lang.NumberFormatException.class)
+	@Test
 	 public void testValidateTreatmentErrorBadTypeValue() {
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
@@ -662,7 +686,7 @@ public class TreatmentValidationTest extends AbstractTests {
 
 
 	
-	//@Test
+	@Test
 	 public void testValidateTreatmentErrorBadContext() {
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
