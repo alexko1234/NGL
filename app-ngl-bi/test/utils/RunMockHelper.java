@@ -52,7 +52,7 @@ public class RunMockHelper {
 	public static Run newRun(String code){
 		Run run = new Run();
 		run.code = code;
-		run.containerSupportCode = "FC00000";
+		run.containerSupportCode = "containerName";
 		run.dispatch = true;
 		
 		run.instrumentUsed = new InstrumentUsed();
