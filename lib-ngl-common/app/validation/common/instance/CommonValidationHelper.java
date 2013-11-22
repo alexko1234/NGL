@@ -398,19 +398,17 @@ public class CommonValidationHelper {
 	public static void validateProjectCodes(List<String> projectCodes,ContextValidation contextValidation){
 		BusinessValidationHelper.validateRequiredInstanceCodes(contextValidation, projectCodes, "projectCodes",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
 	}
+	
+	public static void validateProjectCode(String projectCode,
+			ContextValidation contextValidation) {
+		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, projectCode,"projectCode",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
+	}
 
 
 	public static void validateSampleCodes(List<String> sampleCodes,ContextValidation contextValidation){
 		BusinessValidationHelper.validateRequiredInstanceCodes(contextValidation, sampleCodes,"sampleCodes",Sample.class,InstanceConstants.SAMPLE_COLL_NAME,false);
 	}
-
-
-	public static void validateContainerCode(String containerCode,
-			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, "containerCode", Container.class,InstanceConstants.CONTAINER_COLL_NAME);
-	}
-
-
+	
 	public static void validateSampleCode(String sampleCode, String projectCode, ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, sampleCode, "sampleCode")) {
 			Sample sample =  MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,  sampleCode);
@@ -426,8 +424,16 @@ public class CommonValidationHelper {
 	}
 
 
-	public static void validateProjectCode(String projectCode,
-			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, projectCode,"projectCode",Project.class,InstanceConstants.PROJECT_COLL_NAME,false);
+	public static void validateContainerCode(String containerCode, ContextValidation contextValidation) {
+		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, "containerCode", Container.class,InstanceConstants.CONTAINER_COLL_NAME);
 	}
+	
+	public static void validationContainerSupportCode (String containerSupportCode, ContextValidation contextValidation) {		
+		if (ValidationHelper.required(contextValidation, containerSupportCode, "containerSupportCode")) {
+			if (! MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.is("support.barCode", containerSupportCode))) {
+				contextValidation.addErrors("containerSupportCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, containerSupportCode);
+			}
+		}		 
+	}
+
 }
