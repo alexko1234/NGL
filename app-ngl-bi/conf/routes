@@ -49,8 +49,6 @@ POST  	/api/runs/:code/lanes								controllers.runs.api.Lanes.save(code: java.l
 PUT  	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.update(code: java.lang.String, number:java.lang.Integer)
 DELETE 	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.delete(code: java.lang.String, number:java.lang.Integer)
 DELETE	/api/runs/:code/lanes								controllers.runs.api.Lanes.deleteByRunCode(code: java.lang.String)
-PUT		/api/runs/:code/lanes/:number/state/:stateCode		controllers.runs.api.Lanes.state(code:java.lang.String, number:java.lang.Integer, stateCode:java.lang.String)
-PUT		/api/runs/:code/lanes/:number/workflow/:stateCode	controllers.runs.api.Lanes.state(code:java.lang.String, number:java.lang.Integer, stateCode:java.lang.String)
 PUT		/api/runs/:code/lanes/:number/validation/:valid		controllers.runs.api.Lanes.validation(code:java.lang.String, number:java.lang.Integer, valid:java.lang.String)
 
 GET		/api/runs/:code/lanes/:laneNumber/treatments				controllers.runs.api.LaneTreatments.list(code: java.lang.String, laneNumber:java.lang.Integer)
