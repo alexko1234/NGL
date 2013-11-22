@@ -17,6 +17,8 @@ import javax.swing.text.AbstractDocument.Content;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
@@ -25,6 +27,7 @@ import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import play.Logger;
@@ -35,15 +38,35 @@ import fr.cea.ig.MongoDBDAO;
 
 public class LaneTreatmentsTests extends AbstractTests {
 	
+	static Container c;
+	
+	@BeforeClass
+	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+		   Container c = new Container();
+		   c.code ="containerTest1";
+		   c.support = new ContainerSupport(); 
+		   c.support.barCode = "containerName"; 
+		   
+		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
+		       }}); 
+	}
+	
+	
 	@AfterClass
 	public static void deleteData(){
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
-			List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
-			for (Sample sample : samples) {
-				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
-			}
-		}});
+		running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+		for (Sample sample : samples) {
+			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
+		}
+		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
+		for (Container container : containers) {
+			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
+		}
+		       }}); 
 	}
 	
 	private void createRunWithLaneCode() {
