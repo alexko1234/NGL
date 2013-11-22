@@ -20,8 +20,8 @@ import fr.cea.ig.MongoDBDAO;
 
 public class Migration extends CommonController {
 	
-	private static final String RUN_ILLUMINA_BCK = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_BCK";
-	private static final String READSET_ILLUMINA_BCK = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK";
+	private static final String RUN_ILLUMINA_BCK = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_initData2"+"_BCK";
+	private static final String READSET_ILLUMINA_BCK = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_initData2"+"_BCK";
 	
 	
 	public static Result migration(){
@@ -77,13 +77,16 @@ public class Migration extends CommonController {
 		if(null != readSet.files){
 			for(FileOld fileOld : readSet.files){
 				
-				if(!fileOld.stateCode.equals(state.code)){
-					throw new RuntimeException("file state are different from run state");
+				if (fileOld.stateCode != null) {
+					if(!fileOld.stateCode.equals(state.code)){
+						throw new RuntimeException("file state are different from run state");
+					}
+					
+					
+					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld.class, 
+							DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", fileOld.fullname)),
+							DBUpdate.unset("files.$.stateCode").set("files.$.state", state));	
 				}
-				
-				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld.class, 
-						DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", fileOld.fullname)),
-						DBUpdate.unset("files.$.stateCode").set("files.$.state", state));	
 			}
 		}
 		
