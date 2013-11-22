@@ -138,7 +138,7 @@ public class RunValidationTest extends AbstractTests {
 			
 	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
 	        
-			run.containerSupportCode = "ZOUIOUI";
+			run.containerSupportCode = "containerName";
 			run.traceInformation.modifyDate = new Date();
 			run.traceInformation.modifyUser = "dnoisett";
 			
@@ -149,6 +149,39 @@ public class RunValidationTest extends AbstractTests {
 			 assertThat(ctxVal.errors).hasSize(0);
 		}});
 	 }
+	 
+	 
+	 @Test
+	 public void testUpdateRunValidationError() {
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
+			if(runDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			}	   
+			 Run run = getFullRun();
+			 ContextValidation ctxVal = new ContextValidation();
+			 ctxVal.setCreationMode();
+			 run.validate(ctxVal);
+			
+			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+			assertThat(status(result)).isEqualTo(OK);
+			
+	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+	        
+			run.containerSupportCode = "ZOUIOUI";
+			run.traceInformation.modifyDate = new Date();
+			run.traceInformation.modifyUser = "dnoisett";
+			
+			ctxVal = new ContextValidation();
+			 ctxVal.setUpdateMode();
+			 run.validate(ctxVal);
+			 
+			 assertThat(ctxVal.errors).hasSize(1);
+			 assertThat(ctxVal.errors.containsValue("containerSupportCode")); 
+		}});
+	 }
+	 
 
 	 @Test
 	 public void testValidationErrorBadRunType() {
@@ -343,7 +376,7 @@ public class RunValidationTest extends AbstractTests {
 			
 	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
 	        
-			run.containerSupportCode = "ZOUIOUI";
+			run.containerSupportCode = "containerName";
 			run.traceInformation.modifyDate = new Date();
 			run.traceInformation.modifyUser = "dnoisett";
 			run.typeCode = "RHS3000";
@@ -1189,7 +1222,7 @@ public class RunValidationTest extends AbstractTests {
 	private Run getFullRun() {
 			Run run = new Run();
 			run.code = "YANN_TEST1FORREADSET0";
-			run.containerSupportCode = "FC00000";
+			run.containerSupportCode = "containerName";
 			run.dispatch = true;
 			run.instrumentUsed = new InstrumentUsed();
 			run.instrumentUsed.code = "HS7";
