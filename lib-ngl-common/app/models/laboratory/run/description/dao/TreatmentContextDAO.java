@@ -14,8 +14,7 @@ public class TreatmentContextDAO extends AbstractDAODefault<TreatmentContext>{
 	}
 	
 		
-	private void removeTreatmentTypes(Long id) {
-		//old
+	private void removeTreatmentTypesContexts(Long id) {
 		String sql = "DELETE FROM treatment_type_context WHERE fk_treatment_context=?";
 		jdbcTemplate.update(sql, id);
 		
@@ -26,8 +25,8 @@ public class TreatmentContextDAO extends AbstractDAODefault<TreatmentContext>{
 		if(null == treatmentContext){
 			throw new IllegalArgumentException("treatmentContext is null");
 		}
-		removeTreatmentTypes(treatmentContext.id);
-		//Remove treatmentType
+		removeTreatmentTypesContexts(treatmentContext.id);
+		//Remove treatmentContext
 		super.remove(treatmentContext);
 	}
 
