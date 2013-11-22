@@ -20,8 +20,8 @@ import fr.cea.ig.MongoDBDAO;
 
 public class Migration extends CommonController {
 	
-	private static final String RUN_ILLUMINA_BCK = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_initData2"+"_BCK";
-	private static final String READSET_ILLUMINA_BCK = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_initData2"+"_BCK";
+	private static final String RUN_ILLUMINA_BCK = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_BCK";
+	private static final String READSET_ILLUMINA_BCK = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK";
 	
 	
 	public static Result migration(){
