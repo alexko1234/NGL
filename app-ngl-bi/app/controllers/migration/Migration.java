@@ -104,24 +104,20 @@ public class Migration extends CommonController {
 				DBQuery.is("code", run.code), 
 				DBUpdate.unset("stateCode").unset("valid").unset("validDate")
 				.set("validation", validation).set("state", state));
-		if(run.lanes != null){
+		
+		if (run.lanes != null) {
 			for (LaneOld laneOld : run.lanes) {
-
-				if (!laneOld.stateCode.equals(state.code)) {
-					throw new RuntimeException(
-							"lane state are different from run state");
-				}
 
 				MongoDBDAO.update(
 						InstanceConstants.RUN_ILLUMINA_COLL_NAME,
 						Run.class,
 						DBQuery.and(DBQuery.is("code", run.code),
 								DBQuery.is("lanes.number", laneOld.number)),
-						DBUpdate.unset("lanes.$.stateCode")
+						DBUpdate.unset("lanes.$.state")
+								.unset("lanes.$.stateCode")
 								.unset("lanes.$.valid")
 								.unset("lanes.$.validDate")
-								.set("lanes.$.validation", validation)
-								.set("lanes.$.state", state));
+								.set("lanes.$.validation", validation));
 			}
 		}
 	}

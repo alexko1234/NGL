@@ -144,11 +144,6 @@ public class Lanes extends CommonController{
 		return ok();
 	}
 	
-	//@Permission(value={"workflow_run_lane"})
-	public static Result state(String code, Integer laneNumber, String stateCode){
-		return badRequest("Not implemented");
-	}
-	
 	//@Permission(value={"validation_run_lane"})
 	public static Result validation(String code, Integer laneNumber, String validCode){
 		Run run = getRun(code, laneNumber);

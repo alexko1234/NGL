@@ -52,10 +52,6 @@ public class Workflows {
 			if("F".equals(state.code)){
 				run.dispatch = true;
 			}
-			for(Lane lane:run.lanes){
-				lane.state = state;
-				LaneValidationHelper.validateLaneState(lane.state, contextValidation);
-			}
 			if(!"E".equals(state.code)){
 				List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code)).toList();
 				for(ReadSet readSet: readSets){
