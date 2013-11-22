@@ -93,13 +93,8 @@ public class RunMockHelper {
 		
 		List<String> lResos = new ArrayList<String>();
 		lResos.add("reso1");
-		lResos.add("reso2");
-		
-		State state = new State();
-		lane.state = state;
-		lane.state.code = "F";
-		lane.state.user = "tests";
-		lane.state.date = new Date();
+		lResos.add("reso2");		
+
 				
 		lane.validation = getValidation(TBoolean.UNSET);
 		

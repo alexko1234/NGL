@@ -553,7 +553,7 @@ public class RunValidationTest extends AbstractTests {
 			 	 
 			 result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readSet)));
 			 assertThat(status(result)).isEqualTo(OK);
-			 lane.state = getState("F-RG");
+			 //lane.state = getState("F-RG");
 			 ctxVal = new ContextValidation(); 
 			 ctxVal.putObject("run", run);
 			  ctxVal.setUpdateMode();
@@ -632,7 +632,7 @@ public class RunValidationTest extends AbstractTests {
 			 result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readSet)));
 			 assertThat(status(result)).isEqualTo(OK);
 			 
-			 lane.state = getState("A");
+			 //lane.state = getState("A");
 			 ctxVal = new ContextValidation(); 
 			 ctxVal.putObject("run", run);
 			  ctxVal.setUpdateMode();
@@ -884,7 +884,7 @@ public class RunValidationTest extends AbstractTests {
 			ArrayList<Lane> l = new ArrayList<Lane>();
 			 Lane lane = getLane(); //lane.number = 1
 			 // correct value
-			 lane.state = getState("F"); 
+			 //lane.state = getState("F"); 
 			 ReadSet r = getNewReadSet();
 			 ArrayList<String> a = new ArrayList<String>();
 			 //a.add(r.code);			 
@@ -953,7 +953,7 @@ public class RunValidationTest extends AbstractTests {
 			Run run = getFullRun();
 			ArrayList<Lane> l = new ArrayList<Lane>();
 			 Lane lane = getLane();
-			 lane.state = getState("F");
+			 //lane.state = getState("F");
 			 ReadSet r = getNewReadSet();
 			 r.runCode = run.code;
 			 r.laneNumber = 1;
@@ -1140,7 +1140,7 @@ public class RunValidationTest extends AbstractTests {
 	private Lane getLane() {	
 		Lane lane = new Lane();
 		lane.number = 1;
-		lane.state = getState("F");
+		//lane.state = getState("F");
 		lane.validation = RunMockHelper.getValidation(TBoolean.TRUE);
 		lane.readSetCodes = null;
 		return lane;
@@ -1152,7 +1152,7 @@ public class RunValidationTest extends AbstractTests {
 		List<String> r = new ArrayList<String>();
 		r.add("X"); 
 		lane.readSetCodes = r;
-		lane.state = getState("F");
+		//lane.state = getState("F");
 		Validation v = new Validation();
 		 lane.validation = v;
 		return lane;
@@ -1161,9 +1161,9 @@ public class RunValidationTest extends AbstractTests {
 	private Lane getLane2(){
 		Lane lane = new Lane();
 		lane.number = 3;
-		 lane.state = getState("F");
-		 Validation v = new Validation();
-		 lane.validation = v;
+		//lane.state = getState("F");
+		Validation v = new Validation();
+		lane.validation = v;
 		return lane;
 	}
 	

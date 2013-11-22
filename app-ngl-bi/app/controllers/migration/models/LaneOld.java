@@ -20,5 +20,7 @@ public class LaneOld extends Lane {
 	public String stateCode;
 	public TBoolean valid = TBoolean.UNSET;
 	public Date validDate;
+	
+	public State state;
     
 }
