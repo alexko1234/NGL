@@ -37,6 +37,10 @@ public class Run extends DBObject implements IValidation {
     public Boolean dispatch = Boolean.FALSE;
     
     public Validation validation;
+    
+    //new, dnoisett
+    public List<String> projectCodes;
+    public List<String> sampleCodes;
    
     
     
@@ -60,6 +64,11 @@ public class Run extends DBObject implements IValidation {
     	RunValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
     	RunValidationHelper.validationContainerSupportCode(this.containerSupportCode, contextValidation); 
     	RunValidationHelper.validateRunInstrumentUsed(this.instrumentUsed, contextValidation);		
+    	
+    	RunValidationHelper.validateRunProjectCodes(this.projectCodes, contextValidation);
+    	
+    	RunValidationHelper.validateRunSampleCodes(this.sampleCodes, contextValidation);
+    	
 		contextValidation.putObject("level", Level.CODE.Run);
 		//WARN DON'T CHANGE THE ORDER OF VALIDATION
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);

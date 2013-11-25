@@ -1,9 +1,11 @@
 package controllers.migration;		
 
+import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.Validation;
+import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
@@ -103,10 +105,20 @@ public class Migration extends CommonController {
 		state.user = (null == run.traceInformation.modifyUser) ? run.traceInformation.createUser : run.traceInformation.modifyUser;
 		state.date = (null == run.traceInformation.modifyUser) ? run.traceInformation.creationDate : run.traceInformation.modifyDate;
 		
+		List<String> projectCodes = new ArrayList<String>();
+		List<String> sampleCodes = new ArrayList<String>();
+		List<ReadSetOld> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld.class, DBQuery.is("runCode", run.code)).toList();
+		for (ReadSetOld readSetOld : readSets) {
+			projectCodes.add(readSetOld.projectCode);
+			sampleCodes.add(readSetOld.sampleCode);
+		}
+		
+		
+		
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.is("code", run.code), 
 				DBUpdate.unset("stateCode").unset("valid").unset("validDate")
-				.set("validation", validation).set("state", state));
+				.set("validation", validation).set("state", state).set("projectCodes", projectCodes).set("sampleCodes", sampleCodes));
 		
 		if (run.lanes != null) {
 			for (LaneOld laneOld : run.lanes) {
