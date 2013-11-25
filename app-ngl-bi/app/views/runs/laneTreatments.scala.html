@@ -1,9 +1,12 @@
 @(code: String)
 
 @if(code == "ngsrg-illumina") {
-  <div datatable="laneDatatable.getConfig()"></div>
+  <div ng-controller="LanesNGSRGCtrl" ng-init="init()" datatable="lanesNGSRG.getConfig()"></div>
 } else {
- 
+<div ng-controller="LanesSAVCtrl" ng-init="init()">
+  <div datatable="lanesSAVR1.getConfig()"></div>
+  <div datatable="lanesSAVR2.getConfig()"></div>
+  </div>
 }
 
 	

@@ -36,7 +36,7 @@ runs.button.validate = Valider
 runs.button.cancel = Annuler
 
 runs.dt.type = Type
-runs.dt.nbCycle = Nb Cycle
+runs.dt.nbCycle = Nb Cycles
 runs.dt.flowcellPosition = Position Flowcell
 runs.dt.controlLane = Ligne Contrôle
 runs.dt.flowcellVersion = Version Flowcell
@@ -52,16 +52,33 @@ runs.dt.validation.user = Validé par
 runs.dt.validation.date = Date Validation
 runs.dt.validation.userdate = Validé par {0} le {1}  
 
-runs.table.lane.code = Numéro de Piste
-runs.table.lane.nbCluster = Nb Cluster
-runs.table.validation.valid = Valide ?
-runs.table.lane.percentClusterIlluminaFilter = % Cluster (filtre illumina)
-runs.table.lane.nbClusterIlluminaFilter = Nb Cluster (filtre illumina)
-runs.table.lane.percentClusterInternalAndIlluminaFilter = % Cluster (filtre interne)
-runs.table.lane.nbClusterInternalAndIlluminaFilter = Nb Cluster (filtre interne)
-runs.table.lane.nbBaseInternalAndIlluminaFilter = Nb Bases
-runs.table.lane.phasing = Phasing
-runs.table.lane.prephasing = Prephasing
-runs.table.lane.nbCycles = Nb Cycles
 runs.table.lane.validation.valid = Valide ?
 runs.table.lane.validation.resolutions = Comptes Rendus
+
+runs.table.lane.code = #
+runs.table.lane.ngsrg.nbCluster = Nb Cluster
+runs.table.lane.ngsrg.percentClusterIlluminaFilter = % Cluster (filtre illumina)
+runs.table.lane.ngsrg.nbClusterIlluminaFilter = Nb Cluster (filtre illumina)
+runs.table.lane.ngsrg.percentClusterInternalAndIlluminaFilter = % Cluster (filtre interne)
+runs.table.lane.ngsrg.nbClusterInternalAndIlluminaFilter = Nb Cluster (filtre interne)
+runs.table.lane.ngsrg.nbBaseInternalAndIlluminaFilter = Nb Bases
+runs.table.lane.ngsrg.phasing = Phasing
+runs.table.lane.ngsrg.prephasing = Prephasing
+runs.table.lane.ngsrg.nbCycles = Nb Cycles
+
+runs.table.lane.sav.read1 = Read 1
+runs.table.lane.sav.read2 = Read 2
+runs.table.lane.sav.clusterDensity = Densité de clusters (K/mm2)
+runs.table.lane.sav.clusterPF = Cluster PF (%)
+runs.table.lane.sav.phasing = Phas/Prephas (%)
+runs.table.lane.sav.reads = Nb Séquences (M)
+runs.table.lane.sav.readsPF = Nb Séquences PF (M)
+runs.table.lane.sav.greaterQ30Perc = % >= Q30
+runs.table.lane.sav.cyclesErrRated = Nb Cycles
+runs.table.lane.sav.alignedPerc = Alignement (%)
+runs.table.lane.sav.errorRatePerc = Error Rate (%)
+runs.table.lane.sav.errorRatePercCycle35 = Error Rate Cycle 35 (%)
+runs.table.lane.sav.errorRatePercCycle75 = Error Rate Cycle 75 (%)
+runs.table.lane.sav.errorRatePercCycle100 = Error Rate Cycle 100 (%)
+runs.table.lane.sav.intensityCycle1 = Intensité Cycle 1
+runs.table.lane.sav.intensityCycle20Perc = Intensité Cycle 20 (%)
