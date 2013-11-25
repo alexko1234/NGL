@@ -56,15 +56,6 @@ public class Workflows {
 			run.traceInformation.setTraceInformation("ngsrg");
 			run.state = state;
 			
-			//Appel des règles avec en parametre state.code
-			//Règles sur state.code="F-RG"
-			//Verifier qu on recupere bien le run modifie
-			//Send run fact
-			ArrayList<Object> facts = new ArrayList<Object>();
-			facts.add(run);
-			// Outside of an actor and if no reply is needed the second argument can be null
-			rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("rules.key"),ruleStatRG),null);
-			
 			contextValidation.setUpdateMode();
 			RunValidationHelper.validateState(run.typeCode, run.state, contextValidation);
 			contextValidation.putObject("run", run);
@@ -103,7 +94,18 @@ public class Workflows {
 			
 			
 			
-		}		
+		}	
+		
+		//Appel des règles avec en parametre state.code
+		//Règles sur state.code="F-RG"
+		//Verifier qu on recupere bien le run modifie
+		//Send run fact
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.add(run);
+		// Outside of an actor and if no reply is needed the second argument can be null
+		rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("rules.key"),ruleStatRG),null);
+		
+		
 	}
 
 	private static State getState(String code, String user) {
