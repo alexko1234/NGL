@@ -125,7 +125,8 @@ public class TreatmentService {
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("fraction","fraction", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true));
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualityScore","qualityScore", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true));
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbReadIllumina","nbReadIllumina", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, true));
-                
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("validSeqPercent","validSeqPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Float.class, false));
+                 
         return propertyDefinitions;
 	}
 	
