@@ -36,14 +36,9 @@ function SearchValidationCtrl($scope, datatable) {
 SearchValidationCtrl.$inject = ['$scope', 'datatable'];
 
 
-function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages) {
+function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, treatments) {
 	
-	$scope.validation = {
-			values :  [{code:"TRUE", name:Messages("validate.value.TRUE")},
-		                 {code:"FALSE", name:Messages("validate.value.FALSE")},
-		                 {code:"UNSET", name:Messages("validate.value.UNSET")}],
-		    resolutions :  undefined
-	}
+	
 	
 	
 	$scope.laneDatatableConfig = {
@@ -161,7 +156,7 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages)
 			    	order:false,
 			    	choiceInList:true,
 			    	listStyle:'bs-select',
-			    	possibleValues:$scope.validation.values
+			    	possibleValues:'lists.getValidations()'
 				},
 				
 				{	property:"validation.resolutionCodes",
@@ -171,7 +166,7 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages)
 					order:false,
 			    	choiceInList:true,
 			    	listStyle:'bs-select-multiple',
-			    	possibleValues:undefined
+			    	possibleValues:'lists.getResolutions()'
 				}
 			]				
 	};
@@ -197,9 +192,11 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages)
 		});
 	}
 	
-	
 	$scope.init = function(){
 		$scope.messages = messages();
+		$scope.lists = lists;
+		$scope.treatments = treatments;
+		
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
 				
@@ -211,17 +208,16 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages)
 			
 			$scope.laneDatatable = datatable($scope, $scope.laneDatatableConfig);
 			$scope.laneDatatable.setData($scope.run.lanes, $scope.run.lanes.length);
-			//$scope.laneDatatable.setEdit();
-			$http.get(jsRoutes.controllers.lists.api.Lists.resolutions().url,{params:{typeCode:$scope.run.typeCode}}).success(function(data) {
-				$scope.validation.resolutions=data;
-				$scope.laneDatatable.getColumn({property:"validation.resolutionCodes"}).possibleValues = data;
-				
-			});
 			
+			$scope.lists.refresh({typeCode:$scope.run.typeCode});
+			
+			if(angular.isDefined($scope.run.lanes[0].treatments)){
+				$scope.treatments.init($scope.run.lanes[0].treatments);				
+			}
 		});
 		
 		
 	}
 	
 };
-ValidationDetailsCtrl.$inject = ['$scope', '$http', '$routeParams', 'datatable', 'messages'];
+ValidationDetailsCtrl.$inject = ['$scope', '$http', '$routeParams', 'datatable', 'messages', 'lists', 'treatments'];

@@ -5,6 +5,8 @@ import static validation.utils.ValidationHelper.required;
 import java.util.ArrayList;
 import java.util.List;
 
+import play.Logger;
+
 import net.vz.mongodb.jackson.DBQuery;
 
 import models.laboratory.common.instance.State;
@@ -361,6 +363,11 @@ public class CommonValidationHelper {
 		
 	}
 	
+	public static void validateResolutionCodes(List<String> resoCodes,ContextValidation contextValidation){
+			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
+			validateResolutionCodes(typeCode, resoCodes, contextValidation);		
+	}
+	
 	public static void validateResolutionCodes(String typeCode, List<String> resoCodes, ContextValidation contextValidation){
 		try{
 			if(null != resoCodes){
@@ -374,6 +381,7 @@ public class CommonValidationHelper {
 			throw new RuntimeException(e);
 		}
 	}
+		
 	
 	public static void validateValidation(String typeCode, Validation validation, ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, validation, "validation")){
@@ -389,7 +397,7 @@ public class CommonValidationHelper {
 	protected static <T> T getObjectFromContext(String key, Class<T> clazz, ContextValidation contextValidation) {
 		T o = (T) contextValidation.getObject(key);
 		if(null == o){
-			throw new IllegalArgumentException(clazz.getName()+" form contextValidation is null");
+			throw new IllegalArgumentException(key+" from contextValidation is null");
 		}
 		return o;
 	}

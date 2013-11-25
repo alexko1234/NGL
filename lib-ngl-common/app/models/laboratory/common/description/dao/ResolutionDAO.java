@@ -10,11 +10,14 @@ import models.laboratory.common.description.State;
 import models.utils.DescriptionHelper;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
+import models.utils.dao.DAOHelpers;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
+
+import play.Logger;
 
 @Repository
 public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
@@ -60,10 +63,11 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 	
 	public List<Resolution> findByTypeCode(String typeCode)  throws DAOException {
 		
-		String sql = sqlCommon+
+		String sql = sqlCommon +
 				"JOIN common_info_type_resolution cr ON cr.fk_resolution=t.id "+
 				"JOIN common_info_type c on c.id =cr.fk_common_info_type "+
-				"WHERE c.code = ?";
+				  DAOHelpers.getSQLForInstitute("c")+
+				" where c.code=?";
 		return initializeMapping(sql, new SqlParameter("c.code", Types.VARCHAR)).execute(typeCode);	
 	}
 	
@@ -85,13 +89,14 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		return initializeMapping(sql, new SqlParameter("code", Types.VARCHAR)).execute(code);		
 	}
 
-	public boolean isCodeExistForTypeCode(String code, String typeCode) throws DAOException {
-		String sql = sqlCommon+
+	public boolean isCodeExistForTypeCode(String code, String typeCode) throws DAOException {		
+		String sql = sqlCommon +
 				"JOIN common_info_type_resolution cr ON cr.fk_resolution=t.id "+
 				"JOIN common_info_type c on c.id =cr.fk_common_info_type "+
-				"JOIN institute i on i.id = ci.fk_institute AND i.code =" + DescriptionHelper.getInstitute() + 
-				" WHERE t.code=? and c.code=?";
-	
+				  DAOHelpers.getSQLForInstitute("c")+
+				" where t.code=? and c.code=?";
+		Logger.debug(sql);
+
 		return( initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR),
 				 new SqlParameter("c.code", Types.VARCHAR)).findObject(code, typeCode) != null )? true : false;	
 	}

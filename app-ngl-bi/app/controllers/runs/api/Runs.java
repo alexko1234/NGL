@@ -37,6 +37,7 @@ import play.mvc.Result;
 import rules.services.RulesActor;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
+import validation.run.instance.RunValidationHelper;
 import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
@@ -47,7 +48,6 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 /**
  * Controller around Run object
- * @authors galbini, dnoisett
  *
  */
 public class Runs extends CommonController {
@@ -119,7 +119,7 @@ public class Runs extends CommonController {
 
 		if (null == runValue._id) { 
 			runValue.traceInformation = new TraceInformation();
-			runValue.traceInformation.setTraceInformation("ngsrg");
+			runValue.traceInformation.setTraceInformation(getCurrentUser());
 		} else {
 			return badRequest("use PUT method to update the readset");
 		}
@@ -214,10 +214,8 @@ public class Runs extends CommonController {
 		validation.date = new Date();
 		validation.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
-		ctxVal.putObject("run", run);
 		ctxVal.setUpdateMode();
-		validation.validate(ctxVal);
-
+		RunValidationHelper.validateValidation(run.typeCode, validation, ctxVal);
 		if(!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", code)),

@@ -1,5 +1,5 @@
 "use strict";
-angular.module('home', ['datatableServices','messagesServices','$strap.directives'], function($routeProvider, $locationProvider) {
+angular.module('home', ['datatableServices','commonsServices','biCommonsServices', '$strap.directives'], function($routeProvider, $locationProvider) {
 	$routeProvider.when('/runs/search/home', {
 		templateUrl : '/tpl/runs/search/default',
 		controller : 'SearchCtrl'

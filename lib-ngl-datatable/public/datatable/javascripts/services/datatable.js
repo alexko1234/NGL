@@ -533,7 +533,7 @@ angular.module('datatableServices', []).
 			    						this.config.save.number++;
 			    						this.displayResult[i].trClass = undefined;
 				    					this.displayResult[i].selected = undefined;
-				    					this.displayResult[i].edit = undefined;
+				    					//this.displayResult[i].edit = undefined;
 				    					
 			    						if(this.isRemoteMode(this.config.save.mode)){
 			    							this.saveRemote(this.displayResult[i], i);
@@ -555,13 +555,16 @@ angular.module('datatableServices', []).
 		    				if(urlFunction){
 		    					var valueFunction = this.getValueFunction(this.config.save.value);				    			
 			    				//call url
+		    					//to avoid to send edit to the server but without change the datatable
+		    					value = angular.copy(value);
+		    					value.edit = undefined;
 			    				$http[this.config.save.method](urlFunction(value), valueFunction(value), {datatable:this,index:i})
 				    				.success(function(data, status, headers, config) {
 				    					config.datatable.saveLocal(data, config.index);
 				    					config.datatable.saveFinish();
 				    				})
 				    				.error(function(data, status, headers, config) {
-				    					if(this.config.save.changeClass){
+				    					if(config.datatable.config.save.changeClass){
 				    						config.datatable.displayResult[config.index].trClass = "error";
 				    					}
 				    					config.datatable.displayResult[config.index].edit = true;
@@ -1379,6 +1382,14 @@ angular.module('datatableServices', []).
 		    						    				
 		    			};
 		    			
+		    			var getOptions = function(col){
+		    				if(angular.isString(col.possibleValues)){
+		    					return col.possibleValues;
+		    				}else{
+		    					return 'col.possibleValues';
+		    				}
+		    			};
+		    			
 		    			var getEditElement = function(col){
 		    				var editElement = "";
 		    				if(col.edit && (col.type === "String" || col.type === undefined || col.type === "Number"
@@ -1432,15 +1443,15 @@ angular.module('datatableServices', []).
 	        		  	    			if(col.listStyle == "radio"){
 	        		  	    				editElement = '<label ng-repeat="opt in col.possibleValues"  for="radio{{col.id}}"><input id="radio{{col.id}}" html-filter="{{col.type}}" type="radio"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" value="{{opt.name}}">{{opt.name}}<br></label>';
 	            		  	    		}else if(col.listStyle == "select"){
-	            		  	    			editElement = '<select html-filter="{{col.type}}" ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
+	            		  	    			editElement = '<select html-filter="{{col.type}}" ng-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
 	            		  	    		}else if(col.listStyle == "multiselect"){
-	            		  	    			editElement = '<select multiple html-filter="{{col.type}}"  ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
+	            		  	    			editElement = '<select multiple html-filter="{{col.type}}"  ng-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
 	            		  	    		}else if(col.listStyle == "bs-select"){
-	            		  	    			editElement = '<select html-filter="{{col.type}}" data-width="auto" title="" ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" bs-select></select>';
+	            		  	    			editElement = '<select html-filter="{{col.type}}" data-width="auto" title="" ng-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" bs-select></select>';
 	            		  	    		}else if(col.listStyle == "bs-select-multiple"){
-	            		  	    			editElement = '<select html-filter="{{col.type}}" data-width="auto" title="" multiple ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" bs-select></select>';
+	            		  	    			editElement = '<select html-filter="{{col.type}}" data-width="auto" title="" multiple ng-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" bs-select></select>';
 	            		  	    		}else{
-	            		  	    			editElement = '<select html-filter="{{col.type}}" ng-options="opt.code as opt.name for opt in col.possibleValues '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
+	            		  	    			editElement = '<select html-filter="{{col.type}}" ng-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
 	            		  	    		}
 	        		  	    		}
         		  	    	}else if(col.edit && col.type =="Boolean"){

@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('messagesServices', []).
-    	factory('messages', function(){ //service to manage datatable
+angular.module('commonsServices', []).
+    	factory('messages', function(){
     		var constructor = function($scope, iConfig){
 				var messages = {
 						
@@ -68,7 +68,35 @@ angular.module('messagesServices', []).
 				return messages;
     		}
     		return constructor;
-    	}).directive('messages', function() {
+    	}).factory('lists', ['$http', function($http){
+    		
+    		var resolutionUrl = jsRoutes.controllers.lists.api.Lists.resolutions().url;
+    		var resolutions = [];
+    		
+    		return {
+    			refresh : refresh,
+    			getResolutions : getResolutions,
+    			getValidations : getValidations
+    		};
+    		
+    		
+    		function refresh(params){
+    			$http.get(jsRoutes.controllers.lists.api.Lists.resolutions().url,{params:params}).success(function(data) {
+    				resolutions=data;    				
+    			});
+    		};
+    		
+    		function getResolutions(){
+    			return resolutions;
+    		};
+    		
+    		function getValidations(){
+    			return [{code:"TRUE", name:Messages("validate.value.TRUE")},
+                 {code:"FALSE", name:Messages("validate.value.FALSE")},
+                 {code:"UNSET", name:Messages("validate.value.UNSET")}];
+    		};
+    		
+    	}]).directive('messages', function() {
     		return {
     			restrict: 'A',
     			scope: {

@@ -19,7 +19,7 @@ import play.test.Helpers;
 
 public abstract class AbstractTests {
 	
-	static FakeApplication app;
+	protected static FakeApplication app;
 	@BeforeClass
 	public static void start(){
 		 app = getFakeApplication();

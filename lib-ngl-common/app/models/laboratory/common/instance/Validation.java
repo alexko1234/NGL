@@ -5,6 +5,7 @@ import java.util.List;
 
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationHelper;
 
 public class Validation implements IValidation {
@@ -14,8 +15,6 @@ public class Validation implements IValidation {
     public String user;
     public List<String> resolutionCodes;
     
-    public String criteriaCode;
-    
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		ValidationHelper.required(contextValidation, valid, "valid");
@@ -24,7 +23,7 @@ public class Validation implements IValidation {
 			ValidationHelper.required(contextValidation, user, "user");
 			
 		}
-		
+		CommonValidationHelper.validateResolutionCodes(resolutionCodes, contextValidation);
 		//todo resolution si different de zero
 	}
 

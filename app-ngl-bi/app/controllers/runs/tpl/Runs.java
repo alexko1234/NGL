@@ -56,6 +56,9 @@ public class Runs extends CommonController {
 		return ok(validation.render());
 	}
 	
+	public static Result laneTreatments(String code) {
+		return ok(laneTreatments.render(code));
+	}
 	
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
@@ -65,6 +68,7 @@ public class Runs extends CommonController {
   	    		controllers.runs.tpl.routes.javascript.Runs.home(),  
   	    		controllers.runs.tpl.routes.javascript.Runs.get(), 
   	    		controllers.runs.tpl.routes.javascript.Runs.validation(),
+  	    		controllers.runs.tpl.routes.javascript.Runs.laneTreatments(),
   	    		controllers.runs.api.routes.javascript.Runs.get(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.list(),
   	    		controllers.runs.api.routes.javascript.Runs.list(),

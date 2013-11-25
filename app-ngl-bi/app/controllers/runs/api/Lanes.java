@@ -17,6 +17,7 @@ import static play.data.Form.form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
+import validation.run.instance.RunValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 import controllers.CommonController;
 import controllers.authorisation.Permission;
@@ -144,6 +145,7 @@ public class Lanes extends CommonController{
 		return ok();
 	}
 	
+	
 	//@Permission(value={"validation_run_lane"})
 	public static Result validation(String code, Integer laneNumber, String validCode){
 		Run run = getRun(code, laneNumber);
@@ -153,12 +155,11 @@ public class Lanes extends CommonController{
 		Form<Validation> filledForm = validationForm.bindFromRequest();
 		Validation validation = filledForm.get();
 		validation.date = new Date();
-		validation.user = "default";
+		validation.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		ctxVal.putObject("run", run);
 		ctxVal.setUpdateMode();
-		validation.validate(ctxVal);
-			
+		RunValidationHelper.validateValidation(run.typeCode, validation, ctxVal);			
 		if(!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)),

@@ -17,6 +17,7 @@ GET	   	/runs/:code/validation						controllers.runs.tpl.Runs.validation(code: j
 GET		/tpl/runs/search/:type						controllers.runs.tpl.Runs.search(type: java.lang.String)
 GET		/tpl/runs/details/default					controllers.runs.tpl.Runs.detailsDefault()
 GET		/tpl/runs/details/validation				controllers.runs.tpl.Runs.detailsValidation()
+GET		/tpl/runs/lanes/treatments/:code			controllers.runs.tpl.Runs.laneTreatments(code: java.lang.String)
 GET		/tpl/runs/js-routes							controllers.runs.tpl.Runs.javascriptRoutes()
 #run api
 GET    	/api/runs               					controllers.runs.api.Runs.list()

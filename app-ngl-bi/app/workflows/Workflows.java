@@ -49,11 +49,10 @@ public class Workflows {
 				contextValidation.addErrors("stateCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, state.code);
 				return;
 			}
-			
-			/*if("F-RG".equals(state.code)){
+			if("F-RG".equals(state.code)){
 				state.code = "F";
-			}*/
-			
+			}
+
 			run.traceInformation.setTraceInformation("ngsrg");
 			run.state = state;
 			
@@ -72,7 +71,7 @@ public class Workflows {
 			if("F".equals(state.code)){
 				run.dispatch = true;
 			}
-			
+
 			if(!"E".equals(state.code)){
 				List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code)).toList();
 				for(ReadSet readSet: readSets){
