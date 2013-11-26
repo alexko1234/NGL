@@ -6,7 +6,7 @@ declare ReadSetInfo
 	laneNumber : Integer @key
 	nbClusterLane : Long @key
 	readSet : ReadSet @key
-	validSeqPercent : Long
+	validSeqPercent : Double
 end
 
 declare LaneInfo
@@ -66,11 +66,11 @@ rule "Calculate seqPercent readSet"
 		$nbCluster : Entry(key=="nbCluster") from $mapValue.entrySet()
 	then
 		//Calculate validSeqPercent
-		Double nbClusterReadSet = ((Long)((PropertyValue)$nbCluster.getValue()).getValue()).doubleValue();
-		Double nbClusterLane = $readSetInfo.getNbClusterLane().doubleValue();
-		long validSeqPercent = (new Double((nbClusterReadSet/nbClusterLane)*100)).longValue();
+		Long nbClusterReadSet = ((Long)((PropertyValue)$nbCluster.getValue()).getValue());
+		Long nbClusterLane = $readSetInfo.getNbClusterLane();
+		Double validSeqPercent = roundValue((double)nbClusterReadSet/nbClusterLane*100);
 		//Create new PropertyValue
-		PropertySingleValue propertyValidSeqPercent = new PropertySingleValue(new Long(validSeqPercent));
+		PropertySingleValue propertyValidSeqPercent = new PropertySingleValue(validSeqPercent);
 		$mapValue.put("validSeqPercent", propertyValidSeqPercent);
 		//Update ReadSet in database
 		MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, $readSetInfo.getReadSet());
@@ -88,10 +88,16 @@ rule "Calculate seqLossPercent Lane"
 		$mapValue : Map() from $treatment.results.values()
 		$sumValidSeqPercent : Double() from accumulate (ReadSetInfo(laneNumber==$laneInfo.lane.number, validSeqPercent!=null, $value : validSeqPercent), sum($value))
 	then
-		long seqLossPercent = 100-$sumValidSeqPercent.longValue();
+		Double seqLossPercent =roundValue(100-$sumValidSeqPercent);
 		//Create new PropertyValue seqLossPercent
-		PropertySingleValue propertySeqLossPercent = new PropertySingleValue(new Long(seqLossPercent));
+		PropertySingleValue propertySeqLossPercent = new PropertySingleValue(seqLossPercent);
 		$mapValue.put("seqLossPercent", propertySeqLossPercent);
 		//Update Lane via run
 		MongoDBDAO.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, $laneInfo.getRun());
 end
+
+function Double roundValue(double value)
+{
+	DecimalFormat df=new DecimalFormat("0.00");
+	return (Double)df.parse(df.format(value)).doubleValue();
+}
