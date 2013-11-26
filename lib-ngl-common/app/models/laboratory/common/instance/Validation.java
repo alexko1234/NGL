@@ -15,6 +15,8 @@ public class Validation implements IValidation {
     public String user;
     public List<String> resolutionCodes;
     
+    public String criteriaCode;
+    
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		ValidationHelper.required(contextValidation, valid, "valid");

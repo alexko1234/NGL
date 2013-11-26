@@ -1,7 +1,11 @@
 package models.laboratory.common.description;
 
+import java.util.List;
+
+import models.laboratory.common.description.dao.StateDAO;
 import models.laboratory.common.description.dao.ValidationCriteriaDAO;
 import models.utils.Model;
+import models.utils.dao.DAOException;
 
 
 /**
@@ -13,11 +17,24 @@ public class ValidationCriteria extends Model<ValidationCriteria>{
 	public String name;
 	public String path;
 	
-	public static Finder<ValidationCriteria> find = new Finder<ValidationCriteria>(ValidationCriteriaDAO.class.getName()); 
 	
 	public ValidationCriteria() {
 		super(ValidationCriteriaDAO.class.getName());
 	}
 	
+	public static ValidationCriteriaFinder find = new ValidationCriteriaFinder(); 
 	
+	
+	public static class ValidationCriteriaFinder extends Finder<ValidationCriteria>{
+
+		public ValidationCriteriaFinder() {
+			super(ValidationCriteriaDAO.class.getName());			
+		}
+		
+		public List<ValidationCriteria> findByTypeCode(String code) throws DAOException {
+			return ((ValidationCriteriaDAO) getInstance()).findByTypeCode(code);
+		}
+		
+	}
+		
 }

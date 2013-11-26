@@ -5,6 +5,7 @@ import java.util.List;
 
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
+import models.laboratory.common.description.ValidationCriteria;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
@@ -50,11 +51,10 @@ public class Lists extends Controller{
 			List<ListObject> exp = ExperimentType.find.findAllForList();
 			return Results.ok(Json.toJson(exp));
 		} catch (DAOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return  Results.internalServerError(e.getMessage());
 		}	
-		return  Results.internalServerError();
-
+		
 	}
 
 	public static Result experimentTypesByCategory(String categoryCode) {
@@ -62,11 +62,9 @@ public class Lists extends Controller{
 			List<ListObject> exp=ExperimentType.find.findByCategoryCode(categoryCode);
 			return Results.ok(Json.toJson(exp));
 		}catch (DAOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return  Results.internalServerError(e.getMessage());
 		}	
-
-		return  Results.internalServerError();
 
 	}
 
@@ -76,10 +74,9 @@ public class Lists extends Controller{
 			return Results.ok(Json.toJson(exp));
 
 		} catch (DAOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
-		return  Results.internalServerError();
+			return  Results.internalServerError(e.getMessage());
+		}			
 	}
 
 	public static Result containerStates(){		
@@ -89,9 +86,9 @@ public class Lists extends Controller{
 		}
 		catch (DAOException e) {
 			e.printStackTrace();
+			return  Results.internalServerError(e.getMessage());
 		}
 
-		return  Results.internalServerError();
 	}
 
 	public static Result samples(String projectCode){
@@ -112,9 +109,8 @@ public class Lists extends Controller{
 
 		} catch (DAOException e) {
 			e.printStackTrace();
+			return  Results.internalServerError(e.getMessage());
 		}
-
-		return  Results.internalServerError();
 	}
 
 	public static Result containerCategoryCodes(){
@@ -124,9 +120,9 @@ public class Lists extends Controller{
 
 		} catch (DAOException e) {
 			e.printStackTrace();
+			return  Results.internalServerError(e.getMessage());
 		}
 
-		return  Results.internalServerError();
 	}
 
 	public static Result instrumentUsedTypes(String experimentTypeCode){
@@ -141,10 +137,8 @@ public class Lists extends Controller{
 			return Results.ok(Json.toJson(list));
 		}catch (DAOException e) {
 			e.printStackTrace();
+			return  Results.internalServerError(e.getMessage());
 		}
-
-
-		return  Results.internalServerError();
 	}
 
 
@@ -160,9 +154,8 @@ public class Lists extends Controller{
 
 		} catch (DAOException e) {
 			e.printStackTrace();
+			return  Results.internalServerError(e.getMessage());
 		}
-
-		return  Results.internalServerError();
 	}
 
 
@@ -179,9 +172,8 @@ public class Lists extends Controller{
 
 		} catch (DAOException e) {
 			e.printStackTrace();
+			return  Results.internalServerError(e.getMessage());
 		}
-
-		return  Results.internalServerError();
 	}
 
 
@@ -204,9 +196,9 @@ public class Lists extends Controller{
 
 		} catch (DAOException e) {
 			e.printStackTrace();
+			return  Results.internalServerError(e.getMessage());
 		}
 
-		return  Results.internalServerError();
 	}
 
 	public static Result categoryCodes(String instrumentUsedTypeCode){
@@ -222,10 +214,30 @@ public class Lists extends Controller{
 
 			return Results.ok(Json.toJson(list));
 		} catch (DAOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return  Results.internalServerError(e.getMessage());
 		}
 
-		return  Results.internalServerError();
+	}
+	
+	public static Result validationCriterias(){
+		try{
+			DynamicForm inputForm = form.bindFromRequest();
+			List<ValidationCriteria> criterias = new ArrayList<ValidationCriteria>(0);
+			if(inputForm.get("typeCode") != null){
+				criterias = ValidationCriteria.find.findByTypeCode(inputForm.get("typeCode"));
+			}else {
+				criterias = ValidationCriteria.find.findAll();
+			}
+			List<ListObject> list = new ArrayList<ListObject>();
+			for(ValidationCriteria criteria:criterias){
+				list.add(new ListObject(criteria.code, criteria.name));
+			}
+	
+			return Results.ok(Json.toJson(list));
+	} catch (DAOException e) {
+		e.printStackTrace();
+		return  Results.internalServerError(e.getMessage());
+	}
 	}
 }

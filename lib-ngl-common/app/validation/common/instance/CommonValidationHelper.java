@@ -371,10 +371,12 @@ public class CommonValidationHelper {
 	public static void validateResolutionCodes(String typeCode, List<String> resoCodes, ContextValidation contextValidation){
 		try{
 			if(null != resoCodes){
+				int i = 0;
 				for(String resoCode: resoCodes){
 					if(!models.laboratory.common.description.Resolution.find.isCodeExistForTypeCode(resoCode, typeCode)){
-						contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, resoCode);
+						contextValidation.addErrors("resolutionCodes["+i+"]", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, resoCode);
 					}
+					i++;
 				}
 			}
 		}catch(DAOException e){

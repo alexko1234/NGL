@@ -70,30 +70,37 @@ angular.module('commonsServices', []).
     		return constructor;
     	}).factory('lists', ['$http', function($http){
     		
-    		var resolutionUrl = jsRoutes.controllers.lists.api.Lists.resolutions().url;
     		var resolutions = [];
+    		var validationCriterias = [];
     		
-    		return {
-    			refresh : refresh,
-    			getResolutions : getResolutions,
-    			getValidations : getValidations
-    		};
-    		
-    		
-    		function refresh(params){
-    			$http.get(jsRoutes.controllers.lists.api.Lists.resolutions().url,{params:params}).success(function(data) {
-    				resolutions=data;    				
-    			});
-    		};
-    		
-    		function getResolutions(){
-    			return resolutions;
+    		var refresh = {
+    				resolutions : function(params){
+    					$http.get(jsRoutes.controllers.lists.api.Lists.resolutions().url,{params:params}).success(function(data) {
+    	    				resolutions=data;    				
+    	    			});
+    				},
+    				validationCriterias: function(params){
+    					$http.get(jsRoutes.controllers.lists.api.Lists.validationCriterias().url,{params:params}).success(function(data) {
+    						validationCriterias=data;    				
+    	    			});
+    				},
+    				all : function(params){
+    					this.resolutions(params);
+    					this.validationCriterias(params);
+    				}
     		};
     		
     		function getValidations(){
     			return [{code:"TRUE", name:Messages("validate.value.TRUE")},
                  {code:"FALSE", name:Messages("validate.value.FALSE")},
                  {code:"UNSET", name:Messages("validate.value.UNSET")}];
+    		};
+    		
+    		return {
+    			refresh : refresh,
+    			getResolutions : function(){return resolutions;},
+    			getValidations : getValidations,
+    			getValidationCriterias : function(){return validationCriterias;}
     		};
     		
     	}]).directive('messages', function() {
