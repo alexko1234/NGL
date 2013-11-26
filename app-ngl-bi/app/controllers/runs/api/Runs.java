@@ -120,6 +120,10 @@ public class Runs extends CommonController {
 		if (null == runValue._id) { 
 			runValue.traceInformation = new TraceInformation();
 			runValue.traceInformation.setTraceInformation(getCurrentUser());
+			
+			//TODO History
+			runValue.state.user = getCurrentUser();
+			runValue.state.date = new Date();			
 		} else {
 			return badRequest("use PUT method to update the readset");
 		}
@@ -151,6 +155,9 @@ public class Runs extends CommonController {
 			}else{
 				Logger.error("traceInformation is null !!");
 			}
+			
+			//TODO State ???
+			
 			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 			
 			ctxVal.setUpdateMode();
 			runValue.validate(ctxVal);
@@ -222,8 +229,15 @@ public class Runs extends CommonController {
 					DBUpdate.set("validation", validation));			
 			run.validation = validation;
 			if(isRunCompletelyEvaluate(run)){
-				return state(code, "F-V");
+				State state = new State();
+				state.code = "F-V";
+				state.date = new Date();
+				state.user = getCurrentUser();
+				Workflows.setRunState(ctxVal, run, state);
 			}
+			
+		} 
+		if(!ctxVal.hasErrors()) {
 			return ok();
 		} else {
 			return badRequest(filledForm.errorsAsJson());
