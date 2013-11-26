@@ -26,7 +26,7 @@ function SearchValidationCtrl($scope, datatable) {
 		}
 		$scope.datatable.search({stateCode:"IW-V"});
 		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('search');
+			$scope.setHomePage('validation');
 			$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("validation").url,remove:false});
 			$scope.activeTab(0); // desactive le lien !
 		}
@@ -46,12 +46,12 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages,
 			select:{active:false},
 			showTotalNumberRecords:false,
 			edit : {
-				active:true,
+				active:false,
 				showButton : false,
 				byDefault : true
 			},
 			save : {
-				active:true,
+				active:false,
 				keepEdit:true,
 				showButton : false,
 				changeClass : false,
@@ -95,6 +95,9 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages,
 				},				
 				{	property:"validation.valid",
 					header: Messages("runs.table.lane.validation.valid"),
+					render:function(value){
+						return Codes("validation."+value.validation.valid);
+					},
 					type :"String",
 					edit:true,
 			    	order:false,
@@ -104,6 +107,14 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages,
 				},
 				{	property:"validation.resolutionCodes",
 					header: Messages("runs.table.lane.validation.resolutions"),
+					render:function(value){
+						var html = "<ul class='unstyled'>";
+						for(var i =0; i < value.validation.resolutionCodes.length; i++){
+							html += "<li>"+Codes("resolution."+value.validation.resolutionCodes[i])+"</li>";
+						}
+						html += "</ul>";
+						return html;
+					},
 					type :"String",
 			    	edit:true,
 					order:false,
@@ -116,7 +127,7 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages,
 	
 	
 	$scope.isEdit = function(){
-		return true;
+		return $scope.editMode;
 	};
 	
 	$scope.save = function(){
@@ -140,6 +151,14 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages,
 		$scope.messages = messages();
 		$scope.lists = lists;
 		$scope.treatments = treatments;
+		$scope.editMode = false;
+		if($scope.getHomePage() == 'validation'){
+			$scope.editMode = true;
+			
+		}
+		
+		$scope.lanesDTConfig.edit.active=$scope.editMode;
+		$scope.lanesDTConfig.save.active=$scope.editMode;
 		
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	

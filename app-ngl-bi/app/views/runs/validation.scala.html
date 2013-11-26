@@ -10,7 +10,7 @@
  <small>   
  <span ng-model="run.state.code" codes="state"/>
  </small>
- <div class="btn-toolbar pull-right">
+ <div class="btn-toolbar pull-right" ng-show="isEdit()">
  <button class="btn" ng-click="save()" data-toggle="tooltip" title="@Messages("runs.button.validate")" ><i class="icon-save icon-large"></i> @Messages("runs.button.validate")</button>
  <button class="btn" ng-click="cancel()" data-toggle="tooltip" title="@Messages("runs.button.cancel")" ><i class="icon-undo icon-large"></i> @Messages("runs.button.cancel")</button>
  </div>
@@ -33,7 +33,7 @@
 				<dt>@Messages("runs.dt.validation.valid")</dt>
 				<dd>
 				<div ng-switch on="isEdit()">
-					<div ng-switch-when="false">{{run.validation.valid}}</div>
+					<div ng-switch-when="false" ng-model='run.validation.valid' codes="validation"/>
 					<div ng-switch-when="true"><select class="span12" ng-model="run.validation.valid" ng-options="valid.code as valid.name for valid in lists.getValidations()" bs-select></select></div>
 				</div>
 				</dd>
@@ -43,7 +43,11 @@
 				<dt>@Messages("runs.dt.validation.resolution")</dt>
 				<dd>
 				<div ng-switch on="isEdit()">
-					<div ng-switch-when="false">{{run.validation.resolutionCodes}}</div>
+					<div ng-switch-when="false">
+						    <ul class="unstyled">
+						    		<li ng-repeat="code in run.validation.resolutionCodes" ng-model="code" codes="resolution"/>
+						    </ul>
+					</div>
 					<div ng-switch-when="true"><select class="span12" ng-model="run.validation.resolutionCodes" title="" multiple ng-options="valid.code as valid.name for valid in lists.getResolutions()" bs-select></select></div>
 				</dd>
 			</dl>
@@ -52,7 +56,7 @@
 				<dt>@Messages("runs.dt.validation.criteria")</dt>
 				<dd>
 				<div ng-switch on="isEdit()">
-					<div ng-switch-when="false">{{run.validation.criteriaCode}} </div>
+					<div ng-switch-when="false" ng-model="run.validation.criteriaCode" codes="criteria"/>
 					<div ng-switch-when="true"><select class="span12" ng-model="run.validation.criteriaCode" title="" ng-options="valid.code as valid.name for valid in lists.getValidationCriterias()" bs-select></select></div>
 				</dd>
 			</dl>

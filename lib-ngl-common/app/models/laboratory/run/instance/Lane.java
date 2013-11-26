@@ -22,7 +22,7 @@ public class Lane implements IValidation{
 
 	public Integer number;
 	
-	public Validation validation;
+	public Validation validation = new Validation();
 	
 	//public List<ReadSet> readsets;
 	// dnoisett, the lane doesn't contain the entire readset anymore, just a code to refer it;
