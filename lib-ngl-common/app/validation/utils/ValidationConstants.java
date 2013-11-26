@@ -13,5 +13,7 @@ public interface ValidationConstants {
 	public static final String ERROR_CODE_NOTEXISTS_MSG = "error.codenotexists";
 	public static final String ERROR_NOTEXISTS_MSG = "error.notexists";
 	public static final String ERROR_CODE_DOUBLE_MSG = "error.codedouble";
+	
+	public static final String ERROR_CODE_MISSING_MSG = "error.codemissing";
 
 }

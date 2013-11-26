@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.common.instance.PropertyValue;
@@ -142,6 +144,26 @@ public class RunValidationTest extends AbstractTests {
 			 assertThat(ctxVal.errors).hasSize(0);
 		}});
 	 }
+	 
+	 @Test
+	 public void testCreateRunWithProjectCodeValidationOK() {
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
+			if(runDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			}	   
+			 Run run = getFullRunWithProjectCode();
+			 ContextValidation ctxVal = new ContextValidation();
+			 ctxVal.setCreationMode();
+			 run.validate(ctxVal);
+			 
+			 assertThat(ctxVal.errors).hasSize(3);
+			 
+			 assertThat(ctxVal.errors.toString().contains("projectCode"));
+		}});
+	 }
+	 
 	
 	 @Test
 	 public void testUpdateRunValidationOK() {
@@ -679,6 +701,7 @@ public class RunValidationTest extends AbstractTests {
 			 
 			 l.add(lane);
 			 run.lanes = l;
+			 
 
 			 ContextValidation ctxVal = new ContextValidation();
 			 ctxVal.setCreationMode();
@@ -1196,6 +1219,50 @@ public class RunValidationTest extends AbstractTests {
 			run.validation.date = new Date(); 
 			return run;
 		}
+	
+	
+	private Run getFullRunWithProjectCode() {
+		Run run = new Run();
+		run.code = "YANN_TEST1FORREADSET0";
+		run.containerSupportCode = "containerName";
+		run.dispatch = true;
+		run.instrumentUsed = new InstrumentUsed();
+		run.instrumentUsed.code = "HS7";
+		run.instrumentUsed.categoryCode = "HISEQ2000";
+		run.typeCode = "RHS2000";
+		List<String> lResos = new ArrayList<String>();
+		lResos.add("reso1");
+		lResos.add("reso2");
+		State state = new State();
+		run.state = state;
+		run.state.code = "F";
+		run.state.user = "tests";
+		run.state.date = new Date();
+		
+		Validation v = new Validation();
+		run.validation = v;
+		
+		run.traceInformation = new TraceInformation();
+		run.traceInformation.setTraceInformation("test");
+		Map<String, Treatment> lT = new HashMap<String, Treatment>();
+		Treatment ngsrg = new Treatment(); 
+		lT.put("ngsrg", ngsrg);
+		ngsrg.categoryCode = "ngsrg";
+		ngsrg.typeCode = "ngsrg-illumina";
+		run.typeCode = "RHS2000";
+		run.validation = new Validation();
+		run.validation.user = "test";
+		run.validation.valid = TBoolean.TRUE;
+		run.validation.date = new Date(); 
+		
+		Set<String> t = new TreeSet<String>();
+		t.add("codeProjetBidon");
+		t.add("codeProjetBidon2");
+		run.projectCodes = t;
+		
+		
+		return run;
+	}
 	
 	
 	private Run getEmptyRun() {

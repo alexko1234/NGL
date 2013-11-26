@@ -66,6 +66,12 @@ public class Run extends DBObject implements IValidation {
     	RunValidationHelper.validateRunInstrumentUsed(this.instrumentUsed, contextValidation);		
 		contextValidation.putObject("level", Level.CODE.Run);
 		//WARN DON'T CHANGE THE ORDER OF VALIDATION
+		
+		RunValidationHelper.validateRunProjectCodes(this.code, this.projectCodes, contextValidation);
+		
+		//RunValidationHelper.validateRunSampleCodes(this.code, this.projectCodes, contextValidation);
+		
+		
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);
 		LaneValidationHelper.validationLanes(this.lanes, contextValidation);
 		
