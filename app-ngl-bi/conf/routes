@@ -114,6 +114,7 @@ GET		/migration									controllers.migration.Migration.migration()
 
 #list
 GET		/api/lists/resolutions				controllers.lists.api.Lists.resolutions()
+GET		/api/lists/validation-criterias		controllers.lists.api.Lists.validationCriterias()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               				controllers.Assets.at(path="/public", file)

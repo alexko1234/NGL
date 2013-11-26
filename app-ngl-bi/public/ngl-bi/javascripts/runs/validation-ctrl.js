@@ -153,7 +153,7 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages,
 			$scope.lanesDT = datatable($scope, $scope.lanesDTConfig);
 			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
 			
-			$scope.lists.refresh({typeCode:$scope.run.typeCode});
+			$scope.lists.refresh.all({typeCode:$scope.run.typeCode});
 			
 			if(angular.isDefined($scope.run.lanes[0].treatments)){
 				$scope.treatments.init($scope.run.lanes[0].treatments);				

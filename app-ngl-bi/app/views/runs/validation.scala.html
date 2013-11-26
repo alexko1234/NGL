@@ -43,8 +43,17 @@
 				<dt>@Messages("runs.dt.validation.resolution")</dt>
 				<dd>
 				<div ng-switch on="isEdit()">
-					<div ng-switch-when="false">{{run.validation.resolutionCodes}} </div>
+					<div ng-switch-when="false">{{run.validation.resolutionCodes}}</div>
 					<div ng-switch-when="true"><select class="span12" ng-model="run.validation.resolutionCodes" title="" multiple ng-options="valid.code as valid.name for valid in lists.getResolutions()" bs-select></select></div>
+				</dd>
+			</dl>
+			
+			<dl class="dl-horizontal">
+				<dt>@Messages("runs.dt.validation.criteria")</dt>
+				<dd>
+				<div ng-switch on="isEdit()">
+					<div ng-switch-when="false">{{run.validation.criteriaCode}} </div>
+					<div ng-switch-when="true"><select class="span12" ng-model="run.validation.criteriaCode" title="" ng-options="valid.code as valid.name for valid in lists.getValidationCriterias()" bs-select></select></div>
 				</dd>
 			</dl>
 	</div>

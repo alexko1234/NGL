@@ -51,6 +51,7 @@ runs.dt.validation.resolution = Comptes Rendus
 runs.dt.validation.user = Validé par
 runs.dt.validation.date = Date Validation
 runs.dt.validation.userdate = Validé par {0} le {1}  
+runs.dt.validation.criteria = Critères
 
 runs.table.validation.valid = Valide ?
 runs.table.lane.validation.title = Pistes

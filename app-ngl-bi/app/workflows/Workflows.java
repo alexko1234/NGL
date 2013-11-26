@@ -53,7 +53,7 @@ public class Workflows {
 				state.code = "F";
 			}
 
-			run.traceInformation.setTraceInformation("ngsrg");
+			run.traceInformation.setTraceInformation(state.user);
 			run.state = state;
 			
 			contextValidation.setUpdateMode();
@@ -79,8 +79,10 @@ public class Workflows {
 							file.state = getState("A", state.user);
 						}
 					}
-					readSet.traceInformation.setTraceInformation("ngsrg");
+					readSet.traceInformation.setTraceInformation(state.user);
+					contextValidation.addKeyToRootKeyName("readSet."+readSet.code);
 					ReadSetValidationHelper.validateState(readSet.typeCode, readSet.state, contextValidation);
+					contextValidation.removeKeyFromRootKeyName("readSet."+readSet.code);
 				}
 				if(!contextValidation.hasErrors()){
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);
@@ -100,11 +102,12 @@ public class Workflows {
 		//Règles sur state.code="F-RG"
 		//Verifier qu on recupere bien le run modifie
 		//Send run fact
-		ArrayList<Object> facts = new ArrayList<Object>();
-		facts.add(run);
-		// Outside of an actor and if no reply is needed the second argument can be null
-		rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("rules.key"),ruleStatRG),null);
-		
+		if(!contextValidation.hasErrors() && "F-RG".equals(state.code)){
+			ArrayList<Object> facts = new ArrayList<Object>();
+			facts.add(run);
+			// Outside of an actor and if no reply is needed the second argument can be null
+			rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("rules.key"),ruleStatRG),null);
+		}
 		
 	}
 
