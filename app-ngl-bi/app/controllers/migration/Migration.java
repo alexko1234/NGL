@@ -1,11 +1,11 @@
 package controllers.migration;		
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.Validation;
-import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
@@ -105,8 +105,8 @@ public class Migration extends CommonController {
 		state.user = (null == run.traceInformation.modifyUser) ? run.traceInformation.createUser : run.traceInformation.modifyUser;
 		state.date = (null == run.traceInformation.modifyUser) ? run.traceInformation.creationDate : run.traceInformation.modifyDate;
 		
-		List<String> projectCodes = new ArrayList<String>();
-		List<String> sampleCodes = new ArrayList<String>();
+		Set<String> projectCodes = new TreeSet<String>();
+		Set<String> sampleCodes = new TreeSet<String>();
 		List<ReadSetOld> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld.class, DBQuery.is("runCode", run.code)).toList();
 		for (ReadSetOld readSetOld : readSets) {
 			projectCodes.add(readSetOld.projectCode);

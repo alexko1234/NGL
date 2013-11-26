@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -36,11 +38,10 @@ public class Run extends DBObject implements IValidation {
 	public String containerSupportCode; //id flowcell
     public Boolean dispatch = Boolean.FALSE;
     
-    public Validation validation;
+    public Validation validation = new Validation();
     
-    //new, dnoisett
-    public List<String> projectCodes;
-    public List<String> sampleCodes;
+    public Set<String> projectCodes = new TreeSet<String>();
+    public Set<String> sampleCodes = new TreeSet<String>();
    
     
     
@@ -50,8 +51,7 @@ public class Run extends DBObject implements IValidation {
     public Map<String, PropertyValue> properties = new HashMap<String, PropertyValue>();
     public List<Lane> lanes;
     
-    //TODO Samples, Projects
-
+   
     @Override
     public void validate(ContextValidation contextValidation) {
     	contextValidation.putObject("run", this);
@@ -64,11 +64,6 @@ public class Run extends DBObject implements IValidation {
     	RunValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
     	RunValidationHelper.validationContainerSupportCode(this.containerSupportCode, contextValidation); 
     	RunValidationHelper.validateRunInstrumentUsed(this.instrumentUsed, contextValidation);		
-    	
-    	RunValidationHelper.validateRunProjectCodes(this.projectCodes, contextValidation);
-    	
-    	RunValidationHelper.validateRunSampleCodes(this.sampleCodes, contextValidation);
-    	
 		contextValidation.putObject("level", Level.CODE.Run);
 		//WARN DON'T CHANGE THE ORDER OF VALIDATION
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);

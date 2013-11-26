@@ -80,8 +80,8 @@ public class Container extends DBObject implements IValidation {
 	public List<PropertyValue> calculedVolume;
 
 	// For search optimisation
-	public List<String> projectCodes; // getProjets
-	public List<String> sampleCodes; // getSamples
+	public List<String> projectCodes; // getProjets //TODO SET instead of LIST
+	public List<String> sampleCodes; // getSamples //TODO SET instead of LIST
 	// ExperimentType must be an internal or external experiment ( origine )
 	// List for pool experimentType
 	public List<String> fromExperimentTypeCodes; // getExperimentType

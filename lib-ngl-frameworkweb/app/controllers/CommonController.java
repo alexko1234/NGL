@@ -1,5 +1,6 @@
 package controllers;
 
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 
 import controllers.history.UserHistory;
@@ -29,7 +30,7 @@ public abstract class CommonController extends Controller{
 
 	public static String getCurrentUser(){
 		String user = Context.current().session().get("NGL_FILTER_USER");
-		if(null == user)user = "ngsrg";
+		if(StringUtils.isBlank(user))user = "ngsrg";
 		return user;
 	}
 

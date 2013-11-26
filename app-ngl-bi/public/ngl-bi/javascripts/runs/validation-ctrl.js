@@ -84,7 +84,7 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages,
 			columns : [
 			    {  	property:"number",
 			    	render:function(value){
-			    		if(value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
+			    		if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
 			    			value.trClass = "warning";
 			    		}
 			    		return "<strong>"+value.number+"</strong>";
@@ -190,10 +190,10 @@ function LanesNGSRGCtrl($scope, datatable) {
 			    	order:false
 				},
 				{  	property:function(value){
-						if(angular.isDefined(value.treatments.ngsrg.default.nbCycleRead2)){
-							return value.treatments.ngsrg.default.nbCycleRead1.value +','+value.treatments.ngsrg.default.nbCycleRead2.value;
+						if(angular.isDefined(value.treatments.ngsrg["default"].nbCycleRead2)){
+							return value.treatments.ngsrg["default"].nbCycleRead1.value +','+value.treatments.ngsrg["default"].nbCycleRead2.value;
 						}else{
-							return value.treatments.ngsrg.default.nbCycleRead1.value
+							return value.treatments.ngsrg["default"].nbCycleRead1.value
 						}
 					},
 			    	header: Messages("runs.table.lane.ngsrg.nbCycles"),
@@ -227,6 +227,16 @@ function LanesNGSRGCtrl($scope, datatable) {
 				},
 				{  	property:"treatments.ngsrg.default.nbBaseInternalAndIlluminaFilter.value",
 			    	header: Messages("runs.table.lane.ngsrg.nbBaseInternalAndIlluminaFilter"),
+			    	type :"Number",
+			    	order:false
+				},
+				{  	property:"treatments.ngsrg.default.nbBaseInternalAndIlluminaFilter.value",
+			    	header: Messages("runs.table.lane.ngsrg.nbBaseInternalAndIlluminaFilter"),
+			    	type :"Number",
+			    	order:false
+				},
+				{  	property:"treatments.ngsrg.default.seqLossPercent.value",
+			    	header: Messages("runs.table.lane.ngsrg.seqLossPercent"),
 			    	type :"Number",
 			    	order:false
 				}
@@ -273,7 +283,7 @@ function LanesSAVCtrl($scope, $filter,datatable) {
 			columns : [
 			    {  	property:"number",
 			    	render:function(value){
-			    		if(value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
+			    		if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
 			    			value.trClass = "warning";
 			    		}
 			    		return "<strong>"+value.number+"</strong>";
@@ -407,7 +417,7 @@ function LanesSAVCtrl($scope, $filter,datatable) {
 			columns : [
 			    {  	property:"number",
 			    	render:function(value){
-			    		if(value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
+			    		if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
 			    			value.trClass = "warning";
 			    		}
 			    		return "<strong>"+value.number+"</strong>";

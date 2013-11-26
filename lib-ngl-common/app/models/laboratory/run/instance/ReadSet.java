@@ -35,8 +35,8 @@ public class ReadSet extends DBObject implements IValidation{
 	public String sampleCode; //nom de l'ind / ech
 	public String projectCode;
 	
-	public Validation validationProduction;
-	public Validation validationBioinformatic;
+	public Validation validationProduction = new Validation();
+	public Validation validationBioinformatic = new Validation();
 	
     
 	public String path;
