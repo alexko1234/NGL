@@ -29,7 +29,7 @@ DELETE	/api/runs/:code								controllers.runs.api.Runs.delete(code:java.lang.St
 PUT		/api/runs/:code/state/:stateCode			controllers.runs.api.Runs.state(code:java.lang.String, stateCode:java.lang.String)
 PUT		/api/runs/:code/workflow/:stateCode			controllers.runs.api.Runs.state(code:java.lang.String, stateCode:java.lang.String)
 PUT		/api/runs/:code/validation/:valid 			controllers.runs.api.Runs.validation(code:java.lang.String, valid:java.lang.String)
-PUT		/api/runs/:code/check-rules/:codeRules		controllers.runs.api.Runs.checkRules(code:java.lang.String, codeRules:java.lang.String)
+PUT		/api/runs/:code/apply-rules/:codeRules		controllers.runs.api.Runs.applyRules(code:java.lang.String, codeRules:java.lang.String)
 
 #deprecated
 POST 	/api/runs/:code/dispatch					controllers.runs.api.Runs.dispatch(code: java.lang.String)

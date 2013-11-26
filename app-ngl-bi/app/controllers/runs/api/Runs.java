@@ -273,7 +273,7 @@ public class Runs extends CommonController {
 		return ok();	
 	}
 
-	public static Result checkRules(String code, String rulesCode){
+	public static Result applyRules(String code, String rulesCode){
 		Run run = getRun(code);
 		if(run!=null){
 			//Send run fact
