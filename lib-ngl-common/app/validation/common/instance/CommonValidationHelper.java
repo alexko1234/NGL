@@ -426,7 +426,7 @@ public class CommonValidationHelper {
 				contextValidation.addErrors("sampleCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, sampleCode);
 			}
 			else {
-				if ((sample.projectCodes == null) || (!sample.projectCodes.contains(projectCode))) {
+				if ((sample.projectCodes == null) || (!sample.projectCodes.contains(projectCode))) { 
 					contextValidation.addErrors("projectCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, projectCode);
 				}
 			}
