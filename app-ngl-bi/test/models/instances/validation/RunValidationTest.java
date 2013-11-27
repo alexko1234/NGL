@@ -39,6 +39,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import play.Logger;
 import play.data.validation.ValidationError;
 import play.mvc.Result;
 import utils.AbstractTests;
@@ -52,17 +53,54 @@ import static utils.RunMockHelper.*;
 public class RunValidationTest extends AbstractTests {
 	
 	static Container c;
+	static Sample s;
+	static Project p;
 	
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
+		    	   
+		   		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
+				for (Container container : containers) {
+					if (container.support.barCode.equals("containerName")) {
+						MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
+					}
+				}   
+		   		List<Project> projects = MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList();
+				for (Project project : projects) {
+					if (project.code.equals("ProjectCode")) {
+						MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, project);
+					}
+				}
+				
+				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+				for (Sample sample : samples) {
+					if (sample.code.equals("SampleCode")) {
+						MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
+					}
+				}
+				
 		   Container c = new Container();
 		   c.code ="containerTest1";
 		   c.support = new ContainerSupport(); 
 		   c.support.barCode = "containerName"; 
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
+		   
+		   Sample s = new Sample();
+		   s.code = "SampleCode";
+			List<String> lp =new ArrayList<String>();
+			lp.add("ProjectCode"); 
+			s.projectCodes = lp;
+		   
+		   MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, s);
+		   
+		   Project p = new Project();
+		   p.code = "ProjectCode";
+		   
+		   MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, p);
+		   
 		       }}); 
 	}
 	
@@ -71,16 +109,34 @@ public class RunValidationTest extends AbstractTests {
 	public static void deleteData(){
 		running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
-		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
-		for (Sample sample : samples) {
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
-		}
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 		for (Container container : containers) {
-			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
+			if (container.support.barCode.equals("containerName")) {
+				MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
+			}
 		}
-		       }}); 
+		List<Project> projects = MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList();
+		for (Project project : projects) {
+			if (project.code.equals("ProjectCode")) {
+				MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, project);
+			}
+		}
+		
+		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+		for (Sample sample : samples) {
+			if (sample.code.equals("SampleCode")) {
+				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
+			}
+		}
+		
+		}}); 
 	}
+	
+	
+	
+
+	
+	
 	
 	
 	@Test
@@ -145,6 +201,8 @@ public class RunValidationTest extends AbstractTests {
 		}});
 	 }
 	 
+	 
+	 
 	 @Test
 	 public void testCreateRunWithProjectCodeValidationOK() {
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
@@ -152,15 +210,84 @@ public class RunValidationTest extends AbstractTests {
 			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 			if(runDelete!=null){
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+			}	  
+			ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"));
+			if(readSetDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+			}
+
+			
+			 Run run = getFullRun();
+			 Lane lane1 = getLane();
+			 ArrayList<Lane> al = new ArrayList<Lane>();
+			 al.add(lane1);
+			 run.lanes = al;
+			 
+			 ContextValidation ctxVal2 = new ContextValidation();
+			 ctxVal2.setCreationMode();
+			 
+			 run.validate(ctxVal2);			 
+			 assertThat(ctxVal2.errors).hasSize(0);
+			 
+			 
+			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+	        assertThat(status(result)).isEqualTo(OK);
+		 
+		 
+			ReadSet readset = RunMockHelper.newReadSet("rdCode");
+			readset.runCode = getFullRunWithGoodProjectCode().code;
+			
+			ContextValidation ctxVal = new ContextValidation();
+			ctxVal.setCreationMode();
+			
+			readset.validate(ctxVal);
+			assertThat(ctxVal.errors).hasSize(0);
+				
+			
+			result = null;	
+			result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
+	        assertThat(status(result)).isEqualTo(OK);
+	         
+
+	        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
+	        
+			run.traceInformation.modifyUser = "test";
+			run.traceInformation.modifyDate = new Date();
+			
+			Set<String> t = new TreeSet<String>();
+			t.add("ProjectCode");
+			run.projectCodes = t;
+			
+			t = new TreeSet<String>();
+			t.add("SampleCode");
+			run.sampleCodes = t;
+			
+	        ContextValidation ctxVal3 = new ContextValidation();
+	        ctxVal3.setUpdateMode();
+			 
+	        run.validate(ctxVal3);
+	        assertThat(ctxVal3.errors).hasSize(0);
+			 
+		}});
+	 }
+	 
+	 @Test
+	 public void testCreateRunWithProjectCodeValidationErr() {
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
+			if(runDelete!=null){
+				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 			}	   
-			 Run run = getFullRunWithProjectCode();
+			 Run run = getFullRunWithBadProjectCode();
 			 ContextValidation ctxVal = new ContextValidation();
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 
-			 assertThat(ctxVal.errors).hasSize(3);
+			 assertThat(ctxVal.errors).hasSize(2);
 			 
-			 assertThat(ctxVal.errors.toString().contains("projectCode"));
+			 assertThat(ctxVal.errors.toString().contains("projectCode[0]"));
+			 assertThat(ctxVal.errors.toString().contains("projectCode[1]"));
 		}});
 	 }
 	 
@@ -1221,7 +1348,7 @@ public class RunValidationTest extends AbstractTests {
 		}
 	
 	
-	private Run getFullRunWithProjectCode() {
+	private Run getFullRunWithGoodProjectCode() {
 		Run run = new Run();
 		run.code = "YANN_TEST1FORREADSET0";
 		run.containerSupportCode = "containerName";
@@ -1256,6 +1383,56 @@ public class RunValidationTest extends AbstractTests {
 		run.validation.date = new Date(); 
 		
 		Set<String> t = new TreeSet<String>();
+		t.add("ProjectCode");
+		//t.add("codeProjetBidon2");
+		run.projectCodes = t;
+		
+		t = new TreeSet<String>();
+		t.add("SampleCode");
+		//t.add("codeProjetBidon2");
+		run.sampleCodes = t;
+		
+		
+		return run;
+	}
+	
+
+	private Run getFullRunWithBadProjectCode() {
+		Run run = new Run();
+		run.code = "YANN_TEST1FORREADSET0";
+		run.containerSupportCode = "containerName";
+		run.dispatch = true;
+		run.instrumentUsed = new InstrumentUsed();
+		run.instrumentUsed.code = "HS7";
+		run.instrumentUsed.categoryCode = "HISEQ2000";
+		run.typeCode = "RHS2000";
+		List<String> lResos = new ArrayList<String>();
+		lResos.add("reso1");
+		lResos.add("reso2");
+		State state = new State();
+		run.state = state;
+		run.state.code = "F";
+		run.state.user = "tests";
+		run.state.date = new Date();
+		
+		Validation v = new Validation();
+		run.validation = v;
+		
+		run.traceInformation = new TraceInformation();
+		run.traceInformation.setTraceInformation("test");
+		Map<String, Treatment> lT = new HashMap<String, Treatment>();
+		Treatment ngsrg = new Treatment(); 
+		lT.put("ngsrg", ngsrg);
+		ngsrg.categoryCode = "ngsrg";
+		ngsrg.typeCode = "ngsrg-illumina";
+		run.typeCode = "RHS2000";
+		run.validation = new Validation();
+		run.validation.user = "test";
+		run.validation.valid = TBoolean.TRUE;
+		run.validation.date = new Date(); 
+		
+		Set<String> t = new TreeSet<String>();
+		//t.add("projectCode");
 		t.add("codeProjetBidon");
 		t.add("codeProjetBidon2");
 		run.projectCodes = t;
@@ -1263,7 +1440,6 @@ public class RunValidationTest extends AbstractTests {
 		
 		return run;
 	}
-	
 	
 	private Run getEmptyRun() {
 		Run run = new Run();
