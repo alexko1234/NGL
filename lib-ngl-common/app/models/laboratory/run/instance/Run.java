@@ -67,7 +67,7 @@ public class Run extends DBObject implements IValidation {
 		contextValidation.putObject("level", Level.CODE.Run);
 		//WARN DON'T CHANGE THE ORDER OF VALIDATION
 		
-		RunValidationHelper.validateRunProjectCodes(this.code, this.projectCodes, contextValidation);
+		//RunValidationHelper.validateRunProjectCodes(this.code, this.projectCodes, contextValidation);
 		
 		//RunValidationHelper.validateRunSampleCodes(this.code, this.projectCodes, contextValidation);
 		

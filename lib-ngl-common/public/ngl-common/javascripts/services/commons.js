@@ -131,7 +131,9 @@ angular.module('commonsServices', []).
     				 if(!ngModel) return;
     				 var type = attrs.codes;
     				 ngModel.$render = function() {
-    					 element.html(Codes(type+"."+ngModel.$viewValue));
+    					 if(ngModel.$viewValue){
+    						 element.html(Codes(type+"."+ngModel.$viewValue));
+    					 }
     				 };
     			}    					
     			};
