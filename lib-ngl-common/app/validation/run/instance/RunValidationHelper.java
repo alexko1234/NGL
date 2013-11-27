@@ -73,11 +73,23 @@ public class RunValidationHelper extends CommonValidationHelper {
 	
 	
 	public static void validateRunProjectCodes(String runCode, Set<String> projectCodes, ContextValidation contextValidation) {
-		Logger.debug("in pt0");
-		if(projectCodes != null && projectCodes.size() > 0){
-			Logger.debug("in pt1");
+		
+		if (projectCodes != null && projectCodes.size() > 0) {
+			int i=0;
+			for (Iterator<String> it = projectCodes.iterator(); it.hasNext(); ) {
+				 String projectCode = it.next();
+				if (!MongoDBDAO.checkObjectExist(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", projectCode))) {
+					contextValidation.addErrors("projectCode["+i+"]",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG,  projectCode, "Project");
+				}
+				if (!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("runCode", runCode), DBQuery.is("projectCode", projectCode)))) {
+					contextValidation.addErrors("projectCode["+i+"]",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG,  projectCode, "ReadSet");
+				}
+				i++;
+			}
+			
+			/*
+			//More advanced validation : checking consistency of data ...
 			List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", runCode)).toList();
-			Logger.debug("readSets.size()=" + readSets.size());
 			if (readSets != null) {
 				Set<String> readSetProjectCodes = new TreeSet<String>(); 
 				for (ReadSet readSet : readSets) {
@@ -104,12 +116,27 @@ public class RunValidationHelper extends CommonValidationHelper {
 				Logger.debug("in pt2");
 				contextValidation.addErrors("projectCodes", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, projectCodes.toString(), "Run");
 			}
+			*/
 		}
 	}
 	
 	
-
-
-
+	public static void validateRunSampleCodes(String runCode, Set<String> sampleCodes, ContextValidation contextValidation) {
+		if (sampleCodes != null && sampleCodes.size() > 0) {
+			int i=0;
+			for (Iterator<String> it = sampleCodes.iterator(); it.hasNext(); ) {
+				 String sampleCode = it.next();
+				if (!MongoDBDAO.checkObjectExist(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sampleCode))) {
+					contextValidation.addErrors("sampleCode["+i+"]",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG,  sampleCode, "Sample");
+				}
+				if (!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("runCode", runCode), DBQuery.is("sampleCode", sampleCode)))) {
+					contextValidation.addErrors("sampleCode["+i+"]",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG,  sampleCode, "ReadSet");
+				}
+				i++;
+			}
+		}
+	}
+			
+			
 
 }
