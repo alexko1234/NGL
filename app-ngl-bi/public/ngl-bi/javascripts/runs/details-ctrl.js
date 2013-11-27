@@ -1,44 +1,8 @@
 "use strict";
 
-function SearchValidationCtrl($scope, datatable) {
-
-	$scope.datatableConfig = {
-			order :{by:'traceInformation.creationDate'},
-			search:{
-				url:jsRoutes.controllers.runs.api.Runs.list()
-			},
-			show:{
-				active:true,
-				add :function(line){
-					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.validation(line.code).url,remove:true});
-				}
-			}
-	};
-	
-	
-	$scope.init = function(){
-		//to avoid to lost the previous search
-		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, $scope.datatableConfig);
-			$scope.setDatatable($scope.datatable);
-		}else{
-			$scope.datatable = $scope.getDatatable();
-		}
-		$scope.datatable.search({stateCode:"IW-V"});
-		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('validation');
-			$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("validation").url,remove:false});
-			$scope.activeTab(0); // desactive le lien !
-		}
-	}	
-};
-
-SearchValidationCtrl.$inject = ['$scope', 'datatable'];
-
-
-function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, treatments) {
+function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, treatments) {
 		
-	$scope.lanesDTConfig = {
+	var lanesDTConfig = {
 			name:'lanesDT',
 			order :{by:'number',mode:'local'},
 			search:{active:false},
@@ -67,7 +31,7 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages,
 						$http.put(jsRoutes.controllers.runs.api.Runs.validation($scope.run.code, $scope.run.validation.valid).url, $scope.run.validation).
 							success(function(data, status, headers, config){
 								$scope.messages.setSuccess("save");
-								$scope.updateData();
+								updateData();
 							}).error(function(data, status, headers, config){
 								$scope.messages.setError("save");	
 							});
@@ -108,12 +72,16 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages,
 				{	property:"validation.resolutionCodes",
 					header: Messages("runs.table.lane.validation.resolutions"),
 					render:function(value){
-						var html = "<ul class='unstyled'>";
-						for(var i =0; i < value.validation.resolutionCodes.length; i++){
-							html += "<li>"+Codes("resolution."+value.validation.resolutionCodes[i])+"</li>";
+						if(value.validation.resolutionCodes){
+							var html = "<ul class='unstyled'>";
+							for(var i =0; i < value.validation.resolutionCodes.length; i++){
+								html += "<li>"+Codes("resolution."+value.validation.resolutionCodes[i])+"</li>";
+							}
+							html += "</ul>";
+							return html;
+						}else{
+							return "";
 						}
-						html += "</ul>";
-						return html;
 					},
 					type :"String",
 			    	edit:true,
@@ -126,50 +94,56 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages,
 	}
 	
 	
-	$scope.isEdit = function(){
-		return $scope.editMode;
-	};
-	
 	$scope.save = function(){
 		$scope.lanesDT.save();
 	};
 	
 	$scope.cancel = function(){
 		$scope.messages.clear();
-		$scope.updateData();
+		updateData();
 		
 	};
 	
-	$scope.updateData = function(){
+	var updateData = function(){
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
 			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
 		});
 	}
 	
+	var isValidationMode = function(){
+		return ($scope.isHomePage('validation') || $routeParams.page === 'validation');
+	}
+	
+	
 	$scope.init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
 		$scope.treatments = treatments;
-		$scope.editMode = false;
-		if($scope.getHomePage() == 'validation'){
-			$scope.editMode = true;
+		$scope.stopEditMode();
+		if(isValidationMode()){
+			$scope.startEditMode();
 			
 		}
 		
-		$scope.lanesDTConfig.edit.active=$scope.editMode;
-		$scope.lanesDTConfig.save.active=$scope.editMode;
+		lanesDTConfig.edit.active=$scope.isEditMode();
+		lanesDTConfig.save.active=$scope.isEditMode();
 		
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
 				
 			if($scope.getTabs().length == 0){
-				$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("validation").url,remove:false});
-				$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.validation($scope.run.code).url,remove:true})
+				if(isValidationMode()){ //validation mode
+					$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("validation").url,remove:false});
+					$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.validation($scope.run.code).url,remove:true})
+				}else{ //detail mode
+					$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:false});
+					$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.get($scope.run.code).url,remove:true})									
+				}
 				$scope.activeTab($scope.getTabs(1));
 			}
 			
-			$scope.lanesDT = datatable($scope, $scope.lanesDTConfig);
+			$scope.lanesDT = datatable($scope, lanesDTConfig);
 			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
 			
 			$scope.lists.refresh.all({typeCode:$scope.run.typeCode});
@@ -184,7 +158,7 @@ function ValidationDetailsCtrl($scope, $http, $routeParams, datatable, messages,
 	}
 	
 };
-ValidationDetailsCtrl.$inject = ['$scope', '$http', '$routeParams', 'datatable', 'messages', 'lists', 'treatments'];
+DetailsCtrl.$inject = ['$scope', '$http', '$routeParams', 'datatable', 'messages', 'lists', 'treatments'];
 
 function LanesNGSRGCtrl($scope, datatable) {
 	
@@ -276,8 +250,12 @@ function LanesNGSRGCtrl($scope, datatable) {
 	
 	
 	$scope.init = function(){
-			$scope.lanesNGSRG = datatable($scope, $scope.lanesNGSRGConfig);
-			$scope.lanesNGSRG.setData($scope.run.lanes, $scope.run.lanes.length);					
+		$scope.$watch('run', function() {
+			if(angular.isDefined($scope.run)){
+				$scope.lanesNGSRG = datatable($scope, $scope.lanesNGSRGConfig);
+				$scope.lanesNGSRG.setData($scope.run.lanes, $scope.run.lanes.length);
+			}
+		}); 
 		
 	}
 	
@@ -556,11 +534,15 @@ function LanesSAVCtrl($scope, $filter,datatable) {
 	};
 	
 	$scope.init = function(){
-		$scope.lanesSAVR1 = datatable($scope, $scope.lanesSAVR1Config);
-		$scope.lanesSAVR1.setData($scope.run.lanes, $scope.run.lanes.length);
-		
-		$scope.lanesSAVR2 = datatable($scope, $scope.lanesSAVR2Config);
-		$scope.lanesSAVR2.setData($scope.run.lanes, $scope.run.lanes.length);
+		$scope.$watch('run', function() {
+			if(angular.isDefined($scope.run)){
+				$scope.lanesSAVR1 = datatable($scope, $scope.lanesSAVR1Config);
+				$scope.lanesSAVR1.setData($scope.run.lanes, $scope.run.lanes.length);
+				
+				$scope.lanesSAVR2 = datatable($scope, $scope.lanesSAVR2Config);
+				$scope.lanesSAVR2.setData($scope.run.lanes, $scope.run.lanes.length);
+			};
+		});
 	
 	}
 }

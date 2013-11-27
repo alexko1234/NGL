@@ -22,6 +22,8 @@ angular.module('biCommonsServices', []).
     		};
     		
     		function init(treatments){
+    			_treatments = [];
+    			_treatment = {};
     			for (var key in treatments) {
 					var treatment = treatments[key];
 					_treatments.push({code:treatment.code, url:jsRoutes.controllers.runs.tpl.Runs.laneTreatments(treatment.typeCode).url});

@@ -121,9 +121,11 @@ public class Runs extends CommonController {
 			runValue.traceInformation = new TraceInformation();
 			runValue.traceInformation.setTraceInformation(getCurrentUser());
 			
-			//TODO History
-			runValue.state.user = getCurrentUser();
-			runValue.state.date = new Date();			
+			//TODO History management
+			if(null != runValue.state){
+				runValue.state.user = getCurrentUser();
+				runValue.state.date = new Date();		
+			}
 		} else {
 			return badRequest("use PUT method to update the readset");
 		}
@@ -156,7 +158,7 @@ public class Runs extends CommonController {
 				Logger.error("traceInformation is null !!");
 			}
 			
-			//TODO State ???
+			//TODO State History management ???
 			
 			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 			
 			ctxVal.setUpdateMode();

@@ -1,0 +1,159 @@
+"use strict";
+
+var columns = [
+			    {  	property:"code",
+			    	header: Messages("runs.table.code"),
+			    	type :"String",
+			    	order:true
+				},
+				{	property:"typeCode",
+					header: Messages("runs.table.typeCode"),
+					type :"String",
+			    	order:true
+				},
+				{	property:"traceInformation.creationDate",
+					header: Messages("runs.table.creationdate"),
+					type :"Date",
+			    	order:true
+				},
+				{	property:"state.code",
+					render:function(value){
+						return Codes("state."+value.state.code);
+					},
+					header: Messages("runs.table.stateCode"),
+					type :"String",
+					edit:true,
+					order:true,
+			    	choiceInList:true,
+			    	listStyle:'bs-select',
+			    	possibleValues:[{code:"IW-QC",name:Codes("state.IW-QC")},{code:"IW-V",name:Codes("state.IW-V")},{code:"F-V",name:Codes("state.F-V")}, {code:"F",name:Codes("state.F")}]				
+				},
+				{	property:"validation.valid",
+					render:function(value){
+						return Codes("validation."+value.validation.valid);
+					},
+					header: Messages("runs.table.validation.valid"),
+					type :"String",
+			    	order:true
+				}      
+			];						
+
+
+function SearchCtrl($scope, $routeParams, datatable) {
+
+	$scope.datatableConfig = {
+			order :{by:'traceInformation.creationDate'},
+			search:{
+				url:jsRoutes.controllers.runs.api.Runs.list()
+			},
+			show:{
+				active:true,
+				add :function(line){
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.get(line.code).url,remove:true});
+				}
+			},
+			columns : columns
+	};
+	
+	
+	$scope.init = function(){
+		//to avoid to lost the previous search
+		if(angular.isUndefined($scope.getDatatable())){
+			$scope.datatable = datatable($scope, $scope.datatableConfig);
+			$scope.datatable.search();
+			$scope.setDatatable($scope.datatable);
+		}else{
+			$scope.datatable = $scope.getDatatable();
+		}
+		
+		if(angular.isUndefined($scope.getHomePage())){
+			$scope.setHomePage('search');
+			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:false});
+			$scope.activeTab(0); // desactive le lien !
+		}
+	}	
+};
+
+SearchCtrl.$inject = ['$scope', '$routeParams', 'datatable'];
+
+function SearchStateCtrl($scope, datatable) {
+
+	$scope.datatableConfig = {
+			order :{by:'traceInformation.creationDate'},
+			search:{
+				url:jsRoutes.controllers.runs.api.Runs.list()
+			},
+			edit : {
+				active:true,
+				columnMode:true		    	
+			},
+			save : {
+				active:true,
+				url:function(line){
+					return jsRoutes.controllers.runs.api.Runs.state(line.code, line.state.code).url;
+				},
+				method:'put',
+				value:function(line){return {};}
+			},
+			columns : columns
+	};
+	
+	$scope.init = function(){
+		//to avoid to lost the previous search
+		if(angular.isUndefined($scope.getDatatable())){
+			$scope.datatable = datatable($scope, $scope.datatableConfig);
+			$scope.datatable.search();
+			$scope.setDatatable($scope.datatable);
+		}else{
+			$scope.datatable = $scope.getDatatable();
+		}
+		
+		if(angular.isUndefined($scope.getHomePage())){
+			$scope.setHomePage('search');
+			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:false});
+			$scope.activeTab(0); // desactive le lien !
+		}
+	}	
+};
+
+SearchStateCtrl.$inject = ['$scope', 'datatable'];
+
+
+function SearchValidationCtrl($scope, datatable) {
+
+	$scope.datatableConfig = {
+			order :{by:'traceInformation.creationDate'},
+			search:{
+				url:jsRoutes.controllers.runs.api.Runs.list()
+			},
+			show:{
+				active:true,
+				add :function(line){
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.validation(line.code).url,remove:true});
+				}
+			},
+			columns : columns
+	};
+	
+	
+	$scope.init = function(){
+		//to avoid to lost the previous search
+		if(angular.isUndefined($scope.getDatatable())){
+			$scope.datatable = datatable($scope, $scope.datatableConfig);
+			$scope.setDatatable($scope.datatable);
+		}else{
+			$scope.datatable = $scope.getDatatable();
+		}
+		$scope.datatable.search({stateCode:"IW-V"});
+		if(angular.isUndefined($scope.getHomePage())){
+			$scope.setHomePage('validation');
+			$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("validation").url,remove:false});
+			$scope.activeTab(0); // desactive le lien !
+		}
+	}	
+};
+
+SearchValidationCtrl.$inject = ['$scope', 'datatable'];
+
+
+

@@ -13,12 +13,12 @@ angular.module('home', ['datatableServices','commonsServices','biCommonsServices
 		controller : 'SearchStateCtrl'
 	});
 	$routeProvider.when('/runs/:code', {
-		templateUrl : '/tpl/runs/details/default',
+		templateUrl : '/tpl/runs/details/validation',
 		controller : 'DetailsCtrl'
 	});
-	$routeProvider.when('/runs/:code/validation', {
+	$routeProvider.when('/runs/:code/:page', {
 		templateUrl : '/tpl/runs/details/validation',
-		controller : 'ValidationDetailsCtrl'
+		controller : 'DetailsCtrl'
 	});
 
 	$routeProvider.otherwise({redirectTo: '/runs/search/home'});

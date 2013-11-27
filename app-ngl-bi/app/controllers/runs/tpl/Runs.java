@@ -33,19 +33,13 @@ public class Runs extends CommonController {
 	}
 	
 	public static Result search(String type) {
-		DatatableConfig config = new DatatableConfig();
-		if(!"state".equals(type)){
-			
-			List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-			columns.add(DatatableHelpers.getColumn("code", Messages.get("runs.table.code"), true, false, false));
-			columns.add(DatatableHelpers.getColumn("typeCode", Messages.get("runs.table.typeCode"), true, false, false));
-			columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("runs.table.creationdate"), true, false, false));
-			columns.add(DatatableHelpers.getColumn("state.code", Messages.get("runs.table.stateCode"), true, false, false));
-			columns.add(DatatableHelpers.getColumn("validation.valid", Messages.get("runs.table.validation.valid"), true, false, false));
-			
-			config = new DatatableConfig(columns);	
+		
+		if(!"validation".equals(type)){
+			return ok(search.render(Boolean.TRUE));
+		}else{
+			return ok(search.render(Boolean.FALSE));
 		}
-		return ok(search.render(config));
+		
 	}
 	
 	public static Result detailsDefault() {
@@ -53,7 +47,7 @@ public class Runs extends CommonController {
 	}
 	
 	public static Result detailsValidation() {
-		return ok(validation.render());
+		return ok(details.render());
 	}
 	
 	public static Result laneTreatments(String code) {

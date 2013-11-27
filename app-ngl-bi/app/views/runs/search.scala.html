@@ -1,5 +1,13 @@
-@(datatableConfig: views.components.datatable.DatatableConfig)
+@(isForm: Boolean)
 
-<div ng-init="init()">  
- 		@views.html.components.datatable.datatable(datatableConfig)		
+<div ng-init="init()"> 
+<div class="datatable" datatable="datatable.getConfig()">
+	@if(isForm) {
+		<div id="datatableFormConfiguration">
+			
+		</div>
+	}
+</div>
+</div>
+
 </div>

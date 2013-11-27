@@ -34,7 +34,7 @@ public class ReadSets extends Controller {
 		DatatableConfig config = new DatatableConfig(columns);
 		config.show = true;
 		config.button = true;
-		return ok(search.render(config));
+		return ok(search.render(Boolean.TRUE));
 	}
 	
 	public static Result details() {
