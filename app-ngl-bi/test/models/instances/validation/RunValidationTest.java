@@ -24,6 +24,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Validation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.InstrumentUsed;
@@ -31,8 +32,10 @@ import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
+import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
+import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.AfterClass;
@@ -88,18 +91,25 @@ public class RunValidationTest extends AbstractTests {
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
 		   
-		   Sample s = new Sample();
-		   s.code = "SampleCode";
-			List<String> lp =new ArrayList<String>();
-			lp.add("ProjectCode"); 
-			s.projectCodes = lp;
-		   
-		   MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, s);
-		   
 		   Project p = new Project();
 		   p.code = "ProjectCode";
+		   p.typeCode = "default-project";
+		   p.categoryCode = "default";
+		   p.traceInformation = new TraceInformation(); 		   
 		   
 		   MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, p);
+		   
+		   Sample s = new Sample();
+		   s.code = "SampleCode";
+		   s.typeCode = "default-sample-cng";
+		   s.categoryCode="default";
+
+		   List<String> lp =new ArrayList<String>();
+		   lp.add("ProjectCode"); 
+		   s.projectCodes = lp;
+		   s.traceInformation = new TraceInformation();
+		   
+		   MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, s);
 		   
 		       }}); 
 	}
@@ -115,12 +125,6 @@ public class RunValidationTest extends AbstractTests {
 				MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
 			}
 		}
-		List<Project> projects = MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList();
-		for (Project project : projects) {
-			if (project.code.equals("ProjectCode")) {
-				MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, project);
-			}
-		}
 		
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
 		for (Sample sample : samples) {
@@ -129,14 +133,16 @@ public class RunValidationTest extends AbstractTests {
 			}
 		}
 		
+		List<Project> projects = MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList();
+		for (Project project : projects) {
+			if (project.code.equals("ProjectCode")) {
+				MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, project);
+			}
+		}
+		
 		}}); 
 	}
-	
-	
-	
-
-	
-	
+		
 	
 	
 	@Test
@@ -216,7 +222,6 @@ public class RunValidationTest extends AbstractTests {
 				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
 			}
 
-			
 			 Run run = getFullRun();
 			 Lane lane1 = getLane();
 			 ArrayList<Lane> al = new ArrayList<Lane>();
@@ -253,7 +258,8 @@ public class RunValidationTest extends AbstractTests {
 	        
 			run.traceInformation.modifyUser = "test";
 			run.traceInformation.modifyDate = new Date();
-			
+			/*
+			 // these affectations are not required anymore (automatically done by the readset save()) ...
 			Set<String> t = new TreeSet<String>();
 			t.add("ProjectCode");
 			run.projectCodes = t;
@@ -261,15 +267,20 @@ public class RunValidationTest extends AbstractTests {
 			t = new TreeSet<String>();
 			t.add("SampleCode");
 			run.sampleCodes = t;
-			
+			*/
 	        ContextValidation ctxVal3 = new ContextValidation();
 	        ctxVal3.setUpdateMode();
 			 
 	        run.validate(ctxVal3);
 	        assertThat(ctxVal3.errors).hasSize(0);
+	        
+	        // the fact that we have save the readset must have be saved the projectCode and the sampleCode in the run...
+	        assertThat(run.projectCodes.equals("ProjectCode"));
+	        assertThat(run.sampleCodes.equals("SampleCode"));
 			 
 		}});
 	 }
+	 
 	 
 	 @Test
 	 public void testCreateRunWithProjectCodeValidationErr() {

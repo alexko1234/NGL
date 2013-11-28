@@ -124,7 +124,17 @@ public class ReadSets extends CommonController{
 			readsetValue = MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readsetValue);
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.is("lanes.number", readsetValue.laneNumber)), 
-					DBUpdate.push("lanes.$.readSetCodes", readsetValue.code));		
+					DBUpdate.push("lanes.$.readSetCodes", readsetValue.code));	
+			
+			//To avoid "double" values
+			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+					DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.notIn("projectCodes", readsetValue.projectCode)), 
+					DBUpdate.push("projectCodes", readsetValue.projectCode));
+					
+			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+					DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.notIn("sampleCodes", readsetValue.sampleCode)), 
+					DBUpdate.push("sampleCodes", readsetValue.sampleCode));
+			
 			return ok(Json.toJson(readsetValue));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
@@ -153,6 +163,15 @@ public class ReadSets extends CommonController{
 			
 			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readsetValue);
+				
+				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+						DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.notIn("projectCodes", readsetValue.projectCode)), 
+						DBUpdate.push("projectCodes", readsetValue.projectCode));
+						
+				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+						DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.notIn("sampleCodes", readsetValue.sampleCode)), 
+						DBUpdate.push("sampleCodes", readsetValue.sampleCode));
+				
 				return ok(Json.toJson(filledForm.get()));
 			}else {
 				return badRequest(filledForm.errorsAsJson());			
@@ -162,7 +181,8 @@ public class ReadSets extends CommonController{
 		}		
 	}
 		
-	//@Permission(value={"delete_readset"})
+	
+	//@Permission(value={"delete_readset"}) 
 	public static Result delete(String readSetCode) { 
 		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
 		if (readSet == null) {
@@ -171,9 +191,26 @@ public class ReadSets extends CommonController{
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
 				DBQuery.and(DBQuery.is("code",readSet.runCode),DBQuery.is("lanes.number",readSet.laneNumber)), 
 				DBUpdate.pull("lanes.$.readSetCodes", readSet.code));
+
 		MongoDBDAO.deleteByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, readSet.code);
+		
+		
+		if ((readSet.projectCode!= null) && (!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+				DBQuery.and(DBQuery.is("code",readSet.code), DBQuery.is("projectCode",readSet.projectCode))))) {
+			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
+					DBQuery.is("code",readSet.runCode), 
+					DBUpdate.pull("projectCodes", readSet.projectCode));
+		}
+		if ((readSet.sampleCode!= null) && (!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+				DBQuery.and(DBQuery.is("code",readSet.code), DBQuery.is("sampleCode",readSet.sampleCode))))) {
+			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
+					DBQuery.is("code",readSet.runCode), 
+					DBUpdate.pull("sampleCodes", readSet.sampleCode));
+		}
+		
 		return ok();
 	}
+	
 	
 	//@Permission(value={"delete_readset"})
 	public static Result deleteByRunCode(String runCode) {
@@ -184,10 +221,13 @@ public class ReadSets extends CommonController{
 		for(Lane lane: run.lanes){
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
 					DBQuery.and(DBQuery.is("code",runCode),DBQuery.is("lanes.number",lane.number)), 
-					DBUpdate.unset("lanes.$.readSetCodes"));
-		
+					DBUpdate.unset("lanes.$.readSetCodes"));		
 		}
+		
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code",runCode), DBUpdate.unset("projectCodes").unset("sampleCodes"));
+		
 		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("runCode", runCode)));
+		
 		return ok();
 	}
 	
@@ -216,9 +256,18 @@ public class ReadSets extends CommonController{
 		
 		if (!ctxVal.hasErrors()) {
 			readsetValue = MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readsetValue);
+			
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.is("lanes.number", readsetValue.laneNumber)), 
 					DBUpdate.push("lanes.$.readSetCodes", readsetValue.code));		
+			
+			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+					DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.notIn("projectCodes", readsetValue.projectCode)), 
+					DBUpdate.push("projectCodes", readsetValue.projectCode));
+					
+			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+					DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.notIn("sampleCodes", readsetValue.sampleCode)), 
+					DBUpdate.push("sampleCodes", readsetValue.sampleCode));
 			
 			return ok(Json.toJson(readsetValue));
 		} else {
