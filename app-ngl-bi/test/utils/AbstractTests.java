@@ -80,7 +80,7 @@ public abstract class AbstractTests {
 	    
 	    config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
 	    config.put("rules.key", "nglBI");
-	    config.put("rules.changesets", "rules/changesets/changesets.xml");
+	    config.put("rules.changesets", "rules/cng/changesets/changesets.xml");
 	    
 		return config;
 		
