@@ -12,6 +12,7 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
+import models.laboratory.common.description.ValidationCriteria;
 import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;
@@ -54,7 +55,6 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			try {
 				states = stateDAO.findByCommonInfoType(commonInfoType.id);
 			} catch (DAOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			commonInfoType.states = states;
@@ -74,6 +74,11 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			InstituteDAO instituteDAO = Spring.getBeanOfType(InstituteDAO.class);
 			List<Institute> institutes = instituteDAO.findByCommonInfoType(commonInfoType.id);
 			commonInfoType.institutes = institutes;
+			
+			//Get ValidationCriteria
+			ValidationCriteriaDAO validationCriteriaDAO = Spring.getBeanOfType(ValidationCriteriaDAO.class);
+			List<ValidationCriteria> validationCriterias = validationCriteriaDAO.findByCommonInfoType(commonInfoType.id);
+			commonInfoType.criterias = validationCriterias;
 
 			return commonInfoType;
 	}

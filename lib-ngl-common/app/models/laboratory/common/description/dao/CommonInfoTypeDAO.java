@@ -10,11 +10,13 @@ import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
+import models.laboratory.common.description.ValidationCriteria;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
 import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import play.api.modules.spring.Spring;
@@ -30,14 +32,12 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 				
 	}
 
-	public long save(CommonInfoType cit) throws DAOException
-	{
-		//Check if objectType exist
-		
+	public long save(CommonInfoType cit) throws DAOException {
 		if(null == cit){
 			throw new DAOException("CommonInfoType is mandatory");
 		}
-		
+
+		//Check if objectType exist
 		if(cit.objectType == null || cit.objectType.id == null ){
 			throw new DAOException("CommonInfoType.objectType is mandatory");
 		}
@@ -53,15 +53,14 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		insertState(cit.states, cit.id, false);
 		insertResolution(cit.resolutions, cit.id, false);
 		insertProperties(cit.propertiesDefinitions, cit.id, false);
-		
 		insertInstitutes(cit.institutes, cit.id, false);
+		insertValidationCriterias(cit.criterias, cit.id, false);
 		
 		return cit.id;
 	}
 
 	
-	public void update(CommonInfoType cit) throws DAOException
-	{
+	public void update(CommonInfoType cit) throws DAOException {
 		if(null == cit || cit.id == null){
 			throw new DAOException("CommonInfoType is mandatory");
 		}
@@ -75,10 +74,11 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		insertState(cit.states, cit.id, true);
 		insertResolution(cit.resolutions, cit.id, true);
 		insertProperties(cit.propertiesDefinitions, cit.id, true);
-		
 		insertInstitutes(cit.institutes, cit.id, true);
+		insertValidationCriterias(cit.criterias, cit.id, true);
 	}
 
+	
 	@Override
 	public void remove(CommonInfoType commonInfoType) throws DAOException {
 		//Delete state common_info_type_state
@@ -87,12 +87,15 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		removeResolution(commonInfoType.id);
 		//Delete property_definition
 		removeProperties(commonInfoType.id);
-		
+		//Delete institutes
 		removeInstitutes(commonInfoType.id);
+		//Delete criteria
+		removeValidationCriterias(commonInfoType.id);
 		
 		super.remove(commonInfoType);
 	}
 
+	
 	private void removeResolution( Long citId) {
 		String sqlResol = "DELETE FROM common_info_type_resolution WHERE fk_common_info_type=?";
 		jdbcTemplate.update(sqlResol, citId);
@@ -124,6 +127,12 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		//Delete common_info_type
 	}
 	
+	private void removeValidationCriterias(Long citId) {
+		String sqlCriteria = "DELETE FROM validation_criteria_common_info_type WHERE fk_common_info_type=?";
+		jdbcTemplate.update(sqlCriteria, citId);
+	}
+	
+	
 	private void insertProperties(List<PropertyDefinition> propertyDefinitions, Long citId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeProperties(citId);
@@ -137,12 +146,11 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		}
 	}
 	
-	private void insertState(List<State> states, Long citId, boolean deleteBefore)
-			throws DAOException {
-		//Add states list
+	private void insertState(List<State> states, Long citId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeStates(citId);
 		}
+		//Add states list
 		if(states!=null && states.size()>0){
 			String sql = "INSERT INTO common_info_type_state (fk_common_info_type,fk_state) VALUES(?,?)";
 			for(State state : states){
@@ -154,8 +162,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		}
 	}
 
-	private void insertResolution(List<Resolution> resolutions, Long citId, boolean deleteBefore)
-			throws DAOException {
+	private void insertResolution(List<Resolution> resolutions, Long citId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeResolution(citId);
 		}
@@ -172,12 +179,11 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 	}
 	
 	
-	private void insertInstitutes(List<Institute> institutes, Long citId, boolean deleteBefore)
-			throws DAOException {
+	private void insertInstitutes(List<Institute> institutes, Long citId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeInstitutes(citId);
 		}
-		//Add resolutions list		
+		//Add institutes list		
 		if(institutes!=null && institutes.size()>0){
 			String sql = "INSERT INTO common_info_type_institute (fk_common_info_type, fk_institute) VALUES(?,?)";
 			for(Institute institute : institutes){
@@ -188,6 +194,34 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 			}
 		}
 	}
+	
+	private void insertValidationCriterias(List<ValidationCriteria> criterias, Long citId, boolean deleteBefore) throws DAOException {
+		if (deleteBefore) {
+			removeValidationCriterias(citId);
+		}
+		//Add criteria list		
+		if (criterias!=null && criterias.size()>0) {
+
+			Map<String, Object> parameters = null;
+			
+			for (ValidationCriteria criteria : criterias) {
+				if (criteria == null || criteria.id == null) {
+					throw new DAOException("criteria is mandatory");
+				} else {
+					parameters = new HashMap<String, Object>();
+					parameters.put("fk_common_info_type", citId);
+					parameters.put("fk_validation_criteria", criteria.id);
+					// set the table name to the name of the link table
+					 SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(dataSource)
+			         .withTableName("validation_criteria_common_info_type");
+					jdbcInsert.execute(parameters);
+				}				
+			}
+		} 
+		
+	}
+	
+
 
 
 	public List<CommonInfoType> findByName(String typeName) {

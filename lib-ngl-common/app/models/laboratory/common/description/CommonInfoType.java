@@ -30,6 +30,8 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	public ObjectType objectType;
 	
 	public List<Institute> institutes = new ArrayList<Institute>();
+	
+	public List<ValidationCriteria> criterias = new ArrayList<ValidationCriteria>();
 
 	public static Finder<CommonInfoType> find = new Finder<CommonInfoType>(CommonInfoTypeDAO.class.getName()); 
 
@@ -72,6 +74,8 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		this.objectType=commonInfoType.objectType;
 		
 		this.institutes=commonInfoType.institutes;
+		
+		this.criterias=commonInfoType.criterias;
 	}
 
 	public List<PropertyDefinition> getPropertyDefinitionByLevel(Level.CODE...levels){
