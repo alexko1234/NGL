@@ -383,7 +383,23 @@ public class CommonValidationHelper {
 			throw new RuntimeException(e);
 		}
 	}
-		
+	
+	public static void validateCriteriaCode(String criteriaCode, ContextValidation contextValidation) {
+			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
+			validateCriteriaCode(typeCode, criteriaCode, contextValidation);		
+	}
+
+	public static void validateCriteriaCode(String typeCode, String criteriaCode, ContextValidation contextValidation) {
+		try {
+			if (null != criteriaCode) {
+				if (!models.laboratory.common.description.ValidationCriteria.find.isCodeExistForTypeCode(criteriaCode, typeCode)) {
+					contextValidation.addErrors("criteriaCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, criteriaCode);
+				}	
+			}
+		} catch(DAOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 	
 	public static void validateValidation(String typeCode, Validation validation, ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, validation, "validation")){

@@ -26,7 +26,10 @@ public class Validation implements IValidation {
 			
 		}
 		CommonValidationHelper.validateResolutionCodes(resolutionCodes, contextValidation);
-		//todo resolution si different de zero
+		//TODO : resolution si different de zero
+		
+		CommonValidationHelper.validateCriteriaCode(criteriaCode, contextValidation); 
+		
 	}
 
 }

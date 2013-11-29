@@ -1,23 +1,29 @@
 package models.laboratory.common.description.dao;
 
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.ValidationCriteria;
-import models.utils.dao.AbstractDAODefault;
+import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class ValidationCriteriaDAO extends AbstractDAODefault<ValidationCriteria>{
+import play.Logger;
 
+@Repository
+public class ValidationCriteriaDAO extends AbstractDAOMapping<ValidationCriteria>{
+	
 	protected ValidationCriteriaDAO() {
-		super("validation_criteria", ValidationCriteria.class, true);
+		super("validation_criteria", ValidationCriteria.class, ValidationCriteriaMappingQuery.class,
+				"SELECT t.id, t.name, t.code FROM validation_criteria as t ",
+				true);
 	}
+	
 	
 	@Override
 	public void remove(ValidationCriteria validationCriteria) throws DAOException {
@@ -96,6 +102,18 @@ public class ValidationCriteriaDAO extends AbstractDAODefault<ValidationCriteria
 				"WHERE vcc.fk_common_info_type=?";
 		BeanPropertyRowMapper<ValidationCriteria> mapper = new BeanPropertyRowMapper<ValidationCriteria>(ValidationCriteria.class);
 		return this.jdbcTemplate.query(sql, mapper, idCommonInfoType);
+	}
+	
+	public boolean isCodeExistForTypeCode(String code, String typeCode) throws DAOException {		
+		//TODO : DAOHelpers.getSQLForInstitute("c") ?
+		String sql =  "SELECT vc.id, vc.name, vc.code, vc.path "+
+				"FROM validation_criteria vc "+
+				"INNER JOIN validation_criteria_common_info_type as vcc ON vcc.fk_validation_criteria=vc.id "+
+				"INNER JOIN common_info_type as c ON c.id=vcc.fk_common_info_type " + 
+				"WHERE vc.code=? and c.code=?";
+		
+		return( initializeMapping(sql, new SqlParameter("vc.code", Types.VARCHAR),
+				 new SqlParameter("c.code", Types.VARCHAR)).findObject(code, typeCode) != null )? true : false;	
 	}
 	
 }
