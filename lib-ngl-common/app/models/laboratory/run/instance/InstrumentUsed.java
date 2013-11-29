@@ -1,10 +1,12 @@
 package models.laboratory.run.instance;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.instrument.description.dao.InstrumentCategoryDAO;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.utils.ValidationHelper;
+import validation.common.instance.CommonValidationHelper;
 
 public class InstrumentUsed implements IValidation {
 
@@ -17,16 +19,16 @@ public class InstrumentUsed implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		
-		//TODO: Can not be tested now : no description in database.
 		//DescriptionValidationHelper.validationInstrumentCode(code,contextValidation);
 		//DescriptionValidationHelper.validationInstrumentCategoryCode(code,contextValidation);
+
+		CommonValidationHelper.validateRequiredDescriptionCode(contextValidation, this.code, "code", InstrumentUsedType.find);
 		
-		if(ValidationHelper.required(contextValidation, this.code, "code")){
-			//TODO valid if exist
-		}
-		if(ValidationHelper.required(contextValidation, this.categoryCode, "categoryCode")){
-			//TODO valid if exist
-		}
+		contextValidation.addKeyToRootKeyName("categoryCode");
+		CommonValidationHelper.validateRequiredDescriptionCode(contextValidation, this.categoryCode, "code", InstrumentCategoryDAO.find);
+		contextValidation.removeKeyFromRootKeyName("categoryCode");
+		
 	}
+
 
 }

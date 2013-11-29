@@ -74,12 +74,12 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 		}
 		//Add contexts list		
 		if (contexts!=null && contexts.size()>0) {
-			String sql = "INSERT INTO treatment_type_context (fk_treatment_type, fk_treatment_context) VALUES(?,?)";
+			String sql = "INSERT INTO treatment_type_context (fk_treatment_type, fk_treatment_context, required) VALUES(?,?,?)";
 			for(TreatmentTypeContext context : contexts){
 				if(context == null || context.id == null ){
 					throw new DAOException("context is mandatory");
 				}
-				jdbcTemplate.update(sql, id, context.id);
+				jdbcTemplate.update(sql, id, context.id, context.required);
 			}
 		}
 		else {

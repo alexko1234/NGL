@@ -13,6 +13,7 @@ import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.laboratory.processes.description.dao.ProcessTypeDAO;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import models.utils.dao.AbstractDAOCommonInfoType.CommonInfoTypeFinder;
 
 
 /**
@@ -23,11 +24,13 @@ import models.utils.dao.DAOException;
 public class InstrumentUsedType extends CommonInfoType{
 	
 	public List<Instrument> instruments;
-	
 	public InstrumentCategory category;
-
 	public List<ContainerSupportCategory> inContainerSupportCategories;
 	public List<ContainerSupportCategory> outContainerSupportCategories;
+	public Boolean active = Boolean.TRUE;
+	public String path;
+	
+	
 	
 	
 	public static CommonInfoType.AbstractCommonInfoTypeFinder<InstrumentUsedType> find = new CommonInfoType.AbstractCommonInfoTypeFinder<InstrumentUsedType>(InstrumentUsedTypeDAO.class); 

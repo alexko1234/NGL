@@ -1,8 +1,12 @@
 package models.laboratory.instrument.description.dao;
 
+import models.laboratory.common.description.AbstractCategory;
+import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
+import models.laboratory.container.description.dao.ContainerCategoryDAO;
 import models.laboratory.container.description.dao.ContainerSupportCategoryDAO;
 import models.laboratory.instrument.description.InstrumentCategory;
+import models.utils.Model.Finder;
 import models.utils.dao.AbstractDAODefault;
 import models.utils.dao.DAOException;
 
@@ -12,6 +16,9 @@ import play.api.modules.spring.Spring;
 
 @Repository
 public class InstrumentCategoryDAO extends AbstractDAODefault<InstrumentCategory>{
+	
+	public static Finder<InstrumentCategory> find = new Finder<InstrumentCategory>(InstrumentCategoryDAO.class.getName()); 	
+
 
 	public InstrumentCategoryDAO() {
 		super("instrument_category",InstrumentCategory.class,true);

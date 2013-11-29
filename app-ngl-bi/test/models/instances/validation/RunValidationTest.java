@@ -43,6 +43,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import play.Logger;
+import play.Play;
 import play.data.validation.ValidationError;
 import play.mvc.Result;
 import utils.AbstractTests;
@@ -258,16 +259,7 @@ public class RunValidationTest extends AbstractTests {
 	        
 			run.traceInformation.modifyUser = "test";
 			run.traceInformation.modifyDate = new Date();
-			/*
-			 // these affectations are not required anymore (automatically done by the readset save()) ...
-			Set<String> t = new TreeSet<String>();
-			t.add("ProjectCode");
-			run.projectCodes = t;
-			
-			t = new TreeSet<String>();
-			t.add("SampleCode");
-			run.sampleCodes = t;
-			*/
+
 	        ContextValidation ctxVal3 = new ContextValidation();
 	        ctxVal3.setUpdateMode();
 			 
@@ -1239,31 +1231,31 @@ public class RunValidationTest extends AbstractTests {
 	 }
 	 
 	 
-		@Test
-		public void validateValidationForRun() {
-			 running(fakeApplication(fakeConfiguration()), new Runnable() {
-			       public void run() {
-			    	   
-			    	   
-			   		Run run = new Run();
-					run.code = "runForValidateValidation";
-					run.typeCode = "RHS2000";
-					
-					Validation v = new Validation();
-					v.criteriaCode = "default-criteria-run";
-					v.date = new Date();
-					v.resolutionCodes = null;
-					v.user = "dnoisett";
+	@Test
+	public void validateValidationForRun() {
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {
+		    	   
+		    	   
+		   		Run run = new Run();
+				run.code = "runForValidateValidation";
+				run.typeCode = "RHS2000";
+				
+				Validation v = new Validation();
+				v.criteriaCode = "default-criteria-run";
+				v.date = new Date();
+				v.resolutionCodes = null;
+				v.user = "dnoisett";
 
-			    	ContextValidation ctxVal = new ContextValidation();
-			    	ctxVal.putObject("typeCode", run.typeCode ); 
-			    	ctxVal.setCreationMode();
+		    	ContextValidation ctxVal = new ContextValidation();
+		    	ctxVal.putObject("typeCode", run.typeCode ); 
+		    	ctxVal.setCreationMode();
 
-					v.validate(ctxVal);
-					
-					assertThat(ctxVal.errors).hasSize(0);
-			}});
-		}
+				v.validate(ctxVal);
+				
+				assertThat(ctxVal.errors).hasSize(0);
+		}});
+	}
 	
 	
 	 
@@ -1355,8 +1347,14 @@ public class RunValidationTest extends AbstractTests {
 			run.containerSupportCode = "containerName";
 			run.dispatch = true;
 			run.instrumentUsed = new InstrumentUsed();
-			run.instrumentUsed.code = "HS7";
-			run.instrumentUsed.categoryCode = "HISEQ2000";
+			if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
+				run.instrumentUsed.code = "HISEQ1-CNG";
+				run.instrumentUsed.categoryCode = "HISEQ2000";
+			}	
+			else {
+				run.instrumentUsed.code = "hand";
+				run.instrumentUsed.categoryCode = "hand";
+			}
 			run.typeCode = "RHS2000";
 			List<String> lResos = new ArrayList<String>();
 			lResos.add("reso1");
@@ -1392,8 +1390,14 @@ public class RunValidationTest extends AbstractTests {
 		run.containerSupportCode = "containerName";
 		run.dispatch = true;
 		run.instrumentUsed = new InstrumentUsed();
-		run.instrumentUsed.code = "HS7";
-		run.instrumentUsed.categoryCode = "HISEQ2000";
+		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
+			run.instrumentUsed.code = "HISEQ1-CNG";
+			run.instrumentUsed.categoryCode = "HISEQ2000";
+		}	
+		else {
+			run.instrumentUsed.code = "hand";
+			run.instrumentUsed.categoryCode = "hand";
+		}
 		run.typeCode = "RHS2000";
 		List<String> lResos = new ArrayList<String>();
 		lResos.add("reso1");
@@ -1441,8 +1445,14 @@ public class RunValidationTest extends AbstractTests {
 		run.containerSupportCode = "containerName";
 		run.dispatch = true;
 		run.instrumentUsed = new InstrumentUsed();
-		run.instrumentUsed.code = "HS7";
-		run.instrumentUsed.categoryCode = "HISEQ2000";
+		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
+			run.instrumentUsed.code = "HISEQ1-CNG";
+			run.instrumentUsed.categoryCode = "HISEQ2000";
+		}	
+		else {
+			run.instrumentUsed.code = "hand";
+			run.instrumentUsed.categoryCode = "hand";
+		}
 		run.typeCode = "RHS2000";
 		List<String> lResos = new ArrayList<String>();
 		lResos.add("reso1");

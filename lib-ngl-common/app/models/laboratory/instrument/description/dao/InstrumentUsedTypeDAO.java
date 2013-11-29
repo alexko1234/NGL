@@ -60,6 +60,9 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		parameters.put("id", instrumentUsedType.id);
 		parameters.put("fk_common_info_type", instrumentUsedType.id);
 		parameters.put("fk_instrument_category", instrumentUsedType.category.id);
+		parameters.put("active", instrumentUsedType.active);
+		parameters.put("path", instrumentUsedType.path);
+		
 		jdbcInsert.execute(parameters);
 
 		//Add instruments list

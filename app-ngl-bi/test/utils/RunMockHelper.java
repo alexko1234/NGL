@@ -20,6 +20,7 @@ import models.laboratory.sample.instance.Sample;
 
 import org.codehaus.jackson.JsonNode;
 
+import play.Play;
 import play.libs.Json;
 
 public class RunMockHelper {
@@ -56,8 +57,15 @@ public class RunMockHelper {
 		run.dispatch = true;
 		
 		run.instrumentUsed = new InstrumentUsed();
-		run.instrumentUsed.code = "HS7";
-		run.instrumentUsed.categoryCode = "HISEQ2000";
+		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
+			run.instrumentUsed.code = "HISEQ1-CNG";
+			run.instrumentUsed.categoryCode = "HISEQ2000";
+		}	
+		else {
+			run.instrumentUsed.code = "hand";
+			run.instrumentUsed.categoryCode = "hand";
+		}
+
 		
 		run.typeCode = "RHS2000";
 		
@@ -76,14 +84,7 @@ public class RunMockHelper {
 		TraceInformation ti = new TraceInformation(); 
 		ti.setTraceInformation("dnoisett");
 		run.traceInformation = ti; 
-		/*
-		Map<String, Treatment> lT = new HashMap<String, Treatment>();
-		Treatment ngsrg = new Treatment(); 
-		lT.put("ngsrg", ngsrg);
-		ngsrg.categoryCode = "quality";
-		ngsrg.typeCode = "ngsrg";
-		run.treatments = lT;
-		*/
+
 		return run;
 	}
 	
@@ -173,21 +174,7 @@ public class RunMockHelper {
 		 
 	 }
 	 
-	public static File newFile(){
-		File file = new File();
-		file.fullname = "testfile";
-		file.extension = ".exe";
-		file.typeCode = "42";
-		file.usable = true;
-		
-		file.state = getState("F-QC");
-		
-		file.properties.put("label", new PropertySingleValue("thelabel"));
-		file.properties.put("asciiEncoding", new PropertySingleValue("xxx"));
-		
-		return file;
-		
-	}
+
 	
 	public static File newFile(String code){
 		File file = new File();
