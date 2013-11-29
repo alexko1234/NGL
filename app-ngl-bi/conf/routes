@@ -27,6 +27,7 @@ POST   	/api/runs									controllers.runs.api.Runs.save()
 PUT   	/api/runs/:code 							controllers.runs.api.Runs.update(code: java.lang.String)
 DELETE	/api/runs/:code								controllers.runs.api.Runs.delete(code:java.lang.String)
 PUT		/api/runs/:code/state/:stateCode			controllers.runs.api.Runs.state(code:java.lang.String, stateCode:java.lang.String)
+#deprecated
 PUT		/api/runs/:code/workflow/:stateCode			controllers.runs.api.Runs.state(code:java.lang.String, stateCode:java.lang.String)
 PUT		/api/runs/:code/validation/:valid 			controllers.runs.api.Runs.validation(code:java.lang.String, valid:java.lang.String)
 PUT		/api/runs/:code/apply-rules/:codeRules		controllers.runs.api.Runs.applyRules(code:java.lang.String, codeRules:java.lang.String)
@@ -111,10 +112,15 @@ GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list()
 #migration
 GET		/migration									controllers.migration.Migration.migration()
 
+#Common
+GET		/api/commons/states							controllers.commons.api.States.list()
+GET		/api/commons/types							controllers.commons.api.CommonInfoTypes.list()
 
 #list
 GET		/api/lists/resolutions				controllers.lists.api.Lists.resolutions()
 GET		/api/lists/validation-criterias		controllers.lists.api.Lists.validationCriterias()
+GET		/api/lists/projects					controllers.lists.api.Lists.projects()
+GET		/api/lists/samples					controllers.lists.api.Lists.samples()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               				controllers.Assets.at(path="/public", file)

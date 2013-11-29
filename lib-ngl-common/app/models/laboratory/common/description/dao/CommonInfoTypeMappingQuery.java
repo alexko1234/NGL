@@ -55,6 +55,7 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			try {
 				states = stateDAO.findByCommonInfoType(commonInfoType.id);
 			} catch (DAOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			commonInfoType.states = states;

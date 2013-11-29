@@ -81,27 +81,28 @@ public class DatatableHelpers {
 		return column1;
 	}
 	
+	@Deprecated()
 	public static Integer getNumberRecordsPerPage(Form form){
 		Field field = form.field("numberRecordsPerPage");
-		String value = field.valueOr(DEFAULT_NB_ELEMENT);
+		String value = field.valueOr(DEFAULT_NB_ELEMENT.toString());
 		return Integer.valueOf(value);
 	}
-	
+	@Deprecated()
 	public static Integer getPageNumber(Form form){
 		Field field = form.field("pageNumber");
-		String value = field.valueOr(DEFAULT_PAGE_NUMBER);
+		String value = field.valueOr(DEFAULT_PAGE_NUMBER.toString());
 		return Integer.valueOf(value);
 	}
-	
+	@Deprecated()
 	public static String getOrderBy(Form form){
 		Field field = form.field("orderBy");
 		String value = field.valueOr("");
 		return value;
 	}
-
+	@Deprecated()
 	public static Integer getOrderSense(Form form){
 		Field field = form.field("orderSense");
-		String value = field.valueOr(DEFAULT_ORDER_SENSE);
+		String value = field.valueOr(DEFAULT_ORDER_SENSE.toString());
 		return Integer.valueOf(value);
 	}
 }

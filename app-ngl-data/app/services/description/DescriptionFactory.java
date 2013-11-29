@@ -246,7 +246,7 @@ public class DescriptionFactory {
 		et.propertiesDefinitions = propertiesDefinitions;
 		et.protocols = protocols;
 		et.instrumentUsedTypes = instrumentUsedTypes;
-		et.states = State.find.findByObjectTypeCode(ObjectType.CODE.Experiment.name());
+		et.states = State.find.findByObjectTypeCode(ObjectType.CODE.Experiment);
 		et.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Experiment.name());
 		et.atomicTransfertMethod=atomicTransfertMethod;
 		
@@ -311,7 +311,7 @@ public class DescriptionFactory {
 		pt.category = category;
 		pt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Process.name());
 		pt.propertiesDefinitions = propertiesDefinitions;
-		pt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Process.name());
+		pt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Process);
 		pt.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Process.name());
 		pt.firstExperimentType = firstExperimentType;
 		pt.lastExperimentType = lastExperimentType;
@@ -366,7 +366,7 @@ public class DescriptionFactory {
 		rt.name =name;
 		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.ReadSet.name());
 		rt.propertiesDefinitions = propertiesDefinitions;
-		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.ReadSet.name());
+		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.ReadSet);
 		rt.institutes = institutes; 
 		rt.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.ReadSet.name());
 		
@@ -382,7 +382,7 @@ public class DescriptionFactory {
 		rt.category = category;
 		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Run.name());
 		rt.propertiesDefinitions = propertiesDefinitions;
-		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Run.name());
+		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Run);
 		rt.institutes = institutes;
 		rt.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Run.name());
 		

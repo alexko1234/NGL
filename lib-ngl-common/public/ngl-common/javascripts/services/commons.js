@@ -70,23 +70,34 @@ angular.module('commonsServices', []).
     		return constructor;
     	}).factory('lists', ['$http', function($http){
     		
-    		var resolutions = [];
-    		var validationCriterias = [];
+    		var results = {};    		
     		
     		var refresh = {
     				resolutions : function(params){
-    					$http.get(jsRoutes.controllers.lists.api.Lists.resolutions().url,{params:params}).success(function(data) {
-    	    				resolutions=data;    				
-    	    			});
+    					load(jsRoutes.controllers.lists.api.Lists.resolutions().url,params,'resolutions');
     				},
     				validationCriterias: function(params){
-    					$http.get(jsRoutes.controllers.lists.api.Lists.validationCriterias().url,{params:params}).success(function(data) {
-    						validationCriterias=data;    				
-    	    			});
+    					load(jsRoutes.controllers.lists.api.Lists.validationCriterias().url,params,'validationCriterias');    					
+    				},
+    				projects : function(params){
+    					load(jsRoutes.controllers.lists.api.Lists.projects().url,params,'projects');    					
+    				},
+    				samples : function(params){
+    					load(jsRoutes.controllers.lists.api.Lists.samples().url,params,'samples');    					
+    				},
+    				states : function(params){
+    					load(jsRoutes.controllers.commons.api.States.list().url,params,'states');    				
+    				},
+    				types : function(params){
+    					load(jsRoutes.controllers.commons.api.CommonInfoTypes.list().url,params,'types');    				
     				},
     				all : function(params){
     					this.resolutions(params);
     					this.validationCriterias(params);
+    					this.projects(params);
+    					this.samples(params);
+    					this.states(params);
+    					this.types(params);
     				}
     		};
     		
@@ -96,11 +107,26 @@ angular.module('commonsServices', []).
                  {code:"UNSET", name:Messages("validate.value.UNSET")}];
     		};
     		
+    		function load(url, params, values){
+    			if(angular.isUndefined(params)){
+    				params = {};
+    			}
+    			params.list = true;
+    			$http.get(url,{params:params,values:values}).success(function(data, status, headers, config) {
+    				results[config.values]=data;    				
+    			});
+    		}
+    		
     		return {
     			refresh : refresh,
-    			getResolutions : function(){return resolutions;},
-    			getValidations : getValidations,
-    			getValidationCriterias : function(){return validationCriterias;}
+    			get : function(values){return results[values];},
+    			getResolutions : function(){return results['resolutions'];},
+    			getValidationCriterias : function(){return results['validationCriterias'];},
+    			getProjects : function(){return results['projects'];},
+    			getSamples : function(){return results['samples'];},
+    			getStates : function(){return results['states'];},
+    			getTypes : function(){return results['types'];},
+    			getValidations : getValidations    			
     		};
     		
     	}]).directive('messages', function() {

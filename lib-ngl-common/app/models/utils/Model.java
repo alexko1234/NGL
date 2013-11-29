@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.ObjectType.CODE;
 import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
 import play.api.modules.spring.Spring;
@@ -104,7 +106,7 @@ public class Model<T> {
 		
 		public String getClassName() {
 			return className;
-		}
+		}		
     }
 
 	@Override

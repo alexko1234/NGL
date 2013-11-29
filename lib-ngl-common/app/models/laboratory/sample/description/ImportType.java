@@ -3,10 +3,10 @@ package models.laboratory.sample.description;
 import java.util.List;
 
 import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.CommonInfoType.AbstractCommonInfoTypeFinder;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.sample.description.dao.ImportTypeDAO;
-import models.utils.dao.AbstractDAOCommonInfoType.CommonInfoTypeFinder;
 
 /**
  * Additional information collaborator
@@ -17,7 +17,7 @@ public class ImportType extends CommonInfoType{
 
 	public ImportCategory category;
 	
-	public static CommonInfoTypeFinder<ImportTypeDAO,ImportType> find = new CommonInfoTypeFinder<ImportTypeDAO,ImportType>(ImportTypeDAO.class);
+	public static CommonInfoType.AbstractCommonInfoTypeFinder<ImportType> find = new CommonInfoType.AbstractCommonInfoTypeFinder<ImportType>(ImportTypeDAO.class);
 	
 	public ImportType()
 	{

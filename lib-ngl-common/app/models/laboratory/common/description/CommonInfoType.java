@@ -6,8 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.common.description.dao.StateDAO;
+import models.utils.ListObject;
 import models.utils.Model;
+import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAOCommonInfoType;
+import models.utils.dao.DAOException;
 import play.api.modules.spring.Spring;
 
 /**
@@ -33,7 +39,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	
 	public List<ValidationCriteria> criterias = new ArrayList<ValidationCriteria>();
 
-	public static Finder<CommonInfoType> find = new Finder<CommonInfoType>(CommonInfoTypeDAO.class.getName()); 
+	public static CommonInfoTypeFinder find = new CommonInfoTypeFinder(); 
 
 	public CommonInfoType() {
 		super(CommonInfoTypeDAO.class.getName());
@@ -42,17 +48,6 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	protected CommonInfoType(String classNameDAO){
 		super(classNameDAO);
 	}
-
-	public static List<CommonInfoType> findByNameAndType(String name, Long idObjectType)
-	{
-		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		if(idObjectType==null)
-			return commonInfoTypeDAO.findByName(name);
-		else 
-			return commonInfoTypeDAO.findByTypeNameAndType(name, idObjectType);
-	}
-
-
 
 	public Map<String, PropertyDefinition> getMapPropertyDefinition()
 	{
@@ -74,7 +69,6 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		this.objectType=commonInfoType.objectType;
 		
 		this.institutes=commonInfoType.institutes;
-		
 		this.criterias=commonInfoType.criterias;
 	}
 
@@ -97,6 +91,30 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		}	
 		
 		return proDefinitions;
+	}
+	
+	public static class CommonInfoTypeFinder extends Finder<CommonInfoType>{ 
+
+		public CommonInfoTypeFinder() {
+			super(CommonInfoTypeDAO.class.getName());
+		}
+
+		public List<CommonInfoType> findByObjectTypeCode(CODE objectTypeCode) throws DAOException {
+			return ((CommonInfoTypeDAO)getInstance()).findByObjectTypeCode(objectTypeCode);
+		}
+		
+	}
+
+	public static class AbstractCommonInfoTypeFinder<T> extends Finder<T>{ 
+	
+		public AbstractCommonInfoTypeFinder(Class<? extends AbstractDAOCommonInfoType> type) {
+			super(type.getName());
+		}
+	
+		public List<ListObject> findAllForList() throws DAOException{
+			return ((AbstractDAOCommonInfoType) getInstance()).findAllForList();
+		}
+		
 	}
 
 }

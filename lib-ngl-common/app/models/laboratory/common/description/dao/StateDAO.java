@@ -140,16 +140,17 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		return initializeMapping(sql, new SqlParameter("fk_common_info_type", Type.LONG)).execute(idCommonInfoType);		
 	}
 	
-	public List<State> findByObjectTypeCode(String objectTypeCode) throws DAOException {
+	public List<State> findByObjectTypeCode(ObjectType.CODE objectTypeCode) throws DAOException {
 		if(null == objectTypeCode){
 			throw new DAOException("code is mandatory");
 		}
 		String sql = sqlCommon+
 				"JOIN state_object_type so ON so.fk_state=t.id "+
 				"JOIN object_type o ON so.fk_object_type=o.id "+
-				"WHERE o.code=?";		
-		return initializeMapping(sql, new SqlParameter("o.code", Types.VARCHAR)).execute(objectTypeCode);		
+				"WHERE o.code=? order by position";		
+		return initializeMapping(sql, new SqlParameter("o.code", Types.VARCHAR)).execute(objectTypeCode.name());		
 	}
+	
 	
 	public List<State> findByObjectTypeId(Long id) throws DAOException {
 		if(null == id){

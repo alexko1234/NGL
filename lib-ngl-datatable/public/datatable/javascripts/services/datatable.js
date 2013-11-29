@@ -39,7 +39,7 @@ angular.module('datatableServices', []).
 								numberPageListMax:3,
 	    						pageList:[],
 								numberRecordsPerPage:10,
-	    						numberRecordsPerPageList: [{number:10, clazz:'active'},{number:25, clazz:''},{number:50, clazz:''},{number:100, clazz:''},{number:150, clazz:''},{number:200, clazz:''}]
+	    						numberRecordsPerPageList: [{number:10, clazz:'active'},{number:25, clazz:''},{number:50, clazz:''},{number:100, clazz:''}]
 							},
 							order : {
 								active:true,

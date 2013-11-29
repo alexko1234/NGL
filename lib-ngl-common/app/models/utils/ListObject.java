@@ -3,6 +3,7 @@ package models.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 
@@ -40,5 +41,13 @@ public class ListObject{
 		}
 		
 		return jo;
+	}
+
+	public static List<ListObject> from(List<CommonInfoType> values) {
+		List<ListObject> l = new ArrayList<ListObject>(values.size());
+		for(CommonInfoType value : values){
+			l.add(new ListObject(value.code, value.name));
+		}
+		return l;
 	}
 }

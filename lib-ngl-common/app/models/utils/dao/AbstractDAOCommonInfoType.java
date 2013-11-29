@@ -7,7 +7,6 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.dao.StateDAO;
 import models.utils.ListObject;
-import models.utils.Model.Finder;
 
 import org.springframework.asm.Type;
 import org.springframework.dao.DataAccessException;
@@ -78,19 +77,6 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 		String sql = "SELECT t.code, t.name "+sqlCommonFrom;
 		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
 		return this.jdbcTemplate.query(sql, mapper);
-	}
-
-
-	public static class CommonInfoTypeFinder<P extends AbstractDAOCommonInfoType,T> extends Finder<T>{ 
-
-		public CommonInfoTypeFinder(Class<P> type) {
-			super(type.getName());
-		}
-
-		public List<ListObject> findAllForList() throws DAOException{
-			return ((P) getInstance()).findAllForList();
-		}
-		
 	}
 
 }

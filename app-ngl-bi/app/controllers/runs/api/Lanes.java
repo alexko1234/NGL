@@ -152,7 +152,7 @@ public class Lanes extends CommonController{
 		if(run == null){
 			return badRequest();
 		}
-		Form<Validation> filledForm = validationForm.bindFromRequest();
+		Form<Validation> filledForm = getFilledForm(validationForm, Validation.class);
 		Validation validation = filledForm.get();
 		validation.date = new Date();
 		validation.user = getCurrentUser();

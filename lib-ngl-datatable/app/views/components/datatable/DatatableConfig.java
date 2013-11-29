@@ -14,9 +14,9 @@ import scala.collection.Seq;
 
 public class DatatableConfig {
 	
-	public static final String DEFAULT_NB_ELEMENT = "50";
-	public static final String DEFAULT_PAGE_NUMBER = "0";
-	public static final String DEFAULT_ORDER_SENSE = "1";
+	public static final Integer DEFAULT_NB_ELEMENT = 50;
+	public static final Integer DEFAULT_PAGE_NUMBER = 0;
+	public static final Integer DEFAULT_ORDER_SENSE = 1;
 	
 	public Seq<DatatableColumn> columns;
 	public List<DatatableColumn> columnList;

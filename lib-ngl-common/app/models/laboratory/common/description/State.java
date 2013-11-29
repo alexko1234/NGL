@@ -3,6 +3,7 @@ package models.laboratory.common.description;
 
 import java.util.List;
 
+import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.dao.StateDAO;
 import models.utils.ListObject;
 import models.utils.Model;
@@ -48,12 +49,13 @@ public class State extends Model<State>{
 			return ((StateDAO) getInstance()).isCodeExistForTypeCode(code, typeCode);
 		}
 
-		public List<State> findByObjectTypeCode(String code) throws DAOException {
-			return ((StateDAO) getInstance()).findByObjectTypeCode(code);
-		}
-		
 		public List<ListObject> findAllForContainerList() throws DAOException {
 			return ((StateDAO) getInstance()).findAllForContainerList();
+		}
+
+		public List<State> findByObjectTypeCode(CODE objectTypeCode) throws DAOException {
+			return ((StateDAO) getInstance()).findByObjectTypeCode(objectTypeCode);
+			
 		}
 	}
 	

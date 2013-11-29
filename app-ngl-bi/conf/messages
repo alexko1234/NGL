@@ -1,3 +1,5 @@
+date.format=dd/MM/yyyy
+
 #application
 application.name=NGL-BI
 index.title=Welcome to NGL-BI
@@ -24,6 +26,18 @@ validation.menu.readsets = Read Sets
 validate.value.TRUE = Oui
 validate.value.FALSE = Non
 validate.value.UNSET = -
+
+search.placeholder.projects = Selectionnez des projets
+search.placeholder.samples = Selectionnez des échantillons
+search.placeholder.fromDate = Depuis le (jj/mm/yyyy)
+search.placeholder.toDate = Jusqu''au (jj/mm/yyyy)
+search.placeholder.states = Selectionnez des états
+search.placeholder.instruments = Selectionnez des instruments
+search.placeholder.types = Selectionnez des types
+search.placeholder.valid = Selectionnez une validation
+
+button.search = Rechercher
+button.reset = Réinitialiser
 
 runs.menu = Runs
 runs.menu.search = Recherche

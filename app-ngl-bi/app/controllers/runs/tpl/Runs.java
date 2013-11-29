@@ -70,7 +70,11 @@ public class Runs extends CommonController {
   	    		controllers.runs.api.routes.javascript.Runs.validation(),  	    		
   	    		controllers.runs.api.routes.javascript.Lanes.validation(),  	    		
   	    		controllers.lists.api.routes.javascript.Lists.resolutions(),
-  	    		controllers.lists.api.routes.javascript.Lists.validationCriterias()
+  	    		controllers.lists.api.routes.javascript.Lists.validationCriterias(),
+  	    		controllers.lists.api.routes.javascript.Lists.projects(),
+  	    		controllers.lists.api.routes.javascript.Lists.samples(),
+  	    		controllers.commons.api.routes.javascript.States.list(),
+  	    		controllers.commons.api.routes.javascript.CommonInfoTypes.list()
   	      )	  	      
   	    );
   	  }

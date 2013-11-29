@@ -7,6 +7,7 @@ import java.util.Map;
 
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Institute;
+import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
@@ -195,7 +196,6 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		}
 	}
 	
-	
 	private void insertValidationCriterias(List<ValidationCriteria> criterias, Long citId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeValidationCriterias(citId);
@@ -211,7 +211,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 			}
 		}
 	}
-	
+
 
 
 	public List<CommonInfoType> findByName(String typeName) {
@@ -241,6 +241,14 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 				"WHERE t.code = ? ";
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
 		return commonInfoTypeMappingQuery.findObject(code);
+	}
+
+	public List<CommonInfoType> findByObjectTypeCode(CODE objectTypeCode) {
+		String sql = sqlCommon+
+				" WHERE o.code=? order by name";		
+
+		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
+		return commonInfoTypeMappingQuery.execute(objectTypeCode.name());
 	}
 
 	

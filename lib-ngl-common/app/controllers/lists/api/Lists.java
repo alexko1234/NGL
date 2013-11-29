@@ -1,5 +1,7 @@
 package controllers.lists.api;
 
+import static play.data.Form.form;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
 import play.data.DynamicForm;
+import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -91,13 +94,21 @@ public class Lists extends Controller{
 
 	}
 
-	public static Result samples(String projectCode){
+	final static Form<SamplesSearchForm> samplesForm = form(SamplesSearchForm.class);
+	public static Result samples(){
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("_id", 0);//Don't need the _id field
 		keys.put("name", 1);
 		keys.put("code", 1);
-		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.is("projectCodes", projectCode),keys).sort("code").toList();
-
+		
+		DynamicForm inputForm = form.bindFromRequest();
+		List<Sample> samples = new ArrayList<Sample>(0);
+		if(inputForm.get("projectCode") != null){
+			samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.is("projectCodes", inputForm.get("projectCode")),keys).sort("code").toList();
+		}else if(inputForm.get("projectCodes") != null ){
+			samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.in("projectCodes", (Object[])request().queryString().get("projectCodes")),keys).sort("code").toList();
+		}
+		
 		return Results.ok(Json.toJson(ListObject.sampleToJsonObject(samples)));
 	}
 
@@ -177,7 +188,7 @@ public class Lists extends Controller{
 	}
 
 
-	@Permission(value={"reading"})
+	//@Permission(value={"reading"})
 	public static Result resolutions(){
 		try {
 			DynamicForm inputForm = form.bindFromRequest();

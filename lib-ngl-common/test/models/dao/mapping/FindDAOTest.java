@@ -132,7 +132,7 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertFalse(State.find.isCodeExist(""));
 		Assert.assertNotNull(State.find.findAllForContainerList());
 		Assert.assertNotNull(State.find.findByCategoryCode(""));
-		Assert.assertNotNull(State.find.findByObjectTypeCode("Sample"));
+		Assert.assertNotNull(State.find.findByObjectTypeCode(ObjectType.CODE.Sample));
 		Assert.assertNotNull(State.find.findByTypeCode(""));
 		Assert.assertFalse(State.find.isCodeExistForTypeCode("",""));
 	}

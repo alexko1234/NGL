@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.CommonInfoType.AbstractCommonInfoTypeFinder;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.ListObject;
-import models.utils.dao.AbstractDAOCommonInfoType.CommonInfoTypeFinder;
 import models.utils.dao.DAOException;
 
 /**
@@ -35,7 +35,7 @@ public class ExperimentType extends CommonInfoType{
 		return getPropertyDefinitionByLevel(models.laboratory.common.description.Level.CODE.Experiment);
 	}
 	
-	public static class ExperimentTypeFinder extends CommonInfoTypeFinder<ExperimentTypeDAO, ExperimentType>{
+	public static class ExperimentTypeFinder extends CommonInfoType.AbstractCommonInfoTypeFinder<ExperimentType>{
 
 		public ExperimentTypeFinder() {
 			super(ExperimentTypeDAO.class);

@@ -3,8 +3,11 @@ package controllers.runs.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import models.laboratory.common.instance.State;
 //import models.laboratory.common.description.State;
@@ -20,6 +23,7 @@ import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
 import net.vz.mongodb.jackson.DBUpdate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 
@@ -46,14 +50,16 @@ import controllers.authorisation.Permission;
 import controllers.utils.FormUtils;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.MongoDBResult.Sort;
 /**
  * Controller around Run object
  *
  */
 public class Runs extends CommonController {
 
+	
+	final static Form<RunSearchForm> searchForm = form(RunSearchForm.class); 
 	final static Form<Run> runForm = form(Run.class);
-	final static DynamicForm listForm = new DynamicForm();
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	final static Form<Validation> validationForm = form(Validation.class);
 	final static Form<State> stateForm = form(State.class);
@@ -62,30 +68,55 @@ public class Runs extends CommonController {
 
 	//@Permission(value={"reading"})
 	public static Result list(){
-		DynamicForm filledForm =  listForm.bindFromRequest();
-		MongoDBResult<Run> results = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, getQuery(filledForm)) 
-				.sort(DatatableHelpers.getOrderBy(filledForm), FormUtils.getMongoDBOrderSense(filledForm))
-				.page(DatatableHelpers.getPageNumber(filledForm), DatatableHelpers.getNumberRecordsPerPage(filledForm)); 
-		List<Run> runs = results.toList();
-
-		if(filledForm.get("datatable") != null){
+		Form<RunSearchForm> filledForm = filledFormQueryString(searchForm, RunSearchForm.class);
+		RunSearchForm form = filledForm.get();
+		
+		if(form.datatable){
+			MongoDBResult<Run> results = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, getQuery(form)) 
+					.sort(form.orderBy, Sort.valueOf(form.orderSense))
+					.page(form.pageNumber,form.numberRecordsPerPage); 
+			List<Run> runs = results.toList();
 			return ok(Json.toJson(new DatatableResponse<Run>(runs, results.count())));
 		}else{
+			MongoDBResult<Run> results = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, getQuery(form))
+					.sort("code", Sort.valueOf(form.orderSense));
+			List<Run> runs = results.toList();
 			return ok(Json.toJson(runs));
 		}
 	}
 
-	private static Query getQuery(DynamicForm filledForm) {
+	private static Query getQuery(RunSearchForm filledForm) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
-		if (StringUtils.isNotBlank(filledForm.get("stateCode"))) { //all
-			queries.add(DBQuery.is("state.code", filledForm.get("stateCode")));
+		if (StringUtils.isNotBlank(filledForm.stateCode)) { //all
+			queries.add(DBQuery.is("state.code", filledForm.stateCode));
+		}else if (CollectionUtils.isNotEmpty(filledForm.stateCodes)) { //all
+			queries.add(DBQuery.in("state.code", filledForm.stateCodes));
+		}
+		if (StringUtils.isNotBlank(filledForm.validCode)) { //all
+			queries.add(DBQuery.is("validation.valid", TBoolean.valueOf(filledForm.validCode)));
 		}
 
-		if (StringUtils.isNotBlank(filledForm.get("validCode"))) { //all
-			queries.add(DBQuery.is("validation.valid", TBoolean.valueOf(filledForm.get("validCode"))));
+		if (CollectionUtils.isNotEmpty(filledForm.projectCodes)) { //all
+			queries.add(DBQuery.in("projectCodes", filledForm.projectCodes));
 		}
-
+		
+		if (CollectionUtils.isNotEmpty(filledForm.sampleCodes)) { //all
+			queries.add(DBQuery.in("sampleCodes", filledForm.sampleCodes));
+		}
+		
+		if (CollectionUtils.isNotEmpty(filledForm.typeCodes)) { //all
+			queries.add(DBQuery.in("typeCode", filledForm.typeCodes));
+		}
+		
+		if(null != filledForm.fromDate){
+			queries.add(DBQuery.greaterThanEquals("traceInformation.creationDate", filledForm.fromDate));
+		}
+		
+		if(null != filledForm.toDate){
+			queries.add(DBQuery.lessThanEquals("traceInformation.creationDate", filledForm.toDate));
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
@@ -193,7 +224,7 @@ public class Runs extends CommonController {
 		if (run == null) {
 			return badRequest();
 		}
-		Form<State> filledForm = stateForm.bindFromRequest();
+		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		if(null == state.code)state.code = stateCode;
 		state.date = new Date();
@@ -218,7 +249,7 @@ public class Runs extends CommonController {
 		if(run == null){
 			return badRequest();
 		}
-		Form<Validation> filledForm = validationForm.bindFromRequest();
+		Form<Validation> filledForm =  getFilledForm(validationForm, Validation.class);
 		Validation validation = filledForm.get();
 		validation.date = new Date();
 		validation.user = getCurrentUser();

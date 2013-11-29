@@ -1,8 +1,8 @@
 package models.laboratory.reagent.description;
 
 import models.laboratory.common.description.CommonInfoType;
+import models.laboratory.common.description.CommonInfoType.AbstractCommonInfoTypeFinder;
 import models.laboratory.reagent.description.dao.ReagentTypeDAO;
-import models.utils.dao.AbstractDAOCommonInfoType.CommonInfoTypeFinder;
 
 public class ReagentType extends CommonInfoType{
 	
@@ -10,6 +10,6 @@ public class ReagentType extends CommonInfoType{
 		super(ReagentTypeDAO.class.getName());
 	}
 
-	public static CommonInfoTypeFinder<ReagentTypeDAO,ReagentType> find = new CommonInfoTypeFinder<ReagentTypeDAO,ReagentType>(ReagentTypeDAO.class); 
+	public static CommonInfoType.AbstractCommonInfoTypeFinder<ReagentType> find = new CommonInfoType.AbstractCommonInfoTypeFinder<ReagentType>(ReagentTypeDAO.class); 
 	
 }
