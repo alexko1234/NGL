@@ -195,33 +195,23 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		}
 	}
 	
+	
 	private void insertValidationCriterias(List<ValidationCriteria> criterias, Long citId, boolean deleteBefore) throws DAOException {
-		if (deleteBefore) {
+		if(deleteBefore){
 			removeValidationCriterias(citId);
 		}
 		//Add criteria list		
-		if (criterias!=null && criterias.size()>0) {
-
-			Map<String, Object> parameters = null;
-			
-			for (ValidationCriteria criteria : criterias) {
-				if (criteria == null || criteria.id == null) {
+		if(criterias!=null && criterias.size()>0){
+			String sql = "INSERT INTO validation_criteria_common_info_type (fk_common_info_type, fk_validation_criteria) VALUES(?,?)";
+			for(ValidationCriteria criteria : criterias){
+				if(criteria == null || criteria.id == null ){
 					throw new DAOException("criteria is mandatory");
-				} else {
-					parameters = new HashMap<String, Object>();
-					parameters.put("fk_common_info_type", citId);
-					parameters.put("fk_validation_criteria", criteria.id);
-					// set the table name to the name of the link table
-					 SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(dataSource)
-			         .withTableName("validation_criteria_common_info_type");
-					jdbcInsert.execute(parameters);
-				}				
+				}
+				jdbcTemplate.update(sql, citId, criteria.id);
 			}
-		} 
-		
+		}
 	}
 	
-
 
 
 	public List<CommonInfoType> findByName(String typeName) {

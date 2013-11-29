@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.ValidationCriteria;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.TreatmentContext;
 import models.laboratory.run.description.TreatmentType;
@@ -71,30 +72,21 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 		if (deleteBefore) {
 			removeTreatmentContexts(id);
 		}
-		//Add resolutions list		
+		//Add contexts list		
 		if (contexts!=null && contexts.size()>0) {
-			//String sql = null;
-			Map<String, Object> parameters = null;
-			
-			for (TreatmentTypeContext context : contexts) {
-				if (context == null) {
+			String sql = "INSERT INTO treatment_type_context (fk_treatment_type, fk_treatment_context) VALUES(?,?)";
+			for(TreatmentTypeContext context : contexts){
+				if(context == null || context.id == null ){
 					throw new DAOException("context is mandatory");
-				} else {
-					parameters = new HashMap<String, Object>();
-					parameters.put("fk_treatment_type", id);
-					parameters.put("fk_treatment_context", context.id);
-					parameters.put("required", context.required);
-					// set the table name to the name of the link table
-					 SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(dataSource)
-			         .withTableName("treatment_type_context");
-					jdbcInsert.execute(parameters);
-				}				
+				}
+				jdbcTemplate.update(sql, id, context.id);
 			}
-		} else {
+		}
+		else {
 			throw new DAOException("contexts null or empty");
 		}
-		
 	}
+	
 	
 	private void removeTreatmentContexts(Long id)  throws DAOException {
 		String sql = "DELETE FROM treatment_type_context WHERE fk_treatment_type=?";
