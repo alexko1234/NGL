@@ -134,7 +134,7 @@ public class FilesTests extends AbstractTests{
 	        assertThat(charset(result)).isEqualTo("utf-8");
 	        
 		    //query for control
-	        ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("files.fullname",file.fullname));
+	        readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("files.fullname",file.fullname));
 	        assertThat(readSet.files.size()).isEqualTo(1);
 	        assertThat(readSet.files.get(0).fullname).isEqualTo(file.fullname);
 		}});
