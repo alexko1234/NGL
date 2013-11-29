@@ -1237,6 +1237,33 @@ public class RunValidationTest extends AbstractTests {
 		 assertThat(ctxVal.errors.toString()).contains("files[1].fullname");
 			   }});
 	 }
+	 
+	 
+		@Test
+		public void validateValidationForRun() {
+			 running(fakeApplication(fakeConfiguration()), new Runnable() {
+			       public void run() {
+			    	   
+			    	   
+			   		Run run = new Run();
+					run.code = "runForValidateValidation";
+					run.typeCode = "RHS2000";
+					
+					Validation v = new Validation();
+					v.criteriaCode = "default-criteria-run";
+					v.date = new Date();
+					v.resolutionCodes = null;
+					v.user = "dnoisett";
+
+			    	ContextValidation ctxVal = new ContextValidation();
+			    	ctxVal.putObject("typeCode", run.typeCode ); 
+			    	ctxVal.setCreationMode();
+
+					v.validate(ctxVal);
+					
+					assertThat(ctxVal.errors).hasSize(0);
+			}});
+		}
 	
 	
 	 
