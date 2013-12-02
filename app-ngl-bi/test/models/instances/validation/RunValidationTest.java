@@ -21,7 +21,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Validation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.project.description.ProjectCategory;
@@ -706,7 +706,7 @@ public class RunValidationTest extends AbstractTests {
 			
 			List<String> r = new ArrayList<String>();
 			lane.readSetCodes = r;
-			lane.validation = RunMockHelper.getValidation(TBoolean.TRUE);
+			lane.valuation = RunMockHelper.getValuation(TBoolean.TRUE);
 			lanes.add(lane);
 			lanes.add(lane2);
 			run.lanes = lanes;
@@ -720,10 +720,10 @@ public class RunValidationTest extends AbstractTests {
 			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 			assertThat(status(result)).isEqualTo(OK);
 			
-			 if (lane.validation.valid.equals(TBoolean.TRUE)) {
-				 lane.validation.valid = TBoolean.TRUE;
+			 if (lane.valuation.valid.equals(TBoolean.TRUE)) {
+				 lane.valuation.valid = TBoolean.TRUE;
 			 } else {
-				lane.validation.valid = TBoolean.FALSE;
+				lane.valuation.valid = TBoolean.FALSE;
 			 }
 			 	 
 			 result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readSet)));
@@ -1241,7 +1241,7 @@ public class RunValidationTest extends AbstractTests {
 				run.code = "runForValidateValidation";
 				run.typeCode = "RHS2000";
 				
-				Validation v = new Validation();
+				Valuation v = new Valuation();
 				v.criteriaCode = "default-criteria-run";
 				v.date = new Date();
 				v.resolutionCodes = null;
@@ -1263,7 +1263,7 @@ public class RunValidationTest extends AbstractTests {
 		Lane lane = new Lane();
 		lane.number = 1;
 		//lane.state = getState("F");
-		lane.validation = RunMockHelper.getValidation(TBoolean.TRUE);
+		lane.valuation = RunMockHelper.getValuation(TBoolean.TRUE);
 		lane.readSetCodes = null;
 		return lane;
 	}
@@ -1275,8 +1275,8 @@ public class RunValidationTest extends AbstractTests {
 		r.add("X"); 
 		lane.readSetCodes = r;
 		//lane.state = getState("F");
-		Validation v = new Validation();
-		 lane.validation = v;
+		Valuation v = new Valuation();
+		 lane.valuation = v;
 		return lane;
 	}
 	
@@ -1284,8 +1284,8 @@ public class RunValidationTest extends AbstractTests {
 		Lane lane = new Lane();
 		lane.number = 3;
 		//lane.state = getState("F");
-		Validation v = new Validation();
-		lane.validation = v;
+		Valuation v = new Valuation();
+		lane.valuation = v;
 		return lane;
 	}
 	
@@ -1297,9 +1297,9 @@ public class RunValidationTest extends AbstractTests {
 		readSet.sampleCode = "SampleCode";
 		//readSet.sampleContainerCode = "SPCONTCODE";
 		readSet.state = getState("F-QC");
-		Validation v = new Validation();
-		readSet.validationBioinformatic = v;
-		readSet.validationProduction = v;
+		Valuation v = new Valuation();
+		readSet.bioinformaticValuation = v;
+		readSet.productionValuation = v;
 		
 		readSet.traceInformation = new TraceInformation();
 		readSet.traceInformation.setTraceInformation("ngsrg");
@@ -1318,9 +1318,9 @@ public class RunValidationTest extends AbstractTests {
 		readSet.state = getState("F-QC");
 		readSet.typeCode = "default-readset";
 		
-		Validation v = new Validation();
-		readSet.validationBioinformatic = v;
-		readSet.validationProduction = v;
+		Valuation v = new Valuation();
+		readSet.bioinformaticValuation = v;
+		readSet.productionValuation = v;
 		
 		TraceInformation ti = new TraceInformation();
 		ti.createUser = "dnoisett";
@@ -1365,8 +1365,8 @@ public class RunValidationTest extends AbstractTests {
 			run.state.user = "tests";
 			run.state.date = new Date();
 			
-			Validation v = new Validation();
-			run.validation = v;
+			Valuation v = new Valuation();
+			run.valuation = v;
 			
 			run.traceInformation = new TraceInformation();
 			run.traceInformation.setTraceInformation("test");
@@ -1376,10 +1376,10 @@ public class RunValidationTest extends AbstractTests {
 			ngsrg.categoryCode = "ngsrg";
 			ngsrg.typeCode = "ngsrg-illumina";
 			run.typeCode = "RHS2000";
-			run.validation = new Validation();
-			run.validation.user = "test";
-			run.validation.valid = TBoolean.TRUE;
-			run.validation.date = new Date(); 
+			run.valuation = new Valuation();
+			run.valuation.user = "test";
+			run.valuation.valid = TBoolean.TRUE;
+			run.valuation.date = new Date(); 
 			return run;
 		}
 	
@@ -1408,8 +1408,8 @@ public class RunValidationTest extends AbstractTests {
 		run.state.user = "tests";
 		run.state.date = new Date();
 		
-		Validation v = new Validation();
-		run.validation = v;
+		Valuation v = new Valuation();
+		run.valuation = v;
 		
 		run.traceInformation = new TraceInformation();
 		run.traceInformation.setTraceInformation("test");
@@ -1419,10 +1419,10 @@ public class RunValidationTest extends AbstractTests {
 		ngsrg.categoryCode = "ngsrg";
 		ngsrg.typeCode = "ngsrg-illumina";
 		run.typeCode = "RHS2000";
-		run.validation = new Validation();
-		run.validation.user = "test";
-		run.validation.valid = TBoolean.TRUE;
-		run.validation.date = new Date(); 
+		run.valuation = new Valuation();
+		run.valuation.user = "test";
+		run.valuation.valid = TBoolean.TRUE;
+		run.valuation.date = new Date(); 
 		
 		Set<String> t = new TreeSet<String>();
 		t.add("ProjectCode");
@@ -1463,8 +1463,8 @@ public class RunValidationTest extends AbstractTests {
 		run.state.user = "tests";
 		run.state.date = new Date();
 		
-		Validation v = new Validation();
-		run.validation = v;
+		Valuation v = new Valuation();
+		run.valuation = v;
 		
 		run.traceInformation = new TraceInformation();
 		run.traceInformation.setTraceInformation("test");
@@ -1474,10 +1474,10 @@ public class RunValidationTest extends AbstractTests {
 		ngsrg.categoryCode = "ngsrg";
 		ngsrg.typeCode = "ngsrg-illumina";
 		run.typeCode = "RHS2000";
-		run.validation = new Validation();
-		run.validation.user = "test";
-		run.validation.valid = TBoolean.TRUE;
-		run.validation.date = new Date(); 
+		run.valuation = new Valuation();
+		run.valuation.user = "test";
+		run.valuation.valid = TBoolean.TRUE;
+		run.valuation.date = new Date(); 
 		
 		Set<String> t = new TreeSet<String>();
 		//t.add("projectCode");
@@ -1505,8 +1505,8 @@ public class RunValidationTest extends AbstractTests {
 		run.state.user = "tests";
 		run.state.date = new Date();
 		
-		Validation v = new Validation();
-		run.validation = v;
+		Valuation v = new Valuation();
+		run.valuation = v;
 		
 		run.traceInformation = new TraceInformation();
 		Map<String, Treatment> lT = new HashMap<String, Treatment>();
@@ -1515,7 +1515,7 @@ public class RunValidationTest extends AbstractTests {
 		ngsrg.categoryCode = "";
 		ngsrg.typeCode = "";
 		run.typeCode = "";
-		run.validation = new Validation();
+		run.valuation = new Valuation();
 		return run;
 	}
 }

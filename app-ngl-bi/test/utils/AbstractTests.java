@@ -38,16 +38,18 @@ public abstract class AbstractTests {
 	
 	public static  Map<String,String> fakeConfiguration(){
 		Map<String,String> config = new HashMap<String,String>();
+		config.put("application.secret", "ezfzzefzefz");
+		config.put("evolutionplugin","disabled");
+		config.put("ebean.default","models.*");
 		config.put("mongodb.database", "NGL-TESTU");
 		config.put("mongodb.credentials", "testu:testu");
 		config.put("mongodb.servers", "mongodev.genoscope.cns.fr:27017");
-		config.put("application.secret", "ezfzzefzefz");
+		
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");
 		//TESTU must be updated
 		config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST");
 		config.put("db.default.user", "NGL_user");
 		config.put("db.default.password", "NGL_passwd");
-		
 		//config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL");
 		//config.put("db.default.user", "ngl");
 		//config.put("db.default.password", "ngl");
@@ -77,7 +79,6 @@ public abstract class AbstractTests {
 	    config.put("auth.application", "ngl-bi");
 	    
 	    config.put("institute", "CNG");
-	    
 	    config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
 	    config.put("rules.key", "nglBI");
 	    config.put("rules.changesets", "rules/cng/changesets/changesets.xml");

@@ -15,7 +15,7 @@
 				
 				<select ng-model="form.stateCodes" multiple title="@Messages("search.placeholder.states")" ng-options="state.code as state.name for state in lists.getStates()" bs-select></select>			
 				<select ng-model="form.typeCodes" multiple title="@Messages("search.placeholder.types")" ng-options="type.code as type.name for type in lists.getTypes()" bs-select></select>			
-				<select ng-model="form.validCode" title="@Messages("search.placeholder.valid")" ng-options="valid.code as valid.name for valid in lists.getValidations()" bs-select></select>
+				<select ng-model="form.validCode" title="@Messages("search.placeholder.valid")" ng-options="valid.code as valid.name for valid in lists.getValuations()" bs-select></select>
 				
 				
 				<div class="btn-toolbar pull-right">

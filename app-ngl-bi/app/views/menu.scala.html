@@ -9,11 +9,11 @@
 				
 				<a class="brand" href="@controllers.main.tpl.routes.Main.home()">@Messages("application.name")</a>
 					<ul class="nav">
-						<li class="dropdown @("active".when(nav.endsWith("validation")))">
-							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="validation">@Messages("validation.menu")<b class="caret"></b></a>
-							<ul class="dropdown-menu" role="menu" aria-labelledby="validation">
-								<li class="@("active".when(nav == "runs.validation"))"><a href="@controllers.runs.tpl.routes.Runs.home("validation")">@Messages("validation.menu.runs")</a></li>																				
-								<li class="@("active".when(nav == "readsets.validation"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("validation")">@Messages("validation.menu.readsets")</a></li>
+						<li class="dropdown @("active".when(nav.endsWith("valuation")))">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="valuation">@Messages("valuation.menu")<b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="valuation">
+								<li class="@("active".when(nav == "runs.valuation"))"><a href="@controllers.runs.tpl.routes.Runs.home("valuation")">@Messages("valuation.menu.runs")</a></li>																				
+								<li class="@("active".when(nav == "readsets.valuation"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("valuation")">@Messages("valuation.menu.readsets")</a></li>
 							</ul>
   						</li>
   						
@@ -22,7 +22,7 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="runs">@Messages("runs.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="runs">
 								<li class="@("active".when(nav == "runs.search"))"><a href="@controllers.runs.tpl.routes.Runs.home("search")">@Messages("runs.menu.search")</a></li>																				
-								<li class="@("active".when(nav == "runs.validation"))"><a href="@controllers.runs.tpl.routes.Runs.home("validation")">@Messages("runs.menu.validation")</a></li>																												
+								<li class="@("active".when(nav == "runs.valuation"))"><a href="@controllers.runs.tpl.routes.Runs.home("valuation")">@Messages("runs.menu.valuation")</a></li>																												
 								<li class="@("active".when(nav == "runs.state"))"><a href="@controllers.runs.tpl.routes.Runs.home("state")">@Messages("runs.menu.state")</a></li>
 							</ul>
   						</li>

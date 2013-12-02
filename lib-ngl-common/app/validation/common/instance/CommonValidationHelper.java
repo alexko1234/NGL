@@ -11,7 +11,7 @@ import net.vz.mongodb.jackson.DBQuery;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Validation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
@@ -401,11 +401,11 @@ public class CommonValidationHelper {
 		}
 	}
 	
-	public static void validateValidation(String typeCode, Validation validation, ContextValidation contextValidation) {
-		if(ValidationHelper.required(contextValidation, validation, "validation")){
+	public static void validateValuation(String typeCode, Valuation valuation, ContextValidation contextValidation) {
+		if(ValidationHelper.required(contextValidation, valuation, "validation")){
 			contextValidation.putObject(FIELD_TYPE_CODE, typeCode);
 			contextValidation.addKeyToRootKeyName("validation");
-			validation.validate(contextValidation);
+			valuation.validate(contextValidation);
 			contextValidation.removeKeyFromRootKeyName("validation");
 			contextValidation.removeObject(FIELD_TYPE_CODE);
 		}		

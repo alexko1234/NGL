@@ -101,10 +101,10 @@ angular.module('commonsServices', []).
     				}
     		};
     		
-    		function getValidations(){
-    			return [{code:"TRUE", name:Messages("validate.value.TRUE")},
-                 {code:"FALSE", name:Messages("validate.value.FALSE")},
-                 {code:"UNSET", name:Messages("validate.value.UNSET")}];
+    		function getValuations(){
+    			return [{code:"TRUE", name:Messages("valuation.value.TRUE")},
+                 {code:"FALSE", name:Messages("valuation.value.FALSE")},
+                 {code:"UNSET", name:Messages("valuation.value.UNSET")}];
     		};
     		
     		function load(url, params, values){
@@ -126,7 +126,7 @@ angular.module('commonsServices', []).
     			getSamples : function(){return results['samples'];},
     			getStates : function(){return results['states'];},
     			getTypes : function(){return results['types'];},
-    			getValidations : getValidations    			
+    			getValuations : getValuations    			
     		};
     		
     	}]).directive('messages', function() {

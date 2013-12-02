@@ -1,7 +1,7 @@
 @()
 <div class="row-fluid">
 <div class="page-header" ng-init="init()">
- <h1 ng-switch on="run.validation.valid">
+ <h1 ng-switch on="run.valuation.valid">
 
  	<span ng-switch-when="FALSE" class="text-error">{{run.code}}</span> 
  	<span ng-switch-when="TRUE" class="text-success">{{run.code}}</span> 
@@ -30,34 +30,34 @@
 				<dd ng-model='run.state.code' codes="state"></dd>
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.validation.valid")</dt>
+				<dt>@Messages("runs.dt.valuation.valid")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
-					<div ng-switch-when="false" ng-model='run.validation.valid' codes="validation"/>
-					<div ng-switch-when="true"><select class="span12" ng-model="run.validation.valid" ng-options="valid.code as valid.name for valid in lists.getValidations()" bs-select></select></div>
+					<div ng-switch-when="false" ng-model='run.valuation.valid' codes="valuation"/>
+					<div ng-switch-when="true"><select class="span12" ng-model="run.valuation.valid" ng-options="valid.code as valid.name for valid in lists.getValuations()" bs-select></select></div>
 				</div>
 				</dd>
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.validation.resolution")</dt>
+				<dt>@Messages("runs.dt.valuation.resolution")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
 					<div ng-switch-when="false">
 						    <ul class="unstyled">
-						    		<li ng-repeat="code in run.validation.resolutionCodes" ng-model="code" codes="resolution"/>
+						    		<li ng-repeat="code in run.valuation.resolutionCodes" ng-model="code" codes="resolution"/>
 						    </ul>
 					</div>
-					<div ng-switch-when="true"><select class="span12" ng-model="run.validation.resolutionCodes" title="" multiple ng-options="valid.code as valid.name for valid in lists.getResolutions()" bs-select></select></div>
+					<div ng-switch-when="true"><select class="span12" ng-model="run.valuation.resolutionCodes" title="" multiple ng-options="valid.code as valid.name for valid in lists.getResolutions()" bs-select></select></div>
 				</dd>
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.validation.criteria")</dt>
+				<dt>@Messages("runs.dt.valuation.criteria")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
-					<div ng-switch-when="false" ng-model="run.validation.criteriaCode" codes="criteria"/>
-					<div ng-switch-when="true"><select class="span12" ng-model="run.validation.criteriaCode" title="" ng-options="valid.code as valid.name for valid in lists.getValidationCriterias()" bs-select></select></div>
+					<div ng-switch-when="false" ng-model="run.valuation.criteriaCode" codes="criteria"/>
+					<div ng-switch-when="true"><select class="span12" ng-model="run.valuation.criteriaCode" title="" ng-options="valid.code as valid.name for valid in lists.getValidationCriterias()" bs-select></select></div>
 				</dd>
 			</dl>
 	</div>
@@ -136,7 +136,7 @@
 
 <div class="span3">
 <ul class="nav nav-tabs">
-		   <li class="active"><a href="#" >@Messages("runs.table.lane.validation.title")</a></li>		   
+		   <li class="active"><a href="#" >@Messages("runs.table.lane.valuation.title")</a></li>		   
 	</ul>
 	<div class="tab-content">
 	<div class="tab-pane active" />		
@@ -144,8 +144,8 @@
 
  <div datatable="lanesDT.getConfig()"></div>
  <dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.validation.user")</dt>
-				<dd>{{run.validation.user}} - {{run.validation.date | date:'@Messages("date.format")'}}</dd>				
+				<dt>@Messages("runs.dt.valuation.user")</dt>
+				<dd>{{run.valuation.user}} - {{run.valuation.date | date:'@Messages("date.format")'}}</dd>				
 </dl>
 </div>
 </div>

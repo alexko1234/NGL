@@ -28,13 +28,13 @@ public class Runs extends CommonController {
 		return ok(home.render("search")); 
 	}
 	
-	public static Result validation(String code) {
-		return ok(home.render("validation")); 
+	public static Result valuation(String code) {
+		return ok(home.render("valuation")); 
 	}
 	
 	public static Result search(String type) {
 		
-		if(!"validation".equals(type)){
+		if(!"valuation".equals(type)){
 			return ok(search.render(Boolean.TRUE));
 		}else{
 			return ok(search.render(Boolean.FALSE));
@@ -46,7 +46,7 @@ public class Runs extends CommonController {
 		return ok(details.render());
 	}
 	
-	public static Result detailsValidation() {
+	public static Result detailsValuation() {
 		return ok(details.render());
 	}
 	
@@ -61,14 +61,14 @@ public class Runs extends CommonController {
   	        // Routes
   	    		controllers.runs.tpl.routes.javascript.Runs.home(),  
   	    		controllers.runs.tpl.routes.javascript.Runs.get(), 
-  	    		controllers.runs.tpl.routes.javascript.Runs.validation(),
+  	    		controllers.runs.tpl.routes.javascript.Runs.valuation(),
   	    		controllers.runs.tpl.routes.javascript.Runs.laneTreatments(),
   	    		controllers.runs.api.routes.javascript.Runs.get(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.list(),
   	    		controllers.runs.api.routes.javascript.Runs.list(),
   	    		controllers.runs.api.routes.javascript.Runs.state(),
-  	    		controllers.runs.api.routes.javascript.Runs.validation(),  	    		
-  	    		controllers.runs.api.routes.javascript.Lanes.validation(),  	    		
+  	    		controllers.runs.api.routes.javascript.Runs.valuation(),  	    		
+  	    		controllers.runs.api.routes.javascript.Lanes.valuation(),  	    		
   	    		controllers.lists.api.routes.javascript.Lists.resolutions(),
   	    		controllers.lists.api.routes.javascript.Lists.validationCriterias(),
   	    		controllers.lists.api.routes.javascript.Lists.projects(),

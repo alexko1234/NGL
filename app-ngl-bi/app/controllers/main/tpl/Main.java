@@ -42,9 +42,9 @@ public class Main extends CommonController {
 			sb.append("\"").append(cl.tableName).append(".").append(cl.code)
 			.append("\":\"").append(cl.label).append("\",");
 		}
-		sb.append("\"validation.TRUE\":\"Oui\",");
-		sb.append("\"validation.FALSE\":\"Non\",");
-		sb.append("\"validation.UNSET\":\"---\"");
+		sb.append("\"valuation.TRUE\":\"Oui\",");
+		sb.append("\"valuation.FALSE\":\"Non\",");
+		sb.append("\"valuation.UNSET\":\"---\"");
 		sb.append("};return function(k){if(typeof k == 'object'){for(var i=0;i<k.length&&!ms[k[i]];i++);var m=ms[k[i]]||k[0]}else{m=ms[k]||k}for(i=1;i<arguments.length;i++){m=m.replace('{'+(i-1)+'}',arguments[i])}return m}})();");
 		return sb.toString();
 	}

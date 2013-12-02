@@ -28,11 +28,11 @@ var columns = [
 			    	listStyle:'bs-select',
 			    	possibleValues:[{code:"IW-QC",name:Codes("state.IW-QC")},{code:"IW-V",name:Codes("state.IW-V")},{code:"F-V",name:Codes("state.F-V")}, {code:"F",name:Codes("state.F")}]				
 				},
-				{	property:"validation.valid",
+				{	property:"valuation.valid",
 					render:function(value){
-						return Codes("validation."+value.validation.valid);
+						return Codes("valuation."+value.valuation.valid);
 					},
-					header: Messages("runs.table.validation.valid"),
+					header: Messages("runs.table.valuation.valid"),
 					type :"String",
 			    	order:true
 				}      
@@ -183,7 +183,7 @@ function SearchStateCtrl($scope, datatable) {
 SearchStateCtrl.$inject = ['$scope', 'datatable'];
 
 
-function SearchValidationCtrl($scope, datatable) {
+function SearchValuationCtrl($scope, datatable) {
 
 	$scope.datatableConfig = {
 			order :{by:'traceInformation.creationDate'},
@@ -193,7 +193,7 @@ function SearchValidationCtrl($scope, datatable) {
 			show:{
 				active:true,
 				add :function(line){
-					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.validation(line.code).url,remove:true});
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.valuation(line.code).url,remove:true});
 				}
 			},
 			columns : columns
@@ -210,14 +210,14 @@ function SearchValidationCtrl($scope, datatable) {
 		}
 		$scope.datatable.search({stateCode:"IW-V"});
 		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('validation');
-			$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("validation").url,remove:false});
+			$scope.setHomePage('valuation');
+			$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:false});
 			$scope.activeTab(0); // desactive le lien !
 		}
 	}	
 };
 
-SearchValidationCtrl.$inject = ['$scope', 'datatable'];
+SearchValuationCtrl.$inject = ['$scope', 'datatable'];
 
 
 

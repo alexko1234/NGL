@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.Validation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
@@ -64,7 +64,7 @@ public class Migration extends CommonController {
 	}
 
 	private static void migreReadSet(ReadSetOld readSet) {
-		Validation validation = new Validation();
+		Valuation valuation = new Valuation();
 		State state = new State();
 		state.code = readSet.stateCode;
 		
@@ -74,7 +74,7 @@ public class Migration extends CommonController {
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld.class, 
 				DBQuery.is("code", readSet.code), 
 				DBUpdate.unset("stateCode").unset("validProduction").unset("validProductionDate").unset("validBioinformatic").unset("validBioinformaticDate")
-				.unset("sampleContainerCode").set("validationProduction", validation).set("validationBioinformatic", validation).set("state", state).set("sampleCode", readSet.sampleContainerCode));
+				.unset("sampleContainerCode").set("productionValuation", valuation).set("bioinformaticValuation", valuation).set("state", state).set("sampleCode", readSet.sampleContainerCode));
 		
 		if(null != readSet.files){
 			for(FileOld fileOld : readSet.files){
@@ -98,7 +98,7 @@ public class Migration extends CommonController {
 
 	private static void migreRun(RunOld run) {
 		
-		Validation validation = new Validation();
+		Valuation valuation = new Valuation();
 		State state = new State();
 		state.code = run.stateCode;
 		
@@ -118,7 +118,7 @@ public class Migration extends CommonController {
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.is("code", run.code), 
 				DBUpdate.unset("stateCode").unset("valid").unset("validDate")
-				.set("validation", validation).set("state", state).set("projectCodes", projectCodes).set("sampleCodes", sampleCodes));
+				.set("valuation", valuation).set("state", state).set("projectCodes", projectCodes).set("sampleCodes", sampleCodes));
 		
 		if (run.lanes != null) {
 			for (LaneOld laneOld : run.lanes) {
@@ -128,11 +128,10 @@ public class Migration extends CommonController {
 						Run.class,
 						DBQuery.and(DBQuery.is("code", run.code),
 								DBQuery.is("lanes.number", laneOld.number)),
-						DBUpdate.unset("lanes.$.state")
-								.unset("lanes.$.stateCode")
+						DBUpdate.unset("lanes.$.stateCode")
 								.unset("lanes.$.valid")
 								.unset("lanes.$.validDate")
-								.set("lanes.$.validation", validation));
+								.set("lanes.$.valuation", valuation));
 			}
 		}
 	}

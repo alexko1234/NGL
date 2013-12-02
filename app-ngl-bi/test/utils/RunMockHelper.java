@@ -7,7 +7,7 @@ import java.util.List;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Validation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.InstrumentUsed;
@@ -75,7 +75,7 @@ public class RunMockHelper {
 		run.state.user = "tests";
 		run.state.date = new Date();
 		
-		run.validation = getValidation(TBoolean.UNSET);
+		run.valuation = getValuation(TBoolean.UNSET);
 		
 		List<String> lResos = new ArrayList<String>();
 		lResos.add("reso1");
@@ -97,7 +97,7 @@ public class RunMockHelper {
 		lResos.add("reso2");		
 
 				
-		lane.validation = getValidation(TBoolean.UNSET);
+		lane.valuation = getValuation(TBoolean.UNSET);
 		
 		lane.readSetCodes = null;
 				
@@ -159,9 +159,9 @@ public class RunMockHelper {
 		
 		r.typeCode = "default-readset"; 
 		
-		r.validationBioinformatic = getValidation(TBoolean.TRUE);
+		r.bioinformaticValuation = getValuation(TBoolean.TRUE);
 		
-		r.validationProduction = getValidation(TBoolean.TRUE);
+		r.productionValuation = getValuation(TBoolean.TRUE);
 		
 		
 		return r;
@@ -191,8 +191,8 @@ public class RunMockHelper {
 		return file;
 		
 	}
-	public static Validation getValidation(TBoolean b) {
-			Validation v = new Validation();
+	public static Valuation getValuation(TBoolean b) {
+			Valuation v = new Valuation();
 			v.valid = b;
 			v.date = new Date();
 			v.user = "test";

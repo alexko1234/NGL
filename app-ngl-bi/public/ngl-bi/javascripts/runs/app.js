@@ -4,20 +4,20 @@ angular.module('home', ['datatableServices','commonsServices','biCommonsServices
 		templateUrl : '/tpl/runs/search/default',
 		controller : 'SearchCtrl'
 	});
-	$routeProvider.when('/runs/validation/home', {
-		templateUrl : '/tpl/runs/search/validation',
-		controller : 'SearchValidationCtrl'
+	$routeProvider.when('/runs/valuation/home', {
+		templateUrl : '/tpl/runs/search/valuation',
+		controller : 'SearchValuationCtrl'
 	});
 	$routeProvider.when('/runs/state/home', {
 		templateUrl : '/tpl/runs/search/state',
 		controller : 'SearchStateCtrl'
 	});
 	$routeProvider.when('/runs/:code', {
-		templateUrl : '/tpl/runs/details/validation',
+		templateUrl : '/tpl/runs/details/valuation',
 		controller : 'DetailsCtrl'
 	});
 	$routeProvider.when('/runs/:code/:page', {
-		templateUrl : '/tpl/runs/details/validation',
+		templateUrl : '/tpl/runs/details/valuation',
 		controller : 'DetailsCtrl'
 	});
 

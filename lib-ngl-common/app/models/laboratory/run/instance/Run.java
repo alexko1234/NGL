@@ -18,7 +18,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Validation;
+import models.laboratory.common.instance.Valuation;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -38,7 +38,7 @@ public class Run extends DBObject implements IValidation {
 	public String containerSupportCode; //id flowcell
     public Boolean dispatch = Boolean.FALSE;
     
-    public Validation validation = new Validation();
+    public Valuation valuation = new Valuation();
     
     public Set<String> projectCodes = new TreeSet<String>();
     public Set<String> sampleCodes = new TreeSet<String>();
@@ -60,7 +60,7 @@ public class Run extends DBObject implements IValidation {
     	RunValidationHelper.validateRunType(this.typeCode, this.properties, contextValidation);
     	
     	RunValidationHelper.validateState(this.typeCode, this.state, contextValidation);
-    	RunValidationHelper.validateValidation(this.typeCode, this.validation, contextValidation);
+    	RunValidationHelper.validateValuation(this.typeCode, this.valuation, contextValidation);
     	RunValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
     	RunValidationHelper.validationContainerSupportCode(this.containerSupportCode, contextValidation); 
     	RunValidationHelper.validateRunInstrumentUsed(this.instrumentUsed, contextValidation);		

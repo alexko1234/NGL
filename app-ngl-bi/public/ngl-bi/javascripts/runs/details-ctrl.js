@@ -20,15 +20,15 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 				showButton : false,
 				changeClass : false,
 				url:function(line){
-					return jsRoutes.controllers.runs.api.Lanes.validation($scope.run.code, line.number, line.validation.valid).url;
+					return jsRoutes.controllers.runs.api.Lanes.valuation($scope.run.code, line.number, line.valuation.valid).url;
 				},
 				method:'put',
 				value:function(line){
-					return line.validation;
+					return line.valuation;
 				},
 				callback:function(datatable, nbError){
 					if(nbError == 0){
-						$http.put(jsRoutes.controllers.runs.api.Runs.validation($scope.run.code, $scope.run.validation.valid).url, $scope.run.validation).
+						$http.put(jsRoutes.controllers.runs.api.Runs.valuation($scope.run.code, $scope.run.valuation.valid).url, $scope.run.valuation).
 							success(function(data, status, headers, config){
 								$scope.messages.setSuccess("save");
 								updateData();
@@ -57,25 +57,25 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			    	type :"String",
 			    	order:false
 				},				
-				{	property:"validation.valid",
-					header: Messages("runs.table.lane.validation.valid"),
+				{	property:"valuation.valid",
+					header: Messages("runs.table.lane.valuation.valid"),
 					render:function(value){
-						return Codes("validation."+value.validation.valid);
+						return Codes("valuation."+value.valuation.valid);
 					},
 					type :"String",
 					edit:true,
 			    	order:false,
 			    	choiceInList:true,
 			    	listStyle:'bs-select',
-			    	possibleValues:'lists.getValidations()'
+			    	possibleValues:'lists.getValuations()'
 				},
-				{	property:"validation.resolutionCodes",
-					header: Messages("runs.table.lane.validation.resolutions"),
+				{	property:"valuation.resolutionCodes",
+					header: Messages("runs.table.lane.valuation.resolutions"),
 					render:function(value){
-						if(value.validation.resolutionCodes){
+						if(value.valuation.resolutionCodes){
 							var html = "<ul class='unstyled'>";
-							for(var i =0; i < value.validation.resolutionCodes.length; i++){
-								html += "<li>"+Codes("resolution."+value.validation.resolutionCodes[i])+"</li>";
+							for(var i =0; i < value.valuation.resolutionCodes.length; i++){
+								html += "<li>"+Codes("resolution."+value.valuation.resolutionCodes[i])+"</li>";
 							}
 							html += "</ul>";
 							return html;
@@ -111,8 +111,8 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 		});
 	}
 	
-	var isValidationMode = function(){
-		return ($scope.isHomePage('validation') || $routeParams.page === 'validation');
+	var isValuationMode = function(){
+		return ($scope.isHomePage('valuation') || $routeParams.page === 'valuation');
 	}
 	
 	
@@ -121,7 +121,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 		$scope.lists = lists;
 		$scope.treatments = treatments;
 		$scope.stopEditMode();
-		if(isValidationMode()){
+		if(isValuationMode()){
 			$scope.startEditMode();
 			
 		}
@@ -133,9 +133,9 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			$scope.run = data;	
 				
 			if($scope.getTabs().length == 0){
-				if(isValidationMode()){ //validation mode
-					$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("validation").url,remove:false});
-					$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.validation($scope.run.code).url,remove:true})
+				if(isValuationMode()){ //valuation mode
+					$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:false});
+					$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.valuation($scope.run.code).url,remove:true})
 				}else{ //detail mode
 					$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:false});
 					$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.get($scope.run.code).url,remove:true})									

@@ -16,7 +16,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Validation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
@@ -373,13 +373,13 @@ public class LimsCNSDAO {
 				run.state.user = NGSRG_CODE;
 				run.state.date = new Date();
 
-				Validation validation=new Validation();
-				run.validation=validation;
+				Valuation valuation=new Valuation();
+				run.valuation=valuation;
 
 				//
-				run.validation.valid=TBoolean.valueOf(rs.getString("validationValid"));
-				run.validation.user="lims";
-				run.validation.date=rs.getDate("validationDate");
+				run.valuation.valid=TBoolean.valueOf(rs.getString("validationValid"));
+				run.valuation.user="lims";
+				run.valuation.date=rs.getDate("validationDate");
 				//TODO	run.validation.resolutionCodes
 
 				TraceInformation ti = new TraceInformation(); 
@@ -417,10 +417,10 @@ public class LimsCNSDAO {
 			public Lane mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Lane lane=new Lane();
 				lane.number=rs.getInt("lanenum");
-				lane.validation=new Validation();
-				lane.validation.valid=TBoolean.valueOf(rs.getString("validationValid"));
-				lane.validation.user="lims";
-				lane.validation.date=rs.getDate("validationDate");
+				lane.valuation=new Valuation();
+				lane.valuation.valid=TBoolean.valueOf(rs.getString("validationValid"));
+				lane.valuation.user="lims";
+				lane.valuation.date=rs.getDate("validationDate");
 				//TODO 
 				contextError.addKeyToRootKeyName("lane["+lane.number+"].treatment[default]");
 				Treatment treatment=newTreatment(contextError,rs,Level.CODE.Lane,NGSRG_CODE,NGSRG_CODE,RUN_TYPE_CODE);
@@ -486,14 +486,14 @@ public class LimsCNSDAO {
 				readSet.typeCode=READSET_DEFAULT_CODE;
 				
 				//To valide
-				readSet.validationBioinformatic=new Validation();
-				readSet.validationBioinformatic.valid=TBoolean.valueOf(rs.getString("validationBioinformatic"));
-				readSet.validationBioinformatic.date=new Date();
-				readSet.validationBioinformatic.user="lims";
-				readSet.validationProduction=new Validation();
-				readSet.validationProduction.valid=TBoolean.valueOf(rs.getString("validationProduction"));
-				readSet.validationProduction.date=rs.getDate("validationProductionDate");
-				readSet.validationProduction.user="lims";
+				readSet.bioinformaticValuation=new Valuation();
+				readSet.bioinformaticValuation.valid=TBoolean.valueOf(rs.getString("validationBioinformatic"));
+				readSet.bioinformaticValuation.date=new Date();
+				readSet.bioinformaticValuation.user="lims";
+				readSet.productionValuation=new Valuation();
+				readSet.productionValuation.valid=TBoolean.valueOf(rs.getString("validationProduction"));
+				readSet.productionValuation.date=rs.getDate("validationProductionDate");
+				readSet.productionValuation.user="lims";
 				readSet.treatments.put(NGSRG_CODE,newTreatment(contextError,rs,Level.CODE.ReadSet,NGSRG_CODE,NGSRG_CODE,RUN_TYPE_CODE));
 				readSet.treatments.put(GLOBAL_CODE,newTreatment(contextError,rs,Level.CODE.ReadSet,GLOBAL_CODE,GLOBAL_CODE,GLOBAL_CODE));
 				return readSet;

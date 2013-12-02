@@ -8,7 +8,7 @@ import validation.IValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationHelper;
 
-public class Validation implements IValidation {
+public class Valuation implements IValidation {
 	
 	public TBoolean valid = TBoolean.UNSET;
     public Date date;

@@ -13,7 +13,7 @@ import models.laboratory.common.instance.State;
 //import models.laboratory.common.description.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Validation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -61,7 +61,7 @@ public class Runs extends CommonController {
 	final static Form<RunSearchForm> searchForm = form(RunSearchForm.class); 
 	final static Form<Run> runForm = form(Run.class);
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
-	final static Form<Validation> validationForm = form(Validation.class);
+	final static Form<Valuation> valuationForm = form(Valuation.class);
 	final static Form<State> stateForm = form(State.class);
 
 	private static ActorRef rulesActor = Akka.system().actorOf(new Props(RulesActor.class));
@@ -94,7 +94,7 @@ public class Runs extends CommonController {
 			queries.add(DBQuery.in("state.code", filledForm.stateCodes));
 		}
 		if (StringUtils.isNotBlank(filledForm.validCode)) { //all
-			queries.add(DBQuery.is("validation.valid", TBoolean.valueOf(filledForm.validCode)));
+			queries.add(DBQuery.is("valuation.valid", TBoolean.valueOf(filledForm.validCode)));
 		}
 
 		if (CollectionUtils.isNotEmpty(filledForm.projectCodes)) { //all
@@ -243,24 +243,24 @@ public class Runs extends CommonController {
 		return run;
 	}
 	
-	//@Permission(value={"validation_run_lane"})
-	public static Result validation(String code, String validCode){
+	//@Permission(value={"valuation_run_lane"})
+	public static Result valuation(String code, String validCode){
 		Run run = getRun(code);
 		if(run == null){
 			return badRequest();
 		}
-		Form<Validation> filledForm =  getFilledForm(validationForm, Validation.class);
-		Validation validation = filledForm.get();
-		validation.date = new Date();
-		validation.user = getCurrentUser();
+		Form<Valuation> filledForm =  getFilledForm(valuationForm, Valuation.class);
+		Valuation valuation = filledForm.get();
+		valuation.date = new Date();
+		valuation.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		ctxVal.setUpdateMode();
-		RunValidationHelper.validateValidation(run.typeCode, validation, ctxVal);
+		RunValidationHelper.validateValuation(run.typeCode, valuation, ctxVal);
 		if(!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", code)),
-					DBUpdate.set("validation", validation));			
-			run.validation = validation;
+					DBUpdate.set("valuation", valuation));			
+			run.valuation = valuation;
 			if(isRunCompletelyEvaluate(run)){
 				State state = new State();
 				state.code = "F-V";
@@ -280,11 +280,11 @@ public class Runs extends CommonController {
 
 	private static boolean isRunCompletelyEvaluate(Run run) {
 
-		if(run.validation.valid.equals(TBoolean.UNSET)){
+		if(run.valuation.valid.equals(TBoolean.UNSET)){
 			return false;
 		}
 		for(Lane lane : run.lanes){
-			if(lane.validation.valid.equals(TBoolean.UNSET)){
+			if(lane.valuation.valid.equals(TBoolean.UNSET)){
 				return false;
 			}
 		}

@@ -19,13 +19,13 @@ page.archives.fvalue.archive.1 = Archivés
 page.archives.fvalue.archive.2 = Non Archivés
 
 
-validation.menu = Validation
-validation.menu.runs = Runs
-validation.menu.readsets = Read Sets
+valuation.menu = Evaluation
+valuation.menu.runs = Runs
+valuation.menu.readsets = Read Sets
 
-validate.value.TRUE = Oui
-validate.value.FALSE = Non
-validate.value.UNSET = -
+valuation.value.TRUE = Oui
+valuation.value.FALSE = Non
+valuation.value.UNSET = -
 
 search.placeholder.projects = Selectionnez des projets
 search.placeholder.samples = Selectionnez des échantillons
@@ -34,7 +34,7 @@ search.placeholder.toDate = Jusqu''au (jj/mm/yyyy)
 search.placeholder.states = Selectionnez des états
 search.placeholder.instruments = Selectionnez des instruments
 search.placeholder.types = Selectionnez des types
-search.placeholder.valid = Selectionnez une validation
+search.placeholder.valid = Selectionnez une évaluation
 
 button.search = Rechercher
 button.reset = Réinitialiser
@@ -42,9 +42,9 @@ button.reset = Réinitialiser
 runs.menu = Runs
 runs.menu.search = Recherche
 runs.menu.state = Changement d''Etat
-runs.menu.validation = Validation
+runs.menu.valuation = Evaluation
 
-runs.page.tab.validate = Run à Valider
+runs.page.tab.validate = Run à Evaluer
 
 runs.button.validate = Valider
 runs.button.cancel = Annuler
@@ -60,17 +60,17 @@ runs.dt.intrumentCode = Code Instrument
 runs.dt.intrumentCategoryCode = Catégorie Instrument
 runs.dt.code = Code
 runs.dt.state.code = Etat
-runs.dt.validation.valid = Valide ?
-runs.dt.validation.resolution = Comptes Rendus
-runs.dt.validation.user = Validé par
-runs.dt.validation.date = Date Validation
-runs.dt.validation.userdate = Validé par {0} le {1}  
-runs.dt.validation.criteria = Critères
+runs.dt.valuation.valid = Valide ?
+runs.dt.valuation.resolution = Comptes Rendus
+runs.dt.valuation.user = Validé par
+runs.dt.valuation.date = Date d''évaluation
+runs.dt.valuation.userdate = Validé par {0} le {1}  
+runs.dt.valuation.criteria = Critères
 
-runs.table.validation.valid = Valide ?
-runs.table.lane.validation.title = Pistes
-runs.table.lane.validation.valid = Valide ?
-runs.table.lane.validation.resolutions = Comptes Rendus
+runs.table.valuation.valid = Valide ?
+runs.table.lane.valuation.title = Pistes
+runs.table.lane.valuation.valid = Valide ?
+runs.table.lane.valuation.resolutions = Comptes Rendus
 
 runs.table.lane.code = #
 runs.table.lane.ngsrg.nbCluster = Nb Cluster

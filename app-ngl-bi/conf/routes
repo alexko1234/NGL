@@ -13,10 +13,10 @@ GET		/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.co
 #run tpl
 GET	   	/runs/:homecode/home						controllers.runs.tpl.Runs.home(homecode: java.lang.String)
 GET	   	/runs/:code									controllers.runs.tpl.Runs.get(code: java.lang.String)
-GET	   	/runs/:code/validation						controllers.runs.tpl.Runs.validation(code: java.lang.String)
+GET	   	/runs/:code/valuation						controllers.runs.tpl.Runs.valuation(code: java.lang.String)
 GET		/tpl/runs/search/:type						controllers.runs.tpl.Runs.search(type: java.lang.String)
 GET		/tpl/runs/details/default					controllers.runs.tpl.Runs.detailsDefault()
-GET		/tpl/runs/details/validation				controllers.runs.tpl.Runs.detailsValidation()
+GET		/tpl/runs/details/valuation					controllers.runs.tpl.Runs.detailsValuation()
 GET		/tpl/runs/lanes/treatments/:code			controllers.runs.tpl.Runs.laneTreatments(code: java.lang.String)
 GET		/tpl/runs/js-routes							controllers.runs.tpl.Runs.javascriptRoutes()
 #run api
@@ -29,7 +29,7 @@ DELETE	/api/runs/:code								controllers.runs.api.Runs.delete(code:java.lang.St
 PUT		/api/runs/:code/state/:stateCode			controllers.runs.api.Runs.state(code:java.lang.String, stateCode:java.lang.String)
 #deprecated
 PUT		/api/runs/:code/workflow/:stateCode			controllers.runs.api.Runs.state(code:java.lang.String, stateCode:java.lang.String)
-PUT		/api/runs/:code/validation/:valid 			controllers.runs.api.Runs.validation(code:java.lang.String, valid:java.lang.String)
+PUT		/api/runs/:code/valuation/:valid 			controllers.runs.api.Runs.valuation(code:java.lang.String, valid:java.lang.String)
 PUT		/api/runs/:code/apply-rules/:codeRules		controllers.runs.api.Runs.applyRules(code:java.lang.String, codeRules:java.lang.String)
 
 #deprecated
@@ -51,7 +51,7 @@ POST  	/api/runs/:code/lanes								controllers.runs.api.Lanes.save(code: java.l
 PUT  	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.update(code: java.lang.String, number:java.lang.Integer)
 DELETE 	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.delete(code: java.lang.String, number:java.lang.Integer)
 DELETE	/api/runs/:code/lanes								controllers.runs.api.Lanes.deleteByRunCode(code: java.lang.String)
-PUT		/api/runs/:code/lanes/:number/validation/:valid		controllers.runs.api.Lanes.validation(code:java.lang.String, number:java.lang.Integer, valid:java.lang.String)
+PUT		/api/runs/:code/lanes/:number/valuation/:valid		controllers.runs.api.Lanes.valuation(code:java.lang.String, number:java.lang.Integer, valid:java.lang.String)
 
 GET		/api/runs/:code/lanes/:laneNumber/treatments				controllers.runs.api.LaneTreatments.list(code: java.lang.String, laneNumber:java.lang.Integer)
 GET		/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.api.LaneTreatments.get(code: java.lang.String, laneNumber:java.lang.Integer, trCode: java.lang.String)
@@ -111,6 +111,7 @@ GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list()
 
 #migration
 GET		/migration									controllers.migration.Migration.migration()
+GET		/migration2									controllers.migration.Migration2.migration()
 
 #Common
 GET		/api/commons/states							controllers.commons.api.States.list()

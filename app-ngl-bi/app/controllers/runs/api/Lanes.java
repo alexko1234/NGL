@@ -3,7 +3,7 @@ package controllers.runs.api;
 
 import java.util.Date;
 
-import models.laboratory.common.instance.Validation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -28,7 +28,7 @@ public class Lanes extends CommonController{
 	
 	final static Form<Lane> laneForm = form(Lane.class);
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
-	final static Form<Validation> validationForm = form(Validation.class);
+	final static Form<Valuation> valuationForm = form(Valuation.class);
 	
 	private static Run getRun(String code, Integer laneNumber) {
 		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
@@ -146,24 +146,24 @@ public class Lanes extends CommonController{
 	}
 	
 	
-	//@Permission(value={"validation_run_lane"})
-	public static Result validation(String code, Integer laneNumber, String validCode){
+	//@Permission(value={"valuation_run_lane"})
+	public static Result valuation(String code, Integer laneNumber, String validCode){
 		Run run = getRun(code, laneNumber);
 		if(run == null){
 			return badRequest();
 		}
-		Form<Validation> filledForm = getFilledForm(validationForm, Validation.class);
-		Validation validation = filledForm.get();
-		validation.date = new Date();
-		validation.user = getCurrentUser();
+		Form<Valuation> filledForm = getFilledForm(valuationForm, Valuation.class);
+		Valuation valuation = filledForm.get();
+		valuation.date = new Date();
+		valuation.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		ctxVal.putObject("run", run);
 		ctxVal.setUpdateMode();
-		RunValidationHelper.validateValidation(run.typeCode, validation, ctxVal);			
+		RunValidationHelper.validateValuation(run.typeCode, valuation, ctxVal);			
 		if(!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)),
-					DBUpdate.set("lanes.$.validation", validation)); 
+					DBUpdate.set("lanes.$.valuation", valuation)); 
 			return ok();
 		} else {
 			return badRequest(filledForm.errorsAsJson());

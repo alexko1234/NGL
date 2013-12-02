@@ -37,7 +37,7 @@ public class AlertSAVTests extends AbstractTests{
 	@BeforeClass
 	public static void getRunData()
 	{
-		runData = MongoDBDAO.findOne("ngl_bi.RunIllumina_initData", Run.class, DBQuery.is("code", "121023_HISEQ10_C177JACXX"));
+		runData = MongoDBDAO.findOne("ngl_bi.RunIllumina_initData", Run.class, DBQuery.is("code", "121203_HISEQ7_D1DAGACXX"));
 	}
 	
 	@AfterClass

@@ -12,7 +12,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Validation;
+import models.laboratory.common.instance.Valuation;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -35,8 +35,8 @@ public class ReadSet extends DBObject implements IValidation{
 	public String sampleCode; //nom de l'ind / ech
 	public String projectCode;
 	
-	public Validation validationProduction = new Validation();
-	public Validation validationBioinformatic = new Validation();
+	public Valuation productionValuation = new Valuation();
+	public Valuation bioinformaticValuation = new Valuation();
 	
     
 	public String path;
@@ -74,8 +74,8 @@ public class ReadSet extends DBObject implements IValidation{
 		ReadSetValidationHelper.validateCode(this, InstanceConstants.READSET_ILLUMINA_COLL_NAME, contextValidation);
 		ReadSetValidationHelper.validateReadSetType(this.typeCode, this.properties, contextValidation);
 		ReadSetValidationHelper.validateState(this.typeCode, this.state, contextValidation);
-		ReadSetValidationHelper.validateValidation(this.typeCode, this.validationBioinformatic, contextValidation);
-		ReadSetValidationHelper.validateValidation(this.typeCode, this.validationProduction, contextValidation);
+		ReadSetValidationHelper.validateValuation(this.typeCode, this.bioinformaticValuation, contextValidation);
+		ReadSetValidationHelper.validateValuation(this.typeCode, this.productionValuation, contextValidation);
 		ReadSetValidationHelper.validateReadSetCodeInRunLane(this.code, this.runCode, this.laneNumber, contextValidation);
 		ReadSetValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
 		ReadSetValidationHelper.validateReadSetRunCode(this.runCode ,contextValidation);
