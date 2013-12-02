@@ -13,7 +13,6 @@ import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.laboratory.processes.description.dao.ProcessTypeDAO;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import models.utils.dao.AbstractDAOCommonInfoType.CommonInfoTypeFinder;
 
 
 /**
