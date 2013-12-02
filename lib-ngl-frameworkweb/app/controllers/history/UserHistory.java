@@ -37,15 +37,20 @@ public class UserHistory extends Action.Simple{
 			params=data.data().toString();
 			
 			action = context.request().toString();
+			Result res = null;
 			
-			long start = System.currentTimeMillis();
-			Result res = delegate.call(context);
-			long timeRequest = (System.currentTimeMillis() - start);
-			Logger.debug(action + " -> " + (System.currentTimeMillis() - start) + " ms.");
-			
-			//after request
-			//ecriture de l'info
-			MongoDBDAO.save("userHistory", new UserAction(login,params,action,timeRequest));
+			if(!context.request().uri().startsWith("/tpl/")){
+				long start = System.currentTimeMillis();
+				res = delegate.call(context);
+				long timeRequest = (System.currentTimeMillis() - start);
+				Logger.debug(action + " -> " + (System.currentTimeMillis() - start) + " ms.");
+				
+				//after request
+				//ecriture de l'info
+				MongoDBDAO.save("userHistory", new UserAction(login,params,action,timeRequest));
+			}else{
+				res = delegate.call(context);
+			}
 			
 			return res;
 		}else{
