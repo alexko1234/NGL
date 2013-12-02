@@ -3,22 +3,37 @@ package models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Validation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.SampleUsed;
 import models.laboratory.project.instance.Project;
+import models.laboratory.run.description.ReadSetType;
+import models.laboratory.run.description.TreatmentType;
+import models.laboratory.run.instance.File;
+import models.laboratory.run.instance.InstrumentUsed;
+import models.laboratory.run.instance.Lane;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
+import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
+import models.util.DataMappingCNS;
+import models.util.MappingHelper;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -33,7 +48,6 @@ import org.springframework.stereotype.Repository;
 
 import play.Logger;
 import play.api.modules.spring.Spring;
-import play.data.validation.ValidationError;
 import validation.ContextValidation;
 
 
@@ -46,20 +60,20 @@ public class LimsCNSDAO {
 
 	private JdbcTemplate jdbcTemplate;
 
-	private static final String CONTAINER_CATEGORY_CODE= "tube";
-	private static final String CONTAINER_STATE_CODE="IWP";
-	private static final String CONTAINER_PROPERTIES_BQ="tag";
 	public static final String LIMS_CODE="limsCode";
 	private static final String SAMPLE_ADPATER="isAdapters";
-	private static final String RECEPTION_DATE ="receptionDate";
 	protected static final String PROJECT_CATEGORY_CODE = "default";
 	protected static final String PROJECT_TYPE_CODE_FG = "france-genomique";
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
 	protected static final String PROJECT_PROPERTIES_FG_GROUP="fgGroup";
-
+	protected static final String NGSRG_CODE="ngsrg";
+	protected static final String GLOBAL_CODE="global";
 	protected static final String IMPORT_CATEGORY_CODE="sample-import";
-	
-	
+	protected static final String RUN_TYPE_CODE = "ngsrg-illumina";
+
+	protected static final String READSET_DEFAULT_CODE = "default-readset";
+
+
 	@Autowired
 	@Qualifier("lims")
 	public void setDataSource(DataSource dataSource) {
@@ -110,10 +124,10 @@ public class LimsCNSDAO {
 				String tadco = rs.getString("tadco");
 				String tprco = rs.getString("tprco");
 				sample.code=rs.getString("code");
-				
+
 				Logger.debug("Code Materiel (adnco) :"+rs.getString(LIMS_CODE)+" , Type Materiel (tadco) :"+tadco +", Type Projet (tprco) :"+tprco);
 
-				String sampleTypeCode=getSampleTypeFromLims(tadco,tprco);
+				String sampleTypeCode=DataMappingCNS.getSampleTypeFromLims(tadco,tprco);
 
 				if(sampleTypeCode==null){
 					contextError.addErrors( "typeCode", "limsdao.error.emptymapping", tadco, sample.code);
@@ -137,7 +151,7 @@ public class LimsCNSDAO {
 				Logger.debug("Sample Type :"+sampleTypeCode);
 
 				sample.typeCode=sampleTypeCode;
-			
+
 
 				sample.projectCodes=new ArrayList<String>();
 				sample.projectCodes.add(rs.getString("project"));
@@ -151,22 +165,7 @@ public class LimsCNSDAO {
 				sample.categoryCode=sampleType.category.code;
 
 
-				for(PropertyDefinition propertyDefinition :sampleType.propertiesDefinitions)
-				{
-					String code=null;
-					try{
-						code=rs.getString(propertyDefinition.code);
-
-						if(sample.properties==null){ sample.properties=new HashMap<String, PropertyValue>();}
-						if(code!=null){
-							sample.properties.put(propertyDefinition.code, new PropertySingleValue(code));
-						}
-
-					}catch (SQLException e) {
-						Logger.info("Property "+propertyDefinition.code+" not exist in pl_MaterielToNGL");
-					}
-
-				}
+				MappingHelper.getPropertiesFromResultSet(rs,sampleType.propertiesDefinitions,sample.properties);
 
 				boolean tara=false;
 
@@ -177,7 +176,7 @@ public class LimsCNSDAO {
 				if(tara){
 
 					Logger.debug("Tara sample "+sample.code);
-					
+
 					TaraDAO  taraServices = Spring.getBeanOfType(TaraDAO.class);
 					if(sample.properties==null){ sample.properties=new HashMap<String, PropertyValue>();}
 
@@ -196,8 +195,8 @@ public class LimsCNSDAO {
 				if(sample.properties.get(SAMPLE_ADPATER)!=null){
 					adapter= Boolean.parseBoolean(sample.properties.get(SAMPLE_ADPATER).value.toString());
 				}
-				
-				sample.importTypeCode=getImportTypeCode(tara,adapter);
+
+				sample.importTypeCode=DataMappingCNS.getImportTypeCode(tara,adapter);
 				Logger.debug("Import Type "+sample.importTypeCode);
 				return sample;
 			}
@@ -214,8 +213,8 @@ public class LimsCNSDAO {
 
 	}
 
-	
-	
+
+
 	public List<Project> findProjectToCreate(final ContextValidation contextError) throws SQLException, DAOException {
 		List<Project> results = this.jdbcTemplate.query("pl_ProjetToNGL ",new Object[]{} 
 		,new RowMapper<Project>() {
@@ -223,7 +222,7 @@ public class LimsCNSDAO {
 			@SuppressWarnings("rawtypes")
 			public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-				
+
 				Project project = new Project(rs.getString(2).trim(),rs.getString(1));
 				String fgGroupe=rs.getString("groupefg");
 				if(fgGroupe==null){
@@ -234,66 +233,18 @@ public class LimsCNSDAO {
 					project.properties= new HashMap<String, PropertyValue>();
 					project.properties.put(PROJECT_PROPERTIES_FG_GROUP, new PropertySingleValue(fgGroupe));
 				}
-			
+
 				project.categoryCode=PROJECT_CATEGORY_CODE;
 				project.stateCode="IP";
 				InstanceHelpers.updateTraceInformation(project.traceInformation);
 				return project;
 			}
 		});
-		
+
 		return results;
 	}
-	
-	public static String getImportTypeCode(boolean tara, boolean adapter) {
-		
-		//Logger.debug("Adaptateur "+adapter);
-		//Logger.debug("Tara "+tara);
-		if(adapter){
-			if(tara){
-				return "tara-library";
-			}
-			else { return "library"; }
-		}
-		else if(tara){
-			return "tara-default";
-		}
-		else {
-			 return "default-import";
-		}
-	}
 
-	private String getSampleTypeFromLims(String tadnco,String tprco) {
 
-		if(tadnco.equals("15")) return "fosmid";
-		else
-		if(tadnco.equals("8")) return "plasmid";
-		else
-		if(tadnco.equals("2")) return "BAC";
-		else
-		if(tadnco.equals("1") && !tprco.equals("11")) return "gDNA";
-		else
-		if(tadnco.equals("1") && tprco.equals("11")) return "MeTa-DNA";
-		else
-		if(tadnco.equals("16")) return "gDNA";
-		else
-		if(tadnco.equals("19") || tadnco.equals("6")) return "amplicon";
-		else
-		if(tadnco.equals("12")) return "cDNA";
-		else
-		if( tadnco.equals("11")) return "total-RNA";
-		else 
-		if(tadnco.equals("18")) return "sRNA";
-		else
-		if(tadnco.equals("10")) return "mRNA";
-		else
-		if(tadnco.equals("17")) return "chIP";
-		else
-		if(tadnco.equals("20")) return "depletedRNA";
-
-		//Logger.debug("Erreur mapping Type materiel ("+tadnco+")/Type projet ("+tprco+") et Sample Type");
-		return null;
-	}
 
 
 	public List<ListObject> getListObjectFromProcedureLims(String procedure) {
@@ -315,9 +266,9 @@ public class LimsCNSDAO {
 
 		String limsCode=null;
 		String rootKeyName=null;
-		
+
 		contextError.addKeyToRootKeyName("updateMaterielmanipLims");
-		
+
 		for(Container container:containers){
 
 			rootKeyName="container["+container.code+"]";
@@ -330,7 +281,7 @@ public class LimsCNSDAO {
 
 			}else {
 				try{
-			
+
 					String sql="pm_MaterielmanipInNGL @matmaco=?";
 					Logger.debug(sql+limsCode);
 					this.jdbcTemplate.update(sql, Integer.parseInt(limsCode));
@@ -340,12 +291,12 @@ public class LimsCNSDAO {
 					contextError.addErrors("",e.getMessage(), container.support.barCode);
 				}
 			}
-			
+
 			contextError.removeKeyFromRootKeyName(rootKeyName);
 
 
 		}
-		
+
 		contextError.removeKeyFromRootKeyName("updateMaterielmanipLims");
 	}
 
@@ -358,7 +309,7 @@ public class LimsCNSDAO {
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Container container = new Container();
-				
+
 				return container;
 			}
 
@@ -392,7 +343,227 @@ public class LimsCNSDAO {
 		});        
 
 		return results;
+
+	}
+
+	public List<Run> findRunsToCreate(String sqlContent,final ContextValidation contextError){
+		List<Run> results = this.jdbcTemplate.query(sqlContent,new RowMapper<Run>() {
+
+			@SuppressWarnings("rawtypes")
+			public Run mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+				Run run = new Run();
+				run.code = rs.getString("code"); 
+				//Nom flowcell ?
+				run.containerSupportCode = DataMappingCNS.getContainerSupportCode(rs.getString("containerSupportCode"));
+				run.dispatch = rs.getBoolean("dispatch");
+				run.instrumentUsed = new InstrumentUsed();
+				run.instrumentUsed.code = rs.getString("insCode");
+				//Mapping dans la table Tpsequencage du Lims
+				run.instrumentUsed.categoryCode = rs.getString("insCategoryCode");
+				//RHS2000, RHS2500, RHS2500R
+				run.typeCode =DataMappingCNS.getRunTypeCodeMapping(rs.getString("insCategoryCode"));
+				run.containerSupportCode=rs.getString("containerSupportCode");
+
+				//Revoir l'etat en fonction du dispatch et de la validation
+				//TODO fin de tranfert
+				State state = new State();
+				run.state = state;
+				run.state.code = DataMappingCNS.getStateFromLims("F");
+				run.state.user = NGSRG_CODE;
+				run.state.date = new Date();
+
+				Validation validation=new Validation();
+				run.validation=validation;
+
+				//
+				run.validation.valid=TBoolean.valueOf(rs.getString("validationValid"));
+				run.validation.user="lims";
+				run.validation.date=rs.getDate("validationDate");
+				//TODO	run.validation.resolutionCodes
+
+				TraceInformation ti = new TraceInformation(); 
+				ti.setTraceInformation(NGSRG_CODE);
+				run.traceInformation = ti; 
+
+				run.treatments.put(NGSRG_CODE,newTreatment(contextError,rs, Level.CODE.Run,NGSRG_CODE,NGSRG_CODE,RUN_TYPE_CODE));
+/*
+				run.lanes=new ArrayList<Lane>();
+				for(int i=1;i<=rs.getInt("nbPiste");i++){
+					Lane lane=new Lane();
+					lane.number=i;
+					Validation validationLane=new Validation();
+					validationLane.date=new Date();
+					validationLane.user="lims";
+					lane.validation=validationLane;
+					run.lanes.add(lane);
+				}
+*/
+				
+				return run;
+			}
+
+		});        
+
+		return results;
+	}
+
+
+	public List<Lane> findLanesToCreateFromRun(Run run,final ContextValidation contextError){
+
+		List<Lane> results = this.jdbcTemplate.query("pl_LaneUnRunToNGL @runCode=?",new Object[]{run.code} 
+		,new RowMapper<Lane>() {
+			@SuppressWarnings("rawtypes")
+			public Lane mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Lane lane=new Lane();
+				lane.number=rs.getInt("lanenum");
+				lane.validation=new Validation();
+				lane.validation.valid=TBoolean.valueOf(rs.getString("validationValid"));
+				lane.validation.user="lims";
+				lane.validation.date=rs.getDate("validationDate");
+				//TODO 
+				contextError.addKeyToRootKeyName("lane["+lane.number+"].treatment[default]");
+				Treatment treatment=newTreatment(contextError,rs,Level.CODE.Lane,NGSRG_CODE,NGSRG_CODE,RUN_TYPE_CODE);
+				if(treatment==null){
+					return null;
+				}else{
+					lane.treatments.put(NGSRG_CODE,treatment);
+				}
+				contextError.removeKeyFromRootKeyName("lane["+lane.number+"].treatment[default]");
+				return lane;
+			}
+		});
+		return results;
+	}
+
+
+	public Treatment newTreatment(ContextValidation contextError,ResultSet rs,Level.CODE level,String categoryCode,String code,String typeCode) throws SQLException{
+		Treatment treatment=new Treatment();
+		treatment.categoryCode=categoryCode;
+		treatment.code=code;
+		treatment.typeCode=typeCode;
+		Map<String,PropertyValue> m = new HashMap<String,PropertyValue>();
+
+		try {
+			TreatmentType treatmentType=TreatmentType.find.findByCode(treatment.typeCode);
+			if(treatmentType==null){
+				contextError.addErrors("treatmentType","error.codeNotExist",treatment.typeCode);
+				return null;
+			}else {
+				MappingHelper.getPropertiesFromResultSet(rs, treatmentType.getPropertyDefinitionByLevel(level),m);
+			}
+		} catch (DAOException e) {
+			Logger.debug("Erreur newTreatment");
+			e.printStackTrace();
+		}
+		treatment.results=new HashMap<String, Map<String,PropertyValue>>();
+		treatment.results.put("default",m);
+		return treatment;
+	}
+
+	public List<ReadSet> findReadSetToCreateFromRun(final Run run,
+			final ContextValidation contextError) {
+		List<ReadSet> results = this.jdbcTemplate.query("pl_ReadSetUnRunToNGL @runCode=?",new Object[]{run.code} 
+		,new RowMapper<ReadSet>() {
+			@SuppressWarnings("rawtypes")
+			public ReadSet mapRow(ResultSet rs, int rowNum) throws SQLException {
+				ReadSet readSet=new ReadSet();
+				readSet.code=rs.getString("code");
+				readSet.archiveId=rs.getString("archiveId");
+				readSet.archiveDate=rs.getDate("archiveDate");
+				readSet.dispatch=rs.getBoolean("dispatch");
+				readSet.laneNumber=rs.getInt("laneNumber");
+				readSet.path=rs.getString("readSetPath");
+				readSet.projectCode=rs.getString("projectCode");
+				readSet.runCode=run.code;
+				readSet.sampleCode=rs.getString("sampleCode");
+				readSet.state=new State();
+				readSet.state.code=DataMappingCNS.getStateFromLims(rs.getString("state"));
+				readSet.state.date= new Date();
+				readSet.state.user="lims";
+				readSet.traceInformation=new TraceInformation();
+				readSet.traceInformation.setTraceInformation("lims");
+				readSet.typeCode=READSET_DEFAULT_CODE;
+				
+				//To valide
+				readSet.validationBioinformatic=new Validation();
+				readSet.validationBioinformatic.valid=TBoolean.valueOf(rs.getString("validationBioinformatic"));
+				readSet.validationBioinformatic.date=new Date();
+				readSet.validationBioinformatic.user="lims";
+				readSet.validationProduction=new Validation();
+				readSet.validationProduction.valid=TBoolean.valueOf(rs.getString("validationProduction"));
+				readSet.validationProduction.date=rs.getDate("validationProductionDate");
+				readSet.validationProduction.user="lims";
+				readSet.treatments.put(NGSRG_CODE,newTreatment(contextError,rs,Level.CODE.ReadSet,NGSRG_CODE,NGSRG_CODE,RUN_TYPE_CODE));
+				readSet.treatments.put(GLOBAL_CODE,newTreatment(contextError,rs,Level.CODE.ReadSet,GLOBAL_CODE,GLOBAL_CODE,GLOBAL_CODE));
+				return readSet;
+			}
+		});
+		return results;
+	}
+
+
+	public void updateRunLims(List<Run> updateRuns,
+			ContextValidation contextError) {
+		String rootKeyName=null;
+
+		contextError.addKeyToRootKeyName("updateRunLims");
+
+		for(Run run:updateRuns){
+
+			rootKeyName="run["+run.code+"]";
+			contextError.addKeyToRootKeyName(rootKeyName);
+
+			try{
+				String sql="pm_RunhdInNGL @runhnom=?";
+				Logger.debug(sql+run.code);
+				this.jdbcTemplate.update(sql, run.code);
+
+			} catch(DataAccessException e){
+
+				contextError.addErrors("",e.getMessage(), run.code);
+			}
+
+			contextError.removeKeyFromRootKeyName(rootKeyName);
+
+		}
+		contextError.removeKeyFromRootKeyName("updateRunLims");
+
+	}
+
+
+	public List<File> findFileToCreateFromReadSet(final ReadSet readSet,final ContextValidation contextError) {
 		
+		List<File> results = this.jdbcTemplate.query("pl_FileUnReadSetToNGL @readSetCode=?",new Object[]{readSet.code} 
+		,new RowMapper<File>() {
+			@SuppressWarnings("rawtypes")
+			public File mapRow(ResultSet rs, int rowNum) throws SQLException {
+				File file=new File();
+				file.extension=rs.getString("extension");
+				file.fullname=rs.getString("fullname");
+				file.state=new State();
+				file.state.code="A";
+				file.state.date=new Date();
+				file.state.user="lims";
+				file.typeCode=rs.getString("typeCode");
+				file.usable=rs.getBoolean("usable");
+				
+				ReadSetType readSetType = null;
+
+    			try {
+					readSetType = ReadSetType.find.findByCode(readSet.typeCode);
+				} catch (DAOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				MappingHelper.getPropertiesFromResultSet(rs,readSetType.getPropertyDefinitionByLevel(Level.CODE.File),file.properties);
+
+				return file;
+			}
+		});
+		return results;
+
 	}
 
 }

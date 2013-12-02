@@ -1,14 +1,15 @@
 package services.instance;
 
+import play.Logger;
 
-public class ImportDataFactory {
 
+public class ImportDataFactory { 
 
-	public AbstractImportData getImportData(){
+	public AbsImportData getImportData(){
 
 		try {
 			String institute=play.Play.application().configuration().getString("import.institute");
-
+			Logger.debug("Import institute "+ institute);
 			if(institute.equals("CNG")){
 				return new ImportDataCNG();
 			}else if (institute.equals("CNS")){

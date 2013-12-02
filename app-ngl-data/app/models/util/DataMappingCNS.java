@@ -1,15 +1,14 @@
 package models.util;
 
+import models.laboratory.common.instance.State;
+
 public class DataMappingCNS {
 
 	public static String getContainerSupportCode(String code) {
 		return null;
 	}
 
-	public static String getRunTypeCodeMapping(String string) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	public static String getImportTypeCode(boolean tara, boolean adapter) {
 		
@@ -59,6 +58,28 @@ public class DataMappingCNS {
 
 		//Logger.debug("Erreur mapping Type materiel ("+tadnco+")/Type projet ("+tprco+") et Sample Type");
 		return null;
+	}
+
+	public static String getStateFromLims(String string) {
+		
+		/*
+| A     | Disponible                  |
+| UA    | Indisponible                |
+| IW-QC | En attente contr�le qualit� |
+| IP-QC | En cours contr�le qualit�   |
+| F-QC  | Contr�le qualit� termin�e   |
+| IW-V  | En attente �valuation       |
+| IP-V  | En cours �valuation         |
+| F-V   | Evaluation termin�e         |
+| IP-RG | En cours read generation    |
+| F-RG  | Read generation termin�e   
+		 */
+		return "F-V";
+	}
+	
+	public static String getRunTypeCodeMapping(String string) {
+		// TODO
+		return "RHS2000";
 	}
 
 }

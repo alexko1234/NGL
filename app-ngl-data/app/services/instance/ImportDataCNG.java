@@ -2,6 +2,7 @@ package services.instance;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import models.LimsCNGDAO;
 import models.laboratory.container.instance.Container;
@@ -12,14 +13,23 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import play.Logger;
 import play.api.modules.spring.Spring;
+import play.libs.Akka;
+import scala.concurrent.duration.Duration;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 
-public class ImportDataCNG extends AbstractImportData {
+public class ImportDataCNG extends AbsImportData implements Runnable{
 
 	static ContextValidation contextError = new ContextValidation();
 	static LimsCNGDAO  limsServices = Spring.getBeanOfType(LimsCNGDAO.class);
 
+	public ImportDataCNG(){
+		Akka.system().scheduler().schedule(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES)
+                , this, Akka.system().dispatcher()
+				); 
+	}
+	
+	
 	@Override
 	public void run() {
 		contextError.clear();
@@ -150,6 +160,7 @@ public class ImportDataCNG extends AbstractImportData {
 		
 		return ctrs;
 	}
+
 
 	
 }

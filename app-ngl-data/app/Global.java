@@ -19,11 +19,20 @@ public class Global extends GlobalSettings {
 		Logger.info("NGL has started");
 
 		if(play.Play.application().configuration().getBoolean("import.data")){
+			
+	 		Logger.info("NGL scheduler has started");
+		/*	Akka.system().scheduler().schedule(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES)
+	                , (new ImportDataFactory()).getImportData(), Akka.system().dispatcher()
+					);*/
+	 		new ImportDataFactory().getImportData();
+			/*
 			Akka.system().scheduler().schedule(
 					Duration.create(nextExecutionInSeconds(1, 0), TimeUnit.SECONDS),
 	                Duration.create(24, TimeUnit.HOURS)
 	                , (new ImportDataFactory()).getImportData(), Akka.system().dispatcher()
-			); 
+			);*/ 
+			
+
 		}
 	}
 
@@ -31,8 +40,6 @@ public class Global extends GlobalSettings {
 	public void onStop(Application app) {
 		Logger.info("NGL shutdown...");
 	}
-
-	
 	
 	 public static int nextExecutionInSeconds(int hour, int minute){
 	        return Seconds.secondsBetween(
@@ -41,7 +48,7 @@ public class Global extends GlobalSettings {
 	        ).getSeconds();
 	    }
 
-	    public static DateTime nextExecution(int hour, int minute){
+	  public static DateTime nextExecution(int hour, int minute){
 	        DateTime next = new DateTime()
 	                .withHourOfDay(hour)
 	                .withMinuteOfHour(minute)
@@ -52,4 +59,5 @@ public class Global extends GlobalSettings {
 	                ? next.plusHours(24)
 	                : next;
 	    }
+
 }
