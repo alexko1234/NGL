@@ -53,36 +53,8 @@ public class ValidationCriteriaDAO extends AbstractDAOMapping<ValidationCriteria
 		
 	}
 	
-	public List<ValidationCriteria> findByRunCode(String code) {
-		
-		String sql = "SELECT vc.id, vc.code, vc.name, vc.path "+
-				"FROM validation_criteria  as vc "+
-				"INNER JOIN validation_criteria_common_info_type as vcc ON vcc.fk_validation_criteria=vc.id " +
-				"INNER JOIN common_info_type as c ON c.id=vcc.fk_common_info_type " +
-				"INNER JOIN run_type as r ON r.fk_common_info_type=c.id " +
-				"WHERE c.code = ?";
-		
-		BeanPropertyRowMapper<ValidationCriteria> mapper = new BeanPropertyRowMapper<ValidationCriteria>(ValidationCriteria.class);
-		return this.jdbcTemplate.query(sql, mapper, code);
-		
-	}
-	
-	public List<ValidationCriteria> findByReadSetCode(String code) {
-		
-		String sql = "SELECT vc.id, vc.code, vc.name, vc.path "+
-				"FROM validation_criteria  as vc "+
-				"INNER JOIN validation_criteria_common_info_type as vcc ON vcc.fk_validation_criteria=vc.id " +
-				"INNER JOIN common_info_type as c ON c.id=vcc.fk_common_info_type " +
-				"INNER JOIN readset_type as r ON r.fk_common_info_type=c.id " +
-				"WHERE c.code = ?";
-		
-		BeanPropertyRowMapper<ValidationCriteria> mapper = new BeanPropertyRowMapper<ValidationCriteria>(ValidationCriteria.class);
-		return this.jdbcTemplate.query(sql, mapper, code);
-		
-	}
-
 	public List<ValidationCriteria> findByTypeCode(String code) {
-		
+		//TODO : DAOHelpers.getSQLForInstitute("c") ?
 		String sql = "SELECT vc.id, vc.code, vc.name, vc.path "+
 				"FROM validation_criteria  as vc "+
 				"INNER JOIN validation_criteria_common_info_type as vcc ON vcc.fk_validation_criteria=vc.id "+
@@ -90,7 +62,7 @@ public class ValidationCriteriaDAO extends AbstractDAOMapping<ValidationCriteria
 				"WHERE c.code = ?";
 		
 		BeanPropertyRowMapper<ValidationCriteria> mapper = new BeanPropertyRowMapper<ValidationCriteria>(ValidationCriteria.class);
-		return this.jdbcTemplate.query(sql, mapper, code, code);
+		return this.jdbcTemplate.query(sql, mapper, code);
 		
 	}
 	
