@@ -29,11 +29,10 @@ public class ValidationCriteriaService {
 		
 		//NGL-BI 
 		//TODO : change values (values are here just for test the service!!)
-		l.add(DescriptionFactory.newValidationCriteria("Default-run", "default-criteria-run",  "specDefaultCriteriaRunCNGforSAVQualityControl_1" ));
-		l.add(DescriptionFactory.newValidationCriteria("Default-readset", "default-criteria-readset",  "specDefaultCriteriaRdCNGforSAVQualityControl_1" ));
-		l.add(DescriptionFactory.newValidationCriteria("High-run", "criteria-high-run",  "specDefaultCriteriaRunCNGforSAVQualityControl_2" ));
-		l.add(DescriptionFactory.newValidationCriteria("Low-run", "criteria-low-run",  "specDefaultCriteriaRunCNGforSAVQualityControl_3" ));
-
+		l.add(DescriptionFactory.newValidationCriteria("Default", "default-criteria",  "specDefaultCriteriaRunCNGforSAVQualityControl_1" ));
+		l.add(DescriptionFactory.newValidationCriteria("High", "criteria-high",  "specDefaultCriteriaRunCNGforSAVQualityControl_2" ));
+		l.add(DescriptionFactory.newValidationCriteria("Low", "criteria-low",  "specDefaultCriteriaRunCNGforSAVQualityControl_3" ));
+		
 		DAOHelpers.saveModels(ValidationCriteria.class, l, errors);
 	}
 
