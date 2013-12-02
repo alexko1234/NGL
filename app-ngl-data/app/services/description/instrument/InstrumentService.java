@@ -47,6 +47,10 @@ public class InstrumentService {
 		l.add(newInstrumentCategory("QuBit","qubit"));
 		l.add(newInstrumentCategory("qPCR","qpcr"));
 		l.add(newInstrumentCategory("Main","hand"));
+		
+		l.add(newInstrumentCategory("HISEQ2000","HISEQ2000"));
+		l.add(newInstrumentCategory("HISEQ2500","HISEQ2500"));
+		
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 		
 	}
@@ -54,17 +58,63 @@ public class InstrumentService {
 	public static void saveInstrumentUsedTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		
 		List<InstrumentUsedType> l = new ArrayList<InstrumentUsedType>();
-		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, getIntruments(new String[]{"Main"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("Covaris S2", "covaris-s2", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), getIntruments(new String[]{"Covaris 1", "Covaris 2"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), getIntruments(new String[]{"Covaris 3", "Covaris 4"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("Spri", "spri", InstrumentCategory.find.findByCode("spri"), getSpriProperties(), getIntruments(new String[]{"Spri 1", "Spri 2", "Spri 3"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("Thermo", "thermo", InstrumentCategory.find.findByCode("thermo"), getThermoProperties(), getIntruments(new String[]{"Thermo s1", "Thermo s2", "Thermo s3"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("Agilent 2100", "agilent-2100", InstrumentCategory.find.findByCode("agilent"), getAgilentProperties(), getIntruments(new String[]{"BioAnalyzer 1", "BioAnalyzer 2"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("iQuBit", "iqubit", InstrumentCategory.find.findByCode("qubit"), getQuBitProperties(), getIntruments(new String[]{"QuBit 1", "QuBit 2"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("iqPCR", "iqpcr", InstrumentCategory.find.findByCode("qpcr"), getQPCRProperties(), getIntruments(new String[]{"qPCR 1"}),getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		//CNS
+		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, 
+				getIntruments(new Object[][]{{"Main", true, null}}),
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("Covaris S2", "covaris-s2", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
+				getIntruments(new Object[][]{{"Covaris 1", true, null}, {"Covaris 2", true, null}}), 
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
+				getIntruments(new Object[][]{{"Covaris 3", true, null}, {"Covaris 4", true, null}}), 
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("Spri", "spri", InstrumentCategory.find.findByCode("spri"), getSpriProperties(), 
+				getIntruments(new Object[][]{{"Spri 1", true, null}, {"Spri 2", true, null}, {"Spri 3", true, null}}), 
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("Thermo", "thermo", InstrumentCategory.find.findByCode("thermo"), getThermoProperties(), 
+				getIntruments(new Object[][]{{"Thermo s1", true, null}, {"Thermo s2", true, null}, {"Thermo s3", true, null}}), 
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("Agilent 2100", "agilent-2100", InstrumentCategory.find.findByCode("agilent"), getAgilentProperties(), 
+				getIntruments(new Object[][]{{"BioAnalyzer 1", true, null}, {"BioAnalyzer 2", true, null}}), 
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("iQuBit", "iqubit", InstrumentCategory.find.findByCode("qubit"), getQuBitProperties(), 
+				getIntruments(new Object[][]{{"QuBit 1", true, null}, {"QuBit 2", true, null}}), 
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("iqPCR", "iqpcr", InstrumentCategory.find.findByCode("qpcr"), getQPCRProperties(), 
+				getIntruments(new Object[][]{{"qPCR 1", true, null}}), 
+				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		 
+		//CNG
+		l.add(newInstrumentUsedType("HISEQ2000", "HISEQ2000-CNG", InstrumentCategory.find.findByCode("HISEQ2000"), null, 
+				getIntruments(new Object[][]{{"HISEQ1", true, "/env/export/cngstkprd003/v_igseq4/HISEQ1/"},
+						{"HISEQ2", true, "/env/export/cngstkprd003/v_igseq4/HISEQ2/"},
+						{"HISEQ3", true, "/env/export/cngstkprd003/v_igseq4/HISEQ3/"},
+						{"HISEQ4", true, "/env/export/cngstkprd003/v_igseq5/HISEQ4/"},
+						{"HISEQ5", true, "/env/export/cngstkprd003/v_igseq5/HISEQ5/"},
+						{"HISEQ6", true, "/env/export/cngstkprd003/v_igseq5/HISEQ6/"},
+						{"HISEQ7", true, "/env/export/cngstkprd003/v_igseq6/HISEQ7/"},
+						{"HISEQ8", true, "/env/export/cngstkprd003/v_igseq6/HISEQ8/"}}), 
+				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		l.add(newInstrumentUsedType("HISEQ2500", "HISEQ2500-CNG", InstrumentCategory.find.findByCode("HISEQ2500"), null, 
+				getIntruments(new Object[][]{{"HISEQ9", true, "/env/export/cngstkprd003/v_igseq6/HISEQ9/"},
+						{"HISEQ10", true, "/env/export/cngstkprd003/v_igseq7/HISEQ10/"},
+						{"HISEQ11", true, "/env/export/cngstkprd003/v_igseq7/HISEQ11/"}}), 
+				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
+	
 	
 	
 	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
@@ -105,16 +155,20 @@ public class InstrumentService {
 		return l;
 	}
 
-	private static List<Instrument> getIntruments(String[] names) {
+	private static List<Instrument> getIntruments(Object[][] instrumentsDatas) {
 		List<Instrument> l = new ArrayList<Instrument>();
-		for(String name: names){
+		String name = null;
+		for(Object[] instrumentDatas: instrumentsDatas){
 			Instrument instrument = new Instrument();
+			
+			name = String.valueOf(instrumentDatas[0]);
 			instrument.name = name;
 			instrument.code = name.toLowerCase().replaceAll("\\s+", "-");
+			instrument.active = (Boolean) instrumentDatas[1];
+			instrument.path = String.valueOf(instrumentDatas[2]);
+			
 			l.add(instrument);
 		}
-		
-		
 		return l;
 	}
 	
