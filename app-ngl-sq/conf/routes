@@ -56,7 +56,7 @@ GET		/api/experiment/instrument-properties/:instrumentUsedTypeCode	controllers.e
 
 #api combobox
 GET		/api/lists/projects												controllers.lists.api.Lists.projects()
-GET		/api/lists/samples												controllers.lists.api.Lists.samples(projectCode:java.lang.String)
+GET		/api/lists/samples												controllers.lists.api.Lists.samples()
 GET		/api/lists/processTypes											controllers.lists.api.Lists.processTypes()
 GET		/api/lists/experimenttypes										controllers.lists.api.Lists.experimentTypes()
 GET		/api/lists/experimenttypesbycategory/:categoryCode				controllers.lists.api.Lists.experimentTypesByCategory(categoryCode:java.lang.String)
