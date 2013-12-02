@@ -152,7 +152,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 	}
 
 
-	private void saveInstruments(Long id, List<Instrument> instruments, boolean deleteBefore) {
+	private void saveInstruments(Long id, List<Instrument> instruments, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeInstruments(id);
 		}		
