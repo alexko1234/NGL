@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
+import models.LimsCNGDAO;
 import models.LimsCNSDAO;
 import models.TaraDAO;
 import models.utils.dao.DAOException;
@@ -19,8 +20,9 @@ public abstract class AbstractImportData implements Runnable{
 
 	protected static ContextValidation contextError = new ContextValidation();
 	//que fait-on pour CNG ??
-	protected static LimsCNSDAO  limsServices = Spring.getBeanOfType(LimsCNSDAO.class);
+	protected static LimsCNSDAO  limsCNSServices = Spring.getBeanOfType(LimsCNSDAO.class);
 	protected static TaraDAO taraServices = Spring.getBeanOfType(TaraDAO.class);
+	protected static LimsCNGDAO  limsCNGServices = Spring.getBeanOfType(LimsCNGDAO.class);
 	
 	public abstract void runImport() throws SQLException, DAOException;
 	
