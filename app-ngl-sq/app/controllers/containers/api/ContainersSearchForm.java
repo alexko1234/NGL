@@ -1,6 +1,8 @@
 package controllers.containers.api;
 
-public class ContainersSearchForm {
+import controllers.ListForm;
+
+public class ContainersSearchForm extends ListForm{
 	public String projectCode;
 	public String stateCode;
 	public String sampleCode;

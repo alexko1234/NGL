@@ -35,6 +35,7 @@ import workflows.Workflows;
 import controllers.CodeHelper;
 import controllers.CommonController;
 import controllers.authorisation.PermissionHelper;
+import controllers.containers.api.ContainersSearchForm;
 import controllers.utils.FormUtils;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -301,14 +302,23 @@ public class Experiments extends CommonController{
 	
 	
 	public static Result list(){
-		Form<ExperimentSearchForm> experimentSearchFilledForm = experimentSearchForm.bindFromRequest();
-		ExperimentSearchForm experimentSearch = experimentSearchFilledForm.get();
-		DBQuery.Query query = getQuery(experimentSearch);
-	    MongoDBResult<Experiment> results = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query)
-				.sort(DatatableHelpers.getOrderBy(experimentSearchFilledForm), FormUtils.getMongoDBOrderSense(experimentSearchFilledForm))
-				.page(DatatableHelpers.getPageNumber(experimentSearchFilledForm), DatatableHelpers.getNumberRecordsPerPage(experimentSearchFilledForm)); 
-	    List<Experiment> experiment = results.toList();
-		return ok(Json.toJson(new DatatableResponse<Experiment>(experiment, results.count())));
+		Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
+		ExperimentSearchForm experimentsSearch = experimentFilledForm.get();
+		
+		DBQuery.Query query = getQuery(experimentsSearch);
+		
+		if(experimentsSearch.datatable){
+		    MongoDBResult<Experiment> results = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query)
+					.sort(DatatableHelpers.getOrderBy(experimentFilledForm), FormUtils.getMongoDBOrderSense(experimentFilledForm))
+					.page(DatatableHelpers.getPageNumber(experimentFilledForm), DatatableHelpers.getNumberRecordsPerPage(experimentFilledForm)); 
+		    List<Experiment> experiments = results.toList();
+			return ok(Json.toJson(new DatatableResponse<Experiment>(experiments, results.count())));
+		}else{
+			 MongoDBResult<Experiment> results = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query)
+						.sort(DatatableHelpers.getOrderBy(experimentFilledForm), FormUtils.getMongoDBOrderSense(experimentFilledForm));
+			    List<Experiment> experiments = results.toList();
+				return ok(Json.toJson(experiments));
+		}
 	}
 	
 	/**

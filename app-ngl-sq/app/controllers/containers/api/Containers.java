@@ -43,15 +43,23 @@ public class Containers extends CommonController {
 	}
 
 	public static Result list(){
-		Form<ContainersSearchForm> containerFilledForm = containerForm.bindFromRequest();
+		Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
 		ContainersSearchForm containersSearch = containerFilledForm.get();
+		
 		DBQuery.Query query = getQuery(containersSearch);
+		if(containersSearch.datatable){
 		MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query)
 				.sort(DatatableHelpers.getOrderBy(containerFilledForm), FormUtils.getMongoDBOrderSense(containerFilledForm))
 				.page(DatatableHelpers.getPageNumber(containerFilledForm), DatatableHelpers.getNumberRecordsPerPage(containerFilledForm)); 
 		List<Container> containers = results.toList();
 
 		return ok(Json.toJson(new DatatableResponse(containers, results.count())));
+		}else{
+			MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query)
+					.sort(DatatableHelpers.getOrderBy(containerFilledForm), FormUtils.getMongoDBOrderSense(containerFilledForm));
+			
+			return ok(Json.toJson(results));
+		}
 	}
 
 	/**

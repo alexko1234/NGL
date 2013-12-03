@@ -1,6 +1,8 @@
 package controllers.experiments.api;
 
-public class ExperimentSearchForm {
+import controllers.ListForm;
+
+public class ExperimentSearchForm extends ListForm{
 	public String typeCode;
 	@Override
 	public String toString() {

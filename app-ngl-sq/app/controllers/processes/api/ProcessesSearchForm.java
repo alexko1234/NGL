@@ -1,6 +1,8 @@
 package controllers.processes.api;
 
-public class ProcessesSearchForm {
+import controllers.ListForm;
+
+public class ProcessesSearchForm extends ListForm{
 	public String typeCode;
 	public String sampleCode;
 	public String projectCode;
