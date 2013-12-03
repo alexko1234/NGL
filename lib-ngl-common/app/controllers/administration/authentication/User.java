@@ -4,41 +4,13 @@ package controllers.administration.authentication;
  * 
  * @author ydeshayes
  */
+import controllers.CommonController;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 
-public class User extends Controller{
-	  
-		/**
-		 * authentification for technicals users
-		 * @return Result with the cookie if credentials are ok
-		 */
-		public static Result authenticate(){
-			String login = request().getHeader("login");
-			String password = request().getHeader("password");
-			
-			models.administration.authorisation.User user = models.administration.authorisation.User.find.where("login LIKE '"+login+"'").findUnique();
-			if(user!= null && user.technicaluser == 1){
-				if(user.password.equals(password)){
-					createCookie(Http.Context.current(),login);
-					return ok("ok");
-				}
-				else
-					return unauthorized("Bad username or password");
-			} else {
-				return badRequest("User doesn't exist or is not a technical user");
-			}
-		}
-	  
-		private static void createCookie(Http.Context context, String id) {
-				java.util.Date date= new java.util.Date();
-				int timeStamp =  (int)date.getTime();
-				
-				context.session().put("NGL_FILTER_USER", id);
-				context.session().put("NGL_FILTER_TIMEOUT", String.valueOf(timeStamp));
-		}
-		
+public class User extends CommonController{
+
 		public static Result logOut(){
 			Http.Context.current().session().remove("NGL_FILTER_USER");
 			Http.Context.current().session().remove("NGL_FILTER_TIMEOUT");
