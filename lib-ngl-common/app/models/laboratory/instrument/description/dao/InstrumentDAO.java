@@ -61,47 +61,21 @@ public class InstrumentDAO extends AbstractDAODefault<Instrument>{
 		}
 	}
 	
-	private void removeInstitutes( Long instrumentId) {
+	private void removeInstitutes( long instrumentId) {
 		String sql = "DELETE FROM instrument_institute WHERE fk_instrument=?";
 		jdbcTemplate.update(sql, instrumentId);
 	}
 	
 	
-	
-	public void update(Instrument instrument, long idInstrumentUsedType) throws DAOException {
-		if (null == instrument) {
-			throw new DAOException("instrument is mandatory (case 1)");
-		}
-		if (instrument.id == null) {
-			throw new DAOException("instrument is mandatory (case 2)");
+	public void remove(Instrument instrument) throws DAOException {
+		if(null == instrument){
+			throw new IllegalArgumentException("instrument is null");
 		}
 		
-		insertInstitutes(instrument.institutes, instrument.id, true);
-		
-		Instrument insDB = findById(instrument.id);
-		if(null == insDB){
-			throw new DAOException("instrument doesn't exist");
-		}		
-		String sql = "UPDATE instrument SET name=?, code=?, fk_instrument_used_type=?, active=?, path=? WHERE id=?";
-		jdbcTemplate.update(sql, instrument.name, instrument.code, idInstrumentUsedType, instrument.active, instrument.path, instrument.id);
-	}
-	
-	
-	public void remove(Instrument instrument, long idInstrumentUsedType) throws DAOException {
 		//remove institute
 		removeInstitutes(instrument.id);
-		
-		//TODO : removeInstrumentUsedType
-		InstrumentUsedType iut = InstrumentUsedType.find.findById(idInstrumentUsedType);
-		iut.remove(); 
-		
+
 		super.remove(instrument);
 	}
-	
-	
-
-
-	
-	
 	
 }

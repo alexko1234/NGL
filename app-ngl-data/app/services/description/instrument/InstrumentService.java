@@ -27,15 +27,23 @@ public class InstrumentService {
 	
 	
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{
+		
+		Logger.debug("Begin remove Instrument");
+		DAOHelpers.removeAll(Instrument.class, Instrument.find);
+		
 		Logger.debug("Begin remove Instrument Used Type");
 		DAOHelpers.removeAll(InstrumentUsedType.class, InstrumentUsedType.find);
+		
 		Logger.debug("Begin remove Instrument Category !!!");
 		DAOHelpers.removeAll(InstrumentCategory.class, InstrumentCategory.find);
-		Logger.debug("End Remove categories and types ");
+		
+		Logger.debug("Begin save categories");
 		saveInstrumentCategories(errors);
-		Logger.debug("End Inst category");
+		
+		Logger.debug("Begin save Instrument Used Type");
 		saveInstrumentUsedTypes(errors);	
-		Logger.debug("End Inst type");
+		
+		Logger.debug("End Instrument service");
 	}
 	
 	public static void saveInstrumentCategories(Map<String, List<ValidationError>> errors) throws DAOException {
@@ -61,60 +69,76 @@ public class InstrumentService {
 		
 		//CNS
 		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, 
-				getIntruments(new Object[][]{{"Main", true, null}}),
+				getInstruments(
+						createInstrument("Main", "Main", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ),
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("Covaris S2", "covaris-s2", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
-				getIntruments(new Object[][]{{"Covaris 1", true, null}, {"Covaris 2", true, null}}), 
+				getInstruments(
+						createInstrument("Covaris 1", "Covaris 1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("Covaris 2", "Covaris 2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ) ,
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
-				getIntruments(new Object[][]{{"Covaris 3", true, null}, {"Covaris 4", true, null}}), 
+				getInstruments(
+						createInstrument("Covaris 3", "Covaris 3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("Covaris 4", "Covaris 4", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ) , 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("Spri", "spri", InstrumentCategory.find.findByCode("spri"), getSpriProperties(), 
-				getIntruments(new Object[][]{{"Spri 1", true, null}, {"Spri 2", true, null}, {"Spri 3", true, null}}), 
+				getInstruments(
+						createInstrument("Spri 1", "Spri 1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("Spri 2", "Spri 2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("Spri 3", "Spri 3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("Thermo", "thermo", InstrumentCategory.find.findByCode("thermo"), getThermoProperties(), 
-				getIntruments(new Object[][]{{"Thermo s1", true, null}, {"Thermo s2", true, null}, {"Thermo s3", true, null}}), 
+				getInstruments(
+						createInstrument("Thermo s1", "Thermo s1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("Thermo s2", "Thermo s2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("Thermo s3", "Thermo s3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("Agilent 2100", "agilent-2100", InstrumentCategory.find.findByCode("agilent"), getAgilentProperties(), 
-				getIntruments(new Object[][]{{"BioAnalyzer 1", true, null}, {"BioAnalyzer 2", true, null}}), 
+				getInstruments(
+						createInstrument("BioAnalyzer 1", "BioAnalyzer 1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("BioAnalyzer 2", "BioAnalyzer 2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("iQuBit", "iqubit", InstrumentCategory.find.findByCode("qubit"), getQuBitProperties(), 
-				getIntruments(new Object[][]{{"QuBit 1", true, null}, {"QuBit 2", true, null}}), 
+				getInstruments(
+						createInstrument("QuBit 1", "QuBit 1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("QuBit 2", "QuBit 2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ) , 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("iqPCR", "iqpcr", InstrumentCategory.find.findByCode("qpcr"), getQPCRProperties(), 
-				getIntruments(new Object[][]{{"qPCR 1", true, null}}), 
+				getInstruments(
+						createInstrument("qPCR 1", "qPCR 1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
 				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		 
-		//CNG
-		l.add(newInstrumentUsedType("HISEQ2000", "HISEQ2000-CNG", InstrumentCategory.find.findByCode("HISEQ2000"), null, 
-				getIntruments(new Object[][]{{"HISEQ1", true, "/env/export/cngstkprd003/v_igseq4/HISEQ1/"},
-						{"HISEQ2", true, "/env/export/cngstkprd003/v_igseq4/HISEQ2/"},
-						{"HISEQ3", true, "/env/export/cngstkprd003/v_igseq4/HISEQ3/"},
-						{"HISEQ4", true, "/env/export/cngstkprd003/v_igseq5/HISEQ4/"},
-						{"HISEQ5", true, "/env/export/cngstkprd003/v_igseq5/HISEQ5/"},
-						{"HISEQ6", true, "/env/export/cngstkprd003/v_igseq5/HISEQ6/"},
-						{"HISEQ7", true, "/env/export/cngstkprd003/v_igseq6/HISEQ7/"},
-						{"HISEQ8", true, "/env/export/cngstkprd003/v_igseq6/HISEQ8/"}}), 
-				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		l.add(newInstrumentUsedType("HISEQ2500", "HISEQ2500-CNG", InstrumentCategory.find.findByCode("HISEQ2500"), null, 
-				getIntruments(new Object[][]{{"HISEQ9", true, "/env/export/cngstkprd003/v_igseq6/HISEQ9/"},
-						{"HISEQ10", true, "/env/export/cngstkprd003/v_igseq7/HISEQ10/"},
-						{"HISEQ11", true, "/env/export/cngstkprd003/v_igseq7/HISEQ11/"}}), 
-				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		
+		//CNG
+		l.add(newInstrumentUsedType("HISEQ2000", "HISEQ2000", InstrumentCategory.find.findByCode("HISEQ2000"), null, 
+				getInstruments(
+						createInstrument("HISEQ1", "HISEQ1", true, "/env/export/cngstkprd003/v_igseq4/HISEQ1/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("HISEQ2", "HISEQ2", true, "/env/export/cngstkprd003/v_igseq4/HISEQ2/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("HISEQ3", "HISEQ3", true, "/env/export/cngstkprd003/v_igseq4/HISEQ3/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("HISEQ4", "HISEQ4", true, "/env/export/cngstkprd003/v_igseq5/HISEQ4/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("HISEQ5", "HISEQ5", true, "/env/export/cngstkprd003/v_igseq5/HISEQ5/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("HISEQ6", "HISEQ6", true, "/env/export/cngstkprd003/v_igseq5/HISEQ6/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("HISEQ7", "HISEQ7", true, "/env/export/cngstkprd003/v_igseq6/HISEQ7/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("HISEQ8", "HISEQ8", true, "/env/export/cngstkprd003/v_igseq6/HISEQ8/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) ), 
+				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		l.add(newInstrumentUsedType("HISEQ2500", "HISEQ2500", InstrumentCategory.find.findByCode("HISEQ2500"), null, 
+				getInstruments(
+						createInstrument("HISEQ9", "HISEQ9", true, "/env/export/cngstkprd003/v_igseq6/HISEQ9/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("HISEQ10", "HISEQ10", true, "/env/export/cngstkprd003/v_igseq7/HISEQ10/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("HISEQ11", "HISEQ11", true, "/env/export/cngstkprd003/v_igseq7/HISEQ11/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) ), 
+				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
-	
 	
 	
 	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
@@ -154,23 +178,25 @@ public class InstrumentService {
 		l.add(newPropertiesDefinition("Nb. Echantillon", "sampleNumber", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true));		
 		return l;
 	}
-
-	private static List<Instrument> getIntruments(Object[][] instrumentsDatas) {
-		List<Instrument> l = new ArrayList<Instrument>();
-		String name = null;
-		for(Object[] instrumentDatas: instrumentsDatas){
-			Instrument instrument = new Instrument();
-			
-			name = String.valueOf(instrumentDatas[0]);
-			instrument.name = name;
-			instrument.code = name.toLowerCase().replaceAll("\\s+", "-");
-			instrument.active = (Boolean) instrumentDatas[1];
-			instrument.path = String.valueOf(instrumentDatas[2]);
-			
-			l.add(instrument);
-		}
-		return l;
+	
+	private static Instrument createInstrument(String code, String name, Boolean active, String path, List<Institute> institutes) {
+		Instrument i = new Instrument();
+		i.code = code;
+		i.name = name;
+		i.active=active;
+		i.path=path;
+		i.institutes=institutes;
+		return i;
 	}
+
+	private static List<Instrument> getInstruments(Instrument...instruments) {
+		List<Instrument> linstruments = new ArrayList<Instrument>(); 
+		for (Instrument instrument : instruments) {
+			linstruments.add(instrument); 
+		}
+		return linstruments; 
+	}
+
 	
 	private static List<ContainerSupportCategory> getContainerSupportCategories(String[] codes) throws DAOException{		
 		return DAOHelpers.getModelByCodes(ContainerSupportCategory.class,ContainerSupportCategory.find, codes);

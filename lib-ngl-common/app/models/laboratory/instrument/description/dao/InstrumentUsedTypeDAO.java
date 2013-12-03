@@ -1,5 +1,6 @@
 package models.laboratory.instrument.description.dao;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,10 +9,8 @@ import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
-import models.utils.DescriptionHelper;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
-import models.utils.dao.DAOHelpers;
 
 import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
@@ -29,8 +28,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 						"FROM instrument_used_type as c "+sqlCommonInfoType, false);
 	}
 
-	public List<InstrumentUsedType> findByExperimentId(long id)
-	{
+	public List<InstrumentUsedType> findByExperimentId(long id) {
 		String sql=sqlCommon+
 				"JOIN experiment_type_instrument_type as cit ON fk_instrument_used_type=c.id " +
 				"where cit.fk_experiment_type = ?";
@@ -39,9 +37,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 	}
 
 	@Override
-	public long save(InstrumentUsedType instrumentUsedType) throws DAOException
-	{
-		
+	public long save(InstrumentUsedType instrumentUsedType) throws DAOException {
 		if(null == instrumentUsedType){
 			throw new DAOException("InstrumentUsedType is mandatory");
 		}
@@ -110,21 +106,18 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 	}
 
 	private void removeContainerSupportCategoryOut(Long id) {
-	
 			String sql = "DELETE FROM instrument_ut_out_container_support_cat WHERE fk_instrument_used_type=?";
 			jdbcTemplate.update(sql, id);
 	}
 	
 	private void removeContainerSupportCategoryIn(Long id) {
-		
 		String sql = "DELETE FROM instrument_ut_in_container_support_cat WHERE fk_instrument_used_type=?";
 		jdbcTemplate.update(sql, id);
 }
 
 
 	@Override
-	public void update(InstrumentUsedType instrumentUsedType) throws DAOException 
-	{
+	public void update(InstrumentUsedType instrumentUsedType) throws DAOException {
 		//Update commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.update(instrumentUsedType);
@@ -164,8 +157,12 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		}
 	}
 
+	
+	
 	private void removeInstruments(Long id) {
 		String sqlInst = "DELETE FROM instrument WHERE fk_instrument_used_type=?";
 		jdbcTemplate.update(sqlInst, id);
 	}
+
+	
 }
