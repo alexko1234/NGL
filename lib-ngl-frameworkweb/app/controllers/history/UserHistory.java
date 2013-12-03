@@ -1,4 +1,5 @@
 package controllers.history;
+import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import play.Logger;
 import play.Play;
@@ -23,11 +24,11 @@ public class UserHistory extends Action.Simple{
 	@Override
 	//function called by play
 	public Result call(Http.Context context) throws Throwable {
-		if(Play.application().configuration().getBoolean("trace") != null && Play.application().configuration().getBoolean("trace") != false){
+		if(Play.application().configuration().getBoolean("useraction.trace") != null && Play.application().configuration().getBoolean("useraction.trace") != false){
 			String params = "";
 			String action = "";
 			String login = "";
-			Context.current.set(context);
+			
 						
 			if(Context.current().session().get("NGL_FILTER_USER") != null){
 				login = Context.current().session().get("NGL_FILTER_USER");
@@ -39,7 +40,7 @@ public class UserHistory extends Action.Simple{
 			action = context.request().toString();
 			Result res = null;
 			
-			if(!context.request().uri().startsWith("/tpl/")){
+			if(context.request().uri().startsWith("/api/")){
 				long start = System.currentTimeMillis();
 				res = delegate.call(context);
 				long timeRequest = (System.currentTimeMillis() - start);
