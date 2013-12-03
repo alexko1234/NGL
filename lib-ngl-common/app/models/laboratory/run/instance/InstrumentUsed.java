@@ -18,15 +18,10 @@ public class InstrumentUsed implements IValidation {
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		
-		//DescriptionValidationHelper.validationInstrumentCode(code,contextValidation);
-		//DescriptionValidationHelper.validationInstrumentCategoryCode(code,contextValidation);
 
 		CommonValidationHelper.validateRequiredDescriptionCode(contextValidation, this.code, "code", InstrumentUsedType.find);
 		
-		contextValidation.addKeyToRootKeyName("categoryCode");
-		CommonValidationHelper.validateRequiredDescriptionCode(contextValidation, this.categoryCode, "code", InstrumentCategoryDAO.find);
-		contextValidation.removeKeyFromRootKeyName("categoryCode");
+		CommonValidationHelper.validateRequiredDescriptionCode(contextValidation, this.categoryCode, "categoryCode", InstrumentCategoryDAO.find);
 		
 	}
 
