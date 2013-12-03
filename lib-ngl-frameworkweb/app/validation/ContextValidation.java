@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
+import play.Logger.ALogger;
 import play.data.validation.ValidationError;
 import play.i18n.Messages;
 
@@ -202,7 +203,7 @@ public class ContextValidation {
 	}
 
 	
-	public void displayErrors() {
+	public void displayErrors(ALogger logger) {
 		Iterator entries = this.errors.entrySet().iterator();
 		while (entries.hasNext()) {
 			Entry thisEntry = (Entry) entries.next();
@@ -210,7 +211,7 @@ public class ContextValidation {
 			List<ValidationError> value = (List<ValidationError>) thisEntry.getValue();	  
 
 			for(ValidationError validationError:value){
-				Logger.error( key+ " : "+Messages.get(validationError.message(),validationError.arguments()));
+				logger.error( key+ " : "+Messages.get(validationError.message(),validationError.arguments()));
 			}
 		}
 		
