@@ -79,10 +79,8 @@ public abstract class CommonController extends Controller{
 		return true;
 	}
 
-	protected static String getCurrentUser(){
-		String user = Context.current().session().get("NGL_FILTER_USER");
-		if(StringUtils.isBlank(user))user = "ngsrg";
-		return user;
+	public static String getCurrentUser(){
+		return Context.current().request().username();
 	}
 
 }
