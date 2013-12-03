@@ -23,6 +23,8 @@ import play.mvc.Http.Session;
 
 import com.avaje.ebean.Query;
 
+import controllers.CommonController;
+
 public class PermissionHelper {
 	private static final String COOKIE_SESSION = "NGL_FILTER_USER";
 	
@@ -32,11 +34,11 @@ public class PermissionHelper {
 	 * @return the current user login for this session
 	 */
 	public static String getCurrentUser(Session ses){
-		if(ses != null && StringUtils.isNotEmpty(ses.get(COOKIE_SESSION))){
+		/*if(ses != null && StringUtils.isNotEmpty(ses.get(COOKIE_SESSION))){
 			return ses.get(COOKIE_SESSION);
-		}
+		}*/
 		
-		return "";
+		return CommonController.getCurrentUser();
 	}
 	
 	/**
