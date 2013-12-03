@@ -57,7 +57,7 @@ public class LimsCNGDAO {
 	}
 
 
-	public List<Project> findProjectsToCreate(final ContextValidation contextError) throws SQLException, DAOException {
+	public List<Project> findProjectToCreate(final ContextValidation contextError) throws SQLException, DAOException {
 		
 		List<Project> results = this.jdbcTemplate.query("select * from v_project_tongl", new Object[]{}, new RowMapper<Project>() {
 
@@ -153,8 +153,12 @@ public class LimsCNGDAO {
 			return sample;
 	}
 	
+	public List<Sample> findSampleToCreate(final ContextValidation contextError) throws SQLException, DAOException {
+		return findSampleToCreate(contextError, null);
+		
+	}
 	
-	public List<Sample> findSamplesToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {
+	public List<Sample> findSampleToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {
 		
 		List<Sample> results = null;
 		
@@ -240,7 +244,7 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws DAOException 
 	 */
-	public List<Container> findContainersToCreate(final ContextValidation contextError) throws DAOException{
+	public List<Container> findContainerToCreate(final ContextValidation contextError) throws DAOException{
 
 		//verification OK for codes in ('C01BBACXX_1','D0358ACXX_3') 
 		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true order by code, project, code_sample, tag",new Object[]{} 
