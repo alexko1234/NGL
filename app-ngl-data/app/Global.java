@@ -1,15 +1,12 @@
 
-import java.util.concurrent.TimeUnit;
-
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
-import play.libs.Akka;
-import scala.concurrent.duration.Duration;
-import services.instance.ImportDataFactory;
+import services.instance.ImportDataCNG;
+import services.instance.ImportDataCNS;
 
 
 public class Global extends GlobalSettings {
@@ -17,23 +14,9 @@ public class Global extends GlobalSettings {
 	@Override
 	public void onStart(Application app) {
 		Logger.info("NGL has started");
-
-		if(play.Play.application().configuration().getBoolean("import.data")){
-			
-	 		Logger.info("NGL scheduler has started");
-		/*	Akka.system().scheduler().schedule(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES)
-	                , (new ImportDataFactory()).getImportData(), Akka.system().dispatcher()
-					);*/
-	 		new ImportDataFactory().getImportData();
-			/*
-			Akka.system().scheduler().schedule(
-					Duration.create(nextExecutionInSeconds(1, 0), TimeUnit.SECONDS),
-	                Duration.create(24, TimeUnit.HOURS)
-	                , (new ImportDataFactory()).getImportData(), Akka.system().dispatcher()
-			);*/ 
-			
-
-		}
+		
+		importData();
+	 
 	}
 
 	@Override
@@ -60,4 +43,27 @@ public class Global extends GlobalSettings {
 	                : next;
 	    }
 
+	  public static void importData(){
+		  
+			if(play.Play.application().configuration().getBoolean("import.data")){
+				
+		 		Logger.info("NGL import data has started");
+			try {
+				
+				String institute=play.Play.application().configuration().getString("import.institute");
+				Logger.debug("Import institute "+ institute);
+			
+				if(institute.equals("CNG")){
+					new ImportDataCNG();
+				}else if (institute.equals("CNS")){
+					 new ImportDataCNS();
+				} else {
+					throw new RuntimeException("La valeur de l'attribut institute dans application.conf n'a pas d'implementation");
+				}
+				
+			}catch(Exception e){
+				throw new RuntimeException("L'attribut institute dans application.conf n'est pas renseigné");
+			}
+			}else { Logger.info("No import data"); }
+	  }
 }

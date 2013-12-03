@@ -1,22 +1,21 @@
-package services.instance.cns.project;
+package services.instance.project;
 
 import java.sql.SQLException;
 import java.util.List;
-
-import fr.cea.ig.MongoDBDAO;
 
 import models.laboratory.project.instance.Project;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
-import services.instance.AbstractImportData;
+import services.instance.AbstractImportDataCNS;
+import fr.cea.ig.MongoDBDAO;
 
-public class ProjectImportCNS extends AbstractImportData{
+public class ProjectImportCNS extends AbstractImportDataCNS{
 
 	public ProjectImportCNS(FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration) {
-		super(durationFromStart, durationFromNextIteration);
+		super("Project CNS",durationFromStart, durationFromNextIteration);
 	}
 
 	@Override

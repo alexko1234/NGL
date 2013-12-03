@@ -56,7 +56,7 @@ import validation.ContextValidation;
  *
  */
 @Repository
-public class LimsCNSDAO {
+public class LimsCNSDAO{
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -351,7 +351,9 @@ public class LimsCNSDAO {
 
 			@SuppressWarnings("rawtypes")
 			public Run mapRow(ResultSet rs, int rowNum) throws SQLException {
-
+				
+				ContextValidation contextValidation=new ContextValidation();
+				contextValidation.addKeyToRootKeyName(contextError.getRootKeyName());
 				Run run = new Run();
 				run.code = rs.getString("code"); 
 				//Nom flowcell ?
@@ -386,7 +388,9 @@ public class LimsCNSDAO {
 				ti.setTraceInformation(NGSRG_CODE);
 				run.traceInformation = ti; 
 
-				run.treatments.put(NGSRG_CODE,newTreatment(contextError,rs, Level.CODE.Run,NGSRG_CODE,NGSRG_CODE,RUN_TYPE_CODE));
+				contextValidation.addKeyToRootKeyName("run["+run.code+"]");
+				run.treatments.put(NGSRG_CODE,newTreatment(contextValidation,rs, Level.CODE.Run,NGSRG_CODE,NGSRG_CODE,RUN_TYPE_CODE));
+				contextValidation.removeKeyFromRootKeyName("run["+run.code+"]");
 /*
 				run.lanes=new ArrayList<Lane>();
 				for(int i=1;i<=rs.getInt("nbPiste");i++){
@@ -399,8 +403,12 @@ public class LimsCNSDAO {
 					run.lanes.add(lane);
 				}
 */
-				
-				return run;
+				if(contextValidation.hasErrors()){
+					contextError.errors.putAll(contextValidation.errors);
+					return null;
+				}else {
+					return run;
+				}
 			}
 
 		});        
@@ -453,8 +461,7 @@ public class LimsCNSDAO {
 				MappingHelper.getPropertiesFromResultSet(rs, treatmentType.getPropertyDefinitionByLevel(level),m);
 			}
 		} catch (DAOException e) {
-			Logger.debug("Erreur newTreatment");
-			e.printStackTrace();
+			Logger.error(e.toString());
 		}
 		treatment.results=new HashMap<String, Map<String,PropertyValue>>();
 		treatment.results.put("default",m);

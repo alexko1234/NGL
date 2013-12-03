@@ -1,4 +1,4 @@
-package services.instance.cng.project;
+package services.instance.project;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -11,12 +11,13 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportData;
+import services.instance.AbstractImportDataCNG;
 
-public class ProjectImportCNG extends AbstractImportData{
+public class ProjectImportCNG extends AbstractImportDataCNG{
 
 	public ProjectImportCNG(FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration) {
-		super(durationFromStart, durationFromNextIteration);
+		super("ProjectImportCNG",durationFromStart, durationFromNextIteration);
 	}
 
 	@Override
@@ -24,13 +25,13 @@ public class ProjectImportCNG extends AbstractImportData{
 		
 		Logger.info("Start loading projects ..."); 
 		
-		List<Project> projects = limsCNGServices.findProjectToCreate(contextError);
+		List<Project> projects = limsServices.findProjectToCreate(contextError);
 		
 		//save projects
 		List<Project> projs=InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError, true);
 
 		//update import date 
-		limsCNGServices.updateLimsProjects(projs, contextError);
+		limsServices.updateLimsProjects(projs, contextError);
 		
 		Logger.info("End of load projects !"); 
 		

@@ -1,16 +1,10 @@
-package services.instance.cns.container;
+package services.instance.container;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
-import play.Logger;
-
-import fr.cea.ig.MongoDBDAO;
 
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.PropertyValue;
@@ -22,15 +16,19 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
+import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBUpdate;
+import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
-import services.instance.AbstractImportData;
+import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
+import fr.cea.ig.MongoDBDAO;
 
-public class ContainerImportCNS extends AbstractImportData {
+public class ContainerImportCNS extends AbstractImportDataCNS {
 
 	public ContainerImportCNS(FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration) {
-		super(durationFromStart, durationFromNextIteration);
+		super("Container CNS",durationFromStart, durationFromNextIteration);
 	}
 
 	@Override
