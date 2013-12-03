@@ -2,17 +2,12 @@ package models.laboratory.instrument.description;
 
 import java.util.List;
 
-import play.api.modules.spring.Spring;
-
 import models.laboratory.common.description.CommonInfoType;
-import models.laboratory.common.description.CommonInfoType.AbstractCommonInfoTypeFinder;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
-import models.laboratory.processes.description.dao.ProcessTypeDAO;
-import models.utils.ListObject;
-import models.utils.dao.DAOException;
+
 
 
 /**
@@ -26,11 +21,6 @@ public class InstrumentUsedType extends CommonInfoType{
 	public InstrumentCategory category;
 	public List<ContainerSupportCategory> inContainerSupportCategories;
 	public List<ContainerSupportCategory> outContainerSupportCategories;
-	public Boolean active = Boolean.TRUE;
-	public String path;
-	
-	
-	
 	
 	public static CommonInfoType.AbstractCommonInfoTypeFinder<InstrumentUsedType> find = new CommonInfoType.AbstractCommonInfoTypeFinder<InstrumentUsedType>(InstrumentUsedTypeDAO.class); 
 	
