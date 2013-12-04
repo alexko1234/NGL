@@ -62,9 +62,9 @@ runs.dt.code = Code
 runs.dt.state.code = Etat
 runs.dt.valuation.valid = Valide ?
 runs.dt.valuation.resolution = Comptes Rendus
-runs.dt.valuation.user = Validé par
+runs.dt.valuation.user = Evalué par
 runs.dt.valuation.date = Date d''évaluation
-runs.dt.valuation.userdate = Validé par {0} le {1}  
+runs.dt.valuation.userdate = Evalué par {0} le {1}  
 runs.dt.valuation.criteria = Critères
 
 runs.table.valuation.valid = Valide ?

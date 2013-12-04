@@ -110,7 +110,7 @@ public class Migration extends CommonController {
 		List<ReadSetOld> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld.class, DBQuery.is("runCode", run.code)).toList();
 		for (ReadSetOld readSetOld : readSets) {
 			projectCodes.add(readSetOld.projectCode);
-			sampleCodes.add(readSetOld.sampleCode);
+			sampleCodes.add(readSetOld.sampleContainerCode);
 		}
 		
 		
