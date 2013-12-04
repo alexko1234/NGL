@@ -75,45 +75,45 @@ public class InstrumentService {
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("Covaris S2", "covaris-s2", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
-						createInstrument("Covaris 1", "Covaris 1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("Covaris 2", "Covaris 2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ) ,
+						createInstrument("Covaris1", "Covaris1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("Covaris2", "Covaris2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ) ,
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
-						createInstrument("Covaris 3", "Covaris 3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("Covaris 4", "Covaris 4", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ) , 
+						createInstrument("Covaris3", "Covaris3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("Covaris4", "Covaris4", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ) , 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("Spri", "spri", InstrumentCategory.find.findByCode("spri"), getSpriProperties(), 
 				getInstruments(
-						createInstrument("Spri 1", "Spri 1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("Spri 2", "Spri 2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("Spri 3", "Spri 3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
+						createInstrument("Spri1", "Spri1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("Spri2", "Spri2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("Spri3", "Spri3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("Thermo", "thermo", InstrumentCategory.find.findByCode("thermo"), getThermoProperties(), 
 				getInstruments(
-						createInstrument("Thermo s1", "Thermo s1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("Thermo s2", "Thermo s2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("Thermo s3", "Thermo s3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
+						createInstrument("ThermoS1", "ThermoS1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("ThermoS2", "ThermoS2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("ThermoS3", "ThermoS3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("Agilent 2100", "agilent-2100", InstrumentCategory.find.findByCode("agilent"), getAgilentProperties(), 
 				getInstruments(
-						createInstrument("BioAnalyzer 1", "BioAnalyzer 1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("BioAnalyzer 2", "BioAnalyzer 2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
+						createInstrument("BioAnalyzer1", "BioAnalyzer1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("BioAnalyzer2", "BioAnalyzer2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("iQuBit", "iqubit", InstrumentCategory.find.findByCode("qubit"), getQuBitProperties(), 
 				getInstruments(
-						createInstrument("QuBit 1", "QuBit 1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("QuBit 2", "QuBit 2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ) , 
+						createInstrument("QuBit1", "QuBit1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("QuBit2", "QuBit2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ) , 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newInstrumentUsedType("iqPCR", "iqpcr", InstrumentCategory.find.findByCode("qpcr"), getQPCRProperties(), 
 				getInstruments(
-						createInstrument("qPCR 1", "qPCR 1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
+						createInstrument("qPCR1", "qPCR1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
 				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
