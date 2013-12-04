@@ -24,7 +24,7 @@ public abstract class AbstractImportData implements Runnable{
 
 	public AbstractImportData(String name,FiniteDuration durationFromStart, FiniteDuration durationFromNextIteration){
 		this.name=name;
-		logger=Logger.of("import."+name);
+		logger=Logger.of(this.getClass().getName());
 		Akka.system().scheduler().schedule(durationFromStart,durationFromNextIteration
 				, this, Akka.system().dispatcher()
 				); 
@@ -42,7 +42,8 @@ public abstract class AbstractImportData implements Runnable{
 			runImport();
 			contextError.removeKeyFromRootKeyName("import");
 
-		}catch (Exception e) {
+		}catch (Throwable e) {
+			
 			logger.error("",e);
 		}
 		finally{
