@@ -48,7 +48,7 @@ public class UserHistory extends Action.Simple{
 				
 				//after request
 				//ecriture de l'info
-				MongoDBDAO.save("userHistory", new UserAction(login,params,action,timeRequest));
+				MongoDBDAO.save("UserHistory", new UserAction(login,params,action,timeRequest));
 			}else{
 				res = delegate.call(context);
 			}

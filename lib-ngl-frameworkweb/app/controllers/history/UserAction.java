@@ -14,10 +14,10 @@ import java.util.Date;
 import fr.cea.ig.DBObject;
 
 public class UserAction extends DBObject{
-	public Date date;
 	public String login;
-	public String params;
 	public String action;
+	public String params;
+	public Date date;
 	public long timeRequest;
 	
 	
