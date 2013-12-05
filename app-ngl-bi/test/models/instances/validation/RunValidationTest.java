@@ -1242,7 +1242,7 @@ public class RunValidationTest extends AbstractTests {
 				run.typeCode = "RHS2000";
 				
 				Valuation v = new Valuation();
-				v.criteriaCode = "default-criteria-run";
+				v.criteriaCode = "criteria-low";
 				v.date = new Date();
 				v.resolutionCodes = null;
 				v.user = "dnoisett";
@@ -1348,7 +1348,7 @@ public class RunValidationTest extends AbstractTests {
 			run.dispatch = true;
 			run.instrumentUsed = new InstrumentUsed();
 			if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
-				run.instrumentUsed.code = "HISEQ1-CNG";
+				run.instrumentUsed.code = "HISEQ1";
 				run.instrumentUsed.categoryCode = "HISEQ2000";
 			}	
 			else {
@@ -1391,7 +1391,7 @@ public class RunValidationTest extends AbstractTests {
 		run.dispatch = true;
 		run.instrumentUsed = new InstrumentUsed();
 		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
-			run.instrumentUsed.code = "HISEQ1-CNG";
+			run.instrumentUsed.code = "HISEQ1";
 			run.instrumentUsed.categoryCode = "HISEQ2000";
 		}	
 		else {
@@ -1446,7 +1446,7 @@ public class RunValidationTest extends AbstractTests {
 		run.dispatch = true;
 		run.instrumentUsed = new InstrumentUsed();
 		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
-			run.instrumentUsed.code = "HISEQ1-CNG";
+			run.instrumentUsed.code = "HISEQ1";
 			run.instrumentUsed.categoryCode = "HISEQ2000";
 		}	
 		else {

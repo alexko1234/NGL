@@ -58,7 +58,7 @@ public class RunMockHelper {
 		
 		run.instrumentUsed = new InstrumentUsed();
 		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
-			run.instrumentUsed.code = "HISEQ1-CNG";
+			run.instrumentUsed.code = "HISEQ1";
 			run.instrumentUsed.categoryCode = "HISEQ2000";
 		}	
 		else {
