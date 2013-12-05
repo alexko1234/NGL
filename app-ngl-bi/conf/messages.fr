@@ -13,7 +13,6 @@ authentification.dropdown_list.profile=Profil
 authentification.dropdown_list.signout=Se déconnecter
 
 #page title
-runs.page.title=Runs
 run.legend.title=Run
 archives.page.title=Archives
 
@@ -24,13 +23,7 @@ runs.menu.search = Rechercher
 ## dno, from my personal point of view, must be removed, but, to have the same comportement as before, i prefer put it
 archives.menu.search = Rechercher
 
-#runs - main
-runs.table.code=Code
-runs.table.creationdate=Date de création
-# a vérifier
-runs.table.dispatch=Dispatch
-runs.table.typeCode = Type
-runs.table.stateCode = Etat
+
 
 
 runs.dt.nb_cluster_total=Nb clusters (total)

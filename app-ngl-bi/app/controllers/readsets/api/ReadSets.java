@@ -5,8 +5,10 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -24,57 +26,85 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
+import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.MongoDBResult.Sort;
 
 
 
 public class ReadSets extends CommonController{
 
 	final static Form<ReadSet> readSetForm = form(ReadSet.class);
-	final static DynamicForm form = new DynamicForm();
+	final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
 	
 	//@Permission(value={"reading"})
 	public static Result list() {
-		Query q = getQuery();
-		if(null != q){
-			List<ReadSet> readSetValues = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, q).toList();
-			if (readSetValues != null) {		
-				return ok(Json.toJson(readSetValues));					
-			} else {
-				return notFound();
-			}
-		}else{
-			return badRequest("missing parameters");
-		}
+		Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);
+		ReadSetsSearchForm form = filledForm.get();
 		
+		Query q = getQuery(form);
+		if(form.datatable){
+			MongoDBResult<ReadSet> results = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, q) 
+					.sort(form.orderBy, Sort.valueOf(form.orderSense))
+					.page(form.pageNumber,form.numberRecordsPerPage); 
+			List<ReadSet> readSets = results.toList();
+			return ok(Json.toJson(new DatatableResponse<ReadSet>(readSets, results.count())));
+		}else{
+			MongoDBResult<ReadSet> results = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, q)
+					.sort("code", Sort.valueOf(form.orderSense)).limit(form.limit);
+			List<ReadSet> readSets = results.toList();
+			return ok(Json.toJson(readSets));
+		}
 	}
 	
-	private static Query getQuery() {
-		DynamicForm inputForm = form.bindFromRequest();
+	private static Query getQuery(ReadSetsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
-		if (StringUtils.isNotBlank(inputForm.get("runCode"))) { //all
-			queries.add(DBQuery.is("runCode", inputForm.get("runCode")));
+		if (StringUtils.isNotBlank(form.runCode)) { //all
+			queries.add(DBQuery.is("runCode", form.runCode));
+		}else if(CollectionUtils.isNotEmpty(form.runCodes)){
+			queries.add(DBQuery.in("runCode", form.runCodes));
 		}
 		
-		if (StringUtils.isNotBlank(inputForm.get("laneNumber"))) { //all
-			queries.add(DBQuery.is("laneNumber", Integer.valueOf(inputForm.get("laneNumber"))));
+		if (null != form.laneNumber) { //all
+			queries.add(DBQuery.is("laneNumber", form.laneNumber));
+		}else if(CollectionUtils.isNotEmpty(form.laneNumbers)){
+			queries.add(DBQuery.in("laneNumber", form.laneNumbers));
 		}
 		
-		if (StringUtils.isNotBlank(inputForm.get("projectCode"))) { //all
-			queries.add(DBQuery.is("projectCode", inputForm.get("projectCode")));
+		if (StringUtils.isNotBlank(form.stateCode)) { //all
+			queries.add(DBQuery.is("state.code", form.stateCode));
+		}else if (CollectionUtils.isNotEmpty(form.stateCodes)) { //all
+			queries.add(DBQuery.in("state.code", form.stateCodes));
 		}
 		
-		if (StringUtils.isNotBlank(inputForm.get("sampleCode"))) { //all
-			queries.add(DBQuery.is("sampleCode", inputForm.get("sampleCode")));
+		if (StringUtils.isNotBlank(form.validCode)) { //all
+			queries.add(DBQuery.is("valuation.valid", TBoolean.valueOf(form.validCode)));
+		}
+
+		if (CollectionUtils.isNotEmpty(form.projectCodes)) { //all
+			queries.add(DBQuery.in("projectCode", form.projectCodes));
+		}else if (StringUtils.isNotBlank(form.projectCode)) { //all
+			queries.add(DBQuery.is("projectCode", form.projectCode));
 		}
 		
-		if (StringUtils.isNotBlank(inputForm.get("stateCode"))) { //all
-			queries.add(DBQuery.is("state.code", inputForm.get("stateCode")));
+		if (CollectionUtils.isNotEmpty(form.sampleCodes)) { //all
+			queries.add(DBQuery.in("sampleCode", form.sampleCodes));
+		}else if (StringUtils.isNotBlank(form.sampleCode)) { //all
+			queries.add(DBQuery.is("sampleCode", form.sampleCode));
 		}
 		
+		if(null != form.fromDate){
+			queries.add(DBQuery.greaterThanEquals("traceInformation.creationDate", form.fromDate));
+		}
+		
+		if(null != form.toDate){
+			queries.add(DBQuery.lessThanEquals("traceInformation.creationDate", form.toDate));
+		}
+				
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
@@ -231,11 +261,12 @@ public class ReadSets extends CommonController{
 		return ok();
 	}
 	
-	public static Result workflow(String readSetCode, String stateCode){
+	public static Result state(String readSetCode, String stateCode){
 		return badRequest("Not implemented");
 	}
-	
-	
+	public static Result valuation(String code, String validCode){
+		return badRequest("Not implemented");
+	}
 	@Deprecated
 	public static Result saveOld(String code, Integer laneNumber){
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);

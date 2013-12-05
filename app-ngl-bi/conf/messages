@@ -39,6 +39,7 @@ search.placeholder.valid = Selectionnez une évaluation
 button.search = Rechercher
 button.reset = Réinitialiser
 
+runs.page.title=Runs
 runs.menu = Runs
 runs.menu.search = Recherche
 runs.menu.state = Changement d''Etat
@@ -68,6 +69,13 @@ runs.dt.valuation.userdate = Evalué par {0} le {1}
 runs.dt.valuation.criteria = Critères
 
 runs.table.valuation.valid = Valide ?
+#runs - main
+runs.table.code=Code
+runs.table.creationdate=Date de Création
+# a vérifier
+runs.table.dispatch=Dispatch
+runs.table.typeCode = Type
+runs.table.stateCode = Etat
 runs.table.lane.valuation.title = Pistes
 runs.table.lane.valuation.valid = Valide ?
 runs.table.lane.valuation.resolutions = Comptes Rendus
@@ -100,3 +108,20 @@ runs.table.lane.sav.errorRatePercCycle75 = % Error Rate Cycle 75
 runs.table.lane.sav.errorRatePercCycle100 = % Error Rate Cycle 100
 runs.table.lane.sav.intensityCycle1 = Intensité Cycle 1
 runs.table.lane.sav.intensityCycle20Perc = % Intensité Cycle 20
+
+readsets.page.title=Readsets
+readsets.menu = Readsets
+readsets.menu.search = Recherche
+readsets.menu.state = Changement d''Etat
+readsets.menu.valuation = Evaluation
+
+readsets.table.code = Code
+readsets.table.runCode = Run Code
+readsets.table.laneNumber = Piste
+readsets.table.projectCode = Projet
+readsets.table.sampleCode = Echantillon
+readsets.table.creationdate = Date de Création
+readsets.table.stateCode = Etat
+readsets.table.productionValuation.valid = Valide Production ?
+readsets.table.bioinformaticValuation.valid = Valide BioInfo ?
+
