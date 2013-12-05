@@ -29,7 +29,7 @@ public class ValidationCriteriaService {
 		
 		//NGL-BI 
 		//TODO : change values (values are here just for test the service!!)
-		l.add(DescriptionFactory.newValidationCriteria("Default", "default-criteria",  "specDefaultCriteriaRunCNGforSAVQualityControl_1" ));
+		l.add(DescriptionFactory.newValidationCriteria("Default", "criteria-default",  "specDefaultCriteriaRunCNGforSAVQualityControl_1" ));
 		l.add(DescriptionFactory.newValidationCriteria("High", "criteria-high",  "specDefaultCriteriaRunCNGforSAVQualityControl_2" ));
 		l.add(DescriptionFactory.newValidationCriteria("Low", "criteria-low",  "specDefaultCriteriaRunCNGforSAVQualityControl_3" ));
 		

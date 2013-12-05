@@ -47,24 +47,24 @@ public class StateService {
 		l.add(newState("Indisponible", "UA", true, 1000, getStateCategories(StateCategory.CODE.N)));
 		l.add(newState("Terminé", "F", true, 1000, getStateCategories(StateCategory.CODE.F)));					
 		//
-		l.add(newState("En attente contrôle qualité", "IW-QC", true, 401, getStateCategories(StateCategory.CODE.IW)));	
-		l.add(newState("En cours contrôle qualité", "IP-QC", true, 450, getStateCategories(StateCategory.CODE.IP)));	
-		l.add(newState("Contrôle qualité terminée", "F-QC", true, 500, getStateCategories(StateCategory.CODE.F)));	
+		l.add(newState("Contrôle qualité en attente", "IW-QC", true, 401, getStateCategories(StateCategory.CODE.IW)));	
+		l.add(newState("Contrôle qualité en cours", "IP-QC", true, 450, getStateCategories(StateCategory.CODE.IP)));	
+		l.add(newState("Contrôle qualité terminé", "F-QC", true, 500, getStateCategories(StateCategory.CODE.F)));	
 		
-		l.add(newState("En attente évaluation", "IW-V", true, 601, getStateCategories(StateCategory.CODE.IW)));
-		l.add(newState("En cours évaluation", "IP-V", true, 651, getStateCategories(StateCategory.CODE.IP)));
+		l.add(newState("Evaluation en attente", "IW-V", true, 601, getStateCategories(StateCategory.CODE.IW)));
+		l.add(newState("Evaluation en cours", "IP-V", true, 651, getStateCategories(StateCategory.CODE.IP)));
 		l.add(newState("Evaluation terminée", "F-V", true, 701, getStateCategories(StateCategory.CODE.F)));
 		
 		//NGL-SQ
 		l.add(newState("Nouveau", "N", true, 0, getStateCategories(StateCategory.CODE.N)));
 		l.add(newState("En cours", "IP", true, 500, getStateCategories(StateCategory.CODE.IP)));
-		l.add(newState("En attente processus", "IW-P", true, 101, getStateCategories(StateCategory.CODE.IW)));
-		l.add(newState("En attente expérience", "IW-E", true, 201, getStateCategories(StateCategory.CODE.IW)));
+		l.add(newState("Processus en attente", "IW-P", true, 101, getStateCategories(StateCategory.CODE.IW)));
+		l.add(newState("Expérience en attente", "IW-E", true, 201, getStateCategories(StateCategory.CODE.IW)));
 		l.add(newState("En cours d'utilisation", "IU", true, 250, getStateCategories(StateCategory.CODE.IP)));
 		l.add(newState("En stock", "IS", true, 900, getStateCategories(StateCategory.CODE.N)));
 		//NGL-BI
-		l.add(newState("En cours séquençage", "IP-S", true, 150, getStateCategories(StateCategory.CODE.IP)));	
-		l.add(newState("En cours read generation", "IP-RG", true, 250, getStateCategories(StateCategory.CODE.IP)));
+		l.add(newState("Séquençage en cours", "IP-S", true, 150, getStateCategories(StateCategory.CODE.IP)));	
+		l.add(newState("Read generation en cours", "IP-RG", true, 250, getStateCategories(StateCategory.CODE.IP)));
 		l.add(newState("Read generation terminée", "F-RG", true, 300, getStateCategories(StateCategory.CODE.F)));
 
 		DAOHelpers.saveModels(State.class, l, errors);
