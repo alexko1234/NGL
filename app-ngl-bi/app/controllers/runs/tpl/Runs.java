@@ -42,11 +42,7 @@ public class Runs extends CommonController {
 		
 	}
 	
-	public static Result detailsDefault() {
-		return ok(details.render());
-	}
-	
-	public static Result detailsValuation() {
+	public static Result details() {
 		return ok(details.render());
 	}
 	

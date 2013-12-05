@@ -58,7 +58,7 @@ import fr.cea.ig.MongoDBResult.Sort;
 public class Runs extends CommonController {
 
 	
-	final static Form<RunSearchForm> searchForm = form(RunSearchForm.class); 
+	final static Form<RunsSearchForm> searchForm = form(RunsSearchForm.class); 
 	final static Form<Run> runForm = form(Run.class);
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	final static Form<Valuation> valuationForm = form(Valuation.class);
@@ -68,8 +68,8 @@ public class Runs extends CommonController {
 
 	//@Permission(value={"reading"})
 	public static Result list(){
-		Form<RunSearchForm> filledForm = filledFormQueryString(searchForm, RunSearchForm.class);
-		RunSearchForm form = filledForm.get();
+		Form<RunsSearchForm> filledForm = filledFormQueryString(searchForm, RunsSearchForm.class);
+		RunsSearchForm form = filledForm.get();
 		
 		if(form.datatable){
 			MongoDBResult<Run> results = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, getQuery(form)) 
@@ -79,42 +79,43 @@ public class Runs extends CommonController {
 			return ok(Json.toJson(new DatatableResponse<Run>(runs, results.count())));
 		}else{
 			MongoDBResult<Run> results = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, getQuery(form))
-					.sort("code", Sort.valueOf(form.orderSense));
+					.sort("code", Sort.valueOf(form.orderSense)).limit(form.limit);
 			List<Run> runs = results.toList();
 			return ok(Json.toJson(runs));
 		}
 	}
 
-	private static Query getQuery(RunSearchForm filledForm) {
+	private static Query getQuery(RunsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
-		if (StringUtils.isNotBlank(filledForm.stateCode)) { //all
-			queries.add(DBQuery.is("state.code", filledForm.stateCode));
-		}else if (CollectionUtils.isNotEmpty(filledForm.stateCodes)) { //all
-			queries.add(DBQuery.in("state.code", filledForm.stateCodes));
+		if (StringUtils.isNotBlank(form.stateCode)) { //all
+			queries.add(DBQuery.is("state.code", form.stateCode));
+		}else if (CollectionUtils.isNotEmpty(form.stateCodes)) { //all
+			queries.add(DBQuery.in("state.code", form.stateCodes));
 		}
-		if (StringUtils.isNotBlank(filledForm.validCode)) { //all
-			queries.add(DBQuery.is("valuation.valid", TBoolean.valueOf(filledForm.validCode)));
+		
+		if (StringUtils.isNotBlank(form.validCode)) { //all
+			queries.add(DBQuery.is("valuation.valid", TBoolean.valueOf(form.validCode)));
 		}
 
-		if (CollectionUtils.isNotEmpty(filledForm.projectCodes)) { //all
-			queries.add(DBQuery.in("projectCodes", filledForm.projectCodes));
+		if (CollectionUtils.isNotEmpty(form.projectCodes)) { //all
+			queries.add(DBQuery.in("projectCodes", form.projectCodes));
 		}
 		
-		if (CollectionUtils.isNotEmpty(filledForm.sampleCodes)) { //all
-			queries.add(DBQuery.in("sampleCodes", filledForm.sampleCodes));
+		if (CollectionUtils.isNotEmpty(form.sampleCodes)) { //all
+			queries.add(DBQuery.in("sampleCodes", form.sampleCodes));
 		}
 		
-		if (CollectionUtils.isNotEmpty(filledForm.typeCodes)) { //all
-			queries.add(DBQuery.in("typeCode", filledForm.typeCodes));
+		if (CollectionUtils.isNotEmpty(form.typeCodes)) { //all
+			queries.add(DBQuery.in("typeCode", form.typeCodes));
 		}
 		
-		if(null != filledForm.fromDate){
-			queries.add(DBQuery.greaterThanEquals("traceInformation.creationDate", filledForm.fromDate));
+		if(null != form.fromDate){
+			queries.add(DBQuery.greaterThanEquals("traceInformation.creationDate", form.fromDate));
 		}
 		
-		if(null != filledForm.toDate){
-			queries.add(DBQuery.lessThanEquals("traceInformation.creationDate", filledForm.toDate));
+		if(null != form.toDate){
+			queries.add(DBQuery.lessThanEquals("traceInformation.creationDate", form.toDate));
 		}
 		
 		if(queries.size() > 0){
