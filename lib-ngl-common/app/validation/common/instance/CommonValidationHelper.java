@@ -402,11 +402,11 @@ public class CommonValidationHelper {
 	}
 	
 	public static void validateValuation(String typeCode, Valuation valuation, ContextValidation contextValidation) {
-		if(ValidationHelper.required(contextValidation, valuation, "validation")){
+		if(ValidationHelper.required(contextValidation, valuation, "valuation")){
 			contextValidation.putObject(FIELD_TYPE_CODE, typeCode);
-			contextValidation.addKeyToRootKeyName("validation");
+			contextValidation.addKeyToRootKeyName("valuation");
 			valuation.validate(contextValidation);
-			contextValidation.removeKeyFromRootKeyName("validation");
+			contextValidation.removeKeyFromRootKeyName("valuation");
 			contextValidation.removeObject(FIELD_TYPE_CODE);
 		}		
 	}

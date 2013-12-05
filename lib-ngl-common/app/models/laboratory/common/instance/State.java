@@ -14,7 +14,7 @@ public class State implements IValidation {
 	public Date date;
     public String user;
     public List<String> resolutionCodes;
-    
+     
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		CommonValidationHelper.validateStateCode(this.code, contextValidation);

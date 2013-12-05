@@ -27,9 +27,9 @@ public class States extends CommonController {
 			values = State.find.findByObjectTypeCode(ObjectType.CODE.valueOf(statesSearch.objectTypeCode));
 		}
 		
-		if(statesSearch.datatable != null){
+		if(statesSearch.datatable){
 			return ok(Json.toJson(new DatatableResponse<State>(values, values.size())));
-		}else if(statesSearch.list != null){
+		}else if(statesSearch.list){
 			List<ListObject> valuesListObject = new ArrayList<ListObject>();
 			for(State s: values){
 				valuesListObject.add(new ListObject(s.code,s.name));

@@ -74,6 +74,7 @@ public class ReadSet extends DBObject implements IValidation{
 		ReadSetValidationHelper.validateCode(this, InstanceConstants.READSET_ILLUMINA_COLL_NAME, contextValidation);
 		ReadSetValidationHelper.validateReadSetType(this.typeCode, this.properties, contextValidation);
 		ReadSetValidationHelper.validateState(this.typeCode, this.state, contextValidation);
+		//TODO passage de la mauvaise cle dans le message d'erreur
 		ReadSetValidationHelper.validateValuation(this.typeCode, this.bioinformaticValuation, contextValidation);
 		ReadSetValidationHelper.validateValuation(this.typeCode, this.productionValuation, contextValidation);
 		ReadSetValidationHelper.validateReadSetCodeInRunLane(this.code, this.runCode, this.laneNumber, contextValidation);

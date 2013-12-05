@@ -59,7 +59,7 @@ public class Samples extends CommonController{
 			keys.put("name", 1);
 			keys.put("code", 1);
 			MongoDBResult<Sample> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Sample.class, query, keys)
-					.sort(DatatableHelpers.getOrderBy(sampleFilledForm), FormUtils.getMongoDBOrderSense(sampleFilledForm));
+					.sort(DatatableHelpers.getOrderBy(sampleFilledForm), FormUtils.getMongoDBOrderSense(sampleFilledForm)).limit(samplesSearch.limit);
 			List<Sample> samples = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
 			for(Sample p: samples){
