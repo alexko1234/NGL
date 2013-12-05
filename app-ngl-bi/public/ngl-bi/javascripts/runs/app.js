@@ -13,11 +13,11 @@ angular.module('home', ['datatableServices','commonsServices','biCommonsServices
 		controller : 'SearchStateCtrl'
 	});
 	$routeProvider.when('/runs/:code', {
-		templateUrl : '/tpl/runs/details/valuation',
+		templateUrl : '/tpl/runs/details',
 		controller : 'DetailsCtrl'
 	});
 	$routeProvider.when('/runs/:code/:page', {
-		templateUrl : '/tpl/runs/details/valuation',
+		templateUrl : '/tpl/runs/details',
 		controller : 'DetailsCtrl'
 	});
 
