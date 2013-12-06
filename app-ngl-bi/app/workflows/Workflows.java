@@ -85,13 +85,13 @@ public class Workflows {
 				if(!contextValidation.hasErrors()){
 					
 					// for having the historical of states (until the last state, excepted it)
-					//State state2 = saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, oldState);
-					//run.state.historical = state2.historical; 
+					State state2 = saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, oldState);
+					run.state.historical = state2.historical; 
 					
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);
 					
 					//for having the last state in the historical
-					// saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, state);
+					saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, state);
 					
 					
 					for(ReadSet readSet: readSets){
@@ -103,12 +103,12 @@ public class Workflows {
 				}
 			}else if(!contextValidation.hasErrors()){
 				
-				//State state2 = saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, oldState);
-				//run.state.historical = state2.historical; 
+				State state2 = saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, oldState);
+				run.state.historical = state2.historical; 
 				
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);	
 				
-				//saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, state);
+				saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, state);
 			}
 			
 		}	
@@ -156,7 +156,7 @@ public class Workflows {
 		
 		if (state.historical != null && state.historical.size() > 0) {
 			int maxIndex = state.historical.size() - 1;
-			if (state.historical.get(maxIndex).code != stateToHistorized.code) {
+			if (! state.historical.get(maxIndex).code.equals(stateToHistorized.code)) {
 				stateToHistorized.index =  state.historical.size() +1;
 				state.historical.add(stateToHistorized);
 				toUpdate = true;
