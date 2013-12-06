@@ -14,20 +14,18 @@ import play.libs.Akka;
 import rules.services.RulesActor;
 import rules.services.RulesMessage;
 
-
-
 import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBUpdate;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TransientState;
 import models.laboratory.run.instance.File;
-import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import validation.ContextValidation;
 
-import validation.run.instance.LaneValidationHelper;
 import validation.run.instance.ReadSetValidationHelper;
 import validation.run.instance.RunValidationHelper;
 import validation.utils.ValidationConstants;
@@ -43,7 +41,7 @@ public class Workflows {
 	 * @param code
 	 * @param stateCode
 	 */
-	public static void setRunState(ContextValidation contextValidation, Run run, State state){
+	public static void setRunState(ContextValidation contextValidation, Run run, State state, State oldState){
 		if(ValidationHelper.required(contextValidation, state.code, "stateCode")){
 			if(!isStateCodeExist(state.code)){
 				contextValidation.addErrors("stateCode",ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, state.code);
@@ -85,16 +83,33 @@ public class Workflows {
 					contextValidation.removeKeyFromRootKeyName("readSet."+readSet.code);
 				}
 				if(!contextValidation.hasErrors()){
+					
+					// for having the historical of states (until the last state, excepted it)
+					//State state2 = saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, oldState);
+					//run.state.historical = state2.historical; 
+					
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);
+					
+					//for having the last state in the historical
+					// saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, state);
+					
+					
 					for(ReadSet readSet: readSets){
 						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);
 					}
 				}
+				else {
+					Logger.debug(contextValidation.errors.toString()); 
+				}
 			}else if(!contextValidation.hasErrors()){
-				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);				
+				
+				//State state2 = saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, oldState);
+				//run.state.historical = state2.historical; 
+				
+				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);	
+				
+				//saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, state);
 			}
-			
-			
 			
 		}	
 		
@@ -126,6 +141,45 @@ public class Workflows {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	
+	
+	public static State saveHistorical(String collectionName, String objectCode, State state) {
+		//we put in the historical the last state....(in fact, add a TransientState)
+		
+		boolean toUpdate = false;
+		
+		TransientState stateToHistorized = new TransientState(); 
+		stateToHistorized.code = state.code;
+		stateToHistorized.date = state.date;
+		stateToHistorized.user = state.user;
+		
+		if (state.historical != null && state.historical.size() > 0) {
+			int maxIndex = state.historical.size() - 1;
+			if (state.historical.get(maxIndex).code != stateToHistorized.code) {
+				stateToHistorized.index =  state.historical.size() +1;
+				state.historical.add(stateToHistorized);
+				toUpdate = true;
+			}
+		}
+		else {
+			ArrayList<TransientState> l = new ArrayList<TransientState>();
+			stateToHistorized.index = 1;
+			l.add(stateToHistorized); 
+			state.historical = l; 
+			toUpdate = true;
+		}
+
+		if (toUpdate) {
+			MongoDBDAO.update(collectionName,  Run.class, 
+					DBQuery.is("code", objectCode),
+					DBUpdate.push("state.historical", stateToHistorized)); 
+		}
+		return state;
+		
+	}
+	
+	
 	
 
 }

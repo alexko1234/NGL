@@ -153,7 +153,6 @@ public class Runs extends CommonController {
 			runValue.traceInformation = new TraceInformation();
 			runValue.traceInformation.setTraceInformation(getCurrentUser());
 			
-			//TODO History management
 			if(null != runValue.state){
 				runValue.state.user = getCurrentUser();
 				runValue.state.date = new Date();		
@@ -168,13 +167,22 @@ public class Runs extends CommonController {
 
 		if (!ctxVal.hasErrors()) {
 			runValue = MongoDBDAO.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runValue);
+			
+			//Historical management
+			//if we want the current state in the historical 
+			/*
+			if (runValue.state.historical == null || runValue.state.historical.size() == 0) {
+				Workflows.saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runValue.code, runValue.state);
+			} */
+			
+			
 			return ok(Json.toJson(runValue));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
 		}
 	}
 
-	//@Permission(value={"creation_update_run_lane"})
+	////@Permission(value={"creation_update_run_lane"})
 	public static Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -190,13 +198,32 @@ public class Runs extends CommonController {
 				Logger.error("traceInformation is null !!");
 			}
 			
-			//TODO State History management ???
+
 			
 			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 			
 			ctxVal.setUpdateMode();
 			runValue.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
+				
+				boolean bSaveHistorical = false;
+				
+				//State Historical management
+				/*
+				if (! run.state.code.equals(runValue.state.code) ) {
+					State state2 = Workflows.saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, run.state);
+					runValue.state.historical = state2.historical;
+					bSaveHistorical = true;
+				} */
+				
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runValue);
+				
+				//State Historical management 
+				/// if we want the current value of state in the historical...
+				/*
+				if (bSaveHistorical) {
+					Workflows.saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runValue.code, runValue.state);
+				} */
+				
 				return ok(Json.toJson(run));
 			}else {
 				return badRequest(filledForm.errorsAsJson());
@@ -219,7 +246,7 @@ public class Runs extends CommonController {
 		return ok();
 	}
 
-	//@Permission(value={"workflow_run_lane"})
+	////@Permission(value={"workflow_run_lane"})
 	public static Result state(String code, String stateCode){
 		Run run = getRun(code);
 		if (run == null) {
@@ -231,7 +258,7 @@ public class Runs extends CommonController {
 		state.date = new Date();
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
-		Workflows.setRunState(ctxVal, run, state);
+		Workflows.setRunState(ctxVal, run, state, run.state);
 		if (!ctxVal.hasErrors()) {
 			return ok();
 		}else {
@@ -244,7 +271,7 @@ public class Runs extends CommonController {
 		return run;
 	}
 	
-	//@Permission(value={"valuation_run_lane"})
+	/////@Permission(value={"valuation_run_lane"})
 	public static Result valuation(String code, String validCode){
 		Run run = getRun(code);
 		if(run == null){
@@ -266,8 +293,8 @@ public class Runs extends CommonController {
 				State state = new State();
 				state.code = "F-V";
 				state.date = new Date();
-				state.user = getCurrentUser();
-				Workflows.setRunState(ctxVal, run, state);
+				state.user = getCurrentUser();				
+				Workflows.setRunState(ctxVal, run, state, run.state);
 			}
 			
 		} 

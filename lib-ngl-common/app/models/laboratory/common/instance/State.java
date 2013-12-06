@@ -15,6 +15,8 @@ public class State implements IValidation {
     public String user;
     public List<String> resolutionCodes;
      
+    public List<TransientState> historical;
+    
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		CommonValidationHelper.validateStateCode(this.code, contextValidation);
