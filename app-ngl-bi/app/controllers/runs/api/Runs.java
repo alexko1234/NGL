@@ -182,7 +182,7 @@ public class Runs extends CommonController {
 		}
 	}
 
-	////@Permission(value={"creation_update_run_lane"})
+	//@Permission(value={"creation_update_run_lane"})
 	public static Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -246,7 +246,7 @@ public class Runs extends CommonController {
 		return ok();
 	}
 
-	////@Permission(value={"workflow_run_lane"})
+	//@Permission(value={"workflow_run_lane"})
 	public static Result state(String code, String stateCode){
 		Run run = getRun(code);
 		if (run == null) {
@@ -271,7 +271,7 @@ public class Runs extends CommonController {
 		return run;
 	}
 	
-	/////@Permission(value={"valuation_run_lane"})
+	//@Permission(value={"valuation_run_lane"})
 	public static Result valuation(String code, String validCode){
 		Run run = getRun(code);
 		if(run == null){
