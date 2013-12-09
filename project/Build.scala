@@ -62,8 +62,7 @@ object ApplicationBuild extends Build {
 		"org.springframework" % "spring-test" % "3.2.1.RELEASE",
 		"com.github.julienrf" %% "play-jsmessages" % "1.4.1",
 		"javax.mail" % "mail" % "1.4.2",
-	    "janino" % "janino" % "2.5.15",
-		"fr.cea.ig.modules" %% "authentication" % "1.0-SNAPSHOT"
+	    "janino" % "janino" % "2.5.15"
     	)	
    	val ngldatatableDependencies = Seq(
    	    javaCore
@@ -73,7 +72,8 @@ object ApplicationBuild extends Build {
    	    "javax.mail" % "mail" % "1.4.2",
    	    "fr.cea.ig" %% "mongodbplugin" % "1.0-SNAPSHOT",
    	    "org.drools" % "drools-core" % "5.5.0.Final",
-	     "org.drools" % "drools-compiler" % "5.5.0.Final"
+	     "org.drools" % "drools-compiler" % "5.5.0.Final",
+		 "fr.cea.ig.modules" %% "authentication" % "1.0-SNAPSHOT"
    	    )
    	val nglbiDependencies = Seq(
 	        // Add your project dependencies here,
@@ -105,20 +105,20 @@ object ApplicationBuild extends Build {
    }
    
   
-    
+   val ngldatatable = play.Project("datatable", libDatatableVersion, ngldatatableDependencies, path = file("lib-ngl-datatable"),settings = buildSettingsLib).settings(
+       // Add your own project settings here      
+       resolvers := Seq(nexusig),
+	   sbt.Keys.fork in Test := false,
+       publishTo := Some(nexusigpublish)
+    )    
+  
   val nglframeworkweb = play.Project("lib-frameworkweb", libFrameworkWebVersion, nglframeworkwebDependencies, path = file("lib-ngl-frameworkweb"),settings = buildSettingsLib).settings(
        // Add your own project settings here      
        resolvers := Seq(nexusig),
 	   sbt.Keys.fork in Test := false,
        publishTo := Some(nexusigpublish)      
-    )
+    ).dependsOn(ngldatatable)
     
-     val ngldatatable = play.Project("datatable", libDatatableVersion, ngldatatableDependencies, path = file("lib-ngl-datatable"),settings = buildSettingsLib).settings(
-       // Add your own project settings here      
-       resolvers := Seq(nexusig),
-	   sbt.Keys.fork in Test := false,
-       publishTo := Some(nexusigpublish)
-    )
     
    val nglcommon = play.Project(appName + "-common", appVersion, nglcommonDependencies, path = file("lib-ngl-common"),settings = buildSettings).settings(
        // Add your own project settings here      
@@ -127,7 +127,7 @@ object ApplicationBuild extends Build {
 	   sbt.Keys.fork in Test := false,
        publishTo := Some(nexusigpublish),       
        resourceDirectory in Test <<= baseDirectory / "conftest"
-    ).dependsOn(nglframeworkweb, ngldatatable)
+    ).dependsOn(nglframeworkweb)
     
     
    val nglbi = play.Project(appName + "-bi", appVersion, nglbiDependencies, path = file("app-ngl-bi"),settings = buildSettings).settings(
