@@ -18,7 +18,7 @@ public class Global extends GlobalSettings {
 	}
 	
 	public Action onRequest(Request request, Method actionMethod) {
-		return new fr.cea.ig.authentication.Authenticate();
+		return super.onRequest(request, actionMethod);
 	}
 
 	@Override
