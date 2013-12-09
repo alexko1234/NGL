@@ -52,7 +52,8 @@ public class Global extends GlobalSettings {
 		//if(Integer.valueOf(request.getHeader("Content-Length")).intValue() < (100*1024) ){
 			Logger.debug("Request: "+request.body().toString());
 		//}
-		return new fr.cea.ig.authentication.Authenticate();
+		//return new fr.cea.ig.authentication.Authenticate();
+		return super.onRequest(request, actionMethod);
 	}
 
 
