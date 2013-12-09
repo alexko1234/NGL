@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.JSpinner.ListEditor;
 
+import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
@@ -46,20 +47,17 @@ public class Samples extends CommonController{
 
 		DBQuery.Query query = getQuery(samplesSearch);
 		if(samplesSearch.datatable){
-			MongoDBResult<Sample> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Sample.class, query)
-					.sort(DatatableHelpers.getOrderBy(sampleFilledForm), FormUtils.getMongoDBOrderSense(sampleFilledForm))
-					.page(DatatableHelpers.getPageNumber(sampleFilledForm), DatatableHelpers.getNumberRecordsPerPage(sampleFilledForm)); 
+			MongoDBResult<Sample> results = mongoDBFinder(InstanceConstants.SAMPLE_COLL_NAME, samplesSearch, Sample.class, query);
 			List<Sample> samples = results.toList();
 
-			return ok(Json.toJson(new DatatableResponse(samples, results.count())));
+			return ok(Json.toJson(new DatatableResponse<Sample>(samples, results.count())));
 		}
 		else if(samplesSearch.list){
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("name", 1);
 			keys.put("code", 1);
-			MongoDBResult<Sample> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Sample.class, query, keys)
-					.sort(DatatableHelpers.getOrderBy(sampleFilledForm), FormUtils.getMongoDBOrderSense(sampleFilledForm)).limit(samplesSearch.limit);
+			MongoDBResult<Sample> results = mongoDBFinder(InstanceConstants.SAMPLE_COLL_NAME, samplesSearch, Sample.class, query, keys);
 			List<Sample> samples = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
 			for(Sample p: samples){
@@ -68,8 +66,7 @@ public class Samples extends CommonController{
 			
 			return Results.ok(Json.toJson(los));
 		}else{
-			MongoDBResult<Sample> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Sample.class, query)
-					.sort(DatatableHelpers.getOrderBy(sampleFilledForm), FormUtils.getMongoDBOrderSense(sampleFilledForm));
+			MongoDBResult<Sample> results = mongoDBFinder(InstanceConstants.SAMPLE_COLL_NAME, samplesSearch, Sample.class, query);
 			List<Sample> samples = results.toList();
 			return Results.ok(Json.toJson(samples));
 		}
