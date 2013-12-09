@@ -362,7 +362,7 @@ public class LimsCNSDAO{
 				run.instrumentUsed = new InstrumentUsed();
 				run.instrumentUsed.code = rs.getString("insCode");
 				//Mapping dans la table Tpsequencage du Lims
-				run.instrumentUsed.categoryCode = rs.getString("insCategoryCode");
+				run.instrumentUsed.typeCode = rs.getString("insCategoryCode");
 				//RHS2000, RHS2500, RHS2500R
 				run.typeCode =DataMappingCNS.getRunTypeCodeMapping(rs.getString("insCategoryCode"));
 				run.containerSupportCode=rs.getString("containerSupportCode");
