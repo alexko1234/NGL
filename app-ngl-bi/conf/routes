@@ -69,7 +69,7 @@ DELETE	/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.ap
 #readset
 GET	   	/readsets/:homecode/home				controllers.readsets.tpl.ReadSets.home(homecode: java.lang.String)
 GET	   	/readsets/:code							controllers.readsets.tpl.ReadSets.get(code: java.lang.String)
-GET	   	/readsets/:code/:mode					controllers.readsets.tpl.ReadSets.mode(code: java.lang.String, mode: java.lang.String)
+GET	   	/readsets/:code/valuation				controllers.readsets.tpl.ReadSets.valuation(code: java.lang.String)
 GET		/tpl/readsets/search/:type				controllers.readsets.tpl.ReadSets.search(type: java.lang.String)
 GET		/tpl/readsets/details					controllers.readsets.tpl.ReadSets.details()
 GET		/tpl/readsets/treatments/:code			controllers.readsets.tpl.ReadSets.treatments(code: java.lang.String)
@@ -83,7 +83,7 @@ PUT    	/api/readsets/:code							controllers.readsets.api.ReadSets.update(code)
 DELETE	/api/readsets/:code							controllers.readsets.api.ReadSets.delete(code: java.lang.String)
 DELETE	/api/runs/:code/readsets					controllers.readsets.api.ReadSets.deleteByRunCode(code: java.lang.String)
 PUT		/api/readsets/:code/state/:stateCode		controllers.readsets.api.ReadSets.state(code:java.lang.String, stateCode:java.lang.String)
-PUT		/api/readsets/:code/valuation/:valid 		controllers.readsets.api.ReadSets.valuation(code:java.lang.String, valid:java.lang.String)
+PUT		/api/readsets/:code/valuation		 		controllers.readsets.api.ReadSets.valuation(code:java.lang.String)
 
 
 GET		/api/readsets/:code/treatments				controllers.readsets.api.ReadSetTreatments.list(code: java.lang.String)

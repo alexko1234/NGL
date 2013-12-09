@@ -3,13 +3,16 @@ package controllers.readsets.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -26,7 +29,10 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
+import validation.run.instance.ReadSetValidationHelper;
+import validation.run.instance.RunValidationHelper;
 import views.components.datatable.DatatableResponse;
+import workflows.Workflows;
 import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
@@ -39,6 +45,8 @@ public class ReadSets extends CommonController{
 
 	final static Form<ReadSet> readSetForm = form(ReadSet.class);
 	final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
+	final static Form<ReadSetValuation> valuationForm = form(ReadSetValuation.class);
+	final static Form<State> stateForm = form(State.class);
 	
 	//@Permission(value={"reading"})
 	public static Result list() {
@@ -114,7 +122,7 @@ public class ReadSets extends CommonController{
 	
 	//@Permission(value={"reading"})
 	public static Result get(String readSetCode) {
-		ReadSet readSet =  MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);		
+		ReadSet readSet =  getReadSet(readSetCode);		
 		if(readSet != null) {
 			return ok(Json.toJson(readSet));	
 		} 		
@@ -174,7 +182,7 @@ public class ReadSets extends CommonController{
 	
 	
 	public static Result update(String readSetCode){
-		ReadSet readSet =  MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
+		ReadSet readSet =  getReadSet(readSetCode);
 		if(readSet == null) {
 			return badRequest("ReadSet with code "+readSetCode+" does not exist");
 		}
@@ -210,11 +218,15 @@ public class ReadSets extends CommonController{
 			return badRequest("readset code are not the same");
 		}		
 	}
+
+	private static ReadSet getReadSet(String readSetCode) {
+		return MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
+	}
 		
 	
 	//@Permission(value={"delete_readset"}) 
 	public static Result delete(String readSetCode) { 
-		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
+		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet == null) {
 			return badRequest("Readset with code "+readSetCode+" does not exist !");
 		}		
@@ -264,8 +276,49 @@ public class ReadSets extends CommonController{
 	public static Result state(String readSetCode, String stateCode){
 		return badRequest("Not implemented");
 	}
-	public static Result valuation(String code, String validCode){
-		return badRequest("Not implemented");
+	public static Result valuation(String code){
+		ReadSet readSet = getReadSet(code);
+		if(readSet == null){
+			return badRequest();
+		}
+		Form<ReadSetValuation> filledForm =  getFilledForm(valuationForm, ReadSetValuation.class);
+		ReadSetValuation valuations = filledForm.get();
+		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+		ctxVal.setUpdateMode();
+		manageValidation(readSet, valuations, ctxVal);
+		if(!ctxVal.hasErrors()) {
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+					DBQuery.and(DBQuery.is("code", code)),
+					DBUpdate.set("productionValuation", valuations.productionValuation).set("bioinformaticValuation", valuations.bioinformaticValuation));			
+			
+			State state = new State();
+			state.code = "F-V";
+			state.date = new Date();
+			state.user = getCurrentUser();
+			Workflows.setReadSetState(ctxVal, readSet, state);
+						
+		} 
+		if(!ctxVal.hasErrors()) {
+			return ok();
+		} else {
+			return badRequest(filledForm.errorsAsJson());
+		}
+	}
+
+	private static void manageValidation(ReadSet readSet, ReadSetValuation valuations, ContextValidation ctxVal) {
+		Valuation productionVal = valuations.productionValuation;
+		productionVal.date = new Date();
+		productionVal.user = getCurrentUser();
+		Valuation bioinfoVal = valuations.bioinformaticValuation;
+		bioinfoVal.date = new Date();
+		bioinfoVal.user = getCurrentUser();
+		//par defaut si valiadation bioinfo pas rempli alors même que prod
+		if(TBoolean.UNSET.equals(bioinfoVal.valid)){
+			bioinfoVal.valid = productionVal.valid;
+		}
+		
+		ReadSetValidationHelper.validateValuation(readSet.typeCode, productionVal, ctxVal);
+		ReadSetValidationHelper.validateValuation(readSet.typeCode, bioinfoVal, ctxVal);		
 	}
 	@Deprecated
 	public static Result saveOld(String code, Integer laneNumber){

@@ -21,12 +21,14 @@ angular.module('biCommonsServices', []).
     			} 
     		};
     		
-    		function init(treatments){
+    		function init(treatments, url, excludes){
     			_treatments = [];
     			_treatment = {};
     			for (var key in treatments) {
 					var treatment = treatments[key];
-					_treatments.push({code:treatment.code, url:jsRoutes.controllers.runs.tpl.Runs.laneTreatments(treatment.typeCode).url});
+					if(angular.isUndefined(excludes) || angular.isUndefined(excludes[treatment.code])){
+						_treatments.push({code:treatment.code, url:url(treatment.typeCode).url});
+					}
 				}
 				this.activeTreatment(_treatments[0]);
     		};

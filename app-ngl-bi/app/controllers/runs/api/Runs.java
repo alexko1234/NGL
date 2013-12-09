@@ -60,7 +60,6 @@ public class Runs extends CommonController {
 	
 	final static Form<RunsSearchForm> searchForm = form(RunsSearchForm.class); 
 	final static Form<Run> runForm = form(Run.class);
-	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	final static Form<Valuation> valuationForm = form(Valuation.class);
 	final static Form<State> stateForm = form(State.class);
 

@@ -23,8 +23,8 @@ public class ReadSets extends CommonController {
 		return ok(home.render("search")); 
 	}
 	
-	public static Result mode(String code, String mode) {
-		return ok(home.render(mode)); 
+	public static Result valuation(String code) {
+		return ok(home.render("valuation")); 
 	}
 	
 	public static Result search(String type) {
@@ -52,13 +52,15 @@ public class ReadSets extends CommonController {
   	        // Routes
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.home(),  
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.get(), 
-  	    		controllers.readsets.tpl.routes.javascript.ReadSets.mode(),
+  	    		controllers.readsets.tpl.routes.javascript.ReadSets.valuation(),
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.treatments(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.get(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.list(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.list(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.state(),
-  	    		controllers.readsets.api.routes.javascript.ReadSets.valuation(),  	    		 	    		
+  	    		controllers.readsets.api.routes.javascript.ReadSets.valuation(),  	
+  	    		controllers.runs.api.routes.javascript.Runs.get(),
+  	    		controllers.runs.tpl.routes.javascript.Runs.get(),
   	    		controllers.lists.api.routes.javascript.Lists.resolutions(),
   	    		controllers.lists.api.routes.javascript.Lists.validationCriterias(),
   	    		controllers.lists.api.routes.javascript.Lists.projects(),

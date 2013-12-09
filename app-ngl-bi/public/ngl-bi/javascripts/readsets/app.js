@@ -20,7 +20,7 @@ angular.module('home', ['datatableServices','commonsServices','biCommonsServices
 		templateUrl : '/tpl/readsets/details',
 		controller : 'DetailsCtrl'
 	});
-
+	
 	$routeProvider.otherwise({redirectTo: '/readsets/search/home'});
 
 	// configure html5 to get links working with bookmarked

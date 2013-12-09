@@ -150,7 +150,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			$scope.lists.refresh.validationCriterias({typeCode:$scope.run.typeCode});
 			
 			if(angular.isDefined($scope.run.lanes[0].treatments)){
-				$scope.treatments.init($scope.run.lanes[0].treatments);				
+				$scope.treatments.init($scope.run.lanes[0].treatments, jsRoutes.controllers.runs.tpl.Runs.laneTreatments);				
 			}
 			
 		});
@@ -223,12 +223,7 @@ function LanesNGSRGCtrl($scope, datatable) {
 			    	header: Messages("runs.table.lane.ngsrg.nbBaseInternalAndIlluminaFilter"),
 			    	type :"Number",
 			    	order:false
-				},
-				{  	property:"treatments.ngsrg.default.nbBaseInternalAndIlluminaFilter.value",
-			    	header: Messages("runs.table.lane.ngsrg.nbBaseInternalAndIlluminaFilter"),
-			    	type :"Number",
-			    	order:false
-				},
+				},				
 				{  	property:"treatments.ngsrg.default.seqLossPercent.value",
 			    	header: Messages("runs.table.lane.ngsrg.seqLossPercent"),
 			    	type :"Number",

@@ -141,6 +141,10 @@ public class Workflows {
 			throw new RuntimeException(e);
 		}
 	}
+
+	public static void setReadSetState(ContextValidation ctxVal, ReadSet readSet, State state) {
+		//TODO Must be manage
+	}
 	
 	
 	
