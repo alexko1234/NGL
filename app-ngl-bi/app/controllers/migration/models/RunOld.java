@@ -14,5 +14,7 @@ public class RunOld extends Run {
     public Date validDate;
     public List<LaneOld> lanes;
     
+    public InstrumentUsedOld instrumentUsed;
+    
 }
 

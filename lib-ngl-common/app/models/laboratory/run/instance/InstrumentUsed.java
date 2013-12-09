@@ -1,7 +1,7 @@
 package models.laboratory.run.instance;
 
 import models.laboratory.instrument.description.Instrument;
-import models.laboratory.instrument.description.dao.InstrumentCategoryDAO;
+import models.laboratory.instrument.description.InstrumentUsedType;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import validation.ContextValidation;
@@ -12,7 +12,7 @@ public class InstrumentUsed implements IValidation {
 
 	// specific class for the run;
 	public String code;
-	public String categoryCode;
+	public String typeCode;
 
 
 	@JsonIgnore
@@ -21,7 +21,7 @@ public class InstrumentUsed implements IValidation {
 
 		CommonValidationHelper.validateRequiredDescriptionCode(contextValidation, this.code, "code", Instrument.find);
 		
-		CommonValidationHelper.validateRequiredDescriptionCode(contextValidation, this.categoryCode, "categoryCode", InstrumentCategoryDAO.find);
+		CommonValidationHelper.validateRequiredDescriptionCode(contextValidation, this.typeCode, "typeCode", InstrumentUsedType.find);
 		
 	}
 

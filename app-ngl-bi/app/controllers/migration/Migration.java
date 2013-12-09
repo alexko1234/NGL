@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.Valuation;
+import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
@@ -27,6 +28,7 @@ public class Migration extends CommonController {
 	
 	
 	public static Result migration(){
+		
 		JacksonDBCollection<RunOld, String> runsCollBck = MongoDBDAO.getCollection(RUN_ILLUMINA_BCK, RunOld.class);
 		if(runsCollBck.count() == 0){
 			Logger.info("Migration run start");
@@ -56,6 +58,7 @@ public class Migration extends CommonController {
 		}else{
 			Logger.info("Migration readset already execute !");
 		}
+		
 		
 		check();
 		Logger.info("Migration finish");
@@ -99,26 +102,38 @@ public class Migration extends CommonController {
 	private static void migreRun(RunOld run) {
 		
 		Valuation valuation = new Valuation();
+		
 		State state = new State();
 		state.code = run.stateCode;
-		
 		state.user = (null == run.traceInformation.modifyUser) ? run.traceInformation.createUser : run.traceInformation.modifyUser;
 		state.date = (null == run.traceInformation.modifyUser) ? run.traceInformation.creationDate : run.traceInformation.modifyDate;
 		
+		InstrumentUsed instrumentUsed = new InstrumentUsed();
+		instrumentUsed.code = run.instrumentUsed.code;
+		instrumentUsed.typeCode = run.instrumentUsed.categoryCode;
+		
+		
+		Logger.debug("instrumentUsed.typeCode=" + instrumentUsed.typeCode);
+		
 		Set<String> projectCodes = new TreeSet<String>();
 		Set<String> sampleCodes = new TreeSet<String>();
+		
 		List<ReadSetOld> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld.class, DBQuery.is("runCode", run.code)).toList();
 		for (ReadSetOld readSetOld : readSets) {
 			projectCodes.add(readSetOld.projectCode);
 			sampleCodes.add(readSetOld.sampleContainerCode);
 		}
 		
-		
+		Logger.debug("debut update");
 		
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.is("code", run.code), 
-				DBUpdate.unset("stateCode").unset("valid").unset("validDate")
-				.set("valuation", valuation).set("state", state).set("projectCodes", projectCodes).set("sampleCodes", sampleCodes));
+				DBUpdate.unset("stateCode").unset("valid").unset("validDate")  //.unset("instrumentUsed")
+				.set("valuation", valuation).set("state", state)
+				.set("projectCodes", projectCodes).set("sampleCodes", sampleCodes)
+				.set("instrumentUsed", instrumentUsed));
+		
+		Logger.debug("fin update");
 		
 		if (run.lanes != null) {
 			for (LaneOld laneOld : run.lanes) {
