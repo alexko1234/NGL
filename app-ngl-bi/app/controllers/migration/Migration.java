@@ -112,9 +112,6 @@ public class Migration extends CommonController {
 		instrumentUsed.code = run.instrumentUsed.code;
 		instrumentUsed.typeCode = run.instrumentUsed.categoryCode;
 		
-		
-		Logger.debug("instrumentUsed.typeCode=" + instrumentUsed.typeCode);
-		
 		Set<String> projectCodes = new TreeSet<String>();
 		Set<String> sampleCodes = new TreeSet<String>();
 		
@@ -124,16 +121,12 @@ public class Migration extends CommonController {
 			sampleCodes.add(readSetOld.sampleContainerCode);
 		}
 		
-		Logger.debug("debut update");
-		
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.is("code", run.code), 
 				DBUpdate.unset("stateCode").unset("valid").unset("validDate")  //.unset("instrumentUsed")
 				.set("valuation", valuation).set("state", state)
 				.set("projectCodes", projectCodes).set("sampleCodes", sampleCodes)
 				.set("instrumentUsed", instrumentUsed));
-		
-		Logger.debug("fin update");
 		
 		if (run.lanes != null) {
 			for (LaneOld laneOld : run.lanes) {
