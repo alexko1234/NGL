@@ -1,14 +1,14 @@
 package controllers.history;
 import controllers.CommonController;
-import fr.cea.ig.MongoDBDAO;
 import play.Logger;
 import play.Play;
-import play.data.DynamicForm;
+import play.libs.Json;
 import play.mvc.Action;
 import play.mvc.Http;
 import play.mvc.Http.Context;
+import play.mvc.Http.RequestBody;
 import play.mvc.Result;
-import play.Application.*;
+import fr.cea.ig.MongoDBDAO;
 /** 
  * Write user action into database
  * 
@@ -29,13 +29,15 @@ public class UserHistory extends Action.Simple{
 			String action = "";
 			String login = "";
 			
-						
-			if(Context.current().session().get("NGL_FILTER_USER") != null){
-				login = Context.current().session().get("NGL_FILTER_USER");
+			login = CommonController.getCurrentUser();
+			
+			String body = "{}";
+			RequestBody rb = context.request().body();
+			if(rb != null && rb.asJson() != null){
+				body = rb.asJson().toString();
 			}
 			
-			DynamicForm data = new DynamicForm().bindFromRequest();
-			params=data.data().toString();
+			params = Json.toJson(context.request().queryString())+ " , "+ body;
 			
 			action = context.request().toString();
 			Result res = null;

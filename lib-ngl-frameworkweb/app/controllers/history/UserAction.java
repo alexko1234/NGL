@@ -9,6 +9,7 @@ package controllers.history;
  * @author ydeshayes
  */
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import fr.cea.ig.DBObject;
@@ -29,6 +30,7 @@ public class UserAction extends DBObject{
 		this.action = "";
 		this.timeRequest = 0;
 	    this.date = new Date();
+	    this.code = "";
 	}
 	
 	public UserAction(String varLogin,String varParams, String varAction, long varTimeRequest){
@@ -37,5 +39,10 @@ public class UserAction extends DBObject{
 		this.action = varAction;
 	    this.timeRequest = varTimeRequest;
 	    this.date = new Date();
+	    this.code = generateCode(login);
+	}
+	
+	private String generateCode(String login){
+		return ((new SimpleDateFormat("yyyyMMddHHmmss.SSS")).format(new Date()) + login).toUpperCase();
 	}
 }
