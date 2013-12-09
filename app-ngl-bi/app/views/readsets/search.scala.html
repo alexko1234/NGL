@@ -14,7 +14,9 @@
 				<div class="row-fluid">
 				
 				<select ng-model="form.stateCodes" multiple title="@Messages("search.placeholder.states")" ng-options="state.code as state.name for state in lists.getStates()" bs-select></select>			
-				<select ng-model="form.validCode" title="@Messages("search.placeholder.valid")" ng-options="valid.code as valid.name for valid in lists.getValuations()" bs-select></select>
+				<select ng-model="form.productionValidCode" title="@Messages("search.placeholder.productionValid")" ng-options="valid.code as valid.name for valid in lists.getValuations()" bs-select></select>
+				<select ng-model="form.bioinformaticValidCode" title="@Messages("search.placeholder.bioinformaticValid")" ng-options="valid.code as valid.name for valid in lists.getValuations()" bs-select></select>
+				
 				
 				<div class="btn-toolbar pull-right">
 					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" ><i class="icon-search icon-large"></i></button>

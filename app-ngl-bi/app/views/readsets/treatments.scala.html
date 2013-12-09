@@ -3,31 +3,6 @@
 
 	
 @if(code == "ngsrg-illumina") {
-<!-- 
- 	<div class="span12">
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.ngsrg.validSeqPercent")</dt>
-				<dd >{{readset.treatments.ngsrg["default"].validSeqPercent.value | number:2}}</dd>				
-			</dl>
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.ngsrg.nbCluster")</dt>
-				<dd >{{readset.treatments.ngsrg["default"].nbCluster.value | number}}</dd>				
-			</dl>
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.ngsrg.nbBases")</dt>
-				<dd >{{readset.treatments.ngsrg["default"].nbBases.value | number}}</dd>				
-			</dl>
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.ngsrg.Q30")</dt>
-				<dd >{{readset.treatments.ngsrg["default"].Q30.value | number:2}}</dd>				
-			</dl>
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.ngsrg.qualityScore")</dt>
-				<dd >{{readset.treatments.ngsrg["default"].qualityScore.value | number:2}}</dd>				
-			</dl>
-			
-	</div>
--->
 <div class="span6">
  <div ng-controller="NGSRGCtrl" ng-init="init()" datatable="NGSRG.getConfig()"></div>
 </div>

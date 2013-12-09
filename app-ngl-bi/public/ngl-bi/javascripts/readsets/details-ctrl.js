@@ -90,27 +90,27 @@ function NGSRGCtrl($scope, datatable) {
 			cancel : {active:false},						
 			columns : [
 			   	{  	property:"validSeqPercent.value",
-			    	header: Messages("readsets.dt.ngsrg.validSeqPercent"),
+			    	header: Messages("readsets.ngsrg.validSeqPercent"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"nbCluster.value",
-			    	header: Messages("readsets.dt.ngsrg.nbCluster"),
+			    	header: Messages("readsets.ngsrg.nbCluster"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"nbBases.value",
-			    	header: Messages("readsets.dt.ngsrg.nbBases"),
+			    	header: Messages("readsets.ngsrg.nbBases"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"Q30.value",
-			    	header: Messages("readsets.dt.ngsrg.Q30"),
+			    	header: Messages("readsets.ngsrg.Q30"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"qualityScore.value",
-			    	header: Messages("readsets.dt.ngsrg.qualityScore"),
+			    	header: Messages("readsets.ngsrg.qualityScore"),
 			    	type :"Number",
 			    	order:false
 				}

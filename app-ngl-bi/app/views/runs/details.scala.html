@@ -22,15 +22,15 @@
 <form class="form-horizontal">
 		<div class="span3">
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.code")</dt>
+				<dt>@Messages("runs.code")</dt>
 				<dd >{{run.code}}</dd>				
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.state.code")</dt>
+				<dt>@Messages("runs.state.code")</dt>
 				<dd ng-model='run.state.code' codes="state"></dd>
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.valuation.valid")</dt>
+				<dt>@Messages("runs.valuation.valid")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
 					<div ng-switch-when="false" ng-model='run.valuation.valid' codes="valuation"/>
@@ -40,7 +40,7 @@
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.valuation.resolutions")</dt>
+				<dt>@Messages("runs.valuation.resolutions")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
 					<div ng-switch-when="false">
@@ -53,74 +53,78 @@
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.valuation.criteria")</dt>
+				<dt>@Messages("runs.valuation.criteria")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
 					<div ng-switch-when="false" ng-model="run.valuation.criteriaCode" codes="criteria"/>
 					<div ng-switch-when="true"><select class="span12" ng-model="run.valuation.criteriaCode" title="" ng-options="valid.code as valid.name for valid in lists.getValidationCriterias()" bs-select></select></div>
 				</dd>
 			</dl>
+			<dl class="dl-horizontal">
+					<dt>@Messages("runs.valuation.user")</dt>
+					<dd>{{run.valuation.user}} ({{run.valuation.date | date:'@Messages("date.format")'}})</dd>				
+		</dl>
 	</div>
 	<div class="span3">
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.type")</dt>
+				<dt>@Messages("runs.type")</dt>
 				<dd>{{run.typeCode}}</dd>
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.nb_cluster_total")</dt>
+				<dt>@Messages("runs.nb_cluster_total")</dt>
 				<dd>{{run.treatments.ngsrg["default"].nbClusterTotal.value |
 					number}}</dd>
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.nb_cluster_illumina")</dt>
+				<dt>@Messages("runs.nb_cluster_illumina")</dt>
 				<dd>{{run.treatments.ngsrg["default"].nbClusterIlluminaFilter.value	| number}} 
 				({{(run.treatments.ngsrg["default"].nbClusterIlluminaFilter.value/run.treatments.ngsrg["default"].nbClusterTotal.value)*100 | number:2}})</dd>
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.nb_bases_en_gb")</dt>
+				<dt>@Messages("runs.nb_bases_en_gb")</dt>
 				<dd>{{run.treatments.ngsrg["default"].nbBase.value | number}}</dd>
 			</dl>
 
 		</div>
 		<div class="span3">
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.nbCycle")</dt>
+				<dt>@Messages("runs.nbCycle")</dt>
 				<dd>{{run.treatments.ngsrg["default"].nbCycle.value}}</dd>
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.controlLane")</dt>
+				<dt>@Messages("runs.controlLane")</dt>
 				<dd>{{run.treatments.ngsrg["default"].controlLane.value}}</dd>
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.containerSupportCode")</dt>
+				<dt>@Messages("runs.containerSupportCode")</dt>
 				<dd>{{run.containerSupportCode}}</dd>
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.flowcellPosition")</dt>
+				<dt>@Messages("runs.flowcellPosition")</dt>
 				<dd>{{run.treatments.ngsrg["default"].flowcellPosition.value}}</dd>
 			</dl>
 		</div>
 		
 		<div class="span3">
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.rtaVersion")</dt>
+				<dt>@Messages("runs.rtaVersion")</dt>
 				<dd>{{run.treatments.ngsrg["default"].rtaVersion.value}}</dd>
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.flowcellVersion")</dt>
+				<dt>@Messages("runs.flowcellVersion")</dt>
 				<dd>{{run.treatments.ngsrg["default"].flowcellVersion.value}}</dd>
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.intrumentCode")</dt>
+				<dt>@Messages("runs.intrumentCode")</dt>
 				<dd>{{run.instrumentUsed.code}}</dd>
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.intrumentCategoryCode")</dt>
+				<dt>@Messages("runs.intrumentCategoryCode")</dt>
 				<dd>{{run.instrumentUsed.categoryCode}}</dd>
 			</dl>
 		
@@ -136,18 +140,21 @@
 
 <div class="span3">
 <ul class="nav nav-tabs">
-		   <li class="active"><a href="#" >@Messages("runs.table.lane.valuation.title")</a></li>		   
+		   <li class="active"><a href="#" >@Messages("runs.lane.valuation.title")</a></li>		   
 	</ul>
 	<div class="tab-content">
-	<div class="tab-pane active" />		
-  	
-
- <div datatable="lanesDT.getConfig()"></div>
- <dl class="dl-horizontal">
-				<dt>@Messages("runs.dt.valuation.user")</dt>
-				<dd>{{run.valuation.user}} - {{run.valuation.date | date:'@Messages("date.format")'}}</dd>				
-</dl>
+	<div class="tab-pane active">		
+  	<div datatable="lanesDT.getConfig()"></div>
+	
+	</div>
 </div>
 </div>
 </div>
-
+<div class="row-fluid">
+<ul class="nav nav-tabs">
+		   <li class="active"><a href="#" >@Messages("runs.readsets.title") ({{readSetsDT.totalNumberRecords}})</a></li>		   
+	</ul>
+	<div class="tab-content">
+	<div class="tab-pane active"></div>	
+<div datatable="readSetsDT.getConfig()"></div>
+</div>

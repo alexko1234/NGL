@@ -35,6 +35,8 @@ search.placeholder.states = Selectionnez des états
 search.placeholder.instruments = Selectionnez des instruments
 search.placeholder.types = Selectionnez des types
 search.placeholder.valid = Selectionnez une évaluation
+search.placeholder.productionValid = Selectionnez une évaluation prod
+search.placeholder.bioinformaticValid  = Selectionnez une évaluation bioinfo
 
 button.search = Rechercher
 button.reset = Réinitialiser
@@ -46,69 +48,66 @@ runs.menu = Runs
 runs.menu.search = Recherche
 runs.menu.state = Changement d''Etat
 runs.menu.valuation = Evaluation
-
 runs.page.tab.validate = Runs à Evaluer
 
-
-
-runs.dt.type = Type
-runs.dt.nbCycle = Nb Cycles
-runs.dt.flowcellPosition = Position Flowcell
-runs.dt.controlLane = Ligne Contrôle
-runs.dt.flowcellVersion = Version Flowcell
-runs.dt.rtaVersion = Version RTA
-runs.dt.containerSupportCode = Code Flowcell 
-runs.dt.intrumentCode = Code Instrument
-runs.dt.intrumentCategoryCode = Catégorie Instrument
-runs.dt.code = Code
-runs.dt.state.code = Etat
-runs.dt.valuation.valid = Valide ?
-runs.dt.valuation.resolutions = Comptes Rendus
-runs.dt.valuation.user = Evalué par
-runs.dt.valuation.date = Date d''évaluation
-runs.dt.valuation.userdate = Evalué par {0} le {1}  
-runs.dt.valuation.criteria = Critères
-
-runs.table.valuation.valid = Valide ?
+runs.code = Code
+runs.type = Type
+runs.nbCycle = Nb Cycles
+runs.flowcellPosition = Position Flowcell
+runs.controlLane = Ligne Contrôle
+runs.flowcellVersion = Version Flowcell
+runs.rtaVersion = Version RTA
+runs.containerSupportCode = Code Flowcell 
+runs.intrumentCode = Code Instrument
+runs.intrumentCategoryCode = Catégorie Instrument
+runs.state.code = Etat
+runs.valuation.valid = Valide ?
+runs.valuation.resolutions = Comptes Rendus
+runs.valuation.user = Evalué par
+runs.valuation.date = Date d''évaluation
+runs.valuation.userdate = Evalué par {0} le {1}  
+runs.valuation.criteria = Critères
+runs.valuation.valid = Valide ?
 #runs - main
-runs.table.code=Code
-runs.table.creationdate=Date de Création
+runs.creationdate=Date de Création
 # a vérifier
-runs.table.dispatch=Dispatch
-runs.table.typeCode = Type
-runs.table.stateCode = Etat
-runs.table.lane.valuation.title = Pistes
-runs.table.lane.valuation.valid = Valide ?
-runs.table.lane.valuation.resolutions = Comptes Rendus
+runs.dispatch=Dispatch
+runs.typeCode = Type
+runs.stateCode = Etat
+runs.lane.valuation.title = Pistes
+runs.lane.valuation.valid = Valide ?
+runs.lane.valuation.resolutions = Comptes Rendus
 
-runs.table.lane.code = #
-runs.table.lane.ngsrg.nbCluster = Nb Clusters
-runs.table.lane.ngsrg.percentClusterIlluminaFilter = % Clusters Filtrés (illumina)
-runs.table.lane.ngsrg.nbClusterIlluminaFilter = Nb Cluster Filtrés (illumina)
-runs.table.lane.ngsrg.percentClusterInternalAndIlluminaFilter = % Séquences Filtrées (interne)
-runs.table.lane.ngsrg.nbClusterInternalAndIlluminaFilter = Nb Séquences Valides (filtre illumina + interne)
-runs.table.lane.ngsrg.nbBaseInternalAndIlluminaFilter = Nb Bases (filtre illumina + interne)
-runs.table.lane.ngsrg.phasing = Phasing
-runs.table.lane.ngsrg.prephasing = Prephasing
-runs.table.lane.ngsrg.nbCycles = Nb Cycles
-runs.table.lane.ngsrg.seqLossPercent = % Perte
+runs.lane.code = #
+runs.lane.ngsrg.nbCluster = Nb Clusters
+runs.lane.ngsrg.percentClusterIlluminaFilter = % Clusters Filtrés (illumina)
+runs.lane.ngsrg.nbClusterIlluminaFilter = Nb Cluster Filtrés (illumina)
+runs.lane.ngsrg.percentClusterInternalAndIlluminaFilter = % Séquences Filtrées (interne)
+runs.lane.ngsrg.nbClusterInternalAndIlluminaFilter = Nb Séquences (filtre illumina + interne)
+runs.lane.ngsrg.nbBaseInternalAndIlluminaFilter = Nb Bases (filtre illumina + interne)
+runs.lane.ngsrg.phasing = Phasing
+runs.lane.ngsrg.prephasing = Prephasing
+runs.lane.ngsrg.nbCycles = Nb Cycles
+runs.lane.ngsrg.seqLossPercent = % Perte
+runs.lane.sav.read1 = Read 1
+runs.lane.sav.read2 = Read 2
+runs.lane.sav.clusterDensity = Density (K/mm2)
+runs.lane.sav.clusterPF = % Cluster PF
+runs.lane.sav.phasing = % Phas/Prephas
+runs.lane.sav.reads = Reads (M)
+runs.lane.sav.readsPF = Reads PF (M)
+runs.lane.sav.greaterQ30Perc = % >= Q30
+runs.lane.sav.cyclesErrRated = Cycles Err Rated
+runs.lane.sav.alignedPerc = % Alignement
+runs.lane.sav.errorRatePerc = % Error Rate
+runs.lane.sav.errorRatePercCycle35 = % Error Rate Cycle 35
+runs.lane.sav.errorRatePercCycle75 = % Error Rate Cycle 75
+runs.lane.sav.errorRatePercCycle100 = % Error Rate Cycle 100
+runs.lane.sav.intensityCycle1 = Intensity Cycle 1
+runs.lane.sav.intensityCycle20Perc = % Intensity Cycle 20
 
-runs.table.lane.sav.read1 = Read 1
-runs.table.lane.sav.read2 = Read 2
-runs.table.lane.sav.clusterDensity = Density (K/mm2)
-runs.table.lane.sav.clusterPF = % Cluster PF
-runs.table.lane.sav.phasing = % Phas/Prephas
-runs.table.lane.sav.reads = Reads (M)
-runs.table.lane.sav.readsPF = Reads PF (M)
-runs.table.lane.sav.greaterQ30Perc = % >= Q30
-runs.table.lane.sav.cyclesErrRated = Nb Cycles
-runs.table.lane.sav.alignedPerc = % Alignement
-runs.table.lane.sav.errorRatePerc = % Error Rate
-runs.table.lane.sav.errorRatePercCycle35 = % Error Rate Cycle 35
-runs.table.lane.sav.errorRatePercCycle75 = % Error Rate Cycle 75
-runs.table.lane.sav.errorRatePercCycle100 = % Error Rate Cycle 100
-runs.table.lane.sav.intensityCycle1 = Intensity Cycle 1
-runs.table.lane.sav.intensityCycle20Perc = % Intensity Cycle 20
+runs.readsets.title = ReadSets
+
 
 readsets.page.title=ReadSets
 readsets.page.tab.validate = ReadSets à Evaluer
@@ -117,37 +116,39 @@ readsets.menu.search = Recherche
 readsets.menu.state = Changement d''Etat
 readsets.menu.valuation = Evaluation
 
-readsets.table.code = Code
-readsets.table.runCode = Code du Run
-readsets.table.laneNumber = Piste
-readsets.table.projectCode = Projet
-readsets.table.sampleCode = Echantillon
-readsets.table.creationdate = Date de Création
-readsets.table.stateCode = Etat
-readsets.table.productionValuation.valid = Valide Production ?
-readsets.table.bioinformaticValuation.valid = Valide BioInfo ?
+#readset properties
+readsets.code = Code
+readsets.runCode = Code du Run
+readsets.laneNumber = Piste
+readsets.projectCode = Projet
+readsets.sampleCode = Echantillon
+readsets.creationdate = Date de Création
+readsets.stateCode = Etat
+readsets.productionValuation.valid = Valide Production ?
+readsets.bioinformaticValuation.valid = Valide BioInfo ?
 
-readsets.dt.code = Code
-readsets.dt.state.code = Etat
-readsets.dt.productionValuation.valid = Valide Prod ?
-readsets.dt.productionValuation.resolutions = Comptes Rendus Prod
-readsets.dt.productionValuation.criteria = Critères Prod
+readsets.code = Code
+readsets.state.code = Etat
+readsets.productionValuation.valid = Valide Prod ?
+readsets.productionValuation.resolutions = Comptes Rendus Prod
+readsets.productionValuation.criteria = Critères Prod
+readsets.valuation.user = Evalué par
 
-readsets.dt.bioinformaticValuation.valid = Valide BioInfo ?
-readsets.dt.bioinformaticValuation.resolutions = Comptes Rendus BioInfo
-readsets.dt.bioinformaticValuation.criteria = Critères BioInfo
-readsets.dt.runCode = Run
-readsets.dt.runType = Type de Run
-readsets.dt.laneNumber = N° Piste
-readsets.dt.projectCode = Projet
-readsets.dt.sampleCode = Echantillon
-readsets.dt.nbCycles = Nb Cycles
+readsets.bioinformaticValuation.valid = Valide BioInfo ?
+readsets.bioinformaticValuation.resolutions = Comptes Rendus BioInfo
+readsets.bioinformaticValuation.criteria = Critères BioInfo
+readsets.runCode = Run
+readsets.runType = Type de Run
+readsets.laneNumber = N° Piste
+readsets.projectCode = Projet
+readsets.sampleCode = Echantillon
+readsets.nbCycles = Nb Cycles
 
-readsets.dt.global.usefulSequences = Nb Séquences Utiles
-readsets.dt.global.usefulBases = Nb Bases Utiles
-readsets.dt.ngsrg.nbCluster = Nb Clusters
-readsets.dt.ngsrg.nbBases = Nb Bases
-readsets.dt.ngsrg.Q30 = Q30
-readsets.dt.ngsrg.qualityScore = Quality Score
-readsets.dt.ngsrg.validSeqPercent = % Sequences Valides
+readsets.global.usefulSequences = Nb Séquences Utiles
+readsets.global.usefulBases = Nb Bases Utiles
+readsets.ngsrg.nbCluster = Nb Séquences Valides
+readsets.ngsrg.nbBases = Nb Bases
+readsets.ngsrg.Q30 = Q30
+readsets.ngsrg.qualityScore = Score Qualité Moyen
+readsets.ngsrg.validSeqPercent = % Séquences valides / piste
 

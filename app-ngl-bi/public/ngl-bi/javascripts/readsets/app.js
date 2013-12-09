@@ -1,10 +1,11 @@
 "use strict";
 angular.module('home', ['datatableServices','commonsServices','biCommonsServices', '$strap.directives', 'ui.bootstrap'], function($routeProvider, $locationProvider) {
+	
 	$routeProvider.when('/readsets/search/home', {
 		templateUrl : '/tpl/readsets/search/default',
 		controller : 'SearchCtrl'
 	});
-	$routeProvider.when('/readsets/valuation/home', {
+	$routeProvider.when('/readsets/:code/home', {
 		templateUrl : '/tpl/readsets/search/valuation',
 		controller : 'SearchValuationCtrl'
 	});

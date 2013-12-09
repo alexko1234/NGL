@@ -2,17 +2,17 @@
 
 var columns = [
 			    {  	property:"code",
-			    	header: Messages("runs.table.code"),
+			    	header: Messages("runs.code"),
 			    	type :"String",
 			    	order:true
 				},
 				{	property:"typeCode",
-					header: Messages("runs.table.typeCode"),
+					header: Messages("runs.typeCode"),
 					type :"String",
 			    	order:true
 				},
 				{	property:"traceInformation.creationDate",
-					header: Messages("runs.table.creationdate"),
+					header: Messages("runs.creationdate"),
 					type :"Date",
 			    	order:true
 				},
@@ -20,7 +20,7 @@ var columns = [
 					render:function(value){
 						return Codes("state."+value.state.code);
 					},
-					header: Messages("runs.table.stateCode"),
+					header: Messages("runs.stateCode"),
 					type :"String",
 					edit:true,
 					order:true,
@@ -32,7 +32,7 @@ var columns = [
 					render:function(value){
 						return Codes("valuation."+value.valuation.valid);
 					},
-					header: Messages("runs.table.valuation.valid"),
+					header: Messages("runs.valuation.valid"),
 					type :"String",
 			    	order:true
 				}      

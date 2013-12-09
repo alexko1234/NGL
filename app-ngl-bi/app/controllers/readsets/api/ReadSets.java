@@ -89,8 +89,12 @@ public class ReadSets extends CommonController{
 			queries.add(DBQuery.in("state.code", form.stateCodes));
 		}
 		
-		if (StringUtils.isNotBlank(form.validCode)) { //all
-			queries.add(DBQuery.is("valuation.valid", TBoolean.valueOf(form.validCode)));
+		if (StringUtils.isNotBlank(form.productionValidCode)) { //all
+			queries.add(DBQuery.is("productionValuation.valid", TBoolean.valueOf(form.productionValidCode)));
+		}
+		
+		if (StringUtils.isNotBlank(form.bioinformaticValidCode)) { //all
+			queries.add(DBQuery.is("bioinformaticValuation.valid", TBoolean.valueOf(form.bioinformaticValidCode)));
 		}
 
 		if (CollectionUtils.isNotEmpty(form.projectCodes)) { //all

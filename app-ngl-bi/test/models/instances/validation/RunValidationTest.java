@@ -1349,11 +1349,11 @@ public class RunValidationTest extends AbstractTests {
 			run.instrumentUsed = new InstrumentUsed();
 			if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
 				run.instrumentUsed.code = "HISEQ1";
-				run.instrumentUsed.categoryCode = "HISEQ2000";
+				run.instrumentUsed.typeCode = "HISEQ2000";
 			}	
 			else {
 				run.instrumentUsed.code = "hand";
-				run.instrumentUsed.categoryCode = "hand";
+				run.instrumentUsed.typeCode = "hand";
 			}
 			run.typeCode = "RHS2000";
 			List<String> lResos = new ArrayList<String>();
@@ -1392,11 +1392,11 @@ public class RunValidationTest extends AbstractTests {
 		run.instrumentUsed = new InstrumentUsed();
 		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
 			run.instrumentUsed.code = "HISEQ1";
-			run.instrumentUsed.categoryCode = "HISEQ2000";
+			run.instrumentUsed.typeCode = "HISEQ2000";
 		}	
 		else {
 			run.instrumentUsed.code = "hand";
-			run.instrumentUsed.categoryCode = "hand";
+			run.instrumentUsed.typeCode = "hand";
 		}
 		run.typeCode = "RHS2000";
 		List<String> lResos = new ArrayList<String>();
@@ -1447,11 +1447,11 @@ public class RunValidationTest extends AbstractTests {
 		run.instrumentUsed = new InstrumentUsed();
 		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
 			run.instrumentUsed.code = "HISEQ1";
-			run.instrumentUsed.categoryCode = "HISEQ2000";
+			run.instrumentUsed.typeCode = "HISEQ2000";
 		}	
 		else {
 			run.instrumentUsed.code = "hand";
-			run.instrumentUsed.categoryCode = "hand";
+			run.instrumentUsed.typeCode = "hand";
 		}
 		run.typeCode = "RHS2000";
 		List<String> lResos = new ArrayList<String>();
@@ -1496,7 +1496,7 @@ public class RunValidationTest extends AbstractTests {
 		run.dispatch = null;
 		run.instrumentUsed = new InstrumentUsed();
 		run.instrumentUsed.code = "";
-		run.instrumentUsed.categoryCode = "";
+		run.instrumentUsed.typeCode = "";
 		run.typeCode = "";
 		List<String> lResos = new ArrayList<String>();
 		State state = new State();

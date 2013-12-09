@@ -22,15 +22,15 @@
 <form class="form-horizontal">
 		<div class="span4">
 			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.code")</dt>
+				<dt>@Messages("readsets.code")</dt>
 				<dd >{{readset.code}}</dd>				
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.state.code")</dt>
+				<dt>@Messages("readsets.state.code")</dt>
 				<dd ng-model='readset.state.code' codes="state"></dd>
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.productionValuation.valid")</dt>
+				<dt>@Messages("readsets.productionValuation.valid")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
 					<div ng-switch-when="false" ng-model='readset.productionValuation.valid' codes="valuation"/>
@@ -40,7 +40,7 @@
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.productionValuation.resolutions")</dt>
+				<dt>@Messages("readsets.productionValuation.resolutions")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
 					<div ng-switch-when="false">
@@ -53,25 +53,31 @@
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.productionValuation.criteria")</dt>
+				<dt>@Messages("readsets.productionValuation.criteria")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
 					<div ng-switch-when="false" ng-model="readset.productionValuation.criteriaCode" codes="criteria"/>
 					<div ng-switch-when="true"><select class="span12" ng-model="readset.productionValuation.criteriaCode" title="" ng-options="valid.code as valid.name for valid in lists.getValidationCriterias()" bs-select></select></div>
 				</dd>
 			</dl>
+			
+			<dl class="dl-horizontal">
+				<dt>@Messages("readsets.valuation.user")</dt>
+				<dd>{{readset.productionValuation.user}} ({{readset.productionValuation.date | date:'@Messages("date.format")'}})</dd>				
+			</dl>
+			
 	</div>
 	<div class="span4">
 			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.global.usefulSequences")</dt>
+				<dt>@Messages("readsets.global.usefulSequences")</dt>
 				<dd>{{readset.treatments.global["default"].usefulSequences.value |	number}}</dd>
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.global.usefulBases")</dt>
+				<dt>@Messages("readsets.global.usefulBases")</dt>
 				<dd>{{readset.treatments.global["default"].usefulBases.value | number}}</dd>
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.bioinformaticValuation.valid")</dt>
+				<dt>@Messages("readsets.bioinformaticValuation.valid")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
 					<div ng-switch-when="false" ng-model='readset.bioinformaticValuation.valid' codes="valuation"/>
@@ -81,7 +87,7 @@
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.bioinformaticValuation.resolutions")</dt>
+				<dt>@Messages("readsets.bioinformaticValuation.resolutions")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
 					<div ng-switch-when="false">
@@ -94,27 +100,30 @@
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.bioinformaticValuation.criteria")</dt>
+				<dt>@Messages("readsets.bioinformaticValuation.criteria")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
 					<div ng-switch-when="false" ng-model="readset.bioinformaticValuation.criteriaCode" codes="criteria"/>
 					<div ng-switch-when="true"><select class="span12" ng-model="readset.bioinformaticValuation.criteriaCode" title="" ng-options="valid.code as valid.name for valid in lists.getValidationCriterias()" bs-select></select></div>
 				</dd>
 			</dl>
-
+			<dl class="dl-horizontal">
+				<dt>@Messages("readsets.valuation.user")</dt>
+				<dd>{{readset.bioinformaticValuation.user}} ({{readset.bioinformaticValuation.date | date:'@Messages("date.format")'}})</dd>				
+			</dl>
 		</div>
 		<div class="span4">
 			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.runCode") / @Messages("readsets.dt.laneNumber")</dt>
+				<dt>@Messages("readsets.runCode") / @Messages("readsets.laneNumber")</dt>
 				<dd><button class="btn btn-link" type="button" ng-click="goToRun()">{{readset.runCode}}</button> / {{readset.laneNumber}}</dd>
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.runType")</dt>
+				<dt>@Messages("readsets.runType")</dt>
 				<dd>{{run.typeCode}}</dd>
 			</dl>
 			
 			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.dt.nbCycles")</dt>
+				<dt>@Messages("readsets.nbCycles")</dt>
 				<dd>{{run.treatments.ngsrg["default"].nbCycle.value}}</dd>
 			</dl>			
 		</div>
@@ -126,6 +135,5 @@
 <div class="span12">
 @views.html.commons.treatments()
 </div>
-
 </div>
 

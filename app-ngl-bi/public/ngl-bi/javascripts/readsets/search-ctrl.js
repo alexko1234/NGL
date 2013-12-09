@@ -2,32 +2,32 @@
 
 var columns = [
 			    {  	property:"code",
-			    	header: Messages("readsets.table.code"),
+			    	header: Messages("readsets.code"),
 			    	type :"String",
 			    	order:true
 				},
 				{	property:"runCode",
-					header: Messages("readsets.table.runCode"),
+					header: Messages("readsets.runCode"),
 					type :"String",
 			    	order:true
 				},
 				{	property:"laneNumber",
-					header: Messages("readsets.table.laneNumber"),
+					header: Messages("readsets.laneNumber"),
 					type :"String",
 			    	order:true
 				},
 				{	property:"projectCode",
-					header: Messages("readsets.table.projectCode"),
+					header: Messages("readsets.projectCode"),
 					type :"String",
 			    	order:true
 				},
 				{	property:"sampleCode",
-					header: Messages("readsets.table.sampleCode"),
+					header: Messages("readsets.sampleCode"),
 					type :"String",
 			    	order:true
 				},
 				{	property:"traceInformation.creationDate",
-					header: Messages("readsets.table.creationdate"),
+					header: Messages("readsets.creationdate"),
 					type :"Date",
 			    	order:true
 				},
@@ -35,7 +35,7 @@ var columns = [
 					render:function(value){
 						return Codes("state."+value.state.code);
 					},
-					header: Messages("readsets.table.stateCode"),
+					header: Messages("readsets.stateCode"),
 					type :"String",
 					edit:true,
 					order:true,
@@ -47,7 +47,7 @@ var columns = [
 					render:function(value){
 						return Codes("valuation."+value.productionValuation.valid);
 					},
-					header: Messages("readsets.table.productionValuation.valid"),
+					header: Messages("readsets.productionValuation.valid"),
 					type :"String",
 			    	order:true
 				},
@@ -55,7 +55,7 @@ var columns = [
 					render:function(value){
 						return Codes("valuation."+value.bioinformaticValuation.valid);
 					},
-					header: Messages("readsets.table.bioinformaticValuation.valid"),
+					header: Messages("readsets.bioinformaticValuation.valid"),
 					type :"String",
 			    	order:true
 				}      
@@ -124,7 +124,7 @@ function SearchFormCtrl($scope, $filter, lists){
 };
 SearchFormCtrl.$inject = ['$scope', '$filter', 'lists'];
 
-function SearchCtrl($scope, $routeParams, datatable) {
+function SearchCtrl($scope, datatable) {
 
 	$scope.datatableConfig = {
 			order :{by:'traceInformation.creationDate'},
@@ -160,7 +160,7 @@ function SearchCtrl($scope, $routeParams, datatable) {
 	}	
 };
 
-SearchCtrl.$inject = ['$scope', '$routeParams', 'datatable'];
+SearchCtrl.$inject = ['$scope', 'datatable'];
 
 function SearchStateCtrl($scope, datatable) {
 
@@ -240,6 +240,5 @@ function SearchValuationCtrl($scope, datatable) {
 };
 
 SearchValuationCtrl.$inject = ['$scope', 'datatable'];
-
 
 

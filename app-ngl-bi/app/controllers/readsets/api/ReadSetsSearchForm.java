@@ -27,7 +27,9 @@ public class ReadSetsSearchForm extends ListForm{
 	public Integer laneNumber;
 	
 	
-	public String validCode;
+	public String bioinformaticValidCode;
+	public String productionValidCode;
+	
 	
 	public Date fromDate;
 	public Date toDate;
