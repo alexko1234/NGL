@@ -8,12 +8,15 @@ import java.util.List;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
+import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.sample.instance.Sample;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.avaje.ebeaninternal.server.persist.Constant;
+import com.mongodb.BasicDBObject;
 
 
 import play.Logger;
@@ -28,6 +31,7 @@ import controllers.utils.FormUtils;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import models.utils.InstanceConstants;
+import models.utils.ListObject;
 
 public class Containers extends CommonController {
 
@@ -45,19 +49,30 @@ public class Containers extends CommonController {
 	public static Result list(){
 		Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
 		ContainersSearchForm containersSearch = containerFilledForm.get();
-		
+
 		DBQuery.Query query = getQuery(containersSearch);
 		if(containersSearch.datatable){
-		MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query)
-				.sort(DatatableHelpers.getOrderBy(containerFilledForm), FormUtils.getMongoDBOrderSense(containerFilledForm))
-				.page(DatatableHelpers.getPageNumber(containerFilledForm), DatatableHelpers.getNumberRecordsPerPage(containerFilledForm)); 
-		List<Container> containers = results.toList();
+			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
+			List<Container> containers = results.toList();
 
-		return ok(Json.toJson(new DatatableResponse(containers, results.count())));
+			return ok(Json.toJson(new DatatableResponse<Container>(containers, results.count())));
+		}else if(containersSearch.list){
+			BasicDBObject keys = new BasicDBObject();
+			keys.put("_id", 0);//Don't need the _id field
+			keys.put("code", 1);
+
+			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
+			List<Container> containers = results.toList();
+
+			List<ListObject> los = new ArrayList<ListObject>();
+			for(Container p: containers){
+				los.add(new ListObject(p.code, p.code));
+			}
+
+			return ok(Json.toJson(los));
 		}else{
-			MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query)
-					.sort(DatatableHelpers.getOrderBy(containerFilledForm), FormUtils.getMongoDBOrderSense(containerFilledForm));
-			
+			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
+
 			return ok(Json.toJson(results));
 		}
 	}

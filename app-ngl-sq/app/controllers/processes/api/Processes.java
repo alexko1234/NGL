@@ -10,10 +10,13 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
+import models.utils.ListObject;
 import models.utils.dao.DAOHelpers;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.mongodb.BasicDBObject;
 
 import play.Logger;
 import play.data.Form;
@@ -90,14 +93,25 @@ public class Processes extends CommonController{
 
 		DBQuery.Query query = getQuery(processesSearch);
 		if(processesSearch.datatable){
-			MongoDBResult<Process> results = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, query)
-					.sort(DatatableHelpers.getOrderBy(processesFilledForm), FormUtils.getMongoDBOrderSense(processesFilledForm))
-					.page(DatatableHelpers.getPageNumber(processesFilledForm), DatatableHelpers.getNumberRecordsPerPage(processesFilledForm)); 
+			MongoDBResult<Process> results =  mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query); 
 			List<Process> processes = results.toList();
-			return ok(Json.toJson(new DatatableResponse(processes, results.count())));
+			return ok(Json.toJson(new DatatableResponse<Process>(processes, results.count())));
+		}else if(processesSearch.list){
+			BasicDBObject keys = new BasicDBObject();
+			keys.put("_id", 0);//Don't need the _id field
+			keys.put("code", 1);
+
+			MongoDBResult<Process> results = mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query, keys); 
+			List<Process> processes = results.toList();
+
+			List<ListObject> los = new ArrayList<ListObject>();
+			for(Process p: processes){
+				los.add(new ListObject(p.code, p.code));
+			}
+
+			return ok(Json.toJson(los));
 		}else{
-			MongoDBResult<Process> results = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, query)
-					.sort(DatatableHelpers.getOrderBy(processesFilledForm), FormUtils.getMongoDBOrderSense(processesFilledForm));
+			MongoDBResult<Process> results = mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query); 
 			List<Process> processes = results.toList();
 			return ok(Json.toJson(processes));
 		}

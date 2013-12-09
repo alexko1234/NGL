@@ -1,18 +1,18 @@
 package controllers.main.tpl;
 
-import controllers.CommonController;
 import jsmessages.JsMessages;
-
 import play.Routes;
-import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
+import controllers.CommonController;
+import controllers.authorisation.Authenticate;
+import controllers.authorisation.Permission;
+
 
 public class Main extends CommonController{
-  
+
    public static Result index() {
         return ok(index.render());
-        
    }
    
    public static Result javascriptRoutes() {

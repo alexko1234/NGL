@@ -4,30 +4,31 @@ import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
-import models.laboratory.processes.instance.Process;
+import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
+import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
 import net.vz.mongodb.jackson.DBUpdate.Builder;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.mongodb.BasicDBObject;
+
 import play.Logger;
-import play.api.data.validation.ValidationError;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-
+import play.mvc.Results;
 import validation.ContextValidation;
 import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
@@ -35,7 +36,6 @@ import workflows.Workflows;
 import controllers.CodeHelper;
 import controllers.CommonController;
 import controllers.authorisation.PermissionHelper;
-import controllers.containers.api.ContainersSearchForm;
 import controllers.utils.FormUtils;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -75,23 +75,23 @@ public class Experiments extends CommonController{
 				for(int i=0;i<exp.atomicTransfertMethods.size();i++){
 					containers.addAll(exp.atomicTransfertMethods.get(i).createOutputContainerUsed(exp));
 				}
-	
-	
+
+
 				Builder builder = new DBUpdate.Builder();
 				builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
-	
+
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
-				
-				
+
+
 				InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers,new ContextValidation( experimentFilledForm.errors()));
-				
+
 				return ok(Json.toJson(exp));
 			}
 		}else{
 			//TODO: Add errors to form (state not IP)
 
 		}
-		
+
 		return badRequest(experimentFilledForm.errorsAsJson());
 	}
 
@@ -208,7 +208,7 @@ public class Experiments extends CommonController{
 
 	public static Result updateStateCode(String code, String stateCode){
 		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
-		
+
 		//TODO if first experiment in the processus then processus state to IP
 		ContextValidation ctxValidation = new ContextValidation();
 		Workflows.setExperimentStateCode(exp,stateCode,ctxValidation);
@@ -228,7 +228,7 @@ public class Experiments extends CommonController{
 			exp = traceInformation(exp);
 
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
-			
+
 			return ok();
 		}
 
@@ -257,7 +257,7 @@ public class Experiments extends CommonController{
 			//exp = (Experiment) InstanceHelpers.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp, new ContextValidation(experimentFilledForm.errors()));
 			exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 		}
-		
+
 		if (!experimentFilledForm.hasErrors()) {
 			return ok(Json.toJson(exp));
 		}else {
@@ -265,23 +265,23 @@ public class Experiments extends CommonController{
 		}
 	}
 
-	
+
 	public static Result create(){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
-		
+
 		if(exp._id == null){
 			exp.code = CodeHelper.generateExperiementCode(exp);
 			exp.stateCode = "N";
 		}
-		
+
 		exp = traceInformation(exp);
-		
+
 		//exp = (Experiment) MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
-		
+
 		return ok(Json.toJson(exp));
 	}
-	
+
 	/**
 	 * Add/Create trace informations to the experiment object
 	 * @param exp: the Experiment object
@@ -295,32 +295,40 @@ public class Experiments extends CommonController{
 		} else {
 			exp.traceInformation.setTraceInformation(PermissionHelper.getCurrentUser(session()));
 		}
-		
+
 		return exp;
 	}
-	
-	
-	
+
+
+
 	public static Result list(){
 		Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
 		ExperimentSearchForm experimentsSearch = experimentFilledForm.get();
-		
+
 		DBQuery.Query query = getQuery(experimentsSearch);
-		
 		if(experimentsSearch.datatable){
-		    MongoDBResult<Experiment> results = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query)
-					.sort(DatatableHelpers.getOrderBy(experimentFilledForm), FormUtils.getMongoDBOrderSense(experimentFilledForm))
-					.page(DatatableHelpers.getPageNumber(experimentFilledForm), DatatableHelpers.getNumberRecordsPerPage(experimentFilledForm)); 
-		    List<Experiment> experiments = results.toList();
+			MongoDBResult<Experiment> results =  mongoDBFinder(InstanceConstants.EXPERIMENT_COLL_NAME, experimentsSearch, Experiment.class, query);
+			List<Experiment> experiments = results.toList();
 			return ok(Json.toJson(new DatatableResponse<Experiment>(experiments, results.count())));
+		}else if (experimentsSearch.list){
+			BasicDBObject keys = new BasicDBObject();
+			keys.put("_id", 0);//Don't need the _id field
+			keys.put("code", 1);
+			MongoDBResult<Experiment> results = mongoDBFinder(InstanceConstants.EXPERIMENT_COLL_NAME, experimentsSearch, Experiment.class, query, keys);
+			List<Experiment> experiments = results.toList();
+			List<ListObject> los = new ArrayList<ListObject>();
+			for(Experiment p: experiments){
+				los.add(new ListObject(p.code, p.code));
+			}
+			
+			return Results.ok(Json.toJson(los));
 		}else{
-			 MongoDBResult<Experiment> results = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query)
-						.sort(DatatableHelpers.getOrderBy(experimentFilledForm), FormUtils.getMongoDBOrderSense(experimentFilledForm));
-			    List<Experiment> experiments = results.toList();
-				return ok(Json.toJson(experiments));
+			MongoDBResult<Experiment> results = mongoDBFinder(InstanceConstants.EXPERIMENT_COLL_NAME, experimentsSearch, Experiment.class, query);
+			List<Experiment> experiments = results.toList();
+			return ok(Json.toJson(experiments));
 		}
 	}
-	
+
 	/**
 	 * Construct the experiment query
 	 * @param experimentSearch
@@ -328,13 +336,13 @@ public class Experiments extends CommonController{
 	 */
 	private static DBQuery.Query getQuery(ExperimentSearchForm experimentSearch) {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
-		
+
 		Logger.info("Experiment Query : "+experimentSearch);
-		
+
 		if(StringUtils.isNotEmpty(experimentSearch.typeCode)){
 			queryElts.add(DBQuery.is("typeCode", experimentSearch.typeCode));
-	    }
-		
+		}
+
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}
 }
