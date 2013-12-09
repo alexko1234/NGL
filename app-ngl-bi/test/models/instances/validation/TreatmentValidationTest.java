@@ -120,7 +120,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		m.put("sampleInput", new PropertySingleValue(100)); //Long.class, required=true
 		m.put("organism",new PropertySingleValue("titi")); // String.class, true
-		m.put("taxonomie",new PropertySingleValue("trucBizarre")); // String.class, true
+		m.put("taxonomy",new PropertySingleValue("trucBizarre")); // String.class, true
 		
 		
 		PropertyObjectValue p = new PropertyObjectValue(); // Map<String, ?>
@@ -168,7 +168,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		m.put("sampleInput", new PropertySingleValue(100)); //Long.class, required=true
 		m.put("organism",new PropertySingleValue("titi")); // String.class, true
-		m.put("taxonomie",new PropertySingleValue("trucBizarre")); // String.class, true
+		m.put("taxonomy",new PropertySingleValue("trucBizarre")); // String.class, true
 		
 		
 		PropertyObjectValue p = new PropertyObjectValue(); // Map<String, ?>
