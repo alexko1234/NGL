@@ -35,7 +35,7 @@ public class CodeLabelDAO {
 						"union all "+
 						"select 'instrument_cat' as table_name, code, name as label from instrument_category "+
 						"union all "+
-						"select 'criteria' as table_name, code, name as label from validation_criteria";
+						"select 'valuation' as table_name, code, name as label from valuation";
 		BeanPropertyRowMapper<CodeLabel> mapper = new BeanPropertyRowMapper<CodeLabel>(CodeLabel.class);
 		return this.jdbcTemplate.query(sql, mapper);
 	}

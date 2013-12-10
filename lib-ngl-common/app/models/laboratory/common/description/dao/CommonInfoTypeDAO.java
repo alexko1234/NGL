@@ -11,7 +11,7 @@ import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
-import models.laboratory.common.description.ValidationCriteria;
+import models.laboratory.common.description.Valuation;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -55,7 +55,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		insertResolution(cit.resolutions, cit.id, false);
 		insertProperties(cit.propertiesDefinitions, cit.id, false);
 		insertInstitutes(cit.institutes, cit.id, false);
-		insertValidationCriterias(cit.criterias, cit.id, false);
+		insertValuations(cit.valuations, cit.id, false);
 		
 		return cit.id;
 	}
@@ -76,7 +76,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		insertResolution(cit.resolutions, cit.id, true);
 		insertProperties(cit.propertiesDefinitions, cit.id, true);
 		insertInstitutes(cit.institutes, cit.id, true);
-		insertValidationCriterias(cit.criterias, cit.id, true);
+		insertValuations(cit.valuations, cit.id, true);
 	}
 
 	
@@ -90,8 +90,8 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		removeProperties(commonInfoType.id);
 		//Delete institutes
 		removeInstitutes(commonInfoType.id);
-		//Delete criteria
-		removeValidationCriterias(commonInfoType.id);
+		//Delete evaluations
+		removeValuations(commonInfoType.id);
 		
 		super.remove(commonInfoType);
 	}
@@ -128,9 +128,9 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		//Delete common_info_type
 	}
 	
-	private void removeValidationCriterias(Long citId) {
-		String sqlCriteria = "DELETE FROM validation_criteria_common_info_type WHERE fk_common_info_type=?";
-		jdbcTemplate.update(sqlCriteria, citId);
+	private void removeValuations(Long citId) {
+		String sql = "DELETE FROM valuation_common_info_type WHERE fk_common_info_type=?";
+		jdbcTemplate.update(sql, citId);
 	}
 	
 	
@@ -196,18 +196,18 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		}
 	}
 	
-	private void insertValidationCriterias(List<ValidationCriteria> criterias, Long citId, boolean deleteBefore) throws DAOException {
+	private void insertValuations(List<Valuation> valuations, Long citId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
-			removeValidationCriterias(citId);
+			removeValuations(citId);
 		}
-		//Add criteria list		
-		if(criterias!=null && criterias.size()>0){
-			String sql = "INSERT INTO validation_criteria_common_info_type (fk_common_info_type, fk_validation_criteria) VALUES(?,?)";
-			for(ValidationCriteria criteria : criterias){
-				if(criteria == null || criteria.id == null ){
-					throw new DAOException("criteria is mandatory");
+		//Add evaluation list		
+		if(valuations!=null && valuations.size()>0){
+			String sql = "INSERT INTO valuation_common_info_type (fk_common_info_type, fk_valuation) VALUES(?,?)";
+			for(Valuation valuation : valuations){
+				if(valuation == null || valuation.id == null ){
+					throw new DAOException("valuation is mandatory");
 				}
-				jdbcTemplate.update(sql, citId, criteria.id);
+				jdbcTemplate.update(sql, citId, valuation.id);
 			}
 		}
 	}
