@@ -1242,7 +1242,7 @@ public class RunValidationTest extends AbstractTests {
 				run.typeCode = "RHS2000";
 				
 				Valuation v = new Valuation();
-				v.criteriaCode = "criteria-low";
+				v.valuationCode = "criteria-low";
 				v.date = new Date();
 				v.resolutionCodes = null;
 				v.user = "dnoisett";

@@ -7,7 +7,7 @@ import java.util.List;
 
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
-import models.laboratory.common.description.ValidationCriteria;
+import models.laboratory.common.description.Valuation;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
@@ -231,18 +231,18 @@ public class Lists extends Controller{
 
 	}
 	
-	public static Result validationCriterias(){
+	public static Result valuationCodes(){
 		try{
 			DynamicForm inputForm = form.bindFromRequest();
-			List<ValidationCriteria> criterias = new ArrayList<ValidationCriteria>(0);
+			List<Valuation> valuations = new ArrayList<Valuation>(0);
 			if(inputForm.get("typeCode") != null){
-				criterias = ValidationCriteria.find.findByTypeCode(inputForm.get("typeCode"));
+				valuations = Valuation.find.findByTypeCode(inputForm.get("typeCode"));
 			}else {
-				criterias = ValidationCriteria.find.findAll();
+				valuations = Valuation.find.findAll();
 			}
 			List<ListObject> list = new ArrayList<ListObject>();
-			for(ValidationCriteria criteria:criterias){
-				list.add(new ListObject(criteria.code, criteria.name));
+			for(Valuation valuation:valuations){
+				list.add(new ListObject(valuation.code, valuation.name));
 			}
 	
 			return Results.ok(Json.toJson(list));

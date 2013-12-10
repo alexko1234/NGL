@@ -384,16 +384,16 @@ public class CommonValidationHelper {
 		}
 	}
 	
-	public static void validateCriteriaCode(String criteriaCode, ContextValidation contextValidation) {
+	public static void validateValuationCode(String valuationCode, ContextValidation contextValidation) {
 			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
-			validateCriteriaCode(typeCode, criteriaCode, contextValidation);		
+			validateValuationCode(typeCode, valuationCode, contextValidation);		
 	}
 
-	public static void validateCriteriaCode(String typeCode, String criteriaCode, ContextValidation contextValidation) {
+	public static void validateValuationCode(String typeCode, String valuationCode, ContextValidation contextValidation) {
 		try {
-			if (null != criteriaCode) {
-				if (!models.laboratory.common.description.ValidationCriteria.find.isCodeExistForTypeCode(criteriaCode, typeCode)) {
-					contextValidation.addErrors("criteriaCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, criteriaCode);
+			if (null != valuationCode) {
+				if (!models.laboratory.common.description.Valuation.find.isCodeExistForTypeCode(valuationCode, typeCode)) {
+					contextValidation.addErrors("valuationCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, valuationCode);
 				}	
 			}
 		} catch(DAOException e) {

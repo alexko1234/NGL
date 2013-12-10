@@ -60,7 +60,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			}
 			
 			$scope.lists.refresh.resolutions({typeCode:$scope.readset.typeCode});
-			$scope.lists.refresh.validationCriterias({typeCode:$scope.readset.typeCode});
+			$scope.lists.refresh.valuationCodes({typeCode:$scope.readset.typeCode});
 			
 			if(angular.isDefined($scope.readset.treatments)){				
 				$scope.treatments.init($scope.readset.treatments, jsRoutes.controllers.readsets.tpl.ReadSets.treatments,{global:true});				

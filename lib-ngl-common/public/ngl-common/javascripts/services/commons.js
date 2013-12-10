@@ -76,8 +76,8 @@ angular.module('commonsServices', []).
     				resolutions : function(params){
     					load(jsRoutes.controllers.lists.api.Lists.resolutions().url,params,'resolutions');
     				},
-    				validationCriterias: function(params){
-    					load(jsRoutes.controllers.lists.api.Lists.validationCriterias().url,params,'validationCriterias');    					
+    				valuationCodes: function(params){
+    					load(jsRoutes.controllers.lists.api.Lists.valuationCodes().url,params,'valuations');    					
     				},
     				projects : function(params){
     					load(jsRoutes.controllers.lists.api.Lists.projects().url,params,'projects');    					
@@ -93,7 +93,7 @@ angular.module('commonsServices', []).
     				},
     				all : function(params){
     					this.resolutions(params);
-    					this.validationCriterias(params);
+    					this.valuationCodes(params);
     					this.projects(params);
     					this.samples(params);
     					this.states(params);
@@ -121,7 +121,7 @@ angular.module('commonsServices', []).
     			refresh : refresh,
     			get : function(values){return results[values];},
     			getResolutions : function(){return results['resolutions'];},
-    			getValidationCriterias : function(){return results['validationCriterias'];},
+    			getValuationCodes : function(){return results['valuations'];},
     			getProjects : function(){return results['projects'];},
     			getSamples : function(){return results['samples'];},
     			getStates : function(){return results['states'];},

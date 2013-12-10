@@ -37,7 +37,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	
 	public List<Institute> institutes = new ArrayList<Institute>();
 	
-	public List<ValidationCriteria> criterias = new ArrayList<ValidationCriteria>();
+	public List<Valuation> valuations = new ArrayList<Valuation>();
 
 	public static CommonInfoTypeFinder find = new CommonInfoTypeFinder(); 
 
@@ -69,7 +69,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		this.objectType=commonInfoType.objectType;
 		
 		this.institutes=commonInfoType.institutes;
-		this.criterias=commonInfoType.criterias;
+		this.valuations=commonInfoType.valuations;
 	}
 
 	public List<PropertyDefinition> getPropertyDefinitionByLevel(Level.CODE...levels){
