@@ -57,7 +57,7 @@ public class StatRGTest extends AbstractTests{
 
 	
 	@Test
-	public void testSeqLotPerc() throws RulesException
+	public void testStatRG() throws RulesException
 	{
 
 
@@ -68,10 +68,18 @@ public class StatRGTest extends AbstractTests{
 		rulesServices.callRules(ConfigFactory.load().getString("rules.key"), "rg_1", facts);
 		
 		runData = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", "121107_HISEQ1_D094VACXX"));
+		
+		//Check percentClusterIlluminaFilter for run
+		int nbLane = runData.lanes.size();
+		double sumPercentClusterIlluminaFilter=0;
+		
+		
 		//Check value for lane 5
 		for(Lane lane : runData.lanes){
 			Treatment treatRG = lane.treatments.get("ngsrg");
 			Map<String,PropertyValue> results = treatRG.results.get("default");
+			//Get percentClusterIlluminaFilter
+			sumPercentClusterIlluminaFilter+=((PropertyValue<Double>)results.get("percentClusterIlluminaFilter")).value;
 			Assert.assertTrue(results.containsKey("seqLossPercent"));
 			if(lane.number==5){
 				//Check for readSetCode E421_FE_B00FS5U_5_D094VACXX.IND1
@@ -81,10 +89,16 @@ public class StatRGTest extends AbstractTests{
 				Assert.assertEquals(((Double)resultsRS.get("validSeqPercent").value).doubleValue(),31.27);
 				double valueSeqLossPercent = ((Double)results.get("seqLossPercent").value).doubleValue();
 				Assert.assertEquals(valueSeqLossPercent,1.33);
-				break;
 			}
 		}
+		
+		//Calculate percentClusterIlluminaFilter
+		double percentClusterForRun = (double)sumPercentClusterIlluminaFilter/nbLane;
+		double percentDB = ((PropertyValue<Double>)runData.treatments.get("ngsrg").results.get("default").get("percentClusterIlluminaFilter")).value;
+		Assert.assertEquals(percentClusterForRun, percentDB);
 	}
+	
+	
 }
 
 
