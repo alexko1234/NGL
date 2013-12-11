@@ -30,10 +30,10 @@ public class RulesAgendaFilter implements AgendaFilter{
 	public boolean accept(Activation activation) {
 		String s = (String) activation.getRule().getMetaData().get(metadataKey);
 		if (s!= null && s.equals(this.metadataValue)) {
-			Logger.debug("rule " + activation.getRule().getName() + " is activated ");
+			//Logger.debug("rule " + activation.getRule().getName() + " is activated ");
 			return true;
 		}
-		Logger.debug("rule " + activation.getRule().getName() + " is not activated ");
+		//Logger.debug("rule " + activation.getRule().getName() + " is not activated ");
 		return false;
 
 	}
