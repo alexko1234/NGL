@@ -1,8 +1,14 @@
 package controllers.migration;		
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import akka.actor.ActorRef;
+import akka.actor.Props;
+
+import com.typesafe.config.ConfigFactory;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.Valuation;
@@ -13,7 +19,11 @@ import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
 import net.vz.mongodb.jackson.JacksonDBCollection;
 import play.Logger;
+import play.libs.Akka;
 import play.mvc.Result;
+import rules.services.RulesActor;
+import rules.services.RulesMessage;
+import validation.ContextValidation;
 import controllers.CommonController;
 import controllers.migration.models.FileOld;
 import controllers.migration.models.LaneOld;
@@ -26,8 +36,15 @@ public class Migration extends CommonController {
 	private static final String RUN_ILLUMINA_BCK = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_BCK";
 	private static final String READSET_ILLUMINA_BCK = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK";
 	
+	private static final String RUN_ILLUMINA_BEFORE_RECALCUL = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_BEFORE_RECALCUL";
+	
+	private static ActorRef rulesActor = Akka.system().actorOf(new Props(RulesActor.class));
+	private static final String ruleStatRG="rg_1";
+	
 	
 	public static Result migration(){
+		
+		Logger.info("Start point of Migration");
 		
 		JacksonDBCollection<RunOld, String> runsCollBck = MongoDBDAO.getCollection(RUN_ILLUMINA_BCK, RunOld.class);
 		if(runsCollBck.count() == 0){
@@ -36,7 +53,7 @@ public class Migration extends CommonController {
 			List<RunOld> runs = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, RunOld.class).toList();
 			Logger.debug("migre "+runs.size()+" runs");
 			for(RunOld run : runs){
-				migreRun(run);				
+				migreRun(run);
 			}
 		
 		}else{
@@ -59,13 +76,22 @@ public class Migration extends CommonController {
 			Logger.info("Migration readset already execute !");
 		}
 		
+		//new add-on
+		backupRunBeforeRecalcul(); 
+		List<Run> runs = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class).toList();
+		Logger.debug("recalcul "+runs.size()+" runs");
+		for(Run run : runs){
+			statsRecalcul(run);
+		}
+		//end add-on
 		
 		check();
+		
 		Logger.info("Migration finish");
 		return ok("Migration Finish");
-		
 	}
 
+	
 	private static void migreReadSet(ReadSetOld readSet) {
 		Valuation valuation = new Valuation();
 		State state = new State();
@@ -123,7 +149,7 @@ public class Migration extends CommonController {
 		
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.is("code", run.code), 
-				DBUpdate.unset("stateCode").unset("valid").unset("validDate")  //.unset("instrumentUsed")
+				DBUpdate.unset("stateCode").unset("valid").unset("validDate") 
 				.set("valuation", valuation).set("state", state)
 				.set("projectCodes", projectCodes).set("sampleCodes", sampleCodes)
 				.set("instrumentUsed", instrumentUsed));
@@ -147,6 +173,13 @@ public class Migration extends CommonController {
 	private static void check() {
 		
 	}
+	
+	private static void statsRecalcul(Run run) {
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.add(run);
+		// Outside of an actor and if no reply is needed the second argument can be null
+		rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("rules.key"),ruleStatRG),null);
+	}
 
 	
 
@@ -157,8 +190,16 @@ public class Migration extends CommonController {
 		
 	}
 	
-	private static void backupReadSet() {
+	
+	private static void backupRunBeforeRecalcul() {
+		Logger.info("\tCopie "+InstanceConstants.RUN_ILLUMINA_COLL_NAME+" before recalculation start");
+		MongoDBDAO.save(RUN_ILLUMINA_BEFORE_RECALCUL, MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class).toList());
+		Logger.info("\tCopie "+RUN_ILLUMINA_BEFORE_RECALCUL+" end");
 		
+	}
+	
+	
+	private static void backupReadSet() {
 		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" start");		
 		MongoDBDAO.save(READSET_ILLUMINA_BCK, MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld.class).toList());
 		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" end");
