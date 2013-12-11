@@ -17,7 +17,7 @@ angular.module('comboListsServices', ['ngResource']).
 				 * Return the list of samples with name and code for one project
 				 */
 				getSamples : function(projectCode){
-					return $resource(jsRoutes.controllers.lists.api.Lists.samples(projectCode).url, {}, {
+					return $resource(jsRoutes.controllers.lists.api.Lists.samples().url, {"projectCode":projectCode}, {
 						query: {method:'GET', isArray:true}
 					});
 				},
