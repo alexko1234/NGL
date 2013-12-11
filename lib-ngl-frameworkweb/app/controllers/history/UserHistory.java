@@ -37,7 +37,7 @@ public class UserHistory extends Action.Simple{
 				body = rb.asJson().toString();
 			}
 			
-			params = Json.toJson(context.request().queryString())+ " , "+ body;
+			params = Json.toJson(context.request().queryString()).toString();
 			
 			action = context.request().toString();
 			Result res = null;
@@ -50,7 +50,7 @@ public class UserHistory extends Action.Simple{
 				
 				//after request
 				//ecriture de l'info
-				MongoDBDAO.save("UserHistory", new UserAction(login,params,action,timeRequest));
+				MongoDBDAO.save("UserHistory", new UserAction(login,params,body,action,timeRequest));
 			}else{
 				res = delegate.call(context);
 			}

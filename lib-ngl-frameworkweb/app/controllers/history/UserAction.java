@@ -17,7 +17,8 @@ import fr.cea.ig.DBObject;
 public class UserAction extends DBObject{
 	public String login;
 	public String action;
-	public String params;
+	public String queryString;
+	public String body;
 	public Date date;
 	public long timeRequest;
 	
@@ -26,16 +27,18 @@ public class UserAction extends DBObject{
 	//default constructor for mongodb
 	public UserAction(){
 		this.login = "";
-		this.params = "";
+		this.queryString = "";
+		this.body = "";
 		this.action = "";
 		this.timeRequest = 0;
 	    this.date = new Date();
 	    this.code = "";
 	}
 	
-	public UserAction(String varLogin,String varParams, String varAction, long varTimeRequest){
+	public UserAction(String varLogin,String varQueryString,String varBody, String varAction, long varTimeRequest){
 		this.login = varLogin;
-		this.params = varParams;
+		this.queryString = varQueryString;
+		this.body = varBody;
 		this.action = varAction;
 	    this.timeRequest = varTimeRequest;
 	    this.date = new Date();
