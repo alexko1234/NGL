@@ -30,6 +30,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import play.Logger;
+import play.Logger.ALogger;
 import validation.ContextValidation;
 
 /**
@@ -44,10 +45,13 @@ public class LimsCNGDAO {
 	private static final String CONTAINER_CATEGORY_CODE= "lane";
 	private static final String CONTAINER_STATE_CODE="A";
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
+	protected static final String PROJECT_STATE_CODE_DEFAULT = "IP";
 	protected static final String IMPORT_CATEGORY_CODE="sample-import";
 	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "default-sample-cng";
 	protected static final String SAMPLE_USED_TYPE_CODE = "default-sample-cng";	
 	protected static final String IMPORT_TYPE_CODE_DEFAULT = "default-import";
+	
+	protected ALogger logger =Logger.of(this.getClass().getName());
 	
 	
 	@Autowired
@@ -56,7 +60,13 @@ public class LimsCNGDAO {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);              
 	}
 
-
+	/**
+	 * 
+	 * @param contextError
+	 * @return
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
 	public List<Project> findProjectToCreate(final ContextValidation contextError) throws SQLException, DAOException {
 		
 		List<Project> results = this.jdbcTemplate.query("select * from v_project_tongl", new Object[]{}, new RowMapper<Project>() {
@@ -65,13 +75,15 @@ public class LimsCNGDAO {
 			public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Project project = new Project(rs.getString("code"), rs.getString("name").trim());
+				logger.debug("Project code :"+project.code);
+				
 				project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
 				
 				ProjectType projectType=null;
 				try {
 					projectType = ProjectType.find.findByCode(project.typeCode);
 				} catch (DAOException e) {
-					Logger.debug("",e);
+					logger.error("",e);
 					return null;
 				}
 				if( projectType==null ){
@@ -81,7 +93,7 @@ public class LimsCNGDAO {
 				
 				project.categoryCode=projectType.category.code;
 				
-				project.stateCode="IP";
+				project.stateCode=PROJECT_STATE_CODE_DEFAULT;
 				InstanceHelpers.updateTraceInformation(project.traceInformation);
 
 				// just one comment for one project
@@ -97,14 +109,21 @@ public class LimsCNGDAO {
 	
 
 	
-	
+	/**
+	 * 
+	 * @param rs
+	 * @param rowNum
+	 * @param contextError
+	 * @return
+	 * @throws SQLException
+	 */
 	public Sample commonSampleMapRow(ResultSet rs, int rowNum, ContextValidation contextError) throws SQLException {
 			
 			Sample sample = new Sample();
 			sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 
-			sample.code=rs.getString("code"); //barcode
-			Logger.debug("Sample code :"+sample.code);
+			sample.code=rs.getString("code");
+			logger.debug("Sample code :"+sample.code);
 			
 			String sampleTypeCode=SAMPLE_TYPE_CODE_DEFAULT;
 			
@@ -112,7 +131,7 @@ public class LimsCNGDAO {
 			try {
 				sampleType = SampleType.find.findByCode(sampleTypeCode);
 			} catch (DAOException e) {
-				Logger.debug("",e);
+				logger.error("",e);
 				return null;
 			}
 			if ( sampleType==null ) {
@@ -125,19 +144,19 @@ public class LimsCNGDAO {
 		
 			sample.projectCodes=new ArrayList<String>();
 			if (rs.getString("project") != null) {
-				sample.projectCodes.add(rs.getString("project")); // t_project.name
+				sample.projectCodes.add(rs.getString("project"));
 			}
 			else {
 				sample.projectCodes.add(" "); 
 			}
 
-			sample.name=rs.getString("name"); // t_sample.barcode
+			sample.name=rs.getString("name");
 			
-			sample.referenceCollab= rs.getString("ref_collab"); // t_individual_id.name
+			sample.referenceCollab= rs.getString("ref_collab");
 			
-			sample.taxonCode=rs.getString("taxon_code"); // t_org.ncbi_taxon_id
+			sample.taxonCode=rs.getString("taxon_code");
 			
-			sample.comments=new ArrayList<Comment>(); // comments
+			sample.comments=new ArrayList<Comment>();
 			
 			if (rs.getString("comments") != null) {
 				sample.comments.add(new Comment(rs.getString("comments")));
@@ -153,11 +172,25 @@ public class LimsCNGDAO {
 			return sample;
 	}
 	
+	/**
+	 * 
+	 * @param contextError
+	 * @return
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
 	public List<Sample> findSampleToCreate(final ContextValidation contextError) throws SQLException, DAOException {
 		return findSampleToCreate(contextError, null);
-		
 	}
 	
+	/**
+	 * 
+	 * @param contextError
+	 * @param sampleCode
+	 * @return
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
 	public List<Sample> findSampleToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {
 		
 		List<Sample> results = null;
@@ -258,7 +291,7 @@ public class LimsCNGDAO {
 				container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 				
 				container.code=rs.getString("code");
-				Logger.debug("Container :"+rs.getString("code"));
+				logger.debug("Container code :"+container.code);
 				
 				container.categoryCode=CONTAINER_CATEGORY_CODE;
 				
@@ -268,7 +301,7 @@ public class LimsCNGDAO {
 					container.comments.add(new Comment(rs.getString("comment")));
 				}
 				
-				container.stateCode=CONTAINER_STATE_CODE; // required
+				container.stateCode=CONTAINER_STATE_CODE;
 				
 				container.valid=null;
 				
@@ -277,7 +310,7 @@ public class LimsCNGDAO {
 					container.support=ContainerSupportHelper.getContainerSupport("lane", rs.getInt("nb_container"),rs.getString("code_support"),"1",rs.getString("column")); 
 				}
 				catch(DAOException e) {
-					Logger.info("Can't get container support !"); 
+					logger.error("Can't get container support !"); 
 				}
 				
 				container.properties= new HashMap<String, PropertyValue>();
@@ -299,7 +332,7 @@ public class LimsCNGDAO {
 					try {
 						sampleType = SampleType.find.findByCode(sampleTypeCode);
 					} catch (DAOException e) {
-						Logger.debug("",e);
+						logger.error("",e);
 						return null;
 					}
 					if( sampleType==null ){
@@ -316,7 +349,7 @@ public class LimsCNGDAO {
 						content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
 					}
 					else {
-						content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparaison, suppress it at the end of the function...
+						content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppress it at the end of the function...
 					}
 					
 					if(rs.getString("percent_per_lane")!=null) { 
@@ -333,8 +366,8 @@ public class LimsCNGDAO {
 				container.sampleCodes=new ArrayList<String>();
 				container.sampleCodes.add(rs.getString("code_sample"));
 			
-				container.fromPurifingCode = null; // not required				
-				container.resolutionCode = null; // not required
+				container.fromPurifingCode = null;				
+				container.resolutionCode = null;
 
 				return container;
 			}
@@ -366,7 +399,6 @@ public class LimsCNGDAO {
 						results.get(pos).sampleCodes.add( results.get(pos+x).sampleCodes.get(0) );
 						
 						createContent(results, pos, pos+x); 
-						
 						insertContent = true;
 					}
 				}
@@ -404,7 +436,14 @@ public class LimsCNGDAO {
 		return results;
 	}
 	
-	
+	/**
+	 * 
+	 * @param results
+	 * @param posCurrent
+	 * @param posNext
+	 * @return
+	 * @throws DAOException
+	 */
 	private List<Container>  createContent(List<Container> results, int posCurrent, int posNext) throws DAOException{
 		Content content = new Content();
 		content.sampleUsed=new SampleUsed();
@@ -414,7 +453,6 @@ public class LimsCNGDAO {
 		sampleType = SampleType.find.findByCode(SAMPLE_USED_TYPE_CODE);	
 		content.sampleUsed.typeCode = sampleType.code;
 		content.sampleUsed.categoryCode = sampleType.category.code;
-		
 		
 		content.properties = new HashMap<String, PropertyValue>();
 		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
@@ -429,48 +467,58 @@ public class LimsCNGDAO {
 
 	
 	
-	
+	/**
+	 * 
+	 * @param projects
+	 * @param contextError
+	 * @throws DAOException
+	 */
 	public void updateLimsProjects(List<Project> projects, ContextValidation contextError) throws DAOException {
 		contextError.addKeyToRootKeyName("updateImportDate");
 		
 		String sql = "UPDATE t_project SET nglimport_date = ? WHERE name = ?";
-		
 		List<Object[]> parameters = new ArrayList<Object[]>();
 		for (Project project : projects) {
 	        parameters.add(new Object[] {new Date(), project.code}); 
 		}
-		
 		this.jdbcTemplate.batchUpdate(sql, parameters);  
 		
 		contextError.removeKeyFromRootKeyName("updateImportDate");
 	}
 	
-	
+	/**
+	 * 
+	 * @param samples
+	 * @param contextError
+	 * @throws DAOException
+	 */
 	public void updateLimsSamples(List<Sample> samples, ContextValidation contextError) throws DAOException {
 		contextError.addKeyToRootKeyName("updateImportDate");
 		
 		String sql = "UPDATE t_sample SET nglimport_date = ? WHERE stock_barcode = ?";
-		
 		List<Object[]> parameters = new ArrayList<Object[]>();
 		for (Sample sample : samples) {
 	        parameters.add(new Object[] {new Date(), sample.code}); 
 		}
-		
 		this.jdbcTemplate.batchUpdate(sql, parameters);  
 		
 		contextError.removeKeyFromRootKeyName("updateImportDate");
 	}
 	
+	/**
+	 * 
+	 * @param containers
+	 * @param contextError
+	 * @throws DAOException
+	 */
 	public void updateLimsContainers(List<Container> containers, ContextValidation contextError) throws DAOException {
 		contextError.addKeyToRootKeyName("updateImportDate");
 		
 		String sql = "UPDATE t_lane SET nglimport_date = ? WHERE id = ?";
-		
 		List<Object[]> parameters = new ArrayList<Object[]>();
 		for (Container container : containers) {
 	        parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
 		}
-		
 		this.jdbcTemplate.batchUpdate(sql, parameters);  
 		
 		contextError.removeKeyFromRootKeyName("updateImportDate");

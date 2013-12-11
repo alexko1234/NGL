@@ -2,13 +2,11 @@ package services.instance.container;
 
 import java.sql.SQLException;
 import java.util.List;
-
 import models.laboratory.container.instance.Container;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNG;
 
@@ -22,7 +20,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 	@Override
 	public void runImport() throws SQLException, DAOException {
 		
-		Logger.info("Start loading samples ..."); 
+		logger.info("Start loading samples ..."); 
 		
 		List<Sample> samples = limsServices.findSampleToCreate(contextError, null) ;
 		
@@ -31,10 +29,10 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 			
 		limsServices.updateLimsSamples(samps, contextError);
 		
-		Logger.info("End of load samples !");
+		logger.info("End of load samples !");
 		
 		
-		Logger.info("Start loading containers ..."); 
+		logger.info("Start loading containers ..."); 
 		
 		List<Container> containers = limsServices.findContainerToCreate(contextError) ;
 
@@ -42,7 +40,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		
 		limsServices.updateLimsContainers(ctrs, contextError);
 		
-		Logger.info("End of load containers !"); 
+		logger.info("End of load containers !"); 
 	}
 
 }

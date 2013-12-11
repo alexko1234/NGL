@@ -138,7 +138,7 @@ public class LimsCNSDAO{
 				try {
 					sampleType = SampleType.find.findByCode(sampleTypeCode);
 				} catch (DAOException e) {
-					Logger.debug("",e);
+					Logger.error(e.toString());
 					return null;
 				}
 
