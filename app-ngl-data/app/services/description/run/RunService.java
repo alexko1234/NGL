@@ -7,7 +7,7 @@ import java.util.Map;
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.Valuation;
+import models.laboratory.common.description.ValuationCriteria;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.description.RunCategory;
 import models.laboratory.run.description.RunType;
@@ -33,7 +33,7 @@ public class RunService {
 	
 	public static void saveReadSetType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ReadSetType> l = new ArrayList<ReadSetType>();
-		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions(), getValuation("criteria-default","criteria-high","criteria-low"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions(), getValuationCriterias("criteria-default","criteria-high","criteria-low"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
 		DAOHelpers.saveModels(ReadSetType.class, l, errors);
 	}
 
@@ -45,9 +45,9 @@ public class RunService {
 	
 	public static void saveRunType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunType> l = new ArrayList<RunType>();
-		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), null, getValuation("criteria-default","criteria-high","criteria-low"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
-		l.add(DescriptionFactory.newRunType("RHS2500","RHS2500", 8, RunCategory.find.findByCode("illumina"), null, getValuation("criteria-default","criteria-high","criteria-low"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
-		l.add(DescriptionFactory.newRunType("RHS2500R","RHS2500R", 2, RunCategory.find.findByCode("illumina"), null, getValuation("criteria-default","criteria-high","criteria-low"),  DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), null, getValuationCriterias("criteria-default","criteria-high","criteria-low"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newRunType("RHS2500","RHS2500", 8, RunCategory.find.findByCode("illumina"), null, getValuationCriterias("criteria-default","criteria-high","criteria-low"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newRunType("RHS2500R","RHS2500R", 2, RunCategory.find.findByCode("illumina"), null, getValuationCriterias("criteria-default","criteria-high","criteria-low"),  DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		DAOHelpers.saveModels(RunType.class, l, errors);
 	}
 	
@@ -58,12 +58,12 @@ public class RunService {
 		return propertyDefinitions;
 	}
 	
-	private static List<Valuation> getValuation(String...codes) throws DAOException {
-		List<Valuation> valuations = new ArrayList<Valuation>();
+	private static List<ValuationCriteria> getValuationCriterias(String...codes) throws DAOException {
+		List<ValuationCriteria> valuationCriterias = new ArrayList<ValuationCriteria>();
 		for(String code : codes){
-			valuations.add(Valuation.find.findByCode(code));
+			valuationCriterias.add(ValuationCriteria.find.findByCode(code));
 		}	
-		return valuations;
+		return valuationCriterias;
 	}
 
 }

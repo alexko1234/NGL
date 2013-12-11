@@ -15,7 +15,7 @@ public class Valuation implements IValidation {
     public String user;
     public List<String> resolutionCodes;
     
-    public String valuationCode;
+    public String criteriaCode;
     
 	@Override
 	public void validate(ContextValidation contextValidation) {
@@ -28,7 +28,7 @@ public class Valuation implements IValidation {
 		CommonValidationHelper.validateResolutionCodes(resolutionCodes, contextValidation);
 		//TODO : resolution si different de zero
 		
-		CommonValidationHelper.validateValuationCode(valuationCode, contextValidation); 
+		CommonValidationHelper.validateCriteriaCode(criteriaCode, contextValidation); 
 		
 	}
 

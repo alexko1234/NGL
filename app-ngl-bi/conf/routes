@@ -126,7 +126,7 @@ GET		/api/commons/types							controllers.commons.api.CommonInfoTypes.list()
 
 #list
 GET		/api/lists/resolutions				controllers.lists.api.Lists.resolutions()
-GET		/api/lists/valuationcodes		controllers.lists.api.Lists.valuationCodes()
+GET		/api/lists/valuation-criterias		controllers.lists.api.Lists.valuationCriterias()
 GET		/api/lists/projects					controllers.lists.api.Lists.projects()
 GET		/api/lists/samples					controllers.lists.api.Lists.samples()
 

@@ -212,7 +212,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
 			
 			$scope.lists.refresh.resolutions({typeCode:$scope.run.typeCode});
-			$scope.lists.refresh.valuationCodes({typeCode:$scope.run.typeCode});
+			$scope.lists.refresh.valuationCriterias({typeCode:$scope.run.typeCode});
 			
 			if(angular.isDefined($scope.run.lanes[0].treatments)){
 				$scope.treatments.init($scope.run.lanes[0].treatments, jsRoutes.controllers.runs.tpl.Runs.laneTreatments);				

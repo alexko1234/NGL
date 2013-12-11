@@ -12,7 +12,7 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
-import models.laboratory.common.description.Valuation;
+import models.laboratory.common.description.ValuationCriteria;
 import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;
@@ -77,9 +77,9 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			commonInfoType.institutes = institutes;
 			
 			//Get Valuation
-			ValuationDAO valuationDAO = Spring.getBeanOfType(ValuationDAO.class);
-			List<Valuation> valuations = valuationDAO.findByCommonInfoType(commonInfoType.id);
-			commonInfoType.valuations = valuations;
+			ValuationCriteriaDAO valuationCriteriaDAO = Spring.getBeanOfType(ValuationCriteriaDAO.class);
+			List<ValuationCriteria> valuationCriterias = valuationCriteriaDAO.findByCommonInfoType(commonInfoType.id);
+			commonInfoType.criterias = valuationCriterias;
 
 			return commonInfoType;
 	}

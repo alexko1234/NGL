@@ -14,7 +14,7 @@ import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.ResolutionCategory;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
-import models.laboratory.common.description.Valuation;
+import models.laboratory.common.description.ValuationCriteria;
 import models.laboratory.common.description.Value;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -360,7 +360,7 @@ public class DescriptionFactory {
 	}
 	
 	
-	public static ReadSetType newReadSetType(String name, String code, List<PropertyDefinition> propertiesDefinitions, List<Valuation> valuations, List<Institute> institutes) throws DAOException {
+	public static ReadSetType newReadSetType(String name, String code, List<PropertyDefinition> propertiesDefinitions, List<ValuationCriteria> valCriterias, List<Institute> institutes) throws DAOException {
 		ReadSetType rt = new ReadSetType();
 		rt.code =code.toLowerCase();
 		rt.name =name;
@@ -370,11 +370,11 @@ public class DescriptionFactory {
 		rt.institutes = institutes; 
 		rt.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.ReadSet.name());
 		
-		rt.valuations = valuations;
+		rt.criterias = valCriterias;
 		return rt;
 	}
 	
-	public static RunType newRunType(String name, String code, Integer nbLanes, RunCategory category, List<PropertyDefinition> propertiesDefinitions, List<Valuation> valuations, List<Institute> institutes) throws DAOException {
+	public static RunType newRunType(String name, String code, Integer nbLanes, RunCategory category, List<PropertyDefinition> propertiesDefinitions, List<ValuationCriteria> valCriterias, List<Institute> institutes) throws DAOException {
 		RunType rt = new RunType();
 		rt.code = code;
 		rt.name = name;
@@ -386,7 +386,7 @@ public class DescriptionFactory {
 		rt.institutes = institutes;
 		rt.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Run.name());
 		
-		rt.valuations = valuations;
+		rt.criterias = valCriterias;
 		return rt;
 	}
 	
@@ -429,16 +429,12 @@ public class DescriptionFactory {
 		return states;
 	}
 
-	public static Valuation newValuation(String name, String code, String path) throws DAOException {
-		Valuation v = new Valuation(); 
+	public static ValuationCriteria newValuationCriteria(String name, String code, String path) throws DAOException {
+		ValuationCriteria v = new ValuationCriteria(); 
 		v.code = code;
 		v.name = name;
 		v.path = path;
 		return v;
 	}
-	
-	
-
-	
 
 }

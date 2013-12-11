@@ -11,13 +11,12 @@ import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
-import models.laboratory.common.description.Valuation;
+import models.laboratory.common.description.ValuationCriteria;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
 import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import play.api.modules.spring.Spring;
@@ -55,7 +54,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		insertResolution(cit.resolutions, cit.id, false);
 		insertProperties(cit.propertiesDefinitions, cit.id, false);
 		insertInstitutes(cit.institutes, cit.id, false);
-		insertValuations(cit.valuations, cit.id, false);
+		insertValuationCriterias(cit.criterias, cit.id, false);
 		
 		return cit.id;
 	}
@@ -76,7 +75,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		insertResolution(cit.resolutions, cit.id, true);
 		insertProperties(cit.propertiesDefinitions, cit.id, true);
 		insertInstitutes(cit.institutes, cit.id, true);
-		insertValuations(cit.valuations, cit.id, true);
+		insertValuationCriterias(cit.criterias, cit.id, true);
 	}
 
 	
@@ -90,8 +89,8 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		removeProperties(commonInfoType.id);
 		//Delete institutes
 		removeInstitutes(commonInfoType.id);
-		//Delete evaluations
-		removeValuations(commonInfoType.id);
+		//Delete criteria
+		removeValuationCriterias(commonInfoType.id);
 		
 		super.remove(commonInfoType);
 	}
@@ -128,9 +127,9 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		//Delete common_info_type
 	}
 	
-	private void removeValuations(Long citId) {
-		String sql = "DELETE FROM valuation_common_info_type WHERE fk_common_info_type=?";
-		jdbcTemplate.update(sql, citId);
+	private void removeValuationCriterias(Long citId) {
+		String sqlCriteria = "DELETE FROM valuation_criteria_common_info_type WHERE fk_common_info_type=?";
+		jdbcTemplate.update(sqlCriteria, citId);
 	}
 	
 	
@@ -196,18 +195,18 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		}
 	}
 	
-	private void insertValuations(List<Valuation> valuations, Long citId, boolean deleteBefore) throws DAOException {
+	private void insertValuationCriterias(List<ValuationCriteria> criterias, Long citId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
-			removeValuations(citId);
+			removeValuationCriterias(citId);
 		}
-		//Add evaluation list		
-		if(valuations!=null && valuations.size()>0){
-			String sql = "INSERT INTO valuation_common_info_type (fk_common_info_type, fk_valuation) VALUES(?,?)";
-			for(Valuation valuation : valuations){
-				if(valuation == null || valuation.id == null ){
-					throw new DAOException("valuation is mandatory");
+		//Add criteria list		
+		if(criterias!=null && criterias.size()>0){
+			String sql = "INSERT INTO valuation_criteria_common_info_type (fk_common_info_type, fk_valuation_criteria) VALUES(?,?)";
+			for(ValuationCriteria criteria : criterias){
+				if(criteria == null || criteria.id == null ){
+					throw new DAOException("criteria is mandatory");
 				}
-				jdbcTemplate.update(sql, citId, valuation.id);
+				jdbcTemplate.update(sql, citId, criteria.id);
 			}
 		}
 	}
@@ -246,11 +245,9 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 	public List<CommonInfoType> findByObjectTypeCode(CODE objectTypeCode) {
 		String sql = sqlCommon+
 				" WHERE o.code=? order by name";		
-
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
 		return commonInfoTypeMappingQuery.execute(objectTypeCode.name());
 	}
 
-	
 
 }

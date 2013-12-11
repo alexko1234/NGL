@@ -8,7 +8,6 @@ import java.util.List;
 import play.Logger;
 
 import net.vz.mongodb.jackson.DBQuery;
-
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
@@ -24,7 +23,6 @@ import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 
 public class CommonValidationHelper {
 	public static final String FIELD_CODE = "code";
@@ -384,16 +382,16 @@ public class CommonValidationHelper {
 		}
 	}
 	
-	public static void validateValuationCode(String valuationCode, ContextValidation contextValidation) {
+	public static void validateCriteriaCode(String criteriaCode, ContextValidation contextValidation) {
 			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
-			validateValuationCode(typeCode, valuationCode, contextValidation);		
+			validateCriteriaCode(typeCode, criteriaCode, contextValidation);		
 	}
 
-	public static void validateValuationCode(String typeCode, String valuationCode, ContextValidation contextValidation) {
+	public static void validateCriteriaCode(String typeCode, String criteriaCode, ContextValidation contextValidation) {
 		try {
-			if (null != valuationCode) {
-				if (!models.laboratory.common.description.Valuation.find.isCodeExistForTypeCode(valuationCode, typeCode)) {
-					contextValidation.addErrors("valuationCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, valuationCode);
+			if (null != criteriaCode) {
+				if (!models.laboratory.common.description.ValuationCriteria.find.isCodeExistForTypeCode(criteriaCode, typeCode)) {
+					contextValidation.addErrors("criteriaCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, criteriaCode);
 				}	
 			}
 		} catch(DAOException e) {

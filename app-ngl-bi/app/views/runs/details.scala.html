@@ -57,7 +57,7 @@
 				<dd>
 				<div ng-switch on="isEditMode()">
 					<div ng-switch-when="false" ng-model="run.valuation.valuationCode" codes="valuation"/>
-					<div ng-switch-when="true"><select class="span12" ng-model="run.valuation.valuationCode" title="" ng-options="valid.code as valid.name for valid in lists.getValuationCodes()" bs-select></select></div>
+					<div ng-switch-when="true"><select class="span12" ng-model="run.valuation.valuationCode" title="" ng-options="valid.code as valid.name for valid in lists.getvaluationCriteria()" bs-select></select></div>
 				</dd>
 			</dl>
 			<dl class="dl-horizontal">

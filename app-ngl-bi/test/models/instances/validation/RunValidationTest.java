@@ -24,7 +24,6 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.InstrumentUsed;
@@ -32,10 +31,8 @@ import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
-import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.AfterClass;
@@ -1242,7 +1239,7 @@ public class RunValidationTest extends AbstractTests {
 				run.typeCode = "RHS2000";
 				
 				Valuation v = new Valuation();
-				v.valuationCode = "criteria-low";
+				v.criteriaCode = "criteria-low";
 				v.date = new Date();
 				v.resolutionCodes = null;
 				v.user = "dnoisett";
