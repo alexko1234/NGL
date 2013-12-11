@@ -49,7 +49,7 @@ public class ExperimentType extends CommonInfoType{
 			return ((ExperimentTypeDAO)getInstance()).findPreviousExperimentTypeForAnExperimentTypeCode(code);
 		}
 		
-		public List<ListObject> findByCategoryCode(String categoryCode) throws DAOException{
+		public List<ExperimentType> findByCategoryCode(String categoryCode) throws DAOException{
 			return ((ExperimentTypeDAO)getInstance()).findByCategoryCode(categoryCode);
 		}
 

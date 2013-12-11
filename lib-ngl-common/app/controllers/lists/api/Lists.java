@@ -31,8 +31,6 @@ import play.mvc.Results;
 
 import com.mongodb.BasicDBObject;
 
-import controllers.authorisation.Permission;
-
 import fr.cea.ig.MongoDBDAO;
 
 public class Lists extends Controller{
@@ -62,8 +60,12 @@ public class Lists extends Controller{
 
 	public static Result experimentTypesByCategory(String categoryCode) {
 		try{
-			List<ListObject> exp=ExperimentType.find.findByCategoryCode(categoryCode);
-			return Results.ok(Json.toJson(exp));
+			List<ExperimentType> exp=ExperimentType.find.findByCategoryCode(categoryCode);
+			List<ListObject> lo = new ArrayList<ListObject>();
+			for(ExperimentType et:exp){
+				lo.add(new ListObject(et.code, et.name));
+			}
+			return Results.ok(Json.toJson(lo));
 		}catch (DAOException e) {
 			e.printStackTrace();
 			return  Results.internalServerError(e.getMessage());

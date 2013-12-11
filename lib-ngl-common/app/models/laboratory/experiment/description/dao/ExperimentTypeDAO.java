@@ -180,12 +180,12 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		return initializeMapping(sql, new SqlParameter("p.fk_process_type", Type.LONG)).execute(id);
 	}
 
-	public List<ListObject> findByCategoryCode(String categoryCode){
+	public List<ExperimentType> findByCategoryCode(String categoryCode){
 		String sql = "SELECT t.code AS code, t.name AS name "+
 				 sqlCommonFrom+
 				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 				+"where ec.code='"+categoryCode+"'";
-		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper);
 	}
 
