@@ -61,7 +61,8 @@ public class RunValidationTest extends AbstractTests {
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException { 
 		// to correct a bug, just here
 		// running(fakeApplication(fakeConfiguration()), new Runnable() {
-		//       public void run() {		    	   
+		//       public void run() {	
+		/*
 	   		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 			for (Container container : containers) {
 				if (container.support.barCode.equals("containerName")) {
@@ -81,7 +82,7 @@ public class RunValidationTest extends AbstractTests {
 					MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
 				}
 			}
-				
+		*/		
 		   Container c = new Container();
 		   c.code ="containerTest1";
 		   c.support = new ContainerSupport(); 
