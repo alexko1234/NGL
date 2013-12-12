@@ -32,6 +32,7 @@ import fr.cea.ig.DBObject;
 public class Run extends DBObject implements IValidation {
         
 	public String typeCode;
+	public Date sequencingStartDate;
 	
 	public State state;
 	
@@ -58,6 +59,7 @@ public class Run extends DBObject implements IValidation {
     	RunValidationHelper.validateId(this, contextValidation);
     	RunValidationHelper.validateCode(this, InstanceConstants.RUN_ILLUMINA_COLL_NAME, contextValidation);
     	RunValidationHelper.validateRunType(this.typeCode, this.properties, contextValidation);
+    	//TODO ValidationHelper.required(contextValidation, sequencingStartDate, "sequencingStartDate");
     	
     	RunValidationHelper.validateState(this.typeCode, this.state, contextValidation);
     	RunValidationHelper.validateValuation(this.typeCode, this.valuation, contextValidation);

@@ -71,16 +71,20 @@
 				<dd>{{run.typeCode}}</dd>
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.nb_cluster_total")</dt>
+				<dt>@Messages("runs.nbClusterTotal")</dt>
 				<dd>{{run.treatments.ngsrg["default"].nbClusterTotal.value |
 					number}}</dd>
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.nb_cluster_illumina")</dt>
+				<dt>@Messages("runs.percentClusterIlluminaFilter")</dt>
+				<dd>{{run.treatments.ngsrg["default"].percentClusterIlluminaFilter.value	| number}}</dd>
+			</dl>
+			<dl class="dl-horizontal">
+				<dt>@Messages("runs.nbClusterIlluminaFilter")</dt>
 				<dd>{{run.treatments.ngsrg["default"].nbClusterIlluminaFilter.value	| number}}</dd>
 			</dl>
 			<dl class="dl-horizontal">
-				<dt>@Messages("runs.nb_bases_en_gb")</dt>
+				<dt>@Messages("runs.nbBase")</dt>
 				<dd>{{run.treatments.ngsrg["default"].nbBase.value | number}}</dd>
 			</dl>
 

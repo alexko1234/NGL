@@ -148,11 +148,18 @@ public class ReadSets extends CommonController{
 	public static Result save(){
 		
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
-		ReadSet readsetValue = filledForm.get();
+		ReadSet readSetInput = filledForm.get();
 		
-		if (null == readsetValue._id) { 
-			readsetValue.traceInformation = new TraceInformation();
-			readsetValue.traceInformation.setTraceInformation("ngsrg");
+		if (null == readSetInput._id) { 
+			readSetInput.traceInformation = new TraceInformation();
+			readSetInput.traceInformation.setTraceInformation("ngsrg");
+			
+			if(null != readSetInput.state) {
+				//TODO PUSH state.code = "N"
+				readSetInput.state.user = getCurrentUser();
+				readSetInput.state.date = new Date();		
+			}
+			
 		} else {
 			return badRequest("use PUT method to update the run");
 		}
@@ -160,24 +167,24 @@ public class ReadSets extends CommonController{
 		
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		ctxVal.setCreationMode();
-		readsetValue.validate(ctxVal);	
+		readSetInput.validate(ctxVal);	
 		
 		if (!ctxVal.hasErrors()) {
-			readsetValue = MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readsetValue);
+			readSetInput = MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSetInput);
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-					DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.is("lanes.number", readsetValue.laneNumber)), 
-					DBUpdate.push("lanes.$.readSetCodes", readsetValue.code));	
+					DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.is("lanes.number", readSetInput.laneNumber)), 
+					DBUpdate.push("lanes.$.readSetCodes", readSetInput.code));	
 			
 			//To avoid "double" values
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-					DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.notIn("projectCodes", readsetValue.projectCode)), 
-					DBUpdate.push("projectCodes", readsetValue.projectCode));
+					DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("projectCodes", readSetInput.projectCode)), 
+					DBUpdate.push("projectCodes", readSetInput.projectCode));
 					
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-					DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.notIn("sampleCodes", readsetValue.sampleCode)), 
-					DBUpdate.push("sampleCodes", readsetValue.sampleCode));
+					DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("sampleCodes", readSetInput.sampleCode)), 
+					DBUpdate.push("sampleCodes", readSetInput.sampleCode));
 			
-			return ok(Json.toJson(readsetValue));
+			return ok(Json.toJson(readSetInput));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
 		}
@@ -192,27 +199,32 @@ public class ReadSets extends CommonController{
 		}
 		
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
-		ReadSet readsetValue = filledForm.get();
-		if (readsetValue.code.equals(readSetCode)) {
-			if(null != readsetValue.traceInformation){
-				readsetValue.traceInformation.setTraceInformation("ngsrg");
+		ReadSet readSetInput = filledForm.get();
+		if (readSetInput.code.equals(readSetCode)) {
+			if(null != readSetInput.traceInformation){
+				readSetInput.traceInformation.setTraceInformation("ngsrg");
 			}else{
 				Logger.error("traceInformation is null !!");
 			}
+			
+			if(!readSet.state.code.equals(readSetInput.state.code)){
+				return badRequest("you cannot change the state code. Please used the state url ! ");
+			}
+			
 			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
 			ctxVal.setUpdateMode();
-			readsetValue.validate(ctxVal);
+			readSetInput.validate(ctxVal);
 			
 			if (!ctxVal.hasErrors()) {
-				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readsetValue);
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSetInput);
 				
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-						DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.notIn("projectCodes", readsetValue.projectCode)), 
-						DBUpdate.push("projectCodes", readsetValue.projectCode));
+						DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("projectCodes", readSetInput.projectCode)), 
+						DBUpdate.push("projectCodes", readSetInput.projectCode));
 						
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-						DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.notIn("sampleCodes", readsetValue.sampleCode)), 
-						DBUpdate.push("sampleCodes", readsetValue.sampleCode));
+						DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("sampleCodes", readSetInput.sampleCode)), 
+						DBUpdate.push("sampleCodes", readSetInput.sampleCode));
 				
 				return ok(Json.toJson(filledForm.get()));
 			}else {

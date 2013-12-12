@@ -1,8 +1,7 @@
-@(isForm: Boolean)
+@(isNotValuation: Boolean)
 
 <div ng-init="init()"> 
 <div class="datatable" datatable="datatable.getConfig()">
-	@if(isForm) {
 		<div id="datatableFormConfiguration">
 			<form class="well well-small form-inline" ng-controller="SearchFormCtrl" ng-init="init()">
 				<div class="row-fluid">
@@ -12,8 +11,9 @@
 				<input type="date" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
 				</div>
 				<div class="row-fluid">
-				
-				<select ng-model="form.stateCodes" multiple title="@Messages("search.placeholder.states")" ng-options="state.code as state.name for state in lists.getStates()" bs-select></select>			
+				@if(isNotValuation) {
+					<select ng-model="form.stateCodes" multiple title="@Messages("search.placeholder.states")" ng-options="state.code as state.name for state in lists.getStates()" bs-select></select>			
+				}
 				<select ng-model="form.productionValidCode" title="@Messages("search.placeholder.productionValid")" ng-options="valid.code as valid.name for valid in lists.getValuations()" bs-select></select>
 				<select ng-model="form.bioinformaticValidCode" title="@Messages("search.placeholder.bioinformaticValid")" ng-options="valid.code as valid.name for valid in lists.getValuations()" bs-select></select>
 				
@@ -28,7 +28,6 @@
 				
 			</form>
 		</div>
-	}
 </div>
 </div>
 

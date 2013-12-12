@@ -81,7 +81,9 @@ public class Migration extends CommonController {
 		List<Run> runs = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class).toList();
 		Logger.debug("recalcul "+runs.size()+" runs");
 		for(Run run : runs){
-			statsRecalcul(run);
+			if("F".equals(run.state.code)){
+				statsRecalcul(run);
+			}
 		}
 		//end add-on
 		

@@ -30,6 +30,9 @@ public class ReadSet extends DBObject implements IValidation{
 	public State state;
 	
 	public String runCode;
+	public String runTypeCode;
+	public Date runSequencingStartDate;
+	
 	public Integer laneNumber;
 	public Boolean dispatch = Boolean.FALSE;
 	public String sampleCode; //nom de l'ind / ech
@@ -74,6 +77,7 @@ public class ReadSet extends DBObject implements IValidation{
 		ReadSetValidationHelper.validateCode(this, InstanceConstants.READSET_ILLUMINA_COLL_NAME, contextValidation);
 		ReadSetValidationHelper.validateReadSetType(this.typeCode, this.properties, contextValidation);
 		ReadSetValidationHelper.validateState(this.typeCode, this.state, contextValidation);
+		//TODO validation runTypeCode et runSequencingStartDate
 		//TODO passage de la mauvaise cle dans le message d'erreur
 		ReadSetValidationHelper.validateValuation(this.typeCode, this.bioinformaticValuation, contextValidation);
 		ReadSetValidationHelper.validateValuation(this.typeCode, this.productionValuation, contextValidation);

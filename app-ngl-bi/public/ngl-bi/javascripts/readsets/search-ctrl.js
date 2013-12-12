@@ -108,6 +108,11 @@ function SearchFormCtrl($scope, $filter, lists){
 		if(form.toDate)form.toDate = moment(form.toDate, Messages("date.format").toUpperCase()).valueOf();	
 		if(form.projectCodes) form.projectCodes = form.projectCodes.split(',')
 		if(form.sampleCodes) form.sampleCodes = form.sampleCodes.split(',')
+		
+		if($scope.isHomePage('valuation')){
+			form.stateCodes = ["IW-V","IP-V"];
+		}
+		
 		$scope.datatable.search(form);
 	}
 	
@@ -121,6 +126,7 @@ function SearchFormCtrl($scope, $filter, lists){
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.states({objectTypeCode:"ReadSet"});		
 	}
+	
 	
 };
 SearchFormCtrl.$inject = ['$scope', '$filter', 'lists'];
@@ -175,6 +181,12 @@ function SearchStateCtrl($scope, datatable, lists) {
 			edit : {
 				active:true,
 				columnMode:true		    	
+			},
+			show:{
+				active:true,
+				add :function(line){
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.get(line.code).url,remove:true});
+				}
 			},
 			save : {
 				active:true,

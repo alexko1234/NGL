@@ -69,9 +69,10 @@ runs.valuation.userdate = Evalué par {0} le {1}
 runs.valuation.criteria = Critères
 runs.valuation.valid = Valide ?
 
-runs.nb_cluster_total=Nb Clusters (total)
-runs.nb_cluster_illumina=Nb Clusters filt. (total)
-runs.nb_bases_en_gb=Nb Bases (total)
+runs.nbClusterTotal=Nb Clusters (total)
+runs.percentClusterIlluminaFilter=% Clusters filt. (moyenne)
+runs.nbClusterIlluminaFilter=Nb Clusters filt. (total)
+runs.nbClusterIlluminaFilter=Nb Bases (total)
 
 #runs - main
 runs.creationdate=Date de Création

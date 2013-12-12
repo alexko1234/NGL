@@ -146,15 +146,16 @@ public class Runs extends CommonController {
 	//@Permission(value={"creation_update_run_lane"})
 	public static Result save() {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
-		Run runValue = filledForm.get();
+		Run runInput = filledForm.get();
 
-		if (null == runValue._id) { 
-			runValue.traceInformation = new TraceInformation();
-			runValue.traceInformation.setTraceInformation(getCurrentUser());
+		if (null == runInput._id) { 
+			runInput.traceInformation = new TraceInformation();
+			runInput.traceInformation.setTraceInformation(getCurrentUser());
 			
-			if(null != runValue.state){
-				runValue.state.user = getCurrentUser();
-				runValue.state.date = new Date();		
+			if(null != runInput.state) {
+				//TODO PUSH state.code = "N"
+				runInput.state.user = getCurrentUser();
+				runInput.state.date = new Date();		
 			}
 		} else {
 			return badRequest("use PUT method to update the readset");
@@ -162,20 +163,11 @@ public class Runs extends CommonController {
 
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
 		ctxVal.setCreationMode();
-		runValue.validate(ctxVal);
+		runInput.validate(ctxVal);
 
 		if (!ctxVal.hasErrors()) {
-			runValue = MongoDBDAO.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runValue);
-			
-			//Historical management
-			//if we want the current state in the historical 
-			/*
-			if (runValue.state.historical == null || runValue.state.historical.size() == 0) {
-				Workflows.saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runValue.code, runValue.state);
-			} */
-			
-			
-			return ok(Json.toJson(runValue));
+			runInput = MongoDBDAO.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runInput);
+			return ok(Json.toJson(runInput));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
 		}
@@ -189,40 +181,23 @@ public class Runs extends CommonController {
 		}
 
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
-		Run runValue = filledForm.get();
-		if (code.equals(runValue.code)) {
-			if(null != runValue.traceInformation){
-				runValue.traceInformation.setTraceInformation(getCurrentUser());
+		Run runInput = filledForm.get();
+		if (code.equals(runInput.code)) {
+			if(null != runInput.traceInformation){
+				runInput.traceInformation.setTraceInformation(getCurrentUser());
 			}else{
 				Logger.error("traceInformation is null !!");
 			}
 			
-
+			if(!run.state.code.equals(runInput.state.code)){
+				return badRequest("You cannot change the state code. Please used the state url ! ");
+			}
 			
 			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 			
 			ctxVal.setUpdateMode();
-			runValue.validate(ctxVal);
+			runInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
-				
-				boolean bSaveHistorical = false;
-				
-				//State Historical management
-				/*
-				if (! run.state.code.equals(runValue.state.code) ) {
-					State state2 = Workflows.saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run.code, run.state);
-					runValue.state.historical = state2.historical;
-					bSaveHistorical = true;
-				} */
-				
-				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runValue);
-				
-				//State Historical management 
-				/// if we want the current value of state in the historical...
-				/*
-				if (bSaveHistorical) {
-					Workflows.saveHistorical(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runValue.code, runValue.state);
-				} */
-				
+				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runInput);
 				return ok(Json.toJson(run));
 			}else {
 				return badRequest(filledForm.errorsAsJson());
