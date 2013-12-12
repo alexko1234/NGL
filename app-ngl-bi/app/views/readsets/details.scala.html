@@ -56,7 +56,7 @@
 				<dt>@Messages("readsets.productionValuation.criteria")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
-					<div ng-switch-when="false" ng-model="readset.productionValuation.criteriaCode" codes="criteria"/>
+					<div ng-switch-when="false" ng-model="readset.productionValuation.criteriaCode" codes="valuation_criteria"/>
 					<div ng-switch-when="true"><select class="span12" ng-model="readset.productionValuation.criteriaCode" title="" ng-options="valid.code as valid.name for valid in lists.getValuationCriterias()" bs-select></select></div>
 				</dd>
 			</dl>
@@ -103,7 +103,7 @@
 				<dt>@Messages("readsets.bioinformaticValuation.criteria")</dt>
 				<dd>
 				<div ng-switch on="isEditMode()">
-					<div ng-switch-when="false" ng-model="readset.bioinformaticValuation.criteriaCode" codes="criteria"/>
+					<div ng-switch-when="false" ng-model="readset.bioinformaticValuation.criteriaCode" codes="valuation_criteria"/>
 					<div ng-switch-when="true"><select class="span12" ng-model="readset.bioinformaticValuation.criteriaCode" title="" ng-options="valid.code as valid.name for valid in lists.getValuationCriterias()" bs-select></select></div>
 				</dd>
 			</dl>
