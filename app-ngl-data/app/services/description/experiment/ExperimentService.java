@@ -79,21 +79,7 @@ public class ExperimentService {
 		DAOHelpers.saveModels(ExperimentCategory.class, l, errors);
 	}
 	
-	/**
-	 * Save all ExperimentCategory
-	 * @param errors
-	 * @throws DAOException 
-	 */
-	public static void saveStateCategories(Map<String,List<ValidationError>> errors) throws DAOException{
-		List<StateCategory> l = new ArrayList<StateCategory>();
-				
-		for (StateCategory.CODE code : StateCategory.CODE.values()) {
-			l.add(DescriptionFactory.newSimpleCategory(StateCategory.class, code.name(), code.name()));
-		}
-		DAOHelpers.saveModels(StateCategory.class, l, errors);
 		
-	}
-	
 	private static void saveExperimentTypes(
 			Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();

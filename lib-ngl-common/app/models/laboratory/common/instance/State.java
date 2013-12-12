@@ -11,7 +11,7 @@ import validation.utils.ValidationHelper;
 public class State implements IValidation {
 	
 	public String code;
-	public Date date;
+	public Date date = new Date();
     public String user;
     public List<String> resolutionCodes;
      

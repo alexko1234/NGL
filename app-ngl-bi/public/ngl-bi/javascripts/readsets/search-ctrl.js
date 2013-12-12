@@ -41,7 +41,8 @@ var columns = [
 					order:true,
 			    	choiceInList:true,
 			    	listStyle:'bs-select',
-			    	possibleValues:[{code:"IW-QC",name:Codes("state.IW-QC")},{code:"IW-V",name:Codes("state.IW-V")},{code:"F-V",name:Codes("state.F-V")}, {code:"F",name:Codes("state.F")}]				
+			    	//possibleValues:[{code:"IW-QC",name:Codes("state.IW-QC")},{code:"IW-V",name:Codes("state.IW-V")},{code:"F-V",name:Codes("state.F-V")}, {code:"F",name:Codes("state.F")}]
+					possibleValues:'listsTable.getStates()'	
 				},
 				{	property:"productionValuation.valid",
 					render:function(value){
@@ -162,8 +163,10 @@ function SearchCtrl($scope, datatable) {
 
 SearchCtrl.$inject = ['$scope', 'datatable'];
 
-function SearchStateCtrl($scope, datatable) {
+function SearchStateCtrl($scope, datatable, lists) {
 
+	$scope.listsTable = lists;
+	
 	$scope.datatableConfig = {
 			order :{by:'traceInformation.creationDate'},
 			search:{
@@ -202,7 +205,7 @@ function SearchStateCtrl($scope, datatable) {
 	}	
 };
 
-SearchStateCtrl.$inject = ['$scope', 'datatable'];
+SearchStateCtrl.$inject = ['$scope', 'datatable', 'lists'];
 
 
 function SearchValuationCtrl($scope, datatable) {
@@ -230,7 +233,7 @@ function SearchValuationCtrl($scope, datatable) {
 		}else{
 			$scope.datatable = $scope.getDatatable();
 		}
-		$scope.datatable.search({stateCode:"IW-V"});
+		$scope.datatable.search({stateCodes:["IW-V","IP-V"]});
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('valuation');
 			$scope.addTabs({label:Messages('readsets.page.tab.validate'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("valuation").url,remove:false});

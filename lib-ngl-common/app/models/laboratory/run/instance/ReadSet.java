@@ -31,7 +31,7 @@ public class ReadSet extends DBObject implements IValidation{
 	
 	public String runCode;
 	public Integer laneNumber;
-	public Boolean dispatch;
+	public Boolean dispatch = Boolean.FALSE;
 	public String sampleCode; //nom de l'ind / ech
 	public String projectCode;
 	

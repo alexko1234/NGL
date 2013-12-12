@@ -5,7 +5,7 @@ angular.module('home', ['datatableServices','commonsServices','biCommonsServices
 		templateUrl : '/tpl/readsets/search/default',
 		controller : 'SearchCtrl'
 	});
-	$routeProvider.when('/readsets/:code/home', {
+	$routeProvider.when('/readsets/valuation/home', {
 		templateUrl : '/tpl/readsets/search/valuation',
 		controller : 'SearchValuationCtrl'
 	});

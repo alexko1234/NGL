@@ -35,8 +35,8 @@ search.placeholder.states = Selectionnez des états
 search.placeholder.instruments = Selectionnez des instruments
 search.placeholder.types = Selectionnez des types
 search.placeholder.valid = Selectionnez une évaluation
-search.placeholder.productionValid = Selectionnez une évaluation prod
-search.placeholder.bioinformaticValid  = Selectionnez une évaluation bioinfo
+search.placeholder.productionValid = Selectionnez une éval prod
+search.placeholder.bioinformaticValid  = Selectionnez une éval bioinfo
 
 button.search = Rechercher
 button.reset = Réinitialiser
@@ -64,10 +64,15 @@ runs.state.code = Etat
 runs.valuation.valid = Valide ?
 runs.valuation.resolutions = Comptes Rendus
 runs.valuation.user = Evalué par
-runs.valuation.date = Date d''évaluation
+runs.valuation.date = Date d''Evaluation
 runs.valuation.userdate = Evalué par {0} le {1}  
 runs.valuation.criteria = Critères
 runs.valuation.valid = Valide ?
+
+runs.nb_cluster_total=Nb Clusters (total)
+runs.nb_cluster_illumina=Nb Clusters filt. (total)
+runs.nb_bases_en_gb=Nb Bases (total)
+
 #runs - main
 runs.creationdate=Date de Création
 # a vérifier
@@ -80,9 +85,9 @@ runs.lane.valuation.resolutions = Comptes Rendus
 
 runs.lane.code = #
 runs.lane.ngsrg.nbCluster = Nb Clusters
-runs.lane.ngsrg.percentClusterIlluminaFilter = % Clusters Filtrés (illumina)
-runs.lane.ngsrg.nbClusterIlluminaFilter = Nb Cluster Filtrés (illumina)
-runs.lane.ngsrg.percentClusterInternalAndIlluminaFilter = % Séquences Filtrées (interne)
+runs.lane.ngsrg.percentClusterIlluminaFilter = % Clusters filtrés (illumina)
+runs.lane.ngsrg.nbClusterIlluminaFilter = Nb Cluster filtrés (illumina)
+runs.lane.ngsrg.percentClusterInternalAndIlluminaFilter = % Séquences filtrées (interne)
 runs.lane.ngsrg.nbClusterInternalAndIlluminaFilter = Nb Séquences (filtre illumina + interne)
 runs.lane.ngsrg.nbBaseInternalAndIlluminaFilter = Nb Bases (filtre illumina + interne)
 runs.lane.ngsrg.phasing = Phasing
@@ -144,11 +149,11 @@ readsets.projectCode = Projet
 readsets.sampleCode = Echantillon
 readsets.nbCycles = Nb Cycles
 
-readsets.global.usefulSequences = Nb Séquences Utiles
-readsets.global.usefulBases = Nb Bases Utiles
-readsets.ngsrg.nbCluster = Nb Séquences Valides
+readsets.global.usefulSequences = Nb Séquences utiles
+readsets.global.usefulBases = Nb Bases utiles
+readsets.ngsrg.nbCluster = Nb Séquences valides
 readsets.ngsrg.nbBases = Nb Bases
 readsets.ngsrg.Q30 = Q30
-readsets.ngsrg.qualityScore = Score Qualité Moyen
+readsets.ngsrg.qualityScore = Score Qualité moyen
 readsets.ngsrg.validSeqPercent = % Séquences valides / piste
 

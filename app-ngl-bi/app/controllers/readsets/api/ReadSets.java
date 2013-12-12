@@ -277,9 +277,26 @@ public class ReadSets extends CommonController{
 		return ok();
 	}
 	
-	public static Result state(String readSetCode, String stateCode){
-		return badRequest("Not implemented");
+	public static Result state(String code, String stateCode){
+		ReadSet readSet = getReadSet(code);
+		if(readSet == null){
+			return badRequest();
+		}
+		Form<State> filledForm =  getFilledForm(stateForm, State.class);
+		State state = filledForm.get();
+		if(null == state.code)state.code = stateCode; //backward compatibility
+		state.date = new Date();
+		Logger.debug(state.date.toString());
+		state.user = getCurrentUser();
+		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+		Workflows.setReadSetState(ctxVal, readSet, state);
+		if (!ctxVal.hasErrors()) {
+			return ok();
+		}else {
+			return badRequest(filledForm.errorsAsJson());
+		}
 	}
+	
 	public static Result valuation(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
@@ -293,13 +310,8 @@ public class ReadSets extends CommonController{
 		if(!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.and(DBQuery.is("code", code)),
-					DBUpdate.set("productionValuation", valuations.productionValuation).set("bioinformaticValuation", valuations.bioinformaticValuation));			
-			
-			State state = new State();
-			state.code = "F-V";
-			state.date = new Date();
-			state.user = getCurrentUser();
-			Workflows.setReadSetState(ctxVal, readSet, state);
+					DBUpdate.set("productionValuation", valuations.productionValuation).set("bioinformaticValuation", valuations.bioinformaticValuation));								
+			Workflows.nextReadSetState(ctxVal, getReadSet(code));
 						
 		} 
 		if(!ctxVal.hasErrors()) {

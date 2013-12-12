@@ -26,7 +26,8 @@ var columns = [
 					order:true,
 			    	choiceInList:true,
 			    	listStyle:'bs-select',
-			    	possibleValues:[{code:"IW-QC",name:Codes("state.IW-QC")},{code:"IW-V",name:Codes("state.IW-V")},{code:"F-V",name:Codes("state.F-V")}, {code:"F",name:Codes("state.F")}]				
+			    	//possibleValues:[{code:"IW-QC",name:Codes("state.IW-QC")},{code:"IW-V",name:Codes("state.IW-V")},{code:"F-V",name:Codes("state.F-V")}, {code:"F",name:Codes("state.F")}]
+			    	possibleValues:'listsTable.getStates()'	
 				},
 				{	property:"valuation.valid",
 					render:function(value){
@@ -140,8 +141,10 @@ function SearchCtrl($scope, $routeParams, datatable) {
 
 SearchCtrl.$inject = ['$scope', '$routeParams', 'datatable'];
 
-function SearchStateCtrl($scope, datatable) {
+function SearchStateCtrl($scope, datatable, lists) {
 
+	$scope.listsTable = lists;
+	
 	$scope.datatableConfig = {
 			order :{by:'traceInformation.creationDate'},
 			search:{
@@ -177,10 +180,11 @@ function SearchStateCtrl($scope, datatable) {
 			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:false});
 			$scope.activeTab(0); // desactive le lien !
 		}
+		$scope.listsTable.refresh.states({objectTypeCode:"Run"});
 	}	
 };
 
-SearchStateCtrl.$inject = ['$scope', 'datatable'];
+SearchStateCtrl.$inject = ['$scope', 'datatable', 'lists'];
 
 
 function SearchValuationCtrl($scope, datatable) {
@@ -208,7 +212,7 @@ function SearchValuationCtrl($scope, datatable) {
 		}else{
 			$scope.datatable = $scope.getDatatable();
 		}
-		$scope.datatable.search({stateCode:"IW-V"});
+		$scope.datatable.search({stateCodes:["IW-V","IP-V"]});
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('valuation');
 			$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:false});

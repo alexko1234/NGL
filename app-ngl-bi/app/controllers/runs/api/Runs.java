@@ -253,11 +253,12 @@ public class Runs extends CommonController {
 		}
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
-		if(null == state.code)state.code = stateCode;
+		if(null == state.code)state.code = stateCode; //backward compatibility
 		state.date = new Date();
+		Logger.debug(state.date.toString());
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
-		Workflows.setRunState(ctxVal, run, state, run.state);
+		Workflows.setRunState(ctxVal, run, state);
 		if (!ctxVal.hasErrors()) {
 			return ok();
 		}else {
@@ -287,15 +288,8 @@ public class Runs extends CommonController {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", code)),
 					DBUpdate.set("valuation", valuation));			
-			run.valuation = valuation;
-			if(isRunCompletelyEvaluate(run)){
-				State state = new State();
-				state.code = "F-V";
-				state.date = new Date();
-				state.user = getCurrentUser();				
-				Workflows.setRunState(ctxVal, run, state, run.state);
-			}
 			
+			Workflows.nextRunState(ctxVal, getRun(code));
 		} 
 		if(!ctxVal.hasErrors()) {
 			return ok();
@@ -305,18 +299,7 @@ public class Runs extends CommonController {
 	}
 
 
-	private static boolean isRunCompletelyEvaluate(Run run) {
-
-		if(run.valuation.valid.equals(TBoolean.UNSET)){
-			return false;
-		}
-		for(Lane lane : run.lanes){
-			if(lane.valuation.valid.equals(TBoolean.UNSET)){
-				return false;
-			}
-		}
-		return true;
-	}
+	
 
 	@Deprecated
 	public static Result dispatch(String code) {
