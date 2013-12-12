@@ -58,29 +58,29 @@ public class RunValidationTest extends AbstractTests {
 	static Project p;
 	
 	@BeforeClass
-	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
-		    	   
-		   		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
-				for (Container container : containers) {
-					if (container.support.barCode.equals("containerName")) {
-						MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
-					}
-				}   
-		   		List<Project> projects = MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList();
-				for (Project project : projects) {
-					if (project.code.equals("ProjectCode")) {
-						MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, project);
-					}
+	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException { 
+		// to correct a bug, just here
+		// running(fakeApplication(fakeConfiguration()), new Runnable() {
+		//       public void run() {		    	   
+	   		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
+			for (Container container : containers) {
+				if (container.support.barCode.equals("containerName")) {
+					MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
 				}
-				
-				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
-				for (Sample sample : samples) {
-					if (sample.code.equals("SampleCode")) {
-						MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
-					}
+			}   
+	   		List<Project> projects = MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList();
+			for (Project project : projects) {
+				if (project.code.equals("ProjectCode")) {
+					MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, project);
 				}
+			}
+			
+			List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+			for (Sample sample : samples) {
+				if (sample.code.equals("SampleCode")) {
+					MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
+				}
+			}
 				
 		   Container c = new Container();
 		   c.code ="containerTest1";
@@ -108,37 +108,33 @@ public class RunValidationTest extends AbstractTests {
 		   s.traceInformation = new TraceInformation();
 		   
 		   MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, s);
-		   
-		       }}); 
+		// }});
 	}
 	
 	
 	@AfterClass
 	public static void deleteData(){
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {		
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 		for (Container container : containers) {
 			if (container.support.barCode.equals("containerName")) {
 				MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
 			}
 		}
-		
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
 		for (Sample sample : samples) {
 			if (sample.code.equals("SampleCode")) {
 				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
 			}
 		}
-		
 		List<Project> projects = MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList();
 		for (Project project : projects) {
 			if (project.code.equals("ProjectCode")) {
 				MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, project);
 			}
 		}
-		
-		}}); 
+		}});
 	}
 		
 	
