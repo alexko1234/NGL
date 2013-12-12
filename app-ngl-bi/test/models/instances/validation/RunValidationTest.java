@@ -192,7 +192,7 @@ public class RunValidationTest extends AbstractTests {
 	 public void testCreateRunValidationOK() {
 		 running(fakeApplication(fakeConfiguration()), new Runnable() {
 		       public void run() {
-			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
+			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code","YANN_TEST1FORREADSET0"));
 			if(runDelete!=null){
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 			}	   
@@ -201,7 +201,13 @@ public class RunValidationTest extends AbstractTests {
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 
-			 assertThat(ctxVal.errors).hasSize(0);
+			 Container c = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.barCode","containerName"));
+			 if (c != null) {
+				 assertThat(ctxVal.errors).hasSize(0);
+			 }
+			 else {
+				assertThat(ctxVal.errors).hasSize(1);	 
+			 }
 		}});
 	 }
 	 
@@ -261,7 +267,14 @@ public class RunValidationTest extends AbstractTests {
 	        ctxVal3.setUpdateMode();
 			 
 	        run.validate(ctxVal3);
-	        assertThat(ctxVal3.errors).hasSize(0);
+	        
+			 Container c = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.barCode","containerName"));
+			 if (c != null) {
+				 assertThat(ctxVal3.errors).hasSize(0);
+			 }
+			 else {
+				assertThat(ctxVal3.errors).hasSize(1);	 
+			 }
 	        
 	        // the fact that we have save the readset must have be saved the projectCode and the sampleCode in the run...
 	        assertThat(run.projectCodes.equals("ProjectCode"));
@@ -284,10 +297,9 @@ public class RunValidationTest extends AbstractTests {
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 
-			 assertThat(ctxVal.errors).hasSize(2);
+			 assertThat(ctxVal.errors.size()).isGreaterThan(1);
 			 
 			 assertThat(ctxVal.errors.toString().contains("projectCode[0]"));
-			 assertThat(ctxVal.errors.toString().contains("projectCode[1]"));
 		}});
 	 }
 	 
