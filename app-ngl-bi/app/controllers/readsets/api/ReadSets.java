@@ -226,7 +226,7 @@ public class ReadSets extends CommonController{
 						DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("sampleCodes", readSetInput.sampleCode)), 
 						DBUpdate.push("sampleCodes", readSetInput.sampleCode));
 				
-				return ok(Json.toJson(filledForm.get()));
+				return ok(Json.toJson(readSetInput));
 			}else {
 				return badRequest(filledForm.errorsAsJson());			
 			}
@@ -303,7 +303,7 @@ public class ReadSets extends CommonController{
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		Workflows.setReadSetState(ctxVal, readSet, state);
 		if (!ctxVal.hasErrors()) {
-			return ok();
+			return ok(Json.toJson(getReadSet(code)));
 		}else {
 			return badRequest(filledForm.errorsAsJson());
 		}
@@ -323,11 +323,12 @@ public class ReadSets extends CommonController{
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.and(DBQuery.is("code", code)),
 					DBUpdate.set("productionValuation", valuations.productionValuation).set("bioinformaticValuation", valuations.bioinformaticValuation));								
-			Workflows.nextReadSetState(ctxVal, getReadSet(code));
+			readSet = getReadSet(code);
+			Workflows.nextReadSetState(ctxVal, readSet);
 						
 		} 
 		if(!ctxVal.hasErrors()) {
-			return ok();
+			return ok(Json.toJson(readSet));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
 		}
@@ -347,46 +348,5 @@ public class ReadSets extends CommonController{
 		
 		ReadSetValidationHelper.validateValuation(readSet.typeCode, productionVal, ctxVal);
 		ReadSetValidationHelper.validateValuation(readSet.typeCode, bioinfoVal, ctxVal);		
-	}
-	@Deprecated
-	public static Result saveOld(String code, Integer laneNumber){
-		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
-		ReadSet readsetValue = filledForm.get();	
-		readsetValue.laneNumber = laneNumber;
-		readsetValue.runCode = code;
-		
-		if (null == readsetValue._id) { 
-			readsetValue.traceInformation = new TraceInformation();
-			readsetValue.traceInformation.setTraceInformation("ngsrg");
-		} else {
-			return badRequest("use PUT method to update the run");
-		}
-		
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
-		ctxVal.setCreationMode();
-		readsetValue.validate(ctxVal);	
-		
-		if (!ctxVal.hasErrors()) {
-			readsetValue = MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readsetValue);
-			
-			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-					DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.is("lanes.number", readsetValue.laneNumber)), 
-					DBUpdate.push("lanes.$.readSetCodes", readsetValue.code));		
-			
-			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-					DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.notIn("projectCodes", readsetValue.projectCode)), 
-					DBUpdate.push("projectCodes", readsetValue.projectCode));
-					
-			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-					DBQuery.and(DBQuery.is("code", readsetValue.runCode), DBQuery.notIn("sampleCodes", readsetValue.sampleCode)), 
-					DBUpdate.push("sampleCodes", readsetValue.sampleCode));
-			
-			return ok(Json.toJson(readsetValue));
-		} else {
-			return badRequest(filledForm.errorsAsJson());
-		}
-	}
-	
-	
-	
+	}		
 }

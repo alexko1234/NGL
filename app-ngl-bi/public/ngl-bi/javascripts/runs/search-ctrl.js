@@ -160,7 +160,13 @@ function SearchStateCtrl($scope, datatable, lists) {
 					return jsRoutes.controllers.runs.api.Runs.state(line.code, line.state.code).url;
 				},
 				method:'put',
-				value:function(line){return {};}
+				value:function(line){return line.state;}
+			},
+			show:{
+				active:true,
+				add :function(line){
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.get(line.code).url,remove:true});
+				}
 			},
 			columns : columns
 	};

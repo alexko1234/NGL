@@ -11,7 +11,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 				{productionValuation:$scope.readset.productionValuation,bioinformaticValuation:$scope.readset.bioinformaticValuation})
 		.success(function(data, status, headers, config){
 			$scope.messages.setSuccess("save");
-			updateData();
+			$scope.readset = data;
 		}).error(function(data, status, headers, config){
 			$scope.messages.setError("save");	
 		});

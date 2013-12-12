@@ -31,7 +31,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 						$http.put(jsRoutes.controllers.runs.api.Runs.valuation($scope.run.code, $scope.run.valuation.valid).url, $scope.run.valuation).
 							success(function(data, status, headers, config){
 								$scope.messages.setSuccess("save");
-								updateData();
+								$scope.run = data;
 							}).error(function(data, status, headers, config){
 								$scope.messages.setError("save");	
 							});

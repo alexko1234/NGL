@@ -70,7 +70,7 @@ public class RunTreatments extends CommonController{
 			MongoDBDAO.updateSet(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, "treatments."+treatment.code, treatment);			
 		}
 		if (!filledForm.hasErrors()) {
-			return ok(Json.toJson(filledForm.get()));			
+			return ok(Json.toJson(treatment));			
 		} else {
 			return badRequest(filledForm.errorsAsJson());			
 		}		
@@ -99,7 +99,7 @@ public class RunTreatments extends CommonController{
 				MongoDBDAO.updateSet(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, "treatments."+treatment.code, treatment);			
 			}
 			if (!filledForm.hasErrors()) {
-				return ok(Json.toJson(filledForm.get()));			
+				return ok(Json.toJson(treatment));			
 			} else {
 				return badRequest(filledForm.errorsAsJson());			
 			}

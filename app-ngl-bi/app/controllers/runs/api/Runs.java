@@ -198,7 +198,7 @@ public class Runs extends CommonController {
 			runInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runInput);
-				return ok(Json.toJson(run));
+				return ok(Json.toJson(runInput));
 			}else {
 				return badRequest(filledForm.errorsAsJson());
 			}
@@ -230,12 +230,11 @@ public class Runs extends CommonController {
 		State state = filledForm.get();
 		if(null == state.code)state.code = stateCode; //backward compatibility
 		state.date = new Date();
-		Logger.debug(state.date.toString());
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		Workflows.setRunState(ctxVal, run, state);
 		if (!ctxVal.hasErrors()) {
-			return ok();
+			return ok(Json.toJson(getRun(code)));
 		}else {
 			return badRequest(filledForm.errorsAsJson());
 		}
@@ -263,32 +262,15 @@ public class Runs extends CommonController {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", code)),
 					DBUpdate.set("valuation", valuation));			
+			run = getRun(code);
+			Workflows.nextRunState(ctxVal, run);
 			
-			Workflows.nextRunState(ctxVal, getRun(code));
 		} 
 		if(!ctxVal.hasErrors()) {
-			return ok();
+			return ok(Json.toJson(run));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
 		}
-	}
-
-
-	
-
-	@Deprecated
-	public static Result dispatch(String code) {
-		Run run = getRun(code);		
-		if (run != null) {
-			JsonNode json = request().body().asJson();
-			Logger.info("Dispatch run : "+code);
-			boolean dispatch = json.get("dispatch").asBoolean();
-			MongoDBDAO.updateSet(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, "dispatch", dispatch);
-			//TODO ReadSet dispatch
-		} else {
-			return badRequest();
-		}		
-		return ok();	
 	}
 
 	public static Result applyRules(String code, String rulesCode){

@@ -164,20 +164,11 @@ public class Lanes extends CommonController{
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)),
 					DBUpdate.set("lanes.$.valuation", valuation)); 
-			return ok();
+			return get(code, laneNumber);
 		} else {
 			return badRequest(filledForm.errorsAsJson());
 		}
 		
-	}
-	
-	@Deprecated
-	public static Result saveOld(String code) {
-		return save(code);
-	}
-	@Deprecated
-	public static Result getOld(String code, Integer laneNumber) {
-		return get(code, laneNumber);
-	}
+	}	
 
 }

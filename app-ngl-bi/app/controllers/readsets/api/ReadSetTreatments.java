@@ -74,7 +74,7 @@ public class ReadSetTreatments extends CommonController{
 			MongoDBDAO.updateSet(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet, "treatments."+treatment.code, treatment);			
 		}
 		if (!filledForm.hasErrors()) {
-			return ok(Json.toJson(filledForm.get()));			
+			return ok(Json.toJson(treatment));			
 		} else {
 			return badRequest(filledForm.errorsAsJson());			
 		}		
@@ -101,7 +101,7 @@ public class ReadSetTreatments extends CommonController{
 				MongoDBDAO.updateSet(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet, "treatments."+treatment.code, treatment);			
 			}
 			if (!filledForm.hasErrors()) {
-				return ok(Json.toJson(filledForm.get()));			
+				return ok(Json.toJson(treatment));			
 			} else {
 				return badRequest(filledForm.errorsAsJson());			
 			}

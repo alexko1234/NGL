@@ -182,19 +182,19 @@ function SearchStateCtrl($scope, datatable, lists) {
 				active:true,
 				columnMode:true		    	
 			},
-			show:{
-				active:true,
-				add :function(line){
-					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.get(line.code).url,remove:true});
-				}
-			},
 			save : {
 				active:true,
 				url:function(line){
 					return jsRoutes.controllers.readsets.api.ReadSets.state(line.code, line.state.code).url;
 				},
 				method:'put',
-				value:function(line){return {};}
+				value:function(line){return line.state;}
+			},
+			show:{
+				active:true,
+				add :function(line){
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.get(line.code).url,remove:true});
+				}
 			},
 			columns : columns
 	};
