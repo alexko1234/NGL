@@ -59,9 +59,8 @@ public class RunValidationTest extends AbstractTests {
 	
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException { 
-		// to correct a bug, just here
-		// running(fakeApplication(fakeConfiguration()), new Runnable() {
-		//       public void run() {	
+		 running(fakeApplication(fakeConfiguration()), new Runnable() {
+		       public void run() {	
 		
 	   		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 			for (Container container : containers) {
@@ -109,7 +108,7 @@ public class RunValidationTest extends AbstractTests {
 		   s.traceInformation = new TraceInformation();
 		   
 		   MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, s);
-		// }});
+		 }});
 	}
 	
 	
@@ -410,6 +409,7 @@ public class RunValidationTest extends AbstractTests {
 			m.put("flowcellVersion", new PropertySingleValue("v1"));
 			m.put("controlLane", new PropertySingleValue(90));
 			m.put("mismatch", new PropertySingleValue(true));
+			m.put("percentClusterIlluminaFilter", new PropertySingleValue(96.125));
 			t1.set("default", m);
 			 
 			 Map<String, Treatment> mT = new HashMap<String, Treatment>();
@@ -451,6 +451,7 @@ public class RunValidationTest extends AbstractTests {
 			m.put("flowcellVersion", new PropertySingleValue("v1"));
 			m.put("controlLane", new PropertySingleValue(90));
 			m.put("mismatch", new PropertySingleValue(true));
+			m.put("percentClusterIlluminaFilter", new PropertySingleValue(96.125));
 			t1.set("default", m);
 			
 			 Treatment t2 = new Treatment();
@@ -499,6 +500,7 @@ public class RunValidationTest extends AbstractTests {
 			m.put("flowcellVersion", new PropertySingleValue("v1"));
 			m.put("controlLane", new PropertySingleValue(90));
 			m.put("mismatch", new PropertySingleValue(true));
+			m.put("percentClusterIlluminaFilter", new PropertySingleValue(96.125));
 			t1.set("default", m);
 			
 			 Treatment t2 = new Treatment();
@@ -516,6 +518,7 @@ public class RunValidationTest extends AbstractTests {
 			m.put("flowcellVersion", new PropertySingleValue("v1"));
 			m.put("controlLane", new PropertySingleValue(90));
 			m.put("mismatch", new PropertySingleValue(true));
+			m.put("percentClusterIlluminaFilter", new PropertySingleValue(96.125));
 			t2.set("default", m);
 			
 			 Map<String, Treatment> mT = new HashMap<String, Treatment>();
