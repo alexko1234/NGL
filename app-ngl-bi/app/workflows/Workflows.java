@@ -103,7 +103,8 @@ public class Workflows {
 			
 			List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code)).toList();
 			for(ReadSet readSet: readSets){
-				setReadSetState(contextValidation, readSet, run.state);
+				State nextReadSetState = cloneState(run.state);
+				setReadSetState(contextValidation, readSet, nextReadSetState);
 			}
 			
 			
@@ -177,10 +178,11 @@ public class Workflows {
 	private static State updateHistoricalNextState(State previousState, State nextState) {
 		if (null == previousState.historical) {
 			nextState.historical = new ArrayList<TransientState>(0);
+			nextState.historical.add(new TransientState(previousState, nextState.historical.size()));
 		} else {
 			nextState.historical = previousState.historical;
 		}
-		nextState.historical.add(new TransientState(previousState, nextState.historical.size()));		
+		nextState.historical.add(new TransientState(nextState, nextState.historical.size()));		
 		return nextState;
 	}
 
