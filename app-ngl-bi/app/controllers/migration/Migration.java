@@ -1,8 +1,14 @@
 package controllers.migration;		
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.TreeSet;
 
 import akka.actor.ActorRef;
@@ -23,7 +29,6 @@ import play.libs.Akka;
 import play.mvc.Result;
 import rules.services.RulesActor;
 import rules.services.RulesMessage;
-import validation.ContextValidation;
 import controllers.CommonController;
 import controllers.migration.models.FileOld;
 import controllers.migration.models.LaneOld;
@@ -76,8 +81,7 @@ public class Migration extends CommonController {
 			Logger.info("Migration readset already execute !");
 		}
 		
-		//new add-on
-		backupRunBeforeRecalcul(); 
+		//backupRunBeforeRecalcul(); 
 		List<Run> runs = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class).toList();
 		Logger.debug("recalcul "+runs.size()+" runs");
 		for(Run run : runs){
@@ -85,7 +89,6 @@ public class Migration extends CommonController {
 				statsRecalcul(run);
 			}
 		}
-		//end add-on
 		
 		check();
 		
@@ -95,17 +98,26 @@ public class Migration extends CommonController {
 
 	
 	private static void migreReadSet(ReadSetOld readSet) {
+		
 		Valuation valuation = new Valuation();
+		
 		State state = new State();
 		state.code = readSet.stateCode;
-		
 		state.user = (null == readSet.traceInformation.modifyUser) ? readSet.traceInformation.createUser : readSet.traceInformation.modifyUser;
 		state.date = (null == readSet.traceInformation.modifyUser) ? readSet.traceInformation.creationDate : readSet.traceInformation.modifyDate;
+		
+		String runTypeCode = null;
+		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, readSet.runCode);
+		if (run != null) {
+			runTypeCode = run.typeCode; 
+		}
 		
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld.class, 
 				DBQuery.is("code", readSet.code), 
 				DBUpdate.unset("stateCode").unset("validProduction").unset("validProductionDate").unset("validBioinformatic").unset("validBioinformaticDate")
-				.unset("sampleContainerCode").set("productionValuation", valuation).set("bioinformaticValuation", valuation).set("state", state).set("sampleCode", readSet.sampleContainerCode));
+				.unset("sampleContainerCode").set("productionValuation", valuation).set("bioinformaticValuation", valuation).set("state", state).set("sampleCode", readSet.sampleContainerCode)
+				.set("runSequencingStartDate", getDate(readSet.runCode))
+				.set("runTypeCode", runTypeCode) );
 		
 		if(null != readSet.files){
 			for(FileOld fileOld : readSet.files){
@@ -124,7 +136,6 @@ public class Migration extends CommonController {
 		}
 		
 	}
-
 	
 
 	private static void migreRun(RunOld run) {
@@ -154,7 +165,8 @@ public class Migration extends CommonController {
 				DBUpdate.unset("stateCode").unset("valid").unset("validDate") 
 				.set("valuation", valuation).set("state", state)
 				.set("projectCodes", projectCodes).set("sampleCodes", sampleCodes)
-				.set("instrumentUsed", instrumentUsed));
+				.set("instrumentUsed", instrumentUsed)
+				.set("sequencingStartDate", getDate(run.code)) );
 		
 		if (run.lanes != null) {
 			for (LaneOld laneOld : run.lanes) {
@@ -207,5 +219,47 @@ public class Migration extends CommonController {
 		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" end");
 		
 	}
+	
+
+	
+	/*
+	 * other possibility : use SimpleDateFormat
+	 * 
+	private static Date getDate(String runCode) {
+		String sStartDate = runCode.substring(0, runCode.indexOf("_"));
+		String sFormatStartDate = sStartDate.substring(4, 6)  + "/" 
+				+ sStartDate.substring(2, 4) + "/" 
+				+ "20"+sStartDate.substring(0, 2) + " 01:00:00";
+		
+	      SimpleDateFormat format =  new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
+		
+	      Date dParsed = null;
+	      try {
+	            dParsed = format.parse(sFormatStartDate);
+	        }
+	        catch(ParseException pe) {
+	            System.out.println("ERROR: Cannot parse \"" + sFormatStartDate + "\"");
+	        }
+	      return dParsed; 
+	} 
+	*/
+	
+	
+	private static Date getDate(String runCode) {
+		String sStartDate = runCode.substring(0, runCode.indexOf("_"));
+		int year = Integer.parseInt(sStartDate.substring(0, 2)) + 2000;
+		int month = Integer.parseInt(sStartDate.substring(2, 4))-1;
+		int day = Integer.parseInt(sStartDate.substring(4, 6));
+				
+		java.util.Calendar calendar = new GregorianCalendar(year,month,day,0,0,0); 
+		TimeZone tz = TimeZone.getTimeZone("GMT");
+		calendar.setTimeZone(tz);
+
+		return calendar.getTime(); 
+	}
+	 
+	
+	
+
 
 }
