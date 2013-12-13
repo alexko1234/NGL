@@ -1,67 +1,101 @@
 "use strict";
 
-var columns = [
-			    {  	property:"code",
-			    	header: Messages("readsets.code"),
-			    	type :"String",
-			    	order:true
-				},
-				{	property:"runCode",
+
+function getColumns(type){
+	var columns = [];
+	
+	columns.push({	property:"code",
+		    	  	header: Messages("readsets.code"),
+		    	  	type :"String",
+		    	  	order:true});
+	
+	columns.push({	property:"runCode",
 					header: Messages("readsets.runCode"),
 					type :"String",
-			    	order:true
-				},
-				{	property:"laneNumber",
+					order:true});
+	columns.push({	property:"laneNumber",
 					header: Messages("readsets.laneNumber"),
 					type :"String",
-			    	order:true
-				},
-				{	property:"projectCode",
+					order:true});
+	columns.push({	property:"projectCode",
 					header: Messages("readsets.projectCode"),
 					type :"String",
-			    	order:true
-				},
-				{	property:"sampleCode",
+					order:true});
+	columns.push({	property:"sampleCode",
 					header: Messages("readsets.sampleCode"),
 					type :"String",
-			    	order:true
-				},
-				{	property:"traceInformation.creationDate",
+					order:true});
+	columns.push({	property:"traceInformation.creationDate",
 					header: Messages("readsets.creationdate"),
 					type :"Date",
-			    	order:true
-				},
-				{	property:"state.code",
-					render:function(value){
-						return Codes("state."+value.state.code);
-					},
-					header: Messages("readsets.stateCode"),
-					type :"String",
-					edit:true,
-					order:true,
-			    	choiceInList:true,
-			    	listStyle:'bs-select',
-			    	//possibleValues:[{code:"IW-QC",name:Codes("state.IW-QC")},{code:"IW-V",name:Codes("state.IW-V")},{code:"F-V",name:Codes("state.F-V")}, {code:"F",name:Codes("state.F")}]
-					possibleValues:'listsTable.getStates()'	
-				},
-				{	property:"productionValuation.valid",
-					render:function(value){
-						return Codes("valuation."+value.productionValuation.valid);
-					},
-					header: Messages("readsets.productionValuation.valid"),
-					type :"String",
-			    	order:true
-				},
-				{	property:"bioinformaticValuation.valid",
-					render:function(value){
-						return Codes("valuation."+value.bioinformaticValuation.valid);
-					},
-					header: Messages("readsets.bioinformaticValuation.valid"),
-					type :"String",
-			    	order:true
-				}      
-			];						
-
+					order:true});
+	
+	if('state' === type){
+		columns.push({	property:"state.code",
+						render:function(value){
+							return Codes("state."+value.state.code);
+						},
+						header: Messages("readsets.stateCode"),
+						type :"String",
+						edit:true,
+						order:true,
+				    	choiceInList:true,
+				    	listStyle:'bs-select',
+				    	//possibleValues:[{code:"IW-QC",name:Codes("state.IW-QC")},{code:"IW-V",name:Codes("state.IW-V")},{code:"F-V",name:Codes("state.F-V")}, {code:"F",name:Codes("state.F")}]
+						possibleValues:'listsTable.getStates()'});
+	}else{
+		columns.push({	property:"state.code",
+						render:function(value){
+							return Codes("state."+value.state.code);
+						},
+						header: Messages("readsets.stateCode"),
+						type :"String",
+						order:true});
+	}
+	
+	if('valuation' === type){
+		columns.push({	property:"productionValuation.valid",
+						render:function(value){
+							return Codes("valuation."+value.productionValuation.valid);
+						},
+						header: Messages("readsets.productionValuation.valid"),
+						type :"String",
+				    	order:true,
+				    	edit:true,
+				    	choiceInList:true,
+				    	listStyle:'bs-select',
+				    	possibleValues:'listsTable.getValuations()'
+				    	});
+		columns.push({	property:"bioinformaticValuation.valid",
+						render:function(value){
+							return Codes("valuation."+value.bioinformaticValuation.valid);
+						},
+						header: Messages("readsets.bioinformaticValuation.valid"),
+						type :"String",
+						order:true,
+				    	edit:true,
+				    	choiceInList:true,
+				    	listStyle:'bs-select',
+				    	possibleValues:'listsTable.getValuations()'
+				    	});
+	}else{
+		columns.push({	property:"productionValuation.valid",
+						render:function(value){
+							return Codes("valuation."+value.productionValuation.valid);
+						},
+						header: Messages("readsets.productionValuation.valid"),
+						type :"String",
+				    	order:true});
+		columns.push({	property:"bioinformaticValuation.valid",
+						render:function(value){
+							return Codes("valuation."+value.bioinformaticValuation.valid);
+						},
+						header: Messages("readsets.bioinformaticValuation.valid"),
+						type :"String",
+				    	order:true});
+	}
+	return columns;
+}
 
 function SearchFormCtrl($scope, $filter, lists){
 	$scope.lists = lists;
@@ -144,7 +178,7 @@ function SearchCtrl($scope, datatable) {
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.get(line.code).url,remove:true});
 				}
 			},
-			columns : columns
+			columns : getColumns('search')
 	};
 	
 	
@@ -196,7 +230,7 @@ function SearchStateCtrl($scope, datatable, lists) {
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.get(line.code).url,remove:true});
 				}
 			},
-			columns : columns
+			columns : getColumns('state')
 	};
 	
 	$scope.init = function(){
@@ -220,12 +254,26 @@ function SearchStateCtrl($scope, datatable, lists) {
 SearchStateCtrl.$inject = ['$scope', 'datatable', 'lists'];
 
 
-function SearchValuationCtrl($scope, datatable) {
+function SearchValuationCtrl($scope, datatable, lists) {
 
+	$scope.listsTable = lists;
+	
 	$scope.datatableConfig = {
 			order :{by:'traceInformation.creationDate'},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
+			},
+			edit : {
+				active:true,
+				columnMode:true		    	
+			},			
+			save : {
+				active:true,
+				url:function(line){
+					return jsRoutes.controllers.readsets.api.ReadSets.valuation(line.code).url;
+				},
+				method:'put',
+				value:function(line){return {productionValuation:line.productionValuation,bioinformaticValuation:line.bioinformaticValuation};}
 			},
 			show:{
 				active:true,
@@ -233,7 +281,7 @@ function SearchValuationCtrl($scope, datatable) {
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.valuation(line.code).url,remove:true});
 				}
 			},
-			columns : columns
+			columns : getColumns('valuation')
 	};
 	
 	
@@ -254,6 +302,6 @@ function SearchValuationCtrl($scope, datatable) {
 	}	
 };
 
-SearchValuationCtrl.$inject = ['$scope', 'datatable'];
+SearchValuationCtrl.$inject = ['$scope', 'datatable', 'lists'];
 
 

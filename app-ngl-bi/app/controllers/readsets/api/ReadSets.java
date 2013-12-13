@@ -298,7 +298,6 @@ public class ReadSets extends CommonController{
 		State state = filledForm.get();
 		if(null == state.code)state.code = stateCode; //backward compatibility
 		state.date = new Date();
-		Logger.debug(state.date.toString());
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		Workflows.setReadSetState(ctxVal, readSet, state);
