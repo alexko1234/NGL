@@ -17,25 +17,28 @@ declare LaneInfo
 	nbClusterLane : Long
 end
 
-declare RunInfo
-	code : String
-	sizeLanes : Integer
-	valuesPercentClusterFilter : List
-end
-
-rule "Initialize RunInfo"
+rule "Calculate average percentClusterFilter for run"
 	@nglBI( rg_1 )
 	dialect "java"
 	salience 600
 	no-loop
 	when
-		$run : Run()
-		not ($runInfo : RunInfo(code==$run.code))
+		$run : Run($treatment : treatments["ngsrg"], $treatment!=null)
+		$mapValue : Map() from $treatment.results.values()
+		$nbClusterIlluminaFilter : Entry(key=="nbClusterIlluminaFilter") from $mapValue.entrySet()
+		$nbClusterTotal : Entry(key=="nbClusterTotal") from $mapValue.entrySet()
 	then
-		Logger.debug("Create Run Info "+$run.getCode());
-		RunInfo runInfo = new RunInfo($run.getCode(),$run.getLanes().size(),new ArrayList());
-		insert(runInfo);
-end
+		Logger.debug("Calculate  percentClusterIlluminaFilter for run "+$run.getCode());
+		//Calculate validSeqPercent
+		Long nbClusterFilter = (Long)((PropertyValue)$nbClusterIlluminaFilter.getValue()).getValue();
+		Long nbTotal = (Long)((PropertyValue)$nbClusterTotal.getValue()).getValue();
+		Double percentClusterIlluminaFilter = roundValue((double)nbClusterFilter/nbTotal*100);
+		//Create new PropertyValue
+		PropertySingleValue propertyPercentClusterFilter = new PropertySingleValue(percentClusterIlluminaFilter);
+		$mapValue.put("percentClusterIlluminaFilter", propertyPercentClusterFilter);
+		//Update treatment for Run
+		MongoDBDAO.updateSet(InstanceConstants.RUN_ILLUMINA_COLL_NAME, $run, "treatments."+$treatment.getCode(), $treatment);
+end 
 
 rule "Initialize LaneInfo"
 	@nglBI( rg_1 )
@@ -47,40 +50,12 @@ rule "Initialize LaneInfo"
 		$lane : Lane($treatment : treatments["ngsrg"], $treatment!=null) from $run.lanes
 		$mapValue : Map() from $treatment.results.values()
        	$nbClusterLane : Entry(key == "nbClusterInternalAndIlluminaFilter") from $mapValue.entrySet()
-       	$percentClusterFilter : Entry(key == "percentClusterIlluminaFilter") from $mapValue.entrySet()
-       	$runInfo : RunInfo(code==$run.code)
 	then
 		Logger.debug("Create LaneInfo "+$lane.getNumber());
 		LaneInfo laneInfo = new LaneInfo($run, $lane, $lane.getReadSetCodes().size(), new ArrayList(),(Long)((PropertyValue)$nbClusterLane.getValue()).getValue());
-		//Add percentClusterFilter for lane to runInfo to calculate averagePercentClusterFilter
-		$runInfo.getValuesPercentClusterFilter().add((PropertyValue)$percentClusterFilter.getValue());
-		Logger.debug("Value percentClusterFilter : "+$percentClusterFilter.getValue());
-		update($runInfo);
 		insert(laneInfo);
 	
 end
-
-rule "Calculate average percentClusterFilter for run"
-	@nglBI( rg_1 )
-	dialect "java"
-	salience 450
-	no-loop
-	when
-		$run : Run($treatment : treatments["ngsrg"], $treatment!=null)
-		$mapValue : Map() from $treatment.results.values()
-		$runInfo : RunInfo(sizeLanes==valuesPercentClusterFilter.size())
-		$avgPercentClusterFilter : Double() 
-			from accumulate ($propertyValue : PropertyValue() from $runInfo.valuesPercentClusterFilter,
-			 average($propertyValue.value))
-	then
-		Logger.debug("Calculate average percentClusterFilter for run "+$runInfo.getCode());
-		Logger.debug("Average "+$avgPercentClusterFilter);
-		//Create new PropertyValue
-		PropertySingleValue propertyPercentClusterFilter = new PropertySingleValue($avgPercentClusterFilter);
-		$mapValue.put("percentClusterIlluminaFilter", propertyPercentClusterFilter);
-		//Update treatment for Run
-		MongoDBDAO.updateSet(InstanceConstants.RUN_ILLUMINA_COLL_NAME, $run, "treatments."+$treatment.getCode(), $treatment);
-end 
 
 rule "Get all readSet"
 	@nglBI( rg_1 )

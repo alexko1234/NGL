@@ -1,12 +1,12 @@
 package rules;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import junit.framework.Assert;
-
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -18,7 +18,6 @@ import net.vz.mongodb.jackson.DBQuery;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import play.Logger;
 import rules.services.RulesException;
 import rules.services.RulesServices;
 import utils.AbstractTests;
@@ -57,7 +56,7 @@ public class StatRGTest extends AbstractTests{
 
 	
 	@Test
-	public void testStatRG() throws RulesException
+	public void testStatRG() throws RulesException, ParseException
 	{
 
 
@@ -70,16 +69,18 @@ public class StatRGTest extends AbstractTests{
 		runData = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", "121107_HISEQ1_D094VACXX"));
 		
 		//Check percentClusterIlluminaFilter for run
-		int nbLane = runData.lanes.size();
-		double sumPercentClusterIlluminaFilter=0;
-		
+		//Calculate percentClusterIlluminaFilter
+		long nbClusterIlluminaFilter = ((PropertyValue<Long>)runData.treatments.get("ngsrg").results.get("default").get("nbClusterIlluminaFilter")).value;
+		long nbClusterTotal = ((PropertyValue<Long>)runData.treatments.get("ngsrg").results.get("default").get("nbClusterTotal")).value;
+		double percentClusterForRun = roundValue((double)nbClusterIlluminaFilter/nbClusterTotal*100);
+		double percentDB = ((PropertyValue<Double>)runData.treatments.get("ngsrg").results.get("default").get("percentClusterIlluminaFilter")).value;
+		Assert.assertEquals(percentClusterForRun, percentDB);
 		
 		//Check value for lane 5
 		for(Lane lane : runData.lanes){
 			Treatment treatRG = lane.treatments.get("ngsrg");
 			Map<String,PropertyValue> results = treatRG.results.get("default");
 			//Get percentClusterIlluminaFilter
-			sumPercentClusterIlluminaFilter+=((PropertyValue<Double>)results.get("percentClusterIlluminaFilter")).value;
 			Assert.assertTrue(results.containsKey("seqLossPercent"));
 			if(lane.number==5){
 				//Check for readSetCode E421_FE_B00FS5U_5_D094VACXX.IND1
@@ -92,10 +93,13 @@ public class StatRGTest extends AbstractTests{
 			}
 		}
 		
-		//Calculate percentClusterIlluminaFilter
-		double percentClusterForRun = (double)sumPercentClusterIlluminaFilter/nbLane;
-		double percentDB = ((PropertyValue<Double>)runData.treatments.get("ngsrg").results.get("default").get("percentClusterIlluminaFilter")).value;
-		Assert.assertEquals(percentClusterForRun, percentDB);
+		
+	}
+	
+	private Double roundValue(double value) throws ParseException
+	{
+		DecimalFormat df=new DecimalFormat("0.00");
+		return (Double)df.parse(df.format(value)).doubleValue();
 	}
 	
 	
