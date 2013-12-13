@@ -38,8 +38,8 @@ angular.module('datatableServices', []).
 								pageNumber:0,
 								numberPageListMax:3,
 	    						pageList:[],
-								numberRecordsPerPage:10,
-	    						numberRecordsPerPageList: [{number:10, clazz:'active'},{number:25, clazz:''},{number:50, clazz:''},{number:100, clazz:''}]
+								numberRecordsPerPage:1,
+	    						numberRecordsPerPageList: [{number:1, clazz:'active'},{number:10, clazz:''},{number:25, clazz:''},{number:50, clazz:''},{number:100, clazz:''}]
 							},
 							order : {
 								active:true,
@@ -443,6 +443,7 @@ angular.module('datatableServices', []).
 		    			 */
 		    			setEdit : function(columnId){	
 		    				if(this.config.edit.active){
+		    					this.config.edit.columns = {};
 			    				var find = false;
 			    				for(var i = 0; i < this.displayResult.length; i++){
 			    					
