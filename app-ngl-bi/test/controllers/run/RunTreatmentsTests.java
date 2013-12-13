@@ -99,6 +99,7 @@ public class RunTreatmentsTests extends AbstractTests {
 		m.put("flowcellVersion", new PropertySingleValue("v1"));
 		m.put("controlLane", new PropertySingleValue(90));
 		m.put("mismatch", new PropertySingleValue(true));
+		m.put("percentClusterIlluminaFilter", new PropertySingleValue(96.125));
 		t.set("default", m);
 		
 		return t;
@@ -148,6 +149,7 @@ public class RunTreatmentsTests extends AbstractTests {
 		m2.put("flowcellVersion", new PropertySingleValue("v3"));
 		m2.put("controlLane", new PropertySingleValue(66));
 		m2.put("mismatch", new PropertySingleValue(false));
+		m2.put("percentClusterIlluminaFilter", new PropertySingleValue(96.125));
 		
 		t.results().remove("default");
 		t.set("default", m2);
