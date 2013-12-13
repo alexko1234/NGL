@@ -135,9 +135,9 @@ readsets.bioinformaticValuation.valid = Valide BioInfo ?
 
 readsets.code = Code
 readsets.state.code = Etat
-readsets.productionValuation.valid = Valide Prod ?
-readsets.productionValuation.resolutions = Comptes Rendus Prod
-readsets.productionValuation.criteria = Critères Prod
+readsets.productionValuation.valid = Valide QC ?
+readsets.productionValuation.resolutions = Comptes Rendus QC
+readsets.productionValuation.criteria = Critères QC
 readsets.valuation.user = Evalué par
 
 readsets.bioinformaticValuation.valid = Valide BioInfo ?
