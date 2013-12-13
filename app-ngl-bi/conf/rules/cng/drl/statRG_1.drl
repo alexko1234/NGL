@@ -27,6 +27,7 @@ rule "Calculate average percentClusterFilter for run"
 		$mapValue : Map() from $treatment.results.values()
 		$nbClusterIlluminaFilter : Entry(key=="nbClusterIlluminaFilter") from $mapValue.entrySet()
 		$nbClusterTotal : Entry(key=="nbClusterTotal") from $mapValue.entrySet()
+		eval((Long)((PropertyValue)$nbClusterTotal.getValue()).getValue()>0)
 	then
 		Logger.debug("Calculate  percentClusterIlluminaFilter for run "+$run.getCode());
 		//Calculate validSeqPercent
@@ -84,7 +85,7 @@ rule "Calculate seqPercent readSet"
 	salience 300
 	no-loop
 	when
-		$readSetInfo : ReadSetInfo($treatment : readSet.treatments["ngsrg"], $treatment!=null, validSeqPercent==null)
+		$readSetInfo : ReadSetInfo($treatment : readSet.treatments["ngsrg"], $treatment!=null, validSeqPercent==null,nbClusterLane>0)
 		$mapValue : Map() from $treatment.results.values()
 		$nbCluster : Entry(key=="nbCluster") from $mapValue.entrySet()
 	then

@@ -91,7 +91,7 @@ rule "Send alert info"
        MailServices mailService = new MailServices();
        Set<String> destinataires = new HashSet<String>();
        destinataires.addAll(Arrays.asList(alertMailDest.split(",")));
-       mailService.sendMail(alertMailExp, destinataires, "ALERT SAV", $alertSAVInfo.toString());
+       mailService.sendMail(alertMailExp, destinataires, "ALERT SAV - "+$alertSAVInfo.getRunCode(), $alertSAVInfo.toString());
 end
 
 rule "Save alert info"
