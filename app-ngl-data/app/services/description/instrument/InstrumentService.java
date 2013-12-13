@@ -160,7 +160,7 @@ public class InstrumentService {
 		instruments.add(createInstrument("AZOTE", "AZOTE", false, "/env/atelier/solexa_AZOTE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		instruments.add(createInstrument("CARBONE", "CARBONE", false, "/env/atelier/solexa_CARBONE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		instruments.add(createInstrument("CHROME", "CHROME", false, "/env/atelier/solexa_CHROME", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("MERCURE	", "MERCURE", true, "/env/atelier/solexa_MERCURE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("MERCURE", "MERCURE", true, "/env/atelier/solexa_MERCURE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		instruments.add(createInstrument("SOUFRE", "SOUFRE", true, "/env/atelier/solexa_SOUFRE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		return instruments;
 	}
