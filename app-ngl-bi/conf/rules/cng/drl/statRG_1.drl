@@ -3,7 +3,7 @@ package rules
 
 #declare any global variables here
 declare ReadSetInfo
-	laneNumber : Integer @key
+	lane : Lane @key
 	nbClusterLane : Long @key
 	readSet : ReadSet @key
 	validSeqPercent : Double
@@ -70,7 +70,7 @@ rule "Get all readSet"
     then
     	//Get readSet from database to calculate each validSeqPercent per readSet
     	ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, $readSet);	
-    	ReadSetInfo readSetInfo = new ReadSetInfo($lane.getNumber(),$laneInfo.getNbClusterLane(),readSet);
+    	ReadSetInfo readSetInfo = new ReadSetInfo($lane,$laneInfo.getNbClusterLane(),readSet);
     	//Update laneInfo
     	$laneInfo.getReadSets().add(readSetInfo);
     	insert(readSetInfo);
@@ -109,7 +109,7 @@ rule "Calculate seqLossPercent Lane"
 	when
 		$laneInfo : LaneInfo(sizeReadSets == readSets.size(), $treatment : lane.treatments["ngsrg"], $treatment!=null)
 		$mapValue : Map() from $treatment.results.values()
-		$sumValidSeqPercent : Double() from accumulate (ReadSetInfo(laneNumber==$laneInfo.lane.number, validSeqPercent!=null, $value : validSeqPercent), sum($value))
+		$sumValidSeqPercent : Double() from accumulate (ReadSetInfo(lane==$laneInfo.lane, validSeqPercent!=null, $value : validSeqPercent), sum($value))
 	then
 		Double seqLossPercent =roundValue(100-$sumValidSeqPercent);
 		//Create new PropertyValue seqLossPercent
