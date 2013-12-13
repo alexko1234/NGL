@@ -38,8 +38,8 @@ angular.module('datatableServices', []).
 								pageNumber:0,
 								numberPageListMax:3,
 	    						pageList:[],
-								numberRecordsPerPage:1,
-	    						numberRecordsPerPageList: [{number:1, clazz:'active'},{number:10, clazz:''},{number:25, clazz:''},{number:50, clazz:''},{number:100, clazz:''}]
+								numberRecordsPerPage:10,
+	    						numberRecordsPerPageList: [{number:10, clazz:''},{number:25, clazz:''},{number:50, clazz:''},{number:100, clazz:''}]
 							},
 							order : {
 								active:true,
