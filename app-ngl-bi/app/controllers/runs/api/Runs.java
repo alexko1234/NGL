@@ -80,15 +80,14 @@ public class Runs extends CommonController {
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
-			form.orderBy = "code";
-			form.orderSense = 0;
+			if(null == form.orderBy)form.orderBy = "code";
+			if(null == form.orderSense)form.orderSense = 0;
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);			
-			List<Run> runs = results.toList();
-			
+			List<Run> runs = results.toList();			
 			return ok(Json.toJson(toListObjects(runs)));
 		}else{
-			form.orderBy = "code";
-			form.orderSense = 0;
+			if(null == form.orderBy)form.orderBy = "code";
+			if(null == form.orderSense)form.orderSense = 0;
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form));	
 			List<Run> runs = results.toList();
 			return ok(Json.toJson(runs));
@@ -171,11 +170,13 @@ public class Runs extends CommonController {
 			runInput.traceInformation = new TraceInformation();
 			runInput.traceInformation.setTraceInformation(getCurrentUser());
 			
-			if(null != runInput.state) {
-				//TODO PUSH state.code = "N"
-				runInput.state.user = getCurrentUser();
-				runInput.state.date = new Date();		
+			if(null == runInput.state){
+				runInput.state = new State();
 			}
+			runInput.state.code = "N";
+			runInput.state.user = getCurrentUser();
+			runInput.state.date = new Date();		
+			
 		} else {
 			return badRequest("use PUT method to update the readset");
 		}
