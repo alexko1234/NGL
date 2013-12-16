@@ -60,6 +60,7 @@ public class Migration extends CommonController {
 			for(RunOld run : runs){
 				migreRun(run);
 			}
+			Logger.info("Migration run end");
 		
 		}else{
 			Logger.info("Migration run already execute !");
@@ -75,7 +76,7 @@ public class Migration extends CommonController {
 			for(ReadSetOld readSet : readSets){
 				migreReadSet(readSet);				
 			}
-			
+			Logger.info("Migration readset end");
 						
 		}else{
 			Logger.info("Migration readset already execute !");

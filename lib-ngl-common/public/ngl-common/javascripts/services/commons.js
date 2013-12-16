@@ -91,6 +91,9 @@ angular.module('commonsServices', []).
     				types : function(params){
     					load(jsRoutes.controllers.commons.api.CommonInfoTypes.list().url,params,'types');    				
     				},
+    				runs : function(params){
+    					load(jsRoutes.controllers.runs.api.Runs.list().url,params,'runs');    				
+    				},
     				all : function(params){
     					this.resolutions(params);
     					this.valuationCriterias(params);
@@ -98,6 +101,7 @@ angular.module('commonsServices', []).
     					this.samples(params);
     					this.states(params);
     					this.types(params);
+    					this.runs(params);
     				}
     		};
     		

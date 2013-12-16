@@ -118,7 +118,7 @@ public abstract class CommonController extends Controller{
 					.sort(form.orderBy, Sort.valueOf(form.orderSense))
 					.page(form.pageNumber,form.numberRecordsPerPage); 
 		}else{
-			results = MongoDBDAO.find(collection, type, query) 
+			results = MongoDBDAO.find(collection, type, query, keys) 
 					.sort(form.orderBy, Sort.valueOf(form.orderSense))
 					.limit(form.limit);
 		}
