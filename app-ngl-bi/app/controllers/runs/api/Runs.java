@@ -14,6 +14,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
+import models.laboratory.container.instance.Container;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -27,6 +28,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 
+import com.mongodb.BasicDBObject;
 import com.typesafe.config.ConfigFactory;
 
 import akka.actor.ActorRef;
@@ -47,7 +49,6 @@ import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 import controllers.CommonController;
 import controllers.authorisation.Permission;
-import controllers.utils.FormUtils;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
@@ -69,16 +70,21 @@ public class Runs extends CommonController {
 	public static Result list(){
 		Form<RunsSearchForm> filledForm = filledFormQueryString(searchForm, RunsSearchForm.class);
 		RunsSearchForm form = filledForm.get();
-		
 		if(form.datatable){
-			MongoDBResult<Run> results = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, getQuery(form)) 
-					.sort(form.orderBy, Sort.valueOf(form.orderSense))
-					.page(form.pageNumber,form.numberRecordsPerPage); 
+			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form));			
 			List<Run> runs = results.toList();
 			return ok(Json.toJson(new DatatableResponse<Run>(runs, results.count())));
+		}else if(form.list){
+			BasicDBObject keys = new BasicDBObject();
+			keys.put("_id", 0);//Don't need the _id field
+			keys.put("code", 1);
+			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);			
+			results.sort("code");
+			List<Run> runs = results.toList();
+			return ok(Json.toJson(runs));
 		}else{
-			MongoDBResult<Run> results = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, getQuery(form))
-					.sort("code", Sort.valueOf(form.orderSense)).limit(form.limit);
+			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form));	
+			results.sort("code");
 			List<Run> runs = results.toList();
 			return ok(Json.toJson(runs));
 		}

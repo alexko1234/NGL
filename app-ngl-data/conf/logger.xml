@@ -25,7 +25,7 @@
 		<sift>
 
 			<appender name="SMTP_${name}" class="ch.qos.logback.classic.net.SMTPAppender">
-				<smtpHost>${smtp.serveur}</smtpHost>
+				<smtpHost>${mail.smtp.host}</smtpHost>
 				<to>${import.email.to}</to>
 				<from>${import.email.from}</from>
 				<subject>NGL-DATA : Import Data ${name} </subject>
