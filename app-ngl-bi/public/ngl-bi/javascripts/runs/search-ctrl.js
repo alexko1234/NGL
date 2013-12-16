@@ -159,7 +159,7 @@ function SearchStateCtrl($scope, datatable, lists) {
 			save : {
 				active:true,
 				url:function(line){
-					return jsRoutes.controllers.runs.api.Runs.state(line.code, line.state.code).url;
+					return jsRoutes.controllers.runs.api.Runs.state(line.code).url;
 				},
 				method:'put',
 				value:function(line){return line.state;}

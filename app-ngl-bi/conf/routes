@@ -25,10 +25,8 @@ HEAD	/api/runs/:code               				controllers.runs.api.Runs.head(code: java
 POST   	/api/runs									controllers.runs.api.Runs.save()
 PUT   	/api/runs/:code 							controllers.runs.api.Runs.update(code: java.lang.String)
 DELETE	/api/runs/:code								controllers.runs.api.Runs.delete(code:java.lang.String)
-PUT		/api/runs/:code/state/:stateCode			controllers.runs.api.Runs.state(code:java.lang.String, stateCode:java.lang.String)
-#deprecated
-#PUT	/api/runs/:code/workflow/:stateCode			controllers.runs.api.Runs.state(code:java.lang.String, stateCode:java.lang.String)
-PUT		/api/runs/:code/valuation/:valid 			controllers.runs.api.Runs.valuation(code:java.lang.String, valid:java.lang.String)
+PUT		/api/runs/:code/state						controllers.runs.api.Runs.state(code:java.lang.String)
+PUT		/api/runs/:code/valuation		 			controllers.runs.api.Runs.valuation(code:java.lang.String)
 PUT		/api/runs/:code/apply-rules/:codeRules		controllers.runs.api.Runs.applyRules(code:java.lang.String, codeRules:java.lang.String)
 
 #new
@@ -53,7 +51,7 @@ POST  	/api/runs/:code/lanes								controllers.runs.api.Lanes.save(code: java.l
 PUT  	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.update(code: java.lang.String, number:java.lang.Integer)
 DELETE 	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.delete(code: java.lang.String, number:java.lang.Integer)
 DELETE	/api/runs/:code/lanes								controllers.runs.api.Lanes.deleteByRunCode(code: java.lang.String)
-PUT		/api/runs/:code/lanes/:number/valuation/:valid		controllers.runs.api.Lanes.valuation(code:java.lang.String, number:java.lang.Integer, valid:java.lang.String)
+PUT		/api/runs/:code/lanes/:number/valuation				controllers.runs.api.Lanes.valuation(code:java.lang.String, number:java.lang.Integer)
 
 GET		/api/runs/:code/lanes/:laneNumber/treatments				controllers.runs.api.LaneTreatments.list(code: java.lang.String, laneNumber:java.lang.Integer)
 GET		/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.api.LaneTreatments.get(code: java.lang.String, laneNumber:java.lang.Integer, trCode: java.lang.String)
@@ -82,7 +80,7 @@ POST 	/api/readsets								controllers.readsets.api.ReadSets.save()
 PUT    	/api/readsets/:code							controllers.readsets.api.ReadSets.update(code)
 DELETE	/api/readsets/:code							controllers.readsets.api.ReadSets.delete(code: java.lang.String)
 DELETE	/api/runs/:code/readsets					controllers.readsets.api.ReadSets.deleteByRunCode(code: java.lang.String)
-PUT		/api/readsets/:code/state/:stateCode		controllers.readsets.api.ReadSets.state(code:java.lang.String, stateCode:java.lang.String)
+PUT		/api/readsets/:code/state					controllers.readsets.api.ReadSets.state(code:java.lang.String)
 PUT		/api/readsets/:code/valuation		 		controllers.readsets.api.ReadSets.valuation(code:java.lang.String)
 
 
@@ -115,6 +113,11 @@ GET		/tpl/archives/js-routes						controllers.archives.tpl.ReadSets.javascriptRo
 PUT	   	/api/archives/readsets/:readSetCode			controllers.archives.api.ReadSets.save(readSetCode: java.lang.String)
 GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list() 
 
+
+#alerts
+GET    	/api/alerts			               			controllers.alerts.api.Alerts.list()
+GET    	/api/alerts/:code               			controllers.alerts.api.Alerts.get(code: java.lang.String)
+HEAD	/api/alerts/:code               			controllers.alerts.api.Alerts.head(code: java.lang.String)
 
 #migration
 GET		/migration									controllers.migration.Migration.migration()

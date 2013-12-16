@@ -50,8 +50,8 @@ public class ObjectTypeService {
 		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Project.name(), true, DescriptionFactory.getStates("F", "N", "IP") ));
 		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Experiment.name(), true, DescriptionFactory.getStates("F", "N", "IP") ));
 		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Process.name(), true, DescriptionFactory.getStates("F", "N", "IP") ));
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Run.name(), false, DescriptionFactory.getStates("F", "IW-V", "IP-V", "F-V", "IP-S", "F-S", "FE-S", "IW-RG", "IP-RG", "F-RG") ));
-		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.ReadSet.name(), false, DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "IP-RG", "F-RG") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Run.name(), false, DescriptionFactory.getStates("N", "F", "IW-V", "IP-V", "F-V", "IP-S", "F-S", "FE-S", "IW-RG", "IP-RG", "F-RG") ));
+		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.ReadSet.name(), false, DescriptionFactory.getStates("N", "A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "IP-RG", "F-RG") ));
 		//l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.File.name(), false, DescriptionFactory.getStates("A","UA", "IW-QC", "IP-QC", "F-QC", "IW-V", "IP-V", "F-V", "IP-RG", "F-RG") ));
 		//default values
 		//TODO : define values

@@ -147,7 +147,7 @@ public class Lanes extends CommonController{
 	
 	
 	//@Permission(value={"valuation_run_lane"})
-	public static Result valuation(String code, Integer laneNumber, String validCode){
+	public static Result valuation(String code, Integer laneNumber){
 		Run run = getRun(code, laneNumber);
 		if(run == null){
 			return badRequest();

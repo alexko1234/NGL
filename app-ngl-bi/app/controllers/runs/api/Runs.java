@@ -241,14 +241,13 @@ public class Runs extends CommonController {
 	}
 
 	//@Permission(value={"workflow_run_lane"})
-	public static Result state(String code, String stateCode){
+	public static Result state(String code){
 		Run run = getRun(code);
 		if (run == null) {
 			return badRequest();
 		}
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
-		if(null == state.code)state.code = stateCode; //backward compatibility
 		state.date = new Date();
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
@@ -266,7 +265,7 @@ public class Runs extends CommonController {
 	}
 	
 	//@Permission(value={"valuation_run_lane"})
-	public static Result valuation(String code, String validCode){
+	public static Result valuation(String code){
 		Run run = getRun(code);
 		if(run == null){
 			return badRequest();

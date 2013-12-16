@@ -225,7 +225,7 @@ function SearchStateCtrl($scope,  datatable, lists) {
 			save : {
 				active:true,
 				url:function(line){
-					return jsRoutes.controllers.readsets.api.ReadSets.state(line.code, line.state.code).url;
+					return jsRoutes.controllers.readsets.api.ReadSets.state(line.code).url;
 				},
 				method:'put',
 				value:function(line){return line.state;}

@@ -307,14 +307,13 @@ public class ReadSets extends CommonController{
 		return ok();
 	}
 	
-	public static Result state(String code, String stateCode){
+	public static Result state(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
 			return badRequest();
 		}
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
-		if(null == state.code)state.code = stateCode; //backward compatibility
 		state.date = new Date();
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());

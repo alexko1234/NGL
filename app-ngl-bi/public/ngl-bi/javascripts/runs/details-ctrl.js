@@ -20,7 +20,7 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 				showButton : false,
 				changeClass : false,
 				url:function(line){
-					return jsRoutes.controllers.runs.api.Lanes.valuation($scope.run.code, line.number, line.valuation.valid).url;
+					return jsRoutes.controllers.runs.api.Lanes.valuation($scope.run.code, line.number).url;
 				},
 				method:'put',
 				value:function(line){
@@ -28,7 +28,7 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 				},
 				callback:function(datatable, nbError){
 					if(nbError == 0){
-						$http.put(jsRoutes.controllers.runs.api.Runs.valuation($scope.run.code, $scope.run.valuation.valid).url, $scope.run.valuation).
+						$http.put(jsRoutes.controllers.runs.api.Runs.valuation($scope.run.code).url, $scope.run.valuation).
 							success(function(data, status, headers, config){
 								$scope.messages.setSuccess("save");
 								$scope.run = data;
@@ -336,7 +336,7 @@ function LanesNGSRGCtrl($scope, datatable) {
 LanesNGSRGCtrl.$inject = ['$scope', 'datatable'];
 
 
-function LanesSAVCtrl($scope, $filter,datatable) {
+function LanesSAVCtrl($scope, $filter, $http, datatable) {
 	$scope.lanesSAVR1Config = {
 			name:'lanesSAVR1',
 			order :{by:'number',mode:'local'},
@@ -355,6 +355,9 @@ function LanesSAVCtrl($scope, $filter,datatable) {
 			    		if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
 			    			value.trClass = "warning";
 			    		}
+			    		
+			    		
+			    		
 			    		return "<strong>"+value.number+"</strong>";
 			    	},
 			    	header: Messages("runs.lane.code"),
@@ -462,6 +465,15 @@ function LanesSAVCtrl($scope, $filter,datatable) {
 					return $filter('number')(value.treatments.sav.read1.intensityCycle20Perc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read1.intensityCycle20PercStd.value,2);						
 					},
 			    	header: Messages("runs.lane.sav.intensityCycle20Perc"),
+			    	type :"String",
+			    	order:false,
+			    	extraHeaders:{"0":Messages("runs.lane.sav.read1")}
+				},
+				{  	property:"treatments.sav.read1.alert",
+					render : function(value){
+						return getAlertButton(value,'read1');
+					},
+			    	header: Messages("runs.lane.sav.alerts"),
 			    	type :"String",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read1")}
@@ -599,25 +611,106 @@ function LanesSAVCtrl($scope, $filter,datatable) {
 			    	type :"String",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
+				},											
+				{  	property:"treatments.sav.read2.alert",
+					render : function(value){
+						return getAlertButton(value,'read2');
+					},
+			    	header: Messages("runs.lane.sav.alerts"),
+			    	type :"String",
+			    	order:false,
+			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
 				}												
 
 				
 			]				
 	};
 	
+	
+	var getAlertButton = function(lane, readPos){
+		var button = "";
+		var alert = $scope.alerts[$scope.run.code+'.'+lane.number+'.'+readPos];
+		
+		if(alert){
+			var button = '<button class="btn btn-mini btn-danger" type="button" popover="'+getAlertBody(alert)+'" popover-title="'+getAlertTitle()+'" popover-placement="right"><i class="icon-warning-sign"></i></button>'; 			
+		}
+		return button;
+	}
+	
+	var getAlertTitle = function(){
+		return Messages("runs.lane.sav.alert");
+	};
+	
+	var getAlertBody = function(alert){
+		var text = "";
+		for(var propertyName in alert.propertiesAlert) {
+			var list = alert.propertiesAlert[propertyName];
+			text = propertyName+" : </br>";
+			for(var i = 0; i < list.length; i++ ){
+				text = text +"\t"+list[i]+"</br>";
+			}		
+		}
+		return text;
+	};
+	
 	$scope.init = function(){
 		$scope.$watch('run', function() {
 			if(angular.isDefined($scope.run)){
-				$scope.lanesSAVR1 = datatable($scope, $scope.lanesSAVR1Config);
-				$scope.lanesSAVR1.setData($scope.run.lanes, $scope.run.lanes.length);
 				
-				$scope.lanesSAVR2 = datatable($scope, $scope.lanesSAVR2Config);
-				$scope.lanesSAVR2.setData($scope.run.lanes, $scope.run.lanes.length);
+				
+				/*
+				var isLast = false;
+				for(var i = 0; i < $scope.run.lanes.length ; i++){
+					if(i == $scope.run.lanes.length-1)isLast = true;
+					$http.get(jsRoutes.controllers.alerts.api.Alerts.get($scope.run.code+'.'+$scope.run.lanes[i].number+'.read1').url, {lane:$scope.run.lanes[i]})
+						.success(function(data, status, headers, config) {
+							config.lane.treatments.sav.read1.alert = data;
+						});
+					
+					$http.get(jsRoutes.controllers.alerts.api.Alerts.get($scope.run.code+'.'+$scope.run.lanes[i].number+'.read2').url, {lane:$scope.run.lanes[i], isLast:isLast})
+						.success(function(data, status, headers, config) {
+							config.lane.treatments.sav.read2.alert = data;
+							if(config.isLast){
+								$scope.lanesSAVR1 = datatable($scope, $scope.lanesSAVR1Config);
+								$scope.lanesSAVR1.setData($scope.run.lanes, $scope.run.lanes.length);
+								
+								$scope.lanesSAVR2 = datatable($scope, $scope.lanesSAVR2Config);
+								$scope.lanesSAVR2.setData($scope.run.lanes, $scope.run.lanes.length);
+							}
+						}).error(function(data, status, headers, config) {
+							if(config.isLast){
+								$scope.lanesSAVR1 = datatable($scope, $scope.lanesSAVR1Config);
+								$scope.lanesSAVR1.setData($scope.run.lanes, $scope.run.lanes.length);
+								
+								$scope.lanesSAVR2 = datatable($scope, $scope.lanesSAVR2Config);
+								$scope.lanesSAVR2.setData($scope.run.lanes, $scope.run.lanes.length);
+							}
+						});
+				}
+				*/
+				
+				
+				$http.get(jsRoutes.controllers.alerts.api.Alerts.list().url, {params:{regexCode:$scope.run.code+'*'}})
+					.success(function(data, status, headers, config) {
+					$scope.alerts = {};
+					for(var i =	0; i < data.length ; i++){
+						$scope.alerts[data[i].code] = data[i]; 
+					}
+					
+					$scope.lanesSAVR1 = datatable($scope, $scope.lanesSAVR1Config);
+					$scope.lanesSAVR1.setData($scope.run.lanes, $scope.run.lanes.length);
+					
+					$scope.lanesSAVR2 = datatable($scope, $scope.lanesSAVR2Config);
+					$scope.lanesSAVR2.setData($scope.run.lanes, $scope.run.lanes.length);
+					
+				});
+				
+				
 			};
 		});
 	
 	}
 }
 
-LanesSAVCtrl.$inject = ['$scope', '$filter', 'datatable'];
+LanesSAVCtrl.$inject = ['$scope', '$filter', '$http', 'datatable'];
 

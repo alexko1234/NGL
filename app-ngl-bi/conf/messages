@@ -114,6 +114,7 @@ runs.lane.sav.errorRatePercCycle75 = % Error Rate Cycle 75
 runs.lane.sav.errorRatePercCycle100 = % Error Rate Cycle 100
 runs.lane.sav.intensityCycle1 = Intensity Cycle 1
 runs.lane.sav.intensityCycle20Perc = % Intensity Cycle 20
+runs.lane.sav.alerts = Alertes
 
 runs.readsets.title = ReadSets
 
