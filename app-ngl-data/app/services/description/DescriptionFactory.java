@@ -398,7 +398,7 @@ public class DescriptionFactory {
 		return tc;
 	}
 	
-	public static TreatmentType newTreatmentType(String name, String code, TreatmentCategory category, String names, List<PropertyDefinition> propertiesDefinitions, List<TreatmentTypeContext>  contexts, List<Institute> institutes) throws DAOException {
+	public static TreatmentType newTreatmentType(String name, String code, TreatmentCategory category, String names, List<PropertyDefinition> propertiesDefinitions, List<TreatmentTypeContext>  contexts, List<Institute> institutes, Integer displayOrder) throws DAOException {
 		TreatmentType tt = new TreatmentType();
 		tt.code = code.toLowerCase();
 		tt.name = name;
@@ -409,6 +409,8 @@ public class DescriptionFactory {
 		tt.contexts = contexts;
 		
 		tt.institutes = institutes;
+		
+		tt.displayOrder = displayOrder;
 		return tt;
 	}
 	
