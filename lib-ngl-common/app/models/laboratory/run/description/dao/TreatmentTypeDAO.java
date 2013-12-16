@@ -22,7 +22,7 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 
 	protected TreatmentTypeDAO() {
 		super("treatment_type", TreatmentType.class, TreatmentTypeMappingQuery.class, 
-				"SELECT distinct c.id, c.names, c.fk_common_info_type, c.fk_treatment_category ",
+				"SELECT distinct c.id, c.names, c.fk_common_info_type, c.fk_treatment_category, c.display_order ",
 						"FROM treatment_type as c "+sqlCommonInfoType, false);
 	}
 	
