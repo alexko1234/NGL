@@ -104,5 +104,19 @@ rule "Save alert info"
     	//Convert AlertInfo to instance Alert
     	List<Alert> alerts = $alertSAVInfo.convertToAlert("sav_1");
     	//Save Alert in database
-    	MongoDBDAO.save(InstanceConstants.ALERT_COLL_NAME,alerts);
+    	for(Alert alert : alerts){
+    		//Check if alert exist
+    		Alert alertDB = MongoDBDAO.findByCode(InstanceConstants.ALERT_COLL_NAME, Alert.class, alert.code);
+			if(alertDB==null){
+				alert.createDate=new Date();
+				MongoDBDAO.save(InstanceConstants.ALERT_COLL_NAME, alert);
+			}else{
+				alert.createDate=alertDB.createDate;
+				alert.updateDate=new Date();
+				alert._id=alertDB._id;
+				MongoDBDAO.update(InstanceConstants.ALERT_COLL_NAME, alert);
+			}
+    	}
+    	
+    	//MongoDBDAO.save(InstanceConstants.ALERT_COLL_NAME,alerts);
 end
