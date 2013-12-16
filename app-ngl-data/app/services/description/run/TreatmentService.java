@@ -32,8 +32,6 @@ public class TreatmentService {
 	}
 	
 	
-	
-	
 	public static void saveTreatmentCategory(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<TreatmentCategory> l = new ArrayList<TreatmentCategory>();
 		for (TreatmentCategory.CODE code : TreatmentCategory.CODE.values()) {
@@ -56,19 +54,20 @@ public class TreatmentService {
 	
 	public static void saveTreatmentType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<TreatmentType> l = new ArrayList<TreatmentType>();
-		l.add(DescriptionFactory.newTreatmentType("NGSRG","ngsrg-illumina", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "ngsrg", getNGSRGTreatmentPopertyDefinitions(), getTreatmentTypeContexts("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newTreatmentType("Global","global", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.global.name()), "global", getReadSetTreatmentPropertyDefinitions(), getTreatmentTypeContexts("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", getSAVTreatmentPropertyDefinitions(), 
-				Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newTreatmentType("Read Quality","read-quality", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "readQualityRaw,readQualityClean", getReadQualityTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newTreatmentType("Duplicates","duplicates", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "duplicatesRaw,duplicatesClean", getDuplicatesTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2", "pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+				Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), 10));
+		l.add(DescriptionFactory.newTreatmentType("NGSRG","ngsrg-illumina", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "ngsrg", getNGSRGTreatmentPopertyDefinitions(), getTreatmentTypeContexts("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), 20));
 		
-		l.add(DescriptionFactory.newTreatmentType("Trimming","trimming", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "trimming", getTrimmingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2", "pairs", "single"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationPhiX", getContaminationPhiXTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs", "single"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", getTaxonomyTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newTreatmentType("Sorting Ribo","sorting-ribo", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sortingRibo", getSortingRiboTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2", "pairs", "single"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newTreatmentType("Mapping","mapping", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mapping", getMappingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newTreatmentType("Merging","merging", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "merging", getMergingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newTreatmentType("Global","global", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.global.name()), "global", getReadSetTreatmentPropertyDefinitions(), getTreatmentTypeContexts("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), 500));
+		
+		l.add(DescriptionFactory.newTreatmentType("Read Quality","read-quality", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "readQualityRaw,readQualityClean", getReadQualityTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), 30));
+		l.add(DescriptionFactory.newTreatmentType("Duplicates","duplicates", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "duplicatesRaw,duplicatesClean", getDuplicatesTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2", "pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), 40));
+		l.add(DescriptionFactory.newTreatmentType("Trimming","trimming", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "trimming", getTrimmingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2", "pairs", "single"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), 50));
+		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationPhiX", getContaminationPhiXTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs", "single"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), 60));
+		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", getTaxonomyTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), 70));
+		l.add(DescriptionFactory.newTreatmentType("Sorting Ribo","sorting-ribo", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sortingRibo", getSortingRiboTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2", "pairs", "single"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), 80));
+		l.add(DescriptionFactory.newTreatmentType("Mapping","mapping", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mapping", getMappingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), 90));
+		l.add(DescriptionFactory.newTreatmentType("Merging","merging", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "merging", getMergingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), 100));
 		
 		DAOHelpers.saveModels(TreatmentType.class, l, errors);
 	}

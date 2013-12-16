@@ -4,18 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.ValuationCriteria;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
-import models.laboratory.run.description.TreatmentContext;
 import models.laboratory.run.description.TreatmentType;
 import models.laboratory.run.description.TreatmentTypeContext;
-import models.utils.DescriptionHelper;
 import models.utils.dao.AbstractDAOCommonInfoType;
-import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import com.avaje.ebean.enhance.asm.Type;
@@ -31,9 +26,7 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 						"FROM treatment_type as c "+sqlCommonInfoType, false);
 	}
 	
-	//TODO
-	public List<TreatmentType> findByTreatmentContextId(long id)
-	{
+	public List<TreatmentType> findByTreatmentContextId(long id) {
 		String sql = sqlCommon+
 				" JOIN treatment_type_context as ttc ON ttc.fk_treatment_type=c.id "+
 				"WHERE fk_treatment_context = ? ";
@@ -60,6 +53,7 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 		parameters.put("names", treatmentType.names);
 		parameters.put("fk_common_info_type", treatmentType.id);
 		parameters.put("fk_treatment_category", treatmentType.category.id);
+		parameters.put("display_order", treatmentType.displayOrder);
 		jdbcInsert.execute(parameters);
 		//Add contexts
 		insertTreatmentContexts(treatmentType.contexts, treatmentType.id, false);
@@ -98,8 +92,8 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 	public void update(TreatmentType treatmentType) throws DAOException {
 		//Update contexts
 		insertTreatmentContexts(treatmentType.contexts, treatmentType.id, true);
-		String sql = "UPDATE treatment_type SET names=? WHERE id=?";
-		jdbcTemplate.update(sql, treatmentType.names, treatmentType.id);
+		String sql = "UPDATE treatment_type SET names=?, display_order=? WHERE id=?";
+		jdbcTemplate.update(sql, treatmentType.names, treatmentType.displayOrder, treatmentType.id);
 	}
 
 	@Override
