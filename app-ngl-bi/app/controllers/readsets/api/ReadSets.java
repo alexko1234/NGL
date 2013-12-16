@@ -9,6 +9,8 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.mongodb.BasicDBObject;
+
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
@@ -55,14 +57,11 @@ public class ReadSets extends CommonController{
 		
 		Query q = getQuery(form);
 		if(form.datatable){
-			MongoDBResult<ReadSet> results = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, q) 
-					.sort(form.orderBy, Sort.valueOf(form.orderSense))
-					.page(form.pageNumber,form.numberRecordsPerPage); 
+			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q);				
 			List<ReadSet> readSets = results.toList();
 			return ok(Json.toJson(new DatatableResponse<ReadSet>(readSets, results.count())));
 		}else{
-			MongoDBResult<ReadSet> results = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, q)
-					.sort("code", Sort.valueOf(form.orderSense)).limit(form.limit);
+			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q);							
 			List<ReadSet> readSets = results.toList();
 			return ok(Json.toJson(readSets));
 		}
@@ -109,12 +108,16 @@ public class ReadSets extends CommonController{
 			queries.add(DBQuery.is("sampleCode", form.sampleCode));
 		}
 		
+		if (CollectionUtils.isNotEmpty(form.runTypeCodes)) { //all
+			queries.add(DBQuery.in("runTypeCode", form.runTypeCodes));
+		}
+		
 		if(null != form.fromDate){
-			queries.add(DBQuery.greaterThanEquals("traceInformation.creationDate", form.fromDate));
+			queries.add(DBQuery.greaterThanEquals("runSequencingStartDate", form.fromDate));
 		}
 		
 		if(null != form.toDate){
-			queries.add(DBQuery.lessThanEquals("traceInformation.creationDate", form.toDate));
+			queries.add(DBQuery.lessThanEquals("runSequencingStartDate", form.toDate));
 		}
 				
 		if(queries.size() > 0){
@@ -159,6 +162,11 @@ public class ReadSets extends CommonController{
 				readSetInput.state.user = getCurrentUser();
 				readSetInput.state.date = new Date();		
 			}
+			//hack to simplify ngsrg
+			if(null != readSetInput.runCode && (null == readSetInput.runSequencingStartDate || null == readSetInput.runTypeCode)){
+				updateReadSet(readSetInput);
+				
+			}
 			
 		} else {
 			return badRequest("use PUT method to update the run");
@@ -188,6 +196,16 @@ public class ReadSets extends CommonController{
 		} else {
 			return badRequest(filledForm.errorsAsJson());
 		}
+	}
+
+	private static void updateReadSet(ReadSet readSetInput) {
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("_id", 0);//Don't need the _id field
+		keys.put("sequencingStartDate", 1);
+		keys.put("typeCode", 1);
+		Run run = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", readSetInput.runCode), keys).toList().get(0); 
+		readSetInput.runSequencingStartDate = run.sequencingStartDate;
+		readSetInput.runTypeCode = run.typeCode;
 	}
 	
 	

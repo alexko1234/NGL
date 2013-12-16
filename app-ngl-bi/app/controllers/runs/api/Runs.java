@@ -15,11 +15,13 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
+import models.utils.ListObject;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
 import net.vz.mongodb.jackson.DBUpdate;
@@ -78,18 +80,29 @@ public class Runs extends CommonController {
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
+			form.orderBy = "code";
+			form.orderSense = 0;
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);			
-			results.sort("code");
 			List<Run> runs = results.toList();
-			return ok(Json.toJson(runs));
+			
+			return ok(Json.toJson(toListObjects(runs)));
 		}else{
+			form.orderBy = "code";
+			form.orderSense = 0;
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form));	
-			results.sort("code");
 			List<Run> runs = results.toList();
 			return ok(Json.toJson(runs));
 		}
 	}
 
+	private static List<ListObject> toListObjects(List<Run> runs){
+		List<ListObject> jo = new ArrayList<ListObject>();
+		for(Run r: runs){
+			jo.add(new ListObject(r.code, r.code));
+		}
+		return jo;
+	}
+	
 	private static Query getQuery(RunsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
@@ -116,11 +129,11 @@ public class Runs extends CommonController {
 		}
 		
 		if(null != form.fromDate){
-			queries.add(DBQuery.greaterThanEquals("traceInformation.creationDate", form.fromDate));
+			queries.add(DBQuery.greaterThanEquals("sequencingStartDate", form.fromDate));
 		}
 		
 		if(null != form.toDate){
-			queries.add(DBQuery.lessThanEquals("traceInformation.creationDate", form.toDate));
+			queries.add(DBQuery.lessThanEquals("sequencingStartDate", form.toDate));
 		}
 		
 		if(queries.size() > 0){

@@ -16,6 +16,8 @@
 				}
 				<select ng-model="form.productionValidCode" title="@Messages("search.placeholder.productionValid")" ng-options="valid.code as valid.name for valid in lists.getValuations()" bs-select></select>
 				<select ng-model="form.bioinformaticValidCode" title="@Messages("search.placeholder.bioinformaticValid")" ng-options="valid.code as valid.name for valid in lists.getValuations()" bs-select></select>
+				<select ng-model="form.runTypeCodes" multiple title="@Messages("search.placeholder.runtypes")" ng-options="type.code as type.name for type in lists.getTypes()" bs-select></select>			
+				<input type="text" ng-model="form.runCodes" bs-typeahead="searchRuns" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.runs")'>
 				
 				
 				<div class="btn-toolbar pull-right">

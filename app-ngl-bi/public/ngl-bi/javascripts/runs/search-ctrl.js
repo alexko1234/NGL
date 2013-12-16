@@ -12,8 +12,8 @@ var columns = [
 					type :"String",
 			    	order:true
 				},
-				{	property:"traceInformation.creationDate",
-					header: Messages("runs.creationdate"),
+				{	property:"sequencingStartDate",
+					header: Messages("runs.sequencingStartDate"),
 					type :"Date",
 			    	order:true
 				},

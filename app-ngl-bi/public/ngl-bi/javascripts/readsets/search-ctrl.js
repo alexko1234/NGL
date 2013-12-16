@@ -25,8 +25,8 @@ function getColumns(type){
 					header: Messages("readsets.sampleCode"),
 					type :"String",
 					order:true});
-	columns.push({	property:"traceInformation.creationDate",
-					header: Messages("readsets.creationdate"),
+	columns.push({	property:"runSequencingStartDate",
+					header: Messages("runs.sequencingStartDate"),
 					type :"Date",
 					order:true});
 	
@@ -122,6 +122,11 @@ function SearchFormCtrl($scope, $filter, lists){
 				
 	}
 	
+	$scope.searchRuns = function(query){
+		return search(lists.get('runs'), query);
+				
+	}
+	
 	$scope.refreshSamples = function(){
 		if($scope.form.projectCodes){
 			lists.refresh.samples({projectCodes:$scope.form.projectCodes.split(',')});
@@ -138,6 +143,7 @@ function SearchFormCtrl($scope, $filter, lists){
 		if(form.toDate)form.toDate = moment(form.toDate, Messages("date.format").toUpperCase()).valueOf();	
 		if(form.projectCodes) form.projectCodes = form.projectCodes.split(',')
 		if(form.sampleCodes) form.sampleCodes = form.sampleCodes.split(',')
+		if(form.runCodes) form.runCodes = form.runCodes.split(',')
 		
 		if($scope.isHomePage('valuation')){
 			form.stateCodes = ["IW-V","IP-V"];
@@ -154,7 +160,9 @@ function SearchFormCtrl($scope, $filter, lists){
 	
 	$scope.init = function(){
 		$scope.lists.refresh.projects();
-		$scope.lists.refresh.states({objectTypeCode:"ReadSet"});		
+		$scope.lists.refresh.states({objectTypeCode:"ReadSet"});	
+		$scope.lists.refresh.types({objectTypeCode:"Run"});
+		$scope.lists.refresh.runs();
 	}
 	
 	
