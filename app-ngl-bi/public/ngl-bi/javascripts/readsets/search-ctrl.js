@@ -100,10 +100,6 @@ function getColumns(type){
 function SearchFormCtrl($scope, $filter, lists){
 	$scope.lists = lists;
 	
-	$scope.form = {
-			
-	}
-
 	var search = function(values, query){
 		var queryElts = query.split(',');
 		
@@ -165,8 +161,10 @@ function SearchFormCtrl($scope, $filter, lists){
 };
 SearchFormCtrl.$inject = ['$scope', '$filter', 'lists'];
 
-function SearchCtrl($scope, datatable) {
+function SearchCtrl($scope, $routeParams, datatable) {
 
+	$scope.form = {};
+	
 	$scope.datatableConfig = {
 			order :{by:'traceInformation.creationDate'},
 			search:{
@@ -185,14 +183,14 @@ function SearchCtrl($scope, datatable) {
 	
 	$scope.init = function(){
 		//to avoid to lost the previous search
+		$scope.form = $routeParams;
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, $scope.datatableConfig);
-			$scope.datatable.search();
 			$scope.setDatatable($scope.datatable);
 		}else{
 			$scope.datatable = $scope.getDatatable();
 		}
-		
+		$scope.datatable.search($scope.form);
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
 			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:false});
@@ -201,9 +199,9 @@ function SearchCtrl($scope, datatable) {
 	}	
 };
 
-SearchCtrl.$inject = ['$scope', 'datatable'];
+SearchCtrl.$inject = ['$scope', '$routeParams', 'datatable'];
 
-function SearchStateCtrl($scope, datatable, lists) {
+function SearchStateCtrl($scope,  datatable, lists) {
 
 	$scope.listsTable = lists;
 	

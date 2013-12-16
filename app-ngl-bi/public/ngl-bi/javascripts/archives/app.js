@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['datatableServices'], function($routeProvider, $locationProvider) {
+angular.module('home', ['ngRoute','datatableServices'], function($routeProvider, $locationProvider) {
 	$routeProvider.when('/archives/search/home', {
 		templateUrl : '/tpl/archives/search',
 		controller : 'SearchCtrl'

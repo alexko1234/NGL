@@ -1,6 +1,6 @@
 "use strict";
 
-function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, treatments) {
+function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, lists, treatments) {
 		
 	var lanesDTConfig = {
 			name:'lanesDT',
@@ -72,16 +72,16 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 				{	property:"valuation.resolutionCodes",
 					header: Messages("runs.lane.valuation.resolutions"),
 					render:function(value){
+						var html = "";
 						if(value.valuation.resolutionCodes){
 							var html = "<ul class='unstyled'>";
 							for(var i =0; i < value.valuation.resolutionCodes.length; i++){
 								html += "<li>"+Codes("resolution."+value.valuation.resolutionCodes[i])+"</li>";
 							}
 							html += "</ul>";
-							return html;
-						}else{
-							return "";
+							
 						}
+						return html;
 					},
 					type :"String",
 			    	edit:true,
@@ -110,6 +110,9 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 				}, 
 				{  	property:"code",
 					header: Messages("readsets.code"),
+					render : function(value){
+						return '<a href="" ng-click="goToReadSet(\''+value.code+'\')">'+value.code+'</a>';
+					},
 					type :"String",
 					order:false
 				},
@@ -181,6 +184,10 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(readSetCode).url, 'readsets');
 	}
 	
+	$scope.goToReadSets = function(){
+		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.home('search').url+'?runCode='+$scope.run.code, 'readsets');
+	}
+	
 	$scope.init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
@@ -222,14 +229,13 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 				$scope.readSetsDT = datatable($scope, $scope.readSetsDTConfig);
 				$scope.readSetsDT.setData(data, data.length);
 			});
-			
 		});
 		
 		
 	}
 	
 };
-DetailsCtrl.$inject = ['$scope', '$http', '$routeParams', 'datatable', 'messages', 'lists', 'treatments'];
+DetailsCtrl.$inject = ['$scope', '$http', '$routeParams', '$window', 'datatable', 'messages', 'lists', 'treatments'];
 
 function LanesNGSRGCtrl($scope, datatable) {
 	

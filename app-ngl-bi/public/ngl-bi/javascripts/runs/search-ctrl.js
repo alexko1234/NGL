@@ -1,5 +1,6 @@
 "use strict";
 
+function getColumns(){
 var columns = [
 			    {  	property:"code",
 			    	header: Messages("runs.code"),
@@ -38,7 +39,8 @@ var columns = [
 			    	order:true
 				}      
 			];						
-
+	return columns;
+}
 
 function SearchFormCtrl($scope, $filter, lists){
 	$scope.lists = lists;
@@ -116,7 +118,7 @@ function SearchCtrl($scope, $routeParams, datatable) {
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.get(line.code).url,remove:true});
 				}
 			},
-			columns : columns
+			columns : getColumns()
 	};
 	
 	
@@ -168,7 +170,7 @@ function SearchStateCtrl($scope, datatable, lists) {
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.get(line.code).url,remove:true});
 				}
 			},
-			columns : columns
+			columns : getColumns()
 	};
 	
 	$scope.init = function(){
@@ -206,7 +208,7 @@ function SearchValuationCtrl($scope, datatable) {
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.valuation(line.code).url,remove:true});
 				}
 			},
-			columns : columns
+			columns : getColumns()
 	};
 	
 	
@@ -227,7 +229,7 @@ function SearchValuationCtrl($scope, datatable) {
 	}	
 };
 
-SearchValuationCtrl.$inject = ['$scope', 'datatable'];
+SearchValuationCtrl.$inject = ['$scope','datatable'];
 
 
 

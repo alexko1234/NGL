@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('datatableServices', []).
-    	factory('datatable', ['$http','$filter','$parse','$compile', function($http, $filter,$parse,$compile){ //service to manage datatable
+    	factory('datatable', ['$http','$filter','$parse','$compile', '$sce', function($http, $filter,$parse,$compile,$sce){ //service to manage datatable
     		var constructor = function($scope, iConfig){
 				var datatable = {
 						configDefault:{
@@ -1376,9 +1376,9 @@ angular.module('datatableServices', []).
 		    			
 		    			var getValueElement = function(col){
 		    				if(angular.isDefined(col.render)){
-		    					return '<span ng-bind-html-unsafe="'+name+".config.columns."+attrs.index+".render(value)"+'"></span>';
+		    					return '<span dt-compile="'+name+".config.columns."+attrs.index+".render(value)"+'"></span>';
 		    				}else{
-		    					return '<span ng-bind-html-unsafe="'+getNgModel(col)+' '+columnFormatter(col)+'"></span>';
+		    					return '<span ng-bind="'+getNgModel(col)+' '+columnFormatter(col)+'"></span>';
 		    				}
 		    						    				
 		    			};
@@ -1523,4 +1523,25 @@ angular.module('datatableServices', []).
     					    });   
     					  }
     					}
-    			});
+    			}).directive('dtCompile', function($compile) {
+    				// directive factory creates a link function
+    				return function(scope, element, attrs) {
+    				    scope.$watch(
+    				        function(scope) {
+    				             // watch the 'compile' expression for changes
+    				            return scope.$eval(attrs.dtCompile);
+    				        },
+    				        function(value) {
+    				            // when the 'compile' expression changes
+    				            // assign it into the current DOM
+    				            element.html(value);
+
+    				            // compile the new DOM and link it to the current
+    				            // scope.
+    				            // NOTE: we only compile .childNodes so that
+    				            // we don't get into infinite loop compiling ourselves
+    				            $compile(element.contents())(scope);
+    				        }
+    				    );
+    				};
+    				});;
