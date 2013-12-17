@@ -645,9 +645,9 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 		var text = "";
 		for(var propertyName in alert.propertiesAlert) {
 			var list = alert.propertiesAlert[propertyName];
-			text = propertyName+" : </br>";
+			text = propertyName+" : \n";
 			for(var i = 0; i < list.length; i++ ){
-				text = text +"\t"+list[i]+"</br>";
+				text = text +"\t"+list[i]+"\n";
 			}		
 		}
 		return text;
@@ -656,40 +656,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 	$scope.init = function(){
 		$scope.$watch('run', function() {
 			if(angular.isDefined($scope.run)){
-				
-				
-				/*
-				var isLast = false;
-				for(var i = 0; i < $scope.run.lanes.length ; i++){
-					if(i == $scope.run.lanes.length-1)isLast = true;
-					$http.get(jsRoutes.controllers.alerts.api.Alerts.get($scope.run.code+'.'+$scope.run.lanes[i].number+'.read1').url, {lane:$scope.run.lanes[i]})
-						.success(function(data, status, headers, config) {
-							config.lane.treatments.sav.read1.alert = data;
-						});
-					
-					$http.get(jsRoutes.controllers.alerts.api.Alerts.get($scope.run.code+'.'+$scope.run.lanes[i].number+'.read2').url, {lane:$scope.run.lanes[i], isLast:isLast})
-						.success(function(data, status, headers, config) {
-							config.lane.treatments.sav.read2.alert = data;
-							if(config.isLast){
-								$scope.lanesSAVR1 = datatable($scope, $scope.lanesSAVR1Config);
-								$scope.lanesSAVR1.setData($scope.run.lanes, $scope.run.lanes.length);
 								
-								$scope.lanesSAVR2 = datatable($scope, $scope.lanesSAVR2Config);
-								$scope.lanesSAVR2.setData($scope.run.lanes, $scope.run.lanes.length);
-							}
-						}).error(function(data, status, headers, config) {
-							if(config.isLast){
-								$scope.lanesSAVR1 = datatable($scope, $scope.lanesSAVR1Config);
-								$scope.lanesSAVR1.setData($scope.run.lanes, $scope.run.lanes.length);
-								
-								$scope.lanesSAVR2 = datatable($scope, $scope.lanesSAVR2Config);
-								$scope.lanesSAVR2.setData($scope.run.lanes, $scope.run.lanes.length);
-							}
-						});
-				}
-				*/
-				
-				
 				$http.get(jsRoutes.controllers.alerts.api.Alerts.list().url, {params:{regexCode:$scope.run.code+'*'}})
 					.success(function(data, status, headers, config) {
 					$scope.alerts = {};
