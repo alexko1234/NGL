@@ -56,9 +56,8 @@ public class InstrumentService {
 		l.add(newInstrumentCategory("qPCR","qpcr"));
 		l.add(newInstrumentCategory("Main","hand"));
 		
-		l.add(newInstrumentCategory("HISEQ2000","HISEQ2000"));
-		l.add(newInstrumentCategory("HISEQ2500","HISEQ2500"));
-		
+		l.add(newInstrumentCategory("Sequenceurs Illumina","seq-illumina"));
+	
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 		
 	}
@@ -118,19 +117,19 @@ public class InstrumentService {
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		//CNG et CNS
-		l.add(newInstrumentUsedType("GAII", "GAII", InstrumentCategory.find.findByCode("HISEQ2000"), null, 
+		l.add(newInstrumentUsedType("GAII", "GAII", InstrumentCategory.find.findByCode("seq-illumina"), null, 
 				getInstrumentGAII(),
 				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("MISEQ", "MISEQ", InstrumentCategory.find.findByCode("HISEQ2000"), null, 
+		l.add(newInstrumentUsedType("MISEQ", "MISEQ", InstrumentCategory.find.findByCode("seq-illumina"), null, 
 				getInstrumentMiSeq(),
 				getContainerSupportCategories(new String[]{"flowcell-2"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("HISEQ2000", "HISEQ2000", InstrumentCategory.find.findByCode("HISEQ2000"), null, 
+		l.add(newInstrumentUsedType("HISEQ2000", "HISEQ2000", InstrumentCategory.find.findByCode("seq-illumina"), null, 
 				getInstrumentHiseq2000(),
 				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("HISEQ2500", "HISEQ2500", InstrumentCategory.find.findByCode("HISEQ2500"), null, 
+		l.add(newInstrumentUsedType("HISEQ2500", "HISEQ2500", InstrumentCategory.find.findByCode("seq-illumina"), null, 
 				getInstrumentHiseq2500(),
 				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
