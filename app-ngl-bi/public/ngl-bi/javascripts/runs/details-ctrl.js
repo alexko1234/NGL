@@ -638,7 +638,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 	}
 	
 	var getAlertTitle = function(){
-		return Messages("runs.lane.sav.alert");
+		return Messages("runs.lane.sav.alerts");
 	};
 	
 	var getAlertBody = function(alert){
