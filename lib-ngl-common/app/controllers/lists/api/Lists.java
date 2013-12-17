@@ -84,7 +84,7 @@ public class Lists extends Controller{
 		}			
 	}
 
-	public static Result containerStates(){		
+	public static Result containerStates(){
 		try {
 			List<ListObject> states = State.find.findAllForContainerList();
 			return Results.ok(Json.toJson(states));

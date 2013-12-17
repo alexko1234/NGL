@@ -37,7 +37,7 @@ public class Projects extends CommonController{
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("name", 1);
 			keys.put("code", 1);
-			MongoDBResult<Project> results = mongoDBFinder(InstanceConstants.PROJECT_COLL_NAME, projectsSearch, Project.class, query, keys);
+			MongoDBResult<Project> results = mongoDBFinder(InstanceConstants.PROJECT_COLL_NAME, projectsSearch, Project.class, query, keys).sort("code");
 			List<Project> projects = results.toList();
 			List<ListObject> lop = new ArrayList<ListObject>();
 			for(Project p: projects){
@@ -60,7 +60,7 @@ public class Projects extends CommonController{
 	 */
 	private static DBQuery.Query getQuery(ProjectsSearchForm projectsSearch) {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
-		
+		queryElts.add(DBQuery.exists("_id"));
 
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}

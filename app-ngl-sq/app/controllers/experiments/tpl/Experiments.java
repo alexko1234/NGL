@@ -154,8 +154,6 @@ public class Experiments extends CommonController{
   	    		controllers.containers.api.routes.javascript.Containers.list(),
   	    		controllers.containers.api.routes.javascript.Containers.get(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.search(),
-  	    		controllers.lists.api.routes.javascript.Lists.projects(),
-  	    		controllers.lists.api.routes.javascript.Lists.samples(),
   	    		controllers.lists.api.routes.javascript.Lists.processTypes(),
   	    		controllers.lists.api.routes.javascript.Lists.categoryCodes(),
   	    		controllers.lists.api.routes.javascript.Lists.experimentTypes(),
@@ -181,7 +179,11 @@ public class Experiments extends CommonController{
   	    		controllers.lists.api.routes.javascript.Lists.protocols(),
   	    		controllers.lists.api.routes.javascript.Lists.resolutions(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.getEditExperimentColumns(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.create()
+  	    		controllers.experiments.api.routes.javascript.Experiments.create(),
+				controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
+				controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
+				controllers.projects.api.routes.javascript.Projects.list(),
+  	    		controllers.samples.api.routes.javascript.Samples.list()
   	    		
   	      )	  	      
   	    );

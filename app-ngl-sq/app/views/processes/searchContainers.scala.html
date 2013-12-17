@@ -2,15 +2,15 @@
 @import scala.collection.immutable._
 @form() = {
 	<form class="well form-search form-vertical">
-		<select ng-model="form.processTypes.selected" ng-options="processType.name for processType in form.processTypes.options" ng-change="changeProcessType()">
+		<select ng-model="form.type" ng-options="processType.name for processType in  lists.getTypes()" ng-change="changeProcessType()">
 			<option value="">@Messages("processes.select.processType")</option>
 		</select>		
 		
-		<select ng-model="form.projects.selected" ng-options="project.code+' - '+project.name for project in form.projects.options" ng-change="changeProject()">
+		<select ng-model="form.project" ng-options="project.code+' - '+project.name for project in lists.getProjects()" ng-change="changeProject()">
 			<option value="">@Messages("processes.select.project")</option>
 		</select>
 		
-		<select ng-model="form.samples.selected" ng-options="sample.code for sample in form.samples.options" ng-change="search()">
+		<select ng-model="form.sample" ng-options="sample.code for sample in lists.getSamples()" ng-change="search()">
 			<option value="">@Messages("processes.select.sample")-</option>
 		</select>	
 	</form>

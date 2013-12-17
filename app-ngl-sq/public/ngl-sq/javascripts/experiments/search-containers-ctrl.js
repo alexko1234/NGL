@@ -1,6 +1,6 @@
 "use strict";
 
-function SearchContainerCtrl($scope,$routeParams, datatable,basket, comboLists) {
+function SearchContainerCtrl($scope,$routeParams, datatable,basket, lists) {
 	 
 	$scope.datatableConfig = {
 		search:{
@@ -15,7 +15,7 @@ function SearchContainerCtrl($scope,$routeParams, datatable,basket, comboLists) 
 		}
 	};
 		
-	$scope.comboLists = comboLists;
+	$scope.lists = lists;
 	
 	$scope.init = function(){
 		if(angular.isUndefined($scope.getDatatable())){
@@ -46,17 +46,12 @@ function SearchContainerCtrl($scope,$routeParams, datatable,basket, comboLists) 
 		
 		
 		if(angular.isUndefined($scope.getForm())){
-			$scope.form = {
-					experimentTypes:{},
-					experimentCategories:{},
-					processTypes:{},
-					projects:{},
-					samples:{}
-			};
+			$scope.form = {};
 			$scope.setForm($scope.form);
-			$scope.form.experimentCategories.options = $scope.comboLists.getExperimentCategories().query();
-			$scope.form.processTypes.options = $scope.comboLists.getProcessTypes().query();
-			$scope.form.projects.options = $scope.comboLists.getProjects().query();
+			
+			$scope.lists.refresh.experimentCategories();
+			$scope.lists.refresh.projects();
+			$scope.lists.refresh.types({objectTypeCode:"Process"}, true);
 			
 		} else {
 			$scope.form = $scope.getForm();		
@@ -82,37 +77,38 @@ function SearchContainerCtrl($scope,$routeParams, datatable,basket, comboLists) 
 		$scope.removeTab(1);
 		
 		$scope.basket.reset();
-		$scope.form.experimentTypes.options = $scope.comboLists.getExperimentTypesByCategory($scope.form.experimentCategories.selected.code).query();
-		
+		//$scope.form.experimentTypes.options = $scope.comboLists.getExperimentTypesByCategory($scope.form.experimentCategories.selected.code).query();
+		$scope.lists.refresh.types({objectTypeCode:"Experiment"}, true);
 		//this.search();
 	}
 	
 	$scope.changeProject = function(){
-		if($scope.form.projects.selected){
-			$scope.form.samples.options =  $scope.comboLists.getSamples($scope.form.projects.selected.code).query();			
-		} else {
-			$scope.form.samples.options = [];
-		}	
+		if($scope.form.project){
+			$scope.lists.refresh.samples({projectCode:$scope.form.project.code});
+		}else{
+			$scope.lists.clear("samples");
+		}
+		
 		$scope.search();
 	}
 	
 	
 	$scope.search = function(){
-		if($scope.form.experimentTypes.selected || $scope.newExperiment != "new"){ 		
+		if($scope.form.experimentType || $scope.newExperiment != "new"){ 		
 			var jsonSearch = {};			
 			jsonSearch.stateCode = 'A';	//default state code for containers		
-			if($scope.form.projects.selected){
-				jsonSearch.projectCode = $scope.form.projects.selected.code;
+			if($scope.form.project){
+				jsonSearch.projectCode = $scope.form.project.code;
 			}			
-			if($scope.form.samples.selected){
-				jsonSearch.sampleCode = $scope.form.samples.selected.code;
+			if($scope.form.sample){
+				jsonSearch.sampleCode = $scope.form.sample.code;
 			}			
-			if($scope.form.processTypes.selected){
-				jsonSearch.processTypeCode = $scope.form.processTypes.selected.code;
+			if($scope.form.processType){
+				jsonSearch.processTypeCode = $scope.form.processType.code;
 			}		
 			
-			if($scope.form.experimentTypes.selected){
-				jsonSearch.experimentTypeCode = $scope.form.experimentTypes.selected.code;
+			if($scope.form.experimentType){
+				jsonSearch.experimentTypeCode = $scope.form.experimentType.code;
 			}		
 			
 			$scope.datatable.search(jsonSearch);
@@ -124,9 +120,9 @@ function SearchContainerCtrl($scope,$routeParams, datatable,basket, comboLists) 
 			this.basket.add(containers[i]);
 		}
 		
-		if(($scope.form.experimentTypes.selected || $scope.newExperiment != "new") && this.basket.length() > 0 && $scope.getTabs().length === 1){
-			$scope.addTabs({label:$scope.form.experimentTypes.selected.name,href:"/experiments/new/"+$scope.form.experimentTypes.selected.code,remove:false});
+		if(($scope.form.experimentType || $scope.newExperiment != "new") && this.basket.length() > 0 && $scope.getTabs().length === 1){
+			$scope.addTabs({label:$scope.form.experimentType.name,href:"/experiments/new/"+$scope.form.experimentType.code,remove:false});
 		}
 	}
 }
-SearchContainerCtrl.$inject = ['$scope','$routeParams', 'datatable','basket','comboLists'];
+SearchContainerCtrl.$inject = ['$scope','$routeParams', 'datatable','basket','lists'];

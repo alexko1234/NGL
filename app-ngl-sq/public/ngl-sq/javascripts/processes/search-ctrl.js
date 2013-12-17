@@ -1,8 +1,10 @@
 "use strict"
 
-function SearchCtrl($scope,$location,$routeParams, datatable, comboLists) {
+function SearchCtrl($scope,$location,$routeParams, datatable, lists) {
 	
-	$scope.datatableConfig = {	
+	$scope.lists = lists;
+	
+	$scope.datatableConfig = {
 			search:{
 				url:jsRoutes.controllers.processes.api.Processes.list()
 				
@@ -22,20 +24,18 @@ function SearchCtrl($scope,$location,$routeParams, datatable, comboLists) {
 			}
 		};
 	
-	$scope.comboLists = comboLists;
-	
 	$scope.changeTypeCode = function(){
-		if($scope.form.typeCodes.selected){
-			$location.path('/processes/search/'+$scope.form.typeCodes.selected.code);
+		if($scope.form.type){
+			$location.path('/processes/search/'+$scope.form.type.code);
 		}
 	}
 	
 	$scope.changeProject = function(){
-		if($scope.form.projects.selected){
-			$scope.form.samples.options =  $scope.comboLists.getSamples($scope.form.projects.selected.code).query();			
+		if($scope.form.project){
+			$scope.lists.refresh.samples({projectCode:$scope.form.project.code});
 		}else{
-			$scope.form.samples.options = [];
-		}	
+			$scope.lists.clear("samples");
+		}
 		
 		$scope.search();
 	}
@@ -49,21 +49,21 @@ function SearchCtrl($scope,$location,$routeParams, datatable, comboLists) {
 		}
 		
 		if(angular.isUndefined($scope.getForm())){
-			$scope.form = {
-					typeCodes:{},
-					projects:{},
-					samples:{}
-			};
+			$scope.form = {};
 			$scope.setForm($scope.form);
-			$scope.form.typeCodes.options = $scope.comboLists.getProcessTypes().query();
-			$scope.form.projects.options = $scope.comboLists.getProjects().query();
+			//$scope.form.typeCodes.options = $scope.comboLists.getProcessTypes().query();
+			//$scope.form.projects.options = $scope.comboLists.getProjects().query();
+			
+			$scope.lists.refresh.projects();
+			$scope.lists.refresh.types({objectTypeCode:"Process"});
+			
 			
 		}else{
 			$scope.form = $scope.getForm();			
 		}
 		
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
-		if($scope.form.projects.selected || $scope.form.typeCodes.selected){
+		if($scope.form.project || $scope.form.type){
 			$scope.search();
 		}
 	}
@@ -71,17 +71,17 @@ function SearchCtrl($scope,$location,$routeParams, datatable, comboLists) {
 	$scope.search = function(){		
 			var jsonSearch = {};			
 
-			if($scope.form.projects.selected){
-				jsonSearch.projectCode = $scope.form.projects.selected.code;
+			if($scope.form.project){
+				jsonSearch.projectCode = $scope.form.project.code;			
 			}			
-			if($scope.form.samples.selected){
-				jsonSearch.sampleCode = $scope.form.samples.selected.code;
+			if($scope.form.sample){
+				jsonSearch.sampleCode = $scope.form.sample.code;
 			}			
-			if($scope.form.typeCodes.selected){
-				jsonSearch.typeCode = $scope.form.typeCodes.selected.code;
+			if($scope.form.type){
+				jsonSearch.typeCode = $scope.form.type.code;
 			}			
-			$scope.datatable.search(jsonSearch);							
+			$scope.datatable.search(jsonSearch);						
 	}
 }
 
-SearchCtrl.$inject = ['$scope','$location','$routeParams', 'datatable','comboLists'];
+SearchCtrl.$inject = ['$scope','$location','$routeParams', 'datatable','lists'];

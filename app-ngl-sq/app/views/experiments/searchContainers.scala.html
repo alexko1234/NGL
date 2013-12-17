@@ -2,23 +2,23 @@
 @import scala.collection.immutable._
 @form() = {
 	<form class="well form-search form-vertical">
-		<select ng-model="form.experimentCategories.selected" ng-hide="newExperiment != 'new'" ng-options="experimentCategory.name for experimentCategory in form.experimentCategories.options" ng-change="changeExperimentCategory()">
+		<select ng-model="form.experimentCategory" ng-hide="newExperiment != 'new'" ng-options="experimentCategory.name for experimentCategory in lists.getExperimentCategories()" ng-change="changeExperimentCategory()">
 			<option value="">@Messages("experiments.select.experimentType")</option>
 		</select>
 	
-		<select ng-model="form.experimentTypes.selected" ng-disabled="!form.experimentCategories.selected && newExperiment == 'new'" ng-options="experimentType.name for experimentType in form.experimentTypes.options" ng-change="changeExperimentType()">
+		<select ng-model="form.experimentType" ng-disabled="!form.experimentCategory && newExperiment == 'new'" ng-options="experimentType.name for experimentType in lists.getTypes('Experiment')" ng-change="changeExperimentType()">
 			<option value="">@Messages("experiments.select.experimentType")</option>
 		</select>
 	
-		<select ng-model="form.processTypes.selected"  ng-options="processType.name for processType in form.processTypes.options" ng-change="search()">
+		<select ng-model="form.processType"  ng-options="processType.name for processType in lists.getTypes('Process')" ng-change="search()">
 			<option value="">@Messages("processes.select.processType")</option>
 		</select>		
 		
-		<select ng-model="form.projects.selected" ng-options="project.code+' - '+project.name for project in form.projects.options" ng-change="changeProject()">
+		<select ng-model="form.project" ng-options="project.code+' - '+project.name for project in lists.getProjects()" ng-change="changeProject()">
 			<option value="">@Messages("processes.select.project")</option>
 		</select>
 		
-		<select ng-model="form.samples.selected" ng-options="sample.code for sample in form.samples.options" ng-change="search()">
+		<select ng-model="form.sample" ng-options="sample.code for sample in lists.getSamples()" ng-change="search()">
 			<option value="">@Messages("processes.select.sample")-</option>
 		</select>	
 	</form>

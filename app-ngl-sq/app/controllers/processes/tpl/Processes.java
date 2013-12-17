@@ -126,11 +126,12 @@ public class Processes extends CommonController{
 						controllers.processes.tpl.routes.javascript.Processes.searchContainers(),
 						controllers.processes.tpl.routes.javascript.Processes.home(),  
 						controllers.processes.api.routes.javascript.Processes.save(),
-						controllers.lists.api.routes.javascript.Lists.projects(),
-						controllers.lists.api.routes.javascript.Lists.samples(),
 						controllers.lists.api.routes.javascript.Lists.processTypes(),
 						controllers.containers.api.routes.javascript.Containers.list(),
-						controllers.processes.api.routes.javascript.Processes.list()
+						controllers.processes.api.routes.javascript.Processes.list(),
+						controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
+						controllers.projects.api.routes.javascript.Projects.list(),
+		  	    		controllers.samples.api.routes.javascript.Samples.list()
 						)	  	      
 				);
 	}

@@ -1,6 +1,6 @@
 "use strict"
 
-function SearchCtrl($scope,$location,$routeParams, datatable, comboLists) {
+function SearchCtrl($scope,$location,$routeParams, datatable, lists) {
 	
 	$scope.datatableConfig = {	
 			show:{
@@ -21,7 +21,7 @@ function SearchCtrl($scope,$location,$routeParams, datatable, comboLists) {
 			}
 		};
 	
-	$scope.comboLists = comboLists;
+	$scope.lists = lists;
 	
 	$scope.changeTypeCode = function(){
 		$scope.search();
@@ -36,18 +36,18 @@ function SearchCtrl($scope,$location,$routeParams, datatable, comboLists) {
 		}
 		
 		if(angular.isUndefined($scope.getForm())){
-			$scope.form = {
-					typeCodes:{}
-			};
+			$scope.form = {};
 			$scope.setForm($scope.form);
-			$scope.form.typeCodes.options = $scope.comboLists.getExperimentTypes().query();
+			//$scope.form.typeCodes.options = $scope.comboLists.getExperimentTypes().query();
+			
+			$scope.lists.refresh.types({objectTypeCode:"Experiment"});
 			
 		}else{
 			$scope.form = $scope.getForm();			
 		}
 		
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
-		if($scope.form.typeCodes.selected){
+		if($scope.form.type){
 			$scope.search();
 		}
 	}
@@ -55,12 +55,12 @@ function SearchCtrl($scope,$location,$routeParams, datatable, comboLists) {
 	$scope.search = function(){		
 			var jsonSearch = {};			
 
-			if($scope.form.typeCodes.selected){
-				jsonSearch.typeCode = $scope.form.typeCodes.selected.code;
+			if($scope.form.type){
+				jsonSearch.typeCode = $scope.form.type.code;
 			}			
 			
 			$scope.datatable.search(jsonSearch);							
 	}
 }
 
-SearchCtrl.$inject = ['$scope','$location','$routeParams', 'datatable','comboLists'];
+SearchCtrl.$inject = ['$scope','$location','$routeParams', 'datatable','lists'];

@@ -2,7 +2,7 @@
 @import scala.collection.immutable._
 @form() = {
 	<form class="well form-search form-vertical">
-		<select ng-model="form.typeCodes.selected" ng-options="typeCode.name for typeCode in form.typeCodes.options" ng-change="changeTypeCode()">
+		<select ng-model="form.type" ng-options="typeCode.name for typeCode in lists.getTypes()" ng-change="changeTypeCode()">
 			<option value="">@Messages("experiment.select.experimentType")</option>
 		</select>		
 	</form>

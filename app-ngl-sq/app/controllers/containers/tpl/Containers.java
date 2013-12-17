@@ -38,10 +38,11 @@ public class Containers extends CommonController {
   	    return ok(  	    		
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
-  	    		controllers.lists.api.routes.javascript.Lists.projects(),
-  	    		controllers.lists.api.routes.javascript.Lists.samples(),
+  	    		controllers.projects.api.routes.javascript.Projects.list(),
+  	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.containers.api.routes.javascript.Containers.list(),
-  	    		controllers.lists.api.routes.javascript.Lists.containerStates(),
+  	    		controllers.containers.api.routes.javascript.ContainerCategories.list(),
+  	    		controllers.commons.api.routes.javascript.States.list(),
   	    		controllers.lists.api.routes.javascript.Lists.containerCategoryCodes(),
   	    		controllers.containers.tpl.routes.javascript.Containers.search(),
   	    		controllers.containers.tpl.routes.javascript.Containers.home()

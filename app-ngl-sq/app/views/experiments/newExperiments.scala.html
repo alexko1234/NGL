@@ -1,7 +1,7 @@
 @(datatableConfig: views.components.datatable.DatatableConfig)
 
 @button() = {
-	<button class="btn btn-info" ng-disabled="basket.length()==0" ng-click="newExperiment();" data-toggle="tooltip" title=""><i class=" icon-large"></i>@(Messages("button.newexperiment")) {{form.experimentTypes.selected.name}}</button>
+	<button class="btn btn-info" ng-disabled="basket.length()==0" ng-click="newExperiment();" data-toggle="tooltip" title=""><i class=" icon-large"></i>@(Messages("button.newexperiment")) {{form.experimentType.name}}</button>
 }
 
 <div ng-init="init()">

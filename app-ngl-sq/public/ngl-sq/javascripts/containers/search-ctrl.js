@@ -1,6 +1,7 @@
 "use strict"
 
-function SearchCtrl($scope, datatable, comboLists) {
+function SearchCtrl($scope, datatable, lists) {
+	$scope.lists = lists;
 	
 	$scope.datatableConfig = {	
 			search:{
@@ -11,14 +12,12 @@ function SearchCtrl($scope, datatable, comboLists) {
 			}
 		};
 	
-	$scope.comboLists = comboLists;
-	
 	$scope.changeProject = function(){
-		if($scope.form.projects.selected){
-			$scope.form.samples.options =  $scope.comboLists.getSamples($scope.form.projects.selected.code).query();			
+		if($scope.form.project){
+			$scope.lists.refresh.samples({projectCode:$scope.form.project.code});
 		}else{
-			$scope.form.samples.options = [];
-		}	
+			$scope.lists.clear("samples");
+		}
 		
 		$scope.search();
 	}
@@ -32,35 +31,29 @@ function SearchCtrl($scope, datatable, comboLists) {
 			$scope.activeTab(0);
 		}
 		
-		$scope.form = {
-					categoryCodes:{},
-					projects:{},
-					samples:{},
-					stateCodes:{}
-		};
-		$scope.form.categoryCodes.options = $scope.comboLists.getContainerCategoryCodes().query();
-		$scope.form.projects.options = $scope.comboLists.getProjects().query();
-		$scope.form.stateCodes.options  = $scope.comboLists.getContainerStateCodes().query();
+		$scope.lists.refresh.projects();
+		$scope.lists.refresh.containerCategories();
+		$scope.lists.refresh.states({objectTypeCode:"Container"});
 	}
 	
 	$scope.search = function(){		
 			var jsonSearch = {};			
 
-			if($scope.form.projects.selected){
-				jsonSearch.projectCode = $scope.form.projects.selected.code;
+			if($scope.form.project){
+				jsonSearch.projectCode = $scope.form.project.code;
 			}			
-			if($scope.form.samples.selected){
-				jsonSearch.sampleCode = $scope.form.samples.selected.code;
+			if($scope.form.sample){
+				jsonSearch.sampleCode = $scope.form.sample.code;
 			}			
-			if($scope.form.categoryCodes.selected){
-				jsonSearch.categoryCode = $scope.form.categoryCodes.selected.code;
+			if($scope.form.containerCategory){
+				jsonSearch.categoryCode = $scope.form.containerCategory.code;
 			}	
 			
-			if($scope.form.stateCodes.selected){
-				jsonSearch.stateCode = $scope.form.stateCodes.selected.code;
+			if($scope.form.stateCode){
+				jsonSearch.stateCode = $scope.form.state.code;
 			}	
 			$scope.datatable.search(jsonSearch);							
 	}
 }
 
-SearchCtrl.$inject = ['$scope', 'datatable','comboLists'];
+SearchCtrl.$inject = ['$scope', 'datatable','lists'];

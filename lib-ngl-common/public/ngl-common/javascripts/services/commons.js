@@ -80,22 +80,33 @@ angular.module('commonsServices', []).
     					load(jsRoutes.controllers.lists.api.Lists.valuationCriterias().url,params,'valuationCriterias');    					
     				},
     				projects : function(params){
-    					load(jsRoutes.controllers.lists.api.Lists.projects().url,params,'projects');    					
+    					load(jsRoutes.controllers.projects.api.Projects.list().url,params,'projects');    					
     				},
     				samples : function(params){
-    					load(jsRoutes.controllers.lists.api.Lists.samples().url,params,'samples');    					
+    					load(jsRoutes.controllers.samples.api.Samples.list().url,params,'samples');    					
     				},
     				states : function(params){
     					load(jsRoutes.controllers.commons.api.States.list().url,params,'states');    				
     				},
-    				types : function(params){
-    					load(jsRoutes.controllers.commons.api.CommonInfoTypes.list().url,params,'types');    				
+    				types : function(params, multi){
+    					var name = "types";
+    					if(multi!=undefined){
+    						name = params.objectTypeCode+'Types';
+    					}
+    					load(jsRoutes.controllers.commons.api.CommonInfoTypes.list().url,params,name);    				
+    				},
+    				containerCategories : function(params){
+    					load(jsRoutes.controllers.containers.api.ContainerCategories.list().url,params,'containerCategories');
+    				},
+    				experimentCategories : function(params){
+    					load(jsRoutes.controllers.experiments.api.ExperimentCategories.list().url,params,'experimentCategories');
     				},
     				runs : function(params){
     					load(jsRoutes.controllers.runs.api.Runs.list().url,params,'runs');    				
     				},
     				all : function(params){
     					this.resolutions(params);
+    					this.containerCategories(params);
     					this.valuationCriterias(params);
     					this.projects(params);
     					this.samples(params);
@@ -124,13 +135,22 @@ angular.module('commonsServices', []).
     		return {
     			refresh : refresh,
     			get : function(values){return results[values];},
+    			clear : function(values){results[values] = undefined;},
     			getResolutions : function(){return results['resolutions'];},
     			getValuationCriterias : function(){return results['valuationCriterias'];},
     			getProjects : function(){return results['projects'];},
     			getSamples : function(){return results['samples'];},
+    			getContainerCategories : function(){return results['containerCategories'];},
+    			getExperimentCategories : function(){return results['experimentCategories'];},
     			getStates : function(){return results['states'];},
-    			getTypes : function(){return results['types'];},
-    			getValuations : getValuations    			
+    			getTypes : function(params){
+	    						if(params != undefined){
+	    							return results[params+'Types'];
+	    						}else{
+	    							return results['types'];
+	    						}
+    					   },
+    			getValuations : getValuations			
     		};
     		
     	}]).directive('messages', function() {
