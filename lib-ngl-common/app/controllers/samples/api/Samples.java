@@ -57,7 +57,7 @@ public class Samples extends CommonController{
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("name", 1);
 			keys.put("code", 1);
-			MongoDBResult<Sample> results = mongoDBFinder(InstanceConstants.SAMPLE_COLL_NAME, samplesSearch, Sample.class, query, keys);
+			MongoDBResult<Sample> results = mongoDBFinder(InstanceConstants.SAMPLE_COLL_NAME, samplesSearch, Sample.class, query, keys).sort("code");
 			List<Sample> samples = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
 			for(Sample p: samples){
