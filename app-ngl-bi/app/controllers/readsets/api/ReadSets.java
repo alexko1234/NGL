@@ -5,6 +5,7 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -119,7 +120,11 @@ public class ReadSets extends CommonController{
 		if(null != form.toDate){
 			queries.add(DBQuery.lessThanEquals("runSequencingStartDate", form.toDate));
 		}
-				
+		
+		if (StringUtils.isNotBlank(form.regexCode)) { //all
+			queries.add(DBQuery.regex("code", Pattern.compile(form.regexCode)));
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}

@@ -39,6 +39,7 @@ search.placeholder.runs = Selectionnez des runs
 search.placeholder.valid = Selectionnez une évaluation
 search.placeholder.productionValid = Selectionnez une éval prod
 search.placeholder.bioinformaticValid  = Selectionnez une éval bioinfo
+search.placeholder.regexCode = Mettez une regex pour le code
 
 button.search = Rechercher
 button.reset = Réinitialiser
