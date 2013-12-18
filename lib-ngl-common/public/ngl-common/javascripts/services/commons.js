@@ -74,7 +74,16 @@ angular.module('commonsServices', []).
     		
     		var refresh = {
     				resolutions : function(params){
-    					load(jsRoutes.controllers.lists.api.Lists.resolutions().url,params,'resolutions');
+    					load(jsRoutes.controllers.commons.api.Resolutions.list().url,params,'resolutions');
+    				},
+    				instruments : function(params){
+    					load(jsRoutes.controllers.instruments.api.Instruments.list().url,params,'instruments');
+    				},
+    				instrumentUsedTypes : function(params){
+    					load(jsRoutes.controllers.instruments.api.InstrumentUsedTypes.list().url,params,'instrumentUsedTypes');
+    				},
+    				containerSupportCategories : function(params){
+    					load(jsRoutes.controllers.containers.api.ContainerSupportCategories.list().url,params,'containerSupportCategories');
     				},
     				valuationCriterias: function(params){
     					load(jsRoutes.controllers.lists.api.Lists.valuationCriterias().url,params,'valuationCriterias');    					
@@ -87,6 +96,9 @@ angular.module('commonsServices', []).
     				},
     				states : function(params){
     					load(jsRoutes.controllers.commons.api.States.list().url,params,'states');    				
+    				},
+    				protocols : function(params){
+    					load(jsRoutes.controllers.experiments.api.Protocols.list().url,params,'protocols');    				
     				},
     				types : function(params, multi){
     					var name = "types";
@@ -113,6 +125,7 @@ angular.module('commonsServices', []).
     					this.states(params);
     					this.types(params);
     					this.runs(params);
+    					this.protocols(params);
     				}
     		};
     		

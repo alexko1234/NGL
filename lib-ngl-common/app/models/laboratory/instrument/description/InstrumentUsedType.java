@@ -6,7 +6,9 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.container.description.ContainerSupportCategory;
+import models.laboratory.instrument.description.dao.InstrumentDAO;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
+import models.utils.dao.DAOException;
 
 
 
@@ -22,7 +24,7 @@ public class InstrumentUsedType extends CommonInfoType{
 	public List<ContainerSupportCategory> inContainerSupportCategories;
 	public List<ContainerSupportCategory> outContainerSupportCategories;
 	
-	public static CommonInfoType.AbstractCommonInfoTypeFinder<InstrumentUsedType> find = new CommonInfoType.AbstractCommonInfoTypeFinder<InstrumentUsedType>(InstrumentUsedTypeDAO.class); 
+	public static InstrumentUsedTypeFinder find = new InstrumentUsedTypeFinder(); 
 	
 	public InstrumentUsedType() {
 		super(InstrumentUsedTypeDAO.class.getName());
@@ -31,5 +33,17 @@ public class InstrumentUsedType extends CommonInfoType{
 
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
 		return getPropertyDefinitionByLevel(Level.CODE.Instrument);
+	}
+	
+	
+	public static class InstrumentUsedTypeFinder extends Finder<InstrumentUsedType>{
+
+		public InstrumentUsedTypeFinder() {
+			super(InstrumentUsedTypeDAO.class.getName());			
+		}
+		
+		public List<InstrumentUsedType> findByExperimentTypeCode(String instrumentUsedTypeCode) throws DAOException{
+			return ((InstrumentUsedTypeDAO)getInstance()).findByExperimentTypeCode(instrumentUsedTypeCode);
+		}
 	}
 }

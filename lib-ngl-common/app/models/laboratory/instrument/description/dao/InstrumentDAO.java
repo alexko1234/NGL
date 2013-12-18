@@ -27,6 +27,12 @@ public class InstrumentDAO extends AbstractDAODefault<Instrument>{
 		BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
 		return this.jdbcTemplate.query(sql, mapper, idInstrumentUsedType);
 	}
+	
+	public List<Instrument> findByInstrumentUsedTypeCode(String instrumentUsedTypeCode) {
+		String sql = "SELECT i.id,i.name,i.code FROM instrument i, instrument_used_type iut, common_info_type cit WHERE i.fk_instrument_used_type=iut.id AND iut.fk_common_info_type =cit.id AND cit.code=?";
+		BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
+		return this.jdbcTemplate.query(sql, mapper, instrumentUsedTypeCode);
+	}
 
 	
 	public Instrument save(Instrument instrument, long idInstrumentUsedType) throws DAOException {

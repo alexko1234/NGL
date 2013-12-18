@@ -24,7 +24,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 
 	protected ProtocolDAO() {
 		super("protocol", Protocol.class, ProtocolMappingQuery.class,
-				"SELECT t.id, code, name, file_path, version, fk_protocol_category "+
+				"SELECT t.id, t.code, t.name, file_path, version, fk_protocol_category "+
 						"FROM protocol as t ",true);
 	}
 
@@ -35,6 +35,15 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 				"WHERE fk_experiment_type = ? ";
 		ProtocolMappingQuery protocolMappingQuery=new ProtocolMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return protocolMappingQuery.execute(id);
+	}
+	
+	public List<Protocol> findByExperimentTypeCode(String code)
+	{
+		String sql = sqlCommon+
+				" JOIN experiment_type_protocol as cit ON fk_protocol=id,  experiment_type as et, common_info_type citype "+
+				"WHERE cit.fk_experiment_type=et.id AND cit.fk_protocol=t.id AND et.fk_common_info_type=citype.id AND citype.code=? ";
+		ProtocolMappingQuery protocolMappingQuery=new ProtocolMappingQuery(dataSource, sql,new SqlParameter("id", Types.VARCHAR));
+		return protocolMappingQuery.execute(code);
 	}
 
 	public Protocol findByName(String name)

@@ -194,7 +194,7 @@ th {
 										<select class="input-medium "
 											ng-model="experiment.value.resolutionCode"
 											ng-readonly="!experiment.experimentInformation.enabled"
-											ng-options="resolution.code as resolution.name for resolution in experiment.experimentInformation.resolutions.options"
+											ng-options="resolution.code as resolution.name for resolution in lists.get('resolutions')"
 											ng-disabled="!experiment.experimentInformation.enabled">
 												<option value="">@Messages("experiments.select.resolutions")</option>
 										</select>
@@ -206,7 +206,7 @@ th {
 											<select class="input-medium "
 											ng-model="experiment.value.protocolCode"
 											ng-readonly="!experiment.experimentInformation.enabled"
-											ng-options="protocol.code as protocol.name for protocol in experiment.experimentInformation.protocols.options"
+											ng-options="protocol.code as protocol.name for protocol in lists.get('protocols')"
 											ng-disabled="!experiment.experimentInformation.enabled">
 												<option value="">@Messages("experiments.select.protocols")</option>
 										</select>
@@ -328,7 +328,7 @@ th {
 											ng-change="getInstruments()"
 											ng-model="experiment.value.instrument.categoryCode"
 											ng-readonly="!experiment.instrumentInformation.enabled"
-											ng-options="instrumentUsedType.code as instrumentUsedType.name for instrumentUsedType in experiment.instrumentInformation.instrumentUsedTypes.options"
+											ng-options="instrumentUsedType.code as instrumentUsedType.name for instrumentUsedType in lists.get('instrumentUsedTypes')"
 											ng-disabled="!experiment.instrumentInformation.enabled">
 												<option value="">@Messages("experiments.select.intrumentUsedType")</option>
 										</select>
@@ -337,7 +337,7 @@ th {
 										<select class="input-medium "
 											ng-model="experiment.value.instrument.code"
 											ng-readonly="!experiment.instrumentInformation.enabled"
-											ng-options="instrumentInformation.code as instrumentInformation.name for instrumentInformation in experiment.instrumentInformation.instruments.options"
+											ng-options="instrumentInformation.code as instrumentInformation.name for instrumentInformation in lists.get('instruments')"
 											ng-disabled="!experiment.instrumentInformation.enabled"
 											ng-hide="!experiment.value.instrument.categoryCode"
 											>
@@ -349,7 +349,7 @@ th {
 								<select class="input-medium "
 									ng-model="experiment.value.instrument.outContainerSupportCategoryCode"
 									ng-readonly="!experiment.instrumentInformation.enabled"
-									ng-options="instrumentCategory.code as instrumentCategory.name for instrumentCategory in experiment.instrumentInformation.instrumentCategorys.options"
+									ng-options="instrumentCategory.code as instrumentCategory.name for instrumentCategory in lists.get('containerSupportCategories')"
 									ng-disabled="!experiment.instrumentInformation.enabled"
 									ng-hide="!experiment.value.instrument.categoryCode"
 									>

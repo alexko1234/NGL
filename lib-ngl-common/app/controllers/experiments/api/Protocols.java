@@ -29,10 +29,11 @@ final static Form<ProtocolsSearchForm> protocolForm = form(ProtocolsSearchForm.c
 		
 		try{		
 			if(protocolSearch.experimentTypeCode != null){
-				protocols = ExperimentType.find.findByCode(protocolSearch.experimentTypeCode).protocols;
+				protocols = Protocol.find.findByExperimentTypeCode(protocolSearch.experimentTypeCode);
 			}else{
 				protocols = Protocol.find.findAll();
 			}
+			
 			if(protocolSearch.datatable){
 				return ok(Json.toJson(new DatatableResponse<Protocol>(protocols, protocols.size()))); 
 			}else if(protocolSearch.list){

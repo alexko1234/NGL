@@ -12,8 +12,10 @@ GET		/tpl/containers/js-routes										controllers.containers.tpl.Containers.ja
 
 #containers api
 GET		/api/containers													controllers.containers.api.Containers.list()
+GET		/api/containers/container-support-categories  					controllers.containers.api.ContainerSupportCategories.list()
 GET		/api/containers/categories										controllers.containers.api.ContainerCategories.list()
 GET		/api/containers/:code											controllers.containers.api.Containers.get(code:java.lang.String)
+
 
 #processes tpl
 GET 	/processes/:homecode/home										controllers.processes.tpl.Processes.home(homecode:java.lang.String)
@@ -25,17 +27,16 @@ GET		/tpl/processes/js-routes										controllers.processes.tpl.Processes.javas
 #processes api
 POST	/api/processus													controllers.processes.api.Processes.save()
 GET		/api/processus													controllers.processes.api.Processes.list()
+GET		/api/processus/types											controllers.processes.api.ProcessTypes.list()
 
 #experiments tpl
 GET 	/experiments/:homecode/home										controllers.experiments.tpl.Experiments.home(homecode:java.lang.String)
 GET 	/experiments/edit/:experimentCode								controllers.experiments.tpl.Experiments.edit(experimentCode:java.lang.String)
-
 GET		/tpl/experiments/searchContainers								controllers.experiments.tpl.Experiments.searchContainers()
 GET		/tpl/experiments/newExperiments/:experimentTypeCode				controllers.experiments.tpl.Experiments.newExperiments(experimentTypeCode:java.lang.String)
 GET		/tpl/experiments/js-routes										controllers.experiments.tpl.Experiments.javascriptRoutes()
 GET		/tpl/experiments/first-edit-experiment/:experimentTypeCode		controllers.experiments.tpl.Experiments.firstEditExperiment(experimentTypeCode:java.lang.String)
 GET		/tpl/experiments/edit-experiment/:experimentTypeCode			controllers.experiments.tpl.Experiments.editExperiment(experimentTypeCode:java.lang.String)
-
 GET		/tpl/experiments/getEditExperimentColumns						controllers.experiments.tpl.Experiments.getEditExperimentColumns()
 GET		/tpl/experiments/search/:experimentTypeCode						controllers.experiments.tpl.Experiments.search(experimentTypeCode:java.lang.String)
 
@@ -53,6 +54,8 @@ PUT		/api/experiments/:code/state/:state								controllers.experiments.api.Expe
 PUT		/api/experiments/:code/containers								controllers.experiments.api.Experiments.updateContainers(code:java.lang.String)
 POST	/api/experiments/:experimentTypeCode							controllers.experiments.api.Experiments.save(experimentTypeCode:java.lang.String)
 GET		/api/experiment/categories										controllers.experiments.api.ExperimentCategories.list()
+GET		/api/experiment/types											controllers.experiments.api.ExperimentTypes.list()
+GET		/api/experiments/protocols 										controllers.experiments.api.Protocols.list()
 
 GET		/api/experiment/instrument-properties/:instrumentUsedTypeCode	controllers.experiments.api.Experiments.getInstrumentProperties(instrumentUsedTypeCode:java.lang.String)
 
@@ -63,23 +66,14 @@ GET		/api/samples/list												controllers.samples.api.Samples.list()
 #projects
 GET		/api/projects/list												controllers.projects.api.Projects.list()
 
-
-#api combobox
-GET		/api/lists/processTypes											controllers.lists.api.Lists.processTypes()
-GET		/api/lists/experimenttypes										controllers.lists.api.Lists.experimentTypes()
-GET		/api/lists/experimenttypesbycategory/:categoryCode				controllers.lists.api.Lists.experimentTypesByCategory(categoryCode:java.lang.String)
-GET		/api/lists/containers/states									controllers.lists.api.Lists.containerStates()
-GET		/api/lists/containers/categorycodes								controllers.lists.api.Lists.containerCategoryCodes()
-GET		/api/lists/instrument-used-type/:experimentTypeCode  			controllers.lists.api.Lists.instrumentUsedTypes(experimentTypeCode:java.lang.String)
-GET		/api/lists/instruments/:instrumentUsedTypeCode  				controllers.lists.api.Lists.instruments(instrumentUsedTypeCode:java.lang.String)
-GET		/api/lists/protocols/:experimentTypeCode  						controllers.lists.api.Lists.protocols(experimentTypeCode:java.lang.String)
-GET		/api/lists/resolutions  										controllers.lists.api.Lists.resolutions()
-GET		/api/lists/experimentcategories  								controllers.lists.api.Lists.experimentCategories()
-GET		/api/lists/categorycodes/:instrumentTypeCode  					controllers.lists.api.Lists.categoryCodes(instrumentTypeCode:java.lang.String)
+#instruments
+GET		/api/instruments/types  										controllers.instruments.api.InstrumentUsedTypes.list()
+GET		/api/instruments												controllers.instruments.api.Instruments.list()
 
 #Common
-GET		/api/commons/states											controllers.commons.api.States.list()
-GET		/api/commons/types											controllers.commons.api.CommonInfoTypes.list()
+GET		/api/commons/states												controllers.commons.api.States.list()
+GET		/api/commons/types												controllers.commons.api.CommonInfoTypes.list()
+GET		/api/commons/resolutions  										controllers.commons.api.Resolutions.list()
 
 # load data
 GET	   	   /loaddata/:homecode/home										controllers.dataload.SampleLoad.home(homecode:java.lang.String)

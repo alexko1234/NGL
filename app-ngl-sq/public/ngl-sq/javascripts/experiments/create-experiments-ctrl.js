@@ -1,4 +1,4 @@
-function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse,$q) {
+function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 	$scope.experiment = {
 			outputGenerated:false,
 			value: {
@@ -655,8 +655,13 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse,$q) {
 		}
 		
 		if($scope.experiment.value.instrument.categoryCode != null ){
-			$scope.experiment.instrumentInformation.instruments.options = $scope.comboLists.getInstruments($scope.experiment.value.instrument.categoryCode).query();
-			$scope.experiment.instrumentInformation.instrumentCategorys.options =  $scope.comboLists.getCategoryCodes($scope.experiment.value.instrument.categoryCode).query();
+			
+			
+			$scope.lists.refresh.instruments({"instrumentUsedTypeCode":$scope.experiment.value.instrument.categoryCode});
+			$scope.lists.refresh.containerSupportCategories({"instrumentUsedTypeCode":$scope.experiment.value.instrument.categoryCode});
+			
+			//$scope.experiment.instrumentInformation.instruments.options = $scope.comboLists.getInstruments($scope.experiment.value.instrument.categoryCode).query();
+			//$scope.experiment.instrumentInformation.instrumentCategorys.options =  $scope.comboLists.getCategoryCodes($scope.experiment.value.instrument.categoryCode).query();
 			$scope.getInstrumentProperties($scope.experiment.value.instrument.categoryCode,loaded);
 		}
 	};
@@ -726,7 +731,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse,$q) {
 			experiment =  JSON.parse(experiment);
 		}
 		
-		$scope.comboLists = comboLists;
+		$scope.lists = lists;
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		if(experiment == ""){
 			$scope.basket = $scope.getBasket();
@@ -738,7 +743,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse,$q) {
 				$scope.setForm($scope.form);
 
 
-			$scope.experiment.value.typeCode = $scope.form.experimentTypes.selected.code;
+			$scope.experiment.value.typeCode = $scope.form.experimentType.code;
 			$scope.experiment.value.categoryCode = experimentType.category.code;
 				var basketList = $scope.getBasket().get();
 	
@@ -778,10 +783,11 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse,$q) {
 				}
 	
 				angular.element(document).ready(function() {
-					$scope.experiment.experimentTypeCode = $scope.getForm().experimentTypes.selected.code;
-					$scope.experiment.instrumentInformation.instrumentUsedTypes.options = $scope.comboLists.getInstrumentUsedTypes($scope.experiment.value.typeCode).query();
-					$scope.experiment.experimentInformation.protocols.options = $scope.comboLists.getProtocols($scope.experiment.value.typeCode).query();
-					$scope.experiment.experimentInformation.resolutions.options = $scope.comboLists.getResolution().query();
+					$scope.experiment.experimentTypeCode = $scope.getForm().experimentType.code;
+					
+					$scope.lists.refresh.instrumentUsedTypes({"experimentTypeCode":$scope.experiment.value.typeCode});
+					$scope.lists.refresh.protocols({"experimentTypeCode":$scope.experiment.value.typeCode});
+					$scope.lists.refresh.resolutions();
 				});
 	
 			} else {
@@ -791,9 +797,10 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse,$q) {
 				$scope.experiment.value = experiment;
 				$scope.state=$scope.experiment.value.stateCode;
 
-				$scope.experiment.instrumentInformation.instrumentUsedTypes.options = $scope.comboLists.getInstrumentUsedTypes($scope.experiment.value.typeCode).query();
-				$scope.experiment.experimentInformation.protocols.options = $scope.comboLists.getProtocols($scope.experiment.value.typeCode).query();
-				$scope.experiment.experimentInformation.resolutions.options = $scope.comboLists.getResolution().query();
+				$scope.lists.refresh.instrumentUsedTypes({"experimentTypeCode":$scope.experiment.value.typeCode});
+				$scope.lists.refresh.protocols({"experimentTypeCode":$scope.experiment.value.typeCode});
+				$scope.lists.refresh.resolutions();
+
 				var i=0;
 				var containers = [];//container list for the datatable
 				var promises = [];//promise for loading everithing after the data was set to datatable
@@ -882,4 +889,4 @@ function CreateNewCtrl($scope,$window, datatable, $http,comboLists,$parse,$q) {
 			}
 		}
 }
-CreateNewCtrl.$inject = ['$scope', '$window','datatable','$http','comboLists','$parse','$q'];
+CreateNewCtrl.$inject = ['$scope', '$window','datatable','$http','lists','$parse','$q'];
