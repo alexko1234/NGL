@@ -60,10 +60,6 @@ POST	/api/runs/:code/lanes/:laneNumber/treatments				controllers.runs.api.LaneTr
 PUT		/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.api.LaneTreatments.update(code: java.lang.String, laneNumber:java.lang.Integer, trCode: java.lang.String)
 DELETE	/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.api.LaneTreatments.delete(code: java.lang.String, laneNumber:java.lang.Integer, trCode: java.lang.String)
 
-#deprecated
-#GET	   	/api/runs/:code/:laneNumber					controllers.runs.api.Lanes.getOld(code: java.lang.String, laneNumber:java.lang.Integer)
-#POST  		/api/runs/:code								controllers.runs.api.Lanes.saveOld(code: java.lang.String)
-
 #readset
 GET	   	/readsets/:homecode/home				controllers.readsets.tpl.ReadSets.home(homecode: java.lang.String)
 GET	   	/readsets/:code							controllers.readsets.tpl.ReadSets.get(code: java.lang.String)
@@ -91,9 +87,6 @@ POST	/api/readsets/:code/treatments				controllers.readsets.api.ReadSetTreatment
 PUT		/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.update(code: java.lang.String, trCode: java.lang.String)
 DELETE	/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.delete(code: java.lang.String, trCode: java.lang.String)
 
-#deprecated
-#POST   	/api/runs/:code/:laneNumber				controllers.readsets.api.ReadSets.saveOld(code: java.lang.String, laneNumber:java.lang.Integer)
-
 #readset file
 GET     /api/readsets/:code/files									controllers.readsets.api.Files.list(code: java.lang.String)
 GET     /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.get(code: java.lang.String, fullname: java.lang.String)
@@ -113,6 +106,9 @@ GET		/tpl/archives/js-routes						controllers.archives.tpl.ReadSets.javascriptRo
 PUT	   	/api/archives/readsets/:readSetCode			controllers.archives.api.ReadSets.save(readSetCode: java.lang.String)
 GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list() 
 
+
+#treatmenttype
+GET		/api/treatment-types/:code					controllers.treatmenttypes.api.TreatmentTypes.get(code: java.lang.String)
 
 #alerts
 GET    	/api/alerts			               			controllers.alerts.api.Alerts.list()

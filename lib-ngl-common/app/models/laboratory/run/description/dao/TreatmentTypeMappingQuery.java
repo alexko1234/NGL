@@ -33,6 +33,7 @@ public class TreatmentTypeMappingQuery extends MappingSqlQuery<TreatmentType>{
 			TreatmentType treatmentType = new TreatmentType();
 			treatmentType.id = rs.getLong("id");
 			treatmentType.names = rs.getString("names");  
+			treatmentType.displayOrder = rs.getInt("display_order");  
 						
 			//Get commonInfoType
 			long idCommonInfoType = rs.getLong("fk_common_info_type");			

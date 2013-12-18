@@ -644,10 +644,10 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 	var getAlertBody = function(alert){
 		var text = "";
 		for(var propertyName in alert.propertiesAlert) {
-			var list = alert.propertiesAlert[propertyName];
+			var list =alert.propertiesAlert[propertyName];
 			text = propertyName+" : \n";
 			for(var i = 0; i < list.length; i++ ){
-				text = text +"\t"+list[i]+"\n";
+				text = text +"\t"+Messages(Messages("runs.lane.sav."+list[i]))+", ";
 			}		
 		}
 		return text;

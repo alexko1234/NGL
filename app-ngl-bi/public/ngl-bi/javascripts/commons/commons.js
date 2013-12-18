@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('biCommonsServices', []).
-    	factory('treatments', function(){
+    	factory('treatments',['$q','$http','$filter', function($q,$http,$filter){
     		var _treatments = [];
     		var _treatment = {};
     		
@@ -24,13 +24,26 @@ angular.module('biCommonsServices', []).
     		function init(treatments, url, excludes){
     			_treatments = [];
     			_treatment = {};
+    			var queries = [];
+				
     			for (var key in treatments) {
-					var treatment = treatments[key];
+					var treatment = treatments[key];	
 					if(angular.isUndefined(excludes) || angular.isUndefined(excludes[treatment.code])){
-						_treatments.push({code:treatment.code, url:url(treatment.typeCode).url});
+						queries.push($http.get(jsRoutes.controllers.treatmenttypes.api.TreatmentTypes.get(treatment.typeCode).url, 
+								{key:key})	
+						);
 					}
-				}
-				this.activeTreatment(_treatments[0]);
+					//_treatments.push({code:config.treatment.code, url:url(config.treatment.typeCode).url, order:data.displayOrder});
+					//this.activeTreatment(_treatments[0]);				
+    			}				
+    			$q.all(queries).then(function(results){
+					for(var i = 0; i  < results.length; i++){
+						var result = results[i];
+						_treatments.push({code:result.config.key, name:Messages("treatments."+result.config.key), url:url(result.data.code).url, order:result.data.displayOrder});
+					}
+					_treatments = $filter("orderBy")(_treatments,"order");
+					activeTreatment(_treatments[0]);		
+				});
     		};
     		
     		function getTreatment(){
@@ -47,7 +60,7 @@ angular.module('biCommonsServices', []).
     			getTreatment : getTreatment,
     			getTreatments : getTreatments
     		};
-    	}).directive('treatments', function() {
+    	}]).directive('treatments', function() {
     		return {
     			restrict: 'A',
     			scope: {

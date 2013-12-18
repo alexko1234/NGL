@@ -163,3 +163,6 @@ readsets.ngsrg.Q30 = Q30
 readsets.ngsrg.qualityScore = Score Qualité moyen
 readsets.ngsrg.validSeqPercent = % Séquences valides / piste
 
+
+treatments.sav = SAV
+treatments.ngsrg = NGS-RG
