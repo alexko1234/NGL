@@ -63,6 +63,7 @@ runs.rtaVersion = Version RTA
 runs.containerSupportCode = Code Flowcell 
 runs.intrumentCode = Code Instrument
 runs.intrumentCategoryCode = Catégorie Instrument
+runs.intrumentTypeCode = Type d''Instrument
 runs.state.code = Etat
 runs.valuation.valid = Valide ?
 runs.valuation.resolutions = Comptes Rendus
