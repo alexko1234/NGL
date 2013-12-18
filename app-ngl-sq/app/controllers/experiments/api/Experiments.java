@@ -190,9 +190,9 @@ public class Experiments extends CommonController{
 
 		if (!experimentFilledForm.hasErrors()) {
 			for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-				Workflows.setInWaitingExperiment(exp.atomicTransfertMethods.get(i).getInputContainers());
-				Workflows.setFinalState(exp.atomicTransfertMethods.get(i).getInputContainers());
-				Workflows.setFinalState(exp.atomicTransfertMethods.get(i).getOutputContainers());
+				Workflows.setContainersInWaitingExperiment(exp.atomicTransfertMethods.get(i).getInputContainers());
+				Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getInputContainers());
+				Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getOutputContainers());
 			}
 
 			/*Builder builder = new DBUpdate.Builder();
@@ -211,18 +211,18 @@ public class Experiments extends CommonController{
 
 		//TODO if first experiment in the processus then processus state to IP
 		ContextValidation ctxValidation = new ContextValidation();
-		Workflows.setExperimentStateCode(exp,stateCode,ctxValidation);
+		Workflows.setExperimentState(exp,stateCode,ctxValidation);
 		if (!ctxValidation.hasErrors()) {	 	
 			Builder builder = new DBUpdate.Builder();
 			builder = builder.set("stateCode",stateCode);
-			if(exp.stateCode.equals("IP")){
+			if(stateCode.equals("IP")){
 				for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-					Workflows.setInUse(exp.atomicTransfertMethods.get(i).getInputContainers());
+					Workflows.setContainerInUse(exp.atomicTransfertMethods.get(i).getInputContainers());
 				}
-			}else if(exp.stateCode.equals("F")){
+			}else if(stateCode.equals("F")){
 				for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-					Workflows.setFinalState(exp.atomicTransfertMethods.get(i).getInputContainers());
-					Workflows.setFinalState(exp.atomicTransfertMethods.get(i).getOutputContainers());
+					Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getInputContainers());
+					Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getOutputContainers());
 				}
 			}
 			exp = traceInformation(exp);

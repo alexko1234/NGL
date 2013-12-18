@@ -80,9 +80,6 @@ GET	   	   /loaddata/:homecode/home										controllers.dataload.SampleLoad.hom
 POST   	   /loaddata													controllers.dataload.SampleLoad.uploadDataFromCSVFile()
 POST	   /createtemplate												controllers.dataload.SampleLoad.createTemplateFile()
 
-
-GET	   /logout															controllers.administration.authentication.User.logOut()
-
 ->  /authentication authentication.Routes
 
 # Home page

@@ -73,7 +73,7 @@ public class Processes extends CommonController{
 			if (!filledForm.hasErrors()) {
 				if(value._id == null){
 					//Workflows Implementation
-					Workflows.setAvailable(value.containerInputCode,value.typeCode);
+					Workflows.setContainerAvailable(value.containerInputCode,value.typeCode);
 				}
 
 				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, new ContextValidation(filledForm.errors()));

@@ -2,14 +2,13 @@ package models.laboratory.common.instance;
 
 import java.util.Date;
 
+import models.administration.authorisation.User;
 import models.utils.HelperObjects;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;
-
-import controllers.administration.authentication.User;
 
 /**
  * Comment are embedded data in collection like Container, Experiment.... 

@@ -24,7 +24,7 @@ public class Workflows {
 	 * Set a state of a container to A (Available)
 	 * @param containerCode: the code of the container,processTypeCode: the code of the processType
 	 */
-	public static void setAvailable(String containerCode,String processTypeCode){
+	public static void setContainerAvailable(String containerCode,String processTypeCode){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerCode);
 		
 		if(container != null && (container.stateCode.equals("IW-P") || container.stateCode.equals("N"))){
@@ -37,7 +37,7 @@ public class Workflows {
 	 * Set a state of a container to A (Available)
 	 * @param containerCode: the code of the container,processTypeCode: the code of the processType
 	 */
-	public static void setAvailable(ContainerUsed containerUsed){
+	public static void setContainerAvailable(ContainerUsed containerUsed){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
 		
 		if(container != null && (container.stateCode.equals("IW-P") || container.stateCode.equals("N"))){
@@ -49,7 +49,7 @@ public class Workflows {
 	 * Set a state of a list of containerUsed to IU (In Use)
 	 * @param List<ContainerUsed> inputContainers: the list of container
 	 */
-	public static void setInUse(List<ContainerUsed> inputContainers){
+	public static void setContainerInUse(List<ContainerUsed> inputContainers){
 		for(ContainerUsed containerUsed:inputContainers){
 			Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
 			
@@ -63,15 +63,15 @@ public class Workflows {
 	 * Set final state of list if containerUsed to IS or UN (In Stock or Unavailable)
 	 * @param List<ContainerUsed> inputContainers: the list of container
 	 */
-	public static void setFinalState(List<ContainerUsed> inputContainers){
+	public static void setContainersFinalState(List<ContainerUsed> inputContainers){
 		for(ContainerUsed containerUsed:inputContainers){
 			if(containerUsed != null && containerUsed.resolutionCode!= null){
 				if(containerUsed.resolutionCode.equals("IS")){
-					setInStock(containerUsed);
+					setContainerInStock(containerUsed);
 				}else if(containerUsed.resolutionCode.equals("UN")){
-					setUnavailable(containerUsed);
+					setContainerUnavailable(containerUsed);
 				}else if(containerUsed.resolutionCode.equals("A")){
-					setAvailable(containerUsed);
+					setContainerAvailable(containerUsed);
 				}
 			}	
 		}
@@ -81,7 +81,7 @@ public class Workflows {
 	 * Set a state of a container to IS (In Stock)
 	 * @param containerCode: the code of the container
 	 */
-	public static void setInStock(ContainerUsed containerUsed){
+	public static void setContainerInStock(ContainerUsed containerUsed){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
 			
 		if(container != null && (container.stateCode.equals("IU"))){
@@ -93,7 +93,7 @@ public class Workflows {
 	 * Set a state of a container to UA (Unavailable)
 	 * @param containerCode: the code of the container
 	 */
-	public static void setUnavailable(ContainerUsed containerUsed){
+	public static void setContainerUnavailable(ContainerUsed containerUsed){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
 		
 		if(container != null && (container.stateCode.equals("IU"))){
@@ -105,7 +105,7 @@ public class Workflows {
 	 * Set a state of a container to IWE (In Waiting Experiment)
 	 * @param inputContainers: list of containerUsed
 	 */
-	public static void setInWaitingExperiment(List<ContainerUsed> inputContainers){
+	public static void setContainersInWaitingExperiment(List<ContainerUsed> inputContainers){
 		for(ContainerUsed containerUsed:inputContainers){
 			Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
 			
@@ -119,16 +119,16 @@ public class Workflows {
 	 * Set a state of an experiment 
 	 * @param experiment: the experiment, errors: the filledForm errors
 	 */
-	public static void setExperimentStateCode(Experiment experiment, String state, ContextValidation ctxValidation){
-		if(experiment.stateCode.equals("N")) {
+	public static void setExperimentState(Experiment experiment, String stateCode, ContextValidation ctxValidation){
+		if(stateCode.equals("N")) {
 			required(ctxValidation,experiment.typeCode, "typeCode");
-		} else if(experiment.stateCode.equals("IP")) {
+		} else if(stateCode.equals("IP")) {
 			required(ctxValidation, experiment.typeCode, "typeCode"); 
 			required(ctxValidation, experiment.resolutionCode, "resolutionCode");
 			required(ctxValidation, experiment.protocolCode, "protocolCode");
 			required(ctxValidation, experiment.instrument.code, "instrument");
 			
-		} else if(experiment.stateCode.equals("F")) {
+		} else if(stateCode.equals("F")) {
 			required(ctxValidation, experiment.typeCode, "typeCode"); 
 			required(ctxValidation, experiment.resolutionCode, "resolutionCode");
 			required(ctxValidation, experiment.protocolCode, "protocolCode");
@@ -145,7 +145,11 @@ public class Workflows {
 			
 
 		}else{
-			ctxValidation.addErrors(experiment.stateCode, "InvalidthisStateCode");
+			ctxValidation.addErrors(experiment.stateCode, "InvalidStateCode");
 		}	
+	}
+	
+	public static void setExperimentInProcess(){
+		
 	}
 }
