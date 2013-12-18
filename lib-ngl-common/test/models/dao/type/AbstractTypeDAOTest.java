@@ -92,7 +92,7 @@ public abstract class AbstractTypeDAOTest {
 		InstrumentUsedType cTypeId=InstrumentUsedType.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(InstrumentUsedType.find.isCodeExist(""));
-		Assert.assertNotNull(InstrumentUsedType.find.findAllForList());
+		Assert.assertNotNull(InstrumentUsedType.find.findAll());
 	}
 
 	@Test
