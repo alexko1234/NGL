@@ -133,7 +133,7 @@ GET		/api/projects/list					controllers.projects.api.Projects.list()
 #samples
 GET		/api/samples/list					controllers.samples.api.Samples.list()
 
-
+->  /authentication authentication.Routes
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               				controllers.Assets.at(path="/public", file)

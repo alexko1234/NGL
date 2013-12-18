@@ -162,11 +162,13 @@ public class ReadSets extends CommonController{
 			readSetInput.traceInformation = new TraceInformation();
 			readSetInput.traceInformation.setTraceInformation("ngsrg");
 			
-			if(null != readSetInput.state) {
-				//TODO PUSH state.code = "N"
-				readSetInput.state.user = getCurrentUser();
-				readSetInput.state.date = new Date();		
+			if(null == readSetInput.state){
+				readSetInput.state = new State();
 			}
+			readSetInput.state.code = "N";
+			readSetInput.state.user = getCurrentUser();
+			readSetInput.state.date = new Date();	
+						
 			//hack to simplify ngsrg
 			if(null != readSetInput.runCode && (null == readSetInput.runSequencingStartDate || null == readSetInput.runTypeCode)){
 				updateReadSet(readSetInput);
