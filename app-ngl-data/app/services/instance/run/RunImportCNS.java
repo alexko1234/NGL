@@ -8,15 +8,22 @@ import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
+import rules.services.RulesException;
+import rules.services.RulesServices;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 import validation.run.instance.LaneValidationHelper;
+
+import com.mongodb.MongoException;
+import com.typesafe.config.ConfigFactory;
+
 import fr.cea.ig.MongoDBDAO;
 
 public class RunImportCNS extends AbstractImportDataCNS{
@@ -27,7 +34,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 	}
 
 	@Override
-	public void runImport() throws SQLException, DAOException {
+	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
 
 		//Create Run
 		List<Run> runs=limsServices.findRunsToCreate("pl_RunToNGL", contextError);
@@ -35,7 +42,6 @@ public class RunImportCNS extends AbstractImportDataCNS{
 		//Create Lane
 		List<Run> newRuns=new ArrayList<Run>();
 		String rootKeyName=null;
-
 
 		for(Run run:runs){
 			if(run!=null) {
@@ -91,12 +97,26 @@ public class RunImportCNS extends AbstractImportDataCNS{
 			createReadSetFromRun(run, contextValidation);
 
 			if(!contextValidation.hasErrors()){
+				List<Object> list=new ArrayList<Object>();
+				list.add(run);
+				try{
+					new RulesServices().callRules(ConfigFactory.load().getString("rules.key"),"rg_1",list);
+				}catch (Exception e) {
+					contextValidation.addErrors("rules", e.toString(), run.code);
+				}
+			}
+			
+			if(!contextValidation.hasErrors()){
 				updateRuns.add(run);
 			}else {
 				contextError.errors.putAll(contextValidation.errors);
 			}			
+			
 		}		
 
+		//CallRules rg_1
+		new RulesServices().callRules(ConfigFactory.load().getString("rules.key"),"rg_1",new ArrayList<Object>(updateRuns));
+		
 		//Update Run if lane and readSet are created
 		limsServices.updateRunLims(updateRuns,contextError);
 
@@ -104,7 +124,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 	}
 
 
-	public void createFileFromReadSet(ReadSet readSet,ContextValidation ctxVal){
+	public void createFileFromReadSet(ReadSet readSet,ContextValidation ctxVal) throws SQLException{
 		List<File> files = limsServices.findFileToCreateFromReadSet(readSet,contextError);
 		String rootKeyName=null;
 		for(File file:files){
@@ -125,31 +145,40 @@ public class RunImportCNS extends AbstractImportDataCNS{
 		}
 	}
 
-	public void createReadSetFromRun(Run run,ContextValidation contextValidation){
+	public void createReadSetFromRun(Run run,ContextValidation contextValidation)throws SQLException, DAOException {
 		String rootKeyName="readSet["+run.code+"]";
 		contextValidation.addKeyToRootKeyName(rootKeyName);
 
-		List<ReadSet> readSetsOld=MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("runCode", run.code)).toList();
-		//Si readSets du run existe alors supprime les 
-		if(readSetsOld!=null){
-			for(ReadSet read:readSetsOld){
-				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, read);
-			}
+		//Delete old readSet from run
+		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code))){
+				MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code));
 		}
-
+		
 		List<ReadSet> readSets=limsServices.findReadSetToCreateFromRun(run,contextValidation);
 
 		if(!contextValidation.hasErrors() && readSets.size()!=0){
 			for(ReadSet readSet:readSets){
 
+				if (!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,readSet.sampleCode)){
+					
+					Sample sample =limsServices.findSampleToCreate(contextValidation, readSet.sampleCode);
+					if(sample!=null){
+						InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextValidation,true);
+					}
+				}
+				
 				InstanceHelpers.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet, contextValidation,true);
 
 				if(!contextValidation.hasErrors()){
 
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class
 							,DBQuery.is("code", run.code).and(DBQuery.is("lanes.number",readSet.laneNumber))
-							,DBUpdate.push("lanes.$.readSetCodes", readSet.code));
-
+							,DBUpdate.addToSet("lanes.$.readSetCodes", readSet.code));
+					
+					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class
+							,DBQuery.is("code", run.code)
+							,DBUpdate.addToSet("projectCodes", readSet.projectCode).addToSet("sampleCodes", readSet.sampleCode));
+					
 					createFileFromReadSet(readSet,contextValidation);
 				}
 

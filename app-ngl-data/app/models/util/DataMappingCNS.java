@@ -1,6 +1,7 @@
 package models.util;
 
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TBoolean;
 
 public class DataMappingCNS {
 
@@ -55,31 +56,57 @@ public class DataMappingCNS {
 		if(tadnco.equals("17")) return "chIP";
 		else
 		if(tadnco.equals("20")) return "depletedRNA";
-
+		else
+		if(tadnco.equals("9") || tadnco.equals("14")) return "default-sample-cns";
 		//Logger.debug("Erreur mapping Type materiel ("+tadnco+")/Type projet ("+tprco+") et Sample Type");
 		return null;
 	}
 
 	public static String getStateFromLims(String string) {
 		
+
 		/*
-| A     | Disponible                  |
-| UA    | Indisponible                |
-| IW-QC | En attente contr�le qualit� |
-| IP-QC | En cours contr�le qualit�   |
-| F-QC  | Contr�le qualit� termin�e   |
+
+Lot sequence
+
 | IW-V  | En attente �valuation       |
-| IP-V  | En cours �valuation         |
-| F-V   | Evaluation termin�e         |
-| IP-RG | En cours read generation    |
-| F-RG  | Read generation termin�e   
-		 */
+| A     | Disponible                  |
+
+| UA    | Indisponible                |
+
+
+   
+   Dans le lims : Etat run
+  
+ A_traiter                      
+ En_traitement                  
+ Traite                         
+ Sans_traitement                
+ Non_transfere
+ 
+ Dispatch
+       
+ Valide 
+ 
+ Etat Lot seq
+ 
+		A_traiter                      
+ Non_traite                     
+ Sans_sequence                  
+ Traite    */
 		return "F-V";
 	}
 	
 	public static String getRunTypeCodeMapping(String string) {
 		// TODO
 		return "RHS2000";
+	}
+
+
+
+	public static String getStateReadSetFromLims(TBoolean valid) {
+		// TODO Auto-generated method stub
+		return "F-V";
 	}
 
 }

@@ -24,23 +24,15 @@ import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 
-public class ContainerImportCNS extends AbstractImportDataCNS {
+public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 
-	public ContainerImportCNS(FiniteDuration durationFromStart,
+	public ContainerImportCNS(String name,FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration) {
-		super("Container CNS",durationFromStart, durationFromNextIteration);
+		super(name,durationFromStart, durationFromNextIteration);
 	}
 
-	@Override
-	public void runImport() throws SQLException, DAOException {
-			createContainers(contextError,"pl_TubeToNGL ","tube","IW-P",null,null);
-			createContainers(contextError,"pl_PrepaflowcellToNGL","lane","F",null,"pl_BanquesolexaUneLane @nom_lane=?");
-			//Ne doit-on pas séparer cette execution ???
-			contextError.setUpdateMode();
-			updateSampleFromTara();
-	}
 
-	public static void updateSampleFromTara() throws SQLException, DAOException{
+	public static void updateSampleFromTara(ContextValidation contextError) throws SQLException, DAOException{
 	
 		List<Map<String, PropertyValue>> taraPropertyList = taraServices.findTaraSampleUpdated();
 	
@@ -95,7 +87,7 @@ public class ContainerImportCNS extends AbstractImportDataCNS {
 		//
 	}
 
-	public static void saveSampleFromContainer(List<Container> containers) throws SQLException, DAOException{
+	public static void saveSampleFromContainer(ContextValidation contextError,List<Container> containers) throws SQLException, DAOException{
 		List<Container> listContainers = new ArrayList<Container>(containers);
 	
 		//
@@ -124,6 +116,7 @@ public class ContainerImportCNS extends AbstractImportDataCNS {
 	
 				}else {	
 					/* Find sample in Mongodb */
+					Logger.debug("Code sample"+content.sampleUsed.sampleCode);
 					newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, content.sampleUsed.sampleCode);	
 				}			
 	
@@ -149,7 +142,7 @@ public class ContainerImportCNS extends AbstractImportDataCNS {
 	}
 
 	public static void createContentsFromContainers(List<Container> containers,
-			String sqlContent) {
+			String sqlContent) throws SQLException {
 	
 		for(Container container:containers){
 			if(container.contents==null){
@@ -186,7 +179,7 @@ public class ContainerImportCNS extends AbstractImportDataCNS {
 			ContainerImportCNS.createContentsFromContainers(containers,sqlContent);
 		}
 	
-		ContainerImportCNS.saveSampleFromContainer(containers);
+		ContainerImportCNS.saveSampleFromContainer(contextError,containers);
 	
 		List<Container> newContainers=new ArrayList<Container>();
 	

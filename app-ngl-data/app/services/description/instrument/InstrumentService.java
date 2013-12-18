@@ -141,8 +141,7 @@ public class InstrumentService {
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("MELISSE", "MELISSE", true, "/env/atelier/solexa_MELISSE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("MIMOSSA", "MIMOSSA", true, "/env/atelier/solexa_MIMOSSA", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-// 	extmiseq	instruments.add(createInstrument("EXTMISEQ", "EXTMISEQ", true, "/env/atelier/solexa_EXTMISEQ", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("MIMOSA", "MIMOSA", true, "/env/atelier/solexa_MIMOSA", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		return instruments;
 	}
 

@@ -11,27 +11,30 @@ import com.mongodb.MongoException;
 import play.Logger;
 import play.Logger.ALogger;
 import play.libs.Akka;
+import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import validation.ContextValidation;
 
 public abstract class AbstractImportData implements Runnable{
 
-	protected static ContextValidation contextError = new ContextValidation();
+	public ContextValidation contextError;
 	final String name;
 	protected ALogger logger;
 
-	public abstract void runImport() throws SQLException, DAOException, MongoException;
+	public abstract void runImport() throws SQLException, DAOException, MongoException, RulesException;
 
 	public AbstractImportData(String name,FiniteDuration durationFromStart, FiniteDuration durationFromNextIteration){
+		this.contextError=new ContextValidation();
 		this.name=name;
 		logger=Logger.of(this.getClass().getName());
 		Akka.system().scheduler().schedule(durationFromStart,durationFromNextIteration
 				, this, Akka.system().dispatcher()
 				); 
 	}
-	
 
 	public void run() {
+		boolean error=false;
+
 		MDC.put("name", name);
 		contextError.clear();
 		contextError.addKeyToRootKeyName("import");
@@ -43,14 +46,19 @@ public abstract class AbstractImportData implements Runnable{
 			contextError.removeKeyFromRootKeyName("import");
 
 		}catch (Throwable e) {
-			
 			logger.error("",e);
+			error=true;
 		}
 		finally{
+			error=contextError.hasErrors()?true:error;
 			/* Display error messages  */
 			contextError.displayErrors(logger);
 			/* Logger send an email */
-			logger.info("ImportData End");
+			if(error){
+				logger.error("ImportData End Error");
+			}else {
+				logger.info("ImportData End");
+			}
 			MDC.remove("name");
 		}
 	};

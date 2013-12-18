@@ -35,7 +35,7 @@
 
 				<evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
 					<expression>
-						message.contains("ImportData End")
+						message.contains("ImportData End Error")
 					</expression>
 				</evaluator>
 			</appender>
@@ -53,8 +53,8 @@
 	</appender>
 
 	<logger name="play" level="INFO" />
-	<logger name="application" level="INFO" />
-	<logger name="services.instance" level="DEBUG" />
+	<logger name="application" level="DEBUG" />
+	<logger name="services.instance" level="ERROR" />
 	<root level="ERROR">
 		<appender-ref ref="SIFT_SMTP" />
 		<appender-ref ref="STDOUT" />

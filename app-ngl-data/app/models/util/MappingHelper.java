@@ -24,8 +24,7 @@ public class MappingHelper {
 			try{
 
 				code=rs.getString(propertyDefinition.code);
-				//Logger.debug("Property definition to retrieve "+propertyDefinition.code+ "value"+ code);
-				if(properties==null){ properties=new HashMap<String, PropertyValue>();}
+			//	Logger.debug("Property definition to retrieve "+propertyDefinition.code+ "value "+ code);
 				if(code!=null){
 					properties.put(propertyDefinition.code, new PropertySingleValue(code));
 				}

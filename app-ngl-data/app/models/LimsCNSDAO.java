@@ -99,8 +99,7 @@ public class LimsCNSDAO{
 				try {
 					container = ContainerHelper.createContainerFromResultSet(rs, containerCategoryCode,containerStateCode,experimentTypeCode);
 				} catch (DAOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Logger.error("",e);
 				}
 				return container;
 			}
@@ -138,7 +137,7 @@ public class LimsCNSDAO{
 				try {
 					sampleType = SampleType.find.findByCode(sampleTypeCode);
 				} catch (DAOException e) {
-					Logger.error(e.toString());
+					Logger.error("",e);
 					return null;
 				}
 
@@ -164,9 +163,11 @@ public class LimsCNSDAO{
 				sample.comments.add(new Comment(rs.getString("comment")));
 				sample.categoryCode=sampleType.category.code;
 
-
+				sample.properties=new HashMap<String, PropertyValue>();
 				MappingHelper.getPropertiesFromResultSet(rs,sampleType.propertiesDefinitions,sample.properties);
 
+				//Logger.debug("Properties sample "+sample.properties.containsKey("taxonSize"));
+				
 				boolean tara=false;
 
 				if(rs.getInt("tara")==1){
@@ -197,7 +198,7 @@ public class LimsCNSDAO{
 				}
 
 				sample.importTypeCode=DataMappingCNS.getImportTypeCode(tara,adapter);
-				Logger.debug("Import Type "+sample.importTypeCode);
+				//Logger.debug("Import Type "+sample.importTypeCode);
 				return sample;
 			}
 
@@ -206,7 +207,7 @@ public class LimsCNSDAO{
 
 		if(results.size()==1)
 		{
-			Logger.debug("One sample");
+		//	Logger.debug("One sample");
 			return results.get(0);
 		}
 		else return null;
@@ -262,7 +263,7 @@ public class LimsCNSDAO{
 	}
 
 
-	public void updateMaterielmanipLims(List<Container> containers,ContextValidation contextError) {
+	public void updateMaterielmanipLims(List<Container> containers,ContextValidation contextError) throws SQLException{
 
 		String limsCode=null;
 		String rootKeyName=null;
@@ -301,7 +302,7 @@ public class LimsCNSDAO{
 	}
 
 	//TODO
-	public List<Container> findContainersToUpdate(ContextValidation contexValidation){
+	public List<Container> findContainersToUpdate(ContextValidation contexValidation)throws SQLException{
 
 		List<Container> results = this.jdbcTemplate.query("pl_TubeUpdateToNGL ",new Object[]{} 
 		,new RowMapper<Container>() {
@@ -323,7 +324,7 @@ public class LimsCNSDAO{
 	 *  Find contents from a container code 
 	 *  
 	 *  */
-	public List<Content> findContentsFromContainer(String sqlContent, String code) {
+	public List<Content> findContentsFromContainer(String sqlContent, String code) throws SQLException{
 
 		List<Content> results = this.jdbcTemplate.query(sqlContent,new Object[]{code} 
 		,new RowMapper<Content>() {
@@ -346,7 +347,7 @@ public class LimsCNSDAO{
 
 	}
 
-	public List<Run> findRunsToCreate(String sqlContent,final ContextValidation contextError){
+	public List<Run> findRunsToCreate(String sqlContent,final ContextValidation contextError)throws SQLException{
 		List<Run> results = this.jdbcTemplate.query(sqlContent,new RowMapper<Run>() {
 
 			@SuppressWarnings("rawtypes")
@@ -369,11 +370,7 @@ public class LimsCNSDAO{
 
 				//Revoir l'etat en fonction du dispatch et de la validation
 				//TODO fin de tranfert
-				State state = new State();
-				run.state = state;
-				run.state.code = DataMappingCNS.getStateFromLims("F");
-				run.state.user = NGSRG_CODE;
-				run.state.date = new Date();
+			
 
 				Valuation valuation=new Valuation();
 				run.valuation=valuation;
@@ -383,7 +380,12 @@ public class LimsCNSDAO{
 				run.valuation.user="lims";
 				run.valuation.date=rs.getDate("validationDate");
 				//TODO	run.validation.resolutionCodes
-
+				State state = new State();
+				run.state = state;
+				run.state.code = DataMappingCNS.getStateFromLims(run.valuation.valid.toString());
+				run.state.user = NGSRG_CODE;
+				run.state.date = new Date();
+				
 				TraceInformation ti = new TraceInformation(); 
 				ti.setTraceInformation(NGSRG_CODE);
 				run.traceInformation = ti; 
@@ -417,7 +419,7 @@ public class LimsCNSDAO{
 	}
 
 
-	public List<Lane> findLanesToCreateFromRun(Run run,final ContextValidation contextError){
+	public List<Lane> findLanesToCreateFromRun(Run run,final ContextValidation contextError)throws SQLException{
 
 		List<Lane> results = this.jdbcTemplate.query("pl_LaneUnRunToNGL @runCode=?",new Object[]{run.code} 
 		,new RowMapper<Lane>() {
@@ -461,7 +463,7 @@ public class LimsCNSDAO{
 				MappingHelper.getPropertiesFromResultSet(rs, treatmentType.getPropertyDefinitionByLevel(level),m);
 			}
 		} catch (DAOException e) {
-			Logger.error(e.toString());
+			Logger.error("",e);
 		}
 		treatment.results=new HashMap<String, Map<String,PropertyValue>>();
 		treatment.results.put("default",m);
@@ -469,7 +471,7 @@ public class LimsCNSDAO{
 	}
 
 	public List<ReadSet> findReadSetToCreateFromRun(final Run run,
-			final ContextValidation contextError) {
+			final ContextValidation contextError) throws SQLException{
 		List<ReadSet> results = this.jdbcTemplate.query("pl_ReadSetUnRunToNGL @runCode=?",new Object[]{run.code} 
 		,new RowMapper<ReadSet>() {
 			@SuppressWarnings("rawtypes")
@@ -511,7 +513,7 @@ public class LimsCNSDAO{
 
 
 	public void updateRunLims(List<Run> updateRuns,
-			ContextValidation contextError) {
+			ContextValidation contextError)throws SQLException {
 		String rootKeyName=null;
 
 		contextError.addKeyToRootKeyName("updateRunLims");
@@ -527,7 +529,6 @@ public class LimsCNSDAO{
 				this.jdbcTemplate.update(sql, run.code);
 
 			} catch(DataAccessException e){
-
 				contextError.addErrors("",e.getMessage(), run.code);
 			}
 
@@ -539,7 +540,7 @@ public class LimsCNSDAO{
 	}
 
 
-	public List<File> findFileToCreateFromReadSet(final ReadSet readSet,final ContextValidation contextError) {
+	public List<File> findFileToCreateFromReadSet(final ReadSet readSet,final ContextValidation contextError)throws SQLException {
 		
 		List<File> results = this.jdbcTemplate.query("pl_FileUnReadSetToNGL @readSetCode=?",new Object[]{readSet.code} 
 		,new RowMapper<File>() {
@@ -560,10 +561,9 @@ public class LimsCNSDAO{
     			try {
 					readSetType = ReadSetType.find.findByCode(readSet.typeCode);
 				} catch (DAOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Logger.error("",e);
 				}
-				
+				file.properties=new HashMap<String, PropertyValue>();
 				MappingHelper.getPropertiesFromResultSet(rs,readSetType.getPropertyDefinitionByLevel(Level.CODE.File),file.properties);
 
 				return file;
