@@ -196,7 +196,7 @@ readsets.merging.avgSize=Average size
 #treatments names
 treatments.sav = SAV
 treatments.ngsrg = NGS-RG
-treatments.duplicatesRaw=Lectures dupliquées (vs RAW)
-treatments.duplicatesClean=Lectures dupliquées (vs CLEAN)
+treatments.duplicatesRaw=Duplicates (vs RAW)
+treatments.duplicatesClean=Duplicates (vs CLEAN)
 treatments.trimming=Trimming (vs RAW)
 treatments.merging=Merging
