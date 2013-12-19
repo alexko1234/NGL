@@ -181,9 +181,18 @@ readsets.trimming.readsTrimPercent=% Reads trim.
 readsets.trimming.nucleotideTrim=Nucleotide trim.
 readsets.trimming.trimRejectedShort=Rejected (short)
 readsets.trimming.trimRejectedLength0=Rejected (length 0)
-readsets.trimming.storedPairs=Stored pairs
-readsets.trimming.storedSingleton=Stored singleton
-readsets.trimming.rejectedPairs=Rejected pairs
+readsets.trimming.storedPairs=Stored Pairs
+readsets.trimming.storedSingleton=Stored Singleton
+readsets.trimming.rejectedPairs=Rejected Pairs
+
+readsets.merging.sampleInput=Sample input
+readsets.merging.mergedReads=Merged reads
+readsets.merging.number=Number
+readsets.merging.totalSize=Total Size
+readsets.merging.maxSize=Max Size
+readsets.merging.minSize=Min Size
+readsets.merging.avgSize=Average Size
+readsets.merging.caption=OVERLAP STATISTICS
 
 #treatments names
 treatments.sav = SAV

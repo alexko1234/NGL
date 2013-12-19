@@ -10,11 +10,10 @@
 
 
 
+
 @if(code == "duplicates") {
 
-<div class="span12">
-
- <div ng-controller="DuplicatesCtrl" ng-init="init(treatments.getTreatment().code)">
+ <div class="row-fluid" ng-controller="DuplicatesCtrl" ng-init="init(treatments.getTreatment().code)">
 
 	 <table class="table table-condensed table-hover table-bordered">
 
@@ -112,147 +111,131 @@
 	</table>
 
   </div>	
- </div>			
 
 }
 
-@if(code == "trimming") {
-	
-<div class="span12">
 
+
+
+@if(code == "trimming") {
+
+<div class="row-fluid">	
 	 <table class="table table-condensed table-hover table-bordered">
 		<thead>
 		<tr>
-			<th>
-				&nbsp;
-			</th>
-			<th>
-				<strong>@Messages("readsets.trimming.sizeRange")</strong>
-			</th>
-			<th>
-				<strong>@Messages("readsets.trimming.readsInput")</strong>
-			</th>
-			<th>
-				<strong>@Messages("readsets.trimming.readsOutput")</strong>
-			</th>
-			<th>
-				<strong>@Messages("readsets.trimming.readsTrim")</strong>
-			</th>
-			<th>
-				<strong>@Messages("readsets.trimming.readsTrimPercent")</strong>
-			</th>
-			<th>
-				<strong>@Messages("readsets.trimming.nucleotideTrim")</strong>
-			</th>
-			<th>
-				<strong>@Messages("readsets.trimming.trimRejectedShort")</strong>
-			</th>
-			<th>
-				<strong>@Messages("readsets.trimming.trimRejectedLength0")</strong>
-			</th>			
+			<th>&nbsp;</th>
+			<th><strong>@Messages("readsets.trimming.sizeRange")</strong></th>
+			<th><strong>@Messages("readsets.trimming.readsInput")</strong></th>
+			<th><strong>@Messages("readsets.trimming.readsOutput")</strong></th>
+			<th><strong>@Messages("readsets.trimming.readsTrim")</strong></th>
+			<th><strong>@Messages("readsets.trimming.readsTrimPercent")</strong></th>
+			<th><strong>@Messages("readsets.trimming.nucleotideTrim")</strong></th>
+			<th><strong>@Messages("readsets.trimming.trimRejectedShort")</strong></th>
+			<th><strong>@Messages("readsets.trimming.trimRejectedLength0")</strong></th>			
 		</tr>
 		</thead>
 		<tbody>
 		<!--  Read 1  -->
 		<tr>
-			<th>
-				<strong>@Messages("readsets.read1")</strong>
-			</th>
-			<th>
-				{{readset.treatments.trimming.read1.sizeRange.value}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.read1.readsInput.value | number}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.read1.readsOutput.value | number}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.read1.readsTrim.value | number}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.read1.readsTrimPercent.value | number:2}} %
-			</th>
-			<th>
-				{{readset.treatments.trimming.read1.nucleotidesTrim.value | number}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.read1.trimRejectedShort.value | number}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.read1.trimRejectedLength0.value | number}}
-			</th>
+			<th><strong>@Messages("readsets.read1")</strong></th>
+			<td>{{readset.treatments.trimming.read1.sizeRange.value}}</td>
+			<td>{{readset.treatments.trimming.read1.readsInput.value | number}}</td>
+			<td>{{readset.treatments.trimming.read1.readsOutput.value | number}}</td>
+			<td>{{readset.treatments.trimming.read1.readsTrim.value | number}}</td>
+			<td>{{readset.treatments.trimming.read1.readsTrimPercent.value | number:2}} %</td>
+			<td>{{readset.treatments.trimming.read1.nucleotidesTrim.value | number}}</td>
+			<td>{{readset.treatments.trimming.read1.trimRejectedShort.value | number}}</td>
+			<td>{{readset.treatments.trimming.read1.trimRejectedLength0.value | number}}</td>
 		</tr>						
 		<!--  Read 2  -->
 		<tr>
-			<th>
-				<strong>@Messages("readsets.read2")</strong>
-			</th>
-			<th>
-				{{readset.treatments.trimming.read2.sizeRange.value}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.read2.readsInput.value | number}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.read2.readsOutput.value | number}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.read2.readsTrim.value | number}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.read2.readsTrimPercent.value | number:2}} %
-			</th>
-			<th>
-				{{readset.treatments.trimming.read2.nucleotidesTrim.value | number}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.read2.trimRejectedShort.value | number}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.read2.trimRejectedLength0.value | number}}
-			</th>
+			<th><strong>@Messages("readsets.read2")</strong></th>
+			<td>{{readset.treatments.trimming.read2.sizeRange.value}}</td>
+			<td>{{readset.treatments.trimming.read2.readsInput.value | number}}</td>
+			<td>{{readset.treatments.trimming.read2.readsOutput.value | number}}</td>
+			<td>{{readset.treatments.trimming.read2.readsTrim.value | number}}</td>
+			<td>{{readset.treatments.trimming.read2.readsTrimPercent.value | number:2}} %</td>
+			<td>{{readset.treatments.trimming.read2.nucleotidesTrim.value | number}}</td>
+			<td>{{readset.treatments.trimming.read2.trimRejectedShort.value | number}}</td>
+			<td>{{readset.treatments.trimming.read2.trimRejectedLength0.value | number}}</td>
 		</tr>						
 		</tbody>
-	</table>
-	
-	<div class="span3"></div>
+	 </table>
+</div>
+<div class="row-fluid">	
 	<div  class="span3">
 	 <table class="table table-condensed table-hover table-bordered">
 		<thead>
 		<tr>
-			<th>
-				<strong>@Messages("readsets.trimming.storedPairs")</strong>
-			</th>
-			<th>
-				<strong>@Messages("readsets.trimming.storedSingleton")</strong>
-			</th>
-			<th>
-				<strong>@Messages("readsets.trimming.rejectedPairs")</strong>
-			</th>
+			<th><strong>@Messages("readsets.trimming.storedPairs")</strong></th>
+			<th><strong>@Messages("readsets.trimming.storedSingleton")</strong></th>
+			<th><strong>@Messages("readsets.trimming.rejectedPairs")</strong></th>
 		</tr>
 		</thead>
 		<tbody>
 		<tr>
-			<th>
-				{{readset.treatments.trimming.pairs.storedPairs.value | number}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.single.storedSingleton.value | number}}
-			</th>
-			<th>
-				{{readset.treatments.trimming.pairs.rejectedPairs.value | number}}
-			</th>
+			<td>{{readset.treatments.trimming.pairs.storedPairs.value | number}}</td>
+			<td>{{readset.treatments.trimming.single.storedSingleton.value | number}}</td>
+			<td>{{readset.treatments.trimming.pairs.rejectedPairs.value | number}}</td>
 		</tr>		
 		</tbody>
 	</table>			
 	</div>
-	<div class="span3"></div>
+	<div class="span9"></div>
 </div>		
 						
 }
 
+
+
+
 @if(code == "merging") {
-	Under construction : merging
+
+<div class="row-fluid">
+	<div  class="span6">
+	 <table class="table table-condensed table-hover table-bordered">
+		<tr>
+			<th><strong>@Messages("readsets.merging.sampleInput")</strong></th>
+			<th rowspan="2"></th>
+			<th><strong>@Messages("readsets.merging.mergedReads")</strong></th>
+		</tr>
+		<tr>
+			<td>{{readset.treatments.merging.pairs.sampleInput.value | number}}</td>
+			<td>
+				{{readset.treatments.merging.pairs.mergedReads.value | number}} 
+				({{readset.treatments.merging.pairs.mergedReadsPercent.value | number:2}} %)
+			</td>
+		</tr>		
+	</table>			
+	</div>
+	<div class="span6"></div>
+</div>
+
+<div class="row-fluid">
+	<div class="span4">
+		<table class="table table-condensed table-hover table-bordered">
+		<caption><strong>@Messages("readsets.merging.caption")</strong></caption>
+		<tr>
+			<thead>
+				<th><strong>@Messages("readsets.merging.number")</strong></th>
+				<!--<th><strong>@Messages("readsets.merging.totalSize")</strong></th>-->
+				<th><strong>@Messages("readsets.merging.avgSize")</strong></th>
+				<th><strong>@Messages("readsets.merging.minSize")</strong></th>
+				<th><strong>@Messages("readsets.merging.maxSize")</strong></th>			
+			</thead>
+		</tr>
+		<tr>
+			<tbody>
+				<td>{{readset.treatments.merging.pairs.mergedReads.value | number}}</td>
+				<!--<td>?</td>-->
+				<td>{{readset.treatments.merging.pairs.avgSize.value | number}}</td>
+				<td>{{readset.treatments.merging.pairs.minSize.value | number}}</td>
+				<td>{{readset.treatments.merging.pairs.maxSize.value | number}}</td>			
+			</tbody>
+		</tr>
+		</table>
+	</div>
+	<div class="span8">&nbsp;</div>
+</div>		
 }
 
