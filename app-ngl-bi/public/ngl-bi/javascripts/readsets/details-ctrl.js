@@ -129,4 +129,18 @@ function NGSRGCtrl($scope, datatable) {
 	
 }
 
+
+
+function DuplicatesCtrl($scope) {
+	
+	$scope.init = function(name) {
+		$scope.$watch('readset', function() { 
+			if (angular.isDefined($scope.readset)) {
+				$scope.objsInDuplicates = $scope.readset.treatments[name];
+			}
+		});
+	}
+}
+
 NGSRGCtrl.$inject = ['$scope', 'datatable'];
+

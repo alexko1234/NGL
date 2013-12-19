@@ -140,4 +140,4 @@ GET     /assets/*file               				controllers.Assets.at(path="/public", fi
 GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
 
-
+GET		/api/commons/resolutions							controllers.commons.api.Resolutions.list()

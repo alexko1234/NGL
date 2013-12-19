@@ -50,6 +50,10 @@ angular.module('biCommonsServices', []).
     			return _treatment;
     		};
     		
+    		function getTreatmentName(){
+    			return _treatment.name.split(".")[1];
+    		};
+    		
     		function getTreatments(){
     			return _treatments;
     		};
@@ -58,7 +62,8 @@ angular.module('biCommonsServices', []).
     			init : init,
     			activeTreatment : activeTreatment,
     			getTreatment : getTreatment,
-    			getTreatments : getTreatments
+    			getTreatments : getTreatments,
+    			getTreatmentName : getTreatmentName
     		};
     	}]).directive('treatments', function() {
     		return {

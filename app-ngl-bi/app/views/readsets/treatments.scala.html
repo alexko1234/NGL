@@ -8,3 +8,119 @@
 </div>
 }
 
+
+
+@if(code == "duplicates") {
+
+<div class="span12">
+
+ <div ng-controller="DuplicatesCtrl" ng-init="init(treatments.getTreatmentName())">
+
+	 <table class="table table-condensed table-hover table-bordered">
+
+		<thead>
+		<tr>
+			<th class="span3">
+				&nbsp;
+			</th>
+			<th class="span3">
+				<!--p style="color:darkblue"-->
+					<strong>@Messages("readsets.duplicates.read1")</strong>
+				<!-- /p -->
+			</th>
+			<th class="span3">
+				<strong>@Messages("readsets.duplicates.read2")</strong>
+			</th>
+			<th class="span3">
+				<strong>@Messages("readsets.duplicates.paired")</strong>
+			</th>
+		</tr>						
+		</thead>
+		
+		<tbody>
+		
+		<!--  estimateOfDuplicatedReads  -->
+		<tr>
+			<th class="span3" valign="top">
+					<strong>@Messages("readsets.duplicates.estimateOfDuplicatedReads")</strong>
+			</th>
+			<td class="span3">
+				<strong>
+					{{readset.treatments[treatments.getTreatmentName()].read1.estimateDuplicatedReads.value | number}} &nbsp;
+					({{readset.treatments[treatments.getTreatmentName()].read1.estimateDuplicatedReadsPercent.value | number:2}} %)
+				</strong>
+				<ul class="unstyled">									 
+				    <li ng-repeat="obj in objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value">
+          				{{objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value[$index].percent  | number:2}} % @(Messages("readsets.observed")) 
+          				{{objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value[$index].times}} @Messages("readsets.times")
+       				</li>
+				</ul>
+			</td>
+			<td class="span3">
+				<strong>
+					{{readset.treatments[treatments.getTreatmentName()].read2.estimateDuplicatedReads.value | number}} &nbsp;
+					({{readset.treatments[treatments.getTreatmentName()].read2.estimateDuplicatedReadsPercent.value | number:2}} %)
+				</strong>
+				<ul class="unstyled">									 
+				    <li ng-repeat="obj in objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value">
+          				{{objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value[$index].percent | number:2}} % @(Messages("readsets.observed")) 
+          				{{objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value[$index].times}} @Messages("readsets.times") 
+       				</li>
+				</ul>
+			</td>
+			<td class="span3">
+				<strong>
+					{{readset.treatments[treatments.getTreatmentName()].pairs.estimateDuplicatedReads.value | number}} &nbsp;				
+					({{readset.treatments[treatments.getTreatmentName()].pairs.estimateDuplicatedReadsPercent.value | number:2}} %)
+				</strong>
+				<ul class="unstyled">									 
+				    <li ng-repeat="obj in objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value">
+          				{{objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value[$index].percent | number:2}} % @(Messages("readsets.observed")) 
+          				{{objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value[$index].times}} @Messages("readsets.times")
+       				</li>
+				</ul>
+			</td>
+		</tr>
+
+		<!--  estimateOfUniqueReads  -->
+		<tr>
+			<th class="span3" valign="top">
+					<strong>@Messages("readsets.duplicates.estimateOfUniqueReads")</strong>
+			</th>
+			<td class="span3">
+				<strong>
+					{{readset.treatments[treatments.getTreatmentName()].read1.estimateUniqueReads.value | number}} &nbsp;
+					({{readset.treatments[treatments.getTreatmentName()].read1.estimateUniqueReadsPercent.value | number:2}} %)
+				</strong>
+			</td>
+			<td class="span3">
+				<strong>
+					{{readset.treatments[treatments.getTreatmentName()].read2.estimateUniqueReads.value | number}} &nbsp;
+					({{readset.treatments[treatments.getTreatmentName()].read2.estimateUniqueReadsPercent.value | number:2}} %)
+				</strong>
+			</td>
+			<td class="span3">
+				<strong>
+					{{readset.treatments[treatments.getTreatmentName()].pairs.estimateUniqueReads.value | number}} &nbsp;
+					({{readset.treatments[treatments.getTreatmentName()].pairs.estimateUniqueReadsPercent.value | number:2}} %)
+				</strong>
+			</td>
+		</tr>
+		
+		</tbody>
+		
+	</table>
+
+  </div>	
+ </div>			
+
+}
+
+@if(code == "trimming") {
+	Under construction : triming
+}
+
+@if(code == "merging") {
+	Under construction : merging
+}
+
