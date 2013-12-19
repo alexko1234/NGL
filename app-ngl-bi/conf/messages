@@ -29,8 +29,8 @@ valuation.value.UNSET = -
 
 search.placeholder.projects = Selectionnez des projets
 search.placeholder.samples = Selectionnez des échantillons
-search.placeholder.fromDate = Depuis le (jj/mm/yyyy)
-search.placeholder.toDate = Jusqu''au (jj/mm/yyyy)
+search.placeholder.fromDate = Depuis le (jj/mm/aaaa)
+search.placeholder.toDate = Jusqu''au (jj/mm/aaaa)
 search.placeholder.states = Selectionnez des états
 search.placeholder.instruments = Selectionnez des instruments
 search.placeholder.types = Selectionnez des types
@@ -160,7 +160,7 @@ readsets.global.usefulSequences = Nb Séquences utiles
 readsets.global.usefulBases = Nb Bases utiles
 readsets.ngsrg.nbCluster = Nb Séquences valides
 readsets.ngsrg.nbBases = Nb Bases
-readsets.ngsrg.Q30 = Q30
+readsets.ngsrg.Q30 = % >= Q30
 readsets.ngsrg.qualityScore = Score Qualité moyen
 readsets.ngsrg.validSeqPercent = % Séquences valides / piste
 

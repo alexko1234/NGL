@@ -1,5 +1,8 @@
  package controllers.readsets.api;
 
+import java.util.Date;
+
+import models.laboratory.common.instance.State;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -63,10 +66,20 @@ public class Files extends CommonController {
 		
 		Form<File> filledForm = getFilledForm(fileForm, File.class);
 		File file = filledForm.get();
+		
+		if(null == file.state){
+			file.state = new State();
+		}
+		file.state.code = "N";
+		file.state.user = getCurrentUser();
+		file.state.date = new Date();	
+		
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		ctxVal.putObject("readSet", readSet);
 		ctxVal.setCreationMode();
 		file.validate(ctxVal);
+		
+		
 		
 		if (!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
@@ -87,7 +100,7 @@ public class Files extends CommonController {
 		
 		Form<File> filledForm = getFilledForm(fileForm, File.class);
 		File file = filledForm.get();
-		if (fullname.equals(file.fullname)) {
+		if (fullname.equals(file.fullname)) {			
 			ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 			ctxVal.putObject("readSet", readSet);
 			ctxVal.setUpdateMode();
