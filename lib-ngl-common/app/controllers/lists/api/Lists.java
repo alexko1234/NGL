@@ -72,7 +72,7 @@ public class Lists extends Controller{
 		}	
 
 	}
-
+/*
 	public static Result experimentCategories(){
 		try {
 			List<ExperimentCategory> exp = ExperimentCategory.find.findAll();
@@ -83,7 +83,8 @@ public class Lists extends Controller{
 			return  Results.internalServerError(e.getMessage());
 		}			
 	}
-
+*/
+	/*
 	public static Result containerStates(){
 		try {
 			List<ListObject> states = State.find.findAllForContainerList();
@@ -95,7 +96,7 @@ public class Lists extends Controller{
 		}
 
 	}
-
+*/
 	final static Form<SamplesSearchForm> samplesForm = form(SamplesSearchForm.class);
 	public static Result samples(){
 		BasicDBObject keys = new BasicDBObject();
@@ -125,7 +126,7 @@ public class Lists extends Controller{
 			return  Results.internalServerError(e.getMessage());
 		}
 	}
-
+/*
 	public static Result containerCategoryCodes(){
 		try {
 			List<ListObject> containerCategory =  ContainerCategory.findAllForList();
@@ -137,7 +138,8 @@ public class Lists extends Controller{
 		}
 
 	}
-
+	*/
+/*
 	public static Result instrumentUsedTypes(String experimentTypeCode){
 		List<ListObject> list = new ArrayList<ListObject>();
 		try {
@@ -170,8 +172,8 @@ public class Lists extends Controller{
 			return  Results.internalServerError(e.getMessage());
 		}
 	}
-
-
+*/
+/*
 	public static Result protocols(String experimentTypeCode){
 		try {
 			List<Protocol> protocols = ExperimentType.find.findByCode(experimentTypeCode).protocols;
@@ -189,8 +191,9 @@ public class Lists extends Controller{
 		}
 	}
 
-
+*/
 	//@Permission(value={"reading"})
+	/*
 	public static Result resolutions(){
 		try {
 			DynamicForm inputForm = form.bindFromRequest();
@@ -232,7 +235,7 @@ public class Lists extends Controller{
 		}
 
 	}
-	
+	*/
 	public static Result valuationCriterias(){
 		try{
 			DynamicForm inputForm = form.bindFromRequest();
