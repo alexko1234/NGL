@@ -187,12 +187,11 @@ readsets.trimming.rejectedPairs=Rejected Pairs
 
 readsets.merging.sampleInput=Sample input
 readsets.merging.mergedReads=Merged reads
-readsets.merging.number=Number
-readsets.merging.totalSize=Total Size
-readsets.merging.maxSize=Max Size
-readsets.merging.minSize=Min Size
-readsets.merging.avgSize=Average Size
-readsets.merging.caption=OVERLAP STATISTICS
+readsets.merging.medianeSize=Mediane size
+readsets.merging.totalSize=Total size
+readsets.merging.maxSize=Max size
+readsets.merging.minSize=Min size
+readsets.merging.avgSize=Average size
 
 #treatments names
 treatments.sav = SAV
