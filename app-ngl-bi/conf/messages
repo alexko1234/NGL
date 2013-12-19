@@ -167,12 +167,16 @@ readsets.ngsrg.validSeqPercent = % Séquences valides / piste
 readsets.duplicates.estimateOfDuplicatedReads = Estimation de lectures dupliquées
 readsets.duplicates.estimateOfUniqueReads = Estimation de lectures uniques
 
-readsets.duplicates.read1 = Read 1
-readsets.duplicates.read2 = Read 2
-readsets.duplicates.paired = Pairs
+readsets.read1 = Read 1
+readsets.read2 = Read 2
+readsets.paired = Paired
 
 readsets.observed = observé
 readsets.times = fois
 
 treatments.sav = SAV
 treatments.ngsrg = NGS-RG
+treatments.duplicatesRaw=Lectures dupliquées (vs RAW)
+treatments.duplicatesClean=Lectures dupliquées (vs CLEAN)
+treatments.trimming=Trimming
+treatments.merging=Merging
