@@ -1,5 +1,7 @@
 @(nav: String = "")
 
+@import play.mvc.Http.Context
+
   <!-- Navbar
     ================================================== -->
 		
@@ -42,18 +44,15 @@
 						</li>						
 					</ul>
 					
-					@**
+					
 					<div class="btn-group pull-right">
 						<a href="#" data-toggle="dropdown" class="btn dropdown-toggle">
-							<i class="icon-user"></i>@Messages("authentification.dropdown_list.username") <span class="caret"></span>
+							<i class="icon-user"></i> @Context.current().request().username() <span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="#">@Messages("authentification.dropdown_list.profile")</a></li>
-							<li class="divider"></li>
-							<li><a href="">@Messages("authentification.dropdown_list.signout")</a></li>
+							<li><a href="/authentication/logout">@Messages("authentification.dropdown_list.signout")</a></li>
 						</ul>
 					</div>
-					**@
 					
 				</div>
 			</div>

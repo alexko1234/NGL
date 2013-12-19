@@ -124,14 +124,14 @@ GET		/api/commons/states							controllers.commons.api.States.list()
 GET		/api/commons/types							controllers.commons.api.CommonInfoTypes.list()
 
 #list
-GET		/api/lists/resolutions				controllers.lists.api.Lists.resolutions()
-GET		/api/lists/valuation-criterias		controllers.lists.api.Lists.valuationCriterias()
+GET		/api/commons/resolutions  					controllers.commons.api.Resolutions.list()
+GET		/api/lists/valuation-criterias				controllers.lists.api.Lists.valuationCriterias()
 
 #projects
-GET		/api/projects/list					controllers.projects.api.Projects.list()
+GET		/api/projects/list							controllers.projects.api.Projects.list()
 
 #samples
-GET		/api/samples/list					controllers.samples.api.Samples.list()
+GET		/api/samples/list							controllers.samples.api.Samples.list()
 
 ->  /authentication authentication.Routes
 
@@ -140,4 +140,4 @@ GET     /assets/*file               				controllers.Assets.at(path="/public", fi
 GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
 
-GET		/api/commons/resolutions							controllers.commons.api.Resolutions.list()
+
