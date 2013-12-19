@@ -51,8 +51,8 @@
 				</strong>
 				<ul class="unstyled">									 
 				    <li ng-repeat="obj in objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value">
-          				{{objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value[$index].percent  | number:2}} % @(Messages("readsets.observed")) 
-          				{{objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value[$index].times}} @Messages("readsets.times")
+          				{{objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value[$index].percent  | number:2}} % @(Messages("readsets.duplicates.observed")) 
+          				{{objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value[$index].times}} @Messages("readsets.duplicates.times")
        				</li>
 				</ul>
 			</td>
@@ -63,8 +63,8 @@
 				</strong>
 				<ul class="unstyled">									 
 				    <li ng-repeat="obj in objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value">
-          				{{objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value[$index].percent | number:2}} % @(Messages("readsets.observed")) 
-          				{{objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value[$index].times}} @Messages("readsets.times") 
+          				{{objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value[$index].percent | number:2}} % @(Messages("readsets.duplicates.observed")) 
+          				{{objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value[$index].times}} @Messages("readsets.duplicates.times") 
        				</li>
 				</ul>
 			</td>
@@ -75,8 +75,8 @@
 				</strong>
 				<ul class="unstyled">									 
 				    <li ng-repeat="obj in objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value">
-          				{{objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value[$index].percent | number:2}} % @(Messages("readsets.observed")) 
-          				{{objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value[$index].times}} @Messages("readsets.times")
+          				{{objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value[$index].percent | number:2}} % @(Messages("readsets.duplicates.observed")) 
+          				{{objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value[$index].times}} @Messages("readsets.duplicates.times")
        				</li>
 				</ul>
 			</td>
@@ -117,7 +117,139 @@
 }
 
 @if(code == "trimming") {
-	Under construction : triming
+	
+<div class="span12">
+
+	 <table class="table table-condensed table-hover table-bordered">
+		<thead>
+		<tr>
+			<th>
+				&nbsp;
+			</th>
+			<th>
+				<strong>@Messages("readsets.trimming.sizeRange")</strong>
+			</th>
+			<th>
+				<strong>@Messages("readsets.trimming.readsInput")</strong>
+			</th>
+			<th>
+				<strong>@Messages("readsets.trimming.readsOutput")</strong>
+			</th>
+			<th>
+				<strong>@Messages("readsets.trimming.readsTrim")</strong>
+			</th>
+			<th>
+				<strong>@Messages("readsets.trimming.readsTrimPercent")</strong>
+			</th>
+			<th>
+				<strong>@Messages("readsets.trimming.nucleotideTrim")</strong>
+			</th>
+			<th>
+				<strong>@Messages("readsets.trimming.trimRejectedShort")</strong>
+			</th>
+			<th>
+				<strong>@Messages("readsets.trimming.trimRejectedLength0")</strong>
+			</th>			
+		</tr>
+		</thead>
+		<tbody>
+		<!--  Read 1  -->
+		<tr>
+			<th>
+				<strong>@Messages("readsets.read1")</strong>
+			</th>
+			<th>
+				{{readset.treatments.trimming.read1.sizeRange.value}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.read1.readsInput.value | number}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.read1.readsOutput.value | number}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.read1.readsTrim.value | number}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.read1.readsTrimPercent.value | number:2}} %
+			</th>
+			<th>
+				{{readset.treatments.trimming.read1.nucleotidesTrim.value | number}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.read1.trimRejectedShort.value | number}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.read1.trimRejectedLength0.value | number}}
+			</th>
+		</tr>						
+		<!--  Read 2  -->
+		<tr>
+			<th>
+				<strong>@Messages("readsets.read2")</strong>
+			</th>
+			<th>
+				{{readset.treatments.trimming.read2.sizeRange.value}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.read2.readsInput.value | number}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.read2.readsOutput.value | number}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.read2.readsTrim.value | number}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.read2.readsTrimPercent.value | number:2}} %
+			</th>
+			<th>
+				{{readset.treatments.trimming.read2.nucleotidesTrim.value | number}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.read2.trimRejectedShort.value | number}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.read2.trimRejectedLength0.value | number}}
+			</th>
+		</tr>						
+		</tbody>
+	</table>
+	
+	<div class="span3"></div>
+	<div  class="span3">
+	 <table class="table table-condensed table-hover table-bordered">
+		<thead>
+		<tr>
+			<th>
+				<strong>@Messages("readsets.trimming.storedPairs")</strong>
+			</th>
+			<th>
+				<strong>@Messages("readsets.trimming.storedSingleton")</strong>
+			</th>
+			<th>
+				<strong>@Messages("readsets.trimming.rejectedPairs")</strong>
+			</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<th>
+				{{readset.treatments.trimming.pairs.storedPairs.value | number}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.single.storedSingleton.value | number}}
+			</th>
+			<th>
+				{{readset.treatments.trimming.pairs.rejectedPairs.value | number}}
+			</th>
+		</tr>		
+		</tbody>
+	</table>			
+	</div>
+	<div class="span3"></div>
+</div>		
+						
 }
 
 @if(code == "merging") {

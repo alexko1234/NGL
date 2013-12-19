@@ -164,19 +164,31 @@ readsets.ngsrg.Q30 = % >= Q30
 readsets.ngsrg.qualityScore = Score Qualité moyen
 readsets.ngsrg.validSeqPercent = % Séquences valides / piste
 
-readsets.duplicates.estimateOfDuplicatedReads = Estimation de lectures dupliquées
-readsets.duplicates.estimateOfUniqueReads = Estimation de lectures uniques
-
 readsets.read1 = Read 1
 readsets.read2 = Read 2
 readsets.paired = Paired
 
-readsets.observed = observé
-readsets.times = fois
+readsets.duplicates.estimateOfDuplicatedReads = Estimation de lectures dupliquées
+readsets.duplicates.estimateOfUniqueReads = Estimation de lectures uniques
+readsets.duplicates.observed = observé
+readsets.duplicates.times = fois
 
+readsets.trimming.sizeRange=Size range
+readsets.trimming.readsInput=Reads input
+readsets.trimming.readsOutput=Reads output
+readsets.trimming.readsTrim=Reads trim.
+readsets.trimming.readsTrimPercent=% Reads trim.
+readsets.trimming.nucleotideTrim=Nucleotide trim.
+readsets.trimming.trimRejectedShort=Rejected (short)
+readsets.trimming.trimRejectedLength0=Rejected (length 0)
+readsets.trimming.storedPairs=Stored pairs
+readsets.trimming.storedSingleton=Stored singleton
+readsets.trimming.rejectedPairs=Rejected pairs
+
+#treatments names
 treatments.sav = SAV
 treatments.ngsrg = NGS-RG
 treatments.duplicatesRaw=Lectures dupliquées (vs RAW)
 treatments.duplicatesClean=Lectures dupliquées (vs CLEAN)
-treatments.trimming=Trimming
+treatments.trimming=Trimming (vs RAW)
 treatments.merging=Merging
