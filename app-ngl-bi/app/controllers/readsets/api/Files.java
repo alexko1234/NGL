@@ -79,8 +79,6 @@ public class Files extends CommonController {
 		ctxVal.setCreationMode();
 		file.validate(ctxVal);
 		
-		
-		
 		if (!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.is("code", readsetCode),

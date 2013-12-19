@@ -7,6 +7,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.TransientState;
+import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -14,6 +15,7 @@ import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
+import net.vz.mongodb.jackson.WriteResult;
 import play.Logger;
 import play.libs.Akka;
 import rules.services.RulesActor;
@@ -22,6 +24,7 @@ import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
 import akka.actor.ActorRef;
 import akka.actor.Props;
+
 
 import com.typesafe.config.ConfigFactory;
 
@@ -137,9 +140,20 @@ public class Workflows {
 	private static void applyReadSetRules(ContextValidation contextValidation, ReadSet readSet) {
 		if("F-RG".equals(readSet.state.code)){
 			//update dispatch
-			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  Run.class, 
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 					DBQuery.is("code", readSet.code), DBUpdate.set("dispatch", Boolean.TRUE));						
-		}		
+		}else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code))	{
+			//met les fichier dipo ou non dès que le read set est valider
+			State state = cloneState(readSet.state);
+			
+			for(File f : readSet.files){
+				WriteResult<ReadSet, String> r = MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+						DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", f.fullname)),
+						DBUpdate.set("files.$.state", state));				
+				Logger.debug(r.getError());
+			}
+			
+		}
 	}
 
 	public static void nextReadSetState(ContextValidation contextValidation, ReadSet readSet) {

@@ -29,8 +29,8 @@ valuation.value.UNSET = -
 
 search.placeholder.projects = Selectionnez des projets
 search.placeholder.samples = Selectionnez des échantillons
-search.placeholder.fromDate = Depuis le (jj/mm/aaaa)
-search.placeholder.toDate = Jusqu''au (jj/mm/aaaa)
+search.placeholder.fromDate = Date Run depuis le (jj/mm/aaaa)
+search.placeholder.toDate = Date Run jusqu''au (jj/mm/aaaa)
 search.placeholder.states = Selectionnez des états
 search.placeholder.instruments = Selectionnez des instruments
 search.placeholder.types = Selectionnez des types
@@ -80,7 +80,7 @@ runs.nbBase=Nb Bases (total)
 
 #runs - main
 runs.creationdate=Date de Création
-runs.sequencingStartDate = Date de Séquençage
+runs.sequencingStartDate = Date Run
 # a vérifier
 runs.dispatch=Dispatch
 runs.typeCode = Type
