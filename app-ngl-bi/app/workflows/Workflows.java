@@ -68,6 +68,8 @@ public class Workflows {
 			nextStep.code = "IP-V";
 		}else if("IP-V".equals(run.state.code) && isRunValuationComplete(run)){
 			nextStep.code = "F-V";
+		}else if("F-V".equals(run.state.code) && !isRunValuationComplete(run)){
+			nextStep.code = "IP-V";
 		}
 		setRunState(contextValidation, run, nextStep);
 	}
@@ -172,18 +174,15 @@ public class Workflows {
 				&& !TBoolean.UNSET.equals(readSet.productionValuation.valid)){
 				nextStep.code = "F-V";
 			}	
-		}else if("F-V".equals(readSet.state.code)){
-			if(TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
+		}else if("F-V".equals(readSet.state.code) || "A".equals(readSet.state.code) || "UA".equals(readSet.state.code)){
+			if(TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)
+					|| TBoolean.UNSET.equals(readSet.productionValuation.valid)){
+				nextStep.code = "IP-V";
+			}else if(TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
 				nextStep.code = "A";
 			}else if(TBoolean.FALSE.equals(readSet.bioinformaticValuation.valid)){
 				nextStep.code = "UA";
 			}			
-		}else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code)){
-			if(TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
-				nextStep.code = "A";
-			}else if(TBoolean.FALSE.equals(readSet.bioinformaticValuation.valid)){
-				nextStep.code = "UA";
-			}
 		}
 		setReadSetState(contextValidation, readSet, nextStep);
 	}
