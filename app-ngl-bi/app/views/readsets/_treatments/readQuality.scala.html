@@ -32,8 +32,12 @@
 				</div>
 			</div>
 			<div ng-switch-when="readQualityClean">
-				<!-- TODO : show "Estimate of the number of 151 size's reads" + value + pct -->
-				<strong>@Messages("readsets.read_quality.number151")</strong>
+			 <ul>
+				<dt><strong>@Messages("readsets.read_quality.number151")</strong></dt>
+				<dd>	{{readset.treatments[treatments.getTreatment().code].read1.maxSizeReads.value | number}} &nbsp;
+					({{readset.treatments[treatments.getTreatment().code].read1.maxSizeReadsPercent.value | number:2}} %)
+				</dd>	
+			 </ul>
 			</div>
 			</div>
 		  </td>
@@ -71,8 +75,12 @@
 				</div>
 			</div>
 			<div ng-switch-when="readQualityClean">
-				<!-- TODO : show "Estimate of the number of 151 size's reads" + value + pct -->
-				<strong>@Messages("readsets.read_quality.number151")</strong>
+			 <ul>
+				<dt><strong>@Messages("readsets.read_quality.number151")</strong></dt>
+				<dd>	{{readset.treatments[treatments.getTreatment().code].read2.maxSizeReads.value | number}} &nbsp;
+					({{readset.treatments[treatments.getTreatment().code].read2.maxSizeReadsPercent.value | number:2}} %)
+				</dd>	
+			 </ul>
 			</div>
 			</div>
 		  </td>
