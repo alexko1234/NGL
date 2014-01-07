@@ -2,13 +2,17 @@ package models.laboratory.common.description.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 
+import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
+
+import play.api.modules.spring.Spring;
 
 public class StateMappingQuery extends MappingSqlQuery<State>{
 
@@ -32,7 +36,6 @@ public class StateMappingQuery extends MappingSqlQuery<State>{
 		state.name=rs.getString("name");
 		state.active=rs.getBoolean("active");
 		state.position=rs.getInt("position");
-		
 		return state;
 	}
 

@@ -8,7 +8,7 @@ public class TransientState {
 	public String code;
 	public String user;
 	public Date date;
-    	
+
 	public TransientState(State state, Integer index) {
 		super();
 		this.index = index;
@@ -18,9 +18,7 @@ public class TransientState {
 	}
 
 	public TransientState() {
-		super();		
+		super();
 	}
-    
-    
-    
+
 }
