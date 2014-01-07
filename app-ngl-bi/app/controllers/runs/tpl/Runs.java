@@ -64,7 +64,7 @@ public class Runs extends CommonController {
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.get(),
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.home(),
   	    		controllers.runs.api.routes.javascript.Runs.list(),
-  	    		controllers.runs.api.routes.javascript.Runs.state(),
+  	    		controllers.runs.api.routes.javascript.State.update(),
   	    		controllers.runs.api.routes.javascript.Runs.valuation(),  	    		
   	    		controllers.runs.api.routes.javascript.Lanes.valuation(),  	    		
   	    		controllers.commons.api.routes.javascript.Resolutions.list(),

@@ -58,14 +58,13 @@ import fr.cea.ig.MongoDBResult.Sort;
  * Controller around Run object
  *
  */
-public class Runs extends CommonController {
+public class Runs extends RunsController {
 
 	
 	final static Form<RunsSearchForm> searchForm = form(RunsSearchForm.class); 
 	final static Form<Run> runForm = form(Run.class);
 	final static Form<Valuation> valuationForm = form(Valuation.class);
-	final static Form<State> stateForm = form(State.class);
-
+	
 	private static ActorRef rulesActor = Akka.system().actorOf(new Props(RulesActor.class));
 
 	//@Permission(value={"reading"})
@@ -240,29 +239,8 @@ public class Runs extends CommonController {
 		return ok();
 	}
 
-	//@Permission(value={"workflow_run_lane"})
-	public static Result state(String code){
-		Run run = getRun(code);
-		if (run == null) {
-			return badRequest();
-		}
-		Form<State> filledForm =  getFilledForm(stateForm, State.class);
-		State state = filledForm.get();
-		state.date = new Date();
-		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
-		Workflows.setRunState(ctxVal, run, state);
-		if (!ctxVal.hasErrors()) {
-			return ok(Json.toJson(getRun(code)));
-		}else {
-			return badRequest(filledForm.errorsAsJson());
-		}
-	}
-
-	private static Run getRun(String code) {
-		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
-		return run;
-	}
+	
+	
 	
 	//@Permission(value={"valuation_run_lane"})
 	public static Result valuation(String code){

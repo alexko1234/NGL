@@ -24,17 +24,13 @@ import controllers.authorisation.Permission;
 
 
 
-public class Lanes extends CommonController{
+public class Lanes extends RunsController{
 	
 	final static Form<Lane> laneForm = form(Lane.class);
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	final static Form<Valuation> valuationForm = form(Valuation.class);
 	
-	private static Run getRun(String code, Integer laneNumber) {
-		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-				DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)));
-		return run;
-	}
+	
 	
 	//@Permission(value={"reading"})
 	public static Result list(String code) {

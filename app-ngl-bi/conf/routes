@@ -25,16 +25,13 @@ HEAD	/api/runs/:code               				controllers.runs.api.Runs.head(code: java
 POST   	/api/runs									controllers.runs.api.Runs.save()
 PUT   	/api/runs/:code 							controllers.runs.api.Runs.update(code: java.lang.String)
 DELETE	/api/runs/:code								controllers.runs.api.Runs.delete(code:java.lang.String)
-PUT		/api/runs/:code/state						controllers.runs.api.Runs.state(code:java.lang.String)
+
+PUT		/api/runs/:code/state						controllers.runs.api.State.update(code:java.lang.String)
+GET		/api/runs/:code/state						controllers.runs.api.State.get(code:java.lang.String)
+GET		/api/runs/:code/state/historical			controllers.runs.api.State.historical(code:java.lang.String)
+
 PUT		/api/runs/:code/valuation		 			controllers.runs.api.Runs.valuation(code:java.lang.String)
 PUT		/api/runs/:code/apply-rules/:codeRules		controllers.runs.api.Runs.applyRules(code:java.lang.String, codeRules:java.lang.String)
-
-#new
-GET		/api/runs/:code/state/historical			controllers.runs.api.HistoricalStates.list(code:java.lang.String)
-DELETE	/api/runs/:code/state/historical/:stateIndex			controllers.runs.api.HistoricalStates.delete(code:java.lang.String, stateIndex:java.lang.Integer)
-
-#deprecated
-#POST 	/api/runs/:code/dispatch					controllers.runs.api.Runs.dispatch(code: java.lang.String)
 
 GET    	/api/runs/:code/treatments					controllers.runs.api.RunTreatments.list(code: java.lang.String)
 GET    	/api/runs/:code/treatments/:trCode			controllers.runs.api.RunTreatments.get(code: java.lang.String, trCode: java.lang.String)
@@ -121,6 +118,8 @@ GET		/migration2									controllers.migration.Migration2.migration()
 
 #Common
 GET		/api/commons/states							controllers.commons.api.States.list()
+GET		/api/commons/states/:code					controllers.commons.api.States.get(code: java.lang.String)
+
 GET		/api/commons/types							controllers.commons.api.CommonInfoTypes.list()
 
 #list
