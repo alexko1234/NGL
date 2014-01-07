@@ -1,0 +1,31 @@
+@()
+
+ <div class="span6">
+	 <table class="table table-condensed table-hover table-bordered">
+		<thead>
+		<tr>
+			<th class="span2">&nbsp;</th>
+			<th><strong>@Messages("readsets.contaminationPhiX.readsInput")</strong></th>
+			<th><strong>@Messages("readsets.contaminationPhiX.removedReads")</strong></th>
+			<th><strong>@Messages("readsets.contaminationPhiX.remainingReads")</strong></th>
+			<th><strong>@Messages("readsets.contaminationPhiX.removedReadsPercent")</strong></th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<th><strong>@Messages("readsets.read1_2")</strong></th>
+			<td>{{readset.treatments.contaminationPhiX.pairs.readsInput.value | number}}</td>
+			<td>{{readset.treatments.contaminationPhiX.pairs.removedReads.value | number}}</td>
+			<td>{{readset.treatments.contaminationPhiX.pairs.remainingReads.value | number}}</td>
+			<td>{{readset.treatments.contaminationPhiX.pairs.removedReadsPercent.value | number:2}} %</td>
+		</tr>						
+		<tr>
+			<th><strong>@Messages("readsets.single")</strong></th>
+			<td>{{readset.treatments.contaminationPhiX.single.readsInput.value | number}}</td>
+			<td>{{readset.treatments.contaminationPhiX.single.removedReads.value | number}}</td>
+			<td>{{readset.treatments.contaminationPhiX.single.remainingReads.value | number}}</td>
+			<td>{{readset.treatments.contaminationPhiX.single.removedReadsPercent.value | number:2}} %</td>
+		</tr>						
+		</tbody>
+	 </table>
+ </div>	 

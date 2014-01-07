@@ -141,5 +141,29 @@ function DuplicatesCtrl($scope) {
 	}
 }
 
-NGSRGCtrl.$inject = ['$scope', 'datatable'];
 
+
+function ReadQualityCtrl($scope) {
+	$scope.init = function(name) {
+		$scope.$watch('readset', function() { 
+			if (angular.isDefined($scope.readset)) {
+				$scope.objsInAdapters = $scope.readset.treatments[name];
+			}
+		});
+		
+
+	}
+}
+
+function SortingCtrl($scope) {
+	$scope.init = function(name) {
+		$scope.$watch('readset', function() { 
+			if (angular.isDefined($scope.readset)) {
+				$scope.objsInRNABilan = $scope.readset.treatments[name];
+			}
+		});
+	}
+}
+
+
+NGSRGCtrl.$inject = ['$scope', 'datatable'];

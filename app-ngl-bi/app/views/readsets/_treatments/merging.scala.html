@@ -1,0 +1,29 @@
+@()
+
+	<div  class="span6">
+	 <table class="table table-condensed table-hover table-bordered">
+		<tr>
+		 <thead>
+			<th><strong>@Messages("readsets.merging.sampleInput")</strong></th>
+			<th><strong>@Messages("readsets.merging.mergedReads")</strong></th>
+			<th><strong>@Messages("readsets.merging.medianeSize")</strong></th>
+			<th><strong>@Messages("readsets.merging.avgSize")</strong></th>
+			<th><strong>@Messages("readsets.merging.minSize")</strong></th>
+			<th><strong>@Messages("readsets.merging.maxSize")</strong></th>
+		 </thead>			
+		</tr>
+		<tr>
+		 <tbody>
+			<td>{{readset.treatments.merging.pairs.sampleInput.value | number}}</td>
+			<td>
+				{{readset.treatments.merging.pairs.mergedReads.value | number}} 
+				({{readset.treatments.merging.pairs.mergedReadsPercent.value | number:2}} %)
+			</td>
+			<td>{{readset.treatments.merging.pairs.medianeSize.value | number}}</td>
+			<td>{{readset.treatments.merging.pairs.avgSize.value | number}}</td>
+			<td>{{readset.treatments.merging.pairs.minSize.value | number}}</td>
+			<td>{{readset.treatments.merging.pairs.maxSize.value | number}}</td>
+		 </tbody>							
+		</tr>		
+	</table>			
+	</div>

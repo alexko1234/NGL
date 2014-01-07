@@ -1,0 +1,67 @@
+@()
+
+<div class="row-fluid">
+	<div class="span10">	
+		 <table class="table table-condensed table-hover table-bordered">
+			<thead>
+			<tr>
+				<th class="span2">&nbsp;</th>
+				<th><strong>@Messages("readsets.trimming.sizeRange")</strong></th>
+				<th><strong>@Messages("readsets.trimming.readsInput")</strong></th>
+				<th><strong>@Messages("readsets.trimming.readsOutput")</strong></th>
+				<th><strong>@Messages("readsets.trimming.readsTrim")</strong></th>
+				<th><strong>@Messages("readsets.trimming.readsTrimPercent")</strong></th>
+				<th><strong>@Messages("readsets.trimming.nucleotideTrim")</strong></th>
+				<th><strong>@Messages("readsets.trimming.trimRejectedShort")</strong></th>
+				<th><strong>@Messages("readsets.trimming.trimRejectedLength0")</strong></th>			
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<th class="span2"><strong>@Messages("readsets.read1")</strong></th>
+				<td>{{readset.treatments.trimming.read1.sizeRange.value}}</td>
+				<td>{{readset.treatments.trimming.read1.readsInput.value | number}}</td>
+				<td>{{readset.treatments.trimming.read1.readsOutput.value | number}}</td>
+				<td>{{readset.treatments.trimming.read1.readsTrim.value | number}}</td>
+				<td>{{readset.treatments.trimming.read1.readsTrimPercent.value | number:2}} %</td>
+				<td>{{readset.treatments.trimming.read1.nucleotidesTrim.value | number}}</td>
+				<td>{{readset.treatments.trimming.read1.trimRejectedShort.value | number}}</td>
+				<td>{{readset.treatments.trimming.read1.trimRejectedLength0.value | number}}</td>
+			</tr>						
+			<tr>
+				<th class="span2"><strong>@Messages("readsets.read2")</strong></th>
+				<td>{{readset.treatments.trimming.read2.sizeRange.value}}</td>
+				<td>{{readset.treatments.trimming.read2.readsInput.value | number}}</td>
+				<td>{{readset.treatments.trimming.read2.readsOutput.value | number}}</td>
+				<td>{{readset.treatments.trimming.read2.readsTrim.value | number}}</td>
+				<td>{{readset.treatments.trimming.read2.readsTrimPercent.value | number:2}} %</td>
+				<td>{{readset.treatments.trimming.read2.nucleotidesTrim.value | number}}</td>
+				<td>{{readset.treatments.trimming.read2.trimRejectedShort.value | number}}</td>
+				<td>{{readset.treatments.trimming.read2.trimRejectedLength0.value | number}}</td>
+			</tr>						
+			</tbody>
+		 </table>
+	</div>
+</div>
+
+<div class="row-fluid">
+	<div  class="span4">
+	 <table class="table table-condensed table-hover table-bordered">
+		<thead>
+		<tr>
+			<th class="span2"><strong>@Messages("readsets.trimming.storedPairs")</strong></th>
+			<th><strong>@Messages("readsets.trimming.storedSingleton")</strong></th>
+			<th><strong>@Messages("readsets.trimming.rejectedPairs")</strong></th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>{{readset.treatments.trimming.pairs.storedPairs.value | number}}</td>
+			<td>{{readset.treatments.trimming.single.storedSingleton.value | number}}</td>
+			<td>{{readset.treatments.trimming.pairs.rejectedPairs.value | number}}</td>
+		</tr>		
+		</tbody>
+	</table>			
+	</div>
+</div>						
+

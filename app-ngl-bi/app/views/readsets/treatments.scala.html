@@ -1,224 +1,43 @@
 @(code: String)
 
-
 	
 @if(code == "ngsrg-illumina") {
-<div class="span6">
- <div ng-controller="NGSRGCtrl" ng-init="init()" datatable="NGSRG.getConfig()"></div>
-</div>
+	@_treatments.ngsrg()		
 }
-
-
 
 
 @if(code == "duplicates") {
-
- <div class="row-fluid" ng-controller="DuplicatesCtrl" ng-init="init(treatments.getTreatment().code)">
-
-	 <table class="table table-condensed table-hover table-bordered">
-
-		<thead>
-		<tr>
-			<th class="span3">
-				&nbsp;
-			</th>
-			<th class="span3">
-				<!--p style="color:darkblue"-->
-					<strong>@Messages("readsets.read1")</strong>
-				<!-- /p -->
-			</th>
-			<th class="span3">
-				<strong>@Messages("readsets.read2")</strong>
-			</th>
-			<th class="span3">
-				<strong>@Messages("readsets.paired")</strong>
-			</th>
-		</tr>						
-		</thead>
-		
-		<tbody>
-		
-		<!--  estimateOfDuplicatedReads  -->
-		<tr>
-			<th class="span3">
-					<strong>@Messages("readsets.duplicates.estimateOfDuplicatedReads")</strong>
-			</th>
-			<td class="span3">
-				<strong>
-					{{readset.treatments[treatments.getTreatment().code].read1.estimateDuplicatedReads.value | number}} &nbsp;
-					({{readset.treatments[treatments.getTreatment().code].read1.estimateDuplicatedReadsPercent.value | number:2}} %)
-				</strong>
-				<ul class="unstyled">									 
-				    <li ng-repeat="obj in objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value">
-          				{{objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value[$index].percent  | number:2}} % @(Messages("readsets.duplicates.observed")) 
-          				{{objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value[$index].times}} @Messages("readsets.duplicates.times")
-       				</li>
-				</ul>
-			</td>
-			<td class="span3">
-				<strong>
-					{{readset.treatments[treatments.getTreatment().code].read2.estimateDuplicatedReads.value | number}} &nbsp;
-					({{readset.treatments[treatments.getTreatment().code].read2.estimateDuplicatedReadsPercent.value | number:2}} %)
-				</strong>
-				<ul class="unstyled">									 
-				    <li ng-repeat="obj in objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value">
-          				{{objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value[$index].percent | number:2}} % @(Messages("readsets.duplicates.observed")) 
-          				{{objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value[$index].times}} @Messages("readsets.duplicates.times") 
-       				</li>
-				</ul>
-			</td>
-			<td class="span3">
-				<strong>
-					{{readset.treatments[treatments.getTreatment().code].pairs.estimateDuplicatedReads.value | number}} &nbsp;				
-					({{readset.treatments[treatments.getTreatment().code].pairs.estimateDuplicatedReadsPercent.value | number:2}} %)
-				</strong>
-				<ul class="unstyled">									 
-				    <li ng-repeat="obj in objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value">
-          				{{objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value[$index].percent | number:2}} % @(Messages("readsets.duplicates.observed")) 
-          				{{objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value[$index].times}} @Messages("readsets.duplicates.times")
-       				</li>
-				</ul>
-			</td>
-		</tr>
-
-		<!--  estimateOfUniqueReads  -->
-		<tr>
-			<th class="span3">
-					<strong>@Messages("readsets.duplicates.estimateOfUniqueReads")</strong>
-			</th>
-			<td class="span3">
-				<strong>
-					{{readset.treatments[treatments.getTreatment().code].read1.estimateUniqueReads.value | number}} &nbsp;
-					({{readset.treatments[treatments.getTreatment().code].read1.estimateUniqueReadsPercent.value | number:2}} %)
-				</strong>
-			</td>
-			<td class="span3">
-				<strong>
-					{{readset.treatments[treatments.getTreatment().code].read2.estimateUniqueReads.value | number}} &nbsp;
-					({{readset.treatments[treatments.getTreatment().code].read2.estimateUniqueReadsPercent.value | number:2}} %)
-				</strong>
-			</td>
-			<td class="span3">
-				<strong>
-					{{readset.treatments[treatments.getTreatment().code].pairs.estimateUniqueReads.value | number}} &nbsp;
-					({{readset.treatments[treatments.getTreatment().code].pairs.estimateUniqueReadsPercent.value | number:2}} %)
-				</strong>
-			</td>
-		</tr>
-		
-		</tbody>
-		
-	</table>
-
-  </div>	
+	@_treatments.duplicates()	
 
 }
-
-
 
 
 @if(code == "trimming") {
-
-<div class="row-fluid">	
-	 <table class="table table-condensed table-hover table-bordered">
-		<thead>
-		<tr>
-			<th>&nbsp;</th>
-			<th><strong>@Messages("readsets.trimming.sizeRange")</strong></th>
-			<th><strong>@Messages("readsets.trimming.readsInput")</strong></th>
-			<th><strong>@Messages("readsets.trimming.readsOutput")</strong></th>
-			<th><strong>@Messages("readsets.trimming.readsTrim")</strong></th>
-			<th><strong>@Messages("readsets.trimming.readsTrimPercent")</strong></th>
-			<th><strong>@Messages("readsets.trimming.nucleotideTrim")</strong></th>
-			<th><strong>@Messages("readsets.trimming.trimRejectedShort")</strong></th>
-			<th><strong>@Messages("readsets.trimming.trimRejectedLength0")</strong></th>			
-		</tr>
-		</thead>
-		<tbody>
-		<tr>
-			<th><strong>@Messages("readsets.read1")</strong></th>
-			<td>{{readset.treatments.trimming.read1.sizeRange.value}}</td>
-			<td>{{readset.treatments.trimming.read1.readsInput.value | number}}</td>
-			<td>{{readset.treatments.trimming.read1.readsOutput.value | number}}</td>
-			<td>{{readset.treatments.trimming.read1.readsTrim.value | number}}</td>
-			<td>{{readset.treatments.trimming.read1.readsTrimPercent.value | number:2}} %</td>
-			<td>{{readset.treatments.trimming.read1.nucleotidesTrim.value | number}}</td>
-			<td>{{readset.treatments.trimming.read1.trimRejectedShort.value | number}}</td>
-			<td>{{readset.treatments.trimming.read1.trimRejectedLength0.value | number}}</td>
-		</tr>						
-		<tr>
-			<th><strong>@Messages("readsets.read2")</strong></th>
-			<td>{{readset.treatments.trimming.read2.sizeRange.value}}</td>
-			<td>{{readset.treatments.trimming.read2.readsInput.value | number}}</td>
-			<td>{{readset.treatments.trimming.read2.readsOutput.value | number}}</td>
-			<td>{{readset.treatments.trimming.read2.readsTrim.value | number}}</td>
-			<td>{{readset.treatments.trimming.read2.readsTrimPercent.value | number:2}} %</td>
-			<td>{{readset.treatments.trimming.read2.nucleotidesTrim.value | number}}</td>
-			<td>{{readset.treatments.trimming.read2.trimRejectedShort.value | number}}</td>
-			<td>{{readset.treatments.trimming.read2.trimRejectedLength0.value | number}}</td>
-		</tr>						
-		</tbody>
-	 </table>
-</div>
-<div class="row-fluid">	
-	<div  class="span3">
-	 <table class="table table-condensed table-hover table-bordered">
-		<thead>
-		<tr>
-			<th><strong>@Messages("readsets.trimming.storedPairs")</strong></th>
-			<th><strong>@Messages("readsets.trimming.storedSingleton")</strong></th>
-			<th><strong>@Messages("readsets.trimming.rejectedPairs")</strong></th>
-		</tr>
-		</thead>
-		<tbody>
-		<tr>
-			<td>{{readset.treatments.trimming.pairs.storedPairs.value | number}}</td>
-			<td>{{readset.treatments.trimming.single.storedSingleton.value | number}}</td>
-			<td>{{readset.treatments.trimming.pairs.rejectedPairs.value | number}}</td>
-		</tr>		
-		</tbody>
-	</table>			
-	</div>
-	<div class="span9"></div>
-</div>		
-						
+	@_treatments.triming()
 }
-
-
 
 
 @if(code == "merging") {
+	@_treatments.merging()
+}
 
-<div class="row-fluid">
-	<div  class="span6">
-	 <table class="table table-condensed table-hover table-bordered">
-		<tr>
-		 <thead>
-			<th><strong>@Messages("readsets.merging.sampleInput")</strong></th>
-			<th><strong>@Messages("readsets.merging.mergedReads")</strong></th>
-			<th><strong>@Messages("readsets.merging.medianeSize")</strong></th>
-			<th><strong>@Messages("readsets.merging.avgSize")</strong></th>
-			<th><strong>@Messages("readsets.merging.minSize")</strong></th>
-			<th><strong>@Messages("readsets.merging.maxSize")</strong></th>
-		 </thead>			
-		</tr>
-		<tr>
-		 <tbody>
-			<td>{{readset.treatments.merging.pairs.sampleInput.value | number}}</td>
-			<td>
-				{{readset.treatments.merging.pairs.mergedReads.value | number}} 
-				({{readset.treatments.merging.pairs.mergedReadsPercent.value | number:2}} %)
-			</td>
-			<td>{{readset.treatments.merging.pairs.medianeSize.value | number}}</td>
-			<td>{{readset.treatments.merging.pairs.avgSize.value | number}}</td>
-			<td>{{readset.treatments.merging.pairs.minSize.value | number}}</td>
-			<td>{{readset.treatments.merging.pairs.maxSize.value | number}}</td>
-		 </tbody>							
-		</tr>		
-	</table>			
-	</div>
-	<div class="span6"></div>
-</div>
+
+@if(code == "contamination") {
+	@_treatments.contamination()
+}
+
+
+@if(code == "sorting-ribo") {
+	@_treatments.sortingRibo()
 
 }
 
+
+@if(code == "mapping") {
+	@_treatments.mapping() 
+}
+
+
+@if(code == "read-quality") {
+	@_treatments.readQuality() 
+}

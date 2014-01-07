@@ -167,31 +167,64 @@ readsets.ngsrg.validSeqPercent = % Séquences valides / piste
 readsets.read1 = Read 1
 readsets.read2 = Read 2
 readsets.paired = Paired
+readsets.read1_2 = Read 1 + Read 2
+readsets.single = Single
 
 readsets.duplicates.estimateOfDuplicatedReads = Estimation de lectures dupliquées
 readsets.duplicates.estimateOfUniqueReads = Estimation de lectures uniques
 readsets.duplicates.observed = observé
 readsets.duplicates.times = fois
 
-readsets.trimming.sizeRange=Size range
-readsets.trimming.readsInput=Reads input
-readsets.trimming.readsOutput=Reads output
-readsets.trimming.readsTrim=Reads trim.
-readsets.trimming.readsTrimPercent=% Reads trim.
-readsets.trimming.nucleotideTrim=Nucleotide trim.
-readsets.trimming.trimRejectedShort=Rejected (short)
-readsets.trimming.trimRejectedLength0=Rejected (length 0)
-readsets.trimming.storedPairs=Stored Pairs
-readsets.trimming.storedSingleton=Stored Singleton
-readsets.trimming.rejectedPairs=Rejected Pairs
+readsets.trimming.sizeRange = Size range
+readsets.trimming.readsInput = Reads input
+readsets.trimming.readsOutput = Reads output
+readsets.trimming.readsTrim = Reads trim.
+readsets.trimming.readsTrimPercent = % Reads trim.
+readsets.trimming.nucleotideTrim = Nucleotide trim.
+readsets.trimming.trimRejectedShort = Rejected (short)
+readsets.trimming.trimRejectedLength0 = Rejected (length 0)
+readsets.trimming.storedPairs = Stored Pairs
+readsets.trimming.storedSingleton = Stored Singleton
+readsets.trimming.rejectedPairs = Rejected Pairs
 
-readsets.merging.sampleInput=Sample input
-readsets.merging.mergedReads=Merged reads
-readsets.merging.medianeSize=Mediane size
-readsets.merging.totalSize=Total size
-readsets.merging.maxSize=Max size
-readsets.merging.minSize=Min size
-readsets.merging.avgSize=Average size
+readsets.merging.sampleInput = Sample input
+readsets.merging.mergedReads = Merged reads
+readsets.merging.medianeSize = Mediane size
+readsets.merging.totalSize = Total size
+readsets.merging.maxSize = Max size
+readsets.merging.minSize = Min size
+readsets.merging.avgSize = Average size
+
+readsets.contaminationPhiX.readsInput = Reads input 
+readsets.contaminationPhiX.removedReads = Removed reads
+readsets.contaminationPhiX.remainingReads = Remaining reads 
+readsets.contaminationPhiX.removedReadsPercent = % removed reads
+readsets.contaminationPhiX.remainingNucleotides = Reamining nucleotides
+
+readsets.sorting_ribo.readsInput = Reads input
+readsets.sorting_ribo.no_rRNA = No-rRNA
+readsets.sorting_ribo.rRNA = rRNA
+readsets.sorting_ribo.rRNAPercent = % rRNA
+readsets.sorting_ribo.rRNABilan = Bilan rRNA
+readsets.sorting_ribo.usefulSequences = Useful sequences
+readsets.sorting_ribo.usefulBases = Useful bases
+
+readsets.mapping.number = Number
+readsets.mapping.totalReadsPercent = % total reads
+readsets.mapping.sampleInput = Sample input
+readsets.mapping.nonChimericAlignedReads = Non-chimeric aligned reads
+readsets.mapping.FRAlignedReads = FR (PE) aligned reads
+readsets.mapping.RFAlignedReads = RF (MP) aligned reads
+readsets.mapping.FFAlignedReads = FF aligned reads
+readsets.mapping.RRAlignedReads = RR aligned reads
+readsets.mapping.transAlignedReads = Trans aligned reads
+readsets.mapping.singleAlignedReads = Single aligned reads
+readsets.mapping.MPReadDistanceSeparation =  Distance between MP reads
+readsets.mapping.PEReadDistanceSeparation = Distance between PE reads
+
+readsets.read_quality.adaptersOverRepresented = Adapters over-represented
+readsets.read_quality.number151 = Estimate of the number of 151 size's reads
+
 
 #treatments names
 treatments.sav = SAV

@@ -1,0 +1,100 @@
+@()
+
+ <div class="span8" ng-controller="DuplicatesCtrl" ng-init="init(treatments.getTreatment().code)">
+
+	 <table class="table table-condensed table-hover table-bordered">
+
+		<thead>
+		<tr>
+			<th class="span2">
+				&nbsp;
+			</th>
+			<th class="span2">
+				<!--p style="color:darkblue"-->
+					<strong>@Messages("readsets.read1")</strong>
+				<!-- /p -->
+			</th>
+			<th class="span2">
+				<strong>@Messages("readsets.read2")</strong>
+			</th>
+			<th class="span2">
+				<strong>@Messages("readsets.paired")</strong>
+			</th>
+		</tr>						
+		</thead>
+		
+		<tbody>
+		
+		<!--  estimateOfDuplicatedReads  -->
+		<tr>
+			<th class="span2">
+					<strong>@Messages("readsets.duplicates.estimateOfDuplicatedReads")</strong>
+			</th>
+			<td class="span2">
+				<strong>
+					{{readset.treatments[treatments.getTreatment().code].read1.estimateDuplicatedReads.value | number}} &nbsp;
+					({{readset.treatments[treatments.getTreatment().code].read1.estimateDuplicatedReadsPercent.value | number:2}} %)
+				</strong>
+				<ul class="unstyled">									 
+				    <li ng-repeat="obj in objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value">
+          				{{obj.percent  | number:2}} % @(Messages("readsets.duplicates.observed")) 
+          				{{obj.times}} @Messages("readsets.duplicates.times")
+       				</li>
+				</ul>
+			</td>
+			<td class="span2">
+				<strong>
+					{{readset.treatments[treatments.getTreatment().code].read2.estimateDuplicatedReads.value | number}} &nbsp;
+					({{readset.treatments[treatments.getTreatment().code].read2.estimateDuplicatedReadsPercent.value | number:2}} %)
+				</strong>
+				<ul class="unstyled">									 
+				    <li ng-repeat="obj in objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value">
+          				{{obj.percent | number:2}} % @(Messages("readsets.duplicates.observed")) 
+          				{{obj.times}} @Messages("readsets.duplicates.times") 
+       				</li>
+				</ul>
+			</td>
+			<td class="span2">
+				<strong>
+					{{readset.treatments[treatments.getTreatment().code].pairs.estimateDuplicatedReads.value | number}} &nbsp;				
+					({{readset.treatments[treatments.getTreatment().code].pairs.estimateDuplicatedReadsPercent.value | number:2}} %)
+				</strong>
+				<ul class="unstyled">									 
+				    <li ng-repeat="obj in objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value">
+          				{{obj.percent | number:2}} % @(Messages("readsets.duplicates.observed")) 
+          				{{obj.times}} @Messages("readsets.duplicates.times")
+       				</li>
+				</ul>
+			</td>
+		</tr>
+
+		<!--  estimateOfUniqueReads  -->
+		<tr>
+			<th class="span2">
+					<strong>@Messages("readsets.duplicates.estimateOfUniqueReads")</strong>
+			</th>
+			<td class="span2">
+				<strong>
+					{{readset.treatments[treatments.getTreatment().code].read1.estimateUniqueReads.value | number}} &nbsp;
+					({{readset.treatments[treatments.getTreatment().code].read1.estimateUniqueReadsPercent.value | number:2}} %)
+				</strong>
+			</td>
+			<td class="span2">
+				<strong>
+					{{readset.treatments[treatments.getTreatment().code].read2.estimateUniqueReads.value | number}} &nbsp;
+					({{readset.treatments[treatments.getTreatment().code].read2.estimateUniqueReadsPercent.value | number:2}} %)
+				</strong>
+			</td>
+			<td class="span2">
+				<strong>
+					{{readset.treatments[treatments.getTreatment().code].pairs.estimateUniqueReads.value | number}} &nbsp;
+					({{readset.treatments[treatments.getTreatment().code].pairs.estimateUniqueReadsPercent.value | number:2}} %)
+				</strong>
+			</td>
+		</tr>
+		
+		</tbody>
+		
+	</table>
+
+  </div>	
