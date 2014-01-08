@@ -32,9 +32,7 @@ angular.module('biCommonsServices', []).
 						queries.push($http.get(jsRoutes.controllers.treatmenttypes.api.TreatmentTypes.get(treatment.typeCode).url, 
 								{key:key})	
 						);
-					}
-					//_treatments.push({code:config.treatment.code, url:url(config.treatment.typeCode).url, order:data.displayOrder});
-					//this.activeTreatment(_treatments[0]);				
+					}								
     			}				
     			$q.all(queries).then(function(results){
 					for(var i = 0; i  < results.length; i++){
@@ -74,5 +72,3 @@ angular.module('biCommonsServices', []).
     					  '<div class="tab-pane active" ng-include="treatments.getTreatment().url"/>'
     			};
     	});
-
-
