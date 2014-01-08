@@ -22,7 +22,7 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 
 	protected TreatmentTypeDAO() {
 		super("treatment_type", TreatmentType.class, TreatmentTypeMappingQuery.class, 
-				"SELECT distinct c.id, c.names, c.fk_common_info_type, c.fk_treatment_category, c.display_order ",
+				"SELECT distinct c.id, c.names, c.fk_common_info_type, c.fk_treatment_category, c.display_orders ",
 						"FROM treatment_type as c "+sqlCommonInfoType, false);
 	}
 	
@@ -53,7 +53,7 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 		parameters.put("names", treatmentType.names);
 		parameters.put("fk_common_info_type", treatmentType.id);
 		parameters.put("fk_treatment_category", treatmentType.category.id);
-		parameters.put("display_order", treatmentType.displayOrder);
+		parameters.put("display_orders", treatmentType.displayOrders);
 		jdbcInsert.execute(parameters);
 		//Add contexts
 		insertTreatmentContexts(treatmentType.contexts, treatmentType.id, false);
@@ -93,7 +93,7 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 		//Update contexts
 		insertTreatmentContexts(treatmentType.contexts, treatmentType.id, true);
 		String sql = "UPDATE treatment_type SET names=?, display_order=? WHERE id=?";
-		jdbcTemplate.update(sql, treatmentType.names, treatmentType.displayOrder, treatmentType.id);
+		jdbcTemplate.update(sql, treatmentType.names, treatmentType.displayOrders, treatmentType.id);
 	}
 
 	@Override

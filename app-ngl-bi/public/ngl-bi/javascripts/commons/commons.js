@@ -37,12 +37,33 @@ angular.module('biCommonsServices', []).
     			$q.all(queries).then(function(results){
 					for(var i = 0; i  < results.length; i++){
 						var result = results[i];
-						_treatments.push({code:result.config.key, name:Messages("treatments."+result.config.key), url:url(result.data.code).url, order:result.data.displayOrder});
+						_treatments.push({code:result.config.key, name:Messages("treatments."+result.config.key), url:url(result.data.code).url, order:displayOrder(result, key) });
 					}
 					_treatments = $filter("orderBy")(_treatments,"order");
 					activeTreatment(_treatments[0]);		
 				});
     		};
+    		
+    		function displayOrder(result, key) {
+    			var position = "-1"; 
+    			if (result.data.displayOrders.indexOf(",") != -1) {
+	    			var names = [];
+	    			names = result.data.names.split(",");
+	    			var orders = [];
+	    			orders = result.data.displayOrders.split(",");
+	    			
+	    			for (var i=0; i<names.length; i++) {
+	    				if (names[i] == result.config.key) {
+	    					position = orders[i];
+	    					break;
+	    				}
+	    			}
+    			}
+    			else {
+    				position = result.data.displayOrders;
+    			}
+    			return Number(position);
+    		}
     		
     		function getTreatment(){
     			return _treatment;

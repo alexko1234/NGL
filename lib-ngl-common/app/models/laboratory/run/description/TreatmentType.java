@@ -11,7 +11,7 @@ public class TreatmentType extends CommonInfoType {
 	public TreatmentCategory category;
 	public String names;	
 	public List<TreatmentTypeContext> contexts = new ArrayList<TreatmentTypeContext>();
-	public Integer displayOrder;
+	public String displayOrders;
 
 	
 	public static CommonInfoType.AbstractCommonInfoTypeFinder<TreatmentType> find = new CommonInfoType.AbstractCommonInfoTypeFinder<TreatmentType>(TreatmentTypeDAO.class); 
