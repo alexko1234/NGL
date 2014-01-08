@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['datatableServices','basketServices'], function($routeProvider, $locationProvider) {
+angular.module('home', ['ngRoute','datatableServices','basketServices'], function($routeProvider, $locationProvider) {
 		
 	$routeProvider.when('/plates/search/home', {
 		templateUrl : '/tpl/plates/search',
