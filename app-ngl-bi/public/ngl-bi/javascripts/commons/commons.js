@@ -32,31 +32,19 @@ angular.module('biCommonsServices', []).
 						queries.push($http.get(jsRoutes.controllers.treatmenttypes.api.TreatmentTypes.get(treatment.typeCode).url, 
 								{key:key})	
 						);
-					}								
+					}
+					//_treatments.push({code:config.treatment.code, url:url(config.treatment.typeCode).url, order:data.displayOrder});
+					//this.activeTreatment(_treatments[0]);				
     			}				
     			$q.all(queries).then(function(results){
 					for(var i = 0; i  < results.length; i++){
 						var result = results[i];
-						
-						_treatments.push({code:result.config.key, name:Messages("treatments."+result.config.key), url:url(result.data.code).url, order:orderTabs(result)});
+						_treatments.push({code:result.config.key, name:Messages("treatments."+result.config.key), url:url(result.data.code).url, order:result.data.displayOrder});
 					}
 					_treatments = $filter("orderBy")(_treatments,"order");
 					activeTreatment(_treatments[0]);		
 				});
     		};
-    		
-    		function orderTabs(result) {
-    			//specific order for treatments versus clean files
-				var orderTabs = 0;
-				if (result.config.key == "readQualityClean") 
-					{orderTabs=83;}
-				else {
-					if (result.config.key == "duplicatesClean") 
-						{orderTabs=86;}
-					else {orderTabs= result.data.displayOrder; }
-				}
-				return orderTabs;
-    		}
     		
     		function getTreatment(){
     			return _treatment;
@@ -86,3 +74,5 @@ angular.module('biCommonsServices', []).
     					  '<div class="tab-pane active" ng-include="treatments.getTreatment().url"/>'
     			};
     	});
+
+
