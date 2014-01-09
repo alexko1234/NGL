@@ -44,17 +44,7 @@ public class Plates extends CommonController {
 		
 		//TODO messages Code,Nom
 		public static Result details(){
-			List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-			columns.add(DatatableHelpers.getColumn("code", "plates.table.well.code", true, false, false));
-			columns.add(DatatableHelpers.getColumn("name", "plates.table.well.name", true, false, false));
-			columns.add(DatatableHelpers.getColumn("typeName", "plates.table.typeName", true, false, false));
-			columns.add(DatatableHelpers.getColumn("x", "plates.table.well.x", true, true, false));
-			columns.add(DatatableHelpers.getColumn("y", "plates.table.well.y", true, true, false));		
-			DatatableConfig config = new DatatableConfig(columns);
-			config.remove=true;
-			config.button=true;		
-			config.editColumn=false;
-			return ok(views.html.plates.details.render(config));
+			return ok(views.html.plates.details.render());
 		}
 		
 		public static Result javascriptRoutes() {

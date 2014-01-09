@@ -24,6 +24,5 @@ public class Lists extends Controller {
 	public static Result etmateriels(){
 		return Results.ok(Json.toJson(Spring.getBeanOfType(LimsManipDAO.class).getListObjectFromProcedureLims("pl_Etmateriel")));	
 	}
-	
-	
+
 }

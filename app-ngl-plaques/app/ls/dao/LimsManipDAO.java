@@ -111,7 +111,7 @@ public class LimsManipDAO {
 		        }
 		    });
 
-			//plate.wells = wells.toArray(new Well[wells.size()]);
+			plate.wells = wells.toArray(new Well[wells.size()]);
 			return plate;
 		}else{
 			return null;

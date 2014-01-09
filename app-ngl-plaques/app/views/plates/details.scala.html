@@ -1,4 +1,4 @@
-@(datatableConfig: views.components.datatable.DatatableConfig)
+@()
 
 <div ng-init="init()">
 <legend>@Messages("plates.legend") : {{plate.code}} / {{plate.typeName}}</legend>  
@@ -10,15 +10,15 @@
 <button class="btn"  data-target="#tab2" data-toggle="tab" data-toggle="tooltip" title="@Messages("plates.button.plate")">@Messages("plates.button.plate")</button>
 </div>
 <div class="btn-group">
-<button class="btn" ng-click="save()" data-toggle="tooltip" title="@Messages("plates.button.save")" ng-disabled="!isEditMode()"><i class="icon-save icon-large"></i>@if(!datatableConfig.compact){@(Messages("plates.button.save"))}</button>	
-<button class="btn" ng-click="computeXY()" data-toggle="tooltip" title="@Messages("plates.button.compute")" ng-disabled="!isEditMode()"><i class="icon-magic icon-large"></i> @if(!datatableConfig.compact){@(Messages("plates.button.compute"))}</button>
+<button class="btn" ng-click="save()" data-toggle="tooltip" title="@Messages("plates.button.save")" ng-disabled="!isEditMode()"><i class="icon-save icon-large"></i></button>	
+<button class="btn" ng-click="computeXY()" data-toggle="tooltip" title="@Messages("plates.button.compute")" ng-disabled="!isEditMode()"><i class="icon-magic icon-large"></i> </button>
 </div>
 <div class="btn-group" ng-switch on="isEditMode()">
-	<button class="btn" ng-click="edit()" ng-switch-when="false" data-toggle="tooltip" title="@Messages("plates.button.edit")"><i class="icon-edit icon-large"></i>@if(!datatableConfig.compact){@(Messages("plates.button.edit"))}</button>
-	<button class="btn" ng-click="unedit()" ng-switch-when="true" data-toggle="tooltip" title="@Messages("plates.button.unedit")"><i class="icon-undo icon-large"></i>@if(!datatableConfig.compact){@(Messages("plates.button.unedit"))}</button>	
+	<button class="btn" ng-click="edit()" ng-switch-when="false" data-toggle="tooltip" title="@Messages("plates.button.edit")"><i class="icon-edit icon-large"></i></button>
+	<button class="btn" ng-click="unedit()" ng-switch-when="true" data-toggle="tooltip" title="@Messages("plates.button.unedit")"><i class="icon-undo icon-large"></i></button>	
 </div>
 
-<button class="btn" ng-click="remove()" data-toggle="tooltip" ng-show="plate.code !== undefined" title="@Messages("plates.button.delete")"><i class="icon-trash icon-large"></i>@if(!datatableConfig.compact){@(Messages("plates.button.delete"))}</button>
+<button class="btn" ng-click="remove()" data-toggle="tooltip" ng-show="plate.code !== undefined" title="@Messages("plates.button.delete")"><i class="icon-trash icon-large"></i></button>
 
 </div>
 
@@ -38,7 +38,7 @@
 
 <div class="tab-content">
 <div class="tab-pane active" id="tab1">
-	@views.html.components.datatable.datatable(datatableConfig)
+	<div class="datatable" datatable="datatable.getConfig()"></div>
 </div>
 
 

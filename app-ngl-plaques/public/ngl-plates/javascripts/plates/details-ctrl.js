@@ -13,15 +13,23 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 				active:true,
 				mode:'local'
 			},
+			save:{
+				active:true,
+				mode:'local',
+				keepEdit:true,
+				changeClass:false,
+				showButton:false
+			},
 			edit : {
-				active:false,
+				active:true,
 				withoutSelect:true,
 				showButton:false
 			},
 			remove:{
-				active:false,
+				active:true,
 				withEdit:true,
 				mode:'local',
+				showButton:false,
 				callback : function(datatable){
 					var dataInitial = $scope.basket.get();
 					var dataFinal = []; 
@@ -40,9 +48,33 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 			},
 			cancel : {
 				showButton:false
-			}
+			},
+			columns : [
+					    {  	property:"code",
+					    	header: Messages("plates.table.well.code"),
+					    	type :"String"
+						},
+						{  	property:"name",
+					    	header: Messages("plates.table.well.name"),
+					    	type :"String"
+						},
+						{  	property:"typeName",
+					    	header: Messages("plates.table.typeName"),
+					    	type :"String"
+						},
+						{  	property:"x",
+					    	header: Messages("plates.table.well.x"),
+					    	type :"String",
+					    	edit:true
+						}, 
+						{  	property:"y",
+					    	header: Messages("plates.table.well.y"),
+					    	type :"String",
+					    	edit:true
+						},
+					]
 		};
-		
+	
 	$scope.init = function(){
 		$scope.clearMessages();		
 		$scope.datatable = datatable($scope, datatableConfig);
@@ -146,10 +178,11 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 	 */
 	$scope.setEditConfig = function(value){
 		$scope.editMode = value;
-		var config = $scope.datatable.getConfig();
-		config.edit.active=value;		
-		config.remove.active=value;
-		$scope.datatable.setConfig(config);
+		//var config = $scope.datatable.getConfig();
+		//config.edit.active=value;		
+		//config.remove.active=value;
+		//config.save.active=value;
+		//$scope.datatable.setConfig(config);
 		if(value){
 			$scope.startEditMode();								
 		}else{
@@ -162,7 +195,8 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 	 */
 	$scope.save = function(){
 		$scope.clearMessages();
-		$scope.plate.wells = $scope.datatable.displayResult;
+		$scope.datatable.save();
+		$scope.plate.wells = $scope.datatable.getData();
 		
 		$http.post(jsRoutes.controllers.plates.api.Plates.save().url, $scope.plate).
 			success(function(data, status, headers, config){
