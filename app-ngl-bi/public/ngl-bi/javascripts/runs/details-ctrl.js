@@ -12,7 +12,8 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 			edit : {
 				active:false,
 				showButton : false,
-				byDefault : true
+				byDefault : true,
+				columnMode : true
 			},
 			save : {
 				active:false,
