@@ -492,7 +492,7 @@ angular.module('datatableServices', []).
 			    					var columnEdit = (new Function("config","return config.edit.columns."+columnId+".edit"))(this.config);			    					
 			    					isEdit = (columnEdit || this.config.edit.all);
 			    				}else{
-			    					isEdit = this.config.edit.start;
+			    					isEdit = (this.config.edit.columnMode && this.config.edit.start);
 			    				}
 		    				}
 		    				return isEdit;
@@ -534,7 +534,7 @@ angular.module('datatableServices', []).
 			    						this.config.save.number++;
 			    						this.displayResult[i].trClass = undefined;
 				    					this.displayResult[i].selected = undefined;
-				    					//this.displayResult[i].edit = undefined;
+				    					this.displayResult[i].edit = undefined;
 				    					
 			    						if(this.isRemoteMode(this.config.save.mode)){
 			    							this.saveRemote(this.displayResult[i], i);
@@ -587,18 +587,21 @@ angular.module('datatableServices', []).
 		    					if(data){
 		    						this.displayResult[i] = data;
 		    					}
+		    					
+		    					//update in the all result table
+								var j = i;
+								if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
+									j = i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage);
+								}
+								this.allResult[j] = angular.copy(this.displayResult[i]);
+		    					
 		    					if(!this.config.save.keepEdit){
 		    						this.config.edit.start = false;
 		    						this.displayResult[i].edit = undefined;
 		    					}else{
 		    						this.displayResult[i].edit = true;
 		    					}
-			    				//update in the all result table
-								var j = i;
-								if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
-									j = i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage);
-								}
-								this.allResult[j] = angular.copy(this.displayResult[i]);
+			    				
 								if(this.config.save.changeClass){
 									this.displayResult[i].trClass = "success";
 								}
@@ -1252,7 +1255,7 @@ angular.module('datatableServices', []).
 			    		angular.element(toolbar).append(divButtons);
 			    		
 			    		var divPagination = angular.element('<div class="span4"></div>');
-			    		var paginationToolBar = angular.element('<div class="btn-toolbar pull-right" ng-show="'+config.name+'.isShowToolbarRight()"></div>');
+			    		var paginationToolBar = angular.element('<div class="btn-toolbar" ng-show="'+config.name+'.isShowToolbarRight()"></div>');
 			    		var paginationButtonTotal = '	<button class="btn btn-info" disabled="disabled" ng-show="'+config.name+'.config.showTotalNumberRecords">'+MessagesDatatable("datatable.totalNumberRecords", "{{"+config.name+".totalNumberRecords}}")+'</button>';
 			    		angular.element(paginationToolBar).append(paginationButtonTotal);
 			    		//Pagination Section
