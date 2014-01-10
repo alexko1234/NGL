@@ -102,7 +102,13 @@ public class ExperimentService {
 		
 		//void
 		l.add(newExperimentType("Void Banque 300-600","void-lib-300-600",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Void Depot Illumina","void-illumina-depot",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+
+		//Prepaflowcell : to finish
+		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell", ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, null, null, "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
+		//Depot solexa
+		l.add(newExperimentType("Depot Illumina", "illumina-depot", ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, null, getInstrumentUsedTypes("GAII","MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 		
@@ -113,6 +119,8 @@ public class ExperimentService {
 		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("void-lib-300-600"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
 		newExperimentTypeNode("librairie", getExperimentTypes("librairie").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
 		newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
+		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,null,null,null).save();
+		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),null,null).save();
 	}
 	
 	private static List<Protocol> getProtocols(String...codes) throws DAOException {

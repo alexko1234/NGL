@@ -16,7 +16,6 @@ public class TubeImportCNS extends ContainerImportCNS {
 	@Override
 	public void runImport() throws SQLException, DAOException {
 			createContainers(contextError,"pl_TubeToNGL ","tube","IW-P",null,null);
-			//createContainers(contextError,"pl_PrepaflowcellToNGL","lane","F",null,"pl_BanquesolexaUneLane @nom_lane=?");
 			//contextError.setUpdateMode();
 	//		updateSampleFromTara();
 	}

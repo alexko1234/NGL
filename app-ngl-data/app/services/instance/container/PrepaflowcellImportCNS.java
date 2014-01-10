@@ -17,7 +17,7 @@ public class PrepaflowcellImportCNS extends ContainerImportCNS {
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException {
-		createContainers(contextError,"pl_PrepaflowcellToNGL","lane","F",null,"pl_BanquesolexaUneLane @nom_lane=?");
+		createContainers(contextError,"pl_PrepaflowcellToNGL","lane","F","prepaflowcell","pl_BanquesolexaUneLane @nom_lane=?");
 	}
 	
 

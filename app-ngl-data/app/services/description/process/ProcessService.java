@@ -40,12 +40,35 @@ public class ProcessService {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		l.add(DescriptionFactory.newProcessType("Banque 300-600", "lib-300-600", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie","amplification"), 
 				getExperimentTypes("fragmentation").get(0), getExperimentTypes("amplification").get(0), getExperimentTypes("void-lib-300-600").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepot() , getExperimentTypes("prepa-flowcell","illumina-depot"), getExperimentTypes("prepa-flowcell").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("void-illumina-depot").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
 	
+	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepot() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//TO do multi value
+        propertyDefinitions.add(
+        		DescriptionFactory.newPropertiesDefinition("Type séquencage","sequencingType"
+        				, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("GAIIx", "Hiseq 2000", "Hiseq 2500 normal" , "Hiseq 2500 rapide" ,"Miseq")));
+        propertyDefinitions.add(
+        		DescriptionFactory.newPropertiesDefinition("Type de lecture", "readType"
+        		, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE")));		
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600")));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Type séquenceur", "sequencerType"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("GAIIx","HISEQ2000","HISEQ2500","MISEQ")));
+
+		return propertyDefinitions;
+	}
+
 	private static List<ExperimentType> getExperimentTypes(String...codes) throws DAOException {
 		return DAOHelpers.getModelByCodes(ExperimentType.class,ExperimentType.find, codes);
 	}
+	
+	
 	
 	//TODO
 	// Key to validate
