@@ -32,7 +32,7 @@ public class Plates extends CommonController {
 			boolean isUpdate = true;
 			Logger.info("SAVE Plate : "+ plate);
 			if(plate.code == null){								
-				plate.code = newCode();
+				plate.code = newCode(plate.wells[0].typeCode);
 				if(plate.wells.length > 0){
 					plate.typeName = plate.wells[0].typeName;
 					plate.typeCode = plate.wells[0].typeCode;
@@ -125,9 +125,19 @@ public class Plates extends CommonController {
 		}
 	}
 
-	private static String newCode() {
+	private static String newCode(Integer typeCode) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-		String code = "PL"+sdf.format(new Date());
+		String code;
+		if(Integer.valueOf(12).equals(typeCode)){
+		    code = "FRAGM_"+sdf.format(new Date());
+		}else if(Integer.valueOf(13).equals(typeCode)){
+		    code = "LIB_"+sdf.format(new Date());
+		}else if(Integer.valueOf(18).equals(typeCode)){
+		    code = "AMPLI_"+sdf.format(new Date());
+		}else{
+		    code = "PL"+sdf.format(new Date());
+		}
+		
 		return code;
 	}
 
