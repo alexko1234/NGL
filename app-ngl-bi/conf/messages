@@ -192,8 +192,9 @@ readsets.mapping.FFAlignedReads = FF aligned reads
 readsets.mapping.RRAlignedReads = RR aligned reads
 readsets.mapping.transAlignedReads = Trans aligned reads
 readsets.mapping.singleAlignedReads = Single aligned reads
-readsets.mapping.MPReadDistanceSeparation =  Distance between MP reads
-readsets.mapping.PEReadDistanceSeparation = Distance between PE reads
+
+readsets.MPReadDistanceSeparation =  Distance between MP reads
+readsets.PEReadDistanceSeparation = Distance between PE reads
 
 readsets.merging.mergedReads = Merged reads
 readsets.merging.medianeSize = Mediane size (bases)
@@ -206,13 +207,14 @@ readsets.merging.overlapDistrib.title = Merging size distribution
 
 readsets.read_quality.adaptersOverRepresented = Adapters over-represented
 readsets.read_quality.number151 = Estimate of the number of 151 size's reads
-readsets.read_quality.qualScore = Quality scores for each read position
-readsets.read_quality.nuclDistribution = Distribution of nucleotids for each read position
-readsets.read_quality.readWithNpercent = Percent of reads with sequenced N
-readsets.read_quality.readSizeDistribution = Read size distribution
-readsets.read_quality.adapterContamination = Contamination adaptateurs : liste d'adaptateurs vs cycles run
-readsets.read_quality.GCDistribution = Proportion of reads for different values of G+C content 
-readsets.read_quality.positionN = Position of N in reads
+
+readsets.qualScore = Quality scores for each read position
+readsets.nuclDistribution = Distribution of nucleotids for each read position
+readsets.readWithNpercent = Percent of reads with sequenced N
+readsets.readSizeDistribution = Read size distribution
+readsets.adapterContamination = Contamination adaptateurs : liste d'adaptateurs vs cycles run
+readsets.GCDistribution = Proportion of reads for different values of G+C content 
+readsets.positionN = Position of N in reads
 
 readsets.sorting_ribo.readsInput = Reads input
 readsets.sorting_ribo.no_rRNA = No-rRNA
