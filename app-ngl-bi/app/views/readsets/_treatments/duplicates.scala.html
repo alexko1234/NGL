@@ -38,7 +38,7 @@
 				<ul class="unstyled">									 
 				    <li ng-repeat="obj in objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value">
           				{{obj.percent  | number:2}} % @(Messages("readsets.duplicates.observed")) 
-          				{{obj.times}} @Messages("readsets.duplicates.times")
+          				{{obj.times + 1}} @Messages("readsets.duplicates.times")
        				</li>
 				</ul>
 			</td>
@@ -50,7 +50,7 @@
 				<ul class="unstyled">									 
 				    <li ng-repeat="obj in objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value">
           				{{obj.percent | number:2}} % @(Messages("readsets.duplicates.observed")) 
-          				{{obj.times}} @Messages("readsets.duplicates.times") 
+          				{{obj.times + 1}} @Messages("readsets.duplicates.times") 
        				</li>
 				</ul>
 			</td>
@@ -62,7 +62,7 @@
 				<ul class="unstyled">									 
 				    <li ng-repeat="obj in objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value">
           				{{obj.percent | number:2}} % @(Messages("readsets.duplicates.observed")) 
-          				{{obj.times}} @Messages("readsets.duplicates.times")
+          				{{obj.times + 1}} @Messages("readsets.duplicates.times")
        				</li>
 				</ul>
 			</td>

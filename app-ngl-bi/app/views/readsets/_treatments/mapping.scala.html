@@ -1,6 +1,18 @@
 @()
 
-<div class="row-fluid">
+<style type="text/css">
+#myModal2 {
+	position:absolute;
+	margin-top: 0px;
+	margin-left: 0px;
+	left:0;
+	width: 100%;
+}
+</style>
+
+<div ng-controller="MappingCtrl" ng-init="init(treatments.getTreatment().code)">
+
+<div class="row-fluid"> 
 	<div class="span10">
 	 <table class="table table-condensed table-hover table-bordered">
 		<thead>
@@ -19,31 +31,63 @@
 		<tbody>
 			<tr>
 				<th>@Messages("readsets.mapping.number")</th>
-				<td>{{readset.treatments.mapping.pairs.sampleInput.value | number}}</td>
-				<td>{{readset.treatments.mapping.pairs.nonChimericAlignedReads.value | number}}</td>
-				<td>{{readset.treatments.mapping.pairs.FRAlignedReads.value | number}}</td>
-				<td>{{readset.treatments.mapping.pairs.RFAlignedReads.value | number}}</td>
-				<td>{{readset.treatments.mapping.pairs.FFAlignedReads.value | number}}</td>
-				<td>{{readset.treatments.mapping.pairs.RRAlignedReads.value | number}}</td>
-				<td>{{readset.treatments.mapping.pairs.transAlignedReads.value | number}}</td>
-				<td>{{readset.treatments.mapping.pairs.singleAlignedReads.value | number}}</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.sampleInput.value | number}}</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.nonChimericAlignedReads.value | number}}</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.FRAlignedReads.value | number}}</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.RFAlignedReads.value | number}}</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.FFAlignedReads.value | number}}</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.RRAlignedReads.value | number}}</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.transAlignedReads.value | number}}</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.singleAlignedReads.value | number}}</td>
 			</tr>
 			<tr>
 				<th>@Messages("readsets.mapping.totalReadsPercent")</th>
 				<td>100 %</td>
-				<td>{{readset.treatments.mapping.pairs.nonChimericAlignedReadsPercent.value | number:2}} %</td>
-				<td>{{readset.treatments.mapping.pairs.FRAlignedReadsPercent.value | number:2}} %</td>
-				<td>{{readset.treatments.mapping.pairs.RFAlignedReadsPercent.value | number:2}} %</td>
-				<td>{{readset.treatments.mapping.pairs.FFAlignedReadsPercent.value | number:2}} %</td>
-				<td>{{readset.treatments.mapping.pairs.RRAlignedReadsPercent.value | number:2}} %</td>
-				<td>{{readset.treatments.mapping.pairs.transAlignedReadsPercent.value | number:2}} %</td>
-				<td>{{readset.treatments.mapping.pairs.singleAlignedReadsPercent.value | number:2}} %</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.nonChimericAlignedReadsPercent.value | number:2}} %</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.FRAlignedReadsPercent.value | number:2}} %</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.RFAlignedReadsPercent.value | number:2}} %</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.FFAlignedReadsPercent.value | number:2}} %</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.RRAlignedReadsPercent.value | number:2}} %</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.transAlignedReadsPercent.value | number:2}} %</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.singleAlignedReadsPercent.value | number:2}} %</td>
 			</tr>					
 		</tbody>
 	</table>
 	</div>	
 </div>
-<div class="row-fluid"><!--  graphics here -->
- <img src="data:image/png;base64,{{readset.treatments.mapping.pairs.PEReadDistanceSeparation.value}}" height="450" width="600" />&nbsp;
- <img src="data:image/png;base64,{{readset.treatments.mapping.pairs.MPReadDistanceSeparation.value}}" height="450" width="600" />
+
+<div class="row-fluid">
+	<table border="0">
+		<tr>
+			<td>
+				<a data-target="#myModal2" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
+				ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.value,'PEReadDistanceSeparation')">
+						<img src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.value}}" width="280" />&nbsp;
+				</a>
+				<a data-target="#myModal2" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
+				ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.value,'MPReadDistanceSeparation')">
+						<img src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.value}}" width="280" />&nbsp;
+				</a>
+			 </td>
+		 </tr>
+	</table>
 </div>
+
+</div>
+
+
+	<!-- ----------------------------------------------------------------------------- -->
+	<!-- Modal -->
+	<div id="myModal2" class="modal hide fade" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true" >
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">×</button>
+			<h3 id="myModalLabel">{{currentTitle}}</h3>
+		</div>
+		<div>
+			<img src="data:image/png;base64,{{currentImage}}" />
+		</div>
+	</div>
+	<!-- -------------------------------------------------------------------------------- -->
+

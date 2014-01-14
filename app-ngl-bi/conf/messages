@@ -155,45 +155,12 @@ readsets.laneNumber = N° Piste
 readsets.projectCode = Projet
 readsets.sampleCode = Echantillon
 readsets.nbCycles = Nb Cycles
-
-readsets.global.usefulSequences = Nb Séquences utiles
-readsets.global.usefulBases = Nb Bases utiles
-readsets.ngsrg.nbCluster = Nb Séquences valides
-readsets.ngsrg.nbBases = Nb Bases
-readsets.ngsrg.Q30 = % >= Q30
-readsets.ngsrg.qualityScore = Score Qualité moyen
-readsets.ngsrg.validSeqPercent = % Séquences valides / piste
-
 readsets.read1 = Read 1
 readsets.read2 = Read 2
 readsets.paired = Paired
 readsets.read1_2 = Read 1 + Read 2
 readsets.single = Single
-
-readsets.duplicates.estimateOfDuplicatedReads = Estimation de lectures dupliquées
-readsets.duplicates.estimateOfUniqueReads = Estimation de lectures uniques
-readsets.duplicates.observed = observé
-readsets.duplicates.times = fois
-
-readsets.trimming.sizeRange = Size range
-readsets.trimming.readsInput = Reads input
-readsets.trimming.readsOutput = Reads output
-readsets.trimming.readsTrim = Reads trim.
-readsets.trimming.readsTrimPercent = % Reads trim.
-readsets.trimming.nucleotideTrim = Nucleotide trim.
-readsets.trimming.trimRejectedShort = Rejected (short)
-readsets.trimming.trimRejectedLength0 = Rejected (length 0)
-readsets.trimming.storedPairs = Stored Pairs
-readsets.trimming.storedSingleton = Stored Singleton
-readsets.trimming.rejectedPairs = Rejected Pairs
-
-readsets.merging.sampleInput = Sample input
-readsets.merging.mergedReads = Merged reads
-readsets.merging.medianeSize = Mediane size
-readsets.merging.totalSize = Total size
-readsets.merging.maxSize = Max size
-readsets.merging.minSize = Min size
-readsets.merging.avgSize = Average size
+readsets.sampleInput = Sample input
 
 readsets.contaminationPhiX.readsInput = Reads input 
 readsets.contaminationPhiX.removedReads = Removed reads
@@ -201,13 +168,19 @@ readsets.contaminationPhiX.remainingReads = Remaining reads
 readsets.contaminationPhiX.removedReadsPercent = % removed reads
 readsets.contaminationPhiX.remainingNucleotides = Reamining nucleotides
 
-readsets.sorting_ribo.readsInput = Reads input
-readsets.sorting_ribo.no_rRNA = No-rRNA
-readsets.sorting_ribo.rRNA = rRNA
-readsets.sorting_ribo.rRNAPercent = % rRNA
-readsets.sorting_ribo.rRNABilan = Bilan rRNA
-readsets.sorting_ribo.usefulSequences = Useful sequences
-readsets.sorting_ribo.usefulBases = Useful bases
+readsets.duplicates.estimateOfDuplicatedReads = Estimation de lectures dupliquées
+readsets.duplicates.estimateOfUniqueReads = Estimation de lectures uniques
+readsets.duplicates.observed = observé
+readsets.duplicates.times = fois
+
+readsets.global.usefulSequences = Nb Séquences utiles
+readsets.global.usefulBases = Nb Bases utiles
+
+readsets.ngsrg.nbCluster = Nb Séquences valides
+readsets.ngsrg.nbBases = Nb Bases
+readsets.ngsrg.Q30 = % >= Q30
+readsets.ngsrg.qualityScore = Score Qualité moyen
+readsets.ngsrg.validSeqPercent = % Séquences valides / piste
 
 readsets.mapping.number = Number
 readsets.mapping.totalReadsPercent = % total reads
@@ -222,19 +195,65 @@ readsets.mapping.singleAlignedReads = Single aligned reads
 readsets.mapping.MPReadDistanceSeparation =  Distance between MP reads
 readsets.mapping.PEReadDistanceSeparation = Distance between PE reads
 
+readsets.merging.mergedReads = Merged reads
+readsets.merging.medianeSize = Mediane size (bases)
+readsets.merging.totalSize = Total size (bases)
+readsets.merging.maxSize = Max size (bases)
+readsets.merging.minSize = Min size (bases)
+readsets.merging.avgSize = Average size (bases)
+readsets.merging.overlapDistrib.title = Merging size distribution
+
+
 readsets.read_quality.adaptersOverRepresented = Adapters over-represented
 readsets.read_quality.number151 = Estimate of the number of 151 size's reads
+readsets.read_quality.qualScore = Quality scores for each read position
+readsets.read_quality.nuclDistribution = Distribution of nucleotids for each read position
+readsets.read_quality.readWithNpercent = Percent of reads with sequenced N
+readsets.read_quality.readSizeDistribution = Read size distribution
+readsets.read_quality.adapterContamination = Contamination adaptateurs : liste d'adaptateurs vs cycles run
+readsets.read_quality.GCDistribution = Proportion of reads for different values of G+C content 
+readsets.read_quality.positionN = Position of N in reads
 
+readsets.sorting_ribo.readsInput = Reads input
+readsets.sorting_ribo.no_rRNA = No-rRNA
+readsets.sorting_ribo.rRNA = rRNA
+readsets.sorting_ribo.rRNAPercent = % rRNA
+readsets.sorting_ribo.rRNABilan = Bilan rRNA
+readsets.sorting_ribo.usefulSequences = Useful sequences
+readsets.sorting_ribo.usefulBases = Useful bases
+
+readsets.taxonomy.organism = Organisme
+readsets.taxonomy.taxonomy = Taxonomie
+readsets.taxonomy.divisionBilan = Bilan par division
+readsets.taxonomy.keywordBilan = Bilan par mot-clé 
+readsets.taxonomy.taxonBilan = Bilan par taxon
+
+readsets.trimming.sizeRange = Size range
+readsets.trimming.readsInput = Reads input
+readsets.trimming.readsOutput = Reads output
+readsets.trimming.readsTrim = Reads trim.
+readsets.trimming.readsTrimPercent = % Reads trim.
+readsets.trimming.nucleotideTrim = Nucleotide trim.
+readsets.trimming.trimRejectedShort = Rejected (short)
+readsets.trimming.trimRejectedLength0 = Rejected (length 0)
+readsets.trimming.storedPairs = Stored Pairs
+readsets.trimming.storedSingleton = Stored Singleton
+readsets.trimming.rejectedPairs = Rejected Pairs
 
 #treatments names
 treatments.sav = SAV
 treatments.ngsrg = NGS-RG
 treatments.duplicatesRaw=Duplicates (vs RAW)
 treatments.duplicatesClean=Duplicates (vs CLEAN)
-treatments.trimming=Trimming (vs RAW)
-treatments.merging=Merging
+treatments.duplicatesNoRiboClean=Duplicates (vs NO RIBO CLEAN)
+treatments.trimmingRaw=Trimming (vs RAW)
+treatments.mergingClean=Merging (vs CLEAN)
+treatments.mergingNoRiboClean=Merging (cs NO RIBO CLEAN)
 treatments.readQualityRaw=Read Quality (vs RAW)
 treatments.readQualityClean=Read Quality (vs CLEAN)
-treatments.contaminationPhiX=Contamination PhiX
-treatments.sortingRibo=Sorting Ribo
-treatments.mapping=Mapping
+treatments.readQualityNoRiboClean=Read Quality (vs NO RIBO CLEAN)
+treatments.contaminationPhiXTrim=Contam. PhiX (vs TRIM)
+treatments.sortingRiboClean=Sorting Ribo (vs CLEAN)
+treatments.mappingClean=Mapping (vs CLEAN)
+treatments.mappingNoRiboClean=Mapping (vs NO RIBO CLEAN)
+treatments.taxonomyClean=Taxonomy (vs CLEAN)

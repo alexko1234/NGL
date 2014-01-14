@@ -407,9 +407,7 @@ public class DescriptionFactory {
 		tt.propertiesDefinitions = propertiesDefinitions; 
 		tt.names = names;
 		tt.contexts = contexts;
-		
 		tt.institutes = institutes;
-		
 		tt.displayOrders = displayOrders;
 		return tt;
 	}

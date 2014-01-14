@@ -14,17 +14,17 @@
 		<tbody>
 		<tr>
 			<th><strong>@Messages("readsets.read1_2")</strong></th>
-			<td>{{readset.treatments.contaminationPhiX.pairs.readsInput.value | number}}</td>
-			<td>{{readset.treatments.contaminationPhiX.pairs.removedReads.value | number}}</td>
-			<td>{{readset.treatments.contaminationPhiX.pairs.remainingReads.value | number}}</td>
-			<td>{{readset.treatments.contaminationPhiX.pairs.removedReadsPercent.value | number:2}} %</td>
+			<td>{{readset.treatments[treatments.getTreatment().code].pairs.readsInput.value | number}}</td>
+			<td>{{readset.treatments[treatments.getTreatment().code].pairs.removedReads.value | number}}</td>
+			<td>{{readset.treatments[treatments.getTreatment().code].pairs.remainingReads.value | number}}</td>
+			<td>{{readset.treatments[treatments.getTreatment().code].pairs.removedReadsPercent.value | number:2}} %</td>
 		</tr>						
 		<tr>
 			<th><strong>@Messages("readsets.single")</strong></th>
-			<td>{{readset.treatments.contaminationPhiX.single.readsInput.value | number}}</td>
-			<td>{{readset.treatments.contaminationPhiX.single.removedReads.value | number}}</td>
-			<td>{{readset.treatments.contaminationPhiX.single.remainingReads.value | number}}</td>
-			<td>{{readset.treatments.contaminationPhiX.single.removedReadsPercent.value | number:2}} %</td>
+			<td>{{readset.treatments[treatments.getTreatment().code].single.readsInput.value | number}}</td>
+			<td>{{readset.treatments[treatments.getTreatment().code].single.removedReads.value | number}}</td>
+			<td>{{readset.treatments[treatments.getTreatment().code].single.remainingReads.value | number}}</td>
+			<td>{{readset.treatments[treatments.getTreatment().code].single.removedReadsPercent.value | number:2}} %</td>
 		</tr>						
 		</tbody>
 	 </table>

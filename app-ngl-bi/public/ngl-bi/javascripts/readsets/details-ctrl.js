@@ -150,10 +150,14 @@ function ReadQualityCtrl($scope) {
 				$scope.objsInAdapters = $scope.readset.treatments[name];
 			}
 		});
-		
-
+	}
+	
+	$scope.setImage = function(imageData, imageName) {
+		$scope.currentTitle = Messages('readsets.read_quality.' + imageName);
+		$scope.currentImage = imageData;	
 	}
 }
+
 
 function SortingCtrl($scope) {
 	$scope.init = function(name) {
@@ -165,5 +169,42 @@ function SortingCtrl($scope) {
 	}
 }
 
+function MappingCtrl($scope) {
+	$scope.init = function(name) {}
+	$scope.setImage = function(imageData, imageName) {
+		$scope.currentTitle = Messages('readsets.mapping.' + imageName);
+		$scope.currentImage = imageData;	
+	}
+}
+
+
+
+
+function TaxonomyCtrl($scope) {
+	$scope.init = function(name) {
+		
+		
+		$scope.kronaHTMLString = "";		
+		$scope.kronaHTMLString = $scope.kronaHTMLString + $scope.readset.treatments[name].read1.krona.value;
+		$scope.kronaHTMLString = $scope.kronaHTMLString.replace("\\\"", "\"");
+		$scope.kronaHTMLString = $scope.kronaHTMLString.replace("\\n", "");
+		
+		$scope.detailFrame = $scope.kronaHTMLString;
+		
+		
+		$scope.$watch('readset', function() { 
+			if (angular.isDefined($scope.readset)) {
+				$scope.objsInDivisionBilan = $scope.readset.treatments[name].read1.divisionBilan.value;
+				
+				$scope.objsInKeywordBilan = $scope.readset.treatments[name].read1.keywordBilan.value;
+				
+				$scope.objsInTaxonBilan = $scope.readset.treatments[name].read1.taxonBilan.value;
+			}
+		});
+
+	}
+}
+
 
 NGSRGCtrl.$inject = ['$scope', 'datatable'];
+

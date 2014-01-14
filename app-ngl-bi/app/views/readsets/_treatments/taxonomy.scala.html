@@ -1,0 +1,154 @@
+@()
+
+<div ng-controller="TaxonomyCtrl" ng-init="init(treatments.getTreatment().code)">
+
+	<div class="row-fluid">
+		<div class="span3">
+			<table class="table table-condensed table-hover table-bordered">
+			<tr>
+				<th class="span1">
+					<strong>@Messages("readsets.sampleInput")</strong>
+				</th>
+				<th class="span1">
+					<strong>@Messages("readsets.taxonomy.organism")</strong>
+				</th>
+				<th class="span1">
+					<strong>@Messages("readsets.taxonomy.taxonomy")</strong>
+				</th>	
+			</tr>
+			<tr>
+				<td>
+					{{readset.treatments[treatments.getTreatment().code].read1.sampleInput.value | number}}
+				</td>
+				<td>
+					{{readset.treatments[treatments.getTreatment().code].read1.organism.value}}
+				</td>
+				<td>
+					{{readset.treatments[treatments.getTreatment().code].read1.taxonomy.value}}
+				</td>		
+			</tr>
+			</table> 
+		</div>
+	</div>
+	
+	<div class="row-fluid">
+		<div class="span12">	
+			<table class="table table-condensed table-hover table-bordered">
+				<thead>
+				<tr>
+					<th>
+						<strong>@Messages("readsets.taxonomy.divisionBilan")</strong>
+					</th>
+					<th>
+						<strong>@Messages("readsets.taxonomy.keywordBilan")</strong>
+					</th>
+					<th>
+						<strong>@Messages("readsets.taxonomy.taxonBilan")</strong>
+					</th>
+				</tr>
+				<tr>
+					<th colspan="2"></th>
+					<th></th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td height="10%">
+						<table border="0" >
+							<tr ng-repeat="obj in objsInDivisionBilan">
+								<th>
+									{{obj.division}} :
+								</th>
+								<td>
+									{{obj.nbSeq | number}}
+								</td>
+								<td>
+									{{ obj.percent | number:2}} @(" %")
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td height="10%">
+						<table border="0" >
+							<tr ng-repeat="obj in objsInKeywordBilan">
+								<th>
+									{{obj.keyword}} :
+								</th>
+								<td>
+									{{obj.nbSeq | number}}
+								</td>
+								<td>
+									{{ obj.percent | number:2}} @(" %")
+								</td>
+							</tr>
+						</table>			
+					</td>
+					<td rowspan="2">
+						<table border="0" >
+							<tr ng-repeat="obj in objsInTaxonBilan">
+								<th>
+									{{obj.taxon}} :
+								</th>
+								<td>
+									{{obj.nbSeq | number}}
+								</td>
+								<td>
+									{{ obj.percent | number:2}} @(" %")
+								</td>
+							</tr>
+						</table>			
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div class="row-fluid">
+							<img src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.value}}" />&nbsp;
+						</div>			
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	
+	
+	
+	
+	<!-- ------------------------------------tests affichage Krona !!! -->
+<!-- 	
+	<HR>
+	<br><br>
+	
+	<b>Affichage de la chaine HTML du Krona: OK</b>
+	<br>
+	{{kronaHTMLString}}
+	<br>
+	
+	<b>Affichage d'une IFRAME avec du HTML dedans sans script : OK</b>
+	<br>
+	<iframe sandbox="allow-scripts"  srcdoc='<i>Simple html</i>' src=''></iframe>
+	<br>
+	
+	<b>Affichage d'une IFRAME avec du HTML dedans et un script : OK</b>
+	<br>
+	<iframe sandbox="allow-scripts"  srcdoc='<script>alert("alert javascript ds un script de l Iframe !");</script><i>Simple html</i>' src=''></iframe>
+	<br>
+	
+	
+	<b>Affichage d'une IFRAME avec la chaine HTML du Krona : KO</b> 
+	<br>
+	
+	<iframe sandbox="allow-scripts" srcdoc='{{kronaHTMLString}}' src=''></iframe>
+	
+	<br>
+	test +
+	<iframe sandbox="allow-scripts"><div ng-bind-html='kronaHTMLString'></div></iframe>	
+	
+	<br>
+	Nouveau test : 
+	<iframe ng-src="detailFrame"></iframe>
+		
+ -->	
+	
+</div>
