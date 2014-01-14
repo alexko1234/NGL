@@ -125,7 +125,8 @@ function ListNewCtrl($scope, datatable) {
 				by:'containerInputCode'
 			},
 			edit:{
-				active:true
+				active:true,
+				columnMode:true
 			},
 			save:{
 				active:true,

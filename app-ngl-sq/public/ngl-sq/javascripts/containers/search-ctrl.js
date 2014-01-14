@@ -49,7 +49,7 @@ function SearchCtrl($scope, datatable, lists) {
 				jsonSearch.categoryCode = $scope.form.containerCategory.code;
 			}	
 			
-			if($scope.form.stateCode){
+			if($scope.form.state){
 				jsonSearch.stateCode = $scope.form.state.code;
 			}	
 			$scope.datatable.search(jsonSearch);							

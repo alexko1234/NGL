@@ -78,7 +78,7 @@ function SearchContainerCtrl($scope,$routeParams, datatable,basket, lists) {
 		
 		$scope.basket.reset();
 		//$scope.form.experimentTypes.options = $scope.comboLists.getExperimentTypesByCategory($scope.form.experimentCategories.selected.code).query();
-		$scope.lists.refresh.types({objectTypeCode:"Experiment"}, true);
+		$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code}, true);
 		//this.search();
 	}
 	

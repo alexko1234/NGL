@@ -6,7 +6,7 @@
 			<option value="">@Messages("experiments.select.experimentType")</option>
 		</select>
 	
-		<select ng-model="form.experimentType" ng-disabled="!form.experimentCategory && newExperiment == 'new'" ng-options="experimentType.name for experimentType in lists.getTypes('Experiment')" ng-change="changeExperimentType()">
+		<select ng-model="form.experimentType" ng-disabled="!form.experimentCategory && newExperiment == 'new'" ng-options="experimentType.name for experimentType in lists.getExperimentTypes()" ng-change="changeExperimentType()">
 			<option value="">@Messages("experiments.select.experimentType")</option>
 		</select>
 	

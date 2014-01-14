@@ -14,7 +14,7 @@
 			<option value="">@Messages("processes.select.sample")-</option>
 		</select>	
 		
-		<select ng-model="form.stateCode" ng-options="stateCode.name for stateCode in lists.getStates()" ng-change="search()">
+		<select ng-model="form.state" ng-options="stateCode.name for stateCode in lists.getStates()" ng-change="search()">
 			<option value="">@Messages("containers.select.state")</option>
 		</select>
 	</form>
