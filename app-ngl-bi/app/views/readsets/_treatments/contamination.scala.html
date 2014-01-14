@@ -5,22 +5,22 @@
 		<thead>
 		<tr>
 			<th class="span2">&nbsp;</th>
-			<th><strong>@Messages("readsets.contaminationPhiX.readsInput")</strong></th>
-			<th><strong>@Messages("readsets.contaminationPhiX.removedReads")</strong></th>
-			<th><strong>@Messages("readsets.contaminationPhiX.remainingReads")</strong></th>
-			<th><strong>@Messages("readsets.contaminationPhiX.removedReadsPercent")</strong></th>
+			<th>@Messages("readsets.contaminationPhiX.readsInput")</th>
+			<th>@Messages("readsets.contaminationPhiX.removedReads")</th>
+			<th>@Messages("readsets.contaminationPhiX.remainingReads")</th>
+			<th>@Messages("readsets.contaminationPhiX.removedReadsPercent")</th>
 		</tr>
 		</thead>
 		<tbody>
 		<tr>
-			<th><strong>@Messages("readsets.read1_2")</strong></th>
+			<th>@Messages("readsets.read1_2")</th>
 			<td>{{readset.treatments[treatments.getTreatment().code].pairs.readsInput.value | number}}</td>
 			<td>{{readset.treatments[treatments.getTreatment().code].pairs.removedReads.value | number}}</td>
 			<td>{{readset.treatments[treatments.getTreatment().code].pairs.remainingReads.value | number}}</td>
 			<td>{{readset.treatments[treatments.getTreatment().code].pairs.removedReadsPercent.value | number:2}} %</td>
 		</tr>						
 		<tr>
-			<th><strong>@Messages("readsets.single")</strong></th>
+			<th>@Messages("readsets.single")</th>
 			<td>{{readset.treatments[treatments.getTreatment().code].single.readsInput.value | number}}</td>
 			<td>{{readset.treatments[treatments.getTreatment().code].single.removedReads.value | number}}</td>
 			<td>{{readset.treatments[treatments.getTreatment().code].single.remainingReads.value | number}}</td>

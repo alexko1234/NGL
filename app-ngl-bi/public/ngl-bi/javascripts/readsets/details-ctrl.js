@@ -74,7 +74,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 		
 		$scope.setImage = function(imageData, imageName) {
 			$scope.currentTitle = Messages('readsets.' + imageName);
-			$scope.currentImage = imageData;	
+			$scope.currentImage = imageData;
 		}
 	}
 	

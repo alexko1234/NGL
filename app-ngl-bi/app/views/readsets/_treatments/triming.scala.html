@@ -7,19 +7,19 @@
 			<thead>
 			<tr>
 				<th class="span2">&nbsp;</th>
-				<th><strong>@Messages("readsets.trimming.sizeRange")</strong></th>
-				<th><strong>@Messages("readsets.trimming.readsInput")</strong></th>
-				<th><strong>@Messages("readsets.trimming.readsOutput")</strong></th>
-				<th><strong>@Messages("readsets.trimming.readsTrim")</strong></th>
-				<th><strong>@Messages("readsets.trimming.readsTrimPercent")</strong></th>
-				<th><strong>@Messages("readsets.trimming.nucleotideTrim")</strong></th>
-				<th><strong>@Messages("readsets.trimming.trimRejectedShort")</strong></th>
-				<th><strong>@Messages("readsets.trimming.trimRejectedLength0")</strong></th>			
+				<th>@Messages("readsets.trimming.sizeRange")</th>
+				<th>@Messages("readsets.trimming.readsInput")</th>
+				<th>@Messages("readsets.trimming.readsOutput")</th>
+				<th>@Messages("readsets.trimming.readsTrim")</th>
+				<th>@Messages("readsets.trimming.readsTrimPercent")</th>
+				<th>@Messages("readsets.trimming.nucleotideTrim")</th>
+				<th>@Messages("readsets.trimming.trimRejectedShort")</th>
+				<th>@Messages("readsets.trimming.trimRejectedLength0")</th>			
 			</tr>
 			</thead>
 			<tbody>
 			<tr>
-				<th class="span2"><strong>@Messages("readsets.read1")</strong></th>
+				<th class="span2">@Messages("readsets.read1")</th>
 				<td>{{readset.treatments[treatments.getTreatment().code].read1.sizeRange.value}}</td>
 				<td>{{readset.treatments[treatments.getTreatment().code].read1.readsInput.value | number}}</td>
 				<td>{{readset.treatments[treatments.getTreatment().code].read1.readsOutput.value | number}}</td>
@@ -30,7 +30,7 @@
 				<td>{{readset.treatments[treatments.getTreatment().code].read1.trimRejectedLength0.value | number}}</td>
 			</tr>						
 			<tr>
-				<th class="span2"><strong>@Messages("readsets.read2")</strong></th>
+				<th class="span2">@Messages("readsets.read2")</th>
 				<td>{{readset.treatments[treatments.getTreatment().code].read2.sizeRange.value}}</td>
 				<td>{{readset.treatments[treatments.getTreatment().code].read2.readsInput.value | number}}</td>
 				<td>{{readset.treatments[treatments.getTreatment().code].read2.readsOutput.value | number}}</td>
@@ -50,9 +50,9 @@
 	 <table class="table table-condensed table-hover table-bordered">
 		<thead>
 		<tr>
-			<th class="span2"><strong>@Messages("readsets.trimming.storedPairs")</strong></th>
-			<th><strong>@Messages("readsets.trimming.storedSingleton")</strong></th>
-			<th><strong>@Messages("readsets.trimming.rejectedPairs")</strong></th>
+			<th class="span2">@Messages("readsets.trimming.storedPairs")</th>
+			<th>@Messages("readsets.trimming.storedSingleton")</th>
+			<th>@Messages("readsets.trimming.rejectedPairs")</th>
 		</tr>
 		</thead>
 		<tbody>
