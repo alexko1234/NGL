@@ -42,7 +42,7 @@ public class UserHistory extends Action.Simple{
 			action = context.request().toString();
 			Result res = null;
 			
-			if(context.request().uri().startsWith("/api/")){
+			if(context.request().uri().startsWith("/api/") && !context.request().uri().contains("/authentication")){
 				long start = System.currentTimeMillis();
 				res = delegate.call(context);
 				long timeRequest = (System.currentTimeMillis() - start);
