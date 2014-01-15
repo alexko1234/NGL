@@ -192,6 +192,7 @@ readsets.mapping.FFAlignedReads = FF aligned reads
 readsets.mapping.RRAlignedReads = RR aligned reads
 readsets.mapping.transAlignedReads = Trans aligned reads
 readsets.mapping.singleAlignedReads = Single aligned reads
+readsets.mapping.reference = Assembly reference
 
 readsets.MPReadDistanceSeparation =  Distance between MP reads
 readsets.PEReadDistanceSeparation = Distance between PE reads
@@ -204,7 +205,7 @@ readsets.merging.minSize = Min size (bases)
 readsets.merging.avgSize = Average size (bases)
 
 readsets.read_quality.adaptersOverRepresented = Adapters over-represented
-readsets.read_quality.number151 = Estimate of the number of 151 size's reads
+readsets.read_quality.number151 = Estimation du nb de lectures de taille
 
 readsets.sorting_ribo.readsInput = Reads input
 readsets.sorting_ribo.no_rRNA = No-rRNA

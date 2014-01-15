@@ -73,17 +73,20 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 		});
 		
 		$scope.setImage = function(imageData, imageName, context, width) {
-			$scope.currentTitle = Messages('readsets.' + imageName);
-			$scope.currentImage = imageData;
-			var imageId = context + '.' + imageName;
+			$scope.modalImage = imageData;
+			
+			$scope.modalTitle = '';
+			if (context != '') {
+				$scope.modalTitle = context + ' : ';
+			}
+			$scope.modalTitle = $scope.modalTitle + Messages('readsets.' + imageName);
 			
 			//pb : return the width of the image after resizing (not the original size)
+			//var imageId = context + '.' + imageName;
 			//$scope.imageWidth = document.getElementById(imageId).width;
 			
 			$scope.modalWidth = width;
 			$scope.modalLeft = (window.innerWidth - width)/2;
-			
-			
 		}
 	}
 	

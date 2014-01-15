@@ -48,7 +48,7 @@
  <ul class="thumbnails">
     <li class="span4">
 	    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
-		ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.value,'PEReadDistanceSeparation','pairs',800)">
+		ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.value,'PEReadDistanceSeparation','',800)">
 		 <a href="#">
 		    <img id="pairs.PEReadDistanceSeparation" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.value}}" />
 		    <!--<p>@Messages("readsets.PEReadDistanceSeparation")</p>-->
@@ -57,7 +57,7 @@
     </li>
     <li class="span4">
 	    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
-		ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.value,'MPReadDistanceSeparation','pairs',800)">
+		ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.value,'MPReadDistanceSeparation','',800)">
 		 <a href="#">
 		    <img id="pairs.MPReadDistanceSeparation" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.value}}" />
 		    <!-- <p>@Messages("readsets.MPReadDistanceSeparation")</p> -->
@@ -65,4 +65,8 @@
 	    </div>
     </li>
  </ul>
+</div>
+
+<div class="span4">
+	<a href="javascript:alert('not yet implemented...');"><h3>@Messages("readsets.mapping.reference")</h3></a>
 </div>

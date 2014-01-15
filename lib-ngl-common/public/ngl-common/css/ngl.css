@@ -15,3 +15,8 @@ body {
 dd > button.btn-link{
 	padding : 0px;
 }
+
+#divTaxonBilan {
+	height:100pt;
+	overflow:auto;
+}
