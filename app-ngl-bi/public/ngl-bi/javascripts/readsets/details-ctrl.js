@@ -72,9 +72,18 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			
 		});
 		
-		$scope.setImage = function(imageData, imageName) {
+		$scope.setImage = function(imageData, imageName, context, width) {
 			$scope.currentTitle = Messages('readsets.' + imageName);
 			$scope.currentImage = imageData;
+			var imageId = context + '.' + imageName;
+			
+			//pb : return the width of the image after resizing (not the original size)
+			//$scope.imageWidth = document.getElementById(imageId).width;
+			
+			$scope.modalWidth = width;
+			$scope.modalLeft = (window.innerWidth - width)/2;
+			
+			
 		}
 	}
 	
@@ -172,6 +181,8 @@ function SortingCtrl($scope) {
 
 
 function TaxonomyCtrl($scope) {
+
+	
 	$scope.init = function(name) {		
 		$scope.$watch('readset', function() { 
 			if (angular.isDefined($scope.readset)) {
@@ -186,6 +197,9 @@ function TaxonomyCtrl($scope) {
 				$scope.objsInDivisionBilan = $scope.readset.treatments[name].read1.divisionBilan.value;				
 				$scope.objsInKeywordBilan = $scope.readset.treatments[name].read1.keywordBilan.value;
 				$scope.objsInTaxonBilan = $scope.readset.treatments[name].read1.taxonBilan.value;
+				
+				
+
 			}
 		});
 
