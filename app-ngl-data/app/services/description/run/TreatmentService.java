@@ -64,7 +64,7 @@ public class TreatmentService {
 		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationPhiXTrim", getContaminationPhiXTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs", "single"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "60"));
 		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomyClean", getTaxonomyTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "70"));
 		l.add(DescriptionFactory.newTreatmentType("Sorting Ribo","sorting-ribo", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sortingRiboClean", getSortingRiboTreatmentPropertyDefinitions(), getTreatmentTypeContexts("read1", "read2", "pairs", "single"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "80"));
-		l.add(DescriptionFactory.newTreatmentType("Mapping","mapping", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mappingClean,mappingNoRiboClean", getMappingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "90,90"));
+		l.add(DescriptionFactory.newTreatmentType("Mapping","mapping", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mappingClean,mappingNoRiboClean", getMappingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs", "default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "90,90"));
 		l.add(DescriptionFactory.newTreatmentType("Merging","merging", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mergingClean,mergingNoRiboClean", getMergingTreatmentPropertyDefinitions(), getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "100,100"));
 			
 		DAOHelpers.saveModels(TreatmentType.class, l, errors);
@@ -249,7 +249,7 @@ public class TreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("keywordBilan.nbSeq","keywordBilan.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("keywordBilan.percent","keywordBilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true));
 		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("krona","krona",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("krona","krona",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), File.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("phylogeneticTree","phylogeneticTree",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), File.class, true));
 		return propertyDefinitions;		
 	}
@@ -298,6 +298,9 @@ public class TreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("singleAlignedReadsPercent","singleAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("MPReadDistanceSeparation","MPReadDistanceSeparation",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), File.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("PEReadDistanceSeparation","PEReadDistanceSeparation",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), File.class, true));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("reference","reference",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), String.class, true));
+		
 		return propertyDefinitions;		
 	}
 	
