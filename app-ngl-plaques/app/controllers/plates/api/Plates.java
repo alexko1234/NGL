@@ -129,11 +129,11 @@ public class Plates extends CommonController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
 		String code;
 		if(Integer.valueOf(12).equals(typeCode)){
-		    code = "FRAGM_"+sdf.format(new Date());
+		    code = "FRG_"+sdf.format(new Date());
 		}else if(Integer.valueOf(13).equals(typeCode)){
 		    code = "LIB_"+sdf.format(new Date());
 		}else if(Integer.valueOf(18).equals(typeCode)){
-		    code = "AMPLI_"+sdf.format(new Date());
+		    code = "PCR_"+sdf.format(new Date());
 		}else{
 		    code = "PL"+sdf.format(new Date());
 		}
