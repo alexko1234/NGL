@@ -230,6 +230,10 @@ readsets.taxonomy.sampleInput = Nb échantillons
 readsets.taxonomy.beginNcbiUrl = http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Undef&name=
 readsets.taxonomy.endNcbiUrl = &lvl=0&srchmode=1
 
+readsets.taxonomy.tabs.bilan = Bilans
+readsets.taxonomy.tabs.krona = Krona
+readsets.taxonomy.tabs.phylogeneticTree = Arbre phylogenetique
+
 readsets.trimming.sizeRange = Size range
 readsets.trimming.readsInput = Reads input
 readsets.trimming.readsOutput = Reads output

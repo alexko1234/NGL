@@ -92,4 +92,16 @@ angular.module('biCommonsServices', []).
     					  '<div class="tab-content">'+
     					  '<div class="tab-pane active" ng-include="treatments.getTreatment().url"/>'
     			};
-    	});
+    	}).directive('ngBindSrc', ['$parse',function($parse){
+    		return {
+    			restrict: 'A',
+    			link: function(scope, element, attr) {
+    				var parsed = $parse(attr.ngBindSrc);
+    				function getStringValue() { return (parsed(scope) || '').toString(); }
+    				
+    				scope.$watch(getStringValue, function ngBindHtmlWatchAction(value) {
+    					element.attr("src", parsed(scope) || '');
+    				    });
+    			}
+    		}
+    	}]);

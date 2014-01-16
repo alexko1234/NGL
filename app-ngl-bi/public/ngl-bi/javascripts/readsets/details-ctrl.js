@@ -189,24 +189,16 @@ function TaxonomyCtrl($scope) {
 	$scope.init = function(name) {		
 		$scope.$watch('readset', function() { 
 			if (angular.isDefined($scope.readset)) {
-				
-				$scope.kronaHTMLString = "";		
-				$scope.kronaHTMLString = $scope.kronaHTMLString + $scope.readset.treatments[name].read1.krona.value;
-				$scope.kronaHTMLString = $scope.kronaHTMLString.replace("\\\"", "\"");
-				$scope.kronaHTMLString = $scope.kronaHTMLString.replace("\\n", "");
-				
-				$scope.detailFrame = $scope.kronaHTMLString;
-
 				$scope.objsInDivisionBilan = $scope.readset.treatments[name].read1.divisionBilan.value;				
 				$scope.objsInKeywordBilan = $scope.readset.treatments[name].read1.keywordBilan.value;
 				$scope.objsInTaxonBilan = $scope.readset.treatments[name].read1.taxonBilan.value;
 				
-				
-
+				$scope.krona = "data:text/html;base64,"+$scope.readset.treatments[name].read1.krona.value
 			}
 		});
 
 	}
+	
 }
 
 
