@@ -1,4 +1,4 @@
-package controllers.lists.api;
+package controllers.combo.api;
 
 import ls.dao.LimsManipDAO;
 import play.api.modules.spring.Spring;

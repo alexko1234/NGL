@@ -24,10 +24,10 @@ GET    	/api/manip                					controllers.manips.api.Manips.list()
 
 
 # list api
-GET /api/lists/projects								controllers.lists.api.Lists.projects()
-GET /api/lists/samples								controllers.lists.api.Lists.samples()
-GET /api/lists/etmanips								controllers.lists.api.Lists.etmanips()
-GET /api/lists/etmateriels							controllers.lists.api.Lists.etmateriels()
+GET /api/combo/projects								controllers.combo.api.Lists.projects()
+GET /api/combo/samples								controllers.combo.api.Lists.samples()
+GET /api/combo/etmanips								controllers.combo.api.Lists.etmanips()
+GET /api/combo/etmateriels							controllers.combo.api.Lists.etmateriels()
 
 
 # Map static resources from the /public folder to the /assets URL path

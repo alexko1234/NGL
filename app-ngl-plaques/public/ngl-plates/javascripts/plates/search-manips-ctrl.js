@@ -49,12 +49,12 @@ function SearchManipsCtrl($scope, $http, datatable, basket) {
 			
 			$scope.setForm($scope.form);
 			//jsRoutes.controllers.lists.api.Lists.processTypes().url
-			$http.get(jsRoutes.controllers.lists.api.Lists.projects().url).
+			$http.get(jsRoutes.controllers.combo.api.Lists.projects().url).
 			success(function(data, status, headers, config){
 				$scope.form.projects.options = data;
 			});
 			
-			$http.get(jsRoutes.controllers.lists.api.Lists.etmateriels().url).
+			$http.get(jsRoutes.controllers.combo.api.Lists.etmateriels().url).
 			success(function(data, status, headers, config){
 				$scope.form.etmateriels.options = data;
 				for(var i = 0; i < data.length ; i++){
@@ -66,7 +66,7 @@ function SearchManipsCtrl($scope, $http, datatable, basket) {
 				}
 			});
 			
-			$http.get(jsRoutes.controllers.lists.api.Lists.etmanips().url).
+			$http.get(jsRoutes.controllers.combo.api.Lists.etmanips().url).
 			success(function(data, status, headers, config){
 				$scope.form.etmanips.options = data;
 			});

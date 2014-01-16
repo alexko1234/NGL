@@ -60,9 +60,9 @@ public class Plates extends CommonController {
 	  	    		controllers.plates.api.routes.javascript.Plates.save(),
 	  	    		controllers.plates.api.routes.javascript.Plates.remove(),
 	  	    		controllers.manips.api.routes.javascript.Manips.list(),
-	  	    		controllers.lists.api.routes.javascript.Lists.projects(),
-	  	    		controllers.lists.api.routes.javascript.Lists.etmateriels(),
-	  	    		controllers.lists.api.routes.javascript.Lists.etmanips()
+	  	    		controllers.combo.api.routes.javascript.Lists.projects(),
+	  	    		controllers.combo.api.routes.javascript.Lists.etmateriels(),
+	  	    		controllers.combo.api.routes.javascript.Lists.etmanips()
 	  	      )	  	      
 	  	    );
 	  	  }

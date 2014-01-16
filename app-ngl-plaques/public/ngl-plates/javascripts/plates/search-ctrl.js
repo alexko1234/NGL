@@ -53,12 +53,12 @@ function SearchCtrl($scope, $http,datatable) {
 			};
 			
 			$scope.setForm($scope.form);
-			$http.get(jsRoutes.controllers.lists.api.Lists.projects().url).
+			$http.get(jsRoutes.controllers.combo.api.Lists.projects().url).
 				success(function(data, status, headers, config){
 					$scope.form.projects.options = data;
 				});
 						
-			$http.get(jsRoutes.controllers.lists.api.Lists.etmanips().url).
+			$http.get(jsRoutes.controllers.combo.api.Lists.etmanips().url).
 				success(function(data, status, headers, config){
 					$scope.form.etmanips.options = data;
 				});
