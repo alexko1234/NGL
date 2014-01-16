@@ -1,11 +1,16 @@
 @()
+<div ng-controller="TaxonomyCtrl" ng-init="init(treatments.getTreatment().code)">
 
-<div ng-controller="TaxonomyCtrl" ng-init="init(treatments.getTreatment().code)" datatable="TaxonBilan.getConfig()">
-
-	<div class="row-fluid">
+   <ul class="nav nav-tabs">
+   	<li class="active"><a data-target="#main" data-toggle="tab">@Messages("readsets.taxonomy.tabs.bilan")</a></li>
+   	<li ><a data-target="#krona" data-toggle="tab">@Messages("readsets.taxonomy.tabs.krona")</a></li>    
+   	<li ><a data-target="#phylogeneticTree" data-toggle="tab">@Messages("readsets.taxonomy.tabs.phylogeneticTree")</a></li>    	
+   </ul>
 	
+<div class="tab-content">
+<div class="tab-pane active" id="main">
 		<div class="span4">		
-			<div id="divTaxonBilan">	
+			<div class="divTaxonBilan">	
 				<table class="table table-condensed table-hover table-bordered">
 					<thead>
 					<tr>
@@ -36,7 +41,7 @@
 							 	@Messages("readsets.taxonomy.beginNcbiUrl")
 							 	{{obj.taxon.replace(' ','+')}}
 							 	@Messages("readsets.taxonomy.endNcbiUrl")
-							 	" target=”_blank”> 
+							 	" target='_blank'> 
 							 	{{obj.taxon}} 
 							 </a>
 							</li>
@@ -111,16 +116,7 @@
 					</tr>
 					</tbody>
 				</table>
-			</div>
-			<div class="row">			
-			    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
-				ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.value,'phylogeneticTree','',1000)">
-				 <a href="#">
-				    <img id="read1.phylogeneticTree" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.value}}" />
-				    <p>@Messages("readsets.phylogeneticTree")</p>
-				 </a>   
-			    </div>
-			</div>
+			</div>			
 		</div>
 		
 		<div class="span1"></div>
@@ -204,7 +200,23 @@
 				</table>			
 			</div>	
 		</div>
-		
-	</div>
 	
-</div>	
+</div>
+
+<div class="tab-pane" id="krona">
+	<iframe class="span12" ng-bind-src="krona" style="border:0;height:600px" />
+</div>
+<div class="tab-pane" id="phylogeneticTree">
+		
+    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
+	ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.value,'phylogeneticTree','',1000)">
+	 <a href="#">
+	    <img id="read1.phylogeneticTree" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.value}}" />	 
+	 </a>   
+    </div>
+		
+</div>
+</div>
+	
+
+</div>
