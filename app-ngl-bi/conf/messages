@@ -1,4 +1,5 @@
 date.format=dd/MM/yyyy
+unit.percent = %
 
 #application
 application.name=NGL-BI
@@ -81,6 +82,7 @@ runs.nbBase=Nb Bases (total)
 #runs - main
 runs.creationdate=Date de Création
 runs.sequencingStartDate = Date Run
+
 # a vérifier
 runs.dispatch=Dispatch
 runs.typeCode = Type
@@ -155,123 +157,133 @@ readsets.laneNumber = N° Piste
 readsets.projectCode = Projet
 readsets.sampleCode = Echantillon
 readsets.nbCycles = Nb Cycles
-readsets.read1 = Read 1
-readsets.read2 = Read 2
-readsets.paired = Paired
-readsets.read1_2 = Read 1 + Read 2
-readsets.single = Single
-readsets.sampleInput = Sample input
 
-readsets.contaminationPhiX.readsInput = Reads input 
-readsets.contaminationPhiX.removedReads = Removed reads
-readsets.contaminationPhiX.remainingReads = Remaining reads 
-readsets.contaminationPhiX.removedReadsPercent = % removed reads
-readsets.contaminationPhiX.remainingNucleotides = Reamining nucleotides
 
-readsets.duplicates.estimateOfDuplicatedReads = Estimation de lectures dupliquées
-readsets.duplicates.estimateOfUniqueReads = Estimation de lectures uniques
-readsets.duplicates.observed = observé
-readsets.duplicates.times = fois
+readsets.treatments.contaminationPhiX.read1_2 = Read 1 + Read 2
+readsets.treatments.contaminationPhiX.single = Single
+readsets.treatments.contaminationPhiX.readsInput = Reads input 
+readsets.treatments.contaminationPhiX.removedReads = Removed reads
+readsets.treatments.contaminationPhiX.remainingReads = Remaining reads 
+readsets.treatments.contaminationPhiX.removedReadsPercent = % removed reads
+readsets.treatments.contaminationPhiX.remainingNucleotides = Reamining nucleotides
 
-readsets.global.usefulSequences = Nb Séquences utiles
-readsets.global.usefulBases = Nb Bases utiles
+readsets.treatments.duplicates.estimateOfDuplicatedReads = Estimation de lectures dupliquées
+readsets.treatments.duplicates.estimateOfUniqueReads = Estimation de lectures uniques
+readsets.treatments.duplicates.observed = observé
+readsets.treatments.duplicates.times = fois
+readsets.treatments.duplicates.read1 = Read 1
+readsets.treatments.duplicates.read2 = Read 2
+readsets.treatments.duplicates.paired = Paired
 
-readsets.ngsrg.nbCluster = Nb Séquences valides
-readsets.ngsrg.nbBases = Nb Bases
-readsets.ngsrg.Q30 = % >= Q30
-readsets.ngsrg.qualityScore = Score Qualité moyen
-readsets.ngsrg.validSeqPercent = % Séquences valides / piste
+readsets.treatments.global.usefulSequences = Nb Séquences utiles
+readsets.treatments.global.usefulBases = Nb Bases utiles
 
-readsets.mapping.number = Number
-readsets.mapping.totalReadsPercent = % total reads
-readsets.mapping.sampleInput = Sample input
-readsets.mapping.nonChimericAlignedReads = Non-chimeric aligned reads
-readsets.mapping.FRAlignedReads = FR (PE) aligned reads
-readsets.mapping.RFAlignedReads = RF (MP) aligned reads
-readsets.mapping.FFAlignedReads = FF aligned reads
-readsets.mapping.RRAlignedReads = RR aligned reads
-readsets.mapping.transAlignedReads = Trans aligned reads
-readsets.mapping.singleAlignedReads = Single aligned reads
-readsets.mapping.reference = Assembly reference
+readsets.treatments.ngsrg.nbCluster = Nb Séquences valides
+readsets.treatments.ngsrg.nbBases = Nb Bases
+readsets.treatments.ngsrg.Q30 = % >= Q30
+readsets.treatments.ngsrg.qualityScore = Score Qualité moyen
+readsets.treatments.ngsrg.validSeqPercent = % Séquences valides / piste
 
-readsets.MPReadDistanceSeparation =  Distance between MP reads
-readsets.PEReadDistanceSeparation = Distance between PE reads
+readsets.treatments.mapping.tabs.data = Données
+readsets.treatments.mapping.tabs.ref = Référence
+readsets.treatments.mapping.number = Number
+readsets.treatments.mapping.totalReadsPercent = % total reads
+readsets.treatments.mapping.sampleInput = Sample input
+readsets.treatments.mapping.nonChimericAlignedReads = Non-chimeric aligned reads
+readsets.treatments.mapping.FRAlignedReads = FR (PE) aligned reads
+readsets.treatments.mapping.RFAlignedReads = RF (MP) aligned reads
+readsets.treatments.mapping.FFAlignedReads = FF aligned reads
+readsets.treatments.mapping.RRAlignedReads = RR aligned reads
+readsets.treatments.mapping.transAlignedReads = Trans aligned reads
+readsets.treatments.mapping.singleAlignedReads = Single aligned reads
+readsets.treatments.mapping.reference = Assembly reference
+readsets.treatments.mapping.100percent = 100 %
+readsets.treatments.mapping.MPReadDistanceSeparation =  Distance between MP reads
+readsets.treatments.mapping.PEReadDistanceSeparation = Distance between PE reads
 
-readsets.merging.mergedReads = Merged reads
-readsets.merging.medianeSize = Mediane size (bases)
-readsets.merging.totalSize = Total size (bases)
-readsets.merging.maxSize = Max size (bases)
-readsets.merging.minSize = Min size (bases)
-readsets.merging.avgSize = Average size (bases)
+readsets.treatments.merging.mergedReads = Merged reads
+readsets.treatments.merging.medianeSize = Mediane size (bases)
+readsets.treatments.merging.totalSize = Total size (bases)
+readsets.treatments.merging.maxSize = Max size (bases)
+readsets.treatments.merging.minSize = Min size (bases)
+readsets.treatments.merging.avgSize = Average size (bases)
+readsets.treatments.merging.sampleInput = Sample input
+readsets.treatments.merging.overlapDistrib = Overlap distribution
 
-readsets.read_quality.adaptersOverRepresented = Adapters over-represented
-readsets.read_quality.number = Estimation du nb de lectures de taille
+readsets.treatments.read_quality.adaptersOverRepresented = Adapters over-represented : 
+readsets.treatments.read_quality.number = Estimation du nb de lectures de taille
+readsets.treatments.read_quality.tabs.read1 = Read 1
+readsets.treatments.read_quality.tabs.read2 = Read 2
+readsets.treatments.read_quality.qualScore = Quality scores for each read position
+readsets.treatments.read_quality.nuclDistribution = Distribution of nucleotids for each read position
+readsets.treatments.read_quality.readWithNpercent = Percent of reads with sequenced N
+readsets.treatments.read_quality.readSizeDistribution = Read size distribution
+readsets.treatments.read_quality.adapterContamination = Adapters vs run cycles
+readsets.treatments.read_quality.GCDistribution = Proportion of reads for different values of G+C content 
+readsets.treatments.read_quality.positionN = Position of N in reads
 
-readsets.sorting_ribo.readsInput = Reads input
-readsets.sorting_ribo.no_rRNA = No-rRNA
-readsets.sorting_ribo.rRNA = rRNA
-readsets.sorting_ribo.rRNAPercent = % rRNA
-readsets.sorting_ribo.rRNABilan = Bilan rRNA
-readsets.sorting_ribo.usefulSequences = Useful sequences
-readsets.sorting_ribo.usefulBases = Useful bases
+readsets.treatments.sorting_ribo.readsInput = Reads input
+readsets.treatments.sorting_ribo.no_rRNA = No-rRNA
+readsets.treatments.sorting_ribo.rRNA = rRNA
+readsets.treatments.sorting_ribo.rRNAPercent = % rRNA
+readsets.treatments.sorting_ribo.rRNABilan = Bilan rRNA
+readsets.treatments.sorting_ribo.usefulSequences = Useful sequences
+readsets.treatments.sorting_ribo.usefulBases = Useful bases
+readsets.treatments.sorting_ribo.read1 = Read 1
+readsets.treatments.sorting_ribo.read2 = Read 2
+readsets.treatments.sorting_ribo.paired = Paired
+readsets.treatments.sorting_ribo.single = Single
 
-readsets.taxonomy.organism = Organisme
-readsets.taxonomy.taxonomy = Taxonomie
-readsets.taxonomy.divisionBilan = Bilan par division
-readsets.taxonomy.divisionBilan.division = Divisions
-readsets.taxonomy.keywordBilan = Bilan par mot-clé
-readsets.taxonomy.keywordBilan.keyword = Mots-clés
-readsets.taxonomy.taxonBilan = Bilan par taxon
-readsets.taxonomy.taxonBilan.taxon = Taxons
-readsets.taxonomy.percent = %
-readsets.taxonomy.nbSeq = Nb Seq.
-readsets.taxonomy.sampleInput = Nb échantillons
+readsets.treatments.taxonomy.tabs.bilan = Bilans
+readsets.treatments.taxonomy.tabs.krona = Krona
+readsets.treatments.taxonomy.tabs.phylogeneticTree = Arbre phylogenetique
+readsets.treatments.taxonomy.organism = Organisme
+readsets.treatments.taxonomy.taxonomy = Taxonomie
+readsets.treatments.taxonomy.divisionBilan = Bilan par division
+readsets.treatments.taxonomy.divisionBilan.division = Divisions
+readsets.treatments.taxonomy.divisionBilan.percent = %
+readsets.treatments.taxonomy.divisionBilan.nbSeq = Nb Seq.
+readsets.treatments.taxonomy.keywordBilan = Bilan par mot-clé
+readsets.treatments.taxonomy.keywordBilan.keyword = Mots-clés
+readsets.treatments.taxonomy.keywordBilan.percent = %
+readsets.treatments.taxonomy.keywordBilan.nbSeq = Nb Seq.
+readsets.treatments.taxonomy.taxonBilan = Bilan par taxon
+readsets.treatments.taxonomy.taxonBilan.taxon = Taxons
+readsets.treatments.taxonomy.taxonBilan.percent = %
+readsets.treatments.taxonomy.taxonBilan.nbSeq = Nb Seq.
+readsets.treatments.taxonomy.sampleInput = Nb Seq. (échantillonnage)
+readsets.treatments.taxonomy.beginNcbiUrl = http://www.ncbi.nlm.nih.gov/treatments.taxonomy/Browser/wwwtax.cgi?mode=Undef&name=
+readsets.treatments.taxonomy.endNcbiUrl = &lvl=0&srchmode=1
+readsets.treatments.taxonomy.phylogeneticTree = Arbre philogénétique
 
-readsets.taxonomy.beginNcbiUrl = http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Undef&name=
-readsets.taxonomy.endNcbiUrl = &lvl=0&srchmode=1
-
-readsets.taxonomy.tabs.bilan = Bilans
-readsets.taxonomy.tabs.krona = Krona
-readsets.taxonomy.tabs.phylogeneticTree = Arbre phylogenetique
-
-readsets.trimming.sizeRange = Size range
-readsets.trimming.readsInput = Reads input
-readsets.trimming.readsOutput = Reads output
-readsets.trimming.readsTrim = Reads trim.
-readsets.trimming.readsTrimPercent = % Reads trim.
-readsets.trimming.nucleotideTrim = Nucleotide trim.
-readsets.trimming.trimRejectedShort = Rejected (short)
-readsets.trimming.trimRejectedLength0 = Rejected (length 0)
-readsets.trimming.storedPairs = Stored Pairs
-readsets.trimming.storedSingleton = Stored Singleton
-readsets.trimming.rejectedPairs = Rejected Pairs
-
-#graphics
-readsets.qualScore = Quality scores for each read position
-readsets.nuclDistribution = Distribution of nucleotids for each read position
-readsets.readWithNpercent = Percent of reads with sequenced N
-readsets.readSizeDistribution = Read size distribution
-readsets.adapterContamination = Adapters vs run cycles
-readsets.GCDistribution = Proportion of reads for different values of G+C content 
-readsets.positionN = Position of N in reads
-readsets.phylogeneticTree = Arbre philogénétique
-readsets.overlapDistrib = Overlap distribution
-
+readsets.treatments.trimming.read1 = Read 1
+readsets.treatments.trimming.read2 = Read 2
+readsets.treatments.trimming.sizeRange = Size range
+readsets.treatments.trimming.readsInput = Reads input
+readsets.treatments.trimming.readsOutput = Reads output
+readsets.treatments.trimming.readsTrim = Reads trim.
+readsets.treatments.trimming.readsTrimPercent = % Reads trim.
+readsets.treatments.trimming.nucleotideTrim = Nucleotide trim.
+readsets.treatments.trimming.trimRejectedShort = Rejected (short)
+readsets.treatments.trimming.trimRejectedLength0 = Rejected (length 0)
+readsets.treatments.trimming.storedPairs = Stored Pairs
+readsets.treatments.trimming.storedSingleton = Stored Singleton
+readsets.treatments.trimming.rejectedPairs = Rejected Pairs
 
 #treatments names
-treatments.sav = SAV
-treatments.ngsrg = NGS-RG
-treatments.duplicatesRaw=Duplicates (vs RAW)
-treatments.duplicatesClean=Duplicates (vs CLEAN)
-treatments.duplicatesNoRiboClean=Duplicates (vs NO RIBO CLEAN)
-treatments.trimmingRaw=Trimming (vs RAW)
-treatments.mergingClean=Merging (vs CLEAN)
-treatments.mergingNoRiboClean=Merging (vs NO RIBO CLEAN)
-treatments.readQualityRaw=Read Quality (vs RAW)
-treatments.readQualityClean=Read Quality (vs CLEAN)
-treatments.readQualityNoRiboClean=Read Quality (vs NO RIBO CLEAN)
-treatments.contaminationPhiXTrim=Contam. PhiX (vs TRIM)
-treatments.sortingRiboClean=Sorting Ribo (vs CLEAN)
-treatments.mappingClean=Mapping (vs CLEAN)
-treatments.mappingNoRiboClean=Mapping (vs NO RIBO CLEAN)
-treatments.taxonomyClean=Taxonomy (vs CLEAN)
+readsets.treatments.sav = SAV
+readsets.treatments.ngsrg = NGS-RG
+readsets.treatments.duplicatesRaw = Duplicates (vs RAW)
+readsets.treatments.duplicatesClean = Duplicates (vs CLEAN)
+readsets.treatments.duplicatesNoRiboClean = Duplicates (vs NO RIBO CLEAN)
+readsets.treatments.trimmingRaw = Trimming (vs RAW)
+readsets.treatments.mergingClean = Merging (vs CLEAN)
+readsets.treatments.mergingNoRiboClean = Merging (vs NO RIBO CLEAN)
+readsets.treatments.readQualityRaw = Read Quality (vs RAW)
+readsets.treatments.readQualityClean = Read Quality (vs CLEAN)
+readsets.treatments.readQualityNoRiboClean = Read Quality (vs NO RIBO CLEAN)
+readsets.treatments.contaminationPhiXTrim = Contam. PhiX (vs TRIM)
+readsets.treatments.sortingRiboClean = Sorting Ribo (vs CLEAN)
+readsets.treatments.mappingClean = Mapping (vs CLEAN)
+readsets.treatments.mappingNoRiboClean = Mapping (vs NO RIBO CLEAN)
+readsets.treatments.taxonomyClean = Taxonomy (vs CLEAN)

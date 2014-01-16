@@ -5,41 +5,41 @@
 	<div class="span10">	
 		 <table class="table table-condensed table-hover table-bordered">
 			<thead>
-			<tr>
-				<th class="span2">&nbsp;</th>
-				<th>@Messages("readsets.trimming.sizeRange")</th>
-				<th>@Messages("readsets.trimming.readsInput")</th>
-				<th>@Messages("readsets.trimming.readsOutput")</th>
-				<th>@Messages("readsets.trimming.readsTrim")</th>
-				<th>@Messages("readsets.trimming.readsTrimPercent")</th>
-				<th>@Messages("readsets.trimming.nucleotideTrim")</th>
-				<th>@Messages("readsets.trimming.trimRejectedShort")</th>
-				<th>@Messages("readsets.trimming.trimRejectedLength0")</th>			
-			</tr>
+				<tr>
+					<th class="span2"></th>
+					<th>@Messages("readsets.treatments.trimming.sizeRange")</th>
+					<th>@Messages("readsets.treatments.trimming.readsInput")</th>
+					<th>@Messages("readsets.treatments.trimming.readsOutput")</th>
+					<th>@Messages("readsets.treatments.trimming.readsTrim")</th>
+					<th>@Messages("readsets.treatments.trimming.readsTrimPercent")</th>
+					<th>@Messages("readsets.treatments.trimming.nucleotideTrim")</th>
+					<th>@Messages("readsets.treatments.trimming.trimRejectedShort")</th>
+					<th>@Messages("readsets.treatments.trimming.trimRejectedLength0")</th>			
+				</tr>
 			</thead>
 			<tbody>
-			<tr>
-				<th class="span2">@Messages("readsets.read1")</th>
-				<td>{{readset.treatments[treatments.getTreatment().code].read1.sizeRange.value}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read1.readsInput.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read1.readsOutput.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read1.readsTrim.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read1.readsTrimPercent.value | number:2}} %</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read1.nucleotidesTrim.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read1.trimRejectedShort.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read1.trimRejectedLength0.value | number}}</td>
-			</tr>						
-			<tr>
-				<th class="span2">@Messages("readsets.read2")</th>
-				<td>{{readset.treatments[treatments.getTreatment().code].read2.sizeRange.value}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read2.readsInput.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read2.readsOutput.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read2.readsTrim.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read2.readsTrimPercent.value | number:2}} %</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read2.nucleotidesTrim.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read2.trimRejectedShort.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read2.trimRejectedLength0.value | number}}</td>
-			</tr>						
+				<tr>
+					<th class="span2">@Messages("readsets.treatments.trimming.read1")</th>
+					<td>{{readset.treatments[treatments.getTreatment().code].read1.sizeRange.value}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read1.readsInput.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read1.readsOutput.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read1.readsTrim.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read1.readsTrimPercent.value | number:2}} @Messages("unit.percent")</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read1.nucleotidesTrim.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read1.trimRejectedShort.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read1.trimRejectedLength0.value | number}}</td>
+				</tr>						
+				<tr>
+					<th class="span2">@Messages("readsets.treatments.trimming.read2")</th>
+					<td>{{readset.treatments[treatments.getTreatment().code].read2.sizeRange.value}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read2.readsInput.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read2.readsOutput.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read2.readsTrim.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read2.readsTrimPercent.value | number:2}} @Messages("unit.percent")</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read2.nucleotidesTrim.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read2.trimRejectedShort.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read2.trimRejectedLength0.value | number}}</td>
+				</tr>						
 			</tbody>
 		 </table>
 	</div>
@@ -49,18 +49,18 @@
 	<div  class="span4">
 	 <table class="table table-condensed table-hover table-bordered">
 		<thead>
-		<tr>
-			<th class="span2">@Messages("readsets.trimming.storedPairs")</th>
-			<th>@Messages("readsets.trimming.storedSingleton")</th>
-			<th>@Messages("readsets.trimming.rejectedPairs")</th>
-		</tr>
+			<tr>
+				<th class="span2">@Messages("readsets.treatments.trimming.storedPairs")</th>
+				<th>@Messages("readsets.treatments.trimming.storedSingleton")</th>
+				<th>@Messages("readsets.treatments.trimming.rejectedPairs")</th>
+			</tr>
 		</thead>
 		<tbody>
-		<tr>
-			<td>{{readset.treatments[treatments.getTreatment().code].pairs.storedPairs.value | number}}</td>
-			<td>{{readset.treatments[treatments.getTreatment().code].single.storedSingleton.value | number}}</td>
-			<td>{{readset.treatments[treatments.getTreatment().code].pairs.rejectedPairs.value | number}}</td>
-		</tr>		
+			<tr>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.storedPairs.value | number}}</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].single.storedSingleton.value | number}}</td>
+				<td>{{readset.treatments[treatments.getTreatment().code].pairs.rejectedPairs.value | number}}</td>
+			</tr>		
 		</tbody>
 	</table>			
 	</div>

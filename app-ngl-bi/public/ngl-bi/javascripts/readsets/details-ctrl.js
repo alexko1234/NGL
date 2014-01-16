@@ -72,14 +72,14 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			
 		});
 		
-		$scope.setImage = function(imageData, imageName, context, width) {
+		$scope.setImage = function(imageData, imageName, context, treatment, width) {
 			$scope.modalImage = imageData;
 			
 			$scope.modalTitle = '';
 			if (context != '') {
 				$scope.modalTitle = context + ' : ';
 			}
-			$scope.modalTitle = $scope.modalTitle + Messages('readsets.' + imageName);
+			$scope.modalTitle = $scope.modalTitle + Messages('readsets.treatments.' + treatment + '.' + imageName);
 			
 			//pb : return the width of the image after resizing (not the original size)
 			//var imageId = context + '.' + imageName;
@@ -105,27 +105,27 @@ function NGSRGCtrl($scope, datatable) {
 			cancel : {active:false},						
 			columns : [
 			   	{  	property:"validSeqPercent.value",
-			    	header: Messages("readsets.ngsrg.validSeqPercent"),
+			    	header: Messages("readsets.treatments.ngsrg.validSeqPercent"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"nbCluster.value",
-			    	header: Messages("readsets.ngsrg.nbCluster"),
+			    	header: Messages("readsets.treatments.ngsrg.nbCluster"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"nbBases.value",
-			    	header: Messages("readsets.ngsrg.nbBases"),
+			    	header: Messages("readsets.treatments.ngsrg.nbBases"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"Q30.value",
-			    	header: Messages("readsets.ngsrg.Q30"),
+			    	header: Messages("readsets.treatments.ngsrg.Q30"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"qualityScore.value",
-			    	header: Messages("readsets.ngsrg.qualityScore"),
+			    	header: Messages("readsets.treatments.ngsrg.qualityScore"),
 			    	type :"Number",
 			    	order:false
 				}
@@ -163,6 +163,8 @@ function ReadQualityCtrl($scope) {
 		$scope.$watch('readset', function() { 
 			if (angular.isDefined($scope.readset)) {
 				$scope.objsInAdapters = $scope.readset.treatments[name];
+				
+				$scope.msgQualScore = Messages("readset.treatments." + name + '.qualScore');
 			}
 		});
 	}

@@ -37,7 +37,7 @@ angular.module('biCommonsServices', []).
     			$q.all(queries).then(function(results){
 					for(var i = 0; i  < results.length; i++){
 						var result = results[i];
-						_treatments.push({code:result.config.key, name:Messages("treatments."+result.config.key), url:url(result.data.code).url, order:displayOrder(result, key) });
+						_treatments.push({code:result.config.key, name:Messages("readsets.treatments."+result.config.key), url:url(result.data.code).url, order:displayOrder(result, key) });
 					}
 					_treatments = $filter("orderBy")(_treatments,"order");
 					activeTreatment(_treatments[0]);		

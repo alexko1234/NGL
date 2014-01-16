@@ -7,18 +7,15 @@
 		<thead>
 		<tr>
 			<th class="span2">
-				&nbsp;
 			</th>
 			<th class="span2">
-				<!--p style="color:darkblue"-->
-					@Messages("readsets.read1")
-				<!-- /p -->
+					@Messages("readsets.treatments.duplicates.read1")
 			</th>
 			<th class="span2">
-				@Messages("readsets.read2")
+				@Messages("readsets.treatments.duplicates.read2")
 			</th>
 			<th class="span2">
-				@Messages("readsets.paired")
+				@Messages("readsets.treatments.duplicates.paired")
 			</th>
 		</tr>						
 		</thead>
@@ -28,21 +25,21 @@
 		<!--  estimateOfDuplicatedReads  -->
 		<tr>
 			<th class="span2">
-				@Messages("readsets.duplicates.estimateOfDuplicatedReads")
+				@Messages("readsets.treatments.duplicates.estimateOfDuplicatedReads")
 			</th>
 			<td class="span2">
 					{{readset.treatments[treatments.getTreatment().code].read1.estimateDuplicatedReads.value | number}} &nbsp;
-					({{readset.treatments[treatments.getTreatment().code].read1.estimateDuplicatedReadsPercent.value | number:2}} %)
+					({{readset.treatments[treatments.getTreatment().code].read1.estimateDuplicatedReadsPercent.value | number:2}} @Messages("unit.percent"))
 				<ul class="unstyled">									 
 				    <li ng-repeat="obj in objsInDuplicates.read1.estimateDuplicatedReadsNTimes.value">
           				<div ng-switch on="$index">
           					<div ng-switch-when="9">
-		          				{{obj.percent  | number:2}} % @(Messages("readsets.duplicates.observed")) 
-		          				{{obj.times + 1}} @Messages("readsets.duplicates.times") ou plus
+		          				{{obj.percent  | number:2}} % @(Messages("readsets.treatments.duplicates.observed")) 
+		          				{{obj.times + 1}} @Messages("readsets.treatments.duplicates.times") ou plus
           					</div>
           					<div ng-switch-default>
-		          				{{obj.percent  | number:2}} % @(Messages("readsets.duplicates.observed")) 
-		          				{{obj.times + 1}} @Messages("readsets.duplicates.times")          					
+		          				{{obj.percent  | number:2}} % @(Messages("readsets.treatments.duplicates.observed")) 
+		          				{{obj.times + 1}} @Messages("readsets.treatments.duplicates.times")          					
           					</div>
           				</div>
        				</li>
@@ -50,17 +47,17 @@
 			</td>
 			<td class="span2">
 					{{readset.treatments[treatments.getTreatment().code].read2.estimateDuplicatedReads.value | number}} &nbsp;
-					({{readset.treatments[treatments.getTreatment().code].read2.estimateDuplicatedReadsPercent.value | number:2}} %)
+					({{readset.treatments[treatments.getTreatment().code].read2.estimateDuplicatedReadsPercent.value | number:2}} @Messages("unit.percent"))
 				<ul class="unstyled">									 
 				    <li ng-repeat="obj in objsInDuplicates.read2.estimateDuplicatedReadsNTimes.value">
           				<div ng-switch on="$index">
           					<div ng-switch-when="9">
-		         				{{obj.percent | number:2}} % @(Messages("readsets.duplicates.observed")) 
-		          				{{obj.times + 1}} @Messages("readsets.duplicates.times") ou plus
+		         				{{obj.percent | number:2}} % @(Messages("readsets.treatments.duplicates.observed")) 
+		          				{{obj.times + 1}} @Messages("readsets.treatments.duplicates.times") ou plus
           					</div>
           					<div ng-switch-default>
-		         				{{obj.percent | number:2}} % @(Messages("readsets.duplicates.observed")) 
-		          				{{obj.times + 1}} @Messages("readsets.duplicates.times") 
+		         				{{obj.percent | number:2}} % @(Messages("readsets.treatments.duplicates.observed")) 
+		          				{{obj.times + 1}} @Messages("readsets.treatments.duplicates.times") 
           					</div>
           				</div>
 
@@ -69,17 +66,17 @@
 			</td>
 			<td class="span2">
 					{{readset.treatments[treatments.getTreatment().code].pairs.estimateDuplicatedReads.value | number}} &nbsp;				
-					({{readset.treatments[treatments.getTreatment().code].pairs.estimateDuplicatedReadsPercent.value | number:2}} %)
+					({{readset.treatments[treatments.getTreatment().code].pairs.estimateDuplicatedReadsPercent.value | number:2}} @Messages("unit.percent"))
 				<ul class="unstyled">									 
 				    <li ng-repeat="obj in objsInDuplicates.pairs.estimateDuplicatedReadsNTimes.value">
           				<div ng-switch on="$index">
           					<div ng-switch-when="9">
-		          				{{obj.percent | number:2}} % @(Messages("readsets.duplicates.observed")) 
-		          				{{obj.times + 1}} @Messages("readsets.duplicates.times") ou plus 
+		          				{{obj.percent | number:2}} % @(Messages("readsets.treatments.duplicates.observed")) 
+		          				{{obj.times + 1}} @Messages("readsets.treatments.duplicates.times") ou plus 
           					</div>
           					<div ng-switch-default>
-		          				{{obj.percent  | number:2}} % @(Messages("readsets.duplicates.observed")) 
-		          				{{obj.times + 1}} @Messages("readsets.duplicates.times")          					
+		          				{{obj.percent  | number:2}} % @(Messages("readsets.treatments.duplicates.observed")) 
+		          				{{obj.times + 1}} @Messages("readsets.treatments.duplicates.times")          					
           					</div>
           				</div>
 
@@ -91,19 +88,19 @@
 		<!--  estimateOfUniqueReads  -->
 		<tr>
 			<th class="span2">
-				@Messages("readsets.duplicates.estimateOfUniqueReads")
+				@Messages("readsets.treatments.duplicates.estimateOfUniqueReads")
 			</th>
 			<td class="span2">
 					{{readset.treatments[treatments.getTreatment().code].read1.estimateUniqueReads.value | number}} &nbsp;
-					({{readset.treatments[treatments.getTreatment().code].read1.estimateUniqueReadsPercent.value | number:2}} %)
+					({{readset.treatments[treatments.getTreatment().code].read1.estimateUniqueReadsPercent.value | number:2}} @Messages("unit.percent"))
 			</td>
 			<td class="span2">
 					{{readset.treatments[treatments.getTreatment().code].read2.estimateUniqueReads.value | number}} &nbsp;
-					({{readset.treatments[treatments.getTreatment().code].read2.estimateUniqueReadsPercent.value | number:2}} %)
+					({{readset.treatments[treatments.getTreatment().code].read2.estimateUniqueReadsPercent.value | number:2}} @Messages("unit.percent"))
 			</td>
 			<td class="span2">
 					{{readset.treatments[treatments.getTreatment().code].pairs.estimateUniqueReads.value | number}} &nbsp;
-					({{readset.treatments[treatments.getTreatment().code].pairs.estimateUniqueReadsPercent.value | number:2}} %)
+					({{readset.treatments[treatments.getTreatment().code].pairs.estimateUniqueReadsPercent.value | number:2}} @Messages("unit.percent"))
 			</td>
 		</tr>
 		
