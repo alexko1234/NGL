@@ -79,15 +79,15 @@
 			    	<div class="thumbnail" ng-switch on="treatments.getTreatment().code">
 					    <div ng-switch-when="readQualityRaw">	
 							  <ul>	
-							    <dt><h4>@Messages("readsets.read_quality.adaptersOverRepresented")</h4></dt>								 
+							    <dt><h5>@Messages("readsets.read_quality.adaptersOverRepresented")</h5></dt>								 
 							    <dd ng-repeat="strValue in objsInAdapters.read1.adapters.value">
-							      	<h4>{{strValue}}</h4> 
+							      	<h5>{{strValue}}</h5> 
 							   	</dd>
 							  </ul>
 						</div>
 						<div ng-switch-when="readQualityClean">
 						 <ul>
-							<dt><h4>@Messages("readsets.read_quality.number151")</h4></dt>
+							<dt><h4>@Messages("readsets.read_quality.number") @("{{run.treatments.ngsrg['default'].nbCycle.value}}")</h4></dt>
 							<dd><h4>	{{readset.treatments[treatments.getTreatment().code].read1.maxSizeReads.value | number}} &nbsp;
 								({{readset.treatments[treatments.getTreatment().code].read1.maxSizeReadsPercent.value | number:2}} %) </h4>
 							</dd>	
@@ -176,15 +176,15 @@
 			    	<div class="thumbnail" ng-switch on="treatments.getTreatment().code">
 					    <div ng-switch-when="readQualityRaw">	
 							  <ul>	
-							    <dt><h4>@Messages("readsets.read_quality.adaptersOverRepresented")</h4></dt>								 
+							    <dt><h5>@Messages("readsets.read_quality.adaptersOverRepresented")</h5></dt>								 
 							    <dd ng-repeat="strValue in objsInAdapters.read2.adapters.value">
-							      	<h4>{{strValue}}</h4> 
+							      	<h5>{{strValue}}</h5> 
 							   	</dd>
 							  </ul>
 						</div>
 						<div ng-switch-when="readQualityClean">
 						 <ul>
-							<dt><h4>@Messages("readsets.read_quality.number151")</h4></dt>
+							<dt><h4>@Messages("readsets.read_quality.number")  @("{{run.treatments.ngsrg['default'].nbCycle.value}}")</h4></dt>
 							<dd><h4>	{{readset.treatments[treatments.getTreatment().code].read2.maxSizeReads.value | number}} &nbsp;
 								({{readset.treatments[treatments.getTreatment().code].read2.maxSizeReadsPercent.value | number:2}} %) </h4>
 							</dd>	

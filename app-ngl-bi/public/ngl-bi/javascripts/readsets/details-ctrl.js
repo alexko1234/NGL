@@ -86,7 +86,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			//$scope.imageWidth = document.getElementById(imageId).width;
 			
 			$scope.modalWidth = width;
-			$scope.modalLeft = (window.innerWidth - width)/2;
+			$scope.modalLeft = (document.body.clientWidth - width)/2;
 		}
 	}
 	

@@ -205,7 +205,7 @@ readsets.merging.minSize = Min size (bases)
 readsets.merging.avgSize = Average size (bases)
 
 readsets.read_quality.adaptersOverRepresented = Adapters over-represented
-readsets.read_quality.number151 = Estimation du nb de lectures de taille
+readsets.read_quality.number = Estimation du nb de lectures de taille
 
 readsets.sorting_ribo.readsInput = Reads input
 readsets.sorting_ribo.no_rRNA = No-rRNA
@@ -218,11 +218,14 @@ readsets.sorting_ribo.usefulBases = Useful bases
 readsets.taxonomy.organism = Organisme
 readsets.taxonomy.taxonomy = Taxonomie
 readsets.taxonomy.divisionBilan = Bilan par division
-readsets.taxonomy.keywordBilan = Bilan par mot-clé 
+readsets.taxonomy.divisionBilan.division = Divisions
+readsets.taxonomy.keywordBilan = Bilan par mot-clé
+readsets.taxonomy.keywordBilan.keyword = Mots-clés
 readsets.taxonomy.taxonBilan = Bilan par taxon
-readsets.taxonomy.taxonBilan.taxon = Taxon
-readsets.taxonomy.taxonBilan.percent = %
-readsets.taxonomy.taxonBilan.nbSeq = Nb de séquences
+readsets.taxonomy.taxonBilan.taxon = Taxons
+readsets.taxonomy.percent = %
+readsets.taxonomy.nbSeq = Nb Seq.
+readsets.taxonomy.sampleInput = Nb échantillons
 
 readsets.taxonomy.beginNcbiUrl = http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Undef&name=
 readsets.taxonomy.endNcbiUrl = &lvl=0&srchmode=1
@@ -244,10 +247,10 @@ readsets.qualScore = Quality scores for each read position
 readsets.nuclDistribution = Distribution of nucleotids for each read position
 readsets.readWithNpercent = Percent of reads with sequenced N
 readsets.readSizeDistribution = Read size distribution
-readsets.adapterContamination = Contamination adaptateurs : liste d'adaptateurs vs cycles run
+readsets.adapterContamination = Adapters vs run cycles
 readsets.GCDistribution = Proportion of reads for different values of G+C content 
 readsets.positionN = Position of N in reads
-readsets.phylogeneticTree = Arbre phylogénétique
+readsets.phylogeneticTree = Arbre philogénétique
 readsets.overlapDistrib = Overlap distribution
 
 

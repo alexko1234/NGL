@@ -3,209 +3,208 @@
 <div ng-controller="TaxonomyCtrl" ng-init="init(treatments.getTreatment().code)" datatable="TaxonBilan.getConfig()">
 
 	<div class="row-fluid">
+	
+		<div class="span4">		
+			<div id="divTaxonBilan">	
+				<table class="table table-condensed table-hover table-bordered">
+					<thead>
+					<tr>
+						<th colspan="3">
+							@Messages("readsets.taxonomy.taxonBilan")
+						</th>
+					</tr>
+					<tr>
+						<th>
+							@Messages("readsets.taxonomy.taxonBilan.taxon")
+						</th>
+						<th>
+							@Messages("readsets.taxonomy.nbSeq")
+						</th>
+						<th>
+							@Messages("readsets.taxonomy.percent")
+						</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td>
+							<ul class="unstyled">
+							<li ng-repeat="obj in objsInTaxonBilan">
+							
+							<!--  TODO : to backup ! -->
+							 <a href="
+							 	@Messages("readsets.taxonomy.beginNcbiUrl")
+							 	{{obj.taxon.replace(' ','+')}}
+							 	@Messages("readsets.taxonomy.endNcbiUrl")
+							 	" target=”_blank”> 
+							 	{{obj.taxon}} 
+							 </a>
+							</li>
+							</ul>
+						</td>
+						<td>
+							<ul class="unstyled">
+							<li ng-repeat="obj in objsInTaxonBilan">
+							 {{obj.nbSeq | number}}
+							</li>
+							</ul>					
+						</td>
+						<td>
+							<ul class="unstyled">
+							<li ng-repeat="obj in objsInTaxonBilan">
+							 {{ obj.percent | number:2}} @(" %")
+							</li>
+							</ul>					
+						</td>
+					</tr>
+					</tbody>				
+				</table>
+			</div>
+		</div>
+		
+		<div class="span1"></div>
+
+		<div class="span3">	
+		   <div class="row">
+				<table class="table table-condensed table-hover table-bordered">
+					<thead>
+					<tr>
+						<th colspan="3">
+							@Messages("readsets.taxonomy.divisionBilan")
+						</th>
+					</tr>
+					<tr>
+						<th>
+							@Messages("readsets.taxonomy.divisionBilan.division")
+						</th>
+						<th>
+							@Messages("readsets.taxonomy.nbSeq")
+						</th>
+						<th>
+							@Messages("readsets.taxonomy.percent")
+						</th>
+					</tr>					
+					</thead>
+					<tbody>
+					<tr>
+						<td>
+							<ul class="unstyled">
+							<li ng-repeat="obj in objsInDivisionBilan">
+							 {{obj.division}}
+							</li>
+							</ul>
+						</td>
+						<td>
+							<ul class="unstyled">
+							<li ng-repeat="obj in objsInDivisionBilan">
+							 {{obj.nbSeq | number}}
+							</li>
+							</ul>					
+						</td>
+						<td>
+							<ul class="unstyled">
+							<li ng-repeat="obj in objsInDivisionBilan">
+							 {{ obj.percent | number:2}} @(" %")
+							</li>
+							</ul>					
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="row">			
+			    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
+				ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.value,'phylogeneticTree','',1000)">
+				 <a href="#">
+				    <img id="read1.phylogeneticTree" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.value}}" />
+				    <p>@Messages("readsets.phylogeneticTree")</p>
+				 </a>   
+			    </div>
+			</div>
+		</div>
+		
+		<div class="span1"></div>
+		
 		<div class="span3">
-			<table class="table table-condensed table-hover table-bordered">
-			<thead>
-			<tr>
-				<th class="span1">
-					@Messages("readsets.sampleInput")
-				</th>
-				<th class="span1">
-					@Messages("readsets.taxonomy.organism")
-				</th>
-				<th class="span1">
-					@Messages("readsets.taxonomy.taxonomy")
-				</th>	
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<td>
-					{{readset.treatments[treatments.getTreatment().code].read1.sampleInput.value | number}}
-				</td>
-				<td>
-					{{readset.treatments[treatments.getTreatment().code].read1.organism.value}}
-				</td>
-				<td>
-					{{readset.treatments[treatments.getTreatment().code].read1.taxonomy.value}}
-				</td>		
-			</tr>
-			</tbody>
-			</table> 
+			<div class="row">
+				<table class="table table-condensed table-hover table-bordered">
+					<thead>
+					<tr>
+						<th colspan="3">
+							@Messages("readsets.taxonomy.keywordBilan")
+						</th>
+					</tr>
+					<tr>
+						<th>
+							@Messages("readsets.taxonomy.keywordBilan.keyword")
+						</th>
+						<th>
+							@Messages("readsets.taxonomy.nbSeq")
+						</th>
+						<th>
+							@Messages("readsets.taxonomy.percent")
+						</th>
+					</tr>					
+					</thead>
+					<tbody>	
+					<tr>	
+						<td>
+							<ul class="unstyled">
+							<li ng-repeat="obj in objsInKeywordBilan">
+							 {{obj.keyword}}
+							</li>
+							</ul>
+						</td>
+						<td>
+							<ul class="unstyled">
+							<li ng-repeat="obj in objsInKeywordBilan">
+							 {{obj.nbSeq | number}}
+							</li>
+							</ul>					
+						</td>
+						<td>
+							<ul class="unstyled">
+							<li ng-repeat="obj in objsInKeywordBilan">
+							 {{ obj.percent | number:2}} @(" %")
+							</li>
+							</ul>					
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="row">
+				<table class="table table-condensed table-hover table-bordered">
+					<thead>
+					<tr>
+						<th class="span1">
+							@Messages("readsets.taxonomy.sampleInput")
+						</th>
+						<th class="span1">
+							@Messages("readsets.taxonomy.organism")
+						</th>
+						<th class="span1">
+							@Messages("readsets.taxonomy.taxonomy")
+						</th>	
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td>
+							{{readset.treatments[treatments.getTreatment().code].read1.sampleInput.value | number}}
+						</td>
+						<td>
+							{{readset.treatments[treatments.getTreatment().code].read1.organism.value}}
+						</td>
+						<td>
+							{{readset.treatments[treatments.getTreatment().code].read1.taxonomy.value}}
+						</td>		
+					</tr>
+					</tbody>
+				</table>			
+			</div>	
 		</div>
+		
 	</div>
 	
-
-	<div class="row-fluid">
-		<div class="span4">
-		
-		<div id="divTaxonBilan">	
-			<table class="table table-condensed table-hover table-bordered">
-				<thead>
-				<tr>
-					<th colspan="3">
-						@Messages("readsets.taxonomy.taxonBilan")
-					</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr>
-					<td>
-						<ul class="unstyled">
-						<li ng-repeat="obj in objsInTaxonBilan">
-						
-						<!--  TODO : to backup ! -->
-						 <a href="
-						 	@Messages("readsets.taxonomy.beginNcbiUrl")
-						 	{{obj.taxon.replace(' ','+')}}
-						 	@Messages("readsets.taxonomy.endNcbiUrl")
-						 	"> 
-						 	{{obj.taxon}} : 
-						 </a>
-						</li>
-						</ul>
-					</td>
-					<td>
-						<ul class="unstyled">
-						<li ng-repeat="obj in objsInTaxonBilan">
-						 {{obj.nbSeq | number}}
-						</li>
-						</ul>					
-					</td>
-					<td>
-						<ul class="unstyled">
-						<li ng-repeat="obj in objsInTaxonBilan">
-						 {{ obj.percent | number:2}} @(" %")
-						</li>
-						</ul>					
-					</td>
-				</tr>
-				</tbody>				
-			</table>
-		</div>
-		
-		</div>
-
-		<div class="span6">	
-			<table class="table table-condensed table-hover table-bordered">
-				<thead>
-				<tr>
-					<th colspan="3">
-						@Messages("readsets.taxonomy.divisionBilan")
-					</th>
-					<th colspan="3">
-						@Messages("readsets.taxonomy.keywordBilan")
-					</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr>
-					<td>
-						<ul class="unstyled">
-						<li ng-repeat="obj in objsInDivisionBilan">
-						 {{obj.division}} :
-						</li>
-						</ul>
-					</td>
-					<td>
-						<ul class="unstyled">
-						<li ng-repeat="obj in objsInDivisionBilan">
-						 {{obj.nbSeq | number}}
-						</li>
-						</ul>					
-					</td>
-					<td>
-						<ul class="unstyled">
-						<li ng-repeat="obj in objsInDivisionBilan">
-						 {{ obj.percent | number:2}} @(" %")
-						</li>
-						</ul>					
-					</td>
-										
-					<td>
-						<ul class="unstyled">
-						<li ng-repeat="obj in objsInKeywordBilan">
-						 {{obj.keyword}} :
-						</li>
-						</ul>
-					</td>
-					<td>
-						<ul class="unstyled">
-						<li ng-repeat="obj in objsInKeywordBilan">
-						 {{obj.nbSeq | number}}
-						</li>
-						</ul>					
-					</td>
-					<td>
-						<ul class="unstyled">
-						<li ng-repeat="obj in objsInKeywordBilan">
-						 {{ obj.percent | number:2}} @(" %")
-						</li>
-						</ul>					
-					</td>
-
-
-				</tr>
-				</tbody>
-				
-			</table>
-		</div>
-	</div>
-	
-
-	<div class="row-fluid">
-	 	<ul class="thumbnails">
-	    <li class="span4">
-		    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
-			ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.value,'phylogeneticTree','',1000)">
-			 <a href="#">
-			    <img id="read1.phylogeneticTree" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.value}}" />
-			    <p>@Messages("readsets.phylogeneticTree")</p>
-			 </a>   
-		    </div>
-	    </li>
-	    </ul>
-    </div>
-
-	
-	
-	
-	
-	
-	<!-- ------------------------------------tests affichage Krona !!! -->
-<!-- 	
-	<HR>
-	<br><br>
-	
-	<b>Affichage de la chaine HTML du Krona: OK</b>
-	<br>
-	{{kronaHTMLString}}
-	<br>
-	
-	<b>Affichage d'une IFRAME avec du HTML dedans sans script : OK</b>
-	<br>
-	<iframe sandbox="allow-scripts"  srcdoc='<i>Simple html</i>' src=''></iframe>
-	<br>
-	
-	<b>Affichage d'une IFRAME avec du HTML dedans et un script : OK</b>
-	<br>
-	<iframe sandbox="allow-scripts"  srcdoc='<script>alert("alert javascript ds un script de l Iframe !");</script><i>Simple html</i>' src=''></iframe>
-	<br>
-	
-	
-	<b>Affichage d'une IFRAME avec la chaine HTML du Krona : KO</b> 
-	<br>
-	
-	<iframe sandbox="allow-scripts" srcdoc='{{kronaHTMLString}}' src=''></iframe>
-	
-	<br>
-	test +
-	<iframe sandbox="allow-scripts"><div ng-bind-html='kronaHTMLString'></div></iframe>	
-	
-	<br>
-	Nouveau test : 
-	<iframe ng-src="detailFrame"></iframe>
-		
- -->	
-	
-</div>
+</div>	
