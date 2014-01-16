@@ -1,8 +1,6 @@
 package controllers.migration;		
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -17,6 +15,7 @@ import akka.actor.Props;
 import com.typesafe.config.ConfigFactory;
 
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TransientState;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.Run;
@@ -107,6 +106,8 @@ public class Migration extends CommonController {
 		state.user = (null == readSet.traceInformation.modifyUser) ? readSet.traceInformation.createUser : readSet.traceInformation.modifyUser;
 		state.date = (null == readSet.traceInformation.modifyUser) ? readSet.traceInformation.creationDate : readSet.traceInformation.modifyDate;
 		
+		state = addHistorical(state);
+		
 		String runTypeCode = null;
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, readSet.runCode);
 		if (run != null) {
@@ -147,6 +148,8 @@ public class Migration extends CommonController {
 		state.code = run.stateCode;
 		state.user = (null == run.traceInformation.modifyUser) ? run.traceInformation.createUser : run.traceInformation.modifyUser;
 		state.date = (null == run.traceInformation.modifyUser) ? run.traceInformation.creationDate : run.traceInformation.modifyDate;
+		
+		state = addHistorical(state);
 		
 		InstrumentUsed instrumentUsed = new InstrumentUsed();
 		instrumentUsed.code = run.instrumentUsed.code;
@@ -221,30 +224,6 @@ public class Migration extends CommonController {
 		
 	}
 	
-
-	
-	/*
-	 * other possibility : use SimpleDateFormat
-	 * 
-	private static Date getDate(String runCode) {
-		String sStartDate = runCode.substring(0, runCode.indexOf("_"));
-		String sFormatStartDate = sStartDate.substring(4, 6)  + "/" 
-				+ sStartDate.substring(2, 4) + "/" 
-				+ "20"+sStartDate.substring(0, 2) + " 01:00:00";
-		
-	      SimpleDateFormat format =  new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
-		
-	      Date dParsed = null;
-	      try {
-	            dParsed = format.parse(sFormatStartDate);
-	        }
-	        catch(ParseException pe) {
-	            System.out.println("ERROR: Cannot parse \"" + sFormatStartDate + "\"");
-	        }
-	      return dParsed; 
-	} 
-	*/
-	
 	
 	private static Date getDate(String runCode) {
 		String sStartDate = runCode.substring(0, runCode.indexOf("_"));
@@ -258,7 +237,27 @@ public class Migration extends CommonController {
 
 		return calendar.getTime(); 
 	}
-	 
+	
+	
+	private static State addHistorical(State state) {
+			if (state.code.equals("F")) {				
+				List<TransientState> lts = new ArrayList<TransientState>();
+				
+				TransientState ts1 = new TransientState();
+				ts1.code = "F-RG";
+				ts1.date = state.date;
+				ts1.index = 0;
+				ts1.user = state.user;
+				
+				TransientState ts2 = new TransientState(state, 1);
+				
+				lts.add(ts1);
+				lts.add(ts2);
+				
+				state.historical = lts;
+			}
+			return state;
+	}
 	
 	
 
