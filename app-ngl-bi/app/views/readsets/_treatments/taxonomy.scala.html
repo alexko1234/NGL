@@ -69,16 +69,9 @@
 							<tr>
 								<td>
 									<ul class="unstyled">
-									<li ng-repeat="obj in objsInTaxonBilan">
-									
+									<li ng-repeat="obj in objsInTaxonBilan">								
 									<!--  TODO : to backup ! -->
-									 <a href="
-									 	@Messages("readsets.treatments.taxonomy.beginNcbiUrl")
-									 	{{obj.taxon.replace(' ','+')}}
-									 	@Messages("readsets.treatments.taxonomy.endNcbiUrl")
-									 	" target='_blank'> 
-									 	{{obj.taxon}} 
-									 </a>
+									 <a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}" target="_blank">{{obj.taxon}}</a>
 									</li>
 									</ul>
 								</td>

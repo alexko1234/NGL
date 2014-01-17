@@ -183,11 +183,7 @@ function SortingCtrl($scope) {
 
 
 
-
-
 function TaxonomyCtrl($scope) {
-
-	
 	$scope.init = function(name) {		
 		$scope.$watch('readset', function() { 
 			if (angular.isDefined($scope.readset)) {
@@ -196,13 +192,10 @@ function TaxonomyCtrl($scope) {
 				$scope.objsInTaxonBilan = $scope.readset.treatments[name].read1.taxonBilan.value;
 				
 				$scope.krona = "data:text/html;base64,"+$scope.readset.treatments[name].read1.krona.value
+				
+				$scope.ncbiUrl = Messages("readsets.treatments.taxonomy.beginNcbiUrl");
 			}
 		});
 
 	}
-	
 }
-
-
-
-

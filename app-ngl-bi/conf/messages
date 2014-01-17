@@ -252,8 +252,7 @@ readsets.treatments.taxonomy.taxonBilan.taxon = Taxons
 readsets.treatments.taxonomy.taxonBilan.percent = %
 readsets.treatments.taxonomy.taxonBilan.nbSeq = Nb Seq.
 readsets.treatments.taxonomy.sampleInput = Nb Seq. (échantillonnage)
-readsets.treatments.taxonomy.beginNcbiUrl = http://www.ncbi.nlm.nih.gov/treatments.taxonomy/Browser/wwwtax.cgi?mode=Undef&name=
-readsets.treatments.taxonomy.endNcbiUrl = &lvl=0&srchmode=1
+readsets.treatments.taxonomy.beginNcbiUrl = http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Undef&name=
 readsets.treatments.taxonomy.phylogeneticTree = Arbre philogénétique
 
 readsets.treatments.trimming.read1 = Read 1
