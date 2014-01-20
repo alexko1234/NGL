@@ -161,10 +161,8 @@ function DuplicatesCtrl($scope) {
 function ReadQualityCtrl($scope) {
 	$scope.init = function(name) {
 		$scope.$watch('readset', function() { 
-			if (angular.isDefined($scope.readset)) {
+			if (angular.isDefined($scope.readset)) {				
 				$scope.objsInAdapters = $scope.readset.treatments[name];
-				
-				$scope.msgQualScore = Messages("readset.treatments." + name + '.qualScore');
 			}
 		});
 	}
@@ -191,7 +189,7 @@ function TaxonomyCtrl($scope) {
 				$scope.objsInKeywordBilan = $scope.readset.treatments[name].read1.keywordBilan.value;
 				$scope.objsInTaxonBilan = $scope.readset.treatments[name].read1.taxonBilan.value;
 				
-				$scope.krona = "data:text/html;base64,"+$scope.readset.treatments[name].read1.krona.value
+				$scope.krona = "data:text/html;base64,"+$scope.readset.treatments[name].read1.krona.value;
 				
 				$scope.ncbiUrl = Messages("readsets.treatments.taxonomy.beginNcbiUrl");
 			}
