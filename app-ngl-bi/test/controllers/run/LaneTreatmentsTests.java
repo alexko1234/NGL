@@ -42,22 +42,17 @@ public class LaneTreatmentsTests extends AbstractTests {
 	
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
 		   Container c = new Container();
 		   c.code ="containerTest1";
 		   c.support = new ContainerSupport(); 
 		   c.support.barCode = "containerName"; 
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
-		       }}); 
 	}
 	
 	
 	@AfterClass
 	public static void deleteData(){
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
 		for (Sample sample : samples) {
 			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
@@ -66,7 +61,6 @@ public class LaneTreatmentsTests extends AbstractTests {
 		for (Container container : containers) {
 			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
 		}
-		       }}); 
 	}
 	
 	private void createRunWithLaneCode() {
@@ -113,8 +107,6 @@ public class LaneTreatmentsTests extends AbstractTests {
 	
 	@Test
 	public void testSave() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 		    createRunWithLaneCode();
 			    	 
 			Treatment t = getNewTreatmentForLane();
@@ -128,14 +120,11 @@ public class LaneTreatmentsTests extends AbstractTests {
 	        assertThat(r.lanes.get(0).treatments.size()).isEqualTo(1);
 	        Map.Entry<String, Treatment> entry = r.lanes.get(0).treatments.entrySet().iterator().next();
 	        assertThat(entry.getKey()).isEqualTo("ngsrg");
-		 }});
 	}
 	
 	
 	@Test
 	public void testUpdate() { 
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 		    createRunWithLaneCode();
 			    	 
 			Treatment t = getNewTreatmentForLane();
@@ -170,15 +159,12 @@ public class LaneTreatmentsTests extends AbstractTests {
 	        Map.Entry<String, Treatment> entry = r.lanes.get(0).treatments.entrySet().iterator().next();
 	        assertThat(entry.getKey()).isEqualTo("ngsrg");
 	        assertThat(entry.getValue().results().get("default").get("nbCycleReadIndex1").value.toString()).isEqualTo("120");
-		}});
 	}
 	
 	
 	
 	@Test
 	public void testDelete() { 
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 		    createRunWithLaneCode();
 			    	 
 			Treatment t = getNewTreatmentForLane();
@@ -193,14 +179,11 @@ public class LaneTreatmentsTests extends AbstractTests {
 			//query for control
 	        Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code","DIDIER_TESTFORTRT"));
 	        assertThat(r.lanes.get(0).treatments.size()).isEqualTo(0);
-		}});
 	}
 	
 	
 	@Test
 	public void testGet() { 
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 		    createRunWithLaneCode();
 			    	 
 			Treatment t = getNewTreatmentForLane();
@@ -210,14 +193,11 @@ public class LaneTreatmentsTests extends AbstractTests {
 			
 			result = callAction(controllers.runs.api.routes.ref.LaneTreatments.get("DIDIER_TESTFORTRT", 1, t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
 			assertThat(status(result)).isEqualTo(OK);
-		}});		
 	}
 	
 	
 	@Test
 	public void testHead() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 		    createRunWithLaneCode();
 			    	 
 			Treatment t = getNewTreatmentForLane();
@@ -227,9 +207,7 @@ public class LaneTreatmentsTests extends AbstractTests {
 			
 			result = callAction(controllers.runs.api.routes.ref.LaneTreatments.head("DIDIER_TESTFORTRT", 1, t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
 			assertThat(status(result)).isEqualTo(OK);
-		}});	
 	}
-	
 	
 	
 }

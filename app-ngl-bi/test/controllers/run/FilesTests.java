@@ -41,22 +41,17 @@ public class FilesTests extends AbstractTests{
 	
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
 		   Container c = new Container();
 		   c.code ="containerTest1";
 		   c.support = new ContainerSupport(); 
 		   c.support.barCode = "containerName"; 
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
-		       }}); 
 	}
 	
 	
 	@AfterClass
 	public static void deleteData(){
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
 		for (Sample sample : samples) {
 			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
@@ -65,13 +60,10 @@ public class FilesTests extends AbstractTests{
 		for (Container container : containers) {
 			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
 		}
-		       }}); 
 	}
 	
 	@Test
 	 public void testFileCreate() {
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-			public void run() {	
 			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
 			if(runDelete!=null){
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -102,8 +94,7 @@ public class FilesTests extends AbstractTests{
 		
 			Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET2");
 			run.dispatch = true; 
-	
-			
+				
 			ReadSet rd = RunMockHelper.newReadSet("rdCode"); 
 			rd.runCode = run.code;
 			
@@ -137,14 +128,11 @@ public class FilesTests extends AbstractTests{
 	        readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("files.fullname",file.fullname));
 	        assertThat(readSet.files.size()).isEqualTo(1);
 	        assertThat(readSet.files.get(0).fullname).isEqualTo(file.fullname);
-		}});
 	 }
 	
 	
 	@Test
 	 public void testFileExtensionUpdate() {
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-			public void run() {	
 			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
 			if(runDelete!=null){
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -216,14 +204,11 @@ public class FilesTests extends AbstractTests{
 	        //ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("files.fullname",file.fullname));
 		  	//assertThat(readSet.files.size()).isEqualTo(1);
 		  	//assertThat(readSet.files.get(0).extension).isEqualTo(file.extension );
-			}});
 	 }
 	
 	 
 	 @Test
 	 public void testFileShow() {
-			running(fakeApplication(fakeConfiguration()), new Runnable() {
-				public void run() {	
 			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
 			if(runDelete!=null){
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -289,14 +274,11 @@ public class FilesTests extends AbstractTests{
 		      assertThat(status(result)).isEqualTo(OK);
 		      assertThat(contentType(result)).isEqualTo("application/json");
 		      assertThat(charset(result)).isEqualTo("utf-8");
-			}});
 	 }
 	 
 	 
 	 @Test
 	 public void testDeleteFile(){
-			running(fakeApplication(fakeConfiguration()), new Runnable() {
-				public void run() {	
 			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
 			if(runDelete!=null){
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -360,14 +342,11 @@ public class FilesTests extends AbstractTests{
 	         //ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
 	         //Logger.debug(String.valueOf(readSet.files.size()));
 	         //assertThat(readSet.files.size()).isEqualTo(0);
-			}});	         
 	 }
 	 
 	 
 	 @Test
 	 public void testRemoveFiles(){
-			running(fakeApplication(fakeConfiguration()), new Runnable() {
-				public void run() {	
 			Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET2"));
 			if(runDelete!=null){
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -436,7 +415,6 @@ public class FilesTests extends AbstractTests{
 		 	    //query for control
 	         //ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,rd.code);
 	         //assertThat(readSet.files).isNull();
-			}});
 	 }
 	 
 }

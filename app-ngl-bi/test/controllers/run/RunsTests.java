@@ -42,22 +42,17 @@ public class RunsTests extends AbstractTests {
 	
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
 		   Container c = new Container();
 		   c.code ="containerTest1";
 		   c.support = new ContainerSupport(); 
 		   c.support.barCode = "containerName"; 
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
-		       }}); 
 	}
 	
 	
 	@AfterClass
 	public static void deleteData(){
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
 		for (Sample sample : samples) {
 			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
@@ -66,13 +61,10 @@ public class RunsTests extends AbstractTests {
 		for (Container container : containers) {
 			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
 		}
-		       }}); 
 	}
 	
 	@Test
 	public void testRunSave() { 
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1"));
 		if(runDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -104,8 +96,7 @@ public class RunsTests extends AbstractTests {
 		run.lanes = lanes;
 
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-		assertThat(status(result)).isEqualTo(OK);
-		
+		assertThat(status(result)).isEqualTo(OK);		
         
 		ReadSet r = RunMockHelper.newReadSet("ReadSet00");		
 		r.runCode = run.code;
@@ -122,13 +113,10 @@ public class RunsTests extends AbstractTests {
         assertThat(r.code).isEqualTo("ReadSet00");
         assertThat(r.runCode).isEqualTo(run.code);
         assertThat(r.laneNumber).isEqualTo(lane.number);
-		}});        
     }
 
 	@Test
 	public void testRunUpdate() { 
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 		// change the run dispatch value : false to true		
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1"));
 		if(runDelete!=null){
@@ -157,13 +145,10 @@ public class RunsTests extends AbstractTests {
 	 	//query for control
 	 	run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1"));
 	 	assertThat(run.dispatch).isEqualTo(true);
-		}});	 	
 	}
 	
 	@Test
 	public void testRunSaveWithTwiceSameReadSet() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST2"));
 		if(runDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -220,13 +205,10 @@ public class RunsTests extends AbstractTests {
 	 	run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
 	 	assertThat(run.lanes.get(0).readSetCodes.size()).isEqualTo(1);
 	 	assertThat(run.lanes.get(0).readSetCodes.get(0)).isEqualTo(r.code);
-		}});
 	}
 	
 	@Test
 	public void testPropertyLaneUpdate() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 		// verify that the property "valid" of the lane is update to TRUE
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1"));
 		if(runDelete!=null){
@@ -245,19 +227,15 @@ public class RunsTests extends AbstractTests {
 		
 		result = callAction(controllers.runs.api.routes.ref.Lanes.update(run.code, lane.number),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
 		assertThat(status(result)).isEqualTo(OK);
-		
-		
+				
 	 	//query for control
 	 	run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
 	 	assertThat(lane.valuation.valid).isEqualTo(TBoolean.TRUE);
-		}});	 	
 	}
 	
 
 	@Test
 	public void testPropertyReadSetUpdate() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 		// verify that the property "dispatch" of the readSet is update to false
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1"));
 		if(runDelete!=null){
@@ -309,13 +287,10 @@ public class RunsTests extends AbstractTests {
 	 	//query for control
         r = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code",r.code));
         assertThat(r.dispatch).isEqualTo(false);
-		}});
 	}
 	
 	@Test
 	public void testDeleteRun(){
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1"));
 		if(runDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -335,7 +310,6 @@ public class RunsTests extends AbstractTests {
 	 	//query for control
 	 	run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
 	 	assertThat(run).isNull();	
-		}});
 	}
 
 	

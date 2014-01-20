@@ -42,22 +42,17 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 	
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
 		   Container c = new Container();
 		   c.code ="containerTest1";
 		   c.support = new ContainerSupport(); 
 		   c.support.barCode = "containerName"; 
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
-		       }}); 
 	}
 	
 	
 	@AfterClass
 	public static void deleteData(){
-		running(fakeApplication(fakeConfiguration()), new Runnable() {
-		       public void run() {
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
 		for (Sample sample : samples) {
 			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
@@ -66,7 +61,6 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 		for (Container container : containers) {
 			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
 		}
-		       }}); 
 	}
 	
 	private void createRdCode() {
@@ -133,8 +127,6 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 	
 	@Test
 	public void testSave() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 		createRdCode();
 		    	 
 		Treatment t = getNewTreatmentForReadSet();
@@ -147,15 +139,12 @@ public class ReadSetTreatmentsTests extends AbstractTests {
         assertThat(r.treatments.size()).isEqualTo(1);
         Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
         assertThat(entry.getKey()).isEqualTo("ngsrg");
-		}});        
 	}
 	
 	
 	
 	@Test
 	public void testUpdate() {
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 	    createRdCode();
 		    	 
 		Treatment t = getNewTreatmentForReadSet();
@@ -183,14 +172,11 @@ public class ReadSetTreatmentsTests extends AbstractTests {
         Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
         assertThat(entry.getKey()).isEqualTo("ngsrg");
         assertThat(entry.getValue().results().get("default").get("nbCluster").value.toString()).isEqualTo("18"); 
-		}});        
 	}
 	
 	
 	@Test
 	public void testDelete() {		
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 	    createRdCode();
 		    	 
 		Treatment t = getNewTreatmentForReadSet();
@@ -205,13 +191,10 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 		//query for control
         //ReadSet r = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"));
         //assertThat(r.treatments.size()).isEqualTo(0);
-		}});        
 	}
 	
 	@Test
 	public void testGet() { 
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 	    createRdCode();
 		    	 
 		Treatment t = getNewTreatmentForReadSet();
@@ -221,13 +204,10 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 		
 		result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.get("rdCode", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
 		assertThat(status(result)).isEqualTo(OK);
-		}});    		
 	}
 	
 	@Test
 	public void testHead() { 
-		 running(fakeApplication(fakeConfiguration()), new Runnable() {
-		     public void run() {
 	    createRdCode();
 		    	 
 		Treatment t = getNewTreatmentForReadSet();
@@ -237,7 +217,6 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 		
 		result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.head("rdCode", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
 		assertThat(status(result)).isEqualTo(OK);
-		}});   
 	}
 		
 }
