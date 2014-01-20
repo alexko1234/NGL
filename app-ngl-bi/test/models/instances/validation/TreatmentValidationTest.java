@@ -118,12 +118,11 @@ public class TreatmentValidationTest extends AbstractTests {
 		//define map of property values
 		Map<String,PropertyValue> m = new HashMap<String,PropertyValue>();
 		
-		m.put("sampleInput", new PropertySingleValue(100)); //Long.class, required=true
-		m.put("organism",new PropertySingleValue("titi")); // String.class, true
-		m.put("taxonomy",new PropertySingleValue("trucBizarre")); // String.class, true
+		m.put("sampleInput", new PropertySingleValue(100));
+		m.put("organism",new PropertySingleValue("titi"));
+		m.put("taxonomy",new PropertySingleValue("trucBizarre"));		
 		
-		
-		PropertyObjectValue p = new PropertyObjectValue(); // Map<String, ?>
+		PropertyObjectValue p = new PropertyObjectValue();
 		HashMap<String, Object> m2 = new HashMap<String, Object>(); 
 		m2.put("taxon", "leTaxon");
 		m2.put("nbSeq", 1000000);
@@ -133,7 +132,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		p = new PropertyObjectValue();
 		m2 = new HashMap<String, Object>(); 
-		m2.put("division", "eukaryota"); //value OK
+		m2.put("division", "eukaryota"); 
 		m2.put("nbSeq", 1000000);
 		m2.put("percent", 10.52);
 		p.value=m2;
@@ -141,15 +140,16 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		p = new PropertyObjectValue();
 		m2 = new HashMap<String, Object>(); 
-		m2.put("keyword", "virus"); //value OK
+		m2.put("keyword", "virus"); 
 		m2.put("nbSeq", 1000000);
 		m2.put("percent", 1320.52);
 		p.value=m2;
 		m.put("keywordBilan", p);
 
-		
 		File f = new File("krona");
-		m.put("krona",new PropertySingleValue(f)); // File.class, true
+		m.put("krona",new PropertySingleValue(f));		
+		f = new File("phylogeneticTree");
+		m.put("phylogeneticTree",new PropertySingleValue(f));
 		
 		t.set("read1", m);
 		
@@ -166,20 +166,18 @@ public class TreatmentValidationTest extends AbstractTests {
 		//define map of property values
 		Map<String,PropertyValue> m = new HashMap<String,PropertyValue>();
 		
-		m.put("sampleInput", new PropertySingleValue(100)); //Long.class, required=true
-		m.put("organism",new PropertySingleValue("titi")); // String.class, true
-		m.put("taxonomy",new PropertySingleValue("trucBizarre")); // String.class, true
-		
-		
-		PropertyObjectValue p = new PropertyObjectValue(); // Map<String, ?>
+		m.put("sampleInput", new PropertySingleValue(100));
+		m.put("organism",new PropertySingleValue("titi"));
+		m.put("taxonomy",new PropertySingleValue("trucBizarre"));
+				
+		PropertyObjectValue p = new PropertyObjectValue();
 		HashMap<String, Object> m2 = new HashMap<String, Object>(); 
 		m2.put("taxon", "leTaxon");
 		m2.put("nbSeq", 1000000);
 		m2.put("percent", 10.52);
 		p.value=m2;
 		m.put("taxonBilan", p);
-		
-		
+				
 		p = new PropertyObjectValue();
 		m2 = new HashMap<String, Object>(); 
 		m2.put("division", "toto"); // not authorized, possible value : "eukaryota"
@@ -197,9 +195,10 @@ public class TreatmentValidationTest extends AbstractTests {
 		p.value=m2;
 		m.put("keywordBilan", p);
 
-		
 		File f = new File("krona");
-		m.put("krona",new PropertySingleValue(f)); // File.class, true
+		m.put("krona",new PropertySingleValue(f));		
+		f = new File("phylogeneticTree");
+		m.put("phylogeneticTree",new PropertySingleValue(f));
 		
 		t.set("read1", m);
 		
