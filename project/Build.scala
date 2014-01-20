@@ -100,7 +100,10 @@ object ApplicationBuild extends Build {
 		  // Add your project dependencies here,
 		  "fr.cea.ig" %% "bootstrap" % "1.0-SNAPSHOT",
 		  "postgresql" % "postgresql" % "8.3-603.jdbc4"
-		)		
+		)
+	val nglsubDependencies = Seq(
+	    javaCore, javaJdbc
+	)
 	
    }
    
@@ -151,6 +154,13 @@ object ApplicationBuild extends Build {
           publishTo := Some(nexusigpublish) 
     ).dependsOn(nglcommon)
 	
+    val nglsub = play.Project(appName + "-sub", appVersion, nglsubDependencies, path = file("app-ngl-sub"),settings = buildSettings).settings(
+        // Add your own project settings here      
+          resolvers := Seq(nexusig),
+          publishArtifact in makePom := false,
+          publishTo := Some(nexusigpublish) 
+    ).dependsOn(nglcommon)
+    
     val nglauth = play.Project(appName + "-authorization", appVersion, nglauthDependencies, path = file("app-ngl-authorization"),settings = buildSettings).settings(
              // Add your own project settings here      
              resolvers := Seq(nexusig),
