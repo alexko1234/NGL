@@ -21,10 +21,20 @@ public class ContainerSupportHelper {
 			String containerCategoryCode, int nbUsableContainer, String barCode, String x, String y) throws DAOException {
 			
 		List<ContainerSupportCategory> containerSupportCategories=ContainerSupportCategory.find.findByContainerCategoryCode(containerCategoryCode);
-		
+
 		ContainerSupport containerSupport=new ContainerSupport();
+		
+		for(int i=0;i<containerSupportCategories.size();i++){
+			if(containerSupportCategories.get(i).nbUsableContainer==nbUsableContainer){
+				containerSupport.categoryCode=containerSupportCategories.get(i).code;
+			}
+		}
+		
+		if(containerSupport.categoryCode==null){
+			containerSupport.categoryCode=containerSupportCategories.get(0).code;
+		}
+
 		containerSupport.barCode=barCode;	
-		containerSupport.categoryCode=containerSupportCategories.get(0).code;
 		containerSupport.column=x;
 		containerSupport.line=y;
 		return containerSupport;

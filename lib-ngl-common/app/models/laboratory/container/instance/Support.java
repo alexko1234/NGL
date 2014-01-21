@@ -2,12 +2,13 @@ package models.laboratory.container.instance;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.Valuation;
-import net.vz.mongodb.jackson.MongoCollection;
+import models.utils.InstanceConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.container.instance.SupportValidationHelper;
 import fr.cea.ig.DBObject;
 
 public class Support extends DBObject implements IValidation{
@@ -19,7 +20,7 @@ public class Support extends DBObject implements IValidation{
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		// TODO Auto-generated method stub
-		
+		SupportValidationHelper.validateCode(this, InstanceConstants.SUPPORT_COLL_NAME, contextValidation);
+		SupportValidationHelper.validateSupportCategoryCode(categoryCode, contextValidation);
 	}
 }
