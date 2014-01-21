@@ -735,19 +735,35 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 		$scope.lists = lists;
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		if(experiment == ""){
-			$scope.basket = $scope.getBasket();
-			$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
+			$scope.basket = $scope.getBasket().get();
+			var containers = [];//container list for the datatable
+			var promises = [];//promise for loading everithing after the data was set to datatable
+			for (var i=0;i<$scope.basket.length;i++) {
+				var promise = $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{supportCode:$scope.basket[i].code}})
+				.success(function(data, status, headers, config) {
+					$scope.clearMessages();
+						if(data!=null){
+							for(var j=0;j<data.length;j++){
+								alert(JSON.stringify(data[i]));
+								containers.push(data[j]);
+							}
+						}
+					})
+				.error(function(data, status, headers, config) {
+					alert("error");
+				});
+				promises.push(promise);
+			}
+			$q.all(promises).then(function (res) {
+				
+			$scope.datatable.setData(containers,containers.length);
 			$scope.form = $scope.getForm();
 			$scope.state=$scope.experiment.value.stateCode;
 			if(angular.isUndefined($scope.getForm().experiment)) {
 				$scope.form.experiment = $scope.experiment;
 				$scope.setForm($scope.form);
-
-
-			$scope.experiment.value.typeCode = $scope.form.experimentType.code;
-			$scope.experiment.value.categoryCode = experimentType.category.code;
-				var basketList = $scope.getBasket().get();
-	
+				$scope.experiment.value.typeCode = $scope.form.experimentType.code;
+				$scope.experiment.value.categoryCode = experimentType.category.code;
 				$scope.experiment.value.atomicTransfertMethods = {};
 	
 				//Initialisation of the experiment
@@ -758,13 +774,13 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 						if(data!=null){
 							$scope.experiment.value = data;
 							
-							for(var i=0;i<basketList.length;i++){
+							for(var i=0;i<containers.length;i++){
 								$scope.experiment.value.atomicTransfertMethods[i] = {class:experimentType.atomicTransfertMethod, inputContainerUsed:[]};
 	
 								if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
-									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.push({containerCode:basketList[i].code,instrumentProperties:{},experimentProperties:{}});
+									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.push({containerCode:containers[i].code,instrumentProperties:{},experimentProperties:{}});
 								}else{
-									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed = {containerCode:basketList[i].code,instrumentProperties:{},experimentProperties:{}};
+									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed = {containerCode:containers[i].code,instrumentProperties:{},experimentProperties:{}};
 								}
 							}
 						}
@@ -794,6 +810,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 			} else {
 				$scope.experiment = $scope.form.experiment;
 			}
+			});
 			}else{
 				$scope.experiment.value = experiment;
 				$scope.state=$scope.experiment.value.stateCode;

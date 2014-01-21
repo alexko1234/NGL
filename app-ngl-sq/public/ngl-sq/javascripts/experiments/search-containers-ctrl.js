@@ -4,7 +4,7 @@ function SearchContainerCtrl($scope,$routeParams, datatable,basket, lists) {
 	 
 	$scope.datatableConfig = {
 		search:{
-			url:jsRoutes.controllers.containers.api.Containers.list()
+			url:jsRoutes.controllers.supports.api.Supports.list()
 		},
 		order:{
 			active:true,

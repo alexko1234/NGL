@@ -7,6 +7,7 @@ import java.util.List;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
@@ -186,19 +187,28 @@ public class Experiments extends CommonController{
 		Experiment exp = experimentFilledForm.get();
 
 		exp = traceInformation(exp);
-
+		exp.sampleCodes = new ArrayList<String>();
+		exp.projectCodes  = new ArrayList<String>();
 
 		if (!experimentFilledForm.hasErrors()) {
 			for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-				Workflows.setContainersInWaitingExperiment(exp.atomicTransfertMethods.get(i).getInputContainers());
-				Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getInputContainers());
-				Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getOutputContainers());
-			}
-
+					Workflows.setContainersInWaitingExperiment(exp.atomicTransfertMethods.get(i).getInputContainers());
+					Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getInputContainers());
+					if(exp.atomicTransfertMethods.get(i).getOutputContainers() != null){
+						Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getOutputContainers());
+					}
+					for(ContainerUsed c:exp.atomicTransfertMethods.get(i).getInputContainers()){
+						Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, c.containerCode);
+						exp.sampleCodes = InstanceHelpers.addCodesList(exp.sampleCodes, container.sampleCodes);
+						exp.projectCodes = InstanceHelpers.addCodesList(exp.projectCodes, container.projectCodes);
+					}
+				}
 			/*Builder builder = new DBUpdate.Builder();
 			builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
 
 			MongoDBDAO.update(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);*/
+		
+			
 			MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 			return ok(Json.toJson(exp));
 		}

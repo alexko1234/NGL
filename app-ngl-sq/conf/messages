@@ -17,6 +17,7 @@ containers.table.stateCode = Statut
 containers.table.support.name = Support
 containers.table.stateCode = Code Etat
 containers.table.valid = Valide
+containers.table.barCode = Code Support
 
 containers.select.state =  -- selectionner un état --
 containers.select.categoryCode =  -- selectionner un type --

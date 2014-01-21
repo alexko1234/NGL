@@ -9,12 +9,15 @@ public class ContainersSearchForm extends ListForm{
 	public String categoryCode;
 	public String experimentTypeCode;
 	public String processTypeCode;
+	public String supportCode;
+	public String supportCategoryCode;
 	
 	@Override
 	public String toString() {
 		return "ContainersSearch [projectCode=" + projectCode
 				+ ", categoryCode=" + categoryCode + ", stateCode="
 				+ stateCode + ", sampleCode=" + sampleCode + ", experimentTypeCode=" 
-				+ experimentTypeCode + ", processTypeCode=" + processTypeCode +"]";
+				+ experimentTypeCode + ", processTypeCode=" + processTypeCode + ", supportCode="
+				+ supportCode +", supportCategoryCode=" + supportCategoryCode +"]";
 	}
 }

@@ -2,7 +2,7 @@
  
 angular.module('home', ['ngRoute','datatableServices','basketServices', 'commonsServices'], function($routeProvider, $locationProvider) {
 	$routeProvider.when('/experiments/new/home', {
-		templateUrl : jsRoutes.controllers.experiments.tpl.Experiments.searchContainers().url,
+		templateUrl : jsRoutes.controllers.experiments.tpl.Experiments.searchSupports().url,
 		controller : 'SearchContainerCtrl'
 	});
 	$routeProvider.when('/experiments/new/:experimentTypeCode', {
@@ -30,7 +30,7 @@ angular.module('home', ['ngRoute','datatableServices','basketServices', 'commons
 	});
 	
 	$routeProvider.when('/experiments/:newExperiment/home', {
-		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.searchContainers(params.newExperiment).url},
+		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.searchSupports(params.newExperiment).url},
 		controller : 'SearchContainerCtrl'
 	});
 	

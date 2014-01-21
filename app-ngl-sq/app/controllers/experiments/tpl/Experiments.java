@@ -39,15 +39,10 @@ public class Experiments extends CommonController{
 	}
 	
 	
-	public static Result searchContainers(){
+	public static Result searchSupports(){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes"), true, false, false));				
-		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("containers.table.sampleCodes"), true, false, false));		
-		columns.add(DatatableHelpers.getColumn("valid", Messages.get("containers.table.valid"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("containers.table.stateCode"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes")));
 		
 		DatatableConfig config = new DatatableConfig(columns);
 		config.button = Boolean.TRUE;
@@ -108,7 +103,8 @@ public class Experiments extends CommonController{
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
 		Map<Integer,String> extraHeaders = new HashMap<Integer, String>();
 		extraHeaders.put(0, "Inputs");
-		
+		columns.add(DatatableHelpers.getColumn("support.barCode", Messages.get("containers.table.barCode"), true, false, true,false,extraHeaders));	
+		columns.add(DatatableHelpers.getColumn("support.categoryCode", Messages.get("containers.table.categoryCode"), true, false, true,false,extraHeaders));	
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, true,false,extraHeaders));	
 		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes"), true, false, true,false,extraHeaders));	
 		columns.add(DatatableHelpers.getColumn("mesuredVolume.value", Messages.get("experiments.table.volume.value"),true, true, true,false,extraHeaders));	
@@ -150,8 +146,9 @@ public class Experiments extends CommonController{
   	    return ok(  	    		
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
-  	    		controllers.experiments.tpl.routes.javascript.Experiments.searchContainers(),
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.searchSupports(),
   	    		controllers.containers.api.routes.javascript.Containers.list(),
+  	    		controllers.supports.api.routes.javascript.Supports.list(),
   	    		controllers.containers.api.routes.javascript.Containers.get(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.search(),
   	    		controllers.processes.api.routes.javascript.ProcessTypes.list(),
@@ -182,7 +179,8 @@ public class Experiments extends CommonController{
 				controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
 				controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
 				controllers.projects.api.routes.javascript.Projects.list(),
-  	    		controllers.samples.api.routes.javascript.Samples.list()
+  	    		controllers.samples.api.routes.javascript.Samples.list(),
+  	    		controllers.containers.api.routes.javascript.Containers.list_supports()
   	    		
   	      )	  	      
   	    );

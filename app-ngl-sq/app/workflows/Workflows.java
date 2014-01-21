@@ -63,8 +63,8 @@ public class Workflows {
 	 * Set final state of list if containerUsed to IS or UN (In Stock or Unavailable)
 	 * @param List<ContainerUsed> inputContainers: the list of container
 	 */
-	public static void setContainersFinalState(List<ContainerUsed> inputContainers){
-		for(ContainerUsed containerUsed:inputContainers){
+	public static void setContainersFinalState(List<ContainerUsed> containers){
+		for(ContainerUsed containerUsed:containers){
 			if(containerUsed != null && containerUsed.resolutionCode!= null){
 				if(containerUsed.resolutionCode.equals("IS")){
 					setContainerInStock(containerUsed);
