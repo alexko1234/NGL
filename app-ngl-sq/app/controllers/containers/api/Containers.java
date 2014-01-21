@@ -176,8 +176,8 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.is("support.barCode", containersSearch.supportCode));
 		}
 		
-		if(StringUtils.isNotEmpty(containersSearch.supportCategoryCode)){
-			queryElts.add(DBQuery.is("support.categoryCode", containersSearch.supportCategoryCode));
+		if(StringUtils.isNotEmpty(containersSearch.containerSupportCategory)){
+			queryElts.add(DBQuery.is("support.categoryCode", containersSearch.containerSupportCategory));
 		}else if(!StringUtils.isEmpty(containersSearch.experimentTypeCode)){
 			List<ContainerSupportCategory> containerSupportCategories = ContainerSupportCategory.find.findByExperimentTypeCode(containersSearch.experimentTypeCode);
 			List<String> cs = new ArrayList<String>();

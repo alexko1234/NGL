@@ -427,6 +427,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 							}
 						}
 						$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Code","outputContainerUsed.containerCode",true, true,true,"String",false,undefined,{"0":"Outputs"}));
+						$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Code","outputContainerUsed.support.categoryCode",true, true,true,"String",false,undefined,{"0":"Outputs"}));
 						
 						$scope.addExperimentPropertiesOutputsColumns();
 						$scope.addInstrumentPropertiesOutputsColumns();
@@ -894,6 +895,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 					
 					if($scope.experiment.outputGenerated){
 						$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Code","outputContainerUsed.containerCode",true, true,true,"String",false,undefined,{"0":"Outputs"}));
+						$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Code","outputContainerUsed.support.categoryCode",true, true,true,"String",false,undefined,{"0":"Outputs"}));
 						$scope.addExperimentPropertiesOutputsColumns();
 						$scope.addInstrumentPropertiesOutputsColumns();
 					}

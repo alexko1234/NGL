@@ -10,7 +10,7 @@ public class ContainersSearchForm extends ListForm{
 	public String experimentTypeCode;
 	public String processTypeCode;
 	public String supportCode;
-	public String supportCategoryCode;
+	public String containerSupportCategory;
 	
 	@Override
 	public String toString() {
@@ -18,6 +18,6 @@ public class ContainersSearchForm extends ListForm{
 				+ ", categoryCode=" + categoryCode + ", stateCode="
 				+ stateCode + ", sampleCode=" + sampleCode + ", experimentTypeCode=" 
 				+ experimentTypeCode + ", processTypeCode=" + processTypeCode + ", supportCode="
-				+ supportCode +", supportCategoryCode=" + supportCategoryCode +"]";
+				+ supportCode +", supportCategoryCode=" + containerSupportCategory +"]";
 	}
 }
