@@ -72,7 +72,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			
 		});
 		
-		$scope.setImage = function(imageData, imageName, context, treatment, width) {
+		$scope.setImage = function(imageData, imageName, context, treatment, imageFullSizeWidth) {
 			$scope.modalImage = imageData;
 			
 			$scope.modalTitle = '';
@@ -85,8 +85,13 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			//var imageId = context + '.' + imageName;
 			//$scope.imageWidth = document.getElementById(imageId).width;
 			
-			$scope.modalWidth = width;
-			$scope.modalLeft = (document.body.clientWidth - width)/2;
+			var margin = 25;
+			
+			var rapport = (document.body.clientWidth - margin) / imageFullSizeWidth;
+			rapport = Math.min(rapport, 1);
+
+			$scope.modalWidth = imageFullSizeWidth * rapport;
+			$scope.modalLeft = (document.body.clientWidth - imageFullSizeWidth * rapport )/2;
 		}
 	}
 	
