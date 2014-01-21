@@ -1,5 +1,6 @@
 package controllers.combo.api;
 
+import controllers.CommonController;
 import ls.dao.LimsManipDAO;
 import play.api.modules.spring.Spring;
 import play.libs.Json;
@@ -7,7 +8,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
 
-public class Lists extends Controller {
+public class Lists extends CommonController {
 
 	public static Result projects(){
 		return Results.ok(Json.toJson(Spring.getBeanOfType(LimsManipDAO.class).getListObjectFromProcedureLims("pl_Projet")));	
