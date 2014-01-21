@@ -155,6 +155,7 @@ angular.module('commonsServices', []).
     			getResolutions : function(){return results['resolutions'];},
     			getValuationCriterias : function(){return results['valuationCriterias'];},
     			getProjects : function(){return results['projects'];},
+    			getContainerSupportCategories : function(){return results['containerSupportCategories'];},
     			getSamples : function(){return results['samples'];},
     			getContainerCategories : function(){return results['containerCategories'];},
     			getExperimentCategories : function(){return results['experimentCategories'];},
