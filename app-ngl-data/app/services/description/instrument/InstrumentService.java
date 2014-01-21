@@ -117,26 +117,51 @@ public class InstrumentService {
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		//CNG et CNS
-		l.add(newInstrumentUsedType("GAII", "GAII", InstrumentCategory.find.findByCode("seq-illumina"), null, 
+		l.add(newInstrumentUsedType("GAIIx", "GAIIx", InstrumentCategory.find.findByCode("seq-illumina"), null, 
 				getInstrumentGAII(),
 				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("MISEQ", "MISEQ", InstrumentCategory.find.findByCode("seq-illumina"), null, 
+		l.add(newInstrumentUsedType("MISEQ", "MISEQ", InstrumentCategory.find.findByCode("seq-illumina"), getMiseqProperties(), 
 				getInstrumentMiSeq(),
-				getContainerSupportCategories(new String[]{"flowcell-2"}), null, 
+				getContainerSupportCategories(new String[]{"flowcell-1"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("HISEQ2000", "HISEQ2000", InstrumentCategory.find.findByCode("seq-illumina"), null, 
+		l.add(newInstrumentUsedType("HISEQ2000", "HISEQ2000", InstrumentCategory.find.findByCode("seq-illumina"), getHiseq2000Properties(), 
 				getInstrumentHiseq2000(),
 				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("HISEQ2500", "HISEQ2500", InstrumentCategory.find.findByCode("seq-illumina"), null, 
+		l.add(newInstrumentUsedType("HISEQ2500", "HISEQ2500", InstrumentCategory.find.findByCode("seq-illumina"), getHiseq2500Properties(), 
 				getInstrumentHiseq2500(),
-				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
+				getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
 	
+
+	private static List<PropertyDefinition> getHiseq2000Properties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Position","location"
+        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B")));
+        propertyDefinitions.add(newPropertiesDefinition("Type lecture", "readType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE")));	
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "cycleNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR50", "SR100", "PE50", "PE100")));
+        return propertyDefinitions;
+	}
+
+	private static List<PropertyDefinition> getMiseqProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Type lecture", "readType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE")));	
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "cycleNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("PE150", "PE250", "PE300")));
+        return propertyDefinitions;
+	}
+
+	private static List<PropertyDefinition> getHiseq2500Properties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Position","location"
+        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B")));
+        propertyDefinitions.add(newPropertiesDefinition("Type lecture", "readType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE")));	
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "cycleNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR50", "SR100", "PE50", "PE100","PE150")));
+        return propertyDefinitions;
+	}
 
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();

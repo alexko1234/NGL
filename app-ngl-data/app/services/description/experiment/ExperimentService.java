@@ -108,10 +108,20 @@ public class ExperimentService {
 		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell", ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, null, null, "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		//Depot solexa
-		l.add(newExperimentType("Depot Illumina", "illumina-depot", ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, null, getInstrumentUsedTypes("GAII","MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Depot Illumina", "illumina-depot"
+				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsFragmentation(), null, getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 		
+	}
+
+	private static List<PropertyDefinition> getPropertyDefinitionsDepotIllumina() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Position","location"
+        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B")));
+        propertyDefinitions.add(newPropertiesDefinition("Type lecture", "readType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE")));	
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "cycleNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR150","PE150","PE200","PE300")));
+        return propertyDefinitions;
 	}
 
 	private static void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
