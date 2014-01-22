@@ -74,4 +74,20 @@ public class LimsInformations  extends CommonController {
 		}
 	  }
 
+	/**
+	 * Return the container support information used in the experiment
+	 * @param barcode
+	 * @return
+	 */
+	//@Permission(value={"read_generation"})
+	public static Result isContainerSupport(String barcode) {
+		LimsRunServices  limsRunServices = Spring.getBeanOfType(LimsRunServices.class);  		
+		ContainerSupport containerSupport = limsRunServices.getContainerSupport(barcode);
+		if(null != containerSupport){
+			return ok();
+		}else{
+			return notFound();
+		}
+	  }
+	
 }
