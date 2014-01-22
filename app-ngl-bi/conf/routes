@@ -9,6 +9,8 @@ GET     /                           				controllers.main.tpl.Main.home()
 GET		/api/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
 GET		/api/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experiments()
 GET		/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: java.lang.String)
+HEAD	/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.isContainerSupport(barCode: java.lang.String)
+
 
 #run tpl
 GET	   	/runs/:homecode/home						controllers.runs.tpl.Runs.home(homecode: java.lang.String)
