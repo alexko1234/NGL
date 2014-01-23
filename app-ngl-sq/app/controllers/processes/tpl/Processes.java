@@ -67,6 +67,9 @@ public class Processes extends CommonController{
 
 	public static Result newProcesses(String processTypeCode){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
+		columns.add(DatatableHelpers.getColumn("support.barCode", Messages.get("processes.table.barCode")));
+		columns.add(DatatableHelpers.getColumn("support.line", Messages.get("processes.table.line")));
+		columns.add(DatatableHelpers.getColumn("support.column", Messages.get("processes.table.colums")));
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code")));
 		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode")));						
 		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode")));

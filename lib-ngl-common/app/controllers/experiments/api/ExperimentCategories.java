@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.experiment.description.ExperimentCategory;
+import models.laboratory.experiment.description.Protocol;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import play.data.Form;
@@ -23,8 +24,13 @@ public class ExperimentCategories extends CommonController{
 		Form<ExperimentCategoriesSearchForm>  experimentCategoryFilledForm = filledFormQueryString(experimentCategoryForm,ExperimentCategoriesSearchForm.class);
 		ExperimentCategoriesSearchForm experimentCategoriesSearch = experimentCategoryFilledForm.get();
 		try{
-			List<ExperimentCategory> experimentCategories = ExperimentCategory.find.findAll();
+			List<ExperimentCategory> experimentCategories;
 			
+			if(experimentCategoriesSearch.processTypeCode != null){
+				experimentCategories = ExperimentCategory.find.findByProcessTypeCode(experimentCategoriesSearch.processTypeCode);
+			}else{
+				experimentCategories = ExperimentCategory.find.findAll();
+			}
 			if(experimentCategoriesSearch.datatable){
 				return ok(Json.toJson(new DatatableResponse<ExperimentCategory>(experimentCategories, experimentCategories.size()))); 
 			}else if(experimentCategoriesSearch.list){

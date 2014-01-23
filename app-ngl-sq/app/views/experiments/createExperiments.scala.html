@@ -326,32 +326,32 @@ th {
 												<label class="control-label">@Messages("experiments.intrumentUsedType"): </label>
 											<select class="input-medium "
 											ng-change="getInstruments()"
-											ng-model="experiment.value.instrument.categoryCode"
+											ng-model="experiment.value.instrumentUsedTypeCode"
 											ng-readonly="!experiment.instrumentInformation.enabled"
 											ng-options="instrumentUsedType.code as instrumentUsedType.name for instrumentUsedType in lists.get('instrumentUsedTypes')"
 											ng-disabled="!experiment.instrumentInformation.enabled">
 												<option value="">@Messages("experiments.select.intrumentUsedType")</option>
 										</select>
 										
-									<label class="control-label" style="margin-left:20px;" ng-hide="!experiment.value.instrument.categoryCode">@Messages("experiments.intrument"): </label>
+									<label class="control-label" style="margin-left:20px;" ng-hide="!experiment.value.instrumentUsedTypeCode">@Messages("experiments.intrument"): </label>
 										<select class="input-medium "
 											ng-model="experiment.value.instrument.code"
 											ng-readonly="!experiment.instrumentInformation.enabled"
 											ng-options="instrumentInformation.code as instrumentInformation.name for instrumentInformation in lists.get('instruments')"
 											ng-disabled="!experiment.instrumentInformation.enabled"
-											ng-hide="!experiment.value.instrument.categoryCode"
+											ng-hide="!experiment.value.instrumentUsedTypeCode"
 											>
 												<option value="">@Messages("experiments.select.instrument")</option>
 											</select>
 											
 											
-								<br><br>	<label class="control-label" ng-hide="!experiment.value.instrument.categoryCode">@Messages("experiments.intrumentCategory"): </label>
+								<br><br>	<label class="control-label" ng-hide="!experiment.value.instrumentUsedTypeCode || experiment.outputVoid">@Messages("experiments.intrumentCategory"): </label>
 								<select class="input-medium "
 									ng-model="experiment.value.instrument.outContainerSupportCategoryCode"
 									ng-readonly="!experiment.instrumentInformation.enabled"
 									ng-options="instrumentCategory.code as instrumentCategory.name for instrumentCategory in lists.get('containerSupportCategories')"
 									ng-disabled="!experiment.instrumentInformation.enabled"
-									ng-hide="!experiment.value.instrument.categoryCode"
+									ng-hide="!experiment.value.instrumentUsedTypeCode || experiment.outputVoid"
 									>
 										<option value="">@Messages("experiments.select.instrumentCategory")</option>
 									</select>

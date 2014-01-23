@@ -115,17 +115,6 @@ public class Lists extends Controller{
 		return Results.ok(Json.toJson(ListObject.sampleToJsonObject(samples)));
 	}
 
-	public static Result processTypes(){
-		try {
-			List<ListObject> processusType = ProcessType.find.findAllForList();
-
-			return Results.ok(Json.toJson(processusType));
-
-		} catch (DAOException e) {
-			e.printStackTrace();
-			return  Results.internalServerError(e.getMessage());
-		}
-	}
 /*
 	public static Result containerCategoryCodes(){
 		try {

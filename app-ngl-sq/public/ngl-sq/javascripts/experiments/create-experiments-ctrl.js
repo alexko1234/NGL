@@ -1,6 +1,7 @@
 function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 	$scope.experiment = {
 			outputGenerated:false,
+			outputVoid:false,
 			value: {
 				code:"",
 				typeCode:"",
@@ -28,7 +29,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 			columnsUrl : jsRoutes.controllers.experiments.tpl.Experiments.getEditExperimentColumns().url,
 			compact:false,
 			pagination:{
-				active:true
+				active:false
 			},		
 			search:{
 				active:false
@@ -52,7 +53,8 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 				active:true
 			},
 			messages:{
-				active:true
+				active:true,
+				columnMode:true
 			},
 			extraHeaders:{
 				number:2,
@@ -397,9 +399,8 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 	};
 
 	$scope.outputGeneration = function(){
-		if($scope.experiment.value.atomicTransfertMethods[i].class != "OneToVoid"){
 			for (var j=1; j<$scope.datatable.getData().length+1; j++) {
-				if($scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUsed != null){
+				if($scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUsed != null || $scope.experiment.value.atomicTransfertMethods[(j-1)].class == "OneToVoid"){
 					$scope.experiment.outputGenerated = true;
 				}
 			}
@@ -441,7 +442,6 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 					$scope.message.isDetails = true;
 				});
 			}
-		}
 	};
 
 	$scope.getInstrumentProperties = function(code,loaded){
@@ -572,9 +572,8 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 				$scope.datatable.addColumn(2,$scope.datatable.newColumn(data[i].name,"inputExperimentProperties."+data[i].code+".value",true, true,true,"String",data[i].choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"}));
 			}
 		}
-		
+
 		for(var i=0;i<$scope.datatable.getData().length;i++){
-			
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerIn")){
 					var getter = $parse("datatable.displayResult["+i+"].inputExperimentProperties."+data[j].code+".value");
@@ -633,7 +632,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 		if(!loaded){
 			var loaded = false;
 		}
-		if($scope.experiment.value.instrument.categoryCode === null){
+		if($scope.experiment.value.instrumentUsedTypeCode === null){
 			$scope.experiment.instrumentProperties.inputs = [];
 			$scope.experiment.instrumentInformation.instrumentCategorys.inputs = [];
 		}
@@ -656,15 +655,15 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 			}
 		}
 		
-		if($scope.experiment.value.instrument.categoryCode != null ){
+		if($scope.experiment.value.instrumentUsedTypeCode != null ){
 			
 			
-			$scope.lists.refresh.instruments({"instrumentUsedTypeCode":$scope.experiment.value.instrument.categoryCode});
-			$scope.lists.refresh.containerSupportCategories({"instrumentUsedTypeCode":$scope.experiment.value.instrument.categoryCode});
+			$scope.lists.refresh.instruments({"instrumentUsedTypeCode":$scope.experiment.value.instrumentUsedTypeCode});
+			$scope.lists.refresh.containerSupportCategories({"instrumentUsedTypeCode":$scope.experiment.value.instrumentUsedTypeCode});
 			
 			//$scope.experiment.instrumentInformation.instruments.options = $scope.comboLists.getInstruments($scope.experiment.value.instrument.categoryCode).query();
 			//$scope.experiment.instrumentInformation.instrumentCategorys.options =  $scope.comboLists.getCategoryCodes($scope.experiment.value.instrument.categoryCode).query();
-			$scope.getInstrumentProperties($scope.experiment.value.instrument.categoryCode,loaded);
+			$scope.getInstrumentProperties($scope.experiment.value.instrumentUsedTypeCode,loaded);
 		}
 	};
 
@@ -782,6 +781,10 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 								}else{
 									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed = {containerCode:containers[i].code,instrumentProperties:{},experimentProperties:{}};
 								}
+								
+								if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToVoid"){
+									$scope.experiment.outputVoid = true;
+								}
 							}
 						}
 	
@@ -809,6 +812,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 	
 			} else {
 				$scope.experiment = $scope.form.experiment;
+				$scope.addExperimentPropertiesInputsColumns();
 			}
 			});
 			}else{
@@ -883,6 +887,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 							}
 							$scope.datatable.displayResult[i].inputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.resolutionCode;
 						}else if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToVoid"){
+							$scope.experiment.outputVoid = true;
 							$scope.datatable.displayResult[i].inputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.resolutionCode;
 						}
 						

@@ -10,6 +10,8 @@ import models.utils.Model.Finder;
 import models.utils.dao.AbstractDAODefault;
 import models.utils.dao.DAOException;
 
+import org.springframework.asm.Type;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
 import play.api.modules.spring.Spring;
@@ -24,7 +26,9 @@ public class InstrumentCategoryDAO extends AbstractDAODefault<InstrumentCategory
 		super("instrument_category",InstrumentCategory.class,true);
 	}
 
-	
+	public InstrumentCategory findByInstrumentUsedTypeCode(){
+		return null;
+	}
 	
 /*
 	@Override

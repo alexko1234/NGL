@@ -6,6 +6,7 @@ public class SupportsSearchForm extends ListForm {
 	public String categoryCode;
 	public String stateCode;
 	public String experimentTypeCode;
+	public String processTypeCode;
 	
 	@Override
 	public String toString() {

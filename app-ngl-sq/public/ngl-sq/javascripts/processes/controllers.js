@@ -97,6 +97,7 @@ function SearchContainerCtrl($scope, datatable,basket, lists) {
 						projectCode: containers[i].projectCodes[0],
 						sampleCode: containers[i].sampleCodes[j],
 						containerInputCode: containers[i].code,
+						support: containers[i].support,
 						typeCode:$scope.form.type.code,
 						properties:{}
 				};			
@@ -134,7 +135,8 @@ function ListNewCtrl($scope, datatable) {
 				url:jsRoutes.controllers.processes.api.Processes.save(),
 				callback : function(datatable){
 					$scope.basket.reset();
-				}
+				},
+				value:function(line){var val=line; val.support=undefined; return val;}
 			},
 			remove:{
 				active:true,
@@ -152,6 +154,7 @@ function ListNewCtrl($scope, datatable) {
 	$scope.init = function(){
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		$scope.basket = $scope.getBasket();
+		alert(JSON.stringify($scope.basket.get()));
 		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);		
 		$scope.datatable.selectAll(true);
 		$scope.datatable.setEditColumn();

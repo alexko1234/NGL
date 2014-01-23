@@ -25,8 +25,12 @@ public class ProcessTypes extends CommonController{
 		
 		List<ProcessType> processTypes;
 		
-		try{		
-			processTypes = ProcessType.find.findAll();
+		try{	
+			if(processTypesSearch.processCategoryCode != null){
+				processTypes = ProcessType.find.findByProcessCategoryCode(processTypesSearch.processCategoryCode);
+			}else{
+				processTypes = ProcessType.find.findAll();
+			}
 			
 			if(processTypesSearch.datatable){
 				return ok(Json.toJson(new DatatableResponse<ProcessType>(processTypes, processTypes.size()))); 

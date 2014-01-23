@@ -5,10 +5,13 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.midi.Instrument;
+
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.laboratory.sample.instance.Sample;
@@ -263,7 +266,10 @@ public class Experiments extends CommonController{
 
 		exp = traceInformation(exp);
 
-		if (!experimentFilledForm.hasErrors()) {	 	
+		if (!experimentFilledForm.hasErrors()) {
+			if(exp.instrument != null){
+				//set the categoryCode
+			}
 			//exp = (Experiment) InstanceHelpers.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp, new ContextValidation(experimentFilledForm.errors()));
 			exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 		}

@@ -89,6 +89,12 @@ angular.module('commonsServices', []).
     				containerSupportCategories : function(params){
     					load(jsRoutes.controllers.containers.api.ContainerSupportCategories.list().url,params,'containerSupportCategories');
     				},
+    				processCategories : function(params){
+    					load(jsRoutes.controllers.processes.api.ProcessCategories.list().url,params,'processCategories');
+    				},
+    				processTypes : function(params){
+    					load(jsRoutes.controllers.processes.api.ProcessTypes.list().url,params,'processTypes');
+    				},
     				valuationCriterias: function(params){
     					load(jsRoutes.controllers.lists.api.Lists.valuationCriterias().url,params,'valuationCriterias');    					
     				},
@@ -126,6 +132,7 @@ angular.module('commonsServices', []).
     				all : function(params){
     					this.resolutions(params);
     					this.containerCategories(params);
+    					this.processCategories(params);
     					this.valuationCriterias(params);
     					this.projects(params);
     					this.samples(params);
@@ -156,6 +163,8 @@ angular.module('commonsServices', []).
     			getValuationCriterias : function(){return results['valuationCriterias'];},
     			getProjects : function(){return results['projects'];},
     			getContainerSupportCategories : function(){return results['containerSupportCategories'];},
+    			getProcessCategories : function(){return results['processCategories'];},
+    			getProcessTypes : function(){return results['processTypes'];},
     			getSamples : function(){return results['samples'];},
     			getContainerCategories : function(){return results['containerCategories'];},
     			getExperimentCategories : function(){return results['experimentCategories'];},
