@@ -17,7 +17,7 @@ public class ControllersTest extends AbstractTests{
 
 	@Test
 	public void tplProjectsList(){
-		Result result = callAction(controllers.lists.api.routes.ref.Lists.projects(),fakeRequest());
+		Result result = callAction(controllers.combo.api.routes.ref.Lists.projects(),fakeRequest());
 		//System.err.println(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		assertThat(contentAsString(result).length()).isGreaterThan(2);
@@ -25,7 +25,7 @@ public class ControllersTest extends AbstractTests{
 	
 	@Test
 	public void tplSamplesList(){
-		Result result = callAction(controllers.lists.api.routes.ref.Lists.samples(),fakeRequest());
+		Result result = callAction(controllers.combo.api.routes.ref.Lists.samples(),fakeRequest());
 		//System.err.println(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		assertThat(contentAsString(result).length()).isGreaterThan(2);
@@ -33,7 +33,7 @@ public class ControllersTest extends AbstractTests{
 	
 	@Test
 	public void tplEtmanipsList(){
-			Result result = callAction(controllers.lists.api.routes.ref.Lists.etmanips(),fakeRequest());
+			Result result = callAction(controllers.combo.api.routes.ref.Lists.etmanips(),fakeRequest());
 			//System.err.println(contentAsString(result));
 			assertThat(status(result)).isEqualTo(OK);
 			assertThat(contentAsString(result).length()).isGreaterThan(2);
@@ -41,7 +41,7 @@ public class ControllersTest extends AbstractTests{
 	
 	@Test
 	public void tplEtmaterielsList(){
-			Result result = callAction(controllers.lists.api.routes.ref.Lists.etmateriels(),fakeRequest());
+			Result result = callAction(controllers.combo.api.routes.ref.Lists.etmateriels(),fakeRequest());
 			//System.err.println(contentAsString(result));
 			assertThat(status(result)).isEqualTo(OK);
 			assertThat(contentAsString(result).length()).isGreaterThan(2);

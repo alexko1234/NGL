@@ -1,7 +1,7 @@
 package controllers.combo.api;
 
 import controllers.CommonController;
-import ls.dao.LimsManipDAO;
+import lims.dao.LimsManipDAO;
 import play.api.modules.spring.Spring;
 import play.libs.Json;
 import play.mvc.Controller;

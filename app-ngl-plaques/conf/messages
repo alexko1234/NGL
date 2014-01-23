@@ -26,6 +26,8 @@ plates.button.edit = Editer Plaque
 plates.button.unedit = Désactiver l''édition
 plates.button.delete = Supprimer la plaque
 
+plates.remove.confirm = Etes vous sur de vouloir supprimer la plaque {0} ?
+
 plates.legend = Plaque
 plates.table.code = Code Plaque
 plates.table.well.code = Code Manip
@@ -34,6 +36,7 @@ plates.table.well.x = X
 plates.table.well.y = Y
 plates.table.nbWells = Nombre de Puits Utilisés
 plates.table.typeName = Type de Manips
+plates.table.typeMaterial = Type de Materiel
 
 plates.select.etapemanips = -- sélectionner une étape --
 plates.select.etatmanips = -- sélectionner un état --
@@ -49,3 +52,13 @@ plates.msg.delete.sucess = Suppression réussie
 plates.error.severalsamewellcode = Plusieurs fois la même manip : {0}
 plates.error.wellwithsamecoord = Plusieurs fois les même coordonnées : {0}
 plates.error.typecode.different = Type de manips différent du type de plaque : {0}
+
+plates.code = code
+plates.typeName = type
+plates.validQC = Valid QC ?
+plates.validRun = Valid Run ?
+plates.comment = Commentaires
+
+valuation.value.TRUE = Oui
+valuation.value.FALSE = Non
+valuation.value.UNSET = -

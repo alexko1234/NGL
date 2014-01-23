@@ -1,4 +1,4 @@
-package ls.models;
+package lims.models;
 
 public class Manip {
 	

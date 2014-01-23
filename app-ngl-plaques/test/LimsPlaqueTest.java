@@ -2,8 +2,8 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.List;
 
-import ls.dao.LimsManipDAO;
-import ls.models.Manip;
+import lims.dao.LimsManipDAO;
+import lims.models.Manip;
 
 import org.junit.Test;
 

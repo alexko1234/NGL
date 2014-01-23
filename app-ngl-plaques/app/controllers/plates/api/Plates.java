@@ -9,8 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import ls.dao.LimsManipDAO;
-import ls.models.Plate;
+import lims.dao.LimsManipDAO;
+import lims.models.Plate;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
@@ -26,34 +26,32 @@ public class Plates extends CommonController {
 	final static Form<MaterielManipSearch> manipForm = form(MaterielManipSearch.class);
 	
 	public static Result save(){
-		Form<Plate> filledForm = getFilledForm(wellsForm, Plate.class);
-		if (!filledForm.hasErrors()) {
-			Plate plate = filledForm.get();
-			boolean isUpdate = true;
-			Logger.info("SAVE Plate : "+ plate);
-			if(plate.code == null){								
-				plate.code = newCode(plate.wells[0].typeCode);
-				if(plate.wells.length > 0){
-					plate.typeName = plate.wells[0].typeName;
-					plate.typeCode = plate.wells[0].typeCode;
-				}
-				isUpdate = false;
-			}
-			validatePlate(plate, filledForm.errors(), isUpdate);
-			if (!filledForm.hasErrors()) {
-				Logger.debug(plate.toString());
-				if(!isUpdate){
-					Spring.getBeanOfType(LimsManipDAO.class).createPlate(plate);
-				}
-				Spring.getBeanOfType(LimsManipDAO.class).updatePlate(plate);				
-				filledForm.fill(plate);
-			}
-		}
-		if (!filledForm.hasErrors()) {
-			return ok(Json.toJson(filledForm.get()));
-		} else {
-			return badRequest(filledForm.errorsAsJson());
-		}		
+        	Form<Plate> filledForm = getFilledForm(wellsForm, Plate.class);
+        
+        	Plate plate = filledForm.get();
+        	boolean isUpdate = true;
+        	Logger.info("SAVE Plate : " + plate);
+        	if (plate.code == null) {
+        	    plate.code = newCode(plate.wells[0].typeCode);
+        	    if (plate.wells.length > 0) {
+        		plate.typeName = plate.wells[0].typeName;
+        		plate.typeCode = plate.wells[0].typeCode;
+        	    }
+        	    isUpdate = false;
+        	}
+        	validatePlate(plate, filledForm.errors(), isUpdate);
+        	if (!filledForm.hasErrors()) {
+        	    Logger.debug(plate.toString());
+        	    if (!isUpdate) {
+        		Spring.getBeanOfType(LimsManipDAO.class).createPlate(plate,getCurrentUser());
+        	    } else {
+        		Spring.getBeanOfType(LimsManipDAO.class).updatePlate(plate,getCurrentUser());
+        	    }
+        	    plate = Spring.getBeanOfType(LimsManipDAO.class).getPlate(plate.code);  
+        	    return ok(Json.toJson(plate));
+        	} else {
+        	    return badRequest(filledForm.errorsAsJson());
+        	}
 	}
 	
 	public static Result list(){

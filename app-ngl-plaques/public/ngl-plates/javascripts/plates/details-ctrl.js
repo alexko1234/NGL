@@ -1,6 +1,6 @@
 "use strict";
 
-function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
+function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $window) {
 	
 	var datatableConfig = {
 			pagination:{
@@ -52,6 +52,14 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 			columns : [
 					    {  	property:"code",
 					    	header: Messages("plates.table.well.code"),
+					    	render:function(value){
+					    		if(value.valid === "TRUE"){
+					    			value.trClass = "success";
+					    		}else if(value.valid === "FALSE") {
+					    			value.trClass = "error";
+					    		}
+					    		return value.code;
+					    	},
 					    	type :"String"
 						},
 						{  	property:"name",
@@ -60,6 +68,10 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 						},
 						{  	property:"typeName",
 					    	header: Messages("plates.table.typeName"),
+					    	type :"String"
+						},
+						{  	property:"typeMaterial",
+					    	header: Messages("plates.table.typeMaterial"),
 					    	type :"String"
 						},
 						{  	property:"x",
@@ -78,8 +90,8 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 	$scope.init = function(){
 		$scope.clearMessages();		
 		$scope.datatable = datatable($scope, datatableConfig);
-		$scope.plate = {code:undefined, wells:undefined, typeCode:undefined, typeName:undefined};
-		
+		$scope.plate = {code:undefined, wells:undefined, typeCode:undefined, typeName:undefined, validQC:'UNSET', validRun:'UNSET'};
+		$scope.lists = lists;
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
 			$scope.addTabs({label:Messages('plates.tabs.search'),href:jsRoutes.controllers.plates.tpl.Plates.home("search").url,remove:false});
@@ -152,7 +164,10 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 	 */
 	$scope.remove = function(){
 		$scope.clearMessages();
-		$http["delete"](jsRoutes.controllers.plates.api.Plates["remove"]($scope.plate.code).url).
+		
+		var r= $window.confirm( Messages("plates.remove.confirm", $scope.plate.code));
+		if (r){
+			$http["delete"](jsRoutes.controllers.plates.api.Plates["remove"]($scope.plate.code).url).
 			success(function(data, status, headers, config){
 				$scope.plate = {code:undefined, wells:undefined, typeCode:undefined, typeName:undefined};
 				if($scope.isHomePage('search') && $scope.isBackupTabs()){
@@ -171,6 +186,8 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 				$scope.message.clazz="alert alert-error";
 				$scope.message.text=Messages('plates.msg.delete.error');
 			});
+		}
+				
 	}
 	
 	/**
@@ -280,5 +297,22 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket) {
 		}
         return "------";
      }
+	
+	$scope.getClass = function(x, y){
+		var wells = $scope.datatable.displayResult;
+		if(!angular.isUndefined(wells)){
+	        for (var i = 0; i <wells.length; i++) {
+		         if (wells[i].x === (x+'') && wells[i].y===(y+'')) {
+		        	 var well = wells[i];
+		        	 if(well.valid === "FALSE"){
+		        		 return "alert alert-error";
+		        	 }else if(well.valid === "TRUE"){
+		        		 return "alert alert-success";
+		        	 }		        	
+		         }
+	        }
+		}
+        return "";
+     }
 };
-DetailsCtrl.$inject = ['$scope', '$http', '$routeParams','datatable', 'basket'];
+DetailsCtrl.$inject = ['$scope', '$http', '$routeParams','datatable', 'basket', 'lists', '$window'];

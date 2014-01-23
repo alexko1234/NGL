@@ -1,4 +1,4 @@
-package ls.dao;
+package lims.dao;
 
 
 import java.sql.ResultSet;
@@ -10,13 +10,15 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 
-import ls.models.Manip;
-import ls.models.Plate;
-import ls.models.Well;
+import lims.models.Manip;
+import lims.models.Plate;
+import lims.models.Well;
+import models.laboratory.common.instance.TBoolean;
 import models.utils.ListObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,6 +36,7 @@ public class LimsManipDAO {
 
 
     @Autowired
+    @Qualifier("lims")
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
@@ -46,12 +49,18 @@ public class LimsManipDAO {
         return results;
     }
 
-    public void createPlate(Plate plate){
+    public void createPlate(Plate plate, String user){
     	Logger.info("pc_PlaqueSolexa @plaqueId="+plate.code+", @emnco="+plate.typeCode);
-    	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?", new Object[]{plate.code, plate.typeCode});
+    	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?, @valqc=?, @valrun=?, @plaquecom=?, @perlog=?", new Object[]{plate.code, plate.typeCode, getValValue(plate.validQC), getValValue(plate.validRun), plate.comment, user});
+    	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
+    	for(Well well: plate.wells){
+    		Logger.info("pm_MaterielmanipPlaque @matmaco="+well.code+", @plaqueId="+plate.code+", @plaqueX="+well.x+", @plaqueY="+well.y+"");
+    		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x, well.y);
+    	}
     }
 
-    public void updatePlate(Plate plate){
+    public void updatePlate(Plate plate, String user){
+	this.jdbcTemplate.update("pm_PlaqueSolexa @plaqueId=?, @valqc=?, @valrun=?, @plaquecom=?, @perlog=?", new Object[]{plate.code, getValValue(plate.validQC), getValValue(plate.validRun), plate.comment, user});    	
     	Logger.info("ps_MaterielmanipPlaque @plaqueId="+plate.code);
     	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
     	for(Well well: plate.wells){
@@ -70,12 +79,38 @@ public class LimsManipDAO {
 	        	plate.typeCode = rs.getInt("emnco");
 	        	plate.typeName = rs.getString("emnnom");
 	        	plate.nbWells = rs.getInt("nombrePuitUtilises");
+	        	plate.validQC = getTBoolean(rs.getInt("valqc"));
+	        	plate.validRun = getTBoolean(rs.getInt("valrun"));
+	        	plate.comment = rs.getString("plaquecom");
+	        	
 	            return plate;
 	        }
+
+		
 	    });
 		return plates;
 	}
 
+    private TBoolean getTBoolean(int value) {
+	TBoolean valid = TBoolean.UNSET;
+	if (value == 1) {
+	    valid = TBoolean.TRUE;
+	} else if (value == 0) {
+	    valid = TBoolean.FALSE;
+	}
+	return valid;
+    }
+    
+    private int getValValue(TBoolean value) {
+	int valid = 2;
+	if (TBoolean.TRUE.equals(value)) {
+	    valid = 1;
+	} else if (TBoolean.FALSE.equals(value)) {
+	    valid = 0;
+	}
+	return valid;
+    }
+    
 	/**
 	 * Return a plate with coordinate
 	 * @param code
@@ -85,11 +120,15 @@ public class LimsManipDAO {
 		Logger.info("pl_PlaqueSolexa @plaqueId="+code);
 		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
 	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
-	        	Plate plate = new Plate();
+	            	Plate plate = new Plate();
+	        	//well.plateCode = rs.getString("plaqueId");
 	        	plate.code = rs.getString("plaqueId");
 	        	plate.typeCode = rs.getInt("emnco");
 	        	plate.typeName = rs.getString("emnnom");
 	        	plate.nbWells = rs.getInt("nombrePuitUtilises");
+	        	plate.validQC = getTBoolean(rs.getInt("valqc"));
+	        	plate.validRun = getTBoolean(rs.getInt("valrun"));
+	        	plate.comment = rs.getString("plaquecom");
 	            return plate;
 	        }
 	    });
@@ -100,14 +139,16 @@ public class LimsManipDAO {
 			Logger.info("pl_MaterielmanipPlaque @plaqueId="+plate.code);
 			List<Well> wells = this.jdbcTemplate.query("pl_MaterielmanipPlaque @plaqueId=?", new Object[]{code}, new RowMapper<Well>() {
 		        public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
-		        	Well well = new Well();
-		        	well.name = rs.getString("matmanom");
-		        	well.code = rs.getInt("matmaco");
-		        	well.x = rs.getString("plaqueX");
-		        	well.y = rs.getString("plaqueY");
-		        	well.typeCode = rs.getInt("emnco");
-		        	well.typeName = rs.getString("emnnom");
-		            return well;
+			    Well well = new Well();
+			    well.name = rs.getString("matmanom");
+			    well.code = rs.getInt("matmaco");
+			    well.x = rs.getString("plaqueX");
+			    well.y = rs.getString("plaqueY");
+			    well.typeCode = rs.getInt("emnco");
+			    well.typeName = rs.getString("emnnom");
+			    well.valid = getTBoolean(rs.getInt("val"));
+			    well.typeMaterial = rs.getString("tadnom");
+			    return well;
 		        }
 		    });
 
