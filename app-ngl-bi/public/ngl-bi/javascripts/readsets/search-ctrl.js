@@ -40,7 +40,7 @@ function getColumns(type){
 						edit:true,
 						order:true,
 				    	choiceInList:true,
-				    	listStyle:'bs-select',
+				    	listStyle:'bt-select',
 				    	//possibleValues:[{code:"IW-QC",name:Codes("state.IW-QC")},{code:"IW-V",name:Codes("state.IW-V")},{code:"F-V",name:Codes("state.F-V")}, {code:"F",name:Codes("state.F")}]
 						possibleValues:'listsTable.getStates()'});
 	}else{
@@ -63,7 +63,7 @@ function getColumns(type){
 				    	order:true,
 				    	edit:true,
 				    	choiceInList:true,
-				    	listStyle:'bs-select',
+				    	listStyle:'bt-select',
 				    	possibleValues:'listsTable.getValuations()'
 				    	});
 		columns.push({	property:"bioinformaticValuation.valid",
@@ -75,7 +75,7 @@ function getColumns(type){
 						order:true,
 				    	edit:true,
 				    	choiceInList:true,
-				    	listStyle:'bs-select',
+				    	listStyle:'bt-select',
 				    	possibleValues:'listsTable.getValuations()'
 				    	});
 	}else{

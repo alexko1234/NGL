@@ -26,8 +26,7 @@ var columns = [
 					edit:true,
 					order:true,
 			    	choiceInList:true,
-			    	listStyle:'bs-select',
-			    	//possibleValues:[{code:"IW-QC",name:Codes("state.IW-QC")},{code:"IW-V",name:Codes("state.IW-V")},{code:"F-V",name:Codes("state.F-V")}, {code:"F",name:Codes("state.F")}]
+			    	listStyle:'bt-select',
 			    	possibleValues:'listsTable.getStates()'	
 				},
 				{	property:"valuation.valid",

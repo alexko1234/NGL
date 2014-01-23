@@ -67,7 +67,7 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 					edit:true,
 			    	order:false,
 			    	choiceInList:true,
-			    	listStyle:'bs-select',
+			    	listStyle:'bt-select',
 			    	possibleValues:'lists.getValuations()'
 				},
 				{	property:"valuation.resolutionCodes",
@@ -88,7 +88,7 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 			    	edit:true,
 					order:false,
 			    	choiceInList:true,
-			    	listStyle:'bs-select-multiple',
+			    	listStyle:'bt-select-multiple',
 			    	possibleValues:'lists.getResolutions()'
 				}
 			]				
