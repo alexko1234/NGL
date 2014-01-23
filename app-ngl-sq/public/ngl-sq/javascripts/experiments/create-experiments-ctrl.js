@@ -745,7 +745,6 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 					$scope.clearMessages();
 						if(data!=null){
 							for(var j=0;j<data.length;j++){
-								alert(JSON.stringify(data[i]));
 								containers.push(data[j]);
 							}
 						}
