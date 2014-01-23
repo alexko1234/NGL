@@ -20,3 +20,7 @@ dd > button.btn-link{
 	height:350pt;
 	overflow:auto;
 }
+
+.plates > .alert {
+	margin-bottom:0px;
+} 
