@@ -16,9 +16,6 @@ dd > button.btn-link{
 	padding : 0px;
 }
 
-.bootstrap-select:not([class*="span"]):not([class*="col-"]):not([class*="form-control"]) {
-    
-}
 
 .divTaxonBilan {
 	height:350pt;
