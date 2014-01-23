@@ -70,7 +70,11 @@ angular.module('commonsServices', []).
     		return constructor;
     	}).factory('lists', ['$http', function($http){
     		
-    		var results = {};    		
+    		var results = {
+    				valuations : [{code:"TRUE", name:Messages("valuation.value.TRUE")},
+    				                 {code:"FALSE", name:Messages("valuation.value.FALSE")},
+    				                 {code:"UNSET", name:Messages("valuation.value.UNSET")}]
+    		};    		
     		
     		var refresh = {
     				resolutions : function(params){
@@ -132,11 +136,7 @@ angular.module('commonsServices', []).
     				}
     		};
     		
-    		function getValuations(){
-    			return [{code:"TRUE", name:Messages("valuation.value.TRUE")},
-                 {code:"FALSE", name:Messages("valuation.value.FALSE")},
-                 {code:"UNSET", name:Messages("valuation.value.UNSET")}];
-    		};
+    		
     		
     		function load(url, params, values){
     			if(angular.isUndefined(params)){
@@ -168,7 +168,7 @@ angular.module('commonsServices', []).
 	    							return results['types'];
 	    						}
     					   },
-    			getValuations : getValuations			
+    			getValuations : function(){return results['valuations'];}			
     		};
     		
     	}]).directive('messages', function() {
