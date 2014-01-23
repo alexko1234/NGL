@@ -1294,7 +1294,7 @@ angular.module('datatableServices', []).
 				    		tableHead += ' ng-hide="'+config.name+'.isHide(column.id)"';
 				    	}
 				    	tableHead+= '>{{column.header}} <div class="btn-group pull-right">';
-				    	if(config.edit.columnMode){
+				    	if(config.edit.columnMode && config.edit.showButton ){
 				    		tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setEditColumn(column.id)" ng-show="column.edit" ng-disabled="!'+config.name+'.canEdit()" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.edit")+'"><i class="icon-edit"></i></button>'
 						}
 						if(config.order){
