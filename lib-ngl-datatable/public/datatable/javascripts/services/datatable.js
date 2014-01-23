@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('datatableServices', []).
-    	factory('datatable', ['$http','$filter','$parse','$compile', '$sce', function($http, $filter,$parse,$compile,$sce){ //service to manage datatable
+    	factory('datatable', ['$http','$filter','$parse','$compile', '$sce', '$window', function($http, $filter,$parse,$compile,$sce,$window){ //service to manage datatable
     		var constructor = function($scope, iConfig){
 				var datatable = {
 						configDefault:{
@@ -650,19 +650,22 @@ angular.module('datatableServices', []).
 		    			 */
 		    			remove : function(){
 		    				if(this.config.remove.active && !this.config.remove.start){
-		    					var localDisplayResult = angular.copy(this.displayResult);
-		    					this.config.remove.counter = 0;
-		    					this.config.remove.start = true;
-		    					this.config.remove.number = 0;
-		    					this.config.remove.error = 0;
-		    					for(var i = 0; i < localDisplayResult.length; i++){
-			    					if(localDisplayResult[i].selected && (!localDisplayResult[i].edit || this.config.remove.withEdit)){
-			    						this.config.remove.number++;
-			    						this.removeLocal(i);			    										    						
-			    					}						
-			    				}
-		    					if(!this.isRemoteMode(this.config.remove.mode)){
-		    						this.removeFinish();
+		    					var r= $window.confirm(Messages("datatable.remove.confirm"));
+		    					if(r){		    					
+			    					var localDisplayResult = angular.copy(this.displayResult);
+			    					this.config.remove.counter = 0;
+			    					this.config.remove.start = true;
+			    					this.config.remove.number = 0;
+			    					this.config.remove.error = 0;
+			    					for(var i = 0; i < localDisplayResult.length; i++){
+				    					if(localDisplayResult[i].selected && (!localDisplayResult[i].edit || this.config.remove.withEdit)){
+				    						this.config.remove.number++;
+				    						this.removeLocal(i);			    										    						
+				    					}						
+				    				}
+			    					if(!this.isRemoteMode(this.config.remove.mode)){
+			    						this.removeFinish();
+			    					}
 		    					}
 		    				}else{
 		    					//console.log("remove is not active !");		    				
