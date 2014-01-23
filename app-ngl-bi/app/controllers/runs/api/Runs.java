@@ -104,6 +104,11 @@ public class Runs extends RunsController {
 	private static Query getQuery(RunsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
+		
+		if(CollectionUtils.isNotEmpty(form.codes)){
+			queries.add(DBQuery.in("code", form.codes));
+		}
+		
 		if (StringUtils.isNotBlank(form.stateCode)) { //all
 			queries.add(DBQuery.is("state.code", form.stateCode));
 		}else if (CollectionUtils.isNotEmpty(form.stateCodes)) { //all

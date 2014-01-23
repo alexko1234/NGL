@@ -1,46 +1,70 @@
 @()
 
-
-
-<div class="row-fluid" ng-controller="SortingCtrl" ng-init="init(treatments.getTreatment().code)">
-	<div  class="span5">
-		<table class="table table-condensed table-hover table-bordered">
-			<thead>
-			<tr>
-				<th  class="span1"></th>
-				<th class="span1">@Messages("readsets.treatments.sorting_ribo.readsInput")</th>
-				<th class="span1">@Messages("readsets.treatments.sorting_ribo.no_rRNA")</th>
-				<th class="span1">@Messages("readsets.treatments.sorting_ribo.rRNA")</th>
-				<th class="span1">@Messages("readsets.treatments.sorting_ribo.rRNAPercent")</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr>
-				<th>@Messages("readsets.treatments.sorting_ribo.read1")</th>
-				<td>{{readset.treatments[treatments.getTreatment().code].read1.readsInput.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read1.no_rRNA.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read1.rRNA.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read1.rRNAPercent.value | number:2}} @Messages("unit.percent")</td>
-			</tr>		
-			<tr>
-				<th>@Messages("readsets.treatments.sorting_ribo.read2")</th>
-				<td>{{readset.treatments[treatments.getTreatment().code].read2.readsInput.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read2.no_rRNA.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read2.rRNA.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].read2.rRNAPercent.value | number:2}} @Messages("unit.percent")</td>
-			</tr>		
-			<tr>
-				<th>@Messages("readsets.treatments.sorting_ribo.single")</th>
-				<td>{{readset.treatments[treatments.getTreatment().code].single.readsInput.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].single.no_rRNA.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].single.rRNA.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].single.rRNAPercent.value | number:2}} @Messages("unit.percent")</td>
-			</tr>		
-			</tbody>
-		</table>		
+<div class="row-fluid">
+	
+	<div class="span5">
+ 
+		<div class="row-fluid">
+		
+			<table class="table table-condensed table-hover table-bordered">
+				<thead>
+				<tr>
+					<th class="span1"></th>
+					<th class="span1">@Messages("readsets.treatments.sorting_ribo.readsInput")</th>
+					<th class="span1">@Messages("readsets.treatments.sorting_ribo.no_rRNA")</th>
+					<th class="span1">@Messages("readsets.treatments.sorting_ribo.rRNA")</th>
+					<th class="span1">@Messages("readsets.treatments.sorting_ribo.rRNAPercent")</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<th>@Messages("readsets.treatments.sorting_ribo.read1")</th>
+					<td>{{readset.treatments[treatments.getTreatment().code].read1.readsInput.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read1.no_rRNA.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read1.rRNA.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read1.rRNAPercent.value | number:2}} @Messages("unit.percent")</td>
+				</tr>		
+				<tr>
+					<th>@Messages("readsets.treatments.sorting_ribo.read2")</th>
+					<td>{{readset.treatments[treatments.getTreatment().code].read2.readsInput.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read2.no_rRNA.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read2.rRNA.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].read2.rRNAPercent.value | number:2}} @Messages("unit.percent")</td>
+				</tr>		
+				<tr>
+					<th>@Messages("readsets.treatments.sorting_ribo.single")</th>
+					<td>{{readset.treatments[treatments.getTreatment().code].single.readsInput.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].single.no_rRNA.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].single.rRNA.value | number}}</td>
+					<td>{{readset.treatments[treatments.getTreatment().code].single.rRNAPercent.value | number:2}} @Messages("unit.percent")</td>
+				</tr>		
+				</tbody>
+			</table>		
+		
+			 <table class="table table-condensed table-hover table-bordered">
+				<thead>
+					<tr>
+						<th class="span1"></th>
+						<th class="span2">@Messages("readsets.treatments.sorting_ribo.usefulSequences")</th>
+						<th class="span2">@Messages("readsets.treatments.sorting_ribo.usefulBases")</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th>@Messages("readsets.treatments.sorting_ribo.paired")</th>
+						<td>{{readset.treatments[treatments.getTreatment().code].pairs.usefulSequences.value | number}}</td>
+						<td>{{readset.treatments[treatments.getTreatment().code].pairs.usefulBases.value | number}}</td>
+					</tr>		
+				</tbody>
+			</table>
+			
+		</div> 
+	
 	</div>
-	<div class="span4">
-		<table class="table table-condensed table-hover table-bordered">
+  	
+  	<div class="span3">
+  	
+  		<table class="table table-condensed table-hover table-bordered">
 			<thead>
 			 <tr>
 			 	<th>@Messages("readsets.treatments.sorting_ribo.rRNABilan")</th>
@@ -53,28 +77,28 @@
 			 <tr>
 			 	<th>
 			 		<ul class="unstyled">
-						<li ng-repeat="obj in objsInRNABilan.read1.rRNABilan.value">
+						<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.rRNABilan.value">
 								{{obj.type}} :
 						</li>
 			 		</ul>
 			 	</th>
 			 	<td>
 			 		<ul class="unstyled">
-						<li ng-repeat="obj in objsInRNABilan.read1.rRNABilan.value">
+						<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.rRNABilan.value">
 								{{obj.percent| number:2}} @Messages("unit.percent")
 						</li>
 					</ul>
 				</td>	
 				<td>
 			 		<ul class="unstyled">
-						<li ng-repeat="obj in objsInRNABilan.read2.rRNABilan.value">
+						<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read2.rRNABilan.value">
 								{{obj.percent| number:2}} @Messages("unit.percent")
 						</li>
 					</ul>
 				</td>		
 				<td>
 			 		<ul class="unstyled">
-						<li ng-repeat="obj in objsInRNABilan.single.rRNABilan.value">
+						<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].single.rRNABilan.value">
 								{{obj.percent| number:2}} @Messages("unit.percent")
 						</li>
 					</ul>
@@ -82,28 +106,10 @@
 			</tr>
 			</tbody>
 		</table>
+		
 	</div>
+   
 </div>
-	
-<div class="row-fluid">	
-<div class="span3">
-	 <table class="table table-condensed table-hover table-bordered">
-		<thead>
-			<tr>
-				<th></th>
-				<th>@Messages("readsets.treatments.sorting_ribo.usefulSequences")</th>
-				<th>@Messages("readsets.treatments.sorting_ribo.usefulBases")</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th>@Messages("readsets.treatments.sorting_ribo.paired")</th>
-				<td>{{readset.treatments[treatments.getTreatment().code].pairs.usefulSequences.value | number}}</td>
-				<td>{{readset.treatments[treatments.getTreatment().code].pairs.usefulBases.value | number}}</td>
-			</tr>		
-		</tbody>
-	</table>
-   </div>
-</div>	
+
 	
 

@@ -82,10 +82,9 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			$scope.modalTitle = $scope.modalTitle + Messages('readsets.treatments.' + treatment + '.' + imageName);
 			
 			//pb : return the width of the image after resizing (not the original size)
-			//var imageId = context + '.' + imageName;
-			//$scope.imageWidth = document.getElementById(imageId).width;
+			//$scope.imageWidth = document.getElementById(context + '.' + imageName).width;
 			
-			var margin = 25;
+			var margin = Messages("readsets.treatments.images.margin");
 			
 			var rapport = (document.body.clientWidth - margin) / imageFullSizeWidth;
 			rapport = Math.min(rapport, 1);
@@ -93,6 +92,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			$scope.modalWidth = imageFullSizeWidth * rapport;
 			$scope.modalLeft = (document.body.clientWidth - imageFullSizeWidth * rapport )/2;
 		}
+		
 	}
 	
 };
@@ -151,49 +151,11 @@ function NGSRGCtrl($scope, datatable) {
 
 NGSRGCtrl.$inject = ['$scope', 'datatable'];
 
-function DuplicatesCtrl($scope) {
-	$scope.init = function(name) {
-		$scope.$watch('readset', function() { 
-			if (angular.isDefined($scope.readset)) {
-				$scope.objsInDuplicates = $scope.readset.treatments[name];
-			}
-		});
-	}
-}
-
-
-
-function ReadQualityCtrl($scope) {
-	$scope.init = function(name) {
-		$scope.$watch('readset', function() { 
-			if (angular.isDefined($scope.readset)) {				
-				$scope.objsInAdapters = $scope.readset.treatments[name];
-			}
-		});
-	}
-}
-
-
-function SortingCtrl($scope) {
-	$scope.init = function(name) {
-		$scope.$watch('readset', function() { 
-			if (angular.isDefined($scope.readset)) {
-				$scope.objsInRNABilan = $scope.readset.treatments[name];
-			}
-		});
-	}
-}
-
-
 
 function TaxonomyCtrl($scope) {
 	$scope.init = function(name) {		
 		$scope.$watch('readset', function() { 
-			if (angular.isDefined($scope.readset)) {
-				$scope.objsInDivisionBilan = $scope.readset.treatments[name].read1.divisionBilan.value;				
-				$scope.objsInKeywordBilan = $scope.readset.treatments[name].read1.keywordBilan.value;
-				$scope.objsInTaxonBilan = $scope.readset.treatments[name].read1.taxonBilan.value;
-				
+			if (angular.isDefined($scope.readset)) {				
 				$scope.krona = "data:text/html;base64,"+$scope.readset.treatments[name].read1.krona.value;
 				
 				$scope.ncbiUrl = Messages("readsets.treatments.taxonomy.beginNcbiUrl");

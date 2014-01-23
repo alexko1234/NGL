@@ -14,6 +14,7 @@
 				<div class="row-fluid">
 				
 				<bt-select ng-model="form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in lists.getStates()" ></bt-select>			
+				<input type="text" ng-model="form.codes" bs-typeahead="searchRuns" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.runs")'>
 				
 				<bt-select ng-model="form.typeCodes" multiple="true" placeholder="@Messages("search.placeholder.types")" bt-options="type.code as type.name for type in lists.getTypes()"></bt-select>			
 								

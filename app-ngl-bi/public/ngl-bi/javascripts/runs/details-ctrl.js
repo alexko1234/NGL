@@ -118,27 +118,27 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 					order:false
 				},
 			   	{  	property:"treatments.ngsrg.default.validSeqPercent.value",
-			    	header: Messages("readsets.ngsrg.validSeqPercent"),
+			    	header: Messages("readsets.treatments.ngsrg.validSeqPercent"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.nbCluster.value",
-			    	header: Messages("readsets.ngsrg.nbCluster"),
+			    	header: Messages("readsets.treatments.ngsrg.nbCluster"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.nbBases.value",
-			    	header: Messages("readsets.ngsrg.nbBases"),
+			    	header: Messages("readsets.treatments.ngsrg.nbBases"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.Q30.value",
-			    	header: Messages("readsets.ngsrg.Q30"),
+			    	header: Messages("readsets.treatments.ngsrg.Q30"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.qualityScore.value",
-			    	header: Messages("readsets.ngsrg.qualityScore"),
+			    	header: Messages("readsets.treatments.ngsrg.qualityScore"),
 			    	type :"Number",
 			    	order:false
 				},			
@@ -160,6 +160,7 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 			]
 	};
 	
+
 	$scope.save = function(){
 		$scope.lanesDT.save();
 	};
@@ -185,6 +186,23 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(readSetCode).url, 'readsets');
 	}
 	
+		
+	/*
+	// function for show/hide lane in the datatable ReadSetsDT 
+	$scope.refreshReadSetsDT = function(laneNumber) {
+		var laneNumbers = [];
+		for (var i=0; i<document.getElementsByName("chkb").length; i++) {
+			if (document.getElementsByName("chkb")[i].checked) {
+				laneNumbers[i] = document.getElementsByName("chkb")[i].id;
+			}
+		}
+		$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code,laneNumbers:laneNumbers}}).success(function(data) {
+			//$scope.readSetsDT = datatable($scope, $scope.readSetsDTConfig);
+			$scope.readSetsDT.setData(data, data.length);
+		});
+	}
+	*/
+
 	$scope.goToReadSets = function(){
 		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.home('search').url+'?runCode='+$scope.run.code, 'readsets');
 	}
@@ -226,6 +244,8 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 				$scope.treatments.init($scope.run.lanes[0].treatments, jsRoutes.controllers.runs.tpl.Runs.laneTreatments);				
 			}
 			
+			$scope.lanes = $scope.run.lanes;
+			
 			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code}}).success(function(data) {
 				$scope.readSetsDT = datatable($scope, $scope.readSetsDTConfig);
 				$scope.readSetsDT.setData(data, data.length);
@@ -234,6 +254,8 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 		
 		
 	}
+	
+	
 	
 };
 DetailsCtrl.$inject = ['$scope', '$http', '$routeParams', '$window', 'datatable', 'messages', 'lists', 'treatments'];

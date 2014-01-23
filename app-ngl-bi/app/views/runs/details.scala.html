@@ -136,6 +136,22 @@
 		</div>
 </form>		
 </div>
+
+<!-- comment -->
+<!--div>
+	<div ng-switch on="isEditMode()">
+		<div ng-switch-when="true">
+			<dl class="dl-horizontal">
+				<dt>@Messages("runs.valuation.comment")</dt>
+				<dd>
+					<textarea rows="2" cols="400"></textarea>
+				</dd>				
+			</dl>
+		</div>
+	</div>
+</div-->
+
+
            
 <div class="row-fluid">
 
@@ -161,5 +177,22 @@
 	</ul>
 	<div class="tab-content">
 	<div class="tab-pane active"></div>	
+
+
+
+<!-- div class="navbar">	
+  <div class="navbar-inner">
+   <div class="container">
+        <ul class="nav">
+        <li><strong>@Messages("runs.lane.showOrHide")</strong></li> 
+		<li ng-repeat="lane in lanes | orderBy:number">
+			{{lane.number}} &nbsp;<input type="checkbox" name="chkb" id="{{lane.number}}" checked="true" ng-click="refreshReadSetsDT(lane.number)">&nbsp;
+		</li>
+	  </ul>
+  </div>
+ </div>
+</div -->
+	
 <div datatable="readSetsDT.getConfig()" class="datatable"></div>
+</div>
 </div>

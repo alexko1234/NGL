@@ -8,7 +8,9 @@ import play.data.format.Formats.DateTime;
 import controllers.ListForm;
 
 public class RunsSearchForm extends ListForm {
-
+	
+    public List<String> codes;
+    
     public List<String> stateCodes;
     public String stateCode;
 

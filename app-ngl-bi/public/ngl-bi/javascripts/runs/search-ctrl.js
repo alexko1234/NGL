@@ -66,8 +66,11 @@ function SearchFormCtrl($scope, $filter, lists){
 	}
 	
 	$scope.searchProjects = function(query){
-		return search(lists.getProjects(), query);
-				
+		return search(lists.getProjects(), query);			
+	}
+	
+	$scope.searchRuns = function(query){
+		return search(lists.get('runs'), query);
 	}
 	
 	$scope.refreshSamples = function(){
@@ -84,8 +87,10 @@ function SearchFormCtrl($scope, $filter, lists){
 		var form = angular.copy($scope.form);
 		if(form.fromDate)form.fromDate = moment(form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 		if(form.toDate)form.toDate = moment(form.toDate, Messages("date.format").toUpperCase()).valueOf();	
-		if(form.projectCodes) form.projectCodes = form.projectCodes.split(',')
-		if(form.sampleCodes) form.sampleCodes = form.sampleCodes.split(',')
+		if(form.projectCodes) form.projectCodes = form.projectCodes.split(',');
+		if(form.sampleCodes) form.sampleCodes = form.sampleCodes.split(',');
+		if(form.codes) form.codes = form.codes.split(',');
+		
 		$scope.datatable.search(form);
 	}
 	
@@ -99,6 +104,7 @@ function SearchFormCtrl($scope, $filter, lists){
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.states({objectTypeCode:"Run"});
 		$scope.lists.refresh.types({objectTypeCode:"Run"});
+		$scope.lists.refresh.runs();
 	}
 	
 };

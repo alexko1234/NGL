@@ -1,9 +1,12 @@
 date.format=dd/MM/yyyy
+datetime.format=dd/MM/yyyy HH:mm:ss
 unit.percent = %
 
 #application
 application.name=NGL-BI
 index.title=Welcome to NGL-BI
+
+
 
 #page title
 title.runs=Runs
@@ -73,6 +76,7 @@ runs.valuation.date = Date d''Evaluation
 runs.valuation.userdate = Evalué par {0} le {1}  
 runs.valuation.criteria = Critères
 runs.valuation.valid = Valide ?
+runs.valuation.comment = Commentaire
 
 runs.nbClusterTotal=Nb Clusters (total)
 runs.percentClusterIlluminaFilter=% Clusters filt. (moyenne)
@@ -120,6 +124,8 @@ runs.lane.sav.intensityCycle1 = Intensity Cycle 1
 runs.lane.sav.intensityCycle20Perc = % Intensity Cycle 20
 runs.lane.sav.alerts = Alertes
 
+runs.lane.showOrHide = Afficher/Masquer la lane 
+
 runs.readsets.title = ReadSets
 
 
@@ -129,6 +135,11 @@ readsets.menu = Readsets
 readsets.menu.search = Recherche
 readsets.menu.state = Changement d''Etat
 readsets.menu.valuation = Evaluation
+readsets.archiveId = SSID
+readsets.archiveDate = Date de l''archive
+
+readsets.tabs.general = Général
+readsets.tabs.advanced = Avancé
 
 #readset properties
 readsets.code = Code
@@ -221,6 +232,7 @@ readsets.treatments.read_quality.readSizeDistribution = Read size distribution
 readsets.treatments.read_quality.adapterContamination = Adapters vs run cycles
 readsets.treatments.read_quality.GCDistribution = Proportion of reads for different values of G+C content 
 readsets.treatments.read_quality.positionN = Position of N in reads
+readsets.treatments.read_quality.suspectedKmers = Suspected Kmers
 
 readsets.treatments.sorting_ribo.readsInput = Reads input
 readsets.treatments.sorting_ribo.no_rRNA = No-rRNA
@@ -240,15 +252,15 @@ readsets.treatments.taxonomy.tabs.phylogeneticTree = Arbre phylogenetique
 readsets.treatments.taxonomy.organism = Organisme
 readsets.treatments.taxonomy.taxonomy = Taxonomie
 readsets.treatments.taxonomy.divisionBilan = Bilan par division
-readsets.treatments.taxonomy.divisionBilan.division = Divisions
+readsets.treatments.taxonomy.divisionBilan.division = Division
 readsets.treatments.taxonomy.divisionBilan.percent = %
 readsets.treatments.taxonomy.divisionBilan.nbSeq = Nb Seq.
 readsets.treatments.taxonomy.keywordBilan = Bilan par mot-clé
-readsets.treatments.taxonomy.keywordBilan.keyword = Mots-clés
+readsets.treatments.taxonomy.keywordBilan.keyword = Mot-clé
 readsets.treatments.taxonomy.keywordBilan.percent = %
 readsets.treatments.taxonomy.keywordBilan.nbSeq = Nb Seq.
 readsets.treatments.taxonomy.taxonBilan = Bilan par taxon
-readsets.treatments.taxonomy.taxonBilan.taxon = Taxons
+readsets.treatments.taxonomy.taxonBilan.taxon = Taxon
 readsets.treatments.taxonomy.taxonBilan.percent = %
 readsets.treatments.taxonomy.taxonBilan.nbSeq = Nb Seq.
 readsets.treatments.taxonomy.sampleInput = Nb Seq. (échantillonnage)
@@ -286,3 +298,20 @@ readsets.treatments.sortingRiboClean = Sorting Ribo (vs CLEAN)
 readsets.treatments.mappingClean = Mapping (vs CLEAN)
 readsets.treatments.mappingNoRiboClean = Mapping (vs NO RIBO CLEAN)
 readsets.treatments.taxonomyClean = Taxonomy (vs CLEAN)
+
+readsets.treatments.images.margin=25
+
+readsets.files.fullname = Nom du fichier
+readsets.files.typeCode = Type de fichier
+readsets.files.usable = Utilisable
+readsets.files.properties.label = Libellé
+readsets.files.properties.asciiEncoding = Encodage ASCII
+readsets.files.state = Etat
+readsets.files.state.code = Code
+readsets.files.state.date = Date
+readsets.files.state.user = Utilisateur
+readsets.files.isUsable = Oui
+readsets.files.isNotUsable = Non
+
+file.state.code.a = Disponible
+file.state.code.ua = Non disponible 

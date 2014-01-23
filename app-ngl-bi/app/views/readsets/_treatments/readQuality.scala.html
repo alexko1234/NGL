@@ -1,8 +1,5 @@
 @()
 
-
-<div ng-controller="ReadQualityCtrl" ng-init="init(treatments.getTreatment().code)">
-
    <ul class="nav nav-tabs">
    	<li class="active"><a data-target="#read1" data-toggle="tab">@Messages("readsets.treatments.read_quality.tabs.read1")</a></li>
    	<li ><a data-target="#read2" data-toggle="tab">@Messages("readsets.treatments.read_quality.tabs.read2")</a></li>    	
@@ -74,17 +71,17 @@
 					 </a>   
 				    </div>
 			    </li>				
-				<li class="span3" ng-if="objsInAdapters.read1.adapters != null">
+				<li class="span3" ng-if="(readset.treatments[treatments.getTreatment().code].read1.adapters != null) && (readset.treatments[treatments.getTreatment().code].read1.adapters.value.length > 0)">
 					<div class="thumbnail">
 						<h5> @Messages("readsets.treatments.read_quality.adaptersOverRepresented") </h5>
 						<ul>
-						<li ng-repeat="strValue in objsInAdapters.read1.adapters.value">
+						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.adapters.value">
 							{{strValue}}
 						</li>
 						</ul>	
 					</div>
 				</li>
-			    <li class="span3" ng-if="treatments.getTreatment().code == 'readQualityClean'">
+			    <li class="span3" ng-if="(treatments.getTreatment().code == 'readQualityClean')">
 			    	<div class="thumbnail">
 						 <dl>
 							<dt><h4>@Messages("readsets.treatments.read_quality.number") @("{{run.treatments.ngsrg['default'].nbCycle.value}}") :</h4></dt>
@@ -103,6 +100,18 @@
 					 </a>
 				    </div>
 			    </li>
+			    
+			    <li class="span3">
+			    	<div class="thumbnail" ng-if="(readset.treatments[treatments.getTreatment().code].read1.suspectedKmers != null) && (readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value.length > 0)"> 
+						<h5> @Messages("readsets.treatments.read_quality.suspectedKmers") </h5>
+						<ul>
+						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value">
+							{{strValue}}
+						</li>
+						</ul>	
+					</div>						
+				</li>
+				
     		</ul>
     			
  	</div>	
@@ -172,17 +181,17 @@
 					 </a>   
 				    </div>
 			    </li>
-				<li class="span3" ng-if="objsInAdapters.read2.adapters != null">
+				<li class="span3" ng-if="(readset.treatments[treatments.getTreatment().code].read2.adapters != null) && (readset.treatments[treatments.getTreatment().code].read2.adapters.value.length > 0)">
 					<div class="thumbnail">
 						<h5> @Messages("readsets.treatments.read_quality.adaptersOverRepresented") </h5>
 						<ul>
-						<li ng-repeat="strValue in objsInAdapters.read2.adapters.value">
+						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.adapters.value">
 							{{strValue}}
 						</li>
 						</ul>	
 					</div>
 				</li>
-			    <li class="span3" ng-if="treatments.getTreatment().code == 'readQualityClean'">
+			    <li class="span3" ng-if="(treatments.getTreatment().code == 'readQualityClean')">
 			    	<div class="thumbnail">
 						 <dl>
 							<dt><h4>@Messages("readsets.treatments.read_quality.number") @("{{run.treatments.ngsrg['default'].nbCycle.value}}") :</h4></dt>
@@ -200,7 +209,20 @@
 					    <p>@Messages("readsets.treatments.read_quality.GCDistribution")</p>
 					 </a>
 				    </div>
-			    </li>			    
+			    </li>	
+			    
+			    <li class="span3">
+			    	<div class="thumbnail" ng-if="(readset.treatments[treatments.getTreatment().code].read2.suspectedKmers != null) && (readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value.length > 0)"> 
+						<h5> @Messages("readsets.treatments.read_quality.suspectedKmers") </h5>
+						<ul>
+						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value">
+							{{strValue}}
+						</li>
+						</ul>	
+					</div>						
+				</li>
+			    
+			    		    
     		</ul>	
  	</div>	
  	

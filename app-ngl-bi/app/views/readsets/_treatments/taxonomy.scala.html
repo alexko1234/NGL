@@ -12,7 +12,7 @@
 		<div class="tab-pane active" id="main">
 
 			<div class="row-fluid">		
-				<div class="span4">
+				<div class="span10">
 						<table class="table table-condensed table-hover table-bordered">
 							<thead>
 							<tr>
@@ -22,7 +22,7 @@
 								<th class="span1">
 									@Messages("readsets.treatments.taxonomy.organism")
 								</th>
-								<th class="span1">
+								<th class="span8">
 									@Messages("readsets.treatments.taxonomy.taxonomy")
 								</th>	
 							</tr>
@@ -70,7 +70,7 @@
 							<tr>
 								<td>
 									<ul class="unstyled">
-									<li ng-repeat="obj in objsInTaxonBilan">								
+									<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.taxonBilan.value">								
 									<!--  TODO : to backup ! -->
 									 <a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}" target="_blank">{{obj.taxon}}</a>
 									</li>
@@ -78,14 +78,14 @@
 								</td>
 								<td>
 									<ul class="unstyled">
-									<li ng-repeat="obj in objsInTaxonBilan">
+									<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.taxonBilan.value">
 									 {{obj.nbSeq | number}}
 									</li>
 									</ul>					
 								</td>
 								<td>
 									<ul class="unstyled">
-									<li ng-repeat="obj in objsInTaxonBilan">
+									<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.taxonBilan.value">
 									 {{ obj.percent | number:2}} @Messages("unit.percent")
 									</li>
 									</ul>					
@@ -119,21 +119,21 @@
 						<tr>
 							<td>
 								<ul class="unstyled">
-								<li ng-repeat="obj in objsInDivisionBilan">
+								<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.divisionBilan.value">
 								 {{obj.division}}
 								</li>
 								</ul>
 							</td>
 							<td>
 								<ul class="unstyled">
-								<li ng-repeat="obj in objsInDivisionBilan">
+								<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.divisionBilan.value">
 								 {{obj.nbSeq | number}}
 								</li>
 								</ul>					
 							</td>
 							<td>
 								<ul class="unstyled">
-								<li ng-repeat="obj in objsInDivisionBilan">
+								<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.divisionBilan.value">
 								 {{ obj.percent | number:2}} @Messages("unit.percent")
 								</li>
 								</ul>					
@@ -166,21 +166,21 @@
 						<tr>	
 							<td>
 								<ul class="unstyled">
-								<li ng-repeat="obj in objsInKeywordBilan">
+								<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.keywordBilan.value">
 								 {{obj.keyword}}
 								</li>
 								</ul>
 							</td>
 							<td>
 								<ul class="unstyled">
-								<li ng-repeat="obj in objsInKeywordBilan">
+								<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.keywordBilan.value">
 								 {{obj.nbSeq | number}}
 								</li>
 								</ul>					
 							</td>
 							<td>
 								<ul class="unstyled">
-								<li ng-repeat="obj in objsInKeywordBilan">
+								<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.keywordBilan.value">
 								 {{ obj.percent | number:2}} @Messages("unit.percent")
 								</li>
 								</ul>					
