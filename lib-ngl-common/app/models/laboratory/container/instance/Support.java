@@ -1,6 +1,9 @@
 package models.laboratory.container.instance;
 
+import java.util.List;
+
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.utils.InstanceConstants;
 
@@ -16,6 +19,9 @@ public class Support extends DBObject implements IValidation{
 	public State state;
 	public String stockCode;
 	public Valuation valuation;
+	public TraceInformation traceInformation;
+	public List<String> projectCodes;
+	public List<String> sampleCodes;
 	
 	@JsonIgnore
 	@Override
