@@ -29,168 +29,169 @@
 	
 	<div class="tab-pane active" id="general">
 	
-<div class="row-fluid">
-<form class="form-horizontal">
-		<div class="span4">
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.code")</dt>
-				<dd >{{readset.code}}</dd>				
-			</dl>
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.state.code")</dt>
-				<dd ng-model='readset.state.code' codes="state"></dd>
-			</dl>
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.productionValuation.valid")</dt>
-				<dd>
-				<div ng-switch on="isEditMode()">
-					<div ng-switch-when="false" ng-model='readset.productionValuation.valid' codes="valuation"/>
-					<div ng-switch-when="true"><bt-select class="span12" ng-model="readset.productionValuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></bt-select></div>
-				</div>
-				</dd>
-			</dl>
-			
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.productionValuation.resolutions")</dt>
-				<dd>
-				<div ng-switch on="isEditMode()">
-					<div ng-switch-when="false">
-						    <ul class="unstyled">
-						    		<li ng-repeat="code in readset.productionValuation.resolutionCodes" ng-model="code" codes="resolution"/>
-						    </ul>
-					</div>
-					<div ng-switch-when="true"><bt-select class="span12" ng-model="readset.productionValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></bt-select></div>
-				</dd>
-			</dl>
-			
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.productionValuation.criteria")</dt>
-				<dd>
-				<div ng-switch on="isEditMode()">
-					<div ng-switch-when="false" ng-model="readset.productionValuation.criteriaCode" codes="valuation_criteria"/>
-					<div ng-switch-when="true"><bt-select class="span12" ng-model="readset.productionValuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></bt-select></div>
-				</dd>
-			</dl>
-			
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.valuation.user")</dt>
-				<dd>{{readset.productionValuation.user}} ({{readset.productionValuation.date | date:'@Messages("date.format")'}})</dd>				
-			</dl>
-			
-	</div>
-	<div class="span4">
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.treatments.global.usefulSequences")</dt>
-				<dd>{{readset.treatments.global["default"].usefulSequences.value |	number}}</dd>
-			</dl>
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.treatments.global.usefulBases")</dt>
-				<dd>{{readset.treatments.global["default"].usefulBases.value | number}}</dd>
-			</dl>
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.bioinformaticValuation.valid")</dt>
-				<dd>
-				<div ng-switch on="isEditMode()">
-					<div ng-switch-when="false" ng-model='readset.bioinformaticValuation.valid' codes="valuation"/>
-					<div ng-switch-when="true"><bt-select class="span12" ng-model="readset.bioinformaticValuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></bt-select></div>
-				</div>
-				</dd>
-			</dl>
-			
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.bioinformaticValuation.resolutions")</dt>
-				<dd>
-				<div ng-switch on="isEditMode()">
-					<div ng-switch-when="false">
-						    <ul class="unstyled">
-						    		<li ng-repeat="code in readset.bioinformaticValuation.resolutionCodes" ng-model="code" codes="resolution"/>
-						    </ul>
-					</div>
-					<div ng-switch-when="true"><bt-select class="span12" ng-model="readset.bioinformaticValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></bt-select></div>
-				</dd>
-			</dl>
-			
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.bioinformaticValuation.criteria")</dt>
-				<dd>
-				<div ng-switch on="isEditMode()">
-					<div ng-switch-when="false" ng-model="readset.bioinformaticValuation.criteriaCode" codes="valuation_criteria"/>
-					<div ng-switch-when="true"><bt-select class="span12" ng-model="readset.bioinformaticValuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></bt-select></div>
-				</dd>
-			</dl>
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.valuation.user")</dt>
-				<dd>{{readset.bioinformaticValuation.user}} ({{readset.bioinformaticValuation.date | date:'@Messages("date.format")'}})</dd>				
-			</dl>
-		</div>
-		<div class="span4">
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.runCode") / @Messages("readsets.laneNumber")</dt>
-				<dd><button class="btn btn-link" type="button" ng-click="goToRun()">{{readset.runCode}}</button> / {{readset.laneNumber}}</dd>
-			</dl>
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.runType")</dt>
-				<dd>{{run.typeCode}}</dd>
-			</dl>
-			
-			<dl class="dl-horizontal">
-				<dt>@Messages("readsets.nbCycles")</dt>
-				<dd>{{run.treatments.ngsrg["default"].nbCycle.value}}</dd>
-			</dl>			
-		</div>
-</form>		
-</div>
-           
-<div class="row-fluid">
-
-<div class="span12">
-@views.html.commons.treatments()
-</div>
-</div>
-
-
-
-<div class="tab-pane" id="advanced">
 		<div class="row-fluid">
 			<form class="form-horizontal">
-				<div class="span4" ng-repeat="file in readset.files">
+				<div class="span4">
 					<dl class="dl-horizontal">
-						<dt>@Messages("readsets.files.fullname")</dt>
-						<dd >{{file.fullname}}</dd>				
+						<dt>@Messages("readsets.code")</dt>
+						<dd >{{readset.code}}</dd>				
 					</dl>
 					<dl class="dl-horizontal">
-						<dt>@Messages("readsets.files.typeCode")</dt>
-						<dd >{{file.typeCode}}</dd>				
+						<dt>@Messages("readsets.state.code")</dt>
+						<dd ng-model='readset.state.code' codes="state"></dd>
 					</dl>
 					<dl class="dl-horizontal">
-						<dt>@Messages("readsets.files.usable")</dt>
-						<dd ng-if="file.usable == true">@Messages("readsets.files.isUsable")</dd>
-						<dd ng-if="file.usable == false">@Messages("readsets.files.isNotUsable")</dd>				
+						<dt>@Messages("readsets.productionValuation.valid")</dt>
+						<dd>
+						<div ng-switch on="isEditMode()">
+							<div ng-switch-when="false" ng-model='readset.productionValuation.valid' codes="valuation"/>
+							<div ng-switch-when="true"><bt-select class="span12" ng-model="readset.productionValuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></bt-select></div>
+						</div>
+						</dd>
 					</dl>
+					
 					<dl class="dl-horizontal">
-						<dt>@Messages("readsets.files.properties.label")</dt>
-						<dd>{{file.properties.label.value}}</dd>
+						<dt>@Messages("readsets.productionValuation.resolutions")</dt>
+						<dd>
+						<div ng-switch on="isEditMode()">
+							<div ng-switch-when="false">
+								    <ul class="unstyled">
+								    		<li ng-repeat="code in readset.productionValuation.resolutionCodes" ng-model="code" codes="resolution"/>
+								    </ul>
+							</div>
+							<div ng-switch-when="true"><bt-select class="span12" ng-model="readset.productionValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></bt-select></div>
+						</dd>
 					</dl>
+					
 					<dl class="dl-horizontal">
-						<dt>@Messages("readsets.files.properties.asciiEncoding")</dt>
-						<dd>{{file.properties.asciiEncoding.value}}</dd>
+						<dt>@Messages("readsets.productionValuation.criteria")</dt>
+						<dd>
+						<div ng-switch on="isEditMode()">
+							<div ng-switch-when="false" ng-model="readset.productionValuation.criteriaCode" codes="valuation_criteria"/>
+							<div ng-switch-when="true"><bt-select class="span12" ng-model="readset.productionValuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></bt-select></div>
+						</dd>
 					</dl>
-
+					
 					<dl class="dl-horizontal">
-						<dt>@Messages("readsets.archiveId")</dt>
-						<dd>{{readset.archiveId}}</dd>
+						<dt>@Messages("readsets.valuation.user")</dt>
+						<dd>{{readset.productionValuation.user}} ({{readset.productionValuation.date | date:'@Messages("date.format")'}})</dd>				
 					</dl>
-					<dl class="dl-horizontal">
-						<dt>@Messages("readsets.archiveDate")</dt>
-						<dd>{{readset.archiveDate | date:'@Messages("datetime.format")'}}</dd>
-					</dl>
-
+					
 				</div>
-			</form>
-		</div>	
+				<div class="span4">
+					<dl class="dl-horizontal">
+						<dt>@Messages("readsets.treatments.global.usefulSequences")</dt>
+						<dd>{{readset.treatments.global["default"].usefulSequences.value |	number}}</dd>
+					</dl>
+					<dl class="dl-horizontal">
+						<dt>@Messages("readsets.treatments.global.usefulBases")</dt>
+						<dd>{{readset.treatments.global["default"].usefulBases.value | number}}</dd>
+					</dl>
+					<dl class="dl-horizontal">
+						<dt>@Messages("readsets.bioinformaticValuation.valid")</dt>
+						<dd>
+						<div ng-switch on="isEditMode()">
+							<div ng-switch-when="false" ng-model='readset.bioinformaticValuation.valid' codes="valuation"/>
+							<div ng-switch-when="true"><bt-select class="span12" ng-model="readset.bioinformaticValuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></bt-select></div>
+						</div>
+						</dd>
+					</dl>
+					
+					<dl class="dl-horizontal">
+						<dt>@Messages("readsets.bioinformaticValuation.resolutions")</dt>
+						<dd>
+						<div ng-switch on="isEditMode()">
+							<div ng-switch-when="false">
+								    <ul class="unstyled">
+								    		<li ng-repeat="code in readset.bioinformaticValuation.resolutionCodes" ng-model="code" codes="resolution"/>
+								    </ul>
+							</div>
+							<div ng-switch-when="true"><bt-select class="span12" ng-model="readset.bioinformaticValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></bt-select></div>
+						</dd>
+					</dl>
+					
+					<dl class="dl-horizontal">
+						<dt>@Messages("readsets.bioinformaticValuation.criteria")</dt>
+						<dd>
+						<div ng-switch on="isEditMode()">
+							<div ng-switch-when="false" ng-model="readset.bioinformaticValuation.criteriaCode" codes="valuation_criteria"/>
+							<div ng-switch-when="true"><bt-select class="span12" ng-model="readset.bioinformaticValuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></bt-select></div>
+						</dd>
+					</dl>
+					<dl class="dl-horizontal">
+						<dt>@Messages("readsets.valuation.user")</dt>
+						<dd>{{readset.bioinformaticValuation.user}} ({{readset.bioinformaticValuation.date | date:'@Messages("date.format")'}})</dd>				
+					</dl>
+				</div>
+				<div class="span4">
+					<dl class="dl-horizontal">
+						<dt>@Messages("readsets.runCode") / @Messages("readsets.laneNumber")</dt>
+						<dd><button class="btn btn-link" type="button" ng-click="goToRun()">{{readset.runCode}}</button> / {{readset.laneNumber}}</dd>
+					</dl>
+					<dl class="dl-horizontal">
+						<dt>@Messages("readsets.runType")</dt>
+						<dd>{{run.typeCode}}</dd>
+					</dl>
+					
+					<dl class="dl-horizontal">
+						<dt>@Messages("readsets.nbCycles")</dt>
+						<dd>{{run.treatments.ngsrg["default"].nbCycle.value}}</dd>
+					</dl>			
+				</div>
+			</form>		
+		</div>
+           
+		<div class="row-fluid">	
+			<div class="span12">
+			@views.html.commons.treatments()
+			</div>
+		</div>
+		
 	</div>
-</div>
+	
+	
+	
+	<div class="tab-pane" id="advanced">
+			<div class="row-fluid">
+				<form class="form-horizontal">
+					<div class="span4" ng-repeat="file in readset.files">
+						<dl class="dl-horizontal">
+							<dt>@Messages("readsets.files.fullname")</dt>
+							<dd >{{file.fullname}}</dd>				
+						</dl>
+						<dl class="dl-horizontal">
+							<dt>@Messages("readsets.files.typeCode")</dt>
+							<dd >{{file.typeCode}}</dd>				
+						</dl>
+						<dl class="dl-horizontal">
+							<dt>@Messages("readsets.files.usable")</dt>
+							<dd ng-if="file.usable == true">@Messages("readsets.files.isUsable")</dd>
+							<dd ng-if="file.usable == false">@Messages("readsets.files.isNotUsable")</dd>				
+						</dl>
+						<dl class="dl-horizontal">
+							<dt>@Messages("readsets.files.properties.label")</dt>
+							<dd>{{file.properties.label.value}}</dd>
+						</dl>
+						<dl class="dl-horizontal">
+							<dt>@Messages("readsets.files.properties.asciiEncoding")</dt>
+							<dd>{{file.properties.asciiEncoding.value}}</dd>
+						</dl>
+	
+						<dl class="dl-horizontal">
+							<dt>@Messages("readsets.archiveId")</dt>
+							<dd>{{readset.archiveId}}</dd>
+						</dl>
+						<dl class="dl-horizontal">
+							<dt>@Messages("readsets.archiveDate")</dt>
+							<dd>{{readset.archiveDate | date:'@Messages("datetime.format")'}}</dd>
+						</dl>
+	
+					</div>
+				</form>
+			</div>	
+	</div>
 
+</div>
 <!-- ----------------------------------------------------------------------------- -->
 		<!-- Modal -->
 	<div id="myModal" class="modal hide fade"  tabindex="-1" role="dialog"
@@ -206,5 +207,5 @@
 		</div>
 	</div>
 
-	<!-- -------------------------------------------------------------------------------- -->
+<!-- -------------------------------------------------------------------------------- -->
 	
