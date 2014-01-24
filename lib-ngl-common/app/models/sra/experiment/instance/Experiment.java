@@ -2,6 +2,7 @@ package models.sra.experiment.instance;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 
 import validation.ContextValidation;
 import validation.IValidation;
@@ -11,7 +12,7 @@ import fr.cea.ig.DBObject;
 public class Experiment extends DBObject implements IValidation {
 	// ExperimentType
 	//public String alias;         // required mais remplacé par code herité de DBObject, et valeur = projectCode_num
-	public String projectCode;     // required pou nos stats
+	public String projectCode;     // required pour nos stats
 	public String title;	       // required et champs de la proc */
 	public String librarySelection;// required et constraint: champs de la proc surchargeable dans conf ou par utilisateurs */
 	public String libraryStrategy; // required et constraint. Valeur mise par defaut à "WGS" mais surchargeable */
@@ -32,13 +33,12 @@ public class Experiment extends DBObject implements IValidation {
 	//Projects ref
 	public String sampleCode;
 	public String studyCode;
-	public Run run;
-	//public ReadSpec readSpec;
-	
+	public ReadSpec[] tabReadSpec;
+	public Run run; // le run est rattache à l'experiment
+
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		// TODO Auto-generated method stub
-		
 	}
 
 }
