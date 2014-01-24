@@ -54,7 +54,7 @@ public abstract class AbstractTypeDAOTest {
 		ProcessType cTypeId=ProcessType.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(ProcessType.find.isCodeExist(""));
-		Assert.assertNotNull(ProcessType.find.findAllForList());
+		Assert.assertNotNull(ProcessType.find.findAll());
 	}
 
 
