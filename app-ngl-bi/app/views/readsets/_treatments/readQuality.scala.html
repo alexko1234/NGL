@@ -81,7 +81,7 @@
 						</ul>	
 					</div>
 				</li>
-			    <li class="span3" ng-if="(treatments.getTreatment().code == 'readQualityClean')">
+			    <li class="span3" ng-if="(treatments.getTreatment().code == 'readQualityClean') || (treatments.getTreatment().code == 'readQualityNoRiboClean')">
 			    	<div class="thumbnail">
 						 <dl>
 							<dt><h4>@Messages("readsets.treatments.read_quality.number") @("{{run.treatments.ngsrg['default'].nbCycle.value}}") :</h4></dt>
@@ -191,7 +191,7 @@
 						</ul>	
 					</div>
 				</li>
-			    <li class="span3" ng-if="(treatments.getTreatment().code == 'readQualityClean')">
+			    <li class="span3" ng-if="(treatments.getTreatment().code == 'readQualityClean') || (treatments.getTreatment().code == 'readQualityNoRiboClean')">
 			    	<div class="thumbnail">
 						 <dl>
 							<dt><h4>@Messages("readsets.treatments.read_quality.number") @("{{run.treatments.ngsrg['default'].nbCycle.value}}") :</h4></dt>

@@ -76,7 +76,8 @@ runs.valuation.date = Date d''Evaluation
 runs.valuation.userdate = Evalué par {0} le {1}  
 runs.valuation.criteria = Critères
 runs.valuation.valid = Valide ?
-runs.valuation.comment = Commentaire
+
+runs.valuation.comment = Détails évaluation
 
 runs.nbClusterTotal=Nb Clusters (total)
 runs.percentClusterIlluminaFilter=% Clusters filt. (moyenne)
@@ -151,6 +152,8 @@ readsets.creationdate = Date de Création
 readsets.stateCode = Etat
 readsets.productionValuation.valid = Valide Production ?
 readsets.bioinformaticValuation.valid = Valide BioInfo ?
+
+readsets.productionValuation.comment = Détails évaluation 
 
 readsets.code = Code
 readsets.state.code = Etat
@@ -298,6 +301,7 @@ readsets.treatments.sortingRiboClean = Sorting Ribo (vs CLEAN)
 readsets.treatments.mappingClean = Mapping (vs CLEAN)
 readsets.treatments.mappingNoRiboClean = Mapping (vs NO RIBO CLEAN)
 readsets.treatments.taxonomyClean = Taxonomy (vs CLEAN)
+readsets.treatments.taxonomy = Taxonomy 
 
 readsets.treatments.images.margin=25
 

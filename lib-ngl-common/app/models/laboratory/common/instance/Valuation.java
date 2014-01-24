@@ -14,8 +14,8 @@ public class Valuation implements IValidation {
     public Date date;
     public String user;
     public List<String> resolutionCodes;
-    
     public String criteriaCode;
+    public String comment;
     
 	@Override
 	public void validate(ContextValidation contextValidation) {
