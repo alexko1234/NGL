@@ -12,6 +12,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.utils.InstanceConstants;
 import play.Logger;
 import play.data.validation.ValidationError;
@@ -134,11 +135,11 @@ public class Workflows {
 			required(ctxValidation, experiment.protocolCode, "protocolCode");
 			required(ctxValidation, experiment.instrument.code, "instrument");
 			required(ctxValidation, experiment.atomicTransfertMethods, "atomicTransfertMethods");
-
-			for(int i=0;i<experiment.atomicTransfertMethods.size();i++){
-				required(ctxValidation, experiment.atomicTransfertMethods.get(i).getOutputContainers(), "outputContainer");
+			if((experiment.atomicTransfertMethods instanceof  OneToVoidContainer)){
+				for(int i=0;i<experiment.atomicTransfertMethods.size();i++){
+					required(ctxValidation, experiment.atomicTransfertMethods.get(i).getOutputContainers(), "outputContainer");
+				}
 			}
-			
 			ctxValidation.setRootKeyName("experimentProperties");
 			validateProperties(ctxValidation, experiment.experimentProperties, experiment.getExperimentType().propertiesDefinitions);
 			ctxValidation.removeKeyFromRootKeyName("experimentProperties");

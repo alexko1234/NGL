@@ -9,6 +9,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.InstanceConstants;
@@ -67,31 +68,34 @@ public class Experiments extends CommonController{
 	public static Result generateOutput(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
-		exp = traceInformation(exp);
-		if(exp.stateCode.equals("IP")){			
-			List<Container> containers = new ArrayList<Container>();
-			if (!experimentFilledForm.hasErrors()) {
-				for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-					containers.addAll(exp.atomicTransfertMethods.get(i).createOutputContainerUsed(exp));
+		if(!(exp.atomicTransfertMethods instanceof  OneToVoidContainer)){
+			exp = traceInformation(exp);
+			if(exp.stateCode.equals("IP")){			
+				List<Container> containers = new ArrayList<Container>();
+				if (!experimentFilledForm.hasErrors()) {
+					for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+						containers.addAll(exp.atomicTransfertMethods.get(i).createOutputContainerUsed(exp));
+					}
+	
+	
+					Builder builder = new DBUpdate.Builder();
+					builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
+	
+					MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+	
+	
+					InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers,new ContextValidation( experimentFilledForm.errors()));
+	
+					return ok(Json.toJson(exp));
 				}
-
-
-				Builder builder = new DBUpdate.Builder();
-				builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
-
-				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
-
-
-				InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers,new ContextValidation( experimentFilledForm.errors()));
-
-				return ok(Json.toJson(exp));
+			}else{
+				//TODO: Add errors to form (state not IP)
+	
 			}
-		}else{
-			//TODO: Add errors to form (state not IP)
-
+			
+			return badRequest(experimentFilledForm.errorsAsJson());
 		}
-
-		return badRequest(experimentFilledForm.errorsAsJson());
+		return ok(Json.toJson(exp));
 	}
 
 	public static Result updateInstrumentInformations(String code){
@@ -230,7 +234,9 @@ public class Experiments extends CommonController{
 			}else if(stateCode.equals("F")){
 				for(int i=0;i<exp.atomicTransfertMethods.size();i++){
 					Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getInputContainers());
-					Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getOutputContainers());
+					if((exp.atomicTransfertMethods instanceof  OneToVoidContainer)){
+						Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getOutputContainers());
+					}
 				}
 			}
 			exp = traceInformation(exp);
@@ -240,7 +246,7 @@ public class Experiments extends CommonController{
 			return ok();
 		}
 
-		return badRequest(Json.toJson(ctxValidation.errors));
+		return badRequest(ctxValidation.errors.toString());
 	}
 
 
