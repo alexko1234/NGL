@@ -21,7 +21,7 @@
 
 <ul class="nav nav-tabs">
 	<li class="active"><a data-target="#general" data-toggle="tab">@Messages("readsets.tabs.general")</a></li>
-	<li ><a data-target="#advanced" data-toggle="tab">@Messages("readsets.tabs.advanced")</a></li>    
+	<li><a data-target="#advanced" data-toggle="tab">@Messages("readsets.tabs.advanced")</a></li>    
 </ul>
 
 		
@@ -164,7 +164,7 @@
 	
 	<div class="tab-pane" id="advanced">
 		<div class="row-fluid">
-			<div class="span9">
+			<div class="span11">
 				<table class="table table-condensed table-hover table-bordered">
 					<thead>
 						<tr>
@@ -175,6 +175,7 @@
 							<th>@Messages("readsets.files.properties.asciiEncoding")</th>
 							<th>@Messages("readsets.archiveId")</th>
 							<th>@Messages("readsets.archiveDate")</th>
+							<th>@Messages("readsets.files.path")</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -185,8 +186,12 @@
 							<td ng-if="file.usable == false">@Messages("readsets.files.isNotUsable")</td>
 							<td>{{file.properties.label.value}}</td>
 							<td>{{file.properties.asciiEncoding.value}}</td>
-							<td>{{readset.archiveId}}</td>
-							<td>{{readset.archiveDate | date:'@Messages("datetime.format")'}}</td>
+							<td ng-if="$index==0">{{readset.archiveId}}</td>
+							<td ng-if="$index>0">idem</td>
+							<td ng-if="$index==0">{{readset.archiveDate | date:'@Messages("datetime.format")'}}</td>
+							<td ng-if="$index>0">idem</td>
+							<td ng-if="$index==0">{{readset.path}}</td>
+							<td ng-if="$index>0">idem</td>
 						</tr>
 					</tbody>
 				</table>

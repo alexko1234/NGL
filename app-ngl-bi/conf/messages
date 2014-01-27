@@ -308,7 +308,7 @@ readsets.treatments.images.margin=25
 readsets.files.fullname = Nom du fichier
 readsets.files.typeCode = Type de fichier
 readsets.files.usable = Utilisable
-readsets.files.properties.label = Libellé
+readsets.files.properties.label = Label
 readsets.files.properties.asciiEncoding = Encodage ASCII
 readsets.files.state = Etat
 readsets.files.state.code = Code
@@ -316,6 +316,7 @@ readsets.files.state.date = Date
 readsets.files.state.user = Utilisateur
 readsets.files.isUsable = Oui
 readsets.files.isNotUsable = Non
+readsets.files.path = Chemin
 
 file.state.code.a = Disponible
 file.state.code.ua = Non disponible 
