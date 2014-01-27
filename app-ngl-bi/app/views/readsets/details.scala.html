@@ -163,39 +163,35 @@
 	
 	
 	<div class="tab-pane" id="advanced">
-			<div class="row-fluid">
-					<div class="span4" ng-repeat="file in readset.files">
-						<dl class="dl-horizontal">
-							<dt>@Messages("readsets.files.fullname")</dt>
-							<dd >{{file.fullname}}</dd>				
-						</dl>
-						<dl class="dl-horizontal">
-							<dt>@Messages("readsets.files.typeCode")</dt>
-							<dd >{{file.typeCode}}</dd>				
-						</dl>
-						<dl class="dl-horizontal">
-							<dt>@Messages("readsets.files.usable")</dt>
-							<dd ng-if="file.usable == true">@Messages("readsets.files.isUsable")</dd>
-							<dd ng-if="file.usable == false">@Messages("readsets.files.isNotUsable")</dd>				
-						</dl>
-						<dl class="dl-horizontal">
-							<dt>@Messages("readsets.files.properties.label")</dt>
-							<dd>{{file.properties.label.value}}</dd>
-						</dl>
-						<dl class="dl-horizontal">
-							<dt>@Messages("readsets.files.properties.asciiEncoding")</dt>
-							<dd>{{file.properties.asciiEncoding.value}}</dd>
-						</dl>	
-						<dl class="dl-horizontal">
-							<dt>@Messages("readsets.archiveId")</dt>
-							<dd>{{readset.archiveId}}</dd>
-						</dl>
-						<dl class="dl-horizontal">
-							<dt>@Messages("readsets.archiveDate")</dt>
-							<dd>{{readset.archiveDate | date:'@Messages("datetime.format")'}}</dd>
-						</dl>
-					</div>
-			</div>	
+		<div class="row-fluid">
+			<div class="span9">
+				<table class="table table-condensed table-hover table-bordered">
+					<thead>
+						<tr>
+							<th>@Messages("readsets.files.fullname")</th>
+							<th>@Messages("readsets.files.typeCode")</th>
+							<th>@Messages("readsets.files.usable")</th>
+							<th>@Messages("readsets.files.properties.label")</th>
+							<th>@Messages("readsets.files.properties.asciiEncoding")</th>
+							<th>@Messages("readsets.archiveId")</th>
+							<th>@Messages("readsets.archiveDate")</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="file in readset.files">
+							<td>{{file.fullname}}</td>
+							<td>{{file.typeCode}}</td>
+							<td ng-if="file.usable == true">@Messages("readsets.files.isUsable")</td>
+							<td ng-if="file.usable == false">@Messages("readsets.files.isNotUsable")</td>
+							<td>{{file.properties.label.value}}</td>
+							<td>{{file.properties.asciiEncoding.value}}</td>
+							<td>{{readset.archiveId}}</td>
+							<td>{{readset.archiveDate | date:'@Messages("datetime.format")'}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>	
 	</div>
 
 </div>
