@@ -234,7 +234,7 @@ public class Experiments extends CommonController{
 			}else if(stateCode.equals("F")){
 				for(int i=0;i<exp.atomicTransfertMethods.size();i++){
 					Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getInputContainers());
-					if((exp.atomicTransfertMethods instanceof  OneToVoidContainer)){
+					if(!(exp.atomicTransfertMethods instanceof OneToVoidContainer)){
 						Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getOutputContainers());
 					}
 				}

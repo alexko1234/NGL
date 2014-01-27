@@ -135,7 +135,7 @@ public class Workflows {
 			required(ctxValidation, experiment.protocolCode, "protocolCode");
 			required(ctxValidation, experiment.instrument.code, "instrument");
 			required(ctxValidation, experiment.atomicTransfertMethods, "atomicTransfertMethods");
-			if((experiment.atomicTransfertMethods instanceof  OneToVoidContainer)){
+			if(!(experiment.atomicTransfertMethods instanceof  OneToVoidContainer)){
 				for(int i=0;i<experiment.atomicTransfertMethods.size();i++){
 					required(ctxValidation, experiment.atomicTransfertMethods.get(i).getOutputContainers(), "outputContainer");
 				}
