@@ -90,6 +90,26 @@ public class Supports extends CommonController {
 			queryElts.add(DBQuery.in("categoryCode", cs));
 		}
 		
+		if(supportsSearch.projectCodes != null){
+			queryElts.add(DBQuery.in("projectCodes", supportsSearch.projectCodes));
+		}
+		
+		if(null != supportsSearch.fromDate){
+			queryElts.add(DBQuery.greaterThanEquals("traceInformation.creationDate", supportsSearch.fromDate));
+		}
+		
+		if(null != supportsSearch.toDate){
+			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", supportsSearch.toDate));
+		}
+		
+		if(null != supportsSearch.users){
+			queryElts.add(DBQuery.in("traceInformation.creationUsers", supportsSearch.users));
+		}
+		
+		if(supportsSearch.sampleCodes != null){
+			queryElts.add(DBQuery.in("sampleCodes", supportsSearch.sampleCodes));
+		}
+		
 		if(StringUtils.isNotEmpty(supportsSearch.stateCode)){
 			queryElts.add(DBQuery.is("state.code", supportsSearch.stateCode));
 		}

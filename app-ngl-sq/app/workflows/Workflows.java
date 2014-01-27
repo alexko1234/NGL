@@ -65,12 +65,12 @@ public class Workflows {
 	 */
 	public static void setContainersFinalState(List<ContainerUsed> containers){
 		for(ContainerUsed containerUsed:containers){
-			if(containerUsed != null && containerUsed.resolutionCode!= null){
-				if(containerUsed.resolutionCode.equals("IS")){
+			if(containerUsed != null && containerUsed.resolutionCodes!= null){
+				if(containerUsed.resolutionCodes.equals("IS")){
 					setContainerInStock(containerUsed);
-				}else if(containerUsed.resolutionCode.equals("UN")){
+				}else if(containerUsed.resolutionCodes.equals("UN")){
 					setContainerUnavailable(containerUsed);
-				}else if(containerUsed.resolutionCode.equals("A")){
+				}else if(containerUsed.resolutionCodes.equals("A")){
 					setContainerAvailable(containerUsed);
 				}
 			}	
@@ -124,13 +124,13 @@ public class Workflows {
 			required(ctxValidation,experiment.typeCode, "typeCode");
 		} else if(stateCode.equals("IP")) {
 			required(ctxValidation, experiment.typeCode, "typeCode"); 
-			required(ctxValidation, experiment.resolutionCode, "resolutionCode");
+			required(ctxValidation, experiment.resolutionCodes, "resolutionCodes");
 			required(ctxValidation, experiment.protocolCode, "protocolCode");
 			required(ctxValidation, experiment.instrument.code, "instrument");
 			
 		} else if(stateCode.equals("F")) {
 			required(ctxValidation, experiment.typeCode, "typeCode"); 
-			required(ctxValidation, experiment.resolutionCode, "resolutionCode");
+			required(ctxValidation, experiment.resolutionCodes, "resolutionCodes");
 			required(ctxValidation, experiment.protocolCode, "protocolCode");
 			required(ctxValidation, experiment.instrument.code, "instrument");
 			required(ctxValidation, experiment.atomicTransfertMethods, "atomicTransfertMethods");

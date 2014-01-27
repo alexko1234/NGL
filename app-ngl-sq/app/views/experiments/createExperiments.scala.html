@@ -191,13 +191,18 @@ th {
 									<div class="control-group">
 										<label class="control-label">Resolution:</label>
 										<div class="controls">
-										<select class="input-medium "
+										<!-- <select class="input-medium "
 											ng-model="experiment.value.resolutionCode"
 											ng-readonly="!experiment.experimentInformation.enabled"
 											ng-options="resolution.code as resolution.name for resolution in lists.get('resolutions')"
 											ng-disabled="!experiment.experimentInformation.enabled">
 												<option value="">@Messages("experiments.select.resolutions")</option>
-										</select>
+										</select>-->
+											<bt-select ng-model="experiment.value.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" 
+											bt-options="resolution.code as resolution.name for resolution in lists.get('resolutions')" 
+											ng-disabled="!experiment.experimentInformation.enabled"
+											ng-readonly="!experiment.experimentInformation.enabled">
+											</bt-select>
 										</div>
 									</div>
 									<div class="control-group">

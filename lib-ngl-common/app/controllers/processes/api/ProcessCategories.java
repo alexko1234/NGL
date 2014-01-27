@@ -8,6 +8,7 @@ import java.util.List;
 import models.laboratory.processes.description.ProcessCategory;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -33,6 +34,7 @@ public class ProcessCategories extends CommonController{
 			}else if(processCategoriesSearch.list){
 				List<ListObject> lop = new ArrayList<ListObject>();
 				for(ProcessCategory et:processCategories){
+					Logger.debug(Json.toJson(et).toString());
 					lop.add(new ListObject(et.code, et.name));
 				}
 				return Results.ok(Json.toJson(lop));

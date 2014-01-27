@@ -1,21 +1,17 @@
 package models.laboratory.experiment.instance;
 
+import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.utils.HelperObjects;
-import models.utils.InstanceConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.InstanceValidationHelper;
 import validation.common.instance.CommonValidationHelper;
-import validation.utils.BusinessValidationHelper;
 
 
 public class ContainerUsed implements IValidation{
@@ -29,7 +25,7 @@ public class ContainerUsed implements IValidation{
 	public Map<String,PropertyValue> experimentProperties;
 	public Map<String,PropertyValue> instrumentProperties;
 	
-	public String resolutionCode;
+	public List<String> resolutionCodes;
 	
 	public ContainerUsed() {
 		

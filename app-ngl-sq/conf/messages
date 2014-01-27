@@ -99,3 +99,5 @@ limsdao.error.emptymapping =Pas de correspondance avec les paramètres suivants 
 
 #initialdata
 initialdata.error.sampleNotExist=Le container {0} 
+
+date.format=dd/MM/yyyy

@@ -1,6 +1,6 @@
 "use strict";
 
-function SearchContainerCtrl($scope,$routeParams, datatable,basket, lists) {
+function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lists) {
 	 
 	$scope.datatableConfig = {
 		search:{
@@ -16,6 +16,23 @@ function SearchContainerCtrl($scope,$routeParams, datatable,basket, lists) {
 	};
 		
 	$scope.lists = lists;
+	
+	var search = function(values, query){
+		var queryElts = query.split(',');
+		
+		var lastQueryElt = queryElts.pop();
+		
+		var output = [];
+		angular.forEach($filter('filter')(values, lastQueryElt), function(value, key){
+			if(queryElts.length > 0){
+				this.push(queryElts.join(',')+','+value.code);
+			}else{
+				this.push(value.code);
+			}
+		}, output);
+		
+		return output;
+	}
 	
 	$scope.init = function(){
 		if(angular.isUndefined($scope.getDatatable())){
@@ -82,6 +99,20 @@ function SearchContainerCtrl($scope,$routeParams, datatable,basket, lists) {
 		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
 	}
 	
+	$scope.searchProjects = function(query){
+		return search(lists.getProjects(), query);
+	}
+	
+	$scope.searchSamples = function(query){
+		return search(lists.getSamples(), query);
+	}
+	
+	$scope.reset = function(){
+		$scope.form = {
+				
+		}
+	}
+	
 	$scope.changeProcessType = function(){
 		/*$scope.removeTab(1);
 		
@@ -103,14 +134,10 @@ function SearchContainerCtrl($scope,$routeParams, datatable,basket, lists) {
 		//this.search();
 	}
 	
-	$scope.changeProject = function(){
-		if($scope.form.project){
-			$scope.lists.refresh.samples({projectCode:$scope.form.project.code});
-		}else{
-			$scope.lists.clear("samples");
+	$scope.refreshSamples = function(){
+		if($scope.form.projectCodes){
+			lists.refresh.samples({projectCodes:$scope.form.projectCodes.split(',')});
 		}
-		
-		$scope.search();
 	}
 	
 	
@@ -118,11 +145,11 @@ function SearchContainerCtrl($scope,$routeParams, datatable,basket, lists) {
 		if($scope.form.experimentType || $scope.newExperiment != "new"){ 		
 			var jsonSearch = {};			
 			jsonSearch.stateCode = 'A';	//default state code for containers		
-			if($scope.form.project){
-				jsonSearch.projectCode = $scope.form.project.code;
+			if($scope.form.projectCodes){
+				jsonSearch.projectCodes = $scope.form.projectCodes.split(",");
 			}			
-			if($scope.form.sample){
-				jsonSearch.sampleCode = $scope.form.sample.code;
+			if($scope.form.sampleCodes){
+				jsonSearch.sampleCodes = $scope.form.sampleCodes.split(",");
 			}			
 			if($scope.form.processType){
 				jsonSearch.processTypeCode = $scope.form.processType.code;
@@ -130,7 +157,14 @@ function SearchContainerCtrl($scope,$routeParams, datatable,basket, lists) {
 			
 			if($scope.form.experimentType){
 				jsonSearch.experimentTypeCode = $scope.form.experimentType.code;
-			}		
+			}
+			
+			if($scope.form.users){
+				jsonSearch.users = $scope.form.users.split(",");
+			}
+			
+			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate).valueOf();
+			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate).valueOf();	
 			
 			$scope.datatable.search(jsonSearch);
 		}							
@@ -146,4 +180,4 @@ function SearchContainerCtrl($scope,$routeParams, datatable,basket, lists) {
 		}
 	}
 }
-SearchContainerCtrl.$inject = ['$scope','$routeParams', 'datatable','basket','lists'];
+SearchContainerCtrl.$inject = ['$scope','$routeParams', '$filter','datatable','basket','lists'];

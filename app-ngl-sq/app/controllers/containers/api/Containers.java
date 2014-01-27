@@ -156,8 +156,8 @@ public class Containers extends CommonController {
 	 */
 	private static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
-		if(StringUtils.isNotEmpty(containersSearch.projectCode)){
-			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCode));
+		if(containersSearch.projectCodes != null){
+			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCodes));
 		}
 
 		if(StringUtils.isNotEmpty(containersSearch.stateCode)){
@@ -168,8 +168,8 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.is("categoryCode", containersSearch.categoryCode));
 		}
 
-		if(StringUtils.isNotEmpty(containersSearch.sampleCode)){
-			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
+		if(containersSearch.sampleCodes != null){
+			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCodes));
 		}
 
 		if(StringUtils.isNotEmpty(containersSearch.supportCode)){
@@ -224,5 +224,4 @@ public class Containers extends CommonController {
 
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}
-
 }

@@ -1,5 +1,6 @@
 package validation;
 
+import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Resolution;
@@ -83,6 +84,13 @@ public class DescriptionValidationHelper {
 	public static void validationResolutionCode(String resolutionCode,
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, resolutionCode,"resolutionCode", Resolution.find);		
+	}
+	
+	public static void validationResolutionCodes(List<String> resolutionCodes,
+			ContextValidation contextValidation) {
+		for(String resolutionCode:resolutionCodes){
+			BusinessValidationHelper.validateExistDescriptionCode(contextValidation, resolutionCode,"resolutionCode", Resolution.find);
+		}
 	}
 
 	

@@ -55,7 +55,7 @@ public class Experiment extends DBObject implements IValidation {
 	
 	// States
 	public String stateCode;
-	public String resolutionCode;
+	public List<String> resolutionCodes;
 	
 	//TODO delete class InputOutputContainer
 	//public List<InputOutputContainer> listInputOutputContainers;
@@ -115,8 +115,8 @@ public class Experiment extends DBObject implements IValidation {
 	}
 	
 	@JsonIgnore
-	public Resolution getResolution(){
-		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode);
+	public List<Resolution> getResolution(){
+		return new HelperObjects<Resolution>().getObjects(Resolution.class, resolutionCodes);
 	}
 
 	@JsonIgnore
@@ -134,7 +134,7 @@ public class Experiment extends DBObject implements IValidation {
 		DescriptionValidationHelper.validationStateCode(stateCode, contextValidation);
 		DescriptionValidationHelper.validationExperimentTypeCode(typeCode, contextValidation);
 		DescriptionValidationHelper.validationExperimentCategoryCode(categoryCode, contextValidation);
-		DescriptionValidationHelper.validationResolutionCode(resolutionCode, contextValidation);
+		DescriptionValidationHelper.validationResolutionCodes(resolutionCodes, contextValidation);
 		DescriptionValidationHelper.validationProtocol(protocolCode,contextValidation);
 		DescriptionValidationHelper.validationInstrumentUsedTypeCode(instrumentUsedTypeCode,contextValidation);
 		

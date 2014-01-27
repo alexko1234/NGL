@@ -5,16 +5,12 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sound.midi.Instrument;
-
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
-import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
@@ -25,8 +21,6 @@ import net.vz.mongodb.jackson.DBUpdate.Builder;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.mongodb.BasicDBObject;
-
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
@@ -34,13 +28,14 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import validation.ContextValidation;
-import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
+
+import com.mongodb.BasicDBObject;
+
 import controllers.CodeHelper;
 import controllers.CommonController;
 import controllers.authorisation.PermissionHelper;
-import controllers.utils.FormUtils;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -59,7 +54,7 @@ public class Experiments extends CommonController{
 
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("typeCode",exp.typeCode);
-			builder=builder.set("resolutionCode",exp.resolutionCode);
+			builder=builder.set("resolutionCodes",exp.resolutionCodes);
 			builder=builder.set("protocolCode",exp.protocolCode);
 
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);

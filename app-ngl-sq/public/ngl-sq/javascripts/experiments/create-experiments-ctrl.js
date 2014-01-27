@@ -5,7 +5,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 			value: {
 				code:"",
 				typeCode:"",
-				resolutionCode:"",
+				resolutionCodes:[],
 				protocolCode:"",
 				stateCode:"N",
 				instrument:{
@@ -79,25 +79,25 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 						$scope.clearMessages();
 	
 						//copy resoltion to atomicTransfere
-						for(var i=0;i<$scope.datatable.displayResult.length &&  $scope.datatable.displayResult[i].inputResolutionCode != null;i++){
+						for(var i=0;i<$scope.datatable.displayResult.length &&  $scope.datatable.displayResult[i].inputResolutionCodes != null;i++){
 							if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
 								for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.length;j++){
-									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed[j].resolutionCode = $scope.datatable.displayResult[i].inputResolutionCode;
+									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed[j].resolutionCodes = $scope.datatable.displayResult[i].inputResolutionCodes;
 								}
 								i += j;
 							}else{
-								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCode =  $scope.datatable.displayResult[i].inputResolutionCode;
+								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCodes =  $scope.datatable.displayResult[i].inputResolutionCodes;
 							}
 						}
 	
-						for(var i=0;i<$scope.datatable.displayResult.length &&  $scope.datatable.displayResult[i].outputResolutionCode != null;i++){
+						for(var i=0;i<$scope.datatable.displayResult.length &&  $scope.datatable.displayResult[i].outputResolutionCodes != null;i++){
 							if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
 								for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds.length;j++){
-									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].resolutionCode = $scope.datatable.displayResult[i].outputResolutionCode;
+									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].resolutionCodes = $scope.datatable.displayResult[i].outputResolutionCodes;
 								}
 								i += j;
 							}else if($scope.experiment.value.atomicTransfertMethods[i].class != "OneToVoid"){
-								$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCode =  $scope.datatable.displayResult[i].outputResolutionCode;
+								$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCodes =  $scope.datatable.displayResult[i].outputResolutionCodes;
 							}
 						}
 	
@@ -708,9 +708,13 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 					$scope.state=$scope.experiment.value.stateCode;
 					if($scope.experiment.value.stateCode == "F" && $scope.experiment.value.atomicTransfertMethods[i].class != "OneToVoid"){
 						//ajout des colonnes de selection de resolution pour chaque tube
-						$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Resolution","outputResolutionCode",true, true,true,"String",true,$scope.ouputContainersResolutions,{"0":"Outputs","1":"Resolution"}));
+						var col = $scope.datatable.newColumn("Resolution","outputResolutionCodes",true, true,true,"String",true,$scope.ouputContainersResolutions,{"0":"Outputs","1":"Resolutions"});
+						col.listStyle = "bt-select-multiple";
+						$scope.datatable.addColumn(-1, col);
 					}else if($scope.experiment.value.stateCode == "IP"){
-						$scope.datatable.addColumn(2,$scope.datatable.newColumn("Resolution","inputResolutionCode",true, true,true,"String",true,$scope.inputContainersResolutions,{"0":"Inputs","1":"Resolution"}));
+						var col = $scope.datatable.newColumn("Resolution","inputResolutionCodes",true, true,true,"String",true,$scope.inputContainersResolutions,{"0":"Inputs","1":"Resolutions"});
+						col.listStyle = "bt-select-multiple";
+						$scope.datatable.addColumn(2, col);
 					}
 				}
 			})
@@ -872,23 +876,23 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 						if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToOne"){
 							$scope.datatable.displayResult[i].outputContainerUsed = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed;
 							if($scope.datatable.displayResult[i].outputContainerUsed != undefined){
-								$scope.datatable.displayResult[i].outputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCode;
+								$scope.datatable.displayResult[i].outputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCodes;
 							}
-							$scope.datatable.displayResult[i].inputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCode;
+							$scope.datatable.displayResult[i].inputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCodes;
 						}else if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany"){
 							$scope.datatable.displayResult[i].outputContainerUseds = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds;
 							if($scope.datatable.displayResult[i].outputContainerUseds != undefined){
-								$scope.datatable.displayResult[i].outputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds.resolutionCode;
+								$scope.datatable.displayResult[i].outputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds.resolutionCodes;
 							}
-							$scope.datatable.displayResult[i].inputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCode;
+							$scope.datatable.displayResult[i].inputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCodes;
 						}else if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
 							if($scope.datatable.displayResult[i].outputContainerUsed != undefined){
-								$scope.datatable.displayResult[i].outputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCode;
+								$scope.datatable.displayResult[i].outputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCodes;
 							}
-							$scope.datatable.displayResult[i].inputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.resolutionCode;
+							$scope.datatable.displayResult[i].inputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.resolutionCodes;
 						}else if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToVoid"){
 							$scope.experiment.outputVoid = true;
-							$scope.datatable.displayResult[i].inputResolutionCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.resolutionCode;
+							$scope.datatable.displayResult[i].inputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.resolutionCodes;
 						}
 						
 						if(($scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany" && $scope.datatable.displayResult[i].outputContainerUseds.length > 0) || ($scope.experiment.value.atomicTransfertMethods[i].class == "OneToOne" && $scope.datatable.displayResult[i].outputContainerUsed)){
@@ -907,11 +911,11 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 					if($scope.experiment.value.stateCode == "F"){
 						//ajout des colonnes de selection de resolution pour chaque tube
 						if($scope.experiment.value.atomicTransfertMethods[i].class != "OneToVoid"){
-							$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Resolution","outputResolutionCode",true, true,true,"String",true,$scope.ouputContainersResolutions,{"0":"Outputs","1":"Resolution"}));
+							$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Resolutions","outputResolutionCodes",true, true,true,"String",true,$scope.ouputContainersResolutions,{"0":"Outputs","1":"Resolutions"}));
 						}
-						$scope.datatable.addColumn(2,$scope.datatable.newColumn("Resolution","inputResolutionCode",true, true,true,"String",true,$scope.inputContainersResolutions,{"0":"Inputs","1":"Resolution"}));
+						$scope.datatable.addColumn(2,$scope.datatable.newColumn("Resolutions","inputResolutionCodes",true, true,true,"String",true,$scope.inputContainersResolutions,{"0":"Inputs","1":"Resolutions"}));
 					}else if($scope.experiment.value.stateCode == "IP"){
-						$scope.datatable.addColumn(2,$scope.datatable.newColumn("Resolution","inputResolutionCode",true, true,true,"String",true,$scope.inputContainersResolutions,{"0":"Inputs","1":"Resolution"}));
+						$scope.datatable.addColumn(2,$scope.datatable.newColumn("Resolutions","inputResolutionCodes",true, true,true,"String",true,$scope.inputContainersResolutions,{"0":"Inputs","1":"Resolutions"}));
 					}
 				});
 			}
