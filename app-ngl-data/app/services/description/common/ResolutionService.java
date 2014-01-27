@@ -30,10 +30,12 @@ public class ResolutionService {
 	public static void saveResolutions(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<Resolution> l = new ArrayList<Resolution>();
 				
-		l.add(newResolution("reso1","exp_reso1",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Experiment.name())));
-		l.add(newResolution("reso2","exp_reso2",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Experiment.name())));
-		l.add(newResolution("reso3","exp_reso3",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Experiment.name())));
-		
+	/*	l.add(newResolution("Réhybridation R1 / même séquenceur","rehybridR1",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Experiment.name())));
+		l.add(newResolution("Réhybridation R1 / autre séquenceur","rehybridR1Ext",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Experiment.name())));
+		l.add(newResolution("Réhybridation Read Index","rehybridRIndex",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Experiment.name())));
+		l.add(newResolution("Réhybridation R2","rehybridR2",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Experiment.name())));		
+		l.add(newResolution("Dépôt OK","depotOk",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Experiment.name())));
+*/
 		l.add(newResolution("reso1","pro_reso1",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Process.name())));
 		l.add(newResolution("reso2","pro_reso2",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Process.name())));
 		l.add(newResolution("reso3","pro_reso3",ResolutionCategory.find.findByCode(ResolutionCategory.CODE.Process.name())));

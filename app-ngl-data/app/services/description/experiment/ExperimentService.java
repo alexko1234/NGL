@@ -61,7 +61,9 @@ public class ExperimentService {
 		l.add(newProtocol("Fragmentation_ptr_sox140_1","fragmentation_ptr_sox140_1","path1","1", ProtocolCategory.find.findByCode("production")));
 		l.add(newProtocol("BqSPRI_ptr_sox142_1","bqspri_ptr_sox142_1","path2","1", ProtocolCategory.find.findByCode("production")));
 		l.add(newProtocol("Amplif_ptr_sox144_1","amplif_ptr_sox144_1","path3","1", ProtocolCategory.find.findByCode("production")));
-		
+		l.add(newProtocol("Depot_Illumina_prt_1","depot_illumina_ptr_1","path4","1", ProtocolCategory.find.findByCode("production")));
+		l.add(newProtocol("Depot_Illumina_prt_2","depot_illumina_ptr_2","path5","1", ProtocolCategory.find.findByCode("production")));
+		l.add(newProtocol("Depot_Illumina_prt_3","depot_illumina_ptr_3","path6","1", ProtocolCategory.find.findByCode("production")));
 		DAOHelpers.saveModels(Protocol.class, l, errors);
 		
 	}
@@ -85,7 +87,7 @@ public class ExperimentService {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
 		//transformation
-		l.add(newExperimentType("Fragmentation","fragmentation",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsFragmentation(), getProtocols("fragmentation_ptr_sox140_1"), getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
+		l.add(newExperimentType("Fragmentation","fragmentation",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("fragmentation_ptr_sox140_1"), getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
 		l.add(newExperimentType("Librairie","librairie",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newExperimentType("Amplification","amplification",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand","thermo"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
@@ -109,7 +111,7 @@ public class ExperimentService {
 		
 		//Depot solexa
 		l.add(newExperimentType("Depot Illumina", "illumina-depot"
-				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsFragmentation(), null, getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_illumina_ptr_1","depot_illumina_ptr_2","depot_illumina_ptr_3"), getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 		
@@ -151,13 +153,13 @@ public class ExperimentService {
 	
 	
 	//Data Test
-	public static List<PropertyDefinition> getPropertyDefinitionsFragmentation() throws DAOException {
+/*	public static List<PropertyDefinition> getPropertyDefinitionsFragmentation() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Libelle 1","Key1", LevelService.getLevels(Level.CODE.Experiment),Double.class, false,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb")));
 		propertyDefinitions.add(newPropertiesDefinition("Libelle 2", "Key2", LevelService.getLevels(Level.CODE.ContainerOut),String.class, false));
 		propertyDefinitions.add(newPropertiesDefinition("Libelle 3", "Key3", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false));
 		return propertyDefinitions;
-	}
+	}*/
 	
 	//TODO
 	// Propriete taille en output et non en input ?

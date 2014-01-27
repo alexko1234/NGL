@@ -156,6 +156,8 @@ public class InstrumentService {
 
 	private static List<PropertyDefinition> getHiseq2500Properties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		   propertyDefinitions.add(newPropertiesDefinition("Type run","runType"
+	        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("RHS2500","RHS2500R")));
         propertyDefinitions.add(newPropertiesDefinition("Position","location"
         		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B")));
         propertyDefinitions.add(newPropertiesDefinition("Type lecture", "readType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE")));	
