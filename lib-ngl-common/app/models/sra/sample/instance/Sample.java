@@ -10,7 +10,7 @@ public class Sample extends DBObject implements IValidation {
 
 	// SampleType
 	//public String alias;         // required mais remplacé par code herité de DBObject, et valeur = projectCode_num
-	public String projectCode;     // required pour nos stats   
+	public String projectCode;     // required pour nos stats //Reference code de la collection project NGL  
 	public int taxonId;            // required 
 	public String classification;     
 	public String commonName;     

@@ -33,7 +33,9 @@ public class Experiment extends DBObject implements IValidation {
 	//Projects ref
 	public String sampleCode;
 	public String studyCode;
-	public ReadSpec[] tabReadSpec;
+	//probleme du tableau taille fixé à l'instantiation mieux vaut une collection
+	//public ReadSpec[] tabReadSpec;
+	public List<ReadSpec> readSpecs;
 	public Run run; // le run est rattache à l'experiment
 
 	@Override

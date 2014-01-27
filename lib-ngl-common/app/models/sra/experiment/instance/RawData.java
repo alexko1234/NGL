@@ -8,7 +8,8 @@ public class RawData  implements IValidation {
 	public String path;	           // chemin
 	public String extention;       // extention .fastq, .fastq.gz
 	public String md5;	           
-	public int lotSeqCode; 
+	//TODO voir dans modèle NGL si existe collection lotSeq pour pointer vers code de la collection
+	public int lotSeqCode; 			
 	public String projectCode; 
 	
 	@Override
