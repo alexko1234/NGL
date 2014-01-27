@@ -100,6 +100,9 @@ function getColumns(type){
 function SearchFormCtrl($scope, $filter, lists){
 	$scope.lists = lists;
 	
+	$scope.form = {
+	}
+	
 	var search = function(values, query){
 		var queryElts = query.split(',');
 		
@@ -141,12 +144,15 @@ function SearchFormCtrl($scope, $filter, lists){
 		var form = angular.copy($scope.form);
 		if(form.fromDate)form.fromDate = moment(form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 		if(form.toDate)form.toDate = moment(form.toDate, Messages("date.format").toUpperCase()).valueOf();	
-		if(form.projectCodes) form.projectCodes = form.projectCodes.split(',')
-		if(form.sampleCodes) form.sampleCodes = form.sampleCodes.split(',')
-		if(form.runCodes) form.runCodes = form.runCodes.split(',')
+		if(form.projectCodes) form.projectCodes = form.projectCodes.split(',');
+		if(form.sampleCodes) form.sampleCodes = form.sampleCodes.split(',');
+		if(form.runCodes) form.runCodes = form.runCodes.split(',');
 		
-		if($scope.isHomePage('valuation')){
-			form.stateCodes = ["IW-V","IP-V"];
+		if ($scope.isHomePage('valuation')) {
+			if(form.stateCodes == undefined || form.stateCodes.length == 0) {
+				//no stateCodes selected, the filter by default (on the two states for the valuation) is applied
+				form.stateCodes = ["IW-V","IP-V"];
+			}		
 		}
 		
 		$scope.datatable.search(form);
@@ -159,12 +165,19 @@ function SearchFormCtrl($scope, $filter, lists){
 	}
 	
 	$scope.init = function(){
+		
+		$scope.states = lists.getStates();
+		if ($scope.isHomePage('valuation')) {
+			$scope.form.stateCodes = ["IW-V","IP-V"];
+			$scope.states = [{code:"IW-V",name:Codes("state.IW-V")},{code:"IP-V",name:Codes("state.IP-V")}];
+		}
+		
 		$scope.lists.refresh.projects();
-		$scope.lists.refresh.states({objectTypeCode:"ReadSet"});	
+		$scope.lists.refresh.states({objectTypeCode:"ReadSet"});
 		$scope.lists.refresh.types({objectTypeCode:"Run"});
 		$scope.lists.refresh.runs();
+		
 	}
-	
 	
 };
 SearchFormCtrl.$inject = ['$scope', '$filter', 'lists'];
