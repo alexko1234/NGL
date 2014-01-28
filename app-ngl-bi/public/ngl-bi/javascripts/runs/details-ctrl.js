@@ -1,6 +1,9 @@
 "use strict";
 
 function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, lists, treatments) {
+	
+	$scope.form = {
+	}
 		
 	var lanesDTConfig = {
 			name:'lanesDT',
@@ -185,27 +188,27 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 	$scope.goToReadSet = function(readSetCode){
 		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(readSetCode).url, 'readsets');
 	}
-	
 		
-	/*
-	// function for show/hide lane in the datatable ReadSetsDT 
-	$scope.refreshReadSetsDT = function(laneNumber) {
-		var laneNumbers = [];
-		for (var i=0; i<document.getElementsByName("chkb").length; i++) {
-			if (document.getElementsByName("chkb")[i].checked) {
-				laneNumbers[i] = document.getElementsByName("chkb")[i].id;
-			}
-		}
-		$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code,laneNumbers:laneNumbers}}).success(function(data) {
-			//$scope.readSetsDT = datatable($scope, $scope.readSetsDTConfig);
+	$scope.search = function(){
+		//get lane numbers selected
+		var laneNum = "";
+		if($scope.form.laneNumbers) laneNum = $scope.form.laneNumbers;		
+		//query by laneNumbers
+		$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code,laneNumbers:laneNum}}).success(function(data) {
 			$scope.readSetsDT.setData(data, data.length);
 		});
 	}
-	*/
-
+	
+	$scope.reset = function(){
+		$scope.form = {
+		}
+	}
+	
 	$scope.goToReadSets = function(){
 		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.home('search').url+'?runCode='+$scope.run.code, 'readsets');
 	}
+	
+	
 	
 	$scope.init = function(){
 		$scope.messages = messages();
@@ -214,9 +217,8 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 		$scope.stopEditMode();
 		if(isValuationMode()){
 			$scope.startEditMode();
-			
 		}
-		
+				
 		lanesDTConfig.edit.active=$scope.isEditMode();
 		lanesDTConfig.save.active=$scope.isEditMode();
 		
@@ -243,8 +245,6 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 			if(angular.isDefined($scope.run.lanes[0].treatments)){
 				$scope.treatments.init($scope.run.lanes[0].treatments, jsRoutes.controllers.runs.tpl.Runs.laneTreatments);				
 			}
-			
-			$scope.lanes = $scope.run.lanes;
 			
 			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code}}).success(function(data) {
 				$scope.readSetsDT = datatable($scope, $scope.readSetsDTConfig);

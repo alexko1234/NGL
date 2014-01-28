@@ -45,6 +45,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			
 		}
 		
+		
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.get($routeParams.code).url).success(function(data) {
 			$scope.readset = data;	
 				

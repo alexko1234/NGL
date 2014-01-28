@@ -2,6 +2,10 @@ body {
 	padding-top:50px;
 }
 
+.nav-tabs > li {
+	cursor:pointer;	
+}
+
 .nav-pills > li > a > .close,
 .nav-tabs > li > a > .close{
    margin-left: 5px;
@@ -27,4 +31,5 @@ dd > button.btn-link{
 
 .plates > .alert {
 	margin-bottom:0px;
-} 
+}
+

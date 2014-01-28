@@ -150,7 +150,7 @@ function SearchFormCtrl($scope, $filter, lists){
 		
 		if ($scope.isHomePage('valuation')) {
 			if(form.stateCodes == undefined || form.stateCodes.length == 0) {
-				//no stateCodes selected, the filter by default (on the two states for the valuation) is applied
+				//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
 				form.stateCodes = ["IW-V","IP-V"];
 			}		
 		}
@@ -168,7 +168,9 @@ function SearchFormCtrl($scope, $filter, lists){
 		
 		$scope.states = lists.getStates();
 		if ($scope.isHomePage('valuation')) {
-			$scope.form.stateCodes = ["IW-V","IP-V"];
+			//If we want to show the 2 states used to filter the data...
+			//$scope.form.stateCodes = ["IW-V","IP-V"];
+			//Reduce data to the set of states specific to the valuation
 			$scope.states = [{code:"IW-V",name:Codes("state.IW-V")},{code:"IP-V",name:Codes("state.IP-V")}];
 		}
 		
