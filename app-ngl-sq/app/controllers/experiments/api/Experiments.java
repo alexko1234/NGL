@@ -68,13 +68,15 @@ public class Experiments extends CommonController{
 	public static Result generateOutput(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
-		if(!(exp.atomicTransfertMethods instanceof  OneToVoidContainer)){
+		
 			exp = traceInformation(exp);
 			if(exp.stateCode.equals("IP")){			
 				List<Container> containers = new ArrayList<Container>();
 				if (!experimentFilledForm.hasErrors()) {
 					for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-						containers.addAll(exp.atomicTransfertMethods.get(i).createOutputContainerUsed(exp));
+						if(!(exp.atomicTransfertMethods.get(i) instanceof  OneToVoidContainer)){
+							containers.addAll(exp.atomicTransfertMethods.get(i).createOutputContainerUsed(exp));
+						}
 					}
 	
 	
@@ -94,8 +96,6 @@ public class Experiments extends CommonController{
 			}
 			
 			return badRequest(experimentFilledForm.errorsAsJson());
-		}
-		return ok(Json.toJson(exp));
 	}
 
 	public static Result updateInstrumentInformations(String code){
@@ -234,7 +234,7 @@ public class Experiments extends CommonController{
 			}else if(stateCode.equals("F")){
 				for(int i=0;i<exp.atomicTransfertMethods.size();i++){
 					Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getInputContainers());
-					if(!(exp.atomicTransfertMethods instanceof OneToVoidContainer)){
+					if(!(exp.atomicTransfertMethods.get(i) instanceof OneToVoidContainer)){
 						Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getOutputContainers());
 					}
 				}

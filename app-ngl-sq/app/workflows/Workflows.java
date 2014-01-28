@@ -135,11 +135,13 @@ public class Workflows {
 			required(ctxValidation, experiment.protocolCode, "protocolCode");
 			required(ctxValidation, experiment.instrument.code, "instrument");
 			required(ctxValidation, experiment.atomicTransfertMethods, "atomicTransfertMethods");
-			if(!(experiment.atomicTransfertMethods instanceof  OneToVoidContainer)){
+			
 				for(int i=0;i<experiment.atomicTransfertMethods.size();i++){
-					required(ctxValidation, experiment.atomicTransfertMethods.get(i).getOutputContainers(), "outputContainer");
+					if(!(experiment.atomicTransfertMethods.get(i) instanceof OneToVoidContainer)){
+						required(ctxValidation, experiment.atomicTransfertMethods.get(i).getOutputContainers(), "outputContainer");
+					}
 				}
-			}
+			
 			ctxValidation.setRootKeyName("experimentProperties");
 			validateProperties(ctxValidation, experiment.experimentProperties, experiment.getExperimentType().propertiesDefinitions);
 			ctxValidation.removeKeyFromRootKeyName("experimentProperties");
