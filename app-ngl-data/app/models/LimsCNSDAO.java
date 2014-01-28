@@ -16,6 +16,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.TransientState;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -34,6 +35,7 @@ import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.util.DataMappingCNS;
 import models.util.MappingHelper;
+import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -45,6 +47,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import fr.cea.ig.MongoDBDAO;
 
 import play.Logger;
 import play.api.modules.spring.Spring;
@@ -167,7 +171,7 @@ public class LimsCNSDAO{
 				MappingHelper.getPropertiesFromResultSet(rs,sampleType.propertiesDefinitions,sample.properties);
 
 				//Logger.debug("Properties sample "+sample.properties.containsKey("taxonSize"));
-				
+
 				boolean tara=false;
 
 				if(rs.getInt("tara")==1){
@@ -207,7 +211,7 @@ public class LimsCNSDAO{
 
 		if(results.size()==1)
 		{
-		//	Logger.debug("One sample");
+			//	Logger.debug("One sample");
 			return results.get(0);
 		}
 		else return null;
@@ -348,29 +352,31 @@ public class LimsCNSDAO{
 	}
 
 	public List<Run> findRunsToCreate(String sqlContent,final ContextValidation contextError)throws SQLException{
+
 		List<Run> results = this.jdbcTemplate.query(sqlContent,new RowMapper<Run>() {
 
 			@SuppressWarnings("rawtypes")
 			public Run mapRow(ResultSet rs, int rowNum) throws SQLException {
-				
+				Logger.debug("Begin findRunsToCreate");
+
 				ContextValidation contextValidation=new ContextValidation();
 				contextValidation.addKeyToRootKeyName(contextError.getRootKeyName());
-				Run run = new Run();
+
+				Run run= MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, rs.getString("code"));
+				if(run==null){
+					run= new Run();
+				}
 				run.code = rs.getString("code"); 
-				//Nom flowcell ?
-				run.containerSupportCode = DataMappingCNS.getContainerSupportCode(rs.getString("containerSupportCode"));
 				run.dispatch = rs.getBoolean("dispatch");
 				run.instrumentUsed = new InstrumentUsed();
 				run.instrumentUsed.code = rs.getString("insCode");
-				//Mapping dans la table Tpsequencage du Lims
-				run.instrumentUsed.typeCode = rs.getString("insCategoryCode");
-				//RHS2000, RHS2500, RHS2500R
+				run.instrumentUsed.typeCode = DataMappingCNS.getInstrumentTypeCodeMapping(rs.getString("insCategoryCode"));
 				run.typeCode =DataMappingCNS.getRunTypeCodeMapping(rs.getString("insCategoryCode"));
 				run.containerSupportCode=rs.getString("containerSupportCode");
-
+				run.sequencingStartDate=rs.getDate("sequencingStartDate");
 				//Revoir l'etat en fonction du dispatch et de la validation
 				//TODO fin de tranfert
-			
+
 
 				Valuation valuation=new Valuation();
 				run.valuation=valuation;
@@ -382,9 +388,13 @@ public class LimsCNSDAO{
 				//TODO	run.validation.resolutionCodes
 				State state = new State();
 				run.state = state;
-				run.state.code = DataMappingCNS.getStateFromLims(run.valuation.valid.toString());
+				run.state.code = DataMappingCNS.getStateRunFromLims(run.valuation.valid);
 				run.state.user = NGSRG_CODE;
 				run.state.date = new Date();
+				
+				run.state.historical=new ArrayList<TransientState>();		
+				run.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",0));
+				run.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",1));				
 				
 				TraceInformation ti = new TraceInformation(); 
 				ti.setTraceInformation(NGSRG_CODE);
@@ -393,18 +403,8 @@ public class LimsCNSDAO{
 				contextValidation.addKeyToRootKeyName("run["+run.code+"]");
 				run.treatments.put(NGSRG_CODE,newTreatment(contextValidation,rs, Level.CODE.Run,NGSRG_CODE,NGSRG_CODE,RUN_TYPE_CODE));
 				contextValidation.removeKeyFromRootKeyName("run["+run.code+"]");
-/*
-				run.lanes=new ArrayList<Lane>();
-				for(int i=1;i<=rs.getInt("nbPiste");i++){
-					Lane lane=new Lane();
-					lane.number=i;
-					Validation validationLane=new Validation();
-					validationLane.date=new Date();
-					validationLane.user="lims";
-					lane.validation=validationLane;
-					run.lanes.add(lane);
-				}
-*/
+
+
 				if(contextValidation.hasErrors()){
 					contextError.errors.putAll(contextValidation.errors);
 					return null;
@@ -419,14 +419,33 @@ public class LimsCNSDAO{
 	}
 
 
-	public List<Lane> findLanesToCreateFromRun(Run run,final ContextValidation contextError)throws SQLException{
+	protected TransientState getTransientState(java.sql.Date date,String state, int index) {
+		if(date!=null){
+			TransientState transientState=new TransientState();
+			transientState.date=date;
+			transientState.index=index;
+			transientState.code=state;
+			transientState.user=NGSRG_CODE;	
+		return transientState;
+		}
+		return null;
+	}
+
+
+	public List<Lane> findLanesToCreateFromRun(final Run run,final ContextValidation contextError)throws SQLException{
 
 		List<Lane> results = this.jdbcTemplate.query("pl_LaneUnRunToNGL @runCode=?",new Object[]{run.code} 
 		,new RowMapper<Lane>() {
 			@SuppressWarnings("rawtypes")
 			public Lane mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Lane lane=new Lane();
-				lane.number=rs.getInt("lanenum");
+
+				Lane lane=getLane(run,rs.getInt("lanenum"));
+
+				if(lane==null){
+					Logger.debug("Lane null");
+					lane=new Lane();
+					lane.number=rs.getInt("lanenum");
+				}
 				lane.valuation=new Valuation();
 				lane.valuation.valid=TBoolean.valueOf(rs.getString("validationValid"));
 				lane.valuation.user="lims";
@@ -444,6 +463,17 @@ public class LimsCNSDAO{
 			}
 		});
 		return results;
+	}
+
+
+	protected Lane getLane(Run run, int int1) {
+		if(run.lanes!=null){
+			for(Lane lane:run.lanes){
+				if(lane.number==int1){
+					return lane;
+				}
+			}}
+		return null;
 	}
 
 
@@ -487,13 +517,20 @@ public class LimsCNSDAO{
 				readSet.runCode=run.code;
 				readSet.sampleCode=rs.getString("sampleCode");
 				readSet.state=new State();
-				readSet.state.code=DataMappingCNS.getStateFromLims(rs.getString("state"));
+				readSet.state.code=DataMappingCNS.getStateReadSetFromLims(rs.getString("state"),TBoolean.valueOf(rs.getString("validationProduction")));
 				readSet.state.date= new Date();
 				readSet.state.user="lims";
+				
+				readSet.state.historical=new ArrayList<TransientState>();		
+				readSet.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",1));
+				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",2));	
+				
 				readSet.traceInformation=new TraceInformation();
 				readSet.traceInformation.setTraceInformation("lims");
 				readSet.typeCode=READSET_DEFAULT_CODE;
-				
+				readSet.archiveDate=rs.getDate("archiveDate");
+				readSet.archiveId=rs.getString("archiveId");
+				readSet.runSequencingStartDate=rs.getDate("runSequencingStartDate");
 				//To valide
 				readSet.bioinformaticValuation=new Valuation();
 				readSet.bioinformaticValuation.valid=TBoolean.valueOf(rs.getString("validationBioinformatic"));
@@ -511,8 +548,12 @@ public class LimsCNSDAO{
 		return results;
 	}
 
-
 	public void updateRunLims(List<Run> updateRuns,
+			ContextValidation contextError)throws SQLException {
+		updateRunLims(updateRuns, true, contextError);
+	}
+
+	public void updateRunLims(List<Run> updateRuns, boolean inNGL,
 			ContextValidation contextError)throws SQLException {
 		String rootKeyName=null;
 
@@ -524,9 +565,10 @@ public class LimsCNSDAO{
 			contextError.addKeyToRootKeyName(rootKeyName);
 
 			try{
-				String sql="pm_RunhdInNGL @runhnom=?";
+				String sql="pm_RunhdInNGL @runhnom=?, @InNGL=?";
 				Logger.debug(sql+run.code);
-				this.jdbcTemplate.update(sql, run.code);
+				int intInNGL = (inNGL) ? 1 : 0;
+				this.jdbcTemplate.update(sql, run.code,intInNGL);
 
 			} catch(DataAccessException e){
 				contextError.addErrors("",e.getMessage(), run.code);
@@ -541,7 +583,7 @@ public class LimsCNSDAO{
 
 
 	public List<File> findFileToCreateFromReadSet(final ReadSet readSet,final ContextValidation contextError)throws SQLException {
-		
+
 		List<File> results = this.jdbcTemplate.query("pl_FileUnReadSetToNGL @readSetCode=?",new Object[]{readSet.code} 
 		,new RowMapper<File>() {
 			@SuppressWarnings("rawtypes")
@@ -555,10 +597,10 @@ public class LimsCNSDAO{
 				file.state.user="lims";
 				file.typeCode=rs.getString("typeCode");
 				file.usable=rs.getBoolean("usable");
-				
+
 				ReadSetType readSetType = null;
 
-    			try {
+				try {
 					readSetType = ReadSetType.find.findByCode(readSet.typeCode);
 				} catch (DAOException e) {
 					Logger.error("",e);

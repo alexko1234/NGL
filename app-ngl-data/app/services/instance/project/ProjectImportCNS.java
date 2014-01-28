@@ -9,6 +9,7 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
+import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 
 public class ProjectImportCNS extends AbstractImportDataCNS{
@@ -20,8 +21,13 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 
 	@Override
 	public void runImport() throws SQLException, DAOException {
+		createProjet(contextError);
+	}
+
+	
+	public static void createProjet(ContextValidation contextValidation) throws SQLException, DAOException{
 		
-		List<Project> projects = limsServices.findProjectToCreate(contextError) ;
+	List<Project> projects = limsServices.findProjectToCreate(contextValidation) ;
 		
 		for(Project project:projects){
 	
@@ -31,7 +37,7 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 			}
 		}
 	
-		InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError);
+		InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextValidation);
+		
 	}
-
 }

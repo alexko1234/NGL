@@ -19,7 +19,7 @@ public abstract class AbstractImportData implements Runnable{
 
 	public ContextValidation contextError;
 	final String name;
-	protected ALogger logger;
+	protected static ALogger logger;
 
 	public abstract void runImport() throws SQLException, DAOException, MongoException, RulesException;
 
