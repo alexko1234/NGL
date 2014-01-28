@@ -323,7 +323,7 @@ public class InstanceTest extends AbstractTests{
 		experiment.instrument.code="instrumentCode";
 
 		experiment.stateCode="New";
-		experiment.resolutionCode="ResolutionexperimentType";
+		experiment.resolutionCodes.add("ResolutionexperimentType");
 
 		//TODO
 		//public Map<String,PropertyValue> experimentProperties;
