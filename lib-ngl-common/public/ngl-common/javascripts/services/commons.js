@@ -104,6 +104,9 @@ angular.module('commonsServices', []).
     				samples : function(params){
     					load(jsRoutes.controllers.samples.api.Samples.list().url,params,'samples');    					
     				},
+    				users : function(params){
+    					load(jsRoutes.controllers.commons.api.Users.list().url,params,'users');    					
+    				},
     				states : function(params){
     					load(jsRoutes.controllers.commons.api.States.list().url,params,'states');    				
     				},
@@ -138,6 +141,7 @@ angular.module('commonsServices', []).
     					this.samples(params);
     					this.states(params);
     					this.types(params);
+    					this.users(params);
     					this.runs(params);
     					this.protocols(params);
     				}
@@ -166,6 +170,7 @@ angular.module('commonsServices', []).
     			getProcessCategories : function(){return results['processCategories'];},
     			getProcessTypes : function(){return results['processTypes'];},
     			getSamples : function(){return results['samples'];},
+    			getUsers : function(){return results['users'];},
     			getContainerCategories : function(){return results['containerCategories'];},
     			getExperimentCategories : function(){return results['experimentCategories'];},
     			getExperimentTypes : function(){return results['experimentTypes'];},

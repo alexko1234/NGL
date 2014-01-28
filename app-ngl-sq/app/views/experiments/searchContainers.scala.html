@@ -35,7 +35,8 @@
 		<input type="date" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
 		<input type="date" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
 		
-		<input type="text" ng-model="form.users" data-min-length="1" placeholder='@Messages("search.placeholder.users")'>
+		<input type="text" ng-model="form.users" bs-typeahead="searchUsers" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.users")'>
+		
 		
 		
 		<div class="btn-toolbar pull-right">

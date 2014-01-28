@@ -103,7 +103,7 @@ public class Supports extends CommonController {
 		}
 		
 		if(null != supportsSearch.users){
-			queryElts.add(DBQuery.in("traceInformation.creationUsers", supportsSearch.users));
+			queryElts.add(DBQuery.in("traceInformation.createUser", supportsSearch.users));
 		}
 		
 		if(supportsSearch.sampleCodes != null){

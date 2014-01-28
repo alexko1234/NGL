@@ -70,6 +70,7 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 			$scope.lists.refresh.types({objectTypeCode:"Process"}, true);
 			$scope.lists.refresh.processCategories();
 			$scope.lists.refresh.experimentCategories();
+			$scope.lists.refresh.users();
 			
 		} else {
 			$scope.form = $scope.getForm();		
@@ -101,6 +102,10 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 	
 	$scope.searchProjects = function(query){
 		return search(lists.getProjects(), query);
+	}
+	
+	$scope.searchUsers = function(query){
+		return search(lists.getUsers(), query);
 	}
 	
 	$scope.searchSamples = function(query){

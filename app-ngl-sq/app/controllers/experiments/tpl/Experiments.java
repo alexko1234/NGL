@@ -43,6 +43,9 @@ public class Experiments extends CommonController{
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode"), true, false, false));
+		columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("containers.table.creationDate"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("traceInformation.createUser", Messages.get("containers.table.creationUser"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("state.code", Messages.get("containers.table.state"), true, false, false));
 		
 		DatatableConfig config = new DatatableConfig(columns);
 		config.button = Boolean.TRUE;
@@ -181,6 +184,7 @@ public class Experiments extends CommonController{
 				controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
 				controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
+  	    		controllers.commons.api.routes.javascript.Users.list(),
   	    		controllers.containers.api.routes.javascript.Containers.list_supports()
   	    		
   	      )	  	      
