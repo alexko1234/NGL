@@ -30,6 +30,7 @@ public class Containers extends CommonController {
 		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("valid", Messages.get("containers.table.valid"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("containers.table.stateCode"), true, false, false));
+		columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("containers.table.creationDate"), true, false, false));
 		DatatableConfig config = new DatatableConfig(columns);
 		return ok(search.render(config));
 	}
