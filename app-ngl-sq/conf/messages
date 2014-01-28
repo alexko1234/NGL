@@ -16,6 +16,8 @@ containers.table.fromExperimentTypeCodes = Type d'Expérience
 containers.table.stateCode = Statut
 containers.table.support.name = Support
 containers.table.stateCode = Code Etat
+containers.table.creationDate = Date de création
+containers.table.createUser = Création par
 containers.table.valid = Valide
 containers.table.barCode = Code Support
 

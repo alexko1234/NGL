@@ -6,13 +6,23 @@
 			<option value="">@Messages("processes.select.processType")</option>
 		</select>		
 		
-		<select ng-model="form.project" ng-options="project.code+' - '+project.name for project in lists.getProjects()" ng-change="changeProject()">
+		
+		<input type="text" ng-model="form.projectCodes" bs-typeahead="searchProjects" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.projects")'>
+		<input type="text" ng-model="form.sampleCodes" bs-typeahead="searchSamples" ng-click="refreshSamples()" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.samples")'>
+		
+		
+		<!--<select ng-model="form.project" ng-options="project.code+' - '+project.name for project in lists.getProjects()" ng-change="changeProject()">
 			<option value="">@Messages("processes.select.project")</option>
 		</select>
 		
 		<select ng-model="form.sample" ng-options="sample.code for sample in lists.getSamples()" ng-change="search()">
 			<option value="">@Messages("processes.select.sample")-</option>
-		</select>	
+		</select>-->
+		
+		<div class="btn-toolbar pull-right">
+					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" ><i class="icon-search icon-large"></i></button>
+					<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="reset()"  class="btn"><i class="icon-undo icon-large"></i></button>				 	
+		</div>
 	</form>
 }
 

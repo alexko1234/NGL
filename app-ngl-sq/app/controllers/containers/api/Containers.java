@@ -158,6 +158,8 @@ public class Containers extends CommonController {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		if(containersSearch.projectCodes != null){
 			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCodes));
+		}else if(containersSearch.projectCode != null){
+			queryElts.add(DBQuery.is("projectCodes", containersSearch.projectCode));
 		}
 
 		if(StringUtils.isNotEmpty(containersSearch.stateCode)){
@@ -170,6 +172,8 @@ public class Containers extends CommonController {
 
 		if(containersSearch.sampleCodes != null){
 			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCodes));
+		}else if(containersSearch.sampleCode != null){
+			queryElts.add(DBQuery.is("sampleCodes", containersSearch.sampleCode));
 		}
 
 		if(StringUtils.isNotEmpty(containersSearch.supportCode)){

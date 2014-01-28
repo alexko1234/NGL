@@ -125,12 +125,11 @@ public class Workflows {
 			required(ctxValidation,experiment.typeCode, "typeCode");
 		} else if(stateCode.equals("IP")) {
 			required(ctxValidation, experiment.typeCode, "typeCode"); 
-			required(ctxValidation, experiment.resolutionCodes, "resolutionCodes");
 			required(ctxValidation, experiment.protocolCode, "protocolCode");
 			required(ctxValidation, experiment.instrument.code, "instrument");
 			
 		} else if(stateCode.equals("F")) {
-			required(ctxValidation, experiment.typeCode, "typeCode"); 
+			required(ctxValidation, experiment.typeCode, "typeCode");
 			required(ctxValidation, experiment.resolutionCodes, "resolutionCodes");
 			required(ctxValidation, experiment.protocolCode, "protocolCode");
 			required(ctxValidation, experiment.instrument.code, "instrument");

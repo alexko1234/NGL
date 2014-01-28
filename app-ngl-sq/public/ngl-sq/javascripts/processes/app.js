@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['commonsServices','ngRoute','datatableServices','basketServices'], function($routeProvider, $locationProvider) {
+angular.module('home', ['commonsServices','ngRoute','datatableServices','basketServices','ui.bootstrap','$strap.directives'], function($routeProvider, $locationProvider) {
 	$routeProvider.when('/processes/new/home', {
 		templateUrl : jsRoutes.controllers.processes.tpl.Processes.searchContainers().url,
 		controller : 'SearchContainerCtrl'

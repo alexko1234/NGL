@@ -1,6 +1,6 @@
 "use strict";
 
-function SearchContainerCtrl($scope, datatable,basket, lists) {
+function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 	 
 	$scope.datatableConfig = {
 		search:{
@@ -15,6 +15,24 @@ function SearchContainerCtrl($scope, datatable,basket, lists) {
 		}
 	};
 		
+	
+	var search = function(values, query){
+		var queryElts = query.split(',');
+		
+		var lastQueryElt = queryElts.pop();
+		
+		var output = [];
+		angular.forEach($filter('filter')(values, lastQueryElt), function(value, key){
+			if(queryElts.length > 0){
+				this.push(queryElts.join(',')+','+value.code);
+			}else{
+				this.push(value.code);
+			}
+		}, output);
+		
+		return output;
+	}
+	
 	$scope.lists = lists;
 	
 	$scope.init = function(){
@@ -73,15 +91,36 @@ function SearchContainerCtrl($scope, datatable,basket, lists) {
 	}
 	
 	
+	$scope.searchProjects = function(query){
+		return search(lists.getProjects(), query);
+	}
+	
+
+	$scope.reset = function(){
+		$scope.form = {
+				
+		}
+	}
+	
+	$scope.refreshSamples = function(){
+		if($scope.form.projectCodes){
+			lists.refresh.samples({projectCodes:$scope.form.projectCodes.split(',')});
+		}
+	}
+	
+	$scope.searchSamples = function(query){
+		return search(lists.getSamples(), query);
+	}
+	
 	$scope.search = function(){
 		if($scope.form.type){ 		
 			var jsonSearch = {};			
 			jsonSearch.stateCode = "IW-P";	//default state code for containers		
-			if($scope.form.project){
-				jsonSearch.projectCode = $scope.form.project.code;
+			if($scope.form.projectCodes){
+				jsonSearch.projectCodes = $scope.form.projectCodes.split(",");
 			}			
-			if($scope.form.sample){
-				jsonSearch.sampleCode = $scope.form.sample.code;
+			if($scope.form.sampleCodes){
+				jsonSearch.sampleCodes = $scope.form.sampleCodes.split(",");
 			}			
 			if($scope.form.type){
 				jsonSearch.processTypeCode = $scope.form.type.code;
@@ -109,7 +148,7 @@ function SearchContainerCtrl($scope, datatable,basket, lists) {
 		}
 	}
 }
-SearchContainerCtrl.$inject = ['$scope', 'datatable','basket','lists'];
+SearchContainerCtrl.$inject = ['$scope', 'datatable','basket','lists','$filter'];
 
 function ListNewCtrl($scope, datatable) {
 	

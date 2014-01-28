@@ -84,8 +84,8 @@ public class Sample extends DBObject implements IValidation{
 	@Override
 	public void validate(ContextValidation contextValidation) {
 
-    	ContainerValidationHelper.validateId(this, contextValidation);
-		ContainerValidationHelper.validateCode(this, InstanceConstants.SAMPLE_COLL_NAME, contextValidation);
+    	SampleValidationHelper.validateId(this, contextValidation);
+		SampleValidationHelper.validateCode(this, InstanceConstants.SAMPLE_COLL_NAME, contextValidation);
 
 		SampleValidationHelper.validateSampleCategoryCode(categoryCode,contextValidation);
 		SampleValidationHelper.validateProjectCodes(this.projectCodes, contextValidation);
