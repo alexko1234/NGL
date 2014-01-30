@@ -224,7 +224,23 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 		
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
-				
+			
+			$http.get(jsRoutes.controllers.commons.api.Resolutions.list().url,{params:{typeCode:$scope.run.typeCode}}).success(function(data) {
+				//$scope.resolutions = data;				
+				//because the regexp of the "bt-select-group" component needs a group by clause in form of object.property (only one point)
+				//we use an object "reso" with a property "category". 
+				var resos = [];
+				for (var i=0; i<data.length; i++) {
+					var reso = new Object();
+					reso.code = data[i].code;
+					reso.name = data[i].name;
+					reso.category = data[i].category.name;
+					resos[i] = reso; 
+				}
+				$scope.resos = resos;
+			});
+			
+			
 			if($scope.getTabs().length == 0){
 				if(isValuationMode()){ //valuation mode
 					$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:false});

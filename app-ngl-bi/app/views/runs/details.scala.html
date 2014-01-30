@@ -34,32 +34,39 @@
 			<dl class="dl-horizontal">
 				<dt>@Messages("runs.valuation.valid")</dt>
 				<dd>
-				<div ng-switch on="isEditMode()">
-					<div ng-switch-when="false" ng-model='run.valuation.valid' codes="valuation"/>
-					<div ng-switch-when="true">
-					<bt-select class="span12" ng-model="run.valuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></bt-select>
+					<div ng-switch on="isEditMode()">
+						<div ng-switch-when="false" ng-model='run.valuation.valid' codes="valuation"/>
+						<div ng-switch-when="true">
+							<bt-select class="span12" ng-model="run.valuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></bt-select>
+						</div>
 					</div>
-				</div>
 				</dd>
 			</dl>
 			<dl class="dl-horizontal">
 				<dt>@Messages("runs.valuation.resolutions")</dt>
 				<dd>
-				<div ng-switch on="isEditMode()">
-					<div ng-switch-when="false">
-						    <ul class="unstyled">
-						    		<li ng-repeat="code in run.valuation.resolutionCodes" ng-model="code" codes="resolution"/>
-						    </ul>
-					</div>
-					<div ng-switch-when="true"><bt-select class="span12" ng-model="run.valuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name for valid in lists.getResolutions()" ></bt-select></div>
+					<div ng-switch on="isEditMode()">
+						<div ng-switch-when="false">
+							<ul class="unstyled">
+								<li ng-repeat="code in run.valuation.resolutionCodes" ng-model="code" codes="resolution"/>
+							</ul>
+						</div>
+						<div ng-switch-when="true">
+							<bt-select-group class="span12" ng-model="run.valuation.resolutionCodes" multiple="true" bt-options="r.code as r.name group by r.category for r in resos">
+							</bt-select-group>
+						</div>
+					</div>					
 				</dd>
 			</dl>
 			<dl class="dl-horizontal">
 				<dt>@Messages("runs.valuation.criteria")</dt>
 				<dd>
-				<div ng-switch on="isEditMode()">
-					<div ng-switch-when="false" ng-model="run.valuation.criteriaCode" codes="valuation_criteria"/>
-					<div ng-switch-when="true"><bt-select class="span12" ng-model="run.valuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></bt-select></div>
+					<div ng-switch on="isEditMode()">
+						<div ng-switch-when="false" ng-model="run.valuation.criteriaCode" codes="valuation_criteria"/>
+						<div ng-switch-when="true">
+							<bt-select class="span12" ng-model="run.valuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></bt-select>
+						</div>
+					</div>
 				</dd>
 			</dl>
 			<dl class="dl-horizontal">
@@ -74,8 +81,7 @@
 			</dl>
 			<dl class="dl-horizontal">
 				<dt>@Messages("runs.nbClusterTotal")</dt>
-				<dd>{{run.treatments.ngsrg["default"].nbClusterTotal.value |
-					number}}</dd>
+				<dd>{{run.treatments.ngsrg["default"].nbClusterTotal.value | number}}</dd>
 			</dl>
 			<dl class="dl-horizontal">
 				<dt>@Messages("runs.percentClusterIlluminaFilter")</dt>
