@@ -166,14 +166,17 @@
 		<li class="active"><a ng-click="goToReadSets()">@Messages("runs.readsets.title") ({{readSetsDT.totalNumberRecords}})</a></li>		   
 	</ul>
 	<div class="tab-content">
-	<div class="tab-pane active"></div>	
-	<div class="row-fluid">
-	 <form class="well well-small form-inline">
-		<bt-select ng-model="form.laneNumbers" multiple="true" placeholder="@Messages("search.placeholder.lanes")" bt-options="lane.number as lane.number for lane in run.lanes"></bt-select>
-		<div class="btn-toolbar pull-right">
-			<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" ><i class="icon-search icon-large"></i></button>					 	
+		<div class="tab-pane active"></div>	
+		<div class="row-fluid">
+			<div class="span3">
+	 			<form class="well well-small form-inline">
+					<bt-select ng-model="form.laneNumbers" multiple="true" placeholder="@Messages("search.placeholder.lanes")" bt-options="lane.number as lane.number for lane in run.lanes"></bt-select>
+					<div class="btn-toolbar pull-right">
+						<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" ><i class="icon-search icon-large"></i></button>					 	
+					</div>
+	 			</form>	
+			</div> 
 		</div>
-	 </form>	
+		<div datatable="readSetsDT.getConfig()" class="datatable"></div>
 	</div>
-	<div datatable="readSetsDT.getConfig()" class="datatable"></div>
 </div>
