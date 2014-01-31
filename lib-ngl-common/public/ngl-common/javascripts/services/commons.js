@@ -364,7 +364,7 @@ angular.module('commonsServices', []).
 		    	  		+'  <span class="text">{{groupLabel}}</span>'
 		    	  		+'  <ul>'
 		    	  		+'  <li ng-repeat="item in items | filter:{grpLabel:groupLabel}" ng-class="item.class" ng-click="selectItem(item, $event)">'
-		    	  		+'   <a tabindex="-1"  href="#">'
+		    	  		+'   <a tabindex="-1"  href="#" style="color:black; text-decoration:none;">'
 		    	  		+'   <span class="text">{{itemLabel(item)}}</span>'
 		    	  		+'   <i class="glyphicon glyphicon-ok icon-ok check-mark"></i>'
 		    	  		+'   </a>'

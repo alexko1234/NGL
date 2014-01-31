@@ -48,7 +48,11 @@
 					<div ng-switch on="isEditMode()">
 						<div ng-switch-when="false">
 							<ul class="unstyled">
-								<li ng-repeat="code in run.valuation.resolutionCodes" ng-model="code" codes="resolution"/>
+								<!--  <li ng-repeat="code in run.valuation.resolutionCodes" ng-model="code" codes="resolution"> -->
+								<!--  <li ng-repeat="category in resos track by categoryId">  -->
+								 <li ng-repeat="reso in resos">
+									<span>{{reso.category + ' : ' + reso.name}}</span>
+								</li>
 							</ul>
 						</div>
 						<div ng-switch-when="true">
@@ -170,7 +174,7 @@
 		<div class="row-fluid">
 			<div class="span3">
 	 			<form class="well well-small form-inline">
-					<bt-select ng-model="form.laneNumbers" multiple="true" placeholder="@Messages("search.placeholder.lanes")" bt-options="lane.number as lane.number for lane in run.lanes"></bt-select>
+					<bt-select ng-model="form.laneNumbers" multiple="true" placeholder="@Messages("search.placeholder.lanes")" bt-options="l.number as l.number for l in laneOptions"></bt-select>
 					<div class="btn-toolbar pull-right">
 						<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" ><i class="icon-search icon-large"></i></button>					 	
 					</div>

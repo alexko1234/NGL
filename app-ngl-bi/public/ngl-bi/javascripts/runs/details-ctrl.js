@@ -208,6 +208,21 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.home('search').url+'?runCode='+$scope.run.code, 'readsets');
 	}
 	
+	function sortLaneOptions(lanes) {
+		var laneNumbers = [];
+		for (var i=0; i<lanes.length; i++) {
+			laneNumbers[i] = lanes[i].number;
+		}
+		laneNumbers.sort();
+		var laneOptions = [];
+		for (var i=0; i<laneNumbers.length; i++) {
+			var laneOption = new Object();
+			laneOption.number = laneNumbers[i];
+			laneOptions[i] = laneOption;
+		}
+		return laneOptions;
+	}
+	
 	
 	
 	$scope.init = function(){
@@ -235,7 +250,9 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 					reso.code = data[i].code;
 					reso.name = data[i].name;
 					reso.category = data[i].category.name;
+					reso.categoryId = data[i].category.id;
 					resos[i] = reso; 
+					alert(reso.categoryId);
 				}
 				$scope.resos = resos;
 			});
@@ -261,6 +278,9 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 			if(angular.isDefined($scope.run.lanes[0].treatments)){
 				$scope.treatments.init($scope.run.lanes[0].treatments, jsRoutes.controllers.runs.tpl.Runs.laneTreatments);				
 			}
+			
+			//sort laneOptions of lane select list (form.laneNumbers)
+			$scope.laneOptions = sortLaneOptions($scope.run.lanes);
 			
 			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code}}).success(function(data) {
 				$scope.readSetsDT = datatable($scope, $scope.readSetsDTConfig);
