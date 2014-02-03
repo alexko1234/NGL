@@ -50,9 +50,11 @@
 							<ul class="unstyled">
 								 <li ng-repeat="category in categories">
 									{{category}} : 
-									<li ng-repeat="reso in resos | filter: {reso.category:category}">
+									<ul>
+									<li ng-repeat="reso in resos | filter: {reso.category:$parent.category}">
 										{{reso.name}}
 									</li>
+									</ul>
 								</li>
 							</ul>
 						</div>
