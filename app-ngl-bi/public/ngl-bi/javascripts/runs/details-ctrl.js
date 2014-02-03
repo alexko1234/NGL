@@ -252,7 +252,6 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 					reso.category = data[i].category.name;
 					reso.categoryId = data[i].category.id;
 					resos[i] = reso; 
-					alert(reso.categoryId);
 				}
 				$scope.resos = resos;
 			});
