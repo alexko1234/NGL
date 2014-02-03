@@ -48,10 +48,11 @@
 					<div ng-switch on="isEditMode()">
 						<div ng-switch-when="false">
 							<ul class="unstyled">
-								<!--  <li ng-repeat="code in run.valuation.resolutionCodes" ng-model="code" codes="resolution"> -->
-								<!--  <li ng-repeat="category in resos track by categoryId">  -->
-								 <li ng-repeat="reso in resos">
-									<span>{{reso.category + ' : ' + reso.name}}</span>
+								 <li ng-repeat="category in categories">
+									{{category}} : 
+									<li ng-repeat="reso in resos | filter: {reso.category:category}">
+										{{reso.name}}
+									</li>
 								</li>
 							</ul>
 						</div>
