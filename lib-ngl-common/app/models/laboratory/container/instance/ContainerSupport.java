@@ -32,6 +32,8 @@ public class ContainerSupport implements IValidation {
 	// Support name
 	public String name;
 	public String barCode;
+// Replace name and barCode
+//	public String supportCode;
 		
 	public String categoryCode;
 
@@ -61,7 +63,7 @@ public class ContainerSupport implements IValidation {
 		ContainerSupportValidationHelper.validateUniqueBarCodePosition(this, contextValidation);
 		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(categoryCode, contextValidation);
 		ContainerSupportValidationHelper.validateStockCode(stockCode, contextValidation);
-
+		//ContainerSupportValidationHelper.validatesupportCode(supportCode, contextValidation);
 	}
 
 
