@@ -1455,9 +1455,9 @@ angular.module('datatableServices', []).
 	            		  	    		}else if(col.listStyle == "multiselect"){
 	            		  	    			editElement = '<select multiple html-filter="{{col.type}}"  ng-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
 	            		  	    		}else if(col.listStyle == "bt-select"){
-	            		  	    			editElement = '<bt-select html-filter="{{col.type}}" placeholder="" bt-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></bt-select>';	
+	            		  	    			editElement = '<div bt-select html-filter="{{col.type}}" placeholder="" bt-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></div>';	
 	            		  	    		}else if(col.listStyle == "bt-select-multiple"){
-	            		  	    			editElement = '<bt-select html-filter="{{col.type}}" placeholder="" multiple="true" bt-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></bt-select>';
+	            		  	    			editElement = '<div bt-select html-filter="{{col.type}}" placeholder="" multiple="true" bt-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></div>';
 	            		  	    		}else{
 	            		  	    			editElement = '<select html-filter="{{col.type}}" ng-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
 	            		  	    		}
