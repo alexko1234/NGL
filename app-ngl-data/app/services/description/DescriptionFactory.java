@@ -121,7 +121,7 @@ public class DescriptionFactory {
 	}
 
 	public static List<Value> newValues(String...values) {
-		List<Value> l = new ArrayList<Value>(values.hashCode());
+		List<Value> l = new ArrayList<Value>(values.length);
 		for(String v : values){
 			Value value = new Value();
 			value.value = v;
