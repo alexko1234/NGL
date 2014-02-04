@@ -13,9 +13,9 @@
 				</div>
 				<div class="row-fluid">
 				
-				<bt-select ng-model="form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in lists.getStates()" ></bt-select>							
-				<bt-select ng-model="form.typeCodes" multiple="true" placeholder="@Messages("search.placeholder.types")" bt-options="type.code as type.name for type in lists.getTypes()"></bt-select>			
-				<bt-select  ng-model="form.validCode" placeholder="@Messages("search.placeholder.valid")" bt-options="valid.code as valid.name for valid in lists.getValuations()"></bt-select>
+				<div bt-select ng-model="form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in lists.getStates()" ></div>							
+				<div bt-select ng-model="form.typeCodes" multiple="true" placeholder="@Messages("search.placeholder.types")" bt-options="type.code as type.name for type in lists.getTypes()"></div>			
+				<div bt-select  ng-model="form.validCode" placeholder="@Messages("search.placeholder.valid")" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
 				<input type="text" ng-model="form.codes" bs-typeahead="searchRuns" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.runs")'>								
 			
 				<div class="btn-toolbar pull-right">

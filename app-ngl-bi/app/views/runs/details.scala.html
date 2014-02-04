@@ -37,7 +37,7 @@
 					<div ng-switch on="isEditMode()">
 						<div ng-switch-when="false" ng-model='run.valuation.valid' codes="valuation"/>
 						<div ng-switch-when="true">
-							<bt-select class="span12" ng-model="run.valuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></bt-select>
+							<div bt-select class="span12" ng-model="run.valuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
 						</div>
 					</div>
 				</dd>
@@ -71,7 +71,7 @@
 					<div ng-switch on="isEditMode()">
 						<div ng-switch-when="false" ng-model="run.valuation.criteriaCode" codes="valuation_criteria"/>
 						<div ng-switch-when="true">
-							<bt-select class="span12" ng-model="run.valuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></bt-select>
+							<div bt-select class="span12" ng-model="run.valuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></div>
 						</div>
 					</div>
 				</dd>
@@ -177,7 +177,7 @@
 		<div class="row-fluid">
 			<div class="span3">
 	 			<form class="well well-small form-inline">
-					<bt-select ng-model="form.laneNumbers" multiple="true" placeholder="@Messages("search.placeholder.lanes")" bt-options="l.number as l.number for l in laneOptions"></bt-select>
+					<div bt-select ng-model="form.laneNumbers" multiple="true" placeholder="@Messages("search.placeholder.lanes")" bt-options="l.number as l.number for l in laneOptions"></div>
 					<div class="btn-toolbar pull-right">
 						<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" ><i class="icon-search icon-large"></i></button>					 	
 					</div>
