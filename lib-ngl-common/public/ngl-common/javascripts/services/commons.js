@@ -219,32 +219,38 @@ angular.module('commonsServices', []).
     				 };
     			}    					
     			};
-    	}).directive('btSelect',  ['$parse', function($parse)  {
+    	}).directive('btSelect',  ['$parse', '$document', function($parse,$document)  {
 			//0000111110000000000022220000000000000000000000333300000000000000444444444444444000000000555555555555555000000066666666666666600000000000000007777000000000000000000088888
     		  var BT_OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
     		// jshint maxlen: 100
   		    return {
-  		    	restrict: 'E',
+  		    	restrict: 'A',
   		    	replace:false,
   		    	scope:true,
   		    	template: '<div ng-class="getClass()">'
-		    	  		+'<button class="btn dropdown-toggle" data-toggle="dropdown">'
+		    	  		+'<button class="bt-select btn" ng-click="open()">'
 		    	  		+'<div class="filter-option pull-left">{{selectedItemLabel()}}</div>&nbsp;'
-		    	  		+'<span class="caret"></span>'
+		    	  		+'<span class="caret pull-right"></span>'
 		    	  		+'</button>'
-		    	  		+'<ul class="dropdown-menu">'
+		    	  		+'</div>'
+		    	  		+'<ul class="dropdown-menu" style="{{getStyle()}}">'
 		    	  		+'<li ng-repeat="item in items" ng-class="item.class" ng-click="selectItem(item, $event)">'
 		    	  		+'<a tabindex="-1"  href="#">'
 		    	  		+'<span class="text">{{itemLabel(item)}}</span>'
-		    	  		+'<i class="glyphicon glyphicon-ok icon-ok check-mark"></i>'
+		    	  		+'<i class="icon-ok pull-right" ng-show="item.selected"></i>'
 		    	  		+'</a></li>'
 		    	  		+'</ul>'
-		    	  		+'</div>',
+		    	  		,
 	    	  		require: ['?ngModel'],
 	       		    link: function(scope, element, attr, ctrls) {
 	       		  // if ngModel is not defined, we don't need to do anything
 	      		      if (!ctrls[0]) return;
-
+	      		      element.addClass("bt-select");
+	      		      
+	      		      $document.on("click",function(event){console.log(event);
+	      		      	
+	      		      })
+	      		      
 	      		      var ngModelCtrl = ctrls[0],
 	      		          multiple = attr.multiple || false,
 	      		          btOptions = attr.btOptions,
@@ -268,11 +274,29 @@ angular.module('commonsServices', []).
 		      		      };
 		      		      
 	      		      };
-	      		    
+	      		      var isOpen = false;
+		      		
+		      		   scope.open = function(){
+		      			 isOpen = !isOpen;
+		      		   }; 
+		      		   
+		      		 scope.close = function(){
+		      			 isOpen = false;
+		      		   }; 
+	      		      
+	      		    var pos = {};
+	      		    scope.getStyle = function(){
+	      		    	if(isOpen){
+	      		    		return "top:"+(pos.top + pos.height)+"px ;left:"+pos.left+"px;display:block";
+	      		    	}else{
+	      		    		return "top:"+(pos.top + pos.height)+"px ;left:"+pos.left+"px";
+	      		    	}
+	      		    	
+	      		    };
 	      		      var selectedLabels = [];
 	      		      
 	      		      scope.getClass = function(){
-	      		    	return "btn-group bootstrap-select show-tick "+attr.class;  
+	      		    	return "btn-group bt-select "+attr.class;  
 	      		      };
 	      		      
 	      		      scope.selectedItemLabel = function(){
@@ -310,8 +334,10 @@ angular.module('commonsServices', []).
 	      		    			$event.preventDefault();
 	      		    			$event.stopPropagation();
 	      		    	  	}else{
+	      		    	  		scope.open();
 	      		    	  		ngModelCtrl.$setViewValue(scope.itemValue(item));
 	      		    	  		ngModelCtrl.$render();
+	      		    	  		
 	      		    	  	}
 	      		      };
 	      		   ngModelCtrl.$render = render;
@@ -320,6 +346,10 @@ angular.module('commonsServices', []).
 	      		    scope.$watch(render);
 	      	        
 	      		    function render() {
+	      		    	pos = element.position();
+		      		    pos.height = element[0].offsetHeight;
+		      		    
+	      		    	
 	      		    	selectedLabels = [];
 		      	    	scope.items = optionsConfig.source(scope) || [];
 		      	    	var modelValues = ngModelCtrl.$modelValue || [];
@@ -330,10 +360,12 @@ angular.module('commonsServices', []).
 			      	    	for(var i = 0; i < scope.items.length; i++){
 			      	    		var item = scope.items[i];
 			      	    		item.class = "";
+			      	    		item.selected = false;
 		      		    		for(var j = 0; j < modelValues.length; j++){
 			      	    			var modelValue = modelValues[j];
 			      	    			if(scope.itemValue(item) === modelValue){
 				      	    			item.class = "selected";
+				      	    			item.selected = true;
 				      		    		selectedLabels.push(scope.itemLabel(item));
 				      	    		}
 			      	    		}	      	    		
