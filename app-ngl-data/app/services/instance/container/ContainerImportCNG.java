@@ -45,14 +45,6 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		
 		/***********************************************************************************/
 		//MANAGE SUPPORT
-		
-		//cas particulier de la reprise
-		List<Support> supports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, Support.class).toList();
-		if (supports.size() == 0) {
-			containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
-		}	
-		
-		//1. stock all the support created in a hashMap (hmSupports)
 		HashMap<String,Support> hmSupports = new HashMap<String,Support>();
 		
 		for (Container container : containers) {
@@ -75,11 +67,8 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 			}
 		}
 		
-		//2. convert the hashMap to an arrayList of support (object required to update MongoDB)
-		ArrayList<Support> finalSupports = new ArrayList<Support>(hmSupports.values());
-		
 		//update dataBase 
-		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, finalSupports, contextError, true);
+		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, new ArrayList<Support>(hmSupports.values()), contextError, true);
 		/***********************************************************************************/
 		
 		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError, true);
