@@ -17,11 +17,11 @@
 .form-search .bt-select,
 .form-inline .bt-select,
 .form-horizontal .bt-select{
-	display:inline-block;
-	*display:inline;
-	*zoom:1;
-	margin-bottom:0;
-	vertical-align:middle;
+		display:inline-block;
+		*display:inline;
+		*zoom:1;
+		margin-bottom:0;
+		vertical-align:middle;
 }
 
 .form-search .bt-select.btn-group,
@@ -115,7 +115,7 @@
 }
 
 .bt-select.btn-group .dropdown-menu {
-    min-width: 100%;
+    /*min-width: 100%;*/
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;

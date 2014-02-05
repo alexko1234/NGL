@@ -228,18 +228,18 @@ angular.module('commonsServices', []).
   		    	replace:false,
   		    	scope:true,
   		    	template: '<div ng-class="getClass()">'
-		    	  		+'<button class="bt-select btn" ng-click="open()">'
+		    	  		+'<button class="btn dropdown-toggle btn-default" ng-click="open()">'
 		    	  		+'<div class="filter-option pull-left">{{selectedItemLabel()}}</div>&nbsp;'
 		    	  		+'<span class="caret"></span>'
 		    	  		+'</button>'
-		    	  		+'</div>'
 		    	  		+'<ul class="dropdown-menu" style="{{getStyle()}}">'
 		    	  		+'<li ng-repeat="item in items" ng-class="item.class" ng-click="selectItem(item, $event)">'
 		    	  		+'<a tabindex="-1"  href="#">'
 		    	  		+'<span class="text">{{itemLabel(item)}}</span>'
-		    	  		+'<i class="icon-ok" ng-show="item.selected"></i>'
+		    	  		+'<i class="icon-ok check-mark" ng-show="item.selected"></i>'
 		    	  		+'</a></li>'
 		    	  		+'</ul>'
+		    	  		+'</div>'
 		    	  		,
 	    	  		require: ['?ngModel'],
 	       		    link: function(scope, element, attr, ctrls) {
@@ -247,10 +247,11 @@ angular.module('commonsServices', []).
 	      		      if (!ctrls[0]) return;
 	      		      element.addClass("bt-select");
 	      		      
+	      		      /*
 	      		      $document.on("click",function(event){console.log(event);
 	      		      	
 	      		      })
-	      		      
+	      		      */
 	      		      var ngModelCtrl = ctrls[0],
 	      		          multiple = attr.multiple || false,
 	      		          btOptions = attr.btOptions,
@@ -287,16 +288,16 @@ angular.module('commonsServices', []).
 	      		    var pos = {};
 	      		    scope.getStyle = function(){
 	      		    	if(isOpen){
-	      		    		return "top:"+(pos.top + pos.height)+"px ;left:"+pos.left+"px;display:block";
+	      		    		return "top:"+(pos.top + pos.height)+"px ;left:"+pos.left+"px;display:block;position:fixed";
 	      		    	}else{
-	      		    		return "top:"+(pos.top + pos.height)+"px ;left:"+pos.left+"px";
+	      		    		return "top:"+(pos.top + pos.height)+"px ;left:"+pos.left+"px;display:none;position:fixed";
 	      		    	}
 	      		    	
 	      		    };
 	      		      var selectedLabels = [];
 	      		      
 	      		      scope.getClass = function(){
-	      		    	return "btn-group bt-select "+attr.class;  
+	      		    	return "btn-group bt-select show-tick "+attr.class;  
 	      		      };
 	      		      
 	      		      scope.selectedItemLabel = function(){
