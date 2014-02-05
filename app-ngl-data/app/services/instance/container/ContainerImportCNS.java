@@ -2,6 +2,7 @@ package services.instance.container;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,6 +11,7 @@ import models.LimsCNSDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
+import models.laboratory.container.instance.Support;
 import models.laboratory.sample.instance.Sample;
 import models.util.DataMappingCNS;
 import models.utils.InstanceConstants;
@@ -22,6 +24,7 @@ import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
+import validation.container.instance.ContainerValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
 public abstract class ContainerImportCNS extends AbstractImportDataCNS {
@@ -174,12 +177,14 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		String rootKeyName=null;
 	
 		List<Container> containers=	limsServices.findContainersToCreate(sqlContainer,contextError, containerCategoryCode,containerStateCode,experimentTypeCode);
-	
+		
 		if(sqlContent!=null){
 			ContainerImportCNS.createContentsFromContainers(containers,sqlContent);
 		}
 	
 		ContainerImportCNS.saveSampleFromContainer(contextError,containers);
+		
+		ContainerImportCNS.createSupportFromContainers(containers, contextError);
 	
 		List<Container> newContainers=new ArrayList<Container>();
 	
@@ -195,6 +200,30 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		}
 	
 		limsServices.updateMaterielmanipLims(newContainers,contextError);
+	
+	}
+
+	
+	public static void createSupportFromContainers(List<Container> containers,ContextValidation contextValidation){
+	
+	HashMap<String,Support> mapSupports = new HashMap<String,Support>();
+	
+	for (Container container : containers) {
+		if (container.support != null) {
+			Support newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
+			if (!mapSupports.containsKey(newSupport.code)) {
+				mapSupports.put(newSupport.code, newSupport);
+			}
+			else {
+				Support oldSupport = (Support) mapSupports.get(newSupport.code);
+				InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
+				InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
+			}
+			
+		}
+	}
+
+	InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, new ArrayList<Support>(mapSupports.values()), contextValidation, true);
 	
 	}
 
