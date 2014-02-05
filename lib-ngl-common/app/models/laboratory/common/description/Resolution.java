@@ -20,6 +20,7 @@ public class Resolution extends Model<Resolution>{
 	
 	public String name;
 	public ResolutionCategory category;
+	public List<Institute> institutes;
 	
 	
 	public static ResolutionFinder find = new ResolutionFinder();
@@ -50,6 +51,10 @@ public class Resolution extends Model<Resolution>{
 		
 		public List<Resolution> findByObjectTypeCode(ObjectType.CODE objectTypeCode) throws DAOException {
 		    return ((ResolutionDAO) getInstance()).findByObjectTypeCode(objectTypeCode);
+		}
+		
+		public List<Resolution> findByInstitute(Institute.CODE instituteCode) throws DAOException {
+		    return ((ResolutionDAO) getInstance()).findByInstitute(instituteCode);
 		}
 	
 	}

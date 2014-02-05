@@ -197,11 +197,12 @@ public class DescriptionFactory {
 	}
 
 	public static Resolution newResolution(String name, String code,
-		ResolutionCategory category) {
+		ResolutionCategory category, List<Institute> institutes) {
 		Resolution r = new Resolution();
 		r.code = code;
 		r.name = name;
 		r.category = category;
+		r.institutes = institutes;
 		return r;
 	}
 	
@@ -260,7 +261,7 @@ public class DescriptionFactory {
 		et.protocols = protocols;
 		et.instrumentUsedTypes = instrumentUsedTypes;
 		et.states = State.find.findByObjectTypeCode(ObjectType.CODE.Experiment);
-		et.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Experiment.name());
+		et.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.Experiment);
 		et.atomicTransfertMethod=atomicTransfertMethod;
 		
 		et.institutes = institutes;
@@ -325,7 +326,7 @@ public class DescriptionFactory {
 		pt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Process.name());
 		pt.propertiesDefinitions = propertiesDefinitions;
 		pt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Process);
-		pt.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Process.name());
+		pt.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.Process);
 		pt.firstExperimentType = firstExperimentType;
 		pt.lastExperimentType = lastExperimentType;
 		pt.voidExperimentType = voidExperimentType;
@@ -381,7 +382,7 @@ public class DescriptionFactory {
 		rt.propertiesDefinitions = propertiesDefinitions;
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.ReadSet);
 		rt.institutes = institutes; 
-		rt.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.ReadSet.name());
+		rt.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.ReadSet);
 		
 		rt.criterias = valCriterias;
 		return rt;
@@ -397,7 +398,7 @@ public class DescriptionFactory {
 		rt.propertiesDefinitions = propertiesDefinitions;
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Run);
 		rt.institutes = institutes;
-		rt.resolutions = Resolution.find.findByCategoryCode(ResolutionCategory.CODE.Run.name());
+		rt.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.Run);
 		
 		rt.criterias = valCriterias;
 		return rt;

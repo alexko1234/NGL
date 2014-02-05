@@ -29,7 +29,6 @@ public class ObjectTypeService {
 	public static void saveObjectTypes(Map<String,List<ValidationError>> errors) throws DAOException{
 			
 			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Container.name()), errors);
-			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Container.name() ), errors);
 			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Project.name() ), errors);
 			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Experiment.name() ), errors);
 			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Process.name() ), errors);
@@ -41,10 +40,6 @@ public class ObjectTypeService {
 			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Reagent.name() ), errors);
 			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Import.name() ), errors);
 			DAOHelpers.saveModel(ObjectType.class,DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Treatment.name() ), errors);
-			
-			
-			
-			
 	}
 	
 	
@@ -74,8 +69,21 @@ public class ObjectTypeService {
 		
 		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Run.name(), false, DescriptionFactory.getResolutions("pbMIndetermine","pbMChiller","pbMPelletier","pbMFluidiq","pbMLaser","pbMCamera","pbMLentille","pbMPEmodule","pbMCbot","pbRIndetermine","pbRFC","pbRCbot","pbRSeq","pbRIndexing","pbRPEmodule","pbRRehybR1","pbRRehybR2","pbRErreurReac","pbRAjoutReac","savIntensite","savDensiteElevee","savDensiteFaible","savPF","savPhasing","savPrephasing","savErrRate","savQ30","savIndDemultiplex","pbIPC","pbIEcran","pbIEspDisqInsuf","pbILogiciel","pbIRebootPC","infoRunValidation","infoArretSeq","infoArretLogiciel","infoRemboursement") ));
 		
-		//l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.ReadSet.name(), false, DescriptionFactory.getResolutions() )); 
-
+		//TODO : set resolutions for type ReadSet (like for the Run, just before) !
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.ReadSet.name(), false, DescriptionFactory.getResolutions("default") ));
+		
+		
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Container.name(), false, DescriptionFactory.getResolutions("default") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Project.name(), false, DescriptionFactory.getResolutions("default") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Experiment.name(), false, DescriptionFactory.getResolutions("default") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Process.name(), false, DescriptionFactory.getResolutions("default") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Sample.name(), false, DescriptionFactory.getResolutions("default") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Instrument.name(), false, DescriptionFactory.getResolutions("default") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Reagent.name(), false, DescriptionFactory.getResolutions("default") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Import.name(), false, DescriptionFactory.getResolutions("default") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Treatment.name(), false, DescriptionFactory.getResolutions("default") ));
+	
+		
 		DAOHelpers.updateModels(ObjectType.class, l, errors);	
 	}
 	

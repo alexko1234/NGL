@@ -88,7 +88,7 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 
 	private void insertResolutions(List<Resolution> resolutions, Long otId, boolean deleteBefore)
 			throws DAOException {
-		//Add states list
+		//Add resolutions list
 		if(deleteBefore){
 			removeResolutions(otId);
 		}

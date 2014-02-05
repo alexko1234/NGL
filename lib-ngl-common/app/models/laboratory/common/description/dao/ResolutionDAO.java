@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
@@ -33,12 +34,19 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 	
 	@Override
 	public void remove(Resolution resolution) throws DAOException {
+		if(null == resolution){
+			throw new IllegalArgumentException("resolution is null");
+		}
 		//Remove list resolution for common_info_type
 		String sqlResolution = "DELETE FROM common_info_type_resolution WHERE fk_resolution=?";
 		jdbcTemplate.update(sqlResolution, resolution.id);
 		//Remove list resolution for object_type
 		sqlResolution = "DELETE FROM resolution_object_type WHERE fk_resolution=?";
 		jdbcTemplate.update(sqlResolution, resolution.id);
+		
+		//remove institute
+		removeInstitutes(resolution.id);
+		
 		//remove resolution
 		super.remove(resolution);
 	}
@@ -56,14 +64,42 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		resolution.id = newId;
+		
+        
+        insertInstitutes(resolution.institutes, resolution.id, false);
+        
 		return resolution.id;
 	}
 
 	@Override
 	public void update(Resolution resolution) throws DAOException {
 		String sql = "UPDATE resolution SET code=?, name=? WHERE id=?";
-		jdbcTemplate.update(sql, resolution.code, resolution.name);
+		jdbcTemplate.update(sql, resolution.code, resolution.name, resolution.id);
 	}
+	
+	
+	private void insertInstitutes(List<Institute> institutes, Long resolutionId, boolean deleteBefore) throws DAOException {
+		if(deleteBefore){
+			removeInstitutes(resolutionId);
+		}
+		//Add institutes list		
+		if(institutes!=null && institutes.size()>0){
+			String sql = "INSERT INTO resolution_institute (fk_resolution, fk_institute) VALUES (?,?)";
+			for (Institute institute : institutes) {
+				if (institute == null || institute.id == null ) {
+					throw new DAOException("institute is mandatory");
+				}
+				jdbcTemplate.update(sql, resolutionId, institute.id);
+			}
+		}
+	}
+	
+	private void removeInstitutes( long resolutionId) {
+		String sql = "DELETE FROM resolution_institute WHERE fk_resolution=?";
+		jdbcTemplate.update(sql, resolutionId);
+	}
+	
+	
 	
 	
 	private void insertObjectTypes(List<ObjectType> objectTypes, Long id,
@@ -82,8 +118,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 			}
 		}				
 	}
-	
-	
+		
 	private void removeObjectTypes(Long id) {
 		String sql = "DELETE FROM resolution_object_type WHERE fk_resolution=?";
 		jdbcTemplate.update(sql, id);
@@ -136,7 +171,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		String sql = sqlCommon+
 				"JOIN resolution_object_type ro ON ro.fk_resolution=t.id "+
 				"JOIN object_type o ON ro.fk_object_type=o.id "+
-				"WHERE o.code=? order by position";		
+				"WHERE o.code=?";		
 		return initializeMapping(sql, new SqlParameter("o.code", Types.VARCHAR)).execute(objectTypeCode.name());		
 	}
 	
@@ -148,6 +183,16 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 				"JOIN resolution_object_type ON fk_resolution=id "+
 				"WHERE fk_object_type=?";		
 		return initializeMapping(sql, new SqlParameter("fk_object_type", Type.LONG)).execute(id);		
+	}
+	
+	
+	public List<Resolution> findByInstitute(Institute.CODE instituteCode) {
+		String sql = sqlCommon+
+				"JOIN resolution_institute ri ON ri.fk_resolution=t.id "+
+				"JOIN institute i ON ri.fk_institute=i.id " + 
+				"WHERE i.code=?";
+		BeanPropertyRowMapper<Resolution> mapper = new BeanPropertyRowMapper<Resolution>(Resolution.class);
+		return this.jdbcTemplate.query(sql, mapper, instituteCode);
 	}
 
 

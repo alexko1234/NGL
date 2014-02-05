@@ -23,8 +23,15 @@ public class InstituteDAO extends AbstractDAOMapping<Institute>{
 	@Override
 	public void remove(Institute institute) throws DAOException {
 		//Remove list institute for common_info_type
-		String sqlState = "DELETE FROM common_info_type_institute WHERE fk_institute=?";
-		jdbcTemplate.update(sqlState, institute.id);
+		String sql = "DELETE FROM common_info_type_institute WHERE fk_institute=?";
+		jdbcTemplate.update(sql, institute.id);
+		
+		sql = "DELETE FROM instrument_institute WHERE fk_institute=?";
+		jdbcTemplate.update(sql, institute.id);
+		
+		sql = "DELETE FROM resolution_institute WHERE fk_institute=?";
+		jdbcTemplate.update(sql, institute.id);
+		
 		//remove institute itself
 		super.remove(institute);
 	}
