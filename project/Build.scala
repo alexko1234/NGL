@@ -145,7 +145,7 @@ object ApplicationBuild extends Build {
        resolvers := Seq(nexusig),
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish) 
-     ).dependsOn(nglcommon) 
+     ).dependsOn(nglcommon).dependsOn(nglbi) 
     
 	val nglsq = play.Project(appName + "-sq", appVersion, nglsqDependencies, path = file("app-ngl-sq"),settings = buildSettings).settings(
           // Add your own project settings here      
