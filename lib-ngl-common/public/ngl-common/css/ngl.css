@@ -30,31 +30,7 @@ dd > button.btn-link{
 	margin-bottom:0px;
 }
 
-.bt-select {
-	width:220px;
-}
 
-.bt-select>.btn{
-	width:100%;
-}
-
-.bt-select.btn-group,
-.bt-select.btn-group[class*="span"] {
-   margin-bottom: 0px;
-}
-
-.bt-select .btn-group .btn .filter-option{
-	overflow: hidden;
-	position: absolute;
-	left: 12px;
-	right: 25px;
-	text-align: left;
-}
-
-.form-search .bt-select,.form-inline .bt-select,.form-horizontal .bt-select{
-		display:inline-block;
-		*display:inline;
-		*zoom:1;
-		margin-bottom:0;
-		vertical-align:middle;
-	}
+	
+	
+	
