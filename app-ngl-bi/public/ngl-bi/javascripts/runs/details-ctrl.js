@@ -185,13 +185,11 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 		return ($scope.isHomePage('valuation') || $routeParams.page === 'valuation');
 	}
 	
-	$scope.goToReadSet = function(readSetCode){
-		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(readSetCode).url, 'readsets');
-	}
+	
 		
 	$scope.search = function(){
 		//get lane numbers selected
-		var laneNum = "";
+		var laneNum = [];
 		if($scope.form.laneNumbers) laneNum = $scope.form.laneNumbers;		
 		//query by laneNumbers
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code,laneNumbers:laneNum}}).success(function(data) {
@@ -206,6 +204,10 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 	
 	$scope.goToReadSets = function(){
 		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.home('search').url+'?runCode='+$scope.run.code, 'readsets');
+	}
+	
+	$scope.goToReadSet = function(readSetCode){
+		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(readSetCode).url, 'readsets');
 	}
 	
 	function sortLaneOptions(lanes) {
