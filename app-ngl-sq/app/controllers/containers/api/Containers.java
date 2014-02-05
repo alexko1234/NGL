@@ -93,18 +93,18 @@ public class Containers extends CommonController {
 			
 			BasicDBObject keysSupport = new BasicDBObject();
 			BasicDBObject test = new BasicDBObject();
-			keysSupport.put("support.barCode",true);
-			keysSupport.put("support.catoryCode",true);
+			keysSupport.put("support.supportCode",true);
+			keysSupport.put("support.categoryCode",true);
 		    
 			BasicDBList supportDBObject = (BasicDBList) MongoDB.getCollection(InstanceConstants.CONTAINER_COLL_NAME, Container.class, String.class).group(keysSupport, query, test,"function ( curr, result ) { }");
 			Iterator itr = supportDBObject.iterator();
 		    
 			while(itr.hasNext()) {
 		         BasicDBObject element = (BasicDBObject) itr.next();
-		         String barcode  = (String)element.get("support.barCode");
+		         String supportCode  = (String)element.get("support.supportCode");
 		         ContainerSupport cs = new ContainerSupport();
-		         cs.barCode = (String)element.get("support.barCode");
-		         cs.categoryCode = (String)element.get("support.catoryCode");
+		         cs.supportCode = (String)element.get("support.supportCode");
+		         cs.categoryCode = (String)element.get("support.categoryCode");
 		         containerSupports.add(cs);
 		    }
 		
@@ -122,14 +122,14 @@ public class Containers extends CommonController {
 				}
 			}
 
-			List<ListObject> los = new ArrayList<ListObject>();
+			List<String> ls = new ArrayList<String>();
 			for(ContainerSupport p: containerSupports){
 				if(!containerSupports.contains(p)){
-					los.add(new ListObject(p.barCode, p.name));
+					ls.add(p.supportCode);
 				}
 			}
 
-			return ok(Json.toJson(los));
+			return ok(Json.toJson(ls));
 		}else{
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
@@ -177,7 +177,7 @@ public class Containers extends CommonController {
 		}
 
 		if(StringUtils.isNotEmpty(containersSearch.supportCode)){
-			queryElts.add(DBQuery.is("support.barCode", containersSearch.supportCode));
+			queryElts.add(DBQuery.is("support.supportCode", containersSearch.supportCode));
 		}
 		
 		if(StringUtils.isNotEmpty(containersSearch.containerSupportCategory)){

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.utils.dao.DAOException;
 
@@ -29,8 +30,7 @@ public class ObjectTypeMappingQuery extends MappingSqlQuery<ObjectType>{
 	}
 
 	@Override
-	protected ObjectType mapRow(ResultSet rs, int rowNumber)
-			throws SQLException {
+	protected ObjectType mapRow(ResultSet rs, int rowNumber) throws SQLException {
 		
 			ObjectType objectType = new ObjectType();
 			objectType.id = rs.getLong("oId");
@@ -48,6 +48,16 @@ public class ObjectTypeMappingQuery extends MappingSqlQuery<ObjectType>{
 			}
 			objectType.states = states;
 
+			//Get variables Resolution
+			ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
+			List<Resolution> resolutions = null;
+			try {
+				resolutions = resolutionDAO.findByObjectTypeId(objectType.id);
+			} catch (DAOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			objectType.resolutions = resolutions;
 
 			return objectType;
 	}

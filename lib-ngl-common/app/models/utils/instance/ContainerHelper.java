@@ -164,7 +164,7 @@ public class ContainerHelper {
 		}else{
 			//TODO 
 			/*ContainerSupport containerSupport=new ContainerSupport();
-			containerSupport.barCode=getBarCode(experiment.instrument.outContainerSupportCategoryCode);	
+			containerSupport.supportCode=getSupportCode(experiment.instrument.outContainerSupportCategoryCode);	
 			containerSupport.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
 			containerSupport.column="?";
 			containerSupport.line="?";
@@ -179,7 +179,7 @@ public class ContainerHelper {
 
 
 	//TODO
-	private static String getBarCode(String outContainerSupportCategoryCode) {
+	private static String getSupportCode(String outContainerSupportCategoryCode) {
 		return null;
 	}
 

@@ -22,7 +22,7 @@ import validation.utils.BusinessValidationHelper;
  * 
  * If container category is  tube, the position is (column,line)=(1,1) and support category is 'VIDE'
  * 
- * A support intance defines by unique barcode /line/column, a barCode can be referenced in many container.support 
+ * A support intance defines by unique supportCode /line/column, a supportCode (ex barCode) can be referenced in many container.support 
  * 
  * @author mhaquell
  *
@@ -30,10 +30,10 @@ import validation.utils.BusinessValidationHelper;
 public class ContainerSupport implements IValidation {
 	
 	// Support name
-	public String name;
-	public String barCode;
+//	public String name;
+//	public String barCode;
 // Replace name and barCode
-//	public String supportCode;
+	public String supportCode;
 		
 	public String categoryCode;
 
@@ -60,10 +60,10 @@ public class ContainerSupport implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 
-		ContainerSupportValidationHelper.validateUniqueBarCodePosition(this, contextValidation);
+		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(this, contextValidation);
 		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(categoryCode, contextValidation);
 		ContainerSupportValidationHelper.validateStockCode(stockCode, contextValidation);
-		//ContainerSupportValidationHelper.validatesupportCode(supportCode, contextValidation);
+		//ContainerSupportValidationHelper.validateSupportCode(supportCode, contextValidation);
 	}
 
 

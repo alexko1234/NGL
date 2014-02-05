@@ -360,11 +360,13 @@ public class LimsCNGDAO {
 					}
 					
 					container.contents=new ArrayList<Content>();
-					container.contents.add(content);					
+					container.contents.add(content);			
+					
+					container.sampleCodes=new ArrayList<String>();
+					container.sampleCodes.add(rs.getString("code_sample"));
 				}
 				
-				container.sampleCodes=new ArrayList<String>();
-				container.sampleCodes.add(rs.getString("code_sample"));
+
 			
 				container.fromPurifingCode = null;				
 				container.resolutionCode = null;

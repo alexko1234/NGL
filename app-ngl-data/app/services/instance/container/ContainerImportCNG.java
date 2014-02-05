@@ -1,14 +1,21 @@
 package services.instance.container;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import play.Logger;
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.Support;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNG;
+import validation.container.instance.ContainerValidationHelper;
 
 public class ContainerImportCNG extends AbstractImportDataCNG{
 
@@ -35,12 +42,57 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		logger.info("Start loading containers ..."); 
 		
 		List<Container> containers = limsServices.findContainerToCreate(contextError) ;
-
+		
+		/***********************************************************************************/
+		//MANAGE SUPPORT
+		
+		//cas particulier de la reprise
+		List<Support> supports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, Support.class).toList();
+		if (supports.size() == 0) {
+			containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
+		}	
+		
+		//1. stock all the support created in a hashMap (hmSupports)
+		HashMap<String,Support> hmSupports = new HashMap<String,Support>();
+		
+		for (Container container : containers) {
+			if (container.support != null) {
+				Support support = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
+				if (!hmSupports.containsKey(support.code)) {
+					hmSupports.put(support.code, support);
+				}
+				else {
+					Support oldSupport = (Support) hmSupports.get(support.code);
+					List<String> oldProjectCodes = oldSupport.projectCodes;
+					List<String> oldSampleCodes = oldSupport.sampleCodes;
+					support.projectCodes = InstanceHelpers.addCodesList(support.projectCodes, oldProjectCodes); 
+					support.sampleCodes = InstanceHelpers.addCodesList(support.sampleCodes, oldSampleCodes);
+					//update the hashMap with the support up to date (in terms of projectCodes & sampleCodes)
+					hmSupports.remove(support.code);
+					hmSupports.put(support.code, support);
+				}
+				
+			}
+		}
+		
+		//2. convert the hashMap to an arrayList of support (object required to update MongoDB)
+		ArrayList<Support> finalSupports = new ArrayList<Support>(hmSupports.values());
+		
+		//update dataBase 
+		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, finalSupports, contextError, true);
+		/***********************************************************************************/
+		
 		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError, true);
 		
 		limsServices.updateLimsContainers(ctrs, contextError);
 		
 		logger.info("End of load containers !"); 
+		
+		logger.info("Start loading supports ...");
+		
+		
+		logger.info("End of load supports !");
+
 	}
 
 }

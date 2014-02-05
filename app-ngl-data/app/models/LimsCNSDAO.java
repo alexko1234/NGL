@@ -282,7 +282,7 @@ public class LimsCNSDAO{
 
 			if(container.properties==null || limsCode==null)
 			{
-				contextError.addErrors("limsCode","error.PropertyNotExist",LIMS_CODE,container.support.barCode);
+				contextError.addErrors("limsCode","error.PropertyNotExist",LIMS_CODE,container.support.supportCode);
 
 			}else {
 				try{
@@ -293,7 +293,7 @@ public class LimsCNSDAO{
 
 				} catch(DataAccessException e){
 
-					contextError.addErrors("",e.getMessage(), container.support.barCode);
+					contextError.addErrors("",e.getMessage(), container.support.supportCode);
 				}
 			}
 

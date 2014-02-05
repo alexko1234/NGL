@@ -19,7 +19,7 @@ containers.table.stateCode = Code Etat
 containers.table.creationDate = Date de création
 containers.table.createUser = Création par
 containers.table.valid = Valide
-containers.table.barCode = Code Support
+containers.table.supportCode = Code Support
 
 containers.select.state =  -- selectionner un état --
 containers.select.categoryCode =  -- selectionner un type --

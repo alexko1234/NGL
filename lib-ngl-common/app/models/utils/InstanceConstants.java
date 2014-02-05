@@ -3,7 +3,7 @@ package models.utils;
 public interface InstanceConstants {
 	
 	public static final String PROJECT_COLL_NAME = "ngl_project.Project";
-	public static final String SUPPORT_COLL_NAME = "ngl_sq.Support";
+	public static final String SUPPORT_COLL_NAME = "ngl_sq.ContainerSupport";
 	public static final String CONTAINER_COLL_NAME = "ngl_sq.Container";
 	public static final String PROCESS_COLL_NAME = "ngl_sq.Process";
 	public static final String EXPERIMENT_COLL_NAME = "ngl_sq.Experiment";

@@ -45,7 +45,7 @@ public class RunsTests extends AbstractTests {
 		   Container c = new Container();
 		   c.code ="containerTest1";
 		   c.support = new ContainerSupport(); 
-		   c.support.barCode = "containerName"; 
+		   c.support.supportCode = "containerName"; 
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
 	}

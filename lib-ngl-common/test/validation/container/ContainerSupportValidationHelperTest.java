@@ -43,36 +43,36 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 	
 	
 	/**
-	 *  BarCode / Line / Column unique position in creation
+	 *  SupportCode / Line / Column unique position in creation
 	 */
 	
 	@Test
-	public void validateUniqueBarCodePositionCode() {
+	public void validateUniqueSupportCodePositionCode() {
 		ContextValidation contextValidation=new ContextValidation();
 		contextValidation.setCreationMode();
 		//Container n'a pas encore ete serialize
-		ContainerSupportValidationHelper.validateUniqueBarCodePosition(container.support, contextValidation);
+		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(container.support, contextValidation);
 		container=MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
 	@Test
-	public void validateUniqueBarCodePositionCodeExist() {
+	public void validateUniqueSupportCodePositionCodeExist() {
 		ContextValidation contextValidation=new ContextValidation();
 		contextValidation.setCreationMode();
 		//Container est dans la base
-		ContainerSupportValidationHelper.validateUniqueBarCodePosition(container.support, contextValidation);
+		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(container.support, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
 	
 	@Test
-	public void validateUniqueBarCodePositionCodeNotCreationMode() {
+	public void validateUniqueSupportCodePositionCodeNotCreationMode() {
 		ContextValidation contextValidation=new ContextValidation();
 		contextValidation.setUpdateMode();
-		ContainerSupportValidationHelper.validateUniqueBarCodePosition(container.support, contextValidation);
+		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(container.support, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 		contextValidation.setDeleteMode();
-		ContainerSupportValidationHelper.validateUniqueBarCodePosition(container.support, contextValidation);
+		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(container.support, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 

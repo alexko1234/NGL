@@ -100,7 +100,7 @@ ORDER BY l.number
 	}
     
     
-	public List<LimsLibrary> geContainerSupport(String barCode){
+	public List<LimsLibrary> geContainerSupport(String supportCode){
 		/*
 		 SELECT l.number as lane_number, et.name as exp_name, s.barcode as aliquot_barcode, s.stock_barcode, i.short_name as index_short,
 			i.sequence as index_sequence, i.type as index_type
@@ -129,7 +129,7 @@ ORDER BY l.number
     			+ " WHERE f.barcode=?"
     			+ " ORDER BY l.number";
     	BeanPropertyRowMapper<LimsLibrary> mapper = new BeanPropertyRowMapper<LimsLibrary>(LimsLibrary.class);
-    	return this.jdbcTemplate.query(sql, mapper, barCode);    	
+    	return this.jdbcTemplate.query(sql, mapper, supportCode);    	
     	
     }
 }

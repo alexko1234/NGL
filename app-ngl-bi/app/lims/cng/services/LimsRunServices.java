@@ -55,12 +55,12 @@ public class LimsRunServices implements ILimsRunServices {
 	}
 
 	@Override
-	public ContainerSupport getContainerSupport(String barCode) {
-		List<LimsLibrary> limsReadSets = dao.geContainerSupport(barCode);
+	public ContainerSupport getContainerSupport(String supportCode) {
+		List<LimsLibrary> limsReadSets = dao.geContainerSupport(supportCode);
 		Flowcell flowcell = null;
 		if (limsReadSets.size() > 0) {
 			flowcell = new Flowcell();
-			flowcell.containerSupportCode = barCode;
+			flowcell.containerSupportCode = supportCode;
 
 			Map<Integer, Lane> lanes = new HashMap<Integer, Lane>();
 

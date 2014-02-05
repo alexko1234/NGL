@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
@@ -38,6 +39,8 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 		ot.id = newId;
 
 		insertStates(ot.states, ot.id, false);
+		
+		insertResolutions(ot.resolutions, ot.id, false);
 
 		return ot.id;
 	}
@@ -59,12 +62,16 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 		jdbcTemplate.update(sql, ot.code, ot.generic, ot.id);
 		
 		insertStates(ot.states, ot.id, true);
+		
+		insertResolutions(ot.resolutions, ot.id, true);
 	}
 
 	@Override
 	public void remove(ObjectType objectType) throws DAOException {
 		//Delete state common_info_type_state
 		removeStates(objectType.id);
+		
+		removeResolutions(objectType.id);
 		
 		super.remove(objectType);
 	}
@@ -74,7 +81,29 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 		jdbcTemplate.update(sqlState, otId);
 	}
 
+	private void removeResolutions(Long otId) {
+		String sql = "DELETE FROM resolution_object_type WHERE fk_object_type=?";
+		jdbcTemplate.update(sql, otId);
+	}
 
+	private void insertResolutions(List<Resolution> resolutions, Long otId, boolean deleteBefore)
+			throws DAOException {
+		//Add states list
+		if(deleteBefore){
+			removeResolutions(otId);
+		}
+		if(resolutions!=null && resolutions.size()>0){
+			String sql = "INSERT INTO resolution_object_type (fk_object_type, fk_resolution) VALUES (?,?)";
+			for(Resolution resolution : resolutions){
+				if(resolution == null || resolution.id == null ){
+					throw new DAOException("resolution is mandatory");
+				}
+				jdbcTemplate.update(sql, otId, resolution.id);
+			}
+		}
+	}
+
+	
 	private void insertStates(List<State> states, Long otId, boolean deleteBefore)
 			throws DAOException {
 		//Add states list

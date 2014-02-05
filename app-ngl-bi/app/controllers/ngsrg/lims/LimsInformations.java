@@ -39,7 +39,7 @@ public class LimsInformations  extends CommonController {
 	/**
 	 * Return the experiment information about the run that will be transfer
 	 * @param type
-	 * @param barcode
+	 * @param supportCode
 	 * @return
 	 */
 	//@Permission(value={"read_generation"})
@@ -53,20 +53,20 @@ public class LimsInformations  extends CommonController {
 				if(null == exp){
 					return notFound();
 				}
-				//System.out.println("SIZE = "+type+" "+barcode);
+				//System.out.println("SIZE = "+type+" "+supportCode);
 				return ok(Json.toJson(exp));
 		}
 	  }
 	
 	/**
 	 * Return the container support information used in the experiment
-	 * @param barcode
+	 * @param supportCode
 	 * @return
 	 */
 	//@Permission(value={"read_generation"})
-	public static Result containerSupport(String barcode) {
+	public static Result containerSupport(String supportCode) {
 		LimsRunServices  limsRunServices = Spring.getBeanOfType(LimsRunServices.class);  		
-		ContainerSupport containerSupport = limsRunServices.getContainerSupport(barcode);
+		ContainerSupport containerSupport = limsRunServices.getContainerSupport(supportCode);
 		if(null != containerSupport){
 			return ok(Json.toJson(containerSupport));
 		}else{
@@ -76,13 +76,13 @@ public class LimsInformations  extends CommonController {
 
 	/**
 	 * Return the container support information used in the experiment
-	 * @param barcode
+	 * @param supportCode
 	 * @return
 	 */
 	//@Permission(value={"read_generation"})
-	public static Result isContainerSupport(String barcode) {
+	public static Result isContainerSupport(String supportCode) {
 		LimsRunServices  limsRunServices = Spring.getBeanOfType(LimsRunServices.class);  		
-		ContainerSupport containerSupport = limsRunServices.getContainerSupport(barcode);
+		ContainerSupport containerSupport = limsRunServices.getContainerSupport(supportCode);
 		if(null != containerSupport){
 			return ok();
 		}else{

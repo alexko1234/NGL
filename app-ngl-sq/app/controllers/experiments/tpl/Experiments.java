@@ -106,7 +106,7 @@ public class Experiments extends CommonController{
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
 		Map<Integer,String> extraHeaders = new HashMap<Integer, String>();
 		extraHeaders.put(0, "Inputs");
-		columns.add(DatatableHelpers.getColumn("support.barCode", Messages.get("containers.table.barCode"), true, false, true,false,extraHeaders));	
+		columns.add(DatatableHelpers.getColumn("support.supportCode", Messages.get("containers.table.supportCode"), true, false, true,false,extraHeaders));	
 		columns.add(DatatableHelpers.getColumn("support.categoryCode", Messages.get("containers.table.categoryCode"), true, false, true,false,extraHeaders));	
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, true,false,extraHeaders));	
 		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes"), true, false, true,false,extraHeaders));	

@@ -2,7 +2,9 @@ package models.laboratory.common.description;
 
 import java.util.List;
 
+import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.dao.ResolutionDAO;
+import models.laboratory.common.description.dao.StateDAO;
 import models.utils.Model;
 import models.utils.dao.DAOException;
 
@@ -45,6 +47,11 @@ public class Resolution extends Model<Resolution>{
 		public boolean isCodeExistForTypeCode(String code, String typeCode) throws DAOException {
 			return ((ResolutionDAO) getInstance()).isCodeExistForTypeCode(code, typeCode);
 		}
+		
+		public List<Resolution> findByObjectTypeCode(ObjectType.CODE objectTypeCode) throws DAOException {
+		    return ((ResolutionDAO) getInstance()).findByObjectTypeCode(objectTypeCode);
+		}
+	
 	}
 	
 }

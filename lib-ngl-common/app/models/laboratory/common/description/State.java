@@ -59,7 +59,7 @@ public class State extends Model<State> {
 	    return ((StateDAO) getInstance())
 		    .findByObjectTypeCode(objectTypeCode);
 
-	}
+		}
     }
 
 }

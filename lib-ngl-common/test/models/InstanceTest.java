@@ -247,7 +247,7 @@ public class InstanceTest extends AbstractTests{
 		Container container=findObject(Container.class);
 
 		container.support=new ContainerSupport();
-		container.support.barCode="containerName";
+		container.support.supportCode="containerName";
 		container.categoryCode="containerCategory";
 
 		container.projectCodes= new ArrayList<String>();
@@ -280,7 +280,7 @@ public class InstanceTest extends AbstractTests{
 		container=findObject(Container.class);
 
 		assertThat(container.code).isEqualTo("ContainerCode");
-		assertThat(container.support.barCode).isEqualTo("containerName");
+		assertThat(container.support.supportCode).isEqualTo("containerName");
 		assertThat(container.comments.get(0).comment).isEqualTo("comment");
 		assertThat(container.traceInformation.createUser).isEqualTo("test");
 		assertThat(container.categoryCode).isEqualTo("containerCategory");

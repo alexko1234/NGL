@@ -18,7 +18,7 @@ public interface ILimsRunServices {
 	
 	Experiment getExperiments(Experiment experiment);
 	
-	ContainerSupport getContainerSupport(String barcode);
+	ContainerSupport getContainerSupport(String supportCode);
 
 	
 	

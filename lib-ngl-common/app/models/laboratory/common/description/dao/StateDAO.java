@@ -41,7 +41,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		//Remove list state for object_type
 		sqlState = "DELETE FROM state_object_type WHERE fk_state=?";
 		jdbcTemplate.update(sqlState, state.id);
-		//remove resolution
+		//remove state
 		super.remove(state);
 	}
 

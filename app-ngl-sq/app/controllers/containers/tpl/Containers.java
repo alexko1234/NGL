@@ -21,7 +21,7 @@ public class Containers extends CommonController {
 	
 	public static Result search(){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("support.barCode", Messages.get("containers.table.barCode"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("support.supportCode", Messages.get("containers.table.supportCode"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("support.categoryCode", Messages.get("containers.table.categoryCode"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode"), true, false, false));

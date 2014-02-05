@@ -17,6 +17,9 @@ public class ObjectType extends Model<ObjectType>{
 	
 	public List<State> states = new ArrayList<State>();
 	
+	public List<Resolution> resolutions =  new ArrayList<Resolution>();
+	
+	
 	public static Finder<ObjectType> find = new Finder<ObjectType>(ObjectTypeDAO.class.getName()); 
 
 	public ObjectType() {

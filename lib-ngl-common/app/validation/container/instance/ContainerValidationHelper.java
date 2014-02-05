@@ -1,18 +1,34 @@
 package validation.container.instance;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
+import net.vz.mongodb.jackson.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
+
+import play.modules.mongodb.jackson.MongoDB;
+
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
+import models.laboratory.container.instance.Support;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
+import models.laboratory.project.instance.Project;
+import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
+import models.laboratory.container.instance.Support;
 
 public class ContainerValidationHelper extends CommonValidationHelper{
 
@@ -65,5 +81,33 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		}
 		contextValidation.removeKeyFromRootKeyName("containersupport");
 	}
+	
+	
+	public static Support createSupport(ContainerSupport containerSupport, List<String> newProjectCodes, List<String> newSampleCodes) {
+		Support s = null;
+		if (containerSupport != null && containerSupport.supportCode != null) {
+
+			s = new Support();
+			String user = "ngsrg"; //default value 
+
+			s.code = containerSupport.supportCode;	
+			s.categoryCode = containerSupport.categoryCode;
+			s.state = new State(); 
+			s.state.code = "A"; // default value
+			s.traceInformation = new TraceInformation(); 
+			s.traceInformation.setTraceInformation(user);
+			s.valuation = new Valuation();
+
+			//s.projectCodes = InstanceHelpers.addCodesList(newProjectCodes, s.projectCodes);
+			//s.sampleCodes = InstanceHelpers.addCodesList(newSampleCodes, s.sampleCodes);
+			
+			s.projectCodes = newProjectCodes;
+			s.sampleCodes = newSampleCodes;
+					
+		}
+		return s;
+	}
+	
+
 
 }

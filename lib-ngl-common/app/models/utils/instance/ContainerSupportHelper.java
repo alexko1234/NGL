@@ -8,9 +8,9 @@ import models.utils.dao.DAOException;
 
 public class ContainerSupportHelper {
 
-	public static ContainerSupport getContainerSupportTube(String barCode){
+	public static ContainerSupport getContainerSupportTube(String supportCode){
 		ContainerSupport containerSupport=new ContainerSupport();
-		containerSupport.barCode=barCode;	
+		containerSupport.supportCode=supportCode;	
 		containerSupport.categoryCode="tube";
 		containerSupport.column="1";
 		containerSupport.line="1";
@@ -18,7 +18,7 @@ public class ContainerSupportHelper {
 	}
 
 	public static ContainerSupport getContainerSupport(
-			String containerCategoryCode, int nbUsableContainer, String barCode, String x, String y) throws DAOException {
+			String containerCategoryCode, int nbUsableContainer, String supportCode, String x, String y) throws DAOException {
 			
 		List<ContainerSupportCategory> containerSupportCategories=ContainerSupportCategory.find.findByContainerCategoryCode(containerCategoryCode);
 
@@ -34,7 +34,7 @@ public class ContainerSupportHelper {
 			containerSupport.categoryCode=containerSupportCategories.get(0).code;
 		}
 
-		containerSupport.barCode=barCode;	
+		containerSupport.supportCode=supportCode;	
 		containerSupport.column=x;
 		containerSupport.line=y;
 		return containerSupport;

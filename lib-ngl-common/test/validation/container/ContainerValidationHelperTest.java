@@ -81,7 +81,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		content1=new Content(new SampleUsed(sample1.code,sample1.typeCode, sample1.categoryCode));
 		
 		containerSupport=new ContainerSupport();
-		containerSupport.barCode="test";
+		containerSupport.supportCode="test";
 		containerSupport.categoryCode=ContainerSupportCategory.find.findAll().get(0).code;
 		containerSupport.line="1";
 		containerSupport.column="1";
