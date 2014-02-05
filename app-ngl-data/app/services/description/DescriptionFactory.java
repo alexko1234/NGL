@@ -159,6 +159,19 @@ public class DescriptionFactory {
 		return l;
 	}
 	
+	public static ObjectType setResolutionsToObjectType(String code, Boolean generic, List<Resolution> resolutions) {
+		ObjectType l = new ObjectType();
+		try {
+			l = ObjectType.find.findByCode(code);
+		} catch (DAOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		l.generic = generic;
+		l.resolutions = resolutions;
+		return l;
+	}
+	
 	
 	public static CommonInfoType setStatesToCommonInfoType(String code, List<State> states) {
 		CommonInfoType cit = new CommonInfoType();
@@ -429,6 +442,15 @@ public class DescriptionFactory {
 		return states;
 	}
 
+	public static List<Resolution> getResolutions(String...codes) throws DAOException {
+		List<Resolution> resolutions = new ArrayList<Resolution>();
+		for(String code: codes){
+			resolutions.add(Resolution.find.findByCode(code));
+		}
+		return resolutions;
+	}
+
+	
 	public static ValuationCriteria newValuationCriteria(String name, String code, String path) throws DAOException {
 		ValuationCriteria v = new ValuationCriteria(); 
 		v.code = code;

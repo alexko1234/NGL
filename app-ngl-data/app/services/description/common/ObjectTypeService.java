@@ -20,6 +20,8 @@ public class ObjectTypeService {
 		saveObjectTypes(errors);
 		
 		updateStatesObjectTypes(errors);
+		
+		updateResolutionsObjectTypes(errors);
 	}
 	
 
@@ -39,6 +41,9 @@ public class ObjectTypeService {
 			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Reagent.name() ), errors);
 			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Import.name() ), errors);
 			DAOHelpers.saveModel(ObjectType.class,DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Treatment.name() ), errors);
+			
+			
+			
 			
 	}
 	
@@ -61,6 +66,16 @@ public class ObjectTypeService {
 		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Import.name(), true, DescriptionFactory.getStates("F", "N", "IP") ));
 		l.add(DescriptionFactory.setStatesToObjectType(ObjectType.CODE.Treatment.name(), false, DescriptionFactory.getStates("F", "N", "IP") ));
 		
+		DAOHelpers.updateModels(ObjectType.class, l, errors);	
+	}
+	
+	public static void updateResolutionsObjectTypes(Map<String,List<ValidationError>> errors) throws DAOException{
+		List<ObjectType> l = new ArrayList<ObjectType>();
+		
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Run.name(), false, DescriptionFactory.getResolutions("pbMIndetermine","pbMChiller","pbMPelletier","pbMFluidiq","pbMLaser","pbMCamera","pbMLentille","pbMPEmodule","pbMCbot","pbRIndetermine","pbRFC","pbRCbot","pbRSeq","pbRIndexing","pbRPEmodule","pbRRehybR1","pbRRehybR2","pbRErreurReac","pbRAjoutReac","savIntensite","savDensiteElevee","savDensiteFaible","savPF","savPhasing","savPrephasing","savErrRate","savQ30","savIndDemultiplex","pbIPC","pbIEcran","pbIEspDisqInsuf","pbILogiciel","pbIRebootPC","infoRunValidation","infoArretSeq","infoArretLogiciel","infoRemboursement") ));
+		
+		//l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.ReadSet.name(), false, DescriptionFactory.getResolutions() )); 
+
 		DAOHelpers.updateModels(ObjectType.class, l, errors);	
 	}
 	
