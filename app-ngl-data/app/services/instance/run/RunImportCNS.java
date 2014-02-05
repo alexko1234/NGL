@@ -4,8 +4,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import play.Logger;
-
 import models.laboratory.common.description.Level;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
@@ -18,12 +16,14 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
+import play.Logger;
 import rules.services.RulesException;
 import rules.services.RulesServices;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 import validation.run.instance.LaneValidationHelper;
+import workflows.Workflows;
 
 import com.mongodb.MongoException;
 import com.typesafe.config.ConfigFactory;
@@ -54,22 +54,29 @@ public class RunImportCNS extends AbstractImportDataCNS{
 		for(Run run:runs){
 			if(run!=null) {
 				rootKeyName="run["+run.code+"]";
-				contextError.addKeyToRootKeyName(rootKeyName);
-
-				//Save Run du Lims si n'existe pas ou n'est pas dispatch
+				ContextValidation ctx=new ContextValidation();
+				ctx.addKeyToRootKeyName(rootKeyName);
+				
+				//Save Run du Lims si n'existe pas ou n'est pas transféré dans NGL
 				Run newRun=MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class, run.code);
-				if(newRun==null || newRun.dispatch==false){
-					Logger.debug("Save Run "+run.code);
-					newRun=(Run) InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, contextError, true);
+				if(newRun==null || !newRun.treatments.containsKey("ngsrg")){
+					Logger.debug("Save Run "+run.code + " mode "+contextError.getMode());
+					newRun=(Run) InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, ctx, true);
 				}
-				//Si Run non null creation des lanes
-				if(newRun!=null){
-					Run runLanes=createLaneFromRun(newRun, contextError);
-					if(runLanes!=null){
+				
+				//Si Run non null creation des lanes ou traitement ngsrg
+				if(newRun!=null && !ctx.hasErrors()){
+					Run runLanes=createLaneFromRun(newRun, ctx);
+					if(runLanes!=null && !ctx.hasErrors()){
 						newRuns.add(runLanes);
 					}
 				}
-				contextError.removeKeyFromRootKeyName(rootKeyName);
+				
+				if(ctx.hasErrors()){
+					contextError.errors.putAll(ctx.errors);
+				}
+				
+				ctx.removeKeyFromRootKeyName(rootKeyName);
 
 			}
 		}
@@ -91,6 +98,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 				}catch (Exception e) {
 					contextValidation.addErrors("rules", e.toString()+ "runCode :"+run.code, run.code);
 				}
+				Workflows.nextRunState(contextValidation, newRun);
 			}
 
 			if(!contextValidation.hasErrors()){
@@ -100,9 +108,6 @@ public class RunImportCNS extends AbstractImportDataCNS{
 			}			
 
 		}		
-
-		//CallRules rg_1
-		//new RulesServices().callRules(ConfigFactory.load().getString("rules.key"),"rg_1",new ArrayList<Object>(updateRuns));
 
 		//Update Run if lane and readSet are created
 		limsServices.updateRunLims(updateRuns,contextError);
