@@ -227,8 +227,8 @@ angular.module('commonsServices', []).
   		    	restrict: 'A',
   		    	replace:false,
   		    	scope:true,
-  		    	template: '<div ng-class="getClass()">'
-		    	  		+'<button class="btn dropdown-toggle btn-default" data-toggle="dropdown">'
+  		    	template: '<div ng-class="getClass()" >'
+		    	  		+'<button class="btn dropdown-toggle btn-default" data-toggle="dropdown" ng-click="getStyle()">'
 		    	  		+'<div class="filter-option pull-left">{{selectedItemLabel()}}</div>&nbsp;'
 		    	  		+'<span class="caret"></span>'
 		    	  		+'</button>'
@@ -272,8 +272,10 @@ angular.module('commonsServices', []).
 	      		      };
 	      		     
 	      		    var pos = {};
+	      		    
+	      		  
 	      		    scope.getStyle = function(){
-	      		    	return "top:"+(pos.top + pos.height)+"px ;left:"+pos.left+"px;position:fixed";
+	      		    	return "top:"+(pos.top + pos.height - $document.scrollTop())+"px ;left:"+pos.left+"px;position:fixed";
 	      		    };
 	      		      var selectedLabels = [];
 	      		      
