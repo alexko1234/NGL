@@ -16,8 +16,6 @@ import models.utils.dao.DAOException;
  */
 public class Resolution extends Model<Resolution>{
 
-	public enum CODE{Project,Process,Sample,Instrument,Reagent,Experiment,Import,Container};
-	
 	public String name;
 	public ResolutionCategory category;
 	public List<Institute> institutes;
@@ -51,10 +49,6 @@ public class Resolution extends Model<Resolution>{
 		
 		public List<Resolution> findByObjectTypeCode(ObjectType.CODE objectTypeCode) throws DAOException {
 		    return ((ResolutionDAO) getInstance()).findByObjectTypeCode(objectTypeCode);
-		}
-		
-		public List<Resolution> findByInstitute(Institute.CODE instituteCode) throws DAOException {
-		    return ((ResolutionDAO) getInstance()).findByInstitute(instituteCode);
 		}
 	
 	}

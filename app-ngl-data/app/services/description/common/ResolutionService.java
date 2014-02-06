@@ -15,6 +15,9 @@ import static services.description.DescriptionFactory.*;
 
 public class ResolutionService {
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{		
+		DAOHelpers.removeAll(Resolution.class, Resolution.find);
+		DAOHelpers.removeAll(ResolutionCategory.class, ResolutionCategory.find);
+		
 		saveResolutionCategories(errors);	
 		saveResolutions(errors);	
 	}
@@ -22,18 +25,18 @@ public class ResolutionService {
 	public static void saveResolutionCategories(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<ResolutionCategory> l = new ArrayList<ResolutionCategory>();
 				
-		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème machine", "PbM"));
-		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème réactifs", "PbR")); 
-		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème qualité : SAV", "SAV"));
-		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème informatique", "PbI"));
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "ProblÃ¨me machine", "PbM"));
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "ProblÃ¨me rÃ©actifs", "PbR")); 
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "ProblÃ¨me qualitÃ© : SAV", "SAV"));
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "ProblÃ¨me informatique", "PbI"));
 		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Informations", "Info"));
-		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème quantité", "Qté"));
-		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème indexing", "IND"));
-		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème qualité", "Qlté"));
-		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème taxon", "TAXO"));
-		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème ribosomes", "RIBO"));
-		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème mapping", "MAP"));
-		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème merging", "MERG"));
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "ProblÃ¨me quantitÃ©", "QtÃ©"));
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "ProblÃ¨me indexing", "IND"));
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "ProblÃ¨me qualitÃ©", "QltÃ©"));
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "ProblÃ¨me taxon", "TAXO"));
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "ProblÃ¨me ribosomes", "RIBO"));
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "ProblÃ¨me mapping", "MAP"));
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "ProblÃ¨me merging", "MERG"));
 		
 		//A SUPPRIMER : juste pour test
 		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Default", "default"));
@@ -70,7 +73,7 @@ public class ResolutionService {
 		*/
 		
 		//new
-		l.add(newResolution("indéterminé","pbMIndetermine",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newResolution("indÃ©terminÃ©","pbMIndetermine",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("chiller","pbMChiller",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("pelletier","pbMPelletier",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("fluidique","pbMFluidiq",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
@@ -80,20 +83,20 @@ public class ResolutionService {
 		l.add(newResolution("PE module","pbMPEmodule",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("cBot","pbMCbot",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
-		l.add(newResolution("indéterminé","pbRIndetermine",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newResolution("indÃ©terminÃ©","pbRIndetermine",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("flowcell","pbRFC",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("cBot","pbRCbot",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newResolution("sequencage","pbRSeq",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newResolution("sÃ©quencage","pbRSeq",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("indexing","pbRIndexing",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("PE module","pbRPEmodule",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("rehyb primer R1","pbRRehybR1",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("rehyb primer R2","pbRRehybR2",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newResolution("erreur réactifs","pbRErreurReac",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newResolution("rajout réactifs","pbRAjoutReac",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newResolution("erreur rÃ©actifs","pbRErreurReac",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newResolution("rajout rÃ©actifs","pbRAjoutReac",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
-		l.add(newResolution("intensité","savIntensite",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newResolution("densité clusters trop élevée","savDensiteElevee",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newResolution("densité clusters trop faible","savDensiteFaible",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newResolution("intensitÃ©","savIntensite",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newResolution("densitÃ© clusters trop Ã©levÃ©e","savDensiteElevee",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newResolution("densitÃ© clusters trop faible","savDensiteFaible",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("%PF","savPF",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("phasing","savPhasing",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("prephasing","savPrephasing",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
@@ -102,14 +105,14 @@ public class ResolutionService {
 		l.add(newResolution("indexing/demultiplexage","savIndDemultiplex",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		l.add(newResolution("PC","pbIPC",ResolutionCategory.find.findByCode("PbI"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newResolution("écran","pbIEcran",ResolutionCategory.find.findByCode("PbI"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newResolution("Ã©cran","pbIEcran",ResolutionCategory.find.findByCode("PbI"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("espace disq insuf","pbIEspDisqInsuf",ResolutionCategory.find.findByCode("PbI"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("logiciel","pbILogiciel",ResolutionCategory.find.findByCode("PbI"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("reboot PC","pbIRebootPC",ResolutionCategory.find.findByCode("PbI"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		l.add(newResolution("run de validation","infoRunValidation",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newResolution("arrêt séquenceur","infoArretSeq",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newResolution("arrêt logiciel","infoArretLogiciel",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newResolution("arret sÃ©quenceur","infoArretSeq",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newResolution("arret logiciel","infoArretLogiciel",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newResolution("remboursement","infoRemboursement",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
 		

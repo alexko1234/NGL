@@ -15,6 +15,8 @@ public class ValuationCriteria extends Model<ValuationCriteria>{
 	
 	public String name;
 	public String path;
+	public List<Institute> institutes;
+	
 	
 	public ValuationCriteria() {
 		super(ValuationCriteriaDAO.class.getName());
@@ -35,6 +37,10 @@ public class ValuationCriteria extends Model<ValuationCriteria>{
 		
 		public boolean isCodeExistForTypeCode(String code, String typeCode) throws DAOException {
 			return ((ValuationCriteriaDAO) getInstance()).isCodeExistForTypeCode(code, typeCode);
+		}
+		
+		public List<ValuationCriteria> findByCommonInfoType(long idCommonInfoType) throws DAOException {
+			return ((ValuationCriteriaDAO) getInstance()).findByCommonInfoType(idCommonInfoType);
 		}
 		
 	}

@@ -64,8 +64,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		resolution.id = newId;
-		
-        
+		       
         insertInstitutes(resolution.institutes, resolution.id, false);
         
 		return resolution.id;
@@ -183,16 +182,6 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 				"JOIN resolution_object_type ON fk_resolution=id "+
 				"WHERE fk_object_type=?";		
 		return initializeMapping(sql, new SqlParameter("fk_object_type", Type.LONG)).execute(id);		
-	}
-	
-	
-	public List<Resolution> findByInstitute(Institute.CODE instituteCode) {
-		String sql = sqlCommon+
-				"JOIN resolution_institute ri ON ri.fk_resolution=t.id "+
-				"JOIN institute i ON ri.fk_institute=i.id " + 
-				"WHERE i.code=?";
-		BeanPropertyRowMapper<Resolution> mapper = new BeanPropertyRowMapper<Resolution>(Resolution.class);
-		return this.jdbcTemplate.query(sql, mapper, instituteCode);
 	}
 
 
