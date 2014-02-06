@@ -47,22 +47,12 @@
 				<dd>
 					<div ng-switch on="isEditMode()">
 						<div ng-switch-when="false">
-							<ul class="unstyled">
-								 <li ng-repeat="category in categories">
-									{{category}} : 
-									<ul>
-									<li ng-repeat="reso in resos | filter: {reso.category:$parent.category}">
-										{{reso.name}}
-									</li>
-									</ul>
-								</li>
-							</ul>
+							    <ul class="unstyled">
+							    		<li ng-repeat="code in run.valuation.resolutionCodes" ng-model="code" codes="resolution"/>
+							    </ul>
 						</div>
-						<div ng-switch-when="true">
-							<bt-select-group class="span12" ng-model="run.valuation.resolutionCodes" multiple="true" bt-options="r.code as r.name group by r.category for r in resos">
-							</bt-select-group>
-						</div>
-					</div>					
+						<div ng-switch-when="true"><div bt-select class="span12" ng-model="run.valuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name for valid in lists.getResolutions()" ></div></div>
+					</div>	
 				</dd>
 			</dl>
 			<dl class="dl-horizontal">
@@ -175,9 +165,9 @@
 	<div class="tab-content">
 		<div class="tab-pane active"></div>	
 		<div class="row-fluid">
-			<div class="span3">
+			<div class="span3">				
 	 			<form class="well well-small form-inline">
-					<div bt-select ng-model="form.laneNumbers" multiple="true" placeholder="@Messages("search.placeholder.lanes")" bt-options="l.number as l.number for l in laneOptions"></div>
+					<div bt-select ng-model="form.laneNumbers" multiple="true" placeholder="@Messages("search.placeholder.lanes")" bt-options="l.number as l.number for l in laneOptions"></div>				
 					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary pull-right" ><i class="icon-search icon-large"></i></button>					 						
 	 			</form>	
 			</div> 

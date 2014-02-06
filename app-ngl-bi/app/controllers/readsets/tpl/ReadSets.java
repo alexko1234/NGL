@@ -28,13 +28,13 @@ public class ReadSets extends CommonController {
 	}
 	
 	public static Result search(String type) {
-		
-		if(!"valuation".equals(type)){
+
+		if (!"valuation".equals(type)) {
 			return ok(search.render(Boolean.TRUE));
-		}else{
+		} else {
 			return ok(search.render(Boolean.FALSE));
 		}
-		
+
 	}
 	
 	public static Result details() {
@@ -58,7 +58,8 @@ public class ReadSets extends CommonController {
   	    		controllers.readsets.api.routes.javascript.ReadSets.list(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.list(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.state(),
-  	    		controllers.readsets.api.routes.javascript.ReadSets.valuation(),  	
+  	    		controllers.readsets.api.routes.javascript.ReadSets.valuation(),
+  	    		controllers.readsets.api.routes.javascript.ReadSets.properties(),
   	    		controllers.runs.api.routes.javascript.Runs.get(),
   	    		controllers.runs.api.routes.javascript.Runs.list(),
   	    		controllers.runs.tpl.routes.javascript.Runs.get(),

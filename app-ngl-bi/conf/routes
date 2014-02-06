@@ -77,7 +77,7 @@ DELETE	/api/readsets/:code							controllers.readsets.api.ReadSets.delete(code: 
 DELETE	/api/runs/:code/readsets					controllers.readsets.api.ReadSets.deleteByRunCode(code: java.lang.String)
 PUT		/api/readsets/:code/state					controllers.readsets.api.ReadSets.state(code:java.lang.String)
 PUT		/api/readsets/:code/valuation		 		controllers.readsets.api.ReadSets.valuation(code:java.lang.String)
-
+PUT     /api/readsets/:code/properties				controllers.readsets.api.ReadSets.properties(code: java.lang.String)
 
 GET		/api/readsets/:code/treatments				controllers.readsets.api.ReadSetTreatments.list(code: java.lang.String)
 GET		/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.get(code: java.lang.String, trCode: java.lang.String)
@@ -95,6 +95,9 @@ PUT     /api/readsets/:code/files/:fullname							controllers.readsets.api.Files
 DELETE  /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
 DELETE	/api/runs/:code/files										controllers.readsets.api.Files.deleteByRunCode(code: java.lang.String)
 PUT		/api/readsets/:code/files/:fullname/workflow/:stateCode		controllers.readsets.api.Files.workflow(code: java.lang.String, fullname: java.lang.String, stateCode:java.lang.String)
+
+
+
 
 #archive tpl
 GET	   	/archives/:homecode/home					controllers.archives.tpl.ReadSets.home(homecode: java.lang.String)

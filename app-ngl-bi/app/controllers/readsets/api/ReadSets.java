@@ -5,6 +5,7 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.mongodb.BasicDBObject;
 
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
@@ -357,6 +359,32 @@ public class ReadSets extends CommonController{
 		}
 	}
 
+	public static Result properties(String code){
+		ReadSet readSet = getReadSet(code);
+		if(readSet == null){
+			return badRequest();
+		}
+				
+		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
+		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		
+		Map<String, PropertyValue> properties = filledForm.get().properties;
+		ctxVal.setUpdateMode();
+		ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
+		
+		if(!ctxVal.hasErrors()){
+		    MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+				DBQuery.and(DBQuery.is("code", code)),
+				DBUpdate.set("properties", properties));								
+					
+		}
+		if (!filledForm.hasErrors()) {
+			return ok(Json.toJson(getReadSet(code)));		
+		} else {
+			return badRequest(filledForm.errorsAsJson());			
+		}		
+	}
+	
 	private static void manageValidation(ReadSet readSet, ReadSetValuation valuations, ContextValidation ctxVal) {
 		Valuation productionVal = valuations.productionValuation;
 		productionVal.date = new Date();

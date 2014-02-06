@@ -58,8 +58,12 @@
 								    	<li ng-repeat="code in readset.productionValuation.resolutionCodes" ng-model="code" codes="resolution"/>
 								    </ul>
 							</div>
-							<div ng-switch-when="true"><div bt-select class="span12" ng-model="readset.productionValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></div></div>
+							<div ng-switch-when="true">
+							<div bt-select class="span12" ng-model="readset.productionValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></div>
+							</div>
+							</div>
 						</dd>
+						
 					</dl>
 					<dl class="dl-horizontal">
 						<dt>@Messages("readsets.productionValuation.criteria")</dt>
@@ -67,6 +71,7 @@
 						<div ng-switch on="isEditMode()">
 							<div ng-switch-when="false" ng-model="readset.productionValuation.criteriaCode" codes="valuation_criteria"/>
 							<div ng-switch-when="true"><div bt-select class="span12" ng-model="readset.productionValuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></div></div>
+						</div>
 						</dd>
 					</dl>
 					<dl class="dl-horizontal">
@@ -102,6 +107,7 @@
 								    </ul>
 							</div>
 							<div ng-switch-when="true"><div bt-select class="span12" ng-model="readset.bioinformaticValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></div></div>
+						</div>
 						</dd>
 					</dl>
 					<dl class="dl-horizontal">
@@ -110,6 +116,7 @@
 						<div ng-switch on="isEditMode()">
 							<div ng-switch-when="false" ng-model="readset.bioinformaticValuation.criteriaCode" codes="valuation_criteria"/>
 							<div ng-switch-when="true"><div bt-select class="span12" ng-model="readset.bioinformaticValuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></div></div>
+						</div>
 						</dd>
 					</dl>
 					<dl class="dl-horizontal">

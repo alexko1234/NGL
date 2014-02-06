@@ -94,6 +94,24 @@ function getColumns(type){
 						type :"String",
 				    	order:true});
 	}
+	
+	if('batch' === type){
+		columns.push({	property:"properties.isSentCCRT.value",
+			
+			header: Messages("readsets.properties.isSentCCRT"),
+			type :"Boolean",
+			order:true,
+	    	edit:true
+	    	});
+		columns.push({	property:"properties.isSentCollaborator.value",
+			
+			header: Messages("readsets.properties.isSentCollaborator"),
+			type :"Boolean",
+			order:true,
+	    	edit:true
+	    	});
+		
+	}
 	return columns;
 }
 
@@ -324,5 +342,47 @@ function SearchValuationCtrl($scope, datatable, lists) {
 };
 
 SearchValuationCtrl.$inject = ['$scope', 'datatable', 'lists'];
+
+function SearchBatchCtrl($scope,  datatable) {
+
+	$scope.datatableConfig = {
+			order :{by:'traceInformation.creationDate'},
+			search:{
+				url:jsRoutes.controllers.readsets.api.ReadSets.list()
+			},
+			edit : {
+				active:true,
+				columnMode:true		    	
+			},
+			save : {
+				active:true,
+				url:function(line){
+					return jsRoutes.controllers.readsets.api.ReadSets.properties(line.code).url;
+				},
+				method:'put',
+				value:function(line){return {properties : line.properties};}
+			},
+			columns : getColumns('batch')
+	};
+	
+	$scope.init = function(){
+		//to avoid to lost the previous search
+		if(angular.isUndefined($scope.getDatatable())){
+			$scope.datatable = datatable($scope, $scope.datatableConfig);
+			$scope.datatable.search();
+			$scope.setDatatable($scope.datatable);
+		}else{
+			$scope.datatable = $scope.getDatatable();
+		}
+		
+		if(angular.isUndefined($scope.getHomePage())){
+			$scope.setHomePage('search');
+			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:false});
+			$scope.activeTab(0); // desactive le lien !
+		}
+	}	
+};
+
+SearchBatchCtrl.$inject = ['$scope', 'datatable'];
 
 

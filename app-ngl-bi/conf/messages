@@ -137,6 +137,8 @@ readsets.menu = Readsets
 readsets.menu.search = Recherche
 readsets.menu.state = Changement d''Etat
 readsets.menu.valuation = Evaluation
+readsets.menu.batch = Modification en masse
+
 readsets.archiveId = SSID
 readsets.archiveDate = Date de l''archive
 
@@ -173,6 +175,8 @@ readsets.projectCode = Projet
 readsets.sampleCode = Echantillon
 readsets.nbCycles = Nb Cycles
 
+readsets.properties.isSentCCRT = Envoyé au CCRT ?
+readsets.properties.isSentCollaborator = Envoyé au Collaborateur ?
 
 readsets.treatments.contaminationPhiX.read1_2 = Read 1 + Read 2
 readsets.treatments.contaminationPhiX.single = Single

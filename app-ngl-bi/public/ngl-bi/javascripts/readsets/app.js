@@ -13,6 +13,12 @@ angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biComm
 		templateUrl : '/tpl/readsets/search/state',
 		controller : 'SearchStateCtrl'
 	});
+	
+	$routeProvider.when('/readsets/batch/home', {
+		templateUrl : '/tpl/readsets/search/batch',
+		controller : 'SearchBatchCtrl'
+	});
+	
 	$routeProvider.when('/readsets/:code', {
 		templateUrl : '/tpl/readsets/details',
 		controller : 'DetailsCtrl'
