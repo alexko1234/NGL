@@ -2,9 +2,6 @@ body {
 	padding-top:50px;
 }
 
-.nav-tabs > li {
-	cursor:pointer;	
-}
 
 .nav-pills > li > a > .close,
 .nav-tabs > li > a > .close{

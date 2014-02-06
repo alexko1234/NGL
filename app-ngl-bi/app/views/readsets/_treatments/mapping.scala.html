@@ -1,8 +1,8 @@
 @()
 
 <ul class="nav nav-tabs">
-	<li class="active"><a data-target="#data" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.data")</a></li>
-	<li ><a data-target="#ref" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.ref")</a></li>    	
+	<li class="active"><a href="#" data-target="#data" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.data")</a></li>
+	<li ><a href="#" data-target="#ref" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.ref")</a></li>    	
 </ul>
 
 <div class="tab-content">
@@ -59,7 +59,6 @@
 			ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.value,'PEReadDistanceSeparation','','mapping',800)">
 			 <a href="#">
 			    <img id="pairs.PEReadDistanceSeparation" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.value}}" />
-			    <!--<p>@Messages("readsets.treatments.mapping.PEReadDistanceSeparation")</p>-->
 			 </a>   
 		    </div>
 	    </li>
@@ -68,7 +67,6 @@
 			ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.value,'MPReadDistanceSeparation','','mapping',800)">
 			 <a href="#">
 			    <img id="pairs.MPReadDistanceSeparation" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.value}}" />
-			    <!-- <p>@Messages("readsets.treatments.mapping.MPReadDistanceSeparation")</p> -->
 			 </a>   
 		    </div>
 	    </li>
