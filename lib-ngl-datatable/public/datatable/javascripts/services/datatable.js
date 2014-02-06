@@ -1385,7 +1385,12 @@ angular.module('datatableServices', []).
 		    				if(angular.isDefined(col.render)){
 		    					return '<span dt-compile="'+name+".config.columns."+attrs.index+".render(value)"+'"></span>';
 		    				}else{
-		    					return '<span ng-bind="'+getNgModel(col)+' '+columnFormatter(col)+'"></span>';
+		    					if(col.type == "Boolean"){
+		    						return '<div ng-switch on="'+getNgModel(col)+'"><i ng-switch-when="true" class="icon-check icon-large"></i><i ng-switch-default class="icon-check-empty icon-large"></i></div>';
+		    						
+		    					} else{
+		    						return '<span ng-bind="'+getNgModel(col)+' '+columnFormatter(col)+'"></span>';
+		    					}
 		    				}
 		    						    				
 		    			};
@@ -1477,7 +1482,7 @@ angular.module('datatableServices', []).
 	    			    			newElement = getValueElement(col);
 	    			    		}
     			    		}else{
-    			    			newElement = getEditElement(col);
+    			    			newElement = '<div ng-switch on="'+ngShow+'"><div ng-switch-when="true">'+getEditElement(col)+'</div><div ng-switch-default></div></div>';	    			    		
     			    		}
     			    		newElement = $compile(newElement)(scope);
         		  	    	element.html("");
