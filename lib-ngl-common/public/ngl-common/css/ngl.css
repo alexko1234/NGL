@@ -21,9 +21,9 @@ dd > button.btn-link{
 .divTaxonBilan {
 	height:340px;
 	overflow:auto;
-	border-width:1px 2px;
- 	border-style:solid dotted;
- 	border-color:darkgray;
+	border-width:1px 1px;
+ 	border-style:solid;
+ 	border-color:lightgray;
 }
 
 .plates > .alert {
