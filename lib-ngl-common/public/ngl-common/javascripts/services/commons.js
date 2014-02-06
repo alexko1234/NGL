@@ -228,7 +228,7 @@ angular.module('commonsServices', []).
   		    	replace:false,
   		    	scope:true,
   		    	template: '<div ng-class="getClass()">'
-		    	  		+'<button class="btn dropdown-toggle btn-default" ng-click="open()">'
+		    	  		+'<button class="btn dropdown-toggle btn-default" data-toggle="dropdown">'
 		    	  		+'<div class="filter-option pull-left">{{selectedItemLabel()}}</div>&nbsp;'
 		    	  		+'<span class="caret"></span>'
 		    	  		+'</button>'
@@ -246,12 +246,7 @@ angular.module('commonsServices', []).
 	       		  // if ngModel is not defined, we don't need to do anything
 	      		      if (!ctrls[0]) return;
 	      		      element.addClass("bt-select");
-	      		      
-	      		      /*
-	      		      $document.on("click",function(event){console.log(event);
-	      		      	
-	      		      })
-	      		      */
+	      		     
 	      		      var ngModelCtrl = ctrls[0],
 	      		          multiple = attr.multiple || false,
 	      		          btOptions = attr.btOptions,
@@ -275,24 +270,10 @@ angular.module('commonsServices', []).
 		      		      };
 		      		      
 	      		      };
-	      		      var isOpen = false;
-		      		
-		      		   scope.open = function(){
-		      			 isOpen = !isOpen;
-		      		   }; 
-		      		   
-		      		 scope.close = function(){
-		      			 isOpen = false;
-		      		   }; 
-	      		      
+	      		     
 	      		    var pos = {};
 	      		    scope.getStyle = function(){
-	      		    	if(isOpen){
-	      		    		return "top:"+(pos.top + pos.height)+"px ;left:"+pos.left+"px;display:block;position:fixed";
-	      		    	}else{
-	      		    		return "top:"+(pos.top + pos.height)+"px ;left:"+pos.left+"px;display:none;position:fixed";
-	      		    	}
-	      		    	
+	      		    	return "top:"+(pos.top + pos.height)+"px ;left:"+pos.left+"px;position:fixed";
 	      		    };
 	      		      var selectedLabels = [];
 	      		      
@@ -335,7 +316,6 @@ angular.module('commonsServices', []).
 	      		    			$event.preventDefault();
 	      		    			$event.stopPropagation();
 	      		    	  	}else{
-	      		    	  		scope.open();
 	      		    	  		ngModelCtrl.$setViewValue(scope.itemValue(item));
 	      		    	  		ngModelCtrl.$render();
 	      		    	  		
