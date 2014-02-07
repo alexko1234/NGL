@@ -102,6 +102,24 @@ public class TreatmentValidationTest extends AbstractTests {
 		return t;
 	}
 	
+	private Treatment getNewTreatmentSampleControlOK() {
+		
+		Treatment t = new Treatment();
+		t.code =  "sampleControl";		
+		t.typeCode =  "sample-control";
+		t.categoryCode = "quality";
+		
+		//define map of property values
+		Map<String,PropertyValue> m = new HashMap<String,PropertyValue>();
+		m.put("sampleInput", new PropertySingleValue(100));
+		m.put("sampleSexe",new PropertySingleValue("M"));
+		m.put("samplesComparison",new PropertySingleValue(0.50));	
+		t.set("pairs", m);
+		
+		return t;
+	}
+	
+	
 	private Treatment getNewTreatmentTaxonomyOK() {
 		Treatment t = new Treatment();
 		t.code =  "taxonomy";		
@@ -202,7 +220,13 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	@Test
 	public void testValidatePropertyChoiceInListOK() {
-		Treatment t = getNewTreatmentTaxonomyOK();
+		Treatment t = null;
+		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNS")) {
+			t = getNewTreatmentTaxonomyOK();
+		}
+		else {
+			t = getNewTreatmentSampleControlOK();
+		}
 		
 		ContextValidation ctxVal = new ContextValidation(); 
 		
@@ -224,24 +248,26 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	@Test
 	public void testValidatePropertyChoiceInListBad() {
-		Treatment t = getNewTreatmentTaxonomyBad();
-		
-		ContextValidation ctxVal = new ContextValidation(); 
-		
-		Level.CODE levelCode = Level.CODE.ReadSet; 
-		ctxVal.putObject("level", levelCode);
-		
-		//add readset to ctxVal
-		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		ctxVal.putObject("readSet", readset);
-		
-		ctxVal.setCreationMode();
-		
-		t.validate(ctxVal);
-		
-		assertThat(ctxVal.errors).hasSize(2);
-		
-		assertThat(ctxVal.errors.toString()).contains(ERROR_VALUENOTAUTHORIZED_MSG);
+		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNS")) {
+			Treatment t = getNewTreatmentTaxonomyBad();
+			
+			ContextValidation ctxVal = new ContextValidation(); 
+			
+			Level.CODE levelCode = Level.CODE.ReadSet; 
+			ctxVal.putObject("level", levelCode);
+			
+			//add readset to ctxVal
+			ReadSet readset = RunMockHelper.newReadSet("rdCode");
+			ctxVal.putObject("readSet", readset);
+			
+			ctxVal.setCreationMode();
+			
+			t.validate(ctxVal);
+			
+			assertThat(ctxVal.errors).hasSize(2);
+			
+			assertThat(ctxVal.errors.toString()).contains(ERROR_VALUENOTAUTHORIZED_MSG);
+		}
 	}
 	
 	
@@ -292,7 +318,7 @@ public class TreatmentValidationTest extends AbstractTests {
 			t.validate(ctxVal);
 			
 			assertThat(ctxVal.errors).hasSize(0);
-			assertThat(t.results().get("default").get("nbReadIllumina").value.toString()).contains("1");
+			assertThat(t.results().get("default").get("nbReadIllumina").value.toString()).contains("100");
 		}
 		else {
 			System.out.println("Missing readSet rdCode !");
@@ -301,7 +327,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	 
 	
 	
-	@Test
+    @Test
 	 public void testValidateTreatmentErrorMissingLevel() {
 		Boolean b = false;
 		String msgErreur = "";
@@ -328,7 +354,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		assertThat(msgErreur).isEqualTo("missing level parameter");
 	}
 	
-	@Test
+	 @Test
 	 public void testValidationTreatmentErrorMissingCode() {	
 		Boolean b = false;
 		String msgErreur = "";
@@ -355,7 +381,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	
 	
-	@Test
+	 @Test
 	 public void testValidateTreatmentErrorCodeRequired() {	
 		Treatment t = getNewTreatmentForReadSet();
 		t.code =  ""; //empty!		
@@ -380,7 +406,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	
 	
-	@Test
+	 @Test
 	 public void testValidationTreatmentErrorTypeCodeRequired() {	
 		deleteRdCode();
 		
@@ -407,7 +433,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	
 	
-	@Test
+	 @Test
 	 public void testValidateTreatmentErrorCategoryCodeRequired() {
 		deleteRdCode(); 
 		
@@ -434,7 +460,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	 
 	 
 	
-	@Test
+	 @Test
 	 public void testValidateTreatmentErrorCodeNotUnique() {
 		Treatment t = getNewTreatmentForReadSet();
 		
@@ -522,8 +548,8 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		assertThat(status(result)).isEqualTo(OK);
 		
-		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
-        assertThat(status(result)).isEqualTo(OK);
+		//result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
+        //assertThat(status(result)).isEqualTo(OK);
 	}
 	
 	
@@ -563,7 +589,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 
 
-	@Test
+	 @Test
 	 public void testValidateTreatmentErrorValueNotDefined() {
 			Treatment t = getNewTreatmentForReadSet();
 	
@@ -590,8 +616,8 @@ public class TreatmentValidationTest extends AbstractTests {
 
 	
 	
-	//@Test(expected=java.lang.NumberFormatException.class)
-	@Test
+	 //@Test(expected=java.lang.NumberFormatException.class)
+	 @Test
 	 public void testValidateTreatmentErrorBadTypeValue() {
 		    	Treatment t = null; 
 	    		ContextValidation ctxVal = new ContextValidation();  
@@ -619,7 +645,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	
 	
-	@Test
+	 @Test
 	 public void testValidateTreatmentErrorBadContext() {
 			Treatment t = getNewTreatmentForReadSet();
 			

@@ -1116,23 +1116,23 @@ public class RunValidationTest extends AbstractTests {
 	 
 	@Test
 	public void validateValidationForRun() {
-	   		Run run = new Run();
-			run.code = "runForValidateValidation";
-			run.typeCode = "RHS2000";
-			
-			Valuation v = new Valuation();
-			v.criteriaCode = "criteria-low";
-			v.date = new Date();
-			v.resolutionCodes = null;
-			v.user = "dnoisett";
+   		Run run = new Run();
+		run.code = "runForValidateValidation";
+		run.typeCode = "RHS2000";
+		
+		Valuation v = new Valuation();
+		v.criteriaCode = "criteria-low";
+		v.date = new Date();
+		v.resolutionCodes = null;
+		v.user = "dnoisett";
 
-	    	ContextValidation ctxVal = new ContextValidation();
-	    	ctxVal.putObject("typeCode", run.typeCode ); 
-	    	ctxVal.setCreationMode();
+    	ContextValidation ctxVal = new ContextValidation();
+    	ctxVal.putObject("typeCode", run.typeCode ); 
+    	ctxVal.setCreationMode();
 
-			v.validate(ctxVal);
-			
-			assertThat(ctxVal.errors).hasSize(0);
+		v.validate(ctxVal);
+		
+		assertThat(ctxVal.errors).hasSize(0);
 	}
 	
 	
@@ -1140,7 +1140,6 @@ public class RunValidationTest extends AbstractTests {
 	private Lane getLane() {	
 		Lane lane = new Lane();
 		lane.number = 1;
-		//lane.state = getState("F");
 		lane.valuation = RunMockHelper.getValuation(TBoolean.TRUE);
 		lane.readSetCodes = null;
 		return lane;
@@ -1152,7 +1151,6 @@ public class RunValidationTest extends AbstractTests {
 		List<String> r = new ArrayList<String>();
 		r.add("X"); 
 		lane.readSetCodes = r;
-		//lane.state = getState("F");
 		Valuation v = new Valuation();
 		 lane.valuation = v;
 		return lane;
@@ -1161,7 +1159,6 @@ public class RunValidationTest extends AbstractTests {
 	private Lane getLane2(){
 		Lane lane = new Lane();
 		lane.number = 3;
-		//lane.state = getState("F");
 		Valuation v = new Valuation();
 		lane.valuation = v;
 		return lane;
@@ -1173,12 +1170,10 @@ public class RunValidationTest extends AbstractTests {
 		readSet.path = "/path/test";
 		readSet.projectCode = "ProjectCode"; 
 		readSet.sampleCode = "SampleCode";
-		//readSet.sampleContainerCode = "SPCONTCODE";
 		readSet.state = getState("F-QC");
 		Valuation v = new Valuation();
 		readSet.bioinformaticValuation = v;
-		readSet.productionValuation = v;
-		
+		readSet.productionValuation = v;		
 		readSet.traceInformation = new TraceInformation();
 		readSet.traceInformation.setTraceInformation("ngsrg");
 		readSet.laneNumber = 1;
@@ -1195,11 +1190,9 @@ public class RunValidationTest extends AbstractTests {
 		readSet.sampleCode = "SampleCode";
 		readSet.state = getState("F-QC");
 		readSet.typeCode = "default-readset";
-		
 		Valuation v = new Valuation();
 		readSet.bioinformaticValuation = v;
 		readSet.productionValuation = v;
-		
 		TraceInformation ti = new TraceInformation();
 		ti.createUser = "dnoisett";
 		ti.creationDate = new Date(); 		
@@ -1220,62 +1213,13 @@ public class RunValidationTest extends AbstractTests {
 	}
 	  
 	private Run getFullRun() {
-			Run run = new Run();
-			run.code = "YANN_TEST1FORREADSET0";
-			run.containerSupportCode = "containerName";
-			run.dispatch = true;
-			run.instrumentUsed = new InstrumentUsed();
-			if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
-				run.instrumentUsed.code = "HISEQ1";
-				run.instrumentUsed.typeCode = "HISEQ2000";
-			}	
-			else {
-				run.instrumentUsed.code = "hand";
-				run.instrumentUsed.typeCode = "hand";
-			}
-			run.typeCode = "RHS2000";
-			List<String> lResos = new ArrayList<String>();
-			lResos.add("reso1");
-			lResos.add("reso2");
-			State state = new State();
-			run.state = state;
-			run.state.code = "F";
-			run.state.user = "tests";
-			run.state.date = new Date();
-			
-			Valuation v = new Valuation();
-			run.valuation = v;
-			
-			run.traceInformation = new TraceInformation();
-			run.traceInformation.setTraceInformation("test");
-			Map<String, Treatment> lT = new HashMap<String, Treatment>();
-			Treatment ngsrg = new Treatment(); 
-			lT.put("ngsrg", ngsrg);
-			ngsrg.categoryCode = "ngsrg";
-			ngsrg.typeCode = "ngsrg-illumina";
-			run.typeCode = "RHS2000";
-			run.valuation = new Valuation();
-			run.valuation.user = "test";
-			run.valuation.valid = TBoolean.TRUE;
-			run.valuation.date = new Date(); 
-			return run;
-		}
-	
-	
-	private Run getFullRunWithGoodProjectCode() {
 		Run run = new Run();
 		run.code = "YANN_TEST1FORREADSET0";
 		run.containerSupportCode = "containerName";
 		run.dispatch = true;
 		run.instrumentUsed = new InstrumentUsed();
-		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
-			run.instrumentUsed.code = "HISEQ1";
-			run.instrumentUsed.typeCode = "HISEQ2000";
-		}	
-		else {
-			run.instrumentUsed.code = "hand";
-			run.instrumentUsed.typeCode = "hand";
-		}
+		run.instrumentUsed.code = "HISEQ2";
+		run.instrumentUsed.typeCode = "HISEQ2000";
 		run.typeCode = "RHS2000";
 		List<String> lResos = new ArrayList<String>();
 		lResos.add("reso1");
@@ -1284,11 +1228,9 @@ public class RunValidationTest extends AbstractTests {
 		run.state = state;
 		run.state.code = "F";
 		run.state.user = "tests";
-		run.state.date = new Date();
-		
+		run.state.date = new Date();			
 		Valuation v = new Valuation();
 		run.valuation = v;
-		
 		run.traceInformation = new TraceInformation();
 		run.traceInformation.setTraceInformation("test");
 		Map<String, Treatment> lT = new HashMap<String, Treatment>();
@@ -1301,17 +1243,47 @@ public class RunValidationTest extends AbstractTests {
 		run.valuation.user = "test";
 		run.valuation.valid = TBoolean.TRUE;
 		run.valuation.date = new Date(); 
-		
+		return run;
+		}
+	
+	
+	private Run getFullRunWithGoodProjectCode() {
+		Run run = new Run();
+		run.code = "YANN_TEST1FORREADSET0";
+		run.containerSupportCode = "containerName";
+		run.dispatch = true;
+		run.instrumentUsed = new InstrumentUsed();
+		run.instrumentUsed.code = "HISEQ2";
+		run.instrumentUsed.typeCode = "HISEQ2000";
+		run.typeCode = "RHS2000";
+		List<String> lResos = new ArrayList<String>();
+		lResos.add("reso1");
+		lResos.add("reso2");
+		State state = new State();
+		run.state = state;
+		run.state.code = "F";
+		run.state.user = "tests";
+		run.state.date = new Date();		
+		Valuation v = new Valuation();
+		run.valuation = v;
+		run.traceInformation = new TraceInformation();
+		run.traceInformation.setTraceInformation("test");
+		Map<String, Treatment> lT = new HashMap<String, Treatment>();
+		Treatment ngsrg = new Treatment(); 
+		lT.put("ngsrg", ngsrg);
+		ngsrg.categoryCode = "ngsrg";
+		ngsrg.typeCode = "ngsrg-illumina";
+		run.typeCode = "RHS2000";
+		run.valuation = new Valuation();
+		run.valuation.user = "test";
+		run.valuation.valid = TBoolean.TRUE;
+		run.valuation.date = new Date(); 
 		Set<String> t = new TreeSet<String>();
 		t.add("ProjectCode");
-		//t.add("codeProjetBidon2");
 		run.projectCodes = t;
-		
 		t = new TreeSet<String>();
 		t.add("SampleCode");
-		//t.add("codeProjetBidon2");
-		run.sampleCodes = t;		
-		
+		run.sampleCodes = t;				
 		return run;
 	}
 	
@@ -1322,14 +1294,8 @@ public class RunValidationTest extends AbstractTests {
 		run.containerSupportCode = "containerName";
 		run.dispatch = true;
 		run.instrumentUsed = new InstrumentUsed();
-		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNG")) {
-			run.instrumentUsed.code = "HISEQ1";
-			run.instrumentUsed.typeCode = "HISEQ2000";
-		}	
-		else {
-			run.instrumentUsed.code = "hand";
-			run.instrumentUsed.typeCode = "hand";
-		}
+		run.instrumentUsed.code = "HISEQ2";
+		run.instrumentUsed.typeCode = "HISEQ2000";
 		run.typeCode = "RHS2000";
 		List<String> lResos = new ArrayList<String>();
 		lResos.add("reso1");
@@ -1338,11 +1304,9 @@ public class RunValidationTest extends AbstractTests {
 		run.state = state;
 		run.state.code = "F";
 		run.state.user = "tests";
-		run.state.date = new Date();
-		
+		run.state.date = new Date();		
 		Valuation v = new Valuation();
 		run.valuation = v;
-		
 		run.traceInformation = new TraceInformation();
 		run.traceInformation.setTraceInformation("test");
 		Map<String, Treatment> lT = new HashMap<String, Treatment>();
@@ -1355,13 +1319,10 @@ public class RunValidationTest extends AbstractTests {
 		run.valuation.user = "test";
 		run.valuation.valid = TBoolean.TRUE;
 		run.valuation.date = new Date(); 
-		
 		Set<String> t = new TreeSet<String>();
-		//t.add("projectCode");
 		t.add("codeProjetBidon");
 		t.add("codeProjetBidon2");
-		run.projectCodes = t;
-		
+		run.projectCodes = t;		
 		return run;
 	}
 	
@@ -1380,10 +1341,8 @@ public class RunValidationTest extends AbstractTests {
 		run.state.code = "";
 		run.state.user = "tests";
 		run.state.date = new Date();
-		
 		Valuation v = new Valuation();
 		run.valuation = v;
-		
 		run.traceInformation = new TraceInformation();
 		Map<String, Treatment> lT = new HashMap<String, Treatment>();
 		Treatment ngsrg = new Treatment(); 
