@@ -33,13 +33,13 @@ public class Resolutions extends CommonController{
 			}
 			if(resolutionsSearch.datatable){
 				return ok(Json.toJson(new DatatableResponse<Resolution>(resolutions, resolutions.size()))); 
-			}else if(resolutionsSearch.list){
+			/*}else if(resolutionsSearch.list){
 				List<ListObject> lop = new ArrayList<ListObject>();
 				for(Resolution et:resolutions){
 					lop.add(new ListObject(et.code, et.name));
 				}
 				return Results.ok(Json.toJson(lop));
-			}else{
+			*/}else{
 				return Results.ok(Json.toJson(resolutions));
 			}
 		}catch (DAOException e) {

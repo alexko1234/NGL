@@ -86,7 +86,7 @@ public class ValuationCriteriaDAO extends AbstractDAOMapping<ValuationCriteria>{
 				"FROM valuation_criteria  as v "+
 				"INNER JOIN valuation_criteria_common_info_type as vcc ON vcc.fk_valuation_criteria=v.id "+
 				"INNER JOIN common_info_type as c ON c.id=vcc.fk_common_info_type " +
-				  DAOHelpers.getSQLForInstitute("c")+
+				  DAOHelpers.getCommonInfoTypeSQLForInstitute("c")+
 				" WHERE c.code = ?";
 		
 		BeanPropertyRowMapper<ValuationCriteria> mapper = new BeanPropertyRowMapper<ValuationCriteria>(ValuationCriteria.class);
@@ -108,7 +108,7 @@ public class ValuationCriteriaDAO extends AbstractDAOMapping<ValuationCriteria>{
 				"FROM valuation_criteria v "+
 				"INNER JOIN valuation_criteria_common_info_type as vcc ON vcc.fk_valuation_criteria=v.id "+
 				"INNER JOIN common_info_type as c ON c.id=vcc.fk_common_info_type " + 
-				  DAOHelpers.getSQLForInstitute("c")+
+				  DAOHelpers.getCommonInfoTypeSQLForInstitute("c")+
 				" WHERE v.code=? and c.code=?";
 		
 		return( initializeMapping(sql, new SqlParameter("v.code", Types.VARCHAR),

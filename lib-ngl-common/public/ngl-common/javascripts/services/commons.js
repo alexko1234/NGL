@@ -221,7 +221,8 @@ angular.module('commonsServices', []).
     			};
     	}).directive('btSelect',  ['$parse', '$document', '$window', function($parse,$document, $window)  {
 			//0000111110000000000022220000000000000000000000333300000000000000444444444444444000000000555555555555555000000066666666666666600000000000000007777000000000000000000088888
-    		  var BT_OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
+    		var BT_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*))\s+in\s+([\s\S]+?)$/;                        
+    		//var BT_OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
     		// jshint maxlen: 100
   		    return {
   		    	restrict: 'A',
@@ -234,8 +235,9 @@ angular.module('commonsServices', []).
 		    	  		+'</button>'
 		    	  		+'<ul class="dropdown-menu" style="{{style}}">'
 		    	  		+'<li ng-repeat="item in items" ng-class="item.class" ng-click="selectItem(item, $event)">'
-		    	  		+'<a tabindex="-1"  href="#">'
-		    	  		+'<span class="text">{{itemLabel(item)}}</span>'
+		    	  		+'<span ng-if="groupBy(item, $index)" class="groupBy" ng-bind="itemGroupByLabel(item)"></span>'
+		    	  		+'<a ng-class="itemClass()" href="#">'
+		    	  		+'<span class="text" ng-bind="itemLabel(item)"></span>'
 		    	  		+'<i class="icon-ok check-mark" ng-show="item.selected"></i>'
 		    	  		+'</a></li>'
 		    	  		+'</ul>'
@@ -265,15 +267,39 @@ angular.module('commonsServices', []).
 		      		      }
 	
 		      		    return {
-		      		        itemName:match[3],
-		      		        source:$parse(match[4]),
+		      		        itemName:match[4],
+		      		        source:$parse(match[5]),
 		      		        viewMapper:match[2] || match[1],
-		      		        modelMapper:match[1]
+		      		        modelMapper:match[1],
+		      		        groupBy:match[3],
+		      		        groupByGetter:match[3]?$parse(match[3].replace(match[4]+'.','')):undefined
 		      		      };
 		      		      
 	      		      };
-	      		     
+	      		      /*
+		      		    var displayFn = $parse(match[2] || match[1]),
+		                valueName = match[4] || match[6],
+		                keyName = match[5],
+		                groupByFn = $parse(match[3] || ''),
+		                valueFn = $parse(match[2] ? match[1] : valueName),
+		                valuesFn = $parse(match[7]),
+		                track = match[8],
+		                trackFn = track ? $parse(match[8]) : null,
+	                */
 	      		    var pos = {};
+	      		    
+	      		    scope.groupBy = function(item, index){
+	      		    	if(optionsConfig.groupByGetter){
+	      		    		if(index === 0 || (index > 0 && optionsConfig.groupByGetter(scope.items[index-1]) !== optionsConfig.groupByGetter(item))){
+	      		    			return true;
+	      		    		}	      		    		
+	      		    	}
+	      		    	return false;	      		    	
+	      		    } 
+	      		    
+	      		  scope.itemClass = function(){
+	      			  return (optionsConfig.groupByGetter)?'opt':'';
+	      		  }
 	      		    
 	      		    scope.setStyle = function(){
 	      		    	var top = pos.top + pos.height - $document.scrollTop();
@@ -291,7 +317,12 @@ angular.module('commonsServices', []).
 	      		    	  return selectedLabels.join();
 	      		      };  
 	      	        
-	      		      scope.itemLabel = function(item){
+	      		      
+	      		      scope.itemGroupByLabel = function(item){
+	      		    	 return optionsConfig.groupByGetter(item);
+	      		      }
+	      		      
+	      		      scope.itemLabel = function(item){	      		    	
 	      		    	 return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
 	      		      };
 	      		      
@@ -384,7 +415,7 @@ angular.module('commonsServices', []).
 		    	  		+'  <ul>'
 		    	  		+'  <li ng-repeat="item in items | filter:{grpLabel:groupLabel}" ng-class="item.class" ng-click="selectItem(item, $event)">'
 		    	  		+'   <a tabindex="-1"  href="#" style="color:black; text-decoration:none;">'
-		    	  		+'   <span class="text">{{itemLabel(item)}}</span>'
+		    	  		+'   <span class="text" ng-bind="itemLabel(item)"></span>'
 		    	  		+'   <i class="glyphicon glyphicon-ok icon-ok check-mark"></i>'
 		    	  		+'   </a>'
 		    	  		+'  </li>'

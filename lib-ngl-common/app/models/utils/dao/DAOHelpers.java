@@ -119,7 +119,7 @@ public class DAOHelpers {
 		}		
 	}
 
-	public static String getSQLForInstitute(String aliasCommonInfoType){
+	public static String getCommonInfoTypeSQLForInstitute(String aliasCommonInfoType){
 		 
 		List<String> institutes=DescriptionHelper.getInstitute();
 		String SQLInstitute=" join common_info_type_institute ci on "+aliasCommonInfoType+".id =ci.fk_common_info_type "+
@@ -143,7 +143,7 @@ public class DAOHelpers {
 	}
 	public static String getDefaultSQLForInstitute(){
 		if(SQLInstitute==null){
-			SQLInstitute = getSQLForInstitute("t");
+			SQLInstitute = getCommonInfoTypeSQLForInstitute("t");
 		}
 		return SQLInstitute;
 	}

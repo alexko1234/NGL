@@ -1398,9 +1398,18 @@ angular.module('datatableServices', []).
 		    			var getOptions = function(col){
 		    				if(angular.isString(col.possibleValues)){
 		    					return col.possibleValues;
-		    				}else{
+		    				}else{ //function
 		    					return 'col.possibleValues';
 		    				}
+		    			};
+		    			
+		    			var getGroupBy = function(col){
+		    				if(angular.isString(col.groupBy)){
+		    					return 'group by opt.'+col.groupBy;
+		    				}else{
+		    					return '';
+		    				}
+		    					
 		    			};
 		    			
 		    			var getEditElement = function(col){
@@ -1456,15 +1465,15 @@ angular.module('datatableServices', []).
 	        		  	    			if(col.listStyle == "radio"){
 	        		  	    				editElement = '<label ng-repeat="opt in col.possibleValues"  for="radio{{col.id}}"><input id="radio{{col.id}}" html-filter="{{col.type}}" type="radio" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'" value="{{opt.name}}">{{opt.name}}<br></label>';
 	            		  	    		}else if(col.listStyle == "select"){
-	            		  	    			editElement = '<select html-filter="{{col.type}}" ng-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
+	            		  	    			editElement = '<select html-filter="{{col.type}}" ng-options="opt.code as opt.name '+getGroupBy(col)+' for opt in '+getOptions(col)+' '+columnFormatter(col)+'" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
 	            		  	    		}else if(col.listStyle == "multiselect"){
-	            		  	    			editElement = '<select multiple html-filter="{{col.type}}"  ng-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
+	            		  	    			editElement = '<select multiple html-filter="{{col.type}}"  ng-options="opt.code as opt.name  '+getGroupBy(col)+' for opt in '+getOptions(col)+' '+columnFormatter(col)+'" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
 	            		  	    		}else if(col.listStyle == "bt-select"){
-	            		  	    			editElement = '<div bt-select html-filter="{{col.type}}" placeholder="" bt-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></div>';	
+	            		  	    			editElement = '<div bt-select html-filter="{{col.type}}" placeholder="" bt-options="opt.code as opt.name  '+getGroupBy(col)+' for opt in '+getOptions(col)+' '+columnFormatter(col)+'" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></div>';	
 	            		  	    		}else if(col.listStyle == "bt-select-multiple"){
-	            		  	    			editElement = '<div bt-select html-filter="{{col.type}}" placeholder="" multiple="true" bt-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></div>';
+	            		  	    			editElement = '<div bt-select html-filter="{{col.type}}" placeholder="" multiple="true" bt-options="opt.code as opt.name '+getGroupBy(col)+' for opt in '+getOptions(col)+' '+columnFormatter(col)+'" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></div>';
 	            		  	    		}else{
-	            		  	    			editElement = '<select html-filter="{{col.type}}" ng-options="opt.code as opt.name for opt in '+getOptions(col)+' '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
+	            		  	    			editElement = '<select html-filter="{{col.type}}" ng-options="opt.code as opt.name '+getGroupBy(col)+' for opt in '+getOptions(col)+' '+columnFormatter(col)+'"  ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"></select>';
 	            		  	    		}
 	        		  	    		}
         		  	    	}else if(col.edit && col.type =="Boolean"){

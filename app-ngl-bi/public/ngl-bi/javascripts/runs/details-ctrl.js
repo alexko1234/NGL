@@ -92,7 +92,8 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 					order:false,
 			    	choiceInList:true,
 			    	listStyle:'bt-select-multiple',
-			    	possibleValues:'lists.getResolutions()'
+			    	possibleValues:'lists.getResolutions()',
+			    	groupBy:'category.name'
 				}
 			]				
 	}

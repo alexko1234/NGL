@@ -130,7 +130,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		String sql = sqlCommon +
 				"JOIN common_info_type_resolution cr ON cr.fk_resolution=t.id "+
 				"JOIN common_info_type c on c.id =cr.fk_common_info_type "+
-				  DAOHelpers.getSQLForInstitute("c")+
+				  DAOHelpers.getCommonInfoTypeSQLForInstitute("c")+
 				" where c.code=?";
 		return initializeMapping(sql, new SqlParameter("c.code", Types.VARCHAR)).execute(typeCode);	
 	}
@@ -155,7 +155,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		String sql = sqlCommon +
 				"JOIN common_info_type_resolution cr ON cr.fk_resolution=t.id "+
 				"JOIN common_info_type c on c.id =cr.fk_common_info_type "+
-				  DAOHelpers.getSQLForInstitute("c")+
+				  DAOHelpers.getCommonInfoTypeSQLForInstitute("c")+
 				" where t.code=? and c.code=?";
 		Logger.debug(sql);
 

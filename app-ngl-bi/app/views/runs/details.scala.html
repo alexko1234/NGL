@@ -51,7 +51,7 @@
 							    		<li ng-repeat="code in run.valuation.resolutionCodes" ng-model="code" codes="resolution"/>
 							    </ul>
 						</div>
-						<div ng-switch-when="true"><div bt-select class="span12" ng-model="run.valuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name for valid in lists.getResolutions()" ></div></div>
+						<div ng-switch-when="true"><div bt-select class="span12" ng-model="run.valuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ></div></div>
 					</div>	
 				</dd>
 			</dl>

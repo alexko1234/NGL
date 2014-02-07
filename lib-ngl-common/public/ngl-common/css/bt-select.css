@@ -134,6 +134,13 @@
             box-shadow: none;
 }
 
+.bt-select.btn-group .dropdown-menu .groupBy {
+    display: block;
+    padding: 3px 20px;
+    cursor: default;
+    font-weight: bold;    
+}
+
 .bt-select.btn-group .dropdown-menu dt {
     display: block;
     padding: 3px 20px;
