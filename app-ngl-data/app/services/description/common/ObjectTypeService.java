@@ -64,25 +64,23 @@ public class ObjectTypeService {
 		DAOHelpers.updateModels(ObjectType.class, l, errors);	
 	}
 	
+	
 	public static void updateResolutionsObjectTypes(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<ObjectType> l = new ArrayList<ObjectType>();
 		
 		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Run.name(), false, DescriptionFactory.getResolutions("pbMIndetermine","pbMChiller","pbMPelletier","pbMFluidiq","pbMLaser","pbMCamera","pbMLentille","pbMPEmodule","pbMCbot","pbRIndetermine","pbRFC","pbRCbot","pbRSeq","pbRIndexing","pbRPEmodule","pbRRehybR1","pbRRehybR2","pbRErreurReac","pbRAjoutReac","savIntensite","savDensiteElevee","savDensiteFaible","savPF","savPhasing","savPrephasing","savErrRate","savQ30","savIndDemultiplex","pbIPC","pbIEcran","pbIEspDisqInsuf","pbILogiciel","pbIRebootPC","infoRunValidation","infoArretSeq","infoArretLogiciel","infoRemboursement") ));
 		
-		//TODO : set resolutions for type ReadSet (like for the Run, just before) !
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.ReadSet.name(), false, DescriptionFactory.getResolutions("default") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.ReadSet.name(), false, DescriptionFactory.getResolutions("qteSeqValInsuf", "qteSeqUtileInsuf", "indPbDemultiplex", "indPbManip", "qlteQ30", "qlteRepartitionBases", "qlteAdapterKmer", "qlteDuplicat", "taxoContaIndeterm", "taxoContaManip", "taxoContaMatOri", "taxoNonConforme", "taxoMitochondrie", "taxoChloroplast", "taxoVirus", "taxoBacteria", "taxoFungi", "riboEleve" ) ));
 		
-		
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Container.name(), false, DescriptionFactory.getResolutions("default") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Project.name(), false, DescriptionFactory.getResolutions("default") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Experiment.name(), false, DescriptionFactory.getResolutions("default") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Process.name(), false, DescriptionFactory.getResolutions("default") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Sample.name(), false, DescriptionFactory.getResolutions("default") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Instrument.name(), false, DescriptionFactory.getResolutions("default") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Reagent.name(), false, DescriptionFactory.getResolutions("default") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Import.name(), false, DescriptionFactory.getResolutions("default") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Treatment.name(), false, DescriptionFactory.getResolutions("default") ));
-	
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Container.name(), false, DescriptionFactory.getResolutions("cont_reso1","cont_reso2","cont_reso3") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Project.name(), false, DescriptionFactory.getResolutions("pro_reso1","pro_reso2","pro_reso3") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Process.name(), false, DescriptionFactory.getResolutions("proj_reso1","proj_reso2","proj_reso3") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Experiment.name(), false, DescriptionFactory.getResolutions("exp_reso1","exp_reso2","exp_reso3") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Sample.name(), false, DescriptionFactory.getResolutions("samp_reso1","samp_reso2","samp_reso3") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Instrument.name(), false, DescriptionFactory.getResolutions("ins_reso1","ins_reso2","ins_reso3") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Reagent.name(), false, DescriptionFactory.getResolutions("reag_reso1","reag_reso2","reag_reso3") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Import.name(), false, DescriptionFactory.getResolutions("imp_reso1","imp_reso2","imp_reso3") ));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Treatment.name(), false, DescriptionFactory.getResolutions("trt_reso1","trt_reso2","trt_reso3") ));
 		
 		DAOHelpers.updateModels(ObjectType.class, l, errors);	
 	}

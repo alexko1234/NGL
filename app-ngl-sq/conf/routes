@@ -87,10 +87,6 @@ POST	   /createtemplate												controllers.dataload.SampleLoad.createTemplat
 
 ->  /authentication authentication.Routes
 
-# Home page
-
-# Migration
-GET /migrationsupport													controllers.migration.MigrationSupport.migrationSupport()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               									controllers.Assets.at(path="/public", file)
