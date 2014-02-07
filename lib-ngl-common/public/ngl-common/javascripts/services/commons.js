@@ -219,7 +219,7 @@ angular.module('commonsServices', []).
     				 };
     			}    					
     			};
-    	}).directive('btSelect',  ['$parse', '$document', function($parse,$document)  {
+    	}).directive('btSelect',  ['$parse', '$document', '$window', function($parse,$document, $window)  {
 			//0000111110000000000022220000000000000000000000333300000000000000444444444444444000000000555555555555555000000066666666666666600000000000000007777000000000000000000088888
     		  var BT_OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
     		// jshint maxlen: 100
@@ -227,12 +227,12 @@ angular.module('commonsServices', []).
   		    	restrict: 'A',
   		    	replace:false,
   		    	scope:true,
-  		    	template: '<div ng-class="getClass()" >'
-		    	  		+'<button class="btn dropdown-toggle btn-default" data-toggle="dropdown" ng-click="getStyle()">'
+  		    	template: '<div ng-class="getClass()">'
+		    	  		+'<button class="btn dropdown-toggle btn-default" data-toggle="dropdown" ng-click="setStyle()">'
 		    	  		+'<div class="filter-option pull-left">{{selectedItemLabel()}}</div>&nbsp;'
 		    	  		+'<span class="caret"></span>'
 		    	  		+'</button>'
-		    	  		+'<ul class="dropdown-menu" style="{{getStyle()}}">'
+		    	  		+'<ul class="dropdown-menu" style="{{style}}">'
 		    	  		+'<li ng-repeat="item in items" ng-class="item.class" ng-click="selectItem(item, $event)">'
 		    	  		+'<a tabindex="-1"  href="#">'
 		    	  		+'<span class="text">{{itemLabel(item)}}</span>'
@@ -247,6 +247,8 @@ angular.module('commonsServices', []).
 	      		      if (!ctrls[0]) return;
 	      		      element.addClass("bt-select");
 	      		     
+	      		   
+	      		      
 	      		      var ngModelCtrl = ctrls[0],
 	      		          multiple = attr.multiple || false,
 	      		          btOptions = attr.btOptions,
@@ -273,10 +275,12 @@ angular.module('commonsServices', []).
 	      		     
 	      		    var pos = {};
 	      		    
-	      		  
-	      		    scope.getStyle = function(){
-	      		    	return "top:"+(pos.top + pos.height - $document.scrollTop())+"px ;left:"+pos.left+"px;position:fixed";
+	      		    scope.setStyle = function(){
+	      		    	var top = pos.top + pos.height - $document.scrollTop();
+	      		    	var height = angular.element($window).height() - top;
+	      		    	scope.style = "top:"+top+"px; left:"+pos.left+"px; max-height:"+height+"px; position:fixed; overflow:auto";	      		    	
 	      		    };
+	      		    
 	      		      var selectedLabels = [];
 	      		      
 	      		      scope.getClass = function(){
@@ -331,7 +335,7 @@ angular.module('commonsServices', []).
 	      		    function render() {
 	      		    	pos = element.position();
 		      		    pos.height = element[0].offsetHeight;
-		      		    
+		      		    scope.setStyle();
 	      		    	
 	      		    	selectedLabels = [];
 		      	    	scope.items = optionsConfig.source(scope) || [];
