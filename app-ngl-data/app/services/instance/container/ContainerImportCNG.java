@@ -7,6 +7,7 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+import models.utils.instance.ContainerHelper;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNG;
 import play.Logger;
@@ -31,7 +32,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		List<Container> containers = limsServices.findContainerToCreate(contextError);
 		
 		//common method for CNS & CNG
-		ContainerImportCNS.createSupportFromContainers(containers, contextError);
+		ContainerHelper.createSupportFromContainers(containers, contextError);
 		
 		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError, true);
 		

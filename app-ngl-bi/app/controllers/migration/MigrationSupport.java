@@ -7,8 +7,6 @@ import java.util.Map;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
 import net.vz.mongodb.jackson.JacksonDBCollection;
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Support;
@@ -27,7 +25,7 @@ public class MigrationSupport extends CommonController{
 	private static final String CONTAINER_COLL_NAME_BCK = InstanceConstants.CONTAINER_COLL_NAME+"_BCK";
 
 
-	public static Result migrationSupport(){
+	public static Result migration(){
 
 		Logger.info("Start point of Migration Support");
 
@@ -57,7 +55,6 @@ public class MigrationSupport extends CommonController{
 		}else{
 			Logger.info("Migration Support already execute !");
 		}
-
 		Logger.info("Migration Support finish");
 		return ok("Migration Support Finish");
 	}
@@ -69,55 +66,23 @@ public class MigrationSupport extends CommonController{
 		if (container.support != null) {
 			Container c = new Container();
 			c.support = new ContainerSupport();
-
 			if (container.support.barCode != null) {
 				c.support.supportCode = container.support.barCode;
-
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
 						DBQuery.is("code", container.code), 
 						DBUpdate.unset("support.barCode") 
 						.set("support.supportCode", c.support.supportCode) );
-
 			}
 			else {
-
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
 						DBQuery.is("code", container.code), 
 						DBUpdate.unset("support.barCode")  );
-
 			}
-
 		}
 	}
 
 
-
-	/*public static void createSupportCollection(Container container, Map<String,Support> mapSupport) {
-
-			if(container.support !=null){
-				Support support=new Support();
-				if(container.support.categoryCode!=null){
-					support.categoryCode=container.support.categoryCode; 
-				}
-				support.code=container.support.supportCode;
-				support.state=new State();
-				support.state.code="A";
-				support.projectCodes=container.projectCodes;
-				support.sampleCodes=container.sampleCodes;
-
-				TraceInformation traceInformation =new TraceInformation();
-				traceInformation.setTraceInformation("ngl"); 
-				support.traceInformation = traceInformation;
-
-				if(!mapSupport.containsKey(support.code)){
-					mapSupport.put(support.code,support);
-				}
-
-			}
-	}*/
-
 	public static void createSupportCollection(Container container, Map<String,Support> mapSupports) {
-
 		if (container.support != null) {
 			Support newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
 			if (!mapSupports.containsKey(newSupport.code)) {
@@ -128,16 +93,14 @@ public class MigrationSupport extends CommonController{
 				InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
 				InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
 			}
-
 		}
 	}
 
+	
 	public static Result updateBD(Map<String,Support>  mapSupport) {
-
 		ContextValidation contextValidation=new ContextValidation();
 		contextValidation.setCreationMode();
 		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, new ArrayList<Support>(mapSupport.values()),contextValidation);
-
 		if(contextValidation.hasErrors()){
 			Logger.info("CreateSupportCollection ends with errors");
 			return badRequest("CreateSupportCollection ends with errors");

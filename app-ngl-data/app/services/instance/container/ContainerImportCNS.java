@@ -184,7 +184,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	
 		ContainerImportCNS.saveSampleFromContainer(contextError,containers);
 		
-		ContainerImportCNS.createSupportFromContainers(containers, contextError);
+		ContainerHelper.createSupportFromContainers(containers, contextError);
 	
 		List<Container> newContainers=new ArrayList<Container>();
 	
@@ -204,27 +204,5 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	}
 
 	
-	public static void createSupportFromContainers(List<Container> containers,ContextValidation contextValidation){
-	
-	HashMap<String,Support> mapSupports = new HashMap<String,Support>();
-	
-	for (Container container : containers) {
-		if (container.support != null) {
-			Support newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
-			if (!mapSupports.containsKey(newSupport.code)) {
-				mapSupports.put(newSupport.code, newSupport);
-			}
-			else {
-				Support oldSupport = (Support) mapSupports.get(newSupport.code);
-				InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
-				InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
-			}
-			
-		}
-	}
-
-	InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, new ArrayList<Support>(mapSupports.values()), contextValidation, true);
-	
-	}
 
 }

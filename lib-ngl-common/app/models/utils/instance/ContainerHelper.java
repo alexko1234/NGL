@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import play.Logger;
@@ -18,12 +19,16 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.SampleUsed;
+import models.laboratory.container.instance.Support;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
+import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+import validation.ContextValidation;
+import validation.container.instance.ContainerValidationHelper;
 import validation.utils.BusinessValidationHelper;
 
 public class ContainerHelper {
@@ -209,6 +214,30 @@ public class ContainerHelper {
 			}
 		}
 
+	}
+	
+	
+	public static void createSupportFromContainers(List<Container> containers,ContextValidation contextValidation){
+		
+		HashMap<String,Support> mapSupports = new HashMap<String,Support>();
+		
+		for (Container container : containers) {
+			if (container.support != null) {
+				Support newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
+				if (!mapSupports.containsKey(newSupport.code)) {
+					mapSupports.put(newSupport.code, newSupport);
+				}
+				else {
+					Support oldSupport = (Support) mapSupports.get(newSupport.code);
+					InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
+					InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
+				}
+				
+			}
+		}
+	
+		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, new ArrayList<Support>(mapSupports.values()), contextValidation, true);
+	
 	}
 
 }
