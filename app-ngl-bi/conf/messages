@@ -50,6 +50,8 @@ button.search = Rechercher
 button.reset = Réinitialiser
 button.validate = Sauvegarder
 button.cancel = Annuler
+button.show = Voir
+button.valuation = Evaluer
 
 runs.page.title=Runs
 runs.menu = Runs

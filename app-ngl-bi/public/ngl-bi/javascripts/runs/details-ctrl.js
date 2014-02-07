@@ -115,7 +115,7 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 				{  	property:"code",
 					header: Messages("readsets.code"),
 					render : function(value){
-						return '<a href="" ng-click="goToReadSet(\''+value.code+'\')">'+value.code+'</a>';
+						return '<a href="" ng-click="showReadSet(\''+value.code+'\')">'+value.code+'</a>';
 					},
 					type :"String",
 					order:false
@@ -202,11 +202,27 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 		}
 	}
 	
-	$scope.goToReadSets = function(){
-		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.home('search').url+'?runCode='+$scope.run.code, 'readsets');
+	$scope.showReadSets = function(){
+		var laneNumbers={value:''};
+		angular.forEach($scope.form.laneNumbers, function(value, key){
+			this.value +='&laneNumbers='+value;
+		}, laneNumbers);
+		
+		
+		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.home('search').url+'?runCode='+$scope.run.code+laneNumbers.value, 'readsets');
 	}
 	
-	$scope.goToReadSet = function(readSetCode){
+	$scope.valuateReadSets = function(){
+		var laneNumbers={value:''};
+		angular.forEach($scope.form.laneNumbers, function(value, key){
+			this.value +='&laneNumbers='+value;
+		}, laneNumbers);
+		
+		
+		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.home('valuation').url+'?runCode='+$scope.run.code+laneNumbers.value, 'readsets');
+	}
+	
+	$scope.showReadSet = function(readSetCode){
 		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(readSetCode).url, 'readsets');
 	}
 	

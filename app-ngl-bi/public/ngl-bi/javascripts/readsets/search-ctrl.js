@@ -293,7 +293,7 @@ function SearchStateCtrl($scope,  datatable, lists) {
 SearchStateCtrl.$inject = ['$scope', 'datatable', 'lists'];
 
 
-function SearchValuationCtrl($scope, datatable, lists) {
+function SearchValuationCtrl($scope, datatable, lists, $routeParams) {
 
 	$scope.listsTable = lists;
 	
@@ -332,7 +332,18 @@ function SearchValuationCtrl($scope, datatable, lists) {
 		}else{
 			$scope.datatable = $scope.getDatatable();
 		}
-		$scope.datatable.search({stateCodes:["IW-V","IP-V"]});
+		
+		var count = 0;
+		for(var p in $routeParams){
+			count++;
+		}
+		
+		if(count > 0){
+			$scope.datatable.search($routeParams);
+		}else{
+			$scope.datatable.search({stateCodes:["IW-V","IP-V"]});
+		}
+		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('valuation');
 			$scope.addTabs({label:Messages('readsets.page.tab.validate'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("valuation").url,remove:false});
@@ -341,7 +352,7 @@ function SearchValuationCtrl($scope, datatable, lists) {
 	}	
 };
 
-SearchValuationCtrl.$inject = ['$scope', 'datatable', 'lists'];
+SearchValuationCtrl.$inject = ['$scope', 'datatable', 'lists', '$routeParams'];
 
 function SearchBatchCtrl($scope,  datatable) {
 

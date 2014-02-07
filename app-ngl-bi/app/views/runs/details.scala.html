@@ -160,15 +160,20 @@
 
 <div class="row-fluid">
 	<ul class="nav nav-tabs">
-		<li class="active"><a ng-click="goToReadSets()">@Messages("runs.readsets.title") ({{readSetsDT.totalNumberRecords}})</a></li>		   
+		<li class="active"><a>@Messages("runs.readsets.title") ({{readSetsDT.totalNumberRecords}})</a></li>		   
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane active"></div>	
 		<div class="row-fluid">
-			<div class="span3">				
+			<div class="span5">				
 	 			<form class="well well-small form-inline">
-					<div bt-select ng-model="form.laneNumbers" multiple="true" placeholder="@Messages("search.placeholder.lanes")" bt-options="l.number as l.number for l in laneOptions"></div>				
-					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary pull-right" ><i class="icon-search icon-large"></i></button>					 						
+					<div bt-select  ng-model="form.laneNumbers" multiple="true" placeholder="@Messages("search.placeholder.lanes")" bt-options="l.number as l.number for l in laneOptions"></div>				
+					<div class="btn-group pull-right">
+					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" ><i class="icon-search icon-large"></i></button>
+					<button type="submit" ng-click="showReadSets()" class="btn" >@Messages("button.show")</button>
+					<button type="submit" ng-click="valuateReadSets()" class="btn" ng-if="isEditMode()">@Messages("button.valuation")</button>
+					</div>
+										 						
 	 			</form>	
 			</div> 
 		</div>
