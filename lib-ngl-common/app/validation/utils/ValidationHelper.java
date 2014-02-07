@@ -589,6 +589,11 @@ public class ValidationHelper {
         	isValid =  MapUtils.isNotEmpty((Map)object);        	
         }
         
+        if(isValid && object instanceof byte[]) {
+        	byte[] byteArrayObject =  (byte[]) object;
+        	isValid = (byteArrayObject.length==0?false:true);
+        }
+        
         if(!isValid){
         	contextValidation.addErrors(property, ERROR_REQUIRED_MSG,object);
         }        

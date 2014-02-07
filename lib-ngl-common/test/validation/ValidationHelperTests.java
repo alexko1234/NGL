@@ -13,6 +13,8 @@ import java.util.Map.Entry;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.property.PropertyFileValue;
+import models.laboratory.common.instance.property.PropertyImgValue;
 import models.laboratory.common.instance.property.PropertyListValue;
 import models.laboratory.common.instance.property.PropertyMapValue;
 import models.laboratory.common.instance.property.PropertyObjectListValue;
@@ -26,6 +28,96 @@ import utils.AbstractTests;
 import validation.utils.ValidationHelper;
 
 public class ValidationHelperTests extends AbstractTests {
+	
+	
+	@Test
+	public void validatePropertiesFile() {
+		PropertyFileValue imgTest = new  PropertyFileValue();
+		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
+			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
+			    0x30, 0x30, (byte)0x9d };
+		imgTest.value = data;
+		imgTest.extension = "jpg";
+		
+		ContextValidation cv = new ContextValidation(); 
+		imgTest.validate(cv);
+		
+		showErrors(cv);
+		assertThat(cv.errors.size()).isEqualTo(0); 
+		
+	}
+	
+	
+	@Test
+	public void validatePropertiesFileErr1() {
+		PropertyFileValue imgTest = new  PropertyFileValue();
+		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
+			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
+			    0x30, 0x30, (byte)0x9d };
+		imgTest.value = data;
+		imgTest.extension = "";
+		
+		ContextValidation cv = new ContextValidation(); 
+		imgTest.validate(cv);
+		
+		showErrors(cv);
+		assertThat(cv.errors.size()).isEqualTo(1); 
+		
+	}
+	
+	@Test
+	public void validatePropertiesFileErr2() {
+		PropertyFileValue imgTest = new  PropertyFileValue();
+		byte[] data = new byte[] {};
+		imgTest.value = data;
+		imgTest.extension = "";
+		
+		ContextValidation cv = new ContextValidation(); 
+		imgTest.validate(cv);
+		
+		showErrors(cv);
+		assertThat(cv.errors.size()).isEqualTo(2); 
+		
+	}
+	
+	
+	@Test
+	public void validatePropertiesFileImg() {
+		PropertyImgValue imgTest = new  PropertyImgValue();
+		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
+			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
+			    0x30, 0x30, (byte)0x9d };
+		imgTest.value = data;
+		imgTest.extension = "jpg";
+		imgTest.width = 4;
+		imgTest.height = 4;
+		
+		ContextValidation cv = new ContextValidation(); 
+		imgTest.validate(cv);
+		
+		showErrors(cv);
+		assertThat(cv.errors.size()).isEqualTo(0); 
+		
+	}
+	
+	@Test
+	public void validatePropertiesFileImgErr() {
+		PropertyImgValue imgTest = new  PropertyImgValue();
+		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
+			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
+			    0x30, 0x30, (byte)0x9d };
+		imgTest.value = data;
+		imgTest.extension = "jpg";
+		
+		ContextValidation cv = new ContextValidation(); 
+		imgTest.validate(cv);
+		
+		showErrors(cv);
+		assertThat(cv.errors.size()).isEqualTo(2);
+		assertThat(cv.errors.toString()).contains("width");
+		assertThat(cv.errors.toString()).contains("height");
+		
+	}
 	
 	@Test
 	public void validatePropertiesRequired() {

@@ -2,6 +2,9 @@ package models.laboratory.common.instance.property;
 
 import java.io.IOException;
 
+import validation.ContextValidation;
+import validation.utils.ValidationHelper;
+
 import com.google.common.io.Files;
 
 
@@ -15,6 +18,7 @@ public class PropertyFileValue extends PropertyByteValue{
 	public PropertyFileValue() {
 		super();
 	}
+	
 	public PropertyFileValue(java.io.File value) throws IOException {
 		super(Files.toByteArray(value));
 		this.extension = Files.getFileExtension(value.getName());
@@ -27,6 +31,13 @@ public class PropertyFileValue extends PropertyByteValue{
 	@Override
 	public String toString() {
 		return "PropertyFileValue [name=" + name + ", ext=" + extension+", class="+value.getClass().getName()+"]";
+	}
+	
+	
+	@Override
+	public void validate(ContextValidation contextValidation) {
+		ValidationHelper.required(contextValidation, this.value, "value");
+		ValidationHelper.required(contextValidation, this.extension, "extension");
 	}
 	
 

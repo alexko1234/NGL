@@ -21,6 +21,7 @@ import validation.IValidation;
 	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertySingleValue.class, name = "single"),
 	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyListValue.class, name = "list"),
 	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyFileValue.class, name = "file"),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyImgValue.class, name = "img"),
 	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyMapValue.class, name = "map"),
 	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectValue.class, name = "object"),
 	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectListValue.class, name = "object_list")
