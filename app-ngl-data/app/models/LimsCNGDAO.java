@@ -51,8 +51,6 @@ public class LimsCNGDAO {
 	protected static final String SAMPLE_USED_TYPE_CODE = "default-sample-cng";	
 	protected static final String IMPORT_TYPE_CODE_DEFAULT = "default-import";
 	
-	protected ALogger logger =Logger.of(this.getClass().getName());
-	
 	
 	@Autowired
 	@Qualifier("lims")
@@ -75,7 +73,7 @@ public class LimsCNGDAO {
 			public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Project project = new Project(rs.getString("code"), rs.getString("name").trim());
-				logger.debug("Project code :"+project.code);
+				//Logger.debug("Project code :"+project.code);
 				
 				project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
 				
@@ -83,7 +81,7 @@ public class LimsCNGDAO {
 				try {
 					projectType = ProjectType.find.findByCode(project.typeCode);
 				} catch (DAOException e) {
-					logger.error("",e);
+					Logger.error("",e);
 					return null;
 				}
 				if( projectType==null ){
@@ -104,6 +102,7 @@ public class LimsCNGDAO {
 				return project;
 			}
 		});
+
 		return results;
 	}
 	
@@ -123,7 +122,7 @@ public class LimsCNGDAO {
 			sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 
 			sample.code=rs.getString("code");
-			logger.debug("Sample code :"+sample.code);
+			//Logger.debug("Sample code :"+sample.code);
 			
 			String sampleTypeCode=SAMPLE_TYPE_CODE_DEFAULT;
 			
@@ -131,7 +130,7 @@ public class LimsCNGDAO {
 			try {
 				sampleType = SampleType.find.findByCode(sampleTypeCode);
 			} catch (DAOException e) {
-				logger.error("",e);
+				Logger.error("",e);
 				return null;
 			}
 			if ( sampleType==null ) {
@@ -291,7 +290,7 @@ public class LimsCNGDAO {
 				container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 				
 				container.code=rs.getString("code");
-				logger.debug("Container code :"+container.code);
+				Logger.debug("Container code :"+container.code);
 				
 				container.categoryCode=CONTAINER_CATEGORY_CODE;
 				
@@ -310,7 +309,7 @@ public class LimsCNGDAO {
 					container.support=ContainerSupportHelper.getContainerSupport("lane", rs.getInt("nb_container"),rs.getString("code_support"),"1",rs.getString("column")); 
 				}
 				catch(DAOException e) {
-					logger.error("Can't get container support !"); 
+					Logger.error("Can't get container support !"); 
 				}
 				
 				container.properties= new HashMap<String, PropertyValue>();
@@ -332,7 +331,7 @@ public class LimsCNGDAO {
 					try {
 						sampleType = SampleType.find.findByCode(sampleTypeCode);
 					} catch (DAOException e) {
-						logger.error("",e);
+						Logger.error("",e);
 						return null;
 					}
 					if( sampleType==null ){
