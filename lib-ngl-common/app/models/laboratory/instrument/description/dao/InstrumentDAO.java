@@ -9,6 +9,7 @@ import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.dao.AbstractDAODefault;
 import models.utils.dao.DAOException;
+import models.utils.dao.DAOHelpers;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,22 +20,9 @@ import play.Logger;
 public class InstrumentDAO extends AbstractDAODefault<Instrument>{
 
 	protected InstrumentDAO() {
-		super("instrument", Instrument.class, true);
+		super("instrument", Instrument.class, true, true);		
 	}
 
-	public List<Instrument> findByInstrumentUsedType(long idInstrumentUsedType) {
-		String sql = "SELECT id,name,code FROM instrument WHERE fk_instrument_used_type=?";
-		BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
-		return this.jdbcTemplate.query(sql, mapper, idInstrumentUsedType);
-	}
-	
-	public List<Instrument> findByInstrumentUsedTypeCode(String instrumentUsedTypeCode) {
-		String sql = "SELECT i.id,i.name,i.code FROM instrument i, instrument_used_type iut, common_info_type cit WHERE i.fk_instrument_used_type=iut.id AND iut.fk_common_info_type =cit.id AND cit.code=?";
-		BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
-		return this.jdbcTemplate.query(sql, mapper, instrumentUsedTypeCode);
-	}
-
-	
 	public Instrument save(Instrument instrument, long idInstrumentUsedType) throws DAOException {
 		Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("name", instrument.name);
@@ -82,6 +70,20 @@ public class InstrumentDAO extends AbstractDAODefault<Instrument>{
 		removeInstitutes(instrument.id);
 
 		super.remove(instrument);
+	}
+	
+	public List<Instrument> findByInstrumentUsedType(long idInstrumentUsedType) throws DAOException {
+		String sql = getSqlCommon() + " WHERE t.fk_instrument_used_type=?";
+		BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
+		return this.jdbcTemplate.query(sql, mapper, idInstrumentUsedType);
+	}
+	
+	public List<Instrument> findByInstrumentUsedTypeCode(String instrumentUsedTypeCode) throws DAOException {
+		String sql = getSqlCommon() + " inner join instrument_used_type iut on iut.id = i.fk_instrument_used_type"
+				+" inner join common_info_type cit cit.id = iut.fk_common_info_type" 
+				+" where cit.code=?";
+		BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
+		return this.jdbcTemplate.query(sql, mapper, instrumentUsedTypeCode);
 	}
 	
 }

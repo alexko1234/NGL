@@ -618,21 +618,7 @@ public class ValidationHelper {
         return isValid;		
 	}
 	
-	/**
-	 * 
-	 * @param contextValidation
-	 * @param propertyValue
-	 * @param propertyDefinition
-	 * @return
-	 */
-	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertyByteValue propertyValue, PropertyDefinition propertyDefinition){
-		if(propertyDefinition.choiceInList && !checkIfExistInTheList(propertyDefinition, propertyValue.value.toString())){
-			contextValidation.addErrors(propertyDefinition.code+".value", ERROR_VALUENOTAUTHORIZED_MSG, propertyValue.value);
-			return false;
-		}else{
-			return true;
-		}
-	}
+	
 	
 	/**
 	 * Check if the value is in the list

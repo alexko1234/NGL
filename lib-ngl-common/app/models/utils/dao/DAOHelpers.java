@@ -1,6 +1,7 @@
 package models.utils.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,29 +120,55 @@ public class DAOHelpers {
 		}		
 	}
 
-	public static String getCommonInfoTypeSQLForInstitute(String aliasCommonInfoType){
+	/**
+	 * Create the sql to join with institute
+	 * The rule is simple the join table name equals <main_table_name>_institute
+	 * @param mainTable
+	 * @param mainTableAlias
+	 * @return
+	 */
+	public static String getSQLForInstitute(String mainTable, String mainTableAlias){
 		 
 		List<String> institutes=DescriptionHelper.getInstitute();
-		String SQLInstitute=" join common_info_type_institute ci on "+aliasCommonInfoType+".id =ci.fk_common_info_type "+
-					" join institute i on i.id = ci.fk_institute ";
+		String SQLInstitute=" inner join "+mainTable+"_institute as "+mainTable+"_join_institute on "+mainTable+"_join_institute.fk_"+mainTable+" = "
+								+mainTableAlias+".id inner join institute as "+mainTable+"_inst on "+mainTable+"_inst.id = "+mainTable+"_join_institute.fk_institute ";
 		//Prend en compte tous les instituts
 		if(institutes.size()==0){
 			return SQLInstitute ="";
 			//Si un seul institut
 		}else if(institutes.size()==1){
-			return SQLInstitute+= " and i.code='" + DescriptionHelper.getInstitute().get(0)+"'";
+			return SQLInstitute+= " and "+mainTable+"_inst.code = '" + DescriptionHelper.getInstitute().get(0)+"' ";
 		}else {
 			// Si plusieurs instituts (clause in)
-			SQLInstitute+="  and i.code in (";
+			SQLInstitute+="  and "+mainTable+"_inst.code in (";
+			
 			String comma="";
 			for(int i=0;i<institutes.size();i++){
 				if(i==1) comma=",";
 				SQLInstitute+=comma+"'"+institutes.get(i)+"'";
 			}
-			return SQLInstitute+=")";
+			return SQLInstitute+=") ";
 		}		
 	}
-	public static String getDefaultSQLForInstitute(){
+	
+	
+	public static String getResolutionSQLForInstitute(String tableAlias){		 
+		return getSQLForInstitute("resolution", tableAlias);		
+	}
+	
+	public static String getInstrumentSQLForInstitute(String tableAlias){		 
+		return getSQLForInstitute("instrument", tableAlias);		
+	}
+	
+	public static String getValuationCriteriaSQLForInstitute(String tableAlias){		 
+		return getSQLForInstitute("valuation_criteria", tableAlias);		
+	}
+	
+	public static String getCommonInfoTypeSQLForInstitute(String tableAlias){		 
+		return getSQLForInstitute("common_info_type", tableAlias);		
+	}
+	
+	public static String getCommonInfoTypeDefaultSQLForInstitute(){
 		if(SQLInstitute==null){
 			SQLInstitute = getCommonInfoTypeSQLForInstitute("t");
 		}

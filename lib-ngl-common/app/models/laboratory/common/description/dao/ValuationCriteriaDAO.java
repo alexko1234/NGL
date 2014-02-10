@@ -22,7 +22,7 @@ public class ValuationCriteriaDAO extends AbstractDAOMapping<ValuationCriteria>{
 	
 	protected ValuationCriteriaDAO() {
 		super("valuation_criteria", ValuationCriteria.class, ValuationCriteriaMappingQuery.class,
-				"SELECT t.id, t.name, t.code FROM valuation_criteria as t ",
+				"SELECT distinct t.id, t.name, t.code, t.path FROM valuation_criteria as t "+DAOHelpers.getValuationCriteriaSQLForInstitute("t"),
 				true);
 	}
 	
@@ -82,9 +82,8 @@ public class ValuationCriteriaDAO extends AbstractDAOMapping<ValuationCriteria>{
 
 	
 	public List<ValuationCriteria> findByTypeCode(String code) {
-		String sql = "SELECT v.id, v.code, v.name, v.path "+
-				"FROM valuation_criteria  as v "+
-				"INNER JOIN valuation_criteria_common_info_type as vcc ON vcc.fk_valuation_criteria=v.id "+
+		String sql = sqlCommon +
+				"INNER JOIN valuation_criteria_common_info_type as vcc ON vcc.fk_valuation_criteria = t.id "+
 				"INNER JOIN common_info_type as c ON c.id=vcc.fk_common_info_type " +
 				  DAOHelpers.getCommonInfoTypeSQLForInstitute("c")+
 				" WHERE c.code = ?";
@@ -95,21 +94,19 @@ public class ValuationCriteriaDAO extends AbstractDAOMapping<ValuationCriteria>{
 	}
 	
 	public List<ValuationCriteria> findByCommonInfoType(long idCommonInfoType) {
-		String sql = "SELECT v.id, v.name, v.code, v.path "+
-				"FROM valuation_criteria v "+
-				"JOIN valuation_criteria_common_info_type vcc ON vcc.fk_valuation_criteria= v.id "+
+		String sql = sqlCommon +
+				"JOIN valuation_criteria_common_info_type vcc ON vcc.fk_valuation_criteria= t.id "+
 				"WHERE vcc.fk_common_info_type=?";
 		BeanPropertyRowMapper<ValuationCriteria> mapper = new BeanPropertyRowMapper<ValuationCriteria>(ValuationCriteria.class);
 		return this.jdbcTemplate.query(sql, mapper, idCommonInfoType);
 	}
 	
 	public boolean isCodeExistForTypeCode(String code, String typeCode) throws DAOException {		
-		String sql =  "SELECT v.id, v.name, v.code, v.path "+
-				"FROM valuation_criteria v "+
-				"INNER JOIN valuation_criteria_common_info_type as vcc ON vcc.fk_valuation_criteria=v.id "+
+		String sql =  sqlCommon +
+				"INNER JOIN valuation_criteria_common_info_type as vcc ON vcc.fk_valuation_criteria = t.id "+
 				"INNER JOIN common_info_type as c ON c.id=vcc.fk_common_info_type " + 
 				  DAOHelpers.getCommonInfoTypeSQLForInstitute("c")+
-				" WHERE v.code=? and c.code=?";
+				" WHERE t.code=? and c.code=?";
 		
 		return( initializeMapping(sql, new SqlParameter("v.code", Types.VARCHAR),
 				 new SqlParameter("c.code", Types.VARCHAR)).findObject(code, typeCode) != null )? true : false;	
