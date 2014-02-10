@@ -557,7 +557,13 @@ public class ValidationHelper {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 * @param contextValidation
+	 * @param propertyValue
+	 * @param propertyDefinition
+	 * @return
+	 */
 	public static boolean required(ContextValidation contextValidation, PropertyByteValue propertyValue, PropertyDefinition propertyDefinition){
 		if(propertyDefinition.required && required(contextValidation, propertyValue, propertyDefinition.code)){
 			return required(contextValidation, propertyValue.value, propertyDefinition.code+".value");
@@ -610,6 +616,22 @@ public class ValidationHelper {
         	contextValidation.addErrors(property, ERROR_REQUIRED_MSG,object);
         }        
         return isValid;		
+	}
+	
+	/**
+	 * 
+	 * @param contextValidation
+	 * @param propertyValue
+	 * @param propertyDefinition
+	 * @return
+	 */
+	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertyByteValue propertyValue, PropertyDefinition propertyDefinition){
+		if(propertyDefinition.choiceInList && !checkIfExistInTheList(propertyDefinition, propertyValue.value.toString())){
+			contextValidation.addErrors(propertyDefinition.code+".value", ERROR_VALUENOTAUTHORIZED_MSG, propertyValue.value);
+			return false;
+		}else{
+			return true;
+		}
 	}
 	
 	/**
