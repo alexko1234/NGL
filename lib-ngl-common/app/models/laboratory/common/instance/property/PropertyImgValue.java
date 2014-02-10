@@ -32,7 +32,6 @@ public class PropertyImgValue extends PropertyFileValue {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		super.validate(contextValidation); 
-		//control extension ?
 		ValidationHelper.required(contextValidation, this.width, "width");
 		ValidationHelper.required(contextValidation, this.height, "height");
 	}

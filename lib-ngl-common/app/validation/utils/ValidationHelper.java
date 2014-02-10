@@ -15,6 +15,7 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.property.PropertyByteValue;
 import models.laboratory.common.instance.property.PropertyListValue;
 import models.laboratory.common.instance.property.PropertyMapValue;
 import models.laboratory.common.instance.property.PropertyObjectListValue;
@@ -549,6 +550,17 @@ public class ValidationHelper {
 				}
 			}		
 			return isValid;
+		}else if(propertyDefinition.required){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	
+	public static boolean required(ContextValidation contextValidation, PropertyByteValue propertyValue, PropertyDefinition propertyDefinition){
+		if(propertyDefinition.required && required(contextValidation, propertyValue, propertyDefinition.code)){
+			return required(contextValidation, propertyValue.value, propertyDefinition.code+".value");
 		}else if(propertyDefinition.required){
 			return false;
 		}else{

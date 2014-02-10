@@ -36,6 +36,7 @@ public class PropertyFileValue extends PropertyByteValue{
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		super.validate(contextValidation);
 		ValidationHelper.required(contextValidation, this.name, "name");
 		ValidationHelper.required(contextValidation, this.extension, "extension");
 	}
