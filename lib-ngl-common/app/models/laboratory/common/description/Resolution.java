@@ -1,10 +1,7 @@
 package models.laboratory.common.description;
 
 import java.util.List;
-
-import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.dao.ResolutionDAO;
-import models.laboratory.common.description.dao.StateDAO;
 import models.utils.Model;
 import models.utils.dao.DAOException;
 
@@ -19,6 +16,7 @@ public class Resolution extends Model<Resolution>{
 	public String name;
 	public ResolutionCategory category;
 	public List<Institute> institutes;
+	public List<ObjectType> objectTypes;
 	
 	
 	public static ResolutionFinder find = new ResolutionFinder();

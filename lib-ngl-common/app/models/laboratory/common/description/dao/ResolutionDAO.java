@@ -4,17 +4,12 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.State;
-import models.utils.DescriptionHelper;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
-
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
@@ -66,6 +61,8 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		resolution.id = newId;
 		       
         insertInstitutes(resolution.institutes, resolution.id, false);
+          
+		insertObjectTypes(resolution.objectTypes, resolution.id, true);
         
 		return resolution.id;
 	}
@@ -98,9 +95,6 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		jdbcTemplate.update(sql, resolutionId);
 	}
 	
-	
-	
-	
 	private void insertObjectTypes(List<ObjectType> objectTypes, Long id,
 			boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
@@ -123,9 +117,6 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		jdbcTemplate.update(sql, id);
 	}
 
-	
-	
-	
 	public List<Resolution> findByTypeCode(String typeCode)  throws DAOException {	
 		String sql = sqlCommon +
 				"inner join common_info_type_resolution cr ON cr.fk_resolution=t.id "+
@@ -183,6 +174,5 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 				"WHERE ro.fk_object_type=?";		
 		return initializeMapping(sql, new SqlParameter("fk_object_type", Type.LONG)).execute(id);		
 	}
-
 
 }

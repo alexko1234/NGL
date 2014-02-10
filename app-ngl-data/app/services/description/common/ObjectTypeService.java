@@ -21,8 +21,6 @@ public class ObjectTypeService {
 		saveObjectTypes(errors);
 		
 		updateStatesObjectTypes(errors);
-		
-		updateResolutionsObjectTypes(errors);
 	}
 	
 
@@ -64,34 +62,5 @@ public class ObjectTypeService {
 		
 		DAOHelpers.updateModels(ObjectType.class, l, errors);	
 	}
-	
-	
-	public static void updateResolutionsObjectTypes(Map<String,List<ValidationError>> errors) throws DAOException{
-		List<ObjectType> l = new ArrayList<ObjectType>();
-		
-		List<Resolution> runResos = DescriptionFactory.getResolutionsByCategoryCode("PbM","PbR","SAV","PbI","Info");
-		runResos.addAll(DescriptionFactory.getResolutions("run_reso1","run_reso2","run_reso3"));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Run.name(), false, runResos));
-		
-		List<Resolution> readSetResos = DescriptionFactory.getResolutionsByCategoryCode("Qté","IND","Qlté","TAXO","RIBO","MAP","MERG");
-		readSetResos.addAll(DescriptionFactory.getResolutions("readset_reso1","readset_reso2","readset_reso3"));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.ReadSet.name(), false, readSetResos));
-		
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Container.name(), false, DescriptionFactory.getResolutions("cont_reso1","cont_reso2","cont_reso3") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Project.name(), false, DescriptionFactory.getResolutions("pro_reso1","pro_reso2","pro_reso3") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Process.name(), false, DescriptionFactory.getResolutions("proj_reso1","proj_reso2","proj_reso3") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Experiment.name(), false, DescriptionFactory.getResolutions("exp_reso1","exp_reso2","exp_reso3") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Sample.name(), false, DescriptionFactory.getResolutions("samp_reso1","samp_reso2","samp_reso3") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Instrument.name(), false, DescriptionFactory.getResolutions("ins_reso1","ins_reso2","ins_reso3") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Reagent.name(), false, DescriptionFactory.getResolutions("reag_reso1","reag_reso2","reag_reso3") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Import.name(), false, DescriptionFactory.getResolutions("imp_reso1","imp_reso2","imp_reso3") ));
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Treatment.name(), false, DescriptionFactory.getResolutions("trt_reso1","trt_reso2","trt_reso3") ));
-		
-		DAOHelpers.updateModels(ObjectType.class, l, errors);	
-	}
-	
-	
-
-
 	
 }
