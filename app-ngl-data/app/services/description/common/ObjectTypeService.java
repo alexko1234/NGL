@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.description.Resolution;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
@@ -68,9 +69,13 @@ public class ObjectTypeService {
 	public static void updateResolutionsObjectTypes(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<ObjectType> l = new ArrayList<ObjectType>();
 		
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Run.name(), false, DescriptionFactory.getResolutions("pbMIndetermine","pbMChiller","pbMPelletier","pbMFluidiq","pbMLaser","pbMCamera","pbMLentille","pbMPEmodule","pbMCbot","pbRIndetermine","pbRFC","pbRCbot","pbRSeq","pbRIndexing","pbRPEmodule","pbRRehybR1","pbRRehybR2","pbRErreurReac","pbRAjoutReac","savIntensite","savDensiteElevee","savDensiteFaible","savPF","savPhasing","savPrephasing","savErrRate","savQ30","savIndDemultiplex","pbIPC","pbIEcran","pbIEspDisqInsuf","pbILogiciel","pbIRebootPC","infoRunValidation","infoArretSeq","infoArretLogiciel","infoRemboursement") ));
+		List<Resolution> runResos = DescriptionFactory.getResolutionsByCategoryCode("PbM","PbR","SAV","PbI","Info");
+		runResos.addAll(DescriptionFactory.getResolutions("run_reso1","run_reso2","run_reso3"));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Run.name(), false, runResos));
 		
-		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.ReadSet.name(), false, DescriptionFactory.getResolutions("qteSeqValInsuf", "qteSeqUtileInsuf", "indPbDemultiplex", "indPbManip", "qlteQ30", "qlteRepartitionBases", "qlteAdapterKmer", "qlteDuplicat", "taxoContaIndeterm", "taxoContaManip", "taxoContaMatOri", "taxoNonConforme", "taxoMitochondrie", "taxoChloroplast", "taxoVirus", "taxoBacteria", "taxoFungi", "riboEleve" ) ));
+		List<Resolution> readSetResos = DescriptionFactory.getResolutionsByCategoryCode("Qté","IND","Qlté","TAXO","RIBO","MAP","MERG");
+		readSetResos.addAll(DescriptionFactory.getResolutions("readset_reso1","readset_reso2","readset_reso3"));
+		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.ReadSet.name(), false, readSetResos));
 		
 		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Container.name(), false, DescriptionFactory.getResolutions("cont_reso1","cont_reso2","cont_reso3") ));
 		l.add(DescriptionFactory.setResolutionsToObjectType(ObjectType.CODE.Project.name(), false, DescriptionFactory.getResolutions("pro_reso1","pro_reso2","pro_reso3") ));

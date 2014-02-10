@@ -29,9 +29,9 @@ public class ValuationCriteriaService {
 		
 		//NGL-BI 
 		//TODO : change values (values are here just for test the service!!)
-		l.add(DescriptionFactory.newValuationCriteria("Default", "criteria-default",  "specDefaultCriteriaRunCNGforSAVQualityControl_1" ));
-		l.add(DescriptionFactory.newValuationCriteria("High", "criteria-high",  "specDefaultCriteriaRunCNGforSAVQualityControl_2" ));
-		l.add(DescriptionFactory.newValuationCriteria("Low", "criteria-low",  "specDefaultCriteriaRunCNGforSAVQualityControl_3" ));
+		l.add(DescriptionFactory.newValuationCriteria("Default", "criteria-default",  "specDefaultCriteriaRunCNGforSAVQualityControl_1",DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newValuationCriteria("High", "criteria-high",  "specDefaultCriteriaRunCNGforSAVQualityControl_2",DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newValuationCriteria("Low", "criteria-low",  "specDefaultCriteriaRunCNGforSAVQualityControl_3",DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
 		
 		DAOHelpers.saveModels(ValuationCriteria.class, l, errors);
 	}

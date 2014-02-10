@@ -443,6 +443,15 @@ public class DescriptionFactory {
 		return states;
 	}
 
+	public static List<Resolution> getResolutionsByCategoryCode(String...codes) throws DAOException {
+		List<Resolution> resolutions = new ArrayList<Resolution>();
+		for(String code: codes){
+			resolutions.addAll(Resolution.find.findByCategoryCode(code));
+		}
+		return resolutions;
+	}
+	
+	
 	public static List<Resolution> getResolutions(String...codes) throws DAOException {
 		List<Resolution> resolutions = new ArrayList<Resolution>();
 		for(String code: codes){
@@ -452,11 +461,12 @@ public class DescriptionFactory {
 	}
 
 	
-	public static ValuationCriteria newValuationCriteria(String name, String code, String path) throws DAOException {
+	public static ValuationCriteria newValuationCriteria(String name, String code, String path,  List<Institute> institutes) throws DAOException {
 		ValuationCriteria v = new ValuationCriteria(); 
 		v.code = code;
 		v.name = name;
 		v.path = path;
+		v.institutes = institutes;
 		return v;
 	}
 
