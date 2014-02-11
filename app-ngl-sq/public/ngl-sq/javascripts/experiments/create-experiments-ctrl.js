@@ -1,4 +1,4 @@
-function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
+function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$position) {
 	$scope.experiment = {
 			outputGenerated:false,
 			outputVoid:false,
@@ -50,7 +50,8 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 				active:true
 			},
 			edit:{
-				active:true
+				active:true,
+				columnMode:true
 			},
 			messages:{
 				active:true,
@@ -63,8 +64,8 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 	};
 
 	//Temporairement en dur (à mettre dans la base)
-	$scope.inputContainersResolutions = [{"code":"IS","name":"IS"},{"code":"UA","name":"UA"}];
-	$scope.ouputContainersResolutions = [{"code":"IW-P","name":"IW-P"},{"code":"A","name":"A"},{"code":"UA","name":"UA"}];
+	$scope.inputContainersStates = [{"code":"IS","name":"IS"},{"code":"UA","name":"UA"}];
+	$scope.ouputContainersStates = [{"code":"IW-P","name":"IW-P"},{"code":"A","name":"A"},{"code":"UA","name":"UA"}];
 
 	$scope.experiment.experimentInformation = {
 			protocols:{},
@@ -83,10 +84,13 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 							if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
 								for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.length;j++){
 									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed[j].resolutionCodes = $scope.datatable.displayResult[i].inputResolutionCodes;
+									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed[j].stateCode = $scope.datatable.displayResult[i].inputStateCode;
 								}
 								i += j;
 							}else{
 								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCodes =  $scope.datatable.displayResult[i].inputResolutionCodes;
+								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.stateCode =  $scope.datatable.displayResult[i].inputStateCode;
+								
 							}
 						}
 	
@@ -94,10 +98,14 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 							if($scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
 								for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds.length;j++){
 									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].resolutionCodes = $scope.datatable.displayResult[i].outputResolutionCodes;
+									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].stateCode = $scope.datatable.displayResult[i].inputStateCode;
+									
 								}
 								i += j;
 							}else if($scope.experiment.value.atomicTransfertMethods[i].class != "OneToVoid"){
 								$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCodes =  $scope.datatable.displayResult[i].outputResolutionCodes;
+								$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.stateCode =  $scope.datatable.displayResult[i].outputStateCode;
+								
 							}
 						}
 	
@@ -695,39 +703,42 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 
 	};
 
-	$scope.changeState = function(){
+	$scope.changeState = function(state){
 		$scope.clearMessages();
-		
-		if((($scope.experiment.value.stateCode == "IP" && $scope.state == "N") || ($scope.experiment.value.stateCode == "F" && $scope.state == "IP")) && $scope.experiment.value.instrument.code){
-			$http.put(jsRoutes.controllers.experiments.api.Experiments.updateStateCode($scope.experiment.value.code,$scope.experiment.value.stateCode).url)
-			.success(function(data, status, headers, config) {
-				if(data!=null){
-					$scope.message.clazz="alert alert-success";
-					$scope.message.text=Messages('experiments.msg.save.sucess')
-					//$scope.experiment.value = data;
-					$scope.state=$scope.experiment.value.stateCode;
-					if($scope.experiment.value.stateCode == "F" && $scope.experiment.value.atomicTransfertMethods[i].class != "OneToVoid"){
-						//ajout des colonnes de selection de resolution pour chaque tube
-						var col = $scope.datatable.newColumn("Resolution","outputResolutionCodes",true, true,true,"String",true,$scope.ouputContainersResolutions,{"0":"Outputs","1":"Resolutions"});
-						col.listStyle = "bt-select-multiple";
-						$scope.datatable.addColumn(-1, col);
-					}else if($scope.experiment.value.stateCode == "IP"){
-						var col = $scope.datatable.newColumn("Resolution","inputResolutionCodes",true, true,true,"String",true,$scope.inputContainersResolutions,{"0":"Inputs","1":"Resolutions"});
-						col.listStyle = "bt-select-multiple";
-						$scope.datatable.addColumn(2, col);
-					}
+		$http.put(jsRoutes.controllers.experiments.api.Experiments.updateStateCode($scope.experiment.value.code,state).url)
+		.success(function(data, status, headers, config) {
+			if(data!=null){
+				$scope.message.clazz="alert alert-success";
+				$scope.message.text=Messages('experiments.msg.save.sucess')
+				//$scope.experiment.value = data;
+				$scope.state=state;
+				$scope.experiment.value.stateCode = state;
+				if($scope.experiment.value.stateCode == "F" && $scope.experiment.value.atomicTransfertMethods[i].class != "OneToVoid"){
+					//ajout des colonnes de selection de resolution pour chaque tube
+					var col = $scope.datatable.newColumn("State","outputStateCode",true, true,true,"String",true,$scope.ouputContainersStates,{"0":"Outputs","1":"States"});
+					
+					$scope.datatable.addColumn(-1, col);
+					var col = $scope.datatable.newColumn("Resolution","outputResolutionCodes",true, true,true,"String",true,$scope.lists.get('resolutions'),{"0":"Output","1":"Resolutions"});
+					col.listStyle = "bt-select-multiple";
+					$scope.datatable.addColumn(-1, col);
+				}else if($scope.experiment.value.stateCode == "IP"){
+					var col = $scope.datatable.newColumn("State","inputStateCode",true, true,true,"String",true,$scope.inputContainersStates,{"0":"Inputs","1":"State"});
+					
+					$scope.datatable.addColumn(2, col);
+					var col = $scope.datatable.newColumn("Resolution","inputResolutionCodes",true, true,true,"String",true,$scope.lists.get('resolutions'),{"0":"Inputs","1":"Resolutions"});
+					col.listStyle = "bt-select-multiple";
+					$scope.datatable.addColumn(2, col);
 				}
-			})
-			.error(function(data, status, headers, config) {
-				$scope.message.clazz = "alert alert-error";
-				$scope.message.text = Messages('experiments.msg.save.error');
-				$scope.experiment.value.stateCode = $scope.state;
-				$scope.message.details = data;
-				$scope.message.isDetails = true;
-			});
-		}else{
+			}
+		})
+		.error(function(data, status, headers, config) {
+			$scope.message.clazz = "alert alert-error";
+			$scope.message.text = Messages('experiments.msg.save.error');
 			$scope.experiment.value.stateCode = $scope.state;
-		}
+			$scope.message.details = data;
+			$scope.message.isDetails = true;
+		});
+		
 	};
 
 	$scope.init = function(experimentType,experiment){
@@ -811,7 +822,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 					
 					$scope.lists.refresh.instrumentUsedTypes({"experimentTypeCode":$scope.experiment.value.typeCode});
 					$scope.lists.refresh.protocols({"experimentTypeCode":$scope.experiment.value.typeCode});
-					$scope.lists.refresh.resolutions();
+					$scope.lists.refresh.resolutions({"objectTypeCode":"Experiment"});
 				});
 	
 			} else {
@@ -825,7 +836,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 
 				$scope.lists.refresh.instrumentUsedTypes({"experimentTypeCode":$scope.experiment.value.typeCode});
 				$scope.lists.refresh.protocols({"experimentTypeCode":$scope.experiment.value.typeCode});
-				$scope.lists.refresh.resolutions();
+				$scope.lists.refresh.resolutions({"objectTypeCode":"Experiment"});
 
 				var i=0;
 				var containers = [];//container list for the datatable
@@ -911,14 +922,28 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q) {
 					if($scope.experiment.value.stateCode == "F"){
 						//ajout des colonnes de selection de resolution pour chaque tube
 						if($scope.experiment.value.atomicTransfertMethods[i].class != "OneToVoid"){
-							$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Resolutions","outputResolutionCodes",true, true,true,"String",true,$scope.ouputContainersResolutions,{"0":"Outputs","1":"Resolutions"}));
+							var col = $scope.datatable.newColumn("State","outputStateCode",true, true,true,"String",true,$scope.ouputContainersStates,{"0":"Outputs","1":"States"});
+							
+							$scope.datatable.addColumn(-1, col);
+							var col = $scope.datatable.newColumn("Resolution","outputResolutionCodes",true, true,true,"String",true,$scope.lists.get('resolutions'),{"0":"Output","1":"Resolutions"});
+							col.listStyle = "bt-select-multiple";
 						}
-						$scope.datatable.addColumn(2,$scope.datatable.newColumn("Resolutions","inputResolutionCodes",true, true,true,"String",true,$scope.inputContainersResolutions,{"0":"Inputs","1":"Resolutions"}));
+						var col = $scope.datatable.newColumn("State","inputStateCode",true, true,true,"String",true,$scope.inputContainersStates,{"0":"Inputs","1":"State"});
+						
+						$scope.datatable.addColumn(2, col);
+						var col = $scope.datatable.newColumn("Resolution","inputResolutionCodes",true, true,true,"String",true,$scope.lists.get('resolutions'),{"0":"Inputs","1":"Resolutions"});
+						col.listStyle = "bt-select-multiple";
+						$scope.datatable.addColumn(2, col);
 					}else if($scope.experiment.value.stateCode == "IP"){
-						$scope.datatable.addColumn(2,$scope.datatable.newColumn("Resolutions","inputResolutionCodes",true, true,true,"String",true,$scope.inputContainersResolutions,{"0":"Inputs","1":"Resolutions"}));
-					}
+						var col = $scope.datatable.newColumn("State","inputStateCode",true, true,true,"String",true,$scope.inputContainersStates,{"0":"Inputs","1":"State"});
+					
+						$scope.datatable.addColumn(2, col);
+						var col = $scope.datatable.newColumn("Resolution","inputResolutionCodes",true, true,true,"String",true,$scope.lists.get('resolutions'),{"0":"Inputs","1":"Resolutions"});
+						col.listStyle = "bt-select-multiple";
+						$scope.datatable.addColumn(2, col);
+				}
 				});
 			}
 		}
 }
-CreateNewCtrl.$inject = ['$scope', '$window','datatable','$http','lists','$parse','$q'];
+CreateNewCtrl.$inject = ['$scope', '$window','datatable','$http','lists','$parse','$q','$position'];

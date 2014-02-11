@@ -26,8 +26,10 @@ public class ExperimentTypes extends CommonController{
 		List<ExperimentType> experimentTypes;
 		
 		try{		
-			if(experimentTypesSearch.categoryCode != null){
+			if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.processTypeCode == null){
 				experimentTypes = ExperimentType.find.findByCategoryCode(experimentTypesSearch.categoryCode);
+			}else if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.processTypeCode != null){
+				experimentTypes = ExperimentType.find.findByCategoryCodeAndProcessTypeCode(experimentTypesSearch.categoryCode, experimentTypesSearch.processTypeCode);
 			}else{
 				experimentTypes = ExperimentType.find.findAll();
 			}

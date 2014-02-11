@@ -151,9 +151,7 @@ th {
 			<div class="accordion" id="accordionExp">
 				<div class=" well well-smallaccordion-group">
 					<div class="accordion-heading">
-					<button class="btn pull-right" ng-click="experiment.experimentInformation.save();" ng-disabled="!experiment.experimentInformation.enabled" data-toggle="tooltip" title="@Messages("experiments.save")">
-					<i class="icon-save icon-large"></i>
-					</button>
+					
 					<div class="btn-group pull-right" ng-switch on="experiment.experimentInformation.enabled">
 						<button class="btn" ng-click="experiment.experimentInformation.toggleEdit()" ng-switch-when="false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="icon-edit icon-large"></i></button>
 						<button class="btn" ng-click="experiment.experimentInformation.toggleEdit()" ng-switch-when="true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="icon-undo icon-large"></i></button>	
@@ -174,9 +172,9 @@ th {
 										</div>
 									</div>
 									<div class="control-group">
-										<label class="control-label">@Messages("experiments.status"):</label>
+										<label class="control-label">@Messages("experiments.state"):</label>
 										<div class="controls">
-												<select class="input-small" 
+												<!-- <select class="input-small" 
 														ng-model="experiment.value.stateCode" 
 														ng-readonly="!experiment.experimentInformation.enabled"
 														ng-disabled="!experiment.experimentInformation.enabled"
@@ -185,7 +183,13 @@ th {
 													<option value="N">New</option>
 													<option value="IP" >In progress</option>
 													<option value="F" >Finished</option>
-												</select>
+												</select>-->
+												<div ng-switch="experiment.value.stateCode">
+													<button class="btn" ng-switch-when="N" ng-disabled="experiment.value._id == null" ng-click="changeState('IP')" >@Messages("experiments.begin_progress")</button>
+													<!--<button  class="btn" ng-switch-when="IP" ng-click="changeState('OK')" >@Messages("experiments.ok")</button>-->
+													<button  class="btn" ng-switch-when="IP" ng-disabled="experiment.value._id == null" ng-click="changeState('F')" >@Messages("experiments.finish")</button>
+												</div>
+												
 										</div>
 									</div>
 									<div class="control-group">
@@ -198,17 +202,17 @@ th {
 											ng-disabled="!experiment.experimentInformation.enabled">
 												<option value="">@Messages("experiments.select.resolutions")</option>
 										</select>-->
-											<bt-select ng-model="experiment.value.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" 
+											<div bt-select ng-model="experiment.value.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" 
 											bt-options="resolution.code as resolution.name for resolution in lists.get('resolutions')" 
 											ng-disabled="!experiment.experimentInformation.enabled"
 											ng-readonly="!experiment.experimentInformation.enabled">
-											</bt-select>
+											</div>
 										</div>
 									</div>
 									<div class="control-group">
 										<label class="control-label">Protocole:</label>
 										<div class="controls">
-											<select class="input-medium "
+											<select class="input-small "
 											ng-model="experiment.value.protocolCode"
 											ng-readonly="!experiment.experimentInformation.enabled"
 											ng-options="protocol.code as protocol.name for protocol in lists.get('protocols')"
@@ -277,7 +281,7 @@ th {
 					class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="#" ng-click="outputGeneration();" ng-enabled="!experiment.outputGenerated">@Messages("experiments.generateOutput")</a></li>
+					<li><a href="#" ng-click="outputGeneration();" ng-enabled="!experiment.outputGenerated && experiment.value.stateCode == 'IP'">@Messages("experiments.generateOutput")</a></li>
 				</ul>
 			<button class="btn btn-primary" ng-click="saveAll();" data-toggle="tooltip" title="@Messages("experiments.save_all")">
 				<i class="icon-save icon-large"></i>
@@ -286,10 +290,7 @@ th {
 			<br>
 			<div class="row"
 				style="position: relative; float: left; width: 100%;">
-				<div class="well well-small span5">
-					<button class="btn pull-right" ng-click="experiment.experimentProperties.save();" ng-disabled="!experiment.experimentProperties.enabled" data-toggle="tooltip" title="@Messages("experiments.save")">
-					<i class="icon-save icon-large"></i>
-					</button>
+				<div class="well well-small span5" ng-hide="experiment.experimentProperties.inputs != null">
 					<div class="btn-group pull-right" ng-switch on="experiment.experimentProperties.enabled">
 						<button class="btn" ng-click="experiment.experimentProperties.toggleEdit()" ng-switch-when="false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="icon-edit icon-large"></i></button>
 						<button class="btn" ng-click="experiment.experimentProperties.toggleEdit()" ng-switch-when="true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="icon-undo icon-large"></i></button>	
@@ -316,11 +317,7 @@ th {
 						</form>
 					</div>
 				</div>
-				<div class="well well-small span5">
-					
-						<button class="btn pull-right" ng-click="experiment.instrumentInformation.save();experiment.instrumentProperties.save();" ng-disabled="!experiment.instrumentProperties.enabled" data-toggle="tooltip" title="@Messages("experiments.save")">
-					<i class="icon-save icon-large"></i>
-					</button>
+				<div class="well well-small span5">		
 					<div class="btn-group pull-right" ng-switch on="experiment.instrumentProperties.enabled">
 						<button class="btn" ng-click="experiment.instrumentInformation.toggleEdit();experiment.instrumentProperties.toggleEdit()" ng-switch-when="false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="icon-edit icon-large"></i></button>
 						<button class="btn" ng-click="experiment.instrumentInformation.toggleEdit();experiment.instrumentProperties.toggleEdit()" ng-switch-when="true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="icon-undo icon-large"></i></button>	

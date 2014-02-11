@@ -40,6 +40,14 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists) {
 		$scope.search();
 	}
 	
+	$scope.changeProcessCategory = function(){
+		/*$scope.removeTab(1);
+		
+		$scope.basket.reset();*/
+		
+		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
+	}
+	
 	$scope.init = function(){
 		
 		if(angular.isUndefined($scope.getHomePage())){
@@ -55,7 +63,7 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists) {
 			//$scope.form.projects.options = $scope.comboLists.getProjects().query();
 			
 			$scope.lists.refresh.projects();
-			$scope.lists.refresh.types({objectTypeCode:"Process"});
+			$scope.lists.refresh.processCategories();
 			
 			
 		}else{

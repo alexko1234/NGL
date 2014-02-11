@@ -86,16 +86,10 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 	}
 	
 	$scope.changeExperimentType = function(){
-		/*$scope.removeTab(1);
-		
-		$scope.basket.reset();*/
 		this.search();
 	}
 	
 	$scope.changeProcessCategory = function(){
-		/*$scope.removeTab(1);
-		
-		$scope.basket.reset();*/
 		
 		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
 	}
@@ -117,26 +111,18 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 				
 		}
 	}
-	
-	$scope.changeProcessType = function(){
-		/*$scope.removeTab(1);
-		
-		$scope.basket.reset();*/
-		
-		if($scope.form.processType != null){
-			$scope.lists.refresh.experimentCategories({processTypeCode:$scope.form.processType.code});
-		}else{
-			$scope.lists.refresh.experimentCategories();
-		}
-	}
-	
+
 	$scope.changeExperimentCategory = function(){
 		$scope.removeTab(1);
 		
 		$scope.basket.reset();
-		//$scope.form.experimentTypes.options = $scope.comboLists.getExperimentTypesByCategory($scope.form.experimentCategories.selected.code).query();
-		$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code}, true);
-		//this.search();
+		if($scope.form.processType && $scope.form.experimentCategory){
+			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code}, true);
+		}else if($scope.form.experimentCategory){
+			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code}, true);
+		}
+		
+		this.search();
 	}
 	
 	$scope.refreshSamples = function(){

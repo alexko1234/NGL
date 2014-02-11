@@ -15,6 +15,7 @@ public class ContainersSearchForm extends ListForm{
 	public String processTypeCode;
 	public String supportCode;
 	public String containerSupportCategory;
+	public List<String> fromExperimentTypeCodes;
 	
 	@Override
 	public String toString() {

@@ -28,7 +28,11 @@ public class Resolutions extends CommonController{
 		try{		
 			if(resolutionsSearch.typeCode != null){
 				resolutions = Resolution.find.findByTypeCode(resolutionsSearch.typeCode);
-			}else{
+			}
+			else if(resolutionsSearch.objectTypeCode != null){
+				resolutions = Resolution.find.findByObjectTypeCode(resolutionsSearch.objectTypeCode);
+			}
+			else{
 				resolutions = Resolution.find.findAll();
 			}
 			if(resolutionsSearch.datatable){

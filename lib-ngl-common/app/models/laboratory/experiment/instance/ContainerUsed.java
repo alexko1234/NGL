@@ -27,6 +27,8 @@ public class ContainerUsed implements IValidation{
 	
 	public List<String> resolutionCodes;
 	
+	public String stateCode;
+	
 	public ContainerUsed() {
 		
 	}

@@ -34,6 +34,7 @@ function SearchCtrl($scope, datatable, lists) {
 		$scope.lists.refresh.containerSupportCategories();
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.containerCategories();
+		$scope.lists.refresh.experimentTypes();
 		$scope.lists.refresh.states({objectTypeCode:"Container"});
 	}
 	
@@ -45,7 +46,12 @@ function SearchCtrl($scope, datatable, lists) {
 			}			
 			if($scope.form.sample){
 				jsonSearch.sampleCode = $scope.form.sample.code;
-			}			
+			}	
+			
+			if($scope.form.fromExperimentTypeCodes){
+				jsonSearch.fromExperimentTypeCodes = $scope.form.fromExperimentTypeCodes;
+			}
+			
 			if($scope.form.containerCategory){
 				jsonSearch.categoryCode = $scope.form.containerCategory.code;
 			}	

@@ -13,7 +13,7 @@ containers.table.categoryCode = Code Catégorie
 containers.table.projectCodes = Codes Projets
 containers.table.sampleCodes = Codes Echantillons
 containers.table.fromExperimentTypeCodes = Type d'Expérience
-containers.table.stateCode = Statut
+containers.table.stateCode = Etat
 containers.table.support.name = Support
 containers.table.stateCode = Code Etat
 containers.table.creationDate = Date de création
@@ -74,6 +74,7 @@ experiment.addComment = Ajouter un commentaire
 experiment.seeComments = Voir les commentaires
 experiment.sendComment = Envoyer
 experiment.cancelComment = Annuler
+experiments.begin_progress = Demarrer la progression
 
 experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée

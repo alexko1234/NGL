@@ -2,7 +2,11 @@
 @import scala.collection.immutable._
 @form() = {
 	<form class="well form-search form-vertical">
-		<select ng-model="form.type" ng-options="processType.name for processType in  lists.getTypes()" ng-change="changeProcessType()">
+		<select ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
+			<option value="">@Messages("experiments.select.processCategory")</option>
+		</select>
+	
+		<select ng-model="form.type" ng-options="processType.name for processType in  lists.getProcessTypes()" ng-change="changeProcessType()">
 			<option value="">@Messages("processes.select.processType")</option>
 		</select>		
 		

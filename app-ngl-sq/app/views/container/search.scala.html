@@ -10,6 +10,12 @@
 			<option value="">@Messages("containers.select.categoryCode")</option>
 		</select>		
 		
+		<div bt-select ng-model="form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("experiments.select.experimentTypeCode")" 
+			bt-options="expType.code as expType.name for expType in lists.getExperimentTypes()"
+			ng-disabled="!experiment.experimentInformation.enabled"
+			ng-readonly="!experiment.experimentInformation.enabled">
+		</div>
+		
 		<select ng-model="form.project" ng-options="project.code+' - '+project.name for project in lists.getProjects()" ng-change="changeProject()">
 			<option value="">@Messages("processes.select.project")</option>
 		</select>
@@ -21,6 +27,11 @@
 		<select ng-model="form.state" ng-options="stateCode.name for stateCode in lists.getStates()" ng-change="search()">
 			<option value="">@Messages("containers.select.state")</option>
 		</select>
+		
+		<div class="btn-toolbar pull-right">
+					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" ><i class="icon-search icon-large"></i></button>
+					<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="reset()"  class="btn"><i class="icon-undo icon-large"></i></button>				 	
+		</div>
 	</form>
 }
 

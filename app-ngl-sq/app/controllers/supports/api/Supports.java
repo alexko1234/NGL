@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.container.description.ContainerSupportCategory;
+import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Support;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
@@ -22,6 +23,8 @@ import views.components.datatable.DatatableResponse;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
+import controllers.containers.api.Containers;
+import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -88,6 +91,24 @@ public class Supports extends CommonController {
 				cs.add(c.code);
 			}
 			queryElts.add(DBQuery.in("categoryCode", cs));
+		}
+		
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("_id", 0);//Don't need the _id field
+		keys.put("support", 1);
+		
+		ContainersSearchForm cs = new ContainersSearchForm();
+		cs.experimentTypeCode = supportsSearch.experimentTypeCode;
+		cs.processTypeCode = supportsSearch.processTypeCode;
+		
+		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList(); 
+		List<String> supports  =new ArrayList<String>();
+		for(Container c: containers){
+			supports.add(c.support.supportCode);
+		}
+		
+		if(supports.size() > 0 ){
+			queryElts.add(DBQuery.in("code", supports));
 		}
 		
 		if(supportsSearch.projectCodes != null){

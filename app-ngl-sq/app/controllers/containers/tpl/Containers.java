@@ -43,6 +43,7 @@ public class Containers extends CommonController {
   	    		controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.containers.api.routes.javascript.Containers.list(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentTypes.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
   	    		controllers.containers.api.routes.javascript.Containers.list_supports(),
   	    		controllers.containers.api.routes.javascript.ContainerCategories.list(),

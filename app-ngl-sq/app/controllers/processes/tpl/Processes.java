@@ -132,6 +132,7 @@ public class Processes extends CommonController{
 						controllers.processes.api.routes.javascript.ProcessTypes.list(),
 						controllers.containers.api.routes.javascript.Containers.list(),
 						controllers.processes.api.routes.javascript.Processes.list(),
+						controllers.processes.api.routes.javascript.ProcessCategories.list(),
 						controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
 						controllers.projects.api.routes.javascript.Projects.list(),
 		  	    		controllers.samples.api.routes.javascript.Samples.list()

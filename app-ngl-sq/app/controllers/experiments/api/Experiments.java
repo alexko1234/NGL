@@ -173,7 +173,9 @@ public class Experiments extends CommonController{
 		exp = traceInformation(exp);
 
 		if (!experimentFilledForm.hasErrors()) {
-
+			if(exp._id == null){
+				exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+			}
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("comments",exp.comments);
 
@@ -225,6 +227,9 @@ public class Experiments extends CommonController{
 		ContextValidation ctxValidation = new ContextValidation();
 		Workflows.setExperimentState(exp,stateCode,ctxValidation);
 		if (!ctxValidation.hasErrors()) {	 	
+			if(exp._id == null){
+				exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+			}
 			Builder builder = new DBUpdate.Builder();
 			builder = builder.set("stateCode",stateCode);
 			if(stateCode.equals("IP")){
@@ -359,7 +364,23 @@ public class Experiments extends CommonController{
 		if(StringUtils.isNotEmpty(experimentSearch.typeCode)){
 			queryElts.add(DBQuery.is("typeCode", experimentSearch.typeCode));
 		}
+		
+		if(experimentSearch.projectCodes != null){
+			queryElts.add(DBQuery.in("projectCodes", experimentSearch.projectCodes));
+		}
+		
+		if(null != experimentSearch.fromDate){
+			queryElts.add(DBQuery.greaterThanEquals("traceInformation.creationDate", experimentSearch.fromDate));
+		}
+		
+		if(null != experimentSearch.toDate){
+			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", experimentSearch.toDate));
+		}
 
+		if(experimentSearch.sampleCodes != null){
+			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCodes));
+		}
+		
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}
 }
