@@ -37,7 +37,6 @@ import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 
 import org.junit.Assert;
-import org.junit.Test;
 
 import play.api.modules.spring.Spring;
 import utils.AbstractTests;
@@ -157,11 +156,6 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(commonInfoType.id);
 		Assert.assertNotNull(commonInfoType.code);
 		Assert.assertNotNull(commonInfoType.name);
-		Assert.assertNotNull(commonInfoType.objectType.states);
-		Assert.assertTrue(commonInfoType.objectType.states.size()>0);
-		for(State state : commonInfoType.objectType.states){
-			checkState(state);
-		}
 		Assert.assertNotNull(commonInfoType.resolutions);
 		Assert.assertTrue(commonInfoType.resolutions.size()>0);
 		for(Resolution resolution : commonInfoType.resolutions){
@@ -718,7 +712,6 @@ public class UpdateDescriptionTest extends AbstractTests{
 		CommonInfoType commonInfoType=new CommonInfoType();
 		commonInfoType.code=code;
 		commonInfoType.name=name;
-		commonInfoType.objectType.states=variableStates;
 		commonInfoType.resolutions=resolutions;
 		commonInfoType.propertiesDefinitions=propertiesDefinitions;
 		commonInfoType.objectType=objectType;

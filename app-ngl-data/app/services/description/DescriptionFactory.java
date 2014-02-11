@@ -46,7 +46,13 @@ import play.Logger;
 
 public class DescriptionFactory {
 
-	
+	/**
+	 * 
+	 * @param classCat
+	 * @param name
+	 * @param code
+	 * @return
+	 */
 	public static <T extends AbstractCategory<T>> T newSimpleCategory(Class<T> classCat, String name, String code){
 		try {
 			T cat = classCat.newInstance();
@@ -62,6 +68,16 @@ public class DescriptionFactory {
 		}
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param levels
+	 * @param type
+	 * @param required
+	 * @return
+	 * @throws DAOException
+	 */
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -74,6 +90,19 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param levels
+	 * @param type
+	 * @param required
+	 * @param measureCategory
+	 * @param displayMeasureUnit
+	 * @param saveMeasureUnit
+	 * @return
+	 * @throws DAOException
+	 */
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required,
 			MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
@@ -90,6 +119,20 @@ public class DescriptionFactory {
 		return pd;
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param levels
+	 * @param type
+	 * @param required
+	 * @param values
+	 * @param measureCategory
+	 * @param displayMeasureUnit
+	 * @param saveMeasureUnit
+	 * @return
+	 * @throws DAOException
+	 */
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
 			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
@@ -107,6 +150,17 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param levels
+	 * @param type
+	 * @param required
+	 * @param values
+	 * @return
+	 * @throws DAOException
+	 */
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -120,6 +174,11 @@ public class DescriptionFactory {
 		return pd;
 	}
 
+	/**
+	 * 
+	 * @param values
+	 * @return
+	 */
 	public static List<Value> newValues(String...values) {
 		List<Value> l = new ArrayList<Value>(values.length);
 		for(String v : values){
@@ -131,6 +190,12 @@ public class DescriptionFactory {
 		return l;
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @return
+	 */
 	public static Level newLevel(String name, String code) {
 		Level l = new Level();
 		l.code = code;
@@ -138,6 +203,11 @@ public class DescriptionFactory {
 		return l;
 	}
 	
+	/**
+	 * 
+	 * @param code
+	 * @return
+	 */
 	public static ObjectType newDefaultObjectType(String code) {
 		ObjectType l = new ObjectType();
 		l.code = code;
@@ -146,6 +216,13 @@ public class DescriptionFactory {
 		return l;
 	}
 	
+	/**
+	 * 
+	 * @param code
+	 * @param generic
+	 * @param states
+	 * @return
+	 */
 	public static ObjectType setStatesToObjectType(String code, Boolean generic, List<State> states) {
 		ObjectType l = new ObjectType();
 		try {
@@ -155,25 +232,15 @@ public class DescriptionFactory {
 			e1.printStackTrace();
 		}
 		l.generic = generic;
-		l.states = states;
 		return l;
 	}
 	
-	/*
-	public static ObjectType setResolutionsToObjectType(String code, Boolean generic, List<Resolution> resolutions) {
-		ObjectType l = new ObjectType();
-		try {
-			l = ObjectType.find.findByCode(code);
-		} catch (DAOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		l.generic = generic;
-		l.resolutions = resolutions;
-		return l;
-	} */
-	
-	
+	/**
+	 * 
+	 * @param code
+	 * @param states
+	 * @return
+	 */
 	public static CommonInfoType setStatesToCommonInfoType(String code, List<State> states) {
 		CommonInfoType cit = new CommonInfoType();
 		try {
@@ -186,6 +253,14 @@ public class DescriptionFactory {
 		return cit;
 	}
 	
+	/**
+	 * 
+	 * @param code
+	 * @param value
+	 * @param defaultUnit
+	 * @param category
+	 * @return
+	 */
 	public static MeasureUnit newMeasureUnit(String code, String value,
 			boolean defaultUnit, MeasureCategory category) {
 		MeasureUnit measureUnit = new MeasureUnit();
@@ -197,6 +272,15 @@ public class DescriptionFactory {
 		return measureUnit;
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param category
+	 * @param institutes
+	 * @param objTypes
+	 * @return
+	 */
 	public static Resolution newResolution(String name, String code,
 		ResolutionCategory category, List<Institute> institutes, List<ObjectType> objTypes) {
 		Resolution r = new Resolution();
@@ -208,6 +292,12 @@ public class DescriptionFactory {
 		return r;
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @return
+	 */
 	public static Institute newInstitute(String name, String code) {
 			Institute i = new Institute();
 			i.code = code;
@@ -215,6 +305,14 @@ public class DescriptionFactory {
 			return i;
 		}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param active
+	 * @param position
+	 * @return
+	 */
 	public static State newState(String name, String code, boolean active,	int position) {
 		State s = new State();
 		s.code = code;
@@ -225,25 +323,36 @@ public class DescriptionFactory {
 	}
 
 	/**
-	 * Create a new state
+	 * 
 	 * @param name
 	 * @param code
 	 * @param active
-	 * @param order
-	 * @param category
+	 * @param position
+	 * @param categories
+	 * @param objTypes
 	 * @return
 	 */
-	public static State newState(String name, String code, boolean active,	int position, List<StateCategory> categories) {
+	public static State newState(String name, String code, boolean active,	int position, List<StateCategory> categories, List<ObjectType> objTypes) {
 		State s = new State();
 		s.code = code;
 		s.name = name;
 		s.active =active;
 		s.position = position;
 		s.categories = categories;
-	
+		s.objectTypes = objTypes; 
 		return s;
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param nbLine
+	 * @param nbColumn
+	 * @param nbUsableContainer
+	 * @param containerCategory
+	 * @return
+	 */
 	public static ContainerSupportCategory newContainerSupportCategory(String name, String code, int nbLine, int nbColumn, int nbUsableContainer, ContainerCategory containerCategory) {
 		ContainerSupportCategory csc = DescriptionFactory.newSimpleCategory(ContainerSupportCategory.class, name, code);
 		csc.nbLine = nbLine;
@@ -253,6 +362,19 @@ public class DescriptionFactory {
 		return csc;
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param category
+	 * @param propertiesDefinitions
+	 * @param protocols
+	 * @param instrumentUsedTypes
+	 * @param atomicTransfertMethod
+	 * @param institutes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static ExperimentType newExperimentType(String name, String code, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Protocol> protocols, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, List<Institute> institutes) throws DAOException {
 		ExperimentType et = new ExperimentType();
 		et.code =code.toLowerCase();
@@ -270,9 +392,19 @@ public class DescriptionFactory {
 		return et;
 	}
 
+	/**
+	 * 
+	 * @param code
+	 * @param experimentType
+	 * @param mandatoryPurif
+	 * @param mandatoryQC
+	 * @param previousExp
+	 * @param purifTypes
+	 * @param qcTypes
+	 * @return
+	 */
 	public static ExperimentTypeNode newExperimentTypeNode(String code, ExperimentType experimentType, boolean mandatoryPurif, boolean mandatoryQC, List<ExperimentTypeNode> previousExp, List<ExperimentType> purifTypes, List<ExperimentType> qcTypes) {
 		ExperimentTypeNode etn = new ExperimentTypeNode();
-		
 		etn.code = code;
 		etn.experimentType = experimentType;
 		etn.doPurification = (purifTypes != null && purifTypes.size() > 0)?true:false;
@@ -282,11 +414,18 @@ public class DescriptionFactory {
 		etn.possiblePurificationTypes = purifTypes;
 		etn.possibleQualityControlTypes = qcTypes;
 		etn.previousExperimentType = previousExp;
-		
 		return etn;
 	}
 
-	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param path
+	 * @param version
+	 * @param cat
+	 * @return
+	 */
 	public static Protocol newProtocol(String name, String code,
 			String path, String version, ProtocolCategory cat) {
 		Protocol p = new Protocol();
@@ -298,11 +437,30 @@ public class DescriptionFactory {
 		return p;
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @return
+	 */
 	public static InstrumentCategory newInstrumentCategory(String name, String code) {
 		InstrumentCategory ic = DescriptionFactory.newSimpleCategory(InstrumentCategory.class,name, code);
 		return ic;
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param category
+	 * @param propertiesDefinitions
+	 * @param instruments
+	 * @param inContainerSupportCategories
+	 * @param outContainerSupportCategories
+	 * @param institutes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static InstrumentUsedType newInstrumentUsedType(String name, String code, InstrumentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Instrument> instruments,
 			List<ContainerSupportCategory> inContainerSupportCategories, List<ContainerSupportCategory> outContainerSupportCategories, List<Institute> institutes) throws DAOException{
 		InstrumentUsedType iut = new InstrumentUsedType();
@@ -314,11 +472,24 @@ public class DescriptionFactory {
 		iut.instruments = instruments;
 		iut.inContainerSupportCategories = inContainerSupportCategories;
 		iut.outContainerSupportCategories = outContainerSupportCategories;
-		
 		iut.institutes = institutes;
 		return iut; 
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param category
+	 * @param propertiesDefinitions
+	 * @param experimentTypes
+	 * @param firstExperimentType
+	 * @param lastExperimentType
+	 * @param voidExperimentType
+	 * @param institutes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static ProcessType newProcessType(String name, String code, ProcessCategory category, List<PropertyDefinition> propertiesDefinitions, 
 			List<ExperimentType> experimentTypes, ExperimentType firstExperimentType, ExperimentType lastExperimentType, ExperimentType voidExperimentType, List<Institute> institutes) throws DAOException {
 		ProcessType pt = new ProcessType();
@@ -333,12 +504,20 @@ public class DescriptionFactory {
 		pt.lastExperimentType = lastExperimentType;
 		pt.voidExperimentType = voidExperimentType;
 		pt.experimentTypes = experimentTypes;
-		
 		pt.institutes = institutes;
 		return pt;
 	}
 
-	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param category
+	 * @param propertiesDefinitions
+	 * @param institutes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static SampleType newSampleType(String name, String code, SampleCategory category, List<PropertyDefinition> propertiesDefinitions, List<Institute> institutes) throws DAOException{
 		SampleType st = new SampleType();
 		st.code = code;
@@ -346,11 +525,20 @@ public class DescriptionFactory {
 		st.category = category;
 		st.objectType = ObjectType.find.findByCode(ObjectType.CODE.Sample.name());
 		st.propertiesDefinitions = propertiesDefinitions;
-		
 		st.institutes = institutes;
 		return st;
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param category
+	 * @param propertiesDefinitions
+	 * @param institutes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static ImportType newImportType(String name, String code, ImportCategory category, List<PropertyDefinition> propertiesDefinitions, List<Institute> institutes) throws DAOException{
 		ImportType it = new ImportType();
 		it.code = code.toLowerCase();
@@ -358,11 +546,20 @@ public class DescriptionFactory {
 		it.category = category;
 		it.objectType = ObjectType.find.findByCode(ObjectType.CODE.Import.name());
 		it.propertiesDefinitions = propertiesDefinitions;
-		
 		it.institutes = institutes;
 		return it;
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param category
+	 * @param propertiesDefinitions
+	 * @param institutes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static ProjectType newProjectType(String name, String code, ProjectCategory category, List<PropertyDefinition> propertiesDefinitions, List<Institute> institutes) throws DAOException{
 		ProjectType pt = new ProjectType();
 		pt.code = code.toLowerCase();
@@ -370,12 +567,20 @@ public class DescriptionFactory {
 		pt.category = category;
 		pt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Project.name());
 		pt.propertiesDefinitions = propertiesDefinitions;
-		
 		pt.institutes = institutes;
 		return pt;
 	}
 	
-	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param propertiesDefinitions
+	 * @param valCriterias
+	 * @param institutes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static ReadSetType newReadSetType(String name, String code, List<PropertyDefinition> propertiesDefinitions, List<ValuationCriteria> valCriterias, List<Institute> institutes) throws DAOException {
 		ReadSetType rt = new ReadSetType();
 		rt.code =code.toLowerCase();
@@ -385,11 +590,22 @@ public class DescriptionFactory {
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.ReadSet);
 		rt.institutes = institutes; 
 		rt.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.ReadSet);
-		
 		rt.criterias = valCriterias;
 		return rt;
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param nbLanes
+	 * @param category
+	 * @param propertiesDefinitions
+	 * @param valCriterias
+	 * @param institutes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static RunType newRunType(String name, String code, Integer nbLanes, RunCategory category, List<PropertyDefinition> propertiesDefinitions, List<ValuationCriteria> valCriterias, List<Institute> institutes) throws DAOException {
 		RunType rt = new RunType();
 		rt.code = code;
@@ -401,12 +617,17 @@ public class DescriptionFactory {
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Run);
 		rt.institutes = institutes;
 		rt.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.Run);
-		
 		rt.criterias = valCriterias;
 		return rt;
 	}
 	
-	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @return
+	 * @throws DAOException
+	 */
 	public static TreatmentContext newTreatmentContext(String name, String code) throws DAOException {
 		TreatmentContext tc = new TreatmentContext();
 		tc.code = code.toLowerCase();
@@ -414,6 +635,19 @@ public class DescriptionFactory {
 		return tc;
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param category
+	 * @param names
+	 * @param propertiesDefinitions
+	 * @param contexts
+	 * @param institutes
+	 * @param displayOrders
+	 * @return
+	 * @throws DAOException
+	 */
 	public static TreatmentType newTreatmentType(String name, String code, TreatmentCategory category, String names, List<PropertyDefinition> propertiesDefinitions, List<TreatmentTypeContext>  contexts, List<Institute> institutes, String displayOrders) throws DAOException {
 		TreatmentType tt = new TreatmentType();
 		tt.code = code.toLowerCase();
@@ -428,7 +662,12 @@ public class DescriptionFactory {
 		return tt;
 	}
 	
-	
+	/**
+	 * 
+	 * @param codes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static List<Institute> getInstitutes(Institute.CODE...codes) throws DAOException {
 		List<Institute> institutes = new ArrayList<Institute>();
 		for(Institute.CODE code : codes){
@@ -437,6 +676,12 @@ public class DescriptionFactory {
 		return institutes;
 	}
 	
+	/**
+	 * 
+	 * @param codes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static List<State> getStates(String...codes) throws DAOException {
 		List<State> states = new ArrayList<State>();
 		for(String code: codes){
@@ -445,6 +690,12 @@ public class DescriptionFactory {
 		return states;
 	}
 
+	/**
+	 * 
+	 * @param codes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static List<Resolution> getResolutionsByCategoryCode(String...codes) throws DAOException {
 		List<Resolution> resolutions = new ArrayList<Resolution>();
 		for(String code: codes){
@@ -453,7 +704,12 @@ public class DescriptionFactory {
 		return resolutions;
 	}
 	
-	
+	/**
+	 * 
+	 * @param codes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static List<Resolution> getResolutions(String...codes) throws DAOException {
 		List<Resolution> resolutions = new ArrayList<Resolution>();
 		for(String code: codes){
@@ -462,6 +718,12 @@ public class DescriptionFactory {
 		return resolutions;
 	}
 	
+	/**
+	 * 
+	 * @param codes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static List<ObjectType> getObjectTypes(String...codes) throws DAOException {
 		List<ObjectType> objectTypes = new ArrayList<ObjectType>();
 		for(String code: codes){
@@ -470,7 +732,15 @@ public class DescriptionFactory {
 		return objectTypes;
 	}
 
-	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param path
+	 * @param institutes
+	 * @return
+	 * @throws DAOException
+	 */
 	public static ValuationCriteria newValuationCriteria(String name, String code, String path,  List<Institute> institutes) throws DAOException {
 		ValuationCriteria v = new ValuationCriteria(); 
 		v.code = code;

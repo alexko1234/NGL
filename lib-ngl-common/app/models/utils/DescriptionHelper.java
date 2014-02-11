@@ -101,17 +101,14 @@ public class DescriptionHelper {
 
 
 
-	public static CommonInfoType getCommonInfoType(String code,String name,String collectionName, List<State> variableStates,List<PropertyDefinition> propertyDefinitions, List<Resolution> resolutions,String objectType) throws DAOException {
-
+	public static CommonInfoType getCommonInfoType(String code,String name,String collectionName, List<PropertyDefinition> propertyDefinitions, List<Resolution> resolutions,String objectType) throws DAOException {
 		CommonInfoType commonInfoType=new CommonInfoType();
 		commonInfoType.name=name;
 		commonInfoType.code=code;
-		commonInfoType.objectType.states = variableStates;
 		commonInfoType.resolutions = resolutions;
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
 		ObjectTypeDAO objectTypeDAO=Spring.getBeanOfType(ObjectTypeDAO.class);
 		commonInfoType.objectType=objectTypeDAO.findByCode(objectType);
-
 		return commonInfoType;
 	}
 
@@ -170,10 +167,9 @@ public class DescriptionHelper {
 		List<Resolution> resolutions = new ArrayList<Resolution>();
 		resolutions.add(DescriptionHelper.getResolution("Resolution"+codeType));
 
-		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeType,nameType, "Sample", null, null, null, "Sample");
+		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeType,nameType, "Sample", null, null, "Sample");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
 		commonInfoType.resolutions=resolutions;
-		commonInfoType.objectType.states=states;
 
 		SampleType sampleType = new SampleType();
 		sampleType.setCommonInfoType(commonInfoType);
@@ -198,9 +194,8 @@ public class DescriptionHelper {
 		List<Resolution> resolutions = new ArrayList<Resolution>();
 		resolutions.add(DescriptionHelper.getResolution("Resolution"+codeType));
 
-		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeType,nameType, "Experiment", null, null, null, "Experiment");
+		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeType,nameType, "Experiment", null, null, "Experiment");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
-		commonInfoType.objectType.states=states;
 		commonInfoType.resolutions=resolutions;
 
 		ExperimentType experimentType = new ExperimentType();
@@ -215,13 +210,13 @@ public class DescriptionHelper {
 			String nameType, String codeCategory,
 			List<PropertyDefinition> propertyDefinitions,
 			List<InstrumentUsedType> instrumentUsedTypes,
-			List<Protocol> protocol, List<State> states,
-			List<Resolution> resolutions) throws DAOException,
+			List<Protocol> protocol, List<Resolution> resolutions) 
+			throws DAOException,
 			InstantiationException, IllegalAccessException,
 			ClassNotFoundException {
 
 		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(
-				codeType, nameType, "Experiment", states, propertyDefinitions,
+				codeType, nameType, "Experiment", propertyDefinitions,
 				resolutions, "Experiment");
 
 		ExperimentType experimentType = new ExperimentType();
@@ -276,9 +271,8 @@ public class DescriptionHelper {
 		List<Resolution> resolutions = new ArrayList<Resolution>();
 		resolutions.add(DescriptionHelper.getResolution("Resolution"+codeImport));
 
-		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeImport,nameImport, "Import", null, null, null, "Import");
+		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeImport,nameImport, "Import", null, null, "Import");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
-		commonInfoType.objectType.states=states;
 		commonInfoType.resolutions=resolutions;
 
 		ImportType importType = new ImportType();
@@ -296,9 +290,8 @@ public class DescriptionHelper {
 		List<Resolution> resolutions = new ArrayList<Resolution>();
 		resolutions.add(DescriptionHelper.getResolution("Resolution"+codeProject));
 
-		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeProject,nameProject, "Project", null, null, null, "Project");
+		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(codeProject,nameProject, "Project", null, null, "Project");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
-		commonInfoType.objectType.states=states;
 		commonInfoType.resolutions=resolutions;
 
 		ProjectType projectType =new ProjectType();
@@ -360,9 +353,8 @@ public class DescriptionHelper {
 		List<Resolution> resolutions = new ArrayList<Resolution>();
 		resolutions.add(DescriptionHelper.getResolution("Resolution"+instrumentUsedTypeCode));
 
-		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(instrumentUsedTypeCode,instrumentUsedTypeCode, "Instrument", null, null, null, "Instrument");
+		CommonInfoType commonInfoType = DescriptionHelper.getCommonInfoType(instrumentUsedTypeCode,instrumentUsedTypeCode, "Instrument", null, null, "Instrument");
 		commonInfoType.propertiesDefinitions=propertyDefinitions;
-
 		InstrumentUsedType instrumentUsedType =new InstrumentUsedType();
 		instrumentUsedType.setCommonInfoType(commonInfoType);
 
@@ -395,7 +387,7 @@ public class DescriptionHelper {
 	public static ProcessType getProcessType(String typeCode, String categoryCode, List<PropertyDefinition> propertyDefinitions,List<ExperimentType> experimentTypes, 
 			ExperimentType voidExperimentType, ExperimentType firstExperimentType, ExperimentType lastExperimentType,List<State> variableStates, List<Resolution> resolutions) throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException  {
 		ProcessType processType = new ProcessType();
-		processType.setCommonInfoType(DescriptionHelper.getCommonInfoType(typeCode,typeCode, "Process", variableStates, propertyDefinitions, resolutions, "Process"));
+		processType.setCommonInfoType(DescriptionHelper.getCommonInfoType(typeCode,typeCode, "Process", propertyDefinitions, resolutions, "Process"));
 		processType.experimentTypes=experimentTypes;
 		processType.category=getCategory(ProcessCategory.class, categoryCode);
 		processType.voidExperimentType=voidExperimentType;

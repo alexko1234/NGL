@@ -17,12 +17,10 @@ import models.utils.dao.DAOException;
 public class State extends Model<State> {
 
     public String name;
-
     public boolean active;
-
     public Integer position;
-
     public List<StateCategory> categories;
+    public List<ObjectType> objectTypes;
 
     public static StateFinder find = new StateFinder();
 

@@ -32,6 +32,9 @@ public class InstituteDAO extends AbstractDAOMapping<Institute>{
 		sql = "DELETE FROM resolution_institute WHERE fk_institute=?";
 		jdbcTemplate.update(sql, institute.id);
 		
+		sql = "DELETE FROM valuation_criteria_institute WHERE fk_institute=?";
+		jdbcTemplate.update(sql, institute.id);
+			
 		//remove institute itself
 		super.remove(institute);
 	}

@@ -37,8 +37,6 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		ot.id = newId;
 
-		insertStates(ot.states, ot.id, false);
-
 		return ot.id;
 	}
 
@@ -57,15 +55,15 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 		}		
 		String sql = "UPDATE object_type SET code=?, generic=? WHERE id=?";
 		jdbcTemplate.update(sql, ot.code, ot.generic, ot.id);
-		
-		insertStates(ot.states, ot.id, true);
+				
 	}
 
 	@Override
 	public void remove(ObjectType objectType) throws DAOException {
 		//Delete state common_info_type_state
 		removeStates(objectType.id);
-		
+		//Delete resolution
+		removeResolutions(objectType.id);
 		super.remove(objectType);
 	}
 
@@ -73,23 +71,10 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 		String sqlState = "DELETE FROM state_object_type WHERE fk_object_type=?";
 		jdbcTemplate.update(sqlState, otId);
 	}
-
 	
-	private void insertStates(List<State> states, Long otId, boolean deleteBefore)
-			throws DAOException {
-		//Add states list
-		if(deleteBefore){
-			removeStates(otId);
-		}
-		if(states!=null && states.size()>0){
-			String sql = "INSERT INTO state_object_type (fk_object_type, fk_state) VALUES (?,?)";
-			for(State state : states){
-				if(state == null || state.id == null ){
-					throw new DAOException("state is mandatory");
-				}
-				jdbcTemplate.update(sql, otId, state.id);
-			}
-		}
+	private void removeResolutions(Long otId) {
+		String sqlResolution = "DELETE FROM resolution_object_type WHERE fk_object_type=?";
+		jdbcTemplate.update(sqlResolution, otId);
 	}
 
 	

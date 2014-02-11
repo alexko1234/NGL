@@ -59,6 +59,8 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		
 		insertCategories(state.categories, state.id, false);
 		
+		insertObjectTypes(state.objectTypes, state.id, true);
+		
 		return state.id;
 	}
 
@@ -67,7 +69,6 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		if(deleteBefore){
 			removeCategories(id);
 		}
-		//Add resolutions list		
 		if(categories!=null && categories.size()>0){
 			String sql = "INSERT INTO state_category_state (fk_state, fk_state_category) VALUES(?,?)";
 			for(StateCategory category:categories){
@@ -86,7 +87,6 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		if(deleteBefore){
 			removeObjectTypes(id);
 		}
-		//Add resolutions list		
 		if(objectTypes!=null && objectTypes.size()>0){
 			String sql = "INSERT INTO state_object_type (fk_state, fk_object_type) VALUES(?,?)";
 			for(ObjectType objectType:objectTypes){
@@ -133,10 +133,11 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	}
 	
 	public List<State> findByCommonInfoType(long idCommonInfoType) throws DAOException {
-		//TODO A REFAIRE INSTITUTE
 		String sql = sqlCommon+
-				"JOIN common_info_type_state ON fk_state=id "+
-				"WHERE fk_common_info_type=?";		
+				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
+				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
+				  DAOHelpers.getCommonInfoTypeSQLForInstitute("c")+
+				"WHERE cs.fk_common_info_type=?";		
 		return initializeMapping(sql, new SqlParameter("fk_common_info_type", Type.LONG)).execute(idCommonInfoType);		
 	}
 	

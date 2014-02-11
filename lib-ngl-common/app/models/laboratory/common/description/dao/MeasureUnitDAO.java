@@ -21,8 +21,7 @@ public class MeasureUnitDAO extends AbstractDAOMapping<MeasureUnit>{
 	}
 
 
-	public List<MeasureUnit> findByMeasureCategory(long idMeasureCategory)
-	{
+	public List<MeasureUnit> findByMeasureCategory(long idMeasureCategory) {
 		String sql = "SELECT id, code, value, default_unit " +
 				"FROM measure_unit "+
 				"WHERE fk_measure_category=?";
@@ -30,8 +29,7 @@ public class MeasureUnitDAO extends AbstractDAOMapping<MeasureUnit>{
 		return this.jdbcTemplate.query(sql, mapper, idMeasureCategory);
 	}
 
-	public MeasureUnit findByValue(String value)
-	{
+	public MeasureUnit findByValue(String value) {
 		String sql = "SELECT id, code, value,default_unit " +
 				"FROM measure_unit "+
 				"WHERE value = ?";
@@ -39,8 +37,7 @@ public class MeasureUnitDAO extends AbstractDAOMapping<MeasureUnit>{
 		return this.jdbcTemplate.queryForObject(sql, mapper, value);
 	}
 
-	public long save(MeasureUnit measureValue) throws DAOException
-	{
+	public long save(MeasureUnit measureValue) throws DAOException {
 		if(null == measureValue){
 			throw new IllegalArgumentException("measureValue is mandatory");
 		}

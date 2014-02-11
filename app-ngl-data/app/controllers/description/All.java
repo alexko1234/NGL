@@ -32,9 +32,9 @@ public class All extends CommonController {
 		try {
 			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 			InstituteService.main(errors);
-			StateService.main(errors); //before objectType cause objectType have states now !
-			ValuationCriteriaService.main(errors); //idem
+			ValuationCriteriaService.main(errors);
 			ObjectTypeService.main(errors);
+			StateService.main(errors); 
 			ResolutionService.main(errors); 
 			LevelService.main(errors);
 			MeasureService.main(errors);

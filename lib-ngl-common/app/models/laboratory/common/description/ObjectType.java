@@ -1,8 +1,5 @@
 package models.laboratory.common.description;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import models.laboratory.common.description.dao.ObjectTypeDAO;
 import models.utils.Model;
 
@@ -14,8 +11,6 @@ import models.utils.Model;
 public class ObjectType extends Model<ObjectType>{
 	public enum CODE {Project, Process, Sample, Container, Instrument, Reagent,
 		Experiment, Import, Run, Treatment, ReadSet }; 
-	
-	public List<State> states = new ArrayList<State>();
 	
 	public static Finder<ObjectType> find = new Finder<ObjectType>(ObjectTypeDAO.class.getName()); 
 

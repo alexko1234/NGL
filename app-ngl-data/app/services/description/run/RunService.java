@@ -50,7 +50,6 @@ public class RunService {
 		l.add(DescriptionFactory.newRunType("RHS2500R","RHS2500R", 2, RunCategory.find.findByCode("illumina"), null, getValuationCriterias("criteria-default","criteria-high","criteria-low"),  DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newRunType("RMISEQ","RMISEQ", 1, RunCategory.find.findByCode("illumina"), null, getValuationCriterias("criteria-default","criteria-high","criteria-low"),  DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newRunType("RGAIIx","RGAIIx", 1, RunCategory.find.findByCode("illumina"), null, null,  DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		
 		DAOHelpers.saveModels(RunType.class, l, errors);
 	}
 	

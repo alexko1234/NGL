@@ -35,7 +35,6 @@ import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 
 import org.junit.Assert;
-import org.junit.Test;
 
 import utils.AbstractTests;
 
@@ -55,8 +54,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveObjectType() throws DAOException
-	{
+	public void saveObjectType() throws DAOException {
 		ObjectType objectType = new ObjectType();
 		objectType.code="Test";
 		objectType.generic=false;
@@ -66,11 +64,9 @@ public class SaveDescriptionTest extends AbstractTests{
 		objectTypeDB = ObjectType.find.findById(objectTypeDB.id);
 		Assert.assertTrue(objectType.code.equals(objectTypeDB.code));
 		Assert.assertTrue(objectType.generic.equals(objectTypeDB.generic));
-
 	}
 
-	private void checkObjectType(ObjectType type)
-	{
+	private void checkObjectType(ObjectType type) {
 		Assert.assertNotNull(type);
 		Assert.assertNotNull(type.id);
 		Assert.assertNotNull(type.code);
@@ -82,24 +78,21 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveResolution() throws DAOException
-	{
+	public void saveResolution() throws DAOException {
 		Resolution resolution = createResolution("Resol1", "Resol1");
 		resolution.id = resolution.save();
 		resolution=Resolution.find.findById(resolution.id);
 		checkResolution(resolution);
 	}
 
-	private void checkResolution(Resolution resolution)
-	{
+	private void checkResolution(Resolution resolution) {
 		Assert.assertNotNull(resolution);
 		Assert.assertNotNull(resolution.id);
 		Assert.assertNotNull(resolution.name);
 		Assert.assertNotNull(resolution.code);
 	}
 
-	private Resolution createResolution(String code, String name)
-	{
+	private Resolution createResolution(String code, String name) {
 		Resolution resolution = new Resolution();
 		resolution.code=code;
 		resolution.name=name;
@@ -111,29 +104,26 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveStateCategory() throws DAOException
-	{
+	public void saveStateCategory() throws DAOException {
 		StateCategory stateCategory = createStateCategory("catState1", "catState1");
 		stateCategory.id=stateCategory.save();
 		stateCategory=StateCategory.find.findById(stateCategory.id);
 		checkAbstractCategory(stateCategory);
 	}
 
-	private StateCategory createStateCategory(String code, String name)
-	{
+	private StateCategory createStateCategory(String code, String name) {
 		StateCategory stateCategory = new StateCategory();
 		stateCategory.code=code;
 		stateCategory.name=name;
 		return stateCategory;
-
 	}
+	
 	/**
 	 * TEST STATE
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveState() throws DAOException
-	{
+	public void saveState() throws DAOException {
 		//StateCategory stateCategory = StateCategory.find.findByCode("catState1");
 		//Assert.assertNotNull(stateCategory);
 		StateCategory stateCategory = createStateCategory("catState2", "catState2");
@@ -141,11 +131,9 @@ public class SaveDescriptionTest extends AbstractTests{
 		state.id = state.save();
 		state=State.find.findById(state.id);
 		checkState(state);
-
 	}
 
-	private State createState(String code, String name, Integer position, boolean active, String level, StateCategory stateCategory)
-	{
+	private State createState(String code, String name, Integer position, boolean active, String level, StateCategory stateCategory) {
 		State state = new State();
 		state.code=code;
 		state.name=name;
@@ -154,15 +142,13 @@ public class SaveDescriptionTest extends AbstractTests{
 		return state;
 	}
 
-	private void checkState(State state)
-	{
+	private void checkState(State state) {
 		Assert.assertNotNull(state);
 		Assert.assertNotNull(state.id);
 		Assert.assertNotNull(state.code);
 		Assert.assertNotNull(state.name);
 		Assert.assertNotNull(state.active);
 		Assert.assertNotNull(state.position);
-		
 	}
 
 
@@ -171,38 +157,31 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveMeasureCategory() throws DAOException
-	{
+	public void saveMeasureCategory() throws DAOException {
 		MeasureCategory measureCategory = createMeasureCategory("cat1", "cat1");
 		List<MeasureUnit> measureValues = new ArrayList<MeasureUnit>();
 		measureValues.add(createMeasureValue("value1", "value1", true,measureCategory));
 		measureValues.add(createMeasureValue("value2", "value2", false,measureCategory));
 		measureCategory.id = measureCategory.save();
 		checkMeasureCategory(measureCategory);
-
 	}
 
 	
-	private void checkMeasureCategory(MeasureCategory measureCategory)
-	{
+	private void checkMeasureCategory(MeasureCategory measureCategory) {
 		Assert.assertNotNull(measureCategory);
 		Assert.assertNotNull(measureCategory.id);
 		Assert.assertNotNull(measureCategory.code);
 		Assert.assertNotNull(measureCategory.name);
-		
-
 	}
 
-	private MeasureCategory createMeasureCategory(String code, String name)
-	{
+	private MeasureCategory createMeasureCategory(String code, String name)	{
 		MeasureCategory measureCategory = new MeasureCategory();
 		measureCategory.code=code;
 		measureCategory.name=name;
 		return measureCategory;
 	}
 
-	private MeasureUnit createMeasureValue(String code, String value, boolean defaultValue, MeasureCategory measureCategory)
-	{
+	private MeasureUnit createMeasureValue(String code, String value, boolean defaultValue, MeasureCategory measureCategory) {
 		MeasureUnit measureValue = new MeasureUnit();
 		measureValue.code=code;
 		measureValue.value=value;
@@ -211,8 +190,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		return measureValue;
 	}
 
-	private void checkMeasureValue(MeasureUnit measureValue)
-	{
+	private void checkMeasureValue(MeasureUnit measureValue) {
 		Assert.assertNotNull(measureValue);
 		Assert.assertNotNull(measureValue.id);
 		Assert.assertNotNull(measureValue.code);
@@ -225,8 +203,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveReagentType() throws DAOException
-	{
+	public void saveReagentType() throws DAOException {
 		ReagentType reagentType = new ReagentType();
 		StateCategory stateCategory = StateCategory.find.findByCode("catState1");
 		List<State> states = new ArrayList<State>();
@@ -253,17 +230,11 @@ public class SaveDescriptionTest extends AbstractTests{
 		checkCommonInfoType(reagentType);
 	}
 
-	private void checkCommonInfoType(CommonInfoType commonInfoType)
-	{
+	private void checkCommonInfoType(CommonInfoType commonInfoType) {
 		Assert.assertNotNull(commonInfoType);
 		Assert.assertNotNull(commonInfoType.id);
 		Assert.assertNotNull(commonInfoType.code);
 		Assert.assertNotNull(commonInfoType.name);
-		Assert.assertNotNull(commonInfoType.objectType.states);
-		Assert.assertTrue(commonInfoType.objectType.states.size()>0);
-		for(State state : commonInfoType.objectType.states){
-			checkState(state);
-		}
 		Assert.assertNotNull(commonInfoType.resolutions);
 		Assert.assertTrue(commonInfoType.resolutions.size()>0);
 		for(Resolution resolution : commonInfoType.resolutions){
@@ -279,20 +250,17 @@ public class SaveDescriptionTest extends AbstractTests{
 	}
 
 	private CommonInfoType createCommonInfoType(String code, String name, String collectionName, 
-			List<State> variableStates, List<Resolution> resolutions, List<PropertyDefinition> propertiesDefinitions, ObjectType objectType)
-	{
+			List<State> variableStates, List<Resolution> resolutions, List<PropertyDefinition> propertiesDefinitions, ObjectType objectType)	{
 		CommonInfoType commonInfoType=new CommonInfoType();
 		commonInfoType.code=code;
 		commonInfoType.name=name;
-		commonInfoType.objectType.states=variableStates;
 		commonInfoType.resolutions=resolutions;
 		commonInfoType.propertiesDefinitions=propertiesDefinitions;
 		commonInfoType.objectType=objectType;
 		return commonInfoType;
 	}
 
-	private void checkPropertyDefinition(PropertyDefinition propertyDefinition)
-	{
+	private void checkPropertyDefinition(PropertyDefinition propertyDefinition) {
 		Assert.assertNotNull(propertyDefinition);
 		Assert.assertNotNull(propertyDefinition.id);
 		Assert.assertNotNull(propertyDefinition.code);
@@ -320,8 +288,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	}
 
 	private PropertyDefinition createPropertyDefinition(String code, String name, boolean active, boolean choiceInList, String defaultValue, String description, String displayFormat, Integer displayOrder, String inOut, String level, boolean propagation, boolean required, String type,
-			MeasureCategory measureCategory,MeasureUnit measureValue, MeasureUnit displayMeasureValue, List<Value> possibleValues)
-	{
+			MeasureCategory measureCategory,MeasureUnit measureValue, MeasureUnit displayMeasureValue, List<Value> possibleValues) {
 		PropertyDefinition propertyDefinition = new PropertyDefinition();
 		propertyDefinition.code=code;
 		propertyDefinition.name=name;
@@ -342,8 +309,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		return propertyDefinition;
 	}
 
-	private Value createValue(String code, String value, boolean defaultValue)
-	{
+	private Value createValue(String code, String value, boolean defaultValue) {
 		Value newValue = new Value();
 		newValue.code=code;
 		newValue.value=value;
@@ -351,8 +317,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		return newValue;
 	}
 
-	private void checkValue(Value value)
-	{
+	private void checkValue(Value value) {
 		Assert.assertNotNull(value);
 		Assert.assertNotNull(value.code);
 		Assert.assertNotNull(value.value);
@@ -364,23 +329,21 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveProtocolCategory() throws DAOException
-	{
+	public void saveProtocolCategory() throws DAOException {
 		ProtocolCategory protocolCategory = createProtocolCategory("protoCat1", "protoCat1");
 		protocolCategory.id = protocolCategory.save();
 		protocolCategory = ProtocolCategory.find.findById(protocolCategory.id);
 		checkAbstractCategory(protocolCategory);
 	}
-	private void checkAbstractCategory(AbstractCategory abstractCategory)
-	{
+	
+	private void checkAbstractCategory(AbstractCategory abstractCategory) {
 		Assert.assertNotNull(abstractCategory);
 		Assert.assertNotNull(abstractCategory.id);
 		Assert.assertNotNull(abstractCategory.code);
 		Assert.assertNotNull(abstractCategory.name);
 	}
 
-	private ProtocolCategory createProtocolCategory(String code, String name)
-	{
+	private ProtocolCategory createProtocolCategory(String code, String name) {
 		ProtocolCategory protocolCategory = new ProtocolCategory();
 		protocolCategory.code=code;
 		protocolCategory.name=name;
@@ -392,8 +355,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveProtocol() throws DAOException
-	{
+	public void saveProtocol() throws DAOException {
 		List<ReagentType> reagentTypes = new ArrayList<ReagentType>();
 		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
 		reagentTypes.add(reagentType);
@@ -403,8 +365,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		checkProtocol(protocol);
 	}
 
-	private void checkProtocol(Protocol protocol)
-	{
+	private void checkProtocol(Protocol protocol) {
 		Assert.assertNotNull(protocol);
 		Assert.assertNotNull(protocol.id);
 		Assert.assertNotNull(protocol.name);
@@ -414,10 +375,9 @@ public class SaveDescriptionTest extends AbstractTests{
 		checkAbstractCategory(protocol.category);
 		Assert.assertNotNull(protocol.reagentTypes);
 		Assert.assertTrue(protocol.reagentTypes.size()>0);
-
 	}
-	private Protocol createProtocol(String code, String name, String filePath, String version, ProtocolCategory protocolCategory, List<ReagentType> reagentTypes)
-	{
+	
+	private Protocol createProtocol(String code, String name, String filePath, String version, ProtocolCategory protocolCategory, List<ReagentType> reagentTypes) {
 		Protocol protocol = new Protocol();
 		protocol.name=name;
 		protocol.code=code;
@@ -426,7 +386,6 @@ public class SaveDescriptionTest extends AbstractTests{
 		protocol.category=protocolCategory;
 		protocol.reagentTypes=reagentTypes;
 		return protocol;
-
 	}
 
 	/**
@@ -434,15 +393,14 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveContainerSupportCategory() throws DAOException
-	{
+	public void saveContainerSupportCategory() throws DAOException {
 		ContainerSupportCategory containerSupportCategory = createContainerSupportCategory("support1", "support1", 10, 10, 10);
 		containerSupportCategory.id = containerSupportCategory.save();
 		containerSupportCategory = ContainerSupportCategory.find.findByCode(containerSupportCategory.code);
 		checkContainerSupportCategory(containerSupportCategory);
 	}
-	private ContainerSupportCategory createContainerSupportCategory(String code, String name, int nbLine, int nbColumn, int nbUsableContainer)
-	{
+	
+	private ContainerSupportCategory createContainerSupportCategory(String code, String name, int nbLine, int nbColumn, int nbUsableContainer) {
 		ContainerSupportCategory containerSupportCategory = new ContainerSupportCategory();
 		containerSupportCategory.code=code;
 		containerSupportCategory.name=name;
@@ -450,11 +408,9 @@ public class SaveDescriptionTest extends AbstractTests{
 		containerSupportCategory.nbColumn=nbColumn;
 		containerSupportCategory.nbUsableContainer=nbUsableContainer;
 		return containerSupportCategory;
-
 	}
 
-	private void checkContainerSupportCategory(ContainerSupportCategory containerSupportCategory)
-	{
+	private void checkContainerSupportCategory(ContainerSupportCategory containerSupportCategory) {
 		checkAbstractCategory(containerSupportCategory);
 		Assert.assertNotNull(containerSupportCategory.nbLine);
 		Assert.assertNotNull(containerSupportCategory.nbColumn);
@@ -466,8 +422,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveInstrumentCategory() throws DAOException
-	{
+	public void saveInstrumentCategory() throws DAOException {
 		List<ContainerSupportCategory> inContainerSupportCategories = new ArrayList<ContainerSupportCategory>();
 		inContainerSupportCategories.add(ContainerSupportCategory.find.findByCode("support1"));
 		List<ContainerSupportCategory> outContainerSupportCategories = new ArrayList<ContainerSupportCategory>();
@@ -479,10 +434,10 @@ public class SaveDescriptionTest extends AbstractTests{
 		//Assert.assertTrue(instrumentCategory.inContainerSupportCategories.size()==1);
 		//Assert.assertTrue(instrumentCategory.outContainerSupportCategories.size()==1);
 	}
+	
 	private InstrumentCategory createInstrumentCategory(String code, String name, 
 			int nbInContainerSupportCategories, List<ContainerSupportCategory> inContainerSupportCategories,
-			int nbOutContainerSupportCategories, List<ContainerSupportCategory> outContainerSupportCategories)
-	{
+			int nbOutContainerSupportCategories, List<ContainerSupportCategory> outContainerSupportCategories) {
 		InstrumentCategory instrumentCategory = new InstrumentCategory();
 		instrumentCategory.code=code;
 		instrumentCategory.name=name;
@@ -492,8 +447,8 @@ public class SaveDescriptionTest extends AbstractTests{
 		//instrumentCategory.outContainerSupportCategories=outContainerSupportCategories;
 		return instrumentCategory;
 	}
-	private void checkInstrumentCategory(InstrumentCategory instrumentCategory)
-	{
+	
+	private void checkInstrumentCategory(InstrumentCategory instrumentCategory) {
 		checkAbstractCategory(instrumentCategory);
 		//Assert.assertNotNull(instrumentCategory.nbInContainerSupports);
 	//	Assert.assertNotNull(instrumentCategory.nbOutContainerSupports);
@@ -514,8 +469,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveInstrumentUsedType() throws DAOException
-	{
+	public void saveInstrumentUsedType() throws DAOException {
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state1"));
@@ -549,8 +503,7 @@ public class SaveDescriptionTest extends AbstractTests{
 
 	}
 
-	private InstrumentUsedType createInstrumentUsedType(CommonInfoType commonInfoType, InstrumentCategory instrumentCategory,List<Instrument> instruments)
-	{
+	private InstrumentUsedType createInstrumentUsedType(CommonInfoType commonInfoType, InstrumentCategory instrumentCategory,List<Instrument> instruments) {
 		InstrumentUsedType instrumentUsedType = new InstrumentUsedType();
 		instrumentUsedType.setCommonInfoType(commonInfoType);
 		instrumentUsedType.category=instrumentCategory;
@@ -558,8 +511,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		return instrumentUsedType;
 	}
 
-	private void checkInstrumentUsedType(InstrumentUsedType instrumentUsedType)
-	{
+	private void checkInstrumentUsedType(InstrumentUsedType instrumentUsedType) {
 		Assert.assertNotNull(instrumentUsedType);
 		checkCommonInfoType(instrumentUsedType);
 		checkInstrumentCategory(instrumentUsedType.category);
@@ -569,27 +521,22 @@ public class SaveDescriptionTest extends AbstractTests{
 			checkInstrument(instrument);
 		}
 	}
-	private Instrument createInstrument(String code, String name)
-	{
+	
+	private Instrument createInstrument(String code, String name) {
 		Instrument instrument = new Instrument();
 		instrument.code=code;
 		instrument.name=name;
 		return instrument;
 	}
-	private void checkInstrument(Instrument instrument)
-	{
+	
+	private void checkInstrument(Instrument instrument) {
 		Assert.assertNotNull(instrument);
 		Assert.assertNotNull(instrument.id);
 		Assert.assertNotNull(instrument.code);
 		Assert.assertNotNull(instrument.name);
 	}
 	
-
-
-
-	private void checkAbstractExperiment(ExperimentType experiment)
-	{
-
+	private void checkAbstractExperiment(ExperimentType experiment) {
 		Assert.assertNotNull(experiment);
 		checkCommonInfoType(experiment);
 		Assert.assertNotNull(experiment.instrumentUsedTypes);
@@ -609,16 +556,14 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveExperimentCategory() throws DAOException
-	{
+	public void saveExperimentCategory() throws DAOException {
 		ExperimentCategory experimentCategory = createExperimentCategory("expCat1", "expCat2");
 		experimentCategory.id=experimentCategory.save();
 		experimentCategory=ExperimentCategory.find.findById(experimentCategory.id);
 		checkAbstractCategory(experimentCategory);
-
 	}
-	private ExperimentCategory createExperimentCategory(String code, String name)
-	{
+	
+	private ExperimentCategory createExperimentCategory(String code, String name) {
 		ExperimentCategory experimentCategory = new ExperimentCategory();
 		experimentCategory.code=code;
 		experimentCategory.name=name;
@@ -631,8 +576,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveQualityControlType() throws DAOException
-	{
+	public void saveQualityControlType() throws DAOException {
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state2"));
@@ -665,13 +609,13 @@ public class SaveDescriptionTest extends AbstractTests{
 		qualityControlType = ExperimentType.find.findById(qualityControlType.id);
 		checkAbstractExperiment(qualityControlType);
 	}
+	
 	/**
 	 * TEST EXPERIMENT_TYPE
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveExperimentType() throws DAOException
-	{
+	public void saveExperimentType() throws DAOException {
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state2"));
@@ -715,8 +659,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void savePurificationMethodType() throws DAOException
-	{
+	public void savePurificationMethodType() throws DAOException {
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state2"));
@@ -752,8 +695,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	}
 
 	private ExperimentType createExperimentType(CommonInfoType commonInfoType, List<Protocol> protocols, List<InstrumentUsedType> instrumentUsedTypes,
-			ExperimentCategory experimentCategory)
-	{
+			ExperimentCategory experimentCategory) {
 		ExperimentType experimentType = new ExperimentType();
 		experimentType.setCommonInfoType(commonInfoType);
 		experimentType.protocols=protocols;
@@ -762,8 +704,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		return experimentType;
 	}
 
-	private void checkExperimentType(ExperimentType experimentType)
-	{
+	private void checkExperimentType(ExperimentType experimentType) {
 		checkAbstractExperiment(experimentType);
 	}
 
@@ -772,15 +713,14 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveProcessCategory() throws DAOException
-	{
+	public void saveProcessCategory() throws DAOException {
 		ProcessCategory processCategory = createProcessCategory("processCat1", "processCat1");
 		processCategory.id = processCategory.save();
 		processCategory = ProcessCategory.find.findById(processCategory.id);
 		checkAbstractCategory(processCategory);
 	}
-	private ProcessCategory createProcessCategory(String code, String name)
-	{
+	
+	private ProcessCategory createProcessCategory(String code, String name) {
 		ProcessCategory processCategory = new ProcessCategory();
 		processCategory.code=code;
 		processCategory.name=name;
@@ -792,8 +732,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveProcessType() throws DAOException
-	{
+	public void saveProcessType() throws DAOException {
 		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
 		ExperimentType expType = ExperimentType.find.findByCode("exp1");
 		experimentTypes.add(expType);
@@ -816,9 +755,9 @@ public class SaveDescriptionTest extends AbstractTests{
 		processType = ProcessType.find.findById(processType.id);
 		checkProcessType(processType);
 	}
+	
 	private ProcessType createProcessType(CommonInfoType commonInfoType, List<ExperimentType> experimentTypes, ProcessCategory processCategory, 
-			ExperimentType voidExpType, ExperimentType firstExpType, ExperimentType lastExpType)
-	{
+			ExperimentType voidExpType, ExperimentType firstExpType, ExperimentType lastExpType) {
 		ProcessType processType = new ProcessType();
 		processType.setCommonInfoType(commonInfoType);
 		processType.experimentTypes=experimentTypes;
@@ -829,8 +768,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		return processType;
 	}
 
-	private void checkProcessType(ProcessType processType)
-	{
+	private void checkProcessType(ProcessType processType) {
 		Assert.assertNotNull(processType);
 		checkCommonInfoType(processType);
 		checkAbstractCategory(processType.category);
@@ -849,15 +787,14 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveProjectCategory() throws DAOException
-	{
+	public void saveProjectCategory() throws DAOException {
 		ProjectCategory projectCategory = createProjectCategory("projectCat1", "projectCat1");
 		projectCategory.id = projectCategory.save();
 		projectCategory = ProjectCategory.find.findById(projectCategory.id);
 		checkAbstractCategory(projectCategory);
 	}
-	private ProjectCategory createProjectCategory(String code, String name)
-	{
+	
+	private ProjectCategory createProjectCategory(String code, String name) {
 		ProjectCategory projectCategory = new ProjectCategory();
 		projectCategory.code=code;
 		projectCategory.name=name;
@@ -869,8 +806,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveProjectType() throws DAOException
-	{
+	public void saveProjectType() throws DAOException {
 		ProjectCategory projectCategory = ProjectCategory.find.findByCode("projectCat1");
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
@@ -890,16 +826,15 @@ public class SaveDescriptionTest extends AbstractTests{
 		projectType = ProjectType.find.findById(projectType.id);
 		checkProjectType(projectType);
 	}
-	private ProjectType createProjectType(CommonInfoType commonInfoType,  ProjectCategory projectCategory)
-	{
+	
+	private ProjectType createProjectType(CommonInfoType commonInfoType,  ProjectCategory projectCategory) {
 		ProjectType projectType = new ProjectType();
 		projectType.setCommonInfoType(commonInfoType);
 		projectType.category=projectCategory;
 		return projectType;
 	}
 
-	private void checkProjectType(ProjectType projectType)
-	{
+	private void checkProjectType(ProjectType projectType) {
 		Assert.assertNotNull(projectType);
 		checkCommonInfoType(projectType);
 		checkAbstractCategory(projectType.category);
@@ -910,15 +845,14 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveSampleCategory() throws DAOException
-	{
+	public void saveSampleCategory() throws DAOException {
 		SampleCategory sampleCategory = createSampleCategory("sampleCat1", "sampleCat1");
 		sampleCategory.id = sampleCategory.save();
 		sampleCategory = SampleCategory.find.findById(sampleCategory.id);
 		checkAbstractCategory(sampleCategory);
 	}
-	private SampleCategory createSampleCategory(String code, String name)
-	{
+	
+	private SampleCategory createSampleCategory(String code, String name) {
 		SampleCategory sampleCategory = new SampleCategory();
 		sampleCategory.code=code;
 		sampleCategory.name=name;
@@ -930,8 +864,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveSampleType() throws DAOException
-	{
+	public void saveSampleType() throws DAOException {
 		SampleCategory sampleCategory = SampleCategory.find.findByCode("sampleCat1");
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
@@ -951,24 +884,22 @@ public class SaveDescriptionTest extends AbstractTests{
 		sampleType = SampleType.find.findById(sampleType.id);
 		checkSampleType(sampleType);
 	}
-	private SampleType createSampleType(CommonInfoType commonInfoType,  SampleCategory sampleCategory)
-	{
+	
+	private SampleType createSampleType(CommonInfoType commonInfoType,  SampleCategory sampleCategory) {
 		SampleType sampleType = new SampleType();
 		sampleType.setCommonInfoType(commonInfoType);
 		sampleType.category=sampleCategory;
 		return sampleType;
 	}
 
-	private void checkSampleType(SampleType sampleType)
-	{
+	private void checkSampleType(SampleType sampleType) {
 		Assert.assertNotNull(sampleType);
 		checkCommonInfoType(sampleType);
 		checkAbstractCategory(sampleType.category);
 	}
 
 	//@Test
-	public void saveImportCategory() throws DAOException
-	{
+	public void saveImportCategory() throws DAOException {
 		ImportCategory importCategory = createImportCategory("import1", "import1");
 		importCategory.id = importCategory.save();
 		importCategory = ImportCategory.find.findById(importCategory.id);
@@ -976,8 +907,7 @@ public class SaveDescriptionTest extends AbstractTests{
 	}
 
 	//@Test
-	public void saveImportType() throws DAOException
-	{
+	public void saveImportType() throws DAOException {
 		ImportCategory importCategory = ImportCategory.find.findByCode("import1");
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
@@ -997,24 +927,22 @@ public class SaveDescriptionTest extends AbstractTests{
 		importType = ImportType.find.findById(importType.id);
 		checkImportType(importType);
 	}
-	private ImportType createImportType(CommonInfoType commonInfoType,  ImportCategory importCategory)
-	{
+	
+	private ImportType createImportType(CommonInfoType commonInfoType,  ImportCategory importCategory) {
 		ImportType importType = new ImportType();
 		importType.setCommonInfoType(commonInfoType);
 		importType.category=importCategory;
 		return importType;
 	}
 
-	private void checkImportType(ImportType importType)
-	{
+	private void checkImportType(ImportType importType) {
 		Assert.assertNotNull(importType);
 		checkCommonInfoType(importType);
 		checkAbstractCategory(importType.category);
 	}
 	
 	//@Test
-	public void saveContainerCategory() throws DAOException
-	{
+	public void saveContainerCategory() throws DAOException {
 		ContainerCategory containerCategory = createContainerCategory("container1", "container1");
 		containerCategory.id = containerCategory.save();
 		containerCategory = ContainerCategory.find.findById(containerCategory.id);
@@ -1022,16 +950,14 @@ public class SaveDescriptionTest extends AbstractTests{
 	}
 	
 	
-	public ContainerCategory createContainerCategory(String name, String code)
-	{
+	public ContainerCategory createContainerCategory(String name, String code) {
 		ContainerCategory containerCategory = new ContainerCategory();
 		containerCategory.name=name;
 		containerCategory.code=code;
 		return containerCategory;
 	}
 	
-	public ImportCategory createImportCategory(String name, String code)
-	{
+	public ImportCategory createImportCategory(String name, String code) {
 		ImportCategory importCategory = new ImportCategory();
 		importCategory.name=name;
 		importCategory.code=code;
