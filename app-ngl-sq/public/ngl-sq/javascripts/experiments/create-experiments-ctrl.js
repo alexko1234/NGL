@@ -382,7 +382,6 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 
 	$scope.experiment.comments = {
 			save:function(){
-				if($scope.experiment.value._id){
 				$scope.clearMessages();
 				$scope.experiment.value.comments.push({"comment":$scope.experiment.comment});
 				$http.put(jsRoutes.controllers.experiments.api.Experiments.updateComments($scope.experiment.value.code).url, $scope.experiment.value)
@@ -400,9 +399,6 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 					$scope.message.details = data;
 					$scope.message.isDetails = true;
 				});
-			}else{
-				$scope.save();
-			}	
 			}
 	};
 

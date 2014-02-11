@@ -90,8 +90,15 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 	}
 	
 	$scope.changeProcessCategory = function(){
-		
+		$scope.form.experimentType = undefined;
+		$scope.form.experimentCategory = undefined;
+		$scope.form.processType = undefined;
 		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
+	}
+	
+	$scope.changeProcessType = function(){
+		$scope.form.experimentType = undefined;
+		$scope.form.experimentCategory = undefined;
 	}
 	
 	$scope.searchProjects = function(query){
@@ -116,6 +123,8 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 		$scope.removeTab(1);
 		
 		$scope.basket.reset();
+		
+		$scope.form.experimentType = undefined;
 		if($scope.form.processType && $scope.form.experimentCategory){
 			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code}, true);
 		}else if($scope.form.experimentCategory){

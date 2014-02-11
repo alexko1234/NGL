@@ -49,11 +49,20 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 	}
 	
 	$scope.changeProcessCategory = function(){
-		
+		$scope.form.experimentType = undefined;
+		$scope.form.experimentCategory = undefined;
+		$scope.form.processType = undefined;
 		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
 	}
 	
+	$scope.changeProcessType = function(){
+		$scope.form.experimentType = undefined;
+		$scope.form.experimentCategory = undefined;
+	}
+	
+	
 	$scope.changeExperimentCategory = function(){
+		$scope.form.experimentType = undefined;
 		if($scope.form.processType && $scope.form.experimentCategory){
 			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code}, true);
 		}else if($scope.form.experimentCategory){
