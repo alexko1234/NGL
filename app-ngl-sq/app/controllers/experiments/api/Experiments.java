@@ -175,11 +175,12 @@ public class Experiments extends CommonController{
 		if (!experimentFilledForm.hasErrors()) {
 			if(exp._id == null){
 				exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+			}else{
+				Builder builder = new DBUpdate.Builder();
+				builder=builder.set("comments",exp.comments);
+	
+				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			}
-			Builder builder = new DBUpdate.Builder();
-			builder=builder.set("comments",exp.comments);
-
-			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 		}
 
