@@ -2,6 +2,8 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 	$scope.experiment = {
 			outputGenerated:false,
 			outputVoid:false,
+			doPurif:false,
+			doQc:false,
 			value: {
 				code:"",
 				typeCode:"",
@@ -769,10 +771,23 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			$scope.datatable.setData(containers,containers.length);
 			$scope.form = $scope.getForm();
 			$scope.state=$scope.experiment.value.stateCode;
+			 $http.get(jsRoutes.controllers.experiments.api.ExperimentTypeNodes.list().url,{params:{code: $scope.form.experimentType.code}})
+				.success(function(data, status, headers, config) {
+					$scope.clearMessages();
+						if(data!=null){
+							$scope.experiment.doPurif = data[0].doPurification;
+							$scope.experiment.doQc = data[0].doQualityControl;
+						}
+					})
+				.error(function(data, status, headers, config) {
+					alert("error");
+				});
 			if(angular.isUndefined($scope.getForm().experiment)) {
 				$scope.form.experiment = $scope.experiment;
 				$scope.setForm($scope.form);
 				$scope.experiment.value.typeCode = $scope.form.experimentType.code;
+				
+				
 				$scope.experiment.value.categoryCode = experimentType.category.code;
 				$scope.experiment.value.atomicTransfertMethods = {};
 	

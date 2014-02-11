@@ -59,6 +59,7 @@ PUT		/api/experiments/:code/containers								controllers.experiments.api.Experi
 POST	/api/experiments/:experimentTypeCode							controllers.experiments.api.Experiments.save(experimentTypeCode:java.lang.String)
 GET		/api/experiment/categories										controllers.experiments.api.ExperimentCategories.list()
 GET		/api/experiment/types											controllers.experiments.api.ExperimentTypes.list()
+GET		/api/experiment/type/nodes										controllers.experiments.api.ExperimentTypeNodes.list()
 GET		/api/experiments/protocols 										controllers.experiments.api.Protocols.list()
 
 GET		/api/experiment/instrument-properties/:instrumentUsedTypeCode	controllers.experiments.api.Experiments.getInstrumentProperties(instrumentUsedTypeCode:java.lang.String)

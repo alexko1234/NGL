@@ -388,8 +388,8 @@ th {
 			<i class="icon-save icon-large"></i>
 			</button>-->
 			<div class="btn-group">
-			<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != 'F'" title="@Messages("experiments.addpurif")">@(Messages("experiments.addpurif"))</button>
-			<button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != 'F'" title="@Messages("experiments.addqc")">@(Messages("experiments.addqc"))</button>
+			<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != 'F'" ng-hide="!experiment.doPurif" title="@Messages("experiments.addpurif")">@(Messages("experiments.addpurif"))</button>
+			<button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != 'F'"    ng-hide="!experiment.doQc" title="@Messages("experiments.addqc")">@(Messages("experiments.addqc"))</button>
 			</div>
 		}
 		@views.html.components.datatable.datatable(datatableConfig,null,button)
