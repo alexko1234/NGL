@@ -37,7 +37,7 @@ public class ValidationHelperTests extends AbstractTests {
 		pDef.active = true;
 		pDef.required = true;
 		pDef.valueType = "File";
-		pDef.propertyType = "File";
+		//pDef.propertyType = "File";
 		return pDef;
 	}
 
@@ -48,7 +48,7 @@ public class ValidationHelperTests extends AbstractTests {
 		pDef.active = true;
 		pDef.required = true;
 		pDef.valueType = "File";
-		pDef.propertyType = "Img";
+		//pDef.propertyType = "Img";
 		return pDef;
 	}
 
