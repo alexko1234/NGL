@@ -85,7 +85,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 	public List<T> findAll() throws DAOException
 	{
 		try {
-			String sql = getSqlCommon()+" ORDER by code";
+			String sql = getSqlCommon()+" ORDER by t.code";
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 			return this.jdbcTemplate.query(sql, mapper);
 		} catch (DataAccessException e) {
@@ -105,7 +105,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 			throw new DAOException("id is mandatory");
 		}
 		try {
-			String sql = getSqlCommon()+" WHERE id=?";
+			String sql = getSqlCommon()+" WHERE t.id=?";
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 			return this.jdbcTemplate.queryForObject(sql, mapper, id);
 		} catch (DataAccessException e) {
@@ -119,7 +119,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 			throw new DAOException("code is mandatory");
 		}
 		try {
-			String sql = getSqlCommon()+" WHERE code=?";
+			String sql = getSqlCommon()+" WHERE t.code=?";
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 			return this.jdbcTemplate.queryForObject(sql, mapper, code);
 		} catch (DataAccessException e) {

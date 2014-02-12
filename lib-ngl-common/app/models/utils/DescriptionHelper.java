@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.MeasureCategory;
@@ -412,12 +414,9 @@ public class DescriptionHelper {
 
 			String appInstitute=Play.application().configuration().getString("institute");
 
-			if(appInstitute==null){
-
-					throw new RuntimeException("institute is not defined !");
-			}
 			
-			if(!appInstitute.equals("")){
+			
+			if(StringUtils.isNotBlank(appInstitute)){
 				institute = Arrays.asList(appInstitute.split("\\s*,\\s*"));
 			}else {
 				institute=new ArrayList<String>();
