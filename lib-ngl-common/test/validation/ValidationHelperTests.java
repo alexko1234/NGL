@@ -28,19 +28,51 @@ import utils.AbstractTests;
 import validation.utils.ValidationHelper;
 
 public class ValidationHelperTests extends AbstractTests {
+
 	
+	public PropertyDefinition getPropertyFileDefinition() {
+		PropertyDefinition pDef = new PropertyDefinition();
+		pDef.code = "krona";
+		pDef.name = "krona";		
+		pDef.active = true;
+		pDef.required = true;
+		pDef.valueType = "File";
+		pDef.propertyType = "File";
+		return pDef;
+	}
+
+	public PropertyDefinition getPropertyImgDefinition() {
+		PropertyDefinition pDef = new PropertyDefinition();
+		pDef.code = "phylogeneticTree2";
+		pDef.name = "phylogeneticTree2";		
+		pDef.active = true;
+		pDef.required = true;
+		pDef.valueType = "File";
+		pDef.propertyType = "Img";
+		return pDef;
+	}
+
 	
 	@Test
-	public void validatePropertiesFile() {
-		PropertyFileValue imgTest = new  PropertyFileValue();
+	public void validatePropertiesFileOK() {
+		PropertyFileValue pFileValue = new  PropertyFileValue();
 		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
 			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
 			    0x30, 0x30, (byte)0x9d };
-		imgTest.value = data;
-		imgTest.extension = "jpg";
+		pFileValue.value = data;
+		pFileValue.fullname = "krona.html";
+		pFileValue.extension = "html";
 		
-		ContextValidation cv = new ContextValidation(); 
-		imgTest.validate(cv);
+		ContextValidation cv = new ContextValidation();
+		
+		PropertyDefinition pDef = getPropertyFileDefinition();
+				
+		Map<String, PropertyDefinition> hm= new HashMap<String, PropertyDefinition>();
+		hm.put("krona", pDef);
+		
+		cv.putObject("propertyDefinitions", hm.values());
+		
+		pFileValue.validate(cv);
 		
 		showErrors(cv);
 		assertThat(cv.errors.size()).isEqualTo(0); 
@@ -50,74 +82,118 @@ public class ValidationHelperTests extends AbstractTests {
 	
 	@Test
 	public void validatePropertiesFileErr1() {
-		PropertyFileValue imgTest = new  PropertyFileValue();
+		PropertyFileValue pFileValue = new  PropertyFileValue();
 		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
 			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
 			    0x30, 0x30, (byte)0x9d };
-		imgTest.value = data;
-		imgTest.extension = "";
+		pFileValue.value = data;
+		pFileValue.fullname = "krona.html";
+		pFileValue.extension = "";
 		
 		ContextValidation cv = new ContextValidation(); 
-		imgTest.validate(cv);
+
+		PropertyDefinition pDef = getPropertyFileDefinition();
+		
+		Map<String, PropertyDefinition> hm= new HashMap<String, PropertyDefinition>();
+		hm.put("krona", pDef);
+		
+		cv.putObject("propertyDefinitions", hm.values());
+		
+		pFileValue.validate(cv);
 		
 		showErrors(cv);
 		assertThat(cv.errors.size()).isEqualTo(1); 
-		
+		assertThat(cv.errors.toString()).contains("extension"); 
+		assertThat(cv.errors.toString()).contains("error.required");
 	}
 	
+
 	@Test
 	public void validatePropertiesFileErr2() {
-		PropertyFileValue imgTest = new  PropertyFileValue();
-		byte[] data = new byte[] {};
-		imgTest.value = data;
-		imgTest.extension = "";
-		
-		ContextValidation cv = new ContextValidation(); 
-		imgTest.validate(cv);
-		
-		showErrors(cv);
-		assertThat(cv.errors.size()).isEqualTo(2); 
-		
-	}
-	
-	
-	@Test
-	public void validatePropertiesFileImg() {
-		PropertyImgValue imgTest = new  PropertyImgValue();
+		PropertyFileValue pFileValue = new  PropertyFileValue();
 		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
 			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
 			    0x30, 0x30, (byte)0x9d };
-		imgTest.value = data;
-		imgTest.extension = "jpg";
-		imgTest.width = 4;
-		imgTest.height = 4;
+		pFileValue.value = data;
+		pFileValue.fullname = "";
+		pFileValue.extension = "";
 		
 		ContextValidation cv = new ContextValidation(); 
-		imgTest.validate(cv);
+
+		PropertyDefinition pDef = getPropertyFileDefinition();
+		
+		Map<String, PropertyDefinition> hm= new HashMap<String, PropertyDefinition>();
+		hm.put("krona", pDef);
+		
+		cv.putObject("propertyDefinitions", hm.values());
+		
+		pFileValue.validate(cv);
+		
+		showErrors(cv);
+		assertThat(cv.errors.size()).isEqualTo(2); 
+		assertThat(cv.errors.toString()).contains("extension");
+		assertThat(cv.errors.toString()).contains("fullname");
+		assertThat(cv.errors.toString()).contains("error.required");
+	}
+	
+
+	@Test
+	public void validatePropertiesFileImgOK() {
+		PropertyImgValue pImgValue = new  PropertyImgValue();
+		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
+			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
+			    0x30, 0x30, (byte)0x9d };
+		pImgValue.value = data;
+		pImgValue.fullname = "phylogeneticTree2.jpg";
+		pImgValue.extension = "jpg";
+		pImgValue.width = 4;
+		pImgValue.height = 4;
+		
+		ContextValidation cv = new ContextValidation(); 
+
+		PropertyDefinition pDef = getPropertyImgDefinition();
+		
+		Map<String, PropertyDefinition> hm= new HashMap<String, PropertyDefinition>();
+		hm.put("phylogeneticTree2", pDef);
+		
+		cv.putObject("propertyDefinitions", hm.values());
+		
+		pImgValue.validate(cv);
 		
 		showErrors(cv);
 		assertThat(cv.errors.size()).isEqualTo(0); 
 		
 	}
 	
+	
 	@Test
 	public void validatePropertiesFileImgErr() {
-		PropertyImgValue imgTest = new  PropertyImgValue();
+		PropertyImgValue pImgValue = new  PropertyImgValue();
 		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
 			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
 			    0x30, 0x30, (byte)0x9d };
-		imgTest.value = data;
-		imgTest.extension = "jpg";
+		pImgValue.value = data;
+		pImgValue.fullname = "phylogeneticTree2.jpg";
+		pImgValue.extension = "jpg";
 		
 		ContextValidation cv = new ContextValidation(); 
-		imgTest.validate(cv);
+
+		PropertyDefinition pDef = getPropertyImgDefinition();
+		
+		Map<String, PropertyDefinition> hm= new HashMap<String, PropertyDefinition>();
+		hm.put("phylogeneticTree2", pDef);
+		
+		cv.putObject("propertyDefinitions", hm.values());
+		
+		pImgValue.validate(cv);
 		
 		showErrors(cv);
 		assertThat(cv.errors.size()).isEqualTo(2);
 		assertThat(cv.errors.toString()).contains("width");
 		assertThat(cv.errors.toString()).contains("height");
-		
+		assertThat(cv.errors.toString()).contains("error.required");
 	}
+	
 	
 	@Test
 	public void validatePropertiesRequired() {
