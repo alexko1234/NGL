@@ -82,16 +82,12 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			}
 			$scope.modalTitle = $scope.modalTitle + Messages('readsets.treatments.' + treatment + '.' + imageName);
 			
-			//pb : return the width of the image after resizing (not the original size)
-			//$scope.imageWidth = document.getElementById(context + '.' + imageName).width;
-			
-			var margin = Messages("readsets.treatments.images.margin");
-			
-			var rapport = (document.body.clientWidth - margin) / imageFullSizeWidth;
-			rapport = Math.min(rapport, 1);
+			var margin = Messages("readsets.treatments.images.margin");			
+			var zoom = (document.body.clientWidth - margin) / imageFullSizeWidth;
+			zoom = Math.min(zoom, 1);
 
-			$scope.modalWidth = imageFullSizeWidth * rapport;
-			$scope.modalLeft = (document.body.clientWidth - imageFullSizeWidth * rapport )/2;
+			$scope.modalWidth = imageFullSizeWidth * zoom;
+			$scope.modalLeft = (document.body.clientWidth - imageFullSizeWidth * zoom )/2;
 		}
 		
 	}

@@ -34,7 +34,8 @@
  <ul class="thumbnails">
     <li class="span4">
 	    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
-	    ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.overlapDistrib.value,'overlapDistrib','','merging',792)">
+	    ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.overlapDistrib.value,'overlapDistrib','','merging',
+	    readset.treatments[treatments.getTreatment().code].pairs.overlapDistrib.width)">
 		 <a href="#">
 		    <img id="pairs.overlapDistrib" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].pairs.overlapDistrib.value}}" />
 		    <p>@Messages("readsets.treatments.merging.overlapDistrib")</p>
