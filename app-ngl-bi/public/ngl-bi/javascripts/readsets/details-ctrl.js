@@ -73,14 +73,14 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			
 		});
 		
-		$scope.setImage = function(imageData, imageName, context, treatment, imageFullSizeWidth) {
+		$scope.setImage = function(imageData, imageName, treatmentContext, treatmentCode, imageFullSizeWidth) {
 			$scope.modalImage = imageData;
 			
 			$scope.modalTitle = '';
 			if (context != '') {
-				$scope.modalTitle = context + ' : ';
+				$scope.modalTitle = treatmentContext + ' : ';
 			}
-			$scope.modalTitle = $scope.modalTitle + Messages('readsets.treatments.' + treatment + '.' + imageName);
+			$scope.modalTitle = $scope.modalTitle + Messages('readsets.treatments.' + treatmentCode + '.' + imageName);
 			
 			var margin = Messages("readsets.treatments.images.margin");			
 			var zoom = (document.body.clientWidth - margin) / imageFullSizeWidth;
