@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -66,16 +67,10 @@ public class RunTreatmentsTests extends AbstractTests {
 			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 		}
 		Run run = RunMockHelper.newRun("DIDIER_TESTFORTRT");
-		run.dispatch = true; // For the archive test
-		Lane lane = RunMockHelper.newLane(1);
-		Lane lane2 = RunMockHelper.newLane(2);
-		List<Lane> lanes = new ArrayList<Lane>();		
-		lanes.add(lane);
-		lanes.add(lane2);
-		run.lanes = lanes;
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 		assertThat(status(result)).isEqualTo(OK);
 	}
+
 	
 	private Treatment getNewTreatment() {
 		Treatment t = new Treatment();
@@ -84,16 +79,19 @@ public class RunTreatmentsTests extends AbstractTests {
 		t.categoryCode = "ngsrg";
 		//define map of single property values
 		Map<String,PropertyValue> m = new HashMap<String,PropertyValue>();
-		m.put("nbClusterTotal", new PropertySingleValue(100)); // valeur simple
-		m.put("nbClusterIlluminaFilter", new PropertySingleValue(100));
-		m.put("nbCycle", new PropertySingleValue(100));
-		m.put("nbBase", new PropertySingleValue(100));
+		
+		//run level
 		m.put("flowcellPosition", new PropertySingleValue("A"));
-		m.put("rtaVersion", new PropertySingleValue("v1"));
+		m.put("nbCycle", new PropertySingleValue(100));
 		m.put("flowcellVersion", new PropertySingleValue("v1"));
-		m.put("controlLane", new PropertySingleValue(90));
-		m.put("mismatch", new PropertySingleValue(true));
+		m.put("nbClusterIlluminaFilter", new PropertySingleValue(100));
 		m.put("percentClusterIlluminaFilter", new PropertySingleValue(96.125));
+		m.put("nbBase", new PropertySingleValue(100));
+		m.put("mismatch", new PropertySingleValue(true));
+		m.put("controlLane", new PropertySingleValue(90));
+		m.put("rtaVersion", new PropertySingleValue("v1"));
+		m.put("nbClusterTotal", new PropertySingleValue(1000000)); 
+		
 		t.set("default", m);
 		
 		return t;
@@ -102,7 +100,7 @@ public class RunTreatmentsTests extends AbstractTests {
 	
 	@Test
 	public void testSave() {	 
-	    createRunCode();
+		createRunCode(); 
 	    	 
 	    Treatment t = getNewTreatment();
 		    	 
@@ -116,11 +114,11 @@ public class RunTreatmentsTests extends AbstractTests {
         assertThat(entry.getKey()).isEqualTo("ngsrg");
 	}
 	
-	
+
 	
 	@Test
 	public void testUpdate() {
-	    createRunCode();
+		createRunCode(); 
 		    	 
 	    Treatment t = getNewTreatment();
 		
@@ -158,13 +156,12 @@ public class RunTreatmentsTests extends AbstractTests {
 	
 	@Test
 	public void testDelete() { 
-	    createRunCode();
+		createRunCode(); 
 		    	 
 	    Treatment t =	 getNewTreatment();
 		
 		Result result = callAction(controllers.runs.api.routes.ref.RunTreatments.save("DIDIER_TESTFORTRT"),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
 		assertThat(status(result)).isEqualTo(OK);
-		
 		
 		result = callAction(controllers.runs.api.routes.ref.RunTreatments.delete("DIDIER_TESTFORTRT", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
 		assertThat(status(result)).isEqualTo(OK);
@@ -177,11 +174,10 @@ public class RunTreatmentsTests extends AbstractTests {
 	
 	@Test
 	public void testGet() {
-		createRunCode();
+		createRunCode(); 
 		    	 
 	    Treatment t =	 getNewTreatment();
-		
-		
+	
 		Result result = callAction(controllers.runs.api.routes.ref.RunTreatments.save("DIDIER_TESTFORTRT"),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
 		assertThat(status(result)).isEqualTo(OK);
 		
@@ -192,7 +188,7 @@ public class RunTreatmentsTests extends AbstractTests {
 	
 	@Test
 	public void testHead() {
-	    createRunCode();
+		createRunCode(); 
 		    	 
 	    Treatment t =	 getNewTreatment();
 		

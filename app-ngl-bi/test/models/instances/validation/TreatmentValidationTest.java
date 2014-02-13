@@ -10,12 +10,15 @@ import static play.test.Helpers.status;
 import static play.test.Helpers.contentAsString;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Level;
+import models.laboratory.common.instance.property.PropertyFileValue;
+import models.laboratory.common.instance.property.PropertyImgValue;
 import models.laboratory.common.instance.property.PropertyObjectValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.common.instance.PropertyValue;
@@ -157,11 +160,29 @@ public class TreatmentValidationTest extends AbstractTests {
 		p.value=m2;
 		m.put("keywordBilan", p);
 
-		File f = new File("krona");
-		m.put("krona",new PropertySingleValue(f));		
-		f = new File("phylogeneticTree");
-		m.put("phylogeneticTree",new PropertySingleValue(f));
+	
+		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
+			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
+			    0x30, 0x30, (byte)0x9d };
 		
+		PropertyFileValue pf = null;
+		pf = new PropertyFileValue();
+		pf.value = data;
+		pf.fullname = "krona.html";
+		pf.extension = "html";
+		m.put("krona",pf);
+		
+			
+		PropertyImgValue pi = null;
+		pi = new PropertyImgValue();
+		pi.value = data;
+		pi.fullname = "phylogeneticTree.jpg";
+		pi.extension = "jpg";
+		pi.width = 400;
+		pi.height = 300;
+		m.put("phylogeneticTree",pi);
+		
+	
 		t.set("read1", m);
 		
 		return t;
@@ -206,10 +227,27 @@ public class TreatmentValidationTest extends AbstractTests {
 		p.value=m2;
 		m.put("keywordBilan", p);
 
-		File f = new File("krona");
-		m.put("krona",new PropertySingleValue(f));		
-		f = new File("phylogeneticTree");
-		m.put("phylogeneticTree",new PropertySingleValue(f));
+		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
+			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
+			    0x30, 0x30, (byte)0x9d };
+		
+		PropertyFileValue pf = null;
+		pf = new PropertyFileValue();
+		pf.value = data;
+		pf.fullname = "krona.html";
+		pf.extension = "html";
+		m.put("krona",pf);
+		
+			
+		PropertyImgValue pi = null;
+		pi = new PropertyImgValue();
+		pi.value = data;
+		pi.fullname = "phylogeneticTree.jpg";
+		pi.extension = "jpg";
+		pi.width = 400;
+		pi.height = 300;
+		m.put("phylogeneticTree",pi);
+		
 		
 		t.set("read1", m);
 		
@@ -335,6 +373,8 @@ public class TreatmentValidationTest extends AbstractTests {
 		Treatment t = getNewTreatmentForReadSet();
 				
 		ContextValidation ctxVal = new ContextValidation(); 
+		//Level.CODE levelCode = Level.CODE.ReadSet; 
+		//ctxVal.putObject("level", levelCode);
 		
 		//add readset to ctxVal
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
@@ -363,7 +403,6 @@ public class TreatmentValidationTest extends AbstractTests {
 		t.code =  null;	// NO CODE!	
 				
 		ContextValidation ctxVal = new ContextValidation(); 
-		
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
 		
@@ -387,7 +426,6 @@ public class TreatmentValidationTest extends AbstractTests {
 		t.code =  ""; //empty!		
 		
 		ContextValidation ctxVal = new ContextValidation(); 
-		
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
 		
@@ -414,7 +452,6 @@ public class TreatmentValidationTest extends AbstractTests {
 		t.typeCode = ""; //vide!
 				
 		ContextValidation ctxVal = new ContextValidation(); 
-		
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
 		
@@ -441,7 +478,6 @@ public class TreatmentValidationTest extends AbstractTests {
 		t.categoryCode = ""; //vide!
 				
 		ContextValidation ctxVal = new ContextValidation(); 
-		
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
 		
@@ -467,7 +503,6 @@ public class TreatmentValidationTest extends AbstractTests {
 		createSameTrt();
 				
 		ContextValidation ctxVal = new ContextValidation(); 
-		
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
 		
@@ -562,7 +597,6 @@ public class TreatmentValidationTest extends AbstractTests {
 		deleteRdCode();
 				
 		ContextValidation ctxVal = new ContextValidation(); 
-		
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
 		
@@ -596,7 +630,6 @@ public class TreatmentValidationTest extends AbstractTests {
 			t.results().get("default").put("bad", new PropertySingleValue("Ouh la la"));
 								
 			ContextValidation ctxVal = new ContextValidation(); 
-			
 			Level.CODE levelCode = Level.CODE.ReadSet; 
 			ctxVal.putObject("level", levelCode);
 			
@@ -621,15 +654,14 @@ public class TreatmentValidationTest extends AbstractTests {
 	 public void testValidateTreatmentErrorBadTypeValue() {
 		    	Treatment t = null; 
 	    		ContextValidation ctxVal = new ContextValidation();  
+	    		Level.CODE levelCode = Level.CODE.ReadSet; 
+	    		ctxVal.putObject("level", levelCode);
 						   
 				t = getNewTreatmentForReadSet();
 				
 				t.results().get("default").remove("nbReadIllumina");
 				//must generate a error (because of a bad value)
 				t.results().get("default").put("nbReadIllumina", new PropertySingleValue("un"));	
-				
-	    		Level.CODE levelCode = Level.CODE.ReadSet; 
-	    		ctxVal.putObject("level", levelCode);
 	    		
 	    		//add readset to ctxVal
 	    		ReadSet readset = RunMockHelper.newReadSet("rdCode");
@@ -661,7 +693,6 @@ public class TreatmentValidationTest extends AbstractTests {
 			t.set("read3", m3);
 			
 			ContextValidation ctxVal = new ContextValidation(); 
-			
 			Level.CODE levelCode = Level.CODE.ReadSet; 
 			ctxVal.putObject("level", levelCode);
 			
