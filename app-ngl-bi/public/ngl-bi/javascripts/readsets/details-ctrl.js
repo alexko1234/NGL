@@ -77,14 +77,13 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 			$scope.modalImage = imageData;
 			
 			$scope.modalTitle = '';
-			if (context != '') {
+			if (treatmentContext != '') {
 				$scope.modalTitle = treatmentContext + ' : ';
 			}
 			$scope.modalTitle = $scope.modalTitle + Messages('readsets.treatments.' + treatmentCode + '.' + imageName);
 			
 			var margin = Messages("readsets.treatments.images.margin");			
-			var zoom = (document.body.clientWidth - margin) / imageFullSizeWidth;
-			zoom = Math.min(zoom, 1);
+			var zoom = Math.min((document.body.clientWidth - margin) / imageFullSizeWidth, 1);
 
 			$scope.modalWidth = imageFullSizeWidth * zoom;
 			$scope.modalLeft = (document.body.clientWidth - imageFullSizeWidth * zoom )/2;
