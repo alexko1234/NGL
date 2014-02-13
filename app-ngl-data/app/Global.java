@@ -51,7 +51,7 @@ public class Global extends GlobalSettings {
 			try {
 				
 				String institute=play.Play.application().configuration().getString("import.institute");
-				Logger.debug("Import institute "+ institute);
+				Logger.info("Import institute "+ institute);
 			
 				if(institute.equals("CNG")){
 					new ImportDataCNG();
