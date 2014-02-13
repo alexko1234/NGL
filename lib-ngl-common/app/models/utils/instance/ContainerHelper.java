@@ -81,6 +81,11 @@ public class ContainerHelper {
 			container.projectCodes.add(rs.getString("project"));
 		}
 		
+		if(rs.getString("controlLane")!=null){
+			container.properties.put("controlLane",new PropertySingleValue(rs.getBoolean("controlLane")));
+		}
+			
+		
 		if(rs.getString("sampleCode")!=null){
 			Content content = new Content();
 			content.sampleUsed=new SampleUsed();
