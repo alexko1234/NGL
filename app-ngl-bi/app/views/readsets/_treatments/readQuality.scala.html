@@ -15,7 +15,8 @@
 			    <li class="span12">
 				    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.qualScore.value,'qualScore','Read1','read_quality',
-					readset.treatments[treatments.getTreatment().code].read1.qualScore.width)">
+					readset.treatments[treatments.getTreatment().code].read1.qualScore.width,
+					readset.treatments[treatments.getTreatment().code].read1.qualScore.height)">
 					 <a href="#">
 					    <img id="read1.qualScore" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.qualScore.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.nuclDistribution")</p>
@@ -28,7 +29,8 @@
 			    <li class="span3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.nuclDistribution.value,'nuclDistribution','Read1','read_quality',
-					readset.treatments[treatments.getTreatment().code].read1.nuclDistribution.width)">
+					readset.treatments[treatments.getTreatment().code].read1.nuclDistribution.width,
+					readset.treatments[treatments.getTreatment().code].read1.nuclDistribution.height)">
 					 <a href="#">
 					    <img id="read1.nuclDistribution" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.nuclDistribution.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.nuclDistribution")</p>
@@ -38,7 +40,8 @@
 			    <li class="span3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.readSizeDistribution.value,'readSizeDistribution','Read1','read_quality',
-					readset.treatments[treatments.getTreatment().code].read1.readSizeDistribution.width)">
+					readset.treatments[treatments.getTreatment().code].read1.readSizeDistribution.width,
+					readset.treatments[treatments.getTreatment().code].read1.readSizeDistribution.height)">
 					 <a href="#">
 					    <img id="read1.readSizeDistribution"  ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.readSizeDistribution.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.readSizeDistribution")</p>
@@ -48,7 +51,8 @@
 			    <li class="span3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.readWithNpercent.value,'readWithNpercent','Read1','read_quality',
-					readset.treatments[treatments.getTreatment().code].read1.readWithNpercent.width)">
+					readset.treatments[treatments.getTreatment().code].read1.readWithNpercent.width,
+					readset.treatments[treatments.getTreatment().code].read1.readWithNpercent.height)">
 					 <a href="#">
 					    <img id="read1.readWithNpercent" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.readWithNpercent.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.readWithNpercent")</p>
@@ -58,7 +62,8 @@
 			    <li class="span3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.positionN.value,'positionN','Read1','read_quality',
-					readset.treatments[treatments.getTreatment().code].read1.positionN.width)">
+					readset.treatments[treatments.getTreatment().code].read1.positionN.width,
+					readset.treatments[treatments.getTreatment().code].read1.positionN.height)">
 					 <a href="#">
 					    <img id="read1.positionN" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.positionN.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.positionN")</p>
@@ -70,7 +75,8 @@
 			    <li class="span3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.adapterContamination.value,'adapterContamination','Read1','read_quality',
-					readset.treatments[treatments.getTreatment().code].read1.adapterContamination.width)">
+					readset.treatments[treatments.getTreatment().code].read1.adapterContamination.width,
+					readset.treatments[treatments.getTreatment().code].read1.adapterContamination.height)">
 					 <a href="#">
 					    <img id="read1.adapterContamination" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.adapterContamination.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.adapterContamination")</p>
@@ -87,7 +93,8 @@
 						</ul>	
 					</div>
 				</li>
-			    <li class="span3" ng-if="(treatments.getTreatment().code == 'readQualityClean') || (treatments.getTreatment().code == 'readQualityNoRiboClean')">
+			    <li class="span3" ng-if="((treatments.getTreatment().code == 'readQualityClean') || (treatments.getTreatment().code == 'readQualityNoRiboClean')) 
+			    	&& (readset.treatments[treatments.getTreatment().code].read1.maxSizeReads != null) ">
 			    	<div class="thumbnail">
 						 <dl>
 							<dt><h4>@Messages("readsets.treatments.read_quality.number") @("{{run.treatments.ngsrg['default'].nbCycle.value}}") :</h4></dt>
@@ -100,7 +107,8 @@
 			    <li class="span3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.GCDistribution.value,'GCDistribution','Read1','read_quality',
-					readset.treatments[treatments.getTreatment().code].read1.GCDistribution.width)">
+					readset.treatments[treatments.getTreatment().code].read1.GCDistribution.width,
+					readset.treatments[treatments.getTreatment().code].read1.GCDistribution.height)">
 					 <a href="#">
 					    <img id="read1.GCDistribution" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.GCDistribution.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.GCDistribution")</p>
@@ -133,7 +141,8 @@
 			    <li class="span12">
 				    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.qualScore.value,'qualScore','Read2','read_quality',
-					readset.treatments[treatments.getTreatment().code].read2.qualScore.width)">
+					readset.treatments[treatments.getTreatment().code].read2.qualScore.width,
+					readset.treatments[treatments.getTreatment().code].read2.qualScore.height)">
 					 <a href="#">
 					    <img id="read2.qualScore" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read2.qualScore.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.qualScore")</p>
@@ -145,7 +154,8 @@
 			    <li class="span3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.nuclDistribution.value,'nuclDistribution','Read2','read_quality',
-					readset.treatments[treatments.getTreatment().code].read2.nuclDistribution.width)">
+					readset.treatments[treatments.getTreatment().code].read2.nuclDistribution.width,
+					readset.treatments[treatments.getTreatment().code].read2.nuclDistribution.height)">
 					 <a href="#">
 					    <img id="read2.nuclDistribution" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read2.nuclDistribution.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.nuclDistribution")</p>
@@ -155,7 +165,8 @@
 			    <li class="span3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.readSizeDistribution.value,'readSizeDistribution','Read2','read_quality',
-					readset.treatments[treatments.getTreatment().code].read2.readSizeDistribution.width)">
+					readset.treatments[treatments.getTreatment().code].read2.readSizeDistribution.width,
+					readset.treatments[treatments.getTreatment().code].read2.readSizeDistribution.height)">
 					 <a href="#">
 					    <img id="read2.readSizeDistribution" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read2.readSizeDistribution.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.readSizeDistribution")</p>
@@ -165,7 +176,8 @@
 			    <li class="span3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.readWithNpercent.value,'readWithNpercent','Read2','read_quality',
-					readset.treatments[treatments.getTreatment().code].read2.readWithNpercent.width)">
+					readset.treatments[treatments.getTreatment().code].read2.readWithNpercent.width,
+					readset.treatments[treatments.getTreatment().code].read2.readWithNpercent.height)">
 					 <a href="#">
 					    <img id="read2.readWithNpercent" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read2.readWithNpercent.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.readWithNpercent")</p>
@@ -175,7 +187,8 @@
 			    <li class="span3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.positionN.value,'positionN','Read2','read_quality',
-					readset.treatments[treatments.getTreatment().code].read2.positionN.width)">
+					readset.treatments[treatments.getTreatment().code].read2.positionN.width,
+					readset.treatments[treatments.getTreatment().code].read2.positionN.height)">
 					 <a href="#">
 					    <img id="read2.positionN" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read2.positionN.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.positionN")</p>
@@ -187,7 +200,8 @@
 			    <li class="span3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.adapterContamination.value,'adapterContamination','Read2','read_quality',
-					readset.treatments[treatments.getTreatment().code].read2.adapterContamination.width)">
+					readset.treatments[treatments.getTreatment().code].read2.adapterContamination.width,
+					readset.treatments[treatments.getTreatment().code].read2.adapterContamination.height)">
 					 <a href="#">
 					    <img id="read2.adapterContamination" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read2.adapterContamination.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.adapterContamination")</p>
@@ -204,7 +218,8 @@
 						</ul>	
 					</div>
 				</li>
-			    <li class="span3" ng-if="(treatments.getTreatment().code == 'readQualityClean') || (treatments.getTreatment().code == 'readQualityNoRiboClean')">
+			    <li class="span3" ng-if="((treatments.getTreatment().code == 'readQualityClean') || (treatments.getTreatment().code == 'readQualityNoRiboClean'))  
+			    	&& (readset.treatments[treatments.getTreatment().code].read2.maxSizeReads != null) ">
 			    	<div class="thumbnail">
 						 <dl>
 							<dt><h4>@Messages("readsets.treatments.read_quality.number") @("{{run.treatments.ngsrg['default'].nbCycle.value}}") :</h4></dt>
@@ -217,7 +232,8 @@
 			    <li class="span3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-small btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.GCDistribution.value,'GCDistribution','Read2','read_quality',
-					readset.treatments[treatments.getTreatment().code].read2.GCDistribution.width)">
+					readset.treatments[treatments.getTreatment().code].read2.GCDistribution.width,
+					readset.treatments[treatments.getTreatment().code].read2.GCDistribution.height)">
 					 <a href="#">
 					    <img id="read2.GCDistribution" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read2.GCDistribution.value}}" />
 					    <p>@Messages("readsets.treatments.read_quality.GCDistribution")</p>

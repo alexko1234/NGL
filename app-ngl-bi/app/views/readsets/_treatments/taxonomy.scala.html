@@ -199,7 +199,9 @@
 			
 		<div class="tab-pane" id="phylogeneticTree">
 		    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
-			ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.value,'phylogeneticTree','','taxonomy', readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.width)">
+			ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.value,'phylogeneticTree','','taxonomy', 
+			readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.width,
+			readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.height)">
 			 <a href="#">
 			    <img id="read1.phylogeneticTree" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.value}}" />	 
 			 </a>
