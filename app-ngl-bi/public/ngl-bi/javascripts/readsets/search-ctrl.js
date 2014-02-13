@@ -114,12 +114,18 @@ function getColumns(type){
 	}
 	return columns;
 }
+function convertForm(iform){
+	var form = angular.copy(iform);
+	if(form.fromDate)form.fromDate = moment(form.fromDate, Messages("date.format").toUpperCase()).valueOf();
+	if(form.toDate)form.toDate = moment(form.toDate, Messages("date.format").toUpperCase()).valueOf();	
+	if(form.projectCodes) form.projectCodes = form.projectCodes.split(',');
+	if(form.sampleCodes) form.sampleCodes = form.sampleCodes.split(',');
+	if(form.runCodes) form.runCodes = form.runCodes.split(',');
+	return form
+};
 
 function SearchFormCtrl($scope, $filter, lists){
 	$scope.lists = lists;
-	
-	$scope.form = {
-	}
 	
 	var search = function(values, query){
 		var queryElts = query.split(',');
@@ -136,54 +142,46 @@ function SearchFormCtrl($scope, $filter, lists){
 		}, output);
 		
 		return output;
-	}
+	};
 	
 	$scope.searchProjects = function(query){
 		return search(lists.getProjects(), query);
 				
-	}
+	};
 	
 	$scope.searchRuns = function(query){
 		return search(lists.get('runs'), query);
 				
-	}
+	};
 	
 	$scope.refreshSamples = function(){
 		if($scope.form.projectCodes){
 			lists.refresh.samples({projectCodes:$scope.form.projectCodes.split(',')});
 		}
-	}
+	};
 	
 	$scope.searchSamples = function(query){
 		return search(lists.getSamples(), query);				
-	}
+	};
 	
 	$scope.search = function(){
-		var form = angular.copy($scope.form);
-		if(form.fromDate)form.fromDate = moment(form.fromDate, Messages("date.format").toUpperCase()).valueOf();
-		if(form.toDate)form.toDate = moment(form.toDate, Messages("date.format").toUpperCase()).valueOf();	
-		if(form.projectCodes) form.projectCodes = form.projectCodes.split(',');
-		if(form.sampleCodes) form.sampleCodes = form.sampleCodes.split(',');
-		if(form.runCodes) form.runCodes = form.runCodes.split(',');
-		
+		$scope.setForm($scope.form);
 		if ($scope.isHomePage('valuation')) {
 			if(form.stateCodes == undefined || form.stateCodes.length == 0) {
 				//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
 				form.stateCodes = ["IW-V","IP-V"];
 			}		
 		}
-		
-		$scope.datatable.search(form);
-	}
+		$scope.datatable.search(convertForm($scope.form));
+	};
 	
 	$scope.reset = function(){
 		$scope.form = {
 				
 		}
-	}
+	};
 	
 	$scope.init = function(){
-		
 		$scope.states = lists.getStates();
 		if ($scope.isHomePage('valuation')) {
 			//If we want to show the 2 states used to filter the data...
@@ -197,14 +195,21 @@ function SearchFormCtrl($scope, $filter, lists){
 		$scope.lists.refresh.types({objectTypeCode:"Run"});
 		$scope.lists.refresh.runs();
 		
-	}
+		if(angular.isDefined($scope.getForm())){
+			$scope.form = $scope.getForm();
+		}else{
+			$scope.reset();
+		}
+	};
+	
+	
+
 	
 };
 SearchFormCtrl.$inject = ['$scope', '$filter', 'lists'];
 
 function SearchCtrl($scope, $routeParams, datatable) {
 
-	$scope.form = {};
 	
 	$scope.datatableConfig = {
 			order :{by:'traceInformation.creationDate'},
@@ -223,15 +228,15 @@ function SearchCtrl($scope, $routeParams, datatable) {
 	
 	
 	$scope.init = function(){
-		//to avoid to lost the previous search
-		$scope.form = $routeParams;
+		//to avoid to lost the previous search		
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, $scope.datatableConfig);
 			$scope.setDatatable($scope.datatable);
+			$scope.datatable.search(convertForm($routeParams));
 		}else{
-			$scope.datatable = $scope.getDatatable();
+			$scope.datatable = $scope.getDatatable();			
 		}
-		$scope.datatable.search($scope.form);
+		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
 			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:false});

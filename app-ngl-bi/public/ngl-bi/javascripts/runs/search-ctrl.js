@@ -40,7 +40,15 @@ var columns = [
 			];						
 	return columns;
 }
-
+function convertForm(iform){
+	var form = angular.copy(iform);
+	if(form.fromDate)form.fromDate = moment(form.fromDate, Messages("date.format").toUpperCase()).valueOf();
+	if(form.toDate)form.toDate = moment(form.toDate, Messages("date.format").toUpperCase()).valueOf();	
+	if(form.projectCodes) form.projectCodes = form.projectCodes.split(',');
+	if(form.sampleCodes) form.sampleCodes = form.sampleCodes.split(',');
+	if(form.codes) form.codes = form.codes.split(',');
+	return form
+};
 function SearchFormCtrl($scope, $filter, lists){
 	$scope.lists = lists;
 	
@@ -84,15 +92,10 @@ function SearchFormCtrl($scope, $filter, lists){
 	}
 	
 	$scope.search = function(){
-		var form = angular.copy($scope.form);
-		if(form.fromDate)form.fromDate = moment(form.fromDate, Messages("date.format").toUpperCase()).valueOf();
-		if(form.toDate)form.toDate = moment(form.toDate, Messages("date.format").toUpperCase()).valueOf();	
-		if(form.projectCodes) form.projectCodes = form.projectCodes.split(',');
-		if(form.sampleCodes) form.sampleCodes = form.sampleCodes.split(',');
-		if(form.codes) form.codes = form.codes.split(',');
-		
-		$scope.datatable.search(form);
+		$scope.setForm($scope.form);
+		$scope.datatable.search(convertForm($scope.form));
 	}
+	
 	
 	$scope.reset = function(){
 		$scope.form = {
@@ -105,6 +108,12 @@ function SearchFormCtrl($scope, $filter, lists){
 		$scope.lists.refresh.states({objectTypeCode:"Run"});
 		$scope.lists.refresh.types({objectTypeCode:"Run"});
 		$scope.lists.refresh.runs();
+		
+		if(angular.isDefined($scope.getForm())){
+			$scope.form = $scope.getForm();
+		}else{
+			$scope.reset();
+		}
 	}
 	
 };
