@@ -38,7 +38,7 @@ public class ProcessService {
 	
 	private static void saveProcessTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessType> l = new ArrayList<ProcessType>();
-		l.add(DescriptionFactory.newProcessType("Banque 300-600", "lib-300-600", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie","amplification"), 
+		l.add(DescriptionFactory.newProcessType("Banque 300-600", "lib-300-600", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie_indexing","amplification"), 
 				getExperimentTypes("fragmentation").get(0), getExperimentTypes("amplification").get(0), getExperimentTypes("void-lib-300-600").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepot() , getExperimentTypes("prepa-flowcell","illumina-depot"), getExperimentTypes("prepa-flowcell").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("void-illumina-depot").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
