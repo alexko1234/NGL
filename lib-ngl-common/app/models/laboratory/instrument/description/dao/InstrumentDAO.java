@@ -79,8 +79,8 @@ public class InstrumentDAO extends AbstractDAODefault<Instrument>{
 	}
 	
 	public List<Instrument> findByInstrumentUsedTypeCode(String instrumentUsedTypeCode) throws DAOException {
-		String sql = getSqlCommon() + " inner join instrument_used_type iut on iut.id = i.fk_instrument_used_type"
-				+" inner join common_info_type cit cit.id = iut.fk_common_info_type" 
+		String sql = getSqlCommon() + " inner join instrument_used_type iut on iut.id = t.fk_instrument_used_type"
+				+" inner join common_info_type cit on cit.id = iut.fk_common_info_type" 
 				+" where cit.code=?";
 		BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
 		return this.jdbcTemplate.query(sql, mapper, instrumentUsedTypeCode);
