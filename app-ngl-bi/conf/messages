@@ -50,8 +50,8 @@ button.search = Rechercher
 button.reset = Réinitialiser
 button.validate = Sauvegarder
 button.cancel = Annuler
-button.show = Voir ReadSets
-button.valuation = Evaluer ReadSets
+button.readsets.show = Voir ReadSets
+button.readsets.valuation = Evaluer ReadSets
 
 runs.page.title=Runs
 runs.menu = Runs
