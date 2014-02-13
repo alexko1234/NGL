@@ -14,6 +14,7 @@ import models.laboratory.common.description.State;
 import models.laboratory.common.description.ValuationCriteria;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
+import models.utils.dao.DAOHelpers;
 
 import org.springframework.asm.Type;
 import org.springframework.jdbc.core.SqlParameter;
@@ -28,7 +29,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		super("common_info_type", CommonInfoType.class, CommonInfoTypeMappingQuery.class, 
 				"SELECT t.id as cId, t.name, t.code as codeSearch, o.id as oId, o.code as codeObject, o.generic "+
 				"FROM common_info_type as t "+
-				"JOIN object_type as o ON o.id=t.fk_object_type ", true);
+				"JOIN object_type as o ON o.id=t.fk_object_type "+DAOHelpers.getCommonInfoTypeSQLForInstitute("t"), true);
 				
 	}
 
