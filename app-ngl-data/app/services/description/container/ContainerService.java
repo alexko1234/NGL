@@ -33,7 +33,8 @@ public class ContainerService {
 		List<ContainerCategory> l = new ArrayList<ContainerCategory>();
 		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "Tube", "tube"));
 		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "Puit", "well"));
-		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "Lane", "lane"));		
+		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "Lane", "lane"));
+		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "MapCard", "mapcard"));		
 		DAOHelpers.saveModels(ContainerCategory.class, l, errors);
 	}
 
@@ -45,6 +46,7 @@ public class ContainerService {
 	public static void saveContainerSupportCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ContainerSupportCategory> l = new ArrayList<ContainerSupportCategory>();
 		l.add(newContainerSupportCategory("Tube", "tube", 1, 1, 1, ContainerCategory.find.findByCode("tube")));
+		l.add(newContainerSupportCategory("MapCard", "mapcard", 1, 1, 1, ContainerCategory.find.findByCode("mapcard")));
 		l.add(newContainerSupportCategory("Sheet 96", "sheet-96",12, 8, 96, ContainerCategory.find.findByCode("well")));
 		l.add(newContainerSupportCategory("Sheet 384", "sheet-384",24,96,384, ContainerCategory.find.findByCode("well")));
 		l.add(newContainerSupportCategory("Flowcell 8", "flowcell-8",8,1,8, ContainerCategory.find.findByCode("lane")));

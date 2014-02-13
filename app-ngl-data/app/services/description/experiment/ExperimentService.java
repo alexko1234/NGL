@@ -64,6 +64,8 @@ public class ExperimentService {
 		l.add(newProtocol("Depot_Illumina_prt_1","depot_illumina_ptr_1","path4","1", ProtocolCategory.find.findByCode("production")));
 		l.add(newProtocol("Depot_Illumina_prt_2","depot_illumina_ptr_2","path5","1", ProtocolCategory.find.findByCode("production")));
 		l.add(newProtocol("Depot_Illumina_prt_3","depot_illumina_ptr_3","path6","1", ProtocolCategory.find.findByCode("production")));
+		l.add(newProtocol("Depot_Opgen_prt_1","depot_opgen_ptr_1","path7","1", ProtocolCategory.find.findByCode("production")));
+
 		DAOHelpers.saveModels(Protocol.class, l, errors);
 		
 	}
@@ -88,7 +90,9 @@ public class ExperimentService {
 		
 		//transformation
 		l.add(newExperimentType("Fragmentation","fragmentation",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("fragmentation_ptr_sox140_1"), getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
-		l.add(newExperimentType("Librairie","librairie",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Librairie indexing","librairie_indexing",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(), getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Librairie dual indexing","librairie_dualindexing",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(), getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+
 		l.add(newExperimentType("Amplification","amplification",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand","thermo"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		//qc
@@ -112,27 +116,39 @@ public class ExperimentService {
 		//Depot solexa
 		l.add(newExperimentType("Depot Illumina", "illumina-depot"
 				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_illumina_ptr_1","depot_illumina_ptr_2","depot_illumina_ptr_3"), getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+
+		// Attention remettre : ManyToOne
+		l.add(newExperimentType("Depot Opgen", "opgen-depot"
+				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_opgen_ptr_1"), getInstrumentUsedTypes("ARGUS"), "OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 		
 	}
 
+	
 	private static List<PropertyDefinition> getPropertyDefinitionsDepotIllumina() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Position","location"
         		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B")));
-        propertyDefinitions.add(newPropertiesDefinition("Type lecture", "readType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE")));	
-        propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "cycleNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR150","PE150","PE200","PE300")));
+        propertyDefinitions.add(newPropertiesDefinition("Type lecture", "readType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE")));
+        propertyDefinitions.add(newPropertiesDefinition("Nb Cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true,null));
+        propertyDefinitions.add(newPropertiesDefinition("Nb Cycles ReadIndex1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true,null));
+        propertyDefinitions.add(newPropertiesDefinition("Nb Cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false,null));
+        propertyDefinitions.add(newPropertiesDefinition("Nb Cycles ReadIndex2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false,null));
+//        propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "cycleNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR150","PE150","PE200","PE300")));
         return propertyDefinitions;
 	}
 
 	private static void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 		newExperimentTypeNode("void-lib-300-600", getExperimentTypes("void-lib-300-600").get(0), false, false, null, null, null).save();
 		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("void-lib-300-600"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
-		newExperimentTypeNode("librairie", getExperimentTypes("librairie").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
-		newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
+		newExperimentTypeNode("librairie_indexing", getExperimentTypes("librairie_indexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
+		newExperimentTypeNode("librairie_dualindexing", getExperimentTypes("librairie_dualindexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
+		newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie_indexing","librairie_dualindexing"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,null,null,null).save();
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),null,null).save();
+		newExperimentTypeNode("opgen-depot",getExperimentTypes("opgen-depot").get(0),false,false,null,null,null).save();
+
 	}
 	
 	private static List<Protocol> getProtocols(String...codes) throws DAOException {
@@ -152,15 +168,22 @@ public class ExperimentService {
 	}
 	
 	
-	//Data Test
-/*	public static List<PropertyDefinition> getPropertyDefinitionsFragmentation() throws DAOException {
+	private static List<PropertyDefinition> getPropertyDefinitionsLibIndexing() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Libelle 1","Key1", LevelService.getLevels(Level.CODE.Experiment),Double.class, false,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb")));
-		propertyDefinitions.add(newPropertiesDefinition("Libelle 2", "Key2", LevelService.getLevels(Level.CODE.ContainerOut),String.class, false));
-		propertyDefinitions.add(newPropertiesDefinition("Libelle 3", "Key3", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false));
+		//Ajouter la liste des index illumina
+        propertyDefinitions.add(newPropertiesDefinition("Index","tag", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.SampleUsed),String.class, true));
 		return propertyDefinitions;
-	}*/
+	}
 	
+	private static List<PropertyDefinition> getPropertyDefinitionsLibDualIndexing() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//Ajouter la liste des index illumina
+        propertyDefinitions.add(newPropertiesDefinition("Index1","tag1", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.SampleUsed),String.class, true));
+        propertyDefinitions.add(newPropertiesDefinition("Index2","tag2", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.SampleUsed),String.class, true));
+		return propertyDefinitions;
+	}
+
+		
 	//TODO
 	// Propriete taille en output et non en input ?
 	// Valider les keys

@@ -57,6 +57,7 @@ public class InstrumentService {
 		l.add(newInstrumentCategory("Main","hand"));
 		
 		l.add(newInstrumentCategory("Sequenceurs Illumina","seq-illumina"));
+		l.add(newInstrumentCategory("Cartographie Optique Opgen","opt-map-opgen"));
 	
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 		
@@ -133,11 +134,16 @@ public class InstrumentService {
 				getInstrumentHiseq2500(),
 				getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
+		l.add(newInstrumentUsedType("ARGUS", "ARGUS", InstrumentCategory.find.findByCode("opt-map-opgen"), getArgusProperties(), 
+				getInstrumentOpgen(),
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"mapcard"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
 	
 
+	
 	private static List<PropertyDefinition> getHiseq2000Properties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Position","location"
@@ -153,6 +159,13 @@ public class InstrumentService {
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "cycleNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("PE150", "PE250", "PE300")));
         return propertyDefinitions;
 	}
+	
+	private static List<PropertyDefinition> getArgusProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Référence Carte", "mapcardRef", LevelService.getLevels(Level.CODE.Instrument),String.class, true));	
+        return propertyDefinitions;
+	}
+
 
 	private static List<PropertyDefinition> getHiseq2500Properties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -210,6 +223,11 @@ public class InstrumentService {
 		return instruments;
 	}
 	
+	public static List<Instrument> getInstrumentOpgen()throws DAOException{
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add( createInstrument("APOLLON", "APOLLON", true, "/env/cns/proj/bureautique/finishing/Optical_Mapping/APOLLON", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
 	
 	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
