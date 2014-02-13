@@ -22,6 +22,7 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.SampleUsed;
+import models.laboratory.parameter.Index;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.description.TreatmentType;
@@ -48,11 +49,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import fr.cea.ig.MongoDBDAO;
-
 import play.Logger;
 import play.api.modules.spring.Spring;
 import validation.ContextValidation;
+import fr.cea.ig.MongoDBDAO;
 
 
 /**
@@ -614,6 +614,28 @@ public class LimsCNSDAO{
 		return results;
 
 	}
+	
+	public List<Index> findIndexIlluminaToCreate(final ContextValidation contextError)throws SQLException {
+
+		List<Index> results = this.jdbcTemplate.query("pl_TagUneEtmanip 13" 
+		,new RowMapper<Index>() {
+			@SuppressWarnings("rawtypes")
+			public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Index index=new Index();
+				index.code=rs.getString("tagkeyseq");
+				index.sequence=rs.getString("tagseq");
+				index.illuminaName=rs.getString("tagnamefour");
+				index.traceInformation=new TraceInformation();
+				InstanceHelpers.updateTraceInformation(index.traceInformation);
+				return index;
+			}
+		});
+		return results;
+
+	}
+	
+	
+	
 
 }
 
