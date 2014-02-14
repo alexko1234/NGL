@@ -229,12 +229,12 @@ angular.module('commonsServices', []).
   		    	replace:false,
   		    	scope:true,
   		    	template: '<div ng-class="getClass()">'
-		    	  		+'<button class="btn dropdown-toggle btn-default" data-toggle="dropdown" ng-click="setStyle()">'
+		    	  		+'<button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" ng-click="setStyle()">'
 		    	  		+'<div class="filter-option pull-left">{{selectedItemLabel()}}</div>&nbsp;'
 		    	  		+'<span class="caret"></span>'
 		    	  		+'</button>'
 		    	  		+'<ul class="dropdown-menu"  role="menu" style="{{style}}">'
-		    	  		+'<li ng-repeat="item in items" ng-class="item.class" ng-click="selectItem(item, $event)">'
+		    	  		+'<li ng-repeat="item in getItems()" ng-class="item.class" ng-click="selectItem(item, $event)">'
 		    	  		+'<span ng-if="groupBy(item, $index)" class="groupBy" ng-bind="itemGroupByLabel(item)"></span>'
 		    	  		+'<a ng-class="itemClass()" href="#">'
 		    	  		+'<span class="text" ng-bind="itemLabel(item)"></span>'
@@ -257,6 +257,9 @@ angular.module('commonsServices', []).
 	      		          placeholder = attr.placeholder;
 
 	      		      var optionsConfig = parseBtsOptions(btOptions);
+	      		      var items = [];
+	      		      var pos = {};
+	      		      var selectedLabels = [];
 	      		      
 	      		      function parseBtsOptions(input){
 	      		    	  var match = input.match(BT_OPTIONS_REGEXP);
@@ -286,20 +289,23 @@ angular.module('commonsServices', []).
 		                track = match[8],
 		                trackFn = track ? $parse(match[8]) : null,
 	                */
-	      		    var pos = {};
+	      		   
+	      		     scope.getItems = function(){
+	      		    	 return items;
+	      		     };
 	      		    
 	      		    scope.groupBy = function(item, index){
 	      		    	if(optionsConfig.groupByGetter){
-	      		    		if(index === 0 || (index > 0 && optionsConfig.groupByGetter(scope.items[index-1]) !== optionsConfig.groupByGetter(item))){
+	      		    		if(index === 0 || (index > 0 && optionsConfig.groupByGetter(items[index-1]) !== optionsConfig.groupByGetter(item))){
 	      		    			return true;
 	      		    		}	      		    		
 	      		    	}
 	      		    	return false;	      		    	
-	      		    } 
+	      		    }; 
 	      		    
 	      		  scope.itemClass = function(){
 	      			  return (optionsConfig.groupByGetter)?'opt':'';
-	      		  }
+	      		  };
 	      		    
 	      		    scope.setStyle = function(){
 	      		    	var top = pos.top + pos.height - $document.scrollTop();
@@ -307,8 +313,6 @@ angular.module('commonsServices', []).
 	      		    	scope.style = "top:"+top+"px; left:"+pos.left+"px; max-height:"+height+"px; position:fixed; overflow:auto";	      		    	
 	      		    };
 	      		    
-	      		      var selectedLabels = [];
-	      		      
 	      		      scope.getClass = function(){
 	      		    	return "btn-group bt-select show-tick "+attr.class;  
 	      		      };
@@ -366,21 +370,28 @@ angular.module('commonsServices', []).
 	      		    
 	      		      // TODO(vojta): can't we optimize this ? astuce provenant du select de angular
 	      		    scope.$watch(render);
-	      	        
+	      		  
+	      		    
+	      		   
 	      		    function render() {
 	      		    	pos = element.position();
 		      		    pos.height = element[0].offsetHeight;
 		      		    scope.setStyle();
 	      		    	
 	      		    	selectedLabels = [];
-		      	    	scope.items = optionsConfig.source(scope) || [];
+	      		    	
+	      		    	if(items.length == 0){ //load only once the possible values
+	      		    		var v = optionsConfig.source(scope) || []; //copy avoid conflict with other same values
+	      		    		items = angular.copy(v);
+	      		    	}
+	      		    	
 		      	    	var modelValues = ngModelCtrl.$modelValue || [];
 		      	    	if(!angular.isArray(modelValues)){
 		      	    		modelValues = [modelValues];
 		      	    	}
-		      	    	if(scope.items){
-			      	    	for(var i = 0; i < scope.items.length; i++){
-			      	    		var item = scope.items[i];
+		      	    	if(items){
+			      	    	for(var i = 0; i < items.length; i++){
+			      	    		var item = items[i];
 			      	    		item.class = "";
 			      	    		item.selected = false;
 		      		    		for(var j = 0; j < modelValues.length; j++){
@@ -400,169 +411,4 @@ angular.module('commonsServices', []).
 	      	        };  
 	      		  }
   		    };
-    	}]).directive('btSelectGroup',  ['$parse', function($parse)  {
-    		//new regexp with "group by" block
-    		var BT_OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+group\sby\s+(.*?)?\sfor\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
-    		// jshint maxlen: 100
-  		    return {
-  		    	restrict: 'E',
-  		    	replace:false,
-  		    	scope:true,
-  		    	template: '<div ng-class="getClass()">'
-		    	  		+'<button class="btn dropdown-toggle" data-toggle="dropdown">'
-		    	  		+'<div class="filter-option pull-left">{{selectedItemLabel()}}</div>&nbsp;'
-		    	  		+'<span class="caret"></span>'
-		    	  		+'</button>'
-		    	  		+'<ul class="dropdown-menu">'
-		    	  		+' <li ng-repeat="groupLabel in groupLabels">'
-		    	  		+'  <span class="text">{{groupLabel}}</span>'
-		    	  		+'  <ul>'
-		    	  		+'  <li ng-repeat="item in items | filter:{grpLabel:groupLabel}" ng-class="item.class" ng-click="selectItem(item, $event)">'
-		    	  		+'   <a tabindex="-1"  href="#" style="color:black; text-decoration:none;">'
-		    	  		+'   <span class="text" ng-bind="itemLabel(item)"></span>'
-		    	  		+'   <i class="glyphicon glyphicon-ok icon-ok check-mark"></i>'
-		    	  		+'   </a>'
-		    	  		+'  </li>'
-		    	  		+'  </ul>'
-		    	  		+' </li>'
-		    	  		+'</ul>'
-		    	  		+'</div>',
-	    	  		require: ['?ngModel'],
-	       		    link: function(scope, element, attr, ctrls) {
-	       		  // if ngModel is not defined, we don't need to do anything
-	      		      if (!ctrls[0]) return;
-
-	      		      var ngModelCtrl = ctrls[0],
-	      		          multiple = attr.multiple || false,
-	      		          btOptions = attr.btOptions,
-	      		          placeholder = attr.placeholder;
-
-	      		      var optionsConfig = parseBtsOptions(btOptions);
-	      		      
-	      		      function testLabel(item, groupLabel) {
-	      		    	  if (groupItemLabel(item) == groupLabel) {
-	      		    		  return true;
-	      		    	  }
-	      		    	  else {
-	      		    		  return false;
-	      		    	  }
-	      		      }
-	      		      
-	      		      function parseBtsOptions(input){
-	      		    	  var match = input.match(BT_OPTIONS_REGEXP);
-		      		      if (!match) {
-		      		        throw new Error(
-		      		          "Expected typeahead specification in form of '_modelValue_ (as _label_)? group by _group_ for _item_ in _collection_'" +
-		      		            " but got '" + input + "'.");
-		      		      }
-	
-		      		    return {
-		      		    	groupMapper:match[3],
-		      		        itemName:match[4],
-		      		        source:$parse(match[5]),
-		      		        viewMapper:match[2] || match[1],
-		      		        modelMapper:match[1]
-		      		      };    
-	      		      };
-	      		    
-	      		      var selectedLabels = [];
-	      		      
-	      		      scope.getClass = function(){
-	      		    	return "btn-group bootstrap-select show-tick "+attr.class;  
-	      		      };
-	      		      
-	      		      scope.groupItemLabel = function(item) {
-	      		      	return item[optionsConfig.groupMapper.replace(optionsConfig.itemName+'.','')];
-	      		      }
-	      		      
-	      		      scope.selectedItemLabel = function(){
-	      		    	  return selectedLabels.join();
-	      		      };  
-	      	        
-	      		      scope.itemLabel = function(item){
-	      		    	  return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
-	      		      };
-	      		      
-	      		      scope.itemValue = function(item){
-	      		    	 return item[optionsConfig.modelMapper.replace(optionsConfig.itemName+'.','')];  
-	      		      };
-	      		      
-	      		      scope.selectItem = function(item, $event){
-	      		    	  if(multiple){
-	      		    			var selectedValues = ngModelCtrl.$viewValue || [];
-	      		    		    var newSelectedValues = [];
-	      		    			var itemValue = scope.itemValue(item);
-	      		    			var find = false;
-	      		    			for(var i = 0; i < selectedValues.length; i ++){
-	      		    				if(selectedValues[i] !== itemValue){
-	      		    					newSelectedValues.push(selectedValues[i]);
-	      		    				}else{
-	      		    					find = true;
-	      		    				}
-	      		    			}
-	      		    			if(!find){
-	      		    				newSelectedValues.push(itemValue);
-	      		    			}
-	      		    			selectedValues = newSelectedValues;
-	      		    			
-	      		    			ngModelCtrl.$setViewValue(selectedValues);
-	      		    			ngModelCtrl.$render();
-	      		    			$event.preventDefault();
-	      		    			$event.stopPropagation();
-	      		    	  	}else{
-	      		    	  		ngModelCtrl.$setViewValue(scope.itemValue(item));
-	      		    	  		ngModelCtrl.$render();
-	      		    	  	}
-	      		      };
-	      		   ngModelCtrl.$render = render;
-	      		    
-	      		      // TODO(vojta): can't we optimize this ? astuce provenant du select de angular
-	      		    scope.$watch(render);
-	      	        
-	      		    function render() {
-	      		    	selectedLabels = [];
-		      	    	scope.items = optionsConfig.source(scope) || [];
-		      	    	
-		      	    	//init du group
-		      	    	if (scope.groupLabels == undefined || []) {
-							var lGroupLabel = "";
-							var lGroupLabels = [];
-							for (var i=0; i<scope.items.length; i++) {
-								lGroupLabel = scope.items[i][optionsConfig.groupMapper.replace(optionsConfig.itemName+'.','')];
-								var find = false;
-								for (var j=0; j<lGroupLabels.length; j++) {
-									if (lGroupLabels[j] == lGroupLabel) {find=true;} 
-								}
-								if (!find) {
-									lGroupLabels.push(lGroupLabel);
-								}
-								scope.items[i].grpLabel = lGroupLabel;
-							}
-							scope.groupLabels = lGroupLabels;
-		      	    	}	
-		      	    	
-		      	    	var modelValues = ngModelCtrl.$modelValue || [];
-		      	    	if(!angular.isArray(modelValues)){
-		      	    		modelValues = [modelValues];
-		      	    	}
-		      	    	if(scope.items){
-			      	    	for(var i = 0; i < scope.items.length; i++){
-			      	    		var item = scope.items[i];
-			      	    		item.class = "";
-		      		    		for(var j = 0; j < modelValues.length; j++){
-			      	    			var modelValue = modelValues[j];
-			      	    			if(scope.itemValue(item) === modelValue){
-				      	    			item.class = "selected";
-				      		    		selectedLabels.push(scope.itemLabel(item));
-				      	    		}
-			      	    		}	      	    		
-			      	    	}
-		      	    	}
-		      	    	if(modelValues.length === 0){
-		      	    		selectedLabels.push(placeholder);
-		      	    	}
-		      	    		
-	      	        };  
-	      		  }
-  		    };
-  		   }]); 
+    	}]); 
