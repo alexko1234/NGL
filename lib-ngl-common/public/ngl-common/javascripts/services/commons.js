@@ -233,7 +233,7 @@ angular.module('commonsServices', []).
 		    	  		+'<div class="filter-option pull-left">{{selectedItemLabel()}}</div>&nbsp;'
 		    	  		+'<span class="caret"></span>'
 		    	  		+'</button>'
-		    	  		+'<ul class="dropdown-menu" style="{{style}}">'
+		    	  		+'<ul class="dropdown-menu"  role="menu" style="{{style}}">'
 		    	  		+'<li ng-repeat="item in items" ng-class="item.class" ng-click="selectItem(item, $event)">'
 		    	  		+'<span ng-if="groupBy(item, $index)" class="groupBy" ng-bind="itemGroupByLabel(item)"></span>'
 		    	  		+'<a ng-class="itemClass()" href="#">'
@@ -353,7 +353,11 @@ angular.module('commonsServices', []).
 	      		    			$event.preventDefault();
 	      		    			$event.stopPropagation();
 	      		    	  	}else{
-	      		    	  		ngModelCtrl.$setViewValue(scope.itemValue(item));
+	      		    	  		if(scope.itemValue(item) !== ngModelCtrl.$viewValue){
+	      		    	  			ngModelCtrl.$setViewValue(scope.itemValue(item));
+	      		    	  		}else{
+	      		    	  			ngModelCtrl.$setViewValue(null);
+	      		    	  		}
 	      		    	  		ngModelCtrl.$render();
 	      		    	  		
 	      		    	  	}
