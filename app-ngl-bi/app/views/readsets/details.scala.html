@@ -52,16 +52,7 @@
 					<dl class="dl-horizontal">
 						<dt>@Messages("readsets.productionValuation.resolutions")</dt>
 						<dd>
-						<div ng-switch on="isEditMode()">
-							<div ng-switch-when="false">
-								    <ul class="unstyled">
-								    	<li ng-repeat="code in readset.productionValuation.resolutionCodes" ng-model="code" codes="resolution"/>
-								    </ul>
-							</div>
-							<div ng-switch-when="true">
-							<div bt-select class="span12" ng-model="readset.productionValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></div>
-							</div>
-							</div>
+							<div bt-select class="span12" ng-model="readset.productionValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()"></div>							
 						</dd>
 						
 					</dl>
@@ -100,14 +91,7 @@
 					<dl class="dl-horizontal">
 						<dt>@Messages("readsets.bioinformaticValuation.resolutions")</dt>
 						<dd>
-						<div ng-switch on="isEditMode()">
-							<div ng-switch-when="false">
-								    <ul class="unstyled">
-								    		<li ng-repeat="code in readset.bioinformaticValuation.resolutionCodes" ng-model="code" codes="resolution"/>
-								    </ul>
-							</div>
-							<div ng-switch-when="true"><div bt-select class="span12" ng-model="readset.bioinformaticValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></div></div>
-						</div>
+						<div bt-select class="span12" ng-model="readset.bioinformaticValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()"></div>
 						</dd>
 					</dl>
 					<dl class="dl-horizontal">
