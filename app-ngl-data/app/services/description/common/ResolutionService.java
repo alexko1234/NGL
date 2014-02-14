@@ -48,6 +48,15 @@ public class ResolutionService {
 	public static void saveResolutions(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<Resolution> l = new ArrayList<Resolution>();
 				
+		l.add(newResolution("reso1","run_reso1",ResolutionCategory.find.findByCode("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name())));
+		l.add(newResolution("reso2","run_reso2",ResolutionCategory.find.findByCode("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name())));
+		l.add(newResolution("reso3","run_reso3",ResolutionCategory.find.findByCode("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name())));
+
+		l.add(newResolution("reso1","readset_reso1",ResolutionCategory.find.findByCode("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+		l.add(newResolution("reso2","readset_reso2",ResolutionCategory.find.findByCode("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+		l.add(newResolution("reso3","readset_reso3",ResolutionCategory.find.findByCode("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+
+		
 		//Run
 		l.add(newResolution("indéterminé","pbMIndetermine",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name())));
 		l.add(newResolution("chiller","pbMChiller",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name())));
