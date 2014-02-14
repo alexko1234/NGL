@@ -32,7 +32,7 @@
 					({{readset.treatments[treatments.getTreatment().code].read1.estimateDuplicatedReadsPercent.value | number:2}} @Messages("unit.percent"))
 				<ul class="unstyled">									 
 				    <li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.estimateDuplicatedReadsNTimes.value">
-				    	{{obj.percent  | number:2}} @Messages("unit.percent") @Messages("readsets.treatments.duplicates.observed") 
+				    	{{obj.percent  | number:3}} @Messages("unit.percent") @Messages("readsets.treatments.duplicates.observed") 
 		          		{{obj.times + 1}} @Messages("readsets.treatments.duplicates.times")          						
           				<nobr ng-if="$index==9">
           					ou plus
@@ -45,7 +45,7 @@
 					({{readset.treatments[treatments.getTreatment().code].read2.estimateDuplicatedReadsPercent.value | number:2}} @Messages("unit.percent"))
 				<ul class="unstyled">									 
 				    <li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read2.estimateDuplicatedReadsNTimes.value">
-				    	{{obj.percent  | number:2}} @Messages("unit.percent") @Messages("readsets.treatments.duplicates.observed") 
+				    	{{obj.percent  | number:3}} @Messages("unit.percent") @Messages("readsets.treatments.duplicates.observed") 
 		          		{{obj.times + 1}} @Messages("readsets.treatments.duplicates.times")          						
           				<nobr ng-if="$index==9">
           					ou plus
@@ -58,7 +58,7 @@
 					({{readset.treatments[treatments.getTreatment().code].pairs.estimateDuplicatedReadsPercent.value | number:2}} @Messages("unit.percent"))
 				<ul class="unstyled">									 
 				    <li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].pairs.estimateDuplicatedReadsNTimes.value">
-				    	{{obj.percent  | number:2}} @Messages("unit.percent") @Messages("readsets.treatments.duplicates.observed") 
+				    	{{obj.percent  | number:3}} @Messages("unit.percent") @Messages("readsets.treatments.duplicates.observed") 
 		          		{{obj.times + 1}} @Messages("readsets.treatments.duplicates.times")          						
           				<nobr ng-if="$index==9">
           					ou plus
