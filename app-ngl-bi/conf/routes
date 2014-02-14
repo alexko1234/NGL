@@ -136,6 +136,7 @@ GET		/api/projects/list							controllers.projects.api.Projects.list()
 
 #samples
 GET		/api/samples/list							controllers.samples.api.Samples.list()
+GET		/api/samples/:code							controllers.samples.api.Samples.get(code: java.lang.String)
 
 ->  /authentication authentication.Routes
 

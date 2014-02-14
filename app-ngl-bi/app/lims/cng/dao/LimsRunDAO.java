@@ -43,7 +43,7 @@ public class LimsRunDAO {
     public List<LimsExperiment> getExperiments(Experiment experiment){
 
     	if(null != experiment.date){
-	    	String sql = "SELECT m.pc_name as code, min(w.start_date) as date, mt.name as categoryCode, f.nb_cycles" //, mt.type as seq_type, m.model as seq_model
+	    	String sql = "SELECT m.pc_name as code, min(w.start_date) as date, mt.name as categoryCode, f.nb_cycles" //, f.nb_lanes , mt.type as seq_type, m.model as seq_model
 	    				+" FROM t_flowcell f"
 	    				+" JOIN t_workflow w on w.flowcell_id=f.id"
 	    				//+" JOIN t_stage s on w.stage_id=s.id and ( s.workflow='SEQ' and s.name='Read1')" après passage 2500
@@ -55,7 +55,7 @@ public class LimsRunDAO {
 	    	return this.jdbcTemplate.query(sql, mapper, experiment.containerSupportCode, minus(experiment.date,5), add(experiment.date,5));    	
 	    	
     	}else{
-    		String sql = "SELECT m.pc_name as code,  min(w.start_date) as date, mt.name as categoryCode, f.nb_cycles" //, mt.type as seq_type, m.model as seq_model
+    		String sql = "SELECT m.pc_name as code,  min(w.start_date) as date, mt.name as categoryCode, f.nb_cycles" //, f.nb_lanes , mt.type as seq_type, m.model as seq_model
     				+" FROM t_flowcell f"
     				+" JOIN t_workflow w on w.flowcell_id=f.id"
     				//+" JOIN t_stage s on w.stage_id=s.id and ( s.workflow='SEQ' and s.name='Read1')" après passage 2500
