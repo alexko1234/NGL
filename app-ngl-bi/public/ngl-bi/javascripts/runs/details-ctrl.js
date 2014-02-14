@@ -121,6 +121,13 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 					type :"String",
 					order:false
 				},
+				{	property:"state.code",
+					render:function(value){
+						return Codes("state."+value.state.code);
+					},
+					header: Messages("readsets.stateCode"),
+					type :"String"
+				},
 			   	{  	property:"treatments.ngsrg.default.validSeqPercent.value",
 			    	header: Messages("readsets.treatments.ngsrg.validSeqPercent"),
 			    	type :"Number",
