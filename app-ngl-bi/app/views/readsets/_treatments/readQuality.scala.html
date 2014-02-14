@@ -121,7 +121,7 @@
 						<h5> @Messages("readsets.treatments.read_quality.suspectedKmers") </h5>
 						<ul>
 						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value">
-							{{strValue}}
+							{{strValue.sequence}} ({{strValue.nbSeq | number}})
 						</li>
 						</ul>	
 					</div>						
@@ -246,7 +246,7 @@
 						<h5> @Messages("readsets.treatments.read_quality.suspectedKmers") </h5>
 						<ul>
 						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value">
-							{{strValue}}
+							{{strValue.sequence}} ({{strValue.nbSeq | number}})
 						</li>
 						</ul>	
 					</div>						
