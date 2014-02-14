@@ -228,7 +228,18 @@ angular.module('commonsServices', []).
   		    	restrict: 'A',
   		    	replace:false,
   		    	scope:true,
-  		    	template: '<div ng-class="getClass()">'
+  		    	
+  		    	template:  '<div ng-switch on="isEdit()">'
+  		    			+'<div ng-switch-when="false" class="show">'
+  		    			+'<ul>'
+  		    			+'<li ng-repeat="item in getItems()" ng-show="item.selected">'
+  		    			+'<span ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></span>'
+  		    			+'<span ng-if="groupBy(item, $index)"> - </span>'
+  		    			+'<span class="text" ng-bind="itemLabel(item)"></span>'
+  		    			+'</li>'
+  		    			+'</ul>'
+  		    			+'</div>'
+  		    			+'<div ng-switch-when="true" ng-class="getClass()">'
 		    	  		+'<button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" ng-click="setStyle()">'
 		    	  		+'<div class="filter-option pull-left">{{selectedItemLabel()}}</div>&nbsp;'
 		    	  		+'<span class="caret"></span>'
@@ -242,6 +253,7 @@ angular.module('commonsServices', []).
 		    	  		+'</a></li>'
 		    	  		+'</ul>'
 		    	  		+'</div>'
+		    	  		+'</div>'
 		    	  		,
 	    	  		require: ['?ngModel'],
 	       		    link: function(scope, element, attr, ctrls) {
@@ -250,10 +262,10 @@ angular.module('commonsServices', []).
 	      		      element.addClass("bt-select");
 	      		     
 	      		   
-	      		      
 	      		      var ngModelCtrl = ctrls[0],
 	      		          multiple = attr.multiple || false,
 	      		          btOptions = attr.btOptions,
+	      		          editMode = (attr.ngEdit)?$parse(attr.ngEdit):undefined,
 	      		          placeholder = attr.placeholder;
 
 	      		      var optionsConfig = parseBtsOptions(btOptions);
@@ -290,15 +302,21 @@ angular.module('commonsServices', []).
 		                trackFn = track ? $parse(match[8]) : null,
 	                */
 	      		   
+	      		     scope.isEdit = function(){
+	      		    	 return (editMode)?editMode(scope):true;
+	      		     } 
+	      		      
 	      		     scope.getItems = function(){
 	      		    	 return items;
 	      		     };
 	      		    
 	      		    scope.groupBy = function(item, index){
-	      		    	if(optionsConfig.groupByGetter){
+	      		    	if(optionsConfig.groupByGetter && scope.isEdit()){
 	      		    		if(index === 0 || (index > 0 && optionsConfig.groupByGetter(items[index-1]) !== optionsConfig.groupByGetter(item))){
 	      		    			return true;
 	      		    		}	      		    		
+	      		    	}else if(optionsConfig.groupByGetter){
+	      		    		return true;
 	      		    	}
 	      		    	return false;	      		    	
 	      		    }; 
@@ -321,7 +339,6 @@ angular.module('commonsServices', []).
 	      		    	  return selectedLabels.join();
 	      		      };  
 	      	        
-	      		      
 	      		      scope.itemGroupByLabel = function(item){
 	      		    	 return optionsConfig.groupByGetter(item);
 	      		      }
@@ -406,8 +423,7 @@ angular.module('commonsServices', []).
 		      	    	}
 		      	    	if(modelValues.length === 0){
 		      	    		selectedLabels.push(placeholder);
-		      	    	}
-		      	    		
+		      	    	}	      	    		
 	      	        };  
 	      		  }
   		    };
