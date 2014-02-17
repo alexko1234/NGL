@@ -28,7 +28,7 @@ archives.input_radio.2 = Non Archivés
 #archives - datatable
 archives.table.runcode=Run
 archives.table.projectcode=Projet
-archives.table.readsetcode=Echantillon
+archives.table.readsetcode=Readset
 archives.table.path=Emplacement
 archives.table.date=Date d''archivage
 archives.table.backupid=ID archive

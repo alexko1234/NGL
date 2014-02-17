@@ -25,7 +25,7 @@ page.archives.fvalue.archive.2 = Non Archivés
 
 valuation.menu = Evaluation
 valuation.menu.runs = Runs
-valuation.menu.readsets = Read Sets
+valuation.menu.readsets = Readsets
 
 valuation.value.TRUE = Oui
 valuation.value.FALSE = Non
@@ -50,8 +50,8 @@ button.search = Rechercher
 button.reset = Réinitialiser
 button.validate = Sauvegarder
 button.cancel = Annuler
-button.readsets.show = Voir ReadSets
-button.readsets.valuation = Evaluer ReadSets
+button.readsets.show = Voir Readsets
+button.readsets.valuation = Evaluer Readsets
 
 runs.page.title=Runs
 runs.menu = Runs
@@ -130,11 +130,11 @@ runs.lane.sav.alerts = Alertes
 
 runs.lane.showOrHide = Afficher/Masquer la lane 
 
-runs.readsets.title = ReadSets
+runs.readsets.title = Readsets
 
 
-readsets.page.title=ReadSets
-readsets.page.tab.validate = ReadSets à Evaluer
+readsets.page.title=Readsets
+readsets.page.tab.validate = Readsets à Evaluer
 readsets.menu = Readsets
 readsets.menu.search = Recherche
 readsets.menu.state = Changement d''Etat
