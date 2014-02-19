@@ -1,6 +1,9 @@
 package models.laboratory.common.instance.property;
 
 import java.io.IOException;
+import java.util.Collection;
+
+import models.laboratory.common.description.PropertyDefinition;
 
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
@@ -36,9 +39,10 @@ public class PropertyFileValue extends PropertyByteValue{
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
 		super.validate(contextValidation);
-		ValidationHelper.required(contextValidation, this.fullname, "fullname");
-		ValidationHelper.required(contextValidation, this.extension, "extension");
+		ValidationHelper.required(contextValidation, this.fullname, propertyDefinition.code + ".fullname");
+		ValidationHelper.required(contextValidation, this.extension, propertyDefinition.code + ".extension");
 	}
 	
 

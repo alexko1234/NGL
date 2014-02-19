@@ -1,6 +1,11 @@
 package models.laboratory.common.instance.property;
 
 import java.io.IOException;
+import java.util.Collection;
+
+import play.Logger;
+
+import models.laboratory.common.description.PropertyDefinition;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 
@@ -31,9 +36,10 @@ public class PropertyImgValue extends PropertyFileValue {
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
 		super.validate(contextValidation); 
-		ValidationHelper.required(contextValidation, this.width, "width");
-		ValidationHelper.required(contextValidation, this.height, "height");
+		ValidationHelper.required(contextValidation, this.width, propertyDefinition.code + ".width");
+		ValidationHelper.required(contextValidation, this.height, propertyDefinition.code + ".height");
 	}
 
 
