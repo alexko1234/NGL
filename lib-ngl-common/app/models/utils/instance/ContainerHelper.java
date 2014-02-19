@@ -173,13 +173,13 @@ public class ContainerHelper {
 			container.support=ContainerSupportHelper.getContainerSupportTube(container.code);
 		}else{
 			//TODO 
-			/*ContainerSupport containerSupport=new ContainerSupport();
+			ContainerSupport containerSupport=new ContainerSupport();
 			containerSupport.supportCode=getSupportCode(experiment.instrument.outContainerSupportCategoryCode);	
 			containerSupport.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
 			containerSupport.column="?";
 			containerSupport.line="?";
 			
-			container.support = containerSupport;*/
+			container.support = containerSupport;
 			Logger.info("Not implemented");
 		}
 	}
@@ -213,7 +213,7 @@ public class ContainerHelper {
 	public static void generateCode(Container outputContainer) {
 		if(outputContainer.code==null){
 			if(outputContainer.projectCodes.size()==1 && outputContainer.sampleCodes.size()==1){
-				outputContainer.code=outputContainer.projectCodes.get(0)+"/"+outputContainer.sampleCodes.get(0)+"/"+(new SimpleDateFormat("yyyyMMddHHmmss.SSS")).format(new Date()).toUpperCase();		
+				outputContainer.code=outputContainer.projectCodes.get(0)+"."+outputContainer.sampleCodes.get(0)+"."+(new SimpleDateFormat("yyyyMMddHHmmss.SSS")).format(new Date()).toUpperCase();		
 			} else  {
 				outputContainer.code="MULTI"+(new SimpleDateFormat("yyyyMMddHHmmss.SSS")).format(new Date()).toUpperCase();
 			}

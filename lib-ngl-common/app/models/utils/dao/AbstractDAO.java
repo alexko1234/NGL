@@ -97,8 +97,17 @@ public abstract class AbstractDAO<T> {
 			return null;
 		}
 	}
-
-
+	
+	public String listToParameters(List<String> parameters){
+		String args = "";
+		for(int i = 0; i<parameters.size();i++){
+			args += "'"+parameters.get(i)+"'";
+			if(i != (parameters.size() - 1)){
+				args += ",";
+			}
+		}
+		return args;
+	}
 
 	
 }

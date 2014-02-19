@@ -75,6 +75,9 @@ experiment.seeComments = Voir les commentaires
 experiment.sendComment = Envoyer
 experiment.cancelComment = Annuler
 experiments.begin_progress = Demarrer la progression
+experiments.sampleSheet = Feuille de route
+experiments.finish  = Terminer
+experiments.finished  = Terminé
 
 experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée

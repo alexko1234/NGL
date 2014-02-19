@@ -1,4 +1,4 @@
-@(experimentType:org.codehaus.jackson.JsonNode,datatableConfig: views.components.datatable.DatatableConfig,
+@(experimentCategoryCode:java.lang.String,atomicTransfertMethod:java.lang.String,datatableConfig: views.components.datatable.DatatableConfig,
 experimentProperties: org.codehaus.jackson.JsonNode,experiment:org.codehaus.jackson.JsonNode)
 <style type="text/css">
 #sub_body {
@@ -144,8 +144,7 @@ th {
     	</ul>	
 	</div>
 </div>
-
-<div id="sub_body" class="container-fluid" ng-init="init('@experimentType','@experiment')">
+<div id="sub_body" class="container-fluid" ng-init="init('@experimentCategoryCode','@atomicTransfertMethod','@experiment')">
 	<div class="row-fluid">
 		<div class="span2">
 			<div class="accordion" id="accordionExp">
@@ -188,6 +187,7 @@ th {
 													<button class="btn" ng-switch-when="N" ng-disabled="experiment.value._id == null" ng-click="changeState('IP')" >@Messages("experiments.begin_progress")</button>
 													<!--<button  class="btn" ng-switch-when="IP" ng-click="changeState('OK')" >@Messages("experiments.ok")</button>-->
 													<button  class="btn" ng-switch-when="IP" ng-disabled="experiment.value._id == null" ng-click="changeState('F')" >@Messages("experiments.finish")</button>
+												<b ng-switch-when="F">@Messages("experiments.finished")</b>
 												</div>
 												
 										</div>
@@ -357,8 +357,11 @@ th {
 									>
 										<option value="">@Messages("experiments.select.instrumentCategory")</option>
 									</select>
+									<button  class="btn" ng-disabled="experiment.value.stateCode != 'IP'" ng-click="generateSampleSheet()" >@Messages("experiments.sampleSheet")</button>
+												
 											<hr>
 								</form>	
+								
 						<form class="form-inline" style="padding-left: 10%">
 							<div ng-repeat="instp in experiment.instrumentProperties.inputs"  ng-switch on="getLevel(instp.levels,'Instrument')">
 								<div class="control-group" ng-switch-when="true">

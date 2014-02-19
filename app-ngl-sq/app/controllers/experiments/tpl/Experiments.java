@@ -80,7 +80,7 @@ public class Experiments extends CommonController{
 		config.button = true;
 		config.edit = true;
 		
-		return ok(createExperiments.render(Json.toJson(experimentType),config,Json.toJson(props),null));
+		return ok(createExperiments.render(experimentType.category.code, experimentType.atomicTransfertMethod,config,Json.toJson(props),null));
 	}
 	
 	public static Result editExperiment(String experimentCode){
@@ -98,7 +98,7 @@ public class Experiments extends CommonController{
 		config.button = true;
 		config.edit = true;
 		
-		return ok(createExperiments.render(Json.toJson(experimentType),config,Json.toJson(props),Json.toJson(experiment)));
+		return ok(createExperiments.render(experimentType.category.code, experimentType.atomicTransfertMethod,config,Json.toJson(props),Json.toJson(experiment)));
 	}
 	
 	public static Result getEditExperimentColumns(){
@@ -178,6 +178,7 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.api.routes.javascript.Experiments.save(),
   	    		controllers.experiments.api.routes.javascript.Experiments.updateContainers(),
   	    		controllers.experiments.api.routes.javascript.Protocols.list(),
+  	    		instruments.io.routes.javascript.Outputs.sampleSheets(),
   	    		controllers.commons.api.routes.javascript.Resolutions.list(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.getEditExperimentColumns(),
   	    		controllers.experiments.api.routes.javascript.Experiments.create(),

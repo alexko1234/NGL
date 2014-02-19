@@ -1,10 +1,13 @@
 package models.laboratory.experiment.instance;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+
+import controllers.CommonController;
 
 import validation.ContextValidation;
 
@@ -43,7 +46,12 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 		List<Container> containers = new ArrayList<Container>();
 		Container container = new Container();
 		
+		container.traceInformation.creationDate = new Date();
+		container.traceInformation.createUser = CommonController.getCurrentUser();
+		
+		//container.support.categoryCode
 		container.stateCode="N";
+		
 
 		for(int i=0;i<inputContainers.size();i++){
 			ContainerHelper.addContent(inputContainers.get(i), container,experiment);

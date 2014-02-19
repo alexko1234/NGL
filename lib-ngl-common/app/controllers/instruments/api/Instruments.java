@@ -26,8 +26,8 @@ public class Instruments extends CommonController{
 		List<Instrument> instruments;
 
 		try{		
-			if(instrumentsSearch.instrumentUsedTypeCode != null){
-				instruments =  Instrument.find.findByInstrumentUsedTypeCode(instrumentsSearch.instrumentUsedTypeCode);
+			if(instrumentsSearch.instrumentUsedTypeCodes != null || instrumentsSearch.instrumentUsedTypeCode != null || instrumentsSearch.instrumentCategoryCode != null || instrumentsSearch.instrumentCategoryCodes != null){
+				instruments = Instrument.find.findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(instrumentsSearch, instrumentsSearch.active);
 			}else{
 				instruments = Instrument.find.findAll();
 			}

@@ -3,6 +3,8 @@ package models.laboratory.instrument.description;
 
 import java.util.List;
 
+import controllers.instruments.api.InstrumentsSearchForm;
+
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.ValuationCriteria.ValuationCriteriaFinder;
 import models.laboratory.instrument.description.dao.InstrumentDAO;
@@ -31,8 +33,8 @@ public class Instrument extends Model<Instrument>{
 			super(InstrumentDAO.class.getName());			
 		}
 		
-		public List<Instrument> findByInstrumentUsedTypeCode(String instrumentUsedTypeCode) throws DAOException{
-			return ((InstrumentDAO)getInstance()).findByInstrumentUsedTypeCode(instrumentUsedTypeCode);
+		public List<Instrument> findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(InstrumentsSearchForm instumentSearchForm,  boolean active) throws DAOException{
+			return ((InstrumentDAO)getInstance()).findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(instumentSearchForm, active);
 		}
 	}
 	

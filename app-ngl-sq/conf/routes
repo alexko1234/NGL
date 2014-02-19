@@ -47,6 +47,7 @@ GET		/tpl/experiments/search/:experimentTypeCode						controllers.experiments.tp
 
 #experiments api
 GET		/api/experiments												controllers.experiments.api.Experiments.list()
+POST	/api/experiments/sample-sheets 									instruments.io.Outputs.sampleSheets()
 POST	/api/experiments/create											controllers.experiments.api.Experiments.create()
 PUT		/api/experiments/:code/experiment-information					controllers.experiments.api.Experiments.updateExperimentInformations(code:java.lang.String)
 PUT		/api/experiments/:code/experiment-properties					controllers.experiments.api.Experiments.updateExperimentProperties(code:java.lang.String)

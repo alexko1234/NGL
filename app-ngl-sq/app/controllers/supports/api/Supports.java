@@ -100,6 +100,7 @@ public class Supports extends CommonController {
 		ContainersSearchForm cs = new ContainersSearchForm();
 		cs.experimentTypeCode = supportsSearch.experimentTypeCode;
 		cs.processTypeCode = supportsSearch.processTypeCode;
+		cs.stateCode = supportsSearch.stateCode;
 		
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList(); 
 		List<String> supports  =new ArrayList<String>();
@@ -131,9 +132,9 @@ public class Supports extends CommonController {
 			queryElts.add(DBQuery.in("sampleCodes", supportsSearch.sampleCodes));
 		}
 		
-		if(StringUtils.isNotEmpty(supportsSearch.stateCode)){
+		/*if(StringUtils.isNotEmpty(supportsSearch.stateCode)){
 			queryElts.add(DBQuery.is("state.code", supportsSearch.stateCode));
-		}
+		}*/
 
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}
