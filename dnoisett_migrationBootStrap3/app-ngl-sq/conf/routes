@@ -1,0 +1,95 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           									controllers.main.tpl.Main.index()
+
+#containers tpl
+GET 	/containers/:homecode/home										controllers.containers.tpl.Containers.home(homecode:java.lang.String)
+GET		/tpl/containers/search											controllers.containers.tpl.Containers.search()
+GET		/tpl/containers/js-routes										controllers.containers.tpl.Containers.javascriptRoutes()
+
+#containers api
+GET		/api/containers													controllers.containers.api.Containers.list()
+GET		/api/containers/supports										controllers.containers.api.Containers.list_supports()
+GET		/api/containers/container-support-categories  					controllers.containers.api.ContainerSupportCategories.list()
+GET		/api/containers/categories										controllers.containers.api.ContainerCategories.list()
+GET		/api/containers/:code											controllers.containers.api.Containers.get(code:java.lang.String)
+
+#supports api
+GET		/api/supports													controllers.supports.api.Supports.list()
+
+#processes tpl
+GET 	/processes/:homecode/home										controllers.processes.tpl.Processes.home(homecode:java.lang.String)
+GET		/tpl/processes/search/:processTypeCode							controllers.processes.tpl.Processes.search(processTypeCode:java.lang.String)
+GET		/tpl/processes/searchContainers									controllers.processes.tpl.Processes.searchContainers()
+GET		/tpl/processes/newProcesses/:processTypeCode					controllers.processes.tpl.Processes.newProcesses(processTypeCode:java.lang.String)
+GET		/tpl/processes/js-routes										controllers.processes.tpl.Processes.javascriptRoutes()
+
+#processes api
+POST	/api/processus													controllers.processes.api.Processes.save()
+GET		/api/processus													controllers.processes.api.Processes.list()
+GET		/api/processus/types											controllers.processes.api.ProcessTypes.list()
+GET		/api/processus/categories										controllers.processes.api.ProcessCategories.list()
+
+#experiments tpl
+GET 	/experiments/:homecode/home										controllers.experiments.tpl.Experiments.home(homecode:java.lang.String)
+GET 	/experiments/edit/:experimentCode								controllers.experiments.tpl.Experiments.edit(experimentCode:java.lang.String)
+GET		/tpl/experiments/search-supports								controllers.experiments.tpl.Experiments.searchSupports()
+GET		/tpl/experiments/newExperiments/:experimentTypeCode				controllers.experiments.tpl.Experiments.newExperiments(experimentTypeCode:java.lang.String)
+GET		/tpl/experiments/js-routes										controllers.experiments.tpl.Experiments.javascriptRoutes()
+GET		/tpl/experiments/first-edit-experiment/:experimentTypeCode		controllers.experiments.tpl.Experiments.firstEditExperiment(experimentTypeCode:java.lang.String)
+GET		/tpl/experiments/edit-experiment/:experimentTypeCode			controllers.experiments.tpl.Experiments.editExperiment(experimentTypeCode:java.lang.String)
+GET		/tpl/experiments/getEditExperimentColumns						controllers.experiments.tpl.Experiments.getEditExperimentColumns()
+GET		/tpl/experiments/search/:experimentTypeCode						controllers.experiments.tpl.Experiments.search(experimentTypeCode:java.lang.String)
+
+
+#experiments api
+GET		/api/experiments												controllers.experiments.api.Experiments.list()
+POST	/api/experiments/sample-sheets 									instruments.io.Outputs.sampleSheets()
+POST	/api/experiments/create											controllers.experiments.api.Experiments.create()
+PUT		/api/experiments/:code/experiment-information					controllers.experiments.api.Experiments.updateExperimentInformations(code:java.lang.String)
+PUT		/api/experiments/:code/experiment-properties					controllers.experiments.api.Experiments.updateExperimentProperties(code:java.lang.String)
+PUT		/api/experiments/:code/instrument-information					controllers.experiments.api.Experiments.updateInstrumentInformations(code:java.lang.String)
+PUT		/api/experiments/:code/instrument-properties					controllers.experiments.api.Experiments.updateInstrumentProperties(code:java.lang.String)
+PUT		/api/experiments/:code/comment									controllers.experiments.api.Experiments.updateComments(code:java.lang.String)
+PUT		/api/experiments/:code/generate-output							controllers.experiments.api.Experiments.generateOutput(code:java.lang.String)
+PUT		/api/experiments/:code/state/:state								controllers.experiments.api.Experiments.updateStateCode(code:java.lang.String,state:java.lang.String)
+PUT		/api/experiments/:code/containers								controllers.experiments.api.Experiments.updateContainers(code:java.lang.String)
+POST	/api/experiments/:experimentTypeCode							controllers.experiments.api.Experiments.save(experimentTypeCode:java.lang.String)
+GET		/api/experiment/categories										controllers.experiments.api.ExperimentCategories.list()
+GET		/api/experiment/types											controllers.experiments.api.ExperimentTypes.list()
+GET		/api/experiment/type/nodes										controllers.experiments.api.ExperimentTypeNodes.list()
+GET		/api/experiments/protocols 										controllers.experiments.api.Protocols.list()
+
+GET		/api/experiment/instrument-properties/:instrumentUsedTypeCode	controllers.experiments.api.Experiments.getInstrumentProperties(instrumentUsedTypeCode:java.lang.String)
+
+
+#samples
+GET		/api/samples/list												controllers.samples.api.Samples.list()
+
+#projects
+GET		/api/projects/list												controllers.projects.api.Projects.list()
+
+#instruments
+GET		/api/instruments/types  										controllers.instruments.api.InstrumentUsedTypes.list()
+GET		/api/instruments												controllers.instruments.api.Instruments.list()
+
+#Common
+GET		/api/commons/states												controllers.commons.api.States.list()
+GET		/api/commons/types												controllers.commons.api.CommonInfoTypes.list()
+GET		/api/commons/resolutions  										controllers.commons.api.Resolutions.list()
+GET		/api/commons/users  											controllers.commons.api.Users.list()
+
+# load data
+GET	   	   /loaddata/:homecode/home										controllers.dataload.SampleLoad.home(homecode:java.lang.String)
+POST   	   /loaddata													controllers.dataload.SampleLoad.uploadDataFromCSVFile()
+POST	   /createtemplate												controllers.dataload.SampleLoad.createTemplateFile()
+
+->  /authentication authentication.Routes
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               									controllers.Assets.at(path="/public", file)
+GET     /messages.js                									controllers.main.tpl.Main.jsMessages()

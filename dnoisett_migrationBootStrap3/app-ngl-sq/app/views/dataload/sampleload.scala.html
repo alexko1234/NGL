@@ -1,0 +1,32 @@
+@(tableForm: Form[controllers.utils.DataTableForm], dataForm: Form[data.bean.InputLoadData])
+
+@import helper._
+
+@helper.form(action = controllers.dataload.routes.SampleLoad.uploadDataFromCSVFile(), args = 'class -> "well form-search") {
+		     @helper.tbInputText(
+				field = dataForm("sampleType"), 
+                args = '_label -> "Sample Type",
+                '_showConstraints -> false
+            )		
+            
+            @helper.tbInputText(
+				field = dataForm("experimentType"), 
+                args = '_label -> "Experiment Type",
+                '_showConstraints -> false 
+            )				
+            
+            
+            @helper.tbInputText(
+				field = dataForm("File Name"), 
+                args = '_label -> "File Name",
+                '_showConstraints -> false  
+            )				
+            
+            <input type="submit" value="Load Data">	
+            		
+}
+
+<h1>Erreurs : @dataForm.errors.size()</h1>
+@dataForm.errors.map { error =>
+  <div>@error</div>
+}

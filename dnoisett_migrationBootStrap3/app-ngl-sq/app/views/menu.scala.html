@@ -1,0 +1,85 @@
+@(nav: String = "")
+
+  <!-- Navbar
+    ================================================== -->
+<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				
+				<a class="brand" href="@controllers.main.tpl.routes.Main.index()">@Messages("application.name")</a>
+				
+					<ul class="nav">
+						@** <li class="@("active".when(nav == "projects"))"><a href="@routes.Application.index("projects")" >Projects</a> </li>**@
+						
+						<li class="dropdown @("active".when(nav.startsWith("containers")))">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("containers.menu")<b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
+								<li class="@("active".when(nav == "containers.search"))"><a href="@controllers.containers.tpl.routes.Containers.home("search")">@Messages("containers.menu.search")</a></li>																				
+							</ul>
+  						</li>
+						<li class="dropdown @("active".when(nav.startsWith("processes")))">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("processes.menu")<b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
+								<li class="@("active".when(nav == "processes.new"))"><a href="@controllers.processes.tpl.routes.Processes.home("new")">@Messages("processes.menu.creation")</a></li>
+								<li class="@("active".when(nav == "processes.search"))"><a href="@controllers.processes.tpl.routes.Processes.home("search")">@Messages("processes.menu.search")</a></li>																				
+							</ul>
+  						</li>	
+  						<li class="dropdown @("active".when(nav.startsWith("experiments")))">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("experiments.menu")<b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
+								<li class="@("active".when(nav ==  "experiments.new"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("new")">@Messages("experiments.menu.creation")</a></li>
+								<li class="@("active".when(nav ==  "experiments.search"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("search")">@Messages("experiments.menu.search")</a></li>																				
+							</ul>
+  						</li>
+  						
+  						@**																		
+						<li class="@("active".when(nav == "samples"))"><a href="@routes.Application.index("samples")">Samples</a>
+						</li>
+						<li class="@("active".when(nav == "libraries"))"><a href="@routes.Application.index("libraries")">Libraries</a>
+						</li>
+						<li class="@("active".when(nav == "experiments"))"><a href="@routes.Application.index("experiments")">Experiments</a>
+						</li>
+						<li class="@("active".when(nav == "runs"))"><a href="@routes.Application.index("runs")">Runs</a>
+						</li>
+						<li class="dropdown @("active".when(nav == "permissions" || nav == "roles" || nav == "users"))">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="admin">Administration<b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="admin"> 
+								<li><a href="#">Protocols</a></li>
+								<li><a href="#">Instruments</a></li>
+								<li><a href="#">Tags</a></li>
+								<li><a href="#">Chemical</a></li>
+								<li><a href="#">Fridge</a></li>											
+							</ul>
+  						</li>
+  						<li class="dropdown @("active".when(nav == "types"))">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="param">Parameters<b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="param">
+								<li><a href="#">Project Types</a></li>
+								<li><a href="#">Sample Types</a></li>
+								<li><a href="#">Library Types</a></li>
+								<li><a href="#">Run Types</a></li>
+								<li class="divider"></li>
+								<li><a href="#">Instrument Types</a></li>
+								<li><a href="#">Containing Types</a></li>
+								<li><a href="#">Unit Types</a></li>	
+								<li class="divider"></li>																						
+							</ul>
+  						</li>
+  							**@	
+					</ul>
+					
+					<div class="btn-group pull-right">
+						<a href="#" data-toggle="dropdown" class="btn dropdown-toggle">
+							<i class="icon-user"></i> Username <span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="#">Profile</a></li>
+							<li class="divider"></li>
+							<li><a href="">Sign Out</a></li>
+						</ul>
+					</div>
+				
+				</div>
+			</div>
+		</div>
+

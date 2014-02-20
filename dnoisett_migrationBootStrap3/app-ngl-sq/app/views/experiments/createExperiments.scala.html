@@ -1,0 +1,452 @@
+@(experimentCategoryCode:java.lang.String,atomicTransfertMethod:java.lang.String,datatableConfig: views.components.datatable.DatatableConfig,
+experimentProperties: org.codehaus.jackson.JsonNode,experiment:org.codehaus.jackson.JsonNode)
+<style type="text/css">
+#sub_body {
+	margin-top: 20px;
+}
+
+#table_exp {
+	margin-left: 0px;
+}
+
+#information {
+	position: relative;
+	float: left;
+	width: 160px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 12px;
+}
+
+input,.uneditable-input {
+	padding-top: 2px;
+	padding-right: 6px;
+	padding-bottom: 2px;
+	padding-left: 6px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+}
+
+#accordionExp .well {
+	padding: 0;
+	padding-top: 1px;
+}
+
+#accordionIns .well {
+	padding: 0;
+	padding-top: 1px;
+}
+
+#accordionInf .well {
+	padding: 0;
+	padding-top: 1px;
+}
+
+#accordionExp {
+	width: 80%;
+}
+
+#workflow {
+	margin-top: 15px;
+	margin-left: 10px;
+}
+
+#experiment_action {
+	margin-top: 15px;
+	margin-left: 10px;
+}
+
+#accordionIns {
+	width: 80%;
+}
+
+#accordionInf {
+	width: 80%;
+}
+
+#information table {
+	text-align: center;
+}
+
+#instrument {
+	position: relative;
+	float: left;
+	width: 160px;
+}
+
+#trace_information {
+	position: relative;
+	float: left;
+	width: 160px;
+}
+
+#experience_table {
+	position: relative;
+	float: left;
+	width: 100%;
+}
+
+#experience_table table {
+	position: relative;
+	float: left;
+	width: 100%;
+}
+
+#comments {
+	margin-top: 20px;
+	font-size: 12px;
+}
+
+#comments tr {
+	border-bottom: 2px;
+}
+
+.user {
+	position: relative;
+	float: left;
+	width: 200px;
+}
+
+.comment {
+	padding-bottom: 15px;
+	margin-bottom: 15px;
+	border-bottom: 1px solid #e5e5e5;
+}
+
+#comments table {
+	border-spacing: 200px;
+}
+
+th {
+	color: #333333;
+}
+
+.table th,.table td {
+	text-align: center;
+}
+
+.row_selected {
+	background-color: #f1f1f1;
+}
+
+#information form {
+	margin 0px;
+}
+</style>
+<div ng-class="message.clazz" ng-show="message.text !== undefined">
+	<strong>{{message.text}}</strong><button class="btn btn-link" ng-click="message.showDetails=!message.showDetails" ng-show="message.isDetails">@(Messages("experiments.msg.details"))</button>
+	<div ng-show="message.showDetails">
+	    <ul>
+    		<li ng-repeat="(key1, value1) in message.details">{{key1}}
+    		<ul>
+    			<li ng-repeat="(key2, value2) in value1"> {{value2}} </li>
+    		</ul>
+    		</li>
+    	</ul>	
+	</div>
+</div>
+<div id="sub_body" class="container-fluid" ng-init="init('@experimentCategoryCode','@atomicTransfertMethod','@experiment')">
+	<div class="row-fluid">
+		<div class="span2">
+			<div class="accordion" id="accordionExp">
+				<div class=" well well-smallaccordion-group">
+					<div class="accordion-heading">
+					
+					<div class="btn-group pull-right" ng-switch on="experiment.experimentInformation.enabled">
+						<button class="btn" ng-click="experiment.experimentInformation.toggleEdit()" ng-switch-when="false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="icon-edit icon-large"></i></button>
+						<button class="btn" ng-click="experiment.experimentInformation.toggleEdit()" ng-switch-when="true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="icon-undo icon-large"></i></button>	
+					</div>
+						<a class="accordion-toggle" data-toggle="collapse"
+							data-parent="#information" data-target="#collapseOne">
+							Experiment </a>
+					</div>
+					<div id="collapseOne" class="accordion-body collapse in">
+						<div class="accordion-inner">
+							<div id="experimentInformation">
+
+								<form class="form-stacked">
+									<div class="control-group">
+										<label class="control-label">Experiment Type:</label>
+										<div class="controls">
+												<b>{{experiment.value.typeCode}}</b>
+										</div>
+									</div>
+									<div class="control-group">
+										<label class="control-label">@Messages("experiments.state"):</label>
+										<div class="controls">
+												<!-- <select class="input-small" 
+														ng-model="experiment.value.stateCode" 
+														ng-readonly="!experiment.experimentInformation.enabled"
+														ng-disabled="!experiment.experimentInformation.enabled"
+														ng-change="changeState()"
+														id="workflow">
+													<option value="N">New</option>
+													<option value="IP" >In progress</option>
+													<option value="F" >Finished</option>
+												</select>-->
+												<div ng-switch="experiment.value.stateCode">
+													<button class="btn" ng-switch-when="N" ng-disabled="experiment.value._id == null" ng-click="changeState('IP')" >@Messages("experiments.begin_progress")</button>
+													<!--<button  class="btn" ng-switch-when="IP" ng-click="changeState('OK')" >@Messages("experiments.ok")</button>-->
+													<button  class="btn" ng-switch-when="IP" ng-disabled="experiment.value._id == null" ng-click="changeState('F')" >@Messages("experiments.finish")</button>
+												<b ng-switch-when="F">@Messages("experiments.finished")</b>
+												</div>
+												
+										</div>
+									</div>
+									<div class="control-group">
+										<label class="control-label">Resolution:</label>
+										<div class="controls">
+										<!-- <select class="input-medium "
+											ng-model="experiment.value.resolutionCode"
+											ng-readonly="!experiment.experimentInformation.enabled"
+											ng-options="resolution.code as resolution.name for resolution in lists.get('resolutions')"
+											ng-disabled="!experiment.experimentInformation.enabled">
+												<option value="">@Messages("experiments.select.resolutions")</option>
+										</select>-->
+											<div bt-select ng-model="experiment.value.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" 
+											bt-options="resolution.code as resolution.name for resolution in lists.get('resolutions')" 
+											ng-disabled="!experiment.experimentInformation.enabled"
+											ng-readonly="!experiment.experimentInformation.enabled">
+											</div>
+										</div>
+									</div>
+									<div class="control-group">
+										<label class="control-label">Protocole:</label>
+										<div class="controls">
+											<select class="input-small "
+											ng-model="experiment.value.protocolCode"
+											ng-readonly="!experiment.experimentInformation.enabled"
+											ng-options="protocol.code as protocol.name for protocol in lists.get('protocols')"
+											ng-disabled="!experiment.experimentInformation.enabled">
+												<option value="">@Messages("experiments.select.protocols")</option>
+										</select>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="accordion" id="accordionInf">
+				<div class="well well-small accordion-group">
+					<div class="accordion-heading">
+						<a class="accordion-toggle" data-toggle="collapse"
+							data-parent="#trace_information" data-target="#collapseThree">
+							Info </a>
+					</div>
+					<div id="collapseThree" class="accordion-body collapse in">
+						<div class="accordion-inner">
+
+							<div id="trace_information" class="">
+								<form class="form-stacked">
+									<div class="control-group">
+										<label class="control-label">Creator</label>
+										<div class="controls">
+											<b>{{experiment.value.traceInformation.createUser}}</b>
+										</div>
+									</div>
+									<div class="control-group">
+										<label class="control-label" for="creationDate">Creation
+											date</label>
+										<div class="controls">
+											<b>{{experiment.value.traceInformation.creationDate | date:'yyyy-MM-dd HH:mm:ss'}}</b>
+										</div>
+									</div>
+									<div class="control-group" ng-show="experiment.value.traceInformation.modifyUser">
+										<label class="control-label" for="mondificationUser">Last
+											modification by</label>
+										<div class="controls">
+											<b>{{experiment.value.traceInformation.modifyUser}}</b>
+										</div>
+									</div>
+									<div class="control-group"  ng-show="experiment.value.traceInformation.modifyDate">
+										<label class="control-label" for="modificationDate" >Last
+											Modification date</label>
+										<div class="controls">
+											<b>{{experiment.value.traceInformation.modifyDate | date:'yyyy-MM-dd HH:mm:ss'}}</b>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="table_exp" class="span10">
+			<h3 style="position: relative; float: left;">{{experiment.value.code || '@Messages("experiments.noCode")'}}</h3>
+
+			<div class="btn-group " id="experiment_action">
+				<a class="btn dropdown-toggle" data-toggle="dropdown"> Actions <span
+					class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="#" ng-click="outputGeneration();" ng-enabled="!experiment.outputGenerated && experiment.value.stateCode == 'IP'">@Messages("experiments.generateOutput")</a></li>
+				</ul>
+			<button class="btn btn-primary" ng-click="saveAll();" data-toggle="tooltip" title="@Messages("experiments.save_all")">
+				<i class="icon-save icon-large"></i>
+			</button>
+			</div>
+			<br>
+			<div class="row"
+				style="position: relative; float: left; width: 100%;">
+				<div class="well well-small span5" ng-hide="experiment.experimentProperties.inputs != null">
+					<div class="btn-group pull-right" ng-switch on="experiment.experimentProperties.enabled">
+						<button class="btn" ng-click="experiment.experimentProperties.toggleEdit()" ng-switch-when="false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="icon-edit icon-large"></i></button>
+						<button class="btn" ng-click="experiment.experimentProperties.toggleEdit()" ng-switch-when="true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="icon-undo icon-large"></i></button>	
+					</div>
+					<h5>Experiment properties:</h5>
+					<div class="row">
+						<form class="form-inline" style="padding-left: 10%" ng-init="setExperimentProperties(@experimentProperties)">
+							<div class="span3">
+								<div class="control-group" ng-repeat="expp in experiment.experimentProperties.inputs" ng-switch on="getLevel(expp.levels,'Experiment')">
+								<div ng-switch-when="true">
+								<label class="control-label">{{expp.name}}</label>
+									<div class="controls"  ng-switch on="expp.choiceInList">
+										<input type="text" ng-switch-when="false" class="input-small"
+											ng-readonly="!experiment.experimentProperties.enabled"
+											ng-model="experiment.value.experimentProperties[expp.code].value" />
+										
+										<select  ng-readonly="!experiment.experimentInformation.enabled" ng-disabled="!experiment.experimentInformation.enabled" ng-model="experiment.value.experimentProperties[expp.code].value" ng-switch-when="true" >
+											<option ng-repeat="opt in expp.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
+									    </select>
+									</div>
+								</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="well well-small span5">		
+					<div class="btn-group pull-right" ng-switch on="experiment.instrumentProperties.enabled">
+						<button class="btn" ng-click="experiment.instrumentInformation.toggleEdit();experiment.instrumentProperties.toggleEdit()" ng-switch-when="false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="icon-edit icon-large"></i></button>
+						<button class="btn" ng-click="experiment.instrumentInformation.toggleEdit();experiment.instrumentProperties.toggleEdit()" ng-switch-when="true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="icon-undo icon-large"></i></button>	
+					</div>
+					<h5>Instrument: </h5>
+					<div class="row">
+					<form class="form-inline" style="margin-left:30px">
+												<label class="control-label">@Messages("experiments.intrumentUsedType"): </label>
+											<select class="input-medium "
+											ng-change="getInstruments()"
+											ng-model="experiment.value.instrumentUsedTypeCode"
+											ng-readonly="!experiment.instrumentInformation.enabled"
+											ng-options="instrumentUsedType.code as instrumentUsedType.name for instrumentUsedType in lists.get('instrumentUsedTypes')"
+											ng-disabled="!experiment.instrumentInformation.enabled">
+												<option value="">@Messages("experiments.select.intrumentUsedType")</option>
+										</select>
+										
+									<label class="control-label" style="margin-left:20px;" ng-hide="!experiment.value.instrumentUsedTypeCode">@Messages("experiments.intrument"): </label>
+										<select class="input-medium "
+											ng-model="experiment.value.instrument.code"
+											ng-readonly="!experiment.instrumentInformation.enabled"
+											ng-options="instrumentInformation.code as instrumentInformation.name for instrumentInformation in lists.get('instruments')"
+											ng-disabled="!experiment.instrumentInformation.enabled"
+											ng-hide="!experiment.value.instrumentUsedTypeCode"
+											>
+												<option value="">@Messages("experiments.select.instrument")</option>
+											</select>
+											
+											
+								<br><br>	<label class="control-label" ng-hide="!experiment.value.instrumentUsedTypeCode || experiment.outputVoid">@Messages("experiments.intrumentCategory"): </label>
+								<select class="input-medium "
+									ng-model="experiment.value.instrument.outContainerSupportCategoryCode"
+									ng-readonly="!experiment.instrumentInformation.enabled"
+									ng-options="instrumentCategory.code as instrumentCategory.name for instrumentCategory in lists.get('containerSupportCategories')"
+									ng-disabled="!experiment.instrumentInformation.enabled"
+									ng-hide="!experiment.value.instrumentUsedTypeCode || experiment.outputVoid"
+									>
+										<option value="">@Messages("experiments.select.instrumentCategory")</option>
+									</select>
+									<button  class="btn" ng-disabled="experiment.value.stateCode != 'IP'" ng-click="generateSampleSheet()" >@Messages("experiments.sampleSheet")</button>
+												
+											<hr>
+								</form>	
+								
+						<form class="form-inline" style="padding-left: 10%">
+							<div ng-repeat="instp in experiment.instrumentProperties.inputs"  ng-switch on="getLevel(instp.levels,'Instrument')">
+								<div class="control-group" ng-switch-when="true">
+									<label class="control-label">{{instp.name}}</label>
+									<div class="controls"  ng-switch on="instp.choiceInList">
+										<input type="text" ng-switch-when="false" class="input-small"
+											ng-readonly="!experiment.instrumentInformation.enabled"
+											ng-model="experiment.value.instrumentProperties[instp.code].value" />
+										
+										<select ng-options="opt.value as opt.value for opt in instp.possibleValues"  ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" ng-model="experiment.value.instrumentProperties[instp.code].value" ng-switch-when="true" >
+									    <option value="">@Messages("experiments.select.property")</option>
+									    </select>
+									</div>
+								</div>
+							</div>
+	
+						</form>
+					</div>
+				</div>
+
+
+				<div class="row-fluid">
+		<div id="experience_table" class="row1">
+	<fieldset>
+		@button() = {
+			<!-- <button class="btn" ng-click="saveContainers()" data-toggle="tooltip" title="Sauver">
+			<i class="icon-save icon-large"></i>
+			</button>-->
+			<div class="btn-group">
+			<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != 'F'" ng-hide="!experiment.doPurif" title="@Messages("experiments.addpurif")">@(Messages("experiments.addpurif"))</button>
+			<button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != 'F'"    ng-hide="!experiment.doQc" title="@Messages("experiments.addqc")">@(Messages("experiments.addqc"))</button>
+			</div>
+		}
+		@views.html.components.datatable.datatable(datatableConfig,null,button)
+	</fieldset>
+</div>
+				</div>
+				<div class="accordion" id="accordionCom">
+					<div class="accordion-group">
+						<div class="accordion-heading">
+							<a data-target="#myModal" role="button"
+								class="btn btn-small btn-primary pull-right" data-toggle="modal">@Messages("experiment.addComment")</a> <a class="accordion-toggle" data-toggle="collapse"
+								data-parent="#comments" data-target="#collapseFour"> @Messages("experiment.seeComments")</a>
+						</div>
+						<div id="collapseFour" class="accordion-body collapse out">
+							<div class="accordion-inner">
+								<div id="comments" ng-switch="experiment.value.comments.length == 0">
+								<div ng-switch-when="false">
+									<legend>Comments: </legend>
+									<div ng-repeat="com in experiment.value.comments" class="comment">
+										<table>
+											<tr>
+												<td class="user"><img src="" width=50 height=50></img><br>{{com.createUser}}<br>
+												<i>le {{com.creationDate | date:'yyyy-MM-dd HH:mm:ss'}}</i></td>
+												<td>{{com.comment}}</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+								
+								<div ng-switch-when="true">
+									<h2>@Messages("experiment.noComments")</h2>
+								
+								</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Modal -->
+			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h3 id="myModalLabel">@Messages("experiment.addComment")</h3>
+				</div>
+				<div class="modal-body">
+					@Messages("experiment.leaveComment"): <br>
+					<textarea rows="15" ng-model="experiment.comment" style="width: 489px;"></textarea>
+				</div>
+				<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">@Messages("experiment.cancelComment")</button>
+					<button data-dismiss="modal" class="btn btn-primary"
+						ng-click="experiment.comments.save();">@Messages("experiment.sendComment")</button>
+				</div>
+			</div>
