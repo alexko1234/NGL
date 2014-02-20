@@ -317,6 +317,7 @@ readsets.files.typeCode = Type de fichier
 readsets.files.usable = Utilisable
 readsets.files.properties.label = Label
 readsets.files.properties.asciiEncoding = Encodage ASCII
+readsets.files.properties.md5 = Clé codage md5
 readsets.files.state = Etat
 readsets.files.state.code = Code
 readsets.files.state.date = Date

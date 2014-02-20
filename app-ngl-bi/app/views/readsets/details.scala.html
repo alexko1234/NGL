@@ -192,6 +192,7 @@
 							<th>@Messages("readsets.files.usable")</th>
 							<th>@Messages("readsets.files.properties.label")</th>
 							<th>@Messages("readsets.files.properties.asciiEncoding")</th>
+							<th>@Messages("readsets.files.properties.md5")</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -202,6 +203,7 @@
 							<td ng-if="file.usable == false">@Messages("readsets.files.isNotUsable")</td>
 							<td>{{file.properties.label.value}}</td>
 							<td>{{file.properties.asciiEncoding.value}}</td>
+							<td>{{file.properties.md5.value}}</td>
 						</tr>
 					</tbody>
 				</table>
