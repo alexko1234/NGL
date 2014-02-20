@@ -71,7 +71,7 @@ public class StateService {
 		l.add(newState("Séquençage terminé", "F-S", true, 200, getStateCategories(StateCategory.CODE.F), getObjectTypes(ObjectType.CODE.Run.name())));
 		
 		l.add(newState("Read generation en attente", "IW-RG", true, 201, getStateCategories(StateCategory.CODE.IW), getObjectTypes(ObjectType.CODE.Run.name())));
-		l.add(newState("Read generation en cours", "IP-RG", true, 250, getStateCategories(StateCategory.CODE.IP), getObjectTypes(ObjectType.CODE.Run.name())));
+		l.add(newState("Read generation en cours", "IP-RG", true, 250, getStateCategories(StateCategory.CODE.IP), getObjectTypes(ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name())));
 		l.add(newState("Read generation terminée", "F-RG", true, 300, getStateCategories(StateCategory.CODE.F), getObjectTypes(ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()) ));
 
 		DAOHelpers.saveModels(State.class, l, errors);
