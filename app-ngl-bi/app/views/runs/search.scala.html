@@ -1,10 +1,10 @@
 @(isForm: Boolean)
 
 <div ng-init="init()"> 
-<div class="datatable" datatable="datatable.getConfig()">
+<div datatable="datatable">
 	@if(isForm) {
-		<div id="datatableFormConfiguration">
-			<form class="well well-small form-inline" ng-controller="SearchFormCtrl" ng-init="init()">
+		<div dt-form>
+			<form class="well well-small form-inline" ng-controller="SearchFormCtrl" ng-init="init()" >
 				<div class="row-fluid">
 				<input type="text" ng-model="form.projectCodes" bs-typeahead="searchProjects" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.projects")'>
 				<input type="text" ng-model="form.sampleCodes"  bs-typeahead="searchSamples" data-min-length="1" data-items="20" ng-click="refreshSamples()" placeholder='@Messages("search.placeholder.samples")'>
@@ -27,7 +27,13 @@
 				</div>
 				
 			</form>
-		</div>
+	</div>
+		
+		
+		
 	}
 </div>
+
+
+
 </div>

@@ -25,7 +25,7 @@ var columns = [
 					type :"String",
 					edit:true,
 					order:true,
-			    	choiceInList:true,
+					choiceInList:true,
 			    	listStyle:'bt-select',
 			    	possibleValues:'listsTable.getStates()'	
 				},
@@ -184,7 +184,8 @@ function SearchStateCtrl($scope, datatable, lists) {
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.get(line.code).url,remove:true});
 				}
 			},
-			columns : getColumns()
+			columns : getColumns(),
+			messages : {active:true}
 	};
 	
 	$scope.init = function(){

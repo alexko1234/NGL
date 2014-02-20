@@ -1,8 +1,7 @@
 @(isNotValuation: Boolean)
 
 <div ng-init="init()"> 
-<div class="datatable" datatable="datatable.getConfig()">
-		<div id="datatableFormConfiguration">
+<div datatable="datatable">		
 			<form class="well well-small form-inline" ng-controller="SearchFormCtrl" ng-init="init()">
 				<div class="row-fluid">
 				<input type="text" ng-model="form.projectCodes" bs-typeahead="searchProjects" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.projects")'>
@@ -37,9 +36,6 @@
 				
 				</div>
 				
-			</form>
-		</div>
+			</form>		
 </div>
-</div>
-
 </div>
