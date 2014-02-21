@@ -258,7 +258,7 @@ readsets.treatments.sorting_ribo.single = Single
 
 readsets.treatments.taxonomy.tabs.bilan = Bilans
 readsets.treatments.taxonomy.tabs.krona = Krona
-readsets.treatments.taxonomy.tabs.phylogeneticTree = Arbre phylogenetique
+readsets.treatments.taxonomy.tabs.phylogeneticTree = Arbre phylogénétique
 readsets.treatments.taxonomy.organism = Organisme
 readsets.treatments.taxonomy.taxonomy = Taxonomie
 readsets.treatments.taxonomy.divisionBilan = Bilan par division
@@ -275,7 +275,7 @@ readsets.treatments.taxonomy.taxonBilan.percent = %
 readsets.treatments.taxonomy.taxonBilan.nbSeq = Nb Seq.
 readsets.treatments.taxonomy.sampleInput = Nb Seq. (échantillonnage)
 readsets.treatments.taxonomy.beginNcbiUrl = http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Undef&name=
-readsets.treatments.taxonomy.phylogeneticTree = Arbre philogénétique
+readsets.treatments.taxonomy.phylogeneticTree = Arbre phylogénétique
 
 readsets.treatments.trimming.read1 = Read 1
 readsets.treatments.trimming.read2 = Read 2
