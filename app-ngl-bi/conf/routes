@@ -120,6 +120,8 @@ HEAD	/api/alerts/:code               			controllers.alerts.api.Alerts.head(code:
 #migration
 GET		/migration									controllers.migration.Migration.migration()
 GET		/migration2									controllers.migration.Migration2.migration()
+GET		/migration3									controllers.migration.Migration3.migration()
+
 
 #Common
 GET		/api/commons/states							controllers.commons.api.States.list()
