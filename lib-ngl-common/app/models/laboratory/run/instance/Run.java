@@ -40,10 +40,8 @@ public class Run extends DBObject implements IValidation {
     public Set<String> projectCodes = new TreeSet<String>();
     public Set<String> sampleCodes = new TreeSet<String>();
     
-    public Boolean maintain = Boolean.FALSE;
+    public Boolean keep = Boolean.FALSE;
    
-    
-    
     public TraceInformation traceInformation;
     public InstrumentUsed instrumentUsed;
     public Map<String,Treatment> treatments = new HashMap<String,Treatment>();
