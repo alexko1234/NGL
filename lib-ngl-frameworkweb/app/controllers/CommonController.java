@@ -8,6 +8,7 @@ import java.util.Map;
 import net.vz.mongodb.jackson.DBQuery;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bson.BSONObject;
 import org.codehaus.jackson.JsonNode;
 
 import play.data.DynamicForm;
@@ -16,6 +17,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
 import play.mvc.With;
+import views.components.datatable.DatatableForm;
 
 import com.mongodb.BasicDBObject;
 
@@ -97,7 +99,7 @@ public abstract class CommonController extends Controller{
 	 * @param query
 	 * @return a MongoDBResult
 	 */
-	public static <T extends DBObject> MongoDBResult<T> mongoDBFinder(String collection, ListForm form, Class<T> type, DBQuery.Query query){
+	protected static <T extends DBObject> MongoDBResult<T> mongoDBFinder(String collection, ListForm form, Class<T> type, DBQuery.Query query){
 		MongoDBResult<T> results = null;
 		if(form.datatable){
 			results = MongoDBDAO.find(collection, type, query) 
@@ -111,7 +113,7 @@ public abstract class CommonController extends Controller{
 		return results;
 	}
 
-	public static <T extends DBObject> MongoDBResult<T> mongoDBFinder(String collection, ListForm form, Class<T> type, DBQuery.Query query, BasicDBObject keys){
+	protected static <T extends DBObject> MongoDBResult<T> mongoDBFinder(String collection, ListForm form, Class<T> type, DBQuery.Query query, BasicDBObject keys){
 		MongoDBResult<T> results = null;
 		if(form.datatable){
 			results = MongoDBDAO.find(collection, type, query, keys) 
@@ -124,5 +126,28 @@ public abstract class CommonController extends Controller{
 		}
 		return results;
 	}
+	
+	protected static BasicDBObject getKeys(DatatableForm form) {
+		BasicDBObject keys = new BasicDBObject();
+		keys.putAll((BSONObject)getIncludeKeys(form.includes.toArray(new String[form.includes.size()])));
+		keys.putAll((BSONObject)getExcludeKeys(form.excludes.toArray(new String[form.excludes.size()])));		
+		return keys;
+	}
+	
+	protected static BasicDBObject getIncludeKeys(String[] keys) {
+		BasicDBObject values = new BasicDBObject();
+		for(String key : keys){
+		    values.put(key, 1);
+		}
+		return values;
+    }
+	
+	protected static BasicDBObject getExcludeKeys(String[] keys) {
+		BasicDBObject values = new BasicDBObject();
+		for(String key : keys){
+		    values.put(key, 0);
+		}
+		return values;
+    }
 
 }
