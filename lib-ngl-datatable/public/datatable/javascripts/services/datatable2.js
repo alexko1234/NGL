@@ -941,6 +941,10 @@ angular.module('datatableServices', []).
 		    							columns[i].type = columns[i].type.toLowerCase();
 		    						}
 		    						
+		    						if(columns[i].type === "img" || columns[i].type === "image"){
+		    							if(!columns[i].format)console.log("missinf format for "+columns[i].property);
+		    							if(!columns[i].width)columns[i].width='100%';
+		    						}
 		    						
 			    					if(columns[i].id == null){
 			    						columns[i].id = this.generateColumnId();
@@ -1161,7 +1165,7 @@ angular.module('datatableServices', []).
 		    						return '<div ng-switch on="'+this.getNgModel(col)+'"><i ng-switch-when="true" class="icon-check icon-large"></i><i ng-switch-default class="icon-check-empty icon-large"></i></div>';	    						
 		    					}else if(col.type === "img" || col.type === "image"){
 		    						if(!col.format)console.log("missing format for img !!");
-		    						return '<img ng-src="data:image/'+col.format+';base64,{{'+this.getNgModel(col)+'}}" />' ;
+		    						return '<img ng-src="data:image/'+col.format+';base64,{{'+this.getNgModel(col)+'}}" style="max-width:{{col.width}}"/>' ;
 		    					    
 		    					} else{
 		    						return '<span ng-bind="'+this.getNgModel(col)+this.getFormatter(col)+'"></span>';
