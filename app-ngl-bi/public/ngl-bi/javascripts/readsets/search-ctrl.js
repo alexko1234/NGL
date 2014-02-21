@@ -1,7 +1,7 @@
 "use strict";
 
 
-function getColumns(type){
+function getColumns(page){
 	var columns = [];
 	
 	columns.push({	property:"code",
@@ -28,9 +28,9 @@ function getColumns(type){
 	columns.push({	property:"runSequencingStartDate",
 					header: Messages("runs.sequencingStartDate"),
 					type :"Date",
-					order:true});
+					order:true});	
 	
-	if('state' === type){
+	if('state' === page){
 		columns.push({	property:"state.code",
 						render:function(value){
 							return Codes("state."+value.state.code);
@@ -53,7 +53,7 @@ function getColumns(type){
 						order:true});
 	}
 	
-	if('valuation' === type){
+	if('valuation' === page){
 		columns.push({	property:"productionValuation.valid",
 						render:function(value){
 							return Codes("valuation."+value.productionValuation.valid);
@@ -95,7 +95,7 @@ function getColumns(type){
 				    	order:true});
 	}
 	
-	if('batch' === type){
+	if('batch' === page){
 		columns.push({	property:"properties.isSentCCRT.value",
 			
 			header: Messages("readsets.properties.isSentCCRT"),
@@ -114,6 +114,7 @@ function getColumns(type){
 	}
 	return columns;
 }
+
 function convertForm(iform){
 	var form = angular.copy(iform);
 	if(form.fromDate)form.fromDate = moment(form.fromDate, Messages("date.format").toUpperCase()).valueOf();
@@ -123,6 +124,17 @@ function convertForm(iform){
 	if(form.runCodes) form.runCodes = form.runCodes.split(',');
 	return form
 };
+
+function updateForm(form, page){
+	if (page === 'valuation') {
+		if(form.stateCodes === undefined || form.stateCodes.length === 0) {
+			//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
+			form.stateCodes = ["IW-V","IP-V"];
+		}		
+	}
+	form.excludes = ["treatments","files"];
+	return form;
+}
 
 function SearchFormCtrl($scope, $filter, lists){
 	$scope.lists = lists;
@@ -165,13 +177,8 @@ function SearchFormCtrl($scope, $filter, lists){
 	};
 	
 	$scope.search = function(){
+		$scope.form = updateForm($scope.form, $scope.getHomePage());
 		$scope.setForm($scope.form);
-		if ($scope.isHomePage('valuation')) {
-			if($scope.form.stateCodes === undefined || $scope.form.stateCodes.length === 0) {
-				//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
-				$scope.form.stateCodes = ["IW-V","IP-V"];
-			}		
-		}
 		$scope.datatable.search(convertForm($scope.form));
 	};
 	
@@ -181,8 +188,7 @@ function SearchFormCtrl($scope, $filter, lists){
 		}
 	};
 	
-	$scope.init = function(){
-		$scope.states = lists.getStates();
+	$scope.init = function(){		
 		if ($scope.isHomePage('valuation')) {
 			//If we want to show the 2 states used to filter the data...
 			//$scope.form.stateCodes = ["IW-V","IP-V"];
@@ -231,8 +237,8 @@ function SearchCtrl($scope, $routeParams, datatable) {
 		//to avoid to lost the previous search		
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, $scope.datatableConfig);
-			$scope.setDatatable($scope.datatable);
-			$scope.datatable.search(convertForm($routeParams));
+			$scope.setDatatable($scope.datatable);			
+			$scope.datatable.search(convertForm(updateForm($routeParams,'search')));
 		}else{
 			$scope.datatable = $scope.getDatatable();			
 		}
@@ -281,7 +287,7 @@ function SearchStateCtrl($scope,  datatable, lists) {
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, $scope.datatableConfig);
-			$scope.datatable.search();
+			$scope.datatable.search(updateForm({},'state'));
 			$scope.setDatatable($scope.datatable);
 		}else{
 			$scope.datatable = $scope.getDatatable();
@@ -344,9 +350,9 @@ function SearchValuationCtrl($scope, datatable, lists, $routeParams) {
 		}
 		
 		if(count > 0){
-			$scope.datatable.search($routeParams);
+			$scope.datatable.search(updateForm($routeParams));
 		}else{
-			$scope.datatable.search({stateCodes:["IW-V","IP-V"]});
+			$scope.datatable.search(updateForm({},'valuation'));
 		}
 		
 		if(angular.isUndefined($scope.getHomePage())){
@@ -385,7 +391,7 @@ function SearchBatchCtrl($scope,  datatable) {
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, $scope.datatableConfig);
-			$scope.datatable.search();
+			$scope.datatable.search(updateForm({}));
 			$scope.setDatatable($scope.datatable);
 		}else{
 			$scope.datatable = $scope.getDatatable();

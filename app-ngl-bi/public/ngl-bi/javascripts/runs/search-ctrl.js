@@ -49,13 +49,21 @@ function convertForm(iform){
 	if(form.codes) form.codes = form.codes.split(',');
 	return form
 };
+
+function updateForm(form, page){
+	if (page === 'valuation') {
+		if(form.stateCodes === undefined || form.stateCodes.length === 0) {
+			//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
+			form.stateCodes = ["IW-V","IP-V"];
+		}		
+	}
+	form.excludes = ["treatments","lanes"];
+	return form;
+}
+
 function SearchFormCtrl($scope, $filter, lists){
 	$scope.lists = lists;
 	
-	$scope.form = {
-			
-	}
-
 	var search = function(values, query){
 		var queryElts = query.split(',');
 		
@@ -92,7 +100,8 @@ function SearchFormCtrl($scope, $filter, lists){
 	}
 	
 	$scope.search = function(){
-		$scope.setForm($scope.form);
+		$scope.form = updateForm($scope.form, $scope.getHomePage());
+		$scope.setForm($scope.form);		
 		$scope.datatable.search(convertForm($scope.form));
 	}
 	
@@ -140,8 +149,8 @@ function SearchCtrl($scope, $routeParams, datatable) {
 	$scope.init = function(){
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, $scope.datatableConfig);
-			$scope.datatable.search();
+			$scope.datatable = datatable($scope, $scope.datatableConfig);			
+			$scope.datatable.search(updateForm(convertForm($routeParams),'search'));
 			$scope.setDatatable($scope.datatable);
 		}else{
 			$scope.datatable = $scope.getDatatable();
@@ -192,7 +201,7 @@ function SearchStateCtrl($scope, datatable, lists) {
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, $scope.datatableConfig);
-			$scope.datatable.search();
+			$scope.datatable.search(updateForm({},'state'));
 			$scope.setDatatable($scope.datatable);
 		}else{
 			$scope.datatable = $scope.getDatatable();
@@ -235,7 +244,7 @@ function SearchValuationCtrl($scope, datatable) {
 		}else{
 			$scope.datatable = $scope.getDatatable();
 		}
-		$scope.datatable.search({stateCodes:["IW-V","IP-V"]});
+		$scope.datatable.search(updateForm({},'valuation'));
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('valuation');
 			$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:false});

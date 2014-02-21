@@ -59,12 +59,13 @@ public class ReadSets extends CommonController{
 		ReadSetsSearchForm form = filledForm.get();
 		
 		Query q = getQuery(form);
-		if(form.datatable){
-			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q);				
+		BasicDBObject keys = getKeys(form);
+		if(form.datatable){			
+			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
 			List<ReadSet> readSets = results.toList();
 			return ok(Json.toJson(new DatatableResponse<ReadSet>(readSets, results.count())));
 		}else{
-			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q);							
+			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
 			List<ReadSet> readSets = results.toList();
 			return ok(Json.toJson(readSets));
 		}

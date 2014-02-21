@@ -17,20 +17,14 @@ public class RunsController extends CommonController {
     }
 
     protected static Run getRun(String code, String...keys) {
-	MongoDBResult<Run> runs = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", code), getKeys(keys));
+	MongoDBResult<Run> runs = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", code), getIncludeKeys(keys));
 	if(runs.size() == 1)
 	    return runs.toList().get(0);
 	else
 	    return null;
     }
     
-    private static BasicDBObject getKeys(String[] keys) {
-	BasicDBObject values = new BasicDBObject();
-	for(String key : keys){
-	    values.put(key, 1);
-	}
-	return values;
-    }
+    
 
     protected static Run getRun(String code, Integer laneNumber) {
 	Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,

@@ -71,12 +71,13 @@ public class Runs extends RunsController {
 	public static Result list(){
 		Form<RunsSearchForm> filledForm = filledFormQueryString(searchForm, RunsSearchForm.class);
 		RunsSearchForm form = filledForm.get();
-		if(form.datatable){
-			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form));			
+		BasicDBObject keys = getKeys(form);
+		if(form.datatable){			
+			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);			
 			List<Run> runs = results.toList();
 			return ok(Json.toJson(new DatatableResponse<Run>(runs, results.count())));
 		}else if(form.list){
-			BasicDBObject keys = new BasicDBObject();
+			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
 			if(null == form.orderBy)form.orderBy = "code";
@@ -87,11 +88,13 @@ public class Runs extends RunsController {
 		}else{
 			if(null == form.orderBy)form.orderBy = "code";
 			if(null == form.orderSense)form.orderSense = 0;
-			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form));	
+			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);	
 			List<Run> runs = results.toList();
 			return ok(Json.toJson(runs));
 		}
 	}
+
+	
 
 	private static List<ListObject> toListObjects(List<Run> runs){
 		List<ListObject> jo = new ArrayList<ListObject>();

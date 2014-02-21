@@ -52,7 +52,7 @@ public class ReadSetTreatments extends CommonController{
 	}
 	
 	//@Permission(value={"creation_update_treatments"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 500 * 1024)
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result save(String readSetCode){
 		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
 		if (readSet == null) {
