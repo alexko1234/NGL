@@ -9,14 +9,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import play.Logger;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.utils.InstanceConstants;
@@ -25,7 +22,6 @@ import validation.IValidation;
 import validation.run.instance.LaneValidationHelper;
 import validation.run.instance.RunValidationHelper;
 import validation.run.instance.TreatmentValidationHelper;
-import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
 
 
@@ -43,6 +39,8 @@ public class Run extends DBObject implements IValidation {
     
     public Set<String> projectCodes = new TreeSet<String>();
     public Set<String> sampleCodes = new TreeSet<String>();
+    
+    public Boolean maintain = Boolean.FALSE;
    
     
     
