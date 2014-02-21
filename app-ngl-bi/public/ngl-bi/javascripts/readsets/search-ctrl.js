@@ -167,9 +167,9 @@ function SearchFormCtrl($scope, $filter, lists){
 	$scope.search = function(){
 		$scope.setForm($scope.form);
 		if ($scope.isHomePage('valuation')) {
-			if(form.stateCodes == undefined || form.stateCodes.length == 0) {
+			if($scope.form.stateCodes === undefined || $scope.form.stateCodes.length === 0) {
 				//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
-				form.stateCodes = ["IW-V","IP-V"];
+				$scope.form.stateCodes = ["IW-V","IP-V"];
 			}		
 		}
 		$scope.datatable.search(convertForm($scope.form));
