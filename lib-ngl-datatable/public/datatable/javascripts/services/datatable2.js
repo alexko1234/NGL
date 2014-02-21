@@ -24,6 +24,7 @@ angular.module('datatableServices', []).
 													"choiceInList":false, //when the column is in edit mode, the edition is a list of choices or not
 													"listStyle":"select"/"radio", //if choiceInList=true, listStyle="select" is a select input, listStyle="radio" is a radio input
 													"possibleValues":null, //The list of possible choices
+													"format" : null, //number format or date format or datetime format
 													"extraHeaders":{"0":"Inputs"}, //the extraHeaders list
 												  }*/
 							columnsUrl:undefined, //Load columns config
@@ -1144,11 +1145,11 @@ angular.module('datatableServices', []).
 	  		    		getFormatter : function(col){
 		    				var format = "";
 		    				if(col.type === "date"){
-		    					format += " | date:'"+Messages("date.format")+"'";
+		    					format += " | date:'"+(col.format?col.format:Messages("date.format"))+"'";
 		    				}else if(col.type === "datetime"){
-		    					format += " | date:'"+Messages("datetime.format")+"'";
+		    					format += " | date:'"+(col.format?col.format:Messages("datetime.format"))+"'";
 		    				}else if(col.type === "number"){
-								format += " | number";
+								format += " | number"+(col.format?':'+col.format:'');
 							}	    				
 		    				return format;
 		    			},
@@ -1158,6 +1159,10 @@ angular.module('datatableServices', []).
 		    				}else{
 		    					if(col.type === "boolean"){
 		    						return '<div ng-switch on="'+this.getNgModel(col)+'"><i ng-switch-when="true" class="icon-check icon-large"></i><i ng-switch-default class="icon-check-empty icon-large"></i></div>';	    						
+		    					}else if(col.type === "img" || col.type === "image"){
+		    						if(!col.format)console.log("missing format for img !!");
+		    						return '<img ng-src="data:image/'+col.format+';base64,{{'+this.getNgModel(col)+'}}" />' ;
+		    					    
 		    					} else{
 		    						return '<span ng-bind="'+this.getNgModel(col)+this.getFormatter(col)+'"></span>';
 		    					}
@@ -1188,7 +1193,7 @@ angular.module('datatableServices', []).
 	    			    		ngChange = '" ng-change="dtTable.updateColumn(col.property, col.id)"';	    			    		
 	    			    	}
 		    						    				
-		    				if(col.type ==="boolean"){
+		    				if(col.type === "boolean"){
 		    					editElement = '<input dt-html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+this.getNgModel(col, header)+ngChange+'/>';
 		    				}else if(!col.choiceInList){
 		    					editElement = '<input dt-html-filter="{{col.type}}" type="'+col.type+'" class="input-small" ng-model="'+this.getNgModel(col, header)+ngChange+'/>';
@@ -1210,6 +1215,8 @@ angular.module('datatableServices', []).
 		    							editElement = '<select ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getNgModel(col,header)+ngChange+'></select>';
 			    						break;
     		  	    			}		    					
+		    				}else{
+		    					editElement = "Edit Not Defined for col.type !";
 		    				}		    						    				
 		    				return editElement;
 		    			}
@@ -1492,11 +1499,11 @@ angular.module('datatableServices', []).
 					      //view to model / same algo than model to view ?????
 						   var convertedData = data;
 					    	
-					    	   if(attrs.htmlFilter.toLowerCase() == "datetime"){
+					    	   if(attrs.dtHtmlFilter == "datetime"){
 					    		   convertedData = $filter('date')(convertedData, Messages("datetime.format"));
-					    	   }else if(attrs.htmlFilter.toLowerCase() == "date"){
+					    	   }else if(attrs.dtHtmlFilter == "date"){
 					    		   convertedData = $filter('date')(convertedData, Messages("date.format"));
-					    	   }else if(attrs.htmlFilter.toLowerCase() == "number"){
+					    	   }else if(attrs.dtHtmlFilter == "number"){
 					    		   convertedData = $filter('number')(convertedData);
 					    	   }
 					    	
@@ -1507,11 +1514,11 @@ angular.module('datatableServices', []).
 					      //model to view / same algo than view to model ?????
 					    	var convertedData = data;
 					    	
-					    	  if(attrs.htmlFilter.toLowerCase() == "datetime"){
+					    	  if(attrs.dtHtmlFilter == "datetime"){
 					    			convertedData = $filter('date')(convertedData, Messages("datetime.format"));
-					    	   }else if(attrs.htmlFilter.toLowerCase() == "date"){
+					    	   }else if(attrs.dtHtmlFilter == "date"){
 					    		   	convertedData = $filter('date')(convertedData, Messages("date.format"));
-					    	   }else if(attrs.htmlFilter == "Number"){
+					    	   }else if(attrs.dtHtmlFilter == "number"){
 					    		   	convertedData = $filter('number')(convertedData);
 					    	   }
 					    	
