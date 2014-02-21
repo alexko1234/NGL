@@ -74,7 +74,7 @@ public class Migration3 extends CommonController {
 	
 				}
 				else {
-					if (!file.fullname.endsWith(fileExtension1 + fileExtension2)) {
+					if (!file.fullname.endsWith(fileExtension1 + "." + fileExtension2)) {
 						//unknown case
 						Logger.debug("----------------- Wrong fullname = " + file.fullname);
 						
