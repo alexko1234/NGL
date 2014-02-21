@@ -4,7 +4,24 @@ unit.percent = %
 
 #application
 application.name=NGL-BI
-index.title=Welcome to NGL-BI
+home.title.name=Bienvenue dans NGL-BI
+
+
+
+#authentification
+authentification.dropdown_list.username=Nom
+authentification.dropdown_list.profile=Profil
+authentification.dropdown_list.signout=Se déconnecter
+
+#home page main
+home.h10.header=Bienvenue {0} sur NGL - Bio Informatique
+home.p.comment=NGL-BI est un LIMS simple et flexible pour le suivi des données bioinformatique issues du séquençage de nouvelle génération.
+home.a.comment=En savoir plus...
+
+home.runs.ips = Runs en cours de séquençage
+home.runs.iprg = Runs en cours de read generation
+home.runs.iwpv = Runs en attente de validation
+
 
 
 

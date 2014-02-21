@@ -1,16 +1,5 @@
 #application
-application.name=NGL-BI
-home.title.name=Bienvenue dans NGL-BI
 
-#home page main
-home.h10.header=Bienvenue sur le NGL - Bio Informatique
-home.p.comment=C''est un LIMS simple et flexible pour le séquençage de nouvelle génération
-home.a.comment=En savoir plus...
-
-#authentification
-authentification.dropdown_list.username=Nom
-authentification.dropdown_list.profile=Profil
-authentification.dropdown_list.signout=Se déconnecter
 
 archives.page.title=Archives
 

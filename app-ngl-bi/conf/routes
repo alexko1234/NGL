@@ -118,9 +118,7 @@ GET    	/api/alerts/:code               			controllers.alerts.api.Alerts.get(cod
 HEAD	/api/alerts/:code               			controllers.alerts.api.Alerts.head(code: java.lang.String)
 
 #migration
-GET		/migration									controllers.migration.Migration.migration()
-GET		/migration2									controllers.migration.Migration2.migration()
-GET		/migration3									controllers.migration.Migration3.migration()
+GET		/migration									controllers.migration.Migration3.migration()
 
 
 #Common
