@@ -20,7 +20,7 @@ home.a.comment=En savoir plus...
 
 home.runs.ips = Runs en cours de séquençage
 home.runs.iprg = Runs en cours de read generation
-home.runs.iwpv = Runs en attente de validation
+home.runs.iwpv = Runs en attente d'évaluation
 
 
 
