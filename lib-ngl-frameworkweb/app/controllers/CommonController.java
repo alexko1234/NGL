@@ -3,9 +3,11 @@ package controllers;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBUpdate.Builder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BSONObject;
@@ -17,6 +19,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
 import play.mvc.With;
+import validation.ContextValidation;
 import views.components.datatable.DatatableForm;
 
 import com.mongodb.BasicDBObject;
@@ -149,5 +152,55 @@ public abstract class CommonController extends Controller{
 		}
 		return values;
     }
-
+	
+	/**
+	 * Construct a builder from some fields
+	 * Use to update a mongodb document
+	 * @param value
+	 * @param fields
+	 * @param clazz
+	 * @return
+	 */
+	protected static Builder getBuilder(Object value, List<String> fields, Class clazz) {
+		Builder builder = new Builder();
+		try {
+			for(String field: fields){
+				builder.set(field, clazz.getDeclaredField(field).get(value));
+			}
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+		
+		return builder;
+	}
+	/**
+	 * Validate authorized field for specific update field
+	 * @param ctxVal
+	 * @param fields
+	 * @param authorizedUpdateFields
+	 */
+	protected static void validateAuthorizedUpdateFields(ContextValidation ctxVal, List<String> fields,
+			List<String> authorizedUpdateFields) {
+		for(String field: fields){
+			if(!authorizedUpdateFields.contains(field)){
+				ctxVal.addErrors("fields", "error.valuenotauthorized", field);
+			}
+		}				
+	}
+	
+	/**
+	 * Validate ig the field is present in the form
+	 * @param ctxVal
+	 * @param fields
+	 * @param filledForm
+	 */
+	protected static void validateIfFieldsArePresentInForm(
+			ContextValidation ctxVal, List<String> fields, Form<?> filledForm) {
+		for(String field: fields){
+			if(filledForm.field(field).value() == null){
+				ctxVal.addErrors(field, "error.notdefined");
+			}
+		}	
+		
+	}
 }
