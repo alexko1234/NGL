@@ -1,10 +1,9 @@
 "use strict";
 
-function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, lists, treatments) {
+function DetailsCtrl($scope, $http, $routeParams, $window, $filter, datatable, messages, lists, treatments) {
 	
-	$scope.form = {
-	}
-		
+	
+	/* configuration datatables */	
 	var lanesDTConfig = {
 			name:'lanesDT',
 			order :{by:'number',mode:'local'},
@@ -13,13 +12,13 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 			select:{active:false},
 			showTotalNumberRecords:false,
 			edit : {
-				active:false,
+				active:true,
 				showButton : false,
-				byDefault : true,
+				withoutSelect : true,
 				columnMode : true
 			},
 			save : {
-				active:false,
+				active:true,
 				keepEdit:true,
 				showButton : false,
 				changeClass : false,
@@ -174,7 +173,7 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 			]
 	};
 	
-
+	/* buttons section */
 	$scope.save = function(){
 		$scope.lanesDT.save();
 	};
@@ -182,8 +181,17 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 	$scope.cancel = function(){
 		$scope.messages.clear();
 		updateData();
+		if(!isValuationMode()){
+			$scope.lanesDT.cancel();
+			$scope.stopEditMode();
+		}
 		
 	};
+	
+	$scope.activeEditMode = function(){
+		$scope.startEditMode();
+		$scope.lanesDT.setEdit();		
+	}
 	
 	var updateData = function(){
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
@@ -192,12 +200,12 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 		});
 	}
 	
-	var isValuationMode = function(){
-		return ($scope.isHomePage('valuation') || $routeParams.page === 'valuation');
-	}
 	
+	/* readset section */
 	
-		
+	$scope.form = {
+	}	
+	
 	$scope.search = function(){
 		//get lane numbers selected
 		var laneNum = [];
@@ -207,11 +215,8 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 			$scope.readSetsDT.setData(data, data.length);
 		});
 	}
-		
-	$scope.reset = function(){
-		$scope.form = {
-		}
-	}
+	
+	
 	
 	$scope.showReadSets = function(){
 		var laneNumbers={value:''};
@@ -237,23 +242,11 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(readSetCode).url, 'readsets');
 	}
 	
-	function sortLaneOptions(lanes) {
-		var laneNumbers = [];
-		for (var i=0; i<lanes.length; i++) {
-			laneNumbers[i] = lanes[i].number;
-		}
-		laneNumbers.sort();
-		var laneOptions = [];
-		for (var i=0; i<laneNumbers.length; i++) {
-			var laneOption = new Object();
-			laneOption.number = laneNumbers[i];
-			laneOptions[i] = laneOption;
-		}
-		return laneOptions;
+	/* main section  */
+	
+	var isValuationMode = function(){
+		return ($scope.isHomePage('valuation') || $routeParams.page === 'valuation');
 	}
-	
-	
-	
 	$scope.init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
@@ -261,10 +254,8 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 		$scope.stopEditMode();
 		if(isValuationMode()){
 			$scope.startEditMode();
+			lanesDTConfig.edit.byDefault=true;
 		}
-				
-		lanesDTConfig.edit.active=$scope.isEditMode();
-		lanesDTConfig.save.active=$scope.isEditMode();
 		
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
@@ -291,8 +282,7 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 				$scope.treatments.init($scope.run.lanes[0].treatments, jsRoutes.controllers.runs.tpl.Runs.laneTreatments);				
 			}
 			
-			//sort laneOptions of lane select list (form.laneNumbers)
-			$scope.laneOptions = sortLaneOptions($scope.run.lanes);
+			$scope.laneOptions = $filter('orderBy')($scope.run.lanes, 'number');
 			
 			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code}}).success(function(data) {
 				$scope.readSetsDT = datatable($scope, $scope.readSetsDTConfig);
@@ -306,7 +296,7 @@ function DetailsCtrl($scope, $http, $routeParams, $window, datatable, messages, 
 	
 	
 };
-DetailsCtrl.$inject = ['$scope', '$http', '$routeParams', '$window', 'datatable', 'messages', 'lists', 'treatments'];
+DetailsCtrl.$inject = ['$scope', '$http', '$routeParams', '$window', '$filter', 'datatable', 'messages', 'lists', 'treatments'];
 
 function LanesNGSRGCtrl($scope, datatable) {
 	

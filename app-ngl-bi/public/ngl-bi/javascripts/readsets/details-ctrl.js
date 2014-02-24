@@ -20,8 +20,15 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 	$scope.cancel = function(){
 		$scope.messages.clear();
 		updateData();
+		if(!isValuationMode()){
+			$scope.stopEditMode();
+		}
 		
 	};
+	
+	$scope.activeEditMode = function(){
+		$scope.startEditMode();			
+	}
 	
 	var updateData = function(){
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.get($routeParams.code).url).success(function(data) {

@@ -69,6 +69,8 @@ button.validate = Sauvegarder
 button.cancel = Annuler
 button.readsets.show = Voir Readsets
 button.readsets.valuation = Evaluer Readsets
+button.edit = Editer
+
 
 runs.page.title=Runs
 runs.menu = Runs
