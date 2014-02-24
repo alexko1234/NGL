@@ -1002,8 +1002,10 @@ angular.module('datatableServices', []).
 		    				}
 		    	    		this.newExtraHeaderConfig();
 		    	    		
-		    	    		this.computeDisplayResult();
-		    				this.computePaginationList();
+		    	    		if(this.displayResult && this.displayResult.length > 0){
+		    	    			this.computeDisplayResult();
+		    	    			this.computePaginationList();
+		    	    		}
 		    			},
 		    			
 		    			/**
