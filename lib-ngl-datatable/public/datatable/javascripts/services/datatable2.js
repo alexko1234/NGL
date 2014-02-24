@@ -109,7 +109,8 @@ angular.module('datatableServices', []).
 								showButton:true
 							},
 							otherButtons:{
-								active:false
+								active:false,
+								template:undefined
 							},
 							messages:{
 								active:false,
@@ -846,7 +847,7 @@ angular.module('datatableServices', []).
 		    			isShowToolbarButtons: function(){
 		    				return ( this.isShowCRUDButtons()
 		    						|| this.isShowHideButtons()  || (this.config.show.active && this.config.show.showButton) 
-		    						|| this.config.otherButtons.active);
+		    						|| this.isShowOtherButtons());
 		    			},
 		    			isShowCRUDButtons: function(){
 		    				return (  (this.config.edit.active && this.config.edit.showButton) 
@@ -854,6 +855,9 @@ angular.module('datatableServices', []).
 		    			},
 		    			isShowHideButtons: function(){
 		    				return (this.config.hide.active && this.config.hide.showButton) ;
+		    			},
+		    			isShowOtherButtons: function(){
+		    				return (this.config.otherButtons.active && this.config.otherButtons.template !== undefined) ;
 		    			},
 		    			isShowToolbarPagination: function(){
 		    				return this.config.pagination.active;
@@ -997,6 +1001,9 @@ angular.module('datatableServices', []).
 		    					this.setColumnsConfig(this.config.columns);
 		    				}
 		    	    		this.newExtraHeaderConfig();
+		    	    		
+		    	    		this.computeDisplayResult();
+		    				this.computePaginationList();
 		    			},
 		    			
 		    			/**
@@ -1331,7 +1338,7 @@ angular.module('datatableServices', []).
   		    		+		'</li>'
   		    		+	'</ul>'
   		    		+'</div>'  		    		
-  		    		//+'<div ng-transclude></div>'
+  		    		+'<div class="btn-group" ng-if="dtTable.isShowOtherButtons()" dt-compile="dtTable.config.otherButtons.template"></div>'
   		    		+'</div>'
   		    		+'<div class="btn-toolbar pull-right" name="dt-toolbar-results"  ng-if="dtTable.isShowToolbarResults()">'
   		    		+	'<button class="btn btn-info" disabled="disabled" ng-show="dtTable.config.showTotalNumberRecords">{{messagesDatatable(\'datatable.totalNumberRecords\', dtTable.totalNumberRecords)}}</button>'
@@ -1474,26 +1481,30 @@ angular.module('datatableServices', []).
     		};
     	}).directive('dtCompile', function($compile) {
 			// directive factory creates a link function
-			return function(scope, element, attrs) {
-				//console.log("dtCompile");
-			    scope.$watch(
-			        function(scope) {
-			             // watch the 'compile' expression for changes
-			            return scope.$eval(attrs.dtCompile);
-			        },
-			        function(value) {
-			            // when the 'compile' expression changes
-			            // assign it into the current DOM
-			            element.html(value);
+			return {
+				restrict: 'A',
+  		    	link: function(scope, element, attrs) {
+  					//console.log("dtCompile");
+  				    scope.$watch(
+  				        function(scope) {
+  				             // watch the 'compile' expression for changes
+  				            return scope.$eval(attrs.dtCompile);
+  				        },
+  				        function(value) {
+  				            // when the 'compile' expression changes
+  				            // assign it into the current DOM
+  				            element.html(value);
 
-			            // compile the new DOM and link it to the current
-			            // scope.
-			            // NOTE: we only compile .childNodes so that
-			            // we don't get into infinite loop compiling ourselves
-			            $compile(element.contents())(scope);
-			        }
-			    );
+  				            // compile the new DOM and link it to the current
+  				            // scope.
+  				            // NOTE: we only compile .childNodes so that
+  				            // we don't get into infinite loop compiling ourselves
+  				            $compile(element.contents())(scope);
+  				        }
+  				    );
+  				}
 			};
+						
 		}).directive("dtHtmlFilter", function($filter) {
 				return {
 					  require: 'ngModel',
