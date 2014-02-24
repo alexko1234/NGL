@@ -3,6 +3,7 @@ package controllers.runs.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import models.utils.ListObject;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
 import net.vz.mongodb.jackson.DBUpdate;
+import net.vz.mongodb.jackson.DBUpdate.Builder;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +41,7 @@ import akka.actor.Props;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
+import play.data.validation.ValidationError;
 import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
@@ -50,6 +53,7 @@ import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 import controllers.CommonController;
+import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -63,7 +67,9 @@ public class Runs extends RunsController {
 	
 	final static Form<RunsSearchForm> searchForm = form(RunsSearchForm.class); 
 	final static Form<Run> runForm = form(Run.class);
+	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static Form<Valuation> valuationForm = form(Valuation.class);
+	final static List<String> authorizedUpdateFields = Arrays.asList("keep");
 	
 	private static ActorRef rulesActor = Akka.system().actorOf(new Props(RulesActor.class));
 
@@ -207,33 +213,55 @@ public class Runs extends RunsController {
 			return badRequest("Run with code "+code+" not exist");
 		}
 
+		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
+		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
 		Run runInput = filledForm.get();
-		if (code.equals(runInput.code)) {
-			if(null != runInput.traceInformation){
-				runInput.traceInformation.setTraceInformation(getCurrentUser());
+		
+		if(queryFieldsForm.fields == null){
+			if (code.equals(runInput.code)) {
+				if(null != runInput.traceInformation){
+					runInput.traceInformation.setTraceInformation(getCurrentUser());
+				}else{
+					Logger.error("traceInformation is null !!");
+				}
+				
+				if(!run.state.code.equals(runInput.state.code)){
+					return badRequest("You cannot change the state code. Please used the state url ! ");
+				}
+				ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 	
+				ctxVal.setUpdateMode();
+				runInput.validate(ctxVal);
+				if (!ctxVal.hasErrors()) {
+					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runInput);
+					return ok(Json.toJson(runInput));
+				}else {
+					return badRequest(filledForm.errorsAsJson());
+				}
+				
 			}else{
-				Logger.error("traceInformation is null !!");
-			}
-			
-			if(!run.state.code.equals(runInput.state.code)){
-				return badRequest("You cannot change the state code. Please used the state url ! ");
-			}
-			
-			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 			
-			ctxVal.setUpdateMode();
-			runInput.validate(ctxVal);
-			if (!ctxVal.hasErrors()) {
-				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runInput);
-				return ok(Json.toJson(runInput));
-			}else {
-				return badRequest(filledForm.errorsAsJson());
-			}
+				return badRequest("run code are not the same");
+			}	
 		}else{
-			return badRequest("run code are not the same");
+			//warning no validation !!!
+			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 	
+			ctxVal.setUpdateMode();
+			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
+			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
+			if(!filledForm.hasErrors()){
+				TraceInformation ti = run.traceInformation;
+				ti.setTraceInformation(getCurrentUser());
+				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+						DBQuery.and(DBQuery.is("code", code)), getBuilder(runInput, queryFieldsForm.fields, Run.class).set("traceInformation", ti));
+				return ok(Json.toJson(getRun(code)));
+			}else{
+				return badRequest(filledForm.errorsAsJson());
+			}			
 		}
-
 	}
+
+	
+
 
 
 	public static Result delete(String code) {
@@ -264,9 +292,11 @@ public class Runs extends RunsController {
 		ctxVal.setUpdateMode();
 		RunValidationHelper.validateValuation(run.typeCode, valuation, ctxVal);
 		if(!ctxVal.hasErrors()) {
+			TraceInformation ti = run.traceInformation;
+			ti.setTraceInformation(getCurrentUser());
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", code)),
-					DBUpdate.set("valuation", valuation));			
+					DBUpdate.set("valuation", valuation).set("traceInformation", ti));			
 			run = getRun(code);
 			Workflows.nextRunState(ctxVal, run);
 			

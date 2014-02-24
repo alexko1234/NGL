@@ -3,6 +3,7 @@ package controllers.runs.api;
 
 import java.util.Date;
 
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -83,13 +84,14 @@ public class Lanes extends RunsController{
 		if(!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.is("code", code),
-					DBUpdate.push("lanes", laneValue));
+					DBUpdate.push("lanes", laneValue).set("traceInformation", getUpdateTraceInformation(run)));
 			return ok(Json.toJson(laneValue));	
 		} else {
 			Logger.error(filledForm.errorsAsJson().toString());
 			return badRequest(filledForm.errorsAsJson());
 		}		
 	}
+
 	
 	//@Permission(value={"creation_update_run_lane"})
 	public static Result update(String code, Integer laneNumber){
@@ -108,7 +110,7 @@ public class Lanes extends RunsController{
 			if(!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 						DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)),
-						DBUpdate.set("lanes.$", laneValue)); 
+						DBUpdate.set("lanes.$", laneValue).set("traceInformation", getUpdateTraceInformation(run))); 
 				return ok(Json.toJson(laneValue));
 			} else {
 				return badRequest(filledForm.errorsAsJson());
@@ -125,7 +127,7 @@ public class Lanes extends RunsController{
 		}
 		
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.and(DBQuery.is("code",code),DBQuery.is("lanes.number",laneNumber)), DBUpdate.unset("lanes.$"));
-		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.is("code",code), DBUpdate.pull("lanes", null));
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.is("code",code), DBUpdate.pull("lanes", null).set("traceInformation", getUpdateTraceInformation(run)));
 		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("runCode", code), DBQuery.is("laneNumber",laneNumber)));
 		return ok();
 	
@@ -136,7 +138,7 @@ public class Lanes extends RunsController{
 		if (run==null) {
 			return badRequest();
 		}
-		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.is("code",code), DBUpdate.unset("lanes"));
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, DBQuery.is("code",code), DBUpdate.unset("lanes").set("traceInformation", getUpdateTraceInformation(run)));
 		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("runCode", code)));
 		return ok();
 	}
@@ -159,7 +161,7 @@ public class Lanes extends RunsController{
 		if(!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)),
-					DBUpdate.set("lanes.$.valuation", valuation)); 
+					DBUpdate.set("lanes.$.valuation", valuation).set("traceInformation", getUpdateTraceInformation(run))); 
 			return get(code, laneNumber);
 		} else {
 			return badRequest(filledForm.errorsAsJson());

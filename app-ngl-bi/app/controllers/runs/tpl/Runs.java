@@ -60,6 +60,7 @@ public class Runs extends CommonController {
   	    		controllers.runs.tpl.routes.javascript.Runs.valuation(),
   	    		controllers.runs.tpl.routes.javascript.Runs.laneTreatments(),
   	    		controllers.runs.api.routes.javascript.Runs.get(),
+  	    		controllers.runs.api.routes.javascript.Runs.update(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.list(),
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.get(),
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.home(),

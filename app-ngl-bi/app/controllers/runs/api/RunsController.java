@@ -3,6 +3,7 @@ package controllers.runs.api;
 import com.mongodb.BasicDBObject;
 
 import net.vz.mongodb.jackson.DBQuery;
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import controllers.CommonController;
@@ -24,11 +25,16 @@ public class RunsController extends CommonController {
 	    return null;
     }
     
-    
+    protected static TraceInformation getUpdateTraceInformation(Run run) {
+		TraceInformation ti = run.traceInformation;
+		ti.setTraceInformation(getCurrentUser());
+		return ti;
+	}
+	
 
     protected static Run getRun(String code, Integer laneNumber) {
-	Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,
-		Run.class, DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)));
-	return run;
+		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,
+			Run.class, DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)));
+		return run;
     }
 }

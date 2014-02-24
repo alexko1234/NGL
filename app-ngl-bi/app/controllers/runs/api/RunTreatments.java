@@ -16,7 +16,7 @@ import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 
-public class RunTreatments extends CommonController{
+public class RunTreatments extends RunsController{
 
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	
@@ -67,7 +67,9 @@ public class RunTreatments extends CommonController{
 		ctxVal.putObject("run", run);
 		treatment.validate(ctxVal);
 		if(!ctxVal.hasErrors()){
-			MongoDBDAO.updateSet(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, "treatments."+treatment.code, treatment);			
+			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+					DBQuery.is("code", runCode),
+					DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(run)));						
 		}
 		if (!filledForm.hasErrors()) {
 			return ok(Json.toJson(treatment));			
@@ -96,7 +98,9 @@ public class RunTreatments extends CommonController{
 			
 			treatment.validate(ctxVal);
 			if(!ctxVal.hasErrors()){
-				MongoDBDAO.updateSet(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, "treatments."+treatment.code, treatment);			
+				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+						DBQuery.is("code", runCode),
+						DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(run)));			
 			}
 			if (!filledForm.hasErrors()) {
 				return ok(Json.toJson(treatment));			
@@ -116,7 +120,7 @@ public class RunTreatments extends CommonController{
 			return badRequest();
 		}	
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, ReadSet.class, 
-				DBQuery.is("code", runCode), DBUpdate.unset("treatments."+treatmentCode));			
+				DBQuery.is("code", runCode), DBUpdate.unset("treatments."+treatmentCode).set("traceInformation", getUpdateTraceInformation(run)));			
 		return ok();		
 	}		
 }

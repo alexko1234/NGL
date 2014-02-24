@@ -1,6 +1,6 @@
 "use strict";
 
-function DetailsCtrl($scope, $http, $routeParams, $window, $filter, datatable, messages, lists, treatments) {
+function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatable, messages, lists, treatments) {
 	
 	
 	/* configuration datatables */	
@@ -31,13 +31,25 @@ function DetailsCtrl($scope, $http, $routeParams, $window, $filter, datatable, m
 				},
 				callback:function(datatable, nbError){
 					if(nbError == 0){
-						$http.put(jsRoutes.controllers.runs.api.Runs.valuation($scope.run.code).url, $scope.run.valuation).
-							success(function(data, status, headers, config){
-								$scope.messages.setSuccess("save");
-								$scope.run = data;
-							}).error(function(data, status, headers, config){
+						var queries = [];
+						queries.push($http.put(jsRoutes.controllers.runs.api.Runs.update($scope.run.code).url+"?fields=keep", {keep:$scope.run.keep}));
+						queries.push($http.put(jsRoutes.controllers.runs.api.Runs.valuation($scope.run.code).url, $scope.run.valuation));
+						
+						$q.all(queries).then(function(results){
+							var error = false;
+							for(var i = 0; i  < results.length; i++){
+								var result = results[i];
+								if(result.status !== 200){
+									error = true;
+								}
+							}
+							if(error){
 								$scope.messages.setError("save");	
-							});
+							}else{
+								$scope.messages.setSuccess("save");
+								$scope.run = results[0].data;
+							}
+						});					
 					}else{
 						$scope.messages.setError("save");
 					}
@@ -175,7 +187,7 @@ function DetailsCtrl($scope, $http, $routeParams, $window, $filter, datatable, m
 	
 	/* buttons section */
 	$scope.save = function(){
-		$scope.lanesDT.save();
+		$scope.lanesDT.save();		
 	};
 	
 	$scope.cancel = function(){
@@ -296,7 +308,7 @@ function DetailsCtrl($scope, $http, $routeParams, $window, $filter, datatable, m
 	
 	
 };
-DetailsCtrl.$inject = ['$scope', '$http', '$routeParams', '$window', '$filter', 'datatable', 'messages', 'lists', 'treatments'];
+DetailsCtrl.$inject = ['$scope', '$http', '$q', '$routeParams', '$window', '$filter', 'datatable', 'messages', 'lists', 'treatments'];
 
 function LanesNGSRGCtrl($scope, datatable) {
 	
