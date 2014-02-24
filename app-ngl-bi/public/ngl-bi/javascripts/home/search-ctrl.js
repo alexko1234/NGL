@@ -12,6 +12,9 @@ function SearchCtrl($scope, datatable) {
 				numberRecordsPerPage:5,
 				numberRecordsPerPageList: [{number:5, clazz:''},{number:10, clazz:''},{number:25, clazz:''},{number:50, clazz:''},{number:100, clazz:''}]
 			},
+			select:{
+				active:false
+			},
 			columns : [
 			           {  	property:"code",
 					    	header: Messages("runs.code"),
