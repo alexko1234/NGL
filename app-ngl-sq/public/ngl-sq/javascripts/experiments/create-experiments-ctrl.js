@@ -62,6 +62,10 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			extraHeaders:{
 				number:2,
 				dynamic:true,
+			},
+			otherButton:{
+				active:true,
+				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != \'F\'" ng-hide="!experiment.doPurif" title="Messages("experiments.addpurif")">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
 			}
 	};
 

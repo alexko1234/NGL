@@ -22,9 +22,11 @@ GET		/api/supports													controllers.supports.api.Supports.list()
 
 #processes tpl
 GET 	/processes/:homecode/home										controllers.processes.tpl.Processes.home(homecode:java.lang.String)
+GET		/tpl/processes/searchColmuns/:processTypeCode					controllers.processes.tpl.Processes.searchColumns(processTypeCode:java.lang.String)
 GET		/tpl/processes/search/:processTypeCode							controllers.processes.tpl.Processes.search(processTypeCode:java.lang.String)
 GET		/tpl/processes/searchContainers									controllers.processes.tpl.Processes.searchContainers()
 GET		/tpl/processes/newProcesses/:processTypeCode					controllers.processes.tpl.Processes.newProcesses(processTypeCode:java.lang.String)
+GET		/tpl/processes/newProcessesColumns/:processTypeCode				controllers.processes.tpl.Processes.newProcessesColumns(processTypeCode:java.lang.String)
 GET		/tpl/processes/js-routes										controllers.processes.tpl.Processes.javascriptRoutes()
 
 #processes api

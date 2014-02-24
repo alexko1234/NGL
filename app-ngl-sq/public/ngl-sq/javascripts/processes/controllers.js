@@ -3,6 +3,57 @@
 function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 	 
 	$scope.datatableConfig = {
+			columns:[
+						{
+							"header":Messages("containers.table.code"),
+							"property":"code",
+							"order":true,
+							"hide":true,
+							"type":"text"
+						},
+						{
+							"header":Messages("experiments.table.projectCodes"),
+							"property":"projectCodes",
+							"order":true,
+							"hide":true,
+							"type":"text"
+						},
+						{
+							"header":Messages("containers.table.sampleCodes"),
+							"property":"sampleCodes",
+							"order":true,
+							"hide":true,
+							"type":"text"
+						},
+						{
+							"header":Messages("containers.table.valid"),
+							"property":"valid",
+							"order":true,
+							"hide":true,
+							"type":"text"
+						},
+						{
+							"header":Messages("containers.table.stateCode"),
+							"property":"stateCode",
+							"order":true,
+							"hide":true,
+							"type":"text"
+						},
+						{
+							"header":Messages("containers.table.categoryCode"),
+							"property":"categoryCode",
+							"order":true,
+							"hide":true,
+							"type":"text"
+						},
+						{
+							"header":Messages("containers.table.fromExperimentTypeCodes"),
+							"property":"typeCode",
+							"order":true,
+							"hide":true,
+							"type":"text"
+						}
+						],
 		search:{
 			url:jsRoutes.controllers.containers.api.Containers.list()
 		},
@@ -11,7 +62,8 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 			by:'code'
 		},
 		otherButtons :{
-			active:true
+			active:true,
+			template:'<button class="btn" ng-disabled="!datatable.isSelect()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="Messages("button.addbasket")"><i class="icon-shopping-cart icon-large"></i> Messages("button.addbasket") ({{basket.length()}})</button>'
 		}
 	};
 		
@@ -161,6 +213,7 @@ SearchContainerCtrl.$inject = ['$scope', 'datatable','basket','lists','$filter']
 function ListNewCtrl($scope, datatable) {
 	
 	$scope.datatableConfig = {
+			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns($scope.getForm().type.code).url,
 			pagination:{
 				active:false
 			},		
@@ -199,11 +252,13 @@ function ListNewCtrl($scope, datatable) {
 		};
 	
 	$scope.init = function(){
+		$scope.form = $scope.getForm();
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		$scope.basket = $scope.getBasket();
 		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);		
 		$scope.datatable.selectAll(true);
-		$scope.datatable.setEditColumn();
+		//$scope.datatable.setEditColumn();
+		
 	}
 };
 ListNewCtrl.$inject = ['$scope', 'datatable'];

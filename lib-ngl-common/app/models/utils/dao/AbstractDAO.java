@@ -101,7 +101,7 @@ public abstract class AbstractDAO<T> {
 	public String listToParameters(List<String> parameters){
 		String args = "";
 		for(int i = 0; i<parameters.size();i++){
-			args += "'"+parameters.get(i)+"'";
+			args += "?";
 			if(i != (parameters.size() - 1)){
 				args += ",";
 			}

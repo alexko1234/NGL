@@ -2,8 +2,69 @@
 
 function SearchCtrl($scope, datatable, lists,$filter) {
 	$scope.lists = lists;
-	
 	$scope.datatableConfig = {	
+			columns:[
+				{
+					"header":Messages("containers.table.supportCode"),
+					"property":"support.supportCode",
+					"order":true,
+					"type":"text"
+				},
+				{
+					"header":Messages("containers.table.categoryCode"),
+					"property":"support.categoryCode",
+					"order":true,
+					"type":"text"
+				},
+				{
+					"header":Messages("containers.table.code"),
+					"property":"code",
+					"order":true,
+					"type":"text"
+				},
+				{
+					"header":Messages("containers.table.categoryCode"),
+					"property":"categoryCode",
+					"order":true,
+					"type":"text"
+				},
+				{
+					"header":Messages("containers.table.sampleCodes"),
+					"property":"sampleCodes",
+					"order":true,
+					"type":"text"
+				},
+				{
+					"header":Messages("containers.table.projectCodes"),
+					"property":"projectCodes",
+					"order":true,
+					"type":"text"
+				},
+				{
+					"header":Messages("containers.table.fromExperimentTypeCodes"),
+					"property":"fromExperimentTypeCodes",
+					"order":true,
+					"type":"text"
+				},
+				{
+					"header":Messages("containers.table.valid"),
+					"property":"valid",
+					"order":true,
+					"type":"text"
+				},
+				{
+					"header":Messages("containers.table.stateCode"),
+					"property":"stateCode",
+					"order":true,
+					"type":"text"
+				},
+				{
+					"header":Messages("containers.table.creationDate"),
+					"property":"traceInformation.creationDate",
+					"order":true,
+					"type":"text"
+				},
+			],
 			search:{
 				url:jsRoutes.controllers.containers.api.Containers.list()
 			},
@@ -71,12 +132,15 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 			$scope.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("new").url,remove:false});
 			$scope.activeTab(0);
 		}
-		
+		if(angular.isUndefined($scope.getForm())){
+			$scope.form = {};
+			$scope.setForm($scope.form);
 		$scope.lists.refresh.containerSupportCategories();
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.containerCategories();
 		$scope.lists.refresh.experimentTypes();
 		$scope.lists.refresh.states({objectTypeCode:"Container"});
+		}
 	}
 	
 	$scope.search = function(){		

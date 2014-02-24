@@ -386,16 +386,8 @@ th {
 				<div class="row-fluid">
 		<div id="experience_table" class="row1">
 	<fieldset>
-		@button() = {
-			<!-- <button class="btn" ng-click="saveContainers()" data-toggle="tooltip" title="Sauver">
-			<i class="icon-save icon-large"></i>
-			</button>-->
-			<div class="btn-group">
-			<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != 'F'" ng-hide="!experiment.doPurif" title="@Messages("experiments.addpurif")">@(Messages("experiments.addpurif"))</button>
-			<button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != 'F'"    ng-hide="!experiment.doQc" title="@Messages("experiments.addqc")">@(Messages("experiments.addqc"))</button>
-			</div>
-		}
-		@views.html.components.datatable.datatable(datatableConfig,null,button)
+		<div datatable="datatable">
+		</div>
 	</fieldset>
 </div>
 				</div>

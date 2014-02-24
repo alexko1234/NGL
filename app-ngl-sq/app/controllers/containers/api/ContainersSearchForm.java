@@ -19,10 +19,13 @@ public class ContainersSearchForm extends ListForm{
 	
 	@Override
 	public String toString() {
-		return "ContainersSearch [projectCodes=" + projectCodes.toString()
-				+ ", categoryCode=" + categoryCode + ", stateCode="
-				+ stateCode + ", sampleCodes=" + sampleCodes.toString() + ", experimentTypeCode=" 
-				+ experimentTypeCode + ", processTypeCode=" + processTypeCode + ", supportCode="
-				+ supportCode +", supportCategoryCode=" + containerSupportCategory +"]";
+		return "ContainersSearchForm [projectCode=" + projectCode
+				+ ", projectCodes=" + projectCodes + ", stateCode=" + stateCode
+				+ ", sampleCode=" + sampleCode + ", sampleCodes=" + sampleCodes
+				+ ", categoryCode=" + categoryCode + ", experimentTypeCode="
+				+ experimentTypeCode + ", processTypeCode=" + processTypeCode
+				+ ", supportCode=" + supportCode
+				+ ", containerSupportCategory=" + containerSupportCategory
+				+ ", fromExperimentTypeCodes=" + fromExperimentTypeCodes + "]";
 	}
 }

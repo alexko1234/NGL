@@ -20,19 +20,7 @@ public class Containers extends CommonController {
 	}	
 	
 	public static Result search(){
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("support.supportCode", Messages.get("containers.table.supportCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("support.categoryCode", Messages.get("containers.table.categoryCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("containers.table.sampleCodes"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("valid", Messages.get("containers.table.valid"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("containers.table.stateCode"), true, false, false));
-		columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("containers.table.creationDate"), true, false, false));
-		DatatableConfig config = new DatatableConfig(columns);
-		return ok(search.render(config));
+		return ok(search.render());
 	}
 	
 	public static Result javascriptRoutes() {

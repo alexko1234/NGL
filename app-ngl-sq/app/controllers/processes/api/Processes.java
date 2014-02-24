@@ -60,6 +60,7 @@ public class Processes extends CommonController{
 				if(container.fromExperimentTypeCodes == null || container.fromExperimentTypeCodes.size() == 0){
 					container.fromExperimentTypeCodes = new ArrayList<String>();
 					container.fromExperimentTypeCodes.add(value.getProcessType().voidExperimentType.code);
+					container.processTypeCode = value.typeCode;
 					MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
 				}
 

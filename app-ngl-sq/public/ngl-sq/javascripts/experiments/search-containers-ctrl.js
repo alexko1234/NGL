@@ -3,6 +3,36 @@
 function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lists) {
 	 
 	$scope.datatableConfig = {
+		columns:[{
+			"header":Messages("containers.table.code"),
+			"property":"code",
+			"order":true,
+			"type":"text"
+		},
+		{
+			"header":Messages("containers.table.categoryCode"),
+			"property":"categoryCode",
+			"order":true,
+			"type":"text"
+		},
+		{
+			"header":Messages("containers.table.creationDate"),
+			"property":"traceInformation.creationDate",
+			"order":true,
+			"type":"date"
+		},
+		{
+			"header":Messages("containers.table.createUser"),
+			"property":"traceInformation.createUser",
+			"order":true,
+			"type":"text"
+		},
+		{
+			"header":Messages("containers.table.stateCode"), 
+			"property":"state.code", 
+			"order":true,
+			"type":"text"
+		}],	
 		search:{
 			url:jsRoutes.controllers.supports.api.Supports.list()
 		},
@@ -11,7 +41,8 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 			by:'code'
 		},
 		otherButtons :{
-			active:true
+			active:true,
+			template:'<button class="btn" ng-disabled="!datatable.isSelect()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="Messages("button.addbasket")"><i class="icon-shopping-cart icon-large"></i> ({{basket.length()}})</button>'
 		}
 	};
 		

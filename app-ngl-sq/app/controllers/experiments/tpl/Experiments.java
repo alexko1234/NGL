@@ -38,32 +38,12 @@ public class Experiments extends CommonController{
 		return ok(home.render(code));
 	}
 	
-	
 	public static Result searchSupports(){
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode"), true, false, false));
-		columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("containers.table.creationDate"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("traceInformation.createUser", Messages.get("containers.table.createUser"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("state.code", Messages.get("containers.table.stateCode"), true, false, false));
-		
-		DatatableConfig config = new DatatableConfig(columns);
-		config.button = Boolean.TRUE;
-		
-		return ok(searchContainers.render(config));
+		return ok(searchContainers.render());
 	}
 	
 	public static Result newExperiments(String experimentTypeCode){
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("experiments.table.code")));
-		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("experiments.table.projectCodes")));						
-		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("experiments.table.sampleCodes")));
-			
-		DatatableConfig config = new DatatableConfig(columns);
-		config.remove = true;
-		config.button = true;
-		
-		return ok(newExperiments.render(config));
+		return ok(newExperiments.render());
 	}
 	
 	public static Result firstEditExperiment(String experimentTypeCode){
@@ -121,26 +101,7 @@ public class Experiments extends CommonController{
 	}
 	
 	public static Result search(String experimentType){
-		
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		Map<Integer,String> extraHeaders = new HashMap<Integer, String>();
-		extraHeaders.put(0, "Inputs");
-		
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, true,false,extraHeaders));	
-		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes"), true, false, true,false,extraHeaders));	
-		columns.add(DatatableHelpers.getColumn("mesuredVolume.value", Messages.get("experiments.table.volume.value"),true, true, true,false,extraHeaders));	
-		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("containers.table.sampleCodes"), true, false, true,false,extraHeaders));		
-		columns.add(DatatableHelpers.getColumn("valid", Messages.get("containers.table.valid"), true, false, true,false,extraHeaders));
-		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("containers.table.stateCode"), true, false, true,false,extraHeaders));
-		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode"), true, false, true,false,extraHeaders));
-		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes"), true, false, true,false,extraHeaders));
-	
-		DatatableConfig config = new DatatableConfig(columns);
-		config.save = true;
-		config.edit = true;
-	
-		
-		return ok(search.render(config));
+		return ok(search.render());
 	}
 	
 	

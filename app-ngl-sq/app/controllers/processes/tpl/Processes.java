@@ -10,9 +10,11 @@ import models.utils.ListObject;
 import models.utils.dao.DAOException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.JsonNode;
 
 import play.Routes;
 import play.i18n.Messages;
+import play.libs.Json;
 import play.mvc.Result;
 import views.components.datatable.DatatableColumn;
 import views.components.datatable.DatatableConfig;
@@ -30,21 +32,14 @@ public class Processes extends CommonController{
 	}
 
 	public static Result searchContainers(){
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes"), true, false, false));				
-		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("containers.table.sampleCodes"), true, false, false));		
-		columns.add(DatatableHelpers.getColumn("valid", Messages.get("containers.table.valid"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("containers.table.stateCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes")));
-
-		DatatableConfig config = new DatatableConfig(columns);
-		config.button = Boolean.TRUE;
-		return ok(searchContainers.render(config));
+		return ok(searchContainers.render());
 	}
 
 	public static Result search(String processTypeCode){
+		return ok(search.render());
+	}
+	
+	public static Result searchColumns(String processTypeCode){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("typeCode", Messages.get("processes.table.typeCode"), true, false, false));
@@ -58,14 +53,14 @@ public class Processes extends CommonController{
 
 		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode,true));
 
-		DatatableConfig config = new DatatableConfig(columns);
-		config.save = true;
-		config.edit = true;
-
-		return ok(search.render(config));
+		return ok(Json.toJson(columns));
 	}
 
 	public static Result newProcesses(String processTypeCode){
+		return ok(newProcesses.render());
+	}
+	
+	public static Result newProcessesColumns(String processTypeCode){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
 		columns.add(DatatableHelpers.getColumn("support.supportCode", Messages.get("processes.table.supportCode")));
 		columns.add(DatatableHelpers.getColumn("support.line", Messages.get("processes.table.line")));
@@ -78,13 +73,7 @@ public class Processes extends CommonController{
 
 		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode, true));
 
-		DatatableConfig config = new DatatableConfig(columns);
-		config.save = true;
-		config.edit = true;
-		config.remove = true;
-		config.button = true;
-
-		return ok(newProcesses.render(config));
+		return ok(Json.toJson(columns));
 	}
 
 
@@ -128,6 +117,8 @@ public class Processes extends CommonController{
 						controllers.processes.tpl.routes.javascript.Processes.search(),
 						controllers.processes.tpl.routes.javascript.Processes.searchContainers(),
 						controllers.processes.tpl.routes.javascript.Processes.home(),  
+						controllers.processes.tpl.routes.javascript.Processes.searchColumns(),  
+						controllers.processes.tpl.routes.javascript.Processes.newProcessesColumns(),  
 						controllers.processes.api.routes.javascript.Processes.save(),
 						controllers.processes.api.routes.javascript.ProcessTypes.list(),
 						controllers.containers.api.routes.javascript.Containers.list(),

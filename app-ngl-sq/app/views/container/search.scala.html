@@ -1,7 +1,8 @@
-@(datatableConfig: views.components.datatable.DatatableConfig)
-@import scala.collection.immutable._
-@form() = {
-	<form class="well form-search form-vertical">
+@()
+<div ng-init="init()">
+	<div datatable="datatable">
+	<div dt-form>
+	<form class="well form-search form-inline">
 		<select ng-model="form.containerSupportCategory" ng-options=" CategorySupport.code for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()">
 			<option value="">@Messages("containers.select.categorySupportCode")</option>
 		</select>
@@ -29,8 +30,6 @@
 					<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="reset()"  class="btn"><i class="icon-undo icon-large"></i></button>				 	
 		</div>
 	</form>
-}
-
-<div ng-init="init()">
-	@views.html.components.datatable.datatable(datatableConfig, form)	
+	</div>
+	</div>
 </div>

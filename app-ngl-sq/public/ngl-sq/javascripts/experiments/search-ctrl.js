@@ -3,6 +3,64 @@
 function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 	
 	$scope.datatableConfig = {	
+			columns:[
+			{
+				"header":Messages("containers.table.code"),
+				"property":"code",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("experiments.table.projectCodes"),
+				"property":"projectCodes",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("experiments.table.volume.value"),
+				"property":"mesuredVolume.value",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.sampleCodes"),
+				"property":"sampleCodes",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.valid"),
+				"property":"valid",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.stateCode"),
+				"property":"stateCode",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.categoryCode"),
+				"property":"categoryCode",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.fromExperimentTypeCodes"),
+				"property":"typeCode",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			}
+			],
 			show:{
 				active:true,
 				add :function(line){

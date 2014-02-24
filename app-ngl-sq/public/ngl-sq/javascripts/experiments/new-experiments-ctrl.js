@@ -1,6 +1,25 @@
 function ListNewCtrl($scope, datatable) {
 	
 	$scope.datatableConfig = {
+			columns:[{
+				"header":Messages("experiments.table.code"),
+				"property":"code",
+				"order":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("experiments.table.projectCodes"),
+				"property":"projectCodes",
+				"order":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("experiments.table.sampleCodes"),
+				"property":"sampleCodes",
+				"order":true,
+				"type":"text"
+			}
+			],
 			pagination:{
 				active:false
 			},		
@@ -22,6 +41,10 @@ function ListNewCtrl($scope, datatable) {
 			},
 			messages:{
 				active:true
+			},
+			otherButtons:{
+				active:true,
+				template:'<button class="btn btn-info" ng-disabled="basket.length()==0" ng-click="newExperiment();" data-toggle="tooltip" title=""><i class=" icon-large"></i>{{form.experimentType.name}}</button>'
 			}
 		};
 	
