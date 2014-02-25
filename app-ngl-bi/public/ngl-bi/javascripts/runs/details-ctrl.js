@@ -82,21 +82,12 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 			    	order:false,
 			    	choiceInList:true,
 			    	listStyle:'bt-select',
-			    	possibleValues:'lists.getValuations()'
+			    	possibleValues:'lists.getValuations()'			    	
 				},
 				{	property:"valuation.resolutionCodes",
 					header: Messages("runs.lane.valuation.resolutions"),
-					render:function(value){
-						var html = "";
-						if(value.valuation.resolutionCodes){
-							var html = "<ul class='unstyled'>";
-							for(var i =0; i < value.valuation.resolutionCodes.length; i++){
-								html += "<li>"+Codes("resolution."+value.valuation.resolutionCodes[i])+"</li>";
-							}
-							html += "</ul>";
-							
-						}
-						return html;
+					render:function(value){						
+						return '<div bt-select ng-model="value.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ng-edit="false"></div>';
 					},
 					type :"String",
 			    	edit:true,

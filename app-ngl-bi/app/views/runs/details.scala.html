@@ -140,13 +140,14 @@
 	</form>		
 </div>
 
-<div ng-switch on="isEditMode()">
-	<div ng-switch-when="true">
-		<dl class="dl-horizontal">
-			<dt>@Messages("runs.valuation.comment")</dt>
-			<dd><textarea ng-model="run.valuation.comment"></textarea></dd>				
-		</dl>
-	</div>
+<div>
+	<dl class="dl-horizontal">
+		<dt>@Messages("runs.valuation.comment")</dt>
+		<dd ng-switch on="isEditMode()">
+			<textarea ng-model="run.valuation.comment" ng-switch-when="true"></textarea>
+			<p ng-switch-when="false" ng-bind="run.valuation.comment"></p>
+		</dd>				
+	</dl>
 </div>
 <div class="row-fluid">
 	<div class="span9">

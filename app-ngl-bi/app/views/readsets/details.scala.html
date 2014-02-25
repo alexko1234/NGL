@@ -130,13 +130,14 @@
 		</div>
 		
 		
-		<div ng-switch on="isEditMode()">
-			<div ng-switch-when="true">
-				<dl class="dl-horizontal">
-					<dt>@Messages("readsets.productionValuation.comment")</dt>
-					<dd><textarea ng-model="readset.productionValuation.comment"></textarea></dd>				
-				</dl>
-			</div>
+		<div>			
+			<dl class="dl-horizontal">
+				<dt>@Messages("readsets.productionValuation.comment")</dt>
+				<dd ng-switch on="isEditMode()">
+					<textarea ng-switch-when="true" ng-model="readset.productionValuation.comment"></textarea>
+					<p ng-switch-when="false" ng-bind="readset.productionValuation.comment"></p>
+				</dd>				
+			</dl>
 		</div>
 		
            
