@@ -47,7 +47,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 								$scope.messages.setError("save");	
 							}else{
 								$scope.messages.setSuccess("save");
-								$scope.run = results[0].data;
+								$scope.run = results[1].data;
 							}
 						});					
 					}else{
