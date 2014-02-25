@@ -5,6 +5,7 @@ import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
 import models.laboratory.common.description.Level;
 import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import play.data.Form;
@@ -16,13 +17,13 @@ import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 
-public class ReadSetTreatments extends CommonController{
+public class ReadSetTreatments extends ReadSetsController{
 
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	
 	//@Permission(value={"reading"})
 	public static Result list(String readSetCode){
-		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,DBQuery.is("code", readSetCode));
+		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet != null) {
 			return ok(Json.toJson(readSet.treatments));
 		} else{
@@ -54,7 +55,7 @@ public class ReadSetTreatments extends CommonController{
 	//@Permission(value={"creation_update_treatments"})
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result save(String readSetCode){
-		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
+		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet == null) {
 			return badRequest();
 		}else if(request().body().isMaxSizeExceeded()){
@@ -71,7 +72,10 @@ public class ReadSetTreatments extends CommonController{
 		ctxVal.putObject("readSet", readSet);
 		treatment.validate(ctxVal);
 		if(!ctxVal.hasErrors()){
-			MongoDBDAO.updateSet(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet, "treatments."+treatment.code, treatment);			
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, Run.class, 
+					DBQuery.is("code", readSetCode),
+					DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(readSet)));	
+			
 		}
 		if (!filledForm.hasErrors()) {
 			return ok(Json.toJson(treatment));			
@@ -98,7 +102,9 @@ public class ReadSetTreatments extends CommonController{
 			ctxVal.putObject("readSet", readSet);
 			treatment.validate(ctxVal);
 			if(!ctxVal.hasErrors()){
-				MongoDBDAO.updateSet(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet, "treatments."+treatment.code, treatment);			
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, Run.class, 
+						DBQuery.is("code", readSetCode),
+						DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(readSet)));				
 			}
 			if (!filledForm.hasErrors()) {
 				return ok(Json.toJson(treatment));			
@@ -118,7 +124,7 @@ public class ReadSetTreatments extends CommonController{
 			return badRequest();
 		}	
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-				DBQuery.is("code", readSetCode), DBUpdate.unset("treatments."+treatmentCode));			
+				DBQuery.is("code", readSetCode), DBUpdate.unset("treatments."+treatmentCode).set("traceInformation", getUpdateTraceInformation(readSet)));			
 		return ok();		
 	}
 	

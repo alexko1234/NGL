@@ -91,13 +91,13 @@
 			<dl class="dl-horizontal">
 				<dt>@Messages("runs.keep")</dt>
 				<dd>
-					 <label class="checkbox">
-						<input type="checkbox"  ng-model="run.keep" ng-if="isEditMode()">
-						<div ng-switch on="run.keep" ng-if="!isEditMode()">
-							<i ng-switch-when="true" class="icon-check icon-large"></i>
-							<i ng-switch-default class="icon-check-empty icon-large"></i>
-						</div>					
-					</label>										
+					 <label class="checkbox" ng-if="isEditMode()">
+						<input type="checkbox"  ng-model="run.keep">
+					</label>
+					<div ng-switch on="run.keep" ng-if="!isEditMode()">
+						<i ng-switch-when="true" class="icon-check icon-large"></i>
+						<i ng-switch-default class="icon-check-empty icon-large"></i>
+					</div>																				
 				</dd>
 			</dl>
 		</div>

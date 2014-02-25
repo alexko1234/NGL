@@ -1,20 +1,33 @@
 "use strict";
 
-function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, treatments, $window) {
+function DetailsCtrl($scope, $http, $q, $routeParams, datatable, messages, lists, treatments, $window) {
 	
 	$scope.goToRun=function(){
 		$window.open(jsRoutes.controllers.runs.tpl.Runs.get($scope.run.code).url, 'runs');
 	}
 	
 	$scope.save = function(){
-		$http.put(jsRoutes.controllers.readsets.api.ReadSets.valuation($scope.readset.code).url, 
-				{productionValuation:$scope.readset.productionValuation,bioinformaticValuation:$scope.readset.bioinformaticValuation})
-		.success(function(data, status, headers, config){
-			$scope.messages.setSuccess("save");
-			$scope.readset = data;
-		}).error(function(data, status, headers, config){
-			$scope.messages.setError("save");	
-		});
+		var queries = [];
+		queries.push($http.put(jsRoutes.controllers.readsets.api.ReadSets.properties($scope.readset.code).url,
+				{properties : $scope.readset.properties}));
+		queries.push($http.put(jsRoutes.controllers.readsets.api.ReadSets.valuation($scope.readset.code).url, 
+				{productionValuation:$scope.readset.productionValuation,bioinformaticValuation:$scope.readset.bioinformaticValuation}));
+		
+		$q.all(queries).then(function(results){
+			var error = false;
+			for(var i = 0; i  < results.length; i++){
+				var result = results[i];
+				if(result.status !== 200){
+					error = true;
+				}
+			}
+			if(error){
+				$scope.messages.setError("save");	
+			}else{
+				$scope.messages.setSuccess("save");
+				$scope.run = results[0].data;
+			}
+		});						
 	};
 	
 	$scope.cancel = function(){
@@ -100,7 +113,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, messages, lists, tr
 	}
 	
 };
-DetailsCtrl.$inject = ['$scope', '$http', '$routeParams', 'datatable', 'messages', 'lists', 'treatments', '$window'];
+DetailsCtrl.$inject = ['$scope', '$http', '$q', '$routeParams', 'datatable', 'messages', 'lists', 'treatments', '$window'];
 
 function NGSRGCtrl($scope, datatable) {
 	

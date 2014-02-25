@@ -46,7 +46,7 @@ import fr.cea.ig.MongoDBResult.Sort;
 
 
 
-public class ReadSets extends CommonController{
+public class ReadSets extends ReadSetsController{
 
 	final static Form<ReadSet> readSetForm = form(ReadSet.class);
 	final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
@@ -163,7 +163,7 @@ public class ReadSets extends CommonController{
 		
 		if (null == readSetInput._id) { 
 			readSetInput.traceInformation = new TraceInformation();
-			readSetInput.traceInformation.setTraceInformation("ngsrg");
+			readSetInput.traceInformation.setTraceInformation(getCurrentUser());
 			
 			if(null == readSetInput.state){
 				readSetInput.state = new State();
@@ -262,11 +262,6 @@ public class ReadSets extends CommonController{
 			return badRequest("readset code are not the same");
 		}		
 	}
-
-	private static ReadSet getReadSet(String readSetCode) {
-		return MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
-	}
-		
 	
 	//@Permission(value={"delete_readset"}) 
 	public static Result delete(String readSetCode) { 
@@ -348,10 +343,11 @@ public class ReadSets extends CommonController{
 		if(!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.and(DBQuery.is("code", code)),
-					DBUpdate.set("productionValuation", valuations.productionValuation).set("bioinformaticValuation", valuations.bioinformaticValuation));								
+					DBUpdate.set("productionValuation", valuations.productionValuation)
+					.set("bioinformaticValuation", valuations.bioinformaticValuation)
+					.set("traceInformation", getUpdateTraceInformation(readSet)));								
 			readSet = getReadSet(code);
-			Workflows.nextReadSetState(ctxVal, readSet);
-						
+			Workflows.nextReadSetState(ctxVal, readSet);						
 		} 
 		if(!ctxVal.hasErrors()) {
 			return ok(Json.toJson(readSet));
@@ -376,7 +372,8 @@ public class ReadSets extends CommonController{
 		if(!ctxVal.hasErrors()){
 		    MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", code)),
-				DBUpdate.set("properties", properties));								
+				DBUpdate.set("properties", properties)
+				.set("traceInformation", getUpdateTraceInformation(readSet)));								
 					
 		}
 		if (!filledForm.hasErrors()) {

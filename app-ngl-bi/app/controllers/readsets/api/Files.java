@@ -21,7 +21,7 @@ import controllers.authorisation.Permission;
 
 
 
-public class Files extends CommonController {
+public class Files extends ReadSetsController {
 
 	final static Form<File> fileForm = form(File.class);
 
@@ -82,14 +82,14 @@ public class Files extends CommonController {
 		if (!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.is("code", readsetCode),
-					DBUpdate.push("files", file)); 
+					DBUpdate.push("files", file).set("traceInformation", getUpdateTraceInformation(readSet))); 
 			return ok(Json.toJson(file));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
 		}
 	}
 	
-	//@Permission(value={"creation_update _files"})
+	//@Permission(value={"creation_update_files"})
 	public static Result update(String readsetCode, String fullname) {
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)));
 		if (null == readSet) {
@@ -107,7 +107,7 @@ public class Files extends CommonController {
 			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 						DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)),
-						DBUpdate.set("files.$", file)); 
+						DBUpdate.set("files.$", file).set("traceInformation", getUpdateTraceInformation(readSet))); 
 				
 				return ok(Json.toJson(file));
 			} else {
@@ -124,7 +124,7 @@ public class Files extends CommonController {
 		if (null == readSet) {
 			return badRequest();
 		}
-		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)), DBUpdate.unset("files.$"));
+		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)), DBUpdate.unset("files.$").set("traceInformation", getUpdateTraceInformation(readSet)));
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",readsetCode), DBUpdate.pull("files", null));
 		return ok();
 	}

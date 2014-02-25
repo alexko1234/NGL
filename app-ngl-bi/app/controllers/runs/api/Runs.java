@@ -291,12 +291,10 @@ public class Runs extends RunsController {
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		ctxVal.setUpdateMode();
 		RunValidationHelper.validateValuation(run.typeCode, valuation, ctxVal);
-		if(!ctxVal.hasErrors()) {
-			TraceInformation ti = run.traceInformation;
-			ti.setTraceInformation(getCurrentUser());
+		if(!ctxVal.hasErrors()) {			
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", code)),
-					DBUpdate.set("valuation", valuation).set("traceInformation", ti));			
+					DBUpdate.set("valuation", valuation).set("traceInformation", getUpdateTraceInformation(run)));			
 			run = getRun(code);
 			Workflows.nextRunState(ctxVal, run);
 			
