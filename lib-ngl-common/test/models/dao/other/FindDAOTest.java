@@ -1,5 +1,7 @@
 package models.dao.other;
 
+import java.util.Arrays;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.ResolutionCategory;
@@ -18,6 +20,7 @@ import models.laboratory.experiment.description.dao.ExperimentCategoryDAO;
 import models.laboratory.experiment.description.dao.ProtocolCategoryDAO;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
+import models.laboratory.instrument.description.InstrumentQueryParams;
 import models.laboratory.instrument.description.dao.InstrumentCategoryDAO;
 import models.laboratory.instrument.description.dao.InstrumentDAO;
 import models.laboratory.processes.description.ProcessCategory;
@@ -110,7 +113,24 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(cType);
 		Instrument cTypeId = Instrument.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
-		Assert.assertFalse(Instrument.find.isCodeExist(""));		
+		Assert.assertFalse(Instrument.find.isCodeExist(""));	
+		InstrumentQueryParams instrumentsQueryParams = new InstrumentQueryParams();
+		Assert.assertNotNull(Instrument.find.findByQueryParams(instrumentsQueryParams));
+		instrumentsQueryParams.active = Boolean.TRUE;
+		Assert.assertNotNull(Instrument.find.findByQueryParams(instrumentsQueryParams));
+		instrumentsQueryParams.instrumentCategoryCode = "seq-illumina";
+		Assert.assertNotNull(Instrument.find.findByQueryParams(instrumentsQueryParams));
+		instrumentsQueryParams.instrumentCategoryCode = null;
+		instrumentsQueryParams.instrumentCategoryCodes = Arrays.asList("seq-illumina");
+		Assert.assertNotNull(Instrument.find.findByQueryParams(instrumentsQueryParams));
+		instrumentsQueryParams.instrumentUsedTypeCode = "HISEQ2000";
+		Assert.assertNotNull(Instrument.find.findByQueryParams(instrumentsQueryParams));
+		instrumentsQueryParams.instrumentUsedTypeCode = null;		
+		instrumentsQueryParams.instrumentUsedTypeCodes = Arrays.asList("HISEQ2000");
+		Assert.assertNotNull(Instrument.find.findByQueryParams(instrumentsQueryParams));
+		instrumentsQueryParams.instrumentUsedTypeCodes = Arrays.asList("HISEQ9999");
+		Assert.assertEquals(Instrument.find.findByQueryParams(instrumentsQueryParams).size(), 0);
+		
 	}
 
 	@Test

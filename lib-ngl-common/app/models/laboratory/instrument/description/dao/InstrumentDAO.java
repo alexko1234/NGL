@@ -1,20 +1,25 @@
 package models.laboratory.instrument.description.dao;
 
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Institute;
 import models.laboratory.instrument.description.Instrument;
+import models.laboratory.instrument.description.InstrumentQueryParams;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.SqlTypeValue;
 import org.springframework.stereotype.Repository;
 
-import controllers.instruments.api.InstrumentsSearchForm;
+import com.avaje.ebean.enhance.asm.Type;
+
 
 @Repository
 public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
@@ -82,52 +87,48 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 	
 	public List<Instrument> findByInstrumentUsedType(long idInstrumentUsedType) throws DAOException {
 		String sql = sqlCommon + " WHERE t.fk_instrument_used_type=? and t.active=1";
-		BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
-		return this.jdbcTemplate.query(sql, mapper, idInstrumentUsedType);
+		return initializeMapping(sql, new SqlParameter("t.fk_instrument_used_type", Types.INTEGER)).execute(idInstrumentUsedType);
 	}
 	
-	public List<Instrument> findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(InstrumentsSearchForm instumentSearchForm,  Boolean active) throws DAOException {
+	public List<Instrument> findByQueryParams(InstrumentQueryParams instumentQueryParams) throws DAOException {
 		Object[] parameters = new Object[0];
-		
+		Object[] sqlParameters = new SqlParameter[0];
 		
 		String sql = sqlCommon  + " inner join instrument_used_type iut on iut.id = t.fk_instrument_used_type"
 				+ " inner join instrument_category ic on ic.id = iut.fk_instrument_category"
 				+" inner join common_info_type cit on cit.id = iut.fk_common_info_type"
 				+" where 1=1 ";
 		
-		if(null != active){
-			parameters = ArrayUtils.add(parameters, active);
+		if(null != instumentQueryParams.active){
+			parameters = ArrayUtils.add(parameters, instumentQueryParams.active);
+			sqlParameters = ArrayUtils.add(sqlParameters, new SqlParameter("t.active", Types.BOOLEAN));
 			sql += " and t.active=?";
 		}
 		
 		
-		if(instumentSearchForm.instrumentUsedTypeCodes != null){
-			parameters = ArrayUtils.addAll(parameters, instumentSearchForm.instrumentUsedTypeCodes.toArray());
-			sql += " and  cit.code= ("+listToParameters(instumentSearchForm.instrumentUsedTypeCodes)+") ";
-		}
-			
-		
-		if(instumentSearchForm.instrumentCategoryCodes != null){
-			parameters = ArrayUtils.addAll(parameters, instumentSearchForm.instrumentCategoryCodes.toArray());
-			sql += " and ic.code= ("+listToParameters(instumentSearchForm.instrumentCategoryCodes)+") ";
-		}
-		
-		if(instumentSearchForm.instrumentCategoryCode != null){
-			Object[] args = new Object[]{instumentSearchForm.instrumentCategoryCode};
+		if(instumentQueryParams.instrumentUsedTypeCodes != null){
+			parameters = ArrayUtils.addAll(parameters, instumentQueryParams.instrumentUsedTypeCodes.toArray());	
+			sqlParameters = ArrayUtils.addAll(sqlParameters, listToSqlParameters(instumentQueryParams.instrumentUsedTypeCodes,"cit.code", Types.VARCHAR));	
+			sql += " and  cit.code in ("+listToParameters(instumentQueryParams.instrumentUsedTypeCodes)+") ";
+		}else if(instumentQueryParams.instrumentUsedTypeCode != null){
+			Object[] args = new Object[]{instumentQueryParams.instrumentUsedTypeCode};			
 			parameters = ArrayUtils.addAll(parameters,args);
-			sql += " and ic.code=? ";
-			
+			sqlParameters = ArrayUtils.add(sqlParameters, new SqlParameter("cit.code", Types.VARCHAR));
+			sql += " and  cit.code = ? ";
 		}
-		
-		if(instumentSearchForm.instrumentUsedTypeCode != null){
-			Object[] args = new Object[]{instumentSearchForm.instrumentUsedTypeCode};
+					
+		if(instumentQueryParams.instrumentCategoryCodes != null){
+			parameters = ArrayUtils.addAll(parameters, instumentQueryParams.instrumentCategoryCodes.toArray());
+			sqlParameters = ArrayUtils.addAll(sqlParameters, listToSqlParameters(instumentQueryParams.instrumentCategoryCodes,"ic.code", Types.VARCHAR));			
+			sql += " and ic.code in ("+listToParameters(instumentQueryParams.instrumentCategoryCodes)+") ";
+		}else if(instumentQueryParams.instrumentCategoryCode != null){
+			Object[] args = new Object[]{instumentQueryParams.instrumentCategoryCode};
 			parameters = ArrayUtils.addAll(parameters,args);
-			sql += " and  cit.code=? ";
+			sqlParameters = ArrayUtils.add(sqlParameters, new SqlParameter("ic.code", Types.VARCHAR));
+			sql += " and ic.code = ? ";			
 		}
 		
-		BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
-		
-		return this.jdbcTemplate.query(sql, mapper, parameters);
+		return initializeMapping(sql, (SqlParameter[])sqlParameters).execute(parameters);		
 	}
 	
 }

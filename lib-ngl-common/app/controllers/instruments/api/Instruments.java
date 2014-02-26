@@ -7,6 +7,7 @@ import java.util.List;
 
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.instrument.description.InstrumentQueryParams;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import play.data.Form;
@@ -21,19 +22,19 @@ public class Instruments extends CommonController{
 
 	public static Result list() throws DAOException{
 		Form<InstrumentsSearchForm> processTypeFilledForm = filledFormQueryString(processTypeForm,InstrumentsSearchForm.class);
-		InstrumentsSearchForm instrumentsSearch = processTypeFilledForm.get();
+		InstrumentsSearchForm instrumentsQueryParams = processTypeFilledForm.get();
 
 		List<Instrument> instruments;
 
 		try{		
-			if(instrumentsSearch.instrumentUsedTypeCodes != null || instrumentsSearch.instrumentUsedTypeCode != null || instrumentsSearch.instrumentCategoryCode != null || instrumentsSearch.instrumentCategoryCodes != null){
-				instruments = Instrument.find.findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(instrumentsSearch, instrumentsSearch.active);
+			if(instrumentsQueryParams.getInstrumentsQueryParams().isAtLeastOneParam()){
+				instruments = Instrument.find.findByQueryParams(instrumentsQueryParams.getInstrumentsQueryParams());
 			}else{
 				instruments = Instrument.find.findAll();
 			}
-			if(instrumentsSearch.datatable){
+			if(instrumentsQueryParams.datatable){
 				return ok(Json.toJson(new DatatableResponse<Instrument>(instruments, instruments.size()))); 
-			}else if(instrumentsSearch.list){
+			}else if(instrumentsQueryParams.list){
 				List<ListObject> lop = new ArrayList<ListObject>();
 				for(Instrument et:instruments){
 					lop.add(new ListObject(et.code, et.name));

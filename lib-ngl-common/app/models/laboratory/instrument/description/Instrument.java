@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import controllers.instruments.api.InstrumentsSearchForm;
 
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.ValuationCriteria.ValuationCriteriaFinder;
@@ -45,8 +44,8 @@ public class Instrument extends Model<Instrument>{
 			super(InstrumentDAO.class.getName());			
 		}
 		
-		public List<Instrument> findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(InstrumentsSearchForm instumentSearchForm,  boolean active) throws DAOException{
-			return ((InstrumentDAO)getInstance()).findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(instumentSearchForm, active);
+		public List<Instrument> findByQueryParams(InstrumentQueryParams instrumentsQueryParams) throws DAOException{
+			return ((InstrumentDAO)getInstance()).findByQueryParams(instrumentsQueryParams);
 		}
 	}
 	
