@@ -6,7 +6,7 @@
 		<div class="navbar-inner">
 			<div class="container-fluid">
 				
-				<a class="brand" href="@controllers.main.tpl.routes.Main.index()">@Messages("application.name")</a>
+				<a class="brand" href="@controllers.main.tpl.routes.Main.index()">@Messages("application.name")@helper.env()</a>
 				
 					<ul class="nav">
 						@** <li class="@("active".when(nav == "projects"))"><a href="@routes.Application.index("projects")" >Projects</a> </li>**@
