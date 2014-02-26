@@ -58,7 +58,9 @@ function SearchCtrl($scope, datatable) {
 		$scope.runsIPRG = datatable($scope, datatableConfig);			
 		$scope.runsIPRG.search({stateCodes:["IP-RG"], excludes:["lanes","treatments"]});
 		$scope.runsIWV_IPV = datatable($scope, datatableConfig);			
-		$scope.runsIWV_IPV.search({stateCodes:["IW-V","IP-V"], excludes:["lanes","treatments"]});			
+		$scope.runsIWV_IPV.search({stateCodes:["IW-V","IP-V"], excludes:["lanes","treatments"]});	
+		$scope.runsKeep = datatable($scope, datatableConfig);			
+		$scope.runsKeep.search({keep:true});	
 	}	
 };
 

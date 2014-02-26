@@ -27,5 +27,7 @@ public class RunsSearchForm extends ListForm {
 
     public Date fromDate;
     public Date toDate;
+    
+    public Boolean keep;
 
 }
