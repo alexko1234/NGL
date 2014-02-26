@@ -9,7 +9,7 @@
 		<div class="navbar-inner">
 			<div class="container-fluid">
 				
-				<a class="brand" href="@controllers.main.tpl.routes.Main.home()">@Messages("application.name")@if("PROD" !=  play.Play.application().configuration().getString("ngl.env")){-@play.Play.application().configuration().getString("ngl.env")}</a>
+				<a class="brand" href="@controllers.main.tpl.routes.Main.home()">@Messages("application.name")@helper.env()</a>
 					<ul class="nav">
 						<li class="dropdown @("active".when(nav.endsWith("valuation")))">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="valuation">@Messages("valuation.menu")<b class="caret"></b></a>
