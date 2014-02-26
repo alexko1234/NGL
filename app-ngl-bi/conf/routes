@@ -135,7 +135,7 @@ GET		/api/lists/valuation-criterias				controllers.lists.api.Lists.valuationCrit
 GET		/api/projects/list							controllers.projects.api.Projects.list()
 
 #instruments
-GET		/api/instruments												controllers.instruments.api.Instruments.list()
+GET		/api/instruments							controllers.instruments.api.Instruments.list()
 
 #samples
 GET		/api/samples/list							controllers.samples.api.Samples.list()
