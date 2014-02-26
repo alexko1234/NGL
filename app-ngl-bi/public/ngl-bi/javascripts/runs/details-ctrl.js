@@ -47,7 +47,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 								$scope.messages.setError("save");	
 							}else{
 								$scope.messages.setSuccess("save");
-								$scope.run = results[1].data;
+								//updateData();
 							}
 						});					
 					}else{
@@ -200,6 +200,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
 			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
+			$scope.lanesDT.setEdit();
 		});
 	}
 	
@@ -255,10 +256,6 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 		$scope.lists = lists;
 		$scope.treatments = treatments;
 		$scope.stopEditMode();
-		if(isValuationMode()){
-			$scope.startEditMode();
-			lanesDTConfig.edit.byDefault=true;
-		}
 		
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
@@ -277,7 +274,10 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 			
 			$scope.lanesDT = datatable($scope, lanesDTConfig);
 			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
-			
+			if(isValuationMode()){
+				$scope.startEditMode();	
+				$scope.lanesDT.setEdit();
+			}
 			$scope.lists.refresh.resolutions({typeCode:$scope.run.typeCode});
 			$scope.lists.refresh.valuationCriterias({typeCode:$scope.run.typeCode});
 			
@@ -289,7 +289,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 			
 			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code}}).success(function(data) {
 				$scope.readSetsDT = datatable($scope, $scope.readSetsDTConfig);
-				$scope.readSetsDT.setData(data, data.length);
+				$scope.readSetsDT.setData(data, data.length);				
 			});
 		});
 		

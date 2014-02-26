@@ -271,6 +271,7 @@ angular.module('commonsServices', []).
 	      		      var items = [];
 	      		      var pos = {};
 	      		      var selectedLabels = [];
+	      		      var readValue = [];
 	      		      
 	      		      function parseBtsOptions(input){
 	      		    	  var match = input.match(BT_OPTIONS_REGEXP);
@@ -310,10 +311,14 @@ angular.module('commonsServices', []).
 	      		     };
 	      		    
 	      		    scope.groupBy = function(item, index){
-	      		    	if(optionsConfig.groupByGetter){
+	      		    	if(optionsConfig.groupByGetter && scope.isEdit()){
 	      		    		if(index === 0 || (index > 0 && optionsConfig.groupByGetter(items[index-1]) !== optionsConfig.groupByGetter(item))){
 	      		    			return true;
 	      		    		}	      		    		
+	      		    	}else if(optionsConfig.groupByGetter && !scope.isEdit()){
+	      		    		if(item.selected && (index === 0 || (index > 0 && optionsConfig.groupByGetter(items[index-1]) !== optionsConfig.groupByGetter(item)))){
+	      		    			return true;
+	      		    		}	
 	      		    	}
 	      		    	return false;	      		    	
 	      		    }; 
@@ -420,7 +425,7 @@ angular.module('commonsServices', []).
 		      	    	}
 		      	    	if(modelValues.length === 0){
 		      	    		selectedLabels.push(placeholder);
-		      	    	}	      	    		
+		      	    	}      	    		
 	      	        };  
 	      		  }
   		    };
