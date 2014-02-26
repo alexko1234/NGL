@@ -3,6 +3,9 @@ package models.utils.dao;
 import java.sql.Types;
 import java.util.List;
 
+import models.laboratory.instrument.description.Instrument;
+import models.laboratory.instrument.description.dao.InstrumentMappingQuery;
+
 import org.springframework.asm.Type;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.SqlParameter;
@@ -26,6 +29,8 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 		this.classMapping=classMapping;
 		this.sqlCommon=sqlCommon;
 	}
+
+	
 
 	public T findById(Long id) throws DAOException {
 		if(null == id){

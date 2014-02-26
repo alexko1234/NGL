@@ -110,9 +110,7 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(cType);
 		Instrument cTypeId = Instrument.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
-		Assert.assertFalse(Instrument.find.isCodeExist(""));
-		InstrumentDAO typeDAO = Spring.getBeanOfType(InstrumentDAO.class);
-		Assert.assertNotNull(typeDAO.findAllForList());
+		Assert.assertFalse(Instrument.find.isCodeExist(""));		
 	}
 
 	@Test

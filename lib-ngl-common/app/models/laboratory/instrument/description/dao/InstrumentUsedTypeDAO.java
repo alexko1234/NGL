@@ -46,6 +46,16 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		return instrumentUsedTypeMappingQuery.execute(code);
 	}
 
+	/**
+	 * Used only in InstrumentMappingQuery
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> findTypeCodeAndCatCode(long id){
+		String sql = "SELECT distinct t.code as typeCode, cat.code as catCode "+this.sqlCommonFrom+" inner join instrument_category cat on cat.id = c.fk_instrument_category where c.id = ?"; 
+		return jdbcTemplate.queryForMap(sql, id);
+	}
+	
 	@Override
 	public long save(InstrumentUsedType instrumentUsedType) throws DAOException {
 		if(null == instrumentUsedType){
@@ -70,7 +80,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		jdbcInsert.execute(parameters);
 
 		//Add instruments list
-		saveInstruments(instrumentUsedType.id, instrumentUsedType.instruments, false);
+		saveInstruments(instrumentUsedType, instrumentUsedType.instruments, false);
 		saveContainerSupportCategoryOut(instrumentUsedType.id,instrumentUsedType.outContainerSupportCategories,false);
 		saveContainerSupportCategoryIn(instrumentUsedType.id,instrumentUsedType.inContainerSupportCategories,false);
 		return instrumentUsedType.id;
@@ -131,7 +141,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		commonInfoTypeDAO.update(instrumentUsedType);
 		
 		//Update instrument list
-		saveInstruments(instrumentUsedType.id, instrumentUsedType.instruments, true);
+		saveInstruments(instrumentUsedType, instrumentUsedType.instruments, true);
 		saveContainerSupportCategoryIn(instrumentUsedType.id, instrumentUsedType.inContainerSupportCategories, true);
 		saveContainerSupportCategoryOut(instrumentUsedType.id, instrumentUsedType.outContainerSupportCategories, true);
 	}
@@ -153,14 +163,15 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 	}
 
 
-	private void saveInstruments(Long id, List<Instrument> instruments, boolean deleteBefore) throws DAOException {
+	private void saveInstruments(InstrumentUsedType instrumentUsedType, List<Instrument> instruments, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
-			removeInstruments(id);
+			removeInstruments(instrumentUsedType.id);
 		}		
 		if(instruments!=null && instruments.size()>0){
 			InstrumentDAO instrumentDAO = Spring.getBeanOfType(InstrumentDAO.class);
 			for(Instrument instrument : instruments){
-				instrumentDAO.save(instrument, id);
+				instrument.instrumentUsedType = instrumentUsedType;
+				instrumentDAO.save(instrument);
 			}
 		}
 	}

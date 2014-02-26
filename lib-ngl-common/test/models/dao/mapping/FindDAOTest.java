@@ -10,6 +10,7 @@ import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.Protocol;
+import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.DAOException;
 
@@ -135,6 +136,18 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(State.find.findByObjectTypeCode(ObjectType.CODE.Sample));
 		Assert.assertNotNull(State.find.findByTypeCode(""));
 		Assert.assertFalse(State.find.isCodeExistForTypeCode("",""));
+	}
+	
+	@Test
+	public void InstrumentUsedTypeTest() throws DAOException {
+		InstrumentUsedType type = InstrumentUsedType.find.findAll().get(0);
+		Assert.assertNotNull(type);
+		InstrumentUsedType cType = InstrumentUsedType.find.findByCode(type.code);
+		Assert.assertNotNull(cType);
+		InstrumentUsedType cTypeId = InstrumentUsedType.find.findById(type.id);
+		Assert.assertNotNull(cTypeId);
+		Assert.assertFalse(InstrumentUsedType.find.isCodeExist(""));
+		Assert.assertNotNull(InstrumentUsedType.find.findByExperimentTypeCode(""));		
 	}
 
 }

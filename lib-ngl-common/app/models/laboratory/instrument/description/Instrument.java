@@ -3,6 +3,8 @@ package models.laboratory.instrument.description;
 
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import controllers.instruments.api.InstrumentsSearchForm;
 
 import models.laboratory.common.description.Institute;
@@ -17,7 +19,17 @@ public class Instrument extends Model<Instrument>{
 	public String name;
 	public Boolean active;
 	public String path;
+	
+	@JsonIgnore
+	public InstrumentUsedType instrumentUsedType;	
+	
+	@JsonIgnore
 	public List<Institute> institutes;
+	
+	/* used only to send in json */
+	public String typeCode;
+	public String categoryCode;
+	
 	
 	public static InstrumentFinder find = new InstrumentFinder();
 
