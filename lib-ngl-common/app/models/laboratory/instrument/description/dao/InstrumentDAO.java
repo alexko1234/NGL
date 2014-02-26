@@ -6,8 +6,9 @@ import java.util.Map;
 
 import models.laboratory.common.description.Institute;
 import models.laboratory.instrument.description.Instrument;
-import models.utils.dao.AbstractDAODefault;
+import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
+import models.utils.dao.DAOHelpers;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -16,17 +17,20 @@ import org.springframework.stereotype.Repository;
 import controllers.instruments.api.InstrumentsSearchForm;
 
 @Repository
-public class InstrumentDAO extends AbstractDAODefault<Instrument>{
+public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 
 	protected InstrumentDAO() {
-		super("instrument", Instrument.class, true, true);		
+		super("instrument", Instrument.class, InstrumentMappingQuery.class,
+				"SELECT distinct t.id, t.name, t.code, t.active, t.path, t.fk_instrument_used_type FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t"),
+				true);				
 	}
-
-	public Instrument save(Instrument instrument, long idInstrumentUsedType) throws DAOException {
+	
+	@Override
+	public long save(Instrument instrument) throws DAOException {
 		Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("name", instrument.name);
         parameters.put("code", instrument.code);
-        parameters.put("fk_instrument_used_type", idInstrumentUsedType);
+        parameters.put("fk_instrument_used_type", instrument.instrumentUsedType.id);
         parameters.put("active", instrument.active);
         parameters.put("path", instrument.path);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
@@ -34,9 +38,14 @@ public class InstrumentDAO extends AbstractDAODefault<Instrument>{
         
         insertInstitutes(instrument.institutes, instrument.id, false);
         
-        return instrument;
+        return instrument.id;
 	}
 	
+	@Override
+	public void update(Instrument instrument) throws DAOException {
+		String sql = "UPDATE instrument SET code=?, name=?, fk_instrument_used_type =?, active=?, path=? WHERE id=?";
+		jdbcTemplate.update(sql, instrument.code, instrument.name, instrument.instrumentUsedType.id, instrument.active, instrument.path, instrument.id);
+	}
 	
 	private void insertInstitutes(List<Institute> institutes, Long instrumentId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
@@ -72,18 +81,25 @@ public class InstrumentDAO extends AbstractDAODefault<Instrument>{
 	}
 	
 	public List<Instrument> findByInstrumentUsedType(long idInstrumentUsedType) throws DAOException {
-		String sql = getSqlCommon() + " WHERE t.fk_instrument_used_type=? and t.active=1";
+		String sql = sqlCommon + " WHERE t.fk_instrument_used_type=? and t.active=1";
 		BeanPropertyRowMapper<Instrument> mapper = new BeanPropertyRowMapper<Instrument>(Instrument.class);
 		return this.jdbcTemplate.query(sql, mapper, idInstrumentUsedType);
 	}
 	
-	public List<Instrument> findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(InstrumentsSearchForm instumentSearchForm,  boolean active) throws DAOException {
-		Object[] parameters = new Object[]{active};
+	public List<Instrument> findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(InstrumentsSearchForm instumentSearchForm,  Boolean active) throws DAOException {
+		Object[] parameters = new Object[0];
 		
-		String sql = getSqlCommon()  + " inner join instrument_used_type iut on iut.id = t.fk_instrument_used_type"
+		
+		String sql = sqlCommon  + " inner join instrument_used_type iut on iut.id = t.fk_instrument_used_type"
 				+ " inner join instrument_category ic on ic.id = iut.fk_instrument_category"
 				+" inner join common_info_type cit on cit.id = iut.fk_common_info_type"
-				+" where t.active=?";
+				+" where 1=1 ";
+		
+		if(null != active){
+			ArrayUtils.add(parameters, active);
+			sql += " and t.active=?";
+		}
+		
 		
 		if(instumentSearchForm.instrumentUsedTypeCodes != null){
 			parameters = ArrayUtils.addAll(parameters, instumentSearchForm.instrumentUsedTypeCodes.toArray());
@@ -113,4 +129,5 @@ public class InstrumentDAO extends AbstractDAODefault<Instrument>{
 		
 		return this.jdbcTemplate.query(sql, mapper, parameters);
 	}
+	
 }
