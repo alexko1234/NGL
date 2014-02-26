@@ -141,11 +141,13 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 				
 		}
 	}
+	
 	$scope.refreshSamples = function(){
-		if($scope.form.projectCodes){
-			lists.refresh.samples({projectCodes:$scope.form.projectCodes.split(',')});
+		if($scope.form.projectCode){
+			lists.refresh.samples({projectCode:$scope.form.projectCode});
 		}
-	}
+	};
+	
 	
 	
 	$scope.init = function(){

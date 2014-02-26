@@ -17,16 +17,6 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 			},
 			order:{
 				by:'code'
-			},
-			save:{
-				active:true,
-				withoutEdit:false,
-				url:jsRoutes.controllers.processes.api.Processes.save(),
-				callback : function(datatable){
-				}
-			},
-			edit:{
-				active:true
 			}
 		};
 	
@@ -80,10 +70,11 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 	}
 	
 	$scope.refreshSamples = function(){
-		if($scope.form.projectCodes){
-			lists.refresh.samples({projectCodes:$scope.form.projectCodes.split(',')});
+		if($scope.form.projectCode){
+			lists.refresh.samples({projectCode:$scope.form.projectCode});
 		}
-	}
+	};
+	
 	
 	$scope.searchSamples = function(query){
 		return search(lists.getSamples(), query);

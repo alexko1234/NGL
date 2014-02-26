@@ -55,12 +55,8 @@ public class Experiments extends CommonController{
 		}
 		
 		List<PropertyDefinition> props = experimentProperties(experimentTypeCode);
-		
-		DatatableConfig config = new DatatableConfig();
-		config.button = true;
-		config.edit = true;
-		
-		return ok(createExperiments.render(experimentType.category.code, experimentType.atomicTransfertMethod,config,Json.toJson(props),null));
+	
+		return ok(createExperiments.render(experimentType.category.code, experimentType.atomicTransfertMethod,Json.toJson(props),null));
 	}
 	
 	public static Result editExperiment(String experimentCode){
@@ -73,12 +69,8 @@ public class Experiments extends CommonController{
 		}
 		
 		List<PropertyDefinition> props = experimentProperties(experiment.typeCode);
-		
-		DatatableConfig config = new DatatableConfig();
-		config.button = true;
-		config.edit = true;
-		
-		return ok(createExperiments.render(experimentType.category.code, experimentType.atomicTransfertMethod,config,Json.toJson(props),Json.toJson(experiment)));
+
+		return ok(createExperiments.render(experimentType.category.code, experimentType.atomicTransfertMethod,Json.toJson(props),Json.toJson(experiment)));
 	}
 	
 	public static Result getEditExperimentColumns(){

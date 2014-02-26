@@ -166,10 +166,10 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 	}
 	
 	$scope.refreshSamples = function(){
-		if($scope.form.projectCodes){
-			lists.refresh.samples({projectCodes:$scope.form.projectCodes.split(',')});
+		if($scope.form.projectCode){
+			lists.refresh.samples({projectCode:$scope.form.projectCode});
 		}
-	}
+	};
 	
 	
 	$scope.search = function(){

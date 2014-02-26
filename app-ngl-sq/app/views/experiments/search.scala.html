@@ -19,13 +19,12 @@
 			<option value="">@Messages("experiment.select.experimentType")</option>
 		</select>		
 		
-		<input type="text" ng-model="form.projectCodes" bs-typeahead="searchProjects" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.projects")'>
+		<input type="text" ng-model="form.projectCode" typeahead="project.code as project.name for project in lists.getProjects() | filter:$viewValue | limitTo:20" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.projects")'>
+		<input type="text" ng-model="form.sampleCode" typeahead="sample.code as sample.name for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-click="refreshSamples()" placeholder='@Messages("search.placeholder.samples")'>
 		
 		<!--<bt-select ng-model="form.projects" bt-options="project.code as project.name+' - '+project.name for project in lists.getProjects()"  multiple="true" ng-change="changeProject()">
 			<option value="">@Messages("processes.select.project")</option>
 		</bt-select>-->
-		
-		<input type="text" ng-model="form.sampleCodes" bs-typeahead="searchSamples" ng-click="refreshSamples()" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.samples")'>
 		
 		<!-- <select ng-model="form.sample" ng-options="sample.code for sample in lists.getSamples()" ng-change="search()">
 			<option value="">@Messages("processes.select.sample")-</option>
