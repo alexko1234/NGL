@@ -1,5 +1,8 @@
 package models.dao.mapping;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Assert;
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Institute;
@@ -10,7 +13,9 @@ import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.Protocol;
+import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.instrument.description.dao.InstrumentsQuery;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.DAOException;
 
@@ -148,6 +153,38 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(InstrumentUsedType.find.isCodeExist(""));
 		Assert.assertNotNull(InstrumentUsedType.find.findByExperimentTypeCode(""));		
+	}
+	
+	@Test void InstrumentTest() throws DAOException {
+		InstrumentsQuery instrumentQuery = new InstrumentsQuery();
+		instrumentQuery.instrumentUsedTypeCode = "ARGUS";
+		List<Instrument> intruments = Instrument.find.findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(instrumentQuery, true);
+		Assert.assertNotNull(intruments);
+		
+		instrumentQuery = new InstrumentsQuery();
+		instrumentQuery.instrumentUsedTypeCodes = new ArrayList();
+		instrumentQuery.instrumentUsedTypeCodes.add("ARGUS");
+		intruments = Instrument.find.findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(instrumentQuery, true);
+		Assert.assertNotNull(intruments);
+		
+		instrumentQuery = new InstrumentsQuery();
+		instrumentQuery.instrumentUsedTypeCodes = new ArrayList();
+		instrumentQuery.instrumentCategoryCodes.add("covaris");
+		intruments = Instrument.find.findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(instrumentQuery, true);
+		Assert.assertNotNull(intruments);
+		
+		instrumentQuery = new InstrumentsQuery();
+		instrumentQuery.instrumentUsedTypeCode = "ARGUS";
+		instrumentQuery.instrumentCategoryCode = "opt-map-opgen";
+		intruments = Instrument.find.findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(instrumentQuery, true);
+		
+		instrumentQuery = new InstrumentsQuery();
+		instrumentQuery.instrumentUsedTypeCodes =new ArrayList();
+		instrumentQuery.instrumentUsedTypeCodes.add("ARGUS");
+		instrumentQuery.instrumentCategoryCodes = new ArrayList();
+		instrumentQuery.instrumentCategoryCodes.add("opt-map-opgen");
+		intruments = Instrument.find.findByInstrumentCategoryCodesAndInstrumentUsedTypeCodes(instrumentQuery, true);
+		Assert.assertNotNull(intruments);
 	}
 
 }
