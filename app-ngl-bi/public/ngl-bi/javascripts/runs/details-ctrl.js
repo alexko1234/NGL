@@ -47,7 +47,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 								$scope.messages.setError("save");	
 							}else{
 								$scope.messages.setSuccess("save");
-								//updateData();
+								updateData();
 							}
 						});					
 					}else{
@@ -183,12 +183,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 	
 	$scope.cancel = function(){
 		$scope.messages.clear();
-		updateData();
-		if(!isValuationMode()){
-			$scope.lanesDT.cancel();
-			$scope.stopEditMode();
-		}
-		
+		updateData(true);				
 	};
 	
 	$scope.activeEditMode = function(){
@@ -196,11 +191,16 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 		$scope.lanesDT.setEdit();		
 	}
 	
-	var updateData = function(){
+	var updateData = function(isCancel){
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
 			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
-			$scope.lanesDT.setEdit();
+			if(isCancel && !isValuationMode()){
+				$scope.lanesDT.cancel();
+				$scope.stopEditMode();
+			}else{
+				$scope.lanesDT.setEdit();
+			}			
 		});
 	}
 	
