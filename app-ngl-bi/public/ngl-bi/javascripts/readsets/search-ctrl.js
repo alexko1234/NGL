@@ -118,10 +118,7 @@ function getColumns(page){
 function convertForm(iform){
 	var form = angular.copy(iform);
 	if(form.fromDate)form.fromDate = moment(form.fromDate, Messages("date.format").toUpperCase()).valueOf();
-	if(form.toDate)form.toDate = moment(form.toDate, Messages("date.format").toUpperCase()).valueOf();	
-	if(form.projectCodes) form.projectCodes = form.projectCodes.split(',');
-	if(form.sampleCodes) form.sampleCodes = form.sampleCodes.split(',');
-	if(form.runCodes) form.runCodes = form.runCodes.split(',');
+	if(form.toDate)form.toDate = moment(form.toDate, Messages("date.format").toUpperCase()).valueOf();		
 	return form
 };
 
@@ -139,41 +136,10 @@ function updateForm(form, page){
 function SearchFormCtrl($scope, $filter, lists){
 	$scope.lists = lists;
 	
-	var search = function(values, query){
-		var queryElts = query.split(',');
-		
-		var lastQueryElt = queryElts.pop();
-		
-		var output = [];
-		angular.forEach($filter('filter')(values, lastQueryElt), function(value, key){
-			if(queryElts.length > 0){
-				this.push(queryElts.join(',')+','+value.code);
-			}else{
-				this.push(value.code);
-			}
-		}, output);
-		
-		return output;
-	};
-	
-	$scope.searchProjects = function(query){
-		return search(lists.getProjects(), query);
-				
-	};
-	
-	$scope.searchRuns = function(query){
-		return search(lists.get('runs'), query);
-				
-	};
-	
 	$scope.refreshSamples = function(){
-		if($scope.form.projectCodes){
-			lists.refresh.samples({projectCodes:$scope.form.projectCodes.split(',')});
+		if($scope.form.projectCode){
+			lists.refresh.samples({projectCode:$scope.form.projectCode});
 		}
-	};
-	
-	$scope.searchSamples = function(query){
-		return search(lists.getSamples(), query);				
 	};
 	
 	$scope.search = function(){

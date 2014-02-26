@@ -50,6 +50,8 @@ valuation.value.UNSET = -
 
 search.placeholder.projects = Sélectionnez des projets
 search.placeholder.samples = Sélectionnez des échantillons
+search.placeholder.project = Sélectionnez un projet
+search.placeholder.sample = Sélectionnez un échantillon
 search.placeholder.fromDate = Date Run depuis le (jj/mm/aaaa)
 search.placeholder.toDate = Date Run jusqu''au (jj/mm/aaaa)
 search.placeholder.states = Sélectionnez des états
@@ -57,6 +59,7 @@ search.placeholder.instruments = Sélectionnez des instruments
 search.placeholder.types = Sélectionnez des types
 search.placeholder.runtypes = Sélectionnez des types de run
 search.placeholder.runs = Sélectionnez des runs
+search.placeholder.run = Sélectionnez un run
 search.placeholder.valid = Sélectionnez une évaluation
 search.placeholder.productionValid = Sélectionnez une éval QC
 search.placeholder.bioinformaticValid  = Sélectionnez une éval bioinfo

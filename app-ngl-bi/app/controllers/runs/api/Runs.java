@@ -116,6 +116,8 @@ public class Runs extends RunsController {
 		
 		if(CollectionUtils.isNotEmpty(form.codes)){
 			queries.add(DBQuery.in("code", form.codes));
+		}else if(StringUtils.isNotBlank(form.code)){
+			queries.add(DBQuery.is("code", form.code));
 		}
 		
 		if (StringUtils.isNotBlank(form.stateCode)) { //all
@@ -130,10 +132,14 @@ public class Runs extends RunsController {
 
 		if (CollectionUtils.isNotEmpty(form.projectCodes)) { //all
 			queries.add(DBQuery.in("projectCodes", form.projectCodes));
+		}else if(StringUtils.isNotBlank(form.projectCode)){
+			queries.add(DBQuery.is("projectCodes", form.projectCode));
 		}
 		
 		if (CollectionUtils.isNotEmpty(form.sampleCodes)) { //all
 			queries.add(DBQuery.in("sampleCodes", form.sampleCodes));
+		}else if(StringUtils.isNotBlank(form.sampleCode)){
+			queries.add(DBQuery.is("sampleCodes", form.sampleCode));
 		}
 		
 		if (CollectionUtils.isNotEmpty(form.typeCodes)) { //all

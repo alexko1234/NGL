@@ -10,6 +10,7 @@ import controllers.ListForm;
 public class RunsSearchForm extends ListForm {
 	
     public List<String> codes;
+    public String code;
     
     public List<String> stateCodes;
     public String stateCode;
@@ -17,9 +18,11 @@ public class RunsSearchForm extends ListForm {
     public List<String> typeCodes;
 
     public List<String> projectCodes;
-
+    public String projectCode;
+    
     public List<String> sampleCodes;
-
+    public String sampleCode;
+    
     public String validCode;
 
     public Date fromDate;

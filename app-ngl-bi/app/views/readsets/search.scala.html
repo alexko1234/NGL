@@ -4,8 +4,9 @@
 <div datatable="datatable">		
 			<form class="well well-small form-inline" ng-controller="SearchFormCtrl" ng-init="init()">
 				<div class="row-fluid">
-				<input type="text" ng-model="form.projectCodes" bs-typeahead="searchProjects" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.projects")'>
-				<input type="text" ng-model="form.sampleCodes"  bs-typeahead="searchSamples" data-min-length="1" data-items="20" ng-focus="refreshSamples()" placeholder='@Messages("search.placeholder.samples")'>
+				<input type="text" ng-model="form.projectCode" typeahead="project.code as project.name for project in lists.getProjects() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.project")'>
+				<input type="text" ng-model="form.sampleCode"  typeahead="sample.code as sample.name for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-focus="refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>
+			
 
 				<input type="text" ng-model="form.regexCode" placeholder='@Messages("search.placeholder.regexCode")'>
 				<input type="text" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
@@ -24,8 +25,7 @@
 				<div bt-select ng-model="form.bioinformaticValidCode" placeholder="@Messages("search.placeholder.bioinformaticValid")" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
 				<div bt-select ng-model="form.runTypeCodes" multiple="true" placeholder="@Messages("search.placeholder.runtypes")" bt-options="type.code as type.name for type in lists.getTypes()"></div>			
 				
-				
-				<input type="text" ng-model="form.runCodes" bs-typeahead="searchRuns" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.runs")'>
+				<input type="text" ng-model="form.runCode"  typeahead="run.code as run.name for run in lists.getRuns() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.run")'>
 				
 				
 				<div class="btn-toolbar pull-right">
