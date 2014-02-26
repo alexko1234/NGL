@@ -122,11 +122,11 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 	$scope.search = function(){		
 			var jsonSearch = {};			
 
-			if($scope.form.projectCodes){
-				jsonSearch.projectCodes = $scope.form.projectCodes.split(",");
+			if($scope.form.projectCode){
+				jsonSearch.projectCode = $scope.form.projectCode;
 			}			
-			if($scope.form.sampleCodes){
-				jsonSearch.sampleCodes = $scope.form.sampleCodes.split(",");
+			if($scope.form.sampleCode){
+				jsonSearch.sampleCode = $scope.form.sampleCode;
 			}				
 			if($scope.form.type){
 				jsonSearch.typeCode = $scope.form.type.code;

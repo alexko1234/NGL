@@ -183,11 +183,11 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 			var jsonSearch = {};			
 
 			var jsonSearch = {};	
-			if($scope.form.projectCodes){
-				jsonSearch.projectCodes = $scope.form.projectCodes.split(",");
+			if($scope.form.projectCode){
+				jsonSearch.projectCodes = $scope.form.projectCode;
 			}			
-			if($scope.form.sampleCodes){
-				jsonSearch.sampleCodes = $scope.form.sampleCodes.split(",");
+			if($scope.form.sampleCode){
+				jsonSearch.sampleCodes = $scope.form.sampleCode;
 			}			
 			if($scope.form.processType){
 				jsonSearch.processTypeCode = $scope.form.processType.code;

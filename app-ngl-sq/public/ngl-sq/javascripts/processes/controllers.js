@@ -177,11 +177,11 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 		if($scope.form.type){ 		
 			var jsonSearch = {};			
 			jsonSearch.stateCode = "IW-P";	//default state code for containers		
-			if($scope.form.projectCodes){
-				jsonSearch.projectCodes = $scope.form.projectCodes.split(",");
+			if($scope.form.projectCode){
+				jsonSearch.projectCodes = $scope.form.projectCode;
 			}			
-			if($scope.form.sampleCodes){
-				jsonSearch.sampleCodes = $scope.form.sampleCodes.split(",");
+			if($scope.form.sampleCode){
+				jsonSearch.sampleCodes = $scope.form.sampleCode;
 			}			
 			if($scope.form.type){
 				jsonSearch.processTypeCode = $scope.form.type.code;
