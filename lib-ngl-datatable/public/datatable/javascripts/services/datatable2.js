@@ -1174,8 +1174,7 @@ angular.module('datatableServices', []).
 		    						return '<div ng-switch on="'+this.getNgModel(col)+'"><i ng-switch-when="true" class="icon-check icon-large"></i><i ng-switch-default class="icon-check-empty icon-large"></i></div>';	    						
 		    					}else if(col.type === "img" || col.type === "image"){
 		    						if(!col.format)console.log("missing format for img !!");
-		    						return '<img ng-src="data:image/'+col.format+';base64,{{'+this.getNgModel(col)+'}}" style="max-width:{{col.width}}"/>' ;
-		    					    
+		    						return '<img ng-src="data:image/'+col.format+';base64,{{'+this.getNgModel(col)+'}}" style="max-width:{{col.width}}"/>';		    					    
 		    					} else{
 		    						return '<span ng-bind="'+this.getNgModel(col)+this.getFormatter(col)+'"></span>';
 		    					}

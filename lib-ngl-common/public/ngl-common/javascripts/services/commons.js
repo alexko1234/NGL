@@ -175,6 +175,7 @@ angular.module('commonsServices', []).
     			getExperimentCategories : function(){return results['experimentCategories'];},
     			getExperimentTypes : function(){return results['experimentTypes'];},
     			getStates : function(){return results['states'];},
+    			getRuns : function(){return results['runs'];},
     			getTypes : function(params){
 	    						if(params != undefined){
 	    							return results[params+'Types'];
@@ -228,16 +229,14 @@ angular.module('commonsServices', []).
   		    	restrict: 'A',
   		    	replace:false,
   		    	scope:true,
-  		    	
   		    	template:  '<div ng-switch on="isEdit()">'
-  		    			+'<div ng-switch-when="false" class="show">'
-  		    			+'<ul>'
-  		    			+'<li ng-repeat="item in getItems()" ng-show="item.selected">'
-  		    			+'<span ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></span>'
-  		    			+'<span ng-if="groupBy(item, $index)"> - </span>'
-  		    			+'<span class="text" ng-bind="itemLabel(item)"></span>'
-  		    			+'</li>'
-  		    			+'</ul>'
+  		    			+'<div class="show" ng-switch-when="false">'
+  		    			+'<ul class="unstyled">'
+		    	  		+'<li ng-repeat="item in getItems()">'
+		    	  		+'<span ng-if="groupBy(item, $index)" class="groupBy" ng-bind="itemGroupByLabel(item)"></span>'
+		    	  		+'<span class="text" ng-bind="itemLabel(item)"  ng-show="item.selected"></span>'		    	  		
+		    	  		+'</li>'
+		    	  		+'</ul>'
   		    			+'</div>'
   		    			+'<div ng-switch-when="true" ng-class="getClass()">'
 		    	  		+'<button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" ng-click="setStyle()">'
@@ -311,19 +310,17 @@ angular.module('commonsServices', []).
 	      		     };
 	      		    
 	      		    scope.groupBy = function(item, index){
-	      		    	if(optionsConfig.groupByGetter && scope.isEdit()){
+	      		    	if(optionsConfig.groupByGetter){
 	      		    		if(index === 0 || (index > 0 && optionsConfig.groupByGetter(items[index-1]) !== optionsConfig.groupByGetter(item))){
 	      		    			return true;
 	      		    		}	      		    		
-	      		    	}else if(optionsConfig.groupByGetter){
-	      		    		return true;
 	      		    	}
 	      		    	return false;	      		    	
 	      		    }; 
 	      		    
-	      		  scope.itemClass = function(){
-	      			  return (optionsConfig.groupByGetter)?'opt':'';
-	      		  };
+		      		  scope.itemClass = function(){
+		      			  return (optionsConfig.groupByGetter)?'opt':'';
+		      		  };
 	      		    
 	      		    scope.setStyle = function(){
 	      		    	var top = pos.top + pos.height - $document.scrollTop();

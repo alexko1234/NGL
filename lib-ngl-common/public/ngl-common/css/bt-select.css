@@ -134,6 +134,24 @@
             box-shadow: none;
 }
 
+.bt-select .show ul {
+	margin:0px;
+}
+
+.bt-select .show span.groupBy {
+	display: block;
+    cursor: default;
+    font-weight: bold;
+    padding-left: 0px; 
+}
+.bt-select .show li {
+    position: relative;    
+}
+
+.bt-select .show li span {
+    padding-left: 25px;    
+}
+
 .bt-select.btn-group .dropdown-menu .groupBy {
     display: block;
     padding: 3px 20px;
