@@ -96,7 +96,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 				+" where 1=1 ";
 		
 		if(null != active){
-			ArrayUtils.add(parameters, active);
+			parameters = ArrayUtils.add(parameters, active);
 			sql += " and t.active=?";
 		}
 		
