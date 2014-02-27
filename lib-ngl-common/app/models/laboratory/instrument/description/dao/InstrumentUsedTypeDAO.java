@@ -41,7 +41,6 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		String sql=sqlCommon+
 				"JOIN experiment_type_instrument_type as cit ON fk_instrument_used_type=c.id " +
 				"WHERE cit.fk_experiment_type IN (SELECT e.id FROM experiment_type e, common_info_type citype WHERE e.fk_common_info_type=citype.id AND citype.code=?)";
-		Logger.info(sql);
 		InstrumentUsedTypeMappingQuery instrumentUsedTypeMappingQuery = new InstrumentUsedTypeMappingQuery(dataSource, sql,new SqlParameter("code",Types.VARCHAR));
 		return instrumentUsedTypeMappingQuery.execute(code);
 	}
