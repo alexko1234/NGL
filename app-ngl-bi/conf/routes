@@ -6,6 +6,7 @@
 GET     /                           				controllers.main.tpl.Main.home()
 
 #ngs-rg api
+#deprecated
 GET		/api/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
 GET		/api/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experiments()
 GET		/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: java.lang.String)
@@ -118,7 +119,7 @@ GET    	/api/alerts/:code               			controllers.alerts.api.Alerts.get(cod
 HEAD	/api/alerts/:code               			controllers.alerts.api.Alerts.head(code: java.lang.String)
 
 #migration
-GET		/migration									controllers.migration.Migration3.migration()
+GET		/migration									controllers.migration.MigrationUpdateSampleOnContainer.migration()
 
 
 #Common

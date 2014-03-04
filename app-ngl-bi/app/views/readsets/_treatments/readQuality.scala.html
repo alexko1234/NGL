@@ -97,7 +97,7 @@
 			    	&& (readset.treatments[treatments.getTreatment().code].read1.maxSizeReads != null) ">
 			    	<div class="thumbnail">
 						 <dl>
-							<dt><h4>@Messages("readsets.treatments.read_quality.number") @("{{run.treatments.ngsrg['default'].nbCycle.value}}") :</h4></dt>
+							<dt><h4>@Messages("readsets.treatments.read_quality.number") <span ng-bind="lane.treatments.ngsrg['default'].nbCycleRead1.value"></span> :</h4></dt>
 							<dd><h4>	{{readset.treatments[treatments.getTreatment().code].read1.maxSizeReads.value | number}} 
 								({{readset.treatments[treatments.getTreatment().code].read1.maxSizeReadsPercent.value | number:2}} @Messages("unit.percent")) </h4>
 							</dd>	
@@ -119,9 +119,9 @@
 			    <li class="span3">
 			    	<div class="thumbnail" ng-if="(readset.treatments[treatments.getTreatment().code].read1.suspectedKmers != null) && (readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value.length > 0)"> 
 						<h5> @Messages("readsets.treatments.read_quality.suspectedKmers") </h5>
-						<ul>
-						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value">
-							{{strValue.sequence}} ({{strValue.nbSeq | number}})
+						<ul class="treatmentOverflow">
+						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value | orderBy:'nbOccurences':true">
+							{{strValue.sequence}} ({{strValue.nbOccurences | number}})
 						</li>
 						</ul>	
 					</div>						
@@ -222,7 +222,7 @@
 			    	&& (readset.treatments[treatments.getTreatment().code].read2.maxSizeReads != null) ">
 			    	<div class="thumbnail">
 						 <dl>
-							<dt><h4>@Messages("readsets.treatments.read_quality.number") @("{{run.treatments.ngsrg['default'].nbCycle.value}}") :</h4></dt>
+							<dt><h4>@Messages("readsets.treatments.read_quality.number") <span ng-bind="lane.treatments.ngsrg['default'].nbCycleRead2.value"></span> :</h4></dt>
 							<dd><h4>	{{readset.treatments[treatments.getTreatment().code].read2.maxSizeReads.value | number}} 
 								({{readset.treatments[treatments.getTreatment().code].read2.maxSizeReadsPercent.value | number:2}} @Messages("unit.percent")) </h4>
 							</dd>	
@@ -244,9 +244,9 @@
 			    <li class="span3">
 			    	<div class="thumbnail" ng-if="(readset.treatments[treatments.getTreatment().code].read2.suspectedKmers != null) && (readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value.length > 0)"> 
 						<h5> @Messages("readsets.treatments.read_quality.suspectedKmers") </h5>
-						<ul>
-						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value">
-							{{strValue.sequence}} ({{strValue.nbSeq | number}})
+						<ul class="treatmentOverflow">
+						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value | orderBy:'nbOccurences':true">
+							{{strValue.sequence}} ({{strValue.nbOccurences | number}})
 						</li>
 						</ul>	
 					</div>						

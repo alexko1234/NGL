@@ -60,6 +60,7 @@ public class ReadSets extends CommonController {
   	    		controllers.readsets.api.routes.javascript.ReadSets.state(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.valuation(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.properties(),
+  	    		controllers.runs.api.routes.javascript.Lanes.get(),
   	    		controllers.runs.api.routes.javascript.Runs.get(),
   	    		controllers.runs.api.routes.javascript.Runs.list(),
   	    		controllers.runs.tpl.routes.javascript.Runs.get(),

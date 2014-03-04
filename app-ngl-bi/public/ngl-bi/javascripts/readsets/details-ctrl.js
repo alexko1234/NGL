@@ -3,7 +3,7 @@
 function DetailsCtrl($scope, $http, $q, $routeParams, datatable, messages, lists, treatments, $window) {
 	
 	$scope.goToRun=function(){
-		$window.open(jsRoutes.controllers.runs.tpl.Runs.get($scope.run.code).url, 'runs');
+		$window.open(jsRoutes.controllers.runs.tpl.Runs.get($scope.readset.runCode).url, 'runs');
 	}
 	
 	$scope.save = function(){
@@ -87,10 +87,10 @@ function DetailsCtrl($scope, $http, $q, $routeParams, datatable, messages, lists
 				$scope.treatments.init($scope.readset.treatments, jsRoutes.controllers.readsets.tpl.ReadSets.treatments,{global:true});				
 			}
 			
-			$http.get(jsRoutes.controllers.runs.api.Runs.get($scope.readset.runCode).url).success(function(data) {
-				$scope.run = data;	
+			$http.get(jsRoutes.controllers.runs.api.Lanes.get($scope.readset.runCode, $scope.readset.laneNumber).url).success(function(data) {
+				$scope.lane = data;	
 			});
-			
+			$scope.isTreatmentFullScreen=false;
 		});
 		
 		$scope.setImage = function(imageData, imageName, treatmentContext, treatmentCode, imageFullSizeWidth, imageFullSizeHeight) {

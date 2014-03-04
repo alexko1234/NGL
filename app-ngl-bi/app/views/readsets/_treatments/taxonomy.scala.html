@@ -12,7 +12,7 @@
 		<div class="tab-pane active" id="main">
 
 			<div class="row-fluid">		
-				<div class="span10">
+				<div class="span12">
 						<table class="table table-condensed table-hover table-bordered">
 							<thead>
 							<tr>
@@ -44,65 +44,44 @@
 				</div>	
 			</div>
 					
-			<div class="row-fluid">						
-				<div class="span4">		
-					<div class="divTaxonBilan">	
-						<table class="table table-condensed table-hover table-bordered">
-							<thead>
-							<tr>
-								<th colspan="3">
-									@Messages("readsets.treatments.taxonomy.taxonBilan")
-								</th>
-							</tr>
-							<tr>
-								<th>
-									@Messages("readsets.treatments.taxonomy.taxonBilan.taxon")
-								</th>
-								<th>
-									@Messages("readsets.treatments.taxonomy.taxonBilan.nbSeq")
-								</th>
-								<th>
-									@Messages("readsets.treatments.taxonomy.taxonBilan.percent")
-								</th>
-							</tr>
-							</thead>
-							<tbody>
-							<tr>
-								<td>
-									<ul class="unstyled">
-									<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.taxonBilan.value">								
-									<!--  TODO : to backup ! -->
-									 <a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}" target="_blank">{{obj.taxon}}</a>
-									</li>
-									</ul>
-								</td>
-								<td>
-									<ul class="unstyled">
-									<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.taxonBilan.value">
-									 {{obj.nbSeq | number}}
-									</li>
-									</ul>					
-								</td>
-								<td>
-									<ul class="unstyled">
-									<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.taxonBilan.value">
-									 {{ obj.percent | number:2}} @Messages("unit.percent")
-									</li>
-									</ul>					
-								</td>
-							</tr>
-							</tbody>				
-						</table>
-					</div>
-				</div>
-				<div class="span3">	
+			<div class="row-fluid">
+				<div class="span6 ">	
+					<h5>@Messages("readsets.treatments.taxonomy.taxonBilan")</h5>
+					<div class="treatmentOverflow">										
 					<table class="table table-condensed table-hover table-bordered">
-						<thead>
+						<thead>							
 						<tr>
-							<th colspan="3">
-								@Messages("readsets.treatments.taxonomy.divisionBilan")
+							<th>
+								@Messages("readsets.treatments.taxonomy.taxonBilan.taxon")
+							</th>
+							<th>
+								@Messages("readsets.treatments.taxonomy.taxonBilan.nbSeq")
+							</th>
+							<th>
+								@Messages("readsets.treatments.taxonomy.taxonBilan.percent")
 							</th>
 						</tr>
+						</thead>
+						<tbody>
+						<tr ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.taxonBilan.value">
+							<td>									
+								 <a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}" target="_blank">{{obj.taxon}}</a>									
+							</td>
+							<td>
+								 {{obj.nbSeq | number}}													
+							</td>
+							<td>
+								{{ obj.percent | number:2}} @Messages("unit.percent")												
+							</td>
+						</tr>
+						</tbody>				
+					</table>
+					</div>					
+				</div>
+				<div class="span3">	
+					<h5>@Messages("readsets.treatments.taxonomy.divisionBilan")</h5>
+					<table class="table table-condensed table-hover table-bordered">
+						<thead>						
 						<tr>
 							<th>
 								@Messages("readsets.treatments.taxonomy.divisionBilan.division")
@@ -116,40 +95,25 @@
 						</tr>					
 						</thead>
 						<tbody>
-						<tr>
-							<td>
-								<ul class="unstyled">
-								<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.divisionBilan.value">
+						<tr ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.divisionBilan.value">
+							<td>							
 								 {{obj.division}}
-								</li>
-								</ul>
 							</td>
 							<td>
-								<ul class="unstyled">
-								<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.divisionBilan.value">
-								 {{obj.nbSeq | number}}
-								</li>
-								</ul>					
+								 {{obj.nbSeq | number}}												
 							</td>
 							<td>
-								<ul class="unstyled">
-								<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.divisionBilan.value">
-								 {{ obj.percent | number:2}} @Messages("unit.percent")
-								</li>
-								</ul>					
+								 {{ obj.percent | number:2}} @Messages("unit.percent")												
 							</td>
 						</tr>
 						</tbody>
 					</table>
 				</div>
 				<div class="span3">
+					<h5>@Messages("readsets.treatments.taxonomy.keywordBilan")</h5>
+					
 					<table class="table table-condensed table-hover table-bordered">
-						<thead>
-						<tr>
-							<th colspan="3">
-								@Messages("readsets.treatments.taxonomy.keywordBilan")
-							</th>
-						</tr>
+						<thead>						
 						<tr>
 							<th>
 								@Messages("readsets.treatments.taxonomy.keywordBilan.keyword")
@@ -163,27 +127,15 @@
 						</tr>					
 						</thead>
 						<tbody>	
-						<tr>	
+						<tr ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.keywordBilan.value">	
 							<td>
-								<ul class="unstyled">
-								<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.keywordBilan.value">
-								 {{obj.keyword}}
-								</li>
-								</ul>
+								 {{obj.keyword}}							
 							</td>
 							<td>
-								<ul class="unstyled">
-								<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.keywordBilan.value">
-								 {{obj.nbSeq | number}}
-								</li>
-								</ul>					
+								 {{obj.nbSeq | number}}												
 							</td>
 							<td>
-								<ul class="unstyled">
-								<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.keywordBilan.value">
-								 {{ obj.percent | number:2}} @Messages("unit.percent")
-								</li>
-								</ul>					
+								 {{ obj.percent | number:2}} @Messages("unit.percent")			
 							</td>
 						</tr>
 						</tbody>
@@ -194,7 +146,7 @@
 		</div> <!--  end of tab main -->
 	
 		<div class="tab-pane" id="krona">
-			<iframe class="span12" ng-bind-src="krona" style="border:0;height:600px" />
+			<iframe class="span12" ng-bind-src="krona" style="border:0;height:1500px" />
 		</div>
 			
 		<div class="tab-pane" id="phylogeneticTree">
