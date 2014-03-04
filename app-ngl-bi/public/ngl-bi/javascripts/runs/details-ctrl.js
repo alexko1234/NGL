@@ -130,6 +130,13 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 					header: Messages("readsets.stateCode"),
 					type :"String"
 				},
+				{  	
+					property:"sampleOnContainer.properties.percentPerLane.value",
+					header: Messages("readsets.sampleOnContainer.percentPerLane"),
+					type :"Number",
+					format:2,
+					order:false
+				},
 			   	{  	property:"treatments.ngsrg.default.validSeqPercent.value",
 			    	header: Messages("readsets.treatments.ngsrg.validSeqPercent"),
 			    	type :"Number",
@@ -287,7 +294,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 			
 			$scope.laneOptions = $filter('orderBy')($scope.run.lanes, 'number');
 			
-			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg"]}}).success(function(data) {
+			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg", "sampleOnContainer"]}}).success(function(data) {
 				$scope.readSetsDT = datatable($scope, $scope.readSetsDTConfig);
 				$scope.readSetsDT.setData(data, data.length);				
 			});

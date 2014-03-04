@@ -126,27 +126,34 @@ function NGSRGCtrl($scope, datatable) {
 			showTotalNumberRecords:false,
 			cancel : {active:false},						
 			columns : [
-			   	{  	property:"validSeqPercent.value",
+				{  	property:"sampleOnContainer.properties.percentPerLane.value",
+					header: Messages("readsets.sampleOnContainer.percentPerLane"),
+					type :"Number",
+					format:2,
+					order:false
+				},
+			   	{  	property:"ngsrg.validSeqPercent.value",
 			    	header: Messages("readsets.treatments.ngsrg.validSeqPercent"),
 			    	type :"Number",
+			    	format:2,
 			    	order:false
 				},
-				{  	property:"nbCluster.value",
+				{  	property:"ngsrg.nbCluster.value",
 			    	header: Messages("readsets.treatments.ngsrg.nbCluster"),
 			    	type :"Number",
 			    	order:false
 				},
-				{  	property:"nbBases.value",
+				{  	property:"ngsrg.nbBases.value",
 			    	header: Messages("readsets.treatments.ngsrg.nbBases"),
 			    	type :"Number",
 			    	order:false
 				},
-				{  	property:"Q30.value",
+				{  	property:"ngsrg.Q30.value",
 			    	header: Messages("readsets.treatments.ngsrg.Q30"),
 			    	type :"Number",
 			    	order:false
 				},
-				{  	property:"qualityScore.value",
+				{  	property:"ngsrg.qualityScore.value",
 			    	header: Messages("readsets.treatments.ngsrg.qualityScore"),
 			    	type :"Number",
 			    	order:false
@@ -159,7 +166,10 @@ function NGSRGCtrl($scope, datatable) {
 		$scope.$watch('readset', function() {
 			if(angular.isDefined($scope.readset)){
 				$scope.NGSRG = datatable($scope, $scope.NGSRGConfig);
-				$scope.NGSRG.setData([$scope.readset.treatments.ngsrg['default']], 1);
+				var data = {};
+				data.ngsrg = $scope.readset.treatments.ngsrg['default'];
+				data.sampleOnContainer = $scope.readset.sampleOnContainer;
+				$scope.NGSRG.setData([data], 1);
 			}
 		}); 		
 	}

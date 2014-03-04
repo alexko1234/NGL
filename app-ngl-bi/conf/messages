@@ -203,6 +203,8 @@ readsets.nbCycles = Nb Cycles
 readsets.properties.isSentCCRT = Envoyé au CCRT ?
 readsets.properties.isSentCollaborator = Envoyé au Collaborateur ?
 
+readsets.sampleOnContainer.percentPerLane = % déposé
+
 readsets.treatments.contaminationPhiX.read1_2 = Read 1 + Read 2
 readsets.treatments.contaminationPhiX.single = Single
 readsets.treatments.contaminationPhiX.readsInput = Reads input 
