@@ -287,7 +287,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 			
 			$scope.laneOptions = $filter('orderBy')($scope.run.lanes, 'number');
 			
-			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code}}).success(function(data) {
+			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg"]}}).success(function(data) {
 				$scope.readSetsDT = datatable($scope, $scope.readSetsDTConfig);
 				$scope.readSetsDT.setData(data, data.length);				
 			});
