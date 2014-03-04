@@ -271,7 +271,7 @@ angular.module('commonsServices', []).
 	      		      var items = [];
 	      		      var pos = {};
 	      		      var selectedLabels = [];
-	      		      var readValue = [];
+	      		      var groupByLabels = [];
 	      		      
 	      		      function parseBtsOptions(input){
 	      		    	  var match = input.match(BT_OPTIONS_REGEXP);
@@ -316,7 +316,8 @@ angular.module('commonsServices', []).
 	      		    			return true;
 	      		    		}	      		    		
 	      		    	}else if(optionsConfig.groupByGetter && !scope.isEdit()){
-	      		    		if(item.selected && (index === 0 || (index > 0 && optionsConfig.groupByGetter(items[index-1]) !== optionsConfig.groupByGetter(item)))){
+	      		    		if(item.selected && !groupByLabels[optionsConfig.groupByGetter(item)]){
+	      		    			groupByLabels[optionsConfig.groupByGetter(item)] = true;
 	      		    			return true;
 	      		    		}	
 	      		    	}
@@ -416,6 +417,9 @@ angular.module('commonsServices', []).
 		      		    		for(var j = 0; j < modelValues.length; j++){
 			      	    			var modelValue = modelValues[j];
 			      	    			if(scope.itemValue(item) === modelValue){
+			      	    				if(optionsConfig.groupByGetter){
+			      	    					groupByLabels[optionsConfig.groupByGetter(item)]=false;
+			      	    				}
 				      	    			item.class = "selected";
 				      	    			item.selected = true;
 				      		    		selectedLabels.push(scope.itemLabel(item));
