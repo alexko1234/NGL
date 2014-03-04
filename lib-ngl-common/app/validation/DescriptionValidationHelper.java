@@ -26,7 +26,7 @@ public class DescriptionValidationHelper {
 
 	public static void validationInstrumentUsedTypeCode(
 			String instrumentUsedTypeCode, ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsedTypeCode, "instrumentUsedTypeCode", InstrumentUsedType.find);		
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsedTypeCode, "typeCode", InstrumentUsedType.find);		
 	}
 	
 	public static void validationExperimentTypeCode(

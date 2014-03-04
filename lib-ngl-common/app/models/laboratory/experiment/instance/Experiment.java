@@ -139,7 +139,7 @@ public class Experiment extends DBObject implements IValidation {
 		DescriptionValidationHelper.validationInstrumentUsedTypeCode(instrumentUsedTypeCode,contextValidation);
 		
 		//ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.typeCode, "typeCode", ExperimentType.find,true);
-		//InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.instrumentUsedTypeCode,"instrumentUsedTypeCode", InstrumentUsedType.find,true);
+		//InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.instrumentUsedTypeCode,"typeCode", InstrumentUsedType.find,true);
 		//ConstraintsHelper.validatePropertiesforLevel(contextValidation.errors, this.experimentProperties, exType.propertiesDefinitions,"",LEVEL_SEARCH_EXP);
 
 		DescriptionValidationHelper.validationExperimentType(typeCode, experimentProperties, contextValidation);

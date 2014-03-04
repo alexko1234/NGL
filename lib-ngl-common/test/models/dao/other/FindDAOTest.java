@@ -118,17 +118,17 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(Instrument.find.findByQueryParams(instrumentsQueryParams));
 		instrumentsQueryParams.active = Boolean.TRUE;
 		Assert.assertNotNull(Instrument.find.findByQueryParams(instrumentsQueryParams));
-		instrumentsQueryParams.instrumentCategoryCode = "seq-illumina";
+		instrumentsQueryParams.categoryCode = "seq-illumina";
 		Assert.assertNotNull(Instrument.find.findByQueryParams(instrumentsQueryParams));
-		instrumentsQueryParams.instrumentCategoryCode = null;
-		instrumentsQueryParams.instrumentCategoryCodes = Arrays.asList("seq-illumina");
+		instrumentsQueryParams.categoryCode = null;
+		instrumentsQueryParams.categoryCodes = Arrays.asList("seq-illumina");
 		Assert.assertNotNull(Instrument.find.findByQueryParams(instrumentsQueryParams));
-		instrumentsQueryParams.instrumentUsedTypeCode = "HISEQ2000";
+		instrumentsQueryParams.typeCode = "HISEQ2000";
 		Assert.assertNotNull(Instrument.find.findByQueryParams(instrumentsQueryParams));
-		instrumentsQueryParams.instrumentUsedTypeCode = null;		
-		instrumentsQueryParams.instrumentUsedTypeCodes = Arrays.asList("HISEQ2000");
+		instrumentsQueryParams.typeCode = null;		
+		instrumentsQueryParams.typeCodes = Arrays.asList("HISEQ2000");
 		Assert.assertNotNull(Instrument.find.findByQueryParams(instrumentsQueryParams));
-		instrumentsQueryParams.instrumentUsedTypeCodes = Arrays.asList("HISEQ9999");
+		instrumentsQueryParams.typeCodes = Arrays.asList("HISEQ9999");
 		Assert.assertEquals(Instrument.find.findByQueryParams(instrumentsQueryParams).size(), 0);
 		
 	}

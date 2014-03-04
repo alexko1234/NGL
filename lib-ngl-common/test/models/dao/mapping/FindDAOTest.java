@@ -158,32 +158,32 @@ public class FindDAOTest extends AbstractTests {
 	@Test
 	public void InstrumentTest() throws DAOException {
 		InstrumentQueryParams instrumentQuery = new InstrumentQueryParams();
-		instrumentQuery.instrumentUsedTypeCode = "ARGUS";
+		instrumentQuery.typeCode = "ARGUS";
 		List<Instrument> intruments = Instrument.find.findByQueryParams(instrumentQuery);
 		Assert.assertNotNull(intruments);
 		
 		instrumentQuery = new InstrumentQueryParams();
-		instrumentQuery.instrumentUsedTypeCodes = new ArrayList();
-		instrumentQuery.instrumentUsedTypeCodes.add("ARGUS");
+		instrumentQuery.typeCodes = new ArrayList();
+		instrumentQuery.typeCodes.add("ARGUS");
 		intruments = Instrument.find.findByQueryParams(instrumentQuery);
 		Assert.assertNotNull(intruments);
 		
 		instrumentQuery = new InstrumentQueryParams();
-		instrumentQuery.instrumentCategoryCodes = new ArrayList();
-		instrumentQuery.instrumentCategoryCodes.add("covaris");
+		instrumentQuery.categoryCodes = new ArrayList();
+		instrumentQuery.categoryCodes.add("covaris");
 		intruments = Instrument.find.findByQueryParams(instrumentQuery);
 		Assert.assertNotNull(intruments);
 		
 		instrumentQuery = new InstrumentQueryParams();
-		instrumentQuery.instrumentUsedTypeCode = "ARGUS";
-		instrumentQuery.instrumentCategoryCode = "opt-map-opgen";
+		instrumentQuery.typeCode = "ARGUS";
+		instrumentQuery.categoryCode = "opt-map-opgen";
 		intruments = Instrument.find.findByQueryParams(instrumentQuery);
 		
 		instrumentQuery = new InstrumentQueryParams();
-		instrumentQuery.instrumentUsedTypeCodes =new ArrayList();
-		instrumentQuery.instrumentUsedTypeCodes.add("ARGUS");
-		instrumentQuery.instrumentCategoryCodes = new ArrayList();
-		instrumentQuery.instrumentCategoryCodes.add("opt-map-opgen");
+		instrumentQuery.typeCodes =new ArrayList();
+		instrumentQuery.typeCodes.add("ARGUS");
+		instrumentQuery.categoryCodes = new ArrayList();
+		instrumentQuery.categoryCodes.add("opt-map-opgen");
 		intruments = Instrument.find.findByQueryParams(instrumentQuery);
 		Assert.assertNotNull(intruments);
 	}

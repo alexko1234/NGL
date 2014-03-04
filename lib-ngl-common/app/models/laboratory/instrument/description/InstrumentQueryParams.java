@@ -6,17 +6,17 @@ import controllers.ListForm;
 
 public class InstrumentQueryParams {
 	
-	public String instrumentUsedTypeCode;
-	public List<String> instrumentUsedTypeCodes;
+	public String typeCode;
+	public List<String> typeCodes;
 	
-	public String instrumentCategoryCode;
-	public List<String> instrumentCategoryCodes;
+	public String categoryCode;
+	public List<String> categoryCodes;
 	
 	public Boolean active;
 	
 	public boolean isAtLeastOneParam(){
-		return (this.instrumentUsedTypeCodes != null || this.instrumentUsedTypeCode != null 
-				|| this.instrumentCategoryCode != null || this.instrumentCategoryCodes != null
+		return (this.typeCodes != null || this.typeCode != null 
+				|| this.categoryCode != null || this.categoryCodes != null
 				|| this.active != null);
 	}
 }

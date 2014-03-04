@@ -9,20 +9,20 @@ import controllers.ListForm;
 
 public class InstrumentsSearchForm extends ListForm {
 	
-	public String instrumentUsedTypeCode;
-	public List<String> instrumentUsedTypeCodes;
+	public String typeCode;
+	public List<String> typeCodes;
 	
-	public String instrumentCategoryCode;
-	public List<String> instrumentCategoryCodes;
+	public String categoryCode;
+	public List<String> categoryCodes;
 	
 	public Boolean active;
 	
 	public InstrumentQueryParams getInstrumentsQueryParams(){
 		InstrumentQueryParams instrumentQueryParams = new InstrumentQueryParams();
-		instrumentQueryParams.instrumentUsedTypeCode = instrumentUsedTypeCode;
-		instrumentQueryParams.instrumentUsedTypeCodes = instrumentUsedTypeCodes;
-		instrumentQueryParams.instrumentCategoryCode = instrumentCategoryCode;
-		instrumentQueryParams.instrumentCategoryCodes = instrumentCategoryCodes;
+		instrumentQueryParams.typeCode = typeCode;
+		instrumentQueryParams.typeCodes = typeCodes;
+		instrumentQueryParams.categoryCode = categoryCode;
+		instrumentQueryParams.categoryCodes = categoryCodes;
 		instrumentQueryParams.active = active;
 		
 		return instrumentQueryParams;

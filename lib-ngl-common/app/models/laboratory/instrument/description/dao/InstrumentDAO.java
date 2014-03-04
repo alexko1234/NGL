@@ -106,23 +106,23 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 		}
 		
 		
-		if(instumentQueryParams.instrumentUsedTypeCodes != null){
-			parameters = ArrayUtils.addAll(parameters, instumentQueryParams.instrumentUsedTypeCodes.toArray());	
-			sqlParameters = ArrayUtils.addAll(sqlParameters, listToSqlParameters(instumentQueryParams.instrumentUsedTypeCodes,"cit.code", Types.VARCHAR));	
-			sql += " and  cit.code in ("+listToParameters(instumentQueryParams.instrumentUsedTypeCodes)+") ";
-		}else if(instumentQueryParams.instrumentUsedTypeCode != null){
-			Object[] args = new Object[]{instumentQueryParams.instrumentUsedTypeCode};			
+		if(instumentQueryParams.typeCodes != null){
+			parameters = ArrayUtils.addAll(parameters, instumentQueryParams.typeCodes.toArray());	
+			sqlParameters = ArrayUtils.addAll(sqlParameters, listToSqlParameters(instumentQueryParams.typeCodes,"cit.code", Types.VARCHAR));	
+			sql += " and  cit.code in ("+listToParameters(instumentQueryParams.typeCodes)+") ";
+		}else if(instumentQueryParams.typeCode != null){
+			Object[] args = new Object[]{instumentQueryParams.typeCode};			
 			parameters = ArrayUtils.addAll(parameters,args);
 			sqlParameters = ArrayUtils.add(sqlParameters, new SqlParameter("cit.code", Types.VARCHAR));
 			sql += " and  cit.code = ? ";
 		}
 					
-		if(instumentQueryParams.instrumentCategoryCodes != null){
-			parameters = ArrayUtils.addAll(parameters, instumentQueryParams.instrumentCategoryCodes.toArray());
-			sqlParameters = ArrayUtils.addAll(sqlParameters, listToSqlParameters(instumentQueryParams.instrumentCategoryCodes,"ic.code", Types.VARCHAR));			
-			sql += " and ic.code in ("+listToParameters(instumentQueryParams.instrumentCategoryCodes)+") ";
-		}else if(instumentQueryParams.instrumentCategoryCode != null){
-			Object[] args = new Object[]{instumentQueryParams.instrumentCategoryCode};
+		if(instumentQueryParams.categoryCodes != null){
+			parameters = ArrayUtils.addAll(parameters, instumentQueryParams.categoryCodes.toArray());
+			sqlParameters = ArrayUtils.addAll(sqlParameters, listToSqlParameters(instumentQueryParams.categoryCodes,"ic.code", Types.VARCHAR));			
+			sql += " and ic.code in ("+listToParameters(instumentQueryParams.categoryCodes)+") ";
+		}else if(instumentQueryParams.categoryCode != null){
+			Object[] args = new Object[]{instumentQueryParams.categoryCode};
 			parameters = ArrayUtils.addAll(parameters,args);
 			sqlParameters = ArrayUtils.add(sqlParameters, new SqlParameter("ic.code", Types.VARCHAR));
 			sql += " and ic.code = ? ";			

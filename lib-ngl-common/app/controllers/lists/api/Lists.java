@@ -146,10 +146,10 @@ public class Lists extends Controller{
 	}
 
 
-	public static Result instruments(String instrumentUsedTypeCode){
+	public static Result instruments(String typeCode){
 		List<ListObject> list = new ArrayList<ListObject>();
 		try {
-			InstrumentUsedType instrumentUsedType = InstrumentUsedType.find.findByCode(instrumentUsedTypeCode);
+			InstrumentUsedType instrumentUsedType = InstrumentUsedType.find.findByCode(typeCode);
 			for(Instrument instru:instrumentUsedType.instruments){
 				list.add(new ListObject(instru.code,instru.name));
 			}
@@ -206,11 +206,11 @@ public class Lists extends Controller{
 
 	}
 
-	public static Result categoryCodes(String instrumentUsedTypeCode){
+	public static Result categoryCodes(String typeCode){
 		List<ListObject> list = new ArrayList<ListObject>();
 		List<ContainerSupportCategory> containerSupportCategorys = null;
 		try {
-			InstrumentUsedType i = InstrumentUsedType.find.findByCode(instrumentUsedTypeCode);
+			InstrumentUsedType i = InstrumentUsedType.find.findByCode(typeCode);
 			containerSupportCategorys = i.outContainerSupportCategories;
 
 			for(ContainerSupportCategory c: containerSupportCategorys){
