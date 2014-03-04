@@ -31,15 +31,16 @@ public class ResolutionService {
 		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème qualité : SAV", "SAV"));
 		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème informatique", "PbI"));
 		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Informations", "Info"));
-		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème quantité", "Qté"));
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème quantité", "Qte"));
 		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème indexing", "IND"));
-		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème qualité", "Qlté"));
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème qualité", "Qlte"));
 		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème taxon", "TAXO"));
 		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème ribosomes", "RIBO"));
 		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème mapping", "MAP"));
 		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème merging", "MERG"));		
 		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème run", "Run"));
 		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème échantillon", "Sample"));
+		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Problème librairie", "LIB"));
 		
 		l.add(DescriptionFactory.newSimpleCategory(ResolutionCategory.class, "Default", "Default"));
 		
@@ -100,21 +101,22 @@ public class ResolutionService {
 		l.add(newResolution("arret séquenceur","Info-arretSeq",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name())));
 		l.add(newResolution("arret logiciel","Info_arretLogiciel",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name())));
 		l.add(newResolution("remboursement","Info-remboursement",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name())));
-		
+		l.add(newResolution("flowcell redéposée","Info-FCredeposee",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name())));
+
 		//ReadSet
 		
 		//CNS + CNG
 		l.add(newResolution("lane abandonnée","Run-abandonLane",ResolutionCategory.find.findByCode("Run"), DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
-		l.add(newResolution("répartition bases","Qlte-repartitionBases",ResolutionCategory.find.findByCode("Qlté"), DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+		l.add(newResolution("répartition bases","Qlte-repartitionBases",ResolutionCategory.find.findByCode("Qlte"), DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
 		
 		//CNS only
-		l.add(newResolution("seq valides insuf","Qte-seqValInsuf",ResolutionCategory.find.findByCode("Qté"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
-		l.add(newResolution("seq utiles insuf","Qte-seqUtileInsuf",ResolutionCategory.find.findByCode("Qté"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+		l.add(newResolution("seq valides insuf","Qte-seqValInsuf",ResolutionCategory.find.findByCode("Qte"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+		l.add(newResolution("seq utiles insuf","Qte-seqUtileInsuf",ResolutionCategory.find.findByCode("Qte"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
 		l.add(newResolution("pb demultiplexage","IND-pbDemultiplex",ResolutionCategory.find.findByCode("IND"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
 		l.add(newResolution("pb manip","IND-pbManip",ResolutionCategory.find.findByCode("IND"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
-		l.add(newResolution("Q30","Qlte-Q30",ResolutionCategory.find.findByCode("Qlté"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));		
-		l.add(newResolution("adaptateurs/Kmers","Qlte-adapterKmer",ResolutionCategory.find.findByCode("Qlté"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
-		l.add(newResolution("duplicat > 30","Qlte-duplicat",ResolutionCategory.find.findByCode("Qlté"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+		l.add(newResolution("Q30","Qlte-Q30",ResolutionCategory.find.findByCode("Qlte"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));		
+		l.add(newResolution("adaptateurs/Kmers","Qlte-adapterKmer",ResolutionCategory.find.findByCode("Qlte"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+		l.add(newResolution("duplicat > 30","Qlte-duplicat",ResolutionCategory.find.findByCode("Qlte"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
 		l.add(newResolution("conta indéterminée","TAXO-contaIndeterm",ResolutionCategory.find.findByCode("TAXO"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
 		l.add(newResolution("conta manip","TAXO-contaManip",ResolutionCategory.find.findByCode("TAXO"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
 		l.add(newResolution("conta mat ori","TAXO-contaMatOri",ResolutionCategory.find.findByCode("TAXO"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
@@ -126,13 +128,18 @@ public class ResolutionService {
 		l.add(newResolution("fungi","TAXO-fungi",ResolutionCategory.find.findByCode("TAXO"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
 		l.add(newResolution("% rRNA élevé","RIBO-percEleve",ResolutionCategory.find.findByCode("RIBO"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
 
+		l.add(newResolution("pb construction banque","LIB-pbConstruction",ResolutionCategory.find.findByCode("LIB"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+		l.add(newResolution("erreur dépôt banque","LIB-erreurDepot",ResolutionCategory.find.findByCode("LIB"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+
+		
+		
 		//CNG only
-		l.add(newResolution("% adaptateurs détectés","Qlte-adapterPercent",ResolutionCategory.find.findByCode("Qlté"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
-		l.add(newResolution("% duplicat élevé","Qlte-duplicatElevee",ResolutionCategory.find.findByCode("Qlté"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
-		l.add(newResolution("nb seq brutes faible","Qte-seqRawInsuf",ResolutionCategory.find.findByCode("Qté"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
-		l.add(newResolution("couverture en X hors spec.","Qte-couverture",ResolutionCategory.find.findByCode("Qté"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+		l.add(newResolution("% adaptateurs détectés","Qlte-adapterPercent",ResolutionCategory.find.findByCode("Qlte"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+		l.add(newResolution("% duplicat élevé","Qlte-duplicatElevee",ResolutionCategory.find.findByCode("Qlte"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+		l.add(newResolution("nb seq brutes faible","Qte-seqRawInsuf",ResolutionCategory.find.findByCode("Qte"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+		l.add(newResolution("couverture en X hors spec.","Qte-couverture",ResolutionCategory.find.findByCode("Qte"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
 		l.add(newResolution("index incorrect","IND-indexIncorrect",ResolutionCategory.find.findByCode("IND"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
-		l.add(newResolution("Q30 hors spec.","Qlte-Q30",ResolutionCategory.find.findByCode("Qlté"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
+		l.add(newResolution("Q30 hors spec.","Qlte-Q30",ResolutionCategory.find.findByCode("Qlte"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
 		l.add(newResolution("% mapping faible","MAP-PercMappingFble",ResolutionCategory.find.findByCode("MAP"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
 		l.add(newResolution("test Dev","Info-testDev",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
 		l.add(newResolution("test Prod","Info-testProd",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name())));
