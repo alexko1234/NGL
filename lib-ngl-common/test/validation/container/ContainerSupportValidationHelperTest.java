@@ -29,8 +29,8 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 		stock=saveDBOject(Stock.class, InstanceConstants.STOCK_COLL_NAME, "stock");
 		
 		container=new Container();
-		container.categoryCode=ContainerCategory.find.findAll().get(0).code;
-		container.support=ContainerSupportHelper.getContainerSupport(ContainerSupportCategory.find.findAll().get(0).code, 1, "test", "1", "1");
+		container.categoryCode=ContainerCategory.find.findByCode("tube").code;
+		container.support=ContainerSupportHelper.getContainerSupport(ContainerSupportCategory.find.findByCode("tube").code, 1, "test", "1", "1");
 
 	}
 
