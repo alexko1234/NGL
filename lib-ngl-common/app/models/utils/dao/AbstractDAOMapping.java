@@ -42,7 +42,7 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 
 	
 	public List<T> findAll() throws DAOException {
-		return initializeMapping(sqlCommon).execute();
+		return initializeMapping(sqlCommon+" order by t.code").execute();
 	}
 	
 	
