@@ -12,9 +12,17 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.Content;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
+import models.laboratory.run.instance.SampleOnContainer;
+import net.vz.mongodb.jackson.DBQuery;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
+
+import com.mongodb.BasicDBObject;
 
 import play.Logger;
 import play.libs.Json;
@@ -23,6 +31,7 @@ import validation.ContextValidation;
 import validation.IValidation;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 
 public class InstanceHelpers {
 
@@ -194,6 +203,69 @@ public class InstanceHelpers {
 	}
 
 
+	public static SampleOnContainer getSampleOnContainer(ReadSet readSet) {
+		//1 retrieve containerSupportCode from Run
+		String containerSupportCode = getContainerSupportCode(readSet);
+		Container container = getContainer(readSet, containerSupportCode);
+		if(null != container){
+			Content content = getContent(container, readSet);
+			SampleOnContainer sampleContainer = convertToSampleOnContainer(readSet, containerSupportCode, container, content);
+		//Logger.info(sampleContainer.toString());
+			return sampleContainer;
+		}
+		return null;
+	}
+
+
+	private static SampleOnContainer convertToSampleOnContainer(ReadSet readSet, String containerSupportCode, Container container, Content content) {
+		SampleOnContainer sc = new SampleOnContainer();
+		sc.lastUpdateDate = new Date();
+		sc.containerSupportCode = containerSupportCode;
+		sc.containerCode = container.code;
+		sc.sampleCode = readSet.sampleCode;
+		sc.sampleTypeCode = content.sampleUsed.typeCode;
+		sc.sampleCategoryCode = content.sampleUsed.categoryCode;
+		sc.properties = content.properties;
+		return sc;
+	}
+
+
+
+	private static Content getContent(Container container, ReadSet readSet) {
+		for(Content content : container.contents){
+			if(content.sampleUsed.sampleCode.equals(readSet.sampleCode)){
+				return content;
+			}
+		}
+		Logger.warn("Not found Content for "+readSet.code+" / "+readSet.sampleCode);
+		return null;
+	}
+
+
+
+	private static Container getContainer(ReadSet readSet, String containerSupportCode) {
+		MongoDBResult<Container> cl = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
+				DBQuery.and(DBQuery.is("support.supportCode", containerSupportCode),DBQuery.is("support.line", readSet.laneNumber.toString()),
+						DBQuery.is("contents.sampleUsed.sampleCode", readSet.sampleCode)));
+		
+		if(cl.size() == 0){
+			Logger.warn("Not found Container for "+readSet.code+" with : '"+containerSupportCode+", "+readSet.laneNumber.toString()+", "+readSet.sampleCode+"'");
+			return null;
+		}
+		
+		return cl.toList().get(0);
+	}
+
+
+	private static String getContainerSupportCode(ReadSet readSet) {
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("containerSupportCode", 1);
+		Run r = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+				DBQuery.and(DBQuery.is("code",readSet.runCode),DBQuery.is("lanes.number",readSet.laneNumber), DBQuery.is("lanes.readSetCodes",readSet.code)),
+				keys).toList().get(0);
+		return r.containerSupportCode;
+	}
+	
 
 
 }

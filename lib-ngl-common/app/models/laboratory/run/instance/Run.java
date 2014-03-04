@@ -43,7 +43,7 @@ public class Run extends DBObject implements IValidation {
     public Boolean keep = Boolean.FALSE;
    
     public TraceInformation traceInformation;
-    public InstrumentUsed instrumentUsed;
+    public InstrumentUsed instrumentUsed; //Instrument used to obtain the run
     public Map<String,Treatment> treatments = new HashMap<String,Treatment>();
     public Map<String, PropertyValue> properties = new HashMap<String, PropertyValue>();
     public List<Lane> lanes;

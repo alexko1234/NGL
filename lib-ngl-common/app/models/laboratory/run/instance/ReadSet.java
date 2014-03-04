@@ -35,7 +35,7 @@ public class ReadSet extends DBObject implements IValidation{
 	
 	public Integer laneNumber;
 	public Boolean dispatch = Boolean.FALSE;
-	public String sampleCode; //nom de l'ind / ech
+	public String sampleCode; //nom de l'ind / ech //used for search
 	public String projectCode;
 	
 	public Valuation productionValuation = new Valuation();
@@ -50,6 +50,10 @@ public class ReadSet extends DBObject implements IValidation{
 	public Map<String, PropertyValue> properties= new HashMap<String, PropertyValue>();
 	
 	public List<File> files;
+	
+	//insert after ngsrg
+	public SampleOnContainer sampleOnContainer;
+	
 	
 	/*
 	 * for "archives" optimization purpose (query links)

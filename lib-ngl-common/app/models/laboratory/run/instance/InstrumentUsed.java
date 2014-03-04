@@ -8,6 +8,11 @@ import validation.ContextValidation;
 import validation.IValidation;
 import validation.common.instance.CommonValidationHelper;
 
+/**
+ * Instrument used to obtain the run
+ * @author galbini
+ *
+ */
 public class InstrumentUsed implements IValidation {
 
 	// specific class for the run;
