@@ -122,7 +122,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 				"inner join common_info_type_resolution cr ON cr.fk_resolution=t.id "+
 				"inner join common_info_type c on c.id = cr.fk_common_info_type "+
 				  DAOHelpers.getCommonInfoTypeSQLForInstitute("c")+
-				" where c.code=? order by t.code";
+				" where c.code=?";
 		return initializeMapping(sql, new SqlParameter("c.code", Types.VARCHAR)).execute(typeCode);	
 	}
 	
@@ -138,7 +138,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
-		String sql = sqlCommon+" inner join resolution_category r on r.id = t.fk_resolution_category WHERE r.code = ? order by t.code";
+		String sql = sqlCommon+" inner join resolution_category r on r.id = t.fk_resolution_category WHERE r.code = ?";
 		return initializeMapping(sql, new SqlParameter("code", Types.VARCHAR)).execute(code);		
 	}
 
@@ -161,7 +161,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		String sql = sqlCommon+
 				"inner join resolution_object_type ro ON ro.fk_resolution=t.id "+
 				"inner join object_type o ON ro.fk_object_type=o.id "+
-				"WHERE o.code=? order by t.code";		
+				"WHERE o.code=?";		
 		return initializeMapping(sql, new SqlParameter("o.code", Types.VARCHAR)).execute(objectTypeCode.name());		
 	}
 	
@@ -171,7 +171,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		}
 		String sql = sqlCommon+
 				"inner join resolution_object_type ro ON ro.fk_resolution= t.id "+
-				"WHERE ro.fk_object_type=? order by t.code";		
+				"WHERE ro.fk_object_type=?";		
 		return initializeMapping(sql, new SqlParameter("fk_object_type", Type.LONG)).execute(id);		
 	}
 
