@@ -346,6 +346,8 @@ public class LimsCNGDAO {
 					
 					if(rs.getString("tag")!=null) { 
 						content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+						//new, dnoisett
+						content.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagCategory")));
 					}
 					else {
 						content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppress it at the end of the function...
@@ -457,6 +459,9 @@ public class LimsCNGDAO {
 		
 		content.properties = new HashMap<String, PropertyValue>();
 		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
+		//new, dnoisett
+		content.properties.put("tagCategory",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tagCategory").value ));
+		
 		content.properties.put("percentPerLane",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("percentPerLane").value ));
 		
 		results.get(posCurrent).contents.add(content); 
