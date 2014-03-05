@@ -69,7 +69,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			}
 	};
 
-	//Temporairement en dur (à mettre dans la base)
+	//Temporairement en dur (ï¿½ mettre dans la base)
 	$scope.inputContainersStates = [{"code":"IS","name":"IS"},{"code":"UA","name":"UA"}];
 	$scope.ouputContainersStates = [{"code":"IW-P","name":"IW-P"},{"code":"A","name":"A"},{"code":"UA","name":"UA"}];
 
@@ -699,7 +699,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 		if($scope.experiment.value.instrumentUsedTypeCode != null ){
 			
 			
-			$scope.lists.refresh.instruments({"instrumentUsedTypeCode":$scope.experiment.value.instrumentUsedTypeCode});
+			$scope.lists.refresh.instruments({"typeCode":$scope.experiment.value.instrumentUsedTypeCode});
 			$scope.lists.refresh.containerSupportCategories({"instrumentUsedTypeCode":$scope.experiment.value.instrumentUsedTypeCode});
 			
 			//$scope.experiment.instrumentInformation.instruments.options = $scope.comboLists.getInstruments($scope.experiment.value.instrument.categoryCode).query();
