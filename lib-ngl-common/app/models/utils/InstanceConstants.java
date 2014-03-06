@@ -14,7 +14,11 @@ public interface InstanceConstants {
 	public static final String RUN_ILLUMINA_COLL_NAME = "ngl_bi.RunIllumina";
 	public static final String READSET_ILLUMINA_COLL_NAME = "ngl_bi.ReadSetIllumina";
 	public static final String ALERT_COLL_NAME="ngl_bi.Alert";
-	public static final String PARAMETER_COLL_NAME = "Parameter";
 
+	public static final String SRA_STUDY_COLL_NAME="ngl_sub.Study";
+	public static final String SRA_SAMPLE_COLL_NAME="ngl_sub.Sample";
+	public static final String SRA_EXPERIMENT_COLL_NAME="ngl_sub.Experiment";
+	public static final String SRA_SUBMISSION_COLL_NAME="ngl_sub.Submission";
+	public static final String PARAMETER_COLL_NAME = "Parameter";
 
 }
