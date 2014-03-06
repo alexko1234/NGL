@@ -1,0 +1,34 @@
+package submission;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import models.laboratory.run.instance.ReadSet;
+import models.utils.InstanceConstants;
+
+import org.junit.Test;
+
+import fr.cea.ig.MongoDBDAO;
+
+import services.SubmissionServices;
+import utils.AbstractTests;
+
+public class SubmissionTest extends AbstractTests{
+
+	@Test
+	public void testSubmission()
+	{
+		SubmissionServices submissionServices = new SubmissionServices();
+		String codeReadSet = "AKL_ABOSA_1_80MJ3ABXX"; // equivalent lotSeqName
+		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet);
+		List<ReadSet> readSets = new ArrayList<ReadSet>();
+		readSets.add(readSet);
+
+		String strategySample = "STRATEGY_SAMPLE_CLONE";
+		//String strategySample = "STRATEGY_SAMPLE_TAXON";
+		//String strategySample = "STRATEGY_NO_SAMPLE";
+		System.out.println("Create new submission for readSet " + readSet.code);
+
+		submissionServices.createNewSubmission("AKL", readSets, null, "", strategySample);
+	}
+}
