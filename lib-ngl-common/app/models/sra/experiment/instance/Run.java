@@ -1,11 +1,11 @@
 package models.sra.experiment.instance;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import validation.ContextValidation;
 import validation.IValidation;
-import fr.cea.ig.DBObject;
 
 public class Run implements IValidation {
 	// RunType
@@ -15,7 +15,7 @@ public class Run implements IValidation {
 	public String runCenter;       // required pour nos stats valeur fixee à GSC 
 	public String accession;       // numeros d'accession attribué par ebi 
 	public Date releaseDate;       // required, date de mise à disposition en public par l'EBI
-	public List <RawData> listRawData;
+	public List <RawData> listRawData = new ArrayList<RawData>();
 
 	@Override
 	public void validate(ContextValidation contextValidation) {

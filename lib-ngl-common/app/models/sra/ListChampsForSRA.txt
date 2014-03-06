@@ -1,0 +1,15 @@
+Le study par defaut est rempli sur la base des infos de pl_StudySoumission
+	code ou alias => de la forme study_projectCode_num       
+	title         => champs title de plStudySoumission
+ 	projectCode   => projectCode du lotSeqName   
+	studyAbstract => champs study_abstract de plStudySoumission 
+	description   => study_description de plStudySoumission   
+	bioProjectId  => mis à 0 par defaut et corrigé manuellement   
+	existingStudyType => valeur par defaut à surcharger ou corriger
+ 	accession;         // numeros d'accession attribué par ebi */
+  	releaseDate;       // required, date de mise à disposition en public par l'EBI
+  	centerName;        // required pour nos stats valeur fixee à GSC */
+    centerProjectName; // required pour nos stats valeur fixée à projectCode
+
+   
+    

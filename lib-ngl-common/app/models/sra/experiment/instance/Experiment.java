@@ -23,7 +23,9 @@ public class Experiment extends DBObject implements IValidation {
 	public String libraryName;               // required 
 	public String libraryConstructionProtocol; // fixé à "none provided" par defaut, mais forme libre
 	public String typePlatform;      // required et contrainte, L454 ou illumina en fonction de plateform_map de la proc
-	public String instrumentModel;   // required et contrainte et depend de plateformType
+	// InstrumentUsedType de run ou code= machine et typeCode la techno
+	public String instrumentModel;   // required et contrainte et depend de plateformType.
+	// Actuellement forcement Illumina puisque collection Illumina
     public BigInteger lastBaseCoord; // valeur renseignee ssi illumina paired */
 	public BigInteger spotLength;    // required : champs spot_length de la proc et si 0 ou null ou XX mettre 0 en bigInteger */
 	public String accession;         // numeros d'accession attribué par ebi */
@@ -33,14 +35,21 @@ public class Experiment extends DBObject implements IValidation {
 	//Projects ref
 	public String sampleCode;
 	public String studyCode;
-	//probleme du tableau taille fixé à l'instantiation mieux vaut une collection
-	//public ReadSpec[] tabReadSpec;
 	public List<ReadSpec> readSpecs;
+	public String readSetCode;
 	public Run run; // le run est rattache à l'experiment
+	public String stateCode; // Reference sur "models.laboratory.common.instance.state" 
+							 // pour gerer les differents etats de l'objet.
+							 // Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 
+							 // Les etapes automatisables via birds : inWaitingSubmission, inProgressSubmission, finishSubmission, submit
+	public String traceInformationCode; // Reference sur "models.laboratory.common.instance.TraceInformation" 
+	// pour loguer les dernieres modifications utilisateurs
 
+	
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		// TODO Auto-generated method stub
 	}
 
+	
 }

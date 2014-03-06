@@ -20,7 +20,14 @@ public class Study extends DBObject implements IValidation {
   	public Date releaseDate;         // required, date de mise à disposition en public par l'EBI
   	public String centerName;        // required pour nos stats valeur fixee à GSC */
     public String centerProjectName; // required pour nos stats valeur fixée à projectCode
-    
+	public String stateCode;         // Reference sur "models.laboratory.common.instance.state" 
+	 // pour gerer les differents etats de l'objet.
+	 // Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 
+	 // Les etapes automatisables via birds : inWaitingSubmission, inProgressSubmission, finishSubmission, submit
+
+	public String traceInformationCode; // Reference sur "models.laboratory.common.instance.TraceInformation" 
+	// pour loguer les dernieres modifications utilisateurs
+	
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		// TODO Auto-generated method stub
