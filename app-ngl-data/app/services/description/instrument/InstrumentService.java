@@ -122,7 +122,7 @@ public class InstrumentService {
 				getInstrumentGAII(),
 				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("MISEQ", "MISEQ", InstrumentCategory.find.findByCode("seq-illumina"), getMiseqProperties(), 
+		l.add(newInstrumentUsedType("MISEQ", "MISEQ", InstrumentCategory.find.findByCode("seq-illumina"), getHiseq2000Properties(), 
 				getInstrumentMiSeq(),
 				getContainerSupportCategories(new String[]{"flowcell-1"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
@@ -148,17 +148,20 @@ public class InstrumentService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Position","location"
         		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B")));
-        propertyDefinitions.add(newPropertiesDefinition("Type lecture", "readType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE")));	
-        propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "cycleNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR50", "SR100", "PE50", "PE100")));
+        propertyDefinitions.add(newPropertiesDefinition("Type lecture", "readType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE")));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true));
         return propertyDefinitions;
 	}
 
-	private static List<PropertyDefinition> getMiseqProperties() throws DAOException {
+	/*private static List<PropertyDefinition> getMiseqProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Type lecture", "readType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE")));	
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "cycleNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("PE150", "PE250", "PE300")));
         return propertyDefinitions;
-	}
+	}*/
 	
 	private static List<PropertyDefinition> getArgusProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
