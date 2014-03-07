@@ -5,9 +5,8 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mvel2.sh.command.basic.Set;
-
 import models.LimsCNGDAO;
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
@@ -24,7 +23,7 @@ import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
 /**
- * update tag and add tagCategory 
+ * Update tag and add tagCategory in the Container collection
  * @author dnoisett
  * 
  */
@@ -32,6 +31,7 @@ import fr.cea.ig.MongoDBDAO;
 public class MigrationTag extends CommonController {
 	
 	private static final String CONTAINER_COLL_NAME_BCK = InstanceConstants.CONTAINER_COLL_NAME + "_BCK";
+	private static final String CONTAINER_COLL_NAME_UPDATED = InstanceConstants.CONTAINER_COLL_NAME + "_UPDATED";
 	protected static LimsCNGDAO limsServices= Spring.getBeanOfType(LimsCNGDAO.class);
 
 
@@ -62,8 +62,7 @@ public class MigrationTag extends CommonController {
 			for (Container newContainer : newContainers) {
 				for (Content newContent : newContainer.contents) {
 					if (newContent.properties.get("tag") != null) {
-						m1Value = (String) newContent.properties.get("tag").value + '_' ;
-						m1Value += (String) newContent.properties.get("tagCategory").value;
+						m1Value = (String) newContent.properties.get("tag").value + '_' + (String) newContent.properties.get("tagCategory").value;
 						m1.put(newContent.sampleUsed.sampleCode, m1Value);
 					}
 				}
@@ -71,35 +70,76 @@ public class MigrationTag extends CommonController {
 			}
 			//end of setting map 
 			
+			String newTag = "";
+			String tagCategory = "";
+			String strValue = "";
 			
 			//find current collection
 			List<Container> oldContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 
-			
 			//iteration over current collection
 			for (Container oldContainer : oldContainers) {
 				
 				for (int i=0; i<oldContainer.contents.size(); i++) {
-					
-					String newTag = "";
-					String tagCategory = "";
-					String strValue = "";
-					
+										
 					if (m2.get(oldContainer.code) != null) {
 						
 						strValue = (String) (m2.get(oldContainer.code)).get(oldContainer.contents.get(i).sampleUsed.sampleCode);
-						if (strValue != null) {
+						if (strValue != null && strValue.contains("_")) {
 							
 							newTag = strValue.substring(0, strValue.indexOf("_")); 
 							tagCategory =  strValue.substring(strValue.indexOf("_")+1);
 							
 							if (newTag != "") {
 								
-								MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
-										DBQuery.and(DBQuery.is("code", oldContainer.code), DBQuery.is("contents.sampleUsed.sampleCode", oldContainer.contents.get(i).sampleUsed.sampleCode)),  
-										DBUpdate.set("contents.$.properties.tag", newTag)
-										.set("contents.$.properties.tagCategory", tagCategory));
+								//HashMap<String, PropertySingleValue> mapProperties = new HashMap<String, PropertySingleValue>();
+								
+								//List<PropertySingleValue> l = new ArrayList<PropertySingleValue>(); 
+								
+								if (oldContainer.contents.get(i).properties != null) {
+								
+									//create propertySingleValues from values
+									if (oldContainer.contents.get(i).properties.get("percentperLane") != null) {
+										PropertySingleValue pPercentPerLane = new PropertySingleValue(oldContainer.contents.get(i).properties.get("percentperLane").value);
+										
+										//mapProperties.put("percentPerLane", pPercentPerLane);
+										
+										//l.add(pPercentPerLane); 
+									}
 
+									PropertySingleValue pTag = new PropertySingleValue();
+									pTag.value = newTag;
+									PropertySingleValue pTagCategory = new PropertySingleValue();
+									pTagCategory.value = tagCategory;
+									
+									//l.add(pTag);
+									//l.add(pTagCategory);
+									
+									//mapProperties.put("tag", pTag);
+									//mapProperties.put("tagCategory", pTagCategory);
+									
+									if (oldContainer.contents.get(i).properties.get("tag") != null) {
+										oldContainer.contents.get(i).properties.get("tag").value = newTag;
+									}
+									else {
+										oldContainer.contents.get(i).properties.put("tag", pTag);
+									}
+									
+									oldContainer.contents.get(i).properties.put("tagCategory", pTagCategory); 
+									
+									/*
+									//bug : don't insert tagCategory !
+									MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
+											DBQuery.and(DBQuery.is("code", oldContainer.code), 
+													DBQuery.is("contents.sampleUsed.sampleCode", oldContainer.contents.get(i).sampleUsed.sampleCode)),  
+											DBUpdate.unset("contents."+ i+ ".properties")
+											//.set("contents." + i + ".properties", l)
+											.pushAll("contents." + i + ".properties", l)
+											); 									
+									*/
+
+								
+								}
 							}
 							
 														
@@ -107,8 +147,17 @@ public class MigrationTag extends CommonController {
 					}
 					
 				}
-				
-			}	
+
+				//save instead of update !
+				MongoDBDAO.save(CONTAINER_COLL_NAME_UPDATED, oldContainer); 
+			}	//end for
+			
+			JacksonDBCollection<Container, String> containersColl = MongoDBDAO.getCollection(InstanceConstants.CONTAINER_COLL_NAME, Container.class);
+			containersColl.drop();
+			
+			JacksonDBCollection<Container, String> containersCollUpd = MongoDBDAO.getCollection(CONTAINER_COLL_NAME_UPDATED, Container.class);
+			containersCollUpd.rename(InstanceConstants.CONTAINER_COLL_NAME); 
+			
 			
 			//limsServices.updateLimsContainers(containersUpdated, contextError);
 			
