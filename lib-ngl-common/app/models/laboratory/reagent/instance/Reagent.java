@@ -8,11 +8,10 @@ import models.laboratory.common.instance.TraceInformation;
 import net.vz.mongodb.jackson.MongoCollection;
 import fr.cea.ig.DBObject;
 
-@MongoCollection(name="ReagentInstance")
-public class ReagentInstance extends DBObject {
+@MongoCollection(name="Reagent")
+public class Reagent extends DBObject {
 
 	public String providerCode;
-	public String reagentCode;
 	
 	//public String typeCode;
 	public String categoryCode;

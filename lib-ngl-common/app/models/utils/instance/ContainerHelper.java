@@ -16,10 +16,10 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.SampleUsed;
-import models.laboratory.container.instance.Support;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
@@ -166,14 +166,14 @@ public class ContainerHelper {
 	public static void addContainerSupport(Container container,Experiment experiment){
 
 		if(container.support==null){
-			container.support=new ContainerSupport();
+			container.support=new LocationOnContainerSupport();
 		}
 
 		if(experiment.instrument.outContainerSupportCategoryCode==null || experiment.instrument.outContainerSupportCategoryCode.equals("tube")){
 			container.support=ContainerSupportHelper.getContainerSupportTube(container.code);
 		}else{
 			//TODO 
-			ContainerSupport containerSupport=new ContainerSupport();
+			LocationOnContainerSupport containerSupport=new LocationOnContainerSupport();
 			containerSupport.supportCode=getSupportCode(experiment.instrument.outContainerSupportCategoryCode);	
 			containerSupport.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
 			containerSupport.column="?";
@@ -224,16 +224,16 @@ public class ContainerHelper {
 	
 	public static void createSupportFromContainers(List<Container> containers,ContextValidation contextValidation){
 		
-		HashMap<String,Support> mapSupports = new HashMap<String,Support>();
+		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
 		
 		for (Container container : containers) {
 			if (container.support != null) {
-				Support newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
+				ContainerSupport newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
 				}
 				else {
-					Support oldSupport = (Support) mapSupports.get(newSupport.code);
+					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
 					InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
 					InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
 				}
@@ -241,7 +241,7 @@ public class ContainerHelper {
 			}
 		}
 	
-		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, new ArrayList<Support>(mapSupports.values()), contextValidation, true);
+		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, new ArrayList<ContainerSupport>(mapSupports.values()), contextValidation, true);
 	
 	}
 

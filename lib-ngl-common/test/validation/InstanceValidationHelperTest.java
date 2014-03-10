@@ -8,7 +8,7 @@ import java.util.Random;
 
 import models.laboratory.container.instance.Container;
 import models.laboratory.project.instance.Project;
-import models.laboratory.reagent.instance.ReagentInstance;
+import models.laboratory.reagent.instance.Reagent;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.stock.instance.Stock;
 import models.utils.InstanceConstants;
@@ -38,7 +38,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	
 	static Container container;
 
-	static ReagentInstance reagentInstance;
+	static Reagent reagentInstance;
 	
 	static int randomInt;
 		
@@ -70,7 +70,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		
 		container=saveDBOject(Container.class,InstanceConstants.CONTAINER_COLL_NAME,"container" + randomInt);
 		
-		reagentInstance=saveDBOject(ReagentInstance.class, InstanceConstants.REAGENT_INSTANCE_COLL_NAME, "reagent" + randomInt);
+		reagentInstance=saveDBOject(Reagent.class, InstanceConstants.REAGENT_INSTANCE_COLL_NAME, "reagent" + randomInt);
 
 	}
 	

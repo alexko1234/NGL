@@ -60,7 +60,7 @@ public class DescriptionValidationHelper {
 
 	public static void validationReagentTypeCode(String reagentTypeCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, reagentTypeCode, "reagentTypeCode", ReagentType.find);		
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, reagentTypeCode, "typeCode", ReagentType.find);		
 	}
 
 	public static void validationRunTypeCode(String typeCode,

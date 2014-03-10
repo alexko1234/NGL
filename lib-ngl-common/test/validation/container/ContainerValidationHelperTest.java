@@ -7,7 +7,7 @@ import java.util.List;
 
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
-import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.SampleUsed;
 import models.laboratory.experiment.description.ExperimentType;
@@ -50,7 +50,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	static Content content;
 	static Content content1;
 
-	static ContainerSupport containerSupport;
+	static LocationOnContainerSupport containerSupport;
 
 	@BeforeClass
 	public static void initData() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
@@ -80,7 +80,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		content=new Content(new SampleUsed(sample.code,sample.typeCode,sample.categoryCode));
 		content1=new Content(new SampleUsed(sample1.code,sample1.typeCode, sample1.categoryCode));
 		
-		containerSupport=new ContainerSupport();
+		containerSupport=new LocationOnContainerSupport();
 		containerSupport.supportCode="test";
 		containerSupport.categoryCode=ContainerSupportCategory.find.findAll().get(0).code;
 		containerSupport.line="1";
@@ -215,7 +215,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 
 	/**
 	 * 
-	 * Container Support
+	 * Container ContainerSupport
 	 * 
 	 */
 	@Test
@@ -228,7 +228,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validateContainerSupportRequiredTest(){
 		ContextValidation contextValidation=new ContextValidation();
-		ContainerSupport localContainerSupport=new ContainerSupport();
+		LocationOnContainerSupport localContainerSupport=new LocationOnContainerSupport();
 		ContainerValidationHelper.validateContainerSupport(localContainerSupport,contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}

@@ -48,7 +48,7 @@ public class Container extends DBObject implements IValidation {
 
 
 	@JsonIgnore
-	public final static String HEADER="Container.code;Container.categoryCode;Container.comments;ContainerSupport.categorycode;ContainerSupport.x;ContainerSupport.y;ContainerSupport.barecode";
+	public final static String HEADER="Container.code;Container.categoryCode;Container.comments;LocationOnContainerSupport.categorycode;LocationOnContainerSupport.x;LocationOnContainerSupport.y;LocationOnContainerSupport.barecode";
 
 	//ContainerCategory Ref
 	public String categoryCode;
@@ -64,7 +64,7 @@ public class Container extends DBObject implements IValidation {
 	public List<Comment> comments;
 
 	//Relation with support
-	public ContainerSupport support; 
+	public LocationOnContainerSupport support; 
 
 	//Embedded content with values;
 	public List<Content> contents;

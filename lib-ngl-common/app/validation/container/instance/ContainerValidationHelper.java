@@ -14,9 +14,9 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerCategory;
-import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.Content;
-import models.laboratory.container.instance.Support;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
@@ -28,7 +28,7 @@ import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
-import models.laboratory.container.instance.Support;
+import models.laboratory.container.instance.ContainerSupport;
 
 public class ContainerValidationHelper extends CommonValidationHelper{
 
@@ -73,7 +73,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 
 	}
 
-	public static void validateContainerSupport(ContainerSupport support,
+	public static void validateContainerSupport(LocationOnContainerSupport support,
 			ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("containersupport");
 		if(ValidationHelper.required(contextValidation, support, "containersupport")) {
@@ -83,11 +83,11 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 	}
 	
 	
-	public static Support createSupport(ContainerSupport containerSupport, List<String> newProjectCodes, List<String> newSampleCodes) {
-		Support s = null;
+	public static ContainerSupport createSupport(LocationOnContainerSupport containerSupport, List<String> newProjectCodes, List<String> newSampleCodes) {
+		ContainerSupport s = null;
 		if (containerSupport != null && containerSupport.supportCode != null) {
 
-			s = new Support();
+			s = new ContainerSupport();
 			String user = "ngsrg"; //default value 
 
 			s.code = containerSupport.supportCode;	

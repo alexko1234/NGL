@@ -19,8 +19,8 @@ import models.laboratory.common.instance.PropertyValue;
  * */
 public class QualityControlResult implements IValidation {
 	
-	public String qualityControleCode;
-	public String qualityControleTypeCode;
+	public String code;
+	public String typeCode;
 	public Map<String,PropertyValue> properties;
 	
 	@JsonIgnore

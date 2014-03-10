@@ -18,21 +18,21 @@ import validation.utils.BusinessValidationHelper;
 public class ReagentUsed implements IValidation {
 	
 	// Reagent ref
-	public String reagentTypeCode;
-	public String reagentInstanceCode;
+	public String typeCode;
+	public String code;
 	// to complete with Map properties or attribut or Values class
 	//public Map<String,PropertyValue> properties;
 	
 	@JsonIgnore
 	public ReagentType getReagentType() {
-		return new HelperObjects<ReagentType>().getObject(ReagentType.class, reagentTypeCode);
+		return new HelperObjects<ReagentType>().getObject(ReagentType.class, typeCode);
 	}
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		
-		DescriptionValidationHelper.validationReagentTypeCode(reagentTypeCode,contextValidation);
-		InstanceValidationHelper.validationReagentInstanceCode(reagentInstanceCode,contextValidation);
+		DescriptionValidationHelper.validationReagentTypeCode(typeCode,contextValidation);
+		InstanceValidationHelper.validationReagentInstanceCode(code,contextValidation);
 
 	}
 	 

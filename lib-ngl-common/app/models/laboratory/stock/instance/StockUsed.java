@@ -11,7 +11,7 @@ import validation.IValidation;
 
 
 public class StockUsed implements IValidation{
-	//Support ref
+	//ContainerSupport ref
 	public String barCode;
 	public String createUser;
 	public Date creationDate;

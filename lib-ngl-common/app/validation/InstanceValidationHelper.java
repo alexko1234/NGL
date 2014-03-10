@@ -4,7 +4,7 @@ import java.util.List;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.reagent.instance.ReagentInstance;
+import models.laboratory.reagent.instance.Reagent;
 import models.utils.InstanceConstants;
 import validation.utils.BusinessValidationHelper;
 
@@ -28,7 +28,7 @@ public class InstanceValidationHelper {
 	@Deprecated
 	public static void validationReagentInstanceCode(String reagentInstanceCode, ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("reagent");
-		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, reagentInstanceCode, "reagentInstanceCode", ReagentInstance.class,InstanceConstants.REAGENT_INSTANCE_COLL_NAME);
+		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, reagentInstanceCode, "code", Reagent.class,InstanceConstants.REAGENT_INSTANCE_COLL_NAME);
 		contextValidation.removeKeyFromRootKeyName("reagent");
 	}
 

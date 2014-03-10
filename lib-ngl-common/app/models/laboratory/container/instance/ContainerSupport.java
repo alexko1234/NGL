@@ -1,70 +1,32 @@
 package models.laboratory.container.instance;
 
+import java.util.List;
 
-import models.laboratory.container.description.ContainerSupportCategory;
-import models.laboratory.stock.instance.Stock;
-import models.utils.HelperObjects;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Valuation;
 import models.utils.InstanceConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.container.instance.ContainerSupportValidationHelper;
-import validation.utils.BusinessValidationHelper;
+import validation.container.instance.SupportValidationHelper;
+import fr.cea.ig.DBObject;
 
-
-
-/**
- * 
- * Embedded data in collection Container
- * Associate support and container with a position (column, line)
- * 
- * If container category is  tube, the position is (column,line)=(1,1) and support category is 'VIDE'
- * 
- * A support intance defines by unique supportCode /line/column, a supportCode (ex barCode) can be referenced in many container.support 
- * 
- * @author mhaquell
- *
- */
-public class ContainerSupport implements IValidation {
-	
-	// Support name
-//	public String name;
-//	public String barCode;
-// Replace name and barCode
-	public String supportCode;
-		
+public class ContainerSupport extends DBObject implements IValidation{
 	public String categoryCode;
-
+	public State state;
 	public String stockCode;
+	public Valuation valuation;
+	public TraceInformation traceInformation;
+	public List<String> projectCodes;
+	public List<String> sampleCodes;
 	
-	// Container Position in support
-	public String column;
-	public String line;
-	
-	@JsonIgnore
-	public ContainerSupportCategory getContainerSupportCategory(){
-		return new HelperObjects<ContainerSupportCategory>().getObject(ContainerSupportCategory.class, categoryCode);
-
-	}
-	
-
-	@JsonIgnore
-	public Stock getStock(){
-		return new HelperObjects<Stock>().getObject(Stock.class, stockCode);
-
-	}
-
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-
-		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(this, contextValidation);
-		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(categoryCode, contextValidation);
-		ContainerSupportValidationHelper.validateStockCode(stockCode, contextValidation);
-		//ContainerSupportValidationHelper.validateSupportCode(supportCode, contextValidation);
+		SupportValidationHelper.validateCode(this, InstanceConstants.SUPPORT_COLL_NAME, contextValidation);
+		SupportValidationHelper.validateSupportCategoryCode(categoryCode, contextValidation);
 	}
-
-
 }

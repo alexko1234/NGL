@@ -2,7 +2,7 @@ package validation.container.instance;
 
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.stock.instance.Stock;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
@@ -15,7 +15,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class ContainerSupportValidationHelper extends CommonValidationHelper{
 
-	public static void validateUniqueSupportCodePosition(ContainerSupport containerSupport,ContextValidation contextValidation) {
+	public static void validateUniqueSupportCodePosition(LocationOnContainerSupport containerSupport,ContextValidation contextValidation) {
 
 		if(contextValidation.isCreationMode()){
 			Query query=DBQuery.and(DBQuery.is("support.line",containerSupport.line),

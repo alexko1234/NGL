@@ -14,7 +14,7 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.SampleUsed;
 import models.laboratory.experiment.description.ExperimentCategory;
@@ -246,7 +246,7 @@ public class InstanceTest extends AbstractTests{
 	public void updateContainer(){
 		Container container=findObject(Container.class);
 
-		container.support=new ContainerSupport();
+		container.support=new LocationOnContainerSupport();
 		container.support.supportCode="containerName";
 		container.categoryCode="containerCategory";
 

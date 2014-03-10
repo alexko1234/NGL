@@ -63,7 +63,7 @@ public class Experiment extends DBObject implements IValidation {
 	//Idea for replace listInputOutputContainers attribut
 	public Map<Integer,AtomicTransfertMethod> atomicTransfertMethods; 
 	
-	public List<ReagentUsed> reagentUseds;
+	public List<ReagentUsed> reagentsUsed;
 	
 	public List<Comment> comments;
 	
@@ -154,8 +154,8 @@ public class Experiment extends DBObject implements IValidation {
 		}
 		
 		instrument.validate(contextValidation);
-		if(reagentUseds != null){
-			for(ReagentUsed reagentUsed:reagentUseds){
+		if(reagentsUsed != null){
+			for(ReagentUsed reagentUsed:reagentsUsed){
 				reagentUsed.validate(contextValidation);
 			}
 		}
