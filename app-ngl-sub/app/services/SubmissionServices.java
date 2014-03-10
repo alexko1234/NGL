@@ -162,6 +162,7 @@ public class SubmissionServices {
 		// La validite du readSet doit avoir été testé avant.
 		Experiment experiment = new Experiment(); 
 		experiment.code = "exp_" + readSet.code;
+		experiment.state.code = "N";
 		String laboratorySampleCode = readSet.sampleCode;
 		models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
 		String taxonId = laboratorySample.taxonCode;
