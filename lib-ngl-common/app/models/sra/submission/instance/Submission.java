@@ -2,11 +2,8 @@ package models.sra.submission.instance;
 
 import java.util.Date;
 import java.util.List;
-
-import models.sra.experiment.instance.Experiment;
-import models.sra.experiment.instance.Run;
-import models.sra.sample.instance.Sample;
-import models.sra.study.instance.Study;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TraceInformation;
 import validation.ContextValidation;
 import validation.IValidation;
 import fr.cea.ig.DBObject;
@@ -26,15 +23,14 @@ public class Submission extends DBObject implements IValidation {
 	//public List<String> runCodes;
 	public String strategyStudy;
 	public String strategySample;
-	public String stateCode; // Reference sur "models.laboratory.common.instance.state" 
-	 // pour gerer les differents etats de l'objet.
-	 // Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 
-	 // Les etapes automatisables via birds : inWaitingSubmission, inProgressSubmission, finishSubmission, submit
 
-	public String traceInformationCode; // Reference sur "models.laboratory.common.instance.TraceInformation" 
-	// pour loguer les dernieres modifications utilisateurs
+	public State state;// = new State(); // Reference sur "models.laboratory.common.instance.state" 
+		// pour gerer les differents etats de l'objet.
+		// Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 
+		// Les etapes automatisables via birds : inWaitingSubmission, inProgressSubmission, finishSubmission, submit
+	public TraceInformation traceInformation; // new TraceInformation .Reference sur "models.laboratory.common.instance.TraceInformation" 
+		// pour loguer les dernieres modifications utilisateurs
 
-	
 
 	@Override
 	public void validate(ContextValidation contextValidation) {

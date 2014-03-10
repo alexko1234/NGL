@@ -1,9 +1,12 @@
 package models.sra.experiment.instance;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TraceInformation;
 import validation.ContextValidation;
 import validation.IValidation;
 import fr.cea.ig.DBObject;
@@ -35,15 +38,15 @@ public class Experiment extends DBObject implements IValidation {
 	//Projects ref
 	public String sampleCode;
 	public String studyCode;
-	public List<ReadSpec> readSpecs;
+	public List<ReadSpec> readSpecs = new ArrayList<ReadSpec>();
 	public String readSetCode;
 	public Run run; // le run est rattache à l'experiment
-	public String stateCode; // Reference sur "models.laboratory.common.instance.state" 
+	public State state;// = new State(); // Reference sur "models.laboratory.common.instance.state" 
 							 // pour gerer les differents etats de l'objet.
 							 // Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 
 							 // Les etapes automatisables via birds : inWaitingSubmission, inProgressSubmission, finishSubmission, submit
-	public String traceInformationCode; // Reference sur "models.laboratory.common.instance.TraceInformation" 
-	// pour loguer les dernieres modifications utilisateurs
+	public TraceInformation traceInformation; // new TraceInformation .Reference sur "models.laboratory.common.instance.TraceInformation" 
+		// pour loguer les dernieres modifications utilisateurs
 
 	
 	@Override
