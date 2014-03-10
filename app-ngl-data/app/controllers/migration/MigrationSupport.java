@@ -8,8 +8,8 @@ import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
 import net.vz.mongodb.jackson.JacksonDBCollection;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.container.instance.Support;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import play.Logger;
@@ -27,12 +27,12 @@ public class MigrationSupport extends CommonController{
 
 	public static Result migration(){
 
-		Logger.info("Start point of Migration Support");
+		Logger.info("Start point of Migration ContainerSupport");
 
 		JacksonDBCollection<ContainerOld, String> containersCollBck = MongoDBDAO.getCollection(CONTAINER_COLL_NAME_BCK, ContainerOld.class);
 		if(containersCollBck.count() == 0){
 
-			Logger.info("Migration Support start");
+			Logger.info("Migration ContainerSupport start");
 
 			backupContainerCollection();
 
@@ -44,7 +44,7 @@ public class MigrationSupport extends CommonController{
 			Logger.info("Migration barCode end");
 
 			List<Container> newContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
-			Map<String,Support> mapSupport = new HashMap<String, Support>();
+			Map<String,ContainerSupport> mapSupport = new HashMap<String, ContainerSupport>();
 			for (Container container:newContainers) {
 				createSupportCollection(container, mapSupport);
 			}
@@ -53,10 +53,10 @@ public class MigrationSupport extends CommonController{
 			updateBD(mapSupport);
 
 		}else{
-			Logger.info("Migration Support already execute !");
+			Logger.info("Migration ContainerSupport already execute !");
 		}
-		Logger.info("Migration Support finish");
-		return ok("Migration Support Finish");
+		Logger.info("Migration ContainerSupport finish");
+		return ok("Migration ContainerSupport Finish");
 	}
 
 
@@ -65,7 +65,7 @@ public class MigrationSupport extends CommonController{
 	public static void migreBarCode(ContainerOld container) {
 		if (container.support != null) {
 			Container c = new Container();
-			c.support = new ContainerSupport();
+			c.support = new LocationOnContainerSupport();
 			if (container.support.barCode != null) {
 				c.support.supportCode = container.support.barCode;
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
@@ -82,14 +82,14 @@ public class MigrationSupport extends CommonController{
 	}
 
 
-	public static void createSupportCollection(Container container, Map<String,Support> mapSupports) {
+	public static void createSupportCollection(Container container, Map<String,ContainerSupport> mapSupports) {
 		if (container.support != null) {
-			Support newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
+			ContainerSupport newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
 			if (!mapSupports.containsKey(newSupport.code)) {
 				mapSupports.put(newSupport.code, newSupport);
 			}
 			else {
-				Support oldSupport = (Support) mapSupports.get(newSupport.code);
+				ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
 				InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
 				InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
 			}
@@ -97,10 +97,10 @@ public class MigrationSupport extends CommonController{
 	}
 
 	
-	public static Result updateBD(Map<String,Support>  mapSupport) {
+	public static Result updateBD(Map<String,ContainerSupport>  mapSupport) {
 		ContextValidation contextValidation=new ContextValidation();
 		contextValidation.setCreationMode();
-		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, new ArrayList<Support>(mapSupport.values()),contextValidation);
+		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, new ArrayList<ContainerSupport>(mapSupport.values()),contextValidation);
 		if(contextValidation.hasErrors()){
 			Logger.info("CreateSupportCollection ends with errors");
 			return badRequest("CreateSupportCollection ends with errors");

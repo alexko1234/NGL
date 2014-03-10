@@ -1,8 +1,8 @@
 package controllers.migration.models;
 
-import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 
-public class ContainerSupportOld extends ContainerSupport {
+public class ContainerSupportOld extends LocationOnContainerSupport {
     
 	public String barCode;
 
