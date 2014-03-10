@@ -7,7 +7,7 @@ import java.util.List;
 
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.Support;
+import models.laboratory.container.instance.ContainerSupport;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -33,7 +33,7 @@ public class Supports extends CommonController {
 	final static Form<SupportsSearchForm> supportForm = form(SupportsSearchForm.class);
 	
 	public static Result get(String code){
-		Support support = MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, Support.class, code);
+		ContainerSupport support = MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, code);
 		if(support != null){
 			return ok(Json.toJson(support));
 		}
@@ -47,27 +47,27 @@ public class Supports extends CommonController {
 		
 		DBQuery.Query query = getQuery(supportsSearch);
 		if(supportsSearch.datatable){
-			MongoDBResult<Support> results =  mongoDBFinder(InstanceConstants.SUPPORT_COLL_NAME, supportsSearch, Support.class, query); 
-			List<Support> supports = results.toList();
+			MongoDBResult<ContainerSupport> results =  mongoDBFinder(InstanceConstants.SUPPORT_COLL_NAME, supportsSearch, ContainerSupport.class, query); 
+			List<ContainerSupport> supports = results.toList();
 			
-			return ok(Json.toJson(new DatatableResponse<Support>(supports, results.count())));
+			return ok(Json.toJson(new DatatableResponse<ContainerSupport>(supports, results.count())));
 		}else if(supportsSearch.list){
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
 			
-			MongoDBResult<Support> results =  mongoDBFinder(InstanceConstants.SUPPORT_COLL_NAME, supportsSearch, Support.class, query, keys); 
-			List<Support> supports = results.toList();
+			MongoDBResult<ContainerSupport> results =  mongoDBFinder(InstanceConstants.SUPPORT_COLL_NAME, supportsSearch, ContainerSupport.class, query, keys); 
+			List<ContainerSupport> supports = results.toList();
 			
 			List<ListObject> los = new ArrayList<ListObject>();
-			for(Support s: supports){
+			for(ContainerSupport s: supports){
 				los.add(new ListObject(s.code, s.code));
 			}
 
 			return ok(Json.toJson(los));
 		}else{
-			MongoDBResult<Support> results =  mongoDBFinder(InstanceConstants.SUPPORT_COLL_NAME, supportsSearch, Support.class, query); 
-			List<Support> supports = results.toList();
+			MongoDBResult<ContainerSupport> results =  mongoDBFinder(InstanceConstants.SUPPORT_COLL_NAME, supportsSearch, ContainerSupport.class, query); 
+			List<ContainerSupport> supports = results.toList();
 			
 			return ok(Json.toJson(supports));
 		}
