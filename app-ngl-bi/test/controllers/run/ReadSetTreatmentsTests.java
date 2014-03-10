@@ -16,7 +16,7 @@ import java.util.Map;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -44,7 +44,7 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		   Container c = new Container();
 		   c.code ="containerTest1";
-		   c.support = new ContainerSupport(); 
+		   c.support = new LocationOnContainerSupport(); 
 		   c.support.supportCode = "containerName"; 
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);

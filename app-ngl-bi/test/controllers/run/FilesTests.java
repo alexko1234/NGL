@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
@@ -43,7 +43,7 @@ public class FilesTests extends AbstractTests{
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		   Container c = new Container();
 		   c.code ="containerTest1";
-		   c.support = new ContainerSupport(); 
+		   c.support = new LocationOnContainerSupport(); 
 		   c.support.supportCode = "containerName"; 
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
