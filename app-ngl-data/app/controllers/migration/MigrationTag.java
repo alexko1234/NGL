@@ -48,8 +48,8 @@ import fr.cea.ig.MongoDBDAO;
 @Repository
 public class MigrationTag extends CommonController {
 	
-	private static final String CONTAINER_COLL_NAME_BCK = InstanceConstants.CONTAINER_COLL_NAME + "_BCK";	
-	private static final String SUPPORT_COLL_NAME_BCK = InstanceConstants.SUPPORT_COLL_NAME + "_BCK";
+	private static final String CONTAINER_COLL_NAME_BCK = InstanceConstants.CONTAINER_COLL_NAME + "_BCKmigrationTag";	
+	private static final String SUPPORT_COLL_NAME_BCK = InstanceConstants.SUPPORT_COLL_NAME + "_BCKmigrationTag";
 	
 	private static JdbcTemplate jdbcTemplate;
 	private static DataSource dataSource;
