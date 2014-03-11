@@ -228,7 +228,7 @@ public class ContainerHelper {
 		
 		for (Container container : containers) {
 			if (container.support != null) {
-				ContainerSupport newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
+				ContainerSupport newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes, container.properties.get("tagCategory"));
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
 				}

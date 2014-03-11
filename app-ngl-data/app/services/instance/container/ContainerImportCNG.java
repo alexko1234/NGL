@@ -29,7 +29,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		limsServices.updateLimsSamples(samps, contextError);
 		
 		
-		List<Container> containers = limsServices.findContainer(contextError, true);
+		List<Container> containers = limsServices.findContainerToCreate(contextError);
 		
 		//common method for CNS & CNG
 		ContainerHelper.createSupportFromContainers(containers, contextError);

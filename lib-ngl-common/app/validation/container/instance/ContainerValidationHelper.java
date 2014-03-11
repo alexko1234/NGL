@@ -10,6 +10,7 @@ import fr.cea.ig.MongoDBDAO;
 
 import play.modules.mongodb.jackson.MongoDB;
 
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
@@ -83,7 +84,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 	}
 	
 	
-	public static ContainerSupport createSupport(LocationOnContainerSupport containerSupport, List<String> newProjectCodes, List<String> newSampleCodes) {
+	public static ContainerSupport createSupport(LocationOnContainerSupport containerSupport, List<String> newProjectCodes, List<String> newSampleCodes, PropertyValue tagCategory) {
 		ContainerSupport s = null;
 		if (containerSupport != null && containerSupport.supportCode != null) {
 
@@ -102,7 +103,8 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			//s.sampleCodes = InstanceHelpers.addCodesList(newSampleCodes, s.sampleCodes);
 			
 			s.projectCodes = newProjectCodes;
-			s.sampleCodes = newSampleCodes;
+			s.sampleCodes = newSampleCodes;		
+			s.properties.put("tagCategory", tagCategory);
 					
 		}
 		return s;

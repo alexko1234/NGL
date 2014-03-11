@@ -276,17 +276,10 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws DAOException 
 	 */
-	public List<Container> findContainer(final ContextValidation contextError, Boolean newOnly) throws DAOException{
+	public List<Container> findContainerToCreate(final ContextValidation contextError) throws DAOException {
 
-		//verification OK for codes in ('C01BBACXX_1','D0358ACXX_3')
-		String view;
-		if (newOnly) {
-			view = "v_flowcell_tongl";
-		}
-		else {
-			view = "v_flowcell_tongl_reprise";
-		}
-		List<Container> results = this.jdbcTemplate.query("select * from " + view + " where isavailable = true order by code, project, code_sample, tag",new Object[]{} 
+
+		List<Container> results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true order by code, project, code_sample, tag",new Object[]{} 
 		,new RowMapper<Container>() {
 
 			@SuppressWarnings("rawtypes")
@@ -412,16 +405,7 @@ public class LimsCNGDAO {
 						insertContent = true;
 					}
 				}
-				
-				// difference between the two tag (and same sampleCode)
-				if (!  results.get(pos).contents.get(0).properties.get("tag").value.equals(  results.get(pos+x).contents.get(0).properties.get("tag").value  ) ) {
-					if (!insertContent) {
-						
-						createContent(results, pos, pos+x);
-						
-					}					
-				}
-				
+								
 				// all the difference have been reported on the first sample found (at the position pos)
 				// so we can delete the sample at the position (posNext)
 				results.remove(pos+x);

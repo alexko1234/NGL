@@ -1,11 +1,13 @@
 package models.laboratory.container.instance;
 
 import java.util.List;
+import java.util.Map;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.utils.InstanceConstants;
+import models.laboratory.common.instance.PropertyValue;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -22,6 +24,8 @@ public class ContainerSupport extends DBObject implements IValidation{
 	public TraceInformation traceInformation;
 	public List<String> projectCodes;
 	public List<String> sampleCodes;
+	
+	public Map<String, PropertyValue> properties;
 	
 	@JsonIgnore
 	@Override
