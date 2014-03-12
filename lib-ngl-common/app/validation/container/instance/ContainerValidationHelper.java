@@ -2,6 +2,7 @@ package validation.container.instance;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import net.vz.mongodb.jackson.DBQuery;
@@ -12,6 +13,7 @@ import play.modules.mongodb.jackson.MongoDB;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerCategory;
@@ -93,17 +95,26 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 
 			s.code = containerSupport.supportCode;	
 			s.categoryCode = containerSupport.categoryCode;
+			
 			s.state = new State(); 
 			s.state.code = "A"; // default value
+			s.state.user = user;
+			s.state.date = new Date();
+			
 			s.traceInformation = new TraceInformation(); 
 			s.traceInformation.setTraceInformation(user);
 			s.valuation = new Valuation();
+			
+			//TODO: a verifier
+			s.valuation.valid = TBoolean.UNSET;
 
 			//s.projectCodes = InstanceHelpers.addCodesList(newProjectCodes, s.projectCodes);
 			//s.sampleCodes = InstanceHelpers.addCodesList(newSampleCodes, s.sampleCodes);
 			
 			s.projectCodes = newProjectCodes;
 			s.sampleCodes = newSampleCodes;		
+			
+			s.properties = new HashMap<String, PropertyValue>(); 
 			s.properties.put("tagCategory", tagCategory);
 					
 		}

@@ -284,6 +284,8 @@ public class MigrationTag extends CommonController {
 				
 				for (int i=0; i<oldContainer.contents.size(); i++) {
 					
+					PropertySingleValue pTagCategory = new PropertySingleValue();
+					
 					if (m2.get(oldContainer.code) != null) {
 						
 						strValue = (String) (m2.get(oldContainer.code)).get(oldContainer.contents.get(i).sampleUsed.sampleCode);
@@ -298,7 +300,6 @@ public class MigrationTag extends CommonController {
 								
 									PropertySingleValue pTag = new PropertySingleValue();
 									pTag.value = newTag;
-									PropertySingleValue pTagCategory = new PropertySingleValue();
 									pTagCategory.value = tagCategory;
 									
 									//update tag
@@ -316,16 +317,6 @@ public class MigrationTag extends CommonController {
 									
 									bChangeTag = true;
 									
-									//find support
-									support = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", oldContainer.support.supportCode));
-									//oldSupport = support;
-									
-									support.properties = new HashMap<String, PropertyValue>();
-									
-									support.properties.put("tagCategory", pTagCategory);
-										
-									
-								
 								}
 								else {
 									Logger.debug("No properties for this container, container.code=" + oldContainer.code + ", i=" + i );
@@ -336,6 +327,13 @@ public class MigrationTag extends CommonController {
 							}
 																					
 						}
+					}
+					
+					//TODO : voir la regle (test avec 0 arbitraire)
+					if(i==0) {
+						support = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", oldContainer.support.supportCode));						
+						support.properties = new HashMap<String, PropertyValue>();									
+						support.properties.put("tagCategory", pTagCategory);
 					}
 
 				}
