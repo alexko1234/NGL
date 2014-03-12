@@ -86,7 +86,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 	}
 	
 	
-	public static ContainerSupport createSupport(LocationOnContainerSupport containerSupport, List<String> newProjectCodes, List<String> newSampleCodes, PropertyValue tagCategory) {
+	public static ContainerSupport createSupport(LocationOnContainerSupport containerSupport, List<String> newProjectCodes, List<String> newSampleCodes) {
 		ContainerSupport s = null;
 		if (containerSupport != null && containerSupport.supportCode != null) {
 
@@ -112,11 +112,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			//s.sampleCodes = InstanceHelpers.addCodesList(newSampleCodes, s.sampleCodes);
 			
 			s.projectCodes = newProjectCodes;
-			s.sampleCodes = newSampleCodes;		
-			
-			s.properties = new HashMap<String, PropertyValue>(); 
-			s.properties.put("tagCategory", tagCategory);
-					
+			s.sampleCodes = newSampleCodes;							
 		}
 		return s;
 	}

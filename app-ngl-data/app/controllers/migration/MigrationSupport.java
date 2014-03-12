@@ -84,7 +84,7 @@ public class MigrationSupport extends CommonController{
 
 	public static void createSupportCollection(Container container, Map<String,ContainerSupport> mapSupports) {
 		if (container.support != null) {
-			ContainerSupport newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes, container.properties.get("tagCategory"));
+			ContainerSupport newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
 			if (!mapSupports.containsKey(newSupport.code)) {
 				mapSupports.put(newSupport.code, newSupport);
 			}

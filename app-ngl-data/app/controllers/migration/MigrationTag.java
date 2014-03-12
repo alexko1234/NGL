@@ -120,11 +120,9 @@ public class MigrationTag extends CommonController {
 					
 					if(rs.getString("tag")!=null) { 
 						content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
-						content.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagcategory")));
 					}
 					else {
 						content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppress it at the end of the function...
-						content.properties.put("tagCategory",new PropertySingleValue("-1"));
 					}
 					
 					if(rs.getString("percent_per_lane")!=null) { 
@@ -190,9 +188,6 @@ public class MigrationTag extends CommonController {
 				if (r.contents.get(i).properties.get("tag").value.equals("-1")) {
 					r.contents.get(i).properties.remove("tag");
 				}
-				if (r.contents.get(i).properties.get("tagCategory").value.equals("-1")) {
-					r.contents.get(i).properties.remove("tagCategory");
-				}
 				if (r.contents.get(i).properties.get("percentPerLane").value.equals("-1")) {
 					r.contents.get(i).properties.remove("percentPerLane");
 				}
@@ -214,9 +209,7 @@ public class MigrationTag extends CommonController {
 		content.sampleUsed.categoryCode = sampleType.category.code;
 		
 		content.properties = new HashMap<String, PropertyValue>();
-		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
-		content.properties.put("tagCategory",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tagCategory").value ));
-		
+		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));		
 		content.properties.put("percentPerLane",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("percentPerLane").value ));
 		
 		results.get(posCurrent).contents.add(content); 
@@ -231,9 +224,7 @@ public class MigrationTag extends CommonController {
 		JacksonDBCollection<Container, String> containersCollBck = MongoDBDAO.getCollection(CONTAINER_COLL_NAME_BCK, Container.class);
 		if (containersCollBck.count() == 0) {
 	
-			//backup currents collections
 			backUpContainer();
-			backUpSupport();
 			
 			Logger.info("Migration container starts");
 		
@@ -247,7 +238,7 @@ public class MigrationTag extends CommonController {
 			}
 			
 			
-			//set a map with the new values indexed by codes
+			//set a map with the new values of tag indexed by codes
 			Map<String, String> m1 = new HashMap<String, String>();
 			Map<String, Map> m2 = new HashMap<String, Map>();
 			String m1Value = "";
@@ -255,8 +246,7 @@ public class MigrationTag extends CommonController {
 			for (Container newContainer : newContainers) {
 				for (Content newContent : newContainer.contents) {
 					if (newContent.properties.get("tag") != null) {
-						m1Value = (String) newContent.properties.get("tag").value + '_' + (String) newContent.properties.get("tagCategory").value;
-						
+						m1Value = (String) newContent.properties.get("tag").value;
 						m1.put(newContent.sampleUsed.sampleCode, m1Value);
 					}
 				}
@@ -266,9 +256,7 @@ public class MigrationTag extends CommonController {
 			
 			
 			String newTag = "";
-			String tagCategory = "";
 			String strValue = "";
-			ContainerSupport support;
 			Boolean bChangeTag;
 			
 			//find current collection
@@ -279,12 +267,9 @@ public class MigrationTag extends CommonController {
 				
 			 //if (oldContainer.code.equals("62VBAAAXX_4")) {
 				 
-				support = null;
 				bChangeTag = false;
 				
 				for (int i=0; i<oldContainer.contents.size(); i++) {
-					
-					PropertySingleValue pTagCategory = new PropertySingleValue();
 					
 					if (m2.get(oldContainer.code) != null) {
 						
@@ -292,7 +277,6 @@ public class MigrationTag extends CommonController {
 						if (strValue != null && strValue.contains("_")) {
 							
 							newTag = strValue.substring(0, strValue.indexOf("_")); 
-							tagCategory =  strValue.substring(strValue.indexOf("_")+1);
 							
 							if (newTag != "") {
 								
@@ -300,23 +284,19 @@ public class MigrationTag extends CommonController {
 								
 									PropertySingleValue pTag = new PropertySingleValue();
 									pTag.value = newTag;
-									pTagCategory.value = tagCategory;
 									
-									//update tag
+									//update tag only
 									if (oldContainer.contents.get(i).properties.get("tag") != null) {
 										oldContainer.contents.get(i).properties.get("tag").value = newTag;
 									}
 									else {
-										Logger.debug("Insert tag for this container, container.code=" + oldContainer.code + ", i=" + i );
+										Logger.info("Insert tag for this container, container.code=" + oldContainer.code + ", i=" + i );
 										
 										oldContainer.contents.get(i).properties.put("tag", pTag);
 									}
 									
-									//update tagCategory
-									oldContainer.contents.get(i).properties.put("tagCategory", pTagCategory);
-									
 									bChangeTag = true;
-									
+																	
 								}
 								else {
 									Logger.debug("No properties for this container, container.code=" + oldContainer.code + ", i=" + i );
@@ -327,13 +307,6 @@ public class MigrationTag extends CommonController {
 							}
 																					
 						}
-					}
-					
-					//TODO : voir la regle (test avec 0 arbitraire)
-					if(i==0) {
-						support = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", oldContainer.support.supportCode));						
-						support.properties = new HashMap<String, PropertyValue>();									
-						support.properties.put("tagCategory", pTagCategory);
 					}
 
 				}
@@ -347,19 +320,10 @@ public class MigrationTag extends CommonController {
 						Logger.error("Update CONT : "+oldContainer.code+" / "+r.getError());
 					}
 	
-					//update tagCategory in support
-					r = (WriteResult)MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", oldContainer.support.supportCode),
-							DBUpdate.set("properties", support.properties)); 
-					
-					if(StringUtils.isNotEmpty(r.getError())){
-						Logger.error("Update CONT : "+r.getError());
-					}
 				}
-				//break;
 			 //} //fin test	
 			}	//end for containers
-			
-			
+						
 		} else {
 			Logger.info("Migration containers already executed !");
 		}
@@ -368,40 +332,8 @@ public class MigrationTag extends CommonController {
 		return ok("Migration container (tag) Finish");
 	
 	}
+
 	
-
-	/*
-	public static Result migrationTest() {
-		
-		Logger.info("Migration TEST container (tag) 	START");
-		
-		PropertySingleValue pTagCategory = new PropertySingleValue();
-		pTagCategory.value = "TEST01";
-		
-		String containerCode = "62VBAAAXX_4";
-		
-		Container c = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", containerCode));
-		
-		c.contents.get(0).properties.put("tagCategory", pTagCategory);
-		
-		Logger.debug("value of tagCategory = " + c.contents.get(0).properties.get("tagCategory").value); 
-			
-		
-		WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", c.code),   
-				DBUpdate.set("contents", c.contents));
-			
-		if(StringUtils.isNotEmpty(r.getError())){
-				Logger.error("Update CONT : "+c.code+" / "+r.getError());
-		}
-		
-		Logger.info("Migration TEST container (tag) END");
-		
-		
-		return ok("FIN");
-		
-	}
-	*/
-
 	
 	private static void backUpContainer() {
 		Logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" starts");
@@ -409,11 +341,5 @@ public class MigrationTag extends CommonController {
 		Logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" ended");
 	}
 	
-	private static void backUpSupport() {
-		Logger.info("\tCopie "+InstanceConstants.SUPPORT_COLL_NAME+" starts");
-		MongoDBDAO.save(SUPPORT_COLL_NAME_BCK, MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).toList());
-		Logger.info("\tCopie "+InstanceConstants.SUPPORT_COLL_NAME+" ended");
-		
-	}
 
 }

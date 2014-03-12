@@ -63,7 +63,6 @@ public class ImportService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.addAll(getCommonPropertyDefinitions());
 		propertyDefinitions.add(newPropertiesDefinition("Index", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("IndexCategory", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true));		
 		return propertyDefinitions;
 	}
 	
@@ -83,7 +82,6 @@ public class ImportService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.addAll(getTaraPropertyDefinitions());
 		propertyDefinitions.add(newPropertiesDefinition("Index", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true));
-		propertyDefinitions.add(newPropertiesDefinition("IndexCategory", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true));
 		return propertyDefinitions;
 	}
 	
