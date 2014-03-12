@@ -48,7 +48,7 @@ rule "Initialize LaneInfo"
 	no-loop
 	when
 		$run : Run()
-		$lane : Lane($treatment : treatments["ngsrg"], $treatment!=null) from $run.lanes
+		$lane : Lane($treatment : treatments["ngsrg"], $treatment!=null,readSetCodes!=null) from $run.lanes
 		$mapValue : Map() from $treatment.results.values()
        	$nbClusterLane : Entry(key == "nbClusterInternalAndIlluminaFilter") from $mapValue.entrySet()
 	then
