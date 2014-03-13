@@ -26,3 +26,9 @@ msg.success.save = Sauvegarde réussie.
 msg.error.save = Erreur de sauvegarde.
 msg.success.remove = Suppression réussie.
 msg.error.remove =  Erreur de suppression.
+
+
+#authentification
+authentification.dropdown_list.username=Nom
+authentification.dropdown_list.profile=Profil
+authentification.dropdown_list.signout=Se déconnecter

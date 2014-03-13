@@ -44,7 +44,8 @@ function ListNewCtrl($scope, datatable) {
 			},
 			otherButtons:{
 				active:true,
-				template:'<button class="btn btn-info" ng-disabled="basket.length()==0" ng-click="newExperiment();" data-toggle="tooltip" title=""><i class=" icon-large"></i>{{form.experimentType.name}}</button>'
+				template:'<button class="btn btn-info" ng-disabled="basket.length()==0" ng-click="newExperiment();" data-toggle="tooltip" title="">'
+						+'{{form.experimentType.name}}</button>'
 			}
 		};
 	

@@ -2,18 +2,15 @@ body {
 	padding-top:50px;
 }
 
-
-.nav-pills > li > a > .close,
-.nav-tabs > li > a > .close{
-   margin-left: 5px;
+.text-overflow{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-
-
-dd > button.btn-link{
-	padding : 0px;
+.list-group-item{
+	padding: 7px 12px;
 }
-
 
 .treatmentOverflow {
 	height:340px;
@@ -24,7 +21,9 @@ dd > button.btn-link{
 	margin-bottom:0px;
 }
 
-
+.margin-bottom-5 {
+	margin-bottom:5px;
+}
 	
 	
 	

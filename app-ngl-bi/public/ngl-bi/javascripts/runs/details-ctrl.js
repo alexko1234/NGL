@@ -703,7 +703,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 		var alert = $scope.alerts[$scope.run.code+'.'+lane.number+'.'+readPos];
 		
 		if(alert){
-			var button = '<button class="btn btn-mini btn-danger" type="button" popover="'+getAlertBody(alert)+'" popover-title="'+getAlertTitle()+'" popover-placement="right"><i class="icon-warning-sign"></i></button>'; 			
+			var button = '<button class="btn btn-xs btn-danger" type="button" popover="'+getAlertBody(alert)+'" popover-title="'+getAlertTitle()+'" popover-placement="right"><i class="fa fa-warning"></i></button>'; 			
 		}
 		return button;
 	}

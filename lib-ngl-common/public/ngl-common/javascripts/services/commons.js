@@ -229,26 +229,22 @@ angular.module('commonsServices', []).
   		    	restrict: 'A',
   		    	replace:false,
   		    	scope:true,
-  		    	template:  '<div ng-switch on="isEdit()">'
-  		    			+'<div class="show" ng-switch-when="false">'
-  		    			+'<ul class="unstyled">'
-		    	  		+'<li ng-repeat="item in getItems()">'
-		    	  		+'<span ng-if="groupBy(item, $index)" class="groupBy" ng-bind="itemGroupByLabel(item)"></span>'
-		    	  		+'<span class="text" ng-bind="itemLabel(item)"  ng-show="item.selected"></span>'		    	  		
-		    	  		+'</li>'
-		    	  		+'</ul>'
+  		    	template:'<div ng-switch on="isEdit()">'
+  		    			+'<div ng-switch-when="false">'
+  		    			+'<ul class="list-unstyled">'
+		    	  		+'<li ng-repeat-start="item in getItems()" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)" style="font-weight:bold"></li>'
+		    	  		+'<li ng-repeat-end  ng-if="item.selected" ng-bind="itemLabel(item)" style="padding-left: 15px;"></li>'
+			    	  	+'</ul>'
   		    			+'</div>'
-  		    			+'<div ng-switch-when="true" ng-class="getClass()">'
-		    	  		+'<button type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown" ng-click="setStyle()">'
-		    	  		+'<div class="filter-option pull-left">{{selectedItemLabel()}}</div>&nbsp;'
-		    	  		+'<span class="caret"></span>'
-		    	  		+'</button>'
-		    	  		+'<ul class="dropdown-menu"  role="menu" style="{{style}}">'
-		    	  		+'<li ng-repeat="item in getItems()" ng-class="item.class" ng-click="selectItem(item, $event)">'
-		    	  		+'<span ng-if="groupBy(item, $index)" class="groupBy" ng-bind="itemGroupByLabel(item)"></span>'
-		    	  		+'<a ng-class="itemClass()" href="#">'
-		    	  		+'<span class="text" ng-bind="itemLabel(item)"></span>'
-		    	  		+'<i class="icon-ok check-mark" ng-show="item.selected"></i>'
+  		    			+'<div class="dropdown" ng-switch-when="true">'
+  				        +'<input type="text" ng-class="inputClass" data-toggle="dropdown" role="button" value="{{selectedItemLabel()}}"/>'
+  				        +'<ul class="dropdown-menu"  role="menu">'
+  				        +'<li ng-repeat-start="item in getItems()" ng-if="groupBy(item, $index)" class="divider"></li>'
+  				        +'<li class="dropdown-header" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></li>'
+		    	  		+'<li ng-repeat-end  ng-class="item.class" ng-click="selectItem(item, $event)">'
+			    	  	+'<a href="#">'
+		    	  		+'<i class="fa fa-check pull-right" ng-show="item.selected"></i>'
+		    	  		+'<span class="text" ng-bind="itemLabel(item)"></span>'		    	  		
 		    	  		+'</a></li>'
 		    	  		+'</ul>'
 		    	  		+'</div>'
@@ -258,9 +254,9 @@ angular.module('commonsServices', []).
 	       		    link: function(scope, element, attr, ctrls) {
 	       		  // if ngModel is not defined, we don't need to do anything
 	      		      if (!ctrls[0]) return;
-	      		      element.addClass("bt-select");
-	      		     
-	      		   
+	      		      scope.inputClass = element.attr("class");
+	      		      element.attr("class",''); //remove custom class
+	      		      
 	      		      var ngModelCtrl = ctrls[0],
 	      		          multiple = attr.multiple || false,
 	      		          btOptions = attr.btOptions,
@@ -269,7 +265,6 @@ angular.module('commonsServices', []).
 
 	      		      var optionsConfig = parseBtsOptions(btOptions);
 	      		      var items = [];
-	      		      var pos = {};
 	      		      var selectedLabels = [];
 	      		      var groupByLabels = [];
 	      		      
@@ -324,20 +319,6 @@ angular.module('commonsServices', []).
 	      		    	return false;	      		    	
 	      		    }; 
 	      		    
-		      		  scope.itemClass = function(){
-		      			  return (optionsConfig.groupByGetter)?'opt':'';
-		      		  };
-	      		    
-	      		    scope.setStyle = function(){
-	      		    	var top = pos.top + pos.height - $document.scrollTop();
-	      		    	var height = angular.element($window).height() - top;
-	      		    	scope.style = "top:"+top+"px; left:"+pos.left+"px; max-height:"+height+"px; position:fixed; overflow:auto";	      		    	
-	      		    };
-	      		    
-	      		      scope.getClass = function(){
-	      		    	return "btn-group bt-select show-tick "+attr.class;  
-	      		      };
-	      		      
 	      		      scope.selectedItemLabel = function(){
 	      		    	  return selectedLabels.join();
 	      		      };  
@@ -394,9 +375,6 @@ angular.module('commonsServices', []).
 	      		    
 	      		   
 	      		    function render() {
-	      		    	pos = element.position();
-		      		    pos.height = element[0].offsetHeight;
-		      		    scope.setStyle();
 	      		    	
 	      		    	selectedLabels = [];
 	      		    	

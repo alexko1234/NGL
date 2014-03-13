@@ -1,40 +1,42 @@
 @(isForm: Boolean)
 
-<div ng-init="init()"> 
-<div datatable="datatable">
-	@if(isForm) {
-		<div dt-form>
-			<form class="well well-small form-inline" ng-controller="SearchFormCtrl" ng-init="init()" >
-				<div class="row-fluid">
-				
-				<input type="text" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getProjects() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.project")'>
-				<input type="text" ng-model="form.sampleCode"  typeahead="sample.code as sample.name for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-focus="refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>
-				
-				<input type="text" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
-				<input type="text" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
-				</div>
-				<div class="row-fluid">
-				
-				<div bt-select ng-model="form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in lists.getStates()" ></div>							
-				<div bt-select ng-model="form.typeCodes" multiple="true" placeholder="@Messages("search.placeholder.types")" bt-options="type.code as type.name for type in lists.getTypes()"></div>			
-				<div bt-select  ng-model="form.validCode" placeholder="@Messages("search.placeholder.valid")" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
-				
-				<input type="text" ng-model="form.code"  typeahead="run.code as run.name for run in lists.getRuns() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.run")'>
-				
-				<div class="btn-toolbar pull-right">
-					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" ><i class="icon-search icon-large"></i></button>
-					<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="reset()"  class="btn"><i class="icon-undo icon-large"></i></button>				 	
-				</div>
-								
-				
-				</div>
-				
-			</form>
-	</div>
-		
-	}
-</div>
+@import views.html.helper._
+@form() = {	
 
+		@formGroup{
+			<input type="text" class="form-control" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getProjects() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.project")'>				
+		}
+		@formGroup{		
+			<input type="text" class="form-control" ng-model="form.sampleCode"  typeahead="sample.code as sample.name for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-focus="refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>				
+		}
+		@formGroup{		
+			<input type="text" class="form-control" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
+		}
+		@formGroup{	
+			<input type="text" class="form-control" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
+		}
+		@formGroup{
+			<div  class="form-control" bt-select ng-model="form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in lists.getStates()" ></div>							
+		}
+		@formGroup{
+			<div  class="form-control" bt-select ng-model="form.typeCodes" multiple="true" placeholder="@Messages("search.placeholder.types")" bt-options="type.code as type.name for type in lists.getTypes()"></div>			
+		}
+		@formGroup{
+			<div  class="form-control" bt-select ng-model="form.validCode" placeholder="@Messages("search.placeholder.valid")" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
+		}
+		@formGroup{
+			<input type="text" class="form-control"  ng-model="form.code"  typeahead="run.code as run.name for run in lists.getRuns() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.run")'>
+		}				
+}
 
+@formAttrs() = {
+	ng-controller="SearchFormCtrl" ng-init="init()"
+}
 
-</div>
+@if(isForm) {
+	@searchForm(form,formAttrs)()()
+}
+
+@if(!isForm) {
+	@searchForm()()()
+}

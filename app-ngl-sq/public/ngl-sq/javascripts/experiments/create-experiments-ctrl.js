@@ -65,7 +65,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			},
 			otherButton:{
 				active:true,
-				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != \'F\'" ng-hide="!experiment.doPurif" title="Messages("experiments.addpurif")">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
+				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
 			}
 	};
 
@@ -129,7 +129,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 							}
 						})
 						.error(function(data, status, headers, config) {
-							$scope.message.clazz = "alert alert-error";
+							$scope.message.clazz = "alert alert-danger";
 							$scope.message.text = Messages('experiments.msg.save.error');
 	
 							$scope.message.details = data;
@@ -154,7 +154,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			}
 		})
 		.error(function(data, status, headers, config) {
-			$scope.message.clazz = "alert alert-error";
+			$scope.message.clazz = "alert alert-danger";
 			$scope.message.text = Messages('experiments.msg.save.error');
 
 			$scope.message.details = data;
@@ -188,7 +188,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 						}
 					})
 					.error(function(data, status, headers, config) {
-						$scope.message.clazz = "alert alert-error";
+						$scope.message.clazz = "alert alert-danger";
 						$scope.message.text = Messages('experiments.msg.save.error');
 
 						$scope.message.details = data;
@@ -264,7 +264,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			}
 		})
 		.error(function(data, status, headers, config) {
-			$scope.message.clazz = "alert alert-error";
+			$scope.message.clazz = "alert alert-danger";
 			$scope.message.text = Messages('experiments.msg.save.error');
 
 			$scope.message.details = data;
@@ -316,7 +316,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 						}
 					})
 					.error(function(data, status, headers, config) {
-						$scope.message.clazz = "alert alert-error";
+						$scope.message.clazz = "alert alert-danger";
 						$scope.message.text = Messages('experiments.msg.save.error');
 
 						$scope.message.details = data;
@@ -371,7 +371,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 						}
 					})
 					.error(function(data, status, headers, config) {
-						$scope.message.clazz = "alert alert-error";
+						$scope.message.clazz = "alert alert-danger";
 						$scope.message.text = Messages('experiments.msg.save.error');
 
 						$scope.message.details = data;
@@ -397,7 +397,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			}
 		})
 		.error(function(data, status, headers, config) {
-			$scope.message.clazz = "alert alert-error";
+			$scope.message.clazz = "alert alert-danger";
 			$scope.message.text = Messages('experiments.msg.save.error');
 
 			$scope.message.details = data;
@@ -423,7 +423,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 					}
 				})
 				.error(function(data, status, headers, config) {
-					$scope.message.clazz = "alert alert-error";
+					$scope.message.clazz = "alert alert-danger";
 					$scope.message.text = Messages('experiments.msg.save.error');
 
 					$scope.message.details = data;
@@ -474,7 +474,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 					}
 				})
 				.error(function(data, status, headers, config) {
-					$scope.message.clazz = "alert alert-error";
+					$scope.message.clazz = "alert alert-danger";
 					$scope.message.text = Messages('experiments.msg.save.error');
 		
 					$scope.message.details = data;
@@ -525,7 +525,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			}		
 		})
 		.error(function(data, status, headers, config) {
-			$scope.message.clazz = "alert alert-error";
+			$scope.message.clazz = "alert alert-danger";
 			$scope.message.text = Messages('experiments.msg.save.error');
 
 			$scope.message.details = data;
@@ -765,7 +765,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			}
 		})
 		.error(function(data, status, headers, config) {
-			$scope.message.clazz = "alert alert-error";
+			$scope.message.clazz = "alert alert-danger";
 			$scope.message.text = Messages('experiments.msg.save.error');
 			$scope.experiment.value.stateCode = $scope.state;
 			$scope.message.details = data;

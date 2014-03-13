@@ -11,7 +11,7 @@
             @if(isEdit){
             	<button class="btn btn-primary" type="submit">Save</button>
             	@if(permForm("id").value){
-            		<a class="btn" href="#" data-toggle="pilldyn" data-target="#onelement" data-href="@controllers.administration.authorisation.routes.Applications.show(Integer.valueOf(permForm("id").value))">Cancel</a>
+            		<a class="btn btn-default" href="#" data-toggle="pilldyn" data-target="#onelement" data-href="@controllers.administration.authorisation.routes.Applications.show(Integer.valueOf(permForm("id").value))">Cancel</a>
             	}
             } else {
             	<a class="btn btn-primary" href="#" data-toggle="pilldyn" data-target="#onelement" data-href="@controllers.administration.authorisation.routes.Applications.edit(permForm.get.id)" >Edit</a>

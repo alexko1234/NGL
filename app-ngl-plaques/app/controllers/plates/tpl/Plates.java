@@ -22,24 +22,11 @@ public class Plates extends CommonController {
 		}
 		
 		public static Result searchManips() {
-			List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-			columns.add(DatatableHelpers.getColumn("matmaco", "manips.table.code", true, false, false));
-			columns.add(DatatableHelpers.getColumn("matmanom", "manips.table.name", true, false, false));
-			DatatableConfig config = new DatatableConfig(columns);
-			config.button = Boolean.TRUE;
-			return ok(views.html.plates.searchManips.render(config));
+			return ok(views.html.plates.searchManips.render());
 		}
 		
 		public static Result search(){
-			List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-			columns.add(DatatableHelpers.getColumn("code", "plates.table.code", true, false, false));
-			columns.add(DatatableHelpers.getColumn("typeName", "plates.table.typeName", true, false, false));
-			columns.add(DatatableHelpers.getColumn("nbWells", "plates.table.nbWells"));
-			DatatableConfig config = new DatatableConfig(columns);
-			config.remove = true;
-			config.show = true;
-			config.button = true;
-			return ok(views.html.plates.search.render(config));
+			return ok(views.html.plates.search.render());
 		}
 		
 		//TODO messages Code,Nom

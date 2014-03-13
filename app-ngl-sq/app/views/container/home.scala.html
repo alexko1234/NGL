@@ -13,4 +13,4 @@
 	<script src="@controllers.containers.tpl.routes.Containers.javascriptRoutes" type="text/javascript" charset="utf-8"></script>   
 }
 
-@views.html.lefttabs("containers.title", menu("containers."+code), scripts)
+@views.html.main("containers.title", menu("containers."+code), scripts)(views.html.contents.lefttabs())

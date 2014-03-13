@@ -12,7 +12,7 @@ function TabMainCtrl($scope, $location){
 	
 	$scope.hideTabs = { 
 		hide:false,
-		clazz:'icon-resize-full'
+		clazz:'fa fa-expand'
 	};
 	
 	/**
@@ -130,15 +130,15 @@ function TabMainCtrl($scope, $location){
 	$scope.toggleTabs = function(){
 		$scope.hideTabs.hide = !$scope.hideTabs.hide;
 		if($scope.hideTabs.hide){
-			$scope.hideTabs.clazz='icon-resize-small';
+			$scope.hideTabs.clazz='fa fa-compress';
 		}else{
-			$scope.hideTabs.clazz='icon-resize-full';
+			$scope.hideTabs.clazz='fa fa-expand';
 		}
 	};
 	
 	$scope.setHideTabs =  function(){
 		$scope.hideTabs.hide = true;
-		$scope.hideTabs.clazz='icon-resize-small';
+		$scope.hideTabs.clazz='fa fa-compress';
 	};
 	
 	/**

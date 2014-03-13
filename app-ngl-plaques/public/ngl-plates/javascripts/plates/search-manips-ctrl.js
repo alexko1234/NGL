@@ -12,8 +12,21 @@ function SearchManipsCtrl($scope, $http, datatable, basket) {
 				mode:'local'
 			},
 			otherButtons:{
-				active:true				
-			}
+				active:true,
+				template:'<button class="btn btn-default" ng-disabled="!datatable.isSelect()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'"><i class="fa fa-shopping-cart"></i> (<span ng-bind="basket.length()"/>)</button>'
+			},
+			columns:[
+					    {  	property:"matmaco",
+					    	header: Messages("manips.table.code"),
+					    	type :"String",
+					    	order:true
+						},
+						{	property:"matmanom",
+							header: Messages("manips.table.name"),
+							type :"String",
+					    	order:true
+						}
+					]
 	};
 	
 	$scope.init = function(){

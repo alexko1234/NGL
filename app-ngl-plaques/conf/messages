@@ -53,8 +53,8 @@ plates.error.severalsamewellcode = Plusieurs fois la même manip : {0}
 plates.error.wellwithsamecoord = Plusieurs fois les même coordonnées : {0}
 plates.error.typecode.different = Type de manips différent du type de plaque : {0}
 
-plates.code = code
-plates.typeName = type
+plates.code = Code
+plates.typeName = Type
 plates.validQC = Valid QC ?
 plates.validRun = Valid Run ?
 plates.comment = Commentaires

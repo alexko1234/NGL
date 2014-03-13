@@ -1,27 +1,32 @@
 @()
-<div ng-init="init()">
-	<div datatable="datatable">
-	<div dt-form>
-		<form class="well form-search form-inline">
-		<select ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
-			<option value="">@Messages("experiments.select.processCategory")</option>
-		</select>
-	
-		<select ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()">
-			<option value="">@Messages("processes.select.processType")</option>
-		</select>
-	
-		<select ng-model="form.experimentCategory" ng-options="experimentCategory.name for experimentCategory in lists.getExperimentCategories()" ng-change="changeExperimentCategory()">
-			<option value="">@Messages("experiments.select.experimentCategory")</option>
-		</select>
-		
-		<select ng-model="form.type" ng-options="typeCode.name for typeCode in lists.getExperimentTypes()" ng-change="changeTypeCode()">
-			<option value="">@Messages("experiment.select.experimentType")</option>
-		</select>		
-		
-		<input type="text" ng-model="form.projectCode" typeahead="project.code as project.name for project in lists.getProjects() | filter:$viewValue | limitTo:20" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.projects")'>
-		<input type="text" ng-model="form.sampleCode" typeahead="sample.code as sample.name for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-click="refreshSamples()" placeholder='@Messages("search.placeholder.samples")'>
-		
+@import views.html.helper._
+@form() = {
+		@formGroup{
+			<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
+				<option value="">@Messages("experiments.select.processCategory")</option>
+			</select>
+		}
+		@formGroup{		
+			<select class="form-control" ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()">
+				<option value="">@Messages("processes.select.processType")</option>
+			</select>
+		}
+		@formGroup{		
+			<select class="form-control" ng-model="form.experimentCategory" ng-options="experimentCategory.name for experimentCategory in lists.getExperimentCategories()" ng-change="changeExperimentCategory()">
+				<option value="">@Messages("experiments.select.experimentCategory")</option>
+			</select>
+		}
+		@formGroup{			
+			<select class="form-control" ng-model="form.type" ng-options="typeCode.name for typeCode in lists.getExperimentTypes()" ng-change="changeTypeCode()">
+				<option value="">@Messages("experiment.select.experimentType")</option>
+			</select>		
+		}
+		@formGroup{			
+			<input class="form-control" type="text" ng-model="form.projectCode" typeahead="project.code as project.name for project in lists.getProjects() | filter:$viewValue | limitTo:20" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.projects")'>
+		}
+		@formGroup{	
+			<input class="form-control" type="text" ng-model="form.sampleCode" typeahead="sample.code as sample.name for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-click="refreshSamples()" placeholder='@Messages("search.placeholder.samples")'>
+		}
 		<!--<bt-select ng-model="form.projects" bt-options="project.code as project.name+' - '+project.name for project in lists.getProjects()"  multiple="true" ng-change="changeProject()">
 			<option value="">@Messages("processes.select.project")</option>
 		</bt-select>-->
@@ -30,15 +35,12 @@
 			<option value="">@Messages("processes.select.sample")-</option>
 		</select>-->	
 		
-		<input type="date" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
-		<input type="date" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
-		
-		
-		<div class="btn-toolbar pull-right">
-					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" ><i class="icon-search icon-large"></i></button>
-					<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="reset()"  class="btn"><i class="icon-undo icon-large"></i></button>				 	
-				</div>
-	</form>
-	</div>
-	</div>	
-</div>
+		@formGroup{			
+			<input class="form-control" type="date" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
+		}
+		@formGroup{	
+			<input class="form-control" type="date" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
+		}
+}
+
+@searchForm(form)()()

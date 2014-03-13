@@ -14,4 +14,4 @@
 	<script src="@controllers.processes.tpl.routes.Processes.javascriptRoutes" type="text/javascript" charset="utf-8"></script>   
 }
 
-@views.html.lefttabs("processes.title", menu("processes."+code), scripts)
+@views.html.main("processes.title", menu("processes."+code), scripts)(views.html.contents.lefttabs())

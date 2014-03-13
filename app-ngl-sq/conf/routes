@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /                           									controllers.main.tpl.Main.index()
+GET     /                           									controllers.main.tpl.Main.home()
 
 #containers tpl
 GET 	/containers/:homecode/home										controllers.containers.tpl.Containers.home(homecode:java.lang.String)

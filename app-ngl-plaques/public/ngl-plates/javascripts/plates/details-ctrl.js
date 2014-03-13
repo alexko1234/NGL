@@ -16,7 +16,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 			save:{
 				active:true,
 				mode:'local',
-				keepEdit:true,
+				keepEdit:false,
 				changeClass:false,
 				showButton:false
 			},
@@ -56,7 +56,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 					    		if(value.valid === "TRUE"){
 					    			value.trClass = "success";
 					    		}else if(value.valid === "FALSE") {
-					    			value.trClass = "error";
+					    			value.trClass = "danger";
 					    		}
 					    		return value.code;
 					    	},
@@ -129,7 +129,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 	 */
 	$scope.edit = function(){
 		$scope.setEditConfig(true);		
-		$scope.datatable.setEditColumn();
+		$scope.datatable.setEdit();
 		
 		if($scope.isHomePage('search') && !$scope.isBackupTabs()){
 			$scope.backupTabs();
@@ -183,7 +183,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 				$scope.activeTab(0, true);				
 										
 			}).error(function(data, status, headers, config){
-				$scope.message.clazz="alert alert-error";
+				$scope.message.clazz="alert alert-danger";
 				$scope.message.text=Messages('plates.msg.delete.error');
 			});
 		}
@@ -228,7 +228,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 					$scope.activeTab(1);
 				}			
 		}).error(function(data, status, headers, config){
-				$scope.message.clazz="alert alert-error";
+				$scope.message.clazz="alert alert-danger";
 				$scope.message.text=Messages('plates.msg.save.error');
 				
 				var columns = $scope.datatable.getColumnsConfig();
@@ -252,7 +252,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 						}						
 					}		
 					if(isError){
-						$scope.plate.wells[i].trClass = "error";						
+						$scope.plate.wells[i].trClass = "danger";						
 					}else{
 						$scope.plate.wells[i].trClass = "success";
 					}
@@ -305,7 +305,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 		         if (wells[i].x === (x+'') && wells[i].y===(y+'')) {
 		        	 var well = wells[i];
 		        	 if(well.valid === "FALSE"){
-		        		 return "alert alert-error";
+		        		 return "alert alert-danger";
 		        	 }else if(well.valid === "TRUE"){
 		        		 return "alert alert-success";
 		        	 }		        	

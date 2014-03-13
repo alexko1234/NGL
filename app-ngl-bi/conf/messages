@@ -7,12 +7,6 @@ application.name=NGL-BI
 home.title.name=Bienvenue dans NGL-BI
 
 
-
-#authentification
-authentification.dropdown_list.username=Nom
-authentification.dropdown_list.profile=Profil
-authentification.dropdown_list.signout=Se déconnecter
-
 #home page main
 home.h10.header=Bienvenue {0} sur NGL - Bio Informatique
 home.p.comment=NGL-BI est un LIMS simple et flexible pour le suivi des données bioinformatique issues du séquençage de nouvelle génération.
@@ -48,23 +42,23 @@ valuation.value.TRUE = Oui
 valuation.value.FALSE = Non
 valuation.value.UNSET = -
 
-search.placeholder.projects = Sélectionnez des projets
-search.placeholder.samples = Sélectionnez des échantillons
-search.placeholder.project = Sélectionnez un projet
-search.placeholder.sample = Sélectionnez un échantillon
-search.placeholder.fromDate = Date Run depuis le (jj/mm/aaaa)
-search.placeholder.toDate = Date Run jusqu''au (jj/mm/aaaa)
-search.placeholder.states = Sélectionnez des états
-search.placeholder.instruments = Sélectionnez des instruments
-search.placeholder.types = Sélectionnez des types
-search.placeholder.runtypes = Sélectionnez des types de run
-search.placeholder.runs = Sélectionnez des runs
-search.placeholder.run = Sélectionnez un run
-search.placeholder.valid = Sélectionnez une évaluation
-search.placeholder.productionValid = Sélectionnez une éval QC
-search.placeholder.bioinformaticValid  = Sélectionnez une éval bioinfo
-search.placeholder.regexCode = Mettez une regex pour le code
-search.placeholder.lanes = Sélectionnez des lanes
+search.placeholder.projects = Sélect. des projets
+search.placeholder.samples = Sélect. des échantillons
+search.placeholder.project = Sélect. un projet
+search.placeholder.sample = Sélect. un échantillon
+search.placeholder.fromDate = Run depuis le (jj/mm/aaaa)
+search.placeholder.toDate = Run jusqu''au (jj/mm/aaaa)
+search.placeholder.states = Sélect. des états
+search.placeholder.instruments = Sélect. des instruments
+search.placeholder.types = Sélect. des types
+search.placeholder.runtypes = Sélect. des types de run
+search.placeholder.runs = Sélect. des runs
+search.placeholder.run = Sélect. un run
+search.placeholder.valid = Sélect. une évaluation
+search.placeholder.productionValid = Sélect. une éval QC
+search.placeholder.bioinformaticValid  = Sélect. une éval bioinfo
+search.placeholder.regexCode = Regex pour le code
+search.placeholder.lanes = Sélect. des lanes
 
 button.search = Rechercher
 button.reset = Réinitialiser
@@ -200,8 +194,8 @@ readsets.projectCode = Projet
 readsets.sampleCode = Echantillon
 readsets.nbCycles = Nb Cycles
 
-readsets.properties.isSentCCRT = Envoyé au CCRT ?
-readsets.properties.isSentCollaborator = Envoyé au Collaborateur ?
+readsets.properties.isSentCCRT = Envoyé CCRT ?
+readsets.properties.isSentCollaborator = Envoyé Collaborateur ?
 
 readsets.sampleOnContainer.percentPerLane = % déposé
 

@@ -11,10 +11,10 @@
   background-color: #f1f1f1;
 }
 
-
 .datatable .btn-toolbar{
 	margin-top: 0px;
 }
+
 .datatable .pagination{
 	margin-top: 0px;
 	margin-bottom: 0px;
@@ -24,6 +24,7 @@
 	margin-bottom: 10px;
 }
 
-.datatable table .bt-select:not([class*="span"]):not([class*="col-"]):not([class*="form-control"]) {
-	width:100%
+.datatable .form-group .form-control{
+	width: 100%;
+	margin:0px;
 }

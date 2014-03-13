@@ -1,12 +1,12 @@
 @()
 
 
-<div class="row-fluid">
-	<div class="span10">	
+<div class="row">
+	<div class="col-md-12 col-lg-12">	
 		 <table class="table table-condensed table-hover table-bordered">
 			<thead>
 				<tr>
-					<th class="span2"></th>
+					<th></th>
 					<th>@Messages("readsets.treatments.trimming.sizeRange")</th>
 					<th>@Messages("readsets.treatments.trimming.readsInput")</th>
 					<th>@Messages("readsets.treatments.trimming.readsOutput")</th>
@@ -19,7 +19,7 @@
 			</thead>
 			<tbody>
 				<tr>
-					<th class="span2">@Messages("readsets.treatments.trimming.read1")</th>
+					<th>@Messages("readsets.treatments.trimming.read1")</th>
 					<td>{{readset.treatments[treatments.getTreatment().code].read1.sizeRange.value}}</td>
 					<td>{{readset.treatments[treatments.getTreatment().code].read1.readsInput.value | number}}</td>
 					<td>{{readset.treatments[treatments.getTreatment().code].read1.readsOutput.value | number}}</td>
@@ -30,7 +30,7 @@
 					<td>{{readset.treatments[treatments.getTreatment().code].read1.trimRejectedLength0.value | number}}</td>
 				</tr>						
 				<tr>
-					<th class="span2">@Messages("readsets.treatments.trimming.read2")</th>
+					<th>@Messages("readsets.treatments.trimming.read2")</th>
 					<td>{{readset.treatments[treatments.getTreatment().code].read2.sizeRange.value}}</td>
 					<td>{{readset.treatments[treatments.getTreatment().code].read2.readsInput.value | number}}</td>
 					<td>{{readset.treatments[treatments.getTreatment().code].read2.readsOutput.value | number}}</td>
@@ -45,12 +45,12 @@
 	</div>
 </div>
 
-<div class="row-fluid">
-	<div  class="span4">
+<div class="row">
+	<div class="col-md-4 col-lg-4">
 	 <table class="table table-condensed table-hover table-bordered">
 		<thead>
 			<tr>
-				<th class="span2">@Messages("readsets.treatments.trimming.storedPairs")</th>
+				<th>@Messages("readsets.treatments.trimming.storedPairs")</th>
 				<th>@Messages("readsets.treatments.trimming.storedSingleton")</th>
 				<th>@Messages("readsets.treatments.trimming.rejectedPairs")</th>
 			</tr>

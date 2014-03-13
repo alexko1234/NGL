@@ -63,7 +63,8 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 		},
 		otherButtons :{
 			active:true,
-			template:'<button class="btn" ng-disabled="!datatable.isSelect()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="Messages("button.addbasket")"><i class="icon-shopping-cart icon-large"></i> Messages("button.addbasket") ({{basket.length()}})</button>'
+			template:'<button class="btn" ng-disabled="!datatable.isSelect()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="Messages("button.addbasket")">'
+					+'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})</button>'
 		}
 	};
 		

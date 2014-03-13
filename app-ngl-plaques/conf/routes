@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.main.tpl.Main.index()
+GET     /                           controllers.main.tpl.Main.home()
 
 # plates tpl
 GET	   	/plates/:homecode/home						controllers.plates.tpl.Plates.home(homecode:java.lang.String)
@@ -29,6 +29,7 @@ GET /api/combo/samples								controllers.combo.api.Lists.samples()
 GET /api/combo/etmanips								controllers.combo.api.Lists.etmanips()
 GET /api/combo/etmateriels							controllers.combo.api.Lists.etmateriels()
 
+->  /authentication authentication.Routes
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

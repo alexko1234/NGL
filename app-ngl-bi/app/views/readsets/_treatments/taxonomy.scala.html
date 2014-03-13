@@ -1,28 +1,27 @@
 @()
-<div ng-controller="TaxonomyCtrl" ng-init="init(treatments.getTreatment().code)">
-
-	   <ul class="nav nav-tabs">
-	   	<li class="active"><a href="#" data-target="#main" data-toggle="tab">@Messages("readsets.treatments.taxonomy.tabs.bilan")</a></li>
-	   	<li><a href="#" data-target="#krona" data-toggle="tab">@Messages("readsets.treatments.taxonomy.tabs.krona")</a></li>    
-	   	<li><a href="#" data-target="#phylogeneticTree" data-toggle="tab">@Messages("readsets.treatments.taxonomy.tabs.phylogeneticTree")</a></li>    	
-	   </ul>
+<div class="row" ng-controller="TaxonomyCtrl" ng-init="init(treatments.getTreatment().code)">
+<div class="col-md-12 col-lg-12">
+   <ul class="nav nav-tabs">
+   	<li class="active"><a href="#" data-target="#main" data-toggle="tab">@Messages("readsets.treatments.taxonomy.tabs.bilan")</a></li>
+   	<li><a href="#" data-target="#krona" data-toggle="tab">@Messages("readsets.treatments.taxonomy.tabs.krona")</a></li>    
+   	<li><a href="#" data-target="#phylogeneticTree" data-toggle="tab">@Messages("readsets.treatments.taxonomy.tabs.phylogeneticTree")</a></li>    	
+   </ul>
 		
 	<div class="tab-content">
 	
 		<div class="tab-pane active" id="main">
-
-			<div class="row-fluid">		
-				<div class="span12">
+			<div class="row">		
+				<div class="col-md-12 col-lg-12">
 						<table class="table table-condensed table-hover table-bordered">
 							<thead>
 							<tr>
-								<th class="span1">
+								<th class="col-lg-1">
 									@Messages("readsets.treatments.taxonomy.sampleInput")
 								</th>
-								<th class="span1">
+								<th class="col-lg-1">
 									@Messages("readsets.treatments.taxonomy.organism")
 								</th>
-								<th class="span8">
+								<th class="col-lg-8">
 									@Messages("readsets.treatments.taxonomy.taxonomy")
 								</th>	
 							</tr>
@@ -44,8 +43,8 @@
 				</div>	
 			</div>
 					
-			<div class="row-fluid">
-				<div class="span6 ">	
+			<div class="row">
+				<div class="col-md-6 col-lg-6">	
 					<h5>@Messages("readsets.treatments.taxonomy.taxonBilan")</h5>
 					<div class="treatmentOverflow">										
 					<table class="table table-condensed table-hover table-bordered">
@@ -78,7 +77,7 @@
 					</table>
 					</div>					
 				</div>
-				<div class="span3">	
+				<div class="col-md-3 col-lg-3">	
 					<h5>@Messages("readsets.treatments.taxonomy.divisionBilan")</h5>
 					<table class="table table-condensed table-hover table-bordered">
 						<thead>						
@@ -109,7 +108,7 @@
 						</tbody>
 					</table>
 				</div>
-				<div class="span3">
+				<div class="col-md-3 col-lg-3">
 					<h5>@Messages("readsets.treatments.taxonomy.keywordBilan")</h5>
 					
 					<table class="table table-condensed table-hover table-bordered">
@@ -141,12 +140,12 @@
 						</tbody>
 					</table>
 				</div>
-			</div> <!--  end of row-fluid -->
+			</div> <!--  end of row -->
 			
 		</div> <!--  end of tab main -->
 	
 		<div class="tab-pane" id="krona">
-			<iframe class="span12" ng-bind-src="krona" style="border:0;height:1500px" />
+			<iframe class="col-md-12 col-lg-12" ng-bind-src="krona" style="border:0;height:1500px" />
 		</div>
 			
 		<div class="tab-pane" id="phylogeneticTree">
@@ -161,5 +160,5 @@
 		</div>
 			
 	</div> <!-- end of tab content   -->
-	
+</div>	
 </div>

@@ -13,6 +13,7 @@ import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOHelpers;
 import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBQuery.Query;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -124,7 +125,8 @@ public class Processes extends CommonController{
 	 * @return the query
 	 */
 	private static DBQuery.Query getQuery(ProcessesSearchForm processesSearch) {
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		List<Query> queryElts = new ArrayList<Query>();
+		Query query = null;
 
 		Logger.info("Process Query : "+processesSearch);
 
@@ -140,6 +142,10 @@ public class Processes extends CommonController{
 			queryElts.add(DBQuery.is("typeCode", processesSearch.typeCode));
 		}
 
-		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+		if(queryElts.size() > 0){
+			query = DBQuery.and(queryElts.toArray(new Query[queryElts.size()]));
+		}
+		
+		return query;
 	}
 }

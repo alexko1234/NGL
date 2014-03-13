@@ -3,7 +3,7 @@ package controllers.main.tpl;
 import jsmessages.JsMessages;
 import play.Routes;
 import play.mvc.Result;
-import views.html.index;
+import views.html.home;
 import controllers.CommonController;
 import controllers.authorisation.Authenticate;
 import controllers.authorisation.Permission;
@@ -11,8 +11,8 @@ import controllers.authorisation.Permission;
 
 public class Main extends CommonController{
 
-   public static Result index() {
-        return ok(index.render());
+   public static Result home() {
+        return ok(home.render());
    }
    
    public static Result javascriptRoutes() {

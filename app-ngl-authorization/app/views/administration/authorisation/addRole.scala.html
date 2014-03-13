@@ -20,7 +20,7 @@
             @if(isEdit){
             	<button class="btn btn-primary" type="submit">Save</button>
             	@if(roleForm("id").value != null && roleForm("id").value != ""){
-            		<a class="btn" href="#" data-toggle="pilldyn" data-target="#onelement" data-href="@controllers.administration.authorisation.routes.Roles.show(Integer.valueOf(roleForm("id").value))">Cancel</a>
+            		<a class="btn btn-default" href="#" data-toggle="pilldyn" data-target="#onelement" data-href="@controllers.administration.authorisation.routes.Roles.show(Integer.valueOf(roleForm("id").value))">Cancel</a>
             	}
             } else {
             	<a class="btn btn-primary" href="#" data-toggle="pilldyn" data-target="#onelement" data-href="@controllers.administration.authorisation.routes.Roles.edit(roleForm.get.id)" >Edit</a>

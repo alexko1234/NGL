@@ -25,7 +25,24 @@ function SearchCtrl($scope, $http,datatable) {
 			},
 			messages:{
 				active:true
-			}
+			},
+			columns:[
+					    {  	property:"code",
+					    	header: Messages("plates.table.code"),
+					    	type :"String",
+					    	order:true
+						},
+						{	property:"typeName",
+							header: Messages("plates.table.typeName"),
+							type :"String",
+					    	order:true
+						},
+						{	property:"nbWells",
+							header: Messages("plates.table.nbWells"),
+							type :"Number",
+					    	order:false
+						}
+					]						
 	};
 	
 	$scope.init = function(){

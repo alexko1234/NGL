@@ -16,4 +16,4 @@
 	<script src="@controllers.experiments.tpl.routes.Experiments.javascriptRoutes" type="text/javascript" charset="utf-8"></script>   
 }
 
-@views.html.lefttabs("experiments.title", menu("experiments."+code), scripts)
+@views.html.main("experiments.title", menu("experiments."+code), scripts)(views.html.contents.lefttabs())

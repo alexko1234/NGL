@@ -376,9 +376,9 @@ angular.module('datatableServices', []).
 		    			getOrderColumnClass : function(columnId){
 		    				if(this.config.order.active){
 		    					var fn = new Function("config", 
-		    							"if(!config.order.columns."+columnId+") {return 'icon-sort';}" +
-			    						"else if(config.order.columns."+columnId+" && !config.order.reverse) {return 'icon-sort-up';}" +			    						
-			    						"else if(config.order.columns."+columnId+" && config.order.reverse) {return 'icon-sort-down';}");
+		    							"if(!config.order.columns."+columnId+") {return 'fa fa-sort';}" +
+			    						"else if(config.order.columns."+columnId+" && !config.order.reverse) {return 'fa fa-sort-up';}" +			    						
+			    						"else if(config.order.columns."+columnId+" && config.order.reverse) {return 'fa fa-sort-down';}");
 			    				return fn(this.config);			    						    					    					
 		    				} else{
 		    					//console.log("order is not active !!!");
@@ -1169,23 +1169,23 @@ angular.module('datatableServices', []).
 			    		
 			    		
 			    		//Buttons Section
-			    		var toolbar = angular.element('<div class="row-fluid" ng-show="'+config.name+'.isShowToolbar()"></div>');
-			    		var divButtons = angular.element('<div class="span8"></div>');
+			    		var toolbar = angular.element('<div class="row" ng-show="'+config.name+'.isShowToolbar()"></div>');
+			    		var divButtons = angular.element('<div class="col-lg-8"></div>');
 			    		
 		    			var buttons = angular.element('<div class="btn-toolbar pull-left" ng-show="'+config.name+'.isShowToolbarLeft()"></div>  ');
-		    			var buttonsSelect = '<div class="btn-group" ng-switch on="'+config.name+'.config.select.isSelectAll"><button class="btn" ng-click="'+config.name+'.selectAll(true)"  ng-show="'+config.name+'.showButton(\'select\')"  ng-switch-when="false" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.selectall")+'"><i class="icon-check icon-large"></i>';
+		    			var buttonsSelect = '<div class="btn-group" ng-switch on="'+config.name+'.config.select.isSelectAll"><button class="btn btn-default" ng-click="'+config.name+'.selectAll(true)"  ng-show="'+config.name+'.showButton(\'select\')"  ng-switch-when="false" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.selectall")+'"><i class="fa fa-check-square-o"></i>';
 		    			
 		    			if(!config.compact){ 
 		    				buttonsSelect+=  " "+MessagesDatatable("datatable.button.selectall");
 		    			}
 		    			
-		    			buttonsSelect += '</button><button class="btn" ng-click="'+config.name+'.selectAll(false)" ng-show="'+config.name+'.showButton(\'select\')"  ng-switch-when="true" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.unselectall")+'"><i class="icon-check-empty icon-large"></i>';
+		    			buttonsSelect += '</button><button class="btn btn-default" ng-click="'+config.name+'.selectAll(false)" ng-show="'+config.name+'.showButton(\'select\')"  ng-switch-when="true" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.unselectall")+'"><i class="fa fa-square-o"></i>';
 		    			
 		    			if(!config.compact){
 		    				buttonsSelect +=  " "+MessagesDatatable("datatable.button.unselectall");
 		    			}
 		    			
-		    			buttonsSelect += '</button><button class="btn" ng-click="'+config.name+'.cancel()"  ng-show="'+config.name+'.showButton(\'cancel\')" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.cancel")+'"><i class="icon-undo icon-large"></i>';
+		    			buttonsSelect += '</button><button class="btn btn-default" ng-click="'+config.name+'.cancel()"  ng-show="'+config.name+'.showButton(\'cancel\')" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.cancel")+'"><i class="fa fa-undo"></i>';
 		    			if(!config.compact){ 
 		    				buttonsSelect +=  " "+MessagesDatatable("datatable.button.cancel");
 		    			}
@@ -1194,7 +1194,7 @@ angular.module('datatableServices', []).
 		    			angular.element(buttons).append(buttonsSelect);
 		    			
 		    			if(config.show){
-		    				var buttonsShow = '<button class="btn" ng-click="'+config.name+'.show()" ng-disabled="!'+config.name+'.isSelect()" ng-show="'+config.name+'.showButton(\'show\')" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.show")+'"><i class="icon-pushpin icon-large"></i>';
+		    				var buttonsShow = '<button class="btn btn-default" ng-click="'+config.name+'.show()" ng-disabled="!'+config.name+'.isSelect()" ng-show="'+config.name+'.showButton(\'show\')" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.show")+'"><i class="fa fa-thumb-tack"></i>';
 		    				if(!config.compact){
 		    					buttonsShow +=   " "+MessagesDatatable("datatable.button.show");
 		    				}
@@ -1206,7 +1206,7 @@ angular.module('datatableServices', []).
 		    				var divCrud = angular.element('<div class="btn-group"></div>');
 		    					if(config.edit.active){
 		    						
-		    						var buttonEdit = '<button class="btn" ng-click="'+config.name+'.setEditColumn()" ng-disabled="!'+config.name+'.canEdit()"  ng-show="'+config.name+'.showButton(\'edit\')" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.edit")+'"><i class="icon-edit icon-large"></i>';
+		    						var buttonEdit = '<button class="btn btn-default" ng-click="'+config.name+'.setEditColumn()" ng-disabled="!'+config.name+'.canEdit()"  ng-show="'+config.name+'.showButton(\'edit\')" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.edit")+'"><i class="fa fa-edit"></i>';
 		    						if(!config.compact){ 
 		    							buttonEdit += " "+MessagesDatatable("datatable.button.edit");
 		    						}
@@ -1217,7 +1217,7 @@ angular.module('datatableServices', []).
 		    					}
 		    					
 		    					if(config.save.active){
-		    						var buttonSave = '<button class="btn" ng-click="'+config.name+'.save()" ng-disabled="!'+config.name+'.canSave()" ng-show="'+config.name+'.showButton(\'save\')"  data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.save")+'" ><i class="icon-save icon-large"></i>';
+		    						var buttonSave = '<button class="btn btn-default" ng-click="'+config.name+'.save()" ng-disabled="!'+config.name+'.canSave()" ng-show="'+config.name+'.showButton(\'save\')"  data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.save")+'" ><i class="fa fa-save"></i>';
 		    						
 		    						if(!config.compact){ 
 		    							buttonSave+=  " "+MessagesDatatable("datatable.button.save");
@@ -1227,7 +1227,7 @@ angular.module('datatableServices', []).
 		    					}
 		    					
 		    					if(config.remove.active){
-		    						var buttonRemove = '<button class="btn" ng-click="'+config.name+'.remove()" ng-disabled="!'+config.name+'.canRemove()" ng-show="'+config.name+'.showButton(\'remove\')"  data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.remove")+'"><i class="icon-trash icon-large"></i>';
+		    						var buttonRemove = '<button class="btn btn-default" ng-click="'+config.name+'.remove()" ng-disabled="!'+config.name+'.canRemove()" ng-show="'+config.name+'.showButton(\'remove\')"  data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.remove")+'"><i class="fa fa-trash-o"></i>';
 		    						if(!config.compact){ 
 		    							buttonRemove +=  " "+MessagesDatatable("datatable.button.remove");
 		    						}
@@ -1241,7 +1241,7 @@ angular.module('datatableServices', []).
 		    			
 		    			if(config.hide.active){
 		    				var divHide = angular.element('<div class="btn-group" ng-show="'+config.name+'.config.hide.active"></div>');
-		    				var buttonHide = '<button data-toggle="dropdown" class="btn dropdown-toggle" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.hide")+'"><i class="icon-eye-close icon-large"></i>';
+		    				var buttonHide = '<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.hide")+'"><i class="icon-eye-close icon-large"></i>';
 		    				if(!config.compact){ 
 		    					buttonHide+= " "+MessagesDatatable("datatable.button.hide");
 		    				}
@@ -1257,30 +1257,33 @@ angular.module('datatableServices', []).
 
 			    		angular.element(toolbar).append(divButtons);
 			    		
-			    		var divPagination = angular.element('<div class="span4"></div>');
-			    		var paginationToolBar = angular.element('<div class="btn-toolbar" ng-show="'+config.name+'.isShowToolbarRight()"></div>');
+			    		var divPagination = angular.element('<div class="col-lg-4"></div>');
+			    		var paginationToolBar = angular.element('<div class="btn-toolbar"  role="toolbar" style="margin: 0;" ng-show="'+config.name+'.isShowToolbarRight()"></div>');
 			    		var paginationButtonTotal = '	<button class="btn btn-info" disabled="disabled" ng-show="'+config.name+'.config.showTotalNumberRecords">'+MessagesDatatable("datatable.totalNumberRecords", "{{"+config.name+".totalNumberRecords}}")+'</button>';
 			    		angular.element(paginationToolBar).append(paginationButtonTotal);
 			    		//Pagination Section
 			    		if(config.pagination.active){
 							
-							var pagination = '<div class="span7"><div class="pagination pagination-right" ng-show="'+config.name+'.isShowPagination()"><ul><li ng-repeat="page in '+config.name+'.config.pagination.pageList" ng-class="page.clazz"><a href="#" ng-click="'+config.name+'.setPageNumber(page)">{{page.label}}</a></li></ul></div></div>';
-							var paginationDropDown = '<div class="btn-group" ng-show="'+config.name+'.config.pagination.active"><button data-toggle="dropdown" class="btn dropdown-toggle">'+MessagesDatatable("datatable.button.length", "{{"+config.name+".config.pagination.numberRecordsPerPage}}")+' <span class="caret"></span></button><ul class="dropdown-menu pull-right"><li	ng-repeat="elt in '+config.name+'.config.pagination.numberRecordsPerPageList" class={{elt.clazz}}><a href="#" ng-click="'+config.name+'.setNumberRecordsPerPage(elt)">{{elt.number}}</a></li></ul></div>';
+							//var pagination = '<div class="col-lg-7"><div class="pagination pagination-right" ng-show="'+config.name+'.isShowPagination()"><ul><li ng-repeat="page in '+config.name+'.config.pagination.pageList" ng-class="page.clazz"><a href="#" ng-click="'+config.name+'.setPageNumber(page)">{{page.label}}</a></li></ul></div></div>';
+							
+			    			var pagination = '<div class="col-lg-6"><div class="btn-group pull-right" ng-show="'+config.name+'.isShowPagination()"><ul class="pagination"><li ng-repeat="page in '+config.name+'.config.pagination.pageList" ng-class="page.clazz"><a href="#" ng-click="'+config.name+'.setPageNumber(page)">{{page.label}}</a></li></ul></div></div>';
+			    			
+			    			var paginationDropDown = '<div class="btn-group" ng-show="'+config.name+'.config.pagination.active"><button data-toggle="dropdown" class="btn btn-default dropdown-toggle">'+MessagesDatatable("datatable.button.length", "{{"+config.name+".config.pagination.numberRecordsPerPage}}")+' <span class="caret"></span></button><ul class="dropdown-menu pull-right"><li	ng-repeat="elt in '+config.name+'.config.pagination.numberRecordsPerPageList" class={{elt.clazz}}><a href="#" ng-click="'+config.name+'.setNumberRecordsPerPage(elt)">{{elt.number}}</a></li></ul></div>';
 							
 							angular.element(paginationToolBar).append(paginationDropDown);
 							angular.element(divPagination).append(pagination);
 							
 			    		}
-			    		var divPaginationButton =  angular.element('<div class="span5"></div>');
+			    		var divPaginationButton =  angular.element('<div class="col-lg-6"></div>');
 			    		angular.element(divPaginationButton).append(paginationToolBar);
 						angular.element(divPagination).append(divPaginationButton);
 			    		angular.element(toolbar).append(divPagination);	
 			    		
 						//Messages Section
-			    		var messages = '<div class="row-fluid" ng-show="'+config.name+'.config.messages.active"><div ng-class="'+config.name+'.config.messages.clazz" ng-show="'+config.name+'.config.messages.text !== undefined"><strong>{{'+config.name+'.config.messages.text}}</strong></div></div>';
+			    		var messages = '<div class="row" ng-show="'+config.name+'.config.messages.active"><div ng-class="'+config.name+'.config.messages.clazz" ng-show="'+config.name+'.config.messages.text !== undefined"><strong>{{'+config.name+'.config.messages.text}}</strong></div></div>';
 			    		
 			    		//Table Section
-				    	var datatable =  angular.element('<div class="row-fluid"></div>');
+				    	var datatable =  angular.element('<div class="row"></div>');
 				    	var form = angular.element('<form class="form-inline"></form>');
 				    	var table = angular.element('<table class="table table-condensed table-hover table-bordered"></table>');
 				    	
@@ -1295,13 +1298,13 @@ angular.module('datatableServices', []).
 				    	}
 				    	tableHead+= '>{{column.header}} <div class="btn-group pull-right">';
 				    	if(config.edit.columnMode && config.edit.showButton ){
-				    		tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setEditColumn(column.id)" ng-show="column.edit" ng-disabled="!'+config.name+'.canEdit()" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.edit")+'"><i class="icon-edit"></i></button>'
+				    		tableHead += '<button class="btn btn-xs" ng-click="'+config.name+'.setEditColumn(column.id)" ng-show="column.edit" ng-disabled="!'+config.name+'.canEdit()" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.edit")+'"><i class="fa fa-edit"></i></button>'
 						}
 						if(config.order){
-							tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setOrderColumn(column.property, column.id)" ng-show="column.order" ng-disabled="!'+config.name+'.canOrder()" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.sort")+'"><i ng-class="'+config.name+'.getOrderColumnClass(column.id)"></i></button>'
+							tableHead += '<button class="btn btn-xs" ng-click="'+config.name+'.setOrderColumn(column.property, column.id)" ng-show="column.order" ng-disabled="!'+config.name+'.canOrder()" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.sort")+'"><i ng-class="'+config.name+'.getOrderColumnClass(column.id)"></i></button>'
 						}
 						if(config.hidding){
-							tableHead += '<button class="btn btn-mini" ng-click="'+config.name+'.setHideColumn(column.id)" ng-show="column.hide" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.hide")+'"><i class="icon-eye-close"></i></button>'
+							tableHead += '<button class="btn btn-xs" ng-click="'+config.name+'.setHideColumn(column.id)" ng-show="column.hide" data-toggle="tooltip" title="'+MessagesDatatable("datatable.button.hide")+'"><i class="icon-eye-close"></i></button>'
 						}			
 						tableHead += '</div></th></tr></thead>';
 						
@@ -1324,7 +1327,7 @@ angular.module('datatableServices', []).
 				    	//Adding all to the DOM
 				    	//element.append($compile(formDiv)(scope));
 				    	if(formConfig){
-			    			var formHead = angular.element('<div class="row-fluid"></div>');
+			    			var formHead = angular.element('<div class="row"></div>');
 			    			formHead.append(formConfig);//Adding the form
 			    			element.append($compile(formHead)(scope));					    	
 			    		}
@@ -1386,7 +1389,7 @@ angular.module('datatableServices', []).
 		    					return '<span dt-compile="'+name+".config.columns."+attrs.index+".render(value)"+'"></span>';
 		    				}else{
 		    					if(col.type == "Boolean"){
-		    						return '<div ng-switch on="'+getNgModel(col)+'"><i ng-switch-when="true" class="icon-check icon-large"></i><i ng-switch-default class="icon-check-empty icon-large"></i></div>';
+		    						return '<div ng-switch on="'+getNgModel(col)+'"><i ng-switch-when="true" class="fa fa-check-square-o"></i><i ng-switch-default class="fa fa-square-o"></i></div>';
 		    						
 		    					} else{
 		    						return '<span ng-bind="'+getNgModel(col)+' '+columnFormatter(col)+'"></span>';
@@ -1422,43 +1425,43 @@ angular.module('datatableServices', []).
 	        		  	    			switch (col.type) 
 	        		  	    			{ 
 		        		  	    			case "String": 
-		        		  	    				editElement = '<input html-filter="{{col.type}}" type="text" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="text" class="input-sm" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break; 
 		        		  	    			case "Number": 
-		        		  	    				editElement = '<input html-filter="{{col.type}}" type="number" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="number" class="input-sm" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break; 
 		        		  	    			case "Month": 
-		        		  	    				editElement = '<input html-filter="{{col.type}}" type="month" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="month" class="input-sm" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break; 
 		        		  	    			case "Week": 
-		        		  	    				editElement = '<input html-filter="{{col.type}}" type="week" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="week" class="input-sm" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Time": 
-		        		  	    				editElement = '<input html-filter="{{col.type}}" type="time" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="time" class="input-sm" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "DateTime": 
-		        		  	    				editElement = '<input html-filter="{{col.type}}" type="datetime" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="datetime" class="input-sm" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Range": 
-		        		  	    				editElement = '<input html-filter="{{col.type}}" type="range" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="range" class="input-sm" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Color": 
-		        		  	    				editElement = '<input html-filter="{{col.type}}" type="color" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="color" class="input-sm" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Mail": 
-		        		  	    				editElement = '<input html-filter="{{col.type}}" type="mail" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="mail" class="input-sm" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Tel": 
-		        		  	    				editElement = '<input html-filter="{{col.type}}" type="tel" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="tel" class="input-sm" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Url": 
-		        		  	    				editElement = '<input html-filter="{{col.type}}" type="url" class="input-small" ng-model="'+getNgModel(col)+'"  ng-change="'+ngChange+'"/>';
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="url" class="input-sm" ng-model="'+getNgModel(col)+'"  ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			case "Date": 
-		        		  	    				editElement = '<input html-filter="{{col.type}}" type="date" class="input-small" ng-model="'+getNgModel(col)+'"  ng-change="'+ngChange+'"/>';
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="date" class="input-sm" ng-model="'+getNgModel(col)+'"  ng-change="'+ngChange+'"/>';
 		        		  	    			break;
 		        		  	    			default: 
-		        		  	    				editElement = '<input html-filter="{{col.type}}" type="text" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
+		        		  	    				editElement = '<input html-filter="{{col.type}}" type="text" class="input-sm" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
 		        		  	    			break; 
 	        		  	    			}
 	        		  	    		}else{
@@ -1477,7 +1480,7 @@ angular.module('datatableServices', []).
 	            		  	    		}
 	        		  	    		}
         		  	    	}else if(col.edit && col.type =="Boolean"){
-        		  	    		editElement = '<input html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
+        		  	    		editElement = '<input html-filter="{{col.type}}" type="checkbox" class="input-sm" ng-model="'+getNgModel(col)+'" ng-change="'+ngChange+'"/>';
         		  	    	}
 		    				return editElement;
 		    			};
