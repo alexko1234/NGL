@@ -100,6 +100,8 @@ public class ContainerHelper {
 			if(rs.getString("tag")!=null){
 				content.properties = new HashMap<String, PropertyValue>();
 				content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+				content.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagCategory")));
+
 			}
 
 		}
