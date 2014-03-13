@@ -117,7 +117,9 @@
 				    </div>
 			    </div>   
 			    <div class="col-lg-3">
-			    	<div class="thumbnail" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') && (readset.treatments[treatments.getTreatment().code].read1.suspectedKmers != null) && (readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value.length > 0)"> 
+			    	<div class="thumbnail" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
+			    	&& readset.treatments[treatments.getTreatment().code].read1.suspectedKmers != null 
+			    	&& readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value.length > 0"> 
 						<h5> @Messages("readsets.treatments.read_quality.suspectedKmers") </h5>
 						<ul class="treatmentOverflow">
 						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value | orderBy:'nbOccurences':true">
@@ -252,7 +254,9 @@
 				    </div>
 			    </div>	
 			    <div class="col-lg-3">
-			    	<div class="thumbnail" ng-if="((treatments.getTreatment().code === 'readQualityClean') || (treatments.getTreatment().code === 'readQualityNoRiboClean') && (readset.treatments[treatments.getTreatment().code].read2.suspectedKmers != null) && (readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value.length > 0)"> 
+			    	<div class="thumbnail" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
+			    	&& readset.treatments[treatments.getTreatment().code].read2.suspectedKmers != null 
+			    	&& readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value.length > 0"> 
 						<h5> @Messages("readsets.treatments.read_quality.suspectedKmers") </h5>
 						<ul class="treatmentOverflow">
 						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value | orderBy:'nbOccurences':true">
