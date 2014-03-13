@@ -9,6 +9,7 @@ import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.instance.Sample;
 import models.util.Workflows;
@@ -219,7 +220,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 				}
 
 				InstanceHelpers.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet, contextValidation,true);
-
+				
 				if(!contextValidation.hasErrors()){
 
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class
@@ -232,8 +233,20 @@ public class RunImportCNS extends AbstractImportDataCNS{
 
 					createFileFromReadSet(readSet,contextValidation);
 					
+					SampleOnContainer sampleOnContainer = InstanceHelpers.getSampleOnContainer(readSet);
+					if(null != sampleOnContainer){
+						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
+								DBQuery.is("code", readSet.code), DBUpdate.set("sampleOnContainer", sampleOnContainer));
+					}else{
+						contextValidation.addErrors( "sampleOneContainer", "error.codeNotExist");
+					}
+					
+					if(!contextValidation.hasErrors()){
 					newReadSets.add(readSet);
+					}
 				}
+				
+				
 
 			}
 		}
