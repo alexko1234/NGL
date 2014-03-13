@@ -342,6 +342,7 @@ public class LimsCNSDAO{
 				content.properties=new HashMap<String, PropertyValue>();
 				content.properties.put("percentPerLane", new PropertySingleValue(rs.getFloat("percentPerLane")));
 				content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+				content.properties.put("tagCategory",new PropertySingleValue(DataMappingCNS.getTagCategory(rs.getString("tagCategory"))));
 				return content;
 			}
 
@@ -515,6 +516,7 @@ public class LimsCNSDAO{
 				readSet.path=rs.getString("readSetPath");
 				readSet.projectCode=rs.getString("projectCode");
 				readSet.runCode=run.code;
+				readSet.runTypeCode=run.typeCode;
 				readSet.sampleCode=rs.getString("sampleCode");
 				readSet.state=new State();
 				readSet.state.code=DataMappingCNS.getStateReadSetFromLims(rs.getString("state"),TBoolean.valueOf(rs.getString("validationProduction")));
@@ -524,7 +526,7 @@ public class LimsCNSDAO{
 				readSet.state.historical=new ArrayList<TransientState>();		
 				readSet.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",1));
 				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",2));	
-				
+
 				readSet.traceInformation=new TraceInformation();
 				readSet.traceInformation.setTraceInformation("lims");
 				readSet.typeCode=READSET_DEFAULT_CODE;
