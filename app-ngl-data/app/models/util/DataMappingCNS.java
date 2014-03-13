@@ -123,4 +123,16 @@ public class DataMappingCNS {
 		return null;
 	}
 
+	public static Object getTagCategory(String tagCategory) {
+		if(tagCategory.equals("D")){
+			return "DUAL-INDEX";
+		}else if( tagCategory.equals("IND") || tagCategory.equals("A") || tagCategory.equals("C") || tagCategory.equals("T") || tagCategory.equals("G")){
+			return "SINGLE-INDEX";
+		}
+		else if (tagCategory.equals("NUG")){
+			return "MID";
+		}
+		return null;
+	}
+
 }
