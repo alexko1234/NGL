@@ -175,7 +175,7 @@ angular.module('datatableServices', []).
 		    			 */
 		    			setData:function(data, recordsNumber){
 		    				var configPagination = this.config.pagination;
-		    				if(configPagination.active && !this.isRemoteMode(configPagination.mode)){
+		    				if(configPagination.active){
 		    					this.config.pagination.pageNumber=0;
 		    				}
 		    				this.allResult = data;
