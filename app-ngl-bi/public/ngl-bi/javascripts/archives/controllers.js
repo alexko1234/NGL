@@ -13,14 +13,46 @@ function SearchCtrl($scope, $routeParams, datatable) {
 			order : {
 				mode : 'local',
 				by:'date'
-			}
+			},
+			columns : [
+						{	
+							property:"runCode",
+						  	header: Messages("archives.table.runcode"),
+						  	type :"String",
+						  	order:true
+						 }, {	
+							property:"projectCode",
+						  	header: Messages("archives.table.projectcode"),
+						  	type :"String",
+						  	order:true
+						 }, {	
+							property:"readSetCode",
+						  	header: Messages("archives.table.readsetcode"),
+						  	type :"String",
+						  	order:true
+						 }, {	
+							property:"path",
+						  	header: Messages("archives.table.path"),
+						  	type :"String",
+						  	order:true
+						 },{	
+							property:"date",
+						  	header: Messages("archives.table.date"),
+						  	type :"Date",
+						  	order:true
+						 },{	
+							property:"id",
+						  	header: Messages("archives.table.backupid"),
+						  	type :"String",
+						  	order:true
+						 }			           
+			 ]			
 			
 	};
 	
 	$scope.init = function(){
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
-		$scope.search();
-		$scope.datatable.search({archive:$scope.archive});
+		$scope.search(2);
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
@@ -32,8 +64,8 @@ function SearchCtrl($scope, $routeParams, datatable) {
 	/* 
       call by the init above and the search() to select the type of archives to visualize (0,1,2)
 	 */
-	$scope.search = function(){
-		$scope.datatable.search({archive:$scope.archive});
+	$scope.search = function(param){
+		$scope.datatable.search({archive:param});
 	}
 	
 };

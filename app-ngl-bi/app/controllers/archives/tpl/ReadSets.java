@@ -27,18 +27,8 @@ public class ReadSets extends CommonController {
 		return ok(home.render(code));
 	}
 	
-	public static Result search() {
-		
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("runCode", Messages.get("archives.table.runcode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("archives.table.projectcode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("readSetCode", Messages.get("archives.table.readsetcode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("path", Messages.get("archives.table.path"), true, false, false));
-		columns.add(DatatableHelpers.getDateColumn("date", Messages.get("archives.table.date"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("id", Messages.get("archives.table.backupid"), true, false, false));
-		
-		DatatableConfig config = new DatatableConfig(columns);
-		return ok(search.render(config));
+	public static Result search() {		
+		return ok(search.render());
 	}
 	
 	public static Result javascriptRoutes() {
