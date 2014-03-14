@@ -1,13 +1,17 @@
 @(inputs: Html = Html(""), formAttrs : Html = Html(""))(buttons: Html = Html(""))(datatableName: String = "datatable",  initMethod: String = "init()")
 
+@import views.html.helper._
 
 <div class="row" ng-init="@initMethod"> 
 <div class="col-md-12 col-lg-12" datatable="@datatableName">
 
 	@if(inputs.body != ""){
 	<div dt-form>
-	<form class="well well-small form-inline" @formAttrs>
-		<div class="btn-toolbar pull-right">
+	<form class="well well-small" @formAttrs>
+		<div class="row">
+		@inputs
+		@columnSearchForm{
+		<div class="btn-toolbar">
 			<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" >
 				<i class="fa fa-search"></i>
 			</button>
@@ -16,7 +20,8 @@
 			</button>
 			@buttons				 	
 		</div>
-		@inputs
+		}
+		</div>
 	</form>	
 	</div>
 	}
