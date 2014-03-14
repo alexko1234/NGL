@@ -5,21 +5,20 @@ Typography
 	@line-height-base : 1.428571429 -> 1.333333333
 	
 Components
-	@padding-small-vertical :	-> 3px
-	@padding-base-vertical :	-> 4px
-	@padding-large-vertical : 10px -> 7px
-	
-	@padding-small-horizontal :	-> 8px	
-	@padding-base-horizontal :	-> 10px
-	@padding-large-horizontal : 16px -> 14px
+	@padding-small-vertical :	
+	@padding-base-vertical :	
+	@padding-large-vertical : 	
+	@padding-small-horizontal :		
+	@padding-base-horizontal :	
+	@padding-large-horizontal : 
 	
 	
 Grid system
 	@grid-gutter-width : 30px -> 18px
 
 Tables
-	@table-cell-padding : 8px -> 5px
-	@table-condensed-cell-padding : 5px -> 3px
+	@table-cell-padding : 
+	@table-condensed-cell-padding : 
 	
 Navbar
 	@navbar-height : 50px -> 40px
@@ -34,7 +33,7 @@ Jumbotron
 
 
 Thumbnails
-	@thumbnail-padding : 4px -> 2px
+	@thumbnail-padding : 
 
 Alerts
 	@alert-padding : 15px -> 10px
