@@ -13,7 +13,7 @@ body {
 }
 
 .treatmentOverflow {
-	height:340px;
+	max-height:340px;
 	overflow:auto;	
 }
 
@@ -25,5 +25,9 @@ body {
 	margin-bottom:5px;
 }
 	
+.margin-bottom-7 {
+	margin-bottom:7px;
+}
 	
+		
 	
