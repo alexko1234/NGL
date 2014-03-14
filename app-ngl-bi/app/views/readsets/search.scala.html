@@ -3,24 +3,28 @@
 @import views.html.helper._
 @form() = {
 
-		<div class="row"><div class="col-md-10 col-lg-10" >
+	@columnSearchForm{
 		@formGroup{
 			<input type="text" class="form-control" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getProjects() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.project")'>
 		}
 		@formGroup{
 			<input type="text" class="form-control" ng-model="form.sampleCode"  typeahead="sample.code as sample.code for sample in lists.getSamples() | filter:$viewValue | limitTo:20"  ng-focus="refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>
 		}
+	}
+	@columnSearchForm{
 		@formGroup{					
 			<input type="text" class="form-control" ng-model="form.regexCode" placeholder='@Messages("search.placeholder.regexCode")'>
 		}
 		@formGroup{
 			<input type="text" class="form-control" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
 		}
+	}
+	@columnSearchForm{
 		@formGroup{
 			<input type="text" class="form-control" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
 		}
-		</div></div>
-		<div class="row"><div class="col-md-10 col-lg-10" >
+		
+		
 		@if(isNotValuation) {
 			@formGroup{
 				<div class="form-control" bt-select ng-model="form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in lists.getStates()"></div>			
@@ -32,19 +36,23 @@
 				<div class="form-control" bt-select ng-model="form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in states"></div>
 			}						
 		}
+	}
+	@columnSearchForm{
 		@formGroup{
 			<div class="form-control" bt-select ng-model="form.productionValidCode" placeholder="@Messages("search.placeholder.productionValid")" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
 		}
 		@formGroup{					
 			<div class="form-control" bt-select ng-model="form.bioinformaticValidCode" placeholder="@Messages("search.placeholder.bioinformaticValid")" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
 		}
+	}
+	@columnSearchForm{
 		@formGroup{					
 			<div class="form-control" bt-select ng-model="form.runTypeCodes" multiple="true" placeholder="@Messages("search.placeholder.runtypes")" bt-options="type.code as type.name for type in lists.getTypes()"></div>			
 		}
 		@formGroup{					
 			<input type="text" class="form-control" ng-model="form.runCode" typeahead="run.code as run.name for run in lists.getRuns() | filter:$viewValue | limitTo:20"  placeholder='@Messages("search.placeholder.run")'>
 		}	
-		</div></div>
+	}		
 }
 
 @formAttrs() = {
