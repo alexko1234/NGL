@@ -148,9 +148,7 @@ angular.module('datatableServices', []).
     					 */
     					search : function(params){
     						this.config.pagination.pageNumber=0;
-							if(this.isRemoteMode(this.config.pagination.mode)){
-								this._search(params);
-							}
+							this._search(params);							
     					},
     					
     					//search functions
