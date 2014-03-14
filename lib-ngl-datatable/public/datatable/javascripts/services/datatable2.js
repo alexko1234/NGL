@@ -143,17 +143,26 @@ angular.module('datatableServices', []).
 								choiceInList:false, //when the column is in edit mode, the edition is a list of choices or not
 								extraHeaders:{}
     					},
+    					/**
+    					 * External search réinit pageNumber to 0
+    					 */
+    					search : function(params){
+    						this.config.pagination.pageNumber=0;
+							if(this.isRemoteMode(this.config.pagination.mode)){
+								this._search(params);
+							}
+    					},
     					
     					//search functions
     					/**
-		    			 * Search function to populate the datatable
+		    			 * Internal Search function to populate the datatable
 		    			 */
-		    			search : function(params){
+		    			_search : function(params){
 		    				if(this.config.search.active && this.isRemoteMode(this.config.search.mode)){
 			    				this.lastSearchParams = params;
 			    				var url = this.getUrlFunction(this.config.search.url);
 			    				if(url){
-			    					$http.get(url(),{params:this.getParams(params), datatable:this}).success(function(data, status, headers, config) {		    						
+			    					$http.get(url(),{params:this.getParams(params), datatable:this}).success(function(data, status, headers, config) {
 			    						config.datatable.setData(data.data, data.recordsNumber);		    						
 			    					});
 			    				}else{
@@ -167,7 +176,7 @@ angular.module('datatableServices', []).
 		    			 * Search with the last parameters
 		    			 */
 		    			searchWithLastParams : function(){
-		    				this.search(this.lastSearchParams);
+		    				this._search(this.lastSearchParams);
 		    			},
 		    			
 		    			/**
@@ -175,7 +184,7 @@ angular.module('datatableServices', []).
 		    			 */
 		    			setData:function(data, recordsNumber){
 		    				var configPagination = this.config.pagination;
-		    				if(configPagination.active){
+		    				if(configPagination.active && !this.isRemoteMode(configPagination.mode)){
 		    					this.config.pagination.pageNumber=0;
 		    				}
 		    				this.allResult = data;
