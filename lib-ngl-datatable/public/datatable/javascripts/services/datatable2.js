@@ -75,7 +75,7 @@ angular.module('datatableServices', []).
 							save :{
 								active:false,
 								withoutEdit:false, //usable only for active/inactive save button by default !!!
-								keepEdit:false, //keep in edit mode after safe
+								keepEdit:true, //keep in edit mode after safe
 								showButton : true,
 								changeClass : true, //change class to success or error
 								mode:'remote', //or local
@@ -1303,7 +1303,7 @@ angular.module('datatableServices', []).
     			restrict: 'A',
   		    	replace:true,
   		    	//transclude:true,
-  		    	template:'<div name="dt-toolbar" class="row"><div class="col-md-12 col-lg-12">'
+  		    	template:'<div name="dt-toolbar" class="row margin-bottom-3"><div class="col-md-12 col-lg-12">'
   		    		+'<div class="btn-toolbar pull-left" name="dt-toolbar-buttons" ng-if="dtTable.isShowToolbarButtons()">'
   		    		+'<div class="btn-group"  ng-switch on="dtTable.config.select.isSelectAll">'
   		    		+	'<button class="btn btn-default" ng-click="dtTable.selectAll(true)" ng-show="dtTable.isShowButton(\'select\')" ng-switch-when="false" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.selectall\')}}">'
