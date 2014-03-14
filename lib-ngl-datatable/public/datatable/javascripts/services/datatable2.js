@@ -75,7 +75,7 @@ angular.module('datatableServices', []).
 							save :{
 								active:false,
 								withoutEdit:false, //usable only for active/inactive save button by default !!!
-								keepEdit:true, //keep in edit mode after safe
+								keepEdit:false, //keep in edit mode after safe
 								showButton : true,
 								changeClass : true, //change class to success or error
 								mode:'remote', //or local
