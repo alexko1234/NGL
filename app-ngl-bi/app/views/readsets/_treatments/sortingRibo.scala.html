@@ -76,28 +76,28 @@
 			<tbody>
 			 <tr>
 			 	<th>
-			 		<ul class="unstyled">
+			 		<ul class="list-unstyled">
 						<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.rRNABilan.value">
 								{{obj.type}} :
 						</li>
 			 		</ul>
 			 	</th>
 			 	<td>
-			 		<ul class="unstyled">
+			 		<ul class="list-unstyled">
 						<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.rRNABilan.value">
 								{{obj.percent| number:2}} @Messages("unit.percent")
 						</li>
 					</ul>
 				</td>	
 				<td>
-			 		<ul class="unstyled">
+			 		<ul class="list-unstyled">
 						<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read2.rRNABilan.value">
 								{{obj.percent| number:2}} @Messages("unit.percent")
 						</li>
 					</ul>
 				</td>		
 				<td>
-			 		<ul class="unstyled">
+			 		<ul class="list-unstyled">
 						<li ng-repeat="obj in readset.treatments[treatments.getTreatment().code].single.rRNABilan.value">
 								{{obj.percent| number:2}} @Messages("unit.percent")
 						</li>
