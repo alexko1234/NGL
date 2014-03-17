@@ -5,6 +5,6 @@
 FCID,LANE,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject
 @for(c <- containers){
 	@for(co <- c.contents){
-		@(c.support.supportCode),@(c.support.line),@(c.support.line)_@(co.sampleUsed.sampleCode)_@(AbstractSampleSheetsfactory.getSample(co.sampleUsed.sampleCode).properties.get("tag").value),@AbstractSampleSheetsfactory.getIndex("indexIllumina",AbstractSampleSheetsfactory.getSampleTag(co.sampleUsed.sampleCode)).sequence,@(c.properties.get("controlLane").value),@(AbstractSampleSheetsfactory.getSample(co.sampleUsed.sampleCode).properties.get("tag").value)_@(AbstractSampleSheetsfactory.getSample(co.sampleUsed.sampleCode).properties.get("percentPerLane").value)
+		@(c.support.supportCode),@(c.support.line),@(c.support.line)_@(co.sampleUsed.sampleCode)_@(co.properties.get("tag").value),@AbstractSampleSheetsfactory.getIndex("indexIllumina",AbstractSampleSheetsfactory.getSampleTag(co.sampleUsed.sampleCode)).sequence,@(c.properties.get("controlLane").value),@(co.properties.get("tag").value)_@(AbstractSampleSheetsfactory.getSample(co.sampleUsed.sampleCode).properties.get("percentPerLane").value)
 	}
 }

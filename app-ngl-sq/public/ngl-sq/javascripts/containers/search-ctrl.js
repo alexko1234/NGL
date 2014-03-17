@@ -2,76 +2,77 @@
 
 function SearchCtrl($scope, datatable, lists,$filter) {
 	$scope.lists = lists;
+	
 	$scope.datatableConfig = {	
-			columns:[
-				{
-					"header":Messages("containers.table.supportCode"),
-					"property":"support.supportCode",
-					"order":true,
-					"type":"text"
-				},
-				{
-					"header":Messages("containers.table.categoryCode"),
-					"property":"support.categoryCode",
-					"order":true,
-					"type":"text"
-				},
-				{
-					"header":Messages("containers.table.code"),
-					"property":"code",
-					"order":true,
-					"type":"text"
-				},
-				{
-					"header":Messages("containers.table.categoryCode"),
-					"property":"categoryCode",
-					"order":true,
-					"type":"text"
-				},
-				{
-					"header":Messages("containers.table.sampleCodes"),
-					"property":"sampleCodes",
-					"order":true,
-					"type":"text"
-				},
-				{
-					"header":Messages("containers.table.projectCodes"),
-					"property":"projectCodes",
-					"order":true,
-					"type":"text"
-				},
-				{
-					"header":Messages("containers.table.fromExperimentTypeCodes"),
-					"property":"fromExperimentTypeCodes",
-					"order":true,
-					"type":"text"
-				},
-				{
-					"header":Messages("containers.table.valid"),
-					"property":"valid",
-					"order":true,
-					"type":"text"
-				},
-				{
-					"header":Messages("containers.table.stateCode"),
-					"property":"stateCode",
-					"order":true,
-					"type":"text"
-				},
-				{
-					"header":Messages("containers.table.creationDate"),
-					"property":"traceInformation.creationDate",
-					"order":true,
-					"type":"text"
-				},
-			],
-			search:{
-				url:jsRoutes.controllers.containers.api.Containers.list()
+		columns:[
+			{
+				"header":Messages("containers.table.supportCode"),
+				"property":"support.supportCode",
+				"order":true,
+				"type":"text"
 			},
-			order:{
-				by:'code'
-			}
-		};
+			{
+				"header":Messages("containers.table.categoryCode"),
+				"property":"support.categoryCode",
+				"order":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.code"),
+				"property":"code",
+				"order":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.categoryCode"),
+				"property":"categoryCode",
+				"order":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.sampleCodes"),
+				"property":"sampleCodes",
+				"order":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.projectCodes"),
+				"property":"projectCodes",
+				"order":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.fromExperimentTypeCodes"),
+				"property":"fromExperimentTypeCodes",
+				"order":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.valid"),
+				"property":"valid",
+				"order":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.stateCode"),
+				"property":"stateCode",
+				"order":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.creationDate"),
+				"property":"traceInformation.creationDate",
+				"order":true,
+				"type":"text"
+			},
+		],
+		search:{
+			url:jsRoutes.controllers.containers.api.Containers.list()
+		},
+		order:{
+			by:'code'
+		}
+	};
 	
 	var search = function(values, query){
 		var queryElts = query.split(',');
@@ -88,7 +89,7 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 		}, output);
 		
 		return output;
-	}
+	};
 	
 	$scope.changeProject = function(){
 		if($scope.form.project){
@@ -100,19 +101,15 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 		if($scope.form.type){
 			$scope.search();
 		}
-	}
-	
+	};
 	
 	$scope.searchProjects = function(query){
 		return search(lists.getProjects(), query);
-	}
+	};
 	
-
 	$scope.reset = function(){
-		$scope.form = {
-				
-		}
-	}
+		$scope.form = {};
+	};
 	
 	$scope.refreshSamples = function(){
 		if($scope.form.projectCode){
@@ -122,7 +119,7 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 	
 	$scope.searchSamples = function(query){
 		return search(lists.getSamples(), query);
-	}
+	};
 	
 	$scope.init = function(){
 		$scope.datatable = datatable($scope, $scope.datatableConfig);		
@@ -132,20 +129,24 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 			$scope.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("new").url,remove:false});
 			$scope.activeTab(0);
 		}
+		
 		if(angular.isUndefined($scope.getForm())){
 			$scope.form = {};
 			$scope.setForm($scope.form);
-		$scope.lists.refresh.containerSupportCategories();
-		$scope.lists.refresh.projects();
-		$scope.lists.refresh.containerCategories();
-		$scope.lists.refresh.experimentTypes();
-		$scope.lists.refresh.states({objectTypeCode:"Container"});
+			$scope.lists.refresh.containerSupportCategories();
+			$scope.lists.refresh.projects();
+			$scope.lists.refresh.containerCategories();
+			$scope.lists.refresh.experimentTypes();
+			$scope.lists.refresh.states({objectTypeCode:"Container"});
 		}
-	}
+	};
 	
 	$scope.search = function(){		
-			var jsonSearch = {};			
-
+		if($scope.form.projectCode || $scope.form.sampleCode || ($scope.form.fromExperimentTypeCodes && $scope.form.fromExperimentTypeCodes.length > 0) || $scope.form.containerCategory 
+			|| $scope.form.containerSupportCategory || $scope.form.state){	
+			
+			var jsonSearch = {};
+			
 			if($scope.form.projectCode){
 				jsonSearch.projectCodes = $scope.form.projectCode;
 			}			
@@ -158,18 +159,20 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 			}
 			
 			if($scope.form.containerCategory){
-				jsonSearch.categoryCode = $scope.form.containerCategory.code;
-			}	
+				jsonSearch.categoryCode = $scope.form.containerCategory;
+			}
 			
 			if($scope.form.containerSupportCategory){
-				jsonSearch.containerSupportCategory = $scope.form.containerSupportCategory.code;
+				jsonSearch.containerSupportCategory = $scope.form.containerSupportCategory;
 			}	
 			
 			if($scope.form.state){
 				jsonSearch.stateCode = $scope.form.state.code;
 			}	
-			$scope.datatable.search(jsonSearch);							
-	}
+			
+			$scope.datatable.search(jsonSearch);
+		}
+	};
 }
 
 SearchCtrl.$inject = ['$scope', 'datatable','lists','$filter'];

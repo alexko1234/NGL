@@ -1,13 +1,6 @@
 "use strict"
 
 function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$http) {
-	
-	$scope.form = {
-			type:{
-				code:""
-			}
-	};
-	
 	$scope.lists = lists;
 	
 	$scope.datatableConfig = {
@@ -17,17 +10,20 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 			},
 			order:{
 				by:'code'
+			},
+			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.searchColumns().url,
+			edit:{
+				active:true,
+				columnMode:true
 			}
-		};
+	};
 	
-	$scope.changeTypeCode = function(){
-		if($scope.form.type){
-			//$location.path('/processes/search/'+$scope.form.type.code);
+	$scope.changeProcessTypeCode = function(){
+		if($scope.form.processCategory){
+			$scope.getColumns();
+			$scope.search();
 		}
-		
-		$scope.getColumns();
-		$scope.search();
-	}
+	};
 	
 	var search = function(values, query){
 		var queryElts = query.split(',');
@@ -44,7 +40,8 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 		}, output);
 		
 		return output;
-	}
+	};
+	
 	$scope.changeProject = function(){
 		if($scope.form.project){
 				$scope.lists.refresh.samples({projectCode:$scope.form.project.code});
@@ -55,19 +52,15 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 		if($scope.form.type){
 			$scope.search();
 		}
-	}
-	
+	};
 	
 	$scope.searchProjects = function(query){
 		return search(lists.getProjects(), query);
-	}
-	
+	};
 
 	$scope.reset = function(){
-		$scope.form = {
-				
-		}
-	}
+		$scope.form = {};
+	};
 	
 	$scope.refreshSamples = function(){
 		if($scope.form.projectCode){
@@ -75,22 +68,19 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 		}
 	};
 	
-	
 	$scope.searchSamples = function(query){
 		return search(lists.getSamples(), query);
-	}
-	
+	};
 	
 	$scope.changeProcessCategory = function(){
-		/*$scope.removeTab(1);
-		
-		$scope.basket.reset();*/
-		
-		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
-	}
+		if($scope.form.processCategory){
+			$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
+		}else{
+			$scope.lists.clear("processTypes");
+		}
+	};
 	
 	$scope.init = function(){
-		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('new');
 			$scope.addTabs({label:Messages('processes.tabs.search'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
@@ -98,15 +88,10 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 		}
 		
 		if(angular.isUndefined($scope.getForm())){
-			$scope.form = {type:{code:""}};
+			$scope.form = {processType:{code:""}};
 			$scope.setForm($scope.form);
-			//$scope.form.typeCodes.options = $scope.comboLists.getProcessTypes().query();
-			//$scope.form.projects.options = $scope.comboLists.getProjects().query();
-			
 			$scope.lists.refresh.projects();
 			$scope.lists.refresh.processCategories();
-			
-			
 		}else{
 			$scope.form = $scope.getForm();			
 		}
@@ -117,25 +102,38 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 		if($scope.form.project || $scope.form.type){
 			$scope.search();
 		}
-	}
+	};
 	
-	$scope.search = function(){		
-			var jsonSearch = {};			
-
+	$scope.search = function(){	
+		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.processType || $scope.form.processCategory){
+			var jsonSearch = {};
 			if($scope.form.projectCode){
 				jsonSearch.projectCode = $scope.form.projectCode;
 			}			
+			
 			if($scope.form.sampleCode){
 				jsonSearch.sampleCode = $scope.form.sampleCode;
 			}				
-			if($scope.form.type){
-				jsonSearch.typeCode = $scope.form.type.code;
-			}			
+			
+			if($scope.form.processType){
+				jsonSearch.typeCode = $scope.form.processType.code;
+			}
+			
+			if($scope.form.processCategory){
+				jsonSearch.categoryCode = $scope.form.processCategory.code;
+			}
+			
 			$scope.datatable.search(jsonSearch);						
-	}
+		}
+	};
 	
 	$scope.getColumns = function(){
-		$http.get(jsRoutes.controllers.processes.tpl.Processes.searchColumns($scope.form.type.code).url)
+		var typeCode = "";
+		if($scope.form.processType){
+			typeCode = $scope.form.processType.code;
+		}
+		
+		$http.get(jsRoutes.controllers.processes.tpl.Processes.searchColumns().url,{params:{"typeCode":typeCode}})
 		.success(function(data, status, headers, config) {
 			if(data!=null){
 				$scope.datatable.setColumnsConfig(data);

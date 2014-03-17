@@ -1,59 +1,60 @@
 "use strict";
 
 function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
-	 
+	$scope.lists = lists; 
+	
 	$scope.datatableConfig = {
-			columns:[
-						{
-							"header":Messages("containers.table.code"),
-							"property":"code",
-							"order":true,
-							"hide":true,
-							"type":"text"
-						},
-						{
-							"header":Messages("experiments.table.projectCodes"),
-							"property":"projectCodes",
-							"order":true,
-							"hide":true,
-							"type":"text"
-						},
-						{
-							"header":Messages("containers.table.sampleCodes"),
-							"property":"sampleCodes",
-							"order":true,
-							"hide":true,
-							"type":"text"
-						},
-						{
-							"header":Messages("containers.table.valid"),
-							"property":"valid",
-							"order":true,
-							"hide":true,
-							"type":"text"
-						},
-						{
-							"header":Messages("containers.table.stateCode"),
-							"property":"stateCode",
-							"order":true,
-							"hide":true,
-							"type":"text"
-						},
-						{
-							"header":Messages("containers.table.categoryCode"),
-							"property":"categoryCode",
-							"order":true,
-							"hide":true,
-							"type":"text"
-						},
-						{
-							"header":Messages("containers.table.fromExperimentTypeCodes"),
-							"property":"typeCode",
-							"order":true,
-							"hide":true,
-							"type":"text"
-						}
-						],
+		columns:[
+			{
+				"header":Messages("containers.table.code"),
+				"property":"code",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("experiments.table.projectCodes"),
+				"property":"projectCodes",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.sampleCodes"),
+				"property":"sampleCodes",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.valid"),
+				"property":"valid",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.stateCode"),
+				"property":"stateCode",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.categoryCode"),
+				"property":"categoryCode",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.fromExperimentTypeCodes"),
+				"property":"typeCode",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			}
+		],
 		search:{
 			url:jsRoutes.controllers.containers.api.Containers.list()
 		},
@@ -67,7 +68,6 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 					+'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})</button>'
 		}
 	};
-		
 	
 	var search = function(values, query){
 		var queryElts = query.split(',');
@@ -84,9 +84,7 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 		}, output);
 		
 		return output;
-	}
-	
-	$scope.lists = lists;
+	};
 	
 	$scope.init = function(){
 		if(angular.isUndefined($scope.getDatatable())){
@@ -113,31 +111,27 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 		if(angular.isUndefined($scope.getForm())){
 			$scope.form = {};
 			$scope.setForm($scope.form);
-			
-			//$scope.form.processTypes.options = $scope.comboLists.getProcessTypes().query();
-			//$scope.form.projects.options = $scope.comboLists.getProjects().query();
-			
 			$scope.lists.refresh.projects();
 			$scope.lists.refresh.processCategories();
 			
 		}else{
 			$scope.form = $scope.getForm();			
 		}
-	}
+	};
 	
 	$scope.changeProcessCategory = function(){
-		/*$scope.removeTab(1);
-		
-		$scope.basket.reset();*/
-		
-		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
-	}
+		if($scope.form.processCategory){
+			$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
+		}else{
+			$scope.lists.clear("processTypes");
+		}
+	};
 	
 	$scope.changeProcessType = function(){
 		$scope.removeTab(1);
 		$scope.basket.reset();
 		this.search();
-	}
+	};
 	
 	$scope.changeProject = function(){
 		if($scope.form.project){
@@ -149,73 +143,71 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 		if($scope.form.type){
 			$scope.search();
 		}
-	}
-	
+	};
 	
 	$scope.searchProjects = function(query){
 		return search(lists.getProjects(), query);
-	}
+	};
 	
-
 	$scope.reset = function(){
-		$scope.form = {
-				
-		}
-	}
+		$scope.form = {};
+	};
 	
 	$scope.refreshSamples = function(){
 		if($scope.form.projectCode){
 			lists.refresh.samples({projectCode:$scope.form.projectCode});
 		}
 	};
-	
-	
+
 	$scope.searchSamples = function(query){
 		return search(lists.getSamples(), query);
-	}
+	};
 	
-	$scope.search = function(){
-		if($scope.form.type){ 		
-			var jsonSearch = {};			
-			jsonSearch.stateCode = "IW-P";	//default state code for containers		
+	$scope.search = function(){	
+		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.processType){
+			var jsonSearch = {};
 			if($scope.form.projectCode){
-				jsonSearch.projectCodes = $scope.form.projectCode;
+				jsonSearch.projectCode = $scope.form.projectCode;
 			}			
+			
 			if($scope.form.sampleCode){
-				jsonSearch.sampleCodes = $scope.form.sampleCode;
-			}			
-			if($scope.form.type){
-				jsonSearch.processTypeCode = $scope.form.type.code;
-			}			
-			$scope.datatable.search(jsonSearch);
-		}							
-	}
+				jsonSearch.sampleCode = $scope.form.sampleCode;
+			}				
+			
+			if($scope.form.processType){
+				jsonSearch.processTypeCode = $scope.form.processType.code;
+			}
+			
+			$scope.datatable.search(jsonSearch);						
+		}
+	};
 	
 	$scope.addToBasket = function(containers){
-		for(var i = 0; i < containers.length; i++){
-			for(var j = 0; j < containers[i].sampleCodes.length; j++){ //one process by sample
-				var processus = {
-						projectCode: containers[i].projectCodes[0],
-						sampleCode: containers[i].sampleCodes[j],
-						containerInputCode: containers[i].code,
-						support: containers[i].support,
-						typeCode:$scope.form.type.code,
-						properties:{}
-				};			
-				this.basket.add(processus);
+		if($scope.form.processType){
+			for(var i = 0; i < containers.length; i++){
+				for(var j = 0; j < containers[i].sampleCodes.length; j++){ //one process by sample
+					var processus = {
+							projectCode: containers[i].projectCodes[0],
+							sampleCode: containers[i].sampleCodes[j],
+							containerInputCode: containers[i].code,
+							support: containers[i].support,
+							typeCode:$scope.form.processType.code,
+							categoryCode:$scope.form.processCategory.code,
+							properties:{}
+					};			
+					this.basket.add(processus);
+				}
 			}
+			$scope.addTabs({label:$scope.form.processType.name,href:$scope.form.processType.code,remove:false});
 		}
-		if($scope.form.type){
-			$scope.addTabs({label:$scope.form.type.name,href:$scope.form.type.code,remove:false});
-		}
-	}
-}
+	};
+};
 SearchContainerCtrl.$inject = ['$scope', 'datatable','basket','lists','$filter'];
 
 function ListNewCtrl($scope, datatable) {
 	
 	$scope.datatableConfig = {
-			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns($scope.getForm().type.code).url,
+			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns($scope.getForm().processType.code).url,
 			pagination:{
 				active:false
 			},		
@@ -223,7 +215,7 @@ function ListNewCtrl($scope, datatable) {
 				active:false
 			},
 			order:{
-				mode:'local', //or 
+				mode:'local',
 				active:true,
 				by:'containerInputCode'
 			},
@@ -259,8 +251,6 @@ function ListNewCtrl($scope, datatable) {
 		$scope.basket = $scope.getBasket();
 		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);		
 		$scope.datatable.selectAll(true);
-		//$scope.datatable.setEditColumn();
-		
-	}
+	};
 };
 ListNewCtrl.$inject = ['$scope', 'datatable'];

@@ -1,5 +1,7 @@
 package controllers.processes.tpl;
 
+import static play.data.Form.form;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 
 import play.Routes;
+import play.data.Form;
 import play.i18n.Messages;
 import play.libs.Json;
 import play.mvc.Result;
@@ -24,9 +27,12 @@ import views.html.processes.newProcesses;
 import views.html.processes.search;
 import views.html.processes.searchContainers;
 import controllers.CommonController;
+import controllers.processes.api.ProcessesSearchForm;
 
 public class Processes extends CommonController{
 
+	final static Form<ProcessesSearchForm> processesSearchForm = form(ProcessesSearchForm.class);
+	
 	public static Result home(String code){
 		return ok(home.render(code));
 	}
@@ -39,7 +45,10 @@ public class Processes extends CommonController{
 		return ok(search.render());
 	}
 	
-	public static Result searchColumns(String processTypeCode){
+	public static Result searchColumns(){
+		Form<ProcessesSearchForm> processesFilledForm = filledFormQueryString(processesSearchForm,ProcessesSearchForm.class);
+		ProcessesSearchForm processesSearch = processesFilledForm.get();
+		
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("typeCode", Messages.get("processes.table.typeCode"), true, false, false));
@@ -50,9 +59,11 @@ public class Processes extends CommonController{
 		columns.add(DatatableHelpers.getColumn("resolutionCode", Messages.get("processes.table.resolutionCode"), true, false, false));
 		columns.add( DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("processes.table.creationDate"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("currentExperimentTypeCode", Messages.get("processes.table.currentExperimentTypeCode"), true, false, false));
-
-		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode,true));
-
+		
+		if(processesSearch.typeCode != null){
+			columns.addAll(getPropertiesDefinitionsColumns(processesSearch.typeCode ,true));
+		}
+		
 		return ok(Json.toJson(columns));
 	}
 

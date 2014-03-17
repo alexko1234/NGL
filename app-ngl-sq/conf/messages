@@ -21,8 +21,20 @@ containers.table.createUser = Création par
 containers.table.valid = Valide
 containers.table.supportCode = Code Support
 
-containers.select.state =  -- selectionner un état --
-containers.select.categoryCode =  -- selectionner un type --
+containers.select.state =  Sélect. un état
+containers.select.categoryCode =  Sélect. un type
+containers.select.categorySupportCode =  Sélect. un type de support--
+
+#search
+search.placeholder.projects = Sélect. des projets
+search.placeholder.samples = Sélect. des échantillons
+search.placeholder.project = Sélect. un projet
+search.placeholder.sample = Sélect. un échantillon
+search.placeholder.fromDate = Run depuis le (jj/mm/aaaa)
+search.placeholder.toDate = Run jusqu''au (jj/mm/aaaa)
+search.placeholder.states = Sélect. des états
+search.placeholder.instruments = Sélect. des instruments
+search.placeholder.types = Sélect. des types
 
 #processes
 processes.title = Processus
@@ -44,9 +56,10 @@ processes.table.creationDate = Date creation
 processes.table.comments = Commentaires
 processes.table.currentExperimentTypeCode = Code du type experience courante
 
-processes.select.processType = -- selectionner un type de processus --
-processes.select.project = -- selectionner un projet --
-processes.select.sample = -- selectionner un échantillon --
+processes.select.processType = Sélect. un type de processus
+processes.select.processCategory = Sélect. une categorie de processus
+processes.select.project = Sélect. un projet
+processes.select.sample = Sélect. un échantillon
 
 
 #experiments
@@ -58,7 +71,7 @@ experiments.create = Créer une experience
 experiments.save = Sauvegarder
 experiments.save_all = Sauvegarder tout
 experiments.edit = Editer
-experiments.unedit = Désactiver l''édition
+experiments.unedit = Désactiver l'édition
 experiments.noCode = Aucun code
 experiments.addqc = Ajouter QC
 experiments.addpurif = Ajouter purification
@@ -83,12 +96,13 @@ experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée
 experiments.msg.details = [détails]
 
-experiments.select.experimentType = -- selectionner un type d'experience --
-experiments.select.instrument = -- Selectionner un instrument --
-experiments.select.resolutions = -- Selectionner une resolution --
-experiments.select.protocols = -- Selectionner un protocole --
-experiments.select.intrumentUsedType = -- Selectionner un Type d'instrument --
-experiments.select.intrumentCategory = -- Selectionner un Type de contenant --
+experiments.select.experimentType = Sélect. un type d'experience
+experiments.select.instrument = Sélect. un instrument
+experiments.select.resolutions = Sélect. une resolution
+experiments.select.protocols = Sélect. un protocole
+experiments.select.intrumentUsedType = Sélect. un Type d'instrument
+experiments.select.intrumentCategory = Sélect. un Type de contenant
+experiments.select.experimentTypeCode = Sélect. un Type d'experiences
 
 experiments.intrumentCategory = Contenant sortie
 
@@ -105,5 +119,14 @@ limsdao.error.emptymapping =Pas de correspondance avec les paramètres suivants 
 
 #initialdata
 initialdata.error.sampleNotExist=Le container {0} 
+
+#button
+button.search = Rechercher
+button.reset = Réinitialiser
+button.validate = Sauvegarder
+button.cancel = Annuler
+button.readsets.show = Voir Readsets
+button.readsets.valuation = Evaluer Readsets
+button.edit = Editer
 
 date.format=dd/MM/yyyy

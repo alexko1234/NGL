@@ -20,15 +20,15 @@
 						<li class="dropdown @("active".when(nav.startsWith("processes")))">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("processes.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
-								<li class="@("active".when(nav == "processes.new"))"><a href="@controllers.processes.tpl.routes.Processes.home("new")">@Messages("processes.menu.creation")</a></li>
 								<li class="@("active".when(nav == "processes.search"))"><a href="@controllers.processes.tpl.routes.Processes.home("search")">@Messages("processes.menu.search")</a></li>																				
-							</ul>
+								<li class="@("active".when(nav == "processes.new"))"><a href="@controllers.processes.tpl.routes.Processes.home("new")">@Messages("processes.menu.creation")</a></li>
+								</ul>
   						</li>	
   						<li class="dropdown @("active".when(nav.startsWith("experiments")))">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("experiments.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
+								<li class="@("active".when(nav ==  "experiments.search"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("search")">@Messages("experiments.menu.search")</a></li>
 								<li class="@("active".when(nav ==  "experiments.new"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("new")">@Messages("experiments.menu.creation")</a></li>
-								<li class="@("active".when(nav ==  "experiments.search"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("search")">@Messages("experiments.menu.search")</a></li>																				
 							</ul>
   						</li>						
 			</ul>

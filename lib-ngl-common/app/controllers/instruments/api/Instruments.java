@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.instrument.description.Instrument;
-import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.instrument.description.InstrumentQueryParams;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import play.data.Form;
@@ -18,10 +16,10 @@ import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
 
 public class Instruments extends CommonController{
-	final static Form<InstrumentsSearchForm> processTypeForm = form(InstrumentsSearchForm.class);
+	final static Form<InstrumentsSearchForm> instrumentForm = form(InstrumentsSearchForm.class);
 
 	public static Result list() throws DAOException{
-		Form<InstrumentsSearchForm> processTypeFilledForm = filledFormQueryString(processTypeForm,InstrumentsSearchForm.class);
+		Form<InstrumentsSearchForm> processTypeFilledForm = filledFormQueryString(instrumentForm,InstrumentsSearchForm.class);
 		InstrumentsSearchForm instrumentsQueryParams = processTypeFilledForm.get();
 
 		List<Instrument> instruments;

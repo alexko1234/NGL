@@ -141,6 +141,10 @@ public class Processes extends CommonController{
 		if(StringUtils.isNotEmpty(processesSearch.typeCode)){
 			queryElts.add(DBQuery.is("typeCode", processesSearch.typeCode));
 		}
+		
+		if(StringUtils.isNotEmpty(processesSearch.categoryCode)){
+			queryElts.add(DBQuery.is("categoryCode", processesSearch.categoryCode));
+		}
 
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new Query[queryElts.size()]));

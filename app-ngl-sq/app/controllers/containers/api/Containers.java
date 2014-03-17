@@ -84,11 +84,6 @@ public class Containers extends CommonController {
 
 		DBQuery.Query query = getQuery(containersSearch);
 		if(containersSearch.datatable){
-			/*BasicDBObject keys = new BasicDBObject();
-			keys.put("_id", 0);//Don't need the _id field
-			keys.put("support", 1);
-			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
-			List<Container> containers = results.toList();*/
 			List<LocationOnContainerSupport> containerSupports = new ArrayList<LocationOnContainerSupport>();
 			
 			BasicDBObject keysSupport = new BasicDBObject();
