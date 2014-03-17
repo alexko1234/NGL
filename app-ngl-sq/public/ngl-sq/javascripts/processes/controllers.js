@@ -13,7 +13,7 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 				"type":"text"
 			},
 			{
-				"header":Messages("experiments.table.projectCodes"),
+				"header":Messages("processes.table.projectCodes"),
 				"property":"projectCodes",
 				"order":true,
 				"hide":true,

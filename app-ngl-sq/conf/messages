@@ -48,6 +48,7 @@ processes.save = Sauvegarder
 processes.table.code = Code Processus
 processes.table.typeCode = Type de Processus
 processes.table.projectCode = Code Projet
+processes.table.projectCodes = Code Projets
 processes.table.sampleCode = Code Sample
 processes.table.containerInputCode = Code Container Initial
 processes.table.stateCode = Code Etat
