@@ -237,14 +237,14 @@ angular.module('commonsServices', []).
 			    	  	+'</ul>'
   		    			+'</div>'
   		    			+'<div class="dropdown" ng-switch-when="true">'
-  				        +'<input type="text" ng-class="inputClass" data-toggle="dropdown" role="button" value="{{selectedItemLabel()}}"/>'
+  				        +'<input type="text" ng-class="inputClass" data-toggle="dropdown" role="button" value="{{selectedItemLabel()}}" style="cursor:context-menu;"/>'
   				        +'<ul class="dropdown-menu"  role="menu">'
   				        +'<li ng-repeat-start="item in getItems()" ng-if="groupBy(item, $index)" class="divider"></li>'
   				        +'<li class="dropdown-header" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></li>'
-		    	  		+'<li ng-repeat-end  ng-class="item.class" ng-click="selectItem(item, $event)">'
+		    	  		+'<li ng-repeat-end ng-click="selectItem(item, $event)">'
 			    	  	+'<a href="#">'
 		    	  		+'<i class="fa fa-check pull-right" ng-show="item.selected"></i>'
-		    	  		+'<span class="text" ng-bind="itemLabel(item)"></span>'		    	  		
+		    	  		+'<span class="text" ng-bind="itemLabel(item)" style="margin-right:30px;"></span>'		    	  		
 		    	  		+'</a></li>'
 		    	  		+'</ul>'
 		    	  		+'</div>'
@@ -390,7 +390,6 @@ angular.module('commonsServices', []).
 		      	    	if(items){
 			      	    	for(var i = 0; i < items.length; i++){
 			      	    		var item = items[i];
-			      	    		item.class = "";
 			      	    		item.selected = false;
 		      		    		for(var j = 0; j < modelValues.length; j++){
 			      	    			var modelValue = modelValues[j];
@@ -398,7 +397,6 @@ angular.module('commonsServices', []).
 			      	    				if(optionsConfig.groupByGetter){
 			      	    					groupByLabels[optionsConfig.groupByGetter(item)]=false;
 			      	    				}
-				      	    			item.class = "selected";
 				      	    			item.selected = true;
 				      		    		selectedLabels.push(scope.itemLabel(item));
 				      	    		}
