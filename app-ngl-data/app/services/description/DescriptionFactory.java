@@ -69,6 +69,22 @@ public class DescriptionFactory {
 	}
 
 	/**
+	 * Create a resolution category from the resolutionService
+	 * @param name
+	 * @param code
+	 * @param displayOrder
+	 * @return
+	 * @throws DAOException
+	 */
+	public static ResolutionCategory newResolutionCategory(String name, String code, Short displayOrder) throws DAOException {		
+		ResolutionCategory  rc = new ResolutionCategory();
+		rc.code = code;
+		rc.name = name;
+		rc.displayOrder = displayOrder;
+		return rc; 
+	}
+
+	/**
 	 * 
 	 * @param name
 	 * @param code
@@ -282,13 +298,14 @@ public class DescriptionFactory {
 	 * @return
 	 */
 	public static Resolution newResolution(String name, String code,
-		ResolutionCategory category, List<Institute> institutes, List<ObjectType> objTypes) {
+		ResolutionCategory category, List<Institute> institutes, List<ObjectType> objTypes, Short displayOrder) {
 		Resolution r = new Resolution();
 		r.code = code;
 		r.name = name;
 		r.category = category;
 		r.institutes = institutes;
 		r.objectTypes = objTypes;
+		r.displayOrder = displayOrder;
 		return r;
 	}
 	

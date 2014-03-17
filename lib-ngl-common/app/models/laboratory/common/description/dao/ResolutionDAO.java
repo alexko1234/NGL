@@ -55,6 +55,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("code", resolution.code);
 		parameters.put("name", resolution.name);
+		parameters.put("display_order", resolution.displayOrder);
 		parameters.put("fk_resolution_category", resolution.category.id);
 
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
@@ -69,8 +70,8 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 
 	@Override
 	public void update(Resolution resolution) throws DAOException {
-		String sql = "UPDATE resolution SET code=?, name=? WHERE id=?";
-		jdbcTemplate.update(sql, resolution.code, resolution.name, resolution.id);
+		String sql = "UPDATE resolution SET code=?, name=?, display_order=? WHERE id=?";
+		jdbcTemplate.update(sql, resolution.code, resolution.name, resolution.displayOrder, resolution.id);
 	}
 	
 	
@@ -119,17 +120,18 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 
 	public List<Resolution> findByTypeCode(String typeCode)  throws DAOException {	
 		String sql = sqlCommon +
-				"inner join common_info_type_resolution cr ON cr.fk_resolution=t.id "+
-				"inner join common_info_type c on c.id = cr.fk_common_info_type "+
+				" inner join common_info_type_resolution cr ON cr.fk_resolution=t.id"+
+				" inner join common_info_type c on c.id = cr.fk_common_info_type"+
+				" inner join resolution_category rc on rc.id = t.fk_resolution_category"+
 				  DAOHelpers.getCommonInfoTypeSQLForInstitute("c")+
-				" where c.code=?";
+				" where c.code=? order by rc.display_order, t.display_order";
 		return initializeMapping(sql, new SqlParameter("c.code", Types.VARCHAR)).execute(typeCode);	
 	}
 	
 	public List<Resolution> findByCommonInfoTypeId(long idCommonInfoType) {
 		String sql = sqlCommon+
-				"inner join common_info_type_resolution cr ON cr.fk_resolution=t.id "+
-				"WHERE cr.fk_common_info_type=? ";
+				" inner join common_info_type_resolution cr ON cr.fk_resolution=t.id"+
+				" WHERE cr.fk_common_info_type=? ";
 		BeanPropertyRowMapper<Resolution> mapper = new BeanPropertyRowMapper<Resolution>(Resolution.class);
 		return this.jdbcTemplate.query(sql, mapper, idCommonInfoType);
 	}
@@ -138,18 +140,19 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
-		String sql = sqlCommon+" inner join resolution_category r on r.id = t.fk_resolution_category WHERE r.code = ?";
+		String sql = sqlCommon+
+				" inner join resolution_category rc on rc.id = t.fk_resolution_category"+
+				" WHERE rc.code = ? order by rc.display_order, t.display_order";
 		return initializeMapping(sql, new SqlParameter("code", Types.VARCHAR)).execute(code);		
 	}
 
 	public boolean isCodeExistForTypeCode(String code, String typeCode) throws DAOException {		
 		String sql = sqlCommon +
-				"inner join common_info_type_resolution cr ON cr.fk_resolution=t.id "+
-				"inner join common_info_type c on c.id =cr.fk_common_info_type "+
+				" inner join common_info_type_resolution cr ON cr.fk_resolution=t.id"+
+				" inner join common_info_type c on c.id =cr.fk_common_info_type"+
 				  DAOHelpers.getCommonInfoTypeSQLForInstitute("c")+
 				" where t.code=? and c.code=?";
-		Logger.debug(sql);
-
+		//Logger.debug(sql);
 		return( initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR),
 				 new SqlParameter("c.code", Types.VARCHAR)).findObject(code, typeCode) != null )? true : false;	
 	}
@@ -159,9 +162,10 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 			throw new DAOException("code is mandatory");
 		}
 		String sql = sqlCommon+
-				"inner join resolution_object_type ro ON ro.fk_resolution=t.id "+
-				"inner join object_type o ON ro.fk_object_type=o.id "+
-				"WHERE o.code=?";		
+				" inner join resolution_object_type ro ON ro.fk_resolution=t.id"+
+				" inner join object_type o ON ro.fk_object_type=o.id"+
+				" inner join resolution_category rc on rc.id = t.fk_resolution_category"+
+				" WHERE o.code=? order by rc.display_order, t.display_order";		
 		return initializeMapping(sql, new SqlParameter("o.code", Types.VARCHAR)).execute(objectTypeCode.name());		
 	}
 	
@@ -170,8 +174,8 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 			throw new DAOException("id is mandatory");
 		}
 		String sql = sqlCommon+
-				"inner join resolution_object_type ro ON ro.fk_resolution= t.id "+
-				"WHERE ro.fk_object_type=?";		
+				" inner join resolution_object_type ro ON ro.fk_resolution= t.id"+
+				" WHERE ro.fk_object_type=?";		
 		return initializeMapping(sql, new SqlParameter("fk_object_type", Type.LONG)).execute(id);		
 	}
 

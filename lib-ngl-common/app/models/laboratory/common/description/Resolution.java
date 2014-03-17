@@ -18,6 +18,8 @@ public class Resolution extends Model<Resolution>{
 	public List<Institute> institutes;
 	public List<ObjectType> objectTypes;
 	
+	public Short displayOrder;
+	
 	
 	public static ResolutionFinder find = new ResolutionFinder();
 	
