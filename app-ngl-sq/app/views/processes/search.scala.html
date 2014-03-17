@@ -2,22 +2,27 @@
 
 @import views.html.helper._
 @form() = {
+		
+	@columnSearchForm{	
+		@formGroup{		
+			<input class="form-control" type="text" ng-model="form.projectCode" typeahead="project.code as project.name for project in lists.getProjects() | filter:$viewValue | limitTo:20" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.projects")'>
+		}
 		@formGroup{
 			<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
 				<option value="">@Messages("experiments.select.processCategory")</option>
 			</select>
+		}
+	}
+	@columnSearchForm{	
+		@formGroup{	
+			<input class="form-control" type="text" ng-model="form.sampleCode" typeahead="sample.code as sample.name for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-click="refreshSamples()" placeholder='@Messages("search.placeholder.samples")'>
 		}
 		@formGroup{
 			<select class="form-control" ng-model="form.type" ng-options="typeCode.name for typeCode in lists.getProcessTypes()" ng-change="changeTypeCode()">
 				<option value="">@Messages("processes.select.processType")</option>
 			</select>
 		}
-		@formGroup{		
-			<input class="form-control" type="text" ng-model="form.projectCode" typeahead="project.code as project.name for project in lists.getProjects() | filter:$viewValue | limitTo:20" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.projects")'>
-		}
-		@formGroup{	
-			<input class="form-control" type="text" ng-model="form.sampleCode" typeahead="sample.code as sample.name for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-click="refreshSamples()" placeholder='@Messages("search.placeholder.samples")'>
-		}
+	}
 }
 
 @searchForm(form)()()

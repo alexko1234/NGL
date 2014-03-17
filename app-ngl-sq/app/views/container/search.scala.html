@@ -2,17 +2,28 @@
 
 @import views.html.helper._
 @form() = {
+	@columnSearchForm{
+		@formGroup{		
+			<input class="form-control" type="text" ng-model="form.projectCode" typeahead="project.code as project.name for project in lists.getProjects() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.project")'>
+		}
 
 		@formGroup{
 			<select class="form-control" ng-model="form.containerSupportCategory" ng-options=" CategorySupport.code for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()">
 				<option value="">@Messages("containers.select.categorySupportCode")</option>
 			</select>
 		}
+	}
+	@columnSearchForm{
+		@formGroup{
+			<input class="form-control" type="text" ng-model="form.sampleCode"  typeahead="sample.code as sample.name for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-focus="refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>			
+		}
 		@formGroup{
 			<select class="form-control" ng-model="form.containerCategory" ng-options="CategoryCode.name for CategoryCode in lists.getContainerCategories()" ng-change="search()">
 				<option value="">@Messages("containers.select.categoryCode")</option>
 			</select>		
 		}
+	}
+	@columnSearchForm{
 		@formGroup{
 			<div class="form-control" bt-select ng-model="form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("experiments.select.experimentTypeCode")" 
 				bt-options="expType.code as expType.name for expType in lists.getExperimentTypes()"
@@ -20,17 +31,13 @@
 				ng-readonly="!experiment.experimentInformation.enabled">
 			</div>
 		}
-		@formGroup{		
-			<input class="form-control" type="text" ng-model="form.projectCode" typeahead="project.code as project.name for project in lists.getProjects() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.project")'>
-		}
-		@formGroup{
-			<input class="form-control" type="text" ng-model="form.sampleCode"  typeahead="sample.code as sample.name for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-focus="refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>			
-		}
+		
 		@formGroup{
 			<select class="form-control" ng-model="form.state" ng-options="stateCode.name for stateCode in lists.getStates()" ng-change="search()">
 				<option value="">@Messages("containers.select.state")</option>
 			</select>
 		}		
+	}
 }
 
 @searchForm(form)()()
