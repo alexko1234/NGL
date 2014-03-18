@@ -203,17 +203,15 @@ public class FindDAOTest extends AbstractTests {
 	}
 
 	@Test
-	public void pesolutionCategoryFindTest() throws DAOException {
+	public void resolutionCategoryFindTest() throws DAOException {
 		ResolutionCategory type = ResolutionCategory.find.findAll().get(0);
 		Assert.assertNotNull(type);
-		ResolutionCategory cType = ResolutionCategory.find
-				.findByCode(type.code);
+		ResolutionCategory cType = ResolutionCategory.find.findByCode(type.code);
 		Assert.assertNotNull(cType);
 		ResolutionCategory cTypeId = ResolutionCategory.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(ResolutionCategory.find.isCodeExist(""));
-		ResolutionCategoryDAO typeDAO = Spring
-				.getBeanOfType(ResolutionCategoryDAO.class);
+		ResolutionCategoryDAO typeDAO = Spring.getBeanOfType(ResolutionCategoryDAO.class);
 		Assert.assertNotNull(typeDAO.findAllForList());
 	}
 
