@@ -185,7 +185,7 @@ public class InstrumentService {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("MELISSE", "MELISSE", true, "/env/atelier/solexa_MELISSE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		instruments.add(createInstrument("MIMOSA", "MIMOSA", true, "/env/atelier/solexa_MIMOSA", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("MISEQ1", "MISEQ1", true, "/env/atelier/solexa_MISEQ1", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
+		instruments.add(createInstrument("MISEQ1", "MISEQ1", true, "/env/atelier/solexa_MISEQ1", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		return instruments;
 	}
 
@@ -229,7 +229,7 @@ public class InstrumentService {
 	
 	public static List<Instrument> getInstrumentOpgen()throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add( createInstrument("APOLLON", "APOLLON", true, "/env/cns/proj/bureautique/finishing/Optical_Mapping/APOLLON", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("APOLLON", "APOLLON", true, "/env/atelier/opgen/APOLLON", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		return instruments;
 	}
 	
