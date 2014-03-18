@@ -41,25 +41,22 @@ import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
 /**
- * Update tag and add tagCategory in the Container & Support collections
+ * Update tag in the Container (add missing values)
  * @author dnoisett
  * 
  */
 @Repository
 public class MigrationTag extends CommonController {
 	
-	private static final String CONTAINER_COLL_NAME_BCK = InstanceConstants.CONTAINER_COLL_NAME + "_BCKmigrationTag";	
-	private static final String SUPPORT_COLL_NAME_BCK = InstanceConstants.SUPPORT_COLL_NAME + "_BCKmigrationTag";
-	
+	private static final String CONTAINER_COLL_NAME_BCK = InstanceConstants.CONTAINER_COLL_NAME + "_BCKmigrationTag";		
 	private static JdbcTemplate jdbcTemplate;
-	private static DataSource dataSource;
-
-	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
-	protected static final String PROJECT_STATE_CODE_DEFAULT = "IP";
-	protected static final String IMPORT_CATEGORY_CODE="sample-import";
-	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "default-sample-cng";
+	//private static DataSource dataSource;
+	//protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
+	//protected static final String PROJECT_STATE_CODE_DEFAULT = "IP";
+	//protected static final String IMPORT_CATEGORY_CODE="sample-import";
+	//protected static final String SAMPLE_TYPE_CODE_DEFAULT = "default-sample-cng";
 	protected static final String SAMPLE_USED_TYPE_CODE = "default-sample-cng";	
-	protected static final String IMPORT_TYPE_CODE_DEFAULT = "default-import";
+	//protected static final String IMPORT_TYPE_CODE_DEFAULT = "default-import";
 	
 	
 	@Autowired
@@ -74,7 +71,6 @@ public class MigrationTag extends CommonController {
 	
 	public static List<Container> findContainer(final ContextValidation contextError) throws DAOException{
 
-		//use v_flowcell_tongl_reprise view (specific to this migration)
 		if (jdbcTemplate == null) {
 			Logger.debug("jdbcTemplate is null !!!!!!!!!");
 		}
@@ -86,9 +82,7 @@ public class MigrationTag extends CommonController {
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Container container = new Container();
-				
 				container.code=rs.getString("code");
-				//Logger.debug("Container code :"+container.code);
 				
 				if (rs.getString("project")!=null) {
 					container.projectCodes=new ArrayList<String>();
@@ -120,9 +114,11 @@ public class MigrationTag extends CommonController {
 					
 					if(rs.getString("tag")!=null) { 
 						content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+						content.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagcategory")));
 					}
 					else {
 						content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppress it at the end of the function...
+						content.properties.put("tagCategory",new PropertySingleValue("-1"));
 					}
 					
 					if(rs.getString("percent_per_lane")!=null) { 
@@ -134,11 +130,9 @@ public class MigrationTag extends CommonController {
 					
 					container.contents=new ArrayList<Content>();
 					container.contents.add(content);			
-					
 					container.sampleCodes=new ArrayList<String>();
 					container.sampleCodes.add(rs.getString("code_sample"));
 				}
-				
 				return container;
 			}
 		});       		
@@ -188,18 +182,21 @@ public class MigrationTag extends CommonController {
 				if (r.contents.get(i).properties.get("tag").value.equals("-1")) {
 					r.contents.get(i).properties.remove("tag");
 				}
+				if (r.contents.get(i).properties.get("tagCategory").value.equals("-1")) {
+					r.contents.get(i).properties.remove("tagCategory");
+				}
 				if (r.contents.get(i).properties.get("percentPerLane").value.equals("-1")) {
 					r.contents.get(i).properties.remove("percentPerLane");
 				}
 			}
 		}
-		
 		return results;
 	}
 	
 	
 	private static List<Container>  createContent(List<Container> results, int posCurrent, int posNext) throws DAOException{
 		Content content = new Content();
+		
 		content.sampleUsed=new SampleUsed();
 		content.sampleUsed.sampleCode= results.get(posNext).sampleCodes.get(0);
 		
@@ -209,11 +206,11 @@ public class MigrationTag extends CommonController {
 		content.sampleUsed.categoryCode = sampleType.category.code;
 		
 		content.properties = new HashMap<String, PropertyValue>();
-		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));		
+		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
+		content.properties.put("tagCategory",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tagCategory").value  ));
 		content.properties.put("percentPerLane",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("percentPerLane").value ));
 		
 		results.get(posCurrent).contents.add(content); 
-		
 		return results;
 	}
 
@@ -234,7 +231,7 @@ public class MigrationTag extends CommonController {
 			try {
 				newContainers = findContainer(contextError);
 			} catch (DAOException e) {
-				Logger.debug("ERROR in findContainer()");
+				Logger.debug("ERROR in findContainer():" + e.getMessage());
 			}
 			
 			
@@ -246,7 +243,7 @@ public class MigrationTag extends CommonController {
 			for (Container newContainer : newContainers) {
 				for (Content newContent : newContainer.contents) {
 					if (newContent.properties.get("tag") != null) {
-						m1Value = (String) newContent.properties.get("tag").value;
+						m1Value = (String) newContent.properties.get("tag").value + "_" + (String) newContent.properties.get("tagCategory").value;
 						m1.put(newContent.sampleUsed.sampleCode, m1Value);
 					}
 				}
@@ -256,6 +253,7 @@ public class MigrationTag extends CommonController {
 			
 			
 			String newTag = "";
+			String tagCategory = "";
 			String strValue = "";
 			Boolean bChangeTag;
 			
@@ -277,6 +275,7 @@ public class MigrationTag extends CommonController {
 						if (strValue != null && strValue.contains("_")) {
 							
 							newTag = strValue.substring(0, strValue.indexOf("_")); 
+							tagCategory = strValue.substring(strValue.indexOf("_")+1);
 							
 							if (newTag != "") {
 								
@@ -284,8 +283,9 @@ public class MigrationTag extends CommonController {
 								
 									PropertySingleValue pTag = new PropertySingleValue();
 									pTag.value = newTag;
+									PropertySingleValue pTagCategory = new PropertySingleValue();
+									pTagCategory.value = tagCategory;
 									
-									//update tag only
 									if (oldContainer.contents.get(i).properties.get("tag") != null) {
 										oldContainer.contents.get(i).properties.get("tag").value = newTag;
 									}
@@ -294,16 +294,17 @@ public class MigrationTag extends CommonController {
 										
 										oldContainer.contents.get(i).properties.put("tag", pTag);
 									}
+									oldContainer.contents.get(i).properties.put("tagCategory", pTagCategory);
 									
 									bChangeTag = true;
 																	
 								}
 								else {
-									Logger.debug("No properties for this container, container.code=" + oldContainer.code + ", i=" + i );
+									Logger.error("No properties for this container, container.code=" + oldContainer.code + ", i=" + i );
 								}
 							}
 							else {
-								Logger.debug("newTag=" + newTag + ", container.code=" + oldContainer.code + ", i=" + i ); 
+								Logger.info("newTag=" + newTag + ", container.code=" + oldContainer.code + ", i=" + i ); 
 							}
 																					
 						}
@@ -312,8 +313,8 @@ public class MigrationTag extends CommonController {
 				}
 
 				if (bChangeTag) {
-					Logger.info("update container !");
-					WriteResult r = (WriteResult)MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
+					//Logger.info("update container !");
+					WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
 						DBUpdate.set("contents", oldContainer.contents));
 					
 					if(StringUtils.isNotEmpty(r.getError())){

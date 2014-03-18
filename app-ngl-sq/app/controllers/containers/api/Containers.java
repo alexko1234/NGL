@@ -158,7 +158,7 @@ public class Containers extends CommonController {
 		}
 
 		if(StringUtils.isNotEmpty(containersSearch.stateCode)){
-			queryElts.add(DBQuery.is("stateCode", containersSearch.stateCode));
+			queryElts.add(DBQuery.is("state.code", containersSearch.stateCode));
 		}
 
 		if(StringUtils.isNotEmpty(containersSearch.categoryCode)){

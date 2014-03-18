@@ -9,11 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import controllers.CommonController;
+
 import play.Logger;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
@@ -56,11 +61,18 @@ public class ContainerHelper {
 
 		container.comments=new ArrayList<Comment>();				
 		container.comments.add(new Comment(rs.getString("comment")));
-		container.stateCode=containerStatecode;
-		container.valid=null;
+		
+		container.state = new State(); 
+		container.state.code=containerStatecode;
+		container.state.user = CommonController.getCurrentUser();
+		container.state.date = new Date();
+
+		
+		container.valuation = new Valuation(); 
+		container.valuation.valid=TBoolean.UNSET; // instead of valid=null;
 
 		//TODO 
-		container.support=ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nbContainer"),rs.getString("codeSupport"),rs.getString("column"),rs.getString("line"));
+		container.support=ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nbContainer"), rs.getString("codeSupport"), rs.getString("column"), rs.getString("line"));
 
 		container.properties= new HashMap<String, PropertyValue>();
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("limsCode")));

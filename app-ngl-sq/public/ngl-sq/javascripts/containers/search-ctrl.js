@@ -4,12 +4,12 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 	$scope.lists = lists;
 	
 	$scope.datatableConfig = {	
-		columns:[
-			{
-				"header":Messages("containers.table.supportCode"),
-				"property":"support.supportCode",
-				"order":true,
-				"type":"text"
+			columns:[
+				{
+					"header":Messages("containers.table.supportCode"),
+					"property":"support.supportCode",
+					"order":true,
+					"type":"text"
 			},
 			{
 				"header":Messages("containers.table.categoryCode"),
@@ -49,13 +49,13 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 			},
 			{
 				"header":Messages("containers.table.valid"),
-				"property":"valid",
+				"property":"valuation.valid",
 				"order":true,
 				"type":"text"
 			},
 			{
 				"header":Messages("containers.table.stateCode"),
-				"property":"stateCode",
+				"property":"state.code",
 				"order":true,
 				"type":"text"
 			},

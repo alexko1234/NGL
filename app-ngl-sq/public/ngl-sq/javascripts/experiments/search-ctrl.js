@@ -33,15 +33,15 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 				"type":"text"
 			},
 			{
-				"header":Messages("containers.table.valid"),
-				"property":"valid",
+				"header":Messages("containers.table.valuation.valid"),
+				"property":"valuation.valid",
 				"order":true,
 				"hide":true,
 				"type":"text"
 			},
 			{
-				"header":Messages("containers.table.stateCode"),
-				"property":"stateCode",
+				"header":Messages("containers.table.state.code"),
+				"property":"state.code",
 				"order":true,
 				"hide":true,
 				"type":"text"

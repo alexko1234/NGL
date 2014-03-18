@@ -105,7 +105,9 @@ public class RunMockHelper {
 		s.categoryCode = "sampleCategory";
 		s.name = "sampleName";
 		s.referenceCollab = "Ref collab";
-		s.valid = TBoolean.UNSET;
+		
+		s.valuation = new Valuation();
+		s.valuation.valid = TBoolean.UNSET;
 		
 		List<String> lp = new ArrayList<String>();
 		lp.add("ProjectCode");

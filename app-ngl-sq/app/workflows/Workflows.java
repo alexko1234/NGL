@@ -28,7 +28,7 @@ public class Workflows {
 	public static void setContainerAvailable(String containerCode,String processTypeCode){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerCode);
 		
-		if(container != null && (container.stateCode.equals("IW-P") || container.stateCode.equals("N"))){
+		if ( container != null && container.state != null && (container.state.code.equals("IW-P") || container.state.code.equals("N")) ) {
 			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"stateCode", "A");
 			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"processTypeCode", processTypeCode);
 		}
@@ -41,7 +41,7 @@ public class Workflows {
 	public static void setContainerAvailable(ContainerUsed containerUsed){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
 		
-		if(container != null && (container.stateCode.equals("IW-P") || container.stateCode.equals("N"))){
+		if ( container != null && container.state != null && (container.state.code.equals("IW-P") || container.state.code.equals("N")) ) {
 			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"stateCode", "A");
 		}
 	}
@@ -54,7 +54,7 @@ public class Workflows {
 		for(ContainerUsed containerUsed:inputContainers){
 			Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
 			
-			if(container != null && (container.stateCode.equals("IWE"))){
+			if(container != null && container.state != null && (container.state.code.equals("IWE"))){
 				MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"stateCode", "IU");
 			}
 		}	
@@ -85,7 +85,7 @@ public class Workflows {
 	public static void setContainerInStock(ContainerUsed containerUsed){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
 			
-		if(container != null && (container.stateCode.equals("IU"))){
+		if (container != null && container.state != null && (container.state.code.equals("IU")) ) {
 				MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"stateCode", "IS");
 		}
 	}
@@ -97,7 +97,7 @@ public class Workflows {
 	public static void setContainerUnavailable(ContainerUsed containerUsed){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
 		
-		if(container != null && (container.stateCode.equals("IU"))){
+		if (container != null && container.state != null && (container.state.code.equals("IU")) ) {
 			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"stateCode", "UN");
 		}
 	}
@@ -110,7 +110,7 @@ public class Workflows {
 		for(ContainerUsed containerUsed:inputContainers){
 			Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
 			
-			if(container != null && (container.stateCode.equals("A"))){
+			if (container != null && container.state != null && (container.state.code.equals("A")) ) {
 				MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"stateCode", "IWE");
 			}
 		}	

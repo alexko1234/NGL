@@ -14,6 +14,7 @@ import validation.ContextValidation;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.utils.InstanceConstants;
@@ -50,7 +51,10 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 		container.traceInformation.createUser = CommonController.getCurrentUser();
 		
 		//container.support.categoryCode
-		container.stateCode="N";
+		container.state = new State(); 
+		container.state.code="N";
+		container.state.user = container.traceInformation.createUser;
+		container.state.date = container.traceInformation.creationDate;
 		
 
 		for(int i=0;i<inputContainers.size();i++){

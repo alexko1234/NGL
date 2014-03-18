@@ -1,16 +1,20 @@
 package models.laboratory.experiment.instance;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+
+import controllers.CommonController;
 
 import validation.ContextValidation;
 
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
 import models.utils.instance.ContainerHelper;
@@ -42,7 +46,12 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 			ContainerHelper.addContent(container, outputContainer, experiment);
 			
 			ContainerHelper.generateCode(outputContainer);
-			outputContainer.stateCode="N";
+			
+			outputContainer.state = new State(); 
+			outputContainer.state.code="N";
+			outputContainer.state.user = CommonController.getCurrentUser();
+			outputContainer.state.date = new Date();
+
 			
 			//TODO copy properties in ContainerOut and Container
 

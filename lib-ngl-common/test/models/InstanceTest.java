@@ -3,15 +3,17 @@ package models;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.State;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
@@ -42,6 +44,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import controllers.CommonController;
+
 import play.Logger;
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
@@ -60,7 +64,7 @@ public class InstanceTest extends AbstractTests{
 	static ExperimentType sexpExperimentType;
 	static InstrumentUsedType sIntrumentUsedType;
 	static ContainerCategory sContainerCategory;
-	static State sState;
+	static models.laboratory.common.description.State sState;
 	static Resolution sResolution;
 
 	@AfterClass
@@ -144,11 +148,11 @@ public class InstanceTest extends AbstractTests{
 			}
 			sContainerCategory=ContainerCategory.find.findByCode("containerCategory");
 
-			sState =State.find.findByCode("Etatcontainer");
+			sState = models.laboratory.common.description.State.find.findByCode("Etatcontainer");
 			if(sState==null){
 				sState=DescriptionHelper.getState("Etatcontainer");
 				sState.save();
-				sState =State.find.findByCode("Etatcontainer");
+				sState = models.laboratory.common.description.State.find.findByCode("Etatcontainer");
 			}
 
 			sResolution=Resolution.find.findByCode("Resolutioncontainer");
@@ -187,7 +191,12 @@ public class InstanceTest extends AbstractTests{
 		project.traceInformation.setTraceInformation("test");
 		project.typeCode="projectType";
 		project.categoryCode="categoryProject";
-		project.stateCode="EtatprojectType";
+		
+		project.state = new State(); 
+		project.state.code="EtatprojectType";
+		project.state.user = "test";
+		project.state.date = new Date();
+				
 
 		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
 
@@ -202,9 +211,9 @@ public class InstanceTest extends AbstractTests{
 		ProjectType projectType=project.getProjectType();
 		assertThat(projectType).isNotNull();
 
-		assertThat(project.getState()).isNotNull();
-		assertThat(project.getState().code).isEqualTo("EtatprojectType");
-
+		assertThat(project.state).isNotNull();
+		assertThat(project.state.code).isEqualTo("EtatprojectType");
+		assertThat(project.state.user).isEqualTo("test");
 	}
 
 	//@Test
@@ -213,7 +222,10 @@ public class InstanceTest extends AbstractTests{
 
 		sample.name="sampleName";
 		sample.referenceCollab="Ref collab";
-		sample.valid=TBoolean.UNSET;
+		
+		sample.valuation= new Valuation(); 
+		sample.valuation.valid = TBoolean.UNSET;
+		
 
 		sample.categoryCode="sampleCategory";
 		sample.typeCode="sampleType";
@@ -256,8 +268,18 @@ public class InstanceTest extends AbstractTests{
 		container.sampleCodes=new ArrayList<String>();
 		container.sampleCodes.add("SampleCode");
 
-		container.stateCode="Etatcontainer";
-		container.valid=TBoolean.FALSE;
+		container.state = new State(); 
+		container.state.code="Etatcontainer";
+		container.state.user = CommonController.getCurrentUser();
+		container.state.date = new Date();
+
+		
+		
+		container.valuation = new Valuation();
+		container.valuation.valid = TBoolean.FALSE;
+		container.valuation.user = CommonController.getCurrentUser();
+		container.valuation.date = new Date(); 
+		
 		container.resolutionCode="Resolutioncontainer";
 
 		container.contents=new ArrayList<Content>();
@@ -287,7 +309,7 @@ public class InstanceTest extends AbstractTests{
 		assertThat(container.projectCodes).isNotEmpty();
 		assertThat(container.projectCodes.get(0)).isEqualTo("ProjectCode");
 
-		assertThat(container.stateCode).isEqualTo("Etatcontainer");
+		assertThat(container.state.code).isEqualTo("Etatcontainer");
 		assertThat(container.resolutionCode).isEqualTo("Resolutioncontainer");
 
 		assertThat(container.sampleCodes).isNotEmpty();

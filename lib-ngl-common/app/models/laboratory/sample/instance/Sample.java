@@ -7,6 +7,7 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
@@ -52,7 +53,7 @@ public class Sample extends DBObject implements IValidation{
 	public String referenceCollab; 
 	public Map<String,PropertyValue> properties;
 	// Valid taxon
-	public TBoolean valid;
+	public Valuation valuation;
 	//public List<CollaboratorInvolve> collaborators;
 	public String taxonCode;
 

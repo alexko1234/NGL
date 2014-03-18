@@ -7,11 +7,12 @@ import java.util.Map;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.State;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.project.instance.Project;
@@ -53,8 +54,8 @@ public class Container extends DBObject implements IValidation {
 	//ContainerCategory Ref
 	public String categoryCode;
 
-	public String stateCode;
-	public TBoolean valid;
+	public State state;
+	public Valuation valuation;
 	// Resolution Ref
 	public String resolutionCode; //used to classify the final state (ex : ) 
 
@@ -133,11 +134,6 @@ public class Container extends DBObject implements IValidation {
 
 
 	@JsonIgnore
-	public State getState(){
-		return new HelperObjects<State>().getObject(State.class, stateCode);
-	}
-
-	@JsonIgnore
 	public Resolution getResolution(){
 		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode);
 	}
@@ -149,7 +145,7 @@ public class Container extends DBObject implements IValidation {
 		
     	ContainerValidationHelper.validateId(this, contextValidation);
 		ContainerValidationHelper.validateCode(this, InstanceConstants.CONTAINER_COLL_NAME, contextValidation);
-		ContainerValidationHelper.validateStateCode(this.stateCode, contextValidation);
+		ContainerValidationHelper.validateStateCode(this.state.code, contextValidation);
 		//TODO
 		//ContainerValidationHelper.validateResolution(this.resolutionCode,contextValidation);
 		ContainerValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);

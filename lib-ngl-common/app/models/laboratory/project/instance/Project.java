@@ -3,7 +3,7 @@ package models.laboratory.project.instance;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.State;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
@@ -36,7 +36,7 @@ public class Project extends DBObject implements IValidation{
 	public String typeCode;
 	public String categoryCode;
 	public String name;
-	public String stateCode;
+	public State state;
 	public TraceInformation traceInformation;
 	public Map<String, PropertyValue> properties;
 	public List<Comment> comments;
@@ -62,10 +62,6 @@ public class Project extends DBObject implements IValidation{
 			return new HelperObjects<ProjectCategory>().getObject(ProjectCategory.class, categoryCode);
 	}
 
-	@JsonIgnore
-	public State getState(){
-			return new HelperObjects<State>().getObject(State.class, stateCode);
-	}
 
 	@Override
 	@JsonIgnore

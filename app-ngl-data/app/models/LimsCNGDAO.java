@@ -11,6 +11,9 @@ import javax.sql.DataSource;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
@@ -91,7 +94,11 @@ public class LimsCNGDAO {
 				
 				project.categoryCode=projectType.category.code;
 				
-				project.stateCode=PROJECT_STATE_CODE_DEFAULT;
+				project.state = new State(); 
+				project.state.code=PROJECT_STATE_CODE_DEFAULT;
+				project.state.user = InstanceHelpers.getUser();
+				project.state.date = new Date();
+				
 				InstanceHelpers.updateTraceInformation(project.traceInformation);
 
 				// just one comment for one project
@@ -300,9 +307,13 @@ public class LimsCNGDAO {
 					container.comments.add(new Comment(rs.getString("comment")));
 				}
 				
-				container.stateCode=CONTAINER_STATE_CODE;
+				container.state = new State(); 
+				container.state.code=CONTAINER_STATE_CODE;
+				container.state.user = InstanceHelpers.getUser();
+				container.state.date = new Date(); 
 				
-				container.valid=null;
+				container.valuation = new Valuation(); 
+				container.valuation.valid= TBoolean.UNSET;
 				
 				// define container support attributes
 				try {
@@ -346,9 +357,11 @@ public class LimsCNGDAO {
 					
 					if(rs.getString("tag")!=null) { 
 						content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+						content.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagcategory")));
 					}
 					else {
 						content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppress it at the end of the function...
+						content.properties.put("tagCategory",new PropertySingleValue("-1"));
 					}
 					
 					if(rs.getString("percent_per_lane")!=null) { 
@@ -419,6 +432,9 @@ public class LimsCNGDAO {
 				if (r.contents.get(i).properties.get("tag").value.equals("-1")) {
 					r.contents.get(i).properties.remove("tag");
 				}
+				if (r.contents.get(i).properties.get("tagCategory").value.equals("-1")) {
+					r.contents.get(i).properties.remove("tagCategory");
+				}
 				if (r.contents.get(i).properties.get("percentPerLane").value.equals("-1")) {
 					r.contents.get(i).properties.remove("percentPerLane");
 				}
@@ -448,6 +464,7 @@ public class LimsCNGDAO {
 		
 		content.properties = new HashMap<String, PropertyValue>();
 		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
+		content.properties.put("tagCategory",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tagCategory").value  ));
 		
 		content.properties.put("percentPerLane",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("percentPerLane").value ));
 		

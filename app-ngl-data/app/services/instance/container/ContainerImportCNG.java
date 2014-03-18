@@ -22,12 +22,15 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 	@Override
 	public void runImport() throws SQLException, DAOException {
 		
+		Logger.debug("start loading samples");
+		
 		List<Sample> samples = limsServices.findSampleToCreate(contextError, null) ;
 
 		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError, true);
 			
 		limsServices.updateLimsSamples(samps, contextError);
 		
+		Logger.debug("start loading containers");
 		
 		List<Container> containers = limsServices.findContainerToCreate(contextError);
 		
@@ -37,6 +40,8 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError, true);
 		
 		limsServices.updateLimsContainers(ctrs, contextError);
+		
+		Logger.debug("end loading");
 		
 	}
 

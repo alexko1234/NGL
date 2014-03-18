@@ -240,7 +240,13 @@ public class LimsCNSDAO{
 				}
 
 				project.categoryCode=PROJECT_CATEGORY_CODE;
-				project.stateCode="IP";
+				
+				project.state = new State(); 
+				project.state.code="IP";
+				project.state.user = InstanceHelpers.getUser();
+				project.state.date = new Date();
+
+				
 				InstanceHelpers.updateTraceInformation(project.traceInformation);
 				return project;
 			}
