@@ -23,6 +23,7 @@ public class ResolutionService {
 		saveResolutions(errors);	
 	}
 		
+	
 	public static void saveResolutionCategories(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<ResolutionCategory> l = new ArrayList<ResolutionCategory>();
 				
@@ -188,7 +189,7 @@ public class ResolutionService {
 		l.add(newResolution("erreur Experimental Type","LIMS-erreurExpType",ResolutionCategory.find.findByCode("LIMS"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 1));
 			
 		l.add(newResolution("% lec mergées","MERG-PercLecMerg",ResolutionCategory.find.findByCode("MERG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 1));
-		l.add(newResolution("m�diane lect mergées","MERG-MedLecMerg",ResolutionCategory.find.findByCode("MERG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 2));
+		l.add(newResolution("m�diane lect mergées","MERG-MedLecMerg",ResolutionCategory.find.findByCode("MERG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 2));
 
 		
 		
