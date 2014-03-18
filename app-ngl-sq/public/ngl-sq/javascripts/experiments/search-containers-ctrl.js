@@ -64,7 +64,7 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('new');
-			$scope.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("new").url,remove:false});
+			$scope.addTabs({label:Messages('experiments.tabs.create'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("new").url,remove:false});
 			$scope.activeTab(0);
 		}
 		

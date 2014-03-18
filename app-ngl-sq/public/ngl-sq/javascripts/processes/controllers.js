@@ -79,7 +79,7 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('new');
-			$scope.addTabs({label:Messages('processes.tabs.search'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
+			$scope.addTabs({label:Messages('processes.tabs.create'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
 			$scope.activeTab(0);
 		}
 		

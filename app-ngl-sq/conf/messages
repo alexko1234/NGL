@@ -43,6 +43,7 @@ processes.menu = Processus
 processes.menu.creation = Création
 processes.menu.search = Rechercher
 processes.tabs.search = Recherche
+processes.tabs.create = Creation
 processes.create = Crée un processus
 processes.save = Sauvegarder
 
@@ -67,7 +68,8 @@ processes.select.sample = Sélect. un échantillon
 #experiments
 experiments.title = Experiences
 experiments.menu = Experiences
-experiment.tabs.search = Rechercher
+experiments.tabs.search = Rechercher
+experiments.tabs.create = Creation
 experiments.menu.creation = Création
 experiments.menu.search = Rechercher
 experiments.create = Créer une experience

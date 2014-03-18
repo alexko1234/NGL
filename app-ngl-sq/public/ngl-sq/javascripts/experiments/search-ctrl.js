@@ -125,7 +125,7 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 	$scope.init = function(){
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('experiment.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:false});
+			$scope.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:false});
 			$scope.activeTab(0);
 		}
 		

@@ -63,7 +63,7 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 				"header":Messages("containers.table.creationDate"),
 				"property":"traceInformation.creationDate",
 				"order":true,
-				"type":"text"
+				"type":"date"
 			},
 		],
 		search:{
