@@ -15,6 +15,11 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 			edit:{
 				active:true,
 				columnMode:true
+			},
+			save:{
+				active:true,
+				url:jsRoutes.controllers.processes.api.Processes.save(),
+				mode:'remote'
 			}
 	};
 	
