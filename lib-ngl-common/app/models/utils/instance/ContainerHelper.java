@@ -64,7 +64,7 @@ public class ContainerHelper {
 		
 		container.state = new State(); 
 		container.state.code=containerStatecode;
-		container.state.user = "ngsrg";
+		container.state.user = InstanceHelpers.getUser();
 		container.state.date = new Date();
 
 		
