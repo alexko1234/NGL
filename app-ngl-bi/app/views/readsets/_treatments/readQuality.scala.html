@@ -117,37 +117,47 @@
 				    </div>
 			    </div>   
 			    <div class="col-lg-3">
-			    	<div class="thumbnail" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
+			    	<div class="panel panel-default" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
 			    	&& readset.treatments[treatments.getTreatment().code].read1.suspectedKmers != null 
-			    	&& readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value.length > 0"> 
-						<h5> @Messages("readsets.treatments.read_quality.suspectedKmers") </h5>
-						<ul class="treatmentOverflow">
+			    	&& readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value.length > 0">
+					  <!-- Default panel contents -->
+					  <div class="panel-heading">@Messages("readsets.treatments.read_quality.suspectedKmers")</div>
+					  <div class="panel-body">
+    					<ul class="treatmentOverflow">
 						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value | orderBy:'nbOccurences':true">
 							{{strValue.Kmer}} ({{strValue.nbOccurences | number}})
-						</li>
-						</ul>	
-					</div>						
+						</ul>
+ 					 </div>																
 				</div>
     		</div>
     		<div class="row">
 				<div class="col-lg-3">
-			    	<div class="thumbnail" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
-			    && readset.treatments[treatments.getTreatment().code].read1.suspectedPrimers != null && readset.treatments[treatments.getTreatment().code].read1.suspectedPrimers.value.length > 0"> 
-						<h5> @Messages("readsets.treatments.read_quality.suspectedPrimers") </h5>
-						<ul class="treatmentOverflow">
-						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.suspectedPrimers.value | orderBy:'nbOccurences':true">
-							{{strValue.primer}} ({{strValue.nbOccurences | number}})
-						</li>
-						</ul>	
-					</div>						
+			    	<div class="panel panel-default" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
+			    		&& readset.treatments[treatments.getTreatment().code].read1.suspectedPrimers != null && readset.treatments[treatments.getTreatment().code].read1.suspectedPrimers.value.length > 0"> 
+						
+					  <!-- Default panel contents -->
+					  <div class="panel-heading">@Messages("readsets.treatments.read_quality.suspectedPrimers")</div>
+					  <div class="panel-body">
+    					<ul class="treatmentOverflow">
+						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.suspectedPrimers.value">
+							{{strValue}}
+						
+						</ul>
+ 					 </div>
+					  
 				</div>
+				
+				</div>
+				
+				
+				
+				
 			</div>
 					    
  	</div>	
  	
  
-	<div class="tab-pane" id="read2">
-	
+	<div class="tab-pane" id="read2">	
 			<div class="row">
 			    <div class="col-lg-12">
 				    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
@@ -254,29 +264,41 @@
 				    </div>
 			    </div>	
 			    <div class="col-lg-3">
-			    	<div class="thumbnail" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
+			    	<div class="panel panel-default" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
 			    	&& readset.treatments[treatments.getTreatment().code].read2.suspectedKmers != null 
-			    	&& readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value.length > 0"> 
-						<h5> @Messages("readsets.treatments.read_quality.suspectedKmers") </h5>
-						<ul class="treatmentOverflow">
+			    	&& readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value.length > 0">
+					  <!-- Default panel contents -->
+					  <div class="panel-heading">@Messages("readsets.treatments.read_quality.suspectedKmers")</div>
+					  <div class="panel-body">
+    					<ul class="treatmentOverflow">
 						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value | orderBy:'nbOccurences':true">
 							{{strValue.Kmer}} ({{strValue.nbOccurences | number}})
-						</li>
-						</ul>	
-					</div>						
+						</ul>
+ 					 </div>
+					  
+				</div>
+			    
+			    
+			    		
 				</div> 
 			</div>
 			<div class="row">	   
 			   <div class="col-lg-3">
-			    	<div class="thumbnail" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
+			   	<div class="panel panel-default" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
 			    		&& readset.treatments[treatments.getTreatment().code].read2.suspectedPrimers != null && readset.treatments[treatments.getTreatment().code].read2.suspectedPrimers.value.length > 0"> 
-						<h5> @Messages("readsets.treatments.read_quality.suspectedPrimers") </h5>
-						<ul class="treatmentOverflow">
-						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.suspectedPrimers.value | orderBy:'nbOccurences':true">
-							{{strValue.primer}} ({{strValue.nbOccurences | number}})
-						</li>
-						</ul>	
-					</div>						
+						
+					  <!-- Default panel contents -->
+					  <div class="panel-heading">@Messages("readsets.treatments.read_quality.suspectedPrimers")</div>
+					  <div class="panel-body">
+    					<ul class="treatmentOverflow">
+						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.suspectedPrimers.value">
+							{{strValue}}
+						
+						</ul>
+ 					 </div>
+					  
+				</div>
+			   						
 				</div>				
 			</div>
 				    	

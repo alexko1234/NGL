@@ -154,7 +154,7 @@ function SearchFormCtrl($scope, $filter, lists){
 		}
 	};
 	
-	$scope.init = function(){		
+	$scope.init1 = function(){		
 		if ($scope.isHomePage('valuation')) {
 			//If we want to show the 2 states used to filter the data...
 			//$scope.form.stateCodes = ["IW-V","IP-V"];
@@ -173,9 +173,6 @@ function SearchFormCtrl($scope, $filter, lists){
 			$scope.reset();
 		}
 	};
-	
-	
-
 	
 };
 SearchFormCtrl.$inject = ['$scope', '$filter', 'lists'];
@@ -261,9 +258,10 @@ function SearchStateCtrl($scope,  datatable, lists) {
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:false});
+			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("state").url,remove:false});
 			$scope.activeTab(0); // desactive le lien !
 		}
+		$scope.listsTable.refresh.states({objectTypeCode:"ReadSet"});		
 	}	
 };
 
@@ -365,7 +363,7 @@ function SearchBatchCtrl($scope,  datatable) {
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:false});
+			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("batch").url,remove:false});
 			$scope.activeTab(0); // desactive le lien !
 		}
 	}	

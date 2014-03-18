@@ -11,17 +11,17 @@
 <div class="row">
 	<div class="col-md-12 col-lg-12 ">
 	<div class="page-header" ng-init="init()">
-		<div class="btn-toolbar pull-right" ng-switch="isEditMode()">
-			 <button class="btn btn-default" ng-switch-when="true" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
-			 <button class="btn btn-default" ng-switch-when="true" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
-			 <button class="btn btn-default" ng-switch-when="false"ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					
+		<div class="btn-toolbar pull-right">
+			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
+			 <button class="btn btn-default" ng-if="!isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					
 		</div>
 	
 	 	<h1  ng-switch on="run.valuation.valid">
 	
 	 	<span ng-switch-when="FALSE" class="text-danger">{{run.code}}</span> 
 	 	<span ng-switch-when="TRUE" class="text-success">{{run.code}}</span> 
-	 	<span ng-switch-default class="mute">{{run.code}}</span> 
+	 	<span ng-switch-default>{{run.code}}</span> 
 	
 		<small>   
 			<span ng-model="run.state.code" codes="state"/>
@@ -102,11 +102,15 @@
 				<p class="form-control-static">{{run.treatments.ngsrg["default"].nbBase.value | number}}</p>
 			}
 			@views.html.helper.columnLabelValue(Messages("runs.keep")){
-					<input type="checkbox"  ng-model="run.keep" ng-if="isEditMode()">									
-					<p class="form-control-static" ng-switch on="run.keep" ng-if="!isEditMode()">
-						<i ng-switch-when="true" class="fa fa-check-square-o fa-lf"></i>
-						<i ng-switch-default class="fa fa-square-o fa-lg"></i>
-					</p>																				
+				<div class="checkbox" ng-if="isEditMode()">
+ 					<label>
+					<input type="checkbox"  ng-model="run.keep" ng-if="isEditMode()">	
+					</label>
+				</div>								
+				<p class="form-control-static" ng-switch on="run.keep" ng-if="!isEditMode()">
+					<i ng-switch-when="true" class="fa fa-check-square-o fa-lf"></i>
+					<i ng-switch-default class="fa fa-square-o fa-lg"></i>
+				</p>																				
 			}
 		}
 		

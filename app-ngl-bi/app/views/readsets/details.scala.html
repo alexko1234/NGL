@@ -42,16 +42,16 @@
 <div class="row">
 	<div class="col-md-12 col-lg-12">
 	<div class="page-header" ng-init="init()">	
-		<div class="btn-toolbar pull-right"  ng-switch="isEditMode()">
-			 	<button class="btn btn-default" ng-switch-when="true" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
-			 	<button class="btn btn-default" ng-switch-when="true" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
-		 		<button class="btn btn-default" ng-switch-when="false" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
+		<div class="btn-toolbar pull-right" >
+			 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+			 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
+		 		<button class="btn btn-default" ng-if="!isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
 			</div>
 		 <h1 ng-switch on="readset.productionValuation.valid">		
 
 		 	<span ng-switch-when="FALSE" class="text-danger">{{readset.code}}</span> 
 		 	<span ng-switch-when="TRUE" class="text-success">{{readset.code}}</span> 
-		 	<span ng-switch-default class="mute">{{readset.code}}</span> 
+		 	<span ng-switch-default>{{readset.code}}</span> 
 		 	<small>   
 		 	<span ng-model="readset.state.code" codes="state"></span>
 		 	</small>
@@ -160,18 +160,28 @@
 					<p class="form-control-static">{{readset.path}}</p>
 				}
 				@columnLabelValueAdv(Messages("readsets.properties.isSentCCRT")){
-						<input type="checkbox"  ng-model="readset.properties.isSentCCRT.value" ng-if="isEditMode()">
-						<p class="form-control-static" ng-switch on="readset.properties.isSentCCRT.value" ng-if="!isEditMode()">
-							<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
-							<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
-						</p>					
+					<div class="checkbox" ng-if="isEditMode()">
+	 					<label>
+						<input type="checkbox"  ng-model="readset.properties.isSentCCRT.value" ng-if="isEditMode()">	
+						</label>
+					</div>
+					
+					<p class="form-control-static" ng-switch on="readset.properties.isSentCCRT.value" ng-if="!isEditMode()">
+						<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
+						<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
+					</p>					
 				}
 				@columnLabelValueAdv(Messages("readsets.properties.isSentCollaborator")){
-						<input type="checkbox"  ng-model="readset.properties.isSentCollaborator.value" ng-if="isEditMode()">
-						<p class="form-control-static" ng-switch on="readset.properties.isSentCollaborator.value" ng-if="!isEditMode()">
-							<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
-							<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
-						</p>															
+					<div class="checkbox" ng-if="isEditMode()">
+	 					<label>
+						<input type="checkbox"  ng-model="readset.properties.isSentCollaborator.value" ng-if="isEditMode()">	
+						</label>
+					</div>
+					
+					<p class="form-control-static" ng-switch on="readset.properties.isSentCollaborator.value" ng-if="!isEditMode()">
+						<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
+						<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
+					</p>															
 				}	
 			</div>					
 	</form>
