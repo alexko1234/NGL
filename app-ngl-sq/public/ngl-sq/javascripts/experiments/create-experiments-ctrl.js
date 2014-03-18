@@ -165,7 +165,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 
 	$scope.clearMessages  = function(){
 		$scope.message = {clazz : undefined, text : undefined, showDetails : false, isDetails : false, details : []};
-	}
+	};
 
 	$scope.experiment.instrumentInformation = {
 			instrumentUsedTypes:{},
@@ -545,7 +545,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 		}
 
 		return selectPossibleValues;
-	},
+	};
 
 
 	$scope.addInstrumentPropertiesOutputsColumns = function(){
@@ -589,7 +589,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 				}
 			}
 		
-	},
+	};
 
 	$scope.getLevel = function(levels,level){
 		if(levels != undefined){
@@ -600,34 +600,35 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			}
 		}
 		return false;
-	},
+	};
 
 	$scope.addExperimentPropertiesInputsColumns = function(){
 		var data = $scope.experiment.experimentProperties.inputs;
-
-		for(var i=0; i<data.length;i++){
-			if($scope.getLevel( data[i].levels, "ContainerIn")){		
-				if(data[i].choiceInList){
-					var possibleValues = $scope.possibleValuesToMap(data[i].possibleValues);
-				}
-				$scope.datatable.addColumn(2,$scope.datatable.newColumn(data[i].name,"inputExperimentProperties."+data[i].code+".value",true, true,true,"String",data[i].choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"}));
-			}
-		}
-
-		for(var i=0;i<$scope.datatable.getData().length;i++){
-			for(var j=0; j<data.length;j++){
-				if($scope.getLevel( data[j].levels, "ContainerIn")){
-					var getter = $parse("datatable.displayResult["+i+"].inputExperimentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code].value);
-					}else{
-						getter.assign($scope,"");
+		if(data != undefined){
+			for(var i=0; i<data.length;i++){
+				if($scope.getLevel( data[i].levels, "ContainerIn")){		
+					if(data[i].choiceInList){
+						var possibleValues = $scope.possibleValuesToMap(data[i].possibleValues);
 					}
-					//$scope.datatable.displayResult[i].outputInstrumentProperties[data[i].code].value = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[i].code].value;
+					$scope.datatable.addColumn(2,$scope.datatable.newColumn(data[i].name,"inputExperimentProperties."+data[i].code+".value",true, true,true,"String",data[i].choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"}));
 				}
 			}
-		}		
-	},
+	
+			for(var i=0;i<$scope.datatable.getData().length;i++){
+				for(var j=0; j<data.length;j++){
+					if($scope.getLevel( data[j].levels, "ContainerIn")){
+						var getter = $parse("datatable.displayResult["+i+"].inputExperimentProperties."+data[j].code+".value");
+						if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code].value);
+						}else{
+							getter.assign($scope,"");
+						}
+						//$scope.datatable.displayResult[i].outputInstrumentProperties[data[i].code].value = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[i].code].value;
+					}
+				}
+			}		
+		}
+	};
 
 	$scope.addExperimentPropertiesOutputsColumns = function(){
 		var data = $scope.experiment.experimentProperties.inputs;
@@ -667,7 +668,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 					}
 				}
 			}
-	},
+	};
 
 
 	$scope.getInstruments = function(loaded){
@@ -966,7 +967,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 							}
 						}else if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToVoid"){
 							$scope.experiment.outputVoid = true;
-							$scope.datatable.displayResult[i].inputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.resolutionCodes;
+							$scope.datatable.displayResult[i].inputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUsed.resolutionCodes;
 						}
 						
 						if(($scope.experiment.value.atomicTransfertMethods[i] != undefined && $scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany" && $scope.datatable.displayResult[i].outputContainerUseds.length > 0) || $scope.experiment.value.atomicTransfertMethods[i] != undefined && (($scope.experiment.value.atomicTransfertMethods[i].class == "OneToOne" || $scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne") && $scope.datatable.displayResult[i].outputContainerUsed)){
@@ -1008,6 +1009,6 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 				}
 				});
 			}
-		}
+		};
 }
 CreateNewCtrl.$inject = ['$scope', '$window','datatable','$http','lists','$parse','$q','$position'];

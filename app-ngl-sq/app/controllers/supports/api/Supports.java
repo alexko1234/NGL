@@ -90,7 +90,9 @@ public class Supports extends CommonController {
 			for(ContainerSupportCategory c:containerSupportCategories){
 				cs.add(c.code);
 			}
-			queryElts.add(DBQuery.in("categoryCode", cs));
+			if(cs.size() > 0){
+				queryElts.add(DBQuery.in("categoryCode", cs));
+			}
 		}
 		
 		BasicDBObject keys = new BasicDBObject();
@@ -131,10 +133,6 @@ public class Supports extends CommonController {
 		if(supportsSearch.sampleCodes != null){
 			queryElts.add(DBQuery.in("sampleCodes", supportsSearch.sampleCodes));
 		}
-		
-		/*if(StringUtils.isNotEmpty(supportsSearch.stateCode)){
-			queryElts.add(DBQuery.is("state.code", supportsSearch.stateCode));
-		}*/
 
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}

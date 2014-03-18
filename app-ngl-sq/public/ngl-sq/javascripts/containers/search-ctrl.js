@@ -74,23 +74,6 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 		}
 	};
 	
-	var search = function(values, query){
-		var queryElts = query.split(',');
-		
-		var lastQueryElt = queryElts.pop();
-		
-		var output = [];
-		angular.forEach($filter('filter')(values, lastQueryElt), function(value, key){
-			if(queryElts.length > 0){
-				this.push(queryElts.join(',')+','+value.code);
-			}else{
-				this.push(value.code);
-			}
-		}, output);
-		
-		return output;
-	};
-	
 	$scope.changeProject = function(){
 		if($scope.form.project){
 				$scope.lists.refresh.samples({projectCode:$scope.form.project.code});
@@ -103,10 +86,6 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 		}
 	};
 	
-	$scope.searchProjects = function(query){
-		return search(lists.getProjects(), query);
-	};
-	
 	$scope.reset = function(){
 		$scope.form = {};
 	};
@@ -115,10 +94,6 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 		if($scope.form.projectCode){
 			lists.refresh.samples({projectCode:$scope.form.projectCode});
 		}
-	};
-	
-	$scope.searchSamples = function(query){
-		return search(lists.getSamples(), query);
 	};
 	
 	$scope.init = function(){

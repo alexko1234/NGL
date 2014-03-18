@@ -30,11 +30,12 @@ search.placeholder.projects = Sélect. des projets
 search.placeholder.samples = Sélect. des échantillons
 search.placeholder.project = Sélect. un projet
 search.placeholder.sample = Sélect. un échantillon
-search.placeholder.fromDate = Run depuis le (jj/mm/aaaa)
-search.placeholder.toDate = Run jusqu''au (jj/mm/aaaa)
+search.placeholder.fromDate = Exp. depuis le (jj/mm/aaaa)
+search.placeholder.toDate = Exp. jusqu''au (jj/mm/aaaa)
 search.placeholder.states = Sélect. des états
 search.placeholder.instruments = Sélect. des instruments
 search.placeholder.types = Sélect. des types
+search.placeholder.users = Crée par
 
 #processes
 processes.title = Processus
@@ -49,7 +50,7 @@ processes.table.code = Code Processus
 processes.table.typeCode = Type de Processus
 processes.table.projectCode = Code Projet
 processes.table.projectCodes = Code Projets
-processes.table.sampleCode = Code Sample
+processes.table.sampleCode = Code  échantillon
 processes.table.containerInputCode = Code Container Initial
 processes.table.stateCode = Code Etat
 processes.table.resolutionCode = Code resolution
@@ -66,6 +67,7 @@ processes.select.sample = Sélect. un échantillon
 #experiments
 experiments.title = Experiences
 experiments.menu = Experiences
+experiment.tabs.search = Rechercher
 experiments.menu.creation = Création
 experiments.menu.search = Rechercher
 experiments.create = Créer une experience
@@ -98,12 +100,18 @@ experiments.msg.save.error = Sauvegarde echouée
 experiments.msg.details = [détails]
 
 experiments.select.experimentType = Sélect. un type d'experience
+experiments.select.experimentCategory = Sélect. une categorie d'experience
 experiments.select.instrument = Sélect. un instrument
 experiments.select.resolutions = Sélect. une resolution
 experiments.select.protocols = Sélect. un protocole
 experiments.select.intrumentUsedType = Sélect. un Type d'instrument
 experiments.select.intrumentCategory = Sélect. un Type de contenant
 experiments.select.experimentTypeCode = Sélect. un Type d'experiences
+
+experiments.table.code = Code
+experiments.table.projectCodes = Code Projets
+experiments.table.volume.value = Volume
+experiments.table.sampleCodes = Code échantillons
 
 experiments.intrumentCategory = Contenant sortie
 

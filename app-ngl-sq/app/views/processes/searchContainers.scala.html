@@ -1,7 +1,7 @@
 @()
 @import views.html.helper._
 @form() = {
-		
+
 	@columnSearchForm{		
 		@formGroup{
 		<input class="form-control" type="text" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getProjects() | filter:$viewValue | limitTo:20" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.projects")'>

@@ -47,19 +47,19 @@ function ListNewCtrl($scope, datatable) {
 				template:'<button class="btn btn-info" ng-disabled="basket.length()==0" ng-click="newExperiment();" data-toggle="tooltip" title="">'
 						+'{{form.experimentType.name}}</button>'
 			}
-		};
+	};
 	
 	$scope.newExperiment = function(){
 		if(this.basket.length() > 0 && $scope.getTabs().length === 2){
 			$scope.addTabs({label:$scope.form.experimentType.name+" config",href:"/experiments/create/"+$scope.getForm().experimentType.code,remove:false});
 		}
-	}
+	};
 	
 	$scope.init = function(){
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		$scope.basket = $scope.getBasket();
 		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
 		$scope.form = $scope.getForm();
-	}
+	};
 };
 ListNewCtrl.$inject = ['$scope', 'datatable'];

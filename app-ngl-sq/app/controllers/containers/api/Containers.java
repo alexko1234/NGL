@@ -183,14 +183,15 @@ public class Containers extends CommonController {
 			for(ContainerSupportCategory c:containerSupportCategories){
 				cs.add(c.code);
 			}
-			queryElts.add(DBQuery.in("support.categoryCode", cs));
+			if(cs.size() > 0){
+				queryElts.add(DBQuery.in("support.categoryCode", cs));
+			}
 		}
 		
 		if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isEmpty(containersSearch.experimentTypeCode)){
 			List<String> listePrevious = Spring.getBeanOfType(ExperimentTypeDAO.class).findVoidProcessExperimentTypeCode(containersSearch.processTypeCode);
 			if(null != listePrevious && listePrevious.size() > 0){
 				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.size("fromExperimentTypeCodes", 0)));
-			
 			}	    		    	
 		}
 		
@@ -203,9 +204,7 @@ public class Containers extends CommonController {
 				List<ExperimentType> previous = Spring.getBeanOfType(ExperimentTypeDAO.class).findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.experimentTypeCode);
 				List<String> previousString = new ArrayList<String>();
 				for(ExperimentType e:previous){
-
 					previousString.add(e.code);
-					
 				}
 
 				if(previousString.size() != 0){//If there is no previous, we take all the containers Available

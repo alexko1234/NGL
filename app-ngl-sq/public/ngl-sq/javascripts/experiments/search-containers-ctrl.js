@@ -1,7 +1,8 @@
 "use strict";
 
 function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lists) {
-	 
+	$scope.lists = lists;
+	
 	$scope.datatableConfig = {
 		columns:[{
 			"header":Messages("containers.table.code"),
@@ -46,25 +47,6 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 					+'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})</button>'
 		}
 	};
-		
-	$scope.lists = lists;
-	
-	var search = function(values, query){
-		var queryElts = query.split(',');
-		
-		var lastQueryElt = queryElts.pop();
-		
-		var output = [];
-		angular.forEach($filter('filter')(values, lastQueryElt), function(value, key){
-			if(queryElts.length > 0){
-				this.push(queryElts.join(',')+','+value.code);
-			}else{
-				this.push(value.code);
-			}
-		}, output);
-		
-		return output;
-	}
 	
 	$scope.init = function(){
 		if(angular.isUndefined($scope.getDatatable())){
@@ -115,41 +97,27 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 			$scope.form.experimentCategories.selected = {"code":"qualitycontrol","name":"qualitycontrol"};
 			$scope.form.experimentTypes.options = $scope.comboLists.getExperimentTypesByCategory($scope.form.experimentCategories.selected.code).query();
 		}*/
-	}
+	};
 	
 	$scope.changeExperimentType = function(){
 		this.search();
-	}
+	};
 	
 	$scope.changeProcessCategory = function(){
 		$scope.form.experimentType = undefined;
 		$scope.form.experimentCategory = undefined;
 		$scope.form.processType = undefined;
 		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
-	}
+	};
 	
 	$scope.changeProcessType = function(){
 		$scope.form.experimentType = undefined;
 		$scope.form.experimentCategory = undefined;
-	}
-	
-	$scope.searchProjects = function(query){
-		return search(lists.getProjects(), query);
-	}
-	
-	$scope.searchUsers = function(query){
-		return search(lists.getUsers(), query);
-	}
-	
-	$scope.searchSamples = function(query){
-		return search(lists.getSamples(), query);
-	}
+	};
 	
 	$scope.reset = function(){
-		$scope.form = {
-				
-		}
-	}
+		$scope.form = {}
+	};
 
 	$scope.changeExperimentCategory = function(){
 		$scope.removeTab(1);
@@ -164,7 +132,7 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 		}
 		
 		this.search();
-	}
+	};
 	
 	$scope.refreshSamples = function(){
 		if($scope.form.projectCode){
@@ -191,8 +159,8 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 				jsonSearch.experimentTypeCode = $scope.form.experimentType.code;
 			}
 			
-			if($scope.form.users){
-				jsonSearch.users = $scope.form.users.split(",");
+			if($scope.form.user){
+				jsonSearch.users = $scope.form.user;
 			}
 			
 			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate).valueOf();
@@ -200,7 +168,7 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 			
 			$scope.datatable.search(jsonSearch);
 		}							
-	}
+	};
 	
 	$scope.addToBasket = function(containers){
 		for(var i = 0; i < containers.length; i++){
@@ -210,6 +178,6 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 		if(($scope.form.experimentType || $scope.newExperiment != "new") && this.basket.length() > 0 && $scope.getTabs().length === 1){
 			$scope.addTabs({label:$scope.form.experimentType.name,href:"/experiments/new/"+$scope.form.experimentType.code,remove:false});
 		}
-	}
+	};
 }
 SearchContainerCtrl.$inject = ['$scope','$routeParams', '$filter','datatable','basket','lists'];
