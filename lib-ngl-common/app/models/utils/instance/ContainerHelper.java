@@ -64,7 +64,7 @@ public class ContainerHelper {
 		
 		container.state = new State(); 
 		container.state.code=containerStatecode;
-		container.state.user = CommonController.getCurrentUser();
+		container.state.user = "ngsrg";
 		container.state.date = new Date();
 
 		
