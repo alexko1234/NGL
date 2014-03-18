@@ -43,7 +43,7 @@ public class ResolutionService {
 		l.add(DescriptionFactory.newResolutionCategory("Problème librairie", "LIB", (short) 10));
 		l.add(DescriptionFactory.newResolutionCategory("Observations QC", "QC", (short) 80));
 		l.add(DescriptionFactory.newResolutionCategory("Problème déclaration LIMS", "LIMS", (short) 60));
-			
+		// for experiment	
 		l.add(DescriptionFactory.newResolutionCategory("Default", "Default", (short) 0));
 		
 		DAOHelpers.saveModels(ResolutionCategory.class, l, errors);
@@ -53,7 +53,6 @@ public class ResolutionService {
 		List<Resolution> l = new ArrayList<Resolution>();
 		
 		//Run
-		//order : cns, cng
 		l.add(newResolution("indéterminé","PbM-indetermine",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 1));
 		l.add(newResolution("chiller","PbM-chiller",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 2));
 		l.add(newResolution("pelletier","PbM-pelletier",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 3));
@@ -65,8 +64,7 @@ public class ResolutionService {
 		l.add(newResolution("PE module","PbM-PEmodule",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 9));
 		l.add(newResolution("zone de dépôt","PbM-zoneDepot",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 10));				
 		l.add(newResolution("cBot","PbM-cBot",ResolutionCategory.find.findByCode("PbM"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 11));		
-		
-	
+			
 		l.add(newResolution("indéterminé","PbR-indetermine",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 1));
 		l.add(newResolution("flowcell","PbR-FC",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 2));
 		l.add(newResolution("cBot","PbR-cBot",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 3));
@@ -78,7 +76,6 @@ public class ResolutionService {
 		l.add(newResolution("rehyb primer R2","PbR-rehybR2",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 9));
 		l.add(newResolution("erreur réactifs","PbR-erreurReac",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 10));
 		l.add(newResolution("rajout réactifs","PbR-ajoutReac",ResolutionCategory.find.findByCode("PbR"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 11));
-		
 		
 		l.add(newResolution("intensité","Sav-intensite",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 1));
 		l.add(newResolution("densité clusters trop élevée","SAV-densiteElevee",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 2));
@@ -92,13 +89,11 @@ public class ResolutionService {
 		l.add(newResolution("Q30","SAV-Q30",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 10));
 		l.add(newResolution("indexing / demultiplexage","SAV-IndDemultiplex",ResolutionCategory.find.findByCode("SAV"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 11));
 			
-		
 		l.add(newResolution("construction librairie","LIB-construction",ResolutionCategory.find.findByCode("LIB"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 1));
 		l.add(newResolution("cause profil : librairie","LIB-profilIntLib",ResolutionCategory.find.findByCode("LIB"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 2));
 		l.add(newResolution("cause profil : exp type","LIB-profilIntExpType",ResolutionCategory.find.findByCode("LIB"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 3));
 		l.add(newResolution("pb dilution","LIB-pbDilution",ResolutionCategory.find.findByCode("LIB"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 4));
 		l.add(newResolution("pb dilution spike-In","LIB-pbDilSpikeIn",ResolutionCategory.find.findByCode("LIB"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 5));
-		
 		
 		l.add(newResolution("indéterminé","PbI-indetermine",ResolutionCategory.find.findByCode("PbI"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 1));
 		l.add(newResolution("PC","PbI-PC",ResolutionCategory.find.findByCode("PbI"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 2));
@@ -108,16 +103,12 @@ public class ResolutionService {
 		l.add(newResolution("reboot PC","PbI-rebootPC",ResolutionCategory.find.findByCode("PbI"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 6));	
 		l.add(newResolution("erreur paramétrage run","PbI-parametrageRun",ResolutionCategory.find.findByCode("PbI"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 7));
 		
-		
 		l.add(newResolution("run de validation","Info-runValidation",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 1));
 		l.add(newResolution("arret séquenceur","Info-arretSeq",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 2));
 		l.add(newResolution("arret logiciel","Info_arretLogiciel",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 3));
 		l.add(newResolution("remboursement","Info-remboursement",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 4));
 		l.add(newResolution("flowcell redéposée","Info-FCredeposee",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 5));
 
-		
-		
-		
 		l.add(newResolution("densité hétérogène","QC-densiteHeterogen",ResolutionCategory.find.findByCode("QC"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 1));
 		l.add(newResolution("densité diff. BOT/TOP","QC-densiteTopBot",ResolutionCategory.find.findByCode("QC"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 2));
 		l.add(newResolution("densité SD fort","QC-densiteSdFort",ResolutionCategory.find.findByCode("QC"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.Run.name()), (short) 3));
@@ -155,14 +146,12 @@ public class ResolutionService {
 		//CNS only
 		l.add(newResolution("pb construction banque","LIB-pbConstruction",ResolutionCategory.find.findByCode("LIB"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 1));
 		l.add(newResolution("erreur dépôt banque","LIB-erreurDepot",ResolutionCategory.find.findByCode("LIB"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 2));
-
 		
 		l.add(newResolution("seq valides insuf","Qte-seqValInsuf",ResolutionCategory.find.findByCode("Qte"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 1));
 		l.add(newResolution("seq utiles insuf","Qte-seqUtileInsuf",ResolutionCategory.find.findByCode("Qte"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 2));
 		l.add(newResolution("nb seq brutes faible","Qte-seqRawInsuf",ResolutionCategory.find.findByCode("Qte"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 3));
 		l.add(newResolution("couverture en X hors spec.","Qte-couverture",ResolutionCategory.find.findByCode("Qte"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 4));
 
-		
 		l.add(newResolution("pb demultiplexage","IND-pbDemultiplex",ResolutionCategory.find.findByCode("IND"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 1));
 		l.add(newResolution("pb manip","IND-pbManip",ResolutionCategory.find.findByCode("IND"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 2));
 		l.add(newResolution("index incorrect","IND-indexIncorrect",ResolutionCategory.find.findByCode("IND"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 3));
@@ -174,8 +163,7 @@ public class ResolutionService {
 		l.add(newResolution("% adaptateurs détectés","Qlte-adapterPercent",ResolutionCategory.find.findByCode("Qlte"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 5));
 		l.add(newResolution("duplicat > 30","Qlte-duplicat",ResolutionCategory.find.findByCode("Qlte"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 6));
 		l.add(newResolution("% duplicat élevé","Qlte-duplicatElevee",ResolutionCategory.find.findByCode("Qlte"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 7));
-		
-		
+				
 		l.add(newResolution("conta indéterminée","TAXO-contaIndeterm",ResolutionCategory.find.findByCode("TAXO"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 1));
 		l.add(newResolution("conta manip","TAXO-contaManip",ResolutionCategory.find.findByCode("TAXO"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 2));
 		l.add(newResolution("conta mat ori","TAXO-contaMatOri",ResolutionCategory.find.findByCode("TAXO"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 3));
@@ -185,31 +173,28 @@ public class ResolutionService {
 		l.add(newResolution("virus","TAXO-virus",ResolutionCategory.find.findByCode("TAXO"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 7));
 		l.add(newResolution("bactérie","TAXO-bacteria",ResolutionCategory.find.findByCode("TAXO"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 8)); 
 		l.add(newResolution("fungi","TAXO-fungi",ResolutionCategory.find.findByCode("TAXO"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 9));
-		
-		
+				
 		l.add(newResolution("% rRNA élevé","RIBO-percEleve",ResolutionCategory.find.findByCode("RIBO"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 1));
 		
-
 		l.add(newResolution("% mapping faible","MAP-PercMappingFble",ResolutionCategory.find.findByCode("MAP"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 1));
 		l.add(newResolution("% MP","MAP-PercentMP",ResolutionCategory.find.findByCode("MAP"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 2));
 		l.add(newResolution("taille moyenne MP","MAP-tailleMP",ResolutionCategory.find.findByCode("MAP"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 3));
 		
-		
 		l.add(newResolution("test Dev","Info-testDev",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 1));
 		l.add(newResolution("test Prod","Info-testProd",ResolutionCategory.find.findByCode("Info"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 2));
 		
-		
 		l.add(newResolution("sexe incorrect","Sample-sexeIncorrect",ResolutionCategory.find.findByCode("Sample"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 1));
-		
 		
 		l.add(newResolution("erreur Experimental Type","LIMS-erreurExpType",ResolutionCategory.find.findByCode("LIMS"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 1));
 			
+		l.add(newResolution("% lec mergées","MERG-PercLecMerg",ResolutionCategory.find.findByCode("MERG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 1));
+		l.add(newResolution("m�diane lect mergées","MERG-MedLecMerg",ResolutionCategory.find.findByCode("MERG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 2));
 
+		
+		
+		
 		//Experiment
 		//CNS
-		/*****************************************************/
-		//TODO : define values of displayOrder for experiment !
-		/*****************************************************/
 		l.add(newResolution("% rRNA élevé","riboEleve",ResolutionCategory.find.findByCode("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Experiment.name()), (short) 1));
 		l.add(newResolution("déroulement correct",	"correct",ResolutionCategory.find.findByCode("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Experiment.name()), (short) 1));
 		l.add(newResolution("échec expérience",	"echec-experience",ResolutionCategory.find.findByCode("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Experiment.name()), (short) 1));
