@@ -69,10 +69,6 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			}
 	};
 
-	//Temporairement en dur (� mettre dans la base)
-	$scope.inputContainersStates = [{"code":"IS","name":"IS"},{"code":"UA","name":"UA"}];
-	$scope.ouputContainersStates = [{"code":"IW-P","name":"IW-P"},{"code":"A","name":"A"},{"code":"UA","name":"UA"}];
-
 	$scope.experiment.experimentInformation = {
 			protocols:{},
 			resolutions:{},
@@ -749,14 +745,14 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 				$scope.experiment.value.stateCode = state;
 				if($scope.experiment.value.stateCode == "F"){
 					//ajout des colonnes de selection de resolution pour chaque tube
-					var col = $scope.datatable.newColumn("State","outputStateCode",true, true,true,"String",true,$scope.ouputContainersStates,{"0":"Outputs","1":"States"});
+					var col = $scope.datatable.newColumn("State","outputStateCode",true, true,true,"String",true,$scope.lists.get('states'),{"0":"Outputs","1":"States"});
 					
 					$scope.datatable.addColumn(-1, col);
 					var col = $scope.datatable.newColumn("Resolution","outputResolutionCodes",true, true,true,"String",true,$scope.lists.get('resolutions'),{"0":"Output","1":"Resolutions"});
 					col.listStyle = "bt-select-multiple";
 					$scope.datatable.addColumn(-1, col);
 				}else if($scope.experiment.value.stateCode == "IP"){
-					var col = $scope.datatable.newColumn("State","inputStateCode",true, true,true,"String",true,$scope.inputContainersStates,{"0":"Inputs","1":"State"});
+					var col = $scope.datatable.newColumn("State","inputStateCode",true, true,true,"String",true,$scope.lists.get('states'),{"0":"Inputs","1":"State"});
 					
 					$scope.datatable.addColumn(2, col);
 					var col = $scope.datatable.newColumn("Resolution","inputResolutionCodes",true, true,true,"String",true,$scope.lists.get('resolutions'),{"0":"Inputs","1":"Resolutions"});
@@ -775,7 +771,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 		
 	};
 
-	$scope.init = function(experimentCategoryCode, atomicTransfertMethod,experiment){
+	$scope.init = function(experimentCategoryCode, atomicTransfertMethod, experiment){
 		experimentType =  {};
 		experimentType.category= {};
 		experimentType.category.code = experimentCategoryCode;
@@ -855,12 +851,14 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 						}
 	
 						angular.element(document).ready(function() {
-							for(i=0; i<$scope.experiment.experimentProperties.inputs.length;i++){
-								var getter = $parse("experiment.value.experimentProperties."+$scope.experiment.experimentProperties.inputs[i].code+".value");
-								getter.assign($scope,"");
+							if($scope.experiment.experimentProperties.inputs != undefined){
+								for(i=0; i<$scope.experiment.experimentProperties.inputs.length;i++){
+									var getter = $parse("experiment.value.experimentProperties."+$scope.experiment.experimentProperties.inputs[i].code+".value");
+									getter.assign($scope,"");
+								}
+		
+								$scope.addExperimentPropertiesInputsColumns();
 							}
-	
-							$scope.addExperimentPropertiesInputsColumns();
 						});
 					})
 					.error(function(data, status, headers, config) {
@@ -874,6 +872,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 					$scope.lists.refresh.instrumentUsedTypes({"experimentTypeCode":$scope.experiment.value.typeCode});
 					$scope.lists.refresh.protocols({"experimentTypeCode":$scope.experiment.value.typeCode});
 					$scope.lists.refresh.resolutions({"objectTypeCode":"Experiment"});
+					$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
 				});
 	
 			} else {
@@ -884,10 +883,10 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			}else{
 				$scope.experiment.value = experiment;
 				$scope.state=$scope.experiment.value.stateCode;
-
 				$scope.lists.refresh.instrumentUsedTypes({"experimentTypeCode":$scope.experiment.value.typeCode});
 				$scope.lists.refresh.protocols({"experimentTypeCode":$scope.experiment.value.typeCode});
 				$scope.lists.refresh.resolutions({"objectTypeCode":"Experiment"});
+				$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
 
 				var i=0;
 				var containers = [];//container list for the datatable
@@ -986,21 +985,21 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 					if($scope.experiment.value.stateCode == "F"){
 						//ajout des colonnes de selection de resolution pour chaque tube
 						if($scope.experiment.value.atomicTransfertMethods[0].class != "OneToVoid"){
-							var col = $scope.datatable.newColumn("State","outputStateCode",true, true,true,"String",true,$scope.ouputContainersStates,{"0":"Outputs","1":"States"});
+							var col = $scope.datatable.newColumn("State","outputStateCode",true, true,true,"String",true,$scope.lists.get('states'),{"0":"Outputs","1":"States"});
 							
 							$scope.datatable.addColumn(-1, col);
 							var col = $scope.datatable.newColumn("Resolution","outputResolutionCodes",true, true,true,"String",true,$scope.lists.get('resolutions'),{"0":"Output","1":"Resolutions"});
 							col.listStyle = "bt-select-multiple";
 							$scope.datatable.addColumn(-1, col);
 						}
-						var col = $scope.datatable.newColumn("State","inputStateCode",true, true,true,"String",true,$scope.inputContainersStates,{"0":"Inputs","1":"State"});
+						var col = $scope.datatable.newColumn("State","inputStateCode",true, true,true,"String",true,$scope.lists.get('states'),{"0":"Inputs","1":"State"});
 						
 						$scope.datatable.addColumn(2, col);
 						var col = $scope.datatable.newColumn("Resolution","inputResolutionCodes",true, true,true,"String",true,$scope.lists.get('resolutions'),{"0":"Inputs","1":"Resolutions"});
 						col.listStyle = "bt-select-multiple";
 						$scope.datatable.addColumn(2, col);
 					}else if($scope.experiment.value.stateCode == "IP"){
-						var col = $scope.datatable.newColumn("State","inputStateCode",true, true,true,"String",true,$scope.inputContainersStates,{"0":"Inputs","1":"State"});
+						var col = $scope.datatable.newColumn("State","inputStateCode",true, true,true,"String",true,$scope.lists.get('states'),{"0":"Inputs","1":"State"});
 					
 						$scope.datatable.addColumn(2, col);
 						var col = $scope.datatable.newColumn("Resolution","inputResolutionCodes",true, true,true,"String",true,$scope.lists.get('resolutions'),{"0":"Inputs","1":"Resolutions"});

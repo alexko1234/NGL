@@ -220,12 +220,11 @@ function ListNewCtrl($scope, datatable) {
 			}
 	};
 	
-	$scope.init = function(){
-		$scope.form = $scope.getForm();
-		$scope.datatable = datatable($scope, $scope.datatableConfig);
-		$scope.basket = $scope.getBasket();
-		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);		
-		$scope.datatable.selectAll(true);
-	};
+	//init
+	$scope.form = $scope.getForm();
+	$scope.datatable = datatable($scope, $scope.datatableConfig);
+	$scope.basket = $scope.getBasket();
+	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);		
+	$scope.datatable.selectAll(true);
 };
 ListNewCtrl.$inject = ['$scope', 'datatable'];

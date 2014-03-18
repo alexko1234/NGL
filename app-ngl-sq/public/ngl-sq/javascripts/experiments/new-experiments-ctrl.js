@@ -55,11 +55,10 @@ function ListNewCtrl($scope, datatable) {
 		}
 	};
 	
-	$scope.init = function(){
-		$scope.datatable = datatable($scope, $scope.datatableConfig);
-		$scope.basket = $scope.getBasket();
-		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
-		$scope.form = $scope.getForm();
-	};
+	//init
+	$scope.datatable = datatable($scope, $scope.datatableConfig);
+	$scope.basket = $scope.getBasket();
+	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
+	$scope.form = $scope.getForm();
 };
 ListNewCtrl.$inject = ['$scope', 'datatable'];

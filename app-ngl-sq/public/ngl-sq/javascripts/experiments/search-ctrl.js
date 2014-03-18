@@ -122,31 +122,6 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 		}
 	};
 	
-	$scope.init = function(){
-		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:false});
-			$scope.activeTab(0);
-		}
-		
-		if(angular.isUndefined($scope.getForm())){
-			$scope.form = {};
-			$scope.setForm($scope.form);
-			$scope.lists.refresh.types({objectTypeCode:"Process"}, true);
-			$scope.lists.refresh.processCategories();
-			$scope.lists.refresh.experimentCategories();
-			$scope.lists.refresh.projects();
-			
-		}else{
-			$scope.form = $scope.getForm();			
-		}
-		
-		$scope.datatable = datatable($scope, $scope.datatableConfig);
-		if($scope.form.type){
-			$scope.search();
-		}
-	};
-	
 	$scope.search = function(){		
 		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.type || ($scope.form.fromDate && $scope.form.toDate)){
 			var jsonSearch = {};			
@@ -171,6 +146,28 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 			$scope.datatable.search(jsonSearch);	
 		}
 	};
+	
+	//init
+	if(angular.isUndefined($scope.getHomePage())){
+		$scope.setHomePage('search');
+		$scope.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:false});
+		$scope.activeTab(0);
+	}
+	if(angular.isUndefined($scope.getForm())){
+		$scope.form = {};
+		$scope.setForm($scope.form);
+		$scope.lists.refresh.types({objectTypeCode:"Process"}, true);
+		$scope.lists.refresh.processCategories();
+		$scope.lists.refresh.experimentCategories();
+		$scope.lists.refresh.projects();
+		
+	}else{
+		$scope.form = $scope.getForm();			
+	}
+	$scope.datatable = datatable($scope, $scope.datatableConfig);
+	if($scope.form.type){
+		$scope.search();
+	}
 }
 
 SearchCtrl.$inject = ['$scope','$location','$routeParams','$filter', 'datatable','lists'];

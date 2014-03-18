@@ -60,30 +60,6 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 		}
 	};
 	
-	$scope.init = function(){
-		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('new');
-			$scope.addTabs({label:Messages('processes.tabs.search'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
-			$scope.activeTab(0);
-		}
-		
-		if(angular.isUndefined($scope.getForm())){
-			$scope.form = {processType:{code:""}};
-			$scope.setForm($scope.form);
-			$scope.lists.refresh.projects();
-			$scope.lists.refresh.processCategories();
-		}else{
-			$scope.form = $scope.getForm();			
-		}
-		
-		$scope.datatable = datatable($scope, $scope.datatableConfig);
-
-		
-		if($scope.form.project || $scope.form.type){
-			$scope.search();
-		}
-	};
-	
 	$scope.search = function(){	
 		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.processType || $scope.form.processCategory){
 			var jsonSearch = {};
@@ -123,6 +99,29 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 		
 		});
 	};
+	
+	//init
+	if(angular.isUndefined($scope.getHomePage())){
+		$scope.setHomePage('new');
+		$scope.addTabs({label:Messages('processes.tabs.search'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
+		$scope.activeTab(0);
+	}
+	
+	if(angular.isUndefined($scope.getForm())){
+		$scope.form = {processType:{code:""}};
+		$scope.setForm($scope.form);
+		$scope.lists.refresh.projects();
+		$scope.lists.refresh.processCategories();
+	}else{
+		$scope.form = $scope.getForm();			
+	}
+	
+	$scope.datatable = datatable($scope, $scope.datatableConfig);
+
+	
+	if($scope.form.project || $scope.form.type){
+		$scope.search();
+	}
 }
 
 SearchCtrl.$inject = ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http'];

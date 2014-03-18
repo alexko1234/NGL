@@ -95,27 +95,7 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 			lists.refresh.samples({projectCode:$scope.form.projectCode});
 		}
 	};
-	
-	$scope.init = function(){
-		$scope.datatable = datatable($scope, $scope.datatableConfig);		
-		
-		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('new');
-			$scope.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("new").url,remove:false});
-			$scope.activeTab(0);
-		}
-		
-		if(angular.isUndefined($scope.getForm())){
-			$scope.form = {};
-			$scope.setForm($scope.form);
-			$scope.lists.refresh.containerSupportCategories();
-			$scope.lists.refresh.projects();
-			$scope.lists.refresh.containerCategories();
-			$scope.lists.refresh.experimentTypes();
-			$scope.lists.refresh.states({objectTypeCode:"Container"});
-		}
-	};
-	
+
 	$scope.search = function(){		
 		if($scope.form.projectCode || $scope.form.sampleCode || ($scope.form.fromExperimentTypeCodes && $scope.form.fromExperimentTypeCodes.length > 0) || $scope.form.containerCategory 
 			|| $scope.form.containerSupportCategory || $scope.form.state){	
@@ -148,6 +128,23 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 			$scope.datatable.search(jsonSearch);
 		}
 	};
+	
+	//init
+	$scope.datatable = datatable($scope, $scope.datatableConfig);		
+	if(angular.isUndefined($scope.getHomePage())){
+		$scope.setHomePage('new');
+		$scope.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("new").url,remove:false});
+		$scope.activeTab(0);
+	}
+	if(angular.isUndefined($scope.getForm())){
+		$scope.form = {};
+		$scope.setForm($scope.form);
+		$scope.lists.refresh.containerSupportCategories();
+		$scope.lists.refresh.projects();
+		$scope.lists.refresh.containerCategories();
+		$scope.lists.refresh.experimentTypes();
+		$scope.lists.refresh.states({objectTypeCode:"Container"});
+	}
 }
 
 SearchCtrl.$inject = ['$scope', 'datatable','lists','$filter'];

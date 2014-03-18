@@ -48,57 +48,6 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 		}
 	};
 	
-	$scope.init = function(){
-		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, $scope.datatableConfig);
-			$scope.setDatatable($scope.datatable);	
-		} else {
-			$scope.datatable = $scope.getDatatable();
-		}
-		if($routeParams.newExperiment === undefined){
-			$scope.newExperiment = "new";
-		}else{
-			$scope.newExperiment = $routeParams.newExperiment;
-		}
-		
-		
-		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('new');
-			$scope.addTabs({label:Messages('experiments.tabs.create'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("new").url,remove:false});
-			$scope.activeTab(0);
-		}
-		
-		if(angular.isUndefined($scope.getBasket())){
-			$scope.basket = basket($scope);			
-			$scope.setBasket($scope.basket);
-		} else {
-			$scope.basket = $scope.getBasket();
-		}
-		
-		
-		if(angular.isUndefined($scope.getForm())){
-			$scope.form = {};
-			$scope.setForm($scope.form);
-		
-			$scope.lists.refresh.projects();
-			$scope.lists.refresh.types({objectTypeCode:"Process"}, true);
-			$scope.lists.refresh.processCategories();
-			$scope.lists.refresh.experimentCategories();
-			$scope.lists.refresh.users();
-			
-		} else {
-			$scope.form = $scope.getForm();		
-		}
-		
-		/*if($scope.newExperiment == "newp"){
-			$scope.form.experimentCategories.selected = {"code":"purification","name":"purification"};
-			$scope.form.experimentTypes.options = $scope.comboLists.getExperimentTypesByCategory($scope.form.experimentCategories.selected.code).query();
-		}else if($scope.newExperiment == "newqc"){
-			$scope.form.experimentCategories.selected = {"code":"qualitycontrol","name":"qualitycontrol"};
-			$scope.form.experimentTypes.options = $scope.comboLists.getExperimentTypesByCategory($scope.form.experimentCategories.selected.code).query();
-		}*/
-	};
-	
 	$scope.changeExperimentType = function(){
 		this.search();
 	};
@@ -179,5 +128,43 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 			$scope.addTabs({label:$scope.form.experimentType.name,href:"/experiments/new/"+$scope.form.experimentType.code,remove:false});
 		}
 	};
+	
+	//init
+	if(angular.isUndefined($scope.getDatatable())){
+		$scope.datatable = datatable($scope, $scope.datatableConfig);
+		$scope.setDatatable($scope.datatable);	
+	} else {
+		$scope.datatable = $scope.getDatatable();
+	}
+	if($routeParams.newExperiment === undefined){
+		$scope.newExperiment = "new";
+	}else{
+		$scope.newExperiment = $routeParams.newExperiment;
+	}
+	
+	if(angular.isUndefined($scope.getHomePage())){
+		$scope.setHomePage('new');
+		$scope.addTabs({label:Messages('experiments.tabs.create'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("new").url,remove:false});
+		$scope.activeTab(0);
+	}
+	
+	if(angular.isUndefined($scope.getBasket())){
+		$scope.basket = basket($scope);			
+		$scope.setBasket($scope.basket);
+	} else {
+		$scope.basket = $scope.getBasket();
+	}
+	
+	if(angular.isUndefined($scope.getForm())){
+		$scope.form = {};
+		$scope.setForm($scope.form);
+		$scope.lists.refresh.projects();
+		$scope.lists.refresh.types({objectTypeCode:"Process"}, true);
+		$scope.lists.refresh.processCategories();
+		$scope.lists.refresh.experimentCategories();
+		$scope.lists.refresh.users();
+	} else {
+		$scope.form = $scope.getForm();		
+	}
 }
 SearchContainerCtrl.$inject = ['$scope','$routeParams', '$filter','datatable','basket','lists'];
