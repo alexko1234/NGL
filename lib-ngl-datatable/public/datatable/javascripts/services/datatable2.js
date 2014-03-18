@@ -987,6 +987,7 @@ angular.module('datatableServices', []).
 		    					var settings = $.extend(true, [], this.configColumnDefault, columns);
 			    	    		this.config.columns = angular.copy(settings);
 			    	    		this.configMaster.columns = angular.copy(settings);
+			    	    		this.newExtraHeaderConfig();
 		    			    }
 		    			},
 		    			setColumnsConfigWithUrl : function(){
@@ -1010,7 +1011,6 @@ angular.module('datatableServices', []).
 		    				}else{
 		    					this.setColumnsConfig(this.config.columns);
 		    				}
-		    	    		this.newExtraHeaderConfig();
 		    	    		
 		    	    		if(this.displayResult && this.displayResult.length > 0){
 		    	    			this.computeDisplayResult();
@@ -1087,7 +1087,6 @@ angular.module('datatableServices', []).
 		    				if(!angular.isDefined(this.config.extraHeaders.list[pos])){
 								this.config.extraHeaders.list[pos] = [];
 							}
-		    				
 							this.config.extraHeaders.list[pos].push(header);
 		    			},
 		    			getExtraHeaderConfig : function(){
@@ -1096,15 +1095,18 @@ angular.module('datatableServices', []).
 		    			newExtraHeaderConfig : function(){
 		    				if(this.config.extraHeaders.dynamic === true){
 			    				this.config.extraHeaders.list = {};
+			    				var lineUsed = false; // If we don't have label in a line, we don't want to show the line
 			    				var count = 0;//Number of undefined extraHeader column beetween two defined ones
 			    				//Every level of header
 			    				for(var i=0;i<this.config.extraHeaders.number;i++){
+			    					lineUsed = false;//re-init because new line
 			    					var header = undefined;
 			    					//Every column
 				    				for(var j=0;j<this.config.columns.length;j++){
 				    					if(!this.isHide(this.config.columns[j].id)){
 				    					//if the column have a extra header for this level
 				    						if(this.config.columns[j].extraHeaders != undefined && this.config.columns[j].extraHeaders[i] != undefined ){
+				    							lineUsed = true;
 				    							if(count>0){
 				    								//adding the empty header of undefined extraHeader columns
 				    								this.addToExtraHeaderConfig(i,{"label":"","colspan":count});
@@ -1129,6 +1131,7 @@ angular.module('datatableServices', []).
 				    							}
 				    						
 				    						}else if(header != undefined){
+				    							lineUsed = true;
 				    							//If we find a undefined column, we add the old header
 				    							this.addToExtraHeaderConfig(i, header);
 				    							//and increment the count var
@@ -1145,14 +1148,16 @@ angular.module('datatableServices', []).
 				    				
 				    				//At the end of the level loop
 				    				//If we have undefined column left
-				    				if(count>0){
+				    				//And the line have at least one item
+				    				if(count>0 && (lineUsed === true || header != undefined)){
 				    					this.addToExtraHeaderConfig(i,{"label":"","colspan":count});
 				    					count = 0;
 				    				}
+				    				
 				    				//If we have defined column left
 				    				if(header != undefined){
 		    							this.addToExtraHeaderConfig(i, header);	
-				    				}	
+				    				}
 			    				}
 		    				}
 		    			},
