@@ -455,7 +455,13 @@ public class TreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("transAlignedReadsPercent","transAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("singleAlignedReadsPercent","singleAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("MPReadDistanceSeparation","MPReadDistanceSeparation",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, true));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimatedMPInsertSize","estimatedMPInsertSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, false));
+		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("PEReadDistanceSeparation","PEReadDistanceSeparation",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, true));	
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimatedPEInsertSize","estimatedPEInsertSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, false));
+		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("reference","reference",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), String.class, true));
 		return propertyDefinitions;		
 	}

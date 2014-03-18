@@ -199,6 +199,7 @@ readsets.properties.isSentCollaborator = Envoyé Collaborateur ?
 
 readsets.sampleOnContainer.percentPerLane = % déposé
 
+#treatments properties
 readsets.treatments.contaminationPhiX.read1_2 = Read 1 + Read 2
 readsets.treatments.contaminationPhiX.single = Single
 readsets.treatments.contaminationPhiX.readsInput = Reads input 
@@ -240,6 +241,8 @@ readsets.treatments.mapping.reference = Assembly reference
 readsets.treatments.mapping.100percent = 100 %
 readsets.treatments.mapping.MPReadDistanceSeparation =  Distance between MP reads
 readsets.treatments.mapping.PEReadDistanceSeparation = Distance between PE reads
+readsets.treatments.mapping.estimatedPEInsertSize=Estimated PE insert size
+readsets.treatments.mapping.estimatedMPInsertSize=Estimated MP insert size
 
 readsets.treatments.merging.mergedReads = Merged reads
 readsets.treatments.merging.medianeSize = Mediane size (bases)

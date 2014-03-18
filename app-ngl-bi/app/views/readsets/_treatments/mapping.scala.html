@@ -61,7 +61,10 @@
 			readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.height)">
 			 <a href="#">
 			    <img id="pairs.PEReadDistanceSeparation" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.value}}" />
-			 </a>   
+			 </a> 
+			 <div class="text-center" ng-if="readset.treatments[treatments.getTreatment().code].pairs.estimatedPEInsertSize != null && readset.treatments[treatments.getTreatment().code].pairs.estimatedPEInsertSize.value != null"> 
+			 	<h6><strong>@Messages("readsets.treatments.mapping.estimatedPEInsertSize") : </strong>{{readset.treatments[treatments.getTreatment().code].pairs.estimatedPEInsertSize.value | number:2}} </h6> 
+			 </div>
 		    </div>
 	    </div>
 	    <div class="col-md-4 col-lg-4">
@@ -72,6 +75,9 @@
 			 <a href="#">
 			    <img id="pairs.MPReadDistanceSeparation" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.value}}" />
 			 </a>   
+			 <div class="text-center" ng-if="readset.treatments[treatments.getTreatment().code].pairs.estimatedMPInsertSize != null && readset.treatments[treatments.getTreatment().code].pairs.estimatedMPInsertSize.value != null"> 
+			 	<h6><strong>@Messages("readsets.treatments.mapping.estimatedMPInsertSize") : </strong>{{readset.treatments[treatments.getTreatment().code].pairs.estimatedMPInsertSize.value | number:2}}</h6>
+		     </div>
 		    </div>
 	    </div>
 	</div>
