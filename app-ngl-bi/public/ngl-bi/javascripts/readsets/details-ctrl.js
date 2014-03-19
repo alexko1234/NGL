@@ -92,27 +92,31 @@ function DetailsCtrl($scope, $http, $q, $routeParams, datatable, messages, lists
 			});
 			$scope.isTreatmentFullScreen=false;
 		});
-		
-		$scope.setImage = function(imageData, imageName, treatmentContext, treatmentCode, imageFullSizeWidth, imageFullSizeHeight) {
-			$scope.modalImage = imageData;
-			
-			$scope.modalTitle = '';
-			if (treatmentContext != '') {
-				$scope.modalTitle = treatmentContext + ' : ';
-			}
-			$scope.modalTitle = $scope.modalTitle + Messages('readsets.treatments.' + treatmentCode + '.' + imageName);
-			
-			var margin = Messages("readsets.treatments.images.margin");		
-			var zoom = Math.min((document.body.clientWidth - margin) / imageFullSizeWidth, 1);
-
-			$scope.modalWidth = imageFullSizeWidth * zoom;
-			$scope.modalHeight = imageFullSizeHeight * zoom; //in order to conserve image ratio
-			$scope.modalLeft = (document.body.clientWidth - $scope.modalWidth)/2;
-			
-			$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;
-		}
-		
+				
 	}
+	
+	
+	$scope.setImage = function(imageData, imageName, treatmentContext, treatmentCode, imageFullSizeWidth, imageFullSizeHeight) {
+		$scope.modalImage = imageData;
+		
+		$scope.modalTitle = '';
+		if (treatmentContext != '') {
+			$scope.modalTitle = treatmentContext + ' : ';
+		}
+		$scope.modalTitle = $scope.modalTitle + Messages('readsets.treatments.' + treatmentCode + '.' + imageName);
+		
+		var margin = Messages("readsets.treatments.images.margin");		
+		var zoom = Math.min((document.body.clientWidth - margin) / imageFullSizeWidth, 1);
+
+		$scope.modalWidth = imageFullSizeWidth * zoom;
+		$scope.modalHeight = imageFullSizeHeight * zoom; //in order to conserve image ratio
+		$scope.modalLeft = (document.body.clientWidth - $scope.modalWidth)/2;
+		
+		$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;
+		
+		$scope.modalTop = $scope.modalTop - 50; //height of header and footer
+	}
+
 	
 };
 DetailsCtrl.$inject = ['$scope', '$http', '$q', '$routeParams', 'datatable', 'messages', 'lists', 'treatments', '$window'];

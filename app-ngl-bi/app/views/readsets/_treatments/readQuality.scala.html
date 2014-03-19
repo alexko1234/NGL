@@ -10,7 +10,7 @@
 	<div class="tab-pane active" id="read1">
 
 			<div class="row">
-			    <div class="col-lg-12">
+			    <div class="col-md-12 col-lg-12">
 				    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.qualScore.value,'qualScore','Read1','read_quality',
 					readset.treatments[treatments.getTreatment().code].read1.qualScore.width,
@@ -25,7 +25,7 @@
 			</div>
 			
 			<div class="row">    
-			    <div class="col-lg-3">
+			    <div class="col-md-3 col-lg-3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.nuclDistribution.value,'nuclDistribution','Read1','read_quality',
 					readset.treatments[treatments.getTreatment().code].read1.nuclDistribution.width,
@@ -36,7 +36,7 @@
 					 </a>
 				    </div>
 			    </div>
-			    <div class="col-lg-3">
+			    <div class="col-md-3 col-lg-3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.readSizeDistribution.value,'readSizeDistribution','Read1','read_quality',
 					readset.treatments[treatments.getTreatment().code].read1.readSizeDistribution.width,
@@ -47,7 +47,7 @@
 					 </a>   
 				    </div>
 			    </div>
-			    <div class="col-lg-3">
+			    <div class="col-md-3 col-lg-3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.readWithNpercent.value,'readWithNpercent','Read1','read_quality',
 					readset.treatments[treatments.getTreatment().code].read1.readWithNpercent.width,
@@ -58,7 +58,7 @@
 					 </a>
 				    </div>
 			    </div>
-			    <div class="col-lg-3">
+			    <div class="col-md-3 col-lg-3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.positionN.value,'positionN','Read1','read_quality',
 					readset.treatments[treatments.getTreatment().code].read1.positionN.width,
@@ -72,7 +72,7 @@
 			 </div>
 			 
 			 <div class="row">   			    
-			    <div class="col-lg-3">
+			    <div class="col-md-3 col-lg-3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.adapterContamination.value,'adapterContamination','Read1','read_quality',
 					readset.treatments[treatments.getTreatment().code].read1.adapterContamination.width,
@@ -84,28 +84,29 @@
 				    </div>
 
 			    </div>				
-				<div class="col-lg-3" ng-if="(treatments.getTreatment().code === 'readQualityRaw') && (readset.treatments[treatments.getTreatment().code].read1.adapters != null) && (readset.treatments[treatments.getTreatment().code].read1.adapters.value.length > 0)">
-					<div class="thumbnail">
-						<h5> @Messages("readsets.treatments.read_quality.adaptersOverRepresented") </h5>
-						<ul>
-						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.adapters.value">
-							{{strValue}}
-						</li>
-						</ul>	
-					</div>
+				<div class="col-md-3 col-lg-3" ng-if="(treatments.getTreatment().code === 'readQualityRaw') && (readset.treatments[treatments.getTreatment().code].read1.adapters != null) && (readset.treatments[treatments.getTreatment().code].read1.adapters.value.length > 0)">
+					<div class="panel panel-default">
+						<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.adaptersOverRepresented")</strong></div>
+						<div class="panel-body">
+							<ul class="treatmentOverflow">
+								<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.adapters.value">
+									{{strValue}}
+								</li>
+							</ul>
+						</div>	
+					</div>					
 				</div>
-			    <div class="col-lg-3" ng-if="((treatments.getTreatment().code === 'readQualityClean') || (treatments.getTreatment().code === 'readQualityNoRiboClean')) 
-			    	&& (readset.treatments[treatments.getTreatment().code].read1.maxSizeReads != null) ">
-			    	<div class="thumbnail">
-						 <dl>
-							<dt><h4>@Messages("readsets.treatments.read_quality.number") <span ng-bind="lane.treatments.ngsrg['default'].nbCycleRead1.value"></span> :</h4></dt>
-							<dd><h4>	{{readset.treatments[treatments.getTreatment().code].read1.maxSizeReads.value | number}} 
-								({{readset.treatments[treatments.getTreatment().code].read1.maxSizeReadsPercent.value | number:2}} @Messages("unit.percent")) </h4>
-							</dd>	
-						 </dl>
-					</div>						
+			    <div class="col-md-3 col-lg-3" ng-if="((treatments.getTreatment().code == 'readQualityClean') || (treatments.getTreatment().code == 'readQualityNoRiboClean'))  
+			    	&& (readset.treatments[treatments.getTreatment().code].read1.maxSizeReads != null)">
+					<div class="panel panel-default" >
+			    		<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.number") <span ng-bind="lane.treatments.ngsrg['default'].nbCycleRead1.value"></span> :</strong></div>
+			    		<div class="panel-body">
+							{{readset.treatments[treatments.getTreatment().code].read1.maxSizeReads.value | number}} 
+								({{readset.treatments[treatments.getTreatment().code].read1.maxSizeReadsPercent.value | number:2}} @Messages("unit.percent"))	
+						 </div>
+					</div>											
 				</div>
-			    <div class="col-lg-3">
+			    <div class="col-md-3 col-lg-3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.GCDistribution.value,'GCDistribution','Read1','read_quality',
 					readset.treatments[treatments.getTreatment().code].read1.GCDistribution.width,
@@ -116,50 +117,53 @@
 					 </a>
 				    </div>
 			    </div>   
-			    <div class="col-lg-3">
-			    	<div class="panel panel-default" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
+			    <div class="col-md-3 col-lg-3" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
 			    	&& readset.treatments[treatments.getTreatment().code].read1.suspectedKmers != null 
 			    	&& readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value.length > 0">
+			    	<div class="panel panel-default">
 					  <!-- Default panel contents -->
 					  <div class="panel-heading">@Messages("readsets.treatments.read_quality.suspectedKmers")</div>
 					  <div class="panel-body">
     					<ul class="treatmentOverflow">
 						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.suspectedKmers.value | orderBy:'nbOccurences':true">
 							{{strValue.Kmer}} ({{strValue.nbOccurences | number}})
+						</li>	
 						</ul>
  					 </div>																
-				</div>
-    		</div>
+					</div>
+    			</div>
+    			
+    		<!-- </div>
     		<div class="row">
-				<div class="col-lg-3">
+    		 -->
+				<div class="col-md-3 col-lg-3">
 			    	<div class="panel panel-default" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
 			    		&& readset.treatments[treatments.getTreatment().code].read1.suspectedPrimers != null && readset.treatments[treatments.getTreatment().code].read1.suspectedPrimers.value.length > 0"> 
 						
 					  <!-- Default panel contents -->
-					  <div class="panel-heading">@Messages("readsets.treatments.read_quality.suspectedPrimers")</div>
+					  <div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.suspectedPrimers")</strong></div>
 					  <div class="panel-body">
     					<ul class="treatmentOverflow">
 						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.suspectedPrimers.value">
 							{{strValue}}
-						
+						</li>
 						</ul>
  					 </div>
-					  
-				</div>
-				
-				</div>
-				
-				
-				
-				
+					</div>  
+				</div>	
 			</div>
-					    
+				
+				
+				
+				
+
  	</div>	
  	
  
 	<div class="tab-pane" id="read2">	
+	
 			<div class="row">
-			    <div class="col-lg-12">
+			    <div class="col-md-12 col-lg-12">
 				    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.qualScore.value,'qualScore','Read2','read_quality',
 					readset.treatments[treatments.getTreatment().code].read2.qualScore.width,
@@ -173,7 +177,7 @@
 			</div>
 			
 			<div class="row">    
-			    <div class="col-lg-3">
+			    <div class="col-md-3 col-lg-3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.nuclDistribution.value,'nuclDistribution','Read2','read_quality',
 					readset.treatments[treatments.getTreatment().code].read2.nuclDistribution.width,
@@ -184,7 +188,7 @@
 					 </a>
 				    </div>
 			    </div>
-			    <div class="col-lg-3">
+			    <div class="col-md-3 col-lg-3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.readSizeDistribution.value,'readSizeDistribution','Read2','read_quality',
 					readset.treatments[treatments.getTreatment().code].read2.readSizeDistribution.width,
@@ -195,7 +199,7 @@
 					 </a>   
 				    </div>
 			    </div>
-			    <div class="col-lg-3">
+			    <div class="col-md-3 col-lg-3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.readWithNpercent.value,'readWithNpercent','Read2','read_quality',
 					readset.treatments[treatments.getTreatment().code].read2.readWithNpercent.width,
@@ -206,7 +210,7 @@
 					 </a>
 				    </div>
 			    </div>
-			    <div class="col-lg-3">
+			    <div class="col-md-3 col-lg-3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.positionN.value,'positionN','Read2','read_quality',
 					readset.treatments[treatments.getTreatment().code].read2.positionN.width,
@@ -220,7 +224,7 @@
 			 </div>
 			 
 			 <div class="row">   			    
-			    <div class="col-lg-3">
+			    <div class="col-md-3 col-lg-3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.adapterContamination.value,'adapterContamination','Read2','read_quality',
 					readset.treatments[treatments.getTreatment().code].read2.adapterContamination.width,
@@ -231,28 +235,29 @@
 					 </a>   
 				    </div>
 			    </div>
-				<div class="col-lg-3" ng-if="(readset.treatments[treatments.getTreatment().code].read2.adapters != null) && (readset.treatments[treatments.getTreatment().code].read2.adapters.value.length > 0)">
-					<div class="thumbnail">
-						<h5> @Messages("readsets.treatments.read_quality.adaptersOverRepresented") </h5>
-						<ul>
-						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.adapters.value">
-							{{strValue}}
-						</li>
-						</ul>	
+				<div class="col-md-3 col-lg-3" ng-if="(readset.treatments[treatments.getTreatment().code].read2.adapters != null) && (readset.treatments[treatments.getTreatment().code].read2.adapters.value.length > 0)">
+					<div class="panel panel-default">
+						<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.adaptersOverRepresented")</strong></div>
+						<div class="panel-body">
+							<ul class="treatmentOverflow">
+								<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.adapters.value">
+									{{strValue}}
+								</li>
+							</ul>
+						</div>	
 					</div>
 				</div>
-			    <div class="col-lg-3" ng-if="((treatments.getTreatment().code == 'readQualityClean') || (treatments.getTreatment().code == 'readQualityNoRiboClean'))  
-			    	&& (readset.treatments[treatments.getTreatment().code].read2.maxSizeReads != null) ">
-			    	<div class="thumbnail">
-						 <dl>
-							<dt><h4>@Messages("readsets.treatments.read_quality.number") <span ng-bind="lane.treatments.ngsrg['default'].nbCycleRead2.value"></span> :</h4></dt>
-							<dd><h4>	{{readset.treatments[treatments.getTreatment().code].read2.maxSizeReads.value | number}} 
-								({{readset.treatments[treatments.getTreatment().code].read2.maxSizeReadsPercent.value | number:2}} @Messages("unit.percent")) </h4>
-							</dd>	
-						 </dl>
+			    <div class="col-md-3 col-lg-3" ng-if="((treatments.getTreatment().code == 'readQualityClean') || (treatments.getTreatment().code == 'readQualityNoRiboClean'))  
+			    	&& (readset.treatments[treatments.getTreatment().code].read2.maxSizeReads != null) "> 
+			    	<div class="panel panel-default">
+			    		<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.number") <span ng-bind="lane.treatments.ngsrg['default'].nbCycleRead2.value"></span> :</strong></div>
+			    		<div class="panel-body">
+							{{readset.treatments[treatments.getTreatment().code].read2.maxSizeReads.value | number}} 
+								({{readset.treatments[treatments.getTreatment().code].read2.maxSizeReadsPercent.value | number:2}} @Messages("unit.percent"))	
+						 </div>
 					</div>						
 				</div>
-			    <div class="col-lg-3">
+			    <div class="col-md-3 col-lg-3">
 				    <div class="thumbnail" data-target="#myModal" role="button" class="btn btn-sm btn-primary pull-right" data-toggle="modal" 
 					ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.GCDistribution.value,'GCDistribution','Read2','read_quality',
 					readset.treatments[treatments.getTreatment().code].read2.GCDistribution.width,
@@ -263,43 +268,37 @@
 					 </a>
 				    </div>
 			    </div>	
-			    <div class="col-lg-3">
-			    	<div class="panel panel-default" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
+			    <div class="col-md-3 col-lg-3" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
 			    	&& readset.treatments[treatments.getTreatment().code].read2.suspectedKmers != null 
 			    	&& readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value.length > 0">
+			    	<div class="panel panel-default">
 					  <!-- Default panel contents -->
 					  <div class="panel-heading">@Messages("readsets.treatments.read_quality.suspectedKmers")</div>
 					  <div class="panel-body">
     					<ul class="treatmentOverflow">
 						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.suspectedKmers.value | orderBy:'nbOccurences':true">
 							{{strValue.Kmer}} ({{strValue.nbOccurences | number}})
+						</li>
 						</ul>
  					 </div>
-					  
-				</div>
-			    
-			    
-			    		
-				</div> 
-			</div>
-			<div class="row">	   
-			   <div class="col-lg-3">
-			   	<div class="panel panel-default" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
-			    		&& readset.treatments[treatments.getTreatment().code].read2.suspectedPrimers != null && readset.treatments[treatments.getTreatment().code].read2.suspectedPrimers.value.length > 0"> 
-						
+					</div> 
+				</div>			    
+			<!-- </div>
+			<div class="row">  -->	   
+			   <div class="col-md-3 col-lg-3" ng-if="(treatments.getTreatment().code === 'readQualityClean' || treatments.getTreatment().code === 'readQualityNoRiboClean') 
+			    		&& readset.treatments[treatments.getTreatment().code].read2.suspectedPrimers != null && readset.treatments[treatments.getTreatment().code].read2.suspectedPrimers.value.length > 0">
+			   	<div class="panel panel-default"> 
 					  <!-- Default panel contents -->
-					  <div class="panel-heading">@Messages("readsets.treatments.read_quality.suspectedPrimers")</div>
+					  <div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.suspectedPrimers")</strong></div>
 					  <div class="panel-body">
     					<ul class="treatmentOverflow">
 						<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.suspectedPrimers.value">
 							{{strValue}}
-						
+						</li>
 						</ul>
  					 </div>
-					  
-				</div>
-			   						
-				</div>				
+				</div>						
+			   </div>				
 			</div>
 				    	
  	</div>	
