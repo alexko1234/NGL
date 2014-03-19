@@ -240,13 +240,13 @@ public class LimsCNSDAO{
 				}
 
 				project.categoryCode=PROJECT_CATEGORY_CODE;
-				
+
 				project.state = new State(); 
 				project.state.code="IP";
 				project.state.user = InstanceHelpers.getUser();
 				project.state.date = new Date();
 
-				
+
 				InstanceHelpers.updateTraceInformation(project.traceInformation);
 				return project;
 			}
@@ -347,8 +347,10 @@ public class LimsCNSDAO{
 				// Todo add properties from ExperimentType
 				content.properties=new HashMap<String, PropertyValue>();
 				content.properties.put("percentPerLane", new PropertySingleValue(rs.getFloat("percentPerLane")));
-				content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
-				content.properties.put("tagCategory",new PropertySingleValue(DataMappingCNS.getTagCategory(rs.getString("tagCategory"))));
+				if(rs.getString("tag")!=null){
+					content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+					content.properties.put("tagCategory",new PropertySingleValue(DataMappingCNS.getTagCategory(rs.getString("tagCategory"))));
+				}
 				return content;
 			}
 
@@ -398,11 +400,11 @@ public class LimsCNSDAO{
 				run.state.code = DataMappingCNS.getStateRunFromLims(run.valuation.valid);
 				run.state.user = NGSRG_CODE;
 				run.state.date = new Date();
-				
+
 				run.state.historical=new ArrayList<TransientState>();		
 				run.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",0));
 				run.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",1));				
-				
+
 				TraceInformation ti = new TraceInformation(); 
 				ti.setTraceInformation(NGSRG_CODE);
 				run.traceInformation = ti; 
@@ -433,7 +435,7 @@ public class LimsCNSDAO{
 			transientState.index=index;
 			transientState.code=state;
 			transientState.user=NGSRG_CODE;	
-		return transientState;
+			return transientState;
 		}
 		return null;
 	}
@@ -528,7 +530,7 @@ public class LimsCNSDAO{
 				readSet.state.code=DataMappingCNS.getStateReadSetFromLims(rs.getString("state"),TBoolean.valueOf(rs.getString("validationProduction")));
 				readSet.state.date= new Date();
 				readSet.state.user="lims";
-				
+
 				readSet.state.historical=new ArrayList<TransientState>();		
 				readSet.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",1));
 				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",2));	
@@ -622,28 +624,28 @@ public class LimsCNSDAO{
 		return results;
 
 	}
-	
+
 	public List<Index> findIndexIlluminaToCreate(final ContextValidation contextError)throws SQLException {
 
 		List<Index> results = this.jdbcTemplate.query("pl_TagUneEtmanip 13" 
-		,new RowMapper<Index>() {
-			@SuppressWarnings("rawtypes")
-			public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Index index=new Index();
-				index.code=rs.getString("tagkeyseq");
-				index.sequence=rs.getString("tagseq");
-				index.illuminaName=rs.getString("tagnamefour");
-				index.traceInformation=new TraceInformation();
-				InstanceHelpers.updateTraceInformation(index.traceInformation);
-				return index;
-			}
-		});
+				,new RowMapper<Index>() {
+					@SuppressWarnings("rawtypes")
+					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
+						Index index=new Index();
+						index.code=rs.getString("tagkeyseq");
+						index.sequence=rs.getString("tagseq");
+						index.illuminaName=rs.getString("tagnamefour");
+						index.traceInformation=new TraceInformation();
+						InstanceHelpers.updateTraceInformation(index.traceInformation);
+						return index;
+					}
+				});
 		return results;
 
 	}
-	
-	
-	
+
+
+
 
 }
 
