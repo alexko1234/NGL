@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('datatableServices', []).
-    	factory('datatable', ['$http','$filter','$parse','$compile', '$sce', '$window', function($http, $filter,$parse,$compile,$sce,$window){ //service to manage datatable
+    	factory('datatable', ['$http','$filter','$parse','$compile', '$sce', '$window', '$q', function($http, $filter,$parse,$compile,$sce,$window, $q){ //service to manage datatable
     		var constructor = function($scope, iConfig){
 				var datatable = {
 						configDefault:{
@@ -131,7 +131,7 @@ angular.module('datatableServices', []).
     					configMaster:undefined,
     					allResult:undefined,
     					displayResult:undefined,
-    					displayResultMaster:undefined,
+    					//displayResultMaster:undefined,
     					totalNumberRecords:undefined,
     					lastSearchParams : undefined, //used with pagination when length or page change
     					inc:0, //used for unique column ids
@@ -222,19 +222,27 @@ angular.module('datatableServices', []).
 		    			computeDisplayResult: function(){
 		    				//to manage local pagination
 		    				var configPagination = this.config.pagination;
+		    				
+		    				var _displayResult = [];
+		    				
 		    				if(configPagination.active && !this.isRemoteMode(configPagination.mode)){
-		    					this.displayResult = angular.copy(this.allResult.slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
+		    					_displayResult = angular.copy(this.allResult.slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
 		    							(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage)));
 		    				}else{ //to manage all records or server pagination
-		    					this.displayResult = angular.copy(this.allResult);		    					
+		    					_displayResult = angular.copy(this.allResult);		    					
 		    				}
+		    				
+		    				this.displayResult = [];
+		    				angular.forEach(_displayResult, function(value, key){
+	    						 this.push({data:value, edit:undefined, selected:undefined, trClass:undefined});
+	    					}, this.displayResult);
 		    				
 		    				if(this.config.edit.byDefault){
 		    					this.config.edit.withoutSelect = true;
 		    					this.setEdit();
 		    				}
 		    				
-		    				this.displayResultMaster = angular.copy(this.displayResult);		    				
+		    				//this.displayResultMaster = angular.copy(this.displayResult);		    				
 		    			},
 		    			//pagination functions
 		    			/**
@@ -402,11 +410,12 @@ angular.module('datatableServices', []).
 		    			 */
 		    			show : function(){
 		    				if(this.config.show.active && angular.isFunction(this.config.show.add)){
-			    				for(var i = 0; i < this.displayResult.length; i++){
-			    					if(this.displayResult[i].selected){
-			    						this.config.show.add(this.displayResult[i]);
-			    					}						
-			    				}		    			
+		    					angular.forEach(this.displayResult, function(value, key){
+		    						if(value.selected){
+		    							this.config.show.add(value.data);
+		    						}
+		    					}, this);
+		    							    			
 		    				}else{
 		    					//console.log("show is not active !");
 		    				}
@@ -516,7 +525,7 @@ angular.module('datatableServices', []).
 			    				var getter = $parse(columnPropertyName);
 		    					for(var i = 0; i < this.displayResult.length; i++){
 			    					if(this.displayResult[i].edit){
-										getter.assign(this.displayResult[i],this.config.edit.columns[columnId].value);
+										getter.assign(this.displayResult[i].data,this.config.edit.columns[columnId].value);
 			    					}
 			    				}
 		    				}else{
@@ -531,42 +540,70 @@ angular.module('datatableServices', []).
 		    				if(this.config.save.active){
 		    					this.config.save.number = 0;
 		    					this.config.save.error = 0;
-		    					this.config.save.start = true;
+		    					this.config.save.start = true;		    					
 		    					this.config.messages.text = undefined;
 		    					this.config.messages.clazz = undefined;
+		    					var queries = [];
 		    					for(var i = 0; i < this.displayResult.length; i++){
 			    					if(this.displayResult[i].edit || this.config.save.withoutEdit){
 			    						//remove datatable properties to avoid this data are retrieve in the json
 			    						this.config.save.number++;
 			    						this.displayResult[i].trClass = undefined;
 				    					this.displayResult[i].selected = undefined;
-				    					//this.displayResult[i].edit = undefined;
 				    					
 			    						if(this.isRemoteMode(this.config.save.mode)){
-			    							this.saveRemote(this.displayResult[i], i);
+			    							//this.saveRemote(this.displayResult[i], i);			    							
+			    							queries.push(this.getSaveRemoteRequest(this.displayResult[i].data, i));
+			    							
 			    						} else{	
-			    							this.displayResult[i].edit = undefined;
-			    							this.saveLocal(this.displayResult[i],i);
+			    							this.saveLocal(this.displayResult[i].data,i);
 			    						}
 			    					}						
 			    				}
-		    					
 		    					if(!this.isRemoteMode(this.config.save.mode)){
 	    							this.saveFinish();
-	    						}
+	    						}else{
+	    							$q.all(queries).then(function(results){
+	    								angular.forEach(results, function(value, key){
+	    									if(value.status !== 200){
+	    										if(value.config.datatable.config.save.changeClass){
+	    											value.config.datatable.displayResult[key].trClass = "error";
+	    				    					}
+	    										value.config.datatable.displayResult[key].edit = true;
+	    										value.config.datatable.config.save.error++;
+	    										value.config.datatable.config.save.number--;
+	    										value.config.datatable.saveFinish();
+	    									}else{
+	    										value.config.datatable.saveLocal(value.data, value.config.index);
+	    										value.config.datatable.saveFinish();
+	    									}
+	    								
+	    								});	    								
+	    							});				
+	    						}		    					
 		    				}else{
 		    					//console.log("save is not active !");		    				
 		    				}
 		    			},
+		    			
+		    			getSaveRemoteRequest : function(value, i){
+		    				var urlFunction = this.getUrlFunction(this.config.save.url);
+		    				if(urlFunction){
+		    					var valueFunction = this.getValueFunction(this.config.save.value);				    			
+			    				//call url
+		    					return $http[this.config.save.method](urlFunction(value), valueFunction(value), {datatable:this,index:i});				    				
+		    				}else{
+		    					throw 'no url define for save !';
+		    				}
+		    			},
+		    			
+		    			
 		    			saveRemote : function(value, i){
 		    				var urlFunction = this.getUrlFunction(this.config.save.url);
 		    				if(urlFunction){
 		    					var valueFunction = this.getValueFunction(this.config.save.value);				    			
 			    				//call url
-		    					//to avoid to send edit to the server but without change the datatable
-		    					value = angular.copy(value);
-		    					value.edit = undefined;
-			    				$http[this.config.save.method](urlFunction(value), valueFunction(value), {datatable:this,index:i})
+		    					$http[this.config.save.method](urlFunction(value), valueFunction(value), {datatable:this,index:i})
 				    				.success(function(data, status, headers, config) {
 				    					config.datatable.saveLocal(data, config.index);
 				    					config.datatable.saveFinish();
@@ -592,7 +629,7 @@ angular.module('datatableServices', []).
 		    			saveLocal: function(data, i){
 		    				if(this.config.save.active){
 		    					if(data){
-		    						this.displayResult[i] = data;
+		    						this.displayResult[i].data = data;
 		    					}
 		    					
 		    					//update in the all result table
@@ -600,13 +637,12 @@ angular.module('datatableServices', []).
 								if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
 									j = i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage);
 								}
-								this.allResult[j] = angular.copy(this.displayResult[i]);
+								this.allResult[j] = angular.copy(this.displayResult[i].data);
 		    					
 		    					if(!this.config.save.keepEdit){
-		    						this.config.edit.start = false;
 		    						this.displayResult[i].edit = undefined;
 		    					}else{
-		    						this.displayResult[i].edit = true;
+		    						this.displayResult[i].edit = true;		    						
 		    					}
 			    				
 								if(this.config.save.changeClass){
@@ -635,7 +671,10 @@ angular.module('datatableServices', []).
 			    				}
 		    					
 		    					this.config.save.error = 0;
-		    					this.config.save.start = false;		    					
+		    					this.config.save.start = false;	
+		    					if(!this.config.save.keepEdit){
+		    						this.config.edit.start = false;
+		    					}
 		    				}
 	    					
 		    			},
@@ -711,7 +750,7 @@ angular.module('datatableServices', []).
 		    				if(this.config.remove.active && this.config.remove.start){
 			    				var url = this.getUrlFunction(this.config.remove.url);
 				    			if(url){
-				    				$http['delete'](url(value), {datatable:this,value:value})
+				    				$http['delete'](url(value), {datatable:this})
 					    				.success(function(data, status, headers, config) {
 					    					config.datatable.config.remove.number--;						    				
 					    					config.datatable.removeFinish();
@@ -817,7 +856,7 @@ angular.module('datatableServices', []).
 		    							this.displayResult[i].selected = false;
 		    							this.displayResult[i].trClass=undefined;
 		    						}
-		    						selection.push(angular.copy(this.displayResult[i]));
+		    						selection.push(angular.copy(this.displayResult[i].data));
 		    					}
 		    				}
 		    				if(unselect){this.config.select.isSelectAll = false;}
@@ -1165,9 +1204,9 @@ angular.module('datatableServices', []).
 		    				if(header){
         			    		return  "dtTable.config.edit.columns."+col.id+".value";
         			    	}else if(angular.isFunction(col.property)){
-        			    		return "dtTable.config.columns[$index].property(value)";
+        			    		return "dtTable.config.columns[$index].property(value.data)";
         			    	}else{
-        			    		return "value."+col.property;        			    		
+        			    		return "value.data."+col.property;        			    		
         			    	}		    				
 				    	},
 	  		    		getFormatter : function(col){
@@ -1183,7 +1222,7 @@ angular.module('datatableServices', []).
 		    			},
 		    			getValueElement : function(col){  
 	    					if(angular.isDefined(col.render)){
-		    					return '<span dt-compile="dtTable.config.columns[$index].render(value)"></span>';
+		    					return '<span dt-compile="dtTable.config.columns[$index].render(value.data, value)"></span>';
 		    				}else{
 		    					if(col.type === "boolean"){
 		    						return '<div ng-switch on="'+this.getNgModel(col)+'"><i ng-switch-when="true" class="fa fa-check-square-o"></i><i ng-switch-default class="fa fa-square-o"></i></div>';	    						
@@ -1400,6 +1439,7 @@ angular.module('datatableServices', []).
   		    	replace:true,
   		    	template:
   		    		'<div name="dt-table" class="row"><div class="col-md-12 col-lg-12">'
+  		    		+'<div class="inProgress" ng-if="dtTable.config.save.start"><button class="btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>'
   		    		+'<form class="form-inline">'
   		    		+'<table class="table table-condensed table-hover table-bordered">'
   		    		+'<thead>'

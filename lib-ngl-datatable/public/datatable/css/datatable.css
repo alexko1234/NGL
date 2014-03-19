@@ -33,8 +33,12 @@
 }
 
 
-.datatable .form-group .form-control{
+.datatable .form-group input:not([type="checkbox"]) .form-control {
 	width: 100%;
+	margin:0px;
+}
+
+.datatable .form-group input .form-control {
 	margin:0px;
 }
 
@@ -42,3 +46,16 @@
 	margin-bottom:3px;
 }
 
+.datatable .inProgress {
+	padding-left:40%;
+    background-color: #428BCA;
+    bottom: 0;
+    /*height: 100%;*/
+    left: 0;
+    opacity: 0.5;
+    position: absolute;
+    right: 0;
+    top: 0;
+    /*width: 100%;*/
+    z-index: 1040;
+}
