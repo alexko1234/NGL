@@ -87,6 +87,9 @@ function DetailsCtrl($scope, $http, $q, $routeParams, datatable, messages, lists
 				$scope.treatments.init($scope.readset.treatments, jsRoutes.controllers.readsets.tpl.ReadSets.treatments,{global:true});				
 			}
 			
+			$http.get(jsRoutes.controllers.runs.api.Runs.get($scope.readset.runCode).url).success(function(data) {
+				$scope.run = data;
+			});			
 			$http.get(jsRoutes.controllers.runs.api.Lanes.get($scope.readset.runCode, $scope.readset.laneNumber).url).success(function(data) {
 				$scope.lane = data;	
 			});
