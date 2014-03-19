@@ -23,18 +23,16 @@
  <div ng-controller="SearchCtrl" ng-init=init() ng-app="home">
    <div  class="row">
 		<div class="col-md-6 col-lg-6">
-			<div class="panel panel-info">
+			<div class="panel panel-default">
 				<div class="panel-heading">
-					<div class="container-fluid h3">
+					<h3>
 						<a href="@controllers.runs.tpl.routes.Runs.home("search")?stateCodes=IP-S">
 							@Messages("home.runs.ips")
 						</a>
 						<a href="@controllers.runs.tpl.routes.Runs.home("search")?stateCodes=IP-S">
-							<span class="badge pull-right" style="font-size: 18px; font-weight: bold; background-color: #428BCA;">
-								{{runsIPS.totalNumberRecords}}
-							</span>
+							<span class="label label-primary pull-right">{{runsIPS.totalNumberRecords}}</span>
 						</a>
-					</div>
+					</h3>
 				</div>
 				<div class="panel-body">
 					<div datatable="runsIPS"></div>
@@ -42,18 +40,16 @@
 			</div>
 		</div>
 		<div class="col-md-6 col-lg-6">	
-			<div class="panel panel-info">
+			<div class="panel panel-default">
 				<div class="panel-heading">
-					<div class="container-fluid h3">
+					<h3>
 						<a href="@controllers.runs.tpl.routes.Runs.home("search")?stateCodes=IP-RG">
 							@Messages("home.runs.iprg")
 						</a>
 						<a href="@controllers.runs.tpl.routes.Runs.home("search")?stateCodes=IP-RG">
-							<span class="badge pull-right" style="font-size: 18px; font-weight: bold; background-color: #428BCA;">
-								{{runsIPRG.totalNumberRecords}}
-							</span>
+							<span class="label label-primary pull-right">{{runsIPRG.totalNumberRecords}}</span>
 						</a>
-					</div>
+					</h3>
 				</div>
 				<div class="panel-body">
 					<div datatable="runsIPRG"></div>
@@ -63,18 +59,16 @@
    	</div>
    	<div class="row">
 		<div class="col-md-6 col-lg-6">
-			<div class="panel panel-info">
+			<div class="panel panel-default">
 				<div class="panel-heading">
-					<div class="container-fluid h3">
+					<h3>
 						<a href="@controllers.runs.tpl.routes.Runs.home("valuation")">
 							@Messages("home.runs.iwpv")
 						</a>
 						<a href="@controllers.runs.tpl.routes.Runs.home("valuation")">
-							<span class="badge pull-right" style="font-size: 18px; font-weight: bold; background-color: #428BCA;">
-								{{runsIWV_IPV.totalNumberRecords}}
-							</span>
+							<span class="label label-primary pull-right">{{runsIWV_IPV.totalNumberRecords}}</span>
 						</a>						
-					</div>
+					</h3>
 				</div>
 				<div class="panel-body">
 					<div datatable="runsIWV_IPV"></div>
@@ -82,18 +76,16 @@
 			</div>
 		</div>
 		<div class="col-md-6 col-lg-6">	
-			<div class="panel panel-info">
+			<div class="panel panel-default">
 				<div class="panel-heading">
-					<div class="container-fluid h3">
+					<h3>
 						<a href="@controllers.runs.tpl.routes.Runs.home("search")?keep=true">
 							@Messages("home.runs.keep")
 						</a>
 						<a href="@controllers.runs.tpl.routes.Runs.home("search")?keep=true">
-							<span class="badge pull-right" style="font-size: 18px; font-weight: bold; background-color: #428BCA;">
-								{{runsKeep.totalNumberRecords}}
-							</span>
+							<span class="label label-primary pull-right">{{runsKeep.totalNumberRecords}}</span>
 						</a>						
-					</div>					
+					</h3>					
 				</div>
 				<div class="panel-body">
 					<div datatable="runsKeep"></div>
@@ -101,8 +93,6 @@
 			</div>
 		</div>
     </div>
- 
  </div>
-   
 }
  
