@@ -5,29 +5,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import controllers.CommonController;
-
-import fr.cea.ig.MongoDBDAO;
-
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-import play.Logger;
 import play.Routes;
 import play.i18n.Messages;
 import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Result;
 import views.components.datatable.DatatableColumn;
-import views.components.datatable.DatatableConfig;
 import views.components.datatable.DatatableHelpers;
 import views.html.experiments.createExperiments;
 import views.html.experiments.home;
 import views.html.experiments.newExperiments;
-import views.html.experiments.searchContainers;
 import views.html.experiments.search;
+import views.html.experiments.searchContainers;
+import controllers.CommonController;
+import fr.cea.ig.MongoDBDAO;
 
 public class Experiments extends CommonController{
 	public static Result home(String code){
@@ -85,7 +80,7 @@ public class Experiments extends CommonController{
 		columns.add(DatatableHelpers.getColumn("mesuredVolume.value", Messages.get("experiments.table.volume.value"),true, true, true,false,extraHeaders));	
 		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("containers.table.sampleCodes"), true, false, true,false,extraHeaders));		
 		columns.add(DatatableHelpers.getColumn("valid", Messages.get("containers.table.valid"), true, false, true,false,extraHeaders));
-		columns.add(DatatableHelpers.getColumn("stateCode", Messages.get("containers.table.stateCode"), true, false, true,false,extraHeaders));
+		columns.add(DatatableHelpers.getColumn("state.code", Messages.get("containers.table.stateCode"), true, false, true,false,extraHeaders));
 		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode"), true, false, true,false,extraHeaders));
 		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes"), true, false, true,false,extraHeaders));
 		
@@ -95,7 +90,6 @@ public class Experiments extends CommonController{
 	public static Result search(String experimentType){
 		return ok(search.render());
 	}
-	
 	
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");

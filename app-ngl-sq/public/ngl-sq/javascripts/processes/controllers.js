@@ -34,7 +34,7 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 				"type":"text"
 			},
 			{
-				"header":Messages("containers.table.stateCode"),
+				"header":Messages("containers.table.state.code"),
 				"property":"stateCode",
 				"order":true,
 				"hide":true,

@@ -83,35 +83,30 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 	
 						//copy resoltion to atomicTransfere
 						for(var i=0;i<$scope.datatable.displayResult.length &&  $scope.datatable.displayResult[i].inputResolutionCodes != null;i++){
-							if($scope.experiment.value.atomicTransfertMethods[i] != undefined&& $scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
+							if($scope.experiment.value.atomicTransfertMethods[i] != undefined && $scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
 								for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length;j++){
 									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].resolutionCodes = $scope.datatable.displayResult[i].inputResolutionCodes;
-									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].stateCode = $scope.datatable.displayResult[i].inputStateCode;
+									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].state.code = $scope.datatable.displayResult[i].inputStateCode;
 								}
 								i += j;
 							}else{
 								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCodes =  $scope.datatable.displayResult[i].inputResolutionCodes;
-								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.stateCode =  $scope.datatable.displayResult[i].inputStateCode;
+								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.state.code =  $scope.datatable.displayResult[i].inputStateCode;
 								
 							}
 						}
 	
 						for(var i=0;i<$scope.datatable.displayResult.length &&  $scope.datatable.displayResult[i].outputResolutionCodes != null;i++){
-							if($scope.experiment.value.atomicTransfertMethods[i] != undefined && $scope.experiment.value.atomicTransfertMethods[i].class != "ManyToOne"){
+							if($scope.experiment.value.atomicTransfertMethods[i] != undefined && $scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany"){
 								for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.length;j++){
 									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].resolutionCodes = $scope.datatable.displayResult[i].outputResolutionCodes;
-									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].stateCode = $scope.datatable.displayResult[i].inputStateCode;
+									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].state.code = $scope.datatable.displayResult[i].inputStateCode;
 									
 								}
 								i += j;
 							}else if($scope.experiment.value.atomicTransfertMethods[0].class != "OneToVoid"){
-								if($scope.experiment.value.atomicTransfertMethods[0].class != "ManyToOne"){
 									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCodes =  $scope.datatable.displayResult[i].outputResolutionCodes;
-									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.stateCode =  $scope.datatable.displayResult[i].outputStateCode;
-								}else{
-									$scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.resolutionCodes =  $scope.datatable.displayResult[i].outputResolutionCodes;
-									$scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.stateCode =  $scope.datatable.displayResult[i].outputStateCode;
-								}
+									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.state.code =  $scope.datatable.displayResult[i].outputStateCode;
 								
 							}
 						}
@@ -627,43 +622,45 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 	};
 
 	$scope.addExperimentPropertiesOutputsColumns = function(){
-		var data = $scope.experiment.experimentProperties.inputs;
-		var outputGenerated = false;
-		var j = 1;
-		while($scope.experiment.value.atomicTransfertMethods[(j-1)] != null){
-			if($scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUsed == null){
-				$scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUsed.experimentProperties = {};
-			}else{
-				outputGenerated = true;
-			}
-			j++;
-		}
-		
-			for(var i=0; i<data.length;i++){
-				if($scope.getLevel( data[i].levels, "ContainerOut")){
-					if(data[i].choiceInList){
-						var possibleValues = $scope.possibleValuesToSelect(data[i].possibleValues);
-					}
-	
-					$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data[i].name,"outputExperimentProperties."+data[i].code+".value",true, true,true,"String",data[i].choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"}));
+		if( $scope.experiment.experimentProperties.inputs != undefined){
+			var data = $scope.experiment.experimentProperties.inputs;
+			var outputGenerated = false;
+			var j = 1;
+			while($scope.experiment.value.atomicTransfertMethods[(j-1)] != null){
+				if($scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUsed == null){
+					$scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUsed.experimentProperties = {};
+				}else{
+					outputGenerated = true;
 				}
+				j++;
 			}
-			if(outputGenerated){
-				for(var i=0;i<$scope.datatable.getData().length;i++){
-					
-					for(var j=0; j<data.length;j++){
-						if($scope.getLevel( data[j].levels, "ContainerOut")){
-							var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
-							if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
-								getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value);
-							}else{
-								getter.assign($scope,"");
+			
+				for(var i=0; i<data.length;i++){
+					if($scope.getLevel( data[i].levels, "ContainerOut")){
+						if(data[i].choiceInList){
+							var possibleValues = $scope.possibleValuesToSelect(data[i].possibleValues);
+						}
+		
+						$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data[i].name,"outputExperimentProperties."+data[i].code+".value",true, true,true,"String",data[i].choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"}));
+					}
+				}
+				if(outputGenerated){
+					for(var i=0;i<$scope.datatable.getData().length;i++){
+						
+						for(var j=0; j<data.length;j++){
+							if($scope.getLevel( data[j].levels, "ContainerOut")){
+								var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
+								if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
+									getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value);
+								}else{
+									getter.assign($scope,"");
+								}
+								//$scope.datatable.displayResult[i].outputExperimentProperties[data[i].code].value = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[i].code].value;
 							}
-							//$scope.datatable.displayResult[i].outputExperimentProperties[data[i].code].value = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[i].code].value;
 						}
 					}
 				}
-			}
+		}
 	};
 
 
@@ -906,8 +903,6 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 								alert("error");
 							});
 							promises.push(promise);
-							
-							
 						}
 					}else{
 						var promise = $http.get(jsRoutes.controllers.containers.api.Containers.get($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.containerCode).url)
@@ -939,30 +934,30 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 							$scope.datatable.displayResult[i].outputContainerUsed = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed;
 							if($scope.datatable.displayResult[i].outputContainerUsed != undefined){
 								$scope.datatable.displayResult[i].outputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCodes;
-								$scope.datatable.displayResult[i].outputStateCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.stateCode;
+								$scope.datatable.displayResult[i].outputStateCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.state.code;
 							}
 							$scope.datatable.displayResult[i].inputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCodes;
-							$scope.datatable.displayResult[i].inputStateCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.stateCode;
+							$scope.datatable.displayResult[i].inputStateCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.state.code;
 						}else if($scope.experiment.value.atomicTransfertMethods[i] != undefined && $scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany"){
 							$scope.datatable.displayResult[i].outputContainerUseds = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds;
 							if($scope.datatable.displayResult[i].outputContainerUseds != undefined){
 								for(var j=0;j<$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.length;j++){
 									$scope.datatable.displayResult[j].outputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].resolutionCodes;
-									$scope.datatable.displayResult[j].outputStateCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].stateCode;
+									$scope.datatable.displayResult[j].outputStateCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].state.code;
 								}
 							}
 							$scope.datatable.displayResult[i].inputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCodes;
-							$scope.datatable.displayResult[i].inputStateCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.stateCode;
+							$scope.datatable.displayResult[i].inputStateCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.state.code;
 						}else if($scope.experiment.value.atomicTransfertMethods[0].class == "ManyToOne"){
 							$scope.datatable.displayResult[i].outputContainerUsed = $scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed;
 							if($scope.datatable.displayResult[i].outputContainerUsed != undefined){
 								$scope.datatable.displayResult[i].outputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.resolutionCodes;
-								$scope.datatable.displayResult[i].outputStateCode = $scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.stateCode;
+								$scope.datatable.displayResult[i].outputStateCode = $scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.state.code;
 							}
 
 							for(var j=0;j<$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.length;j++){
 								$scope.datatable.displayResult[j].inputResolutionCodes = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[j].resolutionCodes;
-								$scope.datatable.displayResult[j].inputStateCode = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[j].stateCode;
+								$scope.datatable.displayResult[j].inputStateCode = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[j].state.code;
 							}
 						}else if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToVoid"){
 							$scope.experiment.outputVoid = true;
@@ -988,7 +983,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 							var col = $scope.datatable.newColumn("State","outputStateCode",true, true,true,"String",true,$scope.lists.get('states'),{"0":"Outputs","1":"States"});
 							
 							$scope.datatable.addColumn(-1, col);
-							var col = $scope.datatable.newColumn("Resolution","outputResolutionCodes",true, true,true,"String",true,$scope.lists.get('resolutions'),{"0":"Output","1":"Resolutions"});
+							var col = $scope.datatable.newColumn("Resolution","outputResolutionCodes",true, true,true,"String",true,$scope.lists.get('resolutions'),{"0":"Outputs","1":"Resolutions"});
 							col.listStyle = "bt-select-multiple";
 							$scope.datatable.addColumn(-1, col);
 						}

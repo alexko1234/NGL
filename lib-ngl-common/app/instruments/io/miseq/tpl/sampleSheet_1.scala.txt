@@ -1,13 +1,15 @@
 @(experiment: models.laboratory.experiment.instance.Experiment, containers: List[models.laboratory.container.instance.Container])
 
 @import _root_.instruments.io.utils._;
+@import java.text.SimpleDateFormat
+@import java.util.Locale
 
 [Header]
 IEMFileVersion,4
 Investigator Name,
 Project Name,
 Experiment Name,@experiment.code
-Date,@experiment.traceInformation.creationDate
+Date,@(new SimpleDateFormat("dd/MM/yyyy", new Locale("sv", "SE")).format(experiment.traceInformation.creationDate))
 Workflow,GenerateFASTQ
 Application,FASTQ Only
 Assay,Genoscope
@@ -21,6 +23,6 @@ Chemistry,Default
 Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description
 @for(c <- containers){
 	@for(co <- c.contents){
-		@(c.support.line)_@(co.sampleUsed.sampleCode)_@(AbstractSampleSheetsfactory.getSample(co.sampleUsed.sampleCode).properties.get("tag").value),@(c.support.supportCode),@AbstractSampleSheetsfactory.getIndex("indexIllumina",AbstractSampleSheetsfactory.getSampleTag(co.sampleUsed.sampleCode)).illuminaName,@AbstractSampleSheetsfactory.getIndex("indexIllumina",AbstractSampleSheetsfactory.getSampleTag(co.sampleUsed.sampleCode)).sequence,@(AbstractSampleSheetsfactory.getSample(co.sampleUsed.sampleCode).properties.get("tag").value)_@(AbstractSampleSheetsfactory.getSample(co.sampleUsed.sampleCode).properties.get("percentPerLane").value)
+		@(c.support.line)_@(co.sampleUsed.sampleCode)_@(AbstractSampleSheetsfactory.getContentProperty(co,"tag")),@(c.support.supportCode),,,@AbstractSampleSheetsfactory.getIndex("indexIllumina",AbstractSampleSheetsfactory.getContentProperty(co,"tag")).illuminaName,@AbstractSampleSheetsfactory.getIndex("indexIllumina",AbstractSampleSheetsfactory.getContentProperty(co,"tag")).sequence,,@(AbstractSampleSheetsfactory.getContentProperty(co,"tag"))_@(BigDecimal(AbstractSampleSheetsfactory.getContentDoubleProperty(co,"percentPerLane")).setScale(2, BigDecimal.RoundingMode.DOWN))
 	}
 }

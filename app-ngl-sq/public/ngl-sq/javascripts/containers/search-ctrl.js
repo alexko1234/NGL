@@ -54,7 +54,7 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 				"type":"text"
 			},
 			{
-				"header":Messages("containers.table.stateCode"),
+				"header":Messages("containers.table.state.code"),
 				"property":"state.code",
 				"order":true,
 				"type":"text"

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.utils.HelperObjects;
 
@@ -27,7 +28,7 @@ public class ContainerUsed implements IValidation{
 	
 	public List<String> resolutionCodes;
 	
-	public String stateCode;
+	public State state;
 	
 	public ContainerUsed() {
 		

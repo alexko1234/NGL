@@ -13,7 +13,6 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 
 	public SampleSheetsFactory(Experiment varExperiment) {
 		super(varExperiment);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -24,7 +23,7 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 		play.api.libs.Files.writeFile(new File(containers.get(0).support.supportCode+".csv"), content);
 		
 		
-		return null;
+		return content;
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.parameter.Index;
@@ -41,13 +42,22 @@ public abstract class AbstractSampleSheetsfactory {
 		return index;
 	}
 	
-	public static Sample getSample(String sampleUsedCode){
-		Sample sample  = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sampleUsedCode));
-		return sample;
+	public static String getContentProperty(Content content, String propertyName){
+		return (String) content.properties.get(propertyName).value;
 	}
 	
-	public static String getSampleTag(String sampleUsedCode){
-		Sample sample  = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sampleUsedCode));
-		return (String)sample.properties.get("tag").value;
+	public static Double getContentDoubleProperty(Content content, String propertyName){
+		return (Double) content.properties.get(propertyName).value;
+	}
+	
+	public static String getContainerProperty(Container container, String propertyName){
+		if(Boolean.class.isInstance(container.properties.get(propertyName).value)){
+			if((Boolean) container.properties.get(propertyName).value){
+				return "O";
+			}
+			return "N";
+		}
+		
+		return (String) container.properties.get(propertyName).value;
 	}
 }

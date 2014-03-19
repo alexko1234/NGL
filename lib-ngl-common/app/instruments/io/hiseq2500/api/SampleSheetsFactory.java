@@ -9,7 +9,7 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 
 	public SampleSheetsFactory(Experiment varExperiment) {
 		//super(varExperiment);
-		super(MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, "FRAGMENTATION-20140217150208"));
+		super(varExperiment);
 	}
 
 	@Override
