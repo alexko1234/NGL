@@ -9,11 +9,12 @@ containers.tabs.search = Recherche
 
 #Containers table
 containers.table.code = Code Container
-containers.table.categoryCode = Code Catégorie
+containers.table.supportCategoryCode = Catégorie de support
+containers.table.categoryCode = Catégorie de container
 containers.table.projectCodes = Codes Projets
 containers.table.sampleCodes = Codes Echantillons
-containers.table.fromExperimentTypeCodes = Type d'Expérience
-containers.table.stateCode = Etat
+containers.table.fromExperimentTypeCodes = Type d''Expérience
+containers.table.state.code = Code état
 containers.table.support.name = Support
 containers.table.stateCode = Code Etat
 containers.table.creationDate = Date de création
@@ -76,14 +77,14 @@ experiments.create = Créer une experience
 experiments.save = Sauvegarder
 experiments.save_all = Sauvegarder tout
 experiments.edit = Editer
-experiments.unedit = Désactiver l'édition
+experiments.unedit = Désactiver l''édition
 experiments.noCode = Aucun code
 experiments.addqc = Ajouter QC
 experiments.addpurif = Ajouter purification
 experiments.state = Etat
 experiments.intrument = Instrument
 experiments.status = Statut
-experiments.intrumentUsedType = Type d'instrument
+experiments.intrumentUsedType = Type d''instrument
 experiments.tabs.search = Recherche
 experiments.generateOutput = Generer tube sortie
 experiment.noComments = Pas de commentaire
@@ -101,14 +102,14 @@ experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée
 experiments.msg.details = [détails]
 
-experiments.select.experimentType = Sélect. un type d'experience
-experiments.select.experimentCategory = Sélect. une categorie d'experience
+experiments.select.experimentType = Sélect. un type d''experience
+experiments.select.experimentCategory = Sélect. une categorie d''experience
 experiments.select.instrument = Sélect. un instrument
 experiments.select.resolutions = Sélect. une resolution
 experiments.select.protocols = Sélect. un protocole
-experiments.select.intrumentUsedType = Sélect. un Type d'instrument
+experiments.select.intrumentUsedType = Sélect. un Type d''instrument
 experiments.select.intrumentCategory = Sélect. un Type de contenant
-experiments.select.experimentTypeCode = Sélect. un Type d'experiences
+experiments.select.experimentTypeCode = Sélect. un Type d''experiences
 
 experiments.table.code = Code
 experiments.table.projectCodes = Code Projets
@@ -124,8 +125,8 @@ baskets = Panier
 baskets.new = Créer un panier
 baskets.add = Ajouter au panier
 
-error.codeNotExist=Le code {0} n'existe pas
-error.propertyNotExist=La propriété {0} n'existe pas pour {1}
+error.codeNotExist=Le code {0} n''existe pas
+error.propertyNotExist=La propriété {0} n''existe pas pour {1}
 limsdao.error.emptymapping =Pas de correspondance avec les paramètres suivants :{0}
 
 #initialdata

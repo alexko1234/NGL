@@ -27,6 +27,8 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 		if($scope.form.processCategory){
 			$scope.getColumns();
 			$scope.search();
+		}else{
+			$scope.form.processType = undefined;	
 		}
 	};
 	
@@ -44,6 +46,7 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 
 	$scope.reset = function(){
 		$scope.form = {};
+		$scope.getColumns();
 	};
 	
 	$scope.refreshSamples = function(){
@@ -80,6 +83,8 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 			}
 			
 			$scope.datatable.search(jsonSearch);						
+		}else{
+			$scope.datatable.setData({},0);
 		}
 	};
 	
@@ -108,7 +113,7 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 	}
 	
 	if(angular.isUndefined($scope.getForm())){
-		$scope.form = {processType:{code:""}};
+		$scope.form = {};
 		$scope.setForm($scope.form);
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.processCategories();
@@ -117,7 +122,6 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 	}
 	
 	$scope.datatable = datatable($scope, $scope.datatableConfig);
-
 	
 	if($scope.form.project || $scope.form.type){
 		$scope.search();

@@ -80,37 +80,6 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 				if(this.enabled){
 					if($scope.experiment.value._id){
 						$scope.clearMessages();
-	
-						//copy resoltion to atomicTransfere
-						for(var i=0;i<$scope.datatable.displayResult.length &&  $scope.datatable.displayResult[i].inputResolutionCodes != null;i++){
-							if($scope.experiment.value.atomicTransfertMethods[i] != undefined && $scope.experiment.value.atomicTransfertMethods[i].class == "ManyToOne"){
-								for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length;j++){
-									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].resolutionCodes = $scope.datatable.displayResult[i].inputResolutionCodes;
-									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].state.code = $scope.datatable.displayResult[i].inputStateCode;
-								}
-								i += j;
-							}else{
-								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.resolutionCodes =  $scope.datatable.displayResult[i].inputResolutionCodes;
-								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.state.code =  $scope.datatable.displayResult[i].inputStateCode;
-								
-							}
-						}
-	
-						for(var i=0;i<$scope.datatable.displayResult.length &&  $scope.datatable.displayResult[i].outputResolutionCodes != null;i++){
-							if($scope.experiment.value.atomicTransfertMethods[i] != undefined && $scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany"){
-								for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.length;j++){
-									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].resolutionCodes = $scope.datatable.displayResult[i].outputResolutionCodes;
-									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].state.code = $scope.datatable.displayResult[i].inputStateCode;
-									
-								}
-								i += j;
-							}else if($scope.experiment.value.atomicTransfertMethods[0].class != "OneToVoid"){
-									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.resolutionCodes =  $scope.datatable.displayResult[i].outputResolutionCodes;
-									$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.state.code =  $scope.datatable.displayResult[i].outputStateCode;
-								
-							}
-						}
-	
 						$http.put(jsRoutes.controllers.experiments.api.Experiments.updateExperimentInformations($scope.experiment.value.code).url, $scope.experiment.value)
 						.success(function(data, status, headers, config) {
 							if(data!=null){
@@ -126,6 +95,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 							$scope.message.details = data;
 							$scope.message.isDetails = true;
 						});
+						
 					}else{
 						$scope.save();
 					}
@@ -189,6 +159,34 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			}	
 	};
 
+	$scope.extractFromDatatable = function(propertyName){
+		for(var i=0;i<$scope.datatable.displayResult.length;i++){
+			if($scope.experiment.value.atomicTransfertMethods[0].class == "ManyToOne"){
+				for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[0].length;j++){
+					$scope.datatable.displayResult[i]["input"+propertyName] = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed[j][propertyName];
+					i++;
+				}
+				if($scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed!=undefined){
+					$scope.datatable.displayResult[i].outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed[propertyName];					
+				}
+			}else{
+				$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed[propertyName] = $scope.datatable.displayResult[i].inputExperimentProperties;
+				if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany"){
+					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds!=undefined){
+						for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].length;j++){
+							$scope.datatable.displayResult[i].outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j][propertyName];
+							i++;
+						}
+					}
+				}else if($scope.experiment.value.atomicTransfertMethods[i].class != "OneToVoid"){
+					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed!=undefined){
+						$scope.datatable.displayResult[i].outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed[propertyName];					
+					}
+				}
+			}
+		}
+	};
+	
 	$scope.experimentToDatatable = function(){
 		for(var i=0;i<$scope.datatable.displayResult.length;i++){
 			if($scope.experiment.value.atomicTransfertMethods[0].class == "ManyToOne"){

@@ -27,10 +27,10 @@
 		}
 		@columnSearchForm{
 			@formGroup{		
-			<input class="form-control" type="text" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getProjects() | filter:$viewValue | limitTo:20" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.projects")'>
+			<input class="form-control" type="text" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getProjects() | filter:$viewValue | limitTo:20" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.project")'>
 			}
 			@formGroup{		
-			<input class="form-control" type="text" ng-model="form.sampleCode" typeahead="sample.code as sample.code for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-click="refreshSamples()" placeholder='@Messages("search.placeholder.samples")'>
+			<input class="form-control" type="text" ng-model="form.sampleCode" typeahead="sample.code as sample.code for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-click="refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>
 			}
 		}
 		@columnSearchForm{
@@ -43,7 +43,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{		
-			<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.users")'>
+			<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.user")'>
 			}
 		}
 }

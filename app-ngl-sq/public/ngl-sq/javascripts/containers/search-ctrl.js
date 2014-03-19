@@ -12,7 +12,7 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 					"type":"text"
 			},
 			{
-				"header":Messages("containers.table.categoryCode"),
+				"header":Messages("containers.table.supportCategoryCode"),
 				"property":"support.categoryCode",
 				"order":true,
 				"type":"text"
@@ -57,7 +57,10 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 				"header":Messages("containers.table.state.code"),
 				"property":"state.code",
 				"order":true,
-				"type":"text"
+				"type":"text",
+				 render:function(value){
+					return Codes("state."+value.state.code);
+				},
 			},
 			{
 				"header":Messages("containers.table.creationDate"),
