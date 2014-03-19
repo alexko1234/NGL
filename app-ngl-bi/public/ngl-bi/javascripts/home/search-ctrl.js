@@ -15,6 +15,7 @@ function SearchCtrl($scope, datatable) {
 			select:{
 				active:false
 			},
+			showTotalNumberRecords:false,
 			columns : [
 			           {  	property:"code",
 					    	header: Messages("runs.code"),
