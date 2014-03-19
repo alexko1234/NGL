@@ -181,7 +181,7 @@ function SearchCtrl($scope, $routeParams, datatable) {
 
 	
 	$scope.datatableConfig = {
-			order :{by:'traceInformation.creationDate'},
+			order :{by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
 			},
@@ -221,7 +221,7 @@ function SearchStateCtrl($scope,  datatable, lists) {
 	$scope.listsTable = lists;
 	
 	$scope.datatableConfig = {
-			order :{by:'traceInformation.creationDate'},
+			order :{by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
 			},
@@ -273,7 +273,7 @@ function SearchValuationCtrl($scope, datatable, lists, $routeParams) {
 	$scope.listsTable = lists;
 	
 	$scope.datatableConfig = {
-			order :{by:'traceInformation.creationDate'},
+			order :{by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
 			},
@@ -332,7 +332,7 @@ SearchValuationCtrl.$inject = ['$scope', 'datatable', 'lists', '$routeParams'];
 function SearchBatchCtrl($scope,  datatable) {
 
 	$scope.datatableConfig = {
-			order :{by:'traceInformation.creationDate'},
+			order :{by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
 			},

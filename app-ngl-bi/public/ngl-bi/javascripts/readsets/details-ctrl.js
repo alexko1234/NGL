@@ -87,39 +87,37 @@ function DetailsCtrl($scope, $http, $q, $routeParams, datatable, messages, lists
 				$scope.treatments.init($scope.readset.treatments, jsRoutes.controllers.readsets.tpl.ReadSets.treatments,{global:true});				
 			}
 			
-			$http.get(jsRoutes.controllers.runs.api.Runs.get($scope.readset.runCode).url).success(function(data) {
-				$scope.run = data;
-			});			
 			$http.get(jsRoutes.controllers.runs.api.Lanes.get($scope.readset.runCode, $scope.readset.laneNumber).url).success(function(data) {
 				$scope.lane = data;	
-			});
-			$scope.isTreatmentFullScreen=false;
+			});	
+			
+			$http.get(jsRoutes.controllers.runs.api.RunTreatments.get($scope.readset.runCode, "ngsrg").url).success(function(data) {
+				$scope.runNGSRG = data;	
+			});	
 		});
-				
-	}
-	
-	
-	$scope.setImage = function(imageData, imageName, treatmentContext, treatmentCode, imageFullSizeWidth, imageFullSizeHeight) {
-		$scope.modalImage = imageData;
 		
-		$scope.modalTitle = '';
-		if (treatmentContext != '') {
-			$scope.modalTitle = treatmentContext + ' : ';
-		}
-		$scope.modalTitle = $scope.modalTitle + Messages('readsets.treatments.' + treatmentCode + '.' + imageName);
+		$scope.setImage = function(imageData, imageName, treatmentContext, treatmentCode, imageFullSizeWidth, imageFullSizeHeight) {
+			$scope.modalImage = imageData;
 		
-		var margin = Messages("readsets.treatments.images.margin");		
-		var zoom = Math.min((document.body.clientWidth - margin) / imageFullSizeWidth, 1);
+			$scope.modalTitle = '';
+			if (treatmentContext != '') {
+				$scope.modalTitle = treatmentContext + ' : ';
+			}
+			$scope.modalTitle = $scope.modalTitle + Messages('readsets.treatments.' + treatmentCode + '.' + imageName);
+		
+			var margin = Messages("readsets.treatments.images.margin");		
+			var zoom = Math.min((document.body.clientWidth - margin) / imageFullSizeWidth, 1);
 
-		$scope.modalWidth = imageFullSizeWidth * zoom;
-		$scope.modalHeight = imageFullSizeHeight * zoom; //in order to conserve image ratio
-		$scope.modalLeft = (document.body.clientWidth - $scope.modalWidth)/2;
+			$scope.modalWidth = imageFullSizeWidth * zoom;
+			$scope.modalHeight = imageFullSizeHeight * zoom; //in order to conserve image ratio
+			$scope.modalLeft = (document.body.clientWidth - $scope.modalWidth)/2;
 		
-		$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;
+			$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;
 		
-		$scope.modalTop = $scope.modalTop - 50; //height of header and footer
+			$scope.modalTop = $scope.modalTop - 50; //height of header and footer
 	}
-
+		
+	}
 	
 };
 DetailsCtrl.$inject = ['$scope', '$http', '$q', '$routeParams', 'datatable', 'messages', 'lists', 'treatments', '$window'];
