@@ -136,11 +136,11 @@
 						<p class="form-control-static"><a href="#" ng-click="goToRun()">{{readset.runCode}}</a> / {{readset.laneNumber}}</p>
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.runType")){
-						<p class="form-control-static" >{{run.typeCode}}</p>
+						<p class="form-control-static" >{{readset.runTypeCode}}</p>
 					}
 					
 					@views.html.helper.columnLabelValue(Messages("readsets.nbCycles")){
-						<p class="form-control-static" >{{run.treatments.ngsrg["default"].nbCycle.value}}</p>
+						<p class="form-control-static" >{{runNGSRG["default"].nbCycle.value}}</p>
 					}
 				}
 			</form>		
