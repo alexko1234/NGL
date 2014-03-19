@@ -52,11 +52,11 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 			columns : [
 					    {  	property:"code",
 					    	header: Messages("plates.table.well.code"),
-					    	render:function(value){
+					    	render:function(value,displayR){
 					    		if(value.valid === "TRUE"){
-					    			value.trClass = "success";
+					    			displayR.trClass = "success";
 					    		}else if(value.valid === "FALSE") {
-					    			value.trClass = "danger";
+					    			displayR.trClass = "danger";
 					    		}
 					    		return value.code;
 					    	},
@@ -278,8 +278,8 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 		for(var i = 0; i < nbCol ; i++){
 			for(var j = 0; j < nbLine.length; j++){
 				if(x < wells.length){
-					wells[x].y = nbLine[j]+'';
-					wells[x].x = i+1+'';					
+					wells[x].data.y = nbLine[j]+'';
+					wells[x].data.x = i+1+'';					
 				}
 				x++;
 			}
@@ -290,8 +290,8 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 		var wells = $scope.datatable.displayResult;
 		if(!angular.isUndefined(wells)){
 	        for (var i = 0; i <wells.length; i++) {
-		         if (wells[i].x === (x+'') && wells[i].y===(y+'')) {
-		        	 return wells[i].name;
+		         if (wells[i].data.x === (x+'') && wells[i].data.y===(y+'')) {
+		        	 return wells[i].data.name;
 		         }
 	        }
 		}
@@ -302,11 +302,11 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 		var wells = $scope.datatable.displayResult;
 		if(!angular.isUndefined(wells)){
 	        for (var i = 0; i <wells.length; i++) {
-		         if (wells[i].x === (x+'') && wells[i].y===(y+'')) {
+		         if (wells[i].data.x === (x+'') && wells[i].data.y===(y+'')) {
 		        	 var well = wells[i];
-		        	 if(well.valid === "FALSE"){
+		        	 if(well.data.valid === "FALSE"){
 		        		 return "alert alert-danger";
-		        	 }else if(well.valid === "TRUE"){
+		        	 }else if(well.data.valid === "TRUE"){
 		        		 return "alert alert-success";
 		        	 }		        	
 		         }
