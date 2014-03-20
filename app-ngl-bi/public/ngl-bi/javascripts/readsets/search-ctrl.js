@@ -208,7 +208,7 @@ function SearchCtrl($scope, $routeParams, datatable) {
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:false});
+			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
 	}	
@@ -258,7 +258,7 @@ function SearchStateCtrl($scope,  datatable, lists) {
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("state").url,remove:false});
+			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("state").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
 		$scope.listsTable.refresh.states({objectTypeCode:"ReadSet"});		
@@ -321,7 +321,7 @@ function SearchValuationCtrl($scope, datatable, lists, $routeParams) {
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('valuation');
-			$scope.addTabs({label:Messages('readsets.page.tab.validate'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("valuation").url,remove:false});
+			$scope.addTabs({label:Messages('readsets.page.tab.validate'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("valuation").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
 	}	
@@ -363,7 +363,7 @@ function SearchBatchCtrl($scope,  datatable) {
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("batch").url,remove:false});
+			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("batch").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
 	}	

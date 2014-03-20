@@ -125,7 +125,7 @@ function SearchCtrl($scope, $routeParams, datatable) {
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:false});
+			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
 	}	
@@ -176,7 +176,7 @@ function SearchStateCtrl($scope, datatable, lists) {
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:false});
+			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
 		$scope.listsTable.refresh.states({objectTypeCode:"Run"});
@@ -214,7 +214,7 @@ function SearchValuationCtrl($scope, datatable) {
 		$scope.datatable.search(updateForm({},'valuation'));
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('valuation');
-			$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:false});
+			$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
 	}	

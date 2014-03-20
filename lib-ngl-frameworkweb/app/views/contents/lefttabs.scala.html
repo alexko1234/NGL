@@ -1,18 +1,18 @@
 
 <div id="home" ng-app="home" > 
-<div class="row" ng-controller="TabMainCtrl">
+ <div class="row" ng-controller="TabMainCtrl">
 	<div class="col-md-2 col-lg-2">
 		<!--  button class="btn btn-default btn-xs pull-left hidden-print" ng-click="toggleTabs()"><i class="{{hideTabs.clazz}}"></i></button-->
 		<div class="list-group hidden-print" ng-hide="hideTabs.hide">
-		  <a ng-repeat="value in getTabs()" href="{{value.href}}" class="list-group-item {{value.clazz}} text-overflow" ng-click="activeTab(value)">
-		   <button type="button" class="close" aria-hidden="true" ng-click="removeTab($index)" ng-if="value.remove">&times;</button>
-		   {{value.label}}
-		  </a>   
+			  	<a ng-repeat="value in getTabs()" ng-href="{{value.href}}"   class="list-group-item {{value.clazz}} text-overflow" ng-click="activeTab(value, $event)">
+				   	<button type="button" class="close" aria-hidden="true" ng-click="removeOrKeepOnlyActiveTab($index, $event, true)" ng-if="(value.remove) && (($index>0) || ($index==0) && (getTabs().length > 1)) ">&times;</button>
+			   		{{value.label}}
+			   	</a>    
 		</div>
-	</div>
+	</div>	
 	<div class="col-md-10 col-lg-10" ng-view>
 	
 	</div>		
-</div>
+ </div>
 </div>
 
