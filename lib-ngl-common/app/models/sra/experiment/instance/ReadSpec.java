@@ -7,10 +7,10 @@ import validation.ContextValidation;
 import validation.IValidation;
 
 public class ReadSpec implements IValidation {
-	public BigInteger readIndex;
+	public int readIndex;
 	public String readClass;
 	public String readType;
-	public BigInteger baseCoord;
+	public Integer lastBaseCoord;
 	public String readLabel;
 	public List<String> expectedBaseCallTable;
 	
@@ -18,5 +18,7 @@ public class ReadSpec implements IValidation {
 	public void validate(ContextValidation contextValidation) {
 		// TODO Auto-generated method stub
 	}
+
+
 
 }
