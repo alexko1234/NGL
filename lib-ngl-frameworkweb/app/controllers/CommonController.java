@@ -1,8 +1,10 @@
 package controllers;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +50,21 @@ public abstract class CommonController extends Controller{
 		T input = Json.fromJson(json, clazz);
 		Form<T> filledForm = form.fill(input); 
 		return filledForm;
+	}
+	
+	protected static <T> List<Form<T>> getFilledFormList(Form<T> form, Class<T> clazz) {		
+		JsonNode json = request().body().asJson();
+		List<Form<T>> results = new ArrayList<Form<T>>();
+		Iterator<JsonNode> iterator = json.getElements();
+		
+		while(iterator.hasNext()){
+			JsonNode jsonChild = iterator.next();
+			T input = Json.fromJson(jsonChild, clazz);
+			Form<T> filledForm = form.fill(input);
+			results.add(filledForm);
+		}
+		
+		return results;
 	}
 
 	/**
