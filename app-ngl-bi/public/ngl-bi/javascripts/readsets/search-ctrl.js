@@ -154,7 +154,7 @@ function SearchFormCtrl($scope, $filter, lists){
 		}
 	};
 	
-	$scope.init1 = function(){		
+	$scope.init = function(){		
 		if ($scope.isHomePage('valuation')) {
 			//If we want to show the 2 states used to filter the data...
 			//$scope.form.stateCodes = ["IW-V","IP-V"];
@@ -231,11 +231,10 @@ function SearchStateCtrl($scope,  datatable, lists) {
 			},
 			save : {
 				active:true,
-				url:function(line){
-					return jsRoutes.controllers.readsets.api.ReadSets.state(line.code).url;
-				},
+				url: jsRoutes.controllers.readsets.api.ReadSets.stateBatch().url,				
+				batch:true,
 				method:'put',
-				value:function(line){return line.state;}
+				value:function(line){return {code:line.code,state:line.state};}				
 			},
 			show:{
 				active:true,
@@ -283,11 +282,10 @@ function SearchValuationCtrl($scope, datatable, lists, $routeParams) {
 			},			
 			save : {
 				active:true,
-				url:function(line){
-					return jsRoutes.controllers.readsets.api.ReadSets.valuation(line.code).url;
-				},
+				url: jsRoutes.controllers.readsets.api.ReadSets.valuationBatch().url,				
+				batch:true,
 				method:'put',
-				value:function(line){return {productionValuation:line.productionValuation,bioinformaticValuation:line.bioinformaticValuation};}
+				value:function(line){return {code:line.code,productionValuation:line.productionValuation,bioinformaticValuation:line.bioinformaticValuation};}				
 			},
 			show:{
 				active:true,
@@ -342,12 +340,11 @@ function SearchBatchCtrl($scope,  datatable) {
 			},
 			save : {
 				active:true,
-				url:function(line){
-					return jsRoutes.controllers.readsets.api.ReadSets.properties(line.code).url;
-				},
+				url: jsRoutes.controllers.readsets.api.ReadSets.propertiesBatch().url,				
+				batch:true,
 				method:'put',
-				value:function(line){return {properties : line.properties};}
-			},
+				value:function(line){return {code:line.code, properties : line.properties};}				
+			},			
 			columns : getColumns('batch')
 	};
 	

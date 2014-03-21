@@ -148,12 +148,12 @@ function SearchStateCtrl($scope, datatable, lists) {
 			},
 			save : {
 				active:true,
-				url:function(line){
-					return jsRoutes.controllers.runs.api.State.update(line.code).url;
-				},
+				url: jsRoutes.controllers.runs.api.State.updateBatch().url,				
+				batch:true,
 				method:'put',
-				value:function(line){return line.state;}
+				value:function(line){return {code:line.code,state:line.state};}				
 			},
+			
 			show:{
 				active:true,
 				add :function(line){
