@@ -31,19 +31,23 @@ function TabMainCtrl($scope, $location){
 	 * function to keep only the first tab and an eventually an other tab
 	 * (if active) to remenber the last selection
 	 */
-	$scope.keepOnlyActiveTab = function(keepLastActiveTab) { 
+	$scope.keepOnlyActiveTab = function(keepLastActiveTab, $event) { 
+		var activeTabIndex = 0;
 		var firstTab = tabs[0];
 		var newtabs = [];
 		newtabs[0] = firstTab;		
 		//if we want to have the last active tab ...
 		if (keepLastActiveTab) {
-			var activeTabIndex = $scope.getActiveTabIndex();
+			activeTabIndex = $scope.getActiveTabIndex();
 			if (activeTabIndex > 0) {
-				newtabs[1] = tabs[activeTabIndex]; // not getTab(activeTabIndex) why ?
+				newtabs[1] = tabs[activeTabIndex]; 
 			}
 		}
 		//.. end
 		tabs = newtabs;
+		$scope.activeTab(tabs.length-1, true);		
+		
+		$event.preventDefault();
 	}
 	
 	/**
@@ -89,8 +93,6 @@ function TabMainCtrl($scope, $location){
 		        doubledTab.push(tabs[i]);
 		    }
 		}
-		
-
 	};
 	
 	/**
@@ -111,11 +113,16 @@ function TabMainCtrl($scope, $location){
 	 * remove current tab (if inactive) or re-init menu
 	 */
 	$scope.removeOrKeepOnlyActiveTab = function(index, $event, keepLastActiveTab) {		 
-		if ((index != 0) && (index != $scope.getActiveTabIndex())) {
+		if (index != 0) {
+			var activeTabIndex = $scope.getActiveTabIndex();
 			$scope.removeTab(index);
+			alert(activeTabIndex);
+			if (index == activeTabIndex) {
+				$scope.activeTab(0, true);	
+			}
 		}
 		else {
-			$scope.keepOnlyActiveTab(keepLastActiveTab);
+			$scope.keepOnlyActiveTab(keepLastActiveTab, $event);
 		} 
 		//$event.stopPropagation();
 	    $event.preventDefault();
@@ -125,7 +132,7 @@ function TabMainCtrl($scope, $location){
 	/**
 	 * Set one element of list active
 	 */
-	$scope.activeTab = function(value, changeLocation, $event){
+	$scope.activeTab = function(value, changeLocation){
 		var tab = undefined;
 		if(angular.isNumber(value)){
 			tab = tabs[value];
