@@ -150,13 +150,16 @@ public class Runs extends RunsController {
 			queries.add(DBQuery.is("keep", form.keep));
 		}
 			
-		
 		if(null != form.fromDate){
 			queries.add(DBQuery.greaterThanEquals("sequencingStartDate", form.fromDate));
 		}
 		
 		if(null != form.toDate){
 			queries.add(DBQuery.lessThanEquals("sequencingStartDate", form.toDate));
+		}
+		
+		if (CollectionUtils.isNotEmpty(form.instrumentCodes)) { //all
+			queries.add(DBQuery.in("instrumentUsed.code", form.instrumentCodes));
 		}
 		
 		if(queries.size() > 0){

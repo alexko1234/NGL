@@ -76,7 +76,8 @@ public class Runs extends CommonController {
   	    		controllers.commons.api.routes.javascript.States.list(),
   	    		controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
   	    		controllers.alerts.api.routes.javascript.Alerts.list(),
-  	      		controllers.treatmenttypes.api.routes.javascript.TreatmentTypes.get()
+  	      		controllers.treatmenttypes.api.routes.javascript.TreatmentTypes.get(),
+  	      		controllers.instruments.api.routes.javascript.Instruments.list()
   	      )	  	      
   	    );
   	  }

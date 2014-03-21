@@ -183,7 +183,9 @@ angular.module('commonsServices', []).
 	    							return results['types'];
 	    						}
     					   },
-    			getValuations : function(){return results['valuations'];}			
+    			getInstruments : function(){return results['instruments'];},		   
+    			getValuations : function(){return results['valuations'];}
+    			
     		};
     		
     	}]).directive('messages', function() {

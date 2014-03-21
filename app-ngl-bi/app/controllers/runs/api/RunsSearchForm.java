@@ -29,5 +29,8 @@ public class RunsSearchForm extends ListForm {
     public Date toDate;
     
     public Boolean keep;
+    
+    public List<String> instrumentCodes;
+    
 
 }

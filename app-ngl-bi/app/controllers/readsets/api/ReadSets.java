@@ -132,12 +132,19 @@ public class ReadSets extends ReadSetsController{
 			queries.add(DBQuery.regex("code", Pattern.compile(form.regexCode)));
 		}
 		
+		if (CollectionUtils.isNotEmpty(form.instrumentCodes)) { //all
+			queries.add(DBQuery.regex("runCode", Pattern.compile(findRegExpFromStringList(form.instrumentCodes))));
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
 		
 		return query;
 	}
+	
+	
+	
 	
 	//@Permission(value={"reading"})
 	public static Result get(String readSetCode) {
@@ -489,5 +496,18 @@ public class ReadSets extends ReadSetsController{
 		
 		ReadSetValidationHelper.validateValuation(readSet.typeCode, productionVal, ctxVal);
 		ReadSetValidationHelper.validateValuation(readSet.typeCode, bioinfoVal, ctxVal);		
-	}		
+	}
+
+	
+	
+	public static String findRegExpFromStringList(List<String> searchList) {
+		String regex = ".*("; 
+		for (String itemList : searchList) {
+			regex += itemList + "|"; 
+		}
+		regex = regex.substring(0,regex.length()-1);
+		regex +=  ").*";
+		return regex;
+	}
+
 }

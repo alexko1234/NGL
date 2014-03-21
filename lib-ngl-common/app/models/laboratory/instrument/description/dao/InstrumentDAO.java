@@ -128,6 +128,8 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 			sql += " and ic.code = ? ";			
 		}
 		
+		sql += " ORDER BY t.code";
+		
 		return initializeMapping(sql, (SqlParameter[])sqlParameters).execute(parameters);		
 	}
 	

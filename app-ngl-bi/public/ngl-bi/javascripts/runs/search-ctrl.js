@@ -84,6 +84,7 @@ function SearchFormCtrl($scope, $filter, lists){
 		$scope.lists.refresh.states({objectTypeCode:"Run"});
 		$scope.lists.refresh.types({objectTypeCode:"Run"});
 		$scope.lists.refresh.runs();
+		$scope.lists.refresh.instruments({categoryCode:"seq-illumina"});
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();

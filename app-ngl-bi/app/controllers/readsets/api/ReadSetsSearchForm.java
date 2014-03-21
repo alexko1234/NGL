@@ -36,5 +36,7 @@ public class ReadSetsSearchForm extends ListForm{
 	public Date toDate;
 	
 	public String regexCode;
+    
+    public List<String> instrumentCodes;	
 	 
 }
