@@ -28,17 +28,17 @@ function TabMainCtrl($scope, $location){
 	};
 	
 	/**
-	 * function to keep only the first tab and an eventually an other tab
+	 * "private" function to keep only the first tab and an eventually an other tab
 	 * (if active) to remenber the last selection
 	 */
-	$scope.keepOnlyActiveTab = function(keepLastActiveTab, $event) { 
+	var keepOnlyActiveTab = function(keepLastActiveTab, $event) { 
 		var activeTabIndex = 0;
 		var firstTab = tabs[0];
 		var newtabs = [];
 		newtabs[0] = firstTab;		
 		//if we want to have the last active tab ...
 		if (keepLastActiveTab) {
-			activeTabIndex = $scope.getActiveTabIndex();
+			activeTabIndex = getActiveTabIndex();
 			if (activeTabIndex > 0) {
 				newtabs[1] = tabs[activeTabIndex]; 
 			}
@@ -114,18 +114,17 @@ function TabMainCtrl($scope, $location){
 	 */
 	$scope.removeOrKeepOnlyActiveTab = function(index, $event, keepLastActiveTab) {		 
 		if (index != 0) {
-			var activeTabIndex = $scope.getActiveTabIndex();
+			var activeTabIndex = getActiveTabIndex();
 			$scope.removeTab(index);
-			alert(activeTabIndex);
 			if (index == activeTabIndex) {
 				$scope.activeTab(0, true);	
 			}
 		}
 		else {
-			$scope.keepOnlyActiveTab(keepLastActiveTab, $event);
+			keepOnlyActiveTab(keepLastActiveTab, $event);
 		} 
-		//$event.stopPropagation();
 	    $event.preventDefault();
+	    $event.stopPropagation(); 
 	};
 	
 		
@@ -158,8 +157,7 @@ function TabMainCtrl($scope, $location){
 		}
 	};
 	
-	
-	$scope.getActiveTabIndex = function(){
+	var getActiveTabIndex = function(){
 		for(var i = 0; i < tabs.length; i++){				
 			if(tabs[i].clazz === 'active'){
 				return i;

@@ -138,13 +138,13 @@ GET		/api/commons/resolutions  					controllers.commons.api.Resolutions.list()
 GET		/api/lists/valuation-criterias				controllers.lists.api.Lists.valuationCriterias()
 
 #projects
-GET		/api/projects/list							controllers.projects.api.Projects.list()
+GET		/api/projects							controllers.projects.api.Projects.list()
 
 #instruments
-GET		/api/instruments/list							controllers.instruments.api.Instruments.list()
+GET		/api/instruments							controllers.instruments.api.Instruments.list()
 
 #samples
-GET		/api/samples/list							controllers.samples.api.Samples.list()
+GET		/api/samples							controllers.samples.api.Samples.list()
 GET		/api/samples/:code							controllers.samples.api.Samples.get(code: java.lang.String)
 
 ->  /authentication authentication.Routes
