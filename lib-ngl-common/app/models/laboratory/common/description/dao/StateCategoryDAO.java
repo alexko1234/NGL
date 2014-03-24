@@ -11,8 +11,5 @@ public class StateCategoryDAO extends AbstractDAODefault<StateCategory>{
 	protected StateCategoryDAO() {
 		super("state_category", StateCategory.class, true);
 	}
-
-	
-
 	
 }

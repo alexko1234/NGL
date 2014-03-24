@@ -4,6 +4,7 @@ import java.util.List;
 
 import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.dao.StateDAO;
+import models.laboratory.run.description.RunCategory;
 import models.utils.ListObject;
 import models.utils.Model;
 import models.utils.dao.DAOException;
@@ -19,8 +20,9 @@ public class State extends Model<State> {
     public String name;
     public boolean active;
     public Integer position;
-    public List<StateCategory> categories;
+    public StateCategory category;
     public List<ObjectType> objectTypes;
+    
 
     public static StateFinder find = new StateFinder();
 

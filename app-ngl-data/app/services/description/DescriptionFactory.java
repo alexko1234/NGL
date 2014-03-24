@@ -349,13 +349,13 @@ public class DescriptionFactory {
 	 * @param objTypes
 	 * @return
 	 */
-	public static State newState(String name, String code, boolean active,	int position, List<StateCategory> categories, List<ObjectType> objTypes) {
+	public static State newState(String name, String code, boolean active,	int position, StateCategory category, List<ObjectType> objTypes) {
 		State s = new State();
 		s.code = code;
 		s.name = name;
 		s.active =active;
 		s.position = position;
-		s.categories = categories;
+		s.category = category;
 		s.objectTypes = objTypes; 
 		return s;
 	}
