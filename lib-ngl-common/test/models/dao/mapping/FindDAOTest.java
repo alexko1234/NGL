@@ -12,6 +12,7 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.container.description.ContainerSupportCategory;
+import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentQueryParams;
@@ -114,6 +115,12 @@ public class FindDAOTest extends AbstractTests {
 		Protocol cTypeId = Protocol.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(Protocol.find.isCodeExist(""));
+		ExperimentType experimentType=ExperimentType.find.findAll().get(0);
+		Protocol protocol = Protocol.find.findByExperimentTypeCode(experimentType.code).get(0);
+		Boolean exist=Protocol.find.isCodeExistForTypeCode(protocol.code, experimentType.code);
+		Assert.assertTrue(exist);
+		exist=Protocol.find.isCodeExistForTypeCode(protocol.code, "test");
+		Assert.assertFalse(exist);
 	}
 
 	@Test

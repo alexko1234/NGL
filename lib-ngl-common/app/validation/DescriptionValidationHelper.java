@@ -6,33 +6,21 @@ import java.util.Map;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.reagent.description.ReagentType;
-import models.laboratory.run.description.RunType;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
 
 public class DescriptionValidationHelper {
-	
-	public static void validationProtocol(String protocolCode,
-			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, protocolCode, "protocolCode", Protocol.find);
-	}
 
 	public static void validationInstrumentUsedTypeCode(
 			String instrumentUsedTypeCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsedTypeCode, "typeCode", InstrumentUsedType.find);		
 	}
 	
-	public static void validationExperimentTypeCode(
-			String experimentTypeCode, ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, experimentTypeCode, "experimentTypeCode", ExperimentType.find);		
-	}
 	
 	public static void validationExperimentType(
 			String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
@@ -42,10 +30,7 @@ public class DescriptionValidationHelper {
 		}
 	}
 	
-	public static void validationExperimentCategoryCode(String categoryCode,
-			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ExperimentCategory.find,false);
-	}
+	
 
 	public static void validationInstrumentCode(String code,
 			ContextValidation contextValidation) {
@@ -65,7 +50,7 @@ public class DescriptionValidationHelper {
 
 	public static void validationRunTypeCode(String typeCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", RunType.find,false);		
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,false);		
 		
 	}
 

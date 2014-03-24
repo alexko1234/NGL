@@ -40,5 +40,12 @@ public class Protocol extends Model<Protocol>{
 			return ((ProtocolDAO)getInstance()).findByExperimentTypeCode(code);
 		}
 		
+		public boolean isCodeExistForTypeCode(String code, String typeCode)
+				throws DAOException {
+			    return ((ProtocolDAO) getInstance()).isCodeExistForTypeCode(code,
+				    typeCode);
+			}
 	}
+	
+	
 }

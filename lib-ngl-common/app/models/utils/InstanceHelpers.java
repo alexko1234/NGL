@@ -49,6 +49,9 @@ public class InstanceHelpers {
 		String user;
 		try{
 			user=Http.Context.current().session().get("CAS_FILTER_USER");
+			if(user==null){
+				user="ngl";
+			}
 		} catch(RuntimeException e){
 			user="ngl";
 		}

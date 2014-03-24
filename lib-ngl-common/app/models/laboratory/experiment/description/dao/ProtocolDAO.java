@@ -11,7 +11,9 @@ import models.laboratory.reagent.description.ReagentType;
 import models.laboratory.reagent.description.dao.ReagentTypeDAO;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
+import models.utils.dao.DAOHelpers;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
@@ -144,5 +146,16 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 		//jdbcTemplate.update(sqlState, protocol.id);
 		//remove protocol
 		super.remove(protocol);
+	}
+
+	public boolean isCodeExistForTypeCode(String codeProtocol, String typeCode) throws DataAccessException, DAOException {
+		String sql = sqlCommon +
+				"JOIN experiment_type_protocol etp ON etp.fk_protocol=t.id "+
+				"JOIN experiment_type e ON e.id=etp.fk_experiment_type "+
+				"JOIN common_info_type c on c.id =e.fk_common_info_type "+
+				  DAOHelpers.getCommonInfoTypeSQLForInstitute("c")+
+				" where t.code=? and c.code=?";
+		return( initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR),
+				 new SqlParameter("c.code", Types.VARCHAR)).findObject(codeProtocol, typeCode) != null )? true : false;	
 	}
 }

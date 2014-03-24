@@ -5,7 +5,6 @@ import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.reagent.description.ReagentType;
-import models.laboratory.run.description.RunType;
 import models.laboratory.run.description.TreatmentType;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
@@ -97,26 +96,26 @@ public abstract class AbstractTypeDAOTest {
 
 	@Test
 	public void readSetTypeFindTest() throws DAOException {		
-		RunType type=RunType.find.findAll().get(0);
+		ExperimentType type=ExperimentType.find.findAll().get(0);
 		Assert.assertNotNull(type);
-		RunType cType=RunType.find.findByCode(type.code);
+		ExperimentType cType=ExperimentType.find.findByCode(type.code);
 		Assert.assertNotNull(cType);
-		RunType cTypeId=RunType.find.findById(type.id);
+		ExperimentType cTypeId=ExperimentType.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
-		Assert.assertFalse(RunType.find.isCodeExist(""));
-		Assert.assertNotNull(RunType.find.findAllForList());
+		Assert.assertFalse(ExperimentType.find.isCodeExist(""));
+		Assert.assertNotNull(ExperimentType.find.findAllForList());
 	}
 
 	@Test
 	public void runTypeFindTest() throws DAOException {		
-		RunType type=RunType.find.findAll().get(0);
+		ExperimentType type=ExperimentType.find.findAll().get(0);
 		Assert.assertNotNull(type);
-		RunType cType=RunType.find.findByCode(type.code);
+		ExperimentType cType=ExperimentType.find.findByCode(type.code);
 		Assert.assertNotNull(cType);
-		RunType cTypeId=RunType.find.findById(type.id);
+		ExperimentType cTypeId=ExperimentType.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
-		Assert.assertFalse(RunType.find.isCodeExist(""));
-		Assert.assertNotNull(RunType.find.findAllForList());
+		Assert.assertFalse(ExperimentType.find.isCodeExist(""));
+		Assert.assertNotNull(ExperimentType.find.findAllForList());
 	}
 	
 	@Test

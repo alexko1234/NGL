@@ -1,5 +1,6 @@
 package models.laboratory.experiment.instance;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import models.laboratory.common.description.State;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
@@ -22,9 +24,8 @@ import net.vz.mongodb.jackson.MongoCollection;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import validation.ContextValidation;
-import validation.DescriptionValidationHelper;
 import validation.IValidation;
-import validation.InstanceValidationHelper;
+import validation.experiment.instance.ExperimentValidationHelper;
 import fr.cea.ig.DBObject;
 
 
@@ -119,50 +120,31 @@ public class Experiment extends DBObject implements IValidation {
 		return new HelperObjects<Resolution>().getObjects(Resolution.class, resolutionCodes);
 	}
 
+	public List<ContainerUsed> getAllInPutContainer(){
+		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
+		if(this.atomicTransfertMethods!=null){
+			for(int i=0;i<this.atomicTransfertMethods.size();i++){
+				containersUSed.addAll(this.atomicTransfertMethods.get(i).getInputContainers());
+			}
+
+		}
+		return containersUSed;
+	}
+	
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		
-		if(this == null){
-			throw new IllegalArgumentException("this is null");
-		}
-		
-		contextValidation.putObject("_id",this._id);
-		
-		validation.utils.BusinessValidationHelper.validateUniqueInstanceCode(contextValidation, this.code, Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME);
-		
-		DescriptionValidationHelper.validationStateCode(stateCode, contextValidation);
-		DescriptionValidationHelper.validationExperimentTypeCode(typeCode, contextValidation);
-		DescriptionValidationHelper.validationExperimentCategoryCode(categoryCode, contextValidation);
-		DescriptionValidationHelper.validationResolutionCodes(resolutionCodes, contextValidation);
-		DescriptionValidationHelper.validationProtocol(protocolCode,contextValidation);
-		DescriptionValidationHelper.validationInstrumentUsedTypeCode(instrumentUsedTypeCode,contextValidation);
-		
-		//ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.typeCode, "typeCode", ExperimentType.find,true);
-		//InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation.errors, this.instrumentUsedTypeCode,"typeCode", InstrumentUsedType.find,true);
-		//ConstraintsHelper.validatePropertiesforLevel(contextValidation.errors, this.experimentProperties, exType.propertiesDefinitions,"",LEVEL_SEARCH_EXP);
-
-		DescriptionValidationHelper.validationExperimentType(typeCode, experimentProperties, contextValidation);
-		
-		
-		String rootKeyName=null;
-		for(int i=0;i<atomicTransfertMethods.size();i++){
-			rootKeyName="atomictransfertmethod"+"["+i+"]";
-			contextValidation.addKeyToRootKeyName(rootKeyName);
-			atomicTransfertMethods.get(i).validate(contextValidation);
-			contextValidation.removeKeyFromRootKeyName(rootKeyName);
-		}
-		
-		instrument.validate(contextValidation);
-		if(reagentsUsed != null){
-			for(ReagentUsed reagentUsed:reagentsUsed){
-				reagentUsed.validate(contextValidation);
-			}
-		}
-		
-		traceInformation.validate(contextValidation);
-		InstanceValidationHelper.validationComments(comments, contextValidation);
-		
+				
+		ExperimentValidationHelper.validateCode(this, InstanceConstants.EXPERIMENT_COLL_NAME, contextValidation);
+//		ExperimentValidationHelper.validateState(this.typeCode, this.state, contextValidation);
+		ExperimentValidationHelper.validationExperimentType(typeCode, experimentProperties, contextValidation);
+		ExperimentValidationHelper.validationExperimentCategoryCode(categoryCode, contextValidation);
+		ExperimentValidationHelper.validateResolutionCodes(resolutionCodes,contextValidation);
+		ExperimentValidationHelper.validationProtocol(typeCode,protocolCode,contextValidation);
+		ExperimentValidationHelper.validateInstrumentUsed(typeCode,instrument,instrumentProperties,contextValidation);
+		ExperimentValidationHelper.validateAtomicTransfertMethodes(atomicTransfertMethods,contextValidation);
+		ExperimentValidationHelper.validateReagents(reagentsUsed,contextValidation);
+		ExperimentValidationHelper.validateTraceInformation(traceInformation, contextValidation);			
 
 	}
 

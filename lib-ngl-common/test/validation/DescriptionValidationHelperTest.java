@@ -72,7 +72,7 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 		resolution=Resolution.find.findAll().get(0);
 	}
 
-	@Test
+	/*@Test
 	public void validationProtocol() {
 		ContextValidation contextValidation=new ContextValidation();
 		DescriptionValidationHelper.validationProtocol(proto.code, contextValidation);
@@ -91,7 +91,7 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 		ContextValidation contextValidation=new ContextValidation();
 		DescriptionValidationHelper.validationProtocol("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
-	}
+	}*/
 
 	/**
 	 * InstrumentUsedType
@@ -118,10 +118,11 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 
+	
 	/***
 	 * ExperimentType
 	 */
-	@Test
+	/*@Test
 	public void validationExperimentTypeCode() {
 		ContextValidation contextValidation=new ContextValidation();
 		DescriptionValidationHelper.validationExperimentTypeCode(experimentType.code, contextValidation);
@@ -141,11 +142,11 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 		DescriptionValidationHelper.validationExperimentTypeCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
-
+*/
 	/**
 	 * ExperimentCategory
 	 */
-
+	/*
 	@Test
 	public void validationExperimentCategoryCode() {
 		ContextValidation contextValidation=new ContextValidation();
@@ -166,7 +167,7 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 		DescriptionValidationHelper.validationExperimentCategoryCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
-
+*/
 	
 	/**
 	 * Instrument
