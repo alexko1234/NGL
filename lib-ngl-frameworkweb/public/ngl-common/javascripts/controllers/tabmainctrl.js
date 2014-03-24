@@ -32,14 +32,12 @@ function TabMainCtrl($scope, $location){
 	 * (if active) to remenber the last selection
 	 */
 	var keepOnlyActiveTab = function(keepLastActiveTab, $event) { 
-		var activeTabIndex = 0;
 		var firstTab = tabs[0];
 		var newtabs = [];
 		newtabs[0] = firstTab;		
 		//if we want to have the last active tab ...
 		if (keepLastActiveTab) {
-			activeTabIndex = getActiveTabIndex();
-			if (activeTabIndex > 0) {
+			if (getActiveTabIndex() > 0) {
 				newtabs[1] = tabs[activeTabIndex]; 
 			}
 		}
@@ -114,9 +112,8 @@ function TabMainCtrl($scope, $location){
 	 */
 	$scope.removeOrKeepOnlyActiveTab = function(index, $event, keepLastActiveTab) {		 
 		if (index != 0) {
-			var activeTabIndex = getActiveTabIndex();
 			$scope.removeTab(index);
-			if (index == activeTabIndex) {
+			if (index == getActiveTabIndex()) {
 				$scope.activeTab(0, true);	
 			}
 		}
