@@ -1,15 +1,27 @@
+/*custom bootstrap*/
+
 body {
 	padding-top:50px;
 }
 
+.list-group-item{
+	padding: 7px 12px;
+}
+
+input[type="radio"] {
+	margin: 1px 0 0;
+}
+
+input[type="checkbox"] {
+	margin: 2px 0 0;
+}
+
+
+/*additionnal class*/
 .text-overflow{
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.list-group-item{
-	padding: 7px 12px;
 }
 
 .treatmentOverflow {
@@ -29,5 +41,5 @@ body {
 	margin-bottom:7px;
 }
 	
-		
+
 	
