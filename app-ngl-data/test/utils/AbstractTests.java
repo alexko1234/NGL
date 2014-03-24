@@ -77,6 +77,10 @@ public class AbstractTests {
 
 		config.put("institute", "CNS");
 		config.put("import.data","false");
+	
+		config.put("rules.key","nglBI" );
+		config.put("rules.changesets","rules/cng/changesets/changesets.xml");
+		
 		return config;
 
 	}
