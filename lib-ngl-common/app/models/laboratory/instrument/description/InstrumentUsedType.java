@@ -6,7 +6,6 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.container.description.ContainerSupportCategory;
-import models.laboratory.instrument.description.dao.InstrumentDAO;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.dao.DAOException;
 

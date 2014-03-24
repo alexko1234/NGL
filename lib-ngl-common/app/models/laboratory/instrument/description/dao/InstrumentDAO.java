@@ -13,20 +13,15 @@ import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.SqlTypeValue;
 import org.springframework.stereotype.Repository;
-
-import com.avaje.ebean.enhance.asm.Type;
-
 
 @Repository
 public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 
 	protected InstrumentDAO() {
 		super("instrument", Instrument.class, InstrumentMappingQuery.class,
-				"SELECT distinct t.id, t.name, t.code, t.active, t.path, t.fk_instrument_used_type FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t"),
+				"SELECT distinct t.id, t.short_name, t.name, t.code, t.active, t.path, t.fk_instrument_used_type FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t"),
 				true);				
 	}
 	
@@ -34,6 +29,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 	public long save(Instrument instrument) throws DAOException {
 		Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("name", instrument.name);
+        parameters.put("short_name", instrument.shortName);
         parameters.put("code", instrument.code);
         parameters.put("fk_instrument_used_type", instrument.instrumentUsedType.id);
         parameters.put("active", instrument.active);
@@ -48,7 +44,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 	
 	@Override
 	public void update(Instrument instrument) throws DAOException {
-		String sql = "UPDATE instrument SET code=?, name=?, fk_instrument_used_type =?, active=?, path=? WHERE id=?";
+		String sql = "UPDATE instrument SET code=?, short_name=?, name=?, fk_instrument_used_type =?, active=?, path=? WHERE id=?";
 		jdbcTemplate.update(sql, instrument.code, instrument.name, instrument.instrumentUsedType.id, instrument.active, instrument.path, instrument.id);
 	}
 	

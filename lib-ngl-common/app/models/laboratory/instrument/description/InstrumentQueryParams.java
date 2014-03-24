@@ -2,7 +2,6 @@ package models.laboratory.instrument.description;
 
 import java.util.List;
 
-import controllers.ListForm;
 
 public class InstrumentQueryParams {
 	

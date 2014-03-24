@@ -1,9 +1,6 @@
 package models.laboratory.instrument.description;
 
-import java.util.List;
-
 import models.laboratory.common.description.AbstractCategory;
-import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.dao.InstrumentCategoryDAO;
 
 

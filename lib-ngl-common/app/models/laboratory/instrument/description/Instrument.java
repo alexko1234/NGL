@@ -5,9 +5,7 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-
 import models.laboratory.common.description.Institute;
-import models.laboratory.common.description.ValuationCriteria.ValuationCriteriaFinder;
 import models.laboratory.instrument.description.dao.InstrumentDAO;
 import models.utils.Model;
 import models.utils.dao.DAOException;
@@ -15,6 +13,7 @@ import models.utils.dao.DAOException;
 
 public class Instrument extends Model<Instrument>{
 
+	public String shortName;
 	public String name;
 	public Boolean active;
 	public String path;
@@ -27,17 +26,14 @@ public class Instrument extends Model<Instrument>{
 	
 	/* used only to send in json */
 	public String typeCode;
-	public String categoryCode;
-	
+	public String categoryCode;	
 	
 	public static InstrumentFinder find = new InstrumentFinder();
 
-	
 	public Instrument() {
 		super(InstrumentDAO.class.getName());
 	}
-	
-	
+		
 	public static class InstrumentFinder extends Finder<Instrument>{
 
 		public InstrumentFinder() {

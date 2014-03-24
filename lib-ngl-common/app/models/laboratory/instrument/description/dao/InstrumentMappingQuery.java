@@ -37,16 +37,15 @@ public class InstrumentMappingQuery extends MappingSqlQuery<Instrument>{
 		instrument.id=rs.getLong("id");
 		instrument.code=rs.getString("code");
 		instrument.name=rs.getString("name");
+		instrument.shortName=rs.getString("short_name");
 		instrument.path=rs.getString("path");
 		instrument.active=rs.getBoolean("active");
-		
 		
 		long idType = rs.getLong("fk_instrument_used_type");
 		Map<String, Object> result = Spring.getBeanOfType(InstrumentUsedTypeDAO.class).findTypeCodeAndCatCode(idType);
 		
 		instrument.typeCode = (String)result.get("typeCode");
 		instrument.categoryCode = (String)result.get("catCode");
-		
 		
 		return instrument;
 	}
