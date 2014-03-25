@@ -2,17 +2,14 @@ package controllers.commons.api;
 
 import static play.data.Form.form;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.common.description.Resolution;
-import models.laboratory.processes.description.ProcessType;
-import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
 
@@ -37,18 +34,12 @@ public class Resolutions extends CommonController{
 			}
 			if(resolutionsSearch.datatable){
 				return ok(Json.toJson(new DatatableResponse<Resolution>(resolutions, resolutions.size()))); 
-			/*}else if(resolutionsSearch.list){
-				List<ListObject> lop = new ArrayList<ListObject>();
-				for(Resolution et:resolutions){
-					lop.add(new ListObject(et.code, et.name));
-				}
-				return Results.ok(Json.toJson(lop));
-			*/}else{
-				return Results.ok(Json.toJson(resolutions));
+			}else{
+				return ok(Json.toJson(resolutions));
 			}
 		}catch (DAOException e) {
-			e.printStackTrace();
-			return  Results.internalServerError(e.getMessage());
+			Logger.error(e.getMessage());
+			return internalServerError(e.getMessage());
 		}	
 	}
 }
