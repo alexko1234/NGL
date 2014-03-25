@@ -53,7 +53,7 @@ public class Experiments extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
-		exp = ExperimentHelper.traceInformation(exp,session());
+		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
 		if (!experimentFilledForm.hasErrors()) {
 
@@ -73,7 +73,7 @@ public class Experiments extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
-		exp = ExperimentHelper.traceInformation(exp,session());
+		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 		ContextValidation contextValidation=new ContextValidation(experimentFilledForm.errors());
 		ExperimentHelper.generateOutputContainerUsed(exp, contextValidation);
 
@@ -90,7 +90,7 @@ public class Experiments extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
-		exp = ExperimentHelper.traceInformation(exp,session());
+		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
 		if (!experimentFilledForm.hasErrors()) {
 
@@ -108,7 +108,7 @@ public class Experiments extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
-		exp = ExperimentHelper.traceInformation(exp,session());
+		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
 		if (!experimentFilledForm.hasErrors()) {
 
@@ -126,7 +126,7 @@ public class Experiments extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
-		exp = ExperimentHelper.traceInformation(exp,session());
+		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
 		if (!experimentFilledForm.hasErrors()) {
 
@@ -158,7 +158,7 @@ public class Experiments extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
-		exp = ExperimentHelper.traceInformation(exp,session());
+		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
 		if (!experimentFilledForm.hasErrors()) {
 			if(exp._id == null){
@@ -179,7 +179,7 @@ public class Experiments extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
-		exp = ExperimentHelper.traceInformation(exp,session());
+		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 		exp.sampleCodes = new ArrayList<String>();
 		exp.projectCodes  = new ArrayList<String>();
 
@@ -251,7 +251,7 @@ public class Experiments extends CommonController{
 			exp.stateCode = "N";
 		}
 
-		exp = ExperimentHelper.traceInformation(exp,session());
+		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
 		if (!experimentFilledForm.hasErrors()) {
 			exp=ExperimentHelper.updateInstrumentCategory(exp);
@@ -276,7 +276,7 @@ public class Experiments extends CommonController{
 			exp.stateCode = "N";
 		}
 
-		exp = ExperimentHelper.traceInformation(exp,session());
+		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
 		//exp = (Experiment) MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 
