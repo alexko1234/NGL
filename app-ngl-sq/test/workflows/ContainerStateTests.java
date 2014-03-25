@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import utils.AbstractTests;
 import validation.ContextValidation;
+import workflows.Workflows;
 import fr.cea.ig.MongoDBDAO;
 
 public class ContainerStateTests extends AbstractTests {
@@ -20,8 +21,9 @@ public class ContainerStateTests extends AbstractTests {
 	
 	
 	@Test
-	public static void setContainerStateCode(){
-		Container container=MongoDBDAO.findOne(CONTAINER_DATA, Container.class,DBQuery.is("state.code", "A"));
+	public void setContainerStateCode(){
+		Container container=MongoDBDAO.find(CONTAINER_DATA, Container.class,DBQuery.is("state.code", "A")).toList().get(0);
+		MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class,container.code);
 		container=MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, container);
 		State state=new State();
 		state.code="IW-E";
@@ -30,15 +32,16 @@ public class ContainerStateTests extends AbstractTests {
 		ContextValidation contextValidation=new ContextValidation();
 		Workflows.setContainerState(container.code,state,contextValidation);
 		
-		Container containerUpdate=MongoDBDAO.findOne(CONTAINER_DATA, Container.class,DBQuery.is("code", container.code));
-		Assert.assertSame(containerUpdate.state.code, state.code);
+		Container containerUpdate=MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code));
+		Assert.assertTrue(containerUpdate.state.code.equals(state.code));
 		Assert.assertTrue(contextValidation.errors.size()==0);
 				
 	}
 	
 	@Test
-	public static void setContainerStateCodeError(){
-		Container container=MongoDBDAO.findOne(CONTAINER_DATA, Container.class,DBQuery.is("state.code", "A"));
+	public void setContainerStateCodeError(){
+		Container container=MongoDBDAO.find(CONTAINER_DATA, Container.class,DBQuery.is("state.code", "A")).toList().get(0);
+		MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class,container.code);
 		container=MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, container);
 		State state=new State();
 		state.code="TEST";
