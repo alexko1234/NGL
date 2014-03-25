@@ -28,19 +28,7 @@ import controllers.CommonController;
 public class PermissionHelper {
 	private static final String COOKIE_SESSION = "NGL_FILTER_USER";
 	
-	/**
-	 * 
-	 * @param ses the user session
-	 * @return the current user login for this session
-	 */
-	public static String getCurrentUser(Session ses){
-		/*if(ses != null && StringUtils.isNotEmpty(ses.get(COOKIE_SESSION))){
-			return ses.get(COOKIE_SESSION);
-		}*/
-		
-		return CommonController.getCurrentUser();
-	}
-	
+
 	/**
 	 * 
 	 * @param ses the user session

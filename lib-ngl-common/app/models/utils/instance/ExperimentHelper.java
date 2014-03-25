@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import play.Logger;
-import play.mvc.Http.Session;
 import validation.ContextValidation;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
@@ -83,13 +82,13 @@ public class ExperimentHelper {
 	 * @param exp: the Experiment object
 	 * @return the new experiment object with traces
 	 */
-	public static Experiment traceInformation(Experiment exp,Session session){
+	public static Experiment traceInformation(Experiment exp,String user){
 		if (null == exp._id) {
 			//init
 			exp.traceInformation = new TraceInformation();
-			exp.traceInformation.setTraceInformation(PermissionHelper.getCurrentUser(session));
+			exp.traceInformation.setTraceInformation(user);
 		} else {
-			exp.traceInformation.setTraceInformation(PermissionHelper.getCurrentUser(session));
+			exp.traceInformation.setTraceInformation(user);
 		}
 
 		return exp;
