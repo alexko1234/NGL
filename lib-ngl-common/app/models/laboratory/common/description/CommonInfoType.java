@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.common.description.dao.StateDAO;
@@ -49,6 +51,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		super(classNameDAO);
 	}
 
+	@JsonIgnore
 	public Map<String, PropertyDefinition> getMapPropertyDefinition()
 	{
 		Map<String, PropertyDefinition> mapProperties = new HashMap<String, PropertyDefinition>();
