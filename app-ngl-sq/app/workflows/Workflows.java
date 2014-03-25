@@ -136,17 +136,17 @@ public class Workflows {
 		//il fau peut etre valider tout l'experiment quand il passe à "F"
 		ExperimentValidationHelper.validateNewState(experiment, ctxValidation);
 
-		if(!ctxValidation.hasErrors() && !nextState.equals(experiment.stateCode)){
+		if(!ctxValidation.hasErrors() && !nextState.code.equals(experiment.stateCode)){
 			
 			InstanceHelpers.updateTraceInformation(experiment.traceInformation);  
 			//experiment.state = StateHelper.updateHistoricalNextState(experiment.state, nextState);
 			experiment.stateCode=nextState.code;
 			
 			if(!ctxValidation.hasErrors()){
-				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
+				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,  Run.class, 
 						DBQuery.is("code", experiment.code),
 						//DBUpdate.set("state", experiment.state).set("traceInformation",experiment.traceInformation));
-						DBUpdate.set("state.code", experiment.stateCode).set("traceInformation",experiment.traceInformation));
+						DBUpdate.set("stateCode", experiment.stateCode).set("traceInformation",experiment.traceInformation));
 			}
 			
 			nextInPutContainerState(experiment, ctxValidation);
