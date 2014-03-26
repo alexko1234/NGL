@@ -10,7 +10,6 @@ import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -19,7 +18,6 @@ import net.vz.mongodb.jackson.DBQuery;
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
-import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.modules.mongodb.jackson.MongoDB;
@@ -28,7 +26,6 @@ import views.components.datatable.DatatableResponse;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
@@ -189,7 +186,7 @@ public class Containers extends CommonController {
 		}
 		
 		if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isEmpty(containersSearch.experimentTypeCode)){
-			List<String> listePrevious = Spring.getBeanOfType(ExperimentTypeDAO.class).findVoidProcessExperimentTypeCode(containersSearch.processTypeCode);
+			List<String> listePrevious = ExperimentType.find.findVoidProcessExperimentTypeCode(containersSearch.processTypeCode);
 			if(null != listePrevious && listePrevious.size() > 0){
 				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.size("fromExperimentTypeCodes", 0)));
 			}	    		    	
@@ -201,7 +198,7 @@ public class Containers extends CommonController {
 
 		if(StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
 			try {
-				List<ExperimentType> previous = Spring.getBeanOfType(ExperimentTypeDAO.class).findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.experimentTypeCode);
+				List<ExperimentType> previous = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.experimentTypeCode);
 				List<String> previousString = new ArrayList<String>();
 				for(ExperimentType e:previous){
 					previousString.add(e.code);
