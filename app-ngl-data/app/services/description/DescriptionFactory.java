@@ -113,6 +113,33 @@ public class DescriptionFactory {
 	 * @param levels
 	 * @param type
 	 * @param required
+	 * @param values
+	 * @return
+	 * @throws DAOException
+	 */
+	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String defaultValue) {
+		
+		PropertyDefinition pd = new PropertyDefinition();		
+		pd.name = name;
+		pd.code = code;
+		pd.active = true;
+		pd.levels = levels;
+		pd.valueType = type.getName();
+		pd.required = required;
+		pd.choiceInList = true;		
+		pd.possibleValues = values;
+		pd.defaultValue=defaultValue;
+		return pd;
+	}
+
+	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param levels
+	 * @param type
+	 * @param required
 	 * @param measureCategory
 	 * @param displayMeasureUnit
 	 * @param saveMeasureUnit
@@ -766,5 +793,6 @@ public class DescriptionFactory {
 		v.institutes = institutes;
 		return v;
 	}
+
 
 }

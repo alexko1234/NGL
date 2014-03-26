@@ -1,8 +1,7 @@
 package services.description.process;
 
-import services.description.DescriptionFactory;
-
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +14,7 @@ import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
+import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 
 
@@ -31,6 +31,7 @@ public class ProcessService {
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Optical mapping", "mapping"));		
 		DAOHelpers.saveModels(ProcessCategory.class, l, errors);
@@ -39,11 +40,21 @@ public class ProcessService {
 
 	private static void saveProcessTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessType> l = new ArrayList<ProcessType>();
-		l.add(DescriptionFactory.newProcessType("Banque 300-600", "lib-300-600", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie-indexing","amplification"), 
-				getExperimentTypes("fragmentation").get(0), getExperimentTypes("amplification").get(0), getExperimentTypes("void-lib-300-600").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newProcessType("Librairie PE sans sizing", "Lib-PE-NoSizing", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie-indexing","amplification"), 
+				getExperimentTypes("fragmentation").get(0), getExperimentTypes("amplification").get(0), getExperimentTypes("void-banque").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newProcessType("qPCR et normalisation", "qPCR-normalisation", ProcessCategory.find.findByCode("pre-sequencing"), getPropertyDefinitionsqPCR(), getExperimentTypes("solution-stock"), 
+				getExperimentTypes("solution-stock").get(0), getExperimentTypes("solution-stock").get(0), getExperimentTypes("void-qpcr").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepot() , getExperimentTypes("prepa-flowcell","illumina-depot"), getExperimentTypes("prepa-flowcell").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("void-illumina-depot").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newProcessType("Run Opgen", "opgen-run", ProcessCategory.find.findByCode("mapping"),getPropertyDefinitionsOpgenDepot() , getExperimentTypes("opgen-depot"), getExperimentTypes("opgen-depot").get(0), getExperimentTypes("opgen-depot").get(0),getExperimentTypes("void-opgen-depot").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
+	}
+
+	private static List<PropertyDefinition> getPropertyDefinitionsqPCR() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Type MapCard","mapcardType"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("standard","HD")));
+		return propertyDefinitions;
 	}
 
 	private static List<PropertyDefinition> getPropertyDefinitionsOpgenDepot() throws DAOException {
@@ -79,19 +90,16 @@ public class ProcessService {
 	}
 
 
-
-	//TODO
-	// Key to validate
 	public static List<PropertyDefinition> getPropertyDefinitionsLib300600() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		//Valeur par defaut SPRI
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Robot","robotUsing", LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SPRI")));
-		// //Measure par defaut ng
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Quantité à engager", "quantityUsing", LevelService.getLevels(Level.CODE.Process),Double.class, true, DescriptionFactory.newValues("250","500")));		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Objectif Expérience ", "goalExperiment", LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("PE_400","Fragm_cDNA")));
-		//Valeur par defaut 300-600pb
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Objectif Taille", "goalSize", LevelService.getLevels(Level.CODE.Process),String.class, true));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Catégorie imputation", "imputationCategory", LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("PRODUCTION","DEVELOPPEMENT")));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Robot à utiliser","autoVsManuel", LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("MAN","ROBOT")));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Quantité à engager", "objInputProcess", LevelService.getLevels(Level.CODE.Process),Double.class, true, DescriptionFactory.newValues("250","500")));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Objectif fragmentation", "objFragm", LevelService.getLevels(Level.CODE.Process),String.class,false));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Ojectif Taille de banque finale", "objSize", LevelService.getLevels(Level.CODE.Process),String.class,true,DescriptionFactory.newValues("300-600","300-800"),"300-600"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Catégorie Imputation", "imputationCat", LevelService.getLevels(Level.CODE.Process),String.class,true,DescriptionFactory.newValues("PRODUCTION","DEVELOPPEMENT")));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Date limite", "dateLimite", LevelService.getLevels(Level.CODE.Process),Date.class,false));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Indexing", "indexing", LevelService.getLevels(Level.CODE.Process),String.class,true,DescriptionFactory.newValues("Single indexing","Dual indexing","Pas d'indexing")));
 		return propertyDefinitions;
 	}
 

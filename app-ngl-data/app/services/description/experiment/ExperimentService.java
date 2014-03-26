@@ -89,11 +89,18 @@ public class ExperimentService {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
 		//transformation
+		
+		//library
 		l.add(newExperimentType("Fragmentation","fragmentation",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("fragmentation_ptr_sox140_1"), getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
 		l.add(newExperimentType("Librairie indexing","librairie-indexing",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(), getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newExperimentType("Librairie dual indexing","librairie-dualindexing",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(), getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-
 		l.add(newExperimentType("Amplification","amplification",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand","thermo"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		//pre-sequencing
+		//attention proto, attention robot voir avec julie
+		l.add(newExperimentType("Solution stock","solution-stock",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		
 		
 		//qc
 		l.add(newExperimentType("Bioanalyzer Non Ampli","bioanalyzer-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), null, getInstrumentUsedTypes("agilent-2100"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
@@ -107,7 +114,8 @@ public class ExperimentService {
 		
 		
 		//void
-		l.add(newExperimentType("Void Banque 300-600","void-lib-300-600",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Void Banque","void-banque",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Void qPCR","void-qpcr",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newExperimentType("Void Depot Illumina","void-illumina-depot",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newExperimentType("Void Opgen Illumina","void-opgen-depot",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
@@ -126,24 +134,12 @@ public class ExperimentService {
 		
 	}
 
-	
-	private static List<PropertyDefinition> getPropertyDefinitionsDepotIllumina() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Position","location"
-        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B")));
-        propertyDefinitions.add(newPropertiesDefinition("Type lecture", "readType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE")));
-        propertyDefinitions.add(newPropertiesDefinition("Nb Cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true,null));
-        propertyDefinitions.add(newPropertiesDefinition("Nb Cycles ReadIndex1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true,null));
-        propertyDefinitions.add(newPropertiesDefinition("Nb Cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false,null));
-        propertyDefinitions.add(newPropertiesDefinition("Nb Cycles ReadIndex2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false,null));
-//        propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "cycleNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR150","PE150","PE200","PE300")));
-        return propertyDefinitions;
-	}
 
 	private static void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
-		newExperimentTypeNode("void-lib-300-600", getExperimentTypes("void-lib-300-600").get(0), false, false, null, null, null).save();
-		newExperimentTypeNode("void-opgen-depot", getExperimentTypes("void-lib-300-600").get(0), false, false, null, null, null).save();
-		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("void-lib-300-600"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
+		newExperimentTypeNode("void-banque", getExperimentTypes("void-banque").get(0), false, false, null, null, null).save();
+		newExperimentTypeNode("void-qpcr", getExperimentTypes("void-qpcr").get(0), false, false, null, null, null).save();
+		newExperimentTypeNode("void-opgen-depot", getExperimentTypes("void-banque").get(0), false, false, null, null, null).save();
+		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("void-banque"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
 		newExperimentTypeNode("librairie-indexing", getExperimentTypes("librairie-indexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
 		newExperimentTypeNode("librairie-dualindexing", getExperimentTypes("librairie-dualindexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
 		newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie-indexing","librairie-dualindexing"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
