@@ -20,7 +20,7 @@ public class MeasureUnitDAO extends AbstractDAOMapping<MeasureUnit>{
 						"FROM measure_unit as t ",true);
 	}
 
-
+/*
 	public List<MeasureUnit> findByMeasureCategory(long idMeasureCategory) {
 		String sql = "SELECT id, code, value, default_unit " +
 				"FROM measure_unit "+
@@ -28,7 +28,7 @@ public class MeasureUnitDAO extends AbstractDAOMapping<MeasureUnit>{
 		BeanPropertyRowMapper<MeasureUnit> mapper = new BeanPropertyRowMapper<MeasureUnit>(MeasureUnit.class);
 		return this.jdbcTemplate.query(sql, mapper, idMeasureCategory);
 	}
-
+*/
 	public MeasureUnit findByValue(String value) {
 		String sql = "SELECT id, code, value,default_unit " +
 				"FROM measure_unit "+

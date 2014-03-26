@@ -477,7 +477,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Instrument");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
-		MeasureUnit measureValue = MeasureUnit.findByValue("value2");
+		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value6","value6", true));
 		possibleValues.add(createValue("value7","value7", false));
@@ -584,7 +584,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Experiment");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
-		MeasureUnit measureValue = MeasureUnit.findByValue("value2");
+		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value10","value10", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
@@ -623,7 +623,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Experiment");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
-		MeasureUnit measureValue = MeasureUnit.findByValue("value2");
+		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value12","value12", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
@@ -667,7 +667,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Experiment");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
-		MeasureUnit measureValue = MeasureUnit.findByValue("value2");
+		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value8", "value8", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
@@ -744,7 +744,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Process");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
-		MeasureUnit measureValue = MeasureUnit.findByValue("value2");
+		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value16","value16", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
@@ -815,7 +815,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Project");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
-		MeasureUnit measureValue = MeasureUnit.findByValue("value2");
+		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value17","value17", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
@@ -873,7 +873,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Project");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
-		MeasureUnit measureValue = MeasureUnit.findByValue("value2");
+		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value18","value18", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
@@ -916,7 +916,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Import");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
-		MeasureUnit measureValue = MeasureUnit.findByValue("value2");
+		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
 		List<Value> possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value19","value19", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();

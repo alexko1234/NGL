@@ -136,8 +136,8 @@ public class StateDAO extends AbstractDAOMapping<State>{
 			throw new DAOException("id is mandatory");
 		}
 		String sql = sqlCommon+
-				"JOIN state_object_type ON fk_state=id "+
-				"WHERE fk_object_type=?";		
+				"JOIN state_object_type s ON s.fk_state=t.id "+
+				"WHERE s.fk_object_type=?";		
 		return initializeMapping(sql, new SqlParameter("fk_object_type", Type.LONG)).execute(id);		
 	}
 

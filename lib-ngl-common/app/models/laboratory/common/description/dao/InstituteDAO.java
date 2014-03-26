@@ -60,7 +60,7 @@ public class InstituteDAO extends AbstractDAOMapping<Institute>{
 	public List<Institute> findByCommonInfoType(long idCommonInfoType) {
 		String sql = "SELECT i.id, i.name, i.code "+
 				"FROM institute i "+
-				"JOIN common_info_type_institute ci ON fk_institute= i.id "+
+				"JOIN common_info_type_institute ci ON ci.fk_institute= i.id "+
 				"WHERE ci.fk_common_info_type=?";
 		BeanPropertyRowMapper<Institute> mapper = new BeanPropertyRowMapper<Institute>(Institute.class);
 		return this.jdbcTemplate.query(sql, mapper, idCommonInfoType);

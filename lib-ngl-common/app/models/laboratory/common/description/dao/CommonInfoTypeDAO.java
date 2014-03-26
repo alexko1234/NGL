@@ -213,25 +213,24 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 	}
 
 
-
+/*
 	public List<CommonInfoType> findByName(String typeName) {
 		String sql = sqlCommon+
-				"WHERE name like \'%"+typeName+"%\' "+
-				"ORDER by name asc";
+				"WHERE t.name like \'%"+typeName+"%\' "+
+				"ORDER by t.name asc";
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, null);
 		return commonInfoTypeMappingQuery.execute();
-
 	}
 
 	public List<CommonInfoType> findByTypeNameAndType(String typeName, long idoObjectType) {
 		String sql = sqlCommon+
-				"WHERE name like \'%"+typeName+"%\' "+
+				"WHERE t.name like \'%"+typeName+"%\' "+
 				"AND fk_object_type=? "+
-				"ORDER by name asc";
+				"ORDER by t.name asc";
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("fk_object_type",Type.LONG));
 		return commonInfoTypeMappingQuery.execute(idoObjectType);
-
 	}
+*/	
 	
 	/**
 	 * Particular sql with two code must be implemented
@@ -245,7 +244,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 
 	public List<CommonInfoType> findByObjectTypeCode(CODE objectTypeCode) {
 		String sql = sqlCommon+
-				" WHERE o.code=? order by name";		
+				" WHERE o.code=? order by t.name";		
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
 		return commonInfoTypeMappingQuery.execute(objectTypeCode.name());
 	}

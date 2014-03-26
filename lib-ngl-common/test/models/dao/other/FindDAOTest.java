@@ -1,9 +1,11 @@
 package models.dao.other;
 
 import java.util.Arrays;
+import java.util.List;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.ResolutionCategory;
 import models.laboratory.common.description.StateCategory;
 import models.laboratory.common.description.Value;
@@ -22,7 +24,6 @@ import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentQueryParams;
 import models.laboratory.instrument.description.dao.InstrumentCategoryDAO;
-import models.laboratory.instrument.description.dao.InstrumentDAO;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.dao.ProcessCategoryDAO;
 import models.laboratory.project.description.ProjectCategory;
@@ -47,6 +48,63 @@ import play.api.modules.spring.Spring;
 import utils.AbstractTests;
 
 public class FindDAOTest extends AbstractTests {
+	
+
+	@Test
+	public void RunCategoryFindTest() throws DAOException {
+		RunCategory rt = RunCategory.find.findAll().get(0);
+		Assert.assertNotNull(rt);
+		RunCategory rt2 = RunCategory.find.findByCode(rt.code); 
+		Assert.assertNotNull(rt2);
+		RunCategory rt3 = RunCategory.find.findById(rt.id);
+		Assert.assertNotNull(rt3);
+		Assert.assertFalse(RunCategory.find.isCodeExist(""));
+	}
+
+	@Test
+	public void TreatmentCategoryFindTest() throws DAOException {
+		TreatmentCategory rt = TreatmentCategory.find.findAll().get(0);
+		Assert.assertNotNull(rt);
+		TreatmentCategory rt2 = TreatmentCategory.find.findByCode(rt.code); 
+		Assert.assertNotNull(rt2);
+		TreatmentCategory rt3 = TreatmentCategory.find.findById(rt.id);
+		Assert.assertNotNull(rt3);
+		Assert.assertFalse(TreatmentCategory.find.isCodeExist(""));
+	}
+
+	@Test
+	public void TreatmentContextFindTest() throws DAOException {
+		TreatmentContext rt = TreatmentContext.find.findAll().get(0);
+		Assert.assertNotNull(rt);
+		TreatmentContext rt2 = TreatmentContext.find.findByCode(rt.code); 
+		Assert.assertNotNull(rt2);
+		TreatmentContext rt3 = TreatmentContext.find.findById(rt.id);
+		Assert.assertNotNull(rt3);
+		Assert.assertFalse(TreatmentContext.find.isCodeExist(""));
+	}
+
+	@Test
+	public void ImportCategoryFindTest() throws DAOException {
+		ImportCategory rt = ImportCategory.find.findAll().get(0);
+		Assert.assertNotNull(rt);
+		ImportCategory rt2 = ImportCategory.find.findByCode(rt.code); 
+		Assert.assertNotNull(rt2);
+		ImportCategory rt3 = ImportCategory.find.findById(rt.id);
+		Assert.assertNotNull(rt3);
+		Assert.assertFalse(ImportCategory.find.isCodeExist(""));
+	}
+
+	@Test
+	public void SampleCategoryFindTest() throws DAOException {
+		SampleCategory rt = SampleCategory.find.findAll().get(0);
+		Assert.assertNotNull(rt);
+		SampleCategory rt2 = SampleCategory.find.findByCode(rt.code); 
+		Assert.assertNotNull(rt2);
+		SampleCategory rt3 = SampleCategory.find.findById(rt.id);
+		Assert.assertNotNull(rt3);
+		Assert.assertFalse(SampleCategory.find.isCodeExist(""));
+	}
+
 	@Test
 	public void containerCategoryFindTest() throws DAOException {
 		ContainerCategory type = ContainerCategory.find.findAll().get(0);
@@ -56,6 +114,7 @@ public class FindDAOTest extends AbstractTests {
 		ContainerCategory cTypeId = ContainerCategory.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(ContainerCategory.find.isCodeExist(""));
+		
 		ContainerCategoryDAO typeDAO = Spring
 				.getBeanOfType(ContainerCategoryDAO.class);
 		Assert.assertNotNull(typeDAO.findAllForList());
@@ -65,14 +124,15 @@ public class FindDAOTest extends AbstractTests {
 	public void experimentCategoryFindTest() throws DAOException {
 		ExperimentCategory type = ExperimentCategory.find.findAll().get(0);
 		Assert.assertNotNull(type);
-		ExperimentCategory cType = ExperimentCategory.find
-				.findByCode(type.code);
+		ExperimentCategory cType = ExperimentCategory.find.findByCode(type.code);
 		Assert.assertNotNull(cType);
 		ExperimentCategory cTypeId = ExperimentCategory.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(ExperimentCategory.find.isCodeExist(""));
-		ExperimentCategoryDAO typeDAO = Spring
-				.getBeanOfType(ExperimentCategoryDAO.class);
+		List<ExperimentCategory> lec = ExperimentCategory.find.findByProcessTypeCode("");
+		Assert.assertEquals(0, lec.size());
+		
+		ExperimentCategoryDAO typeDAO = Spring.getBeanOfType(ExperimentCategoryDAO.class);
 		Assert.assertNotNull(typeDAO.findAllForList());
 	}
 
@@ -142,8 +202,11 @@ public class FindDAOTest extends AbstractTests {
 		Level cTypeId = Level.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(Level.find.isCodeExist(""));
-		LevelDAO typeDAO = Spring.getBeanOfType(LevelDAO.class);
-		Assert.assertNotNull(typeDAO.findAllForList());
+		LevelDAO levelDAO = Spring.getBeanOfType(LevelDAO.class);
+		Assert.assertNotNull(levelDAO.findAllForList());
+		
+		//PropertyDefinition pdef =  PropertyDefinition.find.findAll().get(0);
+		//Assert.assertNotNull(levelDAO.findByPropertyDefinitionID(pdef.id));
 	}
 
 	@Test
@@ -297,8 +360,12 @@ public class FindDAOTest extends AbstractTests {
 		Value cTypeId = Value.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(Value.find.isCodeExist(""));
+
+		//internal fcts
 		ValueDAO typeDAO = Spring.getBeanOfType(ValueDAO.class);
 		Assert.assertNotNull(typeDAO.findAllForList());
+		PropertyDefinition pdef = PropertyDefinition.find.findByCode("runType");
+		typeDAO.findByPropertyDefinition(pdef.id);
 	}
 
 }

@@ -1,8 +1,8 @@
 package models.laboratory.common.description;
 
-import play.api.modules.spring.Spring;
 import models.laboratory.common.description.dao.MeasureUnitDAO;
 import models.utils.Model;
+import models.utils.dao.DAOException;
 
 public class MeasureUnit extends Model<MeasureUnit>{
 
@@ -18,11 +18,23 @@ public class MeasureUnit extends Model<MeasureUnit>{
 		super(MeasureUnitDAO.class.getName());
 	}
 	
-	public static Finder<MeasureUnit> find = new Finder<MeasureUnit>(MeasureUnitDAO.class.getName()); 
 	
-	public static MeasureUnit findByValue(String value)
-	{
-		MeasureUnitDAO measureValueDAO = Spring.getBeanOfType(MeasureUnitDAO.class);
-		return measureValueDAO.findByValue(value);
+	public static MeasureUnitFinder find = new MeasureUnitFinder();
+	
+		
+	
+	public static class MeasureUnitFinder extends Finder<MeasureUnit> {
+
+		public MeasureUnitFinder() {
+		    super(MeasureUnitDAO.class.getName());
+		}
+		
+		public MeasureUnit findByValue(String value) throws DAOException {
+			return ((MeasureUnitDAO) getInstance()).findByValue(value);
+		}
+		
 	}
+	
+	
+	
 }
