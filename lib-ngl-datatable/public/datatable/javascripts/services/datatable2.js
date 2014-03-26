@@ -20,7 +20,7 @@ angular.module('datatableServices', []).
 													"edit":false, //can be edited or not
 													"hide":true, //can be hidden or not
 													"order":true, //can be ordered or not
-													"type":"String"/"Number"/"Month"/"Week"/"Time"/"DateTime"/"Range"/"Color"/"Mail"/"Tel"/"Url"/"Date", //the column type
+													"type":"text"/"number"/"month"/"week"/"time"/"datetime"/"range"/"color"/"mail"/"tel"/"url"/"date", //the column type
 													"choiceInList":false, //when the column is in edit mode, the edition is a list of choices or not
 													"listStyle":"select"/"radio", //if choiceInList=true, listStyle="select" is a select input, listStyle="radio" is a radio input
 													"possibleValues":null, //The list of possible choices
