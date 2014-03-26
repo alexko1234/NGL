@@ -31,6 +31,7 @@ import models.laboratory.project.description.dao.ProjectCategoryDAO;
 import models.laboratory.run.description.RunCategory;
 import models.laboratory.run.description.TreatmentCategory;
 import models.laboratory.run.description.TreatmentContext;
+import models.laboratory.run.description.TreatmentType;
 import models.laboratory.run.description.TreatmentTypeContext;
 import models.laboratory.run.description.dao.RunCategoryDAO;
 import models.laboratory.run.description.dao.TreatmentCategoryDAO;
@@ -83,6 +84,18 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertFalse(TreatmentContext.find.isCodeExist(""));
 	}
 
+	
+	@Test
+	public void TreatmentTypeContextFindTest() throws DAOException {
+		Assert.assertFalse(TreatmentTypeContext.find.isCodeExist(""));
+		TreatmentType tt = TreatmentType.find.findAll().get(0);
+		TreatmentTypeContext rt4 = TreatmentTypeContext.find.findByTreatmentTypeId(tt.id).get(0);
+		Assert.assertNotNull(rt4);
+		TreatmentTypeContext rt5 = TreatmentTypeContext.find.findByTreatmentTypeId(rt4.code, tt.id);
+		Assert.assertNotNull(rt5);
+	}
+	
+	
 	@Test
 	public void ImportCategoryFindTest() throws DAOException {
 		ImportCategory rt = ImportCategory.find.findAll().get(0);
