@@ -131,7 +131,7 @@ public class Workflows {
 	 * @param experiment: the experiment, errors: the filledForm errors
 	 */
 	public static void setExperimentState(Experiment experiment, State nextState, ContextValidation ctxValidation){
-		
+
 		ctxValidation.getContextObjects().put("stateCode", nextState.code);
 		ExperimentValidationHelper.validateState(experiment.typeCode, nextState, ctxValidation);
 
@@ -139,26 +139,26 @@ public class Workflows {
 		ExperimentValidationHelper.validateNewState(experiment, ctxValidation);
 
 		if(!ctxValidation.hasErrors() && !nextState.code.equals(experiment.stateCode)){
-			
+
 			InstanceHelpers.updateTraceInformation(experiment.traceInformation);  
 			//experiment.state = StateHelper.updateHistoricalNextState(experiment.state, nextState);
 			experiment.stateCode=nextState.code;
-			
+
 			if(!ctxValidation.hasErrors()){
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,  Run.class, 
 						DBQuery.is("code", experiment.code),
 						//DBUpdate.set("state", experiment.state).set("traceInformation",experiment.traceInformation));
 						DBUpdate.set("stateCode", experiment.stateCode).set("traceInformation",experiment.traceInformation));
 			}
-			
+
 			nextInPutContainerState(experiment, ctxValidation);
 			//nextOutPutContainerState(experiment, ctxValidation);
-			
+
 		}
 
-		
-		
-		
+
+
+
 
 		//Validation en Java class in context
 		/*if(nextState.equals("N")) {
@@ -190,14 +190,14 @@ public class Workflows {
 		}else{
 			ctxValidation.addErrors(experiment.stateCode, "InvalidStateCode");
 		}
-		*/
+		 */
 	}
 
 	public static void nextInPutContainerState(Experiment experiment,ContextValidation contextValidation){
 		State state=new State();
 		state.date=new Date();
 		state.user=InstanceHelpers.getUser();
-		
+
 		if(experiment.stateCode.equals("N")){
 			state.code= "IW-E"; 
 		}else if(experiment.stateCode.equals("IP")){
@@ -207,10 +207,10 @@ public class Workflows {
 		}else {
 			Logger.error("No input container state defined for this experiment"+experiment.code);
 		}
-		
+
 		setContainerState(experiment.getAllInPutContainer(), state, contextValidation);
 	}
-	
+
 	//TODO
 	public static String nextOutPutContainerState(Experiment experiment,ContextValidation contextValidation){
 		if(experiment.stateCode.equals("N")){
@@ -225,13 +225,13 @@ public class Workflows {
 		}
 		return null;
 	}
-	
+
 	//TODO à finir
 	public static void nextProcessState(Container container,ContextValidation contextValidation){
 		State state=new State();
 		state.date=new Date();
 		state.user=InstanceHelpers.getUser();
-		
+
 		if(container.state.code.equals("IW-E")){
 			state.code= "IP";
 		} 
@@ -240,42 +240,43 @@ public class Workflows {
 			setProcessState(container.inputProcessCodes,state,contextValidation);
 		}
 	}
-	
+
 
 	private static void setProcessState(List<String> inputProcessCodes, State state,
 			ContextValidation contextValidation) {
 
-		for(String processCode : inputProcessCodes){
-			setProcessState(processCode,state,contextValidation);
+		if(inputProcessCodes!=null){
+			for(String processCode : inputProcessCodes){
+				setProcessState(processCode,state,contextValidation);
+			}
 		}
-		
+
 	}
 
 	private static void setProcessState(String  processCode, State nextState,
 			ContextValidation contextValidation) {
 		Process process =MongoDBDAO.findOne(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("code", processCode));
-		
-		if(process==null){
-			Logger.error("Process "+processCode+" not exists");
-		} 
 
-		ContainerValidationHelper.validateStateCode(nextState.code, contextValidation);
-		if(!contextValidation.hasErrors() && !nextState.code.equals(process.stateCode)){
+		if(process!=null){ 
+			Logger.debug("Process e"+process.code);
+			ContainerValidationHelper.validateStateCode(nextState.code, contextValidation);
+			if(!contextValidation.hasErrors() && !nextState.code.equals(process.state)){
 
-			TraceInformation traceInformation=new TraceInformation();
-			InstanceHelpers.updateTraceInformation(traceInformation);
-			//StateHelper.updateHistoricalNextState(process.state,nextState);
-			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,  Container.class, 
-					DBQuery.is("code", process.code),
-					DBUpdate.set("stateCode", nextState.code).set("traceInformation",traceInformation));
-		}	
+				TraceInformation traceInformation=new TraceInformation();
+				InstanceHelpers.updateTraceInformation(traceInformation);
+				StateHelper.updateHistoricalNextState(process.state,nextState);
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,  Container.class, 
+						DBQuery.is("code", process.code),
+						DBUpdate.set("state", nextState).set("traceInformation",traceInformation));
+			}	
 
-		
+		}
+
 	}
 
 	public static void setContainerState(String containerCode,State nextState,ContextValidation contextValidation){
 		Container container =MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", containerCode));
-		
+
 		if(container==null){
 			Logger.error("Container "+containerCode+" not exists");
 		} 
@@ -303,9 +304,9 @@ public class Workflows {
 	}
 
 	public static void setContainerSupportState(String code,State nextState,ContextValidation contextValidation) {
-		
+
 		ContainerSupport containerSupport = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", code));
-		
+
 		if(containerSupport==null){
 			Logger.error("ContainerSupport "+containerSupport+" not exists");
 		}
@@ -319,11 +320,11 @@ public class Workflows {
 					DBQuery.is("code", containerSupport.code),
 					DBUpdate.set("state", nextState).set("traceInformation",traceInformation));
 		}	
-		
-		
+
+
 	}
 
-	
+
 	public static void setContainerState(List<ContainerUsed> containersUsed,State state,ContextValidation contextValidation){
 		for(ContainerUsed containerUsed:containersUsed){
 			Workflows.setContainerState(containerUsed.containerCode, state, contextValidation);
@@ -333,9 +334,9 @@ public class Workflows {
 
 
 	public static void nextContainerState(Process process,
-			 ContextValidation contextValidation) {
+			ContextValidation contextValidation) {
 		State nextState=new State();
-		if(process.stateCode=="N"){
+		if(process.state.code.equals("N")){
 			nextState.code="A";
 		}
 
@@ -343,5 +344,5 @@ public class Workflows {
 
 	}
 
-	
+
 }

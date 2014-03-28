@@ -52,7 +52,7 @@ public class Processes extends CommonController{
 
 				value.traceInformation.setTraceInformation(getCurrentUser());
 				//the default status
-				value.stateCode = "N";
+				value.state =new State("N", getCurrentUser());
 				//code and name generation
 				value.code = CodeHelper.generateProcessCode(value);
 				
