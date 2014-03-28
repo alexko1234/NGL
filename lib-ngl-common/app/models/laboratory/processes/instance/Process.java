@@ -5,6 +5,7 @@ import java.util.Map;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
@@ -20,11 +21,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.InstanceValidationHelper;
-import validation.common.instance.CommonValidationHelper;
-import validation.container.instance.ContainerValidationHelper;
 import validation.processes.instance.ProcessValidationHelper;
-import validation.utils.BusinessValidationHelper;
 import fr.cea.ig.DBObject;
 
 
@@ -36,8 +33,7 @@ public class Process extends DBObject implements IValidation{
 	public String typeCode;
 	public String categoryCode;
 	
-	public String stateCode;
-	public String resolutionCode;
+	public State state;
 	
 	public TraceInformation traceInformation;
 	public List<Comment> comments;
@@ -97,7 +93,7 @@ public class Process extends DBObject implements IValidation{
 		ProcessValidationHelper.validateId(this, contextValidation);
 		ProcessValidationHelper.validateCode(this, InstanceConstants.PROCESS_COLL_NAME, contextValidation);
 		ProcessValidationHelper.validateProcessType(typeCode,properties,contextValidation);
-		ProcessValidationHelper.validateStateCode(typeCode,stateCode, contextValidation);
+		ProcessValidationHelper.validateState(typeCode,state, contextValidation);
 		ProcessValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		ProcessValidationHelper.validateContainerCode(containerInputCode, contextValidation);
 		ProcessValidationHelper.validateProjectCode(projectCode, contextValidation);
