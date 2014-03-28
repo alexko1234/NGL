@@ -31,17 +31,7 @@ public class ExperimentHelper {
 				}
 			}
 
-
-			/*Builder builder = new DBUpdate.Builder();
-				builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
-
-				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
-			 */
-
-
 			MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
-
-
 			InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers,new ContextValidation( contextValidation.errors));
 		}
 
