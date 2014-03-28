@@ -37,7 +37,8 @@ function TabMainCtrl($scope, $location){
 		newtabs[0] = firstTab;		
 		//if we want to have the last active tab ...
 		if (keepLastActiveTab) {
-			if (getActiveTabIndex() > 0) {
+			var activeTabIndex = getActiveTabIndex(); 
+			if (activeTabIndex !== null && activeTabIndex > 0) {
 				newtabs[1] = tabs[activeTabIndex]; 
 			}
 		}
@@ -113,7 +114,8 @@ function TabMainCtrl($scope, $location){
 	$scope.removeOrKeepOnlyActiveTab = function(index, $event, keepLastActiveTab) {		 
 		if (index != 0) {
 			$scope.removeTab(index);
-			if (index == getActiveTabIndex()) {
+			var activeTabIndex = getActiveTabIndex(); 
+			if (index == activeTabIndex || null == activeTabIndex) {
 				$scope.activeTab(0, true);	
 			}
 		}
@@ -156,10 +158,11 @@ function TabMainCtrl($scope, $location){
 	
 	var getActiveTabIndex = function(){
 		for(var i = 0; i < tabs.length; i++){				
-			if(tabs[i].clazz === 'active'){
+			if(tabs[i].clazz == 'active'){
 				return i;
 			}
 		}
+		return null;
 	}
 	
 	$scope.toggleTabs = function(){

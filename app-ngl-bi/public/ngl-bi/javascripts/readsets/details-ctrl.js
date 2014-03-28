@@ -51,7 +51,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, datatable, messages, lists
 	}
 	
 	var isValuationMode = function(){
-		return ($scope.isHomePage('valuation') || $routeParams.page === 'valuation');
+		return ($scope.isHomePage('valuation') || $scope.isHomePage('valuationWheat') || $routeParams.page.indexOf('valuation') == 0);
 	}
 	
 	

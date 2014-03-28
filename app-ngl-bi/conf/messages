@@ -156,6 +156,7 @@ readsets.menu = Readsets
 readsets.menu.search = Recherche
 readsets.menu.state = Changement d''Etat
 readsets.menu.valuation = Evaluation
+readsets.menu.valuation.wheat = Evaluation blé
 readsets.menu.batch = Modification en masse
 
 readsets.archiveId = SSID
@@ -233,6 +234,7 @@ readsets.treatments.mapping.sampleInput = Sample input
 readsets.treatments.mapping.nonChimericAlignedReads = Non-chimeric aligned reads
 readsets.treatments.mapping.FRAlignedReads = FR (PE) aligned reads
 readsets.treatments.mapping.RFAlignedReads = RF (MP) aligned reads
+readsets.treatments.mapping.RFAlignedReadsPercent = % RF (MP) aligned reads
 readsets.treatments.mapping.FFAlignedReads = FF aligned reads
 readsets.treatments.mapping.RRAlignedReads = RR aligned reads
 readsets.treatments.mapping.transAlignedReads = Trans aligned reads

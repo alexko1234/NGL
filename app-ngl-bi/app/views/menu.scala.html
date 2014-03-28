@@ -18,7 +18,7 @@
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="valuation">@Messages("valuation.menu")<b class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="valuation">
 						<li class="@("active".when(nav == "runs.valuation"))"><a href="@controllers.runs.tpl.routes.Runs.home("valuation")">@Messages("valuation.menu.runs")</a></li>																				
-						<li class="@("active".when(nav == "readsets.valuation"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("valuation")">@Messages("valuation.menu.readsets")</a></li>
+						<li class="@("active".when(nav == "readsets.valuation"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("valuation")">@Messages("valuation.menu.readsets")</a></li>						
 					</ul>
 				</li>
 									
@@ -35,7 +35,10 @@
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="readsets">@Messages("readsets.menu")<b class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="readsets">
 						<li class="@("active".when(nav == "readsets.search"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("search")">@Messages("readsets.menu.search")</a></li>																				
-						<li class="@("active".when(nav == "readsets.valuation"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("valuation")">@Messages("readsets.menu.valuation")</a></li>																												
+						<li class="@("active".when(nav == "readsets.valuation"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("valuation")">@Messages("readsets.menu.valuation")</a></li>	
+						
+						<li class="@("active".when(nav == "readsets.valuation.wheat"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("valuationWheat")">@Messages("readsets.menu.valuation.wheat")</a></li>
+																																	
 						<li class="@("active".when(nav == "readsets.state"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("state")">@Messages("readsets.menu.state")</a></li>
 						<li class="@("active".when(nav == "readsets.batch"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("batch")">@Messages("readsets.menu.batch")</a></li>
 					</ul>

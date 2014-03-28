@@ -9,6 +9,10 @@ angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biComm
 		templateUrl : '/tpl/readsets/search/valuation',
 		controller : 'SearchValuationCtrl'
 	});
+	$routeProvider.when('/readsets/valuationWheat/home', {
+		templateUrl : '/tpl/readsets/search/valuation',
+		controller : 'SearchValuationWheatCtrl'
+	});
 	$routeProvider.when('/readsets/state/home', {
 		templateUrl : '/tpl/readsets/search/state',
 		controller : 'SearchStateCtrl'
