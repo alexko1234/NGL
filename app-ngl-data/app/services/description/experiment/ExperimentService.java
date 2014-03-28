@@ -138,7 +138,7 @@ public class ExperimentService {
 	private static void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 		newExperimentTypeNode("void-banque", getExperimentTypes("void-banque").get(0), false, false, null, null, null).save();
 		newExperimentTypeNode("void-qpcr", getExperimentTypes("void-qpcr").get(0), false, false, null, null, null).save();
-		newExperimentTypeNode("void-opgen-depot", getExperimentTypes("void-banque").get(0), false, false, null, null, null).save();
+		newExperimentTypeNode("void-opgen-depot", getExperimentTypes("void-opgen-depot").get(0), false, false, null, null, null).save();
 		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("void-banque"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
 		newExperimentTypeNode("librairie-indexing", getExperimentTypes("librairie-indexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
 		newExperimentTypeNode("librairie-dualindexing", getExperimentTypes("librairie-dualindexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
