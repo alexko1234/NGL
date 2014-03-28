@@ -56,8 +56,6 @@ public class Container extends DBObject implements IValidation {
 
 	public State state;
 	public Valuation valuation;
-	// Resolution Ref
-	public String resolutionCode; //used to classify the final state (ex : ) 
 
 	// Container informations
 	public TraceInformation traceInformation;
@@ -133,12 +131,6 @@ public class Container extends DBObject implements IValidation {
 		return new HelperObjects<ExperimentType>().getObjects(ExperimentType.class, fromExperimentTypeCodes);
 	}
 
-
-	@JsonIgnore
-	public Resolution getResolution(){
-		return new HelperObjects<Resolution>().getObject(Resolution.class, resolutionCode);
-	}
-
 		
 	@JsonIgnore
 	@Override
@@ -146,9 +138,8 @@ public class Container extends DBObject implements IValidation {
 		
     	ContainerValidationHelper.validateId(this, contextValidation);
 		ContainerValidationHelper.validateCode(this, InstanceConstants.CONTAINER_COLL_NAME, contextValidation);
+		//TODO 
 		ContainerValidationHelper.validateStateCode(this.state.code, contextValidation);
-		//TODO
-		//ContainerValidationHelper.validateResolution(this.resolutionCode,contextValidation);
 		ContainerValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
 		ContainerValidationHelper.validateContainerCategoryCode(categoryCode, contextValidation);
 		ContainerValidationHelper.validateProcessTypeCode(processTypeCode, contextValidation);

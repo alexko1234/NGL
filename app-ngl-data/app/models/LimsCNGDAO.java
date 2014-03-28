@@ -381,7 +381,6 @@ public class LimsCNGDAO {
 
 			
 				container.fromPurifingCode = null;				
-				container.resolutionCode = null;
 
 				return container;
 			}

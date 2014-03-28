@@ -280,8 +280,6 @@ public class InstanceTest extends AbstractTests{
 		container.valuation.user = CommonController.getCurrentUser();
 		container.valuation.date = new Date(); 
 		
-		container.resolutionCode="Resolutioncontainer";
-
 		container.contents=new ArrayList<Content>();
 		container.contents.add(new Content(new SampleUsed("SampleCode", "sampleType", "sampleCategory")));
 
@@ -310,7 +308,6 @@ public class InstanceTest extends AbstractTests{
 		assertThat(container.projectCodes.get(0)).isEqualTo("ProjectCode");
 
 		assertThat(container.state.code).isEqualTo("Etatcontainer");
-		assertThat(container.resolutionCode).isEqualTo("Resolutioncontainer");
 
 		assertThat(container.sampleCodes).isNotEmpty();
 		assertThat(container.sampleCodes.get(0)).isEqualTo("SampleCode");
