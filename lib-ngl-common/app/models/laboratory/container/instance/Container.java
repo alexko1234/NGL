@@ -94,6 +94,7 @@ public class Container extends DBObject implements IValidation {
 	//process
 	public String processTypeCode; //TODO GA : est ce bien utile comme info ?
 
+	public List<String> inputProcessCodes;
 
 	public Container(){
 		properties=new HashMap<String, PropertyValue>();

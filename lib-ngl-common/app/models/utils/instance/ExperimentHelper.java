@@ -7,6 +7,7 @@ import play.Logger;
 import validation.ContextValidation;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -94,7 +95,7 @@ public class ExperimentHelper {
 		return exp;
 	}
 
-	
+
 	public static Experiment updateInstrumentCategory(Experiment exp) throws DAOException{
 		Logger.debug("Test categoryCode :"+exp.instrument.categoryCode+" .");
 		if((exp.instrument.categoryCode == null ||exp.instrument.categoryCode.equals("") ) && exp.instrumentUsedTypeCode!=null){
@@ -104,5 +105,19 @@ public class ExperimentHelper {
 		}
 		return exp;	
 	}
+
+	public static Experiment setProjetAndSamples(Experiment exp) {
+		exp.sampleCodes = new ArrayList<String>();
+		exp.projectCodes  = new ArrayList<String>();
+
+		for(int i=0;i<exp.atomicTransfertMethods.size();i++)
+			for(ContainerUsed c:exp.atomicTransfertMethods.get(i).getInputContainers()){
+				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, c.containerCode);
+				exp.sampleCodes = InstanceHelpers.addCodesList(exp.sampleCodes, container.sampleCodes);
+				exp.projectCodes = InstanceHelpers.addCodesList(exp.projectCodes, container.projectCodes);
+			}	
+	return exp;
+	}
+
 
 }

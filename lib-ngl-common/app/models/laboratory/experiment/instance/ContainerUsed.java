@@ -6,6 +6,7 @@ import java.util.Map;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.utils.HelperObjects;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -18,6 +19,9 @@ import validation.common.instance.CommonValidationHelper;
 public class ContainerUsed implements IValidation{
 	
 	public String containerCode;
+	
+	public String categoryCode;
+	public LocationOnContainerSupport locationOnContainerSupport;
 	// Take for inputContainer or Create for outputContainer
 	public PropertyValue volume;
 	
