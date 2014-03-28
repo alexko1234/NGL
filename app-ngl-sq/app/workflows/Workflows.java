@@ -6,6 +6,7 @@ import java.util.List;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.run.instance.Run;
@@ -19,6 +20,7 @@ import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ExperimentValidationHelper;
 import fr.cea.ig.MongoDBDAO;
+import models.laboratory.processes.instance.Process;
 
 public class Workflows {
 
@@ -114,7 +116,7 @@ public class Workflows {
 	 * @param inputContainers: list of containerUsed
 	 * @deprecated
 	 */
-	public static void setContainersInWaitingExperiment(List<ContainerUsed> inputContainers){
+	/*public static void setContainersInWaitingExperiment(List<ContainerUsed> inputContainers){
 		for(ContainerUsed containerUsed:inputContainers){
 			Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
 
@@ -122,7 +124,7 @@ public class Workflows {
 				MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"state.code", "IWE");
 			}
 		}	
-	}
+	}*/
 
 	/**
 	 * Set a state of an experiment 
@@ -150,10 +152,8 @@ public class Workflows {
 			}
 			
 			nextInPutContainerState(experiment, ctxValidation);
-			//TODO
 			//nextOutPutContainerState(experiment, ctxValidation);
-			//TODO
-			//nextProcessState(experiment, ctxValidation);
+			
 		}
 
 		
@@ -207,7 +207,7 @@ public class Workflows {
 		}else {
 			Logger.error("No input container state defined for this experiment"+experiment.code);
 		}
-		//Mettre une map pour les messages d'erreur
+		
 		setContainerState(experiment.getAllInPutContainer(), state, contextValidation);
 	}
 	
@@ -226,23 +226,58 @@ public class Workflows {
 		return null;
 	}
 	
-	//TODO
-	public static String nextProcessState(Experiment experiment,ContextValidation contextValidation){
-		if(experiment.stateCode.equals("IP")){
-			return "IP";
-		}else if(experiment.stateCode.equals("F")){
-			//Si seulement dernière experiment
-			return "F";
+	//TODO à finir
+	public static void nextProcessState(Container container,ContextValidation contextValidation){
+		State state=new State();
+		state.date=new Date();
+		state.user=InstanceHelpers.getUser();
+		
+		if(container.state.code.equals("IW-E")){
+			state.code= "IP";
+		} 
+		//TODO mettre en fin de process les processus
+		if(state.code !=null){
+			setProcessState(container.inputProcessCodes,state,contextValidation);
 		}
-		return null;
+	}
+	
+
+	private static void setProcessState(List<String> inputProcessCodes, State state,
+			ContextValidation contextValidation) {
+
+		for(String processCode : inputProcessCodes){
+			setProcessState(processCode,state,contextValidation);
+		}
+		
 	}
 
-	//TODO
+	private static void setProcessState(String  processCode, State nextState,
+			ContextValidation contextValidation) {
+		Process process =MongoDBDAO.findOne(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("code", processCode));
+		
+		if(process==null){
+			Logger.error("Process "+processCode+" not exists");
+		} 
+
+		ContainerValidationHelper.validateStateCode(nextState.code, contextValidation);
+		if(!contextValidation.hasErrors() && !nextState.code.equals(process.stateCode)){
+
+			TraceInformation traceInformation=new TraceInformation();
+			InstanceHelpers.updateTraceInformation(traceInformation);
+			//StateHelper.updateHistoricalNextState(process.state,nextState);
+			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,  Container.class, 
+					DBQuery.is("code", process.code),
+					DBUpdate.set("stateCode", nextState.code).set("traceInformation",traceInformation));
+		}	
+
+		
+	}
+
 	public static void setContainerState(String containerCode,State nextState,ContextValidation contextValidation){
 		Container container =MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", containerCode));
 		
 		if(container==null){
-			Logger.error("Container "+containerCode+" not exists in experiment");
+			Logger.error("Container "+containerCode+" not exists");
 		} 
 		//Validate state for Container
 		ContainerValidationHelper.validateStateCode(nextState.code, contextValidation);
@@ -251,22 +286,62 @@ public class Workflows {
 			TraceInformation traceInformation=new TraceInformation();
 			InstanceHelpers.updateTraceInformation(traceInformation);
 			StateHelper.updateHistoricalNextState(container.state,nextState);
-			
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,  Container.class, 
 					DBQuery.is("code", container.code),
 					DBUpdate.set("state", nextState).set("traceInformation",traceInformation));
 		}	
+		container.state=nextState;
+		nextContainerSupportState(container,contextValidation);
+		nextProcessState(container,contextValidation);
 	}
 
+	private static void nextContainerSupportState(Container container,
+			ContextValidation contextValidation) {
+		State nextState=new State(container.state.code,container.state.user);
+		//Pour le moment des qu'une container change d'etat sont support à la meme etat
+		setContainerSupportState(container.support.supportCode, nextState,contextValidation);
+	}
+
+	public static void setContainerSupportState(String code,State nextState,ContextValidation contextValidation) {
+		
+		ContainerSupport containerSupport = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", code));
+		
+		if(containerSupport==null){
+			Logger.error("ContainerSupport "+containerSupport+" not exists");
+		}
+
+		if(!contextValidation.hasErrors() && !nextState.code.equals(containerSupport.state.code)){
+
+			TraceInformation traceInformation=new TraceInformation();
+			InstanceHelpers.updateTraceInformation(traceInformation);
+			StateHelper.updateHistoricalNextState(containerSupport.state,nextState);
+			MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME,  Container.class, 
+					DBQuery.is("code", containerSupport.code),
+					DBUpdate.set("state", nextState).set("traceInformation",traceInformation));
+		}	
+		
+		
+	}
+
+	
 	public static void setContainerState(List<ContainerUsed> containersUsed,State state,ContextValidation contextValidation){
 		for(ContainerUsed containerUsed:containersUsed){
 			Workflows.setContainerState(containerUsed.containerCode, state, contextValidation);
 		}
 	}
 
-	//TODO
-	public static void setProcessState(Process process,State state,ContextValidation contextValidation){
-		
+
+
+	public static void nextContainerState(Process process,
+			 ContextValidation contextValidation) {
+		State nextState=new State();
+		if(process.stateCode=="N"){
+			nextState.code="A";
+		}
+
+		setContainerState(process.containerInputCode, nextState, contextValidation);
+
 	}
+
 	
 }

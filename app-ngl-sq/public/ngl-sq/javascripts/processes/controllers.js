@@ -141,6 +141,7 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 	$scope.search = function(){	
 		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.processType){
 			var jsonSearch = {};
+			jsonSearch.stateCode = 'IW-P';
 			if($scope.form.projectCode){
 				jsonSearch.projectCode = $scope.form.projectCode;
 			}			

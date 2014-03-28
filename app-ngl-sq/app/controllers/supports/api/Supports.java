@@ -15,6 +15,7 @@ import net.vz.mongodb.jackson.DBQuery;
 
 import org.apache.commons.lang3.StringUtils;
 
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -104,13 +105,14 @@ public class Supports extends CommonController {
 		cs.processTypeCode = supportsSearch.processTypeCode;
 		cs.stateCode = supportsSearch.stateCode;
 		
-		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList(); 
+		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList();
+		Logger.debug("Containers "+containers.size());
 		List<String> supports  =new ArrayList<String>();
 		for(Container c: containers){
 			supports.add(c.support.supportCode);
 		}
 		
-		if(supports.size() > 0 ){
+		if(cs.experimentTypeCode!=null || cs.processTypeCode!=null || cs.stateCode!=null ){
 			queryElts.add(DBQuery.in("code", supports));
 		}
 		

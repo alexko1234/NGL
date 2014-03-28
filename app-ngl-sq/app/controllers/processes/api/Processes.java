@@ -3,36 +3,33 @@ package controllers.processes.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
-import models.utils.dao.DAOHelpers;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.mongodb.BasicDBObject;
-
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-import validation.BusinessValidationHelper;
 import validation.ContextValidation;
-import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
+
+import com.mongodb.BasicDBObject;
+
 import controllers.CodeHelper;
 import controllers.CommonController;
-import controllers.authorisation.PermissionHelper;
-import controllers.containers.api.ContainersSearchForm;
-import controllers.utils.FormUtils;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -56,29 +53,28 @@ public class Processes extends CommonController{
 				value.traceInformation.setTraceInformation(getCurrentUser());
 				//the default status
 				value.stateCode = "N";
-
+				//code and name generation
+				value.code = CodeHelper.generateProcessCode(value);
+				
 				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, value.containerInputCode);
 				if(container.fromExperimentTypeCodes == null || container.fromExperimentTypeCodes.size() == 0){
 					container.fromExperimentTypeCodes = new ArrayList<String>();
 					container.fromExperimentTypeCodes.add(value.getProcessType().voidExperimentType.code);
-					container.processTypeCode = value.typeCode;
-					MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
 				}
+				container.processTypeCode = value.typeCode;
+				container.inputProcessCodes=InstanceHelpers.addCode(value.code, container.inputProcessCodes);
+				MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
 
-				//code and name generation
-				value.code = CodeHelper.generateProcessCode(value);
+				
 				Logger.info("New process code : "+value.code);
 			} else {
 				value.traceInformation.setTraceInformation(getCurrentUser());
 			}
 
 			if (!filledForm.hasErrors()) {
-				if(value._id == null){
-					//Workflows Implementation
-					Workflows.setContainerAvailable(value.containerInputCode,value.typeCode);
-				}
-
 				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, new ContextValidation(filledForm.errors()));
+				Workflows.nextContainerState(value,new ContextValidation(filledForm.errors()));
+
 			}
 		}
 		if (!filledForm.hasErrors()) {

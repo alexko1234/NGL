@@ -125,15 +125,21 @@ public class Experiments extends CommonController{
 	public static Result updateInstrumentProperties(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
-
+		
+		Logger.debug("Experiment update properties :"+exp.code);
+		
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
-
+		try {
+		exp= ExperimentHelper.updateInstrumentCategory(exp);
+		} catch (DAOException e) {
+			Logger.error(e.getMessage());
+		}
 		if (!experimentFilledForm.hasErrors()) {
 
-			Builder builder = new DBUpdate.Builder();
-			builder=builder.set("instrumentProperties",exp.instrumentProperties);
-
-			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
+						DBQuery.is("code", exp.code),
+						DBUpdate.set("instrumentProperties",exp.instrumentProperties).set("instrument",exp.instrument));
+			
 			return ok(Json.toJson(exp));
 		}
 
@@ -180,29 +186,12 @@ public class Experiments extends CommonController{
 		Experiment exp = experimentFilledForm.get();
 
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
-		exp.sampleCodes = new ArrayList<String>();
-		exp.projectCodes  = new ArrayList<String>();
-
+		exp= ExperimentHelper.setProjetAndSamples(exp);
+	
 		if (!experimentFilledForm.hasErrors()) {
-			for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-				Workflows.setContainersInWaitingExperiment(exp.atomicTransfertMethods.get(i).getInputContainers());
-				Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getInputContainers());
-				if(exp.atomicTransfertMethods.get(i).getOutputContainers() != null){
-					Workflows.setContainersFinalState(exp.atomicTransfertMethods.get(i).getOutputContainers());
-				}
-				for(ContainerUsed c:exp.atomicTransfertMethods.get(i).getInputContainers()){
-					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, c.containerCode);
-					exp.sampleCodes = InstanceHelpers.addCodesList(exp.sampleCodes, container.sampleCodes);
-					exp.projectCodes = InstanceHelpers.addCodesList(exp.projectCodes, container.projectCodes);
-				}
-			}
-			/*Builder builder = new DBUpdate.Builder();
-			builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
-
-			MongoDBDAO.update(Constants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);*/
-
-
+		
 			MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+			Workflows.nextInPutContainerState(exp, new ContextValidation(experimentFilledForm.errors()));
 			return ok(Json.toJson(exp));
 		}
 
