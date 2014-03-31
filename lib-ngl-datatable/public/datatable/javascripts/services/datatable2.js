@@ -13,9 +13,10 @@ angular.module('datatableServices', []).
 							},//ex: extraHeaders:{number:2,dynamic:false,list:{0:[{"label":"test","colspan":"1"},{"label":"a","colspan":"1"}],1:[{"label":"test2","colspan":"5"}]}}
 							columns : [], /*ex : 
 												{
-													"header":"Code Container", //the title
-													"property":"code", //the property to bind
-													"render" : function() //render the column
+													"header":"Code Container", //the title //used by default Messages
+													"property":"code", //the property to bind or function used to extract the value
+													"filter":"", angular filter to filter the value only used in read mode
+													"render" : function() //render the column used to add style around value
 													"id":'', //the column id
 													"edit":false, //can be edited or not
 													"hide":true, //can be hidden or not
@@ -140,7 +141,7 @@ angular.module('datatableServices', []).
 								edit:false, //can be edited or not
 								hide:true, //can be hidden or not
 								order:true, //can be ordered or not
-								type:"String", //the column type
+								type:"text", //the column type
 								choiceInList:false, //when the column is in edit mode, the edition is a list of choices or not
 								extraHeaders:{}
     					},
@@ -1084,7 +1085,7 @@ angular.module('datatableServices', []).
 		    				return c;
 		    			},
 		    			/**
-		    			 * Return column with hide
+		    			 * Return column with edit
 		    			 */
 		    			getEditColumns: function(){
 		    				var c = [];
@@ -1234,9 +1235,17 @@ angular.module('datatableServices', []).
 							}	    				
 		    				return format;
 		    			},
+		    			
+		    			getFilter : function(col){
+		    				if(col.filter){
+		    					return '|'+col.filter;
+		    				}
+		    				return '';
+		    			},
+		    			
 		    			getValueElement : function(col){  
-	    					if(angular.isDefined(col.render)){
-		    					return '<span dt-compile="dtTable.config.columns[$index].render(value.data, value)"></span>';
+	    					if(angular.isDefined(col.render) && col.render !== null){
+	    						return '<span dt-compile="dtTable.config.columns[$index].render(value.data, value)"></span>';	    						
 		    				}else{
 		    					if(col.type === "boolean"){
 		    						return '<div ng-switch on="'+this.getNgModel(col)+'"><i ng-switch-when="true" class="fa fa-check-square-o"></i><i ng-switch-default class="fa fa-square-o"></i></div>';	    						
@@ -1244,7 +1253,7 @@ angular.module('datatableServices', []).
 		    						if(!col.format)console.log("missing format for img !!");
 		    						return '<img ng-src="data:image/'+col.format+';base64,{{'+this.getNgModel(col)+'}}" style="max-width:{{col.width}}"/>';		    					    
 		    					} else{
-		    						return '<span ng-bind="'+this.getNgModel(col)+this.getFormatter(col)+'"></span>';
+		    						return '<span ng-bind="'+this.getNgModel(col)+this.getFilter(col)+this.getFormatter(col)+'"></span>';
 		    					}
 		    				}	  					    				
 		    			},
@@ -1264,6 +1273,10 @@ angular.module('datatableServices', []).
 		    					return '';
 		    				}
 		    					
+		    			},
+		    			
+		    			getHeader : function(value){
+		    				return Messages(value);
 		    			},
 		    			
 		    			getEditElement : function(col, header){
@@ -1461,7 +1474,8 @@ angular.module('datatableServices', []).
   		    		+	'<th colspan="{{header.colspan}}" ng-repeat="header in headers">{{header.label}}</th>'
   		    		+'</tr>'
   		    		+'<tr>'
-  		    		+	'<th id="{{column.id}}" ng-repeat="column in dtTable.getColumnsConfig()" ng-if="!dtTable.isHide(column.id)">{{column.header}}'
+  		    		+	'<th id="{{column.id}}" ng-repeat="column in dtTable.getColumnsConfig()" ng-if="!dtTable.isHide(column.id)">'
+  		    		+	'<span ng-bind="dtTable.getHeader(column.header)"/>'
   		    		+	'<div class="btn-group pull-right">'
   		    		+	'<button class="btn btn-xs" ng-click="dtTable.setEdit(column.id)" ng-if="dtTable.isShowButton(\'edit\', column)" ng-disabled="!dtTable.canEdit()" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.edit\')"><i class="fa fa-edit"></i></button>'
   		    		+	'<button class="btn btn-xs" ng-click="dtTable.setOrderColumn(column.property, column.id)" ng-if="dtTable.isShowButton(\'order\', column)" ng-disabled="!dtTable.canOrder()" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.sort\')"><i ng-class="dtTable.getOrderColumnClass(column.id)"></i></button>'

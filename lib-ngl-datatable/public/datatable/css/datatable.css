@@ -33,12 +33,12 @@
 }
 
 
-.datatable .form-group input:not([type="checkbox"]) .form-control {
+.datatable .form-group input.form-control:not([type="checkbox"]) {
 	width: 100%;
 	margin:0px;
 }
 
-.datatable .form-group input .form-control {
+.datatable .form-group input.form-control {
 	margin:0px;
 }
 
