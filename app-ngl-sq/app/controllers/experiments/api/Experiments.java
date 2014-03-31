@@ -25,6 +25,7 @@ import net.vz.mongodb.jackson.DBUpdate;
 import net.vz.mongodb.jackson.DBUpdate.Builder;
 
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.JsonNode;
 
 import play.Logger;
 import play.api.modules.spring.Spring;
@@ -191,7 +192,7 @@ public class Experiments extends CommonController{
 		if (!experimentFilledForm.hasErrors()) {
 		
 			MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
-			Workflows.nextInPutContainerState(exp, new ContextValidation(experimentFilledForm.errors()));
+			Workflows.nextInputContainerState(exp, new ContextValidation(experimentFilledForm.errors()));
 			return ok(Json.toJson(exp));
 		}
 
@@ -223,6 +224,16 @@ public class Experiments extends CommonController{
 		return badRequest(ctxValidation.errors.toString());
 	}
 
+	
+	public static Result nextState(String code){
+		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
+		
+		ContextValidation ctxValidation = new ContextValidation();
+		
+		Workflows.nextExperimentState(exp, ctxValidation);
+		
+		return ok(Json.toJson(exp));
+	}
 
 	/**
 	 * Save or update an Experiment object	
