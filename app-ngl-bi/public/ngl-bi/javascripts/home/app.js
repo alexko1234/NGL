@@ -1,3 +1,3 @@
 "use strict";
-angular.module('home', ['datatableServices']);
+angular.module('home', ['datatableServices','commonsServices','biCommonsServices']);
 
