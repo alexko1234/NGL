@@ -189,6 +189,7 @@ public class InstrumentService {
 		instruments.add(createInstrument("MELISSE", "MELISSE", true, "/env/atelier/solexa_MELISSE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		instruments.add(createInstrument("MIMOSA", "MIMOSA", true, "/env/atelier/solexa_MIMOSA", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		instruments.add(createInstrument("MISEQ1", "MISEQ1", true, "/env/atelier/solexa_MISEQ1", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("MISEQ1", "MISEQ1", false, "/env/atelier/solexa_MISEQ1", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
 		return instruments;
 	}
 
@@ -196,11 +197,14 @@ public class InstrumentService {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("HISEQ1", "HISEQ1", true, "/env/export/cngstkprd003/v_igseq4/HISEQ1/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		instruments.add(createInstrument("HISEQ2", "HISEQ2", true, "/env/export/cngstkprd003/v_igseq4/HISEQ2/", DescriptionFactory.getInstitutes(Institute.CODE.CNG/*,Institute.CODE.CNS*/)));
+		instruments.add(createInstrument("HISEQ2", "HISEQ2", false, "/env/export/cngstkprd003/v_igseq4/HISEQ2/", DescriptionFactory.getInstitutes(Institute.CODE.CNS/*,Institute.CODE.CNS*/)));
 		instruments.add(createInstrument("HISEQ3", "HISEQ3", true, "/env/export/cngstkprd003/v_igseq4/HISEQ3/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		instruments.add(createInstrument("HISEQ4", "HISEQ4", true, "/env/export/cngstkprd003/v_igseq5/HISEQ4/", DescriptionFactory.getInstitutes(Institute.CODE.CNG/*,Institute.CODE.CNS*/)));
+		instruments.add(createInstrument("HISEQ4", "HISEQ4", false, "/env/export/cngstkprd003/v_igseq5/HISEQ4/", DescriptionFactory.getInstitutes(Institute.CODE.CNS/*,Institute.CODE.CNS*/)));
 		instruments.add(createInstrument("HISEQ5", "HISEQ5", true, "/env/export/cngstkprd003/v_igseq5/HISEQ5/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		instruments.add(createInstrument("HISEQ6", "HISEQ6", true, "/env/export/cngstkprd003/v_igseq5/HISEQ6/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		instruments.add(createInstrument("HISEQ7", "HISEQ7", true, "/env/export/cngstkprd003/v_igseq6/HISEQ7/", DescriptionFactory.getInstitutes(Institute.CODE.CNG/*,Institute.CODE.CNS*/)));
+		instruments.add(createInstrument("HISEQ7", "HISEQ7", false, "/env/export/cngstkprd003/v_igseq6/HISEQ7/", DescriptionFactory.getInstitutes(Institute.CODE.CNS/*,Institute.CODE.CNS*/)));
 		instruments.add(createInstrument("HISEQ8", "HISEQ8", true, "/env/export/cngstkprd003/v_igseq6/HISEQ8/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
 		instruments.add(createInstrument("AZOTE", "AZOTE", false, "/env/atelier/solexa_AZOTE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		instruments.add(createInstrument("CARBONE", "CARBONE", false, "/env/atelier/solexa_CARBONE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
