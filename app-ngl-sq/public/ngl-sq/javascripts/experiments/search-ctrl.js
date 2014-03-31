@@ -43,8 +43,11 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 				"header":Messages("containers.table.state.code"),
 				"property":"state.code",
 				"order":true,
+				"type":"text",
 				"hide":true,
-				"type":"text"
+				 render:function(value){
+					return Codes("state."+value.state.code);
+				},
 			},
 			{
 				"header":Messages("containers.table.categoryCode"),
@@ -140,8 +143,8 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 				jsonSearch.typeCode = $scope.form.type.code;
 			}
 			
-			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate).valueOf();
-			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate).valueOf();	
+			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
+			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate, Messages("date.format").toUpperCase()).valueOf();
 			
 			$scope.datatable.search(jsonSearch);	
 		}

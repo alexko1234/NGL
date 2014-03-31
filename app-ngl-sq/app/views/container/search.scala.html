@@ -38,6 +38,11 @@
 			</select>
 		}		
 	}
+	@columnSearchForm{
+		@formGroup{
+			<input class="form-control" type="text" ng-model="form.containerSupportCode"  typeahead="support.code as support.name for support in lists.getSupports() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.support")'>			
+		}
+	}
 }
 
 @searchForm(form)()()

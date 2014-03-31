@@ -13,6 +13,7 @@ import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
+import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
 
@@ -30,6 +31,8 @@ import com.mongodb.BasicDBObject;
 
 import controllers.CodeHelper;
 import controllers.CommonController;
+import controllers.containers.api.Containers;
+import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -52,7 +55,7 @@ public class Processes extends CommonController{
 
 				value.traceInformation.setTraceInformation(getCurrentUser());
 				//the default status
-				value.state =new State("N", getCurrentUser());
+				value.state = new State("N", getCurrentUser());
 				//code and name generation
 				value.code = CodeHelper.generateProcessCode(value);
 				
@@ -85,7 +88,7 @@ public class Processes extends CommonController{
 		}			
 	}
 
-	public static Result list(){
+	public static Result list() throws DAOException{
 		Form<ProcessesSearchForm> processesFilledForm = filledFormQueryString(processesSearchForm,ProcessesSearchForm.class);
 		ProcessesSearchForm processesSearch = processesFilledForm.get();
 
@@ -120,7 +123,7 @@ public class Processes extends CommonController{
 	 * @param processesSearch
 	 * @return the query
 	 */
-	private static DBQuery.Query getQuery(ProcessesSearchForm processesSearch) {
+	private static DBQuery.Query getQuery(ProcessesSearchForm processesSearch) throws DAOException{
 		List<Query> queryElts = new ArrayList<Query>();
 		Query query = null;
 
@@ -141,7 +144,25 @@ public class Processes extends CommonController{
 		if(StringUtils.isNotEmpty(processesSearch.categoryCode)){
 			queryElts.add(DBQuery.is("categoryCode", processesSearch.categoryCode));
 		}
+		
+		if(StringUtils.isNotEmpty(processesSearch.stateCode)){
+			queryElts.add(DBQuery.is("state.code", processesSearch.stateCode));
+		}
 
+		if(StringUtils.isNotEmpty(processesSearch.supportCode)){
+			BasicDBObject keys = new BasicDBObject();
+			keys.put("_id", 0);//Don't need the _id field
+			keys.put("code", 1);
+			
+			ContainersSearchForm cs = new ContainersSearchForm();
+			cs.supportCode = processesSearch.supportCode;
+			
+			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList();
+			for(Container c: containers){
+				queryElts.add(DBQuery.or(DBQuery.is("containerInputCode", c.code)));
+			}
+		}
+		
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new Query[queryElts.size()]));
 		}

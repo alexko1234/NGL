@@ -64,7 +64,7 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 	};
 	
 	$scope.search = function(){	
-		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.processType || $scope.form.processCategory){
+		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.processType || $scope.form.processCategory || $scope.form.processesSupportCode || $scope.form.state){
 			var jsonSearch = {};
 			if($scope.form.projectCode){
 				jsonSearch.projectCode = $scope.form.projectCode;
@@ -80,6 +80,14 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 			
 			if($scope.form.processCategory){
 				jsonSearch.categoryCode = $scope.form.processCategory.code;
+			}
+			
+			if($scope.form.processesSupportCode){
+				jsonSearch.supportCode = $scope.form.processesSupportCode;
+			}
+			
+			if($scope.form.state){
+				jsonSearch.stateCode = $scope.form.state.code;
 			}
 			
 			$scope.datatable.search(jsonSearch);						
@@ -117,6 +125,8 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 		$scope.setForm($scope.form);
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.processCategories();
+		$scope.lists.refresh.supports();
+		$scope.lists.refresh.states({objectTypeCode:"Process"});
 	}else{
 		$scope.form = $scope.getForm();			
 	}

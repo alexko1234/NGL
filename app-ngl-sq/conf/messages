@@ -36,7 +36,8 @@ search.placeholder.toDate = Exp. jusqu''au (jj/mm/aaaa)
 search.placeholder.states = Sélect. des états
 search.placeholder.instruments = Sélect. des instruments
 search.placeholder.types = Sélect. des types
-search.placeholder.users = Crée par
+search.placeholder.user = Crée par
+search.placeholder.support = Sélect. un code support
 
 #processes
 processes.title = Processus
@@ -59,6 +60,19 @@ processes.table.resolutionCode = Code resolution
 processes.table.creationDate = Date creation
 processes.table.comments = Commentaires
 processes.table.currentExperimentTypeCode = Code du type experience courante
+processes.table.properties.robotUsing = Robot à utiliser pour la prep. de lib.
+processes.table.properties.properties.goalSize = Objectif taille finale
+processes.table.properties.properties.quantityUsing = Qté. à engager dans la frag.
+processes.table.properties.autoVsManuel = Processus manuel ou robot ?
+processes.table.properties.objInputProcess = Input fragmentation
+processes.table.properties.objFragm = Objectif fragmentation
+processes.table.properties.objSize = Objectif taille banque finale
+processes.table.properties.imputationCat = Catégorie imputation
+processes.table.properties.dateLimite = Date limite fin processus
+processes.table.properties.indexing = Type indexing
+processes.table.supportCode = Code support container
+processes.table.line = Position(x)
+processes.table.columns = Position(y)
 
 processes.select.processType = Sélect. un type de processus
 processes.select.processCategory = Sélect. une categorie de processus

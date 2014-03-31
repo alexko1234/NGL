@@ -89,10 +89,13 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 		}
 	};
 	
-	
 	$scope.search = function(){
+		$scope.errors.experimentType = {};
+		
+		
 		if($scope.form.experimentType || $scope.newExperiment != "new"){ 		
-			var jsonSearch = {};			
+			var jsonSearch = {};
+			
 			jsonSearch.stateCode = 'A';	//default state code for containers		
 			if($scope.form.projectCode){
 				jsonSearch.projectCodes = $scope.form.projectCode;
@@ -112,10 +115,12 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 				jsonSearch.users = $scope.form.user;
 			}
 			
-			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate).valueOf();
-			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate).valueOf();	
+			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
+			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate, Messages("date.format").toUpperCase()).valueOf();
 			
 			$scope.datatable.search(jsonSearch);
+		}else{
+			$scope.errors.experimentType = "alert-danger";
 		}							
 	};
 	
@@ -130,6 +135,7 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 	};
 	
 	//init
+	$scope.errors = {};
 	if(angular.isUndefined($scope.getDatatable())){
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		$scope.setDatatable($scope.datatable);	

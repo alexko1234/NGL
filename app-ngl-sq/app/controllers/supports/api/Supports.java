@@ -82,6 +82,7 @@ public class Supports extends CommonController {
 	 */
 	private static DBQuery.Query getQuery(SupportsSearchForm supportsSearch) throws DAOException {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		queryElts.add(DBQuery.exists("_id"));
 		
 		if(StringUtils.isNotEmpty(supportsSearch.categoryCode)){
 			queryElts.add(DBQuery.is("categoryCode", supportsSearch.categoryCode));
@@ -99,21 +100,25 @@ public class Supports extends CommonController {
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("_id", 0);//Don't need the _id field
 		keys.put("support", 1);
+		if(supportsSearch.experimentTypeCode != null || supportsSearch.processTypeCode != null || supportsSearch.stateCode!= null){
+			ContainersSearchForm cs = new ContainersSearchForm();
+			cs.experimentTypeCode = supportsSearch.experimentTypeCode;
+			cs.processTypeCode = supportsSearch.processTypeCode;
+			cs.stateCode = supportsSearch.stateCode;
+			
+			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList();
+			Logger.debug("Containers "+containers.size());
+			List<String> supports  =new ArrayList<String>();
+			for(Container c: containers){
+				supports.add(c.support.supportCode);
+			}
 		
-		ContainersSearchForm cs = new ContainersSearchForm();
-		cs.experimentTypeCode = supportsSearch.experimentTypeCode;
-		cs.processTypeCode = supportsSearch.processTypeCode;
-		cs.stateCode = supportsSearch.stateCode;
-		
-		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList();
-		Logger.debug("Containers "+containers.size());
-		List<String> supports  =new ArrayList<String>();
-		for(Container c: containers){
-			supports.add(c.support.supportCode);
+			if(cs.experimentTypeCode!=null || cs.processTypeCode!=null || cs.stateCode!=null ){
+				queryElts.add(DBQuery.in("code", supports));
+			}
 		}
-		
-		if(cs.experimentTypeCode!=null || cs.processTypeCode!=null || cs.stateCode!=null ){
-			queryElts.add(DBQuery.in("code", supports));
+		if(supportsSearch.code != null){
+			queryElts.add(DBQuery.is("code", supportsSearch.code));
 		}
 		
 		if(supportsSearch.projectCodes != null){

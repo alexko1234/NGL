@@ -7,6 +7,8 @@ public class ProcessesSearchForm extends ListForm{
 	public String categoryCode;
 	public String sampleCode;
 	public String projectCode;
+	public String supportCode;
+	public String stateCode;
 	
 	@Override
 	public String toString() {

@@ -70,6 +70,7 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 	};
 	
 	$scope.init = function(){
+		$scope.errors = {};
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, $scope.datatableConfig);			
 			$scope.setDatatable($scope.datatable);	
@@ -96,6 +97,7 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 			$scope.setForm($scope.form);
 			$scope.lists.refresh.projects();
 			$scope.lists.refresh.processCategories();
+			$scope.lists.refresh.supports();
 			
 		}else{
 			$scope.form = $scope.getForm();			
@@ -139,7 +141,7 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 	};
 	
 	$scope.search = function(){	
-		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.processType){
+		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.processType || $scope.form.containerSupportCode){
 			var jsonSearch = {};
 			jsonSearch.stateCode = 'IW-P';
 			if($scope.form.projectCode){
@@ -154,11 +156,17 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 				jsonSearch.processTypeCode = $scope.form.processType.code;
 			}
 			
+			if($scope.form.containerSupportCode){
+				jsonSearch.supportCode = $scope.form.containerSupportCode;
+			}
+			
 			$scope.datatable.search(jsonSearch);						
 		}
 	};
 	
 	$scope.addToBasket = function(containers){
+		$scope.errors.processType = {};
+		$scope.errors.processCategory = {};
 		if($scope.form.processType){
 			for(var i = 0; i < containers.length; i++){
 				for(var j = 0; j < containers[i].sampleCodes.length; j++){ //one process by sample
@@ -175,6 +183,12 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 				}
 			}
 			$scope.addTabs({label:$scope.form.processType.name,href:$scope.form.processType.code,remove:false});
+		}else{
+			if(!$scope.form.processCategory){
+				$scope.errors.processCategory = "alert-danger";
+			}
+			
+			$scope.errors.processType = "alert-danger";
 		}
 	};
 };

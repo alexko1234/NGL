@@ -4,7 +4,7 @@
 
 	@columnSearchForm{		
 		@formGroup{
-		<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
+		<select class="form-control" ng-class="errors.processCategory" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
 			<option value="">@Messages("processes.select.processCategory")</option>
 		</select>
 		}
@@ -14,12 +14,18 @@
 	}
 	@columnSearchForm{
 		@formGroup{
-		<select class="form-control" ng-model="form.processType" ng-options="processType.name for processType in  lists.getProcessTypes()" ng-change="changeProcessType()">
+		<select class="form-control" ng-class="errors.processType" ng-model="form.processType" ng-options="processType.name for processType in  lists.getProcessTypes()" ng-change="changeProcessType()">
 			<option value="">@Messages("processes.select.processType")</option>
 		</select>		
 		}
 		@formGroup{
 		<input class="form-control" type="text" ng-model="form.sampleCode" typeahead="sample.code as sample.code for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-click="refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>
+		}
+	}
+	
+	@columnSearchForm{
+		@formGroup{
+			<input class="form-control" type="text" ng-model="form.containerSupportCode"  typeahead="support.code as support.name for support in lists.getSupports() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.support")'>			
 		}
 	}
 }

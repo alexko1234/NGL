@@ -100,7 +100,7 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 
 	$scope.search = function(){		
 		if($scope.form.projectCode || $scope.form.sampleCode || ($scope.form.fromExperimentTypeCodes && $scope.form.fromExperimentTypeCodes.length > 0) || $scope.form.containerCategory 
-			|| $scope.form.containerSupportCategory || $scope.form.state){	
+			|| $scope.form.containerSupportCategory || $scope.form.state || $scope.form.containerSupportCode){	
 			
 			var jsonSearch = {};
 			
@@ -127,6 +127,10 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 				jsonSearch.stateCode = $scope.form.state.code;
 			}	
 			
+			if($scope.form.containerSupportCode){
+				jsonSearch.supportCode = $scope.form.containerSupportCode;
+			}	
+			
 			$scope.datatable.search(jsonSearch);
 		}
 	};
@@ -145,6 +149,7 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.containerCategories();
 		$scope.lists.refresh.experimentTypes();
+		$scope.lists.refresh.supports();
 		$scope.lists.refresh.states({objectTypeCode:"Container"});
 	}
 }

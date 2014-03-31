@@ -98,6 +98,9 @@ angular.module('commonsServices', []).
     				valuationCriterias: function(params){
     					load(jsRoutes.controllers.lists.api.Lists.valuationCriterias().url,params,'valuationCriterias');    					
     				},
+    				supports : function(params){
+    					load(jsRoutes.controllers.supports.api.Supports.list().url,params,'supports'); 
+    				},
     				projects : function(params){
     					load(jsRoutes.controllers.projects.api.Projects.list().url,params,'projects');    					
     				},
@@ -171,6 +174,7 @@ angular.module('commonsServices', []).
     			getProcessTypes : function(){return results['processTypes'];},
     			getSamples : function(){return results['samples'];},
     			getUsers : function(){return results['users'];},
+    			getSupports : function(){return results['supports'];},
     			getContainerCategories : function(){return results['containerCategories'];},
     			getExperimentCategories : function(){return results['experimentCategories'];},
     			getExperimentTypes : function(){return results['experimentTypes'];},
