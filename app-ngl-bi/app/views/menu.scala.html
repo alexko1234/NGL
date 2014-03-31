@@ -1,6 +1,7 @@
 @(nav: String = "")
 
 @import play.mvc.Http.Context
+@import play.api.Play
 
   <!-- Navbar
     ================================================== -->
@@ -36,9 +37,9 @@
 					<ul class="dropdown-menu" role="menu" aria-labelledby="readsets">
 						<li class="@("active".when(nav == "readsets.search"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("search")">@Messages("readsets.menu.search")</a></li>																				
 						<li class="@("active".when(nav == "readsets.valuation"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("valuation")">@Messages("readsets.menu.valuation")</a></li>	
-						
-						<li class="@("active".when(nav == "readsets.valuation.wheat"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("valuationWheat")">@Messages("readsets.menu.valuation.wheat")</a></li>
-																																	
+						@if(Play.current.configuration.getString("institute") == Some("CNS")) {
+							<li class="@("active".when(nav == "readsets.valuation.wheat"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("valuationWheat")">@Messages("readsets.menu.valuation.wheat")</a></li>
+						}
 						<li class="@("active".when(nav == "readsets.state"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("state")">@Messages("readsets.menu.state")</a></li>
 						<li class="@("active".when(nav == "readsets.batch"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("batch")">@Messages("readsets.menu.batch")</a></li>
 					</ul>
