@@ -339,7 +339,7 @@ public class ValidationHelperTests extends AbstractTests {
 		pd.name = name;
 		pd.code = code;
 		pd.active = true;
-		pd.propertyType = propertyType.getName();
+		pd.propertyValueType = propertyType.getName();
 		pd.valueType = valueType.getName();
 		pd.required = required;
 		pd.choiceInList = false;		
