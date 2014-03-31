@@ -53,7 +53,7 @@
 		 	<span ng-switch-when="TRUE" class="text-success">{{readset.code}}</span> 
 		 	<span ng-switch-default>{{readset.code}}</span> 
 		 	<small>   
-		 	<span ng-model="readset.state.code" codes="state"></span>
+		 	<span ng-bind="readset.state.code|codes:'state'"></span>
 		 	</small>
 		 </h1>		 
 	</div>
@@ -78,11 +78,11 @@
 						<p class="form-control-static">{{readset.code}}</p>
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.state.code")){
-						<p class="form-control-static" ng-model='readset.state.code' codes="state"/>
+						<p class="form-control-static" ng-bind="readset.state.code|codes:'state'"/>
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.productionValuation.valid")){
 						<div ng-switch on="isEditMode()">
-							<p class="form-control-static" ng-switch-when="false" ng-model='readset.productionValuation.valid' codes="valuation"/>
+							<p class="form-control-static" ng-switch-when="false" ng-bind="readset.productionValuation.valid|codes:'valuation'"/>
 							<div ng-switch-when="true"><div bt-select class="form-control" ng-model="readset.productionValuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div></div>
 						</div>
 					}				
@@ -91,7 +91,7 @@
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.productionValuation.criteria")){
 						<div ng-switch on="isEditMode()">
-							<p class="form-control-static" ng-switch-when="false" ng-model="readset.productionValuation.criteriaCode" codes="valuation_criteria"/>
+							<p class="form-control-static" ng-switch-when="false" ng-bind="readset.productionValuation.criteriaCode|codes:'valuation_criteria'" />
 							<div ng-switch-when="true"><div bt-select class="form-control" ng-model="readset.productionValuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></div></div>
 						</div>
 					}
@@ -114,7 +114,7 @@
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.bioinformaticValuation.valid")){
 						<div ng-switch on="isEditMode()">
-							<p class="form-control-static" ng-switch-when="false" ng-model='readset.bioinformaticValuation.valid' codes="valuation"/>
+							<p class="form-control-static" ng-switch-when="false" ng-bind="readset.bioinformaticValuation.valid|codes:'valuation'"/>
 							<div ng-switch-when="true"><div bt-select  class="form-control" ng-model="readset.bioinformaticValuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div></div>
 						</div>
 					}
@@ -123,7 +123,7 @@
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.bioinformaticValuation.criteria")){
 						<div ng-switch on="isEditMode()">
-							<p class="form-control-static" ng-switch-when="false" ng-model="readset.bioinformaticValuation.criteriaCode" codes="valuation_criteria"/>
+							<p class="form-control-static" ng-switch-when="false" ng-bind="readset.bioinformaticValuation.criteriaCode|codes:'valuation_criteria'"/>
 							<div ng-switch-when="true"><div bt-select  class="form-control" ng-model="readset.bioinformaticValuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></div></div>
 						</div>
 					}
