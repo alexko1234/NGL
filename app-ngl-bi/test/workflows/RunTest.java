@@ -12,7 +12,6 @@ import java.util.List;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
-import models.laboratory.common.instance.TransientState;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.project.instance.Project;
@@ -94,9 +93,6 @@ public class RunTest extends  AbstractTests {
 		List<Lane> lanes = new ArrayList<Lane>();
 		lanes.add(lane);
 		run.lanes = lanes;
-		
-
-        
         
 
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
@@ -104,7 +100,7 @@ public class RunTest extends  AbstractTests {
 		
 		run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
         
-		assertThat(run.state.code).isEqualTo("N"); //ok
+		assertThat(run.state.code).isEqualTo("N"); //disponible
 
 		ReadSet readSet = RunMockHelper.newReadSet("ReadSet00");		
 		readSet.runCode = run.code;
@@ -115,125 +111,205 @@ public class RunTest extends  AbstractTests {
         
         
         readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code",readSet.code));
-
         
-		assertThat(readSet.state.code).isEqualTo("N"); //ok
+		assertThat(readSet.state.code).isEqualTo("N"); 
+
 		
 		 State nextState = new State();
-		 nextState.code = "IP-V";
+		 nextState.code = "IP-S";
+		 nextState.date = new Date();
+		 nextState.user = "testeur";
+
+		 Workflows.setRunState(new ContextValidation(), run, nextState);
+			
+	     assertThat(run.state.code).isEqualTo("IP-S"); //
+	     
+		 
+	     nextState = new State();
+		 nextState.code = "FE-S";
+		 nextState.date = new Date();
+		 nextState.user = "testeur";
+		
+		 Workflows.setRunState(new ContextValidation(), run, nextState);
+			
+	     assertThat(run.state.code).isEqualTo("FE-S"); //
+
+	     
+		 nextState = new State();
+		 nextState.code = "F-S";
 		 nextState.date = new Date();
 		 nextState.user = "testeur";
 		 
-		Workflows.setRunState(new ContextValidation(), run, nextState);
-		
-        assertThat(run.state.code).isEqualTo("IP-V");
-        
-        //make complete valuation
-        run.valuation.valid = TBoolean.TRUE;
-        for (Lane l : run.lanes) {
-        	l.valuation.valid = TBoolean.TRUE;
-        }
-        
-        result = callAction(controllers.runs.api.routes.ref.Runs.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-        assertThat(status(result)).isEqualTo(200);
-                
-        Logger.debug("************** Valuation completed ***************");
-        
-        
-        Workflows.nextRunState(new ContextValidation(), run);
-        
-        assertThat(run.state.code).isEqualTo("F-V");
-        
-        
-        Workflows.nextRunState(new ContextValidation(), run);
-        
-        assertThat(run.state.code).isEqualTo("F-V");
-        
-        run.lanes.get(0).valuation.valid = TBoolean.FALSE;
-        
-        Logger.debug("************** Valuation non completed ***************");
-        
-        assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(true);
-        assertThat(Workflows.atLeastOneValuation(run)).isEqualTo(true);
-        
-        
-        Workflows.nextRunState(new ContextValidation(), run);
-        
-        assertThat(run.state.code).isEqualTo("F-V");
-        
-        Logger.debug("************** set lane to UNSET  **************");
-        
-        run.lanes.get(0).valuation.valid = TBoolean.UNSET;
-        
-        assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(false);
-        
-        
-        Workflows.nextRunState(new ContextValidation(), run);
-        
-        assertThat(run.state.code).isEqualTo("IP-V");
-        
-        Logger.debug("Lane 0 valuation status : " + run.lanes.get(0).valuation.valid); // Lane 0 valuation status : TRUE !!!!!!!!
-  
-        //assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(false);
-        //Workflows.nextRunState(ctx, run);        
-        //Logger.debug("************** run.state.code : IP-V**************");
-        //assertThat(run.state.code).isEqualTo("IP-V");
-        
-        
-        /********************* tests readSet states ***************************************************/ 
-        assertThat(readSet.state.code).isEqualTo("N");
-        
-     
+		 Workflows.setRunState(new ContextValidation(), run, nextState);
+			
+	     assertThat(run.state.code).isEqualTo("IW-RG"); //
+	     
+	     
+		 nextState = new State();
+		 nextState.code = "IP-RG";
+		 nextState.date = new Date();
+		 nextState.user = "testeur";
+		 
+		 Workflows.setRunState(new ContextValidation(), run, nextState);
+			
+	     assertThat(run.state.code).isEqualTo("IP-RG"); //
+	     
+	     
+		 nextState = new State();
+		 nextState.code = "F-RG";
+		 nextState.date = new Date();
+		 nextState.user = "testeur";
+		 
+		 Workflows.setRunState(new ContextValidation(), run, nextState);
+			
+	     assertThat(run.state.code).isEqualTo("IW-V"); //why ?
+	     
+	     
 		 nextState = new State();
 		 nextState.code = "IP-V";
 		 nextState.date = new Date();
 		 nextState.user = "testeur";
+		 
+		 Workflows.setRunState(new ContextValidation(), run, nextState);
+		
+         assertThat(run.state.code).isEqualTo("IP-V"); //
+        
+         //make complete valuation
+         run.valuation.valid = TBoolean.TRUE;
+         for (Lane l : run.lanes) {
+        	l.valuation.valid = TBoolean.TRUE;
+         }
+        
+         Logger.debug("************** Valuation completed ***************");
+        
+        
+         Workflows.nextRunState(new ContextValidation(), run);
+        
+         assertThat(run.state.code).isEqualTo("F-V");
+        
+        
+         Workflows.nextRunState(new ContextValidation(), run);
+        
+         assertThat(run.state.code).isEqualTo("F-V");
+        
+         run.lanes.get(0).valuation.valid = TBoolean.FALSE;
+        
+         Logger.debug("************** Valuation non completed ***************");
+        
+         assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(true);
+         assertThat(Workflows.atLeastOneValuation(run)).isEqualTo(true);
+        
+        
+         Workflows.nextRunState(new ContextValidation(), run);
+        
+         assertThat(run.state.code).isEqualTo("F-V");
+        
+         Logger.debug("************** set lane to UNSET  **************");
+        
+         run.lanes.get(0).valuation.valid = TBoolean.UNSET;
+        
+         assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(false);
+        
+        
+         Workflows.nextRunState(new ContextValidation(), run);
+        
+         assertThat(run.state.code).isEqualTo("IP-V");
+        
+         Logger.debug("Lane 0 valuation status : " + run.lanes.get(0).valuation.valid);
+  
+         assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(false);
+         Workflows.nextRunState(new ContextValidation(), run);        
+         
+         assertThat(run.state.code).isEqualTo("IP-V");
+        
+        
+        /********************* tests readSet states ***************************************************/ 
+
+        assertThat(readSet.state.code).isEqualTo("N");
+
+        
+		 nextState = new State();
+		 nextState.code = "IW-RG";
+		 nextState.date = new Date();
+		 nextState.user = "testeur";
+		 
+		 Workflows.setRunState(new ContextValidation(), run, nextState);
+			
+	     assertThat(run.state.code).isEqualTo("IW-RG");
+	     
+	     
+		 nextState = new State();
+		 nextState.code = "IP-RG";
+		 nextState.date = new Date();
+		 nextState.user = "testeur";
+		 
+		 Workflows.setRunState(new ContextValidation(), run, nextState);
+			
+	     assertThat(run.state.code).isEqualTo("IP-RG");
+	     
+	     
+		 nextState = new State();
+		 nextState.code = "F-RG";
+		 nextState.date = new Date();
+		 nextState.user = "testeur";
+		 
+		 Workflows.setRunState(new ContextValidation(), run, nextState);
+				
+	     assertThat(run.state.code).isEqualTo("IP-V");
+	     
+		 readSet.bioinformaticValuation.valid = TBoolean.FALSE;
 
 		 
 		 Workflows.setReadSetState(new ContextValidation(), readSet, nextState);
 	        
-	     assertThat(readSet.state.code).isEqualTo("A");
+	     assertThat(readSet.state.code).isEqualTo("IW-QC");
 	     
-	     //verify historical	
-	     assertThat(readSet.state.historical.get(0).equals("N"));
-	     assertThat(readSet.state.historical.get(1).equals("IP-V"));
-	     assertThat(readSet.state.historical.get(2).equals("F-V"));
-	     assertThat(readSet.state.historical.get(3).equals("A"));
-	     	     
+	     
+		 nextState = new State();
+		 nextState.code = "IP-QC";
+		 nextState.date = new Date();
+		 nextState.user = "testeur";
+		 
+		 Workflows.setReadSetState(new ContextValidation(), readSet, nextState);
+	     
+	     assertThat(readSet.state.code).isEqualTo("IP-QC");
+	     
+	
+		 nextState = new State();
+		 nextState.code = "F-QC";
+		 nextState.date = new Date();
+		 nextState.user = "testeur";
+		 readSet.bioinformaticValuation.valid = TBoolean.UNSET;
+		 readSet.productionValuation.valid = TBoolean.UNSET;
+		 
+		 Workflows.setReadSetState(new ContextValidation(), readSet, nextState);
+	     
+	     assertThat(readSet.state.code).isEqualTo("IW-V");
+	
+	 
+	     readSet.bioinformaticValuation.valid = TBoolean.UNSET;
+    	     
 		 Workflows.setReadSetState(new ContextValidation(), readSet, nextState);
 	        
-		 //verify that we stay at A
-	     assertThat(readSet.state.code).isEqualTo("A");
+		 
+	     assertThat(readSet.state.code).isEqualTo("IW-V");
 	     
-	     //unset validation bio-info and verify that we pass at 
-	     readSet.bioinformaticValuation.valid = TBoolean.UNSET;
-	     
-	     
-	     Workflows.setReadSetState(new ContextValidation(), readSet, nextState);
-	     
-	     assertThat(readSet.state.code).isEqualTo("IP-V");
 	     
 	     readSet.bioinformaticValuation.valid = TBoolean.FALSE;
-	     
-	     
-	     Workflows.setReadSetState(new ContextValidation(), readSet, nextState);
-	     
-	     assertThat(readSet.state.code).isEqualTo("IP-V");
-	     
-	     
-	     //verify historical	
-	     assertThat(readSet.state.historical.get(0).equals("N"));
-	     assertThat(readSet.state.historical.get(1).equals("IP-V"));
-	     assertThat(readSet.state.historical.get(2).equals("F-V"));
-	     assertThat(readSet.state.historical.get(3).equals("A"));
-	     assertThat(readSet.state.historical.get(1).equals("IP-V"));
-	     assertThat(readSet.state.historical.get(2).equals("F-V"));
-	     assertThat(readSet.state.historical.get(3).equals("A"));
-	     assertThat(readSet.state.historical.get(1).equals("IP-V"));
-	     
-	     
-	     
-    }
+	     readSet.productionValuation.valid = TBoolean.FALSE;
 
+		 Workflows.setReadSetState(new ContextValidation(), readSet, nextState);
+	     		
+	     assertThat(readSet.state.code).isEqualTo("UA");
+	     
+	     
+	     readSet.bioinformaticValuation.valid = TBoolean.TRUE;
+	     readSet.productionValuation.valid = TBoolean.TRUE;
 
+		 Workflows.setReadSetState(new ContextValidation(), readSet, nextState);
+	     
+		
+	     assertThat(readSet.state.code).isEqualTo("A");
+
+	     }
 }
