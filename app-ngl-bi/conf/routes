@@ -103,6 +103,13 @@ DELETE	/api/runs/:code/files										controllers.readsets.api.Files.deleteByRun
 PUT		/api/readsets/:code/files/:fullname/workflow/:stateCode		controllers.readsets.api.Files.workflow(code: java.lang.String, fullname: java.lang.String, stateCode:java.lang.String)
 
 
+#reporting configuration
+GET    	/api/reporting/config    	           			controllers.reporting.api.ReportingConfigurations.list()
+GET	   	/api/reporting/config/:code						controllers.reporting.api.ReportingConfigurations.get(code)
+POST 	/api/reporting/config								controllers.reporting.api.ReportingConfigurations.save()
+PUT    	/api/reporting/config/:code						controllers.reporting.api.ReportingConfigurations.update(code)
+DELETE	/api/reporting/config/:code						controllers.reporting.api.ReportingConfigurations.delete(code: java.lang.String)
+
 
 
 #archive tpl
@@ -116,6 +123,7 @@ GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list()
 
 
 #treatmenttype
+GET		/api/treatment-types						controllers.treatmenttypes.api.TreatmentTypes.list()
 GET		/api/treatment-types/:code					controllers.treatmenttypes.api.TreatmentTypes.get(code: java.lang.String)
 
 #alerts

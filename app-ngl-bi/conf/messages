@@ -34,6 +34,10 @@ page.archives.fvalue.archive.1 = Archivés
 page.archives.fvalue.archive.2 = Non Archivés
 
 
+search.form = Formulaire
+search.config = Configuration
+
+
 valuation.menu = Evaluation
 valuation.menu.runs = Runs
 valuation.menu.readsets = Readsets
@@ -117,16 +121,16 @@ runs.lane.valuation.valid = Valide ?
 runs.lane.valuation.resolutions = Comptes Rendus
 
 runs.lane.code = #
-runs.lane.ngsrg.nbCluster = Nb Clusters
-runs.lane.ngsrg.percentClusterIlluminaFilter = % Clusters filtrés (illumina)
-runs.lane.ngsrg.nbClusterIlluminaFilter = Nb Cluster filtrés (illumina)
-runs.lane.ngsrg.percentClusterInternalAndIlluminaFilter = % Séquences filtrées (interne)
-runs.lane.ngsrg.nbClusterInternalAndIlluminaFilter = Nb Séquences (filtre illumina + interne)
-runs.lane.ngsrg.nbBaseInternalAndIlluminaFilter = Nb Bases (filtre illumina + interne)
-runs.lane.ngsrg.phasing = Phasing
-runs.lane.ngsrg.prephasing = Prephasing
-runs.lane.ngsrg.nbCycles = Nb Cycles
-runs.lane.ngsrg.seqLossPercent = % Perte
+runs.lane.ngsrg_illumina.nbCluster = Nb Clusters
+runs.lane.ngsrg_illumina.percentClusterIlluminaFilter = % Clusters filtrés (illumina)
+runs.lane.ngsrg_illumina.nbClusterIlluminaFilter = Nb Cluster filtrés (illumina)
+runs.lane.ngsrg_illumina.percentClusterInternalAndIlluminaFilter = % Séquences filtrées (interne)
+runs.lane.ngsrg_illumina.nbClusterInternalAndIlluminaFilter = Nb Séquences (filtre illumina + interne)
+runs.lane.ngsrg_illumina.nbBaseInternalAndIlluminaFilter = Nb Bases (filtre illumina + interne)
+runs.lane.ngsrg_illumina.phasing = Phasing
+runs.lane.ngsrg_illumina.prephasing = Prephasing
+runs.lane.ngsrg_illumina.nbCycles = Nb Cycles
+runs.lane.ngsrg_illumina.seqLossPercent = % Perte
 runs.lane.sav.read1 = Read 1
 runs.lane.sav.read2 = Read 2
 runs.lane.sav.clusterDensity = Density (K/mm2)
@@ -201,30 +205,36 @@ readsets.properties.isSentCollaborator = Envoyé Collaborateur ?
 readsets.sampleOnContainer.percentPerLane = % déposé
 
 #treatments properties
-readsets.treatments.contaminationPhiX.read1_2 = Read 1 + Read 2
-readsets.treatments.contaminationPhiX.single = Single
-readsets.treatments.contaminationPhiX.readsInput = Reads input 
-readsets.treatments.contaminationPhiX.removedReads = Removed reads
-readsets.treatments.contaminationPhiX.remainingReads = Remaining reads 
-readsets.treatments.contaminationPhiX.removedReadsPercent = % removed reads
-readsets.treatments.contaminationPhiX.remainingNucleotides = Reamining nucleotides
+readsets.treatments.contamination.read1_2 = Read 1 + Read 2
+readsets.treatments.contamination.single = Single
+readsets.treatments.contamination.readsInput = Reads input 
+readsets.treatments.contamination.removedReads = Removed reads
+readsets.treatments.contamination.remainingReads = Remaining reads 
+readsets.treatments.contamination.removedReadsPercent = % removed reads
+readsets.treatments.contamination.remainingNucleotides = Reamining nucleotides
 
-readsets.treatments.duplicates.estimateOfDuplicatedReads = Estimation de lectures dupliquées
-readsets.treatments.duplicates.estimateOfUniqueReads = Estimation de lectures uniques
+readsets.treatments.duplicates.estimateDuplicatedReads = Estimation de lectures dupliquées
+readsets.treatments.duplicates.estimateDuplicatedReadsPercent = Estimation % lectures dupliquées
+readsets.treatments.duplicates.estimateUniqueReads = Estimation de lectures uniques
+readsets.treatments.duplicates.estimateUniqueReadsPercent = Estimation % lectures uniques
 readsets.treatments.duplicates.observed = observé
 readsets.treatments.duplicates.times = fois
 readsets.treatments.duplicates.read1 = Read 1
 readsets.treatments.duplicates.read2 = Read 2
 readsets.treatments.duplicates.paired = Paired
+readsets.treatments.duplicates.sampleInput = Sample input
+readsets.treatments.duplicates.estimateDuplicatedReadsNTimes = Estimation de lectures dupliquées x+1 fois
 
 readsets.treatments.global.usefulSequences = Nb Séquences utiles
 readsets.treatments.global.usefulBases = Nb Bases utiles
 
-readsets.treatments.ngsrg.nbCluster = Nb Séquences valides
-readsets.treatments.ngsrg.nbBases = Nb Bases
-readsets.treatments.ngsrg.Q30 = % >= Q30
-readsets.treatments.ngsrg.qualityScore = Score Qualité moyen
-readsets.treatments.ngsrg.validSeqPercent = % Séquences valides / piste
+readsets.treatments.ngsrg_illumina.nbCluster = Nb Séquences valides
+readsets.treatments.ngsrg_illumina.nbBases = Nb Bases
+readsets.treatments.ngsrg_illumina.Q30 = % >= Q30
+readsets.treatments.ngsrg_illumina.qualityScore = Score Qualité moyen
+readsets.treatments.ngsrg_illumina.validSeqPercent = % Séquences valides / piste
+readsets.treatments.ngsrg_illumina.fraction = Fraction de run
+readsets.treatments.ngsrg_illumina.nbReadIllumina = Nb Read Illumina
 
 readsets.treatments.mapping.tabs.data = Données
 readsets.treatments.mapping.tabs.ref = Référence
@@ -232,13 +242,19 @@ readsets.treatments.mapping.number = Number
 readsets.treatments.mapping.totalReadsPercent = % total reads
 readsets.treatments.mapping.sampleInput = Sample input
 readsets.treatments.mapping.nonChimericAlignedReads = Non-chimeric aligned reads
+readsets.treatments.mapping.nonChimericAlignedReadsPercent = % Non-chimeric aligned reads
 readsets.treatments.mapping.FRAlignedReads = FR (PE) aligned reads
+readsets.treatments.mapping.FRAlignedReadsPercent = % FR (PE) aligned reads
 readsets.treatments.mapping.RFAlignedReads = RF (MP) aligned reads
 readsets.treatments.mapping.RFAlignedReadsPercent = % RF (MP) aligned reads
 readsets.treatments.mapping.FFAlignedReads = FF aligned reads
+readsets.treatments.mapping.FFAlignedReadsPercent = % FF aligned reads
 readsets.treatments.mapping.RRAlignedReads = RR aligned reads
+readsets.treatments.mapping.RRAlignedReadsPercent = % RR aligned reads
 readsets.treatments.mapping.transAlignedReads = Trans aligned reads
 readsets.treatments.mapping.singleAlignedReads = Single aligned reads
+readsets.treatments.mapping.transAlignedReadsPercent = % Trans aligned reads
+readsets.treatments.mapping.singleAlignedReadsPercent = % Single aligned reads
 readsets.treatments.mapping.reference = Assembly reference
 readsets.treatments.mapping.100percent = 100 %
 readsets.treatments.mapping.MPReadDistanceSeparation =  Distance between MP reads
@@ -254,9 +270,12 @@ readsets.treatments.merging.minSize = Min size (bases)
 readsets.treatments.merging.avgSize = Average size (bases)
 readsets.treatments.merging.sampleInput = Sample input
 readsets.treatments.merging.overlapDistrib = Overlap distribution
+readsets.treatments.merging.mergedReadsDistrib = Merged reads distribution
+readsets.treatments.merging.mergedReadsPercent = % merged reads
 
-readsets.treatments.read_quality.adaptersOverRepresented = Adapters over-represented : 
-readsets.treatments.read_quality.number = Estimation du nb de lectures de taille
+readsets.treatments.read_quality.adapters = Adapters over-represented : 
+readsets.treatments.read_quality.maxSizeReads = Estimation du nb de lectures de taille
+readsets.treatments.read_quality.maxSizeReadsPercent = Estimation du % de lectures de taille
 readsets.treatments.read_quality.tabs.read1 = Read 1
 readsets.treatments.read_quality.tabs.read2 = Read 2
 readsets.treatments.read_quality.qualScore = Quality scores for each read position
@@ -268,6 +287,7 @@ readsets.treatments.read_quality.GCDistribution = Proportion of reads for differ
 readsets.treatments.read_quality.positionN = Position of N in reads
 readsets.treatments.read_quality.suspectedKmers = Suspected Kmers
 readsets.treatments.read_quality.suspectedPrimers = Suspected Primers
+readsets.treatments.read_quality.sampleInput = Sample input
 
 readsets.treatments.sorting_ribo.readsInput = Reads input
 readsets.treatments.sorting_ribo.no_rRNA = No-rRNA
@@ -301,6 +321,7 @@ readsets.treatments.taxonomy.taxonBilan.nbSeq = Nb Seq.
 readsets.treatments.taxonomy.sampleInput = Nb Seq. (échantillonnage)
 readsets.treatments.taxonomy.beginNcbiUrl = http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Undef&name=
 readsets.treatments.taxonomy.phylogeneticTree = Arbre phylogénétique
+readsets.treatments.taxonomy.krona = Krona
 
 readsets.treatments.trimming.read1 = Read 1
 readsets.treatments.trimming.read2 = Read 2
@@ -308,15 +329,19 @@ readsets.treatments.trimming.sizeRange = Size range
 readsets.treatments.trimming.readsInput = Reads input
 readsets.treatments.trimming.readsOutput = Reads output
 readsets.treatments.trimming.readsTrim = Reads trim.
-readsets.treatments.trimming.readsTrimPercent = % Reads trim.
-readsets.treatments.trimming.nucleotideTrim = Nucleotide trim.
+readsets.treatments.trimming.readsNoTrim = Reads no trim.
+readsets.treatments.trimming.readsNoTrimPercent = % reads no trim.
+readsets.treatments.trimming.readsTrimPercent = % reads trim.
+readsets.treatments.trimming.nucleotidesTrim = Nucleotide trim.
 readsets.treatments.trimming.trimRejectedShort = Rejected (short)
 readsets.treatments.trimming.trimRejectedLength0 = Rejected (length 0)
 readsets.treatments.trimming.storedPairs = Stored Pairs
 readsets.treatments.trimming.storedSingleton = Stored Singleton
 readsets.treatments.trimming.rejectedPairs = Rejected Pairs
-
+readsets.treatments.trimming.trimStored = Trim. Stored
+ 
 #treatments names
+readsets.treatments.global = Global
 readsets.treatments.sav = SAV
 readsets.treatments.ngsrg = NGS-RG
 readsets.treatments.duplicatesRaw = Duplicates (vs RAW)
@@ -330,6 +355,7 @@ readsets.treatments.readQualityClean = Read Quality (vs CLEAN)
 readsets.treatments.readQualityNoRiboClean = Read Quality (vs NO RIBO CLEAN)
 readsets.treatments.contaminationPhiXTrim = Contam. PhiX (vs TRIM)
 readsets.treatments.sortingRiboClean = Sorting Ribo (vs CLEAN)
+readsets.treatments.mappingRaw = Mapping (vs RAW)
 readsets.treatments.mappingClean = Mapping (vs CLEAN)
 readsets.treatments.mappingNoRiboClean = Mapping (vs NO RIBO CLEAN)
 readsets.treatments.taxonomyClean = Taxonomy (vs CLEAN)
@@ -353,3 +379,12 @@ readsets.files.path = Chemin
 
 file.state.code.a = Disponible
 file.state.code.ua = Non disponible 
+
+treatments.context.read1 = Read 1
+treatments.context.read2 = Read 2
+treatments.context.single = Single
+treatments.context.pairs = Pairs
+treatments.context.default = Default
+
+title.report.property.selection = Sélectionnner vos champs
+title.report.property.configuration = Configurer vos champs
