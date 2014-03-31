@@ -151,13 +151,10 @@ public class Workflows {
 						DBUpdate.set("stateCode", experiment.stateCode).set("traceInformation",experiment.traceInformation));
 			}
 
-			nextInPutContainerState(experiment, ctxValidation);
+			nextInputContainerState(experiment, ctxValidation);
 			//nextOutPutContainerState(experiment, ctxValidation);
 
-		}
-
-
-
+	}
 
 
 		//Validation en Java class in context
@@ -192,8 +189,22 @@ public class Workflows {
 		}
 		 */
 	}
+	
+	public static void nextExperimentState(Experiment experiment,ContextValidation contextValidation){
+		State state = new State();
+		state.date=new Date();
+		state.user=InstanceHelpers.getUser();
+		
+		if(experiment.stateCode.equals("N")){
+			state.code = "IP";
+			setExperimentState(experiment, state, contextValidation);
+		}else if(experiment.stateCode.equals("IP")){
+			state.code = "F";
+			setExperimentState(experiment, state, contextValidation);
+		}
+	}
 
-	public static void nextInPutContainerState(Experiment experiment,ContextValidation contextValidation){
+	public static void nextInputContainerState(Experiment experiment,ContextValidation contextValidation){
 		State state=new State();
 		state.date=new Date();
 		state.user=InstanceHelpers.getUser();
@@ -212,7 +223,7 @@ public class Workflows {
 	}
 
 	//TODO
-	public static String nextOutPutContainerState(Experiment experiment,ContextValidation contextValidation){
+	public static String nextOutputContainerState(Experiment experiment,ContextValidation contextValidation){
 		if(experiment.stateCode.equals("N")){
 			return "IW-E"; 
 		}else if(experiment.stateCode.equals("IP")){

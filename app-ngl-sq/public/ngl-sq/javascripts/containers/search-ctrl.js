@@ -58,8 +58,7 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 				"property":"state.code",
 				"order":true,
 				"type":"text",
-				"filter":"codes:'state"
-				},
+				"filter":"codes:'state'"
 			},
 			{
 				"header":Messages("containers.table.creationDate"),
