@@ -86,7 +86,7 @@
 			    </div>				
 				<div class="col-md-3 col-lg-3" ng-if="(treatments.getTreatment().code === 'readQualityRaw') && (readset.treatments[treatments.getTreatment().code].read1.adapters != null) && (readset.treatments[treatments.getTreatment().code].read1.adapters.value.length > 0)">
 					<div class="panel panel-default">
-						<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.adaptersOverRepresented")</strong></div>
+						<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.adapters")</strong></div>
 						<div class="panel-body">
 							<ul class="treatmentOverflow">
 								<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read1.adapters.value">
@@ -99,7 +99,7 @@
 			    <div class="col-md-3 col-lg-3" ng-if="((treatments.getTreatment().code == 'readQualityClean') || (treatments.getTreatment().code == 'readQualityNoRiboClean'))  
 			    	&& (readset.treatments[treatments.getTreatment().code].read1.maxSizeReads != null)">
 					<div class="panel panel-default" >
-			    		<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.number") <span ng-bind="lane.treatments.ngsrg['default'].nbCycleRead1.value"></span> :</strong></div>
+			    		<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.maxSizeReads") <span ng-bind="lane.treatments.ngsrg['default'].nbCycleRead1.value"></span> :</strong></div>
 			    		<div class="panel-body">
 							{{readset.treatments[treatments.getTreatment().code].read1.maxSizeReads.value | number}} 
 								({{readset.treatments[treatments.getTreatment().code].read1.maxSizeReadsPercent.value | number:2}} @Messages("unit.percent"))	
@@ -237,7 +237,7 @@
 			    </div>
 				<div class="col-md-3 col-lg-3" ng-if="(readset.treatments[treatments.getTreatment().code].read2.adapters != null) && (readset.treatments[treatments.getTreatment().code].read2.adapters.value.length > 0)">
 					<div class="panel panel-default">
-						<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.adaptersOverRepresented")</strong></div>
+						<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.adapters")</strong></div>
 						<div class="panel-body">
 							<ul class="treatmentOverflow">
 								<li ng-repeat="strValue in readset.treatments[treatments.getTreatment().code].read2.adapters.value">
@@ -250,7 +250,7 @@
 			    <div class="col-md-3 col-lg-3" ng-if="((treatments.getTreatment().code == 'readQualityClean') || (treatments.getTreatment().code == 'readQualityNoRiboClean'))  
 			    	&& (readset.treatments[treatments.getTreatment().code].read2.maxSizeReads != null) "> 
 			    	<div class="panel panel-default">
-			    		<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.number") <span ng-bind="lane.treatments.ngsrg['default'].nbCycleRead2.value"></span> :</strong></div>
+			    		<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.maxSizeReads") <span ng-bind="lane.treatments.ngsrg['default'].nbCycleRead2.value"></span> :</strong></div>
 			    		<div class="panel-body">
 							{{readset.treatments[treatments.getTreatment().code].read2.maxSizeReads.value | number}} 
 								({{readset.treatments[treatments.getTreatment().code].read2.maxSizeReadsPercent.value | number:2}} @Messages("unit.percent"))	
