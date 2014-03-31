@@ -334,8 +334,8 @@ function SearchValuationCtrl($scope, $http, datatable, lists, $routeParams) {
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){
 			
-			$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get("RC-20140331094258").url)
-				.success(function(data) {
+			//$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get("RC-20140331094258").url)
+		//		.success(function(data) {
 					datatableConfig.columns = datatableConfig.columns.concat(data.columns);
 					$scope.datatable = datatable($scope, datatableConfig);
 					$scope.setDatatable($scope.datatable);
@@ -350,7 +350,7 @@ function SearchValuationCtrl($scope, $http, datatable, lists, $routeParams) {
 					}else{
 						$scope.datatable.search(updateForm({},'valuation'));
 					}
-				});
+			//	});
 			
 			
 		}else{
@@ -520,7 +520,6 @@ SearchBatchCtrl.$inject = ['$scope', 'datatable'];
 
 
 angular.module('home').controller('ReportCtrl', ['$scope', '$http', '$filter', function($scope, $http, $filter) {
-	console.log("report controlleur");
 	
 	var convertJavaValueTypeToJSValueType = function(valueType){
 		switch(valueType) {
