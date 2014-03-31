@@ -91,10 +91,11 @@ public class DescriptionFactory {
 	 * @param levels
 	 * @param type
 	 * @param required
+	 * @param propertyValueType TODO
 	 * @return
 	 * @throws DAOException
 	 */
-	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required) throws DAOException{
+	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
@@ -102,7 +103,8 @@ public class DescriptionFactory {
 		pd.levels = levels;
 		pd.valueType = type.getName();
 		pd.required = required;
-		pd.choiceInList = false;		
+		pd.choiceInList = false;
+		pd.propertyValueType = propertyValueType;
 		return pd;
 	}
 	
@@ -117,7 +119,7 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String defaultValue) {
+	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String defaultValue, String propertyValueType) {
 		
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
@@ -129,6 +131,7 @@ public class DescriptionFactory {
 		pd.choiceInList = true;		
 		pd.possibleValues = values;
 		pd.defaultValue=defaultValue;
+		pd.propertyValueType = propertyValueType;
 		return pd;
 	}
 
@@ -140,14 +143,41 @@ public class DescriptionFactory {
 	 * @param levels
 	 * @param type
 	 * @param required
+	 * @param values
+	 * @param propertyValueType TODO
+	 * @return
+	 * @throws DAOException
+	 */
+	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values, String propertyValueType) throws DAOException{
+		PropertyDefinition pd = new PropertyDefinition();		
+		pd.name = name;
+		pd.code = code;
+		pd.active = true;
+		pd.levels = levels;
+		pd.valueType = type.getName();
+		pd.required = required;
+		pd.choiceInList = true;		
+		pd.possibleValues = values;
+		pd.propertyValueType = propertyValueType;
+		return pd;
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param levels
+	 * @param type
+	 * @param required
 	 * @param measureCategory
 	 * @param displayMeasureUnit
 	 * @param saveMeasureUnit
+	 * @param propertyValueType TODO
 	 * @return
 	 * @throws DAOException
 	 */
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required,
-			MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit) throws DAOException{
+			MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
@@ -159,6 +189,7 @@ public class DescriptionFactory {
 		pd.measureCategory = measureCategory;
 		pd.displayMeasureValue = displayMeasureUnit;
 		pd.saveMeasureValue = saveMeasureUnit;
+		pd.propertyValueType = propertyValueType;
 		return pd;
 	}
 
@@ -173,11 +204,12 @@ public class DescriptionFactory {
 	 * @param measureCategory
 	 * @param displayMeasureUnit
 	 * @param saveMeasureUnit
+	 * @param propertyValueType TODO
 	 * @return
 	 * @throws DAOException
 	 */
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
-			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit) throws DAOException{
+			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
@@ -189,33 +221,12 @@ public class DescriptionFactory {
 		pd.possibleValues = values;
 		pd.measureCategory = measureCategory;
 		pd.displayMeasureValue = displayMeasureUnit;
-		pd.saveMeasureValue = saveMeasureUnit;		
+		pd.saveMeasureValue = saveMeasureUnit;	
+		pd.propertyValueType = propertyValueType;
 		return pd;
 	}
 	
-	/**
-	 * 
-	 * @param name
-	 * @param code
-	 * @param levels
-	 * @param type
-	 * @param required
-	 * @param values
-	 * @return
-	 * @throws DAOException
-	 */
-	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, List<Value> values) throws DAOException{
-		PropertyDefinition pd = new PropertyDefinition();		
-		pd.name = name;
-		pd.code = code;
-		pd.active = true;
-		pd.levels = levels;
-		pd.valueType = type.getName();
-		pd.required = required;
-		pd.choiceInList = true;		
-		pd.possibleValues = values;
-		return pd;
-	}
+	
 
 	/**
 	 * 

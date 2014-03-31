@@ -43,7 +43,7 @@ public class ProjectService {
 
 	private static List<PropertyDefinition> getFGPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> pds = new ArrayList<PropertyDefinition>();
-		pds.add(DescriptionFactory.newPropertiesDefinition("Groupe", "fgGroup", LevelService.getLevels(Level.CODE.Project), String.class, true));
+		pds.add(DescriptionFactory.newPropertiesDefinition("Groupe", "fgGroup", LevelService.getLevels(Level.CODE.Project), String.class, true, "single"));
 		return pds;
 	}
 	

@@ -53,7 +53,7 @@ public class ProcessService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type MapCard","mapcardType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("standard","HD")));
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("standard","HD"), "single"));
 		return propertyDefinitions;
 	}
 
@@ -61,7 +61,7 @@ public class ProcessService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type MapCard","mapcardType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("standard","HD")));
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("standard","HD"), "single"));
 		return propertyDefinitions;
 	}
 
@@ -71,16 +71,16 @@ public class ProcessService {
 		//TO do multi value
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type séquencage","sequencingType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("GAIIx", "Hiseq 2000", "Hiseq 2500 normal" , "Hiseq 2500 rapide" ,"Miseq")));
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("GAIIx", "Hiseq 2000", "Hiseq 2500 normal" , "Hiseq 2500 rapide" ,"Miseq"), "single"));
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type de lecture", "readType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE")));		
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE"), "single"));		
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600")));
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"), "single"));
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type séquenceur", "sequencerType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("GAIIx","HISEQ2000","HISEQ2500","MISEQ")));
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("GAIIx","HISEQ2000","HISEQ2500","MISEQ"), "single"));
 
 		return propertyDefinitions;
 	}
@@ -93,15 +93,16 @@ public class ProcessService {
 	public static List<PropertyDefinition> getPropertyDefinitionsLib300600() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Robot à utiliser","autoVsManuel", LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("MAN","ROBOT")));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Quantité à engager", "objInputProcess", LevelService.getLevels(Level.CODE.Process),Double.class, true, DescriptionFactory.newValues("250","500")));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Objectif fragmentation", "objFragm", LevelService.getLevels(Level.CODE.Process),String.class,false));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Ojectif Taille de banque finale", "objSize", LevelService.getLevels(Level.CODE.Process),String.class,true,DescriptionFactory.newValues("300-600","300-800"),"300-600"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Catégorie Imputation", "imputationCat", LevelService.getLevels(Level.CODE.Process),String.class,true,DescriptionFactory.newValues("PRODUCTION","DEVELOPPEMENT")));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Date limite", "dateLimite", LevelService.getLevels(Level.CODE.Process),Date.class,false));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Indexing", "indexing", LevelService.getLevels(Level.CODE.Process),String.class,true,DescriptionFactory.newValues("Single indexing","Dual indexing","Pas d'indexing")));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Robot à utiliser","autoVsManuel", LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("MAN","ROBOT"), "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Quantité à engager", "objInputProcess", LevelService.getLevels(Level.CODE.Process),Double.class, true, DescriptionFactory.newValues("250","500"), "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Objectif fragmentation", "objFragm", LevelService.getLevels(Level.CODE.Process),String.class,false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Ojectif Taille de banque finale", "objSize", LevelService.getLevels(Level.CODE.Process),String.class,true,DescriptionFactory.newValues("300-600","300-800"),"300-600", "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Catégorie Imputation", "imputationCat", LevelService.getLevels(Level.CODE.Process),String.class,true,DescriptionFactory.newValues("PRODUCTION","DEVELOPPEMENT"), "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Date limite", "dateLimite", LevelService.getLevels(Level.CODE.Process),Date.class,false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Indexing", "indexing", LevelService.getLevels(Level.CODE.Process),String.class,true,DescriptionFactory.newValues("Single indexing","Dual indexing","Pas d'indexing"), "single"));
 		return propertyDefinitions;
 	}
+
 
 
 }
