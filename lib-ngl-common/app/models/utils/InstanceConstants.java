@@ -20,5 +20,6 @@ public interface InstanceConstants {
 	public static final String SRA_EXPERIMENT_COLL_NAME="ngl_sub.Experiment";
 	public static final String SRA_SUBMISSION_COLL_NAME="ngl_sub.Submission";
 	public static final String PARAMETER_COLL_NAME = "Parameter";
+	public static final String REPORTING_CONFIG_COLL_NAME = "ngl_common.ReportingConfiguration";
 
 }

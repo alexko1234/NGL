@@ -50,6 +50,7 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			commonInfoType.objectType = objectType;
 
 			//Get variables State
+			/*
 			StateDAO stateDAO = Spring.getBeanOfType(StateDAO.class);
 			List<State> states = null;
 			try {
@@ -59,12 +60,14 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 				e.printStackTrace();
 			}
 			commonInfoType.states = states;
-				
+			*/
+			/*
 			//Get Resolutions
 			ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
 			List<Resolution> resolutions = resolutionDAO.findByCommonInfoTypeId(commonInfoType.id);
 			commonInfoType.resolutions = resolutions;
-	
+			*/
+			
 			//Get properties
 			PropertyDefinitionDAO propertyDefinitionDAO = Spring.getBeanOfType(PropertyDefinitionDAO.class);
 			List<PropertyDefinition> properties = propertyDefinitionDAO.findByCommonInfoType(commonInfoType.id);
@@ -72,15 +75,17 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			
 			
 			//Get Institutes
+			/*
 			InstituteDAO instituteDAO = Spring.getBeanOfType(InstituteDAO.class);
 			List<Institute> institutes = instituteDAO.findByCommonInfoType(commonInfoType.id);
 			commonInfoType.institutes = institutes;
-			
+			*/
 			//Get Valuation
+			/*
 			ValuationCriteriaDAO valuationCriteriaDAO = Spring.getBeanOfType(ValuationCriteriaDAO.class);
 			List<ValuationCriteria> valuationCriterias = valuationCriteriaDAO.findByCommonInfoType(commonInfoType.id);
 			commonInfoType.criterias = valuationCriterias;
-
+			 */
 			return commonInfoType;
 	}
 

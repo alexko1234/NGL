@@ -100,7 +100,7 @@ public abstract class AbstractDAO<T> {
 		}
 	}
 	
-	public String listToParameters(List<String> parameters){
+	public String listToParameters(List<?> parameters){
 		String args = "";
 		for(int i = 0; i<parameters.size();i++){
 			args += "?";
@@ -111,7 +111,7 @@ public abstract class AbstractDAO<T> {
 		return args;
 	}
 
-	public SqlParameter[] listToSqlParameters(List<String> parameters, String paramName, int type){
+	public SqlParameter[] listToSqlParameters(List<?> parameters, String paramName, int type){
 		SqlParameter[] params = new SqlParameter[parameters.size()];
 		for(int i = 0; i<parameters.size();i++){
 			params[i] =  new SqlParameter(paramName, type);

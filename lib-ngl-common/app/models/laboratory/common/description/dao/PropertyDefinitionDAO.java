@@ -23,7 +23,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	protected PropertyDefinitionDAO() {
 		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.class,
 				"SELECT id,code,name,required,active,type,display_format,display_order,default_value,description,"
-						+ "choice_in_list,fk_measure_category,fk_save_measure_unit,fk_display_measure_unit,fk_common_info_type "
+						+ "choice_in_list,fk_measure_category, property_value_type,fk_save_measure_unit,fk_display_measure_unit,fk_common_info_type "
 				+" FROM property_definition as t",true);
 	}
 
@@ -63,6 +63,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		parameters.put("display_format", propertyDefinition.displayFormat);
 		parameters.put("display_order", propertyDefinition.displayOrder);
 		parameters.put("default_value", propertyDefinition.defaultValue);
+		parameters.put("property_value_type", propertyDefinition.propertyValueType);
 		parameters.put("fk_common_info_type", idCommonInfoType);
 
 
@@ -101,11 +102,11 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	{
 		String sql = "UPDATE property_definition SET name=?, description=?, required=?, " +
 				"active=?,choice_in_list=?, type=?, display_format=?, " +
-				"display_order=?, default_value=? " +
+				"display_order=?, default_value=?,  property_value_type=?" +
 				" WHERE id=?";
 		jdbcTemplate.update(sql, propertyDefinition.name, propertyDefinition.description, propertyDefinition.required,
 				propertyDefinition.active, propertyDefinition.choiceInList, propertyDefinition.valueType, propertyDefinition.displayFormat,
-				propertyDefinition.displayOrder, propertyDefinition.defaultValue,
+				propertyDefinition.displayOrder, propertyDefinition.defaultValue, propertyDefinition.propertyValueType,
 				propertyDefinition.id);
 
 		//Update measure category

@@ -1,15 +1,20 @@
  package models.laboratory.run.description.dao;
 
+import java.sql.Types;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.run.description.TreatmentType;
 import models.laboratory.run.description.TreatmentTypeContext;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
@@ -26,15 +31,7 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 						"FROM treatment_type as c "+sqlCommonInfoType, false);
 	}
 	
-	public List<TreatmentType> findByTreatmentContextId(long id) {
-		String sql = sqlCommon+
-				" JOIN treatment_type_context as ttc ON ttc.fk_treatment_type=c.id "+
-				"WHERE fk_treatment_context = ? ";
-		TreatmentTypeMappingQuery treatmentTypeMappingQuery=new TreatmentTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
-		return treatmentTypeMappingQuery.execute(id);
-	}
 	
-
 	@Override
 	public long save(TreatmentType treatmentType) throws DAOException {	
 		if (null == treatmentType) {
@@ -106,5 +103,33 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(treatmentType);
 	}
+	
+	public List<TreatmentType> findByTreatmentContextId(long id) {
+		String sql = sqlCommon+
+				" JOIN treatment_type_context as ttc ON ttc.fk_treatment_type=c.id "+
+				"WHERE fk_treatment_context = ? ";
+		TreatmentTypeMappingQuery treatmentTypeMappingQuery=new TreatmentTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
+		return treatmentTypeMappingQuery.execute(id);
+	}
+	
+	public List<TreatmentType> findByLevels(Level.CODE...levels) throws DAOException{
+		Object[] parameters = new Object[0];
+		Object[] sqlParameters = new SqlParameter[0];
+		
+		String sql = sqlCommon
+				+" inner join property_definition pd on pd.fk_common_info_type = t.id"
+				+" inner join property_definition_level pdl on pdl.fk_property_definition = pd.id"
+				+" inner join level l on l.id = pdl.fk_level"
+				+" where 1=1 ";
+		
+		if(null != levels && levels.length > 0){
+			parameters = ArrayUtils.addAll(parameters,levels);
+			sqlParameters = ArrayUtils.addAll(sqlParameters, listToSqlParameters(Arrays.asList(levels),"l.code", Types.VARCHAR));
+			sql += "and l.code in ("+listToParameters(Arrays.asList(levels))+")";
+		}
+		
+		return initializeMapping(sql, (SqlParameter[])sqlParameters).execute(parameters);
+	}
+	
 
 }

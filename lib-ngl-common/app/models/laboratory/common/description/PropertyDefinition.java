@@ -17,7 +17,6 @@ import play.data.validation.Constraints.Required;
 
 public class PropertyDefinition extends Model<PropertyDefinition>{
 
-	@Required	
 	public String name;
 
 	public String description;
@@ -27,8 +26,7 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 	public Boolean active = Boolean.TRUE;
 	public Boolean choiceInList = Boolean.FALSE;
 
-	public String propertyType = PropertySingleValue.class.getName(); //Single, Map, List, File, Object, List<Object>
-	@Required	
+	public String propertyValueType ;
 	public String valueType;  //String, Integer, Boolean, TBoolean, etc.
 	public String displayFormat;
 	public Integer displayOrder;
