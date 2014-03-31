@@ -1,162 +1,150 @@
 "use strict";
 
 
-function getColumns(page, $filter){
-	var columns = [];
+function getCommonColumns(columns){
 	
 	columns.push({	property:"code",
-		    	  	header: "Code",
-		    	  	type :"String",
+		    	  	header: "readsets.code",
+		    	  	type :"text",
 		    	  	order:true});
 	columns.push({	property:"runCode",
-					header: "Run",
-					type :"String",
+					header: "readsets.runCode",
+					type :"text",
 					order:true});
 	columns.push({	property:"laneNumber",
-					header: "N° Piste",
-					type :"String",
+					header: "readsets.laneNumber",
+					type :"text",
 					order:true});
 	columns.push({	property:"projectCode",
-					header: "Projet",
-					type :"String",
+					header: "readsets.projectCode",
+					type :"text",
 					order:true});
 	columns.push({	property:"sampleCode",
-					header: "Echantillon",
-					type :"String",
+					header: "readsets.sampleCode",
+					type :"text",
 					order:true});
 	columns.push({	property:"runSequencingStartDate",
-					header: "Date Run",
-					type :"Date",
+					header: "runs.sequencingStartDate",
+					type :"date",
 					order:true});	
-	
-	if('state' === page){
-		columns.push({	property:"state.code",
-						render:function(value){
-							return Codes("state."+value.state.code);
-						},
-						header: "Etat",
-						type :"String",
-						edit:true,
-						order:true,
-				    	choiceInList:true,
-				    	listStyle:'bt-select',
-				    	//possibleValues:[{code:"IW-QC",name:Codes("state.IW-QC")},{code:"IW-V",name:Codes("state.IW-V")},{code:"F-V",name:Codes("state.F-V")}, {code:"F",name:Codes("state.F")}]
-						possibleValues:'listsTable.getStates()'});
-	}else{
-		columns.push({	property:"state.code",
-						render:function(value){
-							return Codes("state."+value.state.code);
-						},
-						header: "Etat",
-						type :"String",
-						order:true});
-	}
-	
-	if(page.indexOf('valuation') == 0){
-		if ('valuationWheat' === page) {
-			columns.push({	property:"treatments['mergingNoRiboClean'].pairs.mergedReadsPercent.value",
-				header: "Merged Reads",
-				type :"Number",
-		    	order:true,
-		    	edit:true 
-		    	});			
-			columns.push({	property:"treatments['mergingNoRiboClean'].pairs.medianeSize.value",
-				header: "Mediane Size (bases)",
-				type :"Number",
-		    	order:true,
-		    	edit:true 
-		    	});			
-			columns.push({	property:"treatments['mappingNoRiboClean'].pairs.RFAlignedReadsPercent.value",
-				header: "% RF (MP) aligned reads",
-				type :"Number",
-		    	order:true,
-		    	edit:true 
-		    	});			
-			columns.push({	property:"treatments['mappingNoRiboClean'].pairs.estimatedMPInsertSize.value",
-				header: "Estimated MP insert size",
-				type :"Number",
-		    	order:true,
-		    	edit:true 
-		    	});		
-			columns.push({	property:"taxon.totalPercent",
-				render:function(value){
-					return calculTaxonPcts(value, "Escherichia coli", $filter);
-				},
-				header: "% Escherichia coli", 
-				type :"Number",
-		    	order:true,
-		    	edit:true 
-		    });
-			columns.push({	property:"taxon.totalPercent",
-				render:function(value){
-					return calculTaxonPcts(value, "Triticum", $filter);
-				},
-				header: "% Triticum",
-				type :"Number",
-		    	order:true,
-		    	edit:true 
-		    });
-		}		
-		columns.push({	property:"productionValuation.valid",
-						render:function(value){
-							return Codes("valuation."+value.productionValuation.valid);
-						},
-						header: "Valide QC",
-						type :"String",
-				    	order:true,
-				    	edit:true,
-				    	choiceInList:true,
-				    	listStyle:'bt-select',
-				    	possibleValues:'listsTable.getValuations()'
-				    	});
-		columns.push({	property:"bioinformaticValuation.valid",
-						render:function(value){
-							return Codes("valuation."+value.bioinformaticValuation.valid);
-						},
-						header: "Valide BioInfo ?",
-						type :"String",
-						order:true,
-				    	edit:true,
-				    	choiceInList:true,
-				    	listStyle:'bt-select',
-				    	possibleValues:'listsTable.getValuations()'
-				    	});
-	}else{
-		columns.push({	property:"productionValuation.valid",
-						render:function(value){
-							return Codes("valuation."+value.productionValuation.valid);
-						},
-						header: "Valide QC",
-						type :"String",
-				    	order:true});
-		columns.push({	property:"bioinformaticValuation.valid",
-						render:function(value){
-							return Codes("valuation."+value.bioinformaticValuation.valid);
-						},
-						header: "Valide BioInfo ?",
-						type :"String",
-				    	order:true});
-	}
-	
-	if('batch' === page){
-		columns.push({	property:"properties.isSentCCRT.value",
-			
-			header: "Envoyé CCRT ?",
-			type :"Boolean",
-			order:true,
-	    	edit:true
-	    	});
-		columns.push({	property:"properties.isSentCollaborator.value",
-			
-			header: "Envoyé Collaborateur ?",
-			type :"Boolean",
-			order:true,
-	    	edit:true
-	    	});
-		
-	}
 	return columns;
-}
+};
+
+function getSearchColumns(columns){
+	columns.push({	property:"state.code",
+					filter:"codes:'state'",
+					header: "readsets.stateCode",
+					type :"text",
+					order:true});
+	columns.push({	property:"productionValuation.valid",
+					filter:"codes:'valuation'",
+					header: "readsets.productionValuation.valid",
+					type :"text",
+			    	order:true});
+	columns.push({	property:"bioinformaticValuation.valid",
+					filter:"codes:'valuation'",
+					header: "readsets.bioinformaticValuation.valid",
+					type :"text",
+			    	order:true});
+	return columns;
+};
+
+function getStateColumns(columns){
+
+	columns.push({	property:"state.code",
+					filter:"codes:'state'",
+					header: "readsets.stateCode",
+					type :"text",
+					edit:true,
+					order:true,
+			    	choiceInList:true,
+			    	listStyle:'bt-select',
+			    	possibleValues:'listsTable.getStates()'});
+	return columns;
+};
+function getValuationColumns(columns){	
+	
+	columns.push({	property:"productionValuation.valid",
+					filter:"codes:'valuation'",
+					header: "readsets.productionValuation.valid",
+					type :"text",
+			    	order:true,
+			    	edit:true,
+			    	choiceInList:true,
+			    	listStyle:'bt-select',
+			    	possibleValues:'listsTable.getValuations()'
+			    	});
+	columns.push({	property:"bioinformaticValuation.valid",
+					filter:"codes:'valuation'",
+					header: "readsets.bioinformaticValuation.valid",
+					type :"text",
+					order:true,
+			    	edit:true,
+			    	choiceInList:true,
+			    	listStyle:'bt-select',
+			    	possibleValues:'listsTable.getValuations()'
+			    	});		
+	return columns;
+};
+
+function getBatchColumns(columns){
+	
+	columns.push({	property:"properties.isSentCCRT.value",
+					header: "readsets.properties.isSentCCRT",
+					type :"boolean",
+					order:true,
+			    	edit:true
+    	});
+	columns.push({	property:"properties.isSentCollaborator.value",
+					header: "readsets.properties.isSentCollaborator",
+					type :"boolean",
+					order:true,
+			    	edit:true
+    	});
+		
+	return columns;
+};
+
+
+function getValuationWheatColumns(columns, $filter){
+		columns.push({	property:"treatments['mergingNoRiboClean'].pairs.mergedReadsPercent.value",
+						header: "Merged Reads",
+						type :"number",
+				    	order:true
+		});			
+		columns.push({	property:"treatments['mergingNoRiboClean'].pairs.medianeSize.value",
+						header: "Mediane Size (bases)",
+						type :"number",
+				    	order:true
+		});			
+		columns.push({	property:"treatments['mappingNoRiboClean'].pairs.RFAlignedReadsPercent.value",
+						header: "% RF (MP) aligned reads",
+						type :"number",
+				    	order:true
+		});			
+		columns.push({	property:"treatments['mappingNoRiboClean'].pairs.estimatedMPInsertSize.value",
+					header: "Estimated MP insert size",
+					type :"number",
+			    	order:true
+			    	});		
+		columns.push({	property:"taxon.totalPercent",
+						render:function(value){
+							return calculTaxonPcts(value, "Escherichia coli", $filter);
+						},
+						header: "% Escherichia coli", 
+						type :"number",
+				    	order:true
+		});
+		columns.push({	property:"taxon.totalPercent",
+						render:function(value){
+							return calculTaxonPcts(value, "Triticum", $filter);
+						},
+						header: "% Triticum",
+						type :"number",
+				    	order:true
+		});
+		return columns;
+};
 
 function convertForm(iform){
 	var form = angular.copy(iform);
@@ -166,7 +154,7 @@ function convertForm(iform){
 };
 
 function updateForm(form, page){
-	if (page.indexOf('valuation') == 0) {
+	if (page && page.indexOf('valuation') == 0) {
 		if(form.stateCodes === undefined || form.stateCodes.length === 0) {
 			//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
 			form.stateCodes = ["IW-V","IP-V"];
@@ -224,7 +212,6 @@ SearchFormCtrl.$inject = ['$scope', '$filter', 'lists'];
 
 function SearchCtrl($scope, $routeParams, datatable) {
 
-	
 	$scope.datatableConfig = {
 			order :{by:'runSequencingStartDate', reverse : true},
 			search:{
@@ -236,7 +223,7 @@ function SearchCtrl($scope, $routeParams, datatable) {
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.get(line.code).url,remove:true});
 				}
 			},
-			columns : getColumns('search')
+			columns : getSearchColumns(getCommonColumns([]))
 	};
 	
 	
@@ -288,7 +275,7 @@ function SearchStateCtrl($scope,  datatable, lists) {
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.get(line.code).url,remove:true});
 				}
 			},
-			columns : getColumns('state')
+			columns : getStateColumns(getCommonColumns([]))
 	};
 	
 	$scope.init = function(){
@@ -313,11 +300,11 @@ function SearchStateCtrl($scope,  datatable, lists) {
 SearchStateCtrl.$inject = ['$scope', 'datatable', 'lists'];
 
 
-function SearchValuationCtrl($scope, datatable, lists, $routeParams) {
+function SearchValuationCtrl($scope, $http, datatable, lists, $routeParams) {
 
 	$scope.listsTable = lists;
 	
-	$scope.datatableConfig = {
+	var datatableConfig = {
 			order :{by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
@@ -339,68 +326,60 @@ function SearchValuationCtrl($scope, datatable, lists, $routeParams) {
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.valuation(line.code).url,remove:true});
 				}
 			},
-			columns : getColumns('valuation')
+			columns : getValuationColumns(getCommonColumns([]))
 	};
 	
 	
 	$scope.init = function(){
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, $scope.datatableConfig);
-			$scope.setDatatable($scope.datatable);
+			
+			$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get("RC-20140331094258").url)
+				.success(function(data) {
+					datatableConfig.columns = datatableConfig.columns.concat(data.columns);
+					$scope.datatable = datatable($scope, datatableConfig);
+					$scope.setDatatable($scope.datatable);
+					
+					var count = 0;
+					for(var p in $routeParams){
+						count++;
+					}
+					
+					if(count > 0){
+						$scope.datatable.search(updateForm($routeParams));
+					}else{
+						$scope.datatable.search(updateForm({},'valuation'));
+					}
+				});
+			
+			
 		}else{
 			$scope.datatable = $scope.getDatatable();
+			
+			var count = 0;
+			for(var p in $routeParams){
+				count++;
+			}
+			
+			if(count > 0){
+				$scope.datatable.search(updateForm($routeParams));
+			}else{
+				$scope.datatable.search(updateForm({},'valuation'));
+			}
 		}
 		
-		var count = 0;
-		for(var p in $routeParams){
-			count++;
-		}
 		
-		if(count > 0){
-			$scope.datatable.search(updateForm($routeParams));
-		}else{
-			$scope.datatable.search(updateForm({},'valuation'));
-		}
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('valuation');
 			$scope.addTabs({label:Messages('readsets.page.tab.validate'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("valuation").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
-	}	
+	};
+	
 };
 
-SearchValuationCtrl.$inject = ['$scope', 'datatable', 'lists', '$routeParams'];
-
-
-function findTaxonPct(value, element, $filter) {
-	var pct = 0;
-	var taxonData = value.treatments["taxonomyClean"].read1.taxonBilan.value;	
-	var objTaxon = $filter("filter")(taxonData, {taxon:element});
-	if (objTaxon.length > 0) {
-		pct = objTaxon[0].percent;
-	}	
-	return pct;
-}
-
-function calculTaxonPcts(value, taxonName, $filter) {
-	var taxons = [{name:"Escherichia coli",composition:["Escherichia coli"]},{name:"Triticum",composition:["Triticum aestivum", "Triticeae", "Triticum"]}]; 
-	var pct = null;
-	if (value.treatments["taxonomyClean"] !== undefined) {
-		for(var i=0; i<taxons.length; i++) {
-			if (taxons[i].name == taxonName) {
-				var pct = 0;
-				for (var j=0; j<taxons[i].composition.length; j++) {	
-					pct += findTaxonPct(value, taxons[i].composition[j], $filter);
-				}
-			}
-		}
-	}
-	return $filter('number')(pct, 2);
-}
-
-
+SearchValuationCtrl.$inject = ['$scope', '$http', 'datatable', 'lists', '$routeParams'];
 
 function SearchValuationWheatCtrl($scope, datatable, lists, $routeParams, $filter) {
 	
@@ -428,7 +407,7 @@ function SearchValuationWheatCtrl($scope, datatable, lists, $routeParams, $filte
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.valuation(line.code).url,remove:true});
 				}
 			},
-			columns : getColumns('valuationWheat', $filter)
+			columns : getValuationColumns(getValuationWheatColumns(getCommonColumns([]), $filter))
 	};
 	
 	
@@ -465,6 +444,33 @@ function SearchValuationWheatCtrl($scope, datatable, lists, $routeParams, $filte
 SearchValuationWheatCtrl.$inject = ['$scope', 'datatable', 'lists', '$routeParams', '$filter'];
 
 
+
+function findTaxonPct(value, element, $filter) {
+	var pct = 0;
+	var taxonData = value.treatments["taxonomyClean"].read1.taxonBilan.value;	
+	var objTaxon = $filter("filter")(taxonData, {taxon:element});
+	if (objTaxon.length > 0) {
+		pct = objTaxon[0].percent;
+	}	
+	return pct;
+}
+
+function calculTaxonPcts(value, taxonName, $filter) {
+	var taxons = [{name:"Escherichia coli",composition:["Escherichia coli"]},{name:"Triticum",composition:["Triticum aestivum", "Triticeae", "Triticum"]}]; 
+	var pct = null;
+	if (value.treatments["taxonomyClean"] !== undefined) {
+		for(var i=0; i<taxons.length; i++) {
+			if (taxons[i].name == taxonName) {
+				var pct = 0;
+				for (var j=0; j<taxons[i].composition.length; j++) {	
+					pct += findTaxonPct(value, taxons[i].composition[j], $filter);
+				}
+			}
+		}
+	}
+	return $filter('number')(pct, 2);
+}
+
 function SearchBatchCtrl($scope,  datatable) {
 
 	$scope.datatableConfig = {
@@ -489,7 +495,7 @@ function SearchBatchCtrl($scope,  datatable) {
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.valuation(line.code).url,remove:true});
 				}
 			},
-			columns : getColumns('batch')
+			columns : getBatchColumns(getCommonColumns([]))
 	};
 	
 	$scope.init = function(){
@@ -512,4 +518,150 @@ function SearchBatchCtrl($scope,  datatable) {
 
 SearchBatchCtrl.$inject = ['$scope', 'datatable'];
 
+
+angular.module('home').controller('ReportCtrl', ['$scope', '$http', '$filter', function($scope, $http, $filter) {
+	console.log("report controlleur");
+	
+	var convertJavaValueTypeToJSValueType = function(valueType){
+		switch(valueType) {
+			case 'java.lang.String':
+				valueType = 'text';
+				break;
+			case 'java.lang.Integer':
+				valueType = 'number';
+				break;
+			case 'java.lang.Double':
+				valueType = 'number';
+				break;
+			case 'java.lang.Float':
+				valueType = 'number';
+				break;
+			case 'java.lang.Long':
+				valueType = 'number';
+				break;
+			case 'java.lang.Date':
+				valueType = 'date';
+				break;
+			case 'java.lang.Boolean':
+				valueType = 'boolean';
+				break;
+			case 'java.awt.Image':
+				valueType = 'img';
+				break;
+			case 'java.io.File':
+				valueType = 'file';
+				break;			
+			default:
+				throw 'not managed :'+valueType;
+		}
+		return valueType;
+	};
+	var convertPropertyValueTypeToType = function(propertyValueType){
+		switch(propertyValueType) {
+			case 'single':
+				propertyValueType = 'single';
+				break;
+			case 'list':
+				propertyValueType = 'list';
+				break;
+			case 'file':
+				propertyValueType = 'single';
+				break;
+			case 'img':
+				propertyValueType = 'single';
+				break;
+			case 'map':
+				propertyValueType = 'map';
+				break;
+			case 'object':
+				propertyValueType = 'single';
+				break;
+			case 'object_list':
+				propertyValueType = 'list';
+				break;
+			default:
+				throw 'not managed :'+propertyValueType;
+		}
+		return propertyValueType;
+	};
+	var convertPropertyValueTypeToIsObject = function(propertyValueType){
+		switch(propertyValueType) {
+			case 'single':
+				propertyValueType = false;
+				break;
+			case 'list':
+				propertyValueType = false;
+				break;
+			case 'file':
+				propertyValueType = false;
+				break;
+			case 'img':
+				propertyValueType = false;
+				break;
+			case 'map':
+				propertyValueType = false;
+				break;
+			case 'object':
+				propertyValueType = true;
+				break;
+			case 'object_list':
+				propertyValueType = true;
+				break;
+			default:
+				throw 'not managed :'+propertyValueType;
+		}
+		return propertyValueType;
+	};
+	/**
+	 * Convert propertyDefinition in property and filter with level
+	 */
+	var getProperties = function(treatmentType, level){
+		var properties = {};
+		var propertiesDef = $filter('filter')(treatmentType.propertiesDefinitions, level)
+		
+		angular.forEach(propertiesDef, function(value, key){
+			if(!this[value.code.split(".")[0]]){
+				this[value.code.split(".")[0]] = {code:value.code.split(".")[0], name:value.name.split(".")[0], levels:value.levels,
+						type:convertPropertyValueTypeToType(value.propertyValueType), isObject:convertPropertyValueTypeToIsObject(value.propertyValueType), subProperties:[]};
+			}
+			this[value.code.split(".")[0]].subProperties.push({code:value.code, name:value.name, 
+				format:value.displayFormat,	valueType:convertJavaValueTypeToJSValueType(value.valueType)});
+			
+		}, properties);
+		
+		var propertiesA = [];
+		
+		for(var key in properties){
+			propertiesA.push(properties[key]);
+		}
+		
+		return propertiesA;
+	};
+	
+	var init = function(){
+		$http.get(jsRoutes.controllers.treatmenttypes.api.TreatmentTypes.list().url, {params:{levels: "ReadSet"}}).success(function(data) {
+			var treatmentTypes = [];
+			angular.forEach(data, function(value, key){
+				var properties = getProperties(value, "ReadSet");
+				var names = value.names.split(',');
+				var orders = value.displayOrders.split(',');
+				for(var i = 0 ; i < names.length; i++){
+					var contexts = [];
+					for(var j = 0; j < value.contexts.length ; j++){
+						contexts.push({code:value.contexts[j].code, properties:$filter('filter')(properties, value.contexts[j].code)})
+					}
+					this.push({code:value.code, name:value.name, instanceCode:names[i], 
+						displayOrder:Number(orders[i]), contexts:contexts })	
+				}
+							
+			}, treatmentTypes);
+			$scope.treatmentTypes = treatmentTypes;			
+		});
+		
+		
+	};
+	
+	init();
+	
+}]);
 

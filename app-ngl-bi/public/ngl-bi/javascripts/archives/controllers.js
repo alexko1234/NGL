@@ -17,32 +17,32 @@ function SearchCtrl($scope, $routeParams, datatable) {
 			columns : [
 						{	
 							property:"runCode",
-						  	header: Messages("archives.table.runcode"),
+						  	header: "archives.table.runcode",
 						  	type :"String",
 						  	order:true
 						 }, {	
 							property:"projectCode",
-						  	header: Messages("archives.table.projectcode"),
+						  	header: "archives.table.projectcode",
 						  	type :"String",
 						  	order:true
 						 }, {	
 							property:"readSetCode",
-						  	header: Messages("archives.table.readsetcode"),
+						  	header: "archives.table.readsetcode",
 						  	type :"String",
 						  	order:true
 						 }, {	
 							property:"path",
-						  	header: Messages("archives.table.path"),
+						  	header: "archives.table.path",
 						  	type :"String",
 						  	order:true
 						 },{	
 							property:"date",
-						  	header: Messages("archives.table.date"),
+						  	header: "archives.table.date",
 						  	type :"Date",
 						  	order:true
 						 },{	
 							property:"id",
-						  	header: Messages("archives.table.backupid"),
+						  	header: "archives.table.backupid",
 						  	type :"String",
 						  	order:true
 						 }			           

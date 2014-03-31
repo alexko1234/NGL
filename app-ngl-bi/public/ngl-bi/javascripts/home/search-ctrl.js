@@ -18,33 +18,29 @@ function SearchCtrl($scope, datatable) {
 			showTotalNumberRecords:false,
 			columns : [
 			           {  	property:"code",
-					    	header: Messages("runs.code"),
+					    	header: "runs.code",
 					    	type :"text",
 					    	order:true
 						},
 						{	property:"typeCode",
-							header: Messages("runs.typeCode"),
+							header: "runs.typeCode",
 							type :"text",
 					    	order:true
 						},
 						{	property:"sequencingStartDate",
-							header: Messages("runs.sequencingStartDate"),
+							header: "runs.sequencingStartDate",
 							type :"date",
 					    	order:true
 						},
 						{	property:"state.code",
-							render:function(value){
-								return Codes("state."+value.state.code);
-							},
-							header: Messages("runs.stateCode"),
+							filter:"codes:'state'",
+							header: "runs.stateCode",
 							type :"text",
 							order:true								
 						},
 						{	property:"valuation.valid",
-							render:function(value){
-								return Codes("valuation."+value.valuation.valid);
-							},
-							header: Messages("runs.valuation.valid"),
+							filter:"codes:'valuation'",
+							header: "runs.valuation.valid",
 							type :"text",
 					    	order:true
 						} 

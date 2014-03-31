@@ -68,15 +68,13 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 			    		}
 			    		return "<strong>"+value.number+"</strong>";
 			    	},
-			    	header: Messages("runs.lane.code"),
+			    	header: "runs.lane.code",
 			    	type :"String",
 			    	order:false
 				},				
 				{	property:"valuation.valid",
-					header: Messages("runs.lane.valuation.valid"),
-					render:function(value){
-						return Codes("valuation."+value.valuation.valid);
-					},
+					header: "runs.lane.valuation.valid",
+					filter:"codes:'valuation'",
 					type :"String",
 					edit:true,
 			    	order:false,
@@ -85,7 +83,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 			    	possibleValues:'lists.getValuations()'			    	
 				},
 				{	property:"valuation.resolutionCodes",
-					header: Messages("runs.lane.valuation.resolutions"),
+					header: "runs.lane.valuation.resolutions",
 					render:function(value){						
 						return '<div bt-select ng-model="value.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ng-edit="false"></div>';
 					},
@@ -111,12 +109,12 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 			cancel : {active:false},						
 			columns : [
 				{  	property:"laneNumber",
-					header: Messages("readsets.laneNumber"),
+					header: "readsets.laneNumber",
 					type :"String",
 					order:false
 				}, 
 				{  	property:"code",
-					header: Messages("readsets.code"),
+					header: "readsets.code",
 					render : function(value){
 						return '<a href="" ng-click="showReadSet(\''+value.code+'\')">'+value.code+'</a>';
 					},
@@ -124,59 +122,53 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 					order:false
 				},
 				{	property:"state.code",
-					render:function(value){
-						return Codes("state."+value.state.code);
-					},
-					header: Messages("readsets.stateCode"),
+					filter:"codes:'state'",
+					header: "readsets.stateCode",
 					type :"String"
 				},
 				{  	
 					property:"sampleOnContainer.properties.percentPerLane.value",
-					header: Messages("readsets.sampleOnContainer.percentPerLane"),
+					header: "readsets.sampleOnContainer.percentPerLane",
 					type :"Number",
 					format:2,
 					order:false
 				},
 			   	{  	property:"treatments.ngsrg.default.validSeqPercent.value",
-			    	header: Messages("readsets.treatments.ngsrg.validSeqPercent"),
+			    	header: "readsets.treatments.ngsrg_illumina.validSeqPercent",
 			    	type :"Number",
 			    	format:2,
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.nbCluster.value",
-			    	header: Messages("readsets.treatments.ngsrg.nbCluster"),
+			    	header: "readsets.treatments.ngsrg_illumina.nbCluster",
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.nbBases.value",
-			    	header: Messages("readsets.treatments.ngsrg.nbBases"),
+			    	header: "readsets.treatments.ngsrg_illumina.nbBases",
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.Q30.value",
-			    	header: Messages("readsets.treatments.ngsrg.Q30"),
+			    	header: "readsets.treatments.ngsrg_illumina.Q30",
 			    	type :"Number",
 			    	format:2,
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.qualityScore.value",
-			    	header: Messages("readsets.treatments.ngsrg.qualityScore"),
+			    	header: "readsets.treatments.ngsrg_illumina.qualityScore",
 			    	type :"Number",
 			    	format:2,
 			    	order:false
 				},			
 				{	property:"productionValuation.valid",
-					header: Messages("readsets.productionValuation.valid"),
-					render:function(value){
-						return Codes("valuation."+value.productionValuation.valid);
-					},
+					header: "readsets.productionValuation.valid",
+					filter:"codes:'valuation'",
 					type :"String"
 				},			
 				{	property:"bioinformaticValuation.valid",
-					header: Messages("readsets.bioinformaticValuation.valid"),
-					render:function(value){
-						return Codes("valuation."+value.bioinformaticValuation.valid);
-					},
+					header: "readsets.bioinformaticValuation.valid",
+					filter:"codes:'valuation'",
 					type :"String"
 				}
 			    
@@ -337,42 +329,42 @@ function LanesNGSRGCtrl($scope, datatable) {
 							return value.treatments.ngsrg["default"].nbCycleRead1.value
 						}
 					},
-			    	header: Messages("runs.lane.ngsrg.nbCycles"),
+			    	header: Messages("runs.lane.ngsrg_illumina.nbCycles"),
 			    	type :"Sring",
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.nbCluster.value",
-			    	header: Messages("runs.lane.ngsrg.nbCluster"),
+			    	header: Messages("runs.lane.ngsrg_illumina.nbCluster"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.percentClusterIlluminaFilter.value",
-			    	header: Messages("runs.lane.ngsrg.percentClusterIlluminaFilter"),
+			    	header: Messages("runs.lane.ngsrg_illumina.percentClusterIlluminaFilter"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.nbClusterIlluminaFilter.value",
-			    	header: Messages("runs.lane.ngsrg.nbClusterIlluminaFilter"),
+			    	header: Messages("runs.lane.ngsrg_illumina.nbClusterIlluminaFilter"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.percentClusterInternalAndIlluminaFilter.value",
-			    	header: Messages("runs.lane.ngsrg.percentClusterInternalAndIlluminaFilter"),
+			    	header: Messages("runs.lane.ngsrg_illumina.percentClusterInternalAndIlluminaFilter"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.nbClusterInternalAndIlluminaFilter.value",
-			    	header: Messages("runs.lane.ngsrg.nbClusterInternalAndIlluminaFilter"),
+			    	header: Messages("runs.lane.ngsrg_illumina.nbClusterInternalAndIlluminaFilter"),
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"treatments.ngsrg.default.nbBaseInternalAndIlluminaFilter.value",
-			    	header: Messages("runs.lane.ngsrg.nbBaseInternalAndIlluminaFilter"),
+			    	header: Messages("runs.lane.ngsrg_illumina.nbBaseInternalAndIlluminaFilter"),
 			    	type :"Number",
 			    	order:false
 				},				
 				{  	property:"treatments.ngsrg.default.seqLossPercent.value",
-			    	header: Messages("runs.lane.ngsrg.seqLossPercent"),
+			    	header: Messages("runs.lane.ngsrg_illumina.seqLossPercent"),
 			    	type :"Number",
 			    	order:false
 				}
@@ -426,9 +418,6 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 			    		if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
 			    			value.trClass = "warning";
 			    		}
-			    		
-			    		
-			    		
 			    		return "<strong>"+value.number+"</strong>";
 			    	},
 			    	header: Messages("runs.lane.code"),
@@ -574,7 +563,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 			    		}
 			    		return "<strong>"+value.number+"</strong>";
 			    	},
-			    	header: Messages("runs.lane.code"),
+			    	header: "runs.lane.code",
 			    	type :"String",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
@@ -582,7 +571,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 				{  	property:function(value){
 					return $filter('number')(value.treatments.sav.read2.clusterDensity.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.clusterDensityStd.value,2);						
 					},
-			    	header: Messages("runs.lane.sav.clusterDensity"),
+			    	header: "runs.lane.sav.clusterDensity",
 			    	type :"Sring",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
@@ -590,7 +579,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 				{  	property:function(value){
 						return $filter('number')(value.treatments.sav.read2.clusterPFPerc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.clusterPFPercStd.value,2);						
 					},
-			    	header: Messages("runs.lane.sav.clusterPF"),
+			    	header: "runs.lane.sav.clusterPF",
 			    	type :"Sring",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
@@ -598,31 +587,31 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 				{  	property:function(value){
 						return $filter('number')(value.treatments.sav.read2.phasing.value,3) +' / '+$filter('number')(value.treatments.sav.read2.prephasing.value,3);						
 					},
-			    	header: Messages("runs.lane.sav.phasing"),
+			    	header: "runs.lane.sav.phasing",
 			    	type :"Sring",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
 				},
 				{  property:"treatments.sav.read2.reads.value",
-			    	header: Messages("runs.lane.sav.reads"),
+			    	header: "runs.lane.sav.reads",
 			    	type :"Number",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
 				},
 				{  	property:"treatments.sav.read2.readsPF.value",
-			    	header: Messages("runs.lane.sav.readsPF"),
+			    	header: "runs.lane.sav.readsPF",
 			    	type :"Number",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
 				},
 				{  	property:"treatments.sav.read2.greaterQ30Perc.value",
-			    	header: Messages("runs.lane.sav.greaterQ30Perc"),
+			    	header: "runs.lane.sav.greaterQ30Perc",
 			    	type :"Number",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
 				},
 				{  property:"treatments.sav.read2.cyclesErrRated.value",
-			    	header: Messages("runs.lane.sav.cyclesErrRated"),
+			    	header: "runs.lane.sav.cyclesErrRated",
 			    	type :"Number",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
@@ -630,7 +619,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 				{  	property:function(value){
 						return $filter('number')(value.treatments.sav.read2.alignedPerc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.alignedPercStd.value,2);						
 					},
-			    	header: Messages("runs.lane.sav.alignedPerc"),
+			    	header: "runs.lane.sav.alignedPerc",
 			    	type :"String",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
@@ -638,7 +627,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 				{  	property:function(value){
 						return $filter('number')(value.treatments.sav.read2.errorRatePerc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.errorRatePercStd.value,2);						
 					},
-			    	header: Messages("runs.lane.sav.errorRatePerc"),
+			    	header: "runs.lane.sav.errorRatePerc",
 			    	type :"String",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
@@ -646,7 +635,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 				{  	property:function(value){
 					return $filter('number')(value.treatments.sav.read2.errorRatePercCycle35.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.errorRatePercCycle35Std.value,2);						
 					},
-			    	header: Messages("runs.lane.sav.errorRatePercCycle35"),
+			    	header: "runs.lane.sav.errorRatePercCycle35",
 			    	type :"String",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
@@ -654,7 +643,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 				{  	property:function(value){
 					return $filter('number')(value.treatments.sav.read2.errorRatePercCycle75.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.errorRatePercCycle75Std.value,2);						
 					},
-			    	header: Messages("runs.lane.sav.errorRatePercCycle75"),
+			    	header: "runs.lane.sav.errorRatePercCycle75",
 			    	type :"String",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
@@ -662,7 +651,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 				{  	property:function(value){
 					return $filter('number')(value.treatments.sav.read2.errorRatePercCycle100.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.errorRatePercCycle100Std.value,2);						
 					},
-			    	header: Messages("runs.lane.sav.errorRatePercCycle100"),
+			    	header: "runs.lane.sav.errorRatePercCycle100",
 			    	type :"String",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
@@ -670,7 +659,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 				{  	property:function(value){
 					return $filter('number')(value.treatments.sav.read2.intensityCycle1.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.intensityCycle1Std.value,2);						
 					},
-			    	header: Messages("runs.lane.sav.intensityCycle1"),
+			    	header: "runs.lane.sav.intensityCycle1",
 			    	type :"String",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
@@ -678,7 +667,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 				{  	property:function(value){
 					return $filter('number')(value.treatments.sav.read2.intensityCycle20Perc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.intensityCycle20PercStd.value,2);						
 					},
-			    	header: Messages("runs.lane.sav.intensityCycle20Perc"),
+			    	header: "runs.lane.sav.intensityCycle20Perc",
 			    	type :"String",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
@@ -687,7 +676,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 					render : function(value){
 						return getAlertButton(value,'read2');
 					},
-			    	header: Messages("runs.lane.sav.alerts"),
+			    	header: "runs.lane.sav.alerts",
 			    	type :"String",
 			    	order:false,
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}

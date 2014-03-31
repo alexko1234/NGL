@@ -51,7 +51,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, datatable, messages, lists
 	}
 	
 	var isValuationMode = function(){
-		return ($scope.isHomePage('valuation') || $scope.isHomePage('valuationWheat') || $routeParams.page.indexOf('valuation') == 0);
+		return ($scope.isHomePage('valuation') || $scope.isHomePage('valuationWheat') || ($routeParams.page && $routeParams.page.indexOf('valuation') == 0));
 	}
 	
 	
@@ -134,34 +134,34 @@ function NGSRGCtrl($scope, datatable) {
 			cancel : {active:false},						
 			columns : [
 				{  	property:"sampleOnContainer.properties.percentPerLane.value",
-					header: Messages("readsets.sampleOnContainer.percentPerLane"),
+					header: "readsets.sampleOnContainer.percentPerLane",
 					type :"Number",
 					format:2,
 					order:false
 				},
 			   	{  	property:"ngsrg.validSeqPercent.value",
-			    	header: Messages("readsets.treatments.ngsrg.validSeqPercent"),
+			    	header: "readsets.treatments.ngsrg_illumina.validSeqPercent",
 			    	type :"Number",
 			    	format:2,
 			    	order:false
 				},
 				{  	property:"ngsrg.nbCluster.value",
-			    	header: Messages("readsets.treatments.ngsrg.nbCluster"),
+			    	header: "readsets.treatments.ngsrg_illumina.nbCluster",
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"ngsrg.nbBases.value",
-			    	header: Messages("readsets.treatments.ngsrg.nbBases"),
+			    	header: "readsets.treatments.ngsrg_illumina.nbBases",
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"ngsrg.Q30.value",
-			    	header: Messages("readsets.treatments.ngsrg.Q30"),
+			    	header: "readsets.treatments.ngsrg_illumina.Q30",
 			    	type :"Number",
 			    	order:false
 				},
 				{  	property:"ngsrg.qualityScore.value",
-			    	header: Messages("readsets.treatments.ngsrg.qualityScore"),
+			    	header: "readsets.treatments.ngsrg_illumina.qualityScore",
 			    	type :"Number",
 			    	order:false
 				}

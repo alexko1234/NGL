@@ -3,25 +3,23 @@
 function getColumns(){
 var columns = [
 			    {  	property:"code",
-			    	header: Messages("runs.code"),
+			    	header: "runs.code",
 			    	type :"String",
 			    	order:true
 				},
 				{	property:"typeCode",
-					header: Messages("runs.typeCode"),
+					header: "runs.typeCode",
 					type :"String",
 			    	order:true
 				},
 				{	property:"sequencingStartDate",
-					header: Messages("runs.sequencingStartDate"),
+					header: "runs.sequencingStartDate",
 					type :"Date",
 			    	order:true
 				},
 				{	property:"state.code",
-					render:function(value){
-						return Codes("state."+value.state.code);
-					},
-					header: Messages("runs.stateCode"),
+					filter:"codes:'state'",					
+					header: "runs.stateCode",
 					type :"String",
 					edit:true,
 					order:true,
@@ -30,10 +28,8 @@ var columns = [
 			    	possibleValues:'listsTable.getStates()'	
 				},
 				{	property:"valuation.valid",
-					render:function(value){
-						return Codes("valuation."+value.valuation.valid);
-					},
-					header: Messages("runs.valuation.valid"),
+					filter:"codes:'valuation'",					
+					header: "runs.valuation.valid",
 					type :"String",
 			    	order:true
 				}      
