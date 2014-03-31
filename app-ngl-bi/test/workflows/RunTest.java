@@ -12,6 +12,7 @@ import java.util.List;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.TransientState;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.project.instance.Project;
@@ -62,48 +63,6 @@ public class RunTest extends  AbstractTests {
 	}
 	
 
-
-	/*
-	//COMMON
-	l.add(newState("Disponible", "A", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()) ));
-	l.add(newState("Indisponible", "UA", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()) ));
-	l.add(newState("Terminé", "F", true, 1000, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name()) ));
-	l.add(newState("Terminé en erreur", "FE", true, 1000, StateCategory.find.findByCode("F"), null));
-	l.add(newState("Terminé en ", "FS", true, 1000, StateCategory.find.findByCode("F"), null));
-	l.add(newState("Contrôle qualité en attente", "IW-QC", true, 401, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()) ));	
-	l.add(newState("Contrôle qualité en cours", "IP-QC", true, 450, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()) ));	
-	l.add(newState("Contrôle qualité terminé", "F-QC", true, 500, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()) ));	
-	l.add(newState("Evaluation en attente", "IW-V", true, 601, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()) ));
-	l.add(newState("Evaluation en cours", "IP-V", true, 651, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name()ObjectType.CODE.ReadSet.name()) ));		
-	//NGL-SQ
-	l.add(newState("Nouveau", "N", true, 0, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Proce, ObjectType.CODE.ReadSet.name()) ));
-	l.add(newState("Evaluation terminée", "F-V", true, 701, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ss.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name()) ));
-	l.add(newState("En cours", "IP", true, 500, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name()) ));
-	l.add(newState("Processus en attente", "IW-P", true, 101, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name())));
-	l.add(newState("Expérience en attente", "IW-E", true, 201, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name())));
-	l.add(newState("En cours d'utilisation", "IU", true, 250, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name())));
-	l.add(newState("En stock", "IS", true, 900, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name())));
-	//NGL-BI
-	l.add(newState("Séquençage en cours", "IP-S", true, 150, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Run.name())));
-	l.add(newState("Séquençage en echec", "FE-S", true, 199, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name())));
-	l.add(newState("Séquençage terminé", "F-S", true, 200, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name())));	
-	l.add(newState("Read generation en attente", "IW-RG", true, 201, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Run.name())));
-	l.add(newState("Read generation en cours", "IP-RG", true, 250, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name())));
-	l.add(newState("Read generation terminée", "F-RG", true, 300, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()) ));
-	*/
-	
-	
-    /*
-	run.state.code =   "IP-V"; // evaluation en cours
-	run.state.code =   "F-V"; // evaluation termine
-	run.state.code =  "IP-S"; //Sequençage en cours
-	run.state.code =  "FE-S"; //Sequençage en echec
-	run.state.code =  "F-S"; //Sequençage termine	
-	run.state.code =  "IW-RG"; //Read generation en attente
-	run.state.code =  "IP-RG"; //Read generation en cours
-	run.state.code =  "F-RG"; //Read generation terminee
-	*/
-	
 	@Test
 	public void testRunStates() { 
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1"));
@@ -131,30 +90,42 @@ public class RunTest extends  AbstractTests {
 	
 		Run run = RunMockHelper.newRun("YANN_TEST1");
 		run.state.code = "N";
-		
 		Lane lane = RunMockHelper.newLane(1);
-				
 		List<Lane> lanes = new ArrayList<Lane>();
 		lanes.add(lane);
 		run.lanes = lanes;
+		
+
+        
+        
 
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 		assertThat(status(result)).isEqualTo(OK);
+		
 		run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
         
-		Logger.debug("************** run.state.code : N**************");
 		assertThat(run.state.code).isEqualTo("N"); //ok
+
+		ReadSet readSet = RunMockHelper.newReadSet("ReadSet00");		
+		readSet.runCode = run.code;
+		readSet.laneNumber = lane.number;
+        
+		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readSet)));
+        assertThat(status(result)).isEqualTo(OK);
+        
+        
+        readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code",readSet.code));
+
+        
+		assertThat(readSet.state.code).isEqualTo("N"); //ok
 		
-		ContextValidation ctx = new ContextValidation(); 
 		 State nextState = new State();
 		 nextState.code = "IP-V";
 		 nextState.date = new Date();
 		 nextState.user = "testeur";
-		Workflows.setRunState(ctx, run, nextState);
+		 
+		Workflows.setRunState(new ContextValidation(), run, nextState);
 		
-        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
-                
-        Logger.debug("************** run.state.code : IP-V**************");
         assertThat(run.state.code).isEqualTo("IP-V");
         
         //make complete valuation
@@ -168,20 +139,14 @@ public class RunTest extends  AbstractTests {
                 
         Logger.debug("************** Valuation completed ***************");
         
-        ctx = new ContextValidation();
-        Workflows.nextRunState(ctx, run);
         
-       run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+        Workflows.nextRunState(new ContextValidation(), run);
         
-        Logger.debug("************** run.state.code : F-V**************");
         assertThat(run.state.code).isEqualTo("F-V");
         
-        ctx = new ContextValidation();
-        Workflows.nextRunState(ctx, run);
         
-       run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+        Workflows.nextRunState(new ContextValidation(), run);
         
-        Logger.debug("************** run.state.code : F-V**************");
         assertThat(run.state.code).isEqualTo("F-V");
         
         run.lanes.get(0).valuation.valid = TBoolean.FALSE;
@@ -191,11 +156,9 @@ public class RunTest extends  AbstractTests {
         assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(true);
         assertThat(Workflows.atLeastOneValuation(run)).isEqualTo(true);
         
-        Workflows.nextRunState(ctx, run);
         
-        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+        Workflows.nextRunState(new ContextValidation(), run);
         
-        Logger.debug("************** run.state.code : F-V**************");
         assertThat(run.state.code).isEqualTo("F-V");
         
         Logger.debug("************** set lane to UNSET  **************");
@@ -204,25 +167,72 @@ public class RunTest extends  AbstractTests {
         
         assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(false);
         
-        Workflows.nextRunState(ctx, run);
         
-       run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+        Workflows.nextRunState(new ContextValidation(), run);
         
-        Logger.debug("************** run.state.code : IP-V**************");
         assertThat(run.state.code).isEqualTo("IP-V");
         
         Logger.debug("Lane 0 valuation status : " + run.lanes.get(0).valuation.valid); // Lane 0 valuation status : TRUE !!!!!!!!
   
-        assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(false);
-        
-        //Workflows.nextRunState(ctx, run);
-        
+        //assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(false);
+        //Workflows.nextRunState(ctx, run);        
         //Logger.debug("************** run.state.code : IP-V**************");
         //assertThat(run.state.code).isEqualTo("IP-V");
         
         
+        /********************* tests readSet states ***************************************************/ 
+        assertThat(readSet.state.code).isEqualTo("N");
         
-        
+     
+		 nextState = new State();
+		 nextState.code = "IP-V";
+		 nextState.date = new Date();
+		 nextState.user = "testeur";
+
+		 
+		 Workflows.setReadSetState(new ContextValidation(), readSet, nextState);
+	        
+	     assertThat(readSet.state.code).isEqualTo("A");
+	     
+	     //verify historical	
+	     assertThat(readSet.state.historical.get(0).equals("N"));
+	     assertThat(readSet.state.historical.get(1).equals("IP-V"));
+	     assertThat(readSet.state.historical.get(2).equals("F-V"));
+	     assertThat(readSet.state.historical.get(3).equals("A"));
+	     	     
+		 Workflows.setReadSetState(new ContextValidation(), readSet, nextState);
+	        
+		 //verify that we stay at A
+	     assertThat(readSet.state.code).isEqualTo("A");
+	     
+	     //unset validation bio-info and verify that we pass at 
+	     readSet.bioinformaticValuation.valid = TBoolean.UNSET;
+	     
+	     
+	     Workflows.setReadSetState(new ContextValidation(), readSet, nextState);
+	     
+	     assertThat(readSet.state.code).isEqualTo("IP-V");
+	     
+	     readSet.bioinformaticValuation.valid = TBoolean.FALSE;
+	     
+	     
+	     Workflows.setReadSetState(new ContextValidation(), readSet, nextState);
+	     
+	     assertThat(readSet.state.code).isEqualTo("IP-V");
+	     
+	     
+	     //verify historical	
+	     assertThat(readSet.state.historical.get(0).equals("N"));
+	     assertThat(readSet.state.historical.get(1).equals("IP-V"));
+	     assertThat(readSet.state.historical.get(2).equals("F-V"));
+	     assertThat(readSet.state.historical.get(3).equals("A"));
+	     assertThat(readSet.state.historical.get(1).equals("IP-V"));
+	     assertThat(readSet.state.historical.get(2).equals("F-V"));
+	     assertThat(readSet.state.historical.get(3).equals("A"));
+	     assertThat(readSet.state.historical.get(1).equals("IP-V"));
+	     
+	     
+	     
     }
 
 

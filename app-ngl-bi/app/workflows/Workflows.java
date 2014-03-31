@@ -161,12 +161,16 @@ public class Workflows {
 		}else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code))	{
 			//met les fichier dipo ou non dès que le read set est valider
 			State state = cloneState(readSet.state);
-			
-			for(File f : readSet.files){
-				WriteResult<ReadSet, String> r = MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-						DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", f.fullname)),
-						DBUpdate.set("files.$.state", state));				
-				Logger.debug(r.getError());
+			if (null != readSet.files) {
+				for(File f : readSet.files){
+					WriteResult<ReadSet, String> r = MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+							DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", f.fullname)),
+							DBUpdate.set("files.$.state", state));				
+					Logger.debug(r.getError());
+				}
+			}
+			else {
+				Logger.error("No files for "+readSet.code);
 			}
 			
 		}
