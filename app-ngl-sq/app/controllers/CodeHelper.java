@@ -20,4 +20,6 @@ public class CodeHelper {
 	public static String generateExperiementCode(Experiment exp) {		
 		return (exp.typeCode+"-"+getSimpleDateFormat().format(new Date())).toUpperCase();		
 	}
+	
+	
 }

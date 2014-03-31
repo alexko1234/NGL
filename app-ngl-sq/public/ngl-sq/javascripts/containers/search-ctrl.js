@@ -58,8 +58,7 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 				"property":"state.code",
 				"order":true,
 				"type":"text",
-				 render:function(value){
-					return Codes("state."+value.state.code);
+				"filter":"codes:'state"
 				},
 			},
 			{
