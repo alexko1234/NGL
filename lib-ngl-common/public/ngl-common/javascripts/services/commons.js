@@ -411,4 +411,52 @@ angular.module('commonsServices', []).
 	      	        };  
 	      		  }
   		    };
-    	}]); 
+    	}]).filter('filters',['$filter',function ($filter) {
+    		return function (array, expressions) {
+    			if (!angular.isArray(expressions)) expressions = [expressions];
+    			var filtered = [];
+    			for(var i = 0; i < expressions.length; i++){
+    				var result = $filter('filter')(array, expressions[i]);
+    				if(result && result.length > 0)filtered = filtered.concat(result);    				
+    			}
+    			if(filtered.length > 0)return filtered;
+    			return undefined;
+    		}
+    	}]).filter('unique', function() {
+    	    return function(input, key) {
+    	        var unique = {};
+    	        var uniqueList = [];
+    	        for(var i = 0; i < input.length; i++){
+    	            if(typeof unique[input[i][key]] == "undefined"){
+    	                unique[input[i][key]] = "";
+    	                uniqueList.push(input[i]);
+    	            }
+    	        }
+    	        return uniqueList;
+    	    };
+    	}).filter('sum', ['$parse',function($parse) {
+    	    return function(array, key) {
+    	    	if(!array)return undefined;
+    	    	if(!angular.isArray(array) && (angular.isObject(array) || angular.isNumber(array))) array = [array];
+    	    	else if(!angular.isArray(array)) throw "input is not an array, object or a number !";
+    	    	
+    	    	if(key && !angular.isString(key))throw "key is not valid, only string is authorized";
+    	    	
+    	    	var params = {sum:0, key:key};
+    	    	angular.forEach(array, function(value, index){
+    	    		if(params.key && angular.isObject(value))params.sum = params.sum + value[params.key];
+    	    		else if(!params.key && angular.isObject(value))throw "missing key !";
+    	    		else params.sum = params.sum + value;
+    	    	}, params);
+    	    	return params.sum;
+    	    };
+    	}]).filter('codes', function(){
+    		return function(input, key){
+    			if(input)return Codes(key+"."+input);
+    			return undefined;
+    		}
+    	}).filter('messages', function(){
+    		return function(input){
+    			return Messages(input);    			
+    		}
+    	});
