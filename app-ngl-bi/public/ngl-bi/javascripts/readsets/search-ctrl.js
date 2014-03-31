@@ -482,7 +482,13 @@ function SearchBatchCtrl($scope,  datatable) {
 				batch:true,
 				method:'put',
 				value:function(line){return {code:line.code, properties : line.properties};}				
-			},			
+			},	
+			show:{
+				active:true,
+				add :function(line){
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.valuation(line.code).url,remove:true});
+				}
+			},
 			columns : getColumns('batch')
 	};
 	
