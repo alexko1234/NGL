@@ -152,11 +152,8 @@ public class RunTest extends  AbstractTests {
 		 nextState.user = "testeur";
 		Workflows.setRunState(ctx, run, nextState);
 		
-        //result = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-        //result = callAction(controllers.runs.api.routes.ref.Runs.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
         run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
-        
-        
+                
         Logger.debug("************** run.state.code : IP-V**************");
         assertThat(run.state.code).isEqualTo("IP-V");
         
@@ -188,6 +185,7 @@ public class RunTest extends  AbstractTests {
         assertThat(run.state.code).isEqualTo("F-V");
         
         run.lanes.get(0).valuation.valid = TBoolean.FALSE;
+        
         Logger.debug("************** Valuation non completed ***************");
         
         assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(true);
@@ -195,16 +193,16 @@ public class RunTest extends  AbstractTests {
         
         Workflows.nextRunState(ctx, run);
         
-       run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+        run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
         
         Logger.debug("************** run.state.code : F-V**************");
         assertThat(run.state.code).isEqualTo("F-V");
         
         Logger.debug("************** set lane to UNSET  **************");
+        
         run.lanes.get(0).valuation.valid = TBoolean.UNSET;
         
         assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(false);
-        
         
         Workflows.nextRunState(ctx, run);
         
@@ -215,11 +213,11 @@ public class RunTest extends  AbstractTests {
         
         Logger.debug("Lane 0 valuation status : " + run.lanes.get(0).valuation.valid); // Lane 0 valuation status : TRUE !!!!!!!!
   
-        //assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(false);
+        assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(false);
         
-        Workflows.nextRunState(ctx, run);
+        //Workflows.nextRunState(ctx, run);
         
-        Logger.debug("************** run.state.code : IP-V**************");
+        //Logger.debug("************** run.state.code : IP-V**************");
         //assertThat(run.state.code).isEqualTo("IP-V");
         
         
