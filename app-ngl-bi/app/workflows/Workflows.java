@@ -78,7 +78,7 @@ public class Workflows {
 		setRunState(contextValidation, run, nextStep);
 	}
 
-	private static boolean isRunValuationComplete(Run run) {
+	public static boolean isRunValuationComplete(Run run) {
 
 		if(run.valuation.valid.equals(TBoolean.UNSET)){
 			return false;
@@ -91,7 +91,7 @@ public class Workflows {
 		return true;
 	}
 	
-	private static boolean atLeastOneValuation(Run run) {
+	public static boolean atLeastOneValuation(Run run) {
 
 		if(!run.valuation.valid.equals(TBoolean.UNSET)){
 			return true;
