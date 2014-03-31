@@ -241,7 +241,7 @@ public class ReadSets extends ReadSetsController{
 		ReadSet readSetInput = filledForm.get();
 		if (readSetInput.code.equals(readSetCode)) {
 			if(null != readSetInput.traceInformation){
-				readSetInput.traceInformation.setTraceInformation("ngsrg");
+				readSetInput.traceInformation.setTraceInformation(getCurrentUser());
 			}else{
 				Logger.error("traceInformation is null !!");
 			}

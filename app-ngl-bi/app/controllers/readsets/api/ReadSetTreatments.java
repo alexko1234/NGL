@@ -129,6 +129,16 @@ public class ReadSetTreatments extends ReadSetsController{
 		return ok();		
 	}
 	
+	public static Result deleteAll(String readSetCode){
+		ReadSet readSet = getReadSet(readSetCode);
+		if (readSet == null) {
+			return badRequest();
+		}
+		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+				DBQuery.is("code", readSetCode), DBUpdate.unset("treatments").set("traceInformation", getUpdateTraceInformation(readSet)));			
+		return ok();		
+	}
+	
 	
 
 }
