@@ -50,7 +50,7 @@ public class RunTest extends  AbstractTests {
 		   Container c = new Container();
 		   c.code ="containerTest1";
 		   c.support = new LocationOnContainerSupport(); 
-		   c.support.supportCode = "containerName"; 
+		   c.support.code = "containerName"; 
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);		
 	}
@@ -135,7 +135,6 @@ public class RunTest extends  AbstractTests {
 		 nextState.code = stateCode;
 		 nextState.date = new Date();
 		 nextState.user = "testeur";
-
 		 Workflows.setRunState(new ContextValidation(), run, nextState);
 	}
 	
@@ -146,7 +145,6 @@ public class RunTest extends  AbstractTests {
 		 nextState.code = stateCode;
 		 nextState.date = new Date();
 		 nextState.user = "testeur";
-
 		 Workflows.setReadSetState(new ContextValidation(), readset, nextState);
 	}
 
@@ -259,7 +257,6 @@ public class RunTest extends  AbstractTests {
 		setRunStateTo("IP-RG");
 		setRunStateTo("F-RG");
 		setRunStateTo("IP-V");
-	
         //make complete valuation
         run.valuation.valid = TBoolean.TRUE;
         for (Lane l : run.lanes) {
@@ -282,7 +279,6 @@ public class RunTest extends  AbstractTests {
 		setRunStateTo("IP-RG");	     
 		setRunStateTo("F-RG");
 		setRunStateTo("IP-V");
-	
         //make complete valuation
         run.valuation.valid = TBoolean.TRUE;
         for (Lane l : run.lanes) {
@@ -291,9 +287,6 @@ public class RunTest extends  AbstractTests {
         Workflows.nextRunState(new ContextValidation(), run);
                 
         run.lanes.get(0).valuation.valid = TBoolean.FALSE; // Valuation non completed
-        
-         // Workflows.isRunValuationComplete(run)).isEqualTo(true);
-         // Workflows.atLeastOneValuation(run)).isEqualTo(true);
         
          Workflows.nextRunState(new ContextValidation(), run);
         
@@ -312,7 +305,6 @@ public class RunTest extends  AbstractTests {
 		setRunStateTo("IP-RG");
 		setRunStateTo("F-RG");
 		setRunStateTo("IP-V");
-	
         //make complete valuation
         run.valuation.valid = TBoolean.TRUE;
         for (Lane l : run.lanes) {
@@ -323,14 +315,9 @@ public class RunTest extends  AbstractTests {
                 
         run.lanes.get(0).valuation.valid = TBoolean.FALSE; // Valuation non completed
         
-         // Workflows.isRunValuationComplete(run)).isEqualTo(true);
-         // Workflows.atLeastOneValuation(run)).isEqualTo(true);
-                
          Workflows.nextRunState(new ContextValidation(), run);
         
          run.lanes.get(0).valuation.valid = TBoolean.UNSET;
-        
-         //assertThat(Workflows.isRunValuationComplete(run)).isEqualTo(false);
         
          Workflows.nextRunState(new ContextValidation(), run);
         
@@ -347,8 +334,7 @@ public class RunTest extends  AbstractTests {
 		setRunStateTo("F-S");
 		setRunStateTo("IP-RG");
 		setRunStateTo("F-RG");
-		setRunStateTo("IP-V");
-	
+		setRunStateTo("IP-V");	
         //make complete valuation
         run.valuation.valid = TBoolean.TRUE;
         for (Lane l : run.lanes) {
@@ -359,14 +345,9 @@ public class RunTest extends  AbstractTests {
                 
         run.lanes.get(0).valuation.valid = TBoolean.FALSE; // Valuation non completed
         
-         // Workflows.isRunValuationComplete(run).isEqualTo(true);
-         // Workflows.atLeastOneValuation(run).isEqualTo(true);
-        
          Workflows.nextRunState(new ContextValidation(), run);	
         
          run.lanes.get(0).valuation.valid = TBoolean.UNSET;
-        
-         //Workflows.isRunValuationComplete(run).isEqualTo(false);
         
          Workflows.nextRunState(new ContextValidation(), run);
         
@@ -382,8 +363,7 @@ public class RunTest extends  AbstractTests {
 	@Test
 	public void testRunStateIWRG() {
 		prepareData();        
-		setRunStateTo("IW-RG");
-		
+		setRunStateTo("IW-RG");		
 	    assertThat(run.state.code).isEqualTo("IW-RG");
 	}
 	     
@@ -394,24 +374,23 @@ public class RunTest extends  AbstractTests {
 		prepareData();
 		setRunStateTo("IW-RG");
 		setRunStateTo("IP-RG");
-		
 	    assertThat(run.state.code).isEqualTo("IP-RG");
 	}
 
 
 	
 	@Test
-	public void testRunStateIWV() {
+	public void testRunStateIWVorIPV() {
 		prepareData();
 		setRunStateTo("IW-RG");
 		setRunStateTo("IP-RG");
 		setRunStateTo("F-RG");
-		
-		System.out.println("run.valuation.valid=" + run.valuation.valid);
+
 		boolean bUnset = true;
 		for (Lane l : run.lanes) {
 			if (l.valuation.valid != TBoolean.UNSET) bUnset = false;
 		}
+		
 		if (run.valuation.valid == TBoolean.UNSET && bUnset) {
 			assertThat(run.state.code).isEqualTo("IW-V");
 		}
@@ -486,8 +465,6 @@ public class RunTest extends  AbstractTests {
 		
 		 readset.bioinformaticValuation.valid = TBoolean.FALSE;
 
-		 State nextState = readset.state;
-		 
 		 setReadSetStateTo("IW-QC");
 		 setReadSetStateTo("IP-QC");
 
@@ -508,8 +485,6 @@ public class RunTest extends  AbstractTests {
 		
 		 readset.bioinformaticValuation.valid = TBoolean.FALSE;
 
-		 State nextState = readset.state;
-		 
 		 setReadSetStateTo("IW-QC");
 		 setReadSetStateTo("IP-QC");
 
