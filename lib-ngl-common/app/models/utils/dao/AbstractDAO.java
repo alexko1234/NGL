@@ -95,8 +95,7 @@ public abstract class AbstractDAO<T> {
 				return Boolean.FALSE;
 			}
 		} catch (DataAccessException e) {
-			Logger.warn(e.getMessage());
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 	
