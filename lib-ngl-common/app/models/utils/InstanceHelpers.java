@@ -264,7 +264,7 @@ public class InstanceHelpers {
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("containerSupportCode", 1);
 		Run r = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-				DBQuery.and(DBQuery.is("code",readSet.runCode),DBQuery.is("lanes.number",readSet.laneNumber), DBQuery.is("lanes.readSetCodes",readSet.code)),
+				DBQuery.is("code",readSet.runCode),
 				keys).toList().get(0);
 		return r.containerSupportCode;
 	}
