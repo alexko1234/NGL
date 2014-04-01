@@ -69,6 +69,8 @@ public abstract class AbstractTests {
 		config.put("mongodb.servers","mongodev.genoscope.cns.fr:27017");
 		config.put("ehcacheplugin", "disabled");
 		
+		config.put("mongodb.defaultWriteConcern", "SAFE");
+		
 		config.put("institute", "CNS");
 	
 		return config;
