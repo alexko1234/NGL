@@ -13,6 +13,8 @@ import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
@@ -79,6 +81,28 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 		removeInstitutes(instrument.id);
 
 		super.remove(instrument);
+	}
+	
+	@Override //because code is not unique for Instrument
+	public Boolean isCodeExist(String code) throws DAOException {
+		if(null == code){
+			throw new DAOException("code is mandatory");
+		}
+		try {
+			try{
+				String sql = "select distinct t.id FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t")+" WHERE t.code=?";
+				long id =  this.jdbcTemplate.queryForLong(sql, code);
+				if(id > 0){
+					return Boolean.TRUE;
+				}else{
+					return Boolean.FALSE;
+				}
+			}catch (EmptyResultDataAccessException e ) {
+				return Boolean.FALSE;
+			}
+		} catch (DataAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public List<Instrument> findByInstrumentUsedType(long idInstrumentUsedType) throws DAOException {
