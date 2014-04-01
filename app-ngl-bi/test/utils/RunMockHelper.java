@@ -91,8 +91,6 @@ public class RunMockHelper {
 
 				
 		lane.valuation = getValuation(TBoolean.UNSET);
-		
-		lane.readSetCodes = null;
 				
 		return lane;
 	}
