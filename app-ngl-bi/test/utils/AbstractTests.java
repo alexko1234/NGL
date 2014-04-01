@@ -45,6 +45,8 @@ public abstract class AbstractTests {
 		config.put("mongodb.credentials", "testu:testu");
 		config.put("mongodb.servers", "mongodev.genoscope.cns.fr:27017");
 		
+		config.put("mongodb.defaultWriteConcern", "SAFE"); 
+		
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");
 		//TESTU must be updated
 		//config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL");
