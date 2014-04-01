@@ -58,7 +58,6 @@ public class RunTest extends  AbstractTests {
 	
 	@AfterClass
 	public static void deleteData(){
-	/*	
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
 		for (Sample sample : samples) {
 			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
@@ -79,7 +78,6 @@ public class RunTest extends  AbstractTests {
 		for (ReadSet readSet : readSets) {
 			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);
 		}
-	*/
 	}
 	
 	
