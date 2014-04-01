@@ -1,42 +1,16 @@
 package controllers.migration;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.sql.DataSource;
 
-import org.apache.commons.lang3.StringUtils;
+import models.laboratory.container.instance.Container;
+import models.utils.InstanceConstants;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import models.LimsCNGDAO;
-import models.laboratory.common.instance.Comment;
-import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.container.instance.Content;
-import models.laboratory.container.instance.SampleUsed;
-import models.laboratory.sample.description.SampleType;
-import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
-import models.utils.dao.DAOException;
-import models.utils.instance.ContainerSupportHelper;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
-import net.vz.mongodb.jackson.JacksonDBCollection;
-import net.vz.mongodb.jackson.WriteResult;
 import play.Logger;
-import play.api.modules.spring.Spring;
-import play.mvc.Result;
-import validation.ContextValidation;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
@@ -68,7 +42,7 @@ public class MigrationTag extends CommonController {
 	
 	
 	
-	
+	/*
 	public static List<Container> findContainer(final ContextValidation contextError) throws DAOException{
 
 		if (jdbcTemplate == null) {
@@ -92,7 +66,7 @@ public class MigrationTag extends CommonController {
 				if (rs.getString("code_sample")!=null) {
 					Content content = new Content();
 					content.sampleUsed=new SampleUsed();
-					content.sampleUsed.sampleCode=rs.getString("code_sample");
+					content.sampleUsed.code=rs.getString("code_sample");
 					
 					String sampleTypeCode = SAMPLE_USED_TYPE_CODE;
 					SampleType sampleType=null;
@@ -103,7 +77,7 @@ public class MigrationTag extends CommonController {
 						return null;
 					}
 					if( sampleType==null ){
-						contextError.addErrors("code", "error.codeNotExist", sampleTypeCode, content.sampleUsed.sampleCode);
+						contextError.addErrors("code", "error.codeNotExist", sampleTypeCode, content.sampleUsed.code);
 						return null;
 					}		
 					
@@ -198,7 +172,7 @@ public class MigrationTag extends CommonController {
 		Content content = new Content();
 		
 		content.sampleUsed=new SampleUsed();
-		content.sampleUsed.sampleCode= results.get(posNext).sampleCodes.get(0);
+		content.sampleUsed.code= results.get(posNext).sampleCodes.get(0);
 		
 		SampleType sampleType=null;
 		sampleType = SampleType.find.findByCode(SAMPLE_USED_TYPE_CODE);	
@@ -244,7 +218,7 @@ public class MigrationTag extends CommonController {
 				for (Content newContent : newContainer.contents) {
 					if (newContent.properties.get("tag") != null) {
 						m1Value = (String) newContent.properties.get("tag").value + "_" + (String) newContent.properties.get("tagCategory").value;
-						m1.put(newContent.sampleUsed.sampleCode, m1Value);
+						m1.put(newContent.sampleUsed.code, m1Value);
 					}
 				}
 				m2.put(newContainer.code, m1);
@@ -271,7 +245,7 @@ public class MigrationTag extends CommonController {
 					
 					if (m2.get(oldContainer.code) != null) {
 						
-						strValue = (String) (m2.get(oldContainer.code)).get(oldContainer.contents.get(i).sampleUsed.sampleCode);
+						strValue = (String) (m2.get(oldContainer.code)).get(oldContainer.contents.get(i).sampleUsed.code);
 						if (strValue != null && strValue.contains("_")) {
 							
 							newTag = strValue.substring(0, strValue.indexOf("_")); 
@@ -334,7 +308,7 @@ public class MigrationTag extends CommonController {
 	
 	}
 
-	
+	*/
 	
 	private static void backUpContainer() {
 		Logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" starts");

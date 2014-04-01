@@ -17,7 +17,6 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
-import models.laboratory.container.instance.SampleUsed;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.description.SampleType;
@@ -33,7 +32,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import play.Logger;
-import play.Logger.ALogger;
 import validation.ContextValidation;
 
 /**
@@ -333,9 +331,8 @@ public class LimsCNGDAO {
 				}
 				
 				if (rs.getString("code_sample")!=null) {
-					Content content = new Content();
-					content.sampleUsed=new SampleUsed();
-					content.sampleUsed.sampleCode=rs.getString("code_sample");
+					Content sampleUsed=new Content();
+					sampleUsed.sampleCode=rs.getString("code_sample");
 					
 					String sampleTypeCode = SAMPLE_USED_TYPE_CODE;
 					SampleType sampleType=null;
@@ -346,33 +343,33 @@ public class LimsCNGDAO {
 						return null;
 					}
 					if( sampleType==null ){
-						contextError.addErrors("code", "error.codeNotExist", sampleTypeCode, content.sampleUsed.sampleCode);
+						contextError.addErrors("code", "error.codeNotExist", sampleTypeCode, sampleUsed.sampleCode);
 						return null;
 					}		
 					
-					content.sampleUsed.typeCode = sampleType.code;
-					content.sampleUsed.categoryCode = sampleType.category.code;
+					sampleUsed.sampleTypeCode = sampleType.code;
+					sampleUsed.sampleCategoryCode = sampleType.category.code;
 					
-					content.properties = new HashMap<String, PropertyValue>();
+					sampleUsed.properties = new HashMap<String, PropertyValue>();
 					
 					if(rs.getString("tag")!=null) { 
-						content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
-						content.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagcategory")));
+						sampleUsed.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+						sampleUsed.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagcategory")));
 					}
 					else {
-						content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppress it at the end of the function...
-						content.properties.put("tagCategory",new PropertySingleValue("-1"));
+						sampleUsed.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppress it at the end of the function...
+						sampleUsed.properties.put("tagCategory",new PropertySingleValue("-1"));
 					}
 					
 					if(rs.getString("percent_per_lane")!=null) { 
-						content.properties.put("percentPerLane",new PropertySingleValue(rs.getString("percent_per_lane")));
+						sampleUsed.properties.put("percentPerLane",new PropertySingleValue(rs.getString("percent_per_lane")));
 					}
 					else {
-						content.properties.put("percentPerLane",new PropertySingleValue("-1")); 
+						sampleUsed.properties.put("percentPerLane",new PropertySingleValue("-1")); 
 					}
 					
-					container.contents=new ArrayList<Content>();
-					container.contents.add(content);			
+
+					container.contents.add(sampleUsed);			
 					
 					container.sampleCodes=new ArrayList<String>();
 					container.sampleCodes.add(rs.getString("code_sample"));
@@ -452,22 +449,22 @@ public class LimsCNGDAO {
 	 * @throws DAOException
 	 */
 	private List<Container>  createContent(List<Container> results, int posCurrent, int posNext) throws DAOException{
-		Content content = new Content();
-		content.sampleUsed=new SampleUsed();
-		content.sampleUsed.sampleCode= results.get(posNext).sampleCodes.get(0);
+
+		Content sampleUsed=new Content();
+		sampleUsed.sampleCode= results.get(posNext).sampleCodes.get(0);
 		
 		SampleType sampleType=null;
 		sampleType = SampleType.find.findByCode(SAMPLE_USED_TYPE_CODE);	
-		content.sampleUsed.typeCode = sampleType.code;
-		content.sampleUsed.categoryCode = sampleType.category.code;
+		sampleUsed.sampleTypeCode = sampleType.code;
+		sampleUsed.sampleCategoryCode = sampleType.category.code;
 		
-		content.properties = new HashMap<String, PropertyValue>();
-		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
-		content.properties.put("tagCategory",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tagCategory").value  ));
+		sampleUsed.properties = new HashMap<String, PropertyValue>();
+		sampleUsed.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
+		sampleUsed.properties.put("tagCategory",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tagCategory").value  ));
 		
-		content.properties.put("percentPerLane",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("percentPerLane").value ));
+		sampleUsed.properties.put("percentPerLane",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("percentPerLane").value ));
 		
-		results.get(posCurrent).contents.add(content); 
+		results.get(posCurrent).contents.add(sampleUsed); 
 		
 		return results;
 	}

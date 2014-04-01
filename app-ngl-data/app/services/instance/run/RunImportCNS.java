@@ -196,9 +196,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 	}
 
 	public static List<ReadSet> createReadSetFromRun(Run run,ContextValidation contextValidation)throws SQLException, DAOException {
-		String rootKeyName="readSet["+run.code+"]";
-		contextValidation.addKeyToRootKeyName(rootKeyName);
-
+		
 		List<ReadSet> newReadSets=new ArrayList<ReadSet>();
 		
 		//Delete old readSet from run
@@ -210,6 +208,8 @@ public class RunImportCNS extends AbstractImportDataCNS{
 
 		if(!contextValidation.hasErrors() && readSets.size()!=0){
 			for(ReadSet readSet:readSets){
+				String rootKeyName="readSet["+readSet.code+"]";
+				contextValidation.addKeyToRootKeyName(rootKeyName);
 
 				if (!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,readSet.sampleCode)){
 
@@ -247,10 +247,10 @@ public class RunImportCNS extends AbstractImportDataCNS{
 				}
 				
 				
+				contextValidation.removeKeyFromRootKeyName(rootKeyName);
 
 			}
 		}
-		contextValidation.removeKeyFromRootKeyName(rootKeyName);
 		return newReadSets;
 	}
 	

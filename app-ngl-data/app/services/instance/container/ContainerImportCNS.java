@@ -2,16 +2,13 @@ package services.instance.container;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
-import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.sample.instance.Sample;
 import models.util.DataMappingCNS;
 import models.utils.InstanceConstants;
@@ -24,7 +21,6 @@ import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
-import validation.container.instance.ContainerValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
 public abstract class ContainerImportCNS extends AbstractImportDataCNS {
@@ -54,21 +50,32 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 				}else {
 					Sample sample =samples.get(0);
 	
-					for(Entry taraEntry :taraProperties.entrySet()){
+					String importTypeCode=DataMappingCNS.getImportTypeCode(true,Boolean.valueOf(sample.properties.get("isAdapters").value.toString()));
+					
+					if(!importTypeCode.equals(sample.importTypeCode)){
+						MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sample.code),DBUpdate.set("importTypeCode",sample.importTypeCode));
+					}
+					
+					MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, DBQuery.is("code",sample.code),DBUpdate.addToSet("properties",taraProperties));
+					
+					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class, DBQuery.is("content.sampleUsed.sampleCode",sample.code),DBUpdate.addToSet("content.$.properties",taraProperties));
+					
+					MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, DBQuery.is("code",sample.code),DBUpdate.addToSet("properties",taraProperties));
+
+					/*for(Entry taraEntry :taraProperties.entrySet()){
 	
 						if(!taraEntry.getKey().equals(LimsCNSDAO.LIMS_CODE)){
-							String importTypeCode=DataMappingCNS.getImportTypeCode(true,Boolean.valueOf(sample.properties.get("isAdapters").value.toString()));
+							
 	
-							if(!importTypeCode.equals(sample.importTypeCode)){
-								MongoDBDAO.updateSet(InstanceConstants.SAMPLE_COLL_NAME, sample, "importTypeCode", importTypeCode);
-							}
-	
-							MongoDBDAO.updateSet(InstanceConstants.SAMPLE_COLL_NAME, sample, "properties."+taraEntry.getKey()+".value",taraEntry.getValue());
 							InstanceHelpers.updateTraceInformation(sample.traceInformation);
-							MongoDBDAO.updateSet(InstanceConstants.SAMPLE_COLL_NAME, sample, "traceInformation", sample.traceInformation);
-							MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("samples",sample.code), DBUpdate.set("properties"+taraEntry.getKey()+".value",taraEntry.getValue()));
+							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, DBQuery.is("code",sample.code),DBUpdate.addToSet("properties."+taraEntry.getKey(), taraEntry));
+							
+							//MongoDBDAO.updateSet(InstanceConstants.SAMPLE_COLL_NAME, sample, "properties."+taraEntry.getKey()+".value",taraEntry.getValue());
+							//MongoDBDAO.updateSet(InstanceConstants.SAMPLE_COLL_NAME, sample, "traceInformation", sample.traceInformation);
+							//
+							MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("samples",sample.code), DBUpdate.set("content.properties"+taraEntry.getKey()+".value",taraEntry.getValue()));
 						}
-					}
+					}*/
 	
 				}
 			}
@@ -90,27 +97,31 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		//
 	}
 
-	public static void saveSampleFromContainer(ContextValidation contextError,List<Container> containers) throws SQLException, DAOException{
-		List<Container> listContainers = new ArrayList<Container>(containers);
+	public static void saveSampleFromContainer(ContextValidation contextError,List<Container> containers,String sqlContent) throws SQLException, DAOException{
 	
-		//
 		Sample sample =null;
 		Sample newSample =null;
 		String rootKeyName=null;
 	
-		for(Container container :listContainers){
-	
+		for(Container container :containers){
+
+			List<Content> contents;
+			if(sqlContent!=null){	
+						contents=new ArrayList<Content>(limsServices.findContentsFromContainer(sqlContent,container.code));
+			}else{
+						contents=new ArrayList<Content>(container.contents);
+			}
 			//Logger.debug("Container :"+container.code);
 	
-			List<Content> contents=new ArrayList<Content>(container.contents);
-			for(Content content : contents){
+
+			for(Content sampleUsed : contents){
 	
 				/* Sample content not in MongoDB */
-				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, content.sampleUsed.sampleCode)){
+				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sampleUsed.sampleCode)){
 	
-					rootKeyName="sample["+content.sampleUsed.sampleCode+"]";
+					rootKeyName="sample["+sampleUsed.sampleCode+"]";
 					contextError.addKeyToRootKeyName(rootKeyName);
-					sample = limsServices.findSampleToCreate(contextError,content.sampleUsed.sampleCode);
+					sample = limsServices.findSampleToCreate(contextError,sampleUsed.sampleCode);
 	
 					if(sample!=null){
 						newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
@@ -119,8 +130,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	
 				}else {	
 					/* Find sample in Mongodb */
-					Logger.debug("Code sample"+content.sampleUsed.sampleCode);
-					newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, content.sampleUsed.sampleCode);	
+					newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, sampleUsed.sampleCode);	
 				}			
 	
 				rootKeyName="container["+container.code+"]";
@@ -129,13 +139,12 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 				/* Error : No sample, remove container from list to create */
 				if(newSample==null){
 					containers.remove(container);
-					contextError.addErrors("sample","error.codeNotExist", content.sampleUsed.sampleCode);
+					contextError.addErrors("sample","error.codeNotExist", sampleUsed.sampleCode);
 				}
 				else{
 					/* From sample, add content in container */
-					container.contents.remove(content);
-					ContainerHelper.addContent(container,newSample,content.properties);
-	
+					container.contents.remove(sampleUsed);
+					ContainerHelper.addContent(container,newSample,sampleUsed.properties);
 				}
 				contextError.removeKeyFromRootKeyName(rootKeyName);
 	
@@ -144,23 +153,16 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	
 	}
 
-	public static void createContentsFromContainers(List<Container> containers,
+/*	public static void createContentsFromContainers(List<Container> containers,
 			String sqlContent) throws SQLException {
 	
-		for(Container container:containers){
-			if(container.contents==null){
-	
-				if(sqlContent==null){
-					//add error
-				}else {
-					container.contents=new ArrayList<Content>(limsServices.findContentsFromContainer(sqlContent,container.code));
-					//Logger.debug("Container.contents :"+container.contents.size());
-				}
-			}
+		for(Container container:containers){	
+					container.contents=new ArrayList<SampleUsed>(limsServices.findContentsFromContainer(sqlContent,container.code));
+
 		}
 	
 	}
-
+*/
 	/**
 	 * 
 	 * Create containers, contents and samples from 2 sql queries 
@@ -177,12 +179,8 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		String rootKeyName=null;
 	
 		List<Container> containers=	limsServices.findContainersToCreate(sqlContainer,contextError, containerCategoryCode,containerStateCode,experimentTypeCode);
-		
-		if(sqlContent!=null){
-			ContainerImportCNS.createContentsFromContainers(containers,sqlContent);
-		}
 	
-		ContainerImportCNS.saveSampleFromContainer(contextError,containers);
+		ContainerImportCNS.saveSampleFromContainer(contextError,containers,sqlContent);
 		
 		ContainerHelper.createSupportFromContainers(containers, contextError);
 	

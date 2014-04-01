@@ -72,8 +72,6 @@ public class RunIlluminaTests extends AbstractTests{
 		prepaCodes.add("D2G9NACXX");
 		// prepaflowcell tag=null
 		prepaCodes.add("C3K2AACXX");
-		// valide properties content 
-		//prepaCodes.add("201WFAAXX");
 
 	}
 
@@ -88,14 +86,14 @@ public class RunIlluminaTests extends AbstractTests{
 	@Test 
 	public void importPrepaflowcellTest() throws SQLException, DAOException{
 		
-		MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("support.supportCode",prepaCodes));
+		MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("support.code",prepaCodes));
 		MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME, Container.class, DBQuery.in("code",prepaCodes));
 
 		ContextValidation contextValidation=new ContextValidation();
 		String sql="pl_PrepaflowcellToNGL @flowcellNoms=\'"+StringUtils.join(prepaCodes,",")+"\'";
 		ContainerImportCNS.createContainers(contextValidation,sql,"lane","F","prepa-flowcell","pl_BanquesolexaUneLane @nom_lane=?");
 		Assert.assertEquals(contextValidation.errors.size(),0);
-		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.supportCode", prepaCodes)).toList();
+		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", prepaCodes)).toList();
 		Assert.assertTrue(containers.size()>0);
 		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", prepaCodes)).toList();
 		Assert.assertEquals(containerSupports.size(), prepaCodes.size());

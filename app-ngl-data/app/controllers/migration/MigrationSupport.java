@@ -67,11 +67,11 @@ public class MigrationSupport extends CommonController{
 			Container c = new Container();
 			c.support = new LocationOnContainerSupport();
 			if (container.support.barCode != null) {
-				c.support.supportCode = container.support.barCode;
+				c.support.code = container.support.barCode;
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
 						DBQuery.is("code", container.code), 
 						DBUpdate.unset("support.barCode") 
-						.set("support.supportCode", c.support.supportCode) );
+						.set("support.supportCode", c.support.code) );
 			}
 			else {
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 

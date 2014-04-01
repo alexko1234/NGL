@@ -21,7 +21,6 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
-import models.laboratory.container.instance.SampleUsed;
 import models.laboratory.parameter.Index;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.description.ReadSetType;
@@ -288,7 +287,7 @@ public class LimsCNSDAO{
 
 			if(container.properties==null || limsCode==null)
 			{
-				contextError.addErrors("limsCode","error.PropertyNotExist",LIMS_CODE,container.support.supportCode);
+				contextError.addErrors("limsCode","error.PropertyNotExist",LIMS_CODE,container.support.code);
 
 			}else {
 				try{
@@ -299,7 +298,7 @@ public class LimsCNSDAO{
 
 				} catch(DataAccessException e){
 
-					contextError.addErrors("",e.getMessage(), container.support.supportCode);
+					contextError.addErrors("",e.getMessage(), container.support.code);
 				}
 			}
 
@@ -342,16 +341,16 @@ public class LimsCNSDAO{
 			@SuppressWarnings("rawtypes")
 			public Content mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-				SampleUsed sampleUsed = new SampleUsed(rs.getString("sampleCode"),null,null);
-				Content content= new Content(sampleUsed);
+				Content sampleUsed = new Content(rs.getString("sampleCode"),null,null);
+				
 				// Todo add properties from ExperimentType
-				content.properties=new HashMap<String, PropertyValue>();
-				content.properties.put("percentPerLane", new PropertySingleValue(rs.getFloat("percentPerLane")));
+				sampleUsed.properties=new HashMap<String, PropertyValue>();
+				sampleUsed.properties.put("percentPerLane", new PropertySingleValue(rs.getFloat("percentPerLane")));
 				if(rs.getString("tag")!=null){
-					content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
-					content.properties.put("tagCategory",new PropertySingleValue(DataMappingCNS.getTagCategory(rs.getString("tagCategory"))));
+					sampleUsed.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+					sampleUsed.properties.put("tagCategory",new PropertySingleValue(DataMappingCNS.getTagCategory(rs.getString("tagCategory"))));
 				}
-				return content;
+				return sampleUsed;
 			}
 
 		});        
