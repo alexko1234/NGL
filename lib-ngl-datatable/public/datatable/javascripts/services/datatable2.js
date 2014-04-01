@@ -153,6 +153,7 @@ angular.module('datatableServices', []).
 		    				this.config.remove = angular.copy(this.configMaster.remove);
 		    				this.config.select = angular.copy(this.configMaster.select);
 		    				this.config.messages = angular.copy(this.configMaster.messages);
+		    				this.config.pagination.pageNumber = 0;
 							this._search(params);							
     					},
     					
