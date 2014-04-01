@@ -110,7 +110,7 @@ public class Supports extends CommonController {
 			Logger.debug("Containers "+containers.size());
 			List<String> supports  =new ArrayList<String>();
 			for(Container c: containers){
-				supports.add(c.support.supportCode);
+				supports.add(c.support.code);
 			}
 		
 			if(cs.experimentTypeCode!=null || cs.processTypeCode!=null || cs.stateCode!=null ){

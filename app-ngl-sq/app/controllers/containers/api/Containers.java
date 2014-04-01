@@ -138,7 +138,7 @@ public class Containers extends CommonController {
 			
 			BasicDBObject keysSupport = new BasicDBObject();
 			BasicDBObject test = new BasicDBObject();
-			keysSupport.put("support.supportCode",true);
+			keysSupport.put("support.code",true);
 			keysSupport.put("support.categoryCode",true);
 		    
 			BasicDBList supportDBObject = (BasicDBList) MongoDB.getCollection(InstanceConstants.CONTAINER_COLL_NAME, Container.class, String.class).group(keysSupport, query, test,"function ( curr, result ) { }");
@@ -146,9 +146,9 @@ public class Containers extends CommonController {
 		    
 			while(itr.hasNext()) {
 		         BasicDBObject element = (BasicDBObject) itr.next();
-		         String supportCode  = (String)element.get("support.supportCode");
+		         String supportCode  = (String)element.get("support.code");
 		         LocationOnContainerSupport cs = new LocationOnContainerSupport();
-		         cs.supportCode = (String)element.get("support.supportCode");
+		         cs.code = (String)element.get("support.code");
 		         cs.categoryCode = (String)element.get("support.categoryCode");
 		         containerSupports.add(cs);
 		    }
@@ -170,7 +170,7 @@ public class Containers extends CommonController {
 			List<String> ls = new ArrayList<String>();
 			for(LocationOnContainerSupport p: containerSupports){
 				if(!containerSupports.contains(p)){
-					ls.add(p.supportCode);
+					ls.add(p.code);
 				}
 			}
 
@@ -222,7 +222,7 @@ public class Containers extends CommonController {
 		}
 
 		if(StringUtils.isNotEmpty(containersSearch.supportCode)){
-			queryElts.add(DBQuery.is("support.supportCode", containersSearch.supportCode));
+			queryElts.add(DBQuery.is("support.code", containersSearch.supportCode));
 		}
 		
 		if(StringUtils.isNotEmpty(containersSearch.containerSupportCategory)){

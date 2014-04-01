@@ -6,24 +6,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.Content;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import play.Logger;
-import play.api.modules.spring.Spring;
-import play.data.DynamicForm;
-import play.data.DynamicForm.Dynamic;
 import play.data.Form;
-import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;

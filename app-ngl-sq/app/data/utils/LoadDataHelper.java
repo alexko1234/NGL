@@ -109,7 +109,7 @@ public class LoadDataHelper {
 
 		Container container = new Container();
 		ContainerHelper.addContent(container, sample);
-		Content content =container.contents.get(0);
+		Content sampleUsed =container.contents.get(0);
 		Class<Container> aClass=Container.class;
 		Field field =null;
 		String rootPrefix=aClass.getSimpleName()+".";
@@ -123,10 +123,10 @@ public class LoadDataHelper {
 			System.err.println("Key :"+firstLine[i]+ ", values :"+nextLine[i]);
 			if(firstLine[i].startsWith(contentPrefix) ) {
 
-				if(content.properties==null) content.properties=new HashMap<String, PropertyValue>();
+				if(sampleUsed.properties==null) sampleUsed.properties=new HashMap<String, PropertyValue>();
 				String key=firstLine[i].substring((contentPrefix).length());
 				if(!nextLine[i].isEmpty())
-					content.properties.put(key, new PropertySingleValue(ValidationHelper.transformValue(propertiesDefinition.get(key).valueType, nextLine[i],FORMAT_DATE)));
+					sampleUsed.properties.put(key, new PropertySingleValue(ValidationHelper.transformValue(propertiesDefinition.get(key).valueType, nextLine[i],FORMAT_DATE)));
 			}
 			else if(firstLine[i].startsWith(rootPrefix)) {
 

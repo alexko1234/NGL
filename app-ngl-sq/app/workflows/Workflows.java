@@ -311,7 +311,7 @@ public class Workflows {
 			ContextValidation contextValidation) {
 		State nextState=new State(container.state.code,container.state.user);
 		//Pour le moment des qu'une container change d'etat sont support à la meme etat
-		setContainerSupportState(container.support.supportCode, nextState,contextValidation);
+		setContainerSupportState(container.support.code, nextState,contextValidation);
 	}
 
 	public static void setContainerSupportState(String code,State nextState,ContextValidation contextValidation) {
