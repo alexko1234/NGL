@@ -199,6 +199,7 @@ function SearchFormCtrl($scope, $filter, lists){
 		$scope.lists.refresh.types({objectTypeCode:"Run"});
 		$scope.lists.refresh.runs();
 		$scope.lists.refresh.instruments({categoryCode:"seq-illumina"});
+		$scope.lists.refresh.reportConfigs({pageCodes:["readsets"]});
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();
@@ -333,42 +334,30 @@ function SearchValuationCtrl($scope, $http, datatable, lists, $routeParams) {
 	$scope.init = function(){
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){
+			$scope.datatable = datatable($scope, datatableConfig);
+			$scope.setDatatable($scope.datatable);
+			
 			
 			//$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get("RC-20140331094258").url)
 		//		.success(function(data) {
 		//			datatableConfig.columns = datatableConfig.columns.concat(data.columns);
-					$scope.datatable = datatable($scope, datatableConfig);
-					$scope.setDatatable($scope.datatable);
 					
-					var count = 0;
-					for(var p in $routeParams){
-						count++;
-					}
-					
-					if(count > 0){
-						$scope.datatable.search(updateForm($routeParams));
-					}else{
-						$scope.datatable.search(updateForm({},'valuation'));
-					}
 			//	});
 			
 			
-		}else{
-			$scope.datatable = $scope.getDatatable();
-			
-			var count = 0;
-			for(var p in $routeParams){
-				count++;
-			}
-			
-			if(count > 0){
-				$scope.datatable.search(updateForm($routeParams));
-			}else{
-				$scope.datatable.search(updateForm({},'valuation'));
-			}
 		}
 		
 		
+		var count = 0;
+		for(var p in $routeParams){
+			count++;
+		}
+		
+		if(count > 0){
+			$scope.datatable.search(updateForm($routeParams));
+		}else{
+			$scope.datatable.search(updateForm({},'valuation'));
+		}
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('valuation');

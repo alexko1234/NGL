@@ -172,8 +172,8 @@ function SearchStateCtrl($scope, datatable, lists) {
 		}
 		
 		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:true});
+			$scope.setHomePage('state');
+			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("state").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
 		$scope.listsTable.refresh.states({objectTypeCode:"Run"});
