@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Resolution;
-import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.Comment;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
@@ -18,7 +18,6 @@ import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.Content;
-import models.laboratory.container.instance.SampleUsed;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
@@ -42,13 +41,11 @@ import models.utils.dao.DAOException;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
-
-import controllers.CommonController;
 
 import play.Logger;
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
+import controllers.CommonController;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
@@ -259,7 +256,7 @@ public class InstanceTest extends AbstractTests{
 		Container container=findObject(Container.class);
 
 		container.support=new LocationOnContainerSupport();
-		container.support.supportCode="containerName";
+		container.support.code="containerName";
 		container.categoryCode="containerCategory";
 
 		container.projectCodes= new ArrayList<String>();
@@ -280,8 +277,7 @@ public class InstanceTest extends AbstractTests{
 		container.valuation.user = CommonController.getCurrentUser();
 		container.valuation.date = new Date(); 
 		
-		container.contents=new ArrayList<Content>();
-		container.contents.add(new Content(new SampleUsed("SampleCode", "sampleType", "sampleCategory")));
+		container.contents.add(new Content("SampleCode", "sampleType", "sampleCategory"));
 
 		container.fromExperimentTypeCodes=new ArrayList<String>();
 		container.fromExperimentTypeCodes.add("experimentType");
@@ -300,7 +296,7 @@ public class InstanceTest extends AbstractTests{
 		container=findObject(Container.class);
 
 		assertThat(container.code).isEqualTo("ContainerCode");
-		assertThat(container.support.supportCode).isEqualTo("containerName");
+		assertThat(container.support.code).isEqualTo("containerName");
 		assertThat(container.comments.get(0).comment).isEqualTo("comment");
 		assertThat(container.traceInformation.createUser).isEqualTo("test");
 		assertThat(container.categoryCode).isEqualTo("containerCategory");
@@ -313,9 +309,9 @@ public class InstanceTest extends AbstractTests{
 		assertThat(container.sampleCodes.get(0)).isEqualTo("SampleCode");
 
 		assertThat(container.contents).isNotEmpty();
-		assertThat(container.contents.get(0).sampleUsed.sampleCode).isEqualTo("SampleCode");
-		assertThat(container.contents.get(0).sampleUsed.categoryCode).isEqualTo("sampleCategory");
-		assertThat(container.contents.get(0).sampleUsed.typeCode).isEqualTo("sampleType");
+		assertThat(container.contents.get(0).sampleCode).isEqualTo("SampleCode");
+		assertThat(container.contents.get(0).sampleCategoryCode).isEqualTo("sampleCategory");
+		assertThat(container.contents.get(0).sampleTypeCode).isEqualTo("sampleType");
 
 		assertThat(container.fromExperimentTypeCodes).isNotEmpty();
 		assertThat(container.fromExperimentTypeCodes.size()).isEqualTo(1);

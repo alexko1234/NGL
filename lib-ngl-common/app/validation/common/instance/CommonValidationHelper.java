@@ -179,7 +179,7 @@ public class CommonValidationHelper {
 	/**
 	 * Validate if list is not null and code exist
 	 * @param errors
-	 * @param code
+	 * @param sampleCode
 	 * @param key
 	 * @param type
 	 * @param collectionName
@@ -203,7 +203,7 @@ public class CommonValidationHelper {
 	/**
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
-	 * @param code
+	 * @param sampleCode
 	 * @param key
 	 * @param type
 	 * @param collectionName
@@ -454,7 +454,7 @@ public class CommonValidationHelper {
 	
 	public static void validationContainerSupportCode (String containerSupportCode, ContextValidation contextValidation) {		
 		if (ValidationHelper.required(contextValidation, containerSupportCode, "containerSupportCode")) {
-			if (! MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.is("support.supportCode", containerSupportCode))) {
+			if (! MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.is("support.code", containerSupportCode))) {
 				contextValidation.addErrors("containerSupportCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, containerSupportCode);
 			}
 		}		 

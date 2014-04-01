@@ -22,13 +22,13 @@ import net.vz.mongodb.jackson.DBQuery;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
 
-import com.mongodb.BasicDBObject;
-
 import play.Logger;
-import play.libs.Json;
 import play.mvc.Http;
 import validation.ContextValidation;
 import validation.IValidation;
+
+import com.mongodb.BasicDBObject;
+
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -226,8 +226,8 @@ public class InstanceHelpers {
 		sc.containerSupportCode = containerSupportCode;
 		sc.containerCode = container.code;
 		sc.sampleCode = readSet.sampleCode;
-		sc.sampleTypeCode = content.sampleUsed.typeCode;
-		sc.sampleCategoryCode = content.sampleUsed.categoryCode;
+		sc.sampleTypeCode = content.sampleTypeCode;
+		sc.sampleCategoryCode = content.sampleCategoryCode;
 		sc.properties = content.properties;
 		return sc;
 	}
@@ -235,9 +235,9 @@ public class InstanceHelpers {
 
 
 	private static Content getContent(Container container, ReadSet readSet) {
-		for(Content content : container.contents){
-			if(content.sampleUsed.sampleCode.equals(readSet.sampleCode)){
-				return content;
+		for(Content sampleUsed : container.contents){
+			if(sampleUsed.sampleCode.equals(readSet.sampleCode)){
+				return sampleUsed;
 			}
 		}
 		Logger.warn("Not found Content for "+readSet.code+" / "+readSet.sampleCode);
@@ -248,8 +248,8 @@ public class InstanceHelpers {
 
 	private static Container getContainer(ReadSet readSet, String containerSupportCode) {
 		MongoDBResult<Container> cl = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
-				DBQuery.and(DBQuery.is("support.supportCode", containerSupportCode),DBQuery.is("support.line", readSet.laneNumber.toString()),
-						DBQuery.is("contents.sampleUsed.sampleCode", readSet.sampleCode)));
+				DBQuery.and(DBQuery.is("support.code", containerSupportCode),DBQuery.is("support.line", readSet.laneNumber.toString()),
+						DBQuery.is("contents.sampleCode", readSet.sampleCode)));
 		
 		if(cl.size() == 0){
 			Logger.warn("Not found Container for "+readSet.code+" with : '"+containerSupportCode+", "+readSet.laneNumber.toString()+", "+readSet.sampleCode+"'");

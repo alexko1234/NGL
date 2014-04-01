@@ -23,6 +23,6 @@ Chemistry,Default
 Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description
 @for(c <- containers){
 	@for(co <- c.contents){
-		@(c.support.line)_@(co.sampleUsed.sampleCode)_@(AbstractSampleSheetsfactory.getContentProperty(co,"tag")),@(c.support.supportCode),,,@AbstractSampleSheetsfactory.getIndex("indexIllumina",AbstractSampleSheetsfactory.getContentProperty(co,"tag")).illuminaName,@AbstractSampleSheetsfactory.getIndex("indexIllumina",AbstractSampleSheetsfactory.getContentProperty(co,"tag")).sequence,,@(AbstractSampleSheetsfactory.getContentProperty(co,"tag"))_@(BigDecimal(AbstractSampleSheetsfactory.getContentDoubleProperty(co,"percentPerLane")).setScale(2, BigDecimal.RoundingMode.DOWN))
+		@(c.support.line)_@(co.sampleCode)_@(AbstractSampleSheetsfactory.getContentProperty(co,"tag")),@(c.support.code),,,@AbstractSampleSheetsfactory.getIndex("indexIllumina",AbstractSampleSheetsfactory.getContentProperty(co,"tag")).illuminaName,@AbstractSampleSheetsfactory.getIndex("indexIllumina",AbstractSampleSheetsfactory.getContentProperty(co,"tag")).sequence,,@(AbstractSampleSheetsfactory.getContentProperty(co,"tag"))_@(BigDecimal(AbstractSampleSheetsfactory.getContentDoubleProperty(co,"percentPerLane")).setScale(2, BigDecimal.RoundingMode.DOWN))
 	}
 }

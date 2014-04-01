@@ -20,7 +20,7 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 		
 		List<Container> containers = getContainersFromExperiment();
 		String content = format(sampleSheet_1.render(this.experiment, containers).body());
-		play.api.libs.Files.writeFile(new File(containers.get(0).support.supportCode+".csv"), content);
+		play.api.libs.Files.writeFile(new File(containers.get(0).support.code+".csv"), content);
 		
 		
 		return content;

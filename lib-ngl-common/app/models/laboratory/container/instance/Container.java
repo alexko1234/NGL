@@ -66,8 +66,8 @@ public class Container extends DBObject implements IValidation {
 	public LocationOnContainerSupport support; 
 
 	//Embedded content with values;
+	//public List<Content> contents;
 	public List<Content> contents;
-
 	// Embedded QC result, this data are copying from collection QC
 	public List<QualityControlResult> qualityControlResults;
 
@@ -96,14 +96,14 @@ public class Container extends DBObject implements IValidation {
 
 	public Container(){
 		properties=new HashMap<String, PropertyValue>();
+		contents=new ArrayList<Content>();
 		traceInformation=new TraceInformation();
 	}
 
 	@JsonIgnore
-	public Container(SampleUsed sampleUsed){
+	public Container(Content sampleUsed){
 
-		this.contents=new ArrayList<Content>();
-		this.contents.add(new Content(sampleUsed));
+		this.contents.add(sampleUsed);
 		this.traceInformation=new TraceInformation();
 		properties=new HashMap<String, PropertyValue>();
 	}

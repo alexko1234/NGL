@@ -10,7 +10,7 @@ public class ContainerSupportHelper {
 
 	public static LocationOnContainerSupport getContainerSupportTube(String supportCode){
 		LocationOnContainerSupport containerSupport=new LocationOnContainerSupport();
-		containerSupport.supportCode=supportCode;	
+		containerSupport.code=supportCode;	
 		containerSupport.categoryCode="tube";
 		containerSupport.column="1";
 		containerSupport.line="1";
@@ -34,7 +34,7 @@ public class ContainerSupportHelper {
 			containerSupport.categoryCode=containerSupportCategories.get(0).code;
 		}
 
-		containerSupport.supportCode=supportCode;	
+		containerSupport.code=supportCode;	
 		containerSupport.column=x;
 		containerSupport.line=y;
 		return containerSupport;

@@ -33,7 +33,7 @@ public class LocationOnContainerSupport implements IValidation {
 //	public String name;
 //	public String barCode;
 // Replace name and barCode
-	public String supportCode;
+	public String code;
 		
 	public String categoryCode;
 

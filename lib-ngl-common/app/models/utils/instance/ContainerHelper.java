@@ -9,10 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import controllers.CommonController;
-
-import play.Logger;
-
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -21,10 +17,9 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.Content;
-import models.laboratory.container.instance.SampleUsed;
-import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
@@ -32,6 +27,7 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+import play.Logger;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import validation.utils.BusinessValidationHelper;
@@ -86,10 +82,11 @@ public class ContainerHelper {
 		container.mesuredQuantity=new PropertySingleValue(rs.getFloat("mesuredQuantity"), "ng");
 
 		container.fromExperimentTypeCodes=InstanceHelpers.addCode(experimentTypeCode, container.fromExperimentTypeCodes);
-		
+
+		container.projectCodes=new ArrayList<String>();					
+
 		if(rs.getString("project")!=null)
-		{
-			container.projectCodes=new ArrayList<String>();					
+		{					
 			container.projectCodes.add(rs.getString("project"));
 		}
 		
@@ -97,24 +94,23 @@ public class ContainerHelper {
 			container.properties.put("controlLane",new PropertySingleValue(rs.getBoolean("controlLane")));
 		}
 			
-		
+
+		container.sampleCodes=new ArrayList<String>();
+
 		if(rs.getString("sampleCode")!=null){
-			Content content = new Content();
-			content.sampleUsed=new SampleUsed();
-			content.sampleUsed.sampleCode=rs.getString("sampleCode");
-			container.contents=new ArrayList<Content>();
-			container.contents.add(content);
+			
+			Content sampleUsed=new Content();
+			sampleUsed.sampleCode=rs.getString("sampleCode");
+			
 			//Todo replace by method in containerHelper who update sampleCodes from contents
-			container.sampleCodes=new ArrayList<String>();
 			container.sampleCodes.add(rs.getString("sampleCode"));
 
-
 			if(rs.getString("tag")!=null){
-				content.properties = new HashMap<String, PropertyValue>();
-				content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
-				content.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagCategory")));
-
+				sampleUsed.properties = new HashMap<String, PropertyValue>();
+				sampleUsed.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+				sampleUsed.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagCategory")));
 			}
+			container.contents.add(sampleUsed);
 
 		}
 		return container;
@@ -127,28 +123,23 @@ public class ContainerHelper {
 	
 	public static void addContent(Container container,Sample sample,Map<String,PropertyValue> properties) throws DAOException{
 
-		//Create new content
-		if(container.contents==null){
-			container.contents=new ArrayList<Content>();
-		}
-
-		Content content = new Content(new SampleUsed(sample.code, sample.typeCode, sample.categoryCode));
+		Content sampleUsed =new Content(sample.code, sample.typeCode, sample.categoryCode);
 
 		SampleType sampleType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
 		ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
 
 		if(importType !=null){
 
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,content.properties);
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,sampleUsed.properties);
 		}
 		if(sampleType !=null){
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,content.properties);
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,sampleUsed.properties);
 		}
 
 		if(properties!=null)
-			content.properties.putAll(properties);
+			sampleUsed.properties.putAll(properties);
 		
-		container.contents.add(content);
+		container.contents.add(sampleUsed);
 
 		container.projectCodes=InstanceHelpers.addCodesList(sample.projectCodes,container.projectCodes);
 
@@ -158,9 +149,7 @@ public class ContainerHelper {
 
 
 	public static void addContent(Container inputContainer, Container outputContainer , Experiment experiment) {
-		if(outputContainer.contents==null){
-			outputContainer.contents=new ArrayList<Content>();
-		}
+		
 		//Copy all properties
 		outputContainer.contents.addAll(inputContainer.contents);
 		outputContainer.projectCodes=InstanceHelpers.addCodesList(inputContainer.projectCodes,outputContainer.projectCodes);
@@ -188,7 +177,7 @@ public class ContainerHelper {
 		}else{
 			//TODO 
 			LocationOnContainerSupport containerSupport=new LocationOnContainerSupport();
-			containerSupport.supportCode=getSupportCode(experiment.instrument.outContainerSupportCategoryCode);	
+			containerSupport.code=getSupportCode(experiment.instrument.outContainerSupportCategoryCode);	
 			containerSupport.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
 			containerSupport.column="?";
 			containerSupport.line="?";

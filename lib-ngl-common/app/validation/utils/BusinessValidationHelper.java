@@ -190,7 +190,7 @@ public class BusinessValidationHelper {
 	/**
 	 * Validate if list is not null and code exist
 	 * @param errors
-	 * @param code
+	 * @param sampleCode
 	 * @param key
 	 * @param type
 	 * @param collectionName
@@ -214,7 +214,7 @@ public class BusinessValidationHelper {
 	/**
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
-	 * @param code
+	 * @param sampleCode
 	 * @param key
 	 * @param type
 	 * @param collectionName

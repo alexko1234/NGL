@@ -20,10 +20,10 @@ public class ContainerSupportValidationHelper extends CommonValidationHelper{
 		if(contextValidation.isCreationMode()){
 			Query query=DBQuery.and(DBQuery.is("support.line",containerSupport.line),
 					DBQuery.is("support.column", containerSupport.column),
-					DBQuery.is("support.supportCode",containerSupport.supportCode));
+					DBQuery.is("support.code",containerSupport.code));
 			if (MongoDBDAO.getCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class).count(query)!=0 ) {
 				//TODO revoir le message d'erreur
-				contextValidation.addErrors("supportCode.line.column", ValidationConstants.ERROR_NOTUNIQUE_MSG, containerSupport.supportCode,containerSupport.line,containerSupport.column);		
+				contextValidation.addErrors("supportCode.line.column", ValidationConstants.ERROR_NOTUNIQUE_MSG, containerSupport.code,containerSupport.line,containerSupport.column);		
 			}
 		}
 	}

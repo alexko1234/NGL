@@ -9,7 +9,6 @@ import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.Content;
-import models.laboratory.container.instance.SampleUsed;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
@@ -19,17 +18,14 @@ import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fr.cea.ig.MongoDBDAO;
-
-import play.test.Helpers;
 import utils.AbstractTests;
 import validation.ContextValidation;
 import validation.container.instance.ContainerSupportValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
+import fr.cea.ig.MongoDBDAO;
 
 public class ContainerValidationHelperTest extends AbstractTests {
 
@@ -47,8 +43,8 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	
 	static SampleType sampleType;
 	
-	static Content content;
-	static Content content1;
+	static Content sampleUsed;
+	static Content sampleUsed1;
 
 	static LocationOnContainerSupport containerSupport;
 
@@ -77,11 +73,11 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		sample1.typeCode=sampleType.code;
 		sample1.categoryCode=sampleType.category.code;
 				
-		content=new Content(new SampleUsed(sample.code,sample.typeCode,sample.categoryCode));
-		content1=new Content(new SampleUsed(sample1.code,sample1.typeCode, sample1.categoryCode));
+		sampleUsed=new Content(sample.code,sample.typeCode,sample.categoryCode);
+		sampleUsed1=new Content(sample1.code,sample1.typeCode, sample1.categoryCode);
 		
 		containerSupport=new LocationOnContainerSupport();
-		containerSupport.supportCode="test";
+		containerSupport.code="test";
 		containerSupport.categoryCode=ContainerSupportCategory.find.findAll().get(0).code;
 		containerSupport.line="1";
 		containerSupport.column="1";
@@ -187,9 +183,9 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validationContentTest(){
 		ContextValidation contextValidation=new ContextValidation();
-		List<Content> localContents=new ArrayList<Content>();
-		localContents.add(content);
-		localContents.add(content1);
+		List<Content> localContents=new ArrayList<Content>(); 
+		localContents.add(sampleUsed);
+		localContents.add(sampleUsed1);
 		ContainerValidationHelper.validateContents(localContents, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
@@ -207,9 +203,9 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	public void validationContentSampleUsedTest(){
 		ContextValidation contextValidation=new ContextValidation();
 		List<Content> localContents=new ArrayList<Content>();
-		localContents.add(new Content());
+		localContents.add(new Content("","",""));
 		ContainerValidationHelper.validateContents(localContents, contextValidation);
-		assertThat(contextValidation.errors.size()).isEqualTo(1);
+		assertThat(contextValidation.errors.size()).isEqualTo(3);
 	}
 	
 
