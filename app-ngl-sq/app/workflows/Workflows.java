@@ -197,11 +197,11 @@ public class Workflows {
 		
 		if(experiment.stateCode.equals("N")){
 			state.code = "IP";
-			setExperimentState(experiment, state, contextValidation);
 		}else if(experiment.stateCode.equals("IP")){
 			state.code = "F";
-			setExperimentState(experiment, state, contextValidation);
 		}
+		
+		setExperimentState(experiment, state, contextValidation);
 	}
 
 	public static void nextInputContainerState(Experiment experiment,ContextValidation contextValidation){
@@ -347,7 +347,7 @@ public class Workflows {
 	public static void nextContainerState(Process process,
 			ContextValidation contextValidation) {
 		State nextState=new State();
-		if(process.state.code.equals("N")){
+		if(process.state.code != null && process.state.code.equals("N")){
 			nextState.code="A";
 		}
 
