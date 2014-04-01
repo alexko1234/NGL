@@ -23,8 +23,7 @@ GET		/api/description/processes				controllers.description.processes.Processes.s
 GET		/api/description/runs					controllers.description.runs.Runs.save()
 GET		/api/description/treatments				controllers.description.runs.Treatments.save()
 
-GET		/migrationtag							controllers.migration.MigrationTag.migration()
-GET		/migrationrefactoring					controllers.migration.MigrationStateValuationRefactoring.migration()
+GET		/migration								controllers.migration.MigrationContainer.migration()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               			controllers.Assets.at(path="/public", file)
