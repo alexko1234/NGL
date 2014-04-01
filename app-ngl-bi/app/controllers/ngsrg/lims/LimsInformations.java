@@ -39,7 +39,7 @@ public class LimsInformations  extends CommonController {
 	/**
 	 * Return the experiment information about the run that will be transfer
 	 * @param type
-	 * @param supportCode
+	 * @param code
 	 * @return
 	 */
 	//@Permission(value={"read_generation"})

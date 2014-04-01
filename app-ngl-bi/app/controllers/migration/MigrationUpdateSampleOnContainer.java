@@ -1,15 +1,8 @@
 package controllers.migration;		
 
-import java.util.Date;
 import java.util.List;
 
-import com.mongodb.BasicDBObject;
-
-import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.Content;
-import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.SampleOnContainer;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -20,7 +13,6 @@ import play.Logger;
 import play.mvc.Result;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 
 /**
  * Update SampleOnContainer on ReadSet

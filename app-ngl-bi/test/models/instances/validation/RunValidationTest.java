@@ -60,7 +60,7 @@ public class RunValidationTest extends AbstractTests {
 		
 	   		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 			for (Container container : containers) {
-				if (container.support.supportCode.equals("containerName")) {
+				if (container.support.code.equals("containerName")) {
 					MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
 				}
 			}   
@@ -81,7 +81,7 @@ public class RunValidationTest extends AbstractTests {
 		   Container c = new Container();
 		   c.code ="containerTest1";
 		   c.support = new LocationOnContainerSupport(); 
-		   c.support.supportCode = "containerName"; 
+		   c.support.code = "containerName"; 
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
 		   
@@ -111,7 +111,7 @@ public class RunValidationTest extends AbstractTests {
 	public static void deleteData(){
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 		for (Container container : containers) {
-			if (container.support.supportCode.equals("containerName")) {
+			if (container.support.code.equals("containerName")) {
 				MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
 			}
 		}
@@ -183,7 +183,7 @@ public class RunValidationTest extends AbstractTests {
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 
-			 Container c = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.supportCode","containerName"));
+			 Container c = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code","containerName"));
 			 if (c != null) {
 				 assertThat(ctxVal.errors).hasSize(0);
 			 }
@@ -243,7 +243,7 @@ public class RunValidationTest extends AbstractTests {
 			 
 	        run.validate(ctxVal3);
 	        
-			 Container c = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.supportCode","containerName"));
+			 Container c = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code","containerName"));
 			 if (c != null) {
 				 assertThat(ctxVal3.errors).hasSize(0);
 			 }

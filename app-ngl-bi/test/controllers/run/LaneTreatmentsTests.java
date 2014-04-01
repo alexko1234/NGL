@@ -45,7 +45,7 @@ public class LaneTreatmentsTests extends AbstractTests {
 		   Container c = new Container();
 		   c.code ="containerTest1";
 		   c.support = new LocationOnContainerSupport(); 
-		   c.support.supportCode = "containerName"; 
+		   c.support.code = "containerName"; 
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
 	}
