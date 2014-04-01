@@ -782,7 +782,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 		if(experiment == ""){
 			$scope.basket = $scope.getBasket().get();
 			var containers = [];//container list for the datatable
-			var promises = [];//promise for loading everithing after the data was set to datatable
+			var promises = [];//promise for loading everything after the data was set to datatable
 			for (var i=0;i<$scope.basket.length;i++) {
 				var promise = $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{supportCode:$scope.basket[i].code}})
 				.success(function(data, status, headers, config) {

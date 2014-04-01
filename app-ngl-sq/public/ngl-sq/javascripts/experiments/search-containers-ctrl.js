@@ -32,7 +32,8 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 			"header":Messages("containers.table.stateCode"), 
 			"property":"state.code", 
 			"order":true,
-			"type":"text"
+			"type":"text",
+			"filter":"codes:'state'"
 		}],	
 		search:{
 			url:jsRoutes.controllers.supports.api.Supports.list()
@@ -79,8 +80,6 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 		}else if($scope.form.experimentCategory){
 			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code}, true);
 		}
-		
-		this.search();
 	};
 	
 	$scope.refreshSamples = function(){

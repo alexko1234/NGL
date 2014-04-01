@@ -69,6 +69,7 @@ processes.table.properties.objFragm = Objectif fragmentation
 processes.table.properties.objSize = Objectif taille banque finale
 processes.table.properties.imputationCat = Catégorie imputation
 processes.table.properties.dateLimite = Date limite fin processus
+processes.table.properties.mapcardType = Type de mapcard
 processes.table.properties.indexing = Type indexing
 processes.table.supportCode = Code support container
 processes.table.line = Position(x)
@@ -125,7 +126,7 @@ experiments.select.intrumentUsedType = Sélect. un Type d''instrument
 experiments.select.intrumentCategory = Sélect. un Type de contenant
 experiments.select.experimentTypeCode = Sélect. un Type d''experiences
 
-experiments.table.code = Code
+experiments.table.code = Code experience
 experiments.table.projectCodes = Code Projets
 experiments.table.volume.value = Volume
 experiments.table.sampleCodes = Code échantillons

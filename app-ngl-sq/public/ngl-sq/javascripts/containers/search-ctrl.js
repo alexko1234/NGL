@@ -58,6 +58,9 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 				"property":"state.code",
 				"order":true,
 				"type":"text",
+				"edit":true,
+				"choiceInList": true,
+				"possibleValues":'lists.getStates()',
 				"filter":"codes:'state'"
 			},
 			{
@@ -72,6 +75,16 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 		},
 		order:{
 			by:'code'
+		},
+		edit:{
+			active:true,
+			columnMode:true
+		},
+		save:{
+			active:true,
+			url:jsRoutes.controllers.containers.api.Containers.updateBatch().url,
+			batch:true,
+			method:'put'
 		}
 	};
 	

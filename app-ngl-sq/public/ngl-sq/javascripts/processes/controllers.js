@@ -28,17 +28,17 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 			},
 			{
 				"header":Messages("containers.table.valid"),
-				"property":"valid",
+				"property":"valuation.valid",
 				"order":true,
-				"hide":true,
 				"type":"text"
 			},
 			{
 				"header":Messages("containers.table.state.code"),
-				"property":"stateCode",
+				"property":"state.code",
 				"order":true,
 				"hide":true,
-				"type":"text"
+				"type":"text",
+				"filter":"codes:'state'"
 			},
 			{
 				"header":Messages("containers.table.categoryCode"),
@@ -49,7 +49,7 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 			},
 			{
 				"header":Messages("containers.table.fromExperimentTypeCodes"),
-				"property":"typeCode",
+				"property":"fromExperimentTypeCodes",
 				"order":true,
 				"hide":true,
 				"type":"text"

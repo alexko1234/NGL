@@ -16,6 +16,8 @@ GET		/api/containers/supports										controllers.containers.api.Containers.lis
 GET		/api/containers/container-support-categories  					controllers.containers.api.ContainerSupportCategories.list()
 GET		/api/containers/categories										controllers.containers.api.ContainerCategories.list()
 GET		/api/containers/:code											controllers.containers.api.Containers.get(code:java.lang.String)
+PUT		/api/containers/batch											controllers.containers.api.Containers.updateBatch()
+PUT		/api/containers/:code											controllers.containers.api.Containers.update(code:java.lang.String)
 
 #supports api
 GET		/api/supports													controllers.supports.api.Supports.list()
@@ -58,6 +60,7 @@ PUT		/api/experiments/:code/instrument-properties					controllers.experiments.ap
 PUT		/api/experiments/:code/comment									controllers.experiments.api.Experiments.updateComments(code:java.lang.String)
 PUT		/api/experiments/:code/generate-output							controllers.experiments.api.Experiments.generateOutput(code:java.lang.String)
 PUT		/api/experiments/:code/state/:state								controllers.experiments.api.Experiments.updateStateCode(code:java.lang.String,state:java.lang.String)
+PUT		/api/experiments/:code/state									controllers.experiments.api.Experiments.nextState(code:java.lang.String)
 PUT		/api/experiments/:code/containers								controllers.experiments.api.Experiments.updateContainers(code:java.lang.String)
 POST	/api/experiments/:experimentTypeCode							controllers.experiments.api.Experiments.save(experimentTypeCode:java.lang.String)
 GET		/api/experiment/categories										controllers.experiments.api.ExperimentCategories.list()

@@ -3,9 +3,11 @@ package controllers.containers.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import models.laboratory.common.instance.State;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
@@ -22,7 +24,10 @@ import play.data.Form;
 import play.libs.Json;
 import play.modules.mongodb.jackson.MongoDB;
 import play.mvc.Result;
+import validation.ContextValidation;
+import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
+import workflows.Workflows;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -32,8 +37,10 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 public class Containers extends CommonController {
-
+	
+	final static Form<Container> containersForm = form(Container.class);
 	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
+	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
 
 	public static Result get(String code){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code);
@@ -44,6 +51,52 @@ public class Containers extends CommonController {
 		return badRequest();
 	}
 
+	public static Result updateBatch(){
+		List<Form<ContainerBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerBatchElement.class);
+		
+		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
+		
+		for(Form<ContainerBatchElement> filledForm: filledForms){
+			ContainerBatchElement element = filledForm.get();
+			Container container = findContainer(element.data.code);
+			if(null != container){
+				State state = element.data.state;
+				state.date = new Date();
+				state.user = getCurrentUser();
+				ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+				Workflows.setContainerState(container.code, state, ctxVal);
+				if (!ctxVal.hasErrors()) {
+					response.add(new DatatableBatchResponseElement(OK,  findContainer(element.data.code), element.index));
+				}else {
+					response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index));
+				}
+			}else {
+				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
+			}
+			
+		}		
+		return ok(Json.toJson(response));
+	}
+	
+	private static Container findContainer(String containerCode){
+		return  MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",containerCode));
+	}
+	
+	public static Result update(String containerCode){
+		if(MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", containerCode))){
+			Form<Container> containerFilledForm = getFilledForm(containersForm,Container.class);
+			
+			if(!containerFilledForm.hasErrors()){
+				Container container = containerFilledForm.get();
+				if(container.code.equals(containerCode)){
+					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);
+					return ok(Json.toJson(container));
+				}
+			}
+		}
+		return badRequest();
+	}
+	
 	public static Result list() throws DAOException{
 		Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
 		ContainersSearchForm containersSearch = containerFilledForm.get();

@@ -5,7 +5,7 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 	$scope.datatableConfig = {	
 			columns:[
 			{
-				"header":Messages("containers.table.code"),
+				"header":Messages("experiments.table.code"),
 				"property":"code",
 				"order":true,
 				"hide":true,
@@ -19,13 +19,6 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 				"type":"text"
 			},
 			{
-				"header":Messages("experiments.table.volume.value"),
-				"property":"mesuredVolume.value",
-				"order":true,
-				"hide":true,
-				"type":"text"
-			},
-			{
 				"header":Messages("containers.table.sampleCodes"),
 				"property":"sampleCodes",
 				"order":true,
@@ -33,7 +26,7 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 				"type":"text"
 			},
 			{
-				"header":Messages("containers.table.valuation.valid"),
+				"header":Messages("containers.table.valid"),
 				"property":"valuation.valid",
 				"order":true,
 				"hide":true,
@@ -41,16 +34,14 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 			},
 			{
 				"header":Messages("containers.table.state.code"),
-				"property":"state.code",
+				"property":"stateCode",
 				"order":true,
 				"type":"text",
 				"hide":true,
-				 render:function(value){
-					return Codes("state."+value.state.code);
-				},
+				"filter":"codes:'state'"
 			},
 			{
-				"header":Messages("containers.table.categoryCode"),
+				"header":Messages("experiments.table.categoryCode"),
 				"property":"categoryCode",
 				"order":true,
 				"hide":true,
