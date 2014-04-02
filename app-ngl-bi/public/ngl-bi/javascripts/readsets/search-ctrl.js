@@ -345,6 +345,8 @@ function SearchValuationCtrl($scope, $http, datatable, lists, $routeParams) {
 			//	});
 			
 			
+		}else{
+			$scope.datatable = $scope.getDatatable();
 		}
 		
 		
