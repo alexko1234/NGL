@@ -148,7 +148,7 @@ public class Workflows {
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,  Run.class, 
 						DBQuery.is("code", experiment.code),
 						//DBUpdate.set("state", experiment.state).set("traceInformation",experiment.traceInformation));
-						DBUpdate.set("stateCode", experiment.state).set("traceInformation",experiment.traceInformation));
+						DBUpdate.set("state", experiment.state).set("traceInformation",experiment.traceInformation));
 			}
 
 			nextInputContainerState(experiment, ctxValidation);
