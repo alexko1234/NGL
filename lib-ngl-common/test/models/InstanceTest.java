@@ -18,27 +18,26 @@ import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
-import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.OneToOneContainer;
-import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.project.instance.Project;
-import models.laboratory.sample.description.SampleCategory;
+import models.laboratory.run.instance.Run;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
-import models.utils.DescriptionHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBUpdate;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -75,7 +74,7 @@ public class InstanceTest extends AbstractTests{
 	public static  void initData() throws DAOException {
 			//ExperimentType
 			sexpExperimentType=ExperimentType.find.findAll().get(0);
-
+			
 	}	
 
 
@@ -252,7 +251,8 @@ public class InstanceTest extends AbstractTests{
 		experiment.instrument.categoryCode="instrumentCategory";
 		experiment.instrument.code="instrumentCode";
 
-		experiment.state.code="N";
+		State state=new State("N","test");
+		experiment.state=state;
 		experiment.state.resolutionCodes=new ArrayList<String>();
 		experiment.state.resolutionCodes.add("ResolutionCode");
 
@@ -274,16 +274,18 @@ public class InstanceTest extends AbstractTests{
 			experiment.atomicTransfertMethods.put(i,oneToOneContainer);
 		}
 		
-		Logger.debug("Save Experiment");
 		Experiment newExperiment=MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiment);
-
+		
 		assertThat(newExperiment.code).isEqualTo(experiment.code);
-		assertThat(newExperiment.state.code).isEqualTo(experiment.state.code);
+		//assertThat(newExperiment.state.code).isEqualTo(state.code);
 		assertThat(experiment.state.resolutionCodes.get(0)).isEqualTo(experiment.state.resolutionCodes.get(0));
+		
+		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code",experiment.code),DBUpdate.set("state",state));
+		newExperiment=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class,experiment.code);
+		
+		assertThat(newExperiment.code).isEqualTo(experiment.code);
+		assertThat(newExperiment.state.code).isEqualTo(state.code);
 	}
-
-
-
 
 	////@Test
 	public void removeInstanceMongo(){

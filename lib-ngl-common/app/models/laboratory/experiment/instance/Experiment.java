@@ -21,6 +21,7 @@ import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import validation.ContextValidation;
 import validation.IValidation;
@@ -41,82 +42,41 @@ import fr.cea.ig.DBObject;
 @MongoCollection(name="Experiment")
 public class Experiment extends DBObject implements IValidation {
 	
-	// ExperimentType
+
 	public String typeCode;
 	public String categoryCode;
-	// Informations
+	
 	public TraceInformation traceInformation;
 	public Map<String,PropertyValue> experimentProperties;
 	public Map<String, PropertyValue> instrumentProperties;
 	
 	public InstrumentUsed instrument;
 	public String protocolCode;
-	
-	// States
+
 	public State state;
 	
-	//TODO delete class InputOutputContainer
-	//public List<InputOutputContainer> listInputOutputContainers;
-	
-	//Idea for replace listInputOutputContainers attribut
 	public Map<Integer,AtomicTransfertMethod> atomicTransfertMethods; 
 	
 	public List<ReagentUsed> reagentsUsed;
 	
 	public List<Comment> comments;
 	
-	// For search optimisation
-	//Projects ref
 	public List<String> projectCodes;
-	//Samples ref
+	
 	public List<String> sampleCodes;
 	
 	public Experiment(){
 		traceInformation=new TraceInformation();
+		state=new State();
 	}
 	
 	public Experiment(String code){
 		this.code=code;
 		traceInformation=new TraceInformation();
+		state=new State();
 	}
 	
 	@JsonIgnore
-	public ExperimentType getExperimentType(){
-		return new HelperObjects<ExperimentType>().getObject(ExperimentType.class, typeCode);
-	}
-
-	@JsonIgnore
-	public ExperimentCategory getExperimentCategory(){
-		return new HelperObjects<ExperimentCategory>().getObject(ExperimentCategory.class, categoryCode);
-	}
-
-	
-	@JsonIgnore
-	public List<Sample> getSamples(){
-		return new HelperObjects<Sample>().getObjects(Sample.class, sampleCodes);
-	}
-	
-	@JsonIgnore
-	public List<Project> getProjects(){
-		return new HelperObjects<Project>().getObjects(Project.class, projectCodes);
-	}
-	
-	
-	@JsonIgnore
-	public Protocol getProtocol(){
-		return new HelperObjects<Protocol>().getObject(Protocol.class, protocolCode);
-	}
-	
-	@JsonIgnore
-	public State getState(){
-		return new HelperObjects<State>().getObject(State.class, state.code);
-	}
-	
-	@JsonIgnore
-	public List<Resolution> getResolution(){
-		return new HelperObjects<Resolution>().getObjects(Resolution.class, state.resolutionCodes);
-	}
-
 	public List<ContainerUsed> getAllInPutContainer(){
 		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
 		if(this.atomicTransfertMethods!=null){
