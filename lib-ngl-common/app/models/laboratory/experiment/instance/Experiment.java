@@ -114,7 +114,7 @@ public class Experiment extends DBObject implements IValidation {
 	
 	@JsonIgnore
 	public List<Resolution> getResolution(){
-		return new HelperObjects<Resolution>().getObjects(Resolution.class, resolutionCodes);
+		return new HelperObjects<Resolution>().getObjects(Resolution.class, state.resolutionCodes);
 	}
 
 	public List<ContainerUsed> getAllInPutContainer(){
@@ -136,7 +136,7 @@ public class Experiment extends DBObject implements IValidation {
 //		ExperimentValidationHelper.validateState(this.typeCode, this.state, contextValidation);
 		ExperimentValidationHelper.validationExperimentType(typeCode, experimentProperties, contextValidation);
 		ExperimentValidationHelper.validationExperimentCategoryCode(categoryCode, contextValidation);
-		ExperimentValidationHelper.validateResolutionCodes(resolutionCodes,contextValidation);
+		ExperimentValidationHelper.validateResolutionCodes(state.resolutionCodes,contextValidation);
 		ExperimentValidationHelper.validationProtocol(typeCode,protocolCode,contextValidation);
 		ExperimentValidationHelper.validateInstrumentUsed(typeCode,instrument,instrumentProperties,contextValidation);
 		ExperimentValidationHelper.validateAtomicTransfertMethodes(atomicTransfertMethods,contextValidation);

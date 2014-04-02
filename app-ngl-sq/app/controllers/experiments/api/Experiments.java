@@ -60,7 +60,7 @@ public class Experiments extends CommonController{
 
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("typeCode",exp.typeCode);
-			builder=builder.set("resolutionCodes",exp.resolutionCodes);
+			builder=builder.set("resolutionCodes",exp.state.resolutionCodes);
 			builder=builder.set("protocolCode",exp.protocolCode);
 
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
@@ -241,7 +241,7 @@ public class Experiments extends CommonController{
 	 * @return the created experiment
 	 * @throws DAOException 
 	 */
-	public static Result save(){
+	public static Result save() throws DAOException{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
@@ -252,12 +252,7 @@ public class Experiments extends CommonController{
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
 		if (!experimentFilledForm.hasErrors()) {
-			try {
-				exp=ExperimentHelper.updateInstrumentCategory(exp);
-			} catch (DAOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			//exp=ExperimentHelper.updateInstrumentCategory(exp);
 			//exp = (Experiment) InstanceHelpers.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp, new ContextValidation(experimentFilledForm.errors()));
 			exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 		}

@@ -65,7 +65,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	
 	public static void validateNewState(Experiment experiment,
 			ContextValidation contextValidation){
-		ExperimentValidationHelper.validateResolutionCodes(experiment.typeCode,experiment.resolutionCodes,contextValidation);
+		ExperimentValidationHelper.validateResolutionCodes(experiment.typeCode,experiment.state.resolutionCodes,contextValidation);
 		ExperimentValidationHelper.validationProtocol(experiment.typeCode,experiment.protocolCode,contextValidation);
 		//Validation InstrumentUsedType
 		ExperimentValidationHelper.validateInstrumentUsed(experiment.typeCode,experiment.instrument,experiment.instrumentProperties,contextValidation);
