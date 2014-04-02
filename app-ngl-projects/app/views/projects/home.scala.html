@@ -1,0 +1,8 @@
+@(code: String)
+
+@scripts() = {
+	 <script src="@controllers.projects.tpl.routes.Projects.javascriptRoutes" type="text/javascript" charset="utf-8"></script>
+}
+
+@views.html.main("projects.page.title", menu("projects."+code), scripts)
+

@@ -1,0 +1,19 @@
+@()
+
+@import play.mvc.Http.Context
+
+@scripts() = {
+	<script src="@controllers.projects.tpl.routes.Projects.javascriptRoutes" type="text/javascript" charset="utf-8"></script>
+}
+
+@views.html.main("home.page.title", menu("home"), scripts) {
+ <div  class="row">
+  <div class="col-md-12 col-lg-12">
+  	<div class="jumbotron">
+   		<h1>test</h1>
+    	<p>comment</p> 
+   	</div>
+  </div>
+ </div>
+}
+ 
