@@ -44,7 +44,7 @@ public class DescriptionHelper {
 
 	static List<String> institute;
 
-
+	/*
 	public static PropertyDefinition getPropertyDefinition(String keyCode, String keyName, Boolean required, Boolean active, Boolean choiceInList,
 			List<Value> possiblesValues , Class<?> type, String description, String  displayFormat, int displayOrder
 			,boolean propagation, String inOut, String defaultValue 
@@ -403,7 +403,7 @@ public class DescriptionHelper {
 		ins.code=name;
 		ins.name=name;
 		return ins;
-	}
+	}*/
 	
 	public static void initInstitute(){
 		institute=null;
@@ -425,4 +425,5 @@ public class DescriptionHelper {
 		}
 		return institute;
 	}
+	
 }

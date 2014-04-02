@@ -16,8 +16,8 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.Content;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
@@ -38,9 +38,11 @@ import models.utils.DescriptionHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import play.Logger;
 import play.data.validation.ValidationError;
@@ -65,104 +67,14 @@ public class InstanceTest extends AbstractTests{
 	static Resolution sResolution;
 
 	@AfterClass
-	public static  void deleteData() throws DAOException, InstantiationException,
-	IllegalAccessException, ClassNotFoundException{
-		try {
-
-		/*	for(Class t:classTest){
-				MongoDBDAO.getCollection(t.getSimpleName(), t).drop();
-			}*/
-			ProjectCategory projectCategory= sProjectType.category;
-			sProjectType.remove();
-			projectCategory.remove();
-
-			SampleCategory sampleCategory=sSampleType.category;
-			sSampleType.remove();
-			sampleCategory.remove();
-
-			ExperimentCategory experimentCategory=sexpExperimentType.category;
-			sexpExperimentType.remove();
-			experimentCategory.remove();
-
-			for (Instrument i :sIntrumentUsedType.instruments){
-				i.remove();
-			}
-			sIntrumentUsedType.remove();
-
-			sState.remove();
-			sResolution.remove();
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-
+	public static  void deleteData() {
+		
 	}
 
 	@BeforeClass
-	public static  void initData() throws DAOException, InstantiationException,
-			IllegalAccessException, ClassNotFoundException {
-
-		try {
-
-			//ProjectType
-			sProjectType=ProjectType.find.findByCode("projectType");
-			if(sProjectType==null){
-				sProjectType=DescriptionHelper.getProjectType("projectType","projectType", "categoryProject",null);
-				sProjectType.save();
-			}		
-			sProjectType=ProjectType.find.findByCode(sProjectType.code);
-
-
-			//SampleType
-			sSampleType=SampleType.find.findByCode("sampleType");
-			if(sSampleType==null){
-				sSampleType=DescriptionHelper.getSampleType("sampleType","sampleType", "sampleCategory",null);
-				sSampleType.save();
-			}		
-			sSampleType=SampleType.find.findByCode(sSampleType.code);
-
+	public static  void initData() throws DAOException {
 			//ExperimentType
-			sexpExperimentType=ExperimentType.find.findByCode("experimentType");
-			if(sexpExperimentType==null){
-				sexpExperimentType=DescriptionHelper.getExperimentType("experimentType", "experimentName", "experimentCategory", null);
-				sexpExperimentType.save();
-			}
-			sexpExperimentType=ExperimentType.find.findByCode("experimentType");
-
-			//Instrument
-			sIntrumentUsedType=InstrumentUsedType.find.findByCode("instrumentUsedType");
-			if(sIntrumentUsedType==null){
-				sIntrumentUsedType=DescriptionHelper.getInstrumentUsedType("instrumentUsedType","instrumentCode","instrumentCategory",null);
-				sIntrumentUsedType.save();
-			}
-			sIntrumentUsedType=InstrumentUsedType.find.findByCode("instrumentUsedType");
-
-			//Container category
-			sContainerCategory=ContainerCategory.find.findByCode("containerCategory");
-			if(sContainerCategory==null){
-				sContainerCategory=DescriptionHelper.getCategory(ContainerCategory.class, "containerCategory");
-				sContainerCategory.save();
-			}
-			sContainerCategory=ContainerCategory.find.findByCode("containerCategory");
-
-			sState = models.laboratory.common.description.State.find.findByCode("Etatcontainer");
-			if(sState==null){
-				sState=DescriptionHelper.getState("Etatcontainer");
-				sState.save();
-				sState = models.laboratory.common.description.State.find.findByCode("Etatcontainer");
-			}
-
-			sResolution=Resolution.find.findByCode("Resolutioncontainer");
-			if(sResolution==null){
-				sResolution=DescriptionHelper.getResolution("Resolutioncontainer");
-				sResolution.save();
-				Resolution.find.findByCode("Resolutioncontainer");
-			}
-
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-		}
+			sexpExperimentType=ExperimentType.find.findAll().get(0);
 
 	}	
 
@@ -320,10 +232,13 @@ public class InstanceTest extends AbstractTests{
 	}
 
 
-	//@Test
+	@Test
 	public void updateExperience(){
-		Experiment experiment=findObject(Experiment.class);
+		MongoDBDAO.delete(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", "ExperimentCode"));
 
+		Experiment experiment=new Experiment();
+		
+		experiment.code="ExperimentCode";
 		experiment.typeCode="experimentType";
 		experiment.categoryCode="experimentCategory";
 
@@ -337,8 +252,9 @@ public class InstanceTest extends AbstractTests{
 		experiment.instrument.categoryCode="instrumentCategory";
 		experiment.instrument.code="instrumentCode";
 
-		experiment.state="New";
-		experiment.resolutionCodes.add("ResolutionexperimentType");
+		experiment.state.code="N";
+		experiment.state.resolutionCodes=new ArrayList<String>();
+		experiment.state.resolutionCodes.add("ResolutionCode");
 
 		//TODO
 		//public Map<String,PropertyValue> experimentProperties;
@@ -359,33 +275,11 @@ public class InstanceTest extends AbstractTests{
 		}
 		
 		Logger.debug("Save Experiment");
-		Experiment newExperiment=MongoDBDAO.save(Experiment.class.getSimpleName(), experiment);
+		Experiment newExperiment=MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiment);
 
-		assertThat(newExperiment.code).isEqualTo("ExperimentCode");
-/*		assertThat(newExperiment.comments.get(0).comment).isEqualTo("comment");
-		assertThat(newExperiment.traceInformation.createUser).isEqualTo("test");
-		assertThat(newExperiment.getExperimentCategory()).isNotNull();
-		assertThat(newExperiment.getExperimentCategory().code).isEqualTo("experimentCategory");
-		assertThat(newExperiment.getExperimentType()).isNotNull();
-		assertThat(newExperiment.getExperimentType().code).isEqualTo("experimentType");
-		assertThat(newExperiment.getProjects()).isNotEmpty();
-		assertThat(newExperiment.getProjects().get(0).code).isEqualTo("ProjectCode");
-
-		assertThat(newExperiment.instrument.code).isEqualTo("instrumentCode");
-		assertThat(newExperiment.instrument.categoryCode).isEqualTo("instrumentCategory");
-		assertThat(newExperiment.getState().code).isEqualTo("New");
-		assertThat(newExperiment.getResolution()).isNotNull();
-		assertThat(newExperiment.getResolution().code).isEqualTo("ResolutionexperimentType");
-
-		assertThat(newExperiment.sampleCodes).isNotEmpty();
-		assertThat(newExperiment.sampleCodes.get(0)).isEqualTo("SampleCode");
-
-		assertThat(newExperiment.listInputOutputContainers).isNotEmpty();
-		assertThat(newExperiment.listInputOutputContainers.get(0).inputContainers).isNotEmpty();
-		assertThat(newExperiment.listInputOutputContainers.get(0).outputContainers).isNotEmpty();
-		assertThat(newExperiment.listInputOutputContainers.get(0).inputContainers.get(0).containerCode).isEqualTo("ContainerCode");
-		assertThat(newExperiment.listInputOutputContainers.get(0).outputContainers.get(0).containerCode).isEqualTo("ContainerCode");
-*/
+		assertThat(newExperiment.code).isEqualTo(experiment.code);
+		assertThat(newExperiment.state.code).isEqualTo(experiment.state.code);
+		assertThat(experiment.state.resolutionCodes.get(0)).isEqualTo(experiment.state.resolutionCodes.get(0));
 	}
 
 
