@@ -1,0 +1,91 @@
+@()
+
+@import play.mvc.Http.Context
+
+@scripts() = {
+	 <script src="@controllers.runs.tpl.routes.Runs.javascriptRoutes" type="text/javascript" charset="utf-8"></script>
+     <script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script> 
+     <script src="@routes.Assets.at("ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script> 	 
+	 <script src="@routes.Assets.at("datatable/javascripts/services/datatable2.js")" type="text/javascript" charset="utf-8"></script>                           
+     <script src="@routes.Assets.at("ngl-bi/javascripts/commons/commons.js")" type="text/javascript" charset="utf-8"></script>                      
+     <script src="@routes.Assets.at("ngl-bi/javascripts/home/app.js")" type="text/javascript" charset="utf-8"></script>
+     <script src="@routes.Assets.at("ngl-bi/javascripts/home/search-ctrl.js")" type="text/javascript" charset="utf-8"></script>             
+}
+
+@views.html.main("home.title.name", menu("home"), scripts) {
+ <div  class="row">
+  <div class="col-md-12 col-lg-12">
+  	<div class="jumbotron">
+   		<h1>@Messages("home.h10.header", Context.current().request().username())</h1>
+    	<p>@Messages("home.p.comment")</p> 
+   	</div>
+  </div>
+ </div>
+ <div ng-controller="SearchCtrl" ng-init=init() ng-app="home">
+   <div  class="row">
+		<div class="col-md-6 col-lg-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="text-center">
+						<a href="@controllers.runs.tpl.routes.Runs.home("search")?stateCodes=IP-S">
+							<span class="label label-primary pull-right">{{runsIPS.totalNumberRecords}}</span>
+							@Messages("home.runs.ips")							
+						</a>
+					</h3>
+				</div>
+				<div class="panel-body">
+					<div datatable="runsIPS"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 col-lg-6">	
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="text-center">
+						<a href="@controllers.runs.tpl.routes.Runs.home("search")?stateCodes=IP-RG">
+							<span class="label label-primary pull-right">{{runsIPRG.totalNumberRecords}}</span>
+							@Messages("home.runs.iprg")						
+						</a>
+					</h3>
+				</div>
+				<div class="panel-body">
+					<div datatable="runsIPRG"></div>
+				</div>
+			</div>
+		</div>
+   	</div>
+   	<div class="row">
+		<div class="col-md-6 col-lg-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="text-center">
+						<a href="@controllers.runs.tpl.routes.Runs.home("valuation")">
+							<span class="label label-primary pull-right">{{runsIWV_IPV.totalNumberRecords}}</span>
+							@Messages("home.runs.iwpv")
+						</a>											
+					</h3>
+				</div>
+				<div class="panel-body">
+					<div datatable="runsIWV_IPV"></div>
+				</div>				
+			</div>
+		</div>
+		<div class="col-md-6 col-lg-6">	
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="text-center">
+						<a href="@controllers.runs.tpl.routes.Runs.home("search")?keep=true">
+							<span class="label label-primary pull-right">{{runsKeep.totalNumberRecords}}</span>
+							@Messages("home.runs.keep")
+						</a>												
+					</h3>					
+				</div>
+				<div class="panel-body">
+					<div datatable="runsKeep"></div>
+				</div>
+			</div>
+		</div>
+    </div>
+ </div>
+}
+ 

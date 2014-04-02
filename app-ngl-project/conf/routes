@@ -1,0 +1,165 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           				controllers.main.tpl.Main.home()
+
+#ngs-rg api
+#deprecated
+GET		/api/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
+GET		/api/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experiments()
+GET		/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: java.lang.String)
+HEAD	/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.isContainerSupport(barCode: java.lang.String)
+
+
+#run tpl
+GET	   	/runs/:homecode/home						controllers.runs.tpl.Runs.home(homecode: java.lang.String)
+GET	   	/runs/:code									controllers.runs.tpl.Runs.get(code: java.lang.String)
+GET	   	/runs/:code/valuation						controllers.runs.tpl.Runs.valuation(code: java.lang.String)
+GET		/tpl/runs/search/:type						controllers.runs.tpl.Runs.search(type: java.lang.String)
+GET		/tpl/runs/details							controllers.runs.tpl.Runs.details()
+GET		/tpl/runs/lanes/treatments/:code			controllers.runs.tpl.Runs.laneTreatments(code: java.lang.String)
+GET		/tpl/runs/js-routes							controllers.runs.tpl.Runs.javascriptRoutes()
+#run api
+GET    	/api/runs               					controllers.runs.api.Runs.list()
+GET    	/api/runs/:code               				controllers.runs.api.Runs.get(code: java.lang.String)
+HEAD	/api/runs/:code               				controllers.runs.api.Runs.head(code: java.lang.String)
+POST   	/api/runs									controllers.runs.api.Runs.save()
+PUT   	/api/runs/:code 							controllers.runs.api.Runs.update(code: java.lang.String)
+DELETE	/api/runs/:code								controllers.runs.api.Runs.delete(code:java.lang.String)
+
+PUT		/api/runs/batch/state						controllers.runs.api.State.updateBatch()
+PUT		/api/runs/:code/state						controllers.runs.api.State.update(code:java.lang.String)
+GET		/api/runs/:code/state						controllers.runs.api.State.get(code:java.lang.String)
+GET		/api/runs/:code/state/historical			controllers.runs.api.State.historical(code:java.lang.String)
+
+PUT		/api/runs/:code/valuation		 			controllers.runs.api.Runs.valuation(code:java.lang.String)
+PUT		/api/runs/:code/apply-rules/:codeRules		controllers.runs.api.Runs.applyRules(code:java.lang.String, codeRules:java.lang.String)
+
+GET    	/api/runs/:code/treatments					controllers.runs.api.RunTreatments.list(code: java.lang.String)
+GET    	/api/runs/:code/treatments/:trCode			controllers.runs.api.RunTreatments.get(code: java.lang.String, trCode: java.lang.String)
+HEAD   	/api/runs/:code/treatments/:trCode			controllers.runs.api.RunTreatments.head(code: java.lang.String, trCode: java.lang.String)
+POST   	/api/runs/:code/treatments					controllers.runs.api.RunTreatments.save(code: java.lang.String)
+PUT   	/api/runs/:code/treatments/:trCode			controllers.runs.api.RunTreatments.update(code: java.lang.String, trCode: java.lang.String)
+DELETE 	/api/runs/:code/treatments/:trCode			controllers.runs.api.RunTreatments.delete(code: java.lang.String, trCode: java.lang.String)
+
+#run lane
+GET	   	/api/runs/:code/lanes								controllers.runs.api.Lanes.list(code: java.lang.String)
+GET	   	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.get(code: java.lang.String, number:java.lang.Integer)
+HEAD   	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.head(code: java.lang.String, number:java.lang.Integer)
+POST  	/api/runs/:code/lanes								controllers.runs.api.Lanes.save(code: java.lang.String)
+PUT  	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.update(code: java.lang.String, number:java.lang.Integer)
+DELETE 	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.delete(code: java.lang.String, number:java.lang.Integer)
+DELETE	/api/runs/:code/lanes								controllers.runs.api.Lanes.deleteByRunCode(code: java.lang.String)
+PUT		/api/runs/:code/lanes/:number/valuation				controllers.runs.api.Lanes.valuation(code:java.lang.String, number:java.lang.Integer)
+
+GET		/api/runs/:code/lanes/:laneNumber/treatments				controllers.runs.api.LaneTreatments.list(code: java.lang.String, laneNumber:java.lang.Integer)
+GET		/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.api.LaneTreatments.get(code: java.lang.String, laneNumber:java.lang.Integer, trCode: java.lang.String)
+HEAD	/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.api.LaneTreatments.head(code: java.lang.String, laneNumber:java.lang.Integer, trCode: java.lang.String)
+POST	/api/runs/:code/lanes/:laneNumber/treatments				controllers.runs.api.LaneTreatments.save(code: java.lang.String, laneNumber:java.lang.Integer)
+PUT		/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.api.LaneTreatments.update(code: java.lang.String, laneNumber:java.lang.Integer, trCode: java.lang.String)
+DELETE	/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.api.LaneTreatments.delete(code: java.lang.String, laneNumber:java.lang.Integer, trCode: java.lang.String)
+
+#readset
+GET	   	/readsets/:homecode/home				controllers.readsets.tpl.ReadSets.home(homecode: java.lang.String)
+GET	   	/readsets/:code							controllers.readsets.tpl.ReadSets.get(code: java.lang.String)
+GET	   	/readsets/:code/valuation				controllers.readsets.tpl.ReadSets.valuation(code: java.lang.String)
+GET		/tpl/readsets/search/:type				controllers.readsets.tpl.ReadSets.search(type: java.lang.String)
+GET		/tpl/readsets/details					controllers.readsets.tpl.ReadSets.details()
+GET		/tpl/readsets/treatments/:code			controllers.readsets.tpl.ReadSets.treatments(code: java.lang.String)
+GET		/tpl/readsets/js-routes					controllers.readsets.tpl.ReadSets.javascriptRoutes()
+
+GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list()
+GET	   	/api/readsets/:code							controllers.readsets.api.ReadSets.get(code)
+HEAD   	/api/readsets/:code							controllers.readsets.api.ReadSets.head(code)
+POST 	/api/readsets								controllers.readsets.api.ReadSets.save()
+PUT    	/api/readsets/:code							controllers.readsets.api.ReadSets.update(code)
+DELETE	/api/readsets/:code							controllers.readsets.api.ReadSets.delete(code: java.lang.String)
+DELETE	/api/runs/:code/readsets					controllers.readsets.api.ReadSets.deleteByRunCode(code: java.lang.String)
+
+PUT		/api/readsets/batch/state					controllers.readsets.api.ReadSets.stateBatch()
+PUT		/api/readsets/:code/state					controllers.readsets.api.ReadSets.state(code:java.lang.String)
+PUT		/api/readsets/batch/valuation		 		controllers.readsets.api.ReadSets.valuationBatch()
+PUT		/api/readsets/:code/valuation		 		controllers.readsets.api.ReadSets.valuation(code:java.lang.String)
+PUT     /api/readsets/batch/properties				controllers.readsets.api.ReadSets.propertiesBatch()
+PUT     /api/readsets/:code/properties				controllers.readsets.api.ReadSets.properties(code: java.lang.String)
+
+GET		/api/readsets/:code/treatments				controllers.readsets.api.ReadSetTreatments.list(code: java.lang.String)
+GET		/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.get(code: java.lang.String, trCode: java.lang.String)
+HEAD	/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.head(code: java.lang.String, trCode: java.lang.String)
+POST	/api/readsets/:code/treatments				controllers.readsets.api.ReadSetTreatments.save(code: java.lang.String)
+PUT		/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.update(code: java.lang.String, trCode: java.lang.String)
+DELETE	/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.delete(code: java.lang.String, trCode: java.lang.String)
+
+#readset file
+GET     /api/readsets/:code/files									controllers.readsets.api.Files.list(code: java.lang.String)
+GET     /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.get(code: java.lang.String, fullname: java.lang.String)
+HEAD    /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.head(code: java.lang.String, fullname: java.lang.String)
+POST  	/api/readsets/:code/files									controllers.readsets.api.Files.save(code: java.lang.String)
+PUT     /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.update(code: java.lang.String, fullname: java.lang.String)
+DELETE  /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
+DELETE	/api/runs/:code/files										controllers.readsets.api.Files.deleteByRunCode(code: java.lang.String)
+PUT		/api/readsets/:code/files/:fullname/workflow/:stateCode		controllers.readsets.api.Files.workflow(code: java.lang.String, fullname: java.lang.String, stateCode:java.lang.String)
+
+
+#reporting configuration
+GET    	/api/reporting/config    	           			controllers.reporting.api.ReportingConfigurations.list()
+GET	   	/api/reporting/config/:code						controllers.reporting.api.ReportingConfigurations.get(code)
+POST 	/api/reporting/config								controllers.reporting.api.ReportingConfigurations.save()
+PUT    	/api/reporting/config/:code						controllers.reporting.api.ReportingConfigurations.update(code)
+DELETE	/api/reporting/config/:code						controllers.reporting.api.ReportingConfigurations.delete(code: java.lang.String)
+
+
+
+#archive tpl
+GET	   	/archives/:homecode/home					controllers.archives.tpl.ReadSets.home(homecode: java.lang.String)
+GET	   	/archives/:code								controllers.archives.tpl.ReadSets.get(code: java.lang.String)
+GET		/tpl/archives/search						controllers.archives.tpl.ReadSets.search()
+GET		/tpl/archives/js-routes						controllers.archives.tpl.ReadSets.javascriptRoutes()
+#archive api
+PUT	   	/api/archives/readsets/:readSetCode			controllers.archives.api.ReadSets.save(readSetCode: java.lang.String)
+GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list() 
+
+
+#treatmenttype
+GET		/api/treatment-types						controllers.treatmenttypes.api.TreatmentTypes.list()
+GET		/api/treatment-types/:code					controllers.treatmenttypes.api.TreatmentTypes.get(code: java.lang.String)
+
+#alerts
+GET    	/api/alerts			               			controllers.alerts.api.Alerts.list()
+GET    	/api/alerts/:code               			controllers.alerts.api.Alerts.get(code: java.lang.String)
+HEAD	/api/alerts/:code               			controllers.alerts.api.Alerts.head(code: java.lang.String)
+
+#migration
+GET		/migration									controllers.migration.MigrationUpdateSampleOnContainer.migration()
+
+
+#Common
+GET		/api/commons/states							controllers.commons.api.States.list()
+GET		/api/commons/states/:code					controllers.commons.api.States.get(code: java.lang.String)
+
+GET		/api/commons/types							controllers.commons.api.CommonInfoTypes.list()
+
+#list
+GET		/api/commons/resolutions  					controllers.commons.api.Resolutions.list()
+GET		/api/lists/valuation-criterias				controllers.lists.api.Lists.valuationCriterias()
+
+#projects
+GET		/api/projects							controllers.projects.api.Projects.list()
+
+#instruments
+GET		/api/instruments							controllers.instruments.api.Instruments.list()
+
+#samples
+GET		/api/samples							controllers.samples.api.Samples.list()
+GET		/api/samples/:code							controllers.samples.api.Samples.get(code: java.lang.String)
+
+->  /authentication authentication.Routes
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               				controllers.Assets.at(path="/public", file)
+GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
+GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
+
+

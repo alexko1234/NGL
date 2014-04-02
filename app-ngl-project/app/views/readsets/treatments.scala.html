@@ -1,0 +1,48 @@
+@(code: String)
+
+	
+@if(code == "ngsrg-illumina") {
+	@_treatments.ngsrg()		
+}
+
+
+@if(code == "duplicates") {
+	@_treatments.duplicates()	
+
+}
+
+
+@if(code == "trimming") {
+	@_treatments.triming()
+}
+
+
+@if(code == "merging") {
+	@_treatments.merging()
+}
+
+
+@if(code == "contamination") {
+	@_treatments.contamination()
+}
+
+
+@if(code == "sorting-ribo") {
+	@_treatments.sortingRibo()
+
+}
+
+
+@if(code == "mapping") {
+	@_treatments.mapping() 
+}
+
+
+@if(code == "read-quality") {
+	@_treatments.readQuality() 
+}
+
+@if(code == "taxonomy") {
+	@_treatments.taxonomy() 
+}
+

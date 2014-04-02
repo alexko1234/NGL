@@ -1,0 +1,32 @@
+#application
+
+
+archives.page.title=Archives
+
+## dno, from my personal point of view, must be removed, but, to have the same comportement as before, i prefer put it
+archives.menu.search = Rechercher
+menu.archives.search = Archives
+
+
+
+#archives filter value
+archives.input_radio.0 = Tout
+archives.input_radio.1 = Archivés
+archives.input_radio.2 = Non Archivés
+
+#archives - datatable
+archives.table.runcode=Run
+archives.table.projectcode=Projet
+archives.table.readsetcode=Readset
+archives.table.path=Emplacement
+archives.table.date=Date d''archivage
+archives.table.backupid=ID archive
+
+
+date.format=dd/MM/yyyy
+
+
+
+
+
+

@@ -1,0 +1,16 @@
+@(code: String)
+
+@if(code == "ngsrg-illumina") {
+  <div ng-controller="LanesNGSRGCtrl" ng-init="init()">
+  	<div datatable="lanesNGSRG"></div>
+  </div>
+} 
+
+@if(code == "sav")  {
+<div ng-controller="LanesSAVCtrl" ng-init="init()">
+  <div datatable="lanesSAVR1"></div>
+  <div datatable="lanesSAVR2"></div>
+  </div>
+}
+
+	
