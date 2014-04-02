@@ -54,7 +54,6 @@ public class Experiment extends DBObject implements IValidation {
 	
 	// States
 	public State state;
-	public List<String> resolutionCodes;
 	
 	//TODO delete class InputOutputContainer
 	//public List<InputOutputContainer> listInputOutputContainers;
