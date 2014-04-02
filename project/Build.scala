@@ -104,6 +104,10 @@ object ApplicationBuild extends Build {
 	val nglsubDependencies = Seq(
 	    javaCore, javaJdbc
 	)
+
+	val nglprojectDependencies = Seq(
+	    javaCore, javaJdbc
+	)
 	
    }
    
@@ -190,7 +194,15 @@ object ApplicationBuild extends Build {
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish) 
     ).dependsOn(nglcommon)
-    
+
+   val nglproject = play.Project(appName + "-project", appVersion, nglprojectDependencies, path = file("app-ngl-project"),settings = buildSettings).settings(
+       // Add your own project settings here      
+       resolvers := Seq(nexusig),
+       publishArtifact in makePom := false,
+       publishTo := Some(nexusigpublish)
+     ).dependsOn(nglcommon)
+
+	 
    val main = play.Project(appName, appVersion, settings = buildSettings).settings(
       // Add your own project settings here      
       resolvers := Seq(nexusig),
