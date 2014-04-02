@@ -70,11 +70,11 @@ public class UserDAO extends AbstractDAODefault<User> implements IAuthenticate{
 	}
 	
 	private int getUserId(String login){
-		String sql = "SELECT u.id FROM user u WHERE u.login=?";
+		String sql = "SELECT u.id as id FROM user u WHERE u.login=?";
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<User>(User.class);
 		List<User> users = this.jdbcTemplate.query(sql, mapper,login);
 		if(users != null && users.size() > 0){
-			return this.jdbcTemplate.query(sql, mapper,login).get(0).id;
+			return users.get(0).id;
 		}else{
 			return 0;
 		}

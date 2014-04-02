@@ -106,7 +106,7 @@ public class Users extends Controller {
 					}
 				}
 				
-				if(bean.id == null){
+				if(bean.id == 0){
 					bean.save();
 				}else{
 					bean.update();

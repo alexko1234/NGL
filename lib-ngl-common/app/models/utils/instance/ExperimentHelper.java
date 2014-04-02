@@ -88,8 +88,8 @@ public class ExperimentHelper {
 
 	public static Experiment updateInstrumentCategory(Experiment exp) throws DAOException{
 		Logger.debug("Test categoryCode :"+exp.instrument.categoryCode+" .");
-		if((exp.instrument.categoryCode == null ||exp.instrument.categoryCode.equals("") ) && exp.instrumentUsedTypeCode!=null){
-			InstrumentUsedType instrumentUsedType=InstrumentUsedType.find.findByCode(exp.instrumentUsedTypeCode);
+		if((exp.instrument.categoryCode == null ||exp.instrument.categoryCode.equals("") ) && exp.instrument.typeCode!=null){
+			InstrumentUsedType instrumentUsedType=InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
 			Logger.debug("Result categoryCode"+instrumentUsedType.category.code);
 			exp.instrument.categoryCode=instrumentUsedType.category.code;
 		}
@@ -102,7 +102,7 @@ public class ExperimentHelper {
 
 		for(int i=0;i<exp.atomicTransfertMethods.size();i++)
 			for(ContainerUsed c:exp.atomicTransfertMethods.get(i).getInputContainers()){
-				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, c.containerCode);
+				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, c.code);
 				exp.sampleCodes = InstanceHelpers.addCodesList(exp.sampleCodes, container.sampleCodes);
 				exp.projectCodes = InstanceHelpers.addCodesList(exp.projectCodes, container.projectCodes);
 			}	

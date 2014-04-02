@@ -30,7 +30,7 @@ public abstract class AbstractSampleSheetsfactory {
 		List<Container> containers = new ArrayList<Container>();
 		for(int i=0; i<this.experiment.atomicTransfertMethods.size();i++){
 			for(ContainerUsed cu : this.experiment.atomicTransfertMethods.get(i).getInputContainers()){
-				containers.add(MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, cu.containerCode));
+				containers.add(MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, cu.code));
 			}
 		}
 		

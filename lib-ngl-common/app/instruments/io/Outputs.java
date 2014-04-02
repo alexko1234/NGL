@@ -18,9 +18,9 @@ public class Outputs extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 		
-		AbstractSampleSheetsfactory sampleSheetFactory = (AbstractSampleSheetsfactory) SampleSheetsFactoryHelper.getSampleSheetsFactory("instruments.io."+exp.instrumentUsedTypeCode.toLowerCase()+".api.SampleSheetsFactory", exp);
+		AbstractSampleSheetsfactory sampleSheetFactory = (AbstractSampleSheetsfactory) SampleSheetsFactoryHelper.getSampleSheetsFactory("instruments.io."+exp.instrument.typeCode.toLowerCase()+".api.SampleSheetsFactory", exp);
 		
-		Logger.info("instruments.io."+exp.instrumentUsedTypeCode.toLowerCase()+".api.SampleSheetsFactory");
+		Logger.info("instruments.io."+exp.instrument.typeCode.toLowerCase()+".api.SampleSheetsFactory");
 		
 		if(sampleSheetFactory != null){
 			return ok(sampleSheetFactory.generate());

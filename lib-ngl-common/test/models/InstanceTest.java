@@ -337,7 +337,7 @@ public class InstanceTest extends AbstractTests{
 		experiment.instrument.categoryCode="instrumentCategory";
 		experiment.instrument.code="instrumentCode";
 
-		experiment.stateCode="New";
+		experiment.state="New";
 		experiment.resolutionCodes.add("ResolutionexperimentType");
 
 		//TODO

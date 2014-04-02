@@ -95,7 +95,7 @@
 							</div>
 					}	
 			    	@columnLabelValue(Messages("experiments.resolution")){
-							<div class="form-control"  bt-select ng-model="experiment.value.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" 
+							<div class="form-control"  bt-select ng-model="experiment.value.state.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" 
 									bt-options="resolution.code as resolution.name for resolution in lists.get('resolutions')" 
 									ng-disabled="!experiment.experimentInformation.enabled"
 									ng-readonly="!experiment.experimentInformation.enabled">
@@ -147,7 +147,7 @@
 			    @columnLabelValue(Messages("experiments.intrumentUsedType")){
 						<select class="form-control"
 					ng-change="getInstruments()"
-					ng-model="experiment.value.instrumentUsedTypeCode"
+					ng-model="experiment.value.instrument.typeCode"
 					ng-readonly="!experiment.instrumentInformation.enabled"
 					ng-options="instrumentUsedType.code as instrumentUsedType.name for instrumentUsedType in lists.get('instrumentUsedTypes')"
 					ng-disabled="!experiment.instrumentInformation.enabled">
@@ -161,7 +161,7 @@
 											ng-readonly="!experiment.instrumentInformation.enabled"
 											ng-options="instrumentInformation.code as instrumentInformation.name for instrumentInformation in lists.get('instruments')"
 											ng-disabled="!experiment.instrumentInformation.enabled"
-											ng-hide="!experiment.value.instrumentUsedTypeCode"
+											ng-hide="!experiment.value.instrument.typeCode"
 											>
 												<option value="">@Messages("experiments.select.instrument")</option>
 											</select>
@@ -169,7 +169,7 @@
 			    
 			   
 				
-				<div class="form-group" ng-hide="!experiment.value.instrumentUsedTypeCode || experiment.outputVoid">
+				<div class="form-group" ng-hide="!experiment.value.instrument.typeCode || experiment.outputVoid">
 					<label class="col-md-6 col-lg-6 control-label">@Messages("experiments.intrumentCategory")</label>
 					<div class="col-md-6 col-lg-6">
 									<select  class="form-control"
@@ -177,7 +177,7 @@
 									ng-readonly="!experiment.instrumentInformation.enabled"
 									ng-options="instrumentCategory.code as instrumentCategory.name for instrumentCategory in lists.get('containerSupportCategories')"
 									ng-disabled="!experiment.instrumentInformation.enabled"
-									ng-hide="!experiment.value.instrumentUsedTypeCode || experiment.outputVoid">
+									ng-hide="!experiment.value.instrument.typeCode || experiment.outputVoid">
 										<option value="">@Messages("experiments.select.instrumentCategory")</option>
 									</select>
 					</div>

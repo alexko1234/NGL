@@ -241,20 +241,23 @@ public class Experiments extends CommonController{
 	 * @return the created experiment
 	 * @throws DAOException 
 	 */
-	public static Result save(String experimentType) throws DAOException{
+	public static Result save(){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
-		if(exp._id == null && exp.code == null){
-			exp.code = CodeHelper.generateExperiementCode(exp);
-			exp.typeCode = experimentType;
-			exp.stateCode = "N";
-		}
+		exp.code = CodeHelper.generateExperiementCode(exp);
+		exp.state = new State("N",InstanceHelpers.getUser());
+		
 
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
 		if (!experimentFilledForm.hasErrors()) {
-			exp=ExperimentHelper.updateInstrumentCategory(exp);
+			try {
+				exp=ExperimentHelper.updateInstrumentCategory(exp);
+			} catch (DAOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			//exp = (Experiment) InstanceHelpers.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp, new ContextValidation(experimentFilledForm.errors()));
 			exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 		}
@@ -265,25 +268,6 @@ public class Experiments extends CommonController{
 			return badRequest(experimentFilledForm.errorsAsJson());
 		}
 	}
-
-
-	public static Result create(){
-		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
-		Experiment exp = experimentFilledForm.get();
-
-		if(exp._id == null){
-			exp.code = CodeHelper.generateExperiementCode(exp);
-			exp.stateCode = "N";
-		}
-
-		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
-
-		//exp = (Experiment) MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
-
-		return ok(Json.toJson(exp));
-	}
-
-
 
 	public static Result list(){
 		Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);

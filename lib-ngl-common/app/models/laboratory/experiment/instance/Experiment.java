@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.State;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
@@ -50,12 +49,11 @@ public class Experiment extends DBObject implements IValidation {
 	public Map<String,PropertyValue> experimentProperties;
 	public Map<String, PropertyValue> instrumentProperties;
 	
-	public String instrumentUsedTypeCode;
 	public InstrumentUsed instrument;
 	public String protocolCode;
 	
 	// States
-	public String stateCode;
+	public State state;
 	public List<String> resolutionCodes;
 	
 	//TODO delete class InputOutputContainer
@@ -112,7 +110,7 @@ public class Experiment extends DBObject implements IValidation {
 	
 	@JsonIgnore
 	public State getState(){
-		return new HelperObjects<State>().getObject(State.class, stateCode);
+		return new HelperObjects<State>().getObject(State.class, state.code);
 	}
 	
 	@JsonIgnore

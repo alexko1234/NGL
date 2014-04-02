@@ -9,6 +9,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -20,7 +21,6 @@ import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ExperimentValidationHelper;
 import fr.cea.ig.MongoDBDAO;
-import models.laboratory.processes.instance.Process;
 
 public class Workflows {
 
@@ -44,7 +44,7 @@ public class Workflows {
 	 * @deprecated
 	 */
 	public static void setContainerAvailable(ContainerUsed containerUsed){
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
 
 		if ( container != null && container.state != null && (container.state.code.equals("IW-P") || container.state.code.equals("N")) ) {
 			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"state.code", "A");
@@ -58,7 +58,7 @@ public class Workflows {
 	 */
 	public static void setContainerInUse(List<ContainerUsed> inputContainers){
 		for(ContainerUsed containerUsed:inputContainers){
-			Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
+			Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
 
 			if(container != null && container.state != null && (container.state.code.equals("IWE"))){
 				MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"state.code", "IU");
@@ -73,12 +73,12 @@ public class Workflows {
 	 */
 	public static void setContainersFinalState(List<ContainerUsed> containers){
 		for(ContainerUsed containerUsed:containers){
-			if(containerUsed != null && containerUsed.resolutionCodes!= null){
-				if(containerUsed.resolutionCodes.equals("IS")){
+			if(containerUsed != null && containerUsed.state.resolutionCodes!= null){
+				if(containerUsed.state.resolutionCodes.equals("IS")){
 					setContainerInStock(containerUsed);
-				}else if(containerUsed.resolutionCodes.equals("UN")){
+				}else if(containerUsed.state.resolutionCodes.equals("UN")){
 					setContainerUnavailable(containerUsed);
-				}else if(containerUsed.resolutionCodes.equals("A")){
+				}else if(containerUsed.state.resolutionCodes.equals("A")){
 					setContainerAvailable(containerUsed);
 				}
 			}	
@@ -91,7 +91,7 @@ public class Workflows {
 	 * @deprecated
 	 */
 	public static void setContainerInStock(ContainerUsed containerUsed){
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
 
 		if (container != null && container.state != null && (container.state.code.equals("IU")) ) {
 			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"state.code", "IS");
@@ -104,7 +104,7 @@ public class Workflows {
 	 * @deprecated
 	 */
 	public static void setContainerUnavailable(ContainerUsed containerUsed){
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
 
 		if (container != null && container.state != null && (container.state.code.equals("IU")) ) {
 			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"state.code", "UN");
@@ -138,17 +138,17 @@ public class Workflows {
 		//il fau peut etre valider tout l'experiment quand il passe à "F"
 		ExperimentValidationHelper.validateNewState(experiment, ctxValidation);
 
-		if(!ctxValidation.hasErrors() && !nextState.code.equals(experiment.stateCode)){
+		if(!ctxValidation.hasErrors() && !nextState.code.equals(experiment.state)){
 
 			InstanceHelpers.updateTraceInformation(experiment.traceInformation);  
-			//experiment.state = StateHelper.updateHistoricalNextState(experiment.state, nextState);
-			experiment.stateCode=nextState.code;
+			experiment.state = StateHelper.updateHistoricalNextState(experiment.state, nextState);
+			experiment.state=nextState;
 
 			if(!ctxValidation.hasErrors()){
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,  Run.class, 
 						DBQuery.is("code", experiment.code),
 						//DBUpdate.set("state", experiment.state).set("traceInformation",experiment.traceInformation));
-						DBUpdate.set("stateCode", experiment.stateCode).set("traceInformation",experiment.traceInformation));
+						DBUpdate.set("stateCode", experiment.state).set("traceInformation",experiment.traceInformation));
 			}
 
 			nextInputContainerState(experiment, ctxValidation);
@@ -195,9 +195,9 @@ public class Workflows {
 		state.date=new Date();
 		state.user=InstanceHelpers.getUser();
 		
-		if(experiment.stateCode.equals("N")){
+		if(experiment.state.code.equals("N")){
 			state.code = "IP";
-		}else if(experiment.stateCode.equals("IP")){
+		}else if(experiment.state.code.equals("IP")){
 			state.code = "F";
 		}
 		
@@ -209,11 +209,11 @@ public class Workflows {
 		state.date=new Date();
 		state.user=InstanceHelpers.getUser();
 
-		if(experiment.stateCode.equals("N")){
+		if(experiment.state.code.equals("N")){
 			state.code= "IW-E"; 
-		}else if(experiment.stateCode.equals("IP")){
+		}else if(experiment.state.code.equals("IP")){
 			state.code= "IU";
-		}else if(experiment.stateCode.equals("F")){
+		}else if(experiment.state.code.equals("F")){
 			state.code= "A";
 		}else {
 			Logger.error("No input container state defined for this experiment"+experiment.code);
@@ -224,11 +224,11 @@ public class Workflows {
 
 	//TODO
 	public static String nextOutputContainerState(Experiment experiment,ContextValidation contextValidation){
-		if(experiment.stateCode.equals("N")){
+		if(experiment.state.code.equals("N")){
 			return "IW-E"; 
-		}else if(experiment.stateCode.equals("IP")){
+		}else if(experiment.state.code.equals("IP")){
 			return "";
-		}else if(experiment.stateCode.equals("F")){
+		}else if(experiment.state.code.equals("F")){
 			//TODO return from evaluation
 			return "A";
 		}else {
@@ -338,7 +338,7 @@ public class Workflows {
 
 	public static void setContainerState(List<ContainerUsed> containersUsed,State state,ContextValidation contextValidation){
 		for(ContainerUsed containerUsed:containersUsed){
-			Workflows.setContainerState(containerUsed.containerCode, state, contextValidation);
+			Workflows.setContainerState(containerUsed.code, state, contextValidation);
 		}
 	}
 

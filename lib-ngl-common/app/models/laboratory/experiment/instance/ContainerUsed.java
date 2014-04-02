@@ -18,7 +18,7 @@ import validation.common.instance.CommonValidationHelper;
 
 public class ContainerUsed implements IValidation{
 	
-	public String containerCode;
+	public String code;
 	
 	public String categoryCode;
 	public LocationOnContainerSupport locationOnContainerSupport;
@@ -30,8 +30,6 @@ public class ContainerUsed implements IValidation{
 	public Map<String,PropertyValue> experimentProperties;
 	public Map<String,PropertyValue> instrumentProperties;
 	
-	public List<String> resolutionCodes;
-	
 	public State state;
 	
 	public ContainerUsed() {
@@ -40,25 +38,25 @@ public class ContainerUsed implements IValidation{
 	
 	@JsonIgnore
 	public ContainerUsed(String containerCode) {
-		this.containerCode=containerCode;
+		this.code=containerCode;
 	}
 	
 	@JsonIgnore
 	public ContainerUsed(Container container) {
-		this.containerCode = container.code;
+		this.code = container.code;
 		this.volume = container.mesuredVolume;
 	}
 
 	@JsonIgnore
 	public Container getContainer(){
-		return new HelperObjects<Container>().getObject(Container.class, containerCode);
+		return new HelperObjects<Container>().getObject(Container.class, code);
 		
 	}
 
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		CommonValidationHelper.validateContainerCode(containerCode, contextValidation);
+		CommonValidationHelper.validateContainerCode(code, contextValidation);
 		//TODO validate experimentProperties ?? 
 		//TODO validate instrumentProperties ??
 	}

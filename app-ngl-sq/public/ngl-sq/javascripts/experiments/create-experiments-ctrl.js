@@ -710,8 +710,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 		$window.location.href = "/experiments/newp/home";
 	};
 
-	$scope.saveAll = function(){		
-		
+	$scope.saveAll = function(){
 		if($scope.experiment.value._id){
 			$scope.experiment.experimentInformation.save();
 	

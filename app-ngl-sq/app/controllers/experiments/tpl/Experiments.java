@@ -129,7 +129,6 @@ public class Experiments extends CommonController{
   	    		controllers.commons.api.routes.javascript.Resolutions.list(),
   	    		controllers.commons.api.routes.javascript.States.list(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.getEditExperimentColumns(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.create(),
 				controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
 				controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
 				controllers.projects.api.routes.javascript.Projects.list(),

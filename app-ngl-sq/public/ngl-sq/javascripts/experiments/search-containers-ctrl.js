@@ -75,6 +75,7 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 		$scope.basket.reset();
 		
 		$scope.form.experimentType = undefined;
+		
 		if($scope.form.processType && $scope.form.experimentCategory){
 			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code}, true);
 		}else if($scope.form.experimentCategory){

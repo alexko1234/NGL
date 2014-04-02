@@ -33,7 +33,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	@Override
 	public List<Container> createOutputContainerUsed(Experiment experiment) {
 		
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.containerCode);
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.code);
 		
 		List<Container> outputContainers  = new ArrayList<Container>();
 		outputContainerUseds=new ArrayList<ContainerUsed>();

@@ -39,7 +39,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 		List<String> containerCodes= new ArrayList<String>();
 		for(int i=0;i<inputContainerUseds.size();i++){
-			containerCodes.add(inputContainerUseds.get(i).containerCode);
+			containerCodes.add(inputContainerUseds.get(i).code);
 		}
 
 		List<Container> inputContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("code", containerCodes)).toList();

@@ -23,7 +23,7 @@ public class User extends Model{
 		
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		public java.lang.Integer id;
+		public int id;
 	
 		@Required
 		public String login;
