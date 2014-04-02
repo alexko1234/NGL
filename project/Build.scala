@@ -105,11 +105,12 @@ object ApplicationBuild extends Build {
 	    javaCore, javaJdbc
 	)
 
-	val nglprojectDependencies = Seq(
-	    javaCore, javaJdbc
+	val nglprojectsDependencies = Seq(
+	    javaCore, javaJdbc,
+		"postgresql" % "postgresql" % "8.3-603.jdbc4"
 	)
-	
-   }
+
+  }
    
   
    val ngldatatable = play.Project("datatable", libDatatableVersion, ngldatatableDependencies, path = file("lib-ngl-datatable"),settings = buildSettingsLib).settings(
@@ -195,14 +196,14 @@ object ApplicationBuild extends Build {
        publishTo := Some(nexusigpublish) 
     ).dependsOn(nglcommon)
 
-   val nglproject = play.Project(appName + "-project", appVersion, nglprojectDependencies, path = file("app-ngl-project"),settings = buildSettings).settings(
+   val nglprojects = play.Project(appName + "-projects", appVersion, nglprojectsDependencies, path = file("app-ngl-projects"),settings = buildSettings).settings(
        // Add your own project settings here      
        resolvers := Seq(nexusig),
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish)
      ).dependsOn(nglcommon)
 
-	 
+ 	 
    val main = play.Project(appName, appVersion, settings = buildSettings).settings(
       // Add your own project settings here      
       resolvers := Seq(nexusig),
