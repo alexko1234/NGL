@@ -1,8 +1,7 @@
 "use strict";
 
-function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatable, messages, lists, treatments) {
-	
-	
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$window', '$filter', 'datatable', 'messages', 'lists', 'treatments', 
+                                                  function($scope, $http, $q, $routeParams, $window, $filter, datatable, messages, lists, treatments) {
 	/* configuration datatables */	
 	var lanesDTConfig = {
 			name:'lanesDT',
@@ -62,9 +61,9 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 			
 			columns : [
 			    {  	property:"number",
-			    	render:function(value){
+			    	render:function(value, line){
 			    		if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
-			    			value.trClass = "warning";
+			    			line.trClass = "warning";
 			    		}
 			    		return "<strong>"+value.number+"</strong>";
 			    	},
@@ -85,7 +84,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 				{	property:"valuation.resolutionCodes",
 					header: "runs.lane.valuation.resolutions",
 					render:function(value){						
-						return '<div bt-select ng-model="value.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ng-edit="false"></div>';
+						return '<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ng-edit="false"></div>';
 					},
 					type :"String",
 			    	edit:true,
@@ -99,7 +98,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 	}
 	
 	
-	$scope.readSetsDTConfig = {
+	var readSetsDTConfig = {
 			name:'readSetsDT',
 			order :{by:'laneNumber',mode:'local'},
 			search:{active:false},
@@ -190,18 +189,6 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 		$scope.lanesDT.setEdit();		
 	}
 	
-	var updateData = function(isCancel){
-		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
-			$scope.run = data;	
-			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
-			if(isCancel && !isValuationMode()){
-				$scope.lanesDT.cancel();
-				$scope.stopEditMode();
-			}else{
-				$scope.lanesDT.setEdit();
-			}			
-		});
-	}
 	
 	
 	/* readset section */
@@ -246,11 +233,23 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 	}
 	
 	/* main section  */
+	var updateData = function(isCancel){
+		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
+			$scope.run = data;	
+			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
+			if(isCancel && !isValuationMode()){
+				$scope.lanesDT.cancel();
+				$scope.stopEditMode();
+			}else{
+				$scope.lanesDT.setEdit();
+			}			
+		});
+	}
 	
 	var isValuationMode = function(){
 		return ($scope.isHomePage('valuation') || $routeParams.page === 'valuation');
 	}
-	$scope.init = function(){
+	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
 		$scope.treatments = treatments;
@@ -262,10 +261,10 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 			
 			if($scope.getTabs().length == 0){
 				if(isValuationMode()){ //valuation mode
-					$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:false});
+					$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:true});
 					$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.valuation($scope.run.code).url,remove:true})
 				}else{ //detail mode
-					$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:false});
+					$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:true});
 					$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.get($scope.run.code).url,remove:true})									
 				}
 				$scope.activeTab($scope.getTabs(1));
@@ -287,22 +286,23 @@ function DetailsCtrl($scope, $http, $q, $routeParams, $window, $filter, datatabl
 			$scope.laneOptions = $filter('orderBy')($scope.run.lanes, 'number');
 			
 			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg", "sampleOnContainer"]}}).success(function(data) {
-				$scope.readSetsDT = datatable($scope, $scope.readSetsDTConfig);
+				$scope.readSetsDT = datatable($scope, readSetsDTConfig);
 				$scope.readSetsDT.setData(data, data.length);				
 			});
 		});
 		
 		
-	}
+	};
+	
+	init();
 	
 	
 	
-};
-DetailsCtrl.$inject = ['$scope', '$http', '$q', '$routeParams', '$window', '$filter', 'datatable', 'messages', 'lists', 'treatments'];
+}]);
 
-function LanesNGSRGCtrl($scope, datatable) {
+angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', function($scope, datatable) {
 	
-	$scope.lanesNGSRGConfig = {
+	var lanesNGSRGConfig = {
 			name:'lanesNGSRG',
 			order :{by:'number',mode:'local'},
 			search:{active:false},
@@ -312,9 +312,9 @@ function LanesNGSRGCtrl($scope, datatable) {
 			cancel : {active:false},						
 			columns : [
 			    {  	property:"number",
-			    	render:function(value){
+			    	render:function(value, line){
 			    		if(value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
-			    			value.trClass = "warning";
+			    			line.trClass = "warning";
 			    		}
 			    		return "<strong>"+value.number+"</strong>";
 			    	},
@@ -384,23 +384,22 @@ function LanesNGSRGCtrl($scope, datatable) {
 	};
 	
 	
-	$scope.init = function(){
+	var init = function(){
 		$scope.$watch('run', function() {
 			if(angular.isDefined($scope.run)){
-				$scope.lanesNGSRG = datatable($scope, $scope.lanesNGSRGConfig);
+				$scope.lanesNGSRG = datatable($scope, lanesNGSRGConfig);
 				$scope.lanesNGSRG.setData($scope.run.lanes, $scope.run.lanes.length);
 			}
 		}); 
 		
-	}
+	};
 	
-}
+	init();
+	
+}]);
 
-LanesNGSRGCtrl.$inject = ['$scope', 'datatable'];
-
-
-function LanesSAVCtrl($scope, $filter, $http, datatable) {
-	$scope.lanesSAVR1Config = {
+angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http', 'datatable', function($scope, $filter, $http, datatable) {
+	var lanesSAVR1Config = {
 			name:'lanesSAVR1',
 			order :{by:'number',mode:'local'},
 			search:{active:false},
@@ -414,9 +413,9 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 			},
 			columns : [
 			    {  	property:"number",
-			    	render:function(value){
+			    	render:function(value, line){
 			    		if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
-			    			value.trClass = "warning";
+			    			line.trClass = "warning";
 			    		}
 			    		return "<strong>"+value.number+"</strong>";
 			    	},
@@ -543,7 +542,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 			]				
 	};
 	
-	$scope.lanesSAVR2Config = {
+	var lanesSAVR2Config = {
 			name:'lanesSAVR2',
 			order :{by:'number',mode:'local'},
 			search:{active:false},
@@ -557,9 +556,9 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 			},
 			columns : [
 			    {  	property:"number",
-			    	render:function(value){
+			    	render:function(value, line){
 			    		if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
-			    			value.trClass = "warning";
+			    			line.trClass = "warning";
 			    		}
 			    		return "<strong>"+value.number+"</strong>";
 			    	},
@@ -713,7 +712,7 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 		return text;
 	};
 	
-	$scope.init = function(){
+	var init = function(){
 		$scope.$watch('run', function() {
 			if(angular.isDefined($scope.run)){
 								
@@ -724,10 +723,10 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 						$scope.alerts[data[i].code] = data[i]; 
 					}
 					
-					$scope.lanesSAVR1 = datatable($scope, $scope.lanesSAVR1Config);
+					$scope.lanesSAVR1 = datatable($scope,  lanesSAVR1Config);
 					$scope.lanesSAVR1.setData($scope.run.lanes, $scope.run.lanes.length);
 					
-					$scope.lanesSAVR2 = datatable($scope, $scope.lanesSAVR2Config);
+					$scope.lanesSAVR2 = datatable($scope,  lanesSAVR2Config);
 					$scope.lanesSAVR2.setData($scope.run.lanes, $scope.run.lanes.length);
 					
 				});
@@ -736,8 +735,8 @@ function LanesSAVCtrl($scope, $filter, $http, datatable) {
 			};
 		});
 	
-	}
-}
-
-LanesSAVCtrl.$inject = ['$scope', '$filter', '$http', 'datatable'];
+	};
+	
+	init();
+}]);
 

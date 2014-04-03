@@ -18,11 +18,11 @@
 				<div class="form-control" bt-select ng-model="form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in states"></div>
 			}						
 		}
-		@formGroup{	
-			<div  class="form-control" bt-select ng-model="form.instrumentCodes" multiple="true" placeholder="@Messages("search.placeholder.instruments")" bt-options="instrument.code as instrument.code for instrument in lists.getInstruments()"></div>
+		
+		@formGroup{					
+			<input type="text" class="form-control" ng-model="form.runCode" typeahead="run.code as run.name for run in lists.getRuns() | filter:$viewValue | limitTo:20"  placeholder='@Messages("search.placeholder.run")'>
 		}
-		
-		
+				
 	}
 	@columnSearchForm{
 		@formGroup{
@@ -55,17 +55,22 @@
 		@formGroup{
 			<input type="text" class="form-control" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
 		}
-		
-		
-		@formGroup{					
-			<input type="text" class="form-control" ng-model="form.runCode" typeahead="run.code as run.name for run in lists.getRuns() | filter:$viewValue | limitTo:20"  placeholder='@Messages("search.placeholder.run")'>
-		}	
-	}
-			
+		@formGroup{	
+			<div  class="form-control" bt-select ng-model="form.instrumentCodes" multiple="true" placeholder="@Messages("search.placeholder.instruments")" bt-options="instrument.code as instrument.code for instrument in lists.getInstruments()"></div>
+		}
+					
+	}					
 }
 
 @formAttrs() = {
-	ng-controller="SearchFormCtrl" ng-init="init()"
+	ng-controller="SearchFormCtrl"
 }
 
-@searchForm(form, formAttrs)()()
+@buttons() = {
+	@formGroup{
+		<div class="form-control" bt-select ng-model="datatableConfigCustom.reportingConfigurationCode" ng-change="updateColumn()" placeholder="@Messages("search.placeholder.reporting.configuration")" bt-options="valid.code as valid.name for valid in lists.get('reportConfigs')" ng-if="lists.get('reportConfigs').length > 0"></div>
+	}
+	
+}
+@searchForm(form, formAttrs)(buttons)()
+

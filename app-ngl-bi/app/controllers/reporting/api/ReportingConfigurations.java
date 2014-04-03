@@ -4,26 +4,70 @@ package controllers.reporting.api;
 import static play.data.Form.form;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.regex.Pattern;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBQuery.Query;
+
+import com.mongodb.BasicDBObject;
+
+import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reporting.instance.ReportingConfiguration;
+import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
+import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
+import controllers.readsets.api.ReadSetsSearchForm;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 
 public class ReportingConfigurations extends CommonController {
 	final static Form<ReportingConfiguration> reportConfigForm = form(ReportingConfiguration.class);
+	final static Form<ReportingConfigurationsSearchForm> searchForm = form(ReportingConfigurationsSearchForm.class);
 	
 	public static Result list() {
-		return ok();
+		Form<ReportingConfigurationsSearchForm> filledForm = filledFormQueryString(searchForm, ReportingConfigurationsSearchForm.class);
+		ReportingConfigurationsSearchForm form = filledForm.get();
+		
+		Query q = getQuery(form);
+		BasicDBObject keys = getKeys(form);
+		if(form.datatable){			
+			MongoDBResult<ReportingConfiguration> results = mongoDBFinder(InstanceConstants.REPORTING_CONFIG_COLL_NAME, form, ReportingConfiguration.class, q, keys);				
+			List<ReportingConfiguration> reportingConfigurations = results.toList();
+			return ok(Json.toJson(new DatatableResponse<ReportingConfiguration>(reportingConfigurations, results.count())));
+		}else{
+			MongoDBResult<ReportingConfiguration> results = mongoDBFinder(InstanceConstants.REPORTING_CONFIG_COLL_NAME, form, ReportingConfiguration.class, q, keys);							
+			List<ReportingConfiguration> reportingConfigurations = results.toList();
+			return ok(Json.toJson(reportingConfigurations));
+		}
 	}
 	
+	private static Query getQuery(ReportingConfigurationsSearchForm form) {
+		List<Query> queries = new ArrayList<Query>();
+		Query query = null;
+		
+		if (CollectionUtils.isNotEmpty(form.pageCodes)) { //all
+			queries.add(DBQuery.in("pageCodes", form.pageCodes));
+		}
+		if(queries.size() > 0){
+			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
+		}
+		
+		return query;
+	}
+
 	public static Result get(String code) {
 		ReportingConfiguration reportingConfiguration =  getReportingConfiguration(code);		
 		if(reportingConfiguration != null) {

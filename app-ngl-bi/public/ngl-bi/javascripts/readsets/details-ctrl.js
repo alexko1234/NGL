@@ -1,6 +1,7 @@
  "use strict";
 
-function DetailsCtrl($scope, $http, $q, $routeParams, datatable, messages, lists, treatments, $window) {
+ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', 'datatable', 'messages', 'lists', 'treatments', '$window', 
+                                                   function($scope, $http, $q, $routeParams, datatable, messages, lists, treatments, $window) {
 	
 	$scope.goToRun=function(){
 		$window.open(jsRoutes.controllers.runs.tpl.Runs.get($scope.readset.runCode).url, 'runs');
@@ -43,6 +44,27 @@ function DetailsCtrl($scope, $http, $q, $routeParams, datatable, messages, lists
 		$scope.startEditMode();			
 	}
 	
+	$scope.setImage = function(imageData, imageName, treatmentContext, treatmentCode, imageFullSizeWidth, imageFullSizeHeight) {
+		$scope.modalImage = imageData;
+	
+		$scope.modalTitle = '';
+		if (treatmentContext != '') {
+			$scope.modalTitle = treatmentContext + ' : ';
+		}
+		$scope.modalTitle = $scope.modalTitle + Messages('readsets.treatments.' + treatmentCode + '.' + imageName);
+	
+		var margin = Messages("readsets.treatments.images.margin");		
+		var zoom = Math.min((document.body.clientWidth - margin) / imageFullSizeWidth, 1);
+
+		$scope.modalWidth = imageFullSizeWidth * zoom;
+		$scope.modalHeight = imageFullSizeHeight * zoom; //in order to conserve image ratio
+		$scope.modalLeft = (document.body.clientWidth - $scope.modalWidth)/2;
+	
+		$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;
+	
+		$scope.modalTop = $scope.modalTop - 50; //height of header and footer
+	}
+	
 	var updateData = function(){
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.get($routeParams.code).url).success(function(data) {
 			$scope.readset = data;	
@@ -55,7 +77,7 @@ function DetailsCtrl($scope, $http, $q, $routeParams, datatable, messages, lists
 	}
 	
 	
-	$scope.init = function(){
+	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
 		$scope.treatments = treatments;
@@ -64,7 +86,6 @@ function DetailsCtrl($scope, $http, $q, $routeParams, datatable, messages, lists
 			$scope.startEditMode();
 			
 		}
-		
 		
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.get($routeParams.code).url).success(function(data) {
 			$scope.readset = data;	
@@ -95,36 +116,15 @@ function DetailsCtrl($scope, $http, $q, $routeParams, datatable, messages, lists
 				$scope.runNGSRG = data;	
 			});	
 		});
-		
-		$scope.setImage = function(imageData, imageName, treatmentContext, treatmentCode, imageFullSizeWidth, imageFullSizeHeight) {
-			$scope.modalImage = imageData;
-		
-			$scope.modalTitle = '';
-			if (treatmentContext != '') {
-				$scope.modalTitle = treatmentContext + ' : ';
-			}
-			$scope.modalTitle = $scope.modalTitle + Messages('readsets.treatments.' + treatmentCode + '.' + imageName);
-		
-			var margin = Messages("readsets.treatments.images.margin");		
-			var zoom = Math.min((document.body.clientWidth - margin) / imageFullSizeWidth, 1);
-
-			$scope.modalWidth = imageFullSizeWidth * zoom;
-			$scope.modalHeight = imageFullSizeHeight * zoom; //in order to conserve image ratio
-			$scope.modalLeft = (document.body.clientWidth - $scope.modalWidth)/2;
-		
-			$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;
-		
-			$scope.modalTop = $scope.modalTop - 50; //height of header and footer
-	}
-		
-	}
+	};
 	
-};
-DetailsCtrl.$inject = ['$scope', '$http', '$q', '$routeParams', 'datatable', 'messages', 'lists', 'treatments', '$window'];
-
-function NGSRGCtrl($scope, datatable) {
+	init();
 	
-	$scope.NGSRGConfig = {
+}]);
+
+ angular.module('home').controller('NGSRGCtrl', ['$scope', 'datatable', function($scope, datatable) {
+	
+	var NGSRGConfig = {
 			name:'NGSRG',
 			order :{active:false},
 			search:{active:false},
@@ -169,25 +169,25 @@ function NGSRGCtrl($scope, datatable) {
 			]				
 	};
 		
-	$scope.init = function(){
+	var init = function(){
 		$scope.$watch('readset', function() {
 			if(angular.isDefined($scope.readset)){
-				$scope.NGSRG = datatable($scope, $scope.NGSRGConfig);
+				$scope.NGSRG = datatable($scope, NGSRGConfig);
 				var data = {};
 				data.ngsrg = $scope.readset.treatments.ngsrg['default'];
 				data.sampleOnContainer = $scope.readset.sampleOnContainer;
 				$scope.NGSRG.setData([data], 1);
 			}
 		}); 		
-	}
+	};
 	
-}
+	init();
+	
+}]);
 
-NGSRGCtrl.$inject = ['$scope', 'datatable'];
 
-
-function TaxonomyCtrl($scope) {
-	$scope.init = function(name) {		
+ angular.module('home').controller('TaxonomyCtrl', ['$scope', function($scope) {
+	var init = function(name) {		
 		$scope.$watch('readset', function() { 
 			if (angular.isDefined($scope.readset)) {				
 				$scope.krona = "data:text/html;base64,"+$scope.readset.treatments[name].read1.krona.value;
@@ -195,6 +195,7 @@ function TaxonomyCtrl($scope) {
 				$scope.ncbiUrl = Messages("readsets.treatments.taxonomy.beginNcbiUrl");
 			}
 		});
-
 	}
-}
+	
+	init();
+}]);

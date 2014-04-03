@@ -54,28 +54,28 @@ function updateForm(form, page){
 	return form;
 }
 
-function SearchFormCtrl($scope, $filter, lists){
+angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', 'lists', function($scope, $filter, lists){
 	$scope.lists = lists;
 	
 	$scope.refreshSamples = function(){
 		if($scope.form.projectCode){
 			lists.refresh.samples({projectCode:$scope.form.projectCode});
 		}
-	}
+	};
 	
 	$scope.search = function(){
 		$scope.form = updateForm($scope.form, $scope.getHomePage());
 		$scope.setForm($scope.form);		
 		$scope.datatable.search(convertForm($scope.form));
-	}
+	};
 	
 	$scope.reset = function(){
 		$scope.form = {
 				
 		}
-	}
+	};
 	
-	$scope.init = function(){
+	var init = function(){
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.states({objectTypeCode:"Run"});
 		$scope.lists.refresh.types({objectTypeCode:"Run"});
@@ -87,14 +87,14 @@ function SearchFormCtrl($scope, $filter, lists){
 		}else{
 			$scope.reset();
 		}
-	}
+	};
+	init();
 	
-};
-SearchFormCtrl.$inject = ['$scope', '$filter', 'lists'];
+}]);
 
-function SearchCtrl($scope, $routeParams, datatable) {
+angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'datatable', function($scope, $routeParams, datatable) {
 
-	$scope.datatableConfig = {
+	var datatableConfig = {
 			order :{by:'sequencingStartDate', reverse:true},
 			search:{
 				url:jsRoutes.controllers.runs.api.Runs.list()
@@ -110,10 +110,10 @@ function SearchCtrl($scope, $routeParams, datatable) {
 	
 	
 	
-	$scope.init = function(){
+	var init = function(){
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, $scope.datatableConfig);			
+			$scope.datatable = datatable($scope, datatableConfig);			
 			$scope.datatable.search(updateForm(convertForm($routeParams),'search'));
 			$scope.setDatatable($scope.datatable);
 		}else{
@@ -125,16 +125,16 @@ function SearchCtrl($scope, $routeParams, datatable) {
 			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
-	}	
-};
+	};
+	
+	init();
+}]);
 
-SearchCtrl.$inject = ['$scope', '$routeParams', 'datatable'];
-
-function SearchStateCtrl($scope, datatable, lists) {
+angular.module('home').controller('SearchStateCtrl', ['$scope', 'datatable', 'lists', function($scope, datatable, lists) {
 
 	$scope.listsTable = lists;
 	
-	$scope.datatableConfig = {
+	var datatableConfig = {
 			order :{by:'sequencingStartDate', reverse:true},
 			search:{
 				url:jsRoutes.controllers.runs.api.Runs.list()
@@ -161,10 +161,10 @@ function SearchStateCtrl($scope, datatable, lists) {
 			messages : {active:true}
 	};
 	
-	$scope.init = function(){
+	var init = function(){
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, $scope.datatableConfig);
+			$scope.datatable = datatable($scope, datatableConfig);
 			$scope.datatable.search(updateForm({},'state'));
 			$scope.setDatatable($scope.datatable);
 		}else{
@@ -177,15 +177,15 @@ function SearchStateCtrl($scope, datatable, lists) {
 			$scope.activeTab(0); // desactive le lien !
 		}
 		$scope.listsTable.refresh.states({objectTypeCode:"Run"});
-	}	
-};
+	};
+	
+	init();
+}]);
 
-SearchStateCtrl.$inject = ['$scope', 'datatable', 'lists'];
 
+angular.module('home').controller('SearchValuationCtrl', ['$scope', 'datatable', function($scope, datatable) {
 
-function SearchValuationCtrl($scope, datatable) {
-
-	$scope.datatableConfig = {
+	var datatableConfig = {
 			order :{by:'sequencingStartDate', reverse:true},
 			search:{
 				url:jsRoutes.controllers.runs.api.Runs.list()
@@ -200,10 +200,10 @@ function SearchValuationCtrl($scope, datatable) {
 	};
 	
 	
-	$scope.init = function(){
+	var init = function(){
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, $scope.datatableConfig);
+			$scope.datatable = datatable($scope, datatableConfig);
 			$scope.setDatatable($scope.datatable);
 		}else{
 			$scope.datatable = $scope.getDatatable();
@@ -214,10 +214,8 @@ function SearchValuationCtrl($scope, datatable) {
 			$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
-	}	
-};
-
-SearchValuationCtrl.$inject = ['$scope','datatable'];
-
-
+	};
+	
+	init();
+}]);
 

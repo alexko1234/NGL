@@ -1,0 +1,23 @@
+<div reporting-config-treatments="treatmentTypes" prefix-msg="readsets"></div>
+
+<ul class="nav nav-tabs margin-bottom-5">
+	<li class="active"><a href="#" data-target="#main" data-toggle="tab">@Messages("search.form")</a></li>
+   	<li><a href="#" data-target="#config" data-toggle="tab">@Messages("search.config")</a></li>       	    	
+</ul>
+
+<div class="tab-content">	
+		<div class="tab-pane active" id="main">
+		<div class="row">		
+				<div class="col-md-12 col-lg-12">
+				
+				</div>
+		</div>
+		</div>
+		<div class="tab-pane" id="config" ng-app="readsets" ng-controller="ReportCtrl">
+			<div class="row">
+			<div class="col-md-12 col-lg-12">
+				@reportConfiguration()
+			</div>
+			</div>
+		</div>
+</div>

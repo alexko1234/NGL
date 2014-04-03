@@ -1,6 +1,6 @@
 "use strict";
 
-function SearchCtrl($scope, datatable) {
+angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , function($scope, datatable) {
 
 	var datatableConfig = {
 			order :{by:'sequencingStartDate', reverse:true, mode:'local'},
@@ -59,7 +59,6 @@ function SearchCtrl($scope, datatable) {
 		$scope.runsKeep = datatable($scope, datatableConfig);			
 		$scope.runsKeep.search({keep:true});	
 	}	
-};
+}]);
 
-SearchCtrl.$inject = ['$scope', 'datatable'];
 

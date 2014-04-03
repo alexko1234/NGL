@@ -1,9 +1,17 @@
 "use strict";
 
-function SearchCtrl($scope, $routeParams, datatable) {
+angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'datatable', function($scope, $routeParams, datatable) {
 	$scope.archive = 2; //default only need archive
 	
-	$scope.datatableConfig = {
+	/* 
+    call by the init above and the search() to select the type of archives to visualize (0,1,2)
+	 */
+	$scope.search = function(param){
+		$scope.datatable.search({archive:param});
+	}
+	
+	
+	var datatableConfig = {
 			search : { 
 				url:jsRoutes.controllers.archives.api.ReadSets.list()
 			},
@@ -50,8 +58,9 @@ function SearchCtrl($scope, $routeParams, datatable) {
 			
 	};
 	
-	$scope.init = function(){
-		$scope.datatable = datatable($scope, $scope.datatableConfig);
+	
+	var init = function(){
+		$scope.datatable = datatable($scope, datatableConfig);
 		$scope.search(2);
 		
 		if(angular.isUndefined($scope.getHomePage())){
@@ -59,15 +68,9 @@ function SearchCtrl($scope, $routeParams, datatable) {
 			$scope.addTabs({label:Messages('archives.menu.search'),href:jsRoutes.controllers.archives.tpl.ReadSets.home("search").url,remove:false});
 			$scope.activeTab(0);
 		}
-	}
+	};
 	
-	/* 
-      call by the init above and the search() to select the type of archives to visualize (0,1,2)
-	 */
-	$scope.search = function(param){
-		$scope.datatable.search({archive:param});
-	}
+	init();
 	
-};
+}]);
 
-SearchCtrl.$inject = ['$scope', '$routeParams', 'datatable'];

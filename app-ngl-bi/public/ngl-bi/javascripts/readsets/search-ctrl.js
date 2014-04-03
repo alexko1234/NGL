@@ -1,6 +1,7 @@
 "use strict";
 
 
+
 function getCommonColumns(columns){
 	
 	columns.push({	property:"code",
@@ -63,6 +64,11 @@ function getStateColumns(columns){
 	return columns;
 };
 function getValuationColumns(columns){	
+	columns.push({	property:"state.code",
+					filter:"codes:'state'",
+					header: "readsets.stateCode",
+					type :"text",
+					order:true});
 	
 	columns.push({	property:"productionValuation.valid",
 					filter:"codes:'valuation'",
@@ -105,51 +111,13 @@ function getBatchColumns(columns){
 	return columns;
 };
 
-
-function getValuationWheatColumns(columns, $filter){
-		columns.push({	property:"treatments['mergingNoRiboClean'].pairs.mergedReadsPercent.value",
-						header: "Merged Reads",
-						type :"number",
-				    	order:true
-		});			
-		columns.push({	property:"treatments['mergingNoRiboClean'].pairs.medianeSize.value",
-						header: "Mediane Size (bases)",
-						type :"number",
-				    	order:true
-		});			
-		columns.push({	property:"treatments['mappingNoRiboClean'].pairs.RFAlignedReadsPercent.value",
-						header: "% RF (MP) aligned reads",
-						type :"number",
-				    	order:true
-		});			
-		columns.push({	property:"treatments['mappingNoRiboClean'].pairs.estimatedMPInsertSize.value",
-					header: "Estimated MP insert size",
-					type :"number",
-			    	order:true
-			    	});		
-		columns.push({	property:"taxon.totalPercent",
-						render:function(value){
-							return calculTaxonPcts(value, "Escherichia coli", $filter);
-						},
-						header: "% Escherichia coli", 
-						type :"number",
-				    	order:true
-		});
-		columns.push({	property:"taxon.totalPercent",
-						render:function(value){
-							return calculTaxonPcts(value, "Triticum", $filter);
-						},
-						header: "% Triticum",
-						type :"number",
-				    	order:true
-		});
-		return columns;
-};
-
 function convertForm(iform){
 	var form = angular.copy(iform);
 	if(form.fromDate)form.fromDate = moment(form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 	if(form.toDate)form.toDate = moment(form.toDate, Messages("date.format").toUpperCase()).valueOf();		
+	
+	if(form.reportingConfigurationCode)form.reportingConfigurationCode=undefined;
+	
 	return form
 };
 
@@ -165,7 +133,7 @@ function updateForm(form, page){
 }
 
 
-function SearchFormCtrl($scope, $filter, lists){
+angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', '$http', 'lists', function($scope, $filter, $http, lists){
 	$scope.lists = lists;
 	
 	$scope.refreshSamples = function(){
@@ -181,12 +149,27 @@ function SearchFormCtrl($scope, $filter, lists){
 	};
 	
 	$scope.reset = function(){
+		
 		$scope.form = {
 				
 		}
 	};
 	
-	$scope.init = function(){		
+	
+	$scope.updateColumn = function(){
+		if($scope.datatableConfigCustom.reportingConfigurationCode){
+			$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get($scope.datatableConfigCustom.reportingConfigurationCode).url)
+					.success(function(data) {
+						$scope.datatable.setColumnsConfig(data.columns)
+						
+			});
+		}else{
+			$scope.datatable.setColumnsConfig($scope.datatableConfigCustom.defaultColumns);
+		}
+	}
+	
+	var defaultColumns;
+	var init = function(){		
 		if ($scope.isHomePage('valuation') || $scope.isHomePage('valuationWheat')) {
 			//If we want to show the 2 states used to filter the data...
 			//$scope.form.stateCodes = ["IW-V","IP-V"];
@@ -199,21 +182,25 @@ function SearchFormCtrl($scope, $filter, lists){
 		$scope.lists.refresh.types({objectTypeCode:"Run"});
 		$scope.lists.refresh.runs();
 		$scope.lists.refresh.instruments({categoryCode:"seq-illumina"});
-		//$scope.lists.refresh.reportConfigs({pageCodes:["readsets"]});
+		$scope.lists.refresh.reportConfigs({pageCodes:["readsets"+"-"+$scope.getHomePage()]});
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();
 		}else{
 			$scope.reset();
 		}
+		
+		$scope.datatableConfigCustom = {};
+		$scope.datatableConfigCustom.defaultColumns = $scope.datatable.getColumnsConfig();
 	};
 	
-};
-SearchFormCtrl.$inject = ['$scope', '$filter', 'lists'];
+	
+	init();
+}]);
 
-function SearchCtrl($scope, $routeParams, datatable) {
+angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'datatable', function($scope, $routeParams, datatable) {
 
-	$scope.datatableConfig = {
+	var datatableConfig = {
 			order :{by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
@@ -229,10 +216,10 @@ function SearchCtrl($scope, $routeParams, datatable) {
 	
 	
 	
-	$scope.init = function(){
+	var init = function(){
 		//to avoid to lost the previous search		
 		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, $scope.datatableConfig);
+			$scope.datatable = datatable($scope, datatableConfig);
 			$scope.setDatatable($scope.datatable);			
 			$scope.datatable.search(convertForm(updateForm($routeParams,'search')));
 		}else{
@@ -243,18 +230,18 @@ function SearchCtrl($scope, $routeParams, datatable) {
 			$scope.setHomePage('search');
 			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
-		}
-		$scope.taxons= [{name:"Escherichia coli",composition:["Escherichia coli"]},{name:"Triticum",composition:["Triticum aestivum", "Triticeae", "Triticum"]}];
-	}	
-};
+		}		
+	};	
+	
+	init();
+}]);
 
-SearchCtrl.$inject = ['$scope', '$routeParams', 'datatable'];
 
-function SearchStateCtrl($scope,  datatable, lists) {
+angular.module('home').controller('SearchStateCtrl', ['$scope', 'datatable', 'lists', function($scope, datatable, lists) {
 
 	$scope.listsTable = lists;
 	
-	$scope.datatableConfig = {
+	var datatableConfig = {
 			order :{by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
@@ -279,10 +266,10 @@ function SearchStateCtrl($scope,  datatable, lists) {
 			columns : getStateColumns(getCommonColumns([]))
 	};
 	
-	$scope.init = function(){
+	var init = function(){
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, $scope.datatableConfig);
+			$scope.datatable = datatable($scope, datatableConfig);
 			$scope.datatable.search(updateForm({},'state'));
 			$scope.setDatatable($scope.datatable);
 		}else{
@@ -295,13 +282,13 @@ function SearchStateCtrl($scope,  datatable, lists) {
 			$scope.activeTab(0); // desactive le lien !
 		}
 		$scope.listsTable.refresh.states({objectTypeCode:"ReadSet"});		
-	}	
-};
+	};
+	
+	init();
+}]);
 
-SearchStateCtrl.$inject = ['$scope', 'datatable', 'lists'];
 
-
-function SearchValuationCtrl($scope, $http, datatable, lists, $routeParams) {
+angular.module('home').controller('SearchValuationCtrl', ['$scope', 'datatable', 'lists', '$routeParams', function($scope, datatable, lists, $routeParams) {
 
 	$scope.listsTable = lists;
 	
@@ -331,20 +318,11 @@ function SearchValuationCtrl($scope, $http, datatable, lists, $routeParams) {
 	};
 	
 	
-	$scope.init = function(){
+	var init = function(){
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){
 			$scope.datatable = datatable($scope, datatableConfig);
-			$scope.setDatatable($scope.datatable);
-			
-			
-			//$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get("RC-20140331094258").url)
-		//		.success(function(data) {
-		//			datatableConfig.columns = datatableConfig.columns.concat(data.columns);
-					
-			//	});
-			
-			
+			$scope.setDatatable($scope.datatable);			
 		}else{
 			$scope.datatable = $scope.getDatatable();
 		}
@@ -368,103 +346,13 @@ function SearchValuationCtrl($scope, $http, datatable, lists, $routeParams) {
 		}
 	};
 	
-};
-
-SearchValuationCtrl.$inject = ['$scope', '$http', 'datatable', 'lists', '$routeParams'];
-
-function SearchValuationWheatCtrl($scope, datatable, lists, $routeParams, $filter) {
+	init();
 	
-	$scope.listsTable = lists;
-	
-	$scope.datatableConfig = {
-			order :{by:'runSequencingStartDate', reverse : true},
-			search:{
-				url:jsRoutes.controllers.readsets.api.ReadSets.list()
-			},
-			edit : {
-				active:true,
-				columnMode:true		    	
-			},			
-			save : {
-				active:true,
-				url: jsRoutes.controllers.readsets.api.ReadSets.valuationBatch().url,				
-				batch:true,
-				method:'put',
-				value:function(line){return {code:line.code,productionValuation:line.productionValuation,bioinformaticValuation:line.bioinformaticValuation};}				
-			},
-			show:{
-				active:true,
-				add :function(line){
-					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.valuation(line.code).url,remove:true});
-				}
-			},
-			columns : getValuationColumns(getValuationWheatColumns(getCommonColumns([]), $filter))
-	};
-	
-	
-	$scope.init = function(){
-				
-		//to avoid to lost the previous search
-		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, $scope.datatableConfig);
-			$scope.setDatatable($scope.datatable);
-		}else{
-			$scope.datatable = $scope.getDatatable();
-		}
-		
-		var count = 0;
-		for(var p in $routeParams){
-			count++;
-		}
-		
-		if(count > 0){
-			$scope.datatable.search(updateForm($routeParams));
-		}else{
-			$scope.datatable.search(updateForm({},'valuationWheat'));
-		}		
-		
-		
-		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('valuationWheat');
-			$scope.addTabs({label:Messages('readsets.page.tab.validate'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("valuationWheat").url,remove:true});
-			$scope.activeTab(0); // desactive le lien !
-		}
-	}	
-};
+}]);
 
-SearchValuationWheatCtrl.$inject = ['$scope', 'datatable', 'lists', '$routeParams', '$filter'];
+angular.module('home').controller('SearchBatchCtrl', ['$scope',  'datatable', function($scope,  datatable) {
 
-
-
-function findTaxonPct(value, element, $filter) {
-	var pct = 0;
-	var taxonData = value.treatments["taxonomyClean"].read1.taxonBilan.value;	
-	var objTaxon = $filter("filter")(taxonData, {taxon:element});
-	if (objTaxon.length > 0) {
-		pct = objTaxon[0].percent;
-	}	
-	return pct;
-}
-
-function calculTaxonPcts(value, taxonName, $filter) {
-	var taxons = [{name:"Escherichia coli",composition:["Escherichia coli"]},{name:"Triticum",composition:["Triticum aestivum", "Triticeae", "Triticum"]}]; 
-	var pct = null;
-	if (value.treatments["taxonomyClean"] !== undefined) {
-		for(var i=0; i<taxons.length; i++) {
-			if (taxons[i].name == taxonName) {
-				var pct = 0;
-				for (var j=0; j<taxons[i].composition.length; j++) {	
-					pct += findTaxonPct(value, taxons[i].composition[j], $filter);
-				}
-			}
-		}
-	}
-	return $filter('number')(pct, 2);
-}
-
-function SearchBatchCtrl($scope,  datatable) {
-
-	$scope.datatableConfig = {
+	var datatableConfig = {
 			order :{by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
@@ -489,10 +377,10 @@ function SearchBatchCtrl($scope,  datatable) {
 			columns : getBatchColumns(getCommonColumns([]))
 	};
 	
-	$scope.init = function(){
+	var init = function(){
 		//to avoid to lost the previous search
 		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, $scope.datatableConfig);
+			$scope.datatable = datatable($scope, datatableConfig);
 			$scope.datatable.search(updateForm({}));
 			$scope.setDatatable($scope.datatable);
 		}else{
@@ -504,154 +392,7 @@ function SearchBatchCtrl($scope,  datatable) {
 			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("batch").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
-	}	
-};
-
-SearchBatchCtrl.$inject = ['$scope', 'datatable'];
-
-
-angular.module('home').controller('ReportCtrl', ['$scope', '$http', '$filter', function($scope, $http, $filter) {
-	
-	var convertJavaValueTypeToJSValueType = function(valueType){
-		switch(valueType) {
-			case 'java.lang.String':
-				valueType = 'text';
-				break;
-			case 'java.lang.Integer':
-				valueType = 'number';
-				break;
-			case 'java.lang.Double':
-				valueType = 'number';
-				break;
-			case 'java.lang.Float':
-				valueType = 'number';
-				break;
-			case 'java.lang.Long':
-				valueType = 'number';
-				break;
-			case 'java.lang.Date':
-				valueType = 'date';
-				break;
-			case 'java.lang.Boolean':
-				valueType = 'boolean';
-				break;
-			case 'java.awt.Image':
-				valueType = 'img';
-				break;
-			case 'java.io.File':
-				valueType = 'file';
-				break;			
-			default:
-				throw 'not managed :'+valueType;
-		}
-		return valueType;
-	};
-	var convertPropertyValueTypeToType = function(propertyValueType){
-		switch(propertyValueType) {
-			case 'single':
-				propertyValueType = 'single';
-				break;
-			case 'list':
-				propertyValueType = 'list';
-				break;
-			case 'file':
-				propertyValueType = 'single';
-				break;
-			case 'img':
-				propertyValueType = 'single';
-				break;
-			case 'map':
-				propertyValueType = 'map';
-				break;
-			case 'object':
-				propertyValueType = 'single';
-				break;
-			case 'object_list':
-				propertyValueType = 'list';
-				break;
-			default:
-				throw 'not managed :'+propertyValueType;
-		}
-		return propertyValueType;
-	};
-	var convertPropertyValueTypeToIsObject = function(propertyValueType){
-		switch(propertyValueType) {
-			case 'single':
-				propertyValueType = false;
-				break;
-			case 'list':
-				propertyValueType = false;
-				break;
-			case 'file':
-				propertyValueType = false;
-				break;
-			case 'img':
-				propertyValueType = false;
-				break;
-			case 'map':
-				propertyValueType = false;
-				break;
-			case 'object':
-				propertyValueType = true;
-				break;
-			case 'object_list':
-				propertyValueType = true;
-				break;
-			default:
-				throw 'not managed :'+propertyValueType;
-		}
-		return propertyValueType;
-	};
-	/**
-	 * Convert propertyDefinition in property and filter with level
-	 */
-	var getProperties = function(treatmentType, level){
-		var properties = {};
-		var propertiesDef = $filter('filter')(treatmentType.propertiesDefinitions, level)
-		
-		angular.forEach(propertiesDef, function(value, key){
-			if(!this[value.code.split(".")[0]]){
-				this[value.code.split(".")[0]] = {code:value.code.split(".")[0], name:value.name.split(".")[0], levels:value.levels,
-						type:convertPropertyValueTypeToType(value.propertyValueType), isObject:convertPropertyValueTypeToIsObject(value.propertyValueType), subProperties:[]};
-			}
-			this[value.code.split(".")[0]].subProperties.push({code:value.code, name:value.name, 
-				format:value.displayFormat,	valueType:convertJavaValueTypeToJSValueType(value.valueType)});
-			
-		}, properties);
-		
-		var propertiesA = [];
-		
-		for(var key in properties){
-			propertiesA.push(properties[key]);
-		}
-		
-		return propertiesA;
-	};
-	
-	var init = function(){
-		$http.get(jsRoutes.controllers.treatmenttypes.api.TreatmentTypes.list().url, {params:{levels: "ReadSet"}}).success(function(data) {
-			var treatmentTypes = [];
-			angular.forEach(data, function(value, key){
-				var properties = getProperties(value, "ReadSet");
-				var names = value.names.split(',');
-				var orders = value.displayOrders.split(',');
-				for(var i = 0 ; i < names.length; i++){
-					var contexts = [];
-					for(var j = 0; j < value.contexts.length ; j++){
-						contexts.push({code:value.contexts[j].code, properties:$filter('filter')(properties, value.contexts[j].code)})
-					}
-					this.push({code:value.code, name:value.name, instanceCode:names[i], 
-						displayOrder:Number(orders[i]), contexts:contexts })	
-				}
-							
-			}, treatmentTypes);
-			$scope.treatmentTypes = treatmentTypes;			
-		});
-		
-		
 	};
 	
 	init();
-	
 }]);
-

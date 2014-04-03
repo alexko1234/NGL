@@ -63,6 +63,8 @@ search.placeholder.productionValid = Sélect. une éval QC
 search.placeholder.bioinformaticValid  = Sélect. une éval bioinfo
 search.placeholder.regexCode = Regex pour le code
 search.placeholder.lanes = Sélect. des lanes
+search.placeholder.reporting.configuration = Sélect. colonnes config.
+
 
 button.search = Rechercher
 button.reset = Réinitialiser

@@ -106,7 +106,7 @@ PUT		/api/readsets/:code/files/:fullname/workflow/:stateCode		controllers.readse
 #reporting configuration
 GET    	/api/reporting/config    	           			controllers.reporting.api.ReportingConfigurations.list()
 GET	   	/api/reporting/config/:code						controllers.reporting.api.ReportingConfigurations.get(code)
-POST 	/api/reporting/config								controllers.reporting.api.ReportingConfigurations.save()
+POST 	/api/reporting/config							controllers.reporting.api.ReportingConfigurations.save()
 PUT    	/api/reporting/config/:code						controllers.reporting.api.ReportingConfigurations.update(code)
 DELETE	/api/reporting/config/:code						controllers.reporting.api.ReportingConfigurations.delete(code: java.lang.String)
 
