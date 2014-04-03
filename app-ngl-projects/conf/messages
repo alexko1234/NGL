@@ -8,6 +8,6 @@ home.page.name=Bienvenue dans NGL-PROJECTS
 
 
 #home page main
-home.h10.header=Bienvenue {0} sur NGL - Bio Informatique
+home.h10.header=Bienvenue {0} sur NGL - Projects
 home.page.comment=NGL-PROJECTS est un LIMS simple et flexible pour le suivi des projets de séquençage de nouvelle génération.
 home.a.comment=En savoir plus...
