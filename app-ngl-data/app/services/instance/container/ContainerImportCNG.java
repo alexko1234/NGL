@@ -42,7 +42,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		limsServices.updateLimsContainers(ctrs, contextError);
 		
 		Logger.debug("end loading");
-		
+				
 	}
 
 }

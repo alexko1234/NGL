@@ -331,8 +331,8 @@ public class LimsCNGDAO {
 				}
 				
 				if (rs.getString("code_sample")!=null) {
-					Content sampleUsed=new Content();
-					sampleUsed.sampleCode=rs.getString("code_sample");
+					Content content=new Content();
+					content.sampleCode=rs.getString("code_sample");
 					
 					String sampleTypeCode = SAMPLE_USED_TYPE_CODE;
 					SampleType sampleType=null;
@@ -343,33 +343,33 @@ public class LimsCNGDAO {
 						return null;
 					}
 					if( sampleType==null ){
-						contextError.addErrors("code", "error.codeNotExist", sampleTypeCode, sampleUsed.sampleCode);
+						contextError.addErrors("code", "error.codeNotExist", sampleTypeCode, content.sampleCode);
 						return null;
 					}		
 					
-					sampleUsed.sampleTypeCode = sampleType.code;
-					sampleUsed.sampleCategoryCode = sampleType.category.code;
+					content.sampleTypeCode = sampleType.code;
+					content.sampleCategoryCode = sampleType.category.code;
 					
-					sampleUsed.properties = new HashMap<String, PropertyValue>();
+					content.properties = new HashMap<String, PropertyValue>();
 					
 					if(rs.getString("tag")!=null) { 
-						sampleUsed.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
-						sampleUsed.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagcategory")));
+						content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+						content.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagcategory")));
 					}
 					else {
-						sampleUsed.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppress it at the end of the function...
-						sampleUsed.properties.put("tagCategory",new PropertySingleValue("-1"));
+						content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppress it at the end of the function...
+						content.properties.put("tagCategory",new PropertySingleValue("-1"));
 					}
 					
 					if(rs.getString("percent_per_lane")!=null) { 
-						sampleUsed.properties.put("percentPerLane",new PropertySingleValue(rs.getString("percent_per_lane")));
+						content.properties.put("percentPerLane",new PropertySingleValue(rs.getString("percent_per_lane")));
 					}
 					else {
-						sampleUsed.properties.put("percentPerLane",new PropertySingleValue("-1")); 
+						content.properties.put("percentPerLane",new PropertySingleValue("-1")); 
 					}
 					
 
-					container.contents.add(sampleUsed);			
+					container.contents.add(content);			
 					
 					container.sampleCodes=new ArrayList<String>();
 					container.sampleCodes.add(rs.getString("code_sample"));
@@ -387,14 +387,13 @@ public class LimsCNGDAO {
 		/// required to have an ordered list (see ORDER BY clause in the sql of the view)
 		int pos = 0;
 		int x=1;
-		int listSize  =  results.size(); 
-		Boolean insertContent = false;
+		int listSize  =  results.size();
+		Boolean bFindContent;
 		
-		while (pos < listSize-1    )   {
+		while (pos < listSize-1)   {
 			
 			while ( (pos < listSize-1) && (results.get(pos).code.equals( results.get(pos+x).code))   ) {
 				
-				insertContent = false;
 				// difference between the two projectCode
 				if (! results.get(pos).projectCodes.get(0).equals(results.get(pos+x).projectCodes.get(0))) {
 					if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.get(0))) {
@@ -407,11 +406,23 @@ public class LimsCNGDAO {
 					if (! results.get(pos).sampleCodes.contains(results.get(pos+x).sampleCodes.get(0))) {
 							
 						results.get(pos).sampleCodes.add( results.get(pos+x).sampleCodes.get(0) );
-						
-						createContent(results, pos, pos+x); 
-						insertContent = true;
 					}
 				}
+				
+				
+				bFindContent = false;
+				//just to be sure that we don't create content in double
+				for (Content content : results.get(pos).contents) {
+					if ( (content.sampleCode.equals(results.get(pos+x).contents.get(0).sampleCode))  
+								&& (content.properties.get("tag").value.equals(results.get(pos+x).contents.get(0).properties.get("tag").value)) ) {
+						bFindContent = true;
+						Logger.debug("content already created !");
+					}
+				}
+				
+				
+				if (!bFindContent) createContent(results, pos, pos+x);
+				
 								
 				// all the difference have been reported on the first sample found (at the position pos)
 				// so we can delete the sample at the position (posNext)
