@@ -1011,7 +1011,7 @@ angular.module('datatableServices', []).
 		    						}
 		    						
 		    						if(columns[i].type === "img" || columns[i].type === "image"){
-		    							if(!columns[i].format)console.log("missinf format for "+columns[i].property);
+		    							if(!columns[i].format)console.log("missing format for "+columns[i].property);
 		    							if(!columns[i].width)columns[i].width='100%';
 		    						}
 		    						
