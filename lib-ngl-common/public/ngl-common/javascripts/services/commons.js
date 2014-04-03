@@ -135,6 +135,9 @@ angular.module('commonsServices', []).
     				runs : function(params){
     					load(jsRoutes.controllers.runs.api.Runs.list().url,params,'runs');    				
     				},
+    				reportConfigs : function(params){
+    					load(jsRoutes.controllers.reporting.api.ReportingConfigurations.list().url,params,'reportConfigs');    				
+    				},
     				all : function(params){
     					this.resolutions(params);
     					this.containerCategories(params);

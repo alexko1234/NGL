@@ -12,6 +12,10 @@ public class Column implements IValidation{
 	public String format;
 	public String render; //angular expression
 	public String filter; //angular expression
+	public Boolean edit;
+	public String choiceInList;
+	public String listStyle;
+	public String possibleValues;
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {

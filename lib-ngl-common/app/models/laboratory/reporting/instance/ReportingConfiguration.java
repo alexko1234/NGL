@@ -10,7 +10,7 @@ import fr.cea.ig.DBObject;
 
 public class ReportingConfiguration extends DBObject implements IValidation {
 
-	public String label;
+	public String name;
 	public TraceInformation traceInformation;
 	public List<String> pageCodes; //code des pages sur lesquelles on souhaite l'afficher
 	public List<Column> columns;
