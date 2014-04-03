@@ -20,8 +20,11 @@ public class Main extends CommonController {
 
 	
    public static Result home() {
-	   return ok(home.render());
-        
-    }
+	   return ok(home.render());    
+   }
+   
+   public static Result jsMessages() {
+       return ok(JsMessages.generate("Messages", lang())).as("application/javascript");
+   }
    
 }
