@@ -5,12 +5,12 @@
 @scripts() = {
 }
 
-@views.html.main("home.page.name", menu("home"), scripts) {
+@views.html.main("home.title.name", menu("home"), scripts) {
  <div  class="row">
   <div class="col-md-12 col-lg-12">
   	<div class="jumbotron">
    		<h1>@Messages("home.h10.header", Context.current().request().username())</h1>
-    	<p>@Messages("home.page.comment")</p> 
+    	<p>@Messages("home.p.comment")</p> 
    	</div>
   </div>
  </div>
