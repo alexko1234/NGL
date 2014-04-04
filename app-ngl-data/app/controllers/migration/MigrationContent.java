@@ -44,12 +44,14 @@ import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
 /**
- * Update tag in the Container (add missing values)
- * @author dnoisett
+ * Update contents in the Container (add missing contents, update properties)
+ * This migration replaces MigrationTag (scope larger)
  * 
+ * @author dnoisett
+ * 04/04/2014
  */
 @Repository
-public class MigrationTag extends CommonController {
+public class MigrationContent extends CommonController {
 	
 	private static final String CONTAINER_COLL_NAME_BCK = InstanceConstants.CONTAINER_COLL_NAME + "_BCKmigrationTag";
 	
@@ -68,7 +70,7 @@ public class MigrationTag extends CommonController {
 	@Autowired
 	@Qualifier("lims")
 	public void setDataSource(DataSource dataSource) {
-		MigrationTag.jdbcTemplate = new JdbcTemplate(dataSource);              
+		MigrationContent.jdbcTemplate = new JdbcTemplate(dataSource);              
 	}
 	
 	
@@ -172,7 +174,6 @@ public class MigrationTag extends CommonController {
 		int pos = 0;
 		int x=1;
 		int listSize  =  results.size();
-		Boolean bFindContent;
 		
 		while (pos < listSize-1)   {
 			
@@ -194,18 +195,7 @@ public class MigrationTag extends CommonController {
 				}
 				
 				
-				bFindContent = false;
-				//just to be sure that we don't create content in double
-				for (Content content : results.get(pos).contents) {
-					if ( (content.sampleCode.equals(results.get(pos+x).contents.get(0).sampleCode))  
-								&& (content.properties.get("tag").value.equals(results.get(pos+x).contents.get(0).properties.get("tag").value)) ) {
-						bFindContent = true;
-						Logger.debug("content already created !");
-					}
-				}
-				
-				
-				if (!bFindContent) createContent(results, pos, pos+x);
+				createContent(results, pos, pos+x);
 				
 								
 				// all the difference have been reported on the first sample found (at the position pos)
@@ -263,6 +253,8 @@ public class MigrationTag extends CommonController {
 	
 	public static Result migration() {
 		
+		int n=0;
+		
 		JacksonDBCollection<Container, String> containersCollBck = MongoDBDAO.getCollection(CONTAINER_COLL_NAME_BCK, Container.class);
 		if (containersCollBck.count() == 0) {
 	
@@ -276,106 +268,52 @@ public class MigrationTag extends CommonController {
 			try {
 				newContainers = findContainerToCreate(contextError);
 			} catch (DAOException e) {
-				Logger.debug("ERROR in findContainer():" + e.getMessage());
+				Logger.debug("ERROR in findContainerToCreate():" + e.getMessage());
 			}
-			
-			
-			//set a map with the new values of tag indexed by codes
-			Map<String, String> m1 = new HashMap<String, String>();
-			Map<String, Map> m2 = new HashMap<String, Map>();
-			String m1Value = "";
-			
-			for (Container newContainer : newContainers) {
-				for (Content newContent : newContainer.contents) {
-					if (newContent.properties.get("tag") != null) {
-						m1Value = (String) newContent.properties.get("tag").value + "_" + (String) newContent.properties.get("tagCategory").value;
-						m1.put(newContent.sampleCode, m1Value);
-					}
-				}
-				m2.put(newContainer.code, m1);
-			}
-			//end of setting map 
-			
-			
-			String newTag = "";
-			String tagCategory = "";
-			String strValue = "";
-			Boolean bChangeTag;
 			
 			//find current collection
 			List<Container> oldContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 
+			//delete all contents
+			for (Container oldContainer : oldContainers) {
+				WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
+						DBUpdate.unset("contents"));
+					
+				if(StringUtils.isNotEmpty(r.getError())){
+					Logger.error("Unset contents : "+oldContainer.code+" / "+r.getError());
+				}				
+			}
+			
+			Logger.info("Remove old contents OK");
+
 			//iteration over current collection
 			for (Container oldContainer : oldContainers) {
 				
-			 //if (oldContainer.code.equals("62VBAAAXX_4")) {
-				 
-				bChangeTag = false;
-				
-				for (int i=0; i<oldContainer.contents.size(); i++) {
+				for (Container newContainer : newContainers) {
 					
-					if (m2.get(oldContainer.code) != null) {
-						
-						strValue = (String) (m2.get(oldContainer.code)).get(oldContainer.contents.get(i).sampleCode);
-						if (strValue != null && strValue.contains("_")) {
+					if (oldContainer.code.equals(newContainer.code)) {	
+						oldContainer.contents = newContainer.contents;
+					 
+						WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
+								DBUpdate.set("contents", oldContainer.contents));
 							
-							newTag = strValue.substring(0, strValue.indexOf("_")); 
-							tagCategory = strValue.substring(strValue.indexOf("_")+1);
-							
-							if (newTag != "") {
-								
-								if (oldContainer.contents.get(i).properties != null) {
-								
-									PropertySingleValue pTag = new PropertySingleValue();
-									pTag.value = newTag;
-									PropertySingleValue pTagCategory = new PropertySingleValue();
-									pTagCategory.value = tagCategory;
-									
-									if (oldContainer.contents.get(i).properties.get("tag") != null) {
-										oldContainer.contents.get(i).properties.get("tag").value = newTag;
-									}
-									else {
-										Logger.info("Insert tag for this container, container.code=" + oldContainer.code + ", i=" + i );
-										
-										oldContainer.contents.get(i).properties.put("tag", pTag);
-									}
-									oldContainer.contents.get(i).properties.put("tagCategory", pTagCategory);
-									
-									bChangeTag = true;
-																	
-								}
-								else {
-									Logger.error("No properties for this container, container.code=" + oldContainer.code + ", i=" + i );
-								}
-							}
-							else {
-								Logger.info("newTag=" + newTag + ", container.code=" + oldContainer.code + ", i=" + i ); 
-							}
-																					
+						if(StringUtils.isNotEmpty(r.getError())){
+							Logger.error("Set contents : "+oldContainer.code+" / "+r.getError());
 						}
+						
+						n++;
+						break;
 					}
-
 				}
-
-				if (bChangeTag) {
-					WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
-						DBUpdate.set("contents", oldContainer.contents));
-					
-					if(StringUtils.isNotEmpty(r.getError())){
-						Logger.error("Update CONT : "+oldContainer.code+" / "+r.getError());
-					}
-	
-				}
-			 //} //fin test	
+				
 			}	//end for containers
 						
 		} else {
 			Logger.info("Migration containers already executed !");
 		}
 		
-		Logger.info("Migration container (tag) Finish");
+		Logger.info("Migration container (tag) Finish : " + n + " contents of containers updated !");
 		return ok("Migration container (tag) Finish");
-	
 	}
 
 	private static void backUpContainer() {
