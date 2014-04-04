@@ -27,8 +27,13 @@ angular.module('datatableServices', []).
 													"possibleValues":null, //The list of possible choices
 													"format" : null, //number format or date format or datetime format
 													"extraHeaders":{"0":"Inputs"}, //the extraHeaders list
+													"tdClass : function with data and property as parameter than return css class or just the css class"
+													"
 												  }*/
 							columnsUrl:undefined, //Load columns config
+							lines : {
+								trClass : undefined // function with data than return css class or just the css class
+							},
 							search : {
 								active:true,
 								mode:'remote', //or local but not implemented
@@ -240,7 +245,8 @@ angular.module('datatableServices', []).
 		    				
 		    				this.displayResult = [];
 		    				angular.forEach(_displayResult, function(value, key){
-	    						 this.push({data:value, edit:undefined, selected:undefined, trClass:undefined});
+		    					 var line = {edit:undefined, selected:undefined, trClass:undefined};
+	    						 this.push({data:value, line:line});
 	    					}, this.displayResult);
 		    				
 		    				if(this.config.edit.byDefault){
@@ -417,7 +423,7 @@ angular.module('datatableServices', []).
 		    			show : function(){
 		    				if(this.config.show.active && angular.isFunction(this.config.show.add)){
 		    					angular.forEach(this.displayResult, function(value, key){
-		    						if(value.selected){
+		    						if(value.line.selected){
 		    							this.config.show.add(value.data);
 		    						}
 		    					}, this);
@@ -468,11 +474,11 @@ angular.module('datatableServices', []).
 			    				var find = false;
 			    				for(var i = 0; i < this.displayResult.length; i++){
 			    					
-			    					if(this.displayResult[i].selected || this.config.edit.withoutSelect){
-			    						this.displayResult[i].edit=true;			    						
+			    					if(this.displayResult[i].line.selected || this.config.edit.withoutSelect){
+			    						this.displayResult[i].line.edit=true;			    						
 			    						find = true;			    					
 			    					}else{
-			    						this.displayResult[i].edit=false;
+			    						this.displayResult[i].line.edit=false;
 			    					}			    					   					
 			    				}
 			    				this.selectAll(false);
@@ -530,7 +536,7 @@ angular.module('datatableServices', []).
 		    				if(this.config.edit.active){
 			    				var getter = $parse(columnPropertyName);
 		    					for(var i = 0; i < this.displayResult.length; i++){
-			    					if(this.displayResult[i].edit){
+			    					if(this.displayResult[i].line.edit){
 										getter.assign(this.displayResult[i].data,this.config.edit.columns[columnId].value);
 			    					}
 			    				}
@@ -552,11 +558,11 @@ angular.module('datatableServices', []).
 		    					var data = [];
 		    					var valueFunction = this.getValueFunction(this.config.save.value);
 		    					for(var i = 0; i < this.displayResult.length; i++){
-			    					if(this.displayResult[i].edit || this.config.save.withoutEdit){
+			    					if(this.displayResult[i].line.edit || this.config.save.withoutEdit){
 			    						//remove datatable properties to avoid this data are retrieve in the json
 			    						this.config.save.number++;
-			    						this.displayResult[i].trClass = undefined;
-				    					this.displayResult[i].selected = undefined;
+			    						this.displayResult[i].line.trClass = undefined;
+				    					this.displayResult[i].line.selected = undefined;
 				    					
 			    						if(this.isRemoteMode(this.config.save.mode) && !this.config.save.batch){
 			    							//add the url in table to used $q
@@ -612,9 +618,9 @@ angular.module('datatableServices', []).
 		    			saveRemoteOneElement : function(status, value, index){
 		    				if(status !== 200){
 								if(this.config.save.changeClass){
-									this.displayResult[index].trClass = "error";
+									this.displayResult[index].line.trClass = "error";
 		    					}
-								this.displayResult[index].edit = true;
+								this.displayResult[index].line.edit = true;
 								this.config.save.error++;
 								this.config.save.number--;
 								this.saveFinish();
@@ -656,13 +662,13 @@ angular.module('datatableServices', []).
 								this.allResult[j] = angular.copy(this.displayResult[i].data);
 		    					
 		    					if(!this.config.save.keepEdit){
-		    						this.displayResult[i].edit = undefined;
+		    						this.displayResult[i].line.edit = undefined;
 		    					}else{
-		    						this.displayResult[i].edit = true;		    						
+		    						this.displayResult[i].line.edit = true;		    						
 		    					}
 			    				
 								if(this.config.save.changeClass){
-									this.displayResult[i].trClass = "success";
+									this.displayResult[i].line.trClass = "success";
 								}
 								this.config.save.number--;
 		    				}else{
@@ -720,7 +726,7 @@ angular.module('datatableServices', []).
 			    					this.config.remove.number = 0;
 			    					this.config.remove.error = 0;
 			    					for(var i = 0; i < localDisplayResult.length; i++){
-				    					if(localDisplayResult[i].selected && (!localDisplayResult[i].edit || this.config.remove.withEdit)){
+				    					if(localDisplayResult[i].line.selected && (!localDisplayResult[i].line.edit || this.config.remove.withEdit)){
 				    						this.config.remove.number++;
 				    						this.removeLocal(i);			    										    						
 				    					}						
@@ -813,7 +819,7 @@ angular.module('datatableServices', []).
 		    			canRemove: function(){
 		    				if(this.config.remove.active && !this.config.remove.start){
 			    				for(var i = 0; this.displayResult && i < this.displayResult.length; i++){
-		    						if(this.displayResult[i].selected && (!this.displayResult[i].edit || this.config.remove.withEdit))return true;	    						
+		    						if(this.displayResult[i].line.selected && (!this.displayResult[i].line.edit || this.config.remove.withEdit))return true;	    						
 		    					}
 		    				}else{
 		    					//console.log("remove is not active !");
@@ -822,25 +828,6 @@ angular.module('datatableServices', []).
 		    			},
 		    			//select
     					/**
-    					 * Select all the table line or just one
-    					 */
-						select : function(line){
-							if(this.config.select.active){
-			    				if(line){
-			    					if(!line.selected){
-			    						line.selected=true;
-			    						line.trClass="info";
-			    					}
-									else{
-										line.selected=false;
-			    						line.trClass=undefined;
-									}
-			    				}
-							}else{
-								//console.log("select is not active");
-							}
-		    			},
-		    			/**
 		    			 * Select or unselect all line
 		    			 */
 		    			selectAll : function(value){
@@ -848,11 +835,11 @@ angular.module('datatableServices', []).
 			    				this.config.select.isSelectAll = value;
 			    				for(var i = 0; i < this.displayResult.length; i++){
 			    					if(value){
-			    						this.displayResult[i].selected=true;
-			    						this.displayResult[i].trClass="info";
+			    						this.displayResult[i].line.selected=true;
+			    						this.displayResult[i].line.trClass="info";
 			    					}else{
-			    						this.displayResult[i].selected=false;
-			    						this.displayResult[i].trClass=undefined;
+			    						this.displayResult[i].line.selected=false;
+			    						this.displayResult[i].line.trClass=undefined;
 			    					}
 		    					}
 		    				}else{
@@ -866,11 +853,11 @@ angular.module('datatableServices', []).
 		    			getSelection : function(unselect){
 		    				var selection = [];
 		    				for(var i = 0; i < this.displayResult.length; i++){
-		    					if(this.displayResult[i].selected){
+		    					if(this.displayResult[i].line.selected){
 		    						//unselect selection
 		    						if(unselect){
-		    							this.displayResult[i].selected = false;
-		    							this.displayResult[i].trClass=undefined;
+		    							this.displayResult[i].line.selected = false;
+		    							this.displayResult[i].line.trClass=undefined;
 		    						}
 		    						selection.push(angular.copy(this.displayResult[i].data));
 		    					}
@@ -883,7 +870,7 @@ angular.module('datatableServices', []).
 		    			 */
 		    			isSelect: function(){
 		    				for(var i = 0; this.displayResult && i < this.displayResult.length; i++){
-	    						if(this.displayResult[i].selected)return true;	    						
+	    						if(this.displayResult[i].line.selected)return true;	    						
 	    					}
 		    				return false;
 		    			},
@@ -1246,7 +1233,7 @@ angular.module('datatableServices', []).
 		    			
 		    			getValueElement : function(col){  
 	    					if(angular.isDefined(col.render) && col.render !== null){
-	    						return '<span dt-compile="dtTable.config.columns[$index].render(value.data, value)"></span>';	    						
+	    						return '<span dt-compile="dtTable.config.columns[$index].render(value.data, value.line)"></span>';	    						
 		    				}else{
 		    					if(col.type === "boolean"){
 		    						return '<div ng-switch on="'+this.getNgModel(col)+'"><i ng-switch-when="true" class="fa fa-check-square-o"></i><i ng-switch-default class="fa fa-square-o"></i></div>';	    						
@@ -1412,7 +1399,7 @@ angular.module('datatableServices', []).
   		    		+'<div class="btn-group" ng-if="dtTable.isShowHideButtons()">' //todo bt-select
   		    		+	'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.hide\')}}">'
   		    		+		'<i class="fa fa-eye-slash fa-lg"></i> '
-  		    		+		'<span ng-if="!dtTable.isCompactMode()">{{messagesDatatable(\'datatable.button.hide\')}} </span>'
+  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{messagesDatatable(\'datatable.button.hide\')}} </span>'
   		    		+		'<span class="caret"></span>'  		    		
   		    		+	'</button>'
   		    		+	'<ul class="dropdown-menu">'
@@ -1428,7 +1415,7 @@ angular.module('datatableServices', []).
   		    		+'</div>'
   		    		+'<div class="btn-toolbar pull-right" name="dt-toolbar-pagination"  ng-if="dtTable.isShowToolbarPagination()">'
   		    		+	'<div class="btn-group" ng-if="dtTable.isShowPagination()">'
-  		    		+		'<ul class="pagination"><li ng-repeat="page in dtTable.config.pagination.pageList" ng-class="page.clazz"><a href="#" ng-click="dtTable.setPageNumber(page)">{{page.label}}</a></li></ul>'
+  		    		+		'<ul class="pagination"><li ng-repeat="page in dtTable.config.pagination.pageList" ng-class="page.clazz"><a href="#" ng-click="dtTable.setPageNumber(page)" ng-bind="page.label"></a></li></ul>'
   		    		+	'</div>'
   		    		+	'<div class="btn-group">'
   		    		+		'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">'
@@ -1491,8 +1478,8 @@ angular.module('datatableServices', []).
   		    		+			'<div dt-cell-header/>'
   		    		+		'</td>'
   		    		+	'</tr>'
-  		    		+	'<tr ng-repeat="value in dtTable.displayResult | orderBy:dtTable.config.orderBy:dtTable.config.orderReverse" ng-click="dtTable.select(value)" ng-class="value.trClass">'
-  		    		+		'<td ng-repeat="col in dtTable.config.columns" rowspan="{{col.cells[$parent.$index].rowSpan}}" ng-hide="dtTable.isHide(col.id)">'
+  		    		+	'<tr ng-repeat="value in dtTable.displayResult | orderBy:dtTable.config.orderBy:dtTable.config.orderReverse" ng-click="select(value.line)" ng-class="getTrClass(value.data, value.line, this)">'
+  		    		+		'<td ng-repeat="col in dtTable.config.columns" rowspan="{{col.cells[$parent.$index].rowSpan}}" ng-hide="dtTable.isHide(col.id)" ng-class="getTdClass(value.data, col, this)">'
   		    		+		'<div dt-cell/>'
   		    		+		'</td>'
   		    		+	'</tr>'
@@ -1501,7 +1488,48 @@ angular.module('datatableServices', []).
   		    		+'</form>'
   		    		+'</div></div>',
   		    	link: function(scope, element, attr) {
-  		    		//console.log("dtTable");
+  		    		scope.getTrClass = function(data, line){
+  		    			var dtTable = this.dtTable;
+	    				if(line.trClass){
+	    					return line.trClass; 
+	    				}else if(angular.isFunction(dtTable.config.lines.trClass)){
+	    					return dtTable.config.lines.trClass(data, line);
+	    				} else if(angular.isString(dtTable.config.lines.trClass)){
+	    					return this.$eval(dtTable.config.lines.trClass) || dtTable.config.lines.trClass;
+	    				}else{
+	    					return '';
+	    				}		    				
+	    			};
+	    			scope.getTdClass = function(data, col){
+	    				if(angular.isFunction(col.tdClass)){
+	    					return col.tdClass(data, col.property, $parse);
+	    				} else if(angular.isString(col.tdClass)){
+	    					//we try to evaluation the string against the scope
+	    					return this.$eval(col.tdClass) || col.tdClass;
+	    				}else{
+	    					return '';
+	    				}
+	    			};
+	    			/**
+					 * Select all the table line or just one
+					 */
+					scope.select = function(line){
+						var dtTable = this.dtTable;
+						if(dtTable.config.select.active){
+		    				if(line){
+		    					if(!line.selected){
+		    						line.selected=true;
+		    						line.trClass="info";
+		    					}
+								else{
+									line.selected=false;
+		    						line.trClass=undefined;
+								}
+		    				}
+						}else{
+							//console.log("select is not active");
+						}
+	    			};
   		    	}
     		};
     	}).directive("dtCell", function(){
@@ -1522,7 +1550,7 @@ angular.module('datatableServices', []).
     			restrict: 'A',
   		    	replace:true,
   		    	template:	
-  		    		'<div ng-switch on="dtTable.isEdit(col.id, value)">'
+  		    		'<div ng-switch on="dtTable.isEdit(col.id, value.line)">'
 	  		    		+'<div ng-switch-when="true" >'
 	  		    		+	'<div dt-cell-edit></div>'  		    		
 	  		    		+'</div>'
