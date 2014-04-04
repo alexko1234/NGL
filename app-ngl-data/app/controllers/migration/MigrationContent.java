@@ -53,7 +53,7 @@ import fr.cea.ig.MongoDBDAO;
 @Repository
 public class MigrationContent extends CommonController {
 	
-	private static final String CONTAINER_COLL_NAME_BCK = InstanceConstants.CONTAINER_COLL_NAME + "_BCKmigrationTag";
+	private static final String CONTAINER_COLL_NAME_BCK = InstanceConstants.CONTAINER_COLL_NAME + "_BCKmigrationContent";
 	
 	private static JdbcTemplate jdbcTemplate;
 	
