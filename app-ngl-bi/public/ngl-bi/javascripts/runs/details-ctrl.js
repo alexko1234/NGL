@@ -58,13 +58,16 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			cancel : {
 				showButton:false
 			},
-			
+			lines : {
+				trClass : function(value){
+					if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
+		    			return "info";
+		    		}		    		
+				}
+			},
 			columns : [
 			    {  	property:"number",
 			    	render:function(value, line){
-			    		if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
-			    			line.trClass = "warning";
-			    		}
 			    		return "<strong>"+value.number+"</strong>";
 			    	},
 			    	header: "runs.lane.code",
@@ -309,13 +312,17 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 			pagination:{active:false},
 			select:{active:false},
 			showTotalNumberRecords:false,
-			cancel : {active:false},						
+			cancel : {active:false},
+			lines : {
+				trClass : function(value){
+					if(value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
+		    			return "info";
+		    		}		    		
+				}
+			},
 			columns : [
 			    {  	property:"number",
 			    	render:function(value, line){
-			    		if(value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
-			    			line.trClass = "warning";
-			    		}
 			    		return "<strong>"+value.number+"</strong>";
 			    	},
 			    	header: Messages("runs.lane.code"),
@@ -411,12 +418,16 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 				number:1,
 				dynamic:true,
 			},
+			lines : {
+				trClass : function(value){
+					if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
+		    			return "info";
+		    		}		    		
+				}
+			},
 			columns : [
 			    {  	property:"number",
 			    	render:function(value, line){
-			    		if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
-			    			line.trClass = "warning";
-			    		}
 			    		return "<strong>"+value.number+"</strong>";
 			    	},
 			    	header: Messages("runs.lane.code"),
@@ -554,12 +565,16 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 				number:1,
 				dynamic:true,
 			},
+			lines : {
+				trClass : function(value){
+					if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
+			    		return "info";
+		    		}		    		
+				}
+			},
 			columns : [
 			    {  	property:"number",
 			    	render:function(value, line){
-			    		if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
-			    			line.trClass = "warning";
-			    		}
 			    		return "<strong>"+value.number+"</strong>";
 			    	},
 			    	header: "runs.lane.code",
