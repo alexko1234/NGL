@@ -359,15 +359,7 @@ public class LimsCNGDAO {
 					else {
 						content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppress it at the end of the function...
 						content.properties.put("tagCategory",new PropertySingleValue("-1"));
-					}
-					
-					if(rs.getString("percent_per_lane")!=null) { 
-						content.properties.put("percentPerLane",new PropertySingleValue(rs.getString("percent_per_lane")));
-					}
-					else {
-						content.properties.put("percentPerLane",new PropertySingleValue("-1")); 
-					}
-					
+					}					
 
 					container.contents.add(content);			
 					
@@ -442,9 +434,6 @@ public class LimsCNGDAO {
 				if (r.contents.get(i).properties.get("tagCategory").value.equals("-1")) {
 					r.contents.get(i).properties.remove("tagCategory");
 				}
-				if (r.contents.get(i).properties.get("percentPerLane").value.equals("-1")) {
-					r.contents.get(i).properties.remove("percentPerLane");
-				}
 			}
 		}
 		
@@ -461,21 +450,19 @@ public class LimsCNGDAO {
 	 */
 	private List<Container>  createContent(List<Container> results, int posCurrent, int posNext) throws DAOException{
 
-		Content sampleUsed=new Content();
-		sampleUsed.sampleCode= results.get(posNext).sampleCodes.get(0);
+		Content content=new Content();
+		content.sampleCode= results.get(posNext).sampleCodes.get(0);
 		
 		SampleType sampleType=null;
 		sampleType = SampleType.find.findByCode(SAMPLE_USED_TYPE_CODE);	
-		sampleUsed.sampleTypeCode = sampleType.code;
-		sampleUsed.sampleCategoryCode = sampleType.category.code;
+		content.sampleTypeCode = sampleType.code;
+		content.sampleCategoryCode = sampleType.category.code;
 		
-		sampleUsed.properties = new HashMap<String, PropertyValue>();
-		sampleUsed.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
-		sampleUsed.properties.put("tagCategory",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tagCategory").value  ));
+		content.properties = new HashMap<String, PropertyValue>();
+		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
+		content.properties.put("tagCategory",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tagCategory").value  ));
 		
-		sampleUsed.properties.put("percentPerLane",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("percentPerLane").value ));
-		
-		results.get(posCurrent).contents.add(sampleUsed); 
+		results.get(posCurrent).contents.add(content); 
 		
 		return results;
 	}
