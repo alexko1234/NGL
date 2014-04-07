@@ -95,8 +95,8 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			//TODO: a verifier
 			s.valuation.valid = TBoolean.UNSET;
 
-			s.projectCodes = newProjectCodes;
-			s.sampleCodes = newSampleCodes;							
+			s.projectCodes = new  ArrayList<String>(newProjectCodes);
+			s.sampleCodes = new  ArrayList<String>(newSampleCodes);							
 		}
 		return s;
 	}
