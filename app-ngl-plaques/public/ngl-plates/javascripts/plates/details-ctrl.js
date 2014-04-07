@@ -49,17 +49,18 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 			cancel : {
 				showButton:false
 			},
+			lines : {
+				trClass : function(value){
+					if(value.valid === "TRUE"){
+		    			return "success";
+		    		}else if(value.valid === "FALSE") {
+		    			return "danger";
+		    		}		    		
+				}
+			},
 			columns : [
 					    {  	property:"code",
-					    	header: Messages("plates.table.well.code"),
-					    	render:function(value,displayR){
-					    		if(value.valid === "TRUE"){
-					    			displayR.trClass = "success";
-					    		}else if(value.valid === "FALSE") {
-					    			displayR.trClass = "danger";
-					    		}
-					    		return value.code;
-					    	},
+					    	header: Messages("plates.table.well.code"),					    	
 					    	type :"String"
 						},
 						{  	property:"name",
@@ -252,9 +253,9 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 						}						
 					}		
 					if(isError){
-						$scope.plate.wells[i].trClass = "danger";						
+						$scope.plate.wells[i].line.trClass = "danger";						
 					}else{
-						$scope.plate.wells[i].trClass = "success";
+						$scope.plate.wells[i].line.trClass = "success";
 					}
 				} 
 				
