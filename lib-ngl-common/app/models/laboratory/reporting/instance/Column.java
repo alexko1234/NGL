@@ -16,6 +16,8 @@ public class Column implements IValidation{
 	public String choiceInList;
 	public String listStyle;
 	public String possibleValues;
+	public String tdClass;
+	public String groupBy;
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {

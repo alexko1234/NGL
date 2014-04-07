@@ -99,7 +99,7 @@ angular.module('commonsServices', []).
     					load(jsRoutes.controllers.processes.api.ProcessTypes.list().url,params,'processTypes');
     				},
     				valuationCriterias: function(params){
-    					load(jsRoutes.controllers.lists.api.Lists.valuationCriterias().url,params,'valuationCriterias');    					
+    					load(jsRoutes.controllers.valuation.api.ValuationCriterias.list().url,params,'valuationCriterias');    					
     				},
     				supports : function(params){
     					load(jsRoutes.controllers.supports.api.Supports.list().url,params,'supports'); 
@@ -251,7 +251,7 @@ angular.module('commonsServices', []).
   		    			+'</div>'
   		    			+'<div class="dropdown" ng-switch-when="true">'
   				        +'<input type="text" ng-class="inputClass" data-toggle="dropdown" role="button" value="{{selectedItemLabel()}}" style="cursor:context-menu;"/>'
-  				        +'<ul class="dropdown-menu"  role="menu">'
+  				        +'<ul class="dropdown-menu {{btDropdownClass}}"  role="menu">'
   				        +'<li ng-repeat-start="item in getItems()" ng-if="groupBy(item, $index)" class="divider"></li>'
   				        +'<li class="dropdown-header" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></li>'
 		    	  		+'<li ng-repeat-end ng-click="selectItem(item, $event)">'
@@ -269,6 +269,10 @@ angular.module('commonsServices', []).
 	      		      if (!ctrls[0]) return;
 	      		      scope.inputClass = element.attr("class");
 	      		      element.attr("class",''); //remove custom class
+	      		      
+	      		      if(attr.btDropdownClass){
+	      		    	  scope.btDropdownClass = attr.btDropdownClass
+	      		      }
 	      		      
 	      		      var ngModelCtrl = ctrls[0],
 	      		          multiple = attr.multiple || false,

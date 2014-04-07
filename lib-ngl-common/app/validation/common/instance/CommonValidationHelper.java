@@ -2,18 +2,21 @@ package validation.common.instance;
 
 import static validation.utils.ValidationHelper.required;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 import play.Logger;
 
 import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBQuery.Query;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
+import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
@@ -388,15 +391,12 @@ public class CommonValidationHelper {
 	}
 
 	public static void validateCriteriaCode(String typeCode, String criteriaCode, ContextValidation contextValidation) {
-		try {
-			if (null != criteriaCode) {
-				if (!models.laboratory.common.description.ValuationCriteria.find.isCodeExistForTypeCode(criteriaCode, typeCode)) {
-					contextValidation.addErrors("criteriaCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, criteriaCode);
-				}	
-			}
-		} catch(DAOException e) {
-			throw new RuntimeException(e);
-		}
+		if (null != criteriaCode) {
+			Query q = DBQuery.and(DBQuery.is("code", criteriaCode), DBQuery.is("typeCodes", typeCode));
+			if(!MongoDBDAO.checkObjectExist(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class, q)){
+				contextValidation.addErrors("criteriaCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, criteriaCode);
+			}				
+		}		
 	}
 	
 	public static void validateValuation(String typeCode, Valuation valuation, ContextValidation contextValidation) {
