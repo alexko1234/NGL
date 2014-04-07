@@ -280,7 +280,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				$scope.lanesDT.setEdit();
 			}
 			$scope.lists.refresh.resolutions({typeCode:$scope.run.typeCode});
-			$scope.lists.refresh.valuationCriterias({typeCode:$scope.run.typeCode});
+			$scope.lists.refresh.valuationCriterias({typeCode:$scope.run.typeCode, objectTypeCode:"Run"});
 			
 			if(angular.isDefined($scope.run.lanes[0].treatments)){
 				$scope.treatments.init($scope.run.lanes[0].treatments, jsRoutes.controllers.runs.tpl.Runs.laneTreatments);				

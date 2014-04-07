@@ -6,7 +6,7 @@ function getCommonColumns(columns){
 	
 	columns.push({	property:"code",
 		    	  	header: "readsets.code",
-		    	  	type :"text",
+		    	  	type :"text",		    	  	
 		    	  	order:true});
 	columns.push({	property:"runCode",
 					header: "readsets.runCode",
@@ -27,7 +27,8 @@ function getCommonColumns(columns){
 	columns.push({	property:"runSequencingStartDate",
 					header: "runs.sequencingStartDate",
 					type :"date",
-					order:true});	
+					order:true});
+	
 	return columns;
 };
 
@@ -80,6 +81,30 @@ function getValuationColumns(columns){
 			    	listStyle:'bt-select',
 			    	possibleValues:'listsTable.getValuations()'
 			    	});
+	
+	columns.push({	property:"productionValuation.criteriaCode",
+					filter:"codes:'valuation_criteria'",
+					header: "readsets.productionValuation.criteria",
+					type :"text",
+			    	edit:true,
+			    	choiceInList:true,
+			    	listStyle:'bt-select',
+			    	possibleValues:'listsTable.getValuationCriterias()'
+    });
+	
+	columns.push({	property:"productionValuation.resolutionCodes",
+					header: "readsets.productionValuation.resolutions",
+					render:'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in listsTable.getResolutions()" ng-edit="false"></div>',
+					type :"text",
+			    	edit:true,
+			    	choiceInList:true,
+			    	listStyle:'bt-select-multiple',
+			    	possibleValues:'listsTable.getResolutions()',
+			    	groupBy:'category.name'
+			    		
+	});
+	
+	
 	columns.push({	property:"bioinformaticValuation.valid",
 					filter:"codes:'valuation'",
 					header: "readsets.bioinformaticValuation.valid",
@@ -198,7 +223,7 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', '$http
 	init();
 }]);
 
-angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'datatable', function($scope, $routeParams, datatable) {
+angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'datatable', '$parse', function($scope, $routeParams, datatable, $parse) {
 
 	var datatableConfig = {
 			order :{by:'runSequencingStartDate', reverse : true},
@@ -214,8 +239,17 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'data
 			columns : getSearchColumns(getCommonColumns([]))
 	};
 	
-	
-	
+	/*
+	datatableConfig.columns.push(
+				{	
+					property:"treatments.ngsrg.default.Q30.value|number:5",
+					header: "Q30",
+					type :"number",
+					order:true,
+					tdClass: 'valuationCriteriaClass(value.data, col.property)'
+				}
+	);
+	*/
 	var init = function(){
 		//to avoid to lost the previous search		
 		if(angular.isUndefined($scope.getDatatable())){
@@ -288,7 +322,8 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', 'datatable', 'li
 }]);
 
 
-angular.module('home').controller('SearchValuationCtrl', ['$scope', 'datatable', 'lists', '$routeParams', function($scope, datatable, lists, $routeParams) {
+angular.module('home').controller('SearchValuationCtrl', ['$scope', '$http', 'datatable', 'lists', '$routeParams', '$parse', 
+                                                          function($scope, $http, datatable, lists, $routeParams, $parse) {
 
 	$scope.listsTable = lists;
 	
@@ -315,6 +350,47 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', 'datatable',
 				}
 			},
 			columns : getValuationColumns(getCommonColumns([]))
+	};
+	
+	var criterias = {};
+	
+	$scope.valuationCriteriaClass = function(value, propertyName){
+		
+		if(value.productionValuation.criteriaCode && criterias[value.productionValuation.criteriaCode]){
+			
+			var criteria = criterias[value.productionValuation.criteriaCode];
+			var property;
+			for(var i = 0; i < criteria.properties.length; i++){
+				if(criteria.properties[i].name === propertyName){
+					property = criteria.properties[i];
+					break;
+				}
+			}
+			
+			for(var i = 0; i  < property.expressions.length; i++){
+				var expression = property.expressions[i];
+				if($parse(expression.rule)({pValue : $parse(propertyName)(value)})){
+					return expression.result;
+				}
+			}
+				
+			
+			
+			/*
+			var expression = "pValue < 80";
+			// TODO eval qc et bioinfo
+			if($parse(expression)({pValue : $parse(property)(value)})){
+				return "success";
+			}else{
+				return "danger";
+			}
+			*/
+			
+			
+		}else{
+			return undefined;
+		}
+		
 	};
 	
 	
@@ -344,6 +420,17 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', 'datatable',
 			$scope.addTabs({label:Messages('readsets.page.tab.validate'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("valuation").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
+
+		$scope.listsTable.refresh.resolutions({objectTypeCode:"ReadSet"});
+		$scope.listsTable.refresh.valuationCriterias({objectTypeCode:"ReadSet"});
+		
+		$scope.$watch("listsTable.getValuationCriterias()", function(newValue, oldValue){
+			if(newValue && newValue.length > 0){
+				for(var i = 0 ; i < newValue.length; i++){
+					criterias[newValue[i].code] = newValue[i]; 
+				}
+			}
+		});
 	};
 	
 	init();

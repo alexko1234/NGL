@@ -6,7 +6,10 @@ import java.util.List;
 import models.laboratory.common.description.CodeLabel;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.dao.CodeLabelDAO;
+import models.laboratory.valuation.instance.ValuationCriteria;
+import models.utils.InstanceConstants;
 import controllers.CommonController;
+import fr.cea.ig.MongoDBDAO;
 import jsmessages.JsMessages;
 import play.api.modules.spring.Spring;
 import play.i18n.Lang;
@@ -42,6 +45,14 @@ public class Main extends CommonController {
 			sb.append("\"").append(cl.tableName).append(".").append(cl.code)
 			.append("\":\"").append(cl.label).append("\",");
 		}
+		
+		List<ValuationCriteria> criterias = MongoDBDAO.find(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class).toList();
+		for(ValuationCriteria vc:  criterias){
+			sb.append("\"").append("valuation_criteria").append(".").append(vc.code)
+			.append("\":\"").append(vc.name).append("\",");
+		}
+		
+		
 		sb.append("\"valuation.TRUE\":\"Oui\",");
 		sb.append("\"valuation.FALSE\":\"Non\",");
 		sb.append("\"valuation.UNSET\":\"---\"");
