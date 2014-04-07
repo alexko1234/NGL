@@ -9,7 +9,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			typeCode:"",
 			state:{
 				resolutionCodes:[],
-				code:"N"
+				code:""
 			},
 			protocolCode:"",
 			instrument:{
@@ -479,7 +479,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 	
 	$scope.changeState = function(){
 		$scope.clearMessages();
-		$http.put(jsRoutes.controllers.experiments.api.Experiments.nextState($scope.experiment.value.code).url)
+		$http.put(jsRoutes.controllers.experiments.api.Experiments.nextState($scope.experiment.value.code).url, $scope.experiment.value)
 		.success(function(data, status, headers, config) {
 			if(data!=null){
 				$scope.message.clazz="alert alert-success";
@@ -492,7 +492,6 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 		.error(function(data, status, headers, config) {
 			$scope.message.clazz = "alert alert-danger";
 			$scope.message.text = Messages('experiments.msg.save.error');
-			$scope.experiment.value.state.code = $scope.state;
 			$scope.message.details = data;
 			$scope.message.isDetails = true;
 		});
@@ -591,7 +590,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 	$scope.getInstrumentCategory = function(intrumentUsedTypeCode){
 		$http.get(jsRoutes.controllers.instruments.api.InstrumentCategories.list().url, {params:{instrumentTypeCode:intrumentUsedTypeCode, list:true}})
 		.success(function(data, status, headers, config) {
-			$scope.experiment.value.instrument.categoryCode = data[0].name;
+			$scope.experiment.value.instrument.categoryCode = data[0].code;
 		})
 		.error(function(data, status, headers, config) {
 			$scope.message.clazz = "alert alert-danger";

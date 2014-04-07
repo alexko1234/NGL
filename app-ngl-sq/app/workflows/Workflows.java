@@ -132,7 +132,7 @@ public class Workflows {
 	 */
 	public static void setExperimentState(Experiment experiment, State nextState, ContextValidation ctxValidation){
 
-		ctxValidation.getContextObjects().put("stateCode", nextState.code);
+		ctxValidation.getContextObjects().put("statCode", nextState.code);
 		ExperimentValidationHelper.validateState(experiment.typeCode, nextState, ctxValidation);
 
 		//il fau peut etre valider tout l'experiment quand il passe à "F"
@@ -195,7 +195,9 @@ public class Workflows {
 		state.date=new Date();
 		state.user=InstanceHelpers.getUser();
 		
-		if(experiment.state.code.equals("N")){
+		if(experiment.state == null || experiment.state.code.equals("")){
+			state.code = "N";
+		}else if(experiment.state.code.equals("N")){
 			state.code = "IP";
 		}else if(experiment.state.code.equals("IP")){
 			state.code = "F";

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
@@ -47,6 +48,11 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		}
 	}
 	
+	public static void validateState(String typeCode, State state, ContextValidation contextValidation){
+		if(contextValidation.getObject("stateCode")!=null){
+			CommonValidationHelper.validateState(typeCode, state, contextValidation);
+		}
+	}
 	
 	public static void validationExperimentType(
 			String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation) {

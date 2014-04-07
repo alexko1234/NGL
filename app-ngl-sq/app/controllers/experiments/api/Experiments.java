@@ -194,9 +194,10 @@ public class Experiments extends CommonController{
 	}
 
 	public static Result updateStateCode(String code, String stateCode){
-		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
-
-		ContextValidation ctxValidation = new ContextValidation();
+		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
+		Experiment exp = experimentFilledForm.get();
+		
+		ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
 		//il faut sauvegarder l'experiment avant de changer d'etat
 		if(exp._id == null){
 			// A revoir avec la validation
@@ -210,27 +211,30 @@ public class Experiments extends CommonController{
 		newState.user=InstanceHelpers.getUser();
 
 		Workflows.setExperimentState(exp,newState,ctxValidation);
+		
 
 		if (!ctxValidation.hasErrors()) {	 	
+			exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 			return ok();
 		}
 
-		return badRequest(ctxValidation.errors.toString());
+		return badRequest(experimentFilledForm.errorsAsJson());
 	}
 
 	
 	public static Result nextState(String code){
-		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
+		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
+		Experiment exp = experimentFilledForm.get();
 		
-		ContextValidation ctxValidation = new ContextValidation();
+		ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
 		
 		Workflows.nextExperimentState(exp, ctxValidation);
 		if (!ctxValidation.hasErrors()) {	
+			exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 			return ok(Json.toJson(exp));
 		}
 		
-		
-		return badRequest(ctxValidation.errors.toString());
+		return badRequest(experimentFilledForm.errorsAsJson());
 	}
 
 	/**
@@ -242,23 +246,19 @@ public class Experiments extends CommonController{
 	public static Result save() throws DAOException{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
-
+		
+		ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
+		
 		exp.code = CodeHelper.generateExperiementCode(exp);
-		if(exp.state == null || exp.state.code.equals("")){
-			exp.state = new State("N",InstanceHelpers.getUser());
-		}else{
-			exp.state.code = "N";
-			exp.state.date = new Date();
-			exp.state.user = InstanceHelpers.getUser();
-		}
-
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
-
+		
 		if (!experimentFilledForm.hasErrors()) {
 			//exp=ExperimentHelper.updateInstrumentCategory(exp);
 			//exp = (Experiment) InstanceHelpers.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp, new ContextValidation(experimentFilledForm.errors()));
 			exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 		}
+
+		Workflows.nextExperimentState(exp, ctxValidation);
 
 		if (!experimentFilledForm.hasErrors()) {
 			return ok(Json.toJson(exp));
