@@ -83,6 +83,9 @@ angular.module('commonsServices', []).
     				instruments : function(params){
     					load(jsRoutes.controllers.instruments.api.Instruments.list().url,params,'instruments');
     				},
+    				instrumentCategories : function(params){
+    					load(jsRoutes.controllers.instruments.api.InstrumentCategories.list().url,params,'instrumentCategories');
+    				},
     				instrumentUsedTypes : function(params){
     					load(jsRoutes.controllers.instruments.api.InstrumentUsedTypes.list().url,params,'instrumentUsedTypes');
     				},
@@ -183,6 +186,7 @@ angular.module('commonsServices', []).
     			getExperimentTypes : function(){return results['experimentTypes'];},
     			getStates : function(){return results['states'];},
     			getRuns : function(){return results['runs'];},
+    			getInstrumentCategories : function(){return results['instrumentCategories'];},
     			getTypes : function(params){
 	    						if(params != undefined){
 	    							return results[params+'Types'];

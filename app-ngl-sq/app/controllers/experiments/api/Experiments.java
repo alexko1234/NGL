@@ -225,8 +225,12 @@ public class Experiments extends CommonController{
 		ContextValidation ctxValidation = new ContextValidation();
 		
 		Workflows.nextExperimentState(exp, ctxValidation);
+		if (!ctxValidation.hasErrors()) {	
+			return ok(Json.toJson(exp));
+		}
 		
-		return ok(Json.toJson(exp));
+		
+		return badRequest(ctxValidation.errors.toString());
 	}
 
 	/**

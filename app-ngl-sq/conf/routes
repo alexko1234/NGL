@@ -78,6 +78,7 @@ GET		/api/projects/list												controllers.projects.api.Projects.list()
 
 #instruments
 GET		/api/instruments/types  										controllers.instruments.api.InstrumentUsedTypes.list()
+GET		/api/instruments/categories  									controllers.instruments.api.InstrumentCategories.list()
 GET		/api/instruments												controllers.instruments.api.Instruments.list()
 
 #Common

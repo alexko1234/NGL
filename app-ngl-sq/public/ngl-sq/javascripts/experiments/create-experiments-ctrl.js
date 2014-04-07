@@ -486,7 +486,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 				$scope.message.text=Messages('experiments.msg.save.sucess')
 				//$scope.experiment.value = data;
 				$scope.state=data.state;
-				$scope.experiment.value.state.code = data.state;
+				$scope.experiment.value.state = data.state;
 			}
 		})
 		.error(function(data, status, headers, config) {
@@ -581,10 +581,25 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 		}
 		
 		if($scope.experiment.value.instrument.typeCode != null ){
+			$scope.getInstrumentCategory($scope.experiment.value.instrument.typeCode);
 			$scope.lists.refresh.instruments({"typeCode":$scope.experiment.value.instrument.typeCode});
 			$scope.lists.refresh.containerSupportCategories({"instrumentUsedTypeCode":$scope.experiment.value.instrument.typeCode});
 			$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,loaded);
 		}
+	};
+	
+	$scope.getInstrumentCategory = function(intrumentUsedTypeCode){
+		$http.get(jsRoutes.controllers.instruments.api.InstrumentCategories.list().url, {params:{instrumentTypeCode:intrumentUsedTypeCode, list:true}})
+		.success(function(data, status, headers, config) {
+			$scope.experiment.value.instrument.categoryCode = data[0].name;
+		})
+		.error(function(data, status, headers, config) {
+			$scope.message.clazz = "alert alert-danger";
+			$scope.message.text = Messages('experiments.msg.save.error');
+
+			$scope.message.details = data;
+			$scope.message.isDetails = true;
+		});
 	};
 	
 	$scope.getInstrumentProperties = function(code,loaded){

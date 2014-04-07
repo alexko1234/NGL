@@ -112,6 +112,13 @@ experiments.begin_progress = Demarrer la progression
 experiments.sampleSheet = Feuille de route
 experiments.finish  = Terminer
 experiments.finished  = Terminé
+experiments.type = Type D''expérience
+experiments.resolution = Résolution expérience
+experiments.protocol = Protocole
+experiments.creationDate = Date de création
+experiments.createUser = Crée par
+experiments.modifyDate = Date de modification
+experiments.modifyBy = Modifié par
 
 experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée

@@ -19,8 +19,8 @@ public class Instruments extends CommonController{
 	final static Form<InstrumentsSearchForm> instrumentForm = form(InstrumentsSearchForm.class);
 
 	public static Result list() throws DAOException{
-		Form<InstrumentsSearchForm> processTypeFilledForm = filledFormQueryString(instrumentForm,InstrumentsSearchForm.class);
-		InstrumentsSearchForm instrumentsQueryParams = processTypeFilledForm.get();
+		Form<InstrumentsSearchForm> instrumentTypeFilledForm = filledFormQueryString(instrumentForm,InstrumentsSearchForm.class);
+		InstrumentsSearchForm instrumentsQueryParams = instrumentTypeFilledForm.get();
 
 		List<Instrument> instruments;
 

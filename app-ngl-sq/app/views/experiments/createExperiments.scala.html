@@ -87,13 +87,13 @@
 						<p class="form-control-static">{{experiment.value.typeCode}}</p>
 					}			    
 			   	 	@columnLabelValue(Messages("experiments.state")){
-						<div ng-switch on="experiment.value.stateCode">
-								<button class="btn btn-default" ng-switch-when="N" ng-disabled="experiment.value._id == null" ng-click="changeState('IP')" >@Messages("experiments.begin_progress")</button>
+						<div ng-switch on="experiment.value.state.code">
+								<button class="btn btn-default" ng-switch-when="N" ng-disabled="experiment.value._id == null" ng-click="changeState()" >@Messages("experiments.begin_progress")</button>
 								<!--<button  class="btn btn-default" ng-switch-when="IP" ng-click="changeState('OK')" >@Messages("experiments.ok")</button>-->
-								<button  class="btn btn-default" ng-switch-when="IP" ng-disabled="experiment.value._id == null" ng-click="changeState('F')" >@Messages("experiments.finish")</button>
+								<button  class="btn btn-default" ng-switch-when="IP" ng-disabled="experiment.value._id == null" ng-click="changeState()" >@Messages("experiments.finish")</button>
 								<b ng-switch-when="F">@Messages("experiments.finished")</b>
 							</div>
-					}	
+					}
 			    	@columnLabelValue(Messages("experiments.resolution")){
 							<div class="form-control"  bt-select ng-model="experiment.value.state.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" 
 									bt-options="resolution.code as resolution.name for resolution in lists.get('resolutions')" 
@@ -213,18 +213,19 @@
 				  <div class="panel-body">
 				  
 				    <form class="form-horizontal">
-				    @columnLabelValue(Messages("experiments.createUser")){
-						<p class="form-control-static">{{experiment.value.traceInformation.createUser}}</p>
-					}
 				    @columnLabelValue(Messages("experiments.creationDate")){
 						<p class="form-control-static">{{experiment.value.traceInformation.creationDate | date:'yyyy-MM-dd HH:mm:ss'}}</p>
 					}
+				    @columnLabelValue(Messages("experiments.createUser")){
+						<p class="form-control-static">{{experiment.value.traceInformation.createUser}}</p>
+					}
+				   	@columnLabelValue(Messages("experiments.modifyDate")){
+						<p class="form-control-static">{{experiment.value.traceInformation.modifyDate | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+					}	
 				    @columnLabelValue(Messages("experiments.modifyBy")){
 						<p class="form-control-static">{{experiment.value.traceInformation.modifyUser}}</p>
 					}
-				    @columnLabelValue(Messages("experiments.modifyDate")){
-						<p class="form-control-static">{{experiment.value.traceInformation.modifyDate | date:'yyyy-MM-dd HH:mm:ss'}}</p>
-					}				    								
+				   			    								
 					</form>
 				  </div>
 				</div>
