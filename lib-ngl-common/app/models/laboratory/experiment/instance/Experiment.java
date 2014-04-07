@@ -4,24 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.experiment.description.ExperimentCategory;
-import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.instance.InstrumentUsed;
-import models.laboratory.project.instance.Project;
 import models.laboratory.reagent.instance.ReagentUsed;
-import models.laboratory.sample.instance.Sample;
-import models.utils.HelperObjects;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import validation.ContextValidation;
 import validation.IValidation;

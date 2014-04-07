@@ -7,12 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.OneToVoidContainer;
-import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.InstanceConstants;
@@ -25,7 +20,6 @@ import net.vz.mongodb.jackson.DBUpdate;
 import net.vz.mongodb.jackson.DBUpdate.Builder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonNode;
 
 import play.Logger;
 import play.api.modules.spring.Spring;
@@ -41,7 +35,6 @@ import com.mongodb.BasicDBObject;
 
 import controllers.CodeHelper;
 import controllers.CommonController;
-import controllers.authorisation.PermissionHelper;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -62,6 +55,7 @@ public class Experiments extends CommonController{
 			builder=builder.set("typeCode",exp.typeCode);
 			builder=builder.set("resolutionCodes",exp.state.resolutionCodes);
 			builder=builder.set("protocolCode",exp.protocolCode);
+			builder=builder.set("state.resolutionCodes",exp.state.resolutionCodes);
 
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
@@ -157,7 +151,7 @@ public class Experiments extends CommonController{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
 		return ok(Json.toJson(instrumentUsedType.propertiesDefinitions));
 	}
 
@@ -246,8 +240,13 @@ public class Experiments extends CommonController{
 		Experiment exp = experimentFilledForm.get();
 
 		exp.code = CodeHelper.generateExperiementCode(exp);
-		exp.state = new State("N",InstanceHelpers.getUser());
-		
+		if(exp.state == null || exp.state.code.equals("")){
+			exp.state = new State("N",InstanceHelpers.getUser());
+		}else{
+			exp.state.code = "N";
+			exp.state.date = new Date();
+			exp.state.user = InstanceHelpers.getUser();
+		}
 
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
