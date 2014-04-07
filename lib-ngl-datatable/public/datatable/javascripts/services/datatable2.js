@@ -618,7 +618,7 @@ angular.module('datatableServices', []).
 		    			saveRemoteOneElement : function(status, value, index){
 		    				if(status !== 200){
 								if(this.config.save.changeClass){
-									this.displayResult[index].line.trClass = "error";
+									this.displayResult[index].line.trClass = "danger";
 		    					}
 								this.displayResult[index].line.edit = true;
 								this.config.save.error++;
@@ -691,12 +691,12 @@ angular.module('datatableServices', []).
 		    					if(angular.isFunction(this.config.save.callback)){
 			    					this.config.save.callback(this, this.config.save.error);
 			    				}
-		    					
-		    					this.config.save.error = 0;
-		    					this.config.save.start = false;	
-		    					if(!this.config.save.keepEdit){
+		    					if(!this.config.save.keepEdit && this.config.save.error === 0){
 		    						this.config.edit.start = false;
 		    					}
+		    					this.config.save.error = 0;
+		    					this.config.save.start = false;	
+		    					
 		    				}
 	    					
 		    			},
@@ -1233,7 +1233,11 @@ angular.module('datatableServices', []).
 		    			
 		    			getValueElement : function(col){  
 	    					if(angular.isDefined(col.render) && col.render !== null){
-	    						return '<span dt-compile="dtTable.config.columns[$index].render(value.data, value.line)"></span>';	    						
+	    						if(angular.isFunction(col.render)){
+	    							return '<span dt-compile="dtTable.config.columns[$index].render(value.data, value.line)"></span>';
+	    						}else if(angular.isString(col.render)){
+	    							return '<span dt-compile="dtTable.config.columns[$index].render"></span>';
+	    						}
 		    				}else{
 		    					if(col.type === "boolean"){
 		    						return '<div ng-switch on="'+this.getNgModel(col)+'"><i ng-switch-when="true" class="fa fa-check-square-o"></i><i ng-switch-default class="fa fa-square-o"></i></div>';	    						
@@ -1287,10 +1291,10 @@ angular.module('datatableServices', []).
 		    							editElement = '<select class="form-control" multiple="true" ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getNgModel(col,header)+ngChange+'></select>';
 			    						break;
 		    						case "bt-select":
-		    							editElement = '<div class="form-control" bt-select placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getNgModel(col,header)+ngChange+'></div>';			        		  	    	
+		    							editElement = '<div class="form-control" bt-select placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getNgModel(col,header)+ngChange+'></div>';			        		  	    	
 		    							break;
 		    						case "bt-select-multiple":
-		    							editElement = '<div class="form-control" bt-select multiple="true" placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getNgModel(col,header)+ngChange+'></div>';			        		  	    	
+		    							editElement = '<div class="form-control" bt-select multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getNgModel(col,header)+ngChange+'></div>';			        		  	    	
 		    							break;
 		    						default:
 		    							editElement = '<select class="form-control" ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getNgModel(col,header)+ngChange+'></select>';
