@@ -29,93 +29,10 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import play.Logger;
 import validation.ContextValidation;
-import validation.container.instance.ContainerValidationHelper;
 import validation.utils.BusinessValidationHelper;
 
 public class ContainerHelper {
 
-	/**
-	 * 
-	 * Create au niveau Container from a ResultSet
-	 * 
-	 * The resultset must return fields :code, project, sampleCode, comment, codeSupport, limsCode, receptionDate, mesuredConcentration, mesuredVolume, mesuredQuantity, indexBq, nbContainer
-	 * 
-	 * @param rs ResulSet from Query
-	 * @param containerCategoryCode 
-	 * @param containerStatecode
-	 * @return
-	 * @throws SQLException
-	 * @throws DAOException 
-	 */
-	public static Container createContainerFromResultSet(ResultSet rs, String containerCategoryCode, String containerStatecode, String experimentTypeCode) throws SQLException, DAOException{
-
-		Container container = new Container();
-		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
-		//Logger.debug("Container :"+rs.getString("code"));
-		container.code=rs.getString("code");
-		container.categoryCode=containerCategoryCode;
-
-		container.comments=new ArrayList<Comment>();				
-		container.comments.add(new Comment(rs.getString("comment")));
-		
-		container.state = new State(); 
-		container.state.code=containerStatecode;
-		container.state.user = InstanceHelpers.getUser();
-		container.state.date = new Date();
-
-		
-		container.valuation = new Valuation(); 
-		container.valuation.valid=TBoolean.UNSET; // instead of valid=null;
-
-		//TODO 
-		container.support=ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nbContainer"), rs.getString("codeSupport"), rs.getString("column"), rs.getString("line"));
-
-		container.properties= new HashMap<String, PropertyValue>();
-		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("limsCode")));
-		
-		if(rs.getString("receptionDate")!=null){
-			container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));
-		}
-
-		container.mesuredConcentration=new PropertySingleValue(rs.getFloat("mesuredConcentration"), "ng/µl");
-		container.mesuredVolume=new PropertySingleValue(rs.getFloat("mesuredVolume"), "µl");
-		container.mesuredQuantity=new PropertySingleValue(rs.getFloat("mesuredQuantity"), "ng");
-
-		container.fromExperimentTypeCodes=InstanceHelpers.addCode(experimentTypeCode, container.fromExperimentTypeCodes);
-
-		container.projectCodes=new ArrayList<String>();					
-
-		if(rs.getString("project")!=null)
-		{					
-			container.projectCodes.add(rs.getString("project"));
-		}
-		
-		if(rs.getString("controlLane")!=null){
-			container.properties.put("controlLane",new PropertySingleValue(rs.getBoolean("controlLane")));
-		}
-			
-
-		container.sampleCodes=new ArrayList<String>();
-
-		if(rs.getString("sampleCode")!=null){
-			
-			Content sampleUsed=new Content();
-			sampleUsed.sampleCode=rs.getString("sampleCode");
-			
-			//Todo replace by method in containerHelper who update sampleCodes from contents
-			container.sampleCodes.add(rs.getString("sampleCode"));
-
-			if(rs.getString("tag")!=null){
-				sampleUsed.properties = new HashMap<String, PropertyValue>();
-				sampleUsed.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
-				sampleUsed.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagCategory")));
-			}
-			container.contents.add(sampleUsed);
-
-		}
-		return container;
-
-	}
 
 	public static void addContent(Container container, Sample sample) throws DAOException{
 		addContent(container,sample,null);
@@ -166,7 +83,7 @@ public class ContainerHelper {
 	}
 
 	//TODO 
-	public static void addContainerSupport(Container container,Experiment experiment){
+	/*public static void addContainerSupport(Container container,Experiment experiment){
 
 		if(container.support==null){
 			container.support=new LocationOnContainerSupport();
@@ -185,16 +102,10 @@ public class ContainerHelper {
 			container.support = containerSupport;
 			Logger.info("Not implemented");
 		}
-	}
+	}*/
 
 
 	///public static void addContaineSupport(Container container,)
-
-
-	//TODO
-	private static String getSupportCode(String outContainerSupportCategoryCode) {
-		return null;
-	}
 
 
 	/*	//Copy properties values from lists of properties definition and properties values in object Container
@@ -212,18 +123,14 @@ public class ContainerHelper {
 
 	}
 	 */
-
-	public static void generateCode(Container outputContainer) {
-		if(outputContainer.code==null){
-			if(outputContainer.projectCodes.size()==1 && outputContainer.sampleCodes.size()==1){
-				outputContainer.code=outputContainer.projectCodes.get(0)+"."+outputContainer.sampleCodes.get(0)+"."+(new SimpleDateFormat("yyyyMMddHHmmss.SSS")).format(new Date()).toUpperCase();		
-			} else  {
-				outputContainer.code="MULTI"+(new SimpleDateFormat("yyyyMMddHHmmss.SSS")).format(new Date()).toUpperCase();
-			}
-		}
-
-	}
 	
+	private static SimpleDateFormat getSimpleDateFormat(){
+		return new SimpleDateFormat("yyyyMMddHHmmss");
+	}
+
+	public static String generateContainerCode(String categoryCode){
+		return (categoryCode+"-"+getSimpleDateFormat().format(new Date())).toUpperCase();
+	}
 	
 	public static void createSupportFromContainers(List<Container> containers,ContextValidation contextValidation){
 		
@@ -231,7 +138,10 @@ public class ContainerHelper {
 		
 		for (Container container : containers) {
 			if (container.support != null) {
-				ContainerSupport newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
+				ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code, container.support.categoryCode,"ngl");
+				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
+				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);							
+
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
 				}
@@ -246,6 +156,17 @@ public class ContainerHelper {
 	
 		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, new ArrayList<ContainerSupport>(mapSupports.values()), contextValidation, true);
 	
+	}
+
+	public static List<Content> contentFromSampleCode(List<Content> contents,
+			String sampleCode) {
+		List<Content> contentsFind=new ArrayList<Content>();
+		for(Content content:contents){
+			if(content.sampleCode.equals(sampleCode)){
+				contentsFind.add(content);
+			}
+		}
+		return contentsFind;
 	}
 
 }

@@ -1,27 +1,17 @@
 package validation.container.instance;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TBoolean;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerCategory;
-import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.Content;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
-import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 
 public class ContainerValidationHelper extends CommonValidationHelper{
@@ -70,35 +60,6 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			support.validate(contextValidation);
 		}
 		contextValidation.removeKeyFromRootKeyName("containersupport");
-	}
-	
-	
-	public static ContainerSupport createSupport(LocationOnContainerSupport containerSupport, List<String> newProjectCodes, List<String> newSampleCodes) {
-		ContainerSupport s = null;
-		if (containerSupport != null && containerSupport.code != null) {
-
-			s = new ContainerSupport();
-			String user = "ngsrg"; //default value 
-
-			s.code = containerSupport.code;	
-			s.categoryCode = containerSupport.categoryCode;
-			
-			s.state = new State(); 
-			s.state.code = "A"; // default value
-			s.state.user = user;
-			s.state.date = new Date();
-			
-			s.traceInformation = new TraceInformation(); 
-			s.traceInformation.setTraceInformation(user);
-			s.valuation = new Valuation();
-			
-			//TODO: a verifier
-			s.valuation.valid = TBoolean.UNSET;
-
-			s.projectCodes = new  ArrayList<String>(newProjectCodes);
-			s.sampleCodes = new  ArrayList<String>(newSampleCodes);							
-		}
-		return s;
 	}
 	
 

@@ -7,6 +7,8 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.LocationOnContainerSupport;
+import models.utils.dao.DAOException;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonSubTypes;
@@ -14,6 +16,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonTypeInfo.As;
 import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
 
+import validation.ContextValidation;
 import validation.IValidation;
 
 
@@ -32,8 +35,10 @@ public abstract class AtomicTransfertMethod implements IValidation {
 	
 	public int position;
 	public Comment comment;
-	public abstract List<Container> createOutputContainerUsed(Experiment experiment);
+	public abstract void createOutputContainerUsed(Experiment experiment) throws DAOException;
 	@JsonIgnore
 	public abstract List<ContainerUsed> getInputContainers();
 	public abstract List<ContainerUsed> getOutputContainers();
+	
+	public abstract ContextValidation saveOutputContainers(Experiment experiment);
 }

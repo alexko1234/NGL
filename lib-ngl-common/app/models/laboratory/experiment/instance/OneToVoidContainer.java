@@ -3,7 +3,6 @@ package models.laboratory.experiment.instance;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.laboratory.container.instance.Container;
 import validation.ContextValidation;
 
 public class OneToVoidContainer extends AtomicTransfertMethod {
@@ -17,8 +16,7 @@ public class OneToVoidContainer extends AtomicTransfertMethod {
 	}
 
 	@Override
-	public List<Container> createOutputContainerUsed(Experiment experiment) {
-		return null;
+	public void createOutputContainerUsed(Experiment experiment) {
 	}
 
 	@Override
@@ -30,6 +28,11 @@ public class OneToVoidContainer extends AtomicTransfertMethod {
 
 	@Override
 	public List<ContainerUsed> getOutputContainers() {
+		return null;
+	}
+
+	@Override
+	public ContextValidation saveOutputContainers(Experiment experiment) {
 		return null;
 	}
 

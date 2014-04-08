@@ -20,48 +20,26 @@ import fr.cea.ig.MongoDBDAO;
 public class ExperimentHelper {
 
 
-	public static void generateOutputContainerUsed(Experiment exp, ContextValidation contextValidation){
+	public static void generateOutputContainerUsed(Experiment exp, ContextValidation contextValidation) throws DAOException{
 
-
-		List<Container> containers = new ArrayList<Container>();
 		if (!contextValidation.hasErrors()) {
 			for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-				if(!(exp.atomicTransfertMethods.get(i) instanceof  OneToVoidContainer)){
-					containers.addAll(exp.atomicTransfertMethods.get(i).createOutputContainerUsed(exp));
-				}
+				exp.atomicTransfertMethods.get(i).createOutputContainerUsed(exp);
 			}
-
-			MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
-			InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers,new ContextValidation( contextValidation.errors));
 		}
-
-
 	}
 
-	//TODO
+
+
+
 	public static void saveOutputContainerUsed(Experiment exp, ContextValidation contextValidation){
 
-
-		List<Container> containers = new ArrayList<Container>();
 		if (!contextValidation.hasErrors()) {
 			for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-				if(!(exp.atomicTransfertMethods.get(i) instanceof  OneToVoidContainer)){
-					containers.addAll(exp.atomicTransfertMethods.get(i).createOutputContainerUsed(exp));
-				}
+				contextValidation.errors.putAll(exp.atomicTransfertMethods.get(i).saveOutputContainers(exp).errors);
 			}
 
 
-			/*Builder builder = new DBUpdate.Builder();
-			builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
-
-			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
-			 */
-
-
-			MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
-
-
-			InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers,new ContextValidation( contextValidation.errors));
 		}
 
 
@@ -106,7 +84,7 @@ public class ExperimentHelper {
 				exp.sampleCodes = InstanceHelpers.addCodesList(exp.sampleCodes, container.sampleCodes);
 				exp.projectCodes = InstanceHelpers.addCodesList(exp.projectCodes, container.projectCodes);
 			}	
-	return exp;
+		return exp;
 	}
 
 
