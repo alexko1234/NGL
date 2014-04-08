@@ -16,7 +16,7 @@ angular.module('home').controller('TabMainCtrl', ['$scope', '$location', functio
 	};
 	
 	/**
-	 * function to get all tabs or one
+	 * "public" function to get all tabs or one
 	 */
 	$scope.getTabs = function(index){
 		if(angular.isUndefined(index)){
@@ -28,8 +28,15 @@ angular.module('home').controller('TabMainCtrl', ['$scope', '$location', functio
 	};
 	
 	/**
+	 * "public" function with the condition to show (or not) the icon which permits to remove the link
+	 */
+	$scope.canBeRemoved = function(value, index) {
+		return ((value.remove) && ((index>0) || (index==0) && ($scope.getTabs().length > 1))); 
+	}
+	
+	/**
 	 * "private" function to keep only the first tab and an eventually an other tab
-	 * (if active) to remenber the last selection
+	 * (if active) to remember the last selection
 	 */
 	var keepOnlyActiveTab = function(keepLastActiveTab, $event) { 
 		var firstTab = tabs[0];
@@ -50,21 +57,21 @@ angular.module('home').controller('TabMainCtrl', ['$scope', '$location', functio
 	}
 	
 	/**
-	 * function to get a tabs
+	 * "public" function to get a tab
 	 */
 	$scope.getTab = function(index){		
 		return tabs[index];				
 	};
 	
 	/**
-	 * function to reset all tabs
+	 * "public" function to reset all tabs
 	 */
 	$scope.resetTabs = function(){
 		tabs = [];
 	};
 	
 	/**
-	 * function to add tabs
+	 * "public" function to add tabs
 	 */
 	$scope.addTabs = function(newtabs){
 		if(angular.isArray(newtabs)){
@@ -95,21 +102,21 @@ angular.module('home').controller('TabMainCtrl', ['$scope', '$location', functio
 	};
 	
 	/**
-	 * set tab to a specific index
+	 * "public" function to set tab to a specific index
 	 */
 	$scope.setTab = function(index, tab){
 		tabs[index] = tab;	
 	};
 	
 	/**
-	 * remove one tab
+	 * "public" function to remove one tab
 	 */
 	$scope.removeTab = function(index){
 		tabs.splice(index,1);
 	};
 	
 	/**
-	 * remove current tab (if inactive) or re-init menu
+	 * "public" function to remove current tab (if inactive) or re-init menu
 	 */
 	$scope.removeOrKeepOnlyActiveTab = function(index, $event, keepLastActiveTab) {		 
 		if (index != 0) {
@@ -128,7 +135,7 @@ angular.module('home').controller('TabMainCtrl', ['$scope', '$location', functio
 	
 		
 	/**
-	 * Set one element of list active
+	 * "public" function to set one element of list active
 	 */
 	$scope.activeTab = function(value, changeLocation){
 		var tab = undefined;
@@ -156,6 +163,9 @@ angular.module('home').controller('TabMainCtrl', ['$scope', '$location', functio
 		}
 	};
 	
+	/**
+	 * "private" function to get the index of the active tab
+	 */
 	var getActiveTabIndex = function(){
 		for(var i = 0; i < tabs.length; i++){				
 			if(tabs[i].clazz == 'active'){
@@ -164,6 +174,7 @@ angular.module('home').controller('TabMainCtrl', ['$scope', '$location', functio
 		}
 		return null;
 	}
+	
 	
 	$scope.toggleTabs = function(){
 		$scope.hideTabs.hide = !$scope.hideTabs.hide;
@@ -180,21 +191,21 @@ angular.module('home').controller('TabMainCtrl', ['$scope', '$location', functio
 	};
 	
 	/**
-	 * Backup the current tabs
+	 * "public" function to backup the current tabs
 	 */
 	$scope.backupTabs = function(){
 		bcktabs = angular.copy(tabs);
 	}
 	
 	/**
-	 * Backup the current tabs
+	 * "public" function to know if tabs is backuped
 	 */
 	$scope.isBackupTabs = function(){
 		return !angular.isUndefined(bcktabs);
 	}
 	
 	/**
-	 * Backup the current tabs
+	 * "public" function to restore the backup tabs
 	 */
 	$scope.restoreBackupTabs = function(){
 		tabs = angular.copy(bcktabs);
@@ -202,7 +213,7 @@ angular.module('home').controller('TabMainCtrl', ['$scope', '$location', functio
 	}
 	
 	/**
-	 * function to keep the basket when we switch views
+	 * "public" function to keep the basket when we switch views
 	 */
 	$scope.getBasket = function(){
 		return basketMaster;
