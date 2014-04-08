@@ -120,8 +120,6 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 		Assert.assertTrue(contextValidation.errors.size()==0);
 	}
 			
-	
-	
 	//@Test
 	public void validationInstrumentUsedFinishTest() throws DAOException{
 		ContextValidation contextValidation=new ContextValidation();

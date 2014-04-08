@@ -53,7 +53,6 @@ public class Experiments extends CommonController{
 
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("typeCode",exp.typeCode);
-			builder=builder.set("resolutionCodes",exp.state.resolutionCodes);
 			builder=builder.set("protocolCode",exp.protocolCode);
 			builder=builder.set("state.resolutionCodes",exp.state.resolutionCodes);
 
@@ -229,14 +228,14 @@ public class Experiments extends CommonController{
 
 	
 	public static Result nextState(String code){
-		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
-		Experiment exp = experimentFilledForm.get();
+		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
+		
+		Form<Experiment> experimentFilledForm = experimentForm.fill(exp);
 		
 		ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
 		
 		Workflows.nextExperimentState(exp, ctxValidation);
-		if (!ctxValidation.hasErrors()) {	
-			exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+		if (!ctxValidation.hasErrors()) {
 			return ok(Json.toJson(exp));
 		}
 		
@@ -259,8 +258,6 @@ public class Experiments extends CommonController{
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 		
 		if (!experimentFilledForm.hasErrors()) {
-			//exp=ExperimentHelper.updateInstrumentCategory(exp);
-			//exp = (Experiment) InstanceHelpers.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp, new ContextValidation(experimentFilledForm.errors()));
 			exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 		}
 

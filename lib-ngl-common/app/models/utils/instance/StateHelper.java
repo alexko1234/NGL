@@ -19,11 +19,14 @@ public class StateHelper {
 		return nextState;
 	}
 	
+	
+	
 	public static State cloneState(State state) {
 		State nextState = new State();
 		nextState.code = state.code;
 		nextState.date = state.date;
 		nextState.user = state.user;
+		nextState.resolutionCodes = state.resolutionCodes;
 		return nextState;
 	}
 	

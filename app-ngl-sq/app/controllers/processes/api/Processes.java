@@ -3,7 +3,6 @@ package controllers.processes.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import models.laboratory.common.instance.State;
@@ -36,12 +35,10 @@ import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
-
 public class Processes extends CommonController{
 
 	final static Form<Process> processForm = form(Process.class);
 	final static Form<ProcessesSearchForm> processesSearchForm = form(ProcessesSearchForm.class);
-
 
 	public static Result save(){
 		Form<Process> filledForm = getFilledForm(processForm,Process.class);
@@ -88,6 +85,41 @@ public class Processes extends CommonController{
 		}			
 	}
 
+	public static Result update(String code){
+		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
+		if(process != null){
+			return badRequest("Process with code "+code+" does not exist");
+		}
+		
+		Form<Process> filledForm = getFilledForm(processForm, Process.class);
+		Process processInput = filledForm.get();
+		if (processInput.code.equals(code)) {
+			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+			ctxVal.setUpdateMode();
+			processInput.validate(ctxVal);
+			if (!ctxVal.hasErrors()) {
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, processInput);
+				
+				return ok(Json.toJson(processInput));
+			}else {
+				return badRequest(filledForm.errorsAsJson());			
+			}
+		}else{
+			return badRequest("process code are not the same");
+		}
+	}
+	
+	public static Result delete(String code){
+		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
+		if(process != null){
+			return badRequest("Process with code "+code+" does not exist");
+		}
+		
+		MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, process);
+		
+		return ok();
+	}
+	
 	public static Result list() throws DAOException{
 		Form<ProcessesSearchForm> processesFilledForm = filledFormQueryString(processesSearchForm,ProcessesSearchForm.class);
 		ProcessesSearchForm processesSearch = processesFilledForm.get();

@@ -1,6 +1,6 @@
 "use strict"
 
-function SearchCtrl($scope, datatable, lists,$filter) {
+angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','$filter', function($scope, datatable, lists,$filter) {
 	$scope.lists = lists;
 	
 	$scope.datatableConfig = {	
@@ -164,6 +164,4 @@ function SearchCtrl($scope, datatable, lists,$filter) {
 		$scope.lists.refresh.supports();
 		$scope.lists.refresh.states({objectTypeCode:"Container"});
 	}
-}
-
-SearchCtrl.$inject = ['$scope', 'datatable','lists','$filter'];
+}]);

@@ -33,6 +33,8 @@ GET		/tpl/processes/js-routes										controllers.processes.tpl.Processes.javas
 
 #processes api
 POST	/api/processus													controllers.processes.api.Processes.save()
+PUT		/api/processus/:code											controllers.processes.api.Processes.update(code:java.lang.String)
+DELETE	/api/processus/:code											controllers.processes.api.Processes.delete(code:java.lang.String)
 GET		/api/processus													controllers.processes.api.Processes.list()
 GET		/api/processus/types											controllers.processes.api.ProcessTypes.list()
 GET		/api/processus/categories										controllers.processes.api.ProcessCategories.list()

@@ -1,6 +1,7 @@
 "use strict";
 
-function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
+
+angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable','basket','lists','$filter', function($scope, datatable,basket, lists,$filter) {
 	$scope.lists = lists; 
 	
 	$scope.datatableConfig = {
@@ -191,11 +192,10 @@ function SearchContainerCtrl($scope, datatable,basket, lists,$filter) {
 			$scope.errors.processType = "alert-danger";
 		}
 	};
-};
-SearchContainerCtrl.$inject = ['$scope', 'datatable','basket','lists','$filter'];
+}]);
 
-function ListNewCtrl($scope, datatable) {
-	
+angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable', function($scope, datatable) {
+
 	$scope.datatableConfig = {
 			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns($scope.getForm().processType.code).url,
 			pagination:{
@@ -241,5 +241,4 @@ function ListNewCtrl($scope, datatable) {
 	$scope.basket = $scope.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);		
 	$scope.datatable.selectAll(true);
-};
-ListNewCtrl.$inject = ['$scope', 'datatable'];
+}]);

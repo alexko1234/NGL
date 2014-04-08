@@ -1,6 +1,6 @@
 "use strict"
+angular.module('home').controller('SearchCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http', function($scope,$location,$routeParams, datatable, lists,$filter,$http) {
 
-function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$http) {
 	$scope.lists = lists;
 	
 	$scope.datatableConfig = {
@@ -18,8 +18,9 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 			},
 			save:{
 				active:true,
-				url:jsRoutes.controllers.processes.api.Processes.save(),
-				mode:'remote'
+				url:function(line){return jsRoutes.controllers.processes.api.Processes.update(line.code).url;},
+				mode:'remote',
+				method:'put',
 			}
 	};
 	
@@ -136,6 +137,4 @@ function SearchCtrl($scope,$location,$routeParams, datatable, lists,$filter,$htt
 	if($scope.form.project || $scope.form.type){
 		$scope.search();
 	}
-}
-
-SearchCtrl.$inject = ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http'];
+}]);

@@ -12,14 +12,12 @@ public class CodeHelper {
 		return new SimpleDateFormat("yyyyMMddHHmmss");
 	}
 	
-	//ProcessusTypeCode/ProjectCode/SampeCode/YYYYMMDDHHMMSS
+	//ProcessusTypeCode-ProjectCode-SampeCode-YYYYMMDDHHMMSSSS
 	public static String generateProcessCode(Process process) {		
-		return (process.typeCode+"/"+process.projectCode+"/"+process.sampleCode+"/"+getSimpleDateFormat().format(new Date())).toUpperCase();		
+		return (process.typeCode+"-"+process.projectCode+"-"+process.sampleCode+"-"+new SimpleDateFormat("yyyyMMddHHmmssSS").format(new Date())).toUpperCase();		
 	}
 	
 	public static String generateExperiementCode(Experiment exp) {		
 		return (exp.typeCode+"-"+getSimpleDateFormat().format(new Date())).toUpperCase();		
 	}
-	
-	
 }

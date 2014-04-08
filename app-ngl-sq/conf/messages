@@ -119,6 +119,7 @@ experiments.creationDate = Date de création
 experiments.createUser = Crée par
 experiments.modifyDate = Date de modification
 experiments.modifyBy = Modifié par
+experiment.comments = Commentaires
 
 experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée

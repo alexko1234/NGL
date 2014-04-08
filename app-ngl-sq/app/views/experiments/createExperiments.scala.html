@@ -38,7 +38,6 @@
 			</a>
 			<ul class="dropdown-menu dropdown-menu-right">
 				<li><a href="#"  ng-disabled="experiment.value.stateCode != 'IP'" ng-click="generateSampleSheet()" >@Messages("experiments.sampleSheet")</a></li>
-				<li><a href="#" ng-click="outputGeneration();" ng-enabled="!experiment.outputGenerated && experiment.value.stateCode == 'IP'">@Messages("experiments.generateOutput")</a></li>
 			</ul>
 		</div>
 		<button class="btn btn-primary" ng-click="saveAll();" data-toggle="tooltip" title="@Messages("experiments.save_all")">

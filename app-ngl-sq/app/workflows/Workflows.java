@@ -46,7 +46,7 @@ public class Workflows {
 			experiment.state=nextState;
 
 			if(!ctxValidation.hasErrors()){
-				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,  Run.class, 
+				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,  Experiment.class, 
 						DBQuery.is("code", experiment.code),
 						//DBUpdate.set("state", experiment.state).set("traceInformation",experiment.traceInformation));
 						DBUpdate.set("state", experiment.state).set("traceInformation",experiment.traceInformation));
@@ -92,9 +92,7 @@ public class Workflows {
 	}
 	
 	public static void nextExperimentState(Experiment experiment,ContextValidation contextValidation){
-		State state = new State();
-		state.date=new Date();
-		state.user=InstanceHelpers.getUser();
+		State state = StateHelper.cloneState(experiment.state);
 		
 		if(experiment.state == null || experiment.state.code.equals("")){
 			state.code = "N";

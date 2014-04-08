@@ -39,7 +39,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			if(this.inputContainerUsed!=null){
 			String outPutContainerCode=ContainerHelper.generateContainerCode(experiment.instrument.outContainerSupportCategoryCode);
 			this.outputContainerUsed = new ContainerUsed(outPutContainerCode);
-
+			
 			LocationOnContainerSupport support=new LocationOnContainerSupport();
 			support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
 			// Same position 
@@ -47,6 +47,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			
 			if(containerSupportCategory.nbColumn==1 && containerSupportCategory.nbLine==1){
 				support.line="1";
+				support.code = outputContainerUsed.code;
 				support.column="1";
 			}else {
 				Logger.error("Location in support not implemented");

@@ -100,12 +100,14 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 					i++;
 				}
 				if($scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed!=undefined){
+					$scope.datatable.displayResult[i].data.outputContainerUsed = $scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed;
 					$scope.datatable.displayResult[i].data.outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.experimentProperties;					
 				}
 			}else{
 				$scope.datatable.displayResult[i].data.inputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties;
 				if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToMany"){
 					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds!=undefined){
+						$scope.datatable.displayResult[i].data.outputContainerUseds = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds;
 						for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].length;j++){
 							$scope.datatable.displayResult[i].data.outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].experimentProperties;
 							i++;
@@ -149,43 +151,11 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 		}
 	};
 	
-	$scope.outputGeneration = function(){
-			if(!$scope.isOutputGenerated()){
-				$http.put(jsRoutes.controllers.experiments.api.Experiments.generateOutput($scope.experiment.value.code).url, $scope.experiment.value)
-				.success(function(data, status, headers, config) {
-					if(data!=null){
-						$scope.clearMessages();
-						$scope.message.clazz="alert alert-success";
-						$scope.message.text=Messages('experiments.msg.save.sucess');
-						$scope.experiment.value = data;
-						for(var i=0;i<$scope.datatable.getData().length;i++){
-							if($scope.experiment.value.atomicTransfertMethods[i] != undefined && $scope.experiment.value.atomicTransfertMethods[i].class == "OneToOne"){
-								$scope.datatable.displayResult[i].outputContainerUsed = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed;
-							}else if($scope.experiment.value.atomicTransfertMethods[0].class == "ManyToOne"){
-								$scope.datatable.displayResult[i].outputContainerUsed = $scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed;
-							}
-						}
-						$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Code","outputContainerUsed.code",false, true,true,"String",false,undefined,{"0":"Outputs"}));	
-						//$scope.datatable.addColumn(-1,$scope.datatable.newColumn("SupportCode","outputContainerUsed.support.code",false, true,true,"String",false,undefined,{"0":"Outputs"}));						
-						$scope.addExperimentPropertiesOutputsColumns();
-						$scope.addInstrumentPropertiesOutputsColumns();
-						$scope.experimentToDatatable();
-					}
-				})
-				.error(function(data, status, headers, config) {
-					$scope.message.clazz = "alert alert-danger";
-					$scope.message.text = Messages('experiments.msg.save.error');
-		
-					$scope.message.details = data;
-					$scope.message.isDetails = true;
-				});
-			}
-	};
-	
 	$scope.isOutputGenerated = function(){
 		var j = 1;
 		while($scope.experiment.value.atomicTransfertMethods[(j-1)] != null){
 			if($scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUsed != null || $scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUseds != null){
+				$scope.experiment.outputGenerated = true;
 				return true
 			}
 			j++;
@@ -209,15 +179,15 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 					$http.put(jsRoutes.controllers.experiments.api.Experiments.updateExperimentInformations($scope.experiment.value.code).url, $scope.experiment.value)
 					.success(function(data, status, headers, config) {
 						if(data!=null){
-							$scope.message.clazz="alert alert-success";
-							$scope.message.text=Messages('experiments.msg.save.sucess')
+							//$scope.message.clazz="alert alert-success";
+							//$scope.message.text=Messages('experiments.msg.save.sucess')
 							$scope.experiment.value = data;
 						}
 					})
 					.error(function(data, status, headers, config) {
 						$scope.message.clazz = "alert alert-danger";
-						$scope.message.text = Messages('experiments.msg.save.error');
-						$scope.message.details = data;
+						$scope.message.text += Messages('experiments.msg.save.error');
+						$scope.message.details += data;
 						$scope.message.isDetails = true;
 					});
 				}else{
@@ -263,17 +233,17 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 					$http.put(jsRoutes.controllers.experiments.api.Experiments.updateExperimentProperties($scope.experiment.value.code).url, $scope.experiment.value)
 					.success(function(data, status, headers, config) {
 						if(data!=null){
-							$scope.message.clazz="alert alert-success";
-							$scope.message.text=Messages('experiments.msg.save.sucess')
+							//$scope.message.clazz="alert alert-success";
+							//$scope.message.text=Messages('experiments.msg.save.sucess')
 							$scope.experiment.value = data;
 							$scope.experimentToDatatable();
 						}
 					})
 					.error(function(data, status, headers, config) {
 						$scope.message.clazz = "alert alert-danger";
-						$scope.message.text = Messages('experiments.msg.save.error');
+						$scope.message.text += Messages('experiments.msg.save.error');
 
-						$scope.message.details = data;
+						$scope.message.details += data;
 						$scope.message.isDetails = true;
 					});
 				}
@@ -322,15 +292,15 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 				$http.put(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentInformations($scope.experiment.value.code).url, $scope.experiment.value)
 				.success(function(data, status, headers, config) {
 					if(data!=null){
-						$scope.message.clazz="alert alert-success";
-						$scope.message.text=Messages('experiments.msg.save.sucess')
+						//$scope.message.clazz="alert alert-success";
+						//$scope.message.text=Messages('experiments.msg.save.sucess')
 						$scope.experiment.value = data;
 					}
 				})
 				.error(function(data, status, headers, config) {
 					$scope.message.clazz = "alert alert-danger";
-					$scope.message.text = Messages('experiments.msg.save.error');
-					$scope.message.details = data;
+					$scope.message.text += Messages('experiments.msg.save.error');
+					$scope.message.details += data;
 					$scope.message.isDetails = true;
 				});
 			}
@@ -375,17 +345,17 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 					$http.put(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentProperties($scope.experiment.value.code).url, $scope.experiment.value)
 					.success(function(data, status, headers, config) {
 						if(data!=null){
-							$scope.message.clazz="alert alert-success";
-							$scope.message.text=Messages('experiments.msg.save.sucess')
+							//$scope.message.clazz="alert alert-success";
+							//$scope.message.text=Messages('experiments.msg.save.sucess')
 							$scope.experiment.value = data;
 							$scope.instrumentToDatatable();
 						}
 					})
 					.error(function(data, status, headers, config) {
 						$scope.message.clazz = "alert alert-danger";
-						$scope.message.text = Messages('experiments.msg.save.error');
+						$scope.message.text += Messages('experiments.msg.save.error');
 
-						$scope.message.details = data;
+						$scope.message.details += data;
 						$scope.message.isDetails = true;
 						alert("error");
 					});
@@ -402,8 +372,8 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 		$http.put(jsRoutes.controllers.experiments.api.Experiments.updateContainers($scope.experiment.value.code).url, $scope.experiment.value)
 		.success(function(data, status, headers, config) {
 			if(data!=null){
-				$scope.message.clazz="alert alert-success";
-				$scope.message.text=Messages('experiments.msg.save.sucess')
+				//$scope.message.clazz="alert alert-success";
+				//$scope.message.text += Messages('experiments.msg.save.sucess')
 				$scope.experiment.value = data;
 			}
 		})
@@ -439,23 +409,35 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 		});
 	};
 	
-	$scope.saveAll = function(){
-	alert($scope.experiment.value._id);
+	$scope.saveAllPromise = function(){
+		var promises = [];
 		if($scope.experiment.value._id != undefined){
-			$scope.experiment.experimentInformation.save();
+			promises.push($scope.experiment.experimentInformation.save());
 	
-			$scope.experiment.experimentProperties.save();
+			promises.push($scope.experiment.experimentProperties.save());
 	
-			$scope.experiment.instrumentProperties.save();
+			promises.push($scope.experiment.instrumentProperties.save());
 	
-			$scope.experiment.instrumentInformation.save();
+			promises.push($scope.experiment.instrumentInformation.save());
 	
-			$scope.datatable.save();
+			promises.push($scope.datatable.save());
 	
-			$scope.saveContainers();
+			promises.push($scope.saveContainers());
 		}else{
-			$scope.save();
+			promises.push($scope.save());
 		}
+		
+		return promises;
+	};
+	
+	$scope.saveAll = function(){
+		var promises = $scope.saveAllPromise();
+		$q.all(promises).then(function (res) {
+			if(	$scope.message.text != Messages('experiments.msg.save.error')){
+				$scope.message.clazz="alert alert-success";
+				$scope.message.text=Messages('experiments.msg.save.sucess');
+			}
+		});
 	};
 	
 	$scope.save = function(){
@@ -478,24 +460,38 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 	};
 	
 	$scope.changeState = function(){
-		$scope.clearMessages();
-		$http.put(jsRoutes.controllers.experiments.api.Experiments.nextState($scope.experiment.value.code).url, $scope.experiment.value)
-		.success(function(data, status, headers, config) {
-			if(data!=null){
-				$scope.message.clazz="alert alert-success";
-				$scope.message.text=Messages('experiments.msg.save.sucess')
-				//$scope.experiment.value = data;
-				$scope.state=data.state;
-				$scope.experiment.value.state = data.state;
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.message.clazz = "alert alert-danger";
-			$scope.message.text = Messages('experiments.msg.save.error');
-			$scope.message.details = data;
-			$scope.message.isDetails = true;
+		var promises = $scope.saveAllPromise();
+		$q.all(promises).then(function (res) {
+			$scope.clearMessages();
+			var promise = $http.put(jsRoutes.controllers.experiments.api.Experiments.nextState($scope.experiment.value.code).url)
+			.success(function(data, status, headers, config) {
+				if(data!=null){
+					$scope.message.clazz="alert alert-success";
+					$scope.message.text=Messages('experiments.msg.save.sucess')
+					$scope.experiment.value = data;
+					if(!$scope.experiment.outputGenerated && $scope.isOutputGenerated()){
+						$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Code","outputContainerUsed.code",false, true,true,"String",false,undefined,{"0":"Outputs"}));
+						//$scope.datatable.addColumn(-1,$scope.datatable.newColumn("SupportCode","outputContainerUsed.support.code",false, true,true,"String",false,undefined,{"0":"Outputs"}));
+						$scope.addExperimentPropertiesOutputsColumns();
+						$scope.addInstrumentPropertiesOutputsColumns();
+						$scope.experimentToDatatable();
+					}
+				}
+			})
+			.error(function(data, status, headers, config) {
+				$scope.message.clazz = "alert alert-danger";
+				$scope.message.text = Messages('experiments.msg.save.error');
+				$scope.message.details = data;
+				$scope.message.isDetails = true;
+			});
+			
+			 promise.then(function(res) {
+				if(	$scope.message.text != Messages('experiments.msg.save.error')){
+					$scope.message.clazz="alert alert-success";
+					$scope.message.text=Messages('experiments.msg.save.sucess');
+				}
+			});
 		});
-		
 	};
 
 	$scope.doPurifOrQc = function(code){
@@ -546,8 +542,10 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 	}
 	
 	$scope.init_experiment = function(containers,atomicTransfertMethod){
-		$scope.form.experiment = $scope.experiment;
-		$scope.setForm($scope.form);
+		if($scope.form != undefined && $scope.form.experiment != undefined){
+			$scope.form.experiment = $scope.experiment;
+			$scope.setForm($scope.form);
+		}
 		$scope.experiment.value.categoryCode = $scope.experimentType.category.code;
 		$scope.experiment.value.atomicTransfertMethods = {};
 		if($scope.experiment.value.code === ""){
@@ -755,7 +753,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 		}
 		
 		$scope.form = $scope.getForm();
-		if($scope.form.experimentType != undefined){
+		if($scope.form != undefined && $scope.form.experimentType != undefined){
 			$scope.experiment.value.typeCode = $scope.form.experimentType.code;
 		}
 		$scope.lists = lists;
@@ -842,6 +840,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 					//$scope.datatable.addColumn(-1,$scope.datatable.newColumn("SupportCode","outputContainerUsed.support.code",false, true,true,"String",false,undefined,{"0":"Outputs"}));
 					$scope.addExperimentPropertiesOutputsColumns();
 					$scope.addInstrumentPropertiesOutputsColumns();
+					$scope.experimentToDatatable();
 				}
 			});
 		}

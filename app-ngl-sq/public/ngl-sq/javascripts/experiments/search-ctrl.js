@@ -1,7 +1,5 @@
 "use strict"
-
-function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
-	
+angular.module('home').controller('SearchCtrl', ['$scope','$location','$routeParams','$filter', 'datatable','lists', function($scope,$location,$routeParams,$filter, datatable, lists) {
 	$scope.datatableConfig = {	
 			columns:[
 			{
@@ -162,6 +160,4 @@ function SearchCtrl($scope,$location,$routeParams,$filter, datatable, lists) {
 	if($scope.form.type){
 		$scope.search();
 	}
-}
-
-SearchCtrl.$inject = ['$scope','$location','$routeParams','$filter', 'datatable','lists'];
+}]);
