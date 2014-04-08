@@ -3,6 +3,7 @@ package controllers.processes.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import models.laboratory.common.instance.State;
@@ -94,6 +95,9 @@ public class Processes extends CommonController{
 		Form<Process> filledForm = getFilledForm(processForm, Process.class);
 		Process processInput = filledForm.get();
 		if (processInput.code.equals(code)) {
+			processInput.traceInformation.modifyDate = new Date();
+			processInput.traceInformation.modifyUser = getCurrentUser();
+			
 			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
 			ctxVal.setUpdateMode();
 			processInput.validate(ctxVal);
