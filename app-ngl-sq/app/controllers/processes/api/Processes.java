@@ -87,7 +87,7 @@ public class Processes extends CommonController{
 
 	public static Result update(String code){
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
-		if(process != null){
+		if(process == null){
 			return badRequest("Process with code "+code+" does not exist");
 		}
 		
@@ -111,7 +111,7 @@ public class Processes extends CommonController{
 	
 	public static Result delete(String code){
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
-		if(process != null){
+		if(process == null){
 			return badRequest("Process with code "+code+" does not exist");
 		}
 		
