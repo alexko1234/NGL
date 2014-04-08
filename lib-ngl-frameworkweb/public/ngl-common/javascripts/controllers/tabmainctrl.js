@@ -1,6 +1,6 @@
 "use strict";
 
-function TabMainCtrl($scope, $location){
+angular.module('home').controller('TabMainCtrl', ['$scope', '$location', function($scope, $location){
 	//contain each tab of on element of the datatable
 	var tabs = [];
 	var bcktabs = undefined;
@@ -280,6 +280,4 @@ function TabMainCtrl($scope, $location){
 	$scope.isEditMode = function(){
 		return editMode;
 	};
-}
-
-TabMainCtrl.$inject = ['$scope', '$location'];
+}]);
