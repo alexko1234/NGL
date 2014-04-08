@@ -38,16 +38,31 @@ function getSearchColumns(columns){
 					header: "readsets.stateCode",
 					type :"text",
 					order:true});
+	
 	columns.push({	property:"productionValuation.valid",
 					filter:"codes:'valuation'",
 					header: "readsets.productionValuation.valid",
 					type :"text",
 			    	order:true});
+	
+	columns.push({	property:"productionValuation.resolutionCodes",
+					header: "readsets.productionValuation.resolutions",
+					render:'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in listsTable.getResolutions()" ng-edit="false"></div>',
+					type :"text",
+					hide:true});
+	
 	columns.push({	property:"bioinformaticValuation.valid",
 					filter:"codes:'valuation'",
 					header: "readsets.bioinformaticValuation.valid",
 					type :"text",
 			    	order:true});
+	
+	columns.push({	property:"bioinformaticValuation.resolutionCodes",
+					header: "readsets.bioinformaticValuation.resolutions",
+					render:'<div bt-select ng-model="value.data.bioinformaticValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in listsTable.getResolutions()" ng-edit="false"></div>',
+					type :"text",
+					hide:true});
+	
 	return columns;
 };
 
@@ -65,6 +80,7 @@ function getStateColumns(columns){
 	return columns;
 };
 function getValuationColumns(columns){	
+	
 	columns.push({	property:"state.code",
 					filter:"codes:'state'",
 					header: "readsets.stateCode",
@@ -104,7 +120,6 @@ function getValuationColumns(columns){
 			    		
 	});
 	
-	
 	columns.push({	property:"bioinformaticValuation.valid",
 					filter:"codes:'valuation'",
 					header: "readsets.bioinformaticValuation.valid",
@@ -121,18 +136,18 @@ function getValuationColumns(columns){
 function getBatchColumns(columns){
 	
 	columns.push({	property:"productionValuation.valid",
-		filter:"codes:'valuation'",
-		header: "readsets.productionValuation.valid",
-		type :"text",
-    	order:true    	
+					filter:"codes:'valuation'",
+					header: "readsets.productionValuation.valid",
+					type :"text",
+			    	order:true    	
     	});
 	
 	
 	columns.push({	property:"bioinformaticValuation.valid",
-		filter:"codes:'valuation'",
-		header: "readsets.bioinformaticValuation.valid",
-		type :"text",
-		order:true
+					filter:"codes:'valuation'",
+					header: "readsets.bioinformaticValuation.valid",
+					type :"text",
+					order:true
     	});
 	
 	
@@ -227,6 +242,7 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', '$http
 		$scope.lists.refresh.runs();
 		$scope.lists.refresh.instruments({categoryCode:"seq-illumina"});
 		$scope.lists.refresh.reportConfigs({pageCodes:["readsets"+"-"+$scope.getHomePage()]});
+		$scope.lists.refresh.resolutions({objectTypeCode:"ReadSet"});
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();
@@ -242,8 +258,10 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', '$http
 	init();
 }]);
 
-angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'datatable', '$parse', function($scope, $routeParams, datatable, $parse) {
+angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'datatable', '$parse','lists',  function($scope, $routeParams, datatable, $parse, lists) {
 
+	$scope.listsTable = lists;
+	
 	var datatableConfig = {
 			order :{by:'runSequencingStartDate', reverse : true},
 			search:{
@@ -255,20 +273,12 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'data
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.get(line.code).url,remove:true});
 				}
 			},
+			hide:{
+				active:true
+			},
 			columns : getSearchColumns(getCommonColumns([]))
 	};
-	
-	/*
-	datatableConfig.columns.push(
-				{	
-					property:"treatments.ngsrg.default.Q30.value|number:5",
-					header: "Q30",
-					type :"number",
-					order:true,
-					tdClass: 'valuationCriteriaClass(value.data, col.property)'
-				}
-	);
-	*/
+
 	var init = function(){
 		//to avoid to lost the previous search		
 		if(angular.isUndefined($scope.getDatatable())){
@@ -283,7 +293,8 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'data
 			$scope.setHomePage('search');
 			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
-		}		
+		}	
+		$scope.listsTable.refresh.resolutions({objectTypeCode:"ReadSet"});
 	};	
 	
 	init();
@@ -330,7 +341,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', 'datatable', 'li
 		}
 		
 		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('search');
+			$scope.setHomePage('state');
 			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("state").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
@@ -392,18 +403,6 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$http', 'da
 					return expression.result;
 				}
 			}
-				
-			
-			
-			/*
-			var expression = "pValue < 80";
-			// TODO eval qc et bioinfo
-			if($parse(expression)({pValue : $parse(property)(value)})){
-				return "success";
-			}else{
-				return "danger";
-			}
-			*/
 			
 			
 		}else{
@@ -494,7 +493,7 @@ angular.module('home').controller('SearchBatchCtrl', ['$scope',  'datatable', fu
 		}
 		
 		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('search');
+			$scope.setHomePage('batch');
 			$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("batch").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}

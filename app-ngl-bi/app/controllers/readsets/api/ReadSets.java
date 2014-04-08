@@ -136,6 +136,14 @@ public class ReadSets extends ReadSetsController{
 			queries.add(DBQuery.regex("runCode", Pattern.compile(findRegExpFromStringList(form.instrumentCodes))));
 		}
 		
+		if (CollectionUtils.isNotEmpty(form.productionResolutionCodes)) { //all
+			queries.add(DBQuery.in("productionValuation.resolutionCodes", form.productionResolutionCodes));
+		}
+		
+		if (CollectionUtils.isNotEmpty(form.bioinformaticResolutionCodes)) { //all
+			queries.add(DBQuery.in("bioinformaticValuation.resolutionCodes", form.bioinformaticResolutionCodes));
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}

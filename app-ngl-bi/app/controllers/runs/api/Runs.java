@@ -162,6 +162,14 @@ public class Runs extends RunsController {
 			queries.add(DBQuery.in("instrumentUsed.code", form.instrumentCodes));
 		}
 		
+		if (CollectionUtils.isNotEmpty(form.runResolutionCodes)) { //all
+			queries.add(DBQuery.in("valuation.resolutionCodes", form.runResolutionCodes));
+		}
+		
+		if (CollectionUtils.isNotEmpty(form.laneResolutionCodes)) { //all
+			queries.add(DBQuery.in("lanes.valuation.resolutionCodes", form.laneResolutionCodes));
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}

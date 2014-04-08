@@ -32,7 +32,13 @@ var columns = [
 					header: "runs.valuation.valid",
 					type :"String",
 			    	order:true
-				}      
+				},
+				{	property:"valuation.resolutionCodes",
+					header: "runs.valuation.resolutions",
+					render:'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in listsTable.getResolutions()" ng-edit="false"></div>',
+					type :"text",
+					hide:true
+				}
 			];						
 	return columns;
 }
@@ -81,6 +87,7 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', 'lists
 		$scope.lists.refresh.types({objectTypeCode:"Run"});
 		$scope.lists.refresh.runs();
 		$scope.lists.refresh.instruments({categoryCode:"seq-illumina"});
+		$scope.lists.refresh.resolutions({objectTypeCode:"Run"});
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();
@@ -92,8 +99,8 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', 'lists
 	
 }]);
 
-angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'datatable', function($scope, $routeParams, datatable) {
-
+angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'datatable', 'lists', function($scope, $routeParams, datatable, lists) {
+	$scope.listsTable = lists;
 	var datatableConfig = {
 			order :{by:'sequencingStartDate', reverse:true},
 			search:{
@@ -105,6 +112,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.get(line.code).url,remove:true});
 				}
 			},
+			hide:{active:true},			
 			columns : getColumns()
 	};
 	
@@ -125,6 +133,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
+		$scope.listsTable.refresh.resolutions({objectTypeCode:"Run"});
 	};
 	
 	init();
@@ -157,6 +166,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', 'datatable', 'li
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.get(line.code).url,remove:true});
 				}
 			},
+			hide:{active:true},			
 			columns : getColumns(),
 			messages : {active:true}
 	};
@@ -177,14 +187,17 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', 'datatable', 'li
 			$scope.activeTab(0); // desactive le lien !
 		}
 		$scope.listsTable.refresh.states({objectTypeCode:"Run"});
+		$scope.listsTable.refresh.resolutions({objectTypeCode:"Run"});
 	};
 	
 	init();
 }]);
 
 
-angular.module('home').controller('SearchValuationCtrl', ['$scope', 'datatable', function($scope, datatable) {
+angular.module('home').controller('SearchValuationCtrl', ['$scope', 'datatable', 'lists', function($scope, datatable, lists) {
 
+	$scope.listsTable = lists;
+	
 	var datatableConfig = {
 			order :{by:'sequencingStartDate', reverse:true},
 			search:{
@@ -196,6 +209,7 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', 'datatable',
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.valuation(line.code).url,remove:true});
 				}
 			},
+			hide:{active:true},
 			columns : getColumns()
 	};
 	
@@ -214,6 +228,7 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', 'datatable',
 			$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
+		$scope.listsTable.refresh.resolutions({objectTypeCode:"Run"});
 	};
 	
 	init();

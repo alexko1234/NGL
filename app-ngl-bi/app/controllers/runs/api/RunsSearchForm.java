@@ -31,6 +31,8 @@ public class RunsSearchForm extends ListForm {
     public Boolean keep;
     
     public List<String> instrumentCodes;
+    public List<String> runResolutionCodes;
+    public List<String> laneResolutionCodes;
     
 
 }

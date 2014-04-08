@@ -60,11 +60,14 @@ search.placeholder.runs = Sélect. des runs
 search.placeholder.run = Sélect. un run
 search.placeholder.valid = Sélect. une évaluation
 search.placeholder.productionValid = Sélect. une éval QC
-search.placeholder.bioinformaticValid  = Sélect. une éval bioinfo
+search.placeholder.bioinformaticValid  = Sélect. une éval bioinfo.
 search.placeholder.regexCode = Regex pour le code
 search.placeholder.lanes = Sélect. des lanes
 search.placeholder.reporting.configuration = Sélect. colonnes config.
-
+search.placeholder.productionResolutions = Sélect. des resol. QC.
+search.placeholder.bioinformaticResolutions = Sélect. des resol. bioinfo.
+search.placeholder.runResolutions = Sélect. des resol. de run
+search.placeholder.laneResolutions = Sélect. des resol. de lane
 
 button.search = Rechercher
 button.reset = Réinitialiser
