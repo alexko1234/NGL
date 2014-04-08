@@ -18,6 +18,7 @@ public class Column implements IValidation{
 	public String possibleValues;
 	public String tdClass;
 	public String groupBy;
+	public Boolean hide;
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
