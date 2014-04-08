@@ -30,7 +30,7 @@ public class MappingHelper {
 				}
 
 			}catch (SQLException e) {
-				Logger.info("Property "+propertyDefinition.code+" not exist in "+rs.getStatement().toString()+ " query");
+			//	Logger.info("Property "+propertyDefinition.code+" not exist in "+rs.getStatement().toString()+ " query");
 			}
 
 		}

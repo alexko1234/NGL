@@ -1,20 +1,32 @@
 package services.instance.container;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import models.LimsCNSDAO;
+import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.Valuation;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.util.DataMappingCNS;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
+import models.utils.instance.ContainerSupportHelper;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
 import play.Logger;
@@ -30,80 +42,14 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		super(name,durationFromStart, durationFromNextIteration);
 	}
 
-
-	public static void updateSampleFromTara(ContextValidation contextError) throws SQLException, DAOException{
-	
-		List<Map<String, PropertyValue>> taraPropertyList = taraServices.findTaraSampleUpdated();
-	
-		for(Map<String,PropertyValue> taraProperties : taraPropertyList){
-	
-			Integer limsCode=Integer.valueOf(taraProperties.get(LimsCNSDAO.LIMS_CODE).value.toString());
-			Logger.debug("Tara lims Code :"+limsCode);
-			if(!taraProperties.containsKey(LimsCNSDAO.LIMS_CODE)){
-				contextError.addErrors(LimsCNSDAO.LIMS_CODE,"error.codeNotExist","");
-			}else {
-	
-				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("properties.limsCode.value",limsCode)).toList();
-	
-				if(samples.size()!=1 ) {
-					contextError.addErrors("sample."+LimsCNSDAO.LIMS_CODE,"error.noObject",limsCode);
-				}else {
-					Sample sample =samples.get(0);
-	
-					String importTypeCode=DataMappingCNS.getImportTypeCode(true,Boolean.valueOf(sample.properties.get("isAdapters").value.toString()));
-					
-					if(!importTypeCode.equals(sample.importTypeCode)){
-						MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sample.code),DBUpdate.set("importTypeCode",sample.importTypeCode));
-					}
-					
-					MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, DBQuery.is("code",sample.code),DBUpdate.addToSet("properties",taraProperties));
-					
-					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class, DBQuery.is("content.sampleUsed.sampleCode",sample.code),DBUpdate.addToSet("content.$.properties",taraProperties));
-					
-					MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, DBQuery.is("code",sample.code),DBUpdate.addToSet("properties",taraProperties));
-
-					/*for(Entry taraEntry :taraProperties.entrySet()){
-	
-						if(!taraEntry.getKey().equals(LimsCNSDAO.LIMS_CODE)){
-							
-	
-							InstanceHelpers.updateTraceInformation(sample.traceInformation);
-							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, DBQuery.is("code",sample.code),DBUpdate.addToSet("properties."+taraEntry.getKey(), taraEntry));
-							
-							//MongoDBDAO.updateSet(InstanceConstants.SAMPLE_COLL_NAME, sample, "properties."+taraEntry.getKey()+".value",taraEntry.getValue());
-							//MongoDBDAO.updateSet(InstanceConstants.SAMPLE_COLL_NAME, sample, "traceInformation", sample.traceInformation);
-							//
-							MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("samples",sample.code), DBUpdate.set("content.properties"+taraEntry.getKey()+".value",taraEntry.getValue()));
-						}
-					}*/
-	
-				}
-			}
-	
-	
-		}
-	
-	}
-
-	//TODO
-	//Maj referenceCollab and resolution ???	
-	public static void updateSampleFromLims() throws SQLException, DAOException{
-	
-	}
-
-	//TODO
-	//Maj volume, conc, quantity
-	public static void updateContainerFromLims() throws SQLException, DAOException{
-		//
-	}
-
 	public static void saveSampleFromContainer(ContextValidation contextError,List<Container> containers,String sqlContent) throws SQLException, DAOException{
 	
 		Sample sample =null;
 		Sample newSample =null;
 		String rootKeyName=null;
 	
-		for(Container container :containers){
+		List<Container> containersList=new ArrayList<Container>(containers);
+		for(Container container :containersList){
 
 			List<Content> contents;
 			if(sqlContent!=null){	
@@ -111,7 +57,6 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			}else{
 						contents=new ArrayList<Content>(container.contents);
 			}
-			//Logger.debug("Container :"+container.code);
 	
 
 			for(Content sampleUsed : contents){
@@ -153,16 +98,6 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	
 	}
 
-/*	public static void createContentsFromContainers(List<Container> containers,
-			String sqlContent) throws SQLException {
-	
-		for(Container container:containers){	
-					container.contents=new ArrayList<SampleUsed>(limsServices.findContentsFromContainer(sqlContent,container.code));
-
-		}
-	
-	}
-*/
 	/**
 	 * 
 	 * Create containers, contents and samples from 2 sql queries 
@@ -180,6 +115,8 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	
 		List<Container> containers=	limsServices.findContainersToCreate(sqlContainer,contextError, containerCategoryCode,containerStateCode,experimentTypeCode);
 	
+		ContainerImportCNS.deleteContainerAndContainerSupport(containers);
+		
 		ContainerImportCNS.saveSampleFromContainer(contextError,containers,sqlContent);
 		
 		ContainerHelper.createSupportFromContainers(containers, contextError);
@@ -187,7 +124,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		List<Container> newContainers=new ArrayList<Container>();
 	
 		for(Container container:containers){
-	
+			//Logger.debug("Container :"+container.code+ "nb sample code"+container.sampleCodes.size());
 			rootKeyName="container["+container.code+"]";
 			contextError.addKeyToRootKeyName(rootKeyName);
 			Container result=(Container) InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,container, contextError,true);
@@ -202,5 +139,95 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	}
 
 	
+	private static void deleteContainerAndContainerSupport(
+			List<Container> containers) {
+		for(Container container : containers){
+			MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code);
+			MongoDBDAO.deleteByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
+		}
+	}
+
+	/**
+	 * 
+	 * Create au niveau Container from a ResultSet
+	 * 
+	 * The resultset must return fields :code, project, sampleCode, comment, codeSupport, limsCode, receptionDate, mesuredConcentration, mesuredVolume, mesuredQuantity, indexBq, nbContainer
+	 * 
+	 * @param rs ResulSet from Query
+	 * @param containerCategoryCode 
+	 * @param containerStatecode
+	 * @return
+	 * @throws SQLException
+	 * @throws DAOException 
+	 */
+	public static Container createContainerFromResultSet(ResultSet rs, String containerCategoryCode, String containerStatecode, String experimentTypeCode) throws SQLException, DAOException{
+
+		Container container = new Container();
+		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
+		//Logger.debug("Container :"+rs.getString("code"));
+		container.code=rs.getString("code");
+		container.categoryCode=containerCategoryCode;
+
+		container.comments=new ArrayList<Comment>();				
+		container.comments.add(new Comment(rs.getString("comment")));
+		
+		container.state = new State(); 
+		container.state.code=DataMappingCNS.getState(containerCategoryCode,rs.getInt("etatLims"));
+		container.state.user = InstanceHelpers.getUser();
+		container.state.date = new Date();
+
+		
+		container.valuation = new Valuation(); 
+		container.valuation.valid=TBoolean.UNSET; // instead of valid=null;
+
+		//TODO 
+		container.support=ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nbContainer"), rs.getString("codeSupport"), rs.getString("column"), rs.getString("line"));
+
+		container.properties= new HashMap<String, PropertyValue>();
+		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("limsCode")));
+		
+		if(rs.getString("receptionDate")!=null){
+			container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));
+		}
+
+		container.mesuredConcentration=new PropertySingleValue(rs.getFloat("mesuredConcentration"), "ng/µl");
+		container.mesuredVolume=new PropertySingleValue(rs.getFloat("mesuredVolume"), "µl");
+		container.mesuredQuantity=new PropertySingleValue(rs.getFloat("mesuredQuantity"), "ng");
+
+		container.fromExperimentTypeCodes=InstanceHelpers.addCode(experimentTypeCode, container.fromExperimentTypeCodes);
+
+		container.projectCodes=new ArrayList<String>();					
+
+		if(rs.getString("project")!=null)
+		{					
+			container.projectCodes.add(rs.getString("project"));
+		}
+		
+		if(rs.getString("controlLane")!=null){
+			container.properties.put("controlLane",new PropertySingleValue(rs.getBoolean("controlLane")));
+		}
+			
+
+		container.sampleCodes=new ArrayList<String>();
+
+		if(rs.getString("sampleCode")!=null){
+			
+			Content sampleUsed=new Content();
+			sampleUsed.sampleCode=rs.getString("sampleCode");
+			
+			//Todo replace by method in containerHelper who update sampleCodes from contents
+			container.sampleCodes.add(rs.getString("sampleCode"));
+
+			if(rs.getString("tag")!=null){
+				sampleUsed.properties = new HashMap<String, PropertyValue>();
+				sampleUsed.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+				sampleUsed.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagCategory")));
+			}
+			container.contents.add(sampleUsed);
+
+		}
+		return container;
+
+	}
 
 }

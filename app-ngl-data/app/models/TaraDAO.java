@@ -78,12 +78,21 @@ public class TaraDAO {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public List<Map<String,PropertyValue>> findTaraSampleUpdated(){
+	public List<Map<String,PropertyValue>> findTaraSampleUpdated(List<String> limsCodes){
 
-		Logger.debug("Query :"+SELECT_MATERIEL_TARA);
-		List<Map<String,PropertyValue>> results =  this.jdbcTemplate.query(SELECT_MATERIEL_TARA +
-				"  WHERE TO_DAYS(NOW()) - TO_DAYS(SAMPLE.LAST_UPD_TARA_DB) <= 20"
-				//" WHERE CROSS_REF.REF_ID=15242"
+		String sql=null;
+		if(limsCodes==null){
+			sql=SELECT_MATERIEL_TARA+" WHERE TO_DAYS(NOW()) - TO_DAYS(SAMPLE.LAST_UPD_TARA_DB) <= 20";
+		}else {
+			//Pour les tests unitaires
+			sql=SELECT_MATERIEL_TARA+" WHERE CROSS_REF.REF_ID in (";
+			for(String code:limsCodes){
+				sql=sql+"'"+code+"',";
+			}
+			sql=sql+"'')";
+		}
+		//Logger.debug("Query :"+sql);
+		List<Map<String,PropertyValue>> results =  this.jdbcTemplate.query(sql 
 				,new RowMapper<Map<String,PropertyValue>>() {
 
 			public Map<String,PropertyValue> mapRow(ResultSet rs, int rowNum) throws SQLException {

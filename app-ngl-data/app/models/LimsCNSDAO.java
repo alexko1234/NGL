@@ -50,6 +50,7 @@ import org.springframework.stereotype.Repository;
 
 import play.Logger;
 import play.api.modules.spring.Spring;
+import services.instance.container.ContainerImportCNS;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 
@@ -100,7 +101,7 @@ public class LimsCNSDAO{
 
 				Container container = null;
 				try {
-					container = ContainerHelper.createContainerFromResultSet(rs, containerCategoryCode,containerStateCode,experimentTypeCode);
+					container = ContainerImportCNS.createContainerFromResultSet(rs, containerCategoryCode,containerStateCode,experimentTypeCode);
 				} catch (DAOException e) {
 					Logger.error("",e);
 				}
@@ -310,24 +311,6 @@ public class LimsCNSDAO{
 		contextError.removeKeyFromRootKeyName("updateMaterielmanipLims");
 	}
 
-	//TODO
-	public List<Container> findContainersToUpdate(ContextValidation contexValidation)throws SQLException{
-
-		List<Container> results = this.jdbcTemplate.query("pl_TubeUpdateToNGL ",new Object[]{} 
-		,new RowMapper<Container>() {
-
-			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
-
-				Container container = new Container();
-
-				return container;
-			}
-
-		});        
-
-		return results;
-	}
-
 
 	/**
 	 *  Find contents from a container code 
@@ -346,6 +329,7 @@ public class LimsCNSDAO{
 				// Todo add properties from ExperimentType
 				sampleUsed.properties=new HashMap<String, PropertyValue>();
 				sampleUsed.properties.put("percentPerLane", new PropertySingleValue(rs.getFloat("percentPerLane")));
+				sampleUsed.properties.put("libProcessTypeCode",new PropertySingleValue(rs.getString("libProcessTypeCode")));
 				if(rs.getString("tag")!=null){
 					sampleUsed.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
 					sampleUsed.properties.put("tagCategory",new PropertySingleValue(DataMappingCNS.getTagCategory(rs.getString("tagCategory"))));

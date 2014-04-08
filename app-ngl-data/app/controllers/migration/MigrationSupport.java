@@ -12,10 +12,10 @@ import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.ContainerSupport;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
+import models.utils.instance.ContainerSupportHelper;
 import play.Logger;
 import play.mvc.Result;
 import validation.ContextValidation;
-import validation.container.instance.ContainerValidationHelper;
 import controllers.CommonController;
 import controllers.migration.models.ContainerOld;
 import fr.cea.ig.MongoDBDAO;
@@ -84,7 +84,11 @@ public class MigrationSupport extends CommonController{
 
 	public static void createSupportCollection(Container container, Map<String,ContainerSupport> mapSupports) {
 		if (container.support != null) {
-			ContainerSupport newSupport = ContainerValidationHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
+			//ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
+			ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code,container.support.categoryCode,"ngl");
+			newSupport.projectCodes=new ArrayList<String>(container.projectCodes);
+			newSupport.sampleCodes=new ArrayList<String>(container.sampleCodes);
+
 			if (!mapSupports.containsKey(newSupport.code)) {
 				mapSupports.put(newSupport.code, newSupport);
 			}
