@@ -1,0 +1,33 @@
+@(isForm: Boolean)
+
+
+@import views.html.helper._
+@form() = {	
+	@columnSearchForm{
+			@formGroup{
+				<input type="text" class="form-control" ng-model="form.code" typeahead="project.code as project.code for project in lists.getProjects() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.project")'>				
+			}
+	}		
+	@columnSearchForm{		
+			@formGroup{
+				<div  class="form-control" bt-select ng-model="form.typeCodes" multiple="true" placeholder="@Messages("search.placeholder.types")" bt-options="type.code as type.name for type in lists.getTypes()"></div>			
+			}
+	}		
+	@columnSearchForm{		
+			@formGroup{
+				<div  class="form-control" bt-select ng-model="form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in lists.getStates()" ></div>							
+			}
+	}		
+}
+
+@formAttrs() = {
+	ng-controller="SearchFormCtrl" ng-init="init()"
+}
+
+@if(isForm) {
+	@searchForm(form,formAttrs)()()
+}
+
+@if(!isForm) {
+	@searchForm()()()
+}

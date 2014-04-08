@@ -2,12 +2,70 @@ date.format=dd/MM/yyyy
 datetime.format=dd/MM/yyyy HH:mm:ss
 unit.percent = %
 
+symbol.delimiter.parenthesis.open = (
+symbol.delimiter.parenthesis.close = )
+symbol.delimiter.comma = ,
+
 #application
 application.name=NGL-PROJECTS
-home.title.name=Bienvenue dans NGL-PROJECTS
 
 
 #home page main
+home.a.comment=En savoir plus...
 home.h10.header=Bienvenue {0} sur NGL - Projects
 home.p.comment=NGL-PROJECTS est un LIMS simple et flexible pour le suivi des projets de séquençage de nouvelle génération.
-home.a.comment=En savoir plus...
+home.title.name=Bienvenue dans NGL-PROJECTS
+
+#menu
+menu.projects = Projets
+
+
+#valuation
+valuation.menu = Evaluation
+valuation.menu.projects = Projets
+valuation.value.FALSE = Non
+valuation.value.TRUE = Oui
+valuation.value.UNSET = -
+
+
+#search
+search.form = Formulaire
+search.config = Configuration
+
+search.placeholder.projects = Sélect. des projets
+search.placeholder.project = Sélect. un projet
+search.placeholder.run = Sélect. un projet
+search.placeholder.runtypes = Sélect. des types de run
+search.placeholder.states = Sélect. des états
+search.placeholder.types = Sélect. des types
+search.placeholder.valid = Sélect. une évaluation
+search.placeholder.regexCode = Regex pour le code
+
+
+#projects
+projects.menu = Projets
+projects.menu.search = Recherche
+projects.menu.state = Changement d''Etat
+projects.menu.valuation = Evaluation
+
+projects.page.title = Projets
+projects.page.tab.validate = Projets à évaluer
+
+projects.category.type = Catégorie
+projects.code = Code
+projects.comments = Commentaire
+projects.name = Nom
+projects.traceInformation.createUser = Créé par
+projects.traceInformation.creationDate = Créé le 
+projects.typeCode = Type
+projects.type = Type
+projects.stateCode = Etat
+projects.state.code = Etat
+projects.state.updatedAt = Mis à jour le: 
+projects.state.by = par:  
+
+
+#button
+button.validate = Sauvegarder
+button.cancel = Annuler
+button.edit = Editer
