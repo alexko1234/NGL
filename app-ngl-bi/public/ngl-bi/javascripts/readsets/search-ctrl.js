@@ -120,6 +120,23 @@ function getValuationColumns(columns){
 
 function getBatchColumns(columns){
 	
+	columns.push({	property:"productionValuation.valid",
+		filter:"codes:'valuation'",
+		header: "readsets.productionValuation.valid",
+		type :"text",
+    	order:true    	
+    	});
+	
+	
+	columns.push({	property:"bioinformaticValuation.valid",
+		filter:"codes:'valuation'",
+		header: "readsets.bioinformaticValuation.valid",
+		type :"text",
+		order:true
+    	});
+	
+	
+	
 	columns.push({	property:"properties.isSentCCRT.value",
 					header: "readsets.properties.isSentCCRT",
 					type :"boolean",
@@ -132,7 +149,9 @@ function getBatchColumns(columns){
 					order:true,
 			    	edit:true
     	});
-		
+	
+	
+	
 	return columns;
 };
 

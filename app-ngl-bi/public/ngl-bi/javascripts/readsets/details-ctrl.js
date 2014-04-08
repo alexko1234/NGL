@@ -187,10 +187,10 @@
 
 
  angular.module('home').controller('TaxonomyCtrl', ['$scope', function($scope) {
-	var init = function(name) {		
+	var init = function() {		
 		$scope.$watch('readset', function() { 
 			if (angular.isDefined($scope.readset)) {				
-				$scope.krona = "data:text/html;base64,"+$scope.readset.treatments[name].read1.krona.value;
+				$scope.krona = "data:text/html;base64,"+$scope.readset.treatments[$scope.treatments.getTreatment().code].read1.krona.value;
 				
 				$scope.ncbiUrl = Messages("readsets.treatments.taxonomy.beginNcbiUrl");
 			}
