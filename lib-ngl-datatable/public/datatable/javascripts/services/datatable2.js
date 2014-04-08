@@ -906,7 +906,7 @@ angular.module('datatableServices', []).
 		    						||  (this.config.save.active && this.config.save.showButton) || (this.config.remove.active && this.config.remove.showButton));
 		    			},
 		    			isShowHideButtons: function(){
-		    				return (this.config.hide.active && this.config.hide.showButton) ;
+		    				return (this.config.hide.active && this.config.hide.showButton && this.getHideColumns().length > 0);
 		    			},
 		    			isShowOtherButtons: function(){
 		    				return (this.config.otherButtons.active && this.config.otherButtons.template !== undefined) ;
