@@ -379,6 +379,9 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$http', 'da
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.valuation(line.code).url,remove:true});
 				}
 			},
+			hide:{
+				active:true
+			},
 			columns : getValuationColumns(getCommonColumns([]))
 	};
 	
