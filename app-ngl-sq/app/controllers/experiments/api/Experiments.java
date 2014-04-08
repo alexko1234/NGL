@@ -70,7 +70,13 @@ public class Experiments extends CommonController{
 
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 		ContextValidation contextValidation=new ContextValidation(experimentFilledForm.errors());
-		ExperimentHelper.generateOutputContainerUsed(exp, contextValidation);
+		try {
+			ExperimentHelper.generateOutputContainerUsed(exp, contextValidation);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ExperimentHelper.saveOutputContainerUsed(exp, contextValidation);
 
 		if(!contextValidation.hasErrors()){
 			return ok(Json.toJson(exp));

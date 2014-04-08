@@ -13,6 +13,8 @@ import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
+import models.utils.dao.DAOException;
+import models.utils.instance.ExperimentHelper;
 import models.utils.instance.StateHelper;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
@@ -24,107 +26,6 @@ import fr.cea.ig.MongoDBDAO;
 
 public class Workflows {
 
-	/**
-	 * Set a state of a container to A (Available)
-	 * @param containerCode: the code of the container,processTypeCode: the code of the processType
-	 * @deprecated
-	 */
-	public static void setContainerAvailable(String containerCode,String processTypeCode){
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerCode);
-
-		if ( container != null && container.state != null && (container.state.code.equals("IW-P") || container.state.code.equals("N")) ) {
-			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"state.code", "A");
-			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"processTypeCode", processTypeCode);
-		}
-	}
-
-	/**
-	 * Set a state of a container to A (Available)
-	 * @param containerCode: the code of the container,processTypeCode: the code of the processType
-	 * @deprecated
-	 */
-	public static void setContainerAvailable(ContainerUsed containerUsed){
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
-
-		if ( container != null && container.state != null && (container.state.code.equals("IW-P") || container.state.code.equals("N")) ) {
-			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"state.code", "A");
-		}
-	}
-
-	/**
-	 * Set a state of a list of containerUsed to IU (In Use)
-	 * @param List<ContainerUsed> inputContainers: the list of container
-	 * @deprecated
-	 */
-	public static void setContainerInUse(List<ContainerUsed> inputContainers){
-		for(ContainerUsed containerUsed:inputContainers){
-			Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
-
-			if(container != null && container.state != null && (container.state.code.equals("IWE"))){
-				MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"state.code", "IU");
-			}
-		}	
-	}
-
-	/**
-	 * Set final state of list if containerUsed to IS or UN (In Stock or Unavailable)
-	 * @param List<ContainerUsed> inputContainers: the list of container
-	 * @deprecated
-	 */
-	public static void setContainersFinalState(List<ContainerUsed> containers){
-		for(ContainerUsed containerUsed:containers){
-			if(containerUsed != null && containerUsed.state.resolutionCodes!= null){
-				if(containerUsed.state.resolutionCodes.equals("IS")){
-					setContainerInStock(containerUsed);
-				}else if(containerUsed.state.resolutionCodes.equals("UN")){
-					setContainerUnavailable(containerUsed);
-				}else if(containerUsed.state.resolutionCodes.equals("A")){
-					setContainerAvailable(containerUsed);
-				}
-			}	
-		}
-	}
-
-	/**
-	 * Set a state of a container to IS (In Stock)
-	 * @param containerCode: the code of the container
-	 * @deprecated
-	 */
-	public static void setContainerInStock(ContainerUsed containerUsed){
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
-
-		if (container != null && container.state != null && (container.state.code.equals("IU")) ) {
-			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"state.code", "IS");
-		}
-	}
-
-	/**
-	 * Set a state of a container to UA (Unavailable)
-	 * @param containerCode: the code of the container
-	 * @deprecated
-	 */
-	public static void setContainerUnavailable(ContainerUsed containerUsed){
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
-
-		if (container != null && container.state != null && (container.state.code.equals("IU")) ) {
-			MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"state.code", "UN");
-		}
-	}
-
-	/**
-	 * Set a state of a container to IWE (In Waiting Experiment)
-	 * @param inputContainers: list of containerUsed
-	 * @deprecated
-	 */
-	/*public static void setContainersInWaitingExperiment(List<ContainerUsed> inputContainers){
-		for(ContainerUsed containerUsed:inputContainers){
-			Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.containerCode);
-
-			if (container != null && container.state != null && (container.state.code.equals("A")) ) {
-				MongoDBDAO.updateSet(InstanceConstants.CONTAINER_COLL_NAME, container,"state.code", "IWE");
-			}
-		}	
-	}*/
 
 	/**
 	 * Set a state of an experiment 
@@ -199,8 +100,14 @@ public class Workflows {
 			state.code = "N";
 		}else if(experiment.state.code.equals("N")){
 			state.code = "IP";
+			try {
+				ExperimentHelper.generateOutputContainerUsed(experiment, contextValidation);
+			} catch (DAOException e) {
+				throw new RuntimeException();
+			}
 		}else if(experiment.state.code.equals("IP")){
 			state.code = "F";
+			ExperimentHelper.saveOutputContainerUsed(experiment, contextValidation);
 		}
 		
 		setExperimentState(experiment, state, contextValidation);
