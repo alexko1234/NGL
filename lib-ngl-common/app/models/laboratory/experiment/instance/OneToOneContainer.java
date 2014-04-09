@@ -86,13 +86,13 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			ContainerHelper.addContent(inputContainer, outputContainer, experiment);
 			//Add localisation
 			outputContainer.support=outputContainerUsed.locationOnContainerSupport;
+			outputContainer.state=new State("N",experiment.traceInformation.modifyUser);
 
 			//TODO volume, proportion
 
-
 			support.projectCodes=new ArrayList<String>(inputContainer.projectCodes);
 			support.sampleCodes=new ArrayList<String>(inputContainer.sampleCodes);
-
+			contextValidation.isCreationMode();
 			InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME,support, contextValidation);
 			if(!contextValidation.hasErrors()){
 				InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,outputContainer, contextValidation);

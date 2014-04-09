@@ -3,6 +3,7 @@ package models.laboratory.experiment.instance;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
@@ -105,7 +106,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 			}
 			//Add localisation
 			outputContainer.support=outputContainerUsed.locationOnContainerSupport;
-
+			outputContainer.state=new State("N",experiment.traceInformation.modifyUser);
 			//TODO volume, proportion
 
 			InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME,support, contextValidation);
