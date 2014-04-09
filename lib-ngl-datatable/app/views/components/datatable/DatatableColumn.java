@@ -17,6 +17,8 @@ public class DatatableColumn {
 	
 	public List<Object> possibleValues = null;//The possible value, can be null if choiceInList=false
 	
+	public String filter = "";
+	
 	public Map<Integer, String> extraHeaders = null;//Headers of the column
 	
 	public Boolean isDate(){

@@ -18,6 +18,10 @@ public class DatatableHelpers {
 		return getColumn(property, header, false, false, false);
 	}
 	
+	public static DatatableColumn getColumn(String property, String header, String filter) {
+		return getColumn(property, header, false, false, false, filter);
+	}
+	
 	public static DatatableColumn getDateColumn(String property, String header) {
 		return getDateColumn(property, header, false, false, false);
 	}
@@ -33,6 +37,18 @@ public class DatatableHelpers {
 		return column1;
 	}
 	
+	public static DatatableColumn getColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, String filter) {
+		DatatableColumn column1 = new DatatableColumn();
+		column1.property = property;		
+		column1.header = Messages.get(header);
+		column1.order=order;
+		column1.edit=edit;
+		column1.hide=hide;
+		column1.filter=filter;
+		
+		return column1;
+	}
+	
 	public static DatatableColumn getColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, Boolean choiceInList) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
@@ -42,6 +58,19 @@ public class DatatableHelpers {
 		column1.hide=hide;
 		column1.choiceInList = choiceInList;
 		
+		return column1;
+	}
+	
+	
+	public static DatatableColumn getColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, Boolean choiceInList, String filter) {
+		DatatableColumn column1 = new DatatableColumn();
+		column1.property = property;		
+		column1.header = Messages.get(header);
+		column1.order=order;
+		column1.edit=edit;
+		column1.hide=hide;
+		column1.choiceInList = choiceInList;
+		column1.filter=filter;
 		return column1;
 	}
 	
@@ -66,6 +95,19 @@ public class DatatableHelpers {
 		column1.hide=hide;
 		column1.choiceInList = choiceInList;
 		column1.extraHeaders = headers;
+		return column1;
+	}
+	
+	public static DatatableColumn getDateColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, String filter) {
+		DatatableColumn column1 = new DatatableColumn();
+		column1.property = property;		
+		column1.header =  Messages.get(header);
+		column1.type = "Date";
+		column1.order=order;
+		column1.edit=edit;
+		column1.hide=hide;
+		column1.filter =  filter;
+		
 		return column1;
 	}
 	

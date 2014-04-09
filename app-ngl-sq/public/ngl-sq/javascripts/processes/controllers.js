@@ -31,7 +31,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				"header":Messages("containers.table.valid"),
 				"property":"valuation.valid",
 				"order":true,
-				"type":"text"
+				"type":"text",
+				"filter":"codes:'valuation'"
 			},
 			{
 				"header":Messages("containers.table.state.code"),

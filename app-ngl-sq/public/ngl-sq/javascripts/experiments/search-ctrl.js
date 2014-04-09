@@ -28,7 +28,8 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				"property":"valuation.valid",
 				"order":true,
 				"hide":true,
-				"type":"text"
+				"type":"text",
+				"filter":"codes:'valuation'"
 			},
 			{
 				"header":Messages("containers.table.state.code"),

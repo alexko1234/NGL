@@ -55,7 +55,7 @@ public class Processes extends CommonController{
 		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode"), true, false, false));						
 		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("state.code", Messages.get("processes.table.stateCode"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("state.code", Messages.get("processes.table.stateCode"), true, false, false, "codes:'state'"));
 		columns.add(DatatableHelpers.getColumn("state.resolutionCodes", Messages.get("processes.table.resolutionCode"), true, false, false));
 		columns.add( DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("processes.table.creationDate"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("currentExperimentTypeCode", Messages.get("processes.table.currentExperimentTypeCode"), true, false, false));
@@ -80,7 +80,7 @@ public class Processes extends CommonController{
 		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode")));						
 		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode")));
 		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode")));
-		columns.add(DatatableHelpers.getColumn("state.code", Messages.get("processes.table.stateCode")));
+		columns.add(DatatableHelpers.getColumn("state.code", Messages.get("processes.table.stateCode"),"codes:'state'"));
 
 		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode, true));
 
