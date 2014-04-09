@@ -33,6 +33,7 @@ public class RunsSearchForm extends ListForm {
     public List<String> instrumentCodes;
     public List<String> runResolutionCodes;
     public List<String> laneResolutionCodes;
+    public List<String> resolutionCodes;
     
 
 }

@@ -170,6 +170,11 @@ public class Runs extends RunsController {
 			queries.add(DBQuery.in("lanes.valuation.resolutionCodes", form.laneResolutionCodes));
 		}
 		
+		if (CollectionUtils.isNotEmpty(form.resolutionCodes)) { //all
+			queries.add(DBQuery.or(DBQuery.in("valuation.resolutionCodes", form.resolutionCodes), 
+					DBQuery.in("lanes.valuation.resolutionCodes", form.resolutionCodes)));			
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
@@ -318,6 +323,7 @@ public class Runs extends RunsController {
 					DBQuery.and(DBQuery.is("code", code)),
 					DBUpdate.set("valuation", valuation).set("traceInformation", getUpdateTraceInformation(run)));			
 			run = getRun(code);
+			//TODO Update old lims !
 			Workflows.nextRunState(ctxVal, run);
 			
 		} 
