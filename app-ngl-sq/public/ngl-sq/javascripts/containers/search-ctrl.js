@@ -165,7 +165,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		$scope.form = {};
 		$scope.setForm($scope.form);
 		$scope.lists.refresh.containerSupportCategories();
-		$scope.lists.refresh.projects();
+		
 		$scope.lists.refresh.containerCategories();
 		$scope.lists.refresh.experimentTypes();
 		$scope.lists.refresh.supports();
