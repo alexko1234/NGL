@@ -52,7 +52,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 				"property":"valuation.valid",
 				"order":true,
 				"type":"text",
-				filter:"codes:'valuation'",
+				"filter":"codes:'valuation'",
 			},
 			{
 				"header":Messages("containers.table.state.code"),
