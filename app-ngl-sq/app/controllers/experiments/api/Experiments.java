@@ -15,10 +15,12 @@ import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
+import models.utils.instance.StateHelper;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
 import net.vz.mongodb.jackson.DBUpdate.Builder;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
@@ -32,6 +34,7 @@ import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 
 import com.mongodb.BasicDBObject;
+import com.ning.http.util.DateUtil;
 
 import controllers.CodeHelper;
 import controllers.CommonController;
@@ -243,7 +246,7 @@ public class Experiments extends CommonController{
 	}
 
 	/**
-	 * Save or update an Experiment object	
+	 * First save for an Experiment object	
 	 * @param experimentType
 	 * @return the created experiment
 	 * @throws DAOException 
@@ -251,23 +254,28 @@ public class Experiments extends CommonController{
 	public static Result save() throws DAOException{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
+		if(exp._id == null || exp._id.equals("")){
+			ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
+			
+			exp.code = CodeHelper.generateExperiementCode(exp);
+			exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
+			
+			if (!experimentFilledForm.hasErrors()) {
+				exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+			}
+			State state = StateHelper.cloneState(exp.state);
+			exp.state.code = null;
+			
+			Workflows.setExperimentState(exp, state, ctxValidation);
+	
+			if (!experimentFilledForm.hasErrors()) {
+				return ok(Json.toJson(exp));
+			}else {
+				return badRequest(experimentFilledForm.errorsAsJson());
+			}
+	   }
 		
-		ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
-		
-		exp.code = CodeHelper.generateExperiementCode(exp);
-		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
-		
-		if (!experimentFilledForm.hasErrors()) {
-			exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
-		}
-
-		Workflows.nextExperimentState(exp, ctxValidation);
-
-		if (!experimentFilledForm.hasErrors()) {
-			return ok(Json.toJson(exp));
-		}else {
-			return badRequest(experimentFilledForm.errorsAsJson());
-		}
+	   return badRequest();
 	}
 
 	public static Result list(){
@@ -321,7 +329,7 @@ public class Experiments extends CommonController{
 		}
 
 		if(null != experimentSearch.toDate){
-			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", experimentSearch.toDate));
+			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(experimentSearch.toDate, 1))));
 		}
 
 		if(experimentSearch.sampleCodes != null){

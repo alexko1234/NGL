@@ -79,7 +79,6 @@ public class Experiments extends CommonController{
 		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes"), true, false, true,false,extraHeaders));	
 		columns.add(DatatableHelpers.getColumn("mesuredVolume.value", Messages.get("experiments.table.volume.value"),true, true, true,false,extraHeaders));	
 		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("containers.table.sampleCodes"), true, false, true,false,extraHeaders));		
-		columns.add(DatatableHelpers.getColumn("valid", Messages.get("containers.table.valid"), true, false, true,false,extraHeaders));
 		columns.add(DatatableHelpers.getColumn("state.code", Messages.get("containers.table.stateCode"), true, false, true,false,extraHeaders));
 		columns.add(DatatableHelpers.getColumn("categoryCode", Messages.get("containers.table.categoryCode"), true, false, true,false,extraHeaders));
 		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes"), true, false, true,false,extraHeaders));

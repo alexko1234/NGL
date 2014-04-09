@@ -9,7 +9,7 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 			typeCode:"",
 			state:{
 				resolutionCodes:[],
-				code:""
+				code:"N"
 			},
 			protocolCode:"",
 			instrument:{
@@ -411,6 +411,12 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 	
 	$scope.saveAllPromise = function(){
 		var promises = [];
+		
+		$scope.experiment.experimentProperties.enabled = false;
+		$scope.experiment.experimentInformation.enabled = false;
+		$scope.experiment.instrumentProperties.enabled = false;
+		$scope.experiment.instrumentInformation.enabled = false;
+		
 		if($scope.experiment.value._id != undefined){
 			promises.push($scope.experiment.experimentInformation.save());
 	
@@ -437,6 +443,10 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 				$scope.message.clazz="alert alert-success";
 				$scope.message.text=Messages('experiments.msg.save.sucess');
 			}
+			$scope.experiment.experimentProperties.enabled = true;
+			$scope.experiment.experimentInformation.enabled = true;
+			$scope.experiment.instrumentProperties.enabled = true;
+			$scope.experiment.instrumentInformation.enabled = true;
 		});
 	};
 	
@@ -462,6 +472,10 @@ function CreateNewCtrl($scope,$window, datatable, $http,lists,$parse,$q,$positio
 	$scope.changeState = function(){
 		var promises = $scope.saveAllPromise();
 		$q.all(promises).then(function (res) {
+			$scope.experiment.experimentProperties.enabled = true;
+			$scope.experiment.experimentInformation.enabled = true;
+			$scope.experiment.instrumentProperties.enabled = true;
+			$scope.experiment.instrumentInformation.enabled = true;
 			$scope.clearMessages();
 			var promise = $http.put(jsRoutes.controllers.experiments.api.Experiments.nextState($scope.experiment.value.code).url)
 			.success(function(data, status, headers, config) {

@@ -75,7 +75,6 @@ public class Processes extends CommonController{
 			if (!filledForm.hasErrors()) {
 				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, new ContextValidation(filledForm.errors()));
 				Workflows.nextContainerState(value,new ContextValidation(filledForm.errors()));
-
 			}
 		}
 		if (!filledForm.hasErrors()) {

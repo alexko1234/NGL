@@ -19,7 +19,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">@Messages("experiment.cancelComment")</button>
-		<button data-dismiss="modal" class="btn btn-primary" ng-click="experiment.comments.save();">@Messages("experiment.sendComment")</button>
+		<button data-dismiss="modal" class="btn btn-primary" ng-disabled="!experiment.experimentInformation.enabled" ng-click="experiment.comments.save();">@Messages("experiment.sendComment")</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -37,7 +37,7 @@
 				class="caret"></span>
 			</a>
 			<ul class="dropdown-menu dropdown-menu-right">
-				<li><a href="#"  ng-disabled="experiment.value.stateCode != 'IP'" ng-click="generateSampleSheet()" >@Messages("experiments.sampleSheet")</a></li>
+				<li><a href="#" ng-disabled="experiment.value.stateCode != 'IP' || !experiment.experimentInformation.enabled"  ng-click="generateSampleSheet()" >@Messages("experiments.sampleSheet")</a></li>
 			</ul>
 		</div>
 		<button class="btn btn-primary" ng-click="saveAll();" data-toggle="tooltip" title="@Messages("experiments.save_all")">
@@ -85,12 +85,21 @@
 					@columnLabelValue(Messages("experiments.type")){
 						<p class="form-control-static">{{experiment.value.typeCode}}</p>
 					}			    
+					@columnLabelValue(Messages("experiments.protocol")){
+						<select class="form-control"
+								ng-model="experiment.value.protocolCode"
+								ng-readonly="!experiment.experimentInformation.enabled"
+								ng-options="protocol.code as protocol.name for protocol in lists.get('protocols')"
+								ng-disabled="!experiment.experimentInformation.enabled">
+									<option value="">@Messages("experiments.select.protocols")</option>
+							</select>
+					}	
 			   	 	@columnLabelValue(Messages("experiments.state")){
+			   	 		<b>{{experiment.value.state.code | codes:'state'}}</b>
 						<div ng-switch on="experiment.value.state.code">
-								<button class="btn btn-default" ng-switch-when="N" ng-disabled="experiment.value._id == null" ng-click="changeState()" >@Messages("experiments.begin_progress")</button>
+								<button class="btn btn-default" ng-switch-when="N" ng-disabled="experiment.value._id == null || !experiment.experimentInformation.enabled" ng-click="changeState()" >@Messages("experiments.begin_progress")</button>
 								<!--<button  class="btn btn-default" ng-switch-when="IP" ng-click="changeState('OK')" >@Messages("experiments.ok")</button>-->
-								<button  class="btn btn-default" ng-switch-when="IP" ng-disabled="experiment.value._id == null" ng-click="changeState()" >@Messages("experiments.finish")</button>
-								<b ng-switch-when="F">@Messages("experiments.finished")</b>
+								<button  class="btn btn-default" ng-switch-when="IP" ng-disabled="experiment.value._id == null || !experiment.experimentInformation.enabled" ng-click="changeState()" >@Messages("experiments.finish")</button>
 							</div>
 					}
 			    	@columnLabelValue(Messages("experiments.resolution")){
@@ -99,15 +108,6 @@
 									ng-disabled="!experiment.experimentInformation.enabled"
 									ng-readonly="!experiment.experimentInformation.enabled">
 							</div>	
-					}	
-			    	@columnLabelValue(Messages("experiments.protocol")){
-						<select class="form-control"
-								ng-model="experiment.value.protocolCode"
-								ng-readonly="!experiment.experimentInformation.enabled"
-								ng-options="protocol.code as protocol.name for protocol in lists.get('protocols')"
-								ng-disabled="!experiment.experimentInformation.enabled">
-									<option value="">@Messages("experiments.select.protocols")</option>
-							</select>
 					}	
 					
 						
@@ -172,6 +172,7 @@
 					<label class="col-md-6 col-lg-6 control-label">@Messages("experiments.intrumentCategory")</label>
 					<div class="col-md-6 col-lg-6">
 									<select  class="form-control"
+									auto-select="lists.get('containerSupportCategories')"
 									ng-model="experiment.value.instrument.outContainerSupportCategoryCode"
 									ng-readonly="!experiment.instrumentInformation.enabled"
 									ng-options="instrumentCategory.code as instrumentCategory.name for instrumentCategory in lists.get('containerSupportCategories')"

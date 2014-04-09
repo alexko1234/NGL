@@ -74,7 +74,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			url:jsRoutes.controllers.containers.api.Containers.list()
 		},
 		order:{
-			by:'code'
+			by:'traceInformation.creationDate',
+			reverse:true
 		},
 		edit:{
 			active:true,

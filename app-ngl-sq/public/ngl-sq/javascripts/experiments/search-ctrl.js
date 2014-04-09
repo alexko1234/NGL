@@ -115,7 +115,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	};
 	
 	$scope.search = function(){		
-		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.type || ($scope.form.fromDate && $scope.form.toDate)){
+		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.type || $scope.form.fromDate || $scope.form.toDate){
 			var jsonSearch = {};			
 
 			if($scope.form.projectCode){
