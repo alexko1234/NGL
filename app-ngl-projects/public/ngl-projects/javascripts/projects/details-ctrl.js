@@ -1,8 +1,8 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routeParams', 'datatable', 'messages', 'lists', 
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routeParams',  
                                                   
-  function($scope, $http, $routeParams, datatable, messages, lists) {
+  function($scope, $http, $routeParams) {
 		
 	$scope.reset = function(){
 		$scope.form = {
@@ -11,6 +11,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	};
 	
 	
+	var isValuationMode = function(){
+		return ($scope.isHomePage('valuation') || $routeParams.page === 'valuation');
+	};
+
 	/* main section  */
 	var init = function(){
 		
@@ -20,13 +24,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 			$scope.reset();
 		}
 
-		
-		$scope.messages = messages();
-		$scope.lists = lists;
 		$scope.stopEditMode();
 		
 		$http.get(jsRoutes.controllers.projects.api.Projects.get($routeParams.code).url).success(function(data) {
 			$scope.project = data;	
+			
+			if(isValuationMode()){
+				$scope.startEditMode();	
+			}
 			
 			
 			if($scope.getTabs().length == 0){
@@ -42,7 +47,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	};
 	
 	init();
-	
 	
 	
 }]);

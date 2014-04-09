@@ -8,7 +8,7 @@
 	</div>
 }
 
-@dataState()(value: Html) = {
+@dataState()() = {
 	<p>
 	@Messages("symbol.delimiter.parenthesis.open")
 	<label>@Messages("projects.state.updatedAt")</label> <time>{{project.state.date  | date:'@Messages("date.format")'}}</time>
@@ -27,9 +27,8 @@
 		<div class="btn-toolbar pull-right">
 			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
 			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
-			 <button class="btn btn-default" ng-if="!isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					
+			 <button class="btn btn-default" ng-if="!isEditMode()" ng-click="startEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					
 		</div>
-	
 	 	<h1 ng-switch on="project.state.code">	
 		 	<span ng-switch-when="IP" class="text-danger">{{project.code}}</span> 
 		 	<span ng-switch-default class="text-success">{{project.code}}</span> 
@@ -37,7 +36,6 @@
 				<span ng-model="project.state.code" codes="state"/>
 			</small>
 		 </h1>
-		 
 	</div>
 </div>
 
@@ -55,26 +53,34 @@
 				}
 				
 				@views.html.helper.columnLabelValue(Messages("projects.name")){
-					<p class="form-control-static">{{project.name}}</p>
+					<div ng-switch on="isEditMode()">
+						<p class="form-control-static" ng-switch-when="false">{{project.name}}</p>
+						<input type="text" class="form-control" ng-switch-when="true" ng-model="project.name">
+					</div>
 				}
 
 				@views.html.helper.columnLabelValue(Messages("projects.state.code")){
 					<p class="form-control-static"  ng-model='project.state.code' codes="state"></p>	
-					@dataState() { }
+					@dataState()
 				}
 					
+				@views.html.helper.columnLabelValue(Messages("projects.traceInformation.creationDate")){
+					<p class="form-control-static">{{project.traceInformation.creationDate | date:'@Messages("date.format")'}}</p>	
+				}
+
 				@views.html.helper.columnLabelValue(Messages("projects.traceInformation.createUser")){
 					<p class="form-control-static">{{project.traceInformation.createUser}}</p>	
 				}
 				
-				@views.html.helper.columnLabelValue(Messages("projects.traceInformation.creationDate")){
-					<p class="form-control-static">{{project.traceInformation.creationDate | date:'@Messages("date.format")'}}</p>	
-				}
-				
-				@views.html.helper.columnLabelValue(Messages("projects.comments")){
-					<textarea>{{project.comments}}</textarea>	
-				}
-								 
+				<div ng-hide="!isEditMode() && !project.comments">			
+					@views.html.helper.columnLabelValue(Messages("projects.comments")){
+						<div ng-switch on="isEditMode()">
+							<p class="form-control-static" ng-switch-when="false">{{project.comments}}</p>
+							<textarea class="form-control" ng-model="project.comments" ng-switch-when="true"></textarea>					
+						</div>
+					}
+				</div>
+						 
 			}
 			
 			
@@ -85,7 +91,6 @@
 				@views.html.helper.columnLabelValue(Messages("projects.category.type")){
 					<p class="form-control-static">{{project.categoryCode}}</p>
 				}
-
 			}
 		
 			</div>		
