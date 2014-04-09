@@ -7,7 +7,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			columns:[
 				{
 					"header":Messages("containers.table.supportCode"),
-					"property":"support.supportCode",
+					"property":"support.code",
 					"order":true,
 					"type":"text"
 			},
