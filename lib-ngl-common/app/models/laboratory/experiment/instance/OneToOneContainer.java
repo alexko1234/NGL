@@ -6,6 +6,7 @@ import java.util.List;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -74,28 +75,42 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			// ContainerSupport
 			ContainerSupport support=ContainerSupportHelper.createSupport(this.outputContainerUsed.locationOnContainerSupport.code
 					,this.outputContainerUsed.locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);
-
+			
+			
 			// Container
 			Container outputContainer = new Container();
-			//outputContainer.categoryCode
+
+			//A verifier la nomenclature
+			outputContainer.code=support.code;
 			outputContainer.traceInformation = new TraceInformation();
 			outputContainer.traceInformation.setTraceInformation(experiment.traceInformation.modifyUser);
-
+			try {
+				outputContainer.categoryCode=ContainerSupportCategory.find.findByCode(this.outputContainerUsed.locationOnContainerSupport.categoryCode).containerCategory.code;
+			} catch (DAOException e) {
+				throw new RuntimeException();
+			}
+					
 			Container inputContainer=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,inputContainerUsed.code);
 			//Add content
 			ContainerHelper.addContent(inputContainer, outputContainer, experiment);
 			//Add localisation
 			outputContainer.support=outputContainerUsed.locationOnContainerSupport;
 			outputContainer.state=new State("N",experiment.traceInformation.modifyUser);
-
+			outputContainer.valuation=new Valuation();
+			
 			//TODO volume, proportion
 
 			support.projectCodes=new ArrayList<String>(inputContainer.projectCodes);
 			support.sampleCodes=new ArrayList<String>(inputContainer.sampleCodes);
+			
 			contextValidation.isCreationMode();
+			contextValidation.addKeyToRootKeyName("support["+support.code+"]");
 			InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME,support, contextValidation);
+			contextValidation.removeKeyFromRootKeyName("support["+support.code+"]");
 			if(!contextValidation.hasErrors()){
+				contextValidation.addKeyToRootKeyName("container["+outputContainer.code+"]");
 				InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,outputContainer, contextValidation);
+				contextValidation.removeKeyFromRootKeyName("container["+outputContainer.code+"]");
 			}
 
 
