@@ -248,6 +248,10 @@ public class Containers extends CommonController {
 		if(containersSearch.fromExperimentTypeCodes != null){
 			queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));
 		}
+		
+		if(containersSearch.valuations != null){
+			queryElts.add(DBQuery.or(DBQuery.in("valuation.valid", containersSearch.valuations)));
+		}
 
 		if(StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
 			try {

@@ -134,6 +134,7 @@ experiments.select.intrumentUsedType = Sélect. un Type d''instrument
 experiments.select.intrumentCategory = Sélect. un Type de contenant
 experiments.select.experimentTypeCode = Sélect. un Type d''experiences
 experiments.select.outContainerSupportCategoryCode = Sélect. un type de sortie
+search.placeholder.valuation = Sélect une évaluation
 
 experiments.table.code = Code experience
 experiments.table.projectCodes = Code Projets
@@ -166,3 +167,7 @@ button.readsets.valuation = Evaluer Readsets
 button.edit = Editer
 
 date.format=dd/MM/yyyy
+
+valuation.value.TRUE = Oui
+valuation.value.FALSE = Non
+valuation.value.UNSET = -

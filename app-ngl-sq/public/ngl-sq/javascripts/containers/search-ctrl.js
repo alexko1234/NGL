@@ -51,7 +51,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 				"header":Messages("containers.table.valid"),
 				"property":"valuation.valid",
 				"order":true,
-				"type":"text"
+				"type":"text",
+				filter:"codes:'valuation'",
 			},
 			{
 				"header":Messages("containers.table.state.code"),
@@ -113,7 +114,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 
 	$scope.search = function(){		
 		if($scope.form.projectCode || $scope.form.sampleCode || ($scope.form.fromExperimentTypeCodes && $scope.form.fromExperimentTypeCodes.length > 0) || $scope.form.containerCategory 
-			|| $scope.form.containerSupportCategory || $scope.form.state || $scope.form.containerSupportCode){	
+			|| $scope.form.containerSupportCategory || $scope.form.state || $scope.form.containerSupportCode  || $scope.form.valuations){	
 			
 			var jsonSearch = {};
 			
@@ -123,6 +124,10 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			if($scope.form.sampleCode){
 				jsonSearch.sampleCodes = $scope.form.sampleCode;
 			}		
+			
+			if($scope.form.valuations){
+				jsonSearch.valuations = $scope.form.valuations;
+			}
 			
 			if($scope.form.fromExperimentTypeCodes){
 				jsonSearch.fromExperimentTypeCodes = $scope.form.fromExperimentTypeCodes;
@@ -135,6 +140,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			if($scope.form.containerSupportCategory){
 				jsonSearch.containerSupportCategory = $scope.form.containerSupportCategory;
 			}	
+			
 			
 			if($scope.form.state){
 				jsonSearch.stateCode = $scope.form.state.code;

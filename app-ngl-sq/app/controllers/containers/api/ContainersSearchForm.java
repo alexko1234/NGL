@@ -16,6 +16,7 @@ public class ContainersSearchForm extends ListForm{
 	public String supportCode;
 	public String containerSupportCategory;
 	public List<String> fromExperimentTypeCodes;
+	public List<String> valuations;
 	
 	@Override
 	public String toString() {
@@ -26,6 +27,7 @@ public class ContainersSearchForm extends ListForm{
 				+ experimentTypeCode + ", processTypeCode=" + processTypeCode
 				+ ", supportCode=" + supportCode
 				+ ", containerSupportCategory=" + containerSupportCategory
-				+ ", fromExperimentTypeCodes=" + fromExperimentTypeCodes + "]";
+				+ ", fromExperimentTypeCodes=" + fromExperimentTypeCodes
+				+ ", valuations=" + valuations + "]";
 	}
 }

@@ -99,7 +99,7 @@ angular.module('commonsServices', []).
     					load(jsRoutes.controllers.processes.api.ProcessTypes.list().url,params,'processTypes');
     				},
     				valuationCriterias: function(params){
-    					load(jsRoutes.controllers.valuation.api.ValuationCriterias.list().url,params,'valuationCriterias');    					
+    					load(jsRoutes.controllers.commons.api.ValuationCriterias.list().url,params,'valuationCriterias');    					
     				},
     				supports : function(params){
     					load(jsRoutes.controllers.supports.api.Supports.list().url,params,'supports'); 
@@ -233,6 +233,20 @@ angular.module('commonsServices', []).
     				 };
     			}    					
     			};
+    	//If the select or multiple choices contain 1 element, this directive select it automaticaly
+    	//USE: As attribut, auto-select="theListOfChoice"
+    	}).directive('autoSelect', function() {
+    		return {
+    			restrict: 'A',
+    			require: 'ngModel',
+    			link: function(scope, element, attrs, ngModel) {
+					 scope.$watch(attrs.autoSelect, function(newVal) {
+						if(newVal && newVal.length == 1){
+							ngModel.$setViewValue(newVal[0].code);
+						}
+					 });
+    			}
+    		};
     	}).directive('btSelect',  ['$parse', '$document', '$window', function($parse,$document, $window)  {
 			//0000111110000000000022220000000000000000000000333300000000000000444444444444444000000000555555555555555000000066666666666666600000000000000007777000000000000000000088888
     		var BT_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*))\s+in\s+([\s\S]+?)$/;                        

@@ -147,6 +147,7 @@
 						<select class="form-control"
 					ng-change="getInstruments()"
 					ng-model="experiment.value.instrument.typeCode"
+					auto-select="lists.get('instrumentUsedTypes')"
 					ng-readonly="!experiment.instrumentInformation.enabled"
 					ng-options="instrumentUsedType.code as instrumentUsedType.name for instrumentUsedType in lists.get('instrumentUsedTypes')"
 					ng-disabled="!experiment.instrumentInformation.enabled">
@@ -178,7 +179,7 @@
 									ng-options="instrumentCategory.code as instrumentCategory.name for instrumentCategory in lists.get('containerSupportCategories')"
 									ng-disabled="!experiment.instrumentInformation.enabled"
 									ng-hide="!experiment.value.instrument.typeCode || experiment.outputVoid">
-										<option value="">@Messages("experiments.select.instrumentCategory")</option>
+										<option value="">@Messages("experiments.select.outContainerSupportCategoryCode")</option>
 									</select>
 					</div>
 				</div>							
@@ -194,7 +195,8 @@
 							
 							<select class="form-control" ng-options="opt.value as opt.value for opt in instp.possibleValues"  
 								ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" 
-								ng-model="experiment.value.instrumentProperties[instp.code].value" ng-switch-when="true" >
+								ng-model="experiment.value.instrumentProperties[instp.code].value" ng-switch-when="true" 
+								select-auto="instp.possibleValues">
 						    <option value="">@Messages("experiments.select.property")</option>
 						    </select>
 						</div>
