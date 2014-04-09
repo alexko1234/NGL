@@ -9,9 +9,7 @@
 			@formGroup{
 				<div  class="form-control" bt-select ng-model="form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in lists.getStates()" ></div>							
 			}
-			@formGroup{	
-				<div  class="form-control" bt-select ng-model="form.laneResolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.laneResolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()"></div>														
-			}
+			
 	}		
 	@columnSearchForm{		
 			@formGroup{		
@@ -42,7 +40,7 @@
 				<div  class="form-control" bt-select ng-model="form.instrumentCodes" multiple="true" placeholder="@Messages("search.placeholder.instruments")" bt-options="instrument.code as instrument.code for instrument in lists.getInstruments()"></div>
 			}
 			@formGroup{	
-			<div  class="form-control" bt-select ng-model="form.runResolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.runResolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()"></div>														
+			<div  class="form-control" bt-select ng-model="form.resolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.resolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()"></div>														
 			}
 	}			
 }
