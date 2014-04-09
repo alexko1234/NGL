@@ -133,6 +133,7 @@ experiments.select.protocols = Sélect. un protocole
 experiments.select.intrumentUsedType = Sélect. un Type d''instrument
 experiments.select.intrumentCategory = Sélect. un Type de contenant
 experiments.select.experimentTypeCode = Sélect. un Type d''experiences
+experiments.select.outContainerSupportCategoryCode = Sélect. un type de sortie
 
 experiments.table.code = Code experience
 experiments.table.projectCodes = Code Projets
