@@ -125,7 +125,7 @@ public class ContainerHelper {
 	 */
 	
 	private static SimpleDateFormat getSimpleDateFormat(){
-		return new SimpleDateFormat("yyyyMMddHHmmss");
+		return new SimpleDateFormat("yyyyMMddHHmmssSS");
 	}
 
 	public static String generateContainerCode(String categoryCode){
