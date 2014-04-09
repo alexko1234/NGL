@@ -68,6 +68,7 @@ search.placeholder.productionResolutions = Sélect. des resol. QC.
 search.placeholder.bioinformaticResolutions = Sélect. des resol. bioinfo.
 search.placeholder.runResolutions = Sélect. des resol. de run
 search.placeholder.laneResolutions = Sélect. des resol. de lane
+search.placeholder.resolutions = Sélect. des resol. de run / lane
 
 button.search = Rechercher
 button.reset = Réinitialiser
