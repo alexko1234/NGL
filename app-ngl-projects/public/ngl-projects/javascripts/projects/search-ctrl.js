@@ -84,6 +84,16 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 					$scope.addTabs({label:line.code,href:jsRoutes.controllers.projects.tpl.Projects.get(line.code).url, remove:true});
 				}
 			},
+			add:{
+				active:true,
+				url:jsRoutes.controllers.projects.api.Projects.save()
+			},
+			/*
+			 * TODO : au lieu de le mettre ds le code du datatable 
+			otherButton:{
+				active:true,
+				template:'<button class="fa fa-plus-square-o" ng-click="add()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.stateCode != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
+			} */
 			columns : getColumns()
 	};
 	

@@ -24,6 +24,9 @@ DELETE	/api/projects/:code								controllers.projects.api.Projects.delete(code:
 GET		/api/commons/types								controllers.commons.api.CommonInfoTypes.list()
 GET		/api/commons/states								controllers.commons.api.States.list()
 
+#migration
+GET		/migration										controllers.migration.Migration.migration()
+
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               					controllers.Assets.at(path="/public", file)
