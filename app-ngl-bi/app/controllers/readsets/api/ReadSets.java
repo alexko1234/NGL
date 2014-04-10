@@ -393,6 +393,7 @@ public class ReadSets extends ReadSetsController{
 					.set("bioinformaticValuation", valuations.bioinformaticValuation)
 					.set("traceInformation", getUpdateTraceInformation(readSet)));								
 			readSet = getReadSet(code);
+			//TODO Update old lims !
 			Workflows.nextReadSetState(ctxVal, readSet);
 			return ok(Json.toJson(readSet));
 		} else {
@@ -420,6 +421,7 @@ public class ReadSets extends ReadSetsController{
 							.set("bioinformaticValuation", element.data.bioinformaticValuation)
 							.set("traceInformation", getUpdateTraceInformation(readSet)));								
 					readSet = getReadSet(readSet.code);
+					//TODO Update old lims !
 					Workflows.nextReadSetState(ctxVal, readSet);
 					response.add(new DatatableBatchResponseElement(OK, readSet, element.index));
 				}else {
@@ -497,7 +499,8 @@ public class ReadSets extends ReadSetsController{
 		productionVal.user = getCurrentUser();
 		bioinfoVal.date = new Date();
 		bioinfoVal.user = getCurrentUser();
-		//par defaut si valiadation bioinfo pas rempli alors même que prod
+		//par defaut si validation bioinfo pas rempli alors même que prod
+		//TODO Project Dependant
 		if(TBoolean.UNSET.equals(bioinfoVal.valid)){
 			bioinfoVal.valid = productionVal.valid;
 		}
@@ -508,7 +511,7 @@ public class ReadSets extends ReadSetsController{
 
 	
 	
-	public static String findRegExpFromStringList(List<String> searchList) {
+	private static String findRegExpFromStringList(List<String> searchList) {
 		String regex = ".*("; 
 		for (String itemList : searchList) {
 			regex += itemList + "|"; 

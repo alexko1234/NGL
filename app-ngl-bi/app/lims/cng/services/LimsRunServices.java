@@ -15,17 +15,22 @@ import lims.models.experiment.illumina.Lane;
 import lims.models.experiment.illumina.Library;
 import lims.models.instrument.Instrument;
 import lims.services.ILimsRunServices;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import play.Logger;
 
+
 /**
  * CNG Implementation
  */
 @Service
 public class LimsRunServices implements ILimsRunServices {
+
+	
 
 	@Autowired
 	LimsRunDAO dao;
@@ -89,6 +94,15 @@ public class LimsRunServices implements ILimsRunServices {
 		}
 		return flowcell;
 	}
+
+	@Override
+	public void valuationRun(Run run) {
+		Logger.warn("Not Implemented");		
+	}
 	
+	@Override
+	public void valuationReadSet(ReadSet readSet) {
+		Logger.warn("Not Implemented");		
+	}
 	
 }

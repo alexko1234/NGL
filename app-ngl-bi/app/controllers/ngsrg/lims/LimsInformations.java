@@ -3,12 +3,13 @@ package controllers.ngsrg.lims;
 import java.util.List;
 
 import controllers.CommonController;
-import controllers.authorisation.Permission;
+
 
 import lims.cng.services.LimsRunServices;
 import lims.models.experiment.ContainerSupport;
 import lims.models.experiment.Experiment;
 import lims.models.instrument.Instrument;
+import lims.services.ILimsRunServices;
 import play.data.Form;
 import play.libs.Json;
 import play.api.modules.spring.Spring;
@@ -31,7 +32,7 @@ public class LimsInformations  extends CommonController {
 	 */
 	//@Permission(value={"read_generation"})
 	public static Result instruments() {
-		LimsRunServices  limsRunServices = Spring.getBeanOfType(LimsRunServices.class);  
+		ILimsRunServices  limsRunServices = Spring.getBeanOfType(ILimsRunServices.class);  
 		List<Instrument> intruments = limsRunServices.getInstruments();		
 		return ok(Json.toJson(intruments));
 	}
@@ -44,7 +45,7 @@ public class LimsInformations  extends CommonController {
 	 */
 	//@Permission(value={"read_generation"})
 	public static Result experiments() {
-		LimsRunServices  limsRunServices = Spring.getBeanOfType(LimsRunServices.class);
+		ILimsRunServices  limsRunServices = Spring.getBeanOfType(ILimsRunServices.class);
 		Form<Experiment> inputExpForm = experimentForm.bindFromRequest();
 		if(inputExpForm.hasErrors()) {			
 				return badRequest(inputExpForm.errorsAsJson());					
@@ -65,7 +66,7 @@ public class LimsInformations  extends CommonController {
 	 */
 	//@Permission(value={"read_generation"})
 	public static Result containerSupport(String supportCode) {
-		LimsRunServices  limsRunServices = Spring.getBeanOfType(LimsRunServices.class);  		
+		ILimsRunServices  limsRunServices = Spring.getBeanOfType(ILimsRunServices.class);  		
 		ContainerSupport containerSupport = limsRunServices.getContainerSupport(supportCode);
 		if(null != containerSupport){
 			return ok(Json.toJson(containerSupport));
@@ -81,7 +82,7 @@ public class LimsInformations  extends CommonController {
 	 */
 	//@Permission(value={"read_generation"})
 	public static Result isContainerSupport(String supportCode) {
-		LimsRunServices  limsRunServices = Spring.getBeanOfType(LimsRunServices.class);  		
+		ILimsRunServices  limsRunServices = Spring.getBeanOfType(ILimsRunServices.class);  		
 		ContainerSupport containerSupport = limsRunServices.getContainerSupport(supportCode);
 		if(null != containerSupport){
 			return ok();

@@ -3,6 +3,8 @@ package workflows;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import lims.services.ILimsRunServices;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
@@ -20,6 +22,7 @@ import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
 import net.vz.mongodb.jackson.WriteResult;
 import play.Logger;
+import play.api.modules.spring.Spring;
 import play.libs.Akka;
 import rules.services.RulesActor;
 import rules.services.RulesMessage;
@@ -120,6 +123,8 @@ public class Workflows {
 			ArrayList<Object> facts = new ArrayList<Object>();
 			facts.add(run);		
 			rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("rules.key"),ruleStatRG),null);
+		}else if("F-V".equals(run.state.code)){
+			Spring.getBeanOfType(ILimsRunServices.class).valuationRun(run);
 		}
 	}
 
@@ -158,7 +163,9 @@ public class Workflows {
 				Logger.error("sampleOnContainer null for "+readSet.code);
 			}
 			
-		}else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code))	{
+		}else if("F-V".equals(readSet.state.code)){
+			Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet);
+		} else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code))	{
 			//met les fichier dipo ou non dès que le read set est valider
 			State state = cloneState(readSet.state);
 			if (null != readSet.files) {

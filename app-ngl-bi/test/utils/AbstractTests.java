@@ -44,7 +44,6 @@ public abstract class AbstractTests {
 		config.put("mongodb.database", "NGL-TESTU");
 		config.put("mongodb.credentials", "testu:testu");
 		config.put("mongodb.servers", "mongodev.genoscope.cns.fr:27017");
-		
 		config.put("mongodb.defaultWriteConcern", "SAFE"); 
 		
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");
@@ -67,6 +66,13 @@ public abstract class AbstractTests {
 		config.put("db.lims.user", "ngl_bi_dev");
 		config.put("db.lims.password", "toto");
 		config.put("db.lims.jndiName", "lims");
+		
+		config.put("db.limscns.driver", "net.sourceforge.jtds.jdbc.Driver");
+		config.put("db.limscns.url", "jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims");
+		config.put("db.limscns.user", "www");
+		config.put("db.limscns.password", "wawiwo");
+		config.put("db.limscns.jndiName", "limscns");
+		
 		
 		//config.put("asset.url","http://192.168.243.231:9001");
 		
