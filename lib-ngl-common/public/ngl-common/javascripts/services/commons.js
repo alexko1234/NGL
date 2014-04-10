@@ -99,7 +99,7 @@ angular.module('commonsServices', []).
     					load(jsRoutes.controllers.processes.api.ProcessTypes.list().url,params,'processTypes');
     				},
     				valuationCriterias: function(params){
-    					load(jsRoutes.controllers.commons.api.ValuationCriterias.list().url,params,'valuationCriterias');    					
+    					load(jsRoutes.controllers.valuation.api.ValuationCriterias.list().url,params,'valuationCriterias');    					
     				},
     				supports : function(params){
     					load(jsRoutes.controllers.supports.api.Supports.list().url,params,'supports'); 
