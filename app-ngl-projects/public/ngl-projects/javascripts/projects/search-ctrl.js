@@ -110,39 +110,4 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 }]);
 
 
-angular.module('home').controller('SearchValuationCtrl', ['$scope', 'datatable', function($scope, datatable) {
-
-	var datatableConfig = {
-			order :{by:'code', reverse:false},
-			search:{
-				url:jsRoutes.controllers.projects.api.Projects.list()
-			},
-			show:{
-				active:true,
-				add :function(line){
-					$scope.addTabs({label:line.code, href:jsRoutes.controllers.projects.tpl.Projects.valuation(line.code).url, remove:true});
-				}
-			},
-			columns : getColumns()
-	};
-	
-	
-	var init = function(){
-		//to avoid to lost the previous search
-		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, datatableConfig);
-			$scope.setDatatable($scope.datatable);
-		}else{
-			$scope.datatable = $scope.getDatatable();
-		}
-		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('valuation');
-			$scope.addTabs({label:Messages('projects.page.tab.validate'), href:jsRoutes.controllers.projects.tpl.Projects.home("valuation").url, remove:true});
-			$scope.activeTab(0); // desactive le lien !
-		}
-	};
-	
-	init();
-}]);
-
 

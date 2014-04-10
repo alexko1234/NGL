@@ -25,7 +25,7 @@
 	<div class="col-md-12 col-lg-12 ">
 	<div class="page-header" ng-init="init()">
 		<div class="btn-toolbar pull-right">
-			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="update()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
 			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
 			 <button class="btn btn-default" ng-if="!isEditMode()" ng-click="startEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					
 		</div>
@@ -72,17 +72,16 @@
 					<p class="form-control-static">{{project.traceInformation.createUser}}</p>	
 				}
 				
-				<div ng-hide="!isEditMode() && !project.comments">			
+				<div ng-if="(project.comments != null && project.comments.length > 0)">			
 					@views.html.helper.columnLabelValue(Messages("projects.comments")){
 						<div ng-switch on="isEditMode()">
-							<p class="form-control-static" ng-switch-when="false">{{project.comments}}</p>
-							<textarea class="form-control" ng-model="project.comments" ng-switch-when="true"></textarea>					
+							<p class="form-control-static" ng-switch-when="false">{{project.comments[0].comment}}</p>
+							<textarea class="form-control" ng-switch-when="true" ng-model="project.comments[0].comment"></textarea>
 						</div>
+						
 					}
 				</div>
-						 
 			}
-			
 			
 			@column(){
 				@views.html.helper.columnLabelValue(Messages("projects.type")){
@@ -92,9 +91,26 @@
 					<p class="form-control-static">{{project.categoryCode}}</p>
 				}
 			}
-		
-			</div>		
+			
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="row margin-bottom-7">
+	<div class="col-md-12 col-lg-12">			
+		<form  class="form-horizontal">	
+			<div class="row">
+				@column(){
+				<div ng-if="isEditMode() && (project.comments == null || project.comments.length == 0)">			
+					@views.html.helper.columnLabelValue(Messages("projects.comments")){
+						<textarea class="form-control" ng-model="obj.newcomment"></textarea>					
+					}
+				</div>
+				}				
+			</div>
 		</form>		
+		
 	</div>
 </div>
        

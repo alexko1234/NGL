@@ -5,10 +5,6 @@ angular.module('home', ['ngRoute','datatableServices','commonsServices','ui.boot
 		templateUrl : '/tpl/projects/search/default',
 		controller : 'SearchCtrl'
 	});
-	$routeProvider.when('/projects/valuation/home', {
-		templateUrl : '/tpl/projects/search/valuation',
-		controller : 'SearchValuationCtrl'
-	});
 	$routeProvider.when('/projects/:code', {
 		templateUrl : '/tpl/projects/details',
 		controller : 'DetailsCtrl'

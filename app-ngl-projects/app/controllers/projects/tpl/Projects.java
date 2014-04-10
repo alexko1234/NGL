@@ -28,9 +28,6 @@ public class Projects extends CommonController {
 		return ok(home.render("search")); 
 	}
 	
-	public static Result valuation(String code) {
-		return ok(home.render("valuation")); 
-	}
 
 	public static Result search(String type) {
 		if(!"valuation".equals(type)){
@@ -53,7 +50,6 @@ public class Projects extends CommonController {
   	        // Routes
   	    		controllers.projects.tpl.routes.javascript.Projects.home(),  
   	    		controllers.projects.tpl.routes.javascript.Projects.get(), 
-  	    		controllers.projects.tpl.routes.javascript.Projects.valuation(),
   	    		controllers.projects.tpl.routes.javascript.Projects.search(),
   	    		controllers.projects.api.routes.javascript.Projects.get(),
   	    		controllers.projects.api.routes.javascript.Projects.update(),

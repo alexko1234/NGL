@@ -7,7 +7,6 @@ GET     /                           					controllers.main.tpl.Main.home()
 
 GET	   	/projects/:homecode/home						controllers.projects.tpl.Projects.home(homecode: java.lang.String)
 GET	   	/projects/:code									controllers.projects.tpl.Projects.get(code: java.lang.String)
-GET	   	/projects/:code/valuation						controllers.projects.tpl.Projects.valuation(code: java.lang.String)
 
 #project tpl
 GET		/tpl/projects/details							controllers.projects.tpl.Projects.details()
@@ -22,8 +21,8 @@ POST   	/api/projects									controllers.projects.api.Projects.save()
 PUT   	/api/projects/:code 							controllers.projects.api.Projects.update(code: java.lang.String)
 DELETE	/api/projects/:code								controllers.projects.api.Projects.delete(code:java.lang.String)
 
-GET		/api/commons/types							controllers.commons.api.CommonInfoTypes.list()
-GET		/api/commons/states							controllers.commons.api.States.list()
+GET		/api/commons/types								controllers.commons.api.CommonInfoTypes.list()
+GET		/api/commons/states								controllers.commons.api.States.list()
 
 
 # Map static resources from the /public folder to the /assets URL path
