@@ -13,16 +13,13 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	
 	/* buttons section */
 	$scope.update = function(){
+		//get data
 		var objProj = angular.copy($scope.project);
-		var txt = $scope.obj.newcomment;
-		if (txt != "") {
-			var comments = new Array();
-			var comment = new Object();
-			comment.comment = txt;
-			comments[0] = comment;
-			objProj.comments = comments;
+		//to not save empty comment in Mongo
+		if (objProj.comments[0].comment == "") {
+			delete objProj.comments; 
 		}
-		
+		//update database
 		$http.put(jsRoutes.controllers.projects.api.Projects.update($routeParams.code).url, objProj).success(function(data) {
 			$scope.messages.setSuccess("save");
 		});
@@ -56,11 +53,18 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		$scope.stopEditMode();
 
 		$http.get(jsRoutes.controllers.projects.api.Projects.get($routeParams.code).url).success(function(data) {
-			$scope.project = data;	
+
+			var data2 = data;
 			
-			var obj = new Object();
-			obj.newComment = "";
-			$scope.obj = obj;
+			if (data2.comments == null || data2.comments.length > 0) {
+				var comments = new Array();
+				var comment = new Object();
+				comment.comment = "";
+				comments[0] = comment;
+				data2.comments = comments;				
+			}
+			
+			$scope.project = data2;
 			
 			if($scope.getTabs().length == 0){
 				$scope.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.projects.tpl.Projects.home("search").url, remove:true});

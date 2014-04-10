@@ -72,15 +72,12 @@
 					<p class="form-control-static">{{project.traceInformation.createUser}}</p>	
 				}
 				
-				<div ng-if="(project.comments != null && project.comments.length > 0)">			
-					@views.html.helper.columnLabelValue(Messages("projects.comments")){
-						<div ng-switch on="isEditMode()">
-							<p class="form-control-static" ng-switch-when="false">{{project.comments[0].comment}}</p>
-							<textarea class="form-control" ng-switch-when="true" ng-model="project.comments[0].comment"></textarea>
-						</div>
-						
-					}
-				</div>
+				@views.html.helper.columnLabelValue(Messages("projects.comments")){
+					<div ng-switch on="isEditMode()">
+						<p class="form-control-static" ng-switch-when="false">{{project.comments[0].comment}}</p>
+						<textarea class="form-control" ng-switch-when="true" ng-model="project.comments[0].comment"></textarea>
+					</div>	
+				}
 			}
 			
 			@column(){
@@ -97,20 +94,4 @@
 	</div>
 </div>
 
-<div class="row margin-bottom-7">
-	<div class="col-md-12 col-lg-12">			
-		<form  class="form-horizontal">	
-			<div class="row">
-				@column(){
-				<div ng-if="isEditMode() && (project.comments == null || project.comments.length == 0)">			
-					@views.html.helper.columnLabelValue(Messages("projects.comments")){
-						<textarea class="form-control" ng-model="obj.newcomment"></textarea>					
-					}
-				</div>
-				}				
-			</div>
-		</form>		
-		
-	</div>
-</div>
        
