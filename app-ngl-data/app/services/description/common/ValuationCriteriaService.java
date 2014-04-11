@@ -15,7 +15,7 @@ public class ValuationCriteriaService {
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{		
 		DAOHelpers.removeAll(ValuationCriteria.class, ValuationCriteria.find);
 
-		saveValuationCriteria(errors);	
+		//saveValuationCriteria(errors);	
 	}
 
 

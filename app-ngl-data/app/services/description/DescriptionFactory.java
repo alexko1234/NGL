@@ -645,7 +645,7 @@ public class DescriptionFactory {
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.ReadSet);
 		rt.institutes = institutes; 
 		rt.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.ReadSet);
-		rt.criterias = valCriterias;
+		//rt.criterias = valCriterias;
 		return rt;
 	}
 	
@@ -672,7 +672,7 @@ public class DescriptionFactory {
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Run);
 		rt.institutes = institutes;
 		rt.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.Run);
-		rt.criterias = valCriterias;
+		//rt.criterias = valCriterias;
 		return rt;
 	}
 	
