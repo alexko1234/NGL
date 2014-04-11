@@ -45,8 +45,7 @@ search.placeholder.regexCode = Regex pour le code
 #projects
 projects.menu = Projets
 projects.menu.search = Recherche
-projects.menu.state = Changement d''Etat
-projects.menu.valuation = Evaluation
+projects.menu.add = Ajouter un projet
 
 projects.page.title = Projets
 projects.page.tab.validate = Projets à évaluer

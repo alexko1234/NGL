@@ -8,10 +8,14 @@ GET     /                           					controllers.main.tpl.Main.home()
 GET	   	/projects/:homecode/home						controllers.projects.tpl.Projects.home(homecode: java.lang.String)
 GET	   	/projects/:code									controllers.projects.tpl.Projects.get(code: java.lang.String)
 
+GET		/projects/save									controllers.projects.tpl.Projects.save()
+
+
 #project tpl
 GET		/tpl/projects/details							controllers.projects.tpl.Projects.details()
 GET		/tpl/projects/search/:type						controllers.projects.tpl.Projects.search(type: java.lang.String)
 GET		/tpl/projects/js-routes							controllers.projects.tpl.Projects.javascriptRoutes()
+
 
 #project api
 GET    	/api/projects               					controllers.projects.api.Projects.list()

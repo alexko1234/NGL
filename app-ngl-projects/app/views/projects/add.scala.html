@@ -1,0 +1,70 @@
+@()
+
+
+
+@column()(value: Html) = {
+	<div class="col-md-3 col-lg-3">
+		@value
+	</div>
+}
+
+<div class="row">
+	<div class="col-md-12 col-lg-12 ">
+	<div class="page-header" ng-init="init()">
+		<div class="btn-toolbar pull-right">
+			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
+			 <button class="btn btn-default" ng-if="!isEditMode()" ng-click="startEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12 col-lg-12"  messages="messages"></div>
+</div>
+
+<div class="row margin-bottom-7">
+	<div class="col-md-12 col-lg-12">
+		<form class="form-horizontal">
+			<div class="row">
+			@column(){
+				<!-- project.code  -->
+								
+				@views.html.helper.columnLabelValue(Messages("projects.name")){
+					<div>
+						<input type="text" class="form-control" ng-model="project.name">
+					</div>
+				}
+
+				@views.html.helper.columnLabelValue(Messages("projects.state.code")){
+					<div>
+						<input type="text" class="form-control" ng-model='project.state.code' codes="state">
+					</div>	
+				}
+									
+				@views.html.helper.columnLabelValue(Messages("projects.type")){
+					<div>
+						<input type="text" class="form-control" ng-model="project.typeCode">
+					</div>
+				}
+				
+				@views.html.helper.columnLabelValue(Messages("projects.category.type")){
+					<div>
+						<input type="text" class="form-control" ng-model="project.categoryCode">
+					</div>
+				}
+				
+				@views.html.helper.columnLabelValue(Messages("projects.comments")){
+					<div>
+						<textarea class="form-control" ng-model="project.comments[0].comment"></textarea>
+					</div>	
+				}
+				
+			}
+			
+			</div>
+		</form>
+	</div>
+</div>
+
+       

@@ -9,6 +9,10 @@ angular.module('home', ['ngRoute','datatableServices','commonsServices','ui.boot
 		templateUrl : '/tpl/projects/details',
 		controller : 'DetailsCtrl'
 	});
+	$routeProvider.when('/projects/save', {
+		templateUrl : '/tpl/projects/add',
+		controller : 'AddCtrl'
+	});
 
 	$routeProvider.otherwise({redirectTo: '/projects/search/home'});
 

@@ -56,7 +56,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 
 			var data2 = data;
 			
-			if (data2.comments == null || data2.comments.length > 0) {
+			if (data2.comments == null || data2.comments.length == 0) {
 				var comments = new Array();
 				var comment = new Object();
 				comment.comment = "";
