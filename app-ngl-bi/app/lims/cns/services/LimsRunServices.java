@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.list.TreeList;
-import org.specs2.execute.Error.ThrowableException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,25 +32,25 @@ public class LimsRunServices implements ILimsRunServices{
 
 	@Autowired
 	LimsAbandonDAO dao;
-	
+
 	ALogger logger = Logger.of("CNS");
-	
+
 	private Map<String, Integer> crmapping;
-	
+
 	/*
-	 * 
+	 *
 Conta:mat ori        					9	TAXO-contaMatOri
-Qlte:duplicat>30    					42	Qlte-duplicat		
+Qlte:duplicat>30    					42	Qlte-duplicat
 Qlte:repartition bases       			41	Qlte-repartitionBases
 
-Conta mat ori + duplicat>30				43	TAXO-contaMatOri ; Qlte-duplicat	
-Conta mat ori + rep bases				44	TAXO-contaMatOri ; Qlte-repartitionBases	
-Duplicat>30 + rep bases					45	Qlte-duplicat ; Qlte-repartitionBases	
-Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Qlte-repartitionBases	
+Conta mat ori + duplicat>30				43	TAXO-contaMatOri ; Qlte-duplicat
+Conta mat ori + rep bases				44	TAXO-contaMatOri ; Qlte-repartitionBases
+Duplicat>30 + rep bases					45	Qlte-duplicat ; Qlte-repartitionBases
+Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Qlte-repartitionBases
 
-	  
+
 	 */
-	
+
 	public LimsRunServices() {
 		crmapping = new HashMap<String, Integer>();
 		crmapping.put("TAXO-contaMatOri;", 9);
@@ -60,7 +59,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		crmapping.put("Qlte-duplicat;TAXO-contaMatOri;", 43);
 		crmapping.put("Qlte-repartitionBases;TAXO-contaMatOri;", 44);
 		crmapping.put("Qlte-duplicat;Qlte-repartitionBases;", 45);
-		crmapping.put("Qlte-duplicat;Qlte-repartitionBases;TAXO-contaMatOri;", 46);		
+		crmapping.put("Qlte-duplicat;Qlte-repartitionBases;TAXO-contaMatOri;", 46);
 	}
 
 	@Override
@@ -122,14 +121,14 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		for(String s : resos){
 			sb.append(s+";");
 		}
-		
+
 		if(sb.length() > 0){
 			return crmapping.get(sb.toString());
 		}else{
 			return null;
 		}
-		
-		
+
+
 	}
 
 	private Integer getAbandon(Valuation valuation) {
@@ -139,9 +138,9 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			return 0; //abandon = false;
 		}else{
 			throw new RuntimeException("Mise à jour abandon run dans lims mais valuation à UNSET");
-		}		
+		}
 	}
-	
+
 	private Integer getSeqVal(Valuation valuation) {
 		if(TBoolean.FALSE.equals(valuation.valid)){
 			return 0; //a abandonner
@@ -149,7 +148,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			return 1; //valide;
 		}else{
 			throw new RuntimeException("Mise à jour abandon run dans lims mais valuation à UNSET");
-		}		
+		}
 	}
 
 }
