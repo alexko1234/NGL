@@ -10,6 +10,7 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.TransientState;
 import models.laboratory.container.instance.Container;
+import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -163,8 +164,19 @@ public class Workflows {
 				Logger.error("sampleOnContainer null for "+readSet.code);
 			}
 			
-		}else if("F-V".equals(readSet.state.code)){
-			Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet);
+		}else if("F-VQC".equals(readSet.state.code)){
+			Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet);	
+			//synchronize the two valuation
+			if(TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
+				readSet.bioinformaticValuation.valid = readSet.productionValuation.valid;
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
+						DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation.valid", readSet.bioinformaticValuation.valid));
+			}
+		} else if("IW-BA".equals(readSet.state.code)){
+			//reinit the bioinformaticValuation
+			readSet.bioinformaticValuation.valid = TBoolean.UNSET;
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
+					DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation.valid", readSet.bioinformaticValuation.valid));
 		} else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code))	{
 			//met les fichier dipo ou non dès que le read set est valider
 			State state = cloneState(readSet.state);
@@ -172,8 +184,7 @@ public class Workflows {
 				for(File f : readSet.files){
 					WriteResult<ReadSet, String> r = MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 							DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", f.fullname)),
-							DBUpdate.set("files.$.state", state));				
-					Logger.debug(r.getError());
+							DBUpdate.set("files.$.state", state));					
 				}
 			}
 			else {
@@ -191,30 +202,54 @@ public class Workflows {
 		if("F-RG".equals(readSet.state.code)){
 			nextStep.code = "IW-QC";
 		}else if("F-QC".equals(readSet.state.code)){
-			nextStep.code = "IW-V";
-		}else if("IW-V".equals(readSet.state.code)){
-			if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)
-				|| !TBoolean.UNSET.equals(readSet.productionValuation.valid)){
-				nextStep.code = "IP-V";
+			nextStep.code = "IW-VQC";
+		}else if("IW-VQC".equals(readSet.state.code)){
+			if(!TBoolean.UNSET.equals(readSet.productionValuation.valid)){
+				nextStep.code = "F-VQC";
 			}		
-		}else if("IP-V".equals(readSet.state.code)){
-			if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)
-				&& !TBoolean.UNSET.equals(readSet.productionValuation.valid)){
-				nextStep.code = "F-V";
-			}	
-		}else if("F-V".equals(readSet.state.code) || "A".equals(readSet.state.code) || "UA".equals(readSet.state.code)){
-			if(TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)
-					|| TBoolean.UNSET.equals(readSet.productionValuation.valid)){
-				nextStep.code = "IP-V";
-			}else if(TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
-				nextStep.code = "A";
+		}else if("F-VQC".equals(readSet.state.code)){
+			if(isReadSetHasBA(readSet) && TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
+				nextStep.code = "IW-BA";
+			}else{
+				if(TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
+					nextStep.code = "A";
+				}else if(TBoolean.FALSE.equals(readSet.bioinformaticValuation.valid)){
+					nextStep.code = "UA";
+				}
+			}
+		}else if("F-BA".equals(readSet.state.code)){
+			nextStep.code = "IW-VBA";
+		}else if("F-VBA".equals(readSet.state.code)){
+			if(TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
+					nextStep.code = "A";
 			}else if(TBoolean.FALSE.equals(readSet.bioinformaticValuation.valid)){
+					nextStep.code = "UA";
+			}					
+		}else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code)){			
+			if(TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
+				nextStep.code = "A";
+			}else { //FALSE or UNSET
 				nextStep.code = "UA";
 			}			
 		}
 		setReadSetState(contextValidation, readSet, nextStep);
 	}
 	
+	/**
+	 * BioInformatics analysis depend of the projet and the lib type
+	 * @param readSet
+	 * @return
+	 */
+	private static boolean isReadSetHasBA(ReadSet readSet){
+		
+		Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
+		if(null != p && p.bioInfoAnalysis){
+			return readSet.code.matches("^.+_.+F_.+_.+$");
+		}else if( null == p){
+			Logger.error("Project is null for readset = "+readSet.code);
+		}
+		return false;
+	}
 	
 	private static State updateHistoricalNextState(State previousState, State nextState) {
 		if (null == previousState.historical) {
