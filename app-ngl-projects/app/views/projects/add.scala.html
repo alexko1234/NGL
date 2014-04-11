@@ -28,7 +28,11 @@
 		<form class="form-horizontal">
 			<div class="row">
 			@column(){
-				<!-- project.code  -->
+				@views.html.helper.columnLabelValue(Messages("projects.name")){
+					<div>
+						<input type="text" class="form-control" ng-model="project.code">
+					</div>
+				}
 								
 				@views.html.helper.columnLabelValue(Messages("projects.name")){
 					<div>

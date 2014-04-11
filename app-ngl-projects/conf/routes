@@ -8,7 +8,7 @@ GET     /                           					controllers.main.tpl.Main.home()
 GET	   	/projects/:homecode/home						controllers.projects.tpl.Projects.home(homecode: java.lang.String)
 GET	   	/projects/:code									controllers.projects.tpl.Projects.get(code: java.lang.String)
 
-GET		/projects/save									controllers.projects.tpl.Projects.save()
+GET		/tpl/projects/add									controllers.projects.tpl.Projects.add()
 
 
 #project tpl

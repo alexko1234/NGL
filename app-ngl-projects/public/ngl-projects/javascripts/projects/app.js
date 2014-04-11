@@ -9,11 +9,10 @@ angular.module('home', ['ngRoute','datatableServices','commonsServices','ui.boot
 		templateUrl : '/tpl/projects/details',
 		controller : 'DetailsCtrl'
 	});
-	$routeProvider.when('/projects/save', {
+	$routeProvider.when('/projects/add', {
 		templateUrl : '/tpl/projects/add',
 		controller : 'AddCtrl'
 	});
-
 	$routeProvider.otherwise({redirectTo: '/projects/search/home'});
 
 	// configure html5 to get links working with bookmarked

@@ -41,8 +41,7 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 
 	/* main section  */
 	var init = function(){
-		
-		alert("inside");
+
 		
 		$scope.messages = messages();
 		
