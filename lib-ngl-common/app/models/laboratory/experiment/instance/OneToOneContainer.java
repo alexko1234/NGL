@@ -21,6 +21,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import play.Logger;
 import validation.ContextValidation;
+import validation.common.instance.CommonValidationHelper;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
@@ -71,7 +72,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 		ContextValidation contextValidation = new ContextValidation();
 
-		if(outputContainerUsed.code!=null){
+		if(outputContainerUsed.code!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class, this.outputContainerUsed.code)){
 			// ContainerSupport
 			ContainerSupport support=ContainerSupportHelper.createSupport(this.outputContainerUsed.locationOnContainerSupport.code
 					,this.outputContainerUsed.locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);
@@ -79,16 +80,10 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			
 			// Container
 			Container outputContainer = new Container();
-
-			//A verifier la nomenclature
-			outputContainer.code=support.code;
+			outputContainer.code=this.outputContainerUsed.code;
 			outputContainer.traceInformation = new TraceInformation();
 			outputContainer.traceInformation.setTraceInformation(experiment.traceInformation.modifyUser);
-			try {
-				outputContainer.categoryCode=ContainerSupportCategory.find.findByCode(this.outputContainerUsed.locationOnContainerSupport.categoryCode).containerCategory.code;
-			} catch (DAOException e) {
-				throw new RuntimeException();
-			}
+			outputContainer.categoryCode=this.outputContainerUsed.categoryCode;
 					
 			Container inputContainer=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,inputContainerUsed.code);
 			//Add content
@@ -97,13 +92,13 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			outputContainer.support=outputContainerUsed.locationOnContainerSupport;
 			outputContainer.state=new State("N",experiment.traceInformation.modifyUser);
 			outputContainer.valuation=new Valuation();
-			
+
 			//TODO volume, proportion
 
 			support.projectCodes=new ArrayList<String>(inputContainer.projectCodes);
 			support.sampleCodes=new ArrayList<String>(inputContainer.sampleCodes);
 			
-			contextValidation.isCreationMode();
+			contextValidation.setCreationMode();
 			contextValidation.addKeyToRootKeyName("support["+support.code+"]");
 			InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME,support, contextValidation);
 			contextValidation.removeKeyFromRootKeyName("support["+support.code+"]");

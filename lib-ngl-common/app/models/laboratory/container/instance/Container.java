@@ -5,32 +5,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Level;
-import models.laboratory.common.description.Resolution;
-import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.processes.instance.Process;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import models.utils.InstanceConstants;
+import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.MongoCollection;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.InstanceValidationHelper;
-import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
-import validation.run.instance.RunValidationHelper;
-import validation.utils.BusinessValidationHelper;
 import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 
 
 
@@ -130,6 +126,11 @@ public class Container extends DBObject implements IValidation {
 	public List<ExperimentType> getFromExperimentTypes() {
 		return new HelperObjects<ExperimentType>().getObjects(ExperimentType.class, fromExperimentTypeCodes);
 	}
+	
+	@JsonIgnore
+	public List<Process> getCurrentProcesses() {
+		return MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code",inputProcessCodes)).toList();
+	}
 
 		
 	@JsonIgnore
@@ -158,4 +159,5 @@ public class Container extends DBObject implements IValidation {
 		
 	}
 
+	
 }

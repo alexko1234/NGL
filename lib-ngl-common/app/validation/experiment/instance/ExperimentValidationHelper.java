@@ -12,9 +12,11 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.dao.DAOException;
+import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
@@ -74,7 +76,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		ExperimentValidationHelper.validateResolutionCodes(experiment.typeCode,experiment.state.resolutionCodes,contextValidation);
 		ExperimentValidationHelper.validationProtocol(experiment.typeCode,experiment.protocolCode,contextValidation);
 		//Validation InstrumentUsedType
-		ExperimentValidationHelper.validateInstrumentUsed(experiment.typeCode,experiment.instrument,experiment.instrumentProperties,contextValidation);
+		ExperimentValidationHelper.validateInstrumentUsed(experiment.instrument,experiment.instrumentProperties,contextValidation);
 		//TODO Validate Properties
 	}
 
@@ -98,10 +100,17 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		}
 	}
 
-	public static void validateInstrumentUsed(String typeCode,
-			InstrumentUsed instrumentUsed,Map<String,PropertyValue> properties, ContextValidation contextValidation) {
-		if(contextValidation.getObject("stateCode")!="N" && contextValidation.getObject("stateCode")!=null){
+	public static void validateInstrumentUsed(InstrumentUsed instrumentUsed,Map<String,PropertyValue> properties, ContextValidation contextValidation) {
+		Logger.debug("Put statecode"+contextValidation.getObject("stateCode"));
+		if(!contextValidation.getObject("stateCode").equals("N") && contextValidation.getObject("stateCode")!=null){
 			if(ValidationHelper.required(contextValidation, instrumentUsed, "instrumentUsed")){
+				InstrumentUsedType instrumentUsedType =BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsed.typeCode, "typeCode", InstrumentUsedType.find,true);
+				if(instrumentUsedType!=null){
+					contextValidation.addKeyToRootKeyName("properties");
+					ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel(), false);
+					contextValidation.removeKeyFromRootKeyName("properties");
+				}
+				
 				contextValidation.addKeyToRootKeyName("instrumentUsed");
 				instrumentUsed.validate(contextValidation); 
 				contextValidation.removeKeyFromRootKeyName("instrumentUsed");

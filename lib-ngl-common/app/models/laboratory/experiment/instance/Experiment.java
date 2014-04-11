@@ -81,6 +81,18 @@ public class Experiment extends DBObject implements IValidation {
 	}
 	
 	@JsonIgnore
+	public List<ContainerUsed> getAllOutPutContainer(){
+		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
+		if(this.atomicTransfertMethods!=null){
+			for(int i=0;i<this.atomicTransfertMethods.size();i++){
+				containersUSed.addAll(this.atomicTransfertMethods.get(i).getOutputContainers());
+			}
+
+		}
+		return containersUSed;
+	}
+	
+	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
 				
@@ -90,7 +102,7 @@ public class Experiment extends DBObject implements IValidation {
 		ExperimentValidationHelper.validationExperimentCategoryCode(categoryCode, contextValidation);
 		ExperimentValidationHelper.validateResolutionCodes(state.resolutionCodes,contextValidation);
 		ExperimentValidationHelper.validationProtocol(typeCode,protocolCode,contextValidation);
-		ExperimentValidationHelper.validateInstrumentUsed(typeCode,instrument,instrumentProperties,contextValidation);
+		ExperimentValidationHelper.validateInstrumentUsed(instrument,instrumentProperties,contextValidation);
 		ExperimentValidationHelper.validateAtomicTransfertMethodes(atomicTransfertMethods,contextValidation);
 		ExperimentValidationHelper.validateReagents(reagentsUsed,contextValidation);
 		ExperimentValidationHelper.validateTraceInformation(traceInformation, contextValidation);			
