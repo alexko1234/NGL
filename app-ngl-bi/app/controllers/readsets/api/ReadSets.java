@@ -3,6 +3,7 @@ package controllers.readsets.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,7 @@ import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 import controllers.CommonController;
+import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -56,7 +58,8 @@ public class ReadSets extends ReadSetsController{
 	final static Form<State> stateForm = form(State.class);
 	
 	final static Form<ReadSetBatchElement> batchElementForm = form(ReadSetBatchElement.class);
-
+	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+	final static List<String> authorizedUpdateFields = Arrays.asList("code");
 	//@Permission(value={"reading"})
 	public static Result list() {
 		Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);
@@ -245,41 +248,68 @@ public class ReadSets extends ReadSetsController{
 			return badRequest("ReadSet with code "+readSetCode+" does not exist");
 		}
 		
+		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
+		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
 		ReadSet readSetInput = filledForm.get();
-		if (readSetInput.code.equals(readSetCode)) {
-			if(null != readSetInput.traceInformation){
-				readSetInput.traceInformation.setTraceInformation(getCurrentUser());
+		
+		if(queryFieldsForm.fields == null){
+			if (readSetInput.code.equals(readSetCode)) {
+				if(null != readSetInput.traceInformation){
+					readSetInput.traceInformation.setTraceInformation(getCurrentUser());
+				}else{
+					Logger.error("traceInformation is null !!");
+				}
+				
+				if(!readSet.state.code.equals(readSetInput.state.code)){
+					return badRequest("you cannot change the state code. Please used the state url ! ");
+				}
+				
+				ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+				ctxVal.setUpdateMode();
+				readSetInput.validate(ctxVal);
+				
+				if (!ctxVal.hasErrors()) {
+					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSetInput);
+					
+					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+							DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("projectCodes", readSetInput.projectCode)), 
+							DBUpdate.push("projectCodes", readSetInput.projectCode));
+							
+					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+							DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("sampleCodes", readSetInput.sampleCode)), 
+							DBUpdate.push("sampleCodes", readSetInput.sampleCode));
+					
+					return ok(Json.toJson(readSetInput));
+				}else {
+					return badRequest(filledForm.errorsAsJson());			
+				}
 			}else{
-				Logger.error("traceInformation is null !!");
+				return badRequest("readset code are not the same");
 			}
-			
-			if(!readSet.state.code.equals(readSetInput.state.code)){
-				return badRequest("you cannot change the state code. Please used the state url ! ");
-			}
-			
-			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		}else{ //update only some authorized properties
+			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 	
 			ctxVal.setUpdateMode();
-			readSetInput.validate(ctxVal);
+			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
+			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
 			
-			if (!ctxVal.hasErrors()) {
-				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSetInput);
-				
-				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-						DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("projectCodes", readSetInput.projectCode)), 
-						DBUpdate.push("projectCodes", readSetInput.projectCode));
-						
-				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-						DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("sampleCodes", readSetInput.sampleCode)), 
-						DBUpdate.push("sampleCodes", readSetInput.sampleCode));
-				
-				return ok(Json.toJson(readSetInput));
-			}else {
-				return badRequest(filledForm.errorsAsJson());			
+			if(queryFieldsForm.fields.contains("code")){
+				ctxVal.setCreationMode();
+				ReadSetValidationHelper.validateCode(readSetInput, InstanceConstants.READSET_ILLUMINA_COLL_NAME, ctxVal);
 			}
-		}else{
-			return badRequest("readset code are not the same");
-		}		
+			
+			if(!filledForm.hasErrors()){
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+						DBQuery.and(DBQuery.is("code", readSetCode)), 
+						getBuilder(readSetInput, queryFieldsForm.fields, ReadSet.class).set("traceInformation", getUpdateTraceInformation(readSet)));
+				if(queryFieldsForm.fields.contains("code") && null != readSetInput.code){
+					readSetCode = readSetInput.code;
+				}
+				return ok(Json.toJson(getReadSet(readSetCode)));
+			}else{
+				return badRequest(filledForm.errorsAsJson());
+			}			
+		}
 	}
 	
 	//@Permission(value={"delete_readset"}) 
