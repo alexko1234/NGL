@@ -7,8 +7,11 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.processes.description.ExperimentTypeNode;
+import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
@@ -33,10 +36,10 @@ public class Workflows {
 	 */
 	public static void setExperimentState(Experiment experiment, State nextState, ContextValidation ctxValidation){
 
-		ctxValidation.getContextObjects().put("statCode", nextState.code);
+		ctxValidation.getContextObjects().put("stateCode", nextState.code);
 		ExperimentValidationHelper.validateState(experiment.typeCode, nextState, ctxValidation);
 
-		//il fau peut etre valider tout l'experiment quand il passe à "F"
+		//il fau peut etre valider tout l'experiment quand elle passe à "F"
 		ExperimentValidationHelper.validateNewState(experiment, ctxValidation);
 
 		if(!ctxValidation.hasErrors() && !nextState.code.equals(experiment.state)){
@@ -52,62 +55,36 @@ public class Workflows {
 						DBUpdate.set("state", experiment.state).set("traceInformation",experiment.traceInformation));
 			}
 
-			nextInputContainerState(experiment, ctxValidation);
-			//nextOutPutContainerState(experiment, ctxValidation);
-
-	}
-
-
-		//Validation en Java class in context
-		/*if(nextState.equals("N")) {
-			required(ctxValidation,experiment.typeCode, "typeCode");
-		} else if(nextState.equals("IP")) {
-			required(ctxValidation, experiment.typeCode, "typeCode"); 
-			required(ctxValidation, experiment.protocolCode, "protocolCode");
-			required(ctxValidation, experiment.instrument.code, "instrument");
-			required(ctxValidation, experiment.atomicTransfertMethods, "atomicTransfertMethods");
-
-		} else if(nextState.equals("F")) {
-			required(ctxValidation, experiment.typeCode, "typeCode");
-			required(ctxValidation, experiment.resolutionCodes, "resolutionCodes");
-			required(ctxValidation, experiment.protocolCode, "protocolCode");
-			required(ctxValidation, experiment.instrument.code, "instrument");
-			required(ctxValidation, experiment.atomicTransfertMethods, "atomicTransfertMethods");
-
-			for(int i=0;i<experiment.atomicTransfertMethods.size();i++){
-				if(!(experiment.atomicTransfertMethods.get(i) instanceof OneToVoidContainer)){
-					required(ctxValidation, experiment.atomicTransfertMethods.get(i).getOutputContainers(), "outputContainer");
+			if(experiment.state.code.equals("IP")){
+				try {
+					ExperimentHelper.generateOutputContainerUsed(experiment, ctxValidation);
+				} catch (DAOException e) {
+					throw new RuntimeException();
 				}
+			}else if(experiment.state.code.equals("F")){
+				ExperimentHelper.saveOutputContainerUsed(experiment, ctxValidation);
+				if(!ctxValidation.hasErrors()){
+					nextOutputContainerState(experiment, ctxValidation);
+				}
+
+			}		
+			if(!ctxValidation.hasErrors()){
+				nextInputContainerState(experiment, ctxValidation);
 			}
-
-			ctxValidation.setRootKeyName("experimentProperties");
-			validateProperties(ctxValidation, experiment.experimentProperties, experiment.getExperimentType().propertiesDefinitions);
-			ctxValidation.removeKeyFromRootKeyName("experimentProperties");
-
-
-		}else{
-			ctxValidation.addErrors(experiment.stateCode, "InvalidStateCode");
 		}
-		 */
 	}
-	
+
 	public static void nextExperimentState(Experiment experiment,ContextValidation contextValidation){
 		State state = StateHelper.cloneState(experiment.state);
-		
+
 		if(experiment.state == null || experiment.state.code.equals("")){
 			state.code = "N";
 		}else if(experiment.state.code.equals("N")){
 			state.code = "IP";
-			try {
-				ExperimentHelper.generateOutputContainerUsed(experiment, contextValidation);
-			} catch (DAOException e) {
-				throw new RuntimeException();
-			}
 		}else if(experiment.state.code.equals("IP")){
 			state.code = "F";
-			ExperimentHelper.saveOutputContainerUsed(experiment, contextValidation);
 		}
-		
+
 		setExperimentState(experiment, state, contextValidation);
 	}
 
@@ -121,27 +98,78 @@ public class Workflows {
 		}else if(experiment.state.code.equals("IP")){
 			state.code= "IU";
 		}else if(experiment.state.code.equals("F")){
-			state.code= "A";
-		}else {
-			Logger.error("No input container state defined for this experiment"+experiment.code);
+			if(experiment.categoryCode.equals("qualitycontrol")){
+				state.code="IW-V";
+			}else {
+				//Mettre à jour l'etat en fonction du volume restant
+				state.code= "UA";
+			}
 		}
 
-		setContainerState(experiment.getAllInPutContainer(), state, contextValidation);
+		if(state.code!=null){
+			setContainerState(experiment.getAllInPutContainer(), state, contextValidation);
+		}
 	}
 
-	//TODO
-	public static String nextOutputContainerState(Experiment experiment,ContextValidation contextValidation){
-		if(experiment.state.code.equals("N")){
-			return "IW-E"; 
-		}else if(experiment.state.code.equals("IP")){
-			return "";
-		}else if(experiment.state.code.equals("F")){
-			//TODO return from evaluation
-			return "A";
-		}else {
-			Logger.error("No output container state defined for this experiment"+experiment.code);
+	public static void nextOutputContainerState(Experiment experiment,ContextValidation contextValidation) {
+		for(ContainerUsed containerUsed:experiment.getAllOutPutContainer()){
+
+			State nextState=new State();
+			nextState.user=experiment.traceInformation.modifyUser;
+
+			if(experiment.categoryCode.equals("transformation")){
+				if(experiment.state.code.equals("F") && doQC(experiment)){
+					//nextState.code="A-QC";
+					nextState.code="IW-QC";
+				}/*else if(experiment.state.code.equals("F") && doPurif()){
+				nextState.code="A-PURIF";
+			}else if(experiment.state.code.equals("F") && doTransfert()){
+				nextState.code="A-TRANSFERT";
+				}*/else if(experiment.state.code.equals("F") && endOfProcess(containerUsed.code,experiment.typeCode)){
+				nextState.code="IW-P";
+				}else {
+				nextState.code="A";
+				}
+			}
+			
+			if(experiment.categoryCode.equals("purification") || experiment.categoryCode.equals("transfert")){
+				if(experiment.state.code.equals("F")){
+					nextState.code="IW-V";
+				}
+			}
+
+			if(nextState.code!=null && containerUsed!=null){
+				setContainerState(containerUsed.code, nextState, contextValidation);
+			}
 		}
-		return null;
+
+	}
+
+
+	private static boolean endOfProcess(String code, String typeCode) {
+		Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class,code);
+		ProcessType processType;
+		try {
+			processType = ProcessType.find.findByCode(container.getCurrentProcesses().get(0).typeCode);
+			if(processType.lastExperimentType.code.equals(typeCode)){
+				return true;
+			}else {
+				return false;
+			}
+
+		} catch (DAOException e) {
+			throw new RuntimeException();
+		}
+	}
+
+	private static boolean doQC(Experiment experiment) {
+		try{
+			ExperimentTypeNode experimentTypeNode=ExperimentTypeNode.find.findByCode(experiment.typeCode);
+			return experimentTypeNode.doQualityControl;
+		}catch (DAOException e){
+			throw new RuntimeException();
+		}
+
 	}
 
 	//TODO à finir
@@ -149,6 +177,14 @@ public class Workflows {
 		State state=new State();
 		state.date=new Date();
 		state.user=InstanceHelpers.getUser();
+
+		for(Process process:container.getCurrentProcesses()){
+			if(container.state.code.equals("A") && checkProcessState("N",container.inputProcessCodes)){
+				state.code="IP";
+			}else if(container.state.code.equals("IW-P") && checkProcessState("IP",container.inputProcessCodes)){
+				state.code="F";
+			}
+		}
 
 		if(container.state.code.equals("IW-E")){
 			state.code= "IP";
@@ -159,6 +195,11 @@ public class Workflows {
 		}
 	}
 
+
+	private static boolean checkProcessState(String stateCode,
+			List<String> inputProcessCodes) {
+		return MongoDBDAO.checkObjectExist(InstanceConstants.PROCESS_COLL_NAME,Process.class, DBQuery.in("code", inputProcessCodes).is("state.code", stateCode));
+	}
 
 	private static void setProcessState(List<String> inputProcessCodes, State state,
 			ContextValidation contextValidation) {
@@ -202,6 +243,9 @@ public class Workflows {
 		ContainerValidationHelper.validateStateCode(nextState.code, contextValidation);
 		if(!contextValidation.hasErrors() && !nextState.code.equals(container.state.code)){
 
+			/*if(nextState.code.equals("IW-P")){
+				container.inputProcessCodes=null;
+			}*/
 			TraceInformation traceInformation=new TraceInformation();
 			InstanceHelpers.updateTraceInformation(traceInformation);
 			StateHelper.updateHistoricalNextState(container.state,nextState);

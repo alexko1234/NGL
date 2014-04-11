@@ -62,7 +62,6 @@ public class Processes extends CommonController{
 					container.fromExperimentTypeCodes = new ArrayList<String>();
 					container.fromExperimentTypeCodes.add(value.getProcessType().voidExperimentType.code);
 				}
-				container.processTypeCode = value.typeCode;
 				container.inputProcessCodes=InstanceHelpers.addCode(value.code, container.inputProcessCodes);
 				MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
 
@@ -73,7 +72,9 @@ public class Processes extends CommonController{
 			}
 
 			if (!filledForm.hasErrors()) {
-				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, new ContextValidation(filledForm.errors()));
+				ContextValidation contextValidation=new ContextValidation(filledForm.errors());
+				contextValidation.setCreationMode();
+				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
 				Workflows.nextContainerState(value,new ContextValidation(filledForm.errors()));
 			}
 		}

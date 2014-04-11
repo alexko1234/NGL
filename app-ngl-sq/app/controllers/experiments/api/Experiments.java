@@ -194,7 +194,7 @@ public class Experiments extends CommonController{
 		if (!experimentFilledForm.hasErrors()) {
 		
 			MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
-			Workflows.nextInputContainerState(exp, new ContextValidation(experimentFilledForm.errors()));
+			//Workflows.nextInputContainerState(exp, new ContextValidation(experimentFilledForm.errors()));
 			return ok(Json.toJson(exp));
 		}
 
@@ -264,6 +264,7 @@ public class Experiments extends CommonController{
 				exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 			}
 			State state = StateHelper.cloneState(exp.state);
+			state.user=getCurrentUser();
 			exp.state.code = null;
 			
 			Workflows.setExperimentState(exp, state, ctxValidation);
