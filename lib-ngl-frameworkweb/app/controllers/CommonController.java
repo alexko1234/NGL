@@ -179,10 +179,23 @@ public abstract class CommonController extends Controller{
 	 * @return
 	 */
 	protected static Builder getBuilder(Object value, List<String> fields, Class clazz) {
+		return getBuilder(value, fields, clazz, null);
+	}
+	
+	/**
+	 * Construct a builder from some fields
+	 * Use to update a mongodb document
+	 * @param value
+	 * @param fields
+	 * @param clazz
+	 * @return
+	 */
+	protected static Builder getBuilder(Object value, List<String> fields, Class clazz, String prefix) {
 		Builder builder = new Builder();
 		try {
 			for(String field: fields){
-				builder.set(field, clazz.getDeclaredField(field).get(value));
+				String fieldName = (null != prefix)?prefix+"."+field:field;
+				builder.set(fieldName, clazz.getField(field).get(value));
 			}
 		}catch(Exception e){
 			throw new RuntimeException(e);

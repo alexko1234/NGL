@@ -54,7 +54,10 @@ public class FileValidationHelper extends CommonValidationHelper {
 			if(contextValidation.isCreationMode() && MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", fullname)))){
 				contextValidation.addErrors("fullname",ValidationConstants.ERROR_NOTUNIQUE_MSG, fullname);
-			}			
+			}else if(contextValidation.isUpdateMode() && !MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+					DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", fullname)))){
+				contextValidation.addErrors("fullname",ValidationConstants.ERROR_NOTEXISTS_MSG, fullname);
+			}
 		}
 		
 	}
