@@ -62,6 +62,7 @@ public class Processes extends CommonController{
 					container.fromExperimentTypeCodes = new ArrayList<String>();
 					container.fromExperimentTypeCodes.add(value.getProcessType().voidExperimentType.code);
 				}
+				container.processTypeCode = value.typeCode;
 				container.inputProcessCodes=InstanceHelpers.addCode(value.code, container.inputProcessCodes);
 				MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
 
