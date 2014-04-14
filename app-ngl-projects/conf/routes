@@ -8,12 +8,12 @@ GET     /                           					controllers.main.tpl.Main.home()
 GET	   	/projects/:homecode/home						controllers.projects.tpl.Projects.home(homecode: java.lang.String)
 GET	   	/projects/:code									controllers.projects.tpl.Projects.get(code: java.lang.String)
 
-GET		/tpl/projects/add									controllers.projects.tpl.Projects.add()
-
 
 #project tpl
 GET		/tpl/projects/details							controllers.projects.tpl.Projects.details()
 GET		/tpl/projects/search/:type						controllers.projects.tpl.Projects.search(type: java.lang.String)
+GET	   	/tpl/projects/add								controllers.projects.tpl.Projects.add()
+
 GET		/tpl/projects/js-routes							controllers.projects.tpl.Projects.javascriptRoutes()
 
 
@@ -27,6 +27,7 @@ DELETE	/api/projects/:code								controllers.projects.api.Projects.delete(code:
 
 GET		/api/commons/types								controllers.commons.api.CommonInfoTypes.list()
 GET		/api/commons/states								controllers.commons.api.States.list()
+
 
 #migration
 GET		/migration										controllers.migration.Migration.migration()

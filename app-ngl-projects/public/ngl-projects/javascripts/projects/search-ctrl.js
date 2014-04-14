@@ -111,3 +111,53 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 
 
 
+
+
+angular.module('home').controller('SearchAddCtrl', ['$scope', '$http', '$routeParams', 'messages', 'datatable', function($scope, $http, $routeParams, messages, datatable) {
+	
+	
+	$scope.reset = function(){
+		$scope.form = {
+				
+		}
+	};
+	
+	
+	var init = function(){
+		
+		$scope.messages = messages();
+		
+		if(angular.isDefined($scope.getForm())){
+			$scope.form = $scope.getForm();
+		}else{
+			$scope.reset();
+		}
+		
+		$scope.startEditMode();
+
+		$http.get(jsRoutes.controllers.projects.api.Projects.list().url).success(function(data) {
+
+			var data2 = data[0];
+			
+			if (data2.comments == null || data2.comments.length == 0) {
+				var comments = new Array();
+				var comment = new Object();
+				comment.comment = "";
+				comments[0] = comment;
+				data2.comments = comments;				
+			}
+			
+			$scope.project = data2;
+					
+		
+			if(angular.isUndefined($scope.getHomePage())){
+				$scope.setHomePage('add');
+			}
+		});
+	};
+	
+	init();
+}]);
+
+
+
