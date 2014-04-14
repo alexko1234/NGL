@@ -1,8 +1,8 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routeParams', 'messages',   
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routeParams', 'messages', 'lists',   
                                                   
-  function($scope, $http, $routeParams, messages) {
+  function($scope, $http, $routeParams, messages, lists) {
 		
 	$scope.reset = function(){
 		$scope.form = {
@@ -43,6 +43,12 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	var init = function(){
 		
 		$scope.messages = messages();
+		$scope.lists = lists;
+		
+		$scope.lists.refresh.states({objectTypeCode:"Project"});
+		$scope.lists.refresh.projectTypes();
+		$scope.lists.refresh.projectCategories();
+		
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();

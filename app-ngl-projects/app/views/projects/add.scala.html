@@ -12,9 +12,8 @@
 	<div class="col-md-12 col-lg-12 ">
 	<div class="page-header" ng-init="init()">
 		<div class="btn-toolbar pull-right">
-			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
-			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
-			 <button class="btn btn-default" ng-if="!isEditMode()" ng-click="startEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					
+			 <button class="btn btn-default" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+			 <button class="btn btn-default" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
 		</div>
 	</div>
 </div>
@@ -28,39 +27,39 @@
 		<form class="form-horizontal">
 			<div class="row">
 			@column(){
-				@views.html.helper.columnLabelValue(Messages("projects.name")){
+				@views.html.helper.columnLabelValue(Messages("projects.code")){
 					<div>
-						<input type="text" class="form-control" ng-model="project.code">
+						<input type="text" class="form-control" ng-model="form.code">
 					</div>
 				}
 								
 				@views.html.helper.columnLabelValue(Messages("projects.name")){
 					<div>
-						<input type="text" class="form-control" ng-model="project.name">
+						<input type="text" class="form-control" ng-model="form.name">
 					</div>
 				}
 
 				@views.html.helper.columnLabelValue(Messages("projects.state.code")){
 					<div>
-						<input type="text" class="form-control" ng-model='project.state.code' codes="state">
+						<div bt-select class="form-control" ng-model="form.state.codes" multiple="false" bt-options="state.code as state.name for state in lists.getStates()"></div>
 					</div>	
 				}
 									
 				@views.html.helper.columnLabelValue(Messages("projects.type")){
 					<div>
-						<input type="text" class="form-control" ng-model="project.typeCode">
+						<div bt-select class="form-control" ng-model="form.projectTypes" multiple="false"  bt-options="projectType.code as projectType.name for projectType in lists.getProjectTypes()"></div>
 					</div>
 				}
 				
 				@views.html.helper.columnLabelValue(Messages("projects.category.type")){
 					<div>
-						<input type="text" class="form-control" ng-model="project.categoryCode">
+						<div bt-select class="form-control" ng-model="form.projectCategories" multiple="false"  bt-options="projectCategory.code as projectCategory.name for projectCategory in lists.getProjectCategories()"></div>
 					</div>
 				}
 				
 				@views.html.helper.columnLabelValue(Messages("projects.comments")){
 					<div>
-						<textarea class="form-control" ng-model="project.comments[0].comment"></textarea>
+						<textarea class="form-control" ng-model="form.comment"></textarea>
 					</div>	
 				}
 				

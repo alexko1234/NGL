@@ -11,7 +11,7 @@ angular.module('home', ['ngRoute','datatableServices','commonsServices','ui.boot
 	});
 	$routeProvider.when('/projects/add/home', {
 		templateUrl : '/tpl/projects/add',
-		controller : 'SearchAddCtrl'
+		controller : 'AddCtrl'
 	});
 
 	$routeProvider.otherwise({redirectTo: '/projects/search/home'});

@@ -40,37 +40,6 @@ function convertForm(iform){
 };
 
 
-angular.module('home').controller('SearchFormCtrl', ['$scope', 'lists', function($scope, lists) {
-	
-	$scope.lists = lists;
-	
-	$scope.search = function(){
-		$scope.setForm($scope.form);		
-		$scope.datatable.search(convertForm($scope.form));
-	};
-	
-	$scope.reset = function(){
-		$scope.form = {
-				
-		}
-	};
-	
-	var init = function(){
-		$scope.lists.refresh.projects();
-		$scope.lists.refresh.types({objectTypeCode:"Project"});
-		$scope.lists.refresh.states({objectTypeCode:"Project"});
-		
-		if(angular.isDefined($scope.getForm())){
-			$scope.form = $scope.getForm();
-		}else{
-			$scope.reset();
-		}
-	};
-	init();
-	
-}]);
-
-
 angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'datatable', function($scope, $routeParams, datatable) {
 	
 	var datatableConfig = {
@@ -113,7 +82,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 
 
 
-angular.module('home').controller('SearchAddCtrl', ['$scope', '$http', '$routeParams', 'messages', 'datatable', function($scope, $http, $routeParams, messages, datatable) {
+angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', 'lists', function($scope, $filter, lists){
+	$scope.lists = lists;
 	
 	
 	$scope.reset = function(){
@@ -122,42 +92,24 @@ angular.module('home').controller('SearchAddCtrl', ['$scope', '$http', '$routePa
 		}
 	};
 	
-	
 	var init = function(){
-		
-		$scope.messages = messages();
+		$scope.lists.refresh.states({objectTypeCode:"Project"});
+		$scope.lists.refresh.projectTypes();
+		$scope.lists.refresh.projectCategories();
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();
 		}else{
 			$scope.reset();
 		}
-		
-		$scope.startEditMode();
-
-		$http.get(jsRoutes.controllers.projects.api.Projects.list().url).success(function(data) {
-
-			var data2 = data[0];
-			
-			if (data2.comments == null || data2.comments.length == 0) {
-				var comments = new Array();
-				var comment = new Object();
-				comment.comment = "";
-				comments[0] = comment;
-				data2.comments = comments;				
-			}
-			
-			$scope.project = data2;
-					
-		
-			if(angular.isUndefined($scope.getHomePage())){
-				$scope.setHomePage('add');
-			}
-		});
 	};
-	
 	init();
+	
 }]);
+
+
+
+
 
 
 
