@@ -169,6 +169,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		$scope.lists.refresh.containerCategories();
 		$scope.lists.refresh.experimentTypes();
 		$scope.lists.refresh.supports();
+		$scope.lists.refresh.projects();
 		$scope.lists.refresh.states({objectTypeCode:"Container"});
 	}
 }]);
