@@ -58,6 +58,7 @@ public class Workflows {
 			if(experiment.state.code.equals("IP")){
 				try {
 					ExperimentHelper.generateOutputContainerUsed(experiment, ctxValidation);
+					MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiment);
 				} catch (DAOException e) {
 					throw new RuntimeException();
 				}
