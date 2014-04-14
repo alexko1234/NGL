@@ -19,6 +19,19 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		if (objProj.comments[0].comment == "") {
 			delete objProj.comments; 
 		}
+		var typeCodes = objProj.typeCodes; 
+		var catgCodes = objProj.categoryCodes;
+		var stateCodes = objProj.state.codes;
+		delete objProj.typeCodes;
+		delete objProj.categoryCodes;
+		delete objProj.state;
+		objProj.typeCode = typeCodes[0];
+		objProj.categoryCode = catgCodes[0];
+		objProj.state = new Object();
+		objProj.state.code = stateCodes[0];
+		objProj.state.user = "ngsrg";
+		objProj.state.date = new Date();
+		
 		//update database
 		$http.put(jsRoutes.controllers.projects.api.Projects.update($routeParams.code).url, objProj).success(function(data) {
 			$scope.messages.setSuccess("save");

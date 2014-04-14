@@ -65,7 +65,7 @@
 							<p class="form-control-static" ng-model='project.state.code' codes="state"></p>	
 							@dataState()
 						</div>
-						<div bt-select class="form-control" multiple="false" ng-model="project.state.code" ng-switch-when="true" bt-options="state.code as state.name for state in lists.getStates()"></div>
+						<div bt-select class="form-control" multiple="false" ng-model="project.state.codes" ng-switch-when="true" bt-options="state.code as state.name for state in lists.getStates()"></div>
 					</div>				
 				}
 					
@@ -90,13 +90,13 @@
 				@views.html.helper.columnLabelValue(Messages("projects.type")){
 					<div ng-switch on="isEditMode()">
 						<p class="form-control-static" ng-switch-when="false">{{project.typeCode}}</p>
-						<div bt-select class="form-control" ng-switch-when="true" ng-model="form.projectTypes" multiple="false"  bt-options="projectType.code as projectType.name for projectType in lists.getProjectTypes()"></div>
+						<div bt-select class="form-control" ng-switch-when="true" ng-model="project.typeCodes" multiple="false"  bt-options="type.code as type.name for type in lists.getProjectTypes()"></div>
 					</div>
 				}
 				@views.html.helper.columnLabelValue(Messages("projects.category.type")){
 					<div ng-switch on="isEditMode()">
 						<p class="form-control-static" ng-switch-when="false">{{project.categoryCode}}</p>
-						<div bt-select class="form-control" ng-switch-when="true" ng-model="form.projectCategories" multiple="false"  bt-options="projectCategory.code as projectCategory.name for projectCategory in lists.getProjectCategories()"></div>
+						<div bt-select class="form-control" ng-switch-when="true" ng-model="project.categoryCodes" multiple="false"  bt-options="category.code as category.name for category in lists.getProjectCategories()"></div>
 					</div>	
 				}
 			}

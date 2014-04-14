@@ -7,8 +7,8 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 		//to not save empty comment in Mongo
 		var txt = $scope.form.comment;
 		var endProcess = false;
+		/*
 		if (txt != "") {
-			b = true;
 			var comments = new Array();
 			var comment = new Object();
 			comment.comment = txt;
@@ -17,10 +17,10 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 			comments[0] = new Object();
 			comments[0].comment = comment;
 		}	
+		*/
 		
 		var state = new Object();
 		state.code = $scope.form.state.codes[0];
-		//alert('state.code=' + state.code);
 		state.user = "ngsrg";
 		state.date = new Date();
 			
@@ -39,7 +39,8 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 		project.name = $scope.form.name;
 		project.typeCode = typeCode;
 		project.categoryCode = categoryCode;
-		project.comments = comments;		
+		//project.comments = comments;		
+		project.state = state;
 		project.traceInformation = traceInformation;
 		
 		endProcess = true;
