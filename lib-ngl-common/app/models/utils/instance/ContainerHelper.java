@@ -73,6 +73,7 @@ public class ContainerHelper {
 		outputContainer.sampleCodes=InstanceHelpers.addCodesList(inputContainer.sampleCodes,outputContainer.sampleCodes);
 		outputContainer.categoryCode = experiment.instrument.outContainerSupportCategoryCode;
 		outputContainer.inputProcessCodes=InstanceHelpers.addCodesList(inputContainer.inputProcessCodes,outputContainer.inputProcessCodes);
+		outputContainer.processTypeCode=inputContainer.processTypeCode;
 
 		if(experiment.categoryCode.equals("transformation")){
 			outputContainer.fromExperimentTypeCodes=InstanceHelpers.addCode(experiment.typeCode ,outputContainer.fromExperimentTypeCodes);
