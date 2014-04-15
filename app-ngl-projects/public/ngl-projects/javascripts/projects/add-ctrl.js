@@ -9,10 +9,10 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 		var comments = null;
 		var txt = $scope.form.comment;
 		if (txt != null && txt != "") {
-			comments =[{"comment":txt, "creationDate":new Date(), "createUser":"ngsrg"}];
+			comments =[{comment:txt, creationDate:new Date(), createUser:"ngsrg"}];
 		}	
 		
-		var state = {code:$scope.form.state.code};
+		var state = {code:$scope.form.state.code, user:"ngsrg"};
 			
 		var traceInformation = new Object();
 		traceInformation.creationDate = new Date();

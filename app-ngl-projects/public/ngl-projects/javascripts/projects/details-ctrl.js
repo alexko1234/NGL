@@ -19,8 +19,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		if (objProj.comments[0].comment == null || objProj.comments[0].comment == "") {
 			delete objProj.comments; 
 		}
-		var stateCode = objProj.state.code;
-		objProj.state = {code:stateCode};		
+		else {
+			objProj.comments[0].createUser = "ngsrg";
+		}
+		objProj.state = {code:objProj.state.code, user:"ngsrg"};		
 		
 		//update database
 		$http.put(jsRoutes.controllers.projects.api.Projects.update($routeParams.code).url, objProj).success(function(data) {
