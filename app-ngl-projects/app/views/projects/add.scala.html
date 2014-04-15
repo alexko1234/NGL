@@ -40,19 +40,19 @@
 
 				@views.html.helper.columnLabelValue(Messages("projects.state.code")){
 					<div>
-						<div bt-select class="form-control" ng-model="form.state.codes" multiple="false" bt-options="state.code as state.name for state in lists.getStates()"></div>
+						<div bt-select class="form-control" ng-model="form.state.code" bt-options="state.code as state.name for state in lists.getStates()"></div>
 					</div>	
 				}
 									
 				@views.html.helper.columnLabelValue(Messages("projects.type")){
 					<div>
-						<div bt-select class="form-control" ng-model="form.projectTypes" multiple="false"  bt-options="projectType.code as projectType.name for projectType in lists.getProjectTypes()"></div>
+						<div bt-select class="form-control" ng-model="form.projectType" bt-options="projectType.code as projectType.name for projectType in lists.getProjectTypes()"></div>
 					</div>
 				}
 				
 				@views.html.helper.columnLabelValue(Messages("projects.category.type")){
 					<div>
-						<div bt-select class="form-control" ng-model="form.projectCategories" multiple="false"  bt-options="projectCategory.code as projectCategory.name for projectCategory in lists.getProjectCategories()"></div>
+						<div bt-select class="form-control" ng-model="form.projectCategory" bt-options="projectCategory.code as projectCategory.name for projectCategory in lists.getProjectCategories()"></div>
 					</div>
 				}
 				

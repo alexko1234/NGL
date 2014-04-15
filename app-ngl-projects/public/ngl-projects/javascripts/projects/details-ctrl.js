@@ -13,24 +13,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	
 	/* buttons section */
 	$scope.update = function(){
-		//get data
+		//copy data
 		var objProj = angular.copy($scope.project);
 		//to not save empty comment in Mongo
-		if (objProj.comments[0].comment == "") {
+		if (objProj.comments[0].comment == null || objProj.comments[0].comment == "") {
 			delete objProj.comments; 
 		}
-		var typeCodes = objProj.typeCodes; 
-		var catgCodes = objProj.categoryCodes;
-		var stateCodes = objProj.state.codes;
-		delete objProj.typeCodes;
-		delete objProj.categoryCodes;
-		delete objProj.state;
-		objProj.typeCode = typeCodes[0];
-		objProj.categoryCode = catgCodes[0];
-		objProj.state = new Object();
-		objProj.state.code = stateCodes[0];
-		objProj.state.user = "ngsrg";
-		objProj.state.date = new Date();
+		var stateCode = objProj.state.code;
+		objProj.state = {code:stateCode};		
 		
 		//update database
 		$http.put(jsRoutes.controllers.projects.api.Projects.update($routeParams.code).url, objProj).success(function(data) {
@@ -58,11 +48,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		$scope.messages = messages();
 		$scope.lists = lists;
 		
-		$scope.lists.refresh.states({objectTypeCode:"Project"});
-		$scope.lists.refresh.projectTypes();
-		$scope.lists.refresh.projectCategories();
-		
-		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();
 		}else{
@@ -74,16 +59,15 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		$http.get(jsRoutes.controllers.projects.api.Projects.get($routeParams.code).url).success(function(data) {
 
 			var data2 = data;
-			
 			if (data2.comments == null || data2.comments.length == 0) {
-				var comments = new Array();
-				var comment = new Object();
-				comment.comment = "";
-				comments[0] = comment;
-				data2.comments = comments;				
+				data2.comments = [{comment:""}];
 			}
-			
 			$scope.project = data2;
+			
+			
+			$scope.lists.refresh.states({objectTypeCode:"Project"});
+			$scope.lists.refresh.projectTypes();
+			$scope.lists.refresh.projectCategories();
 			
 			if($scope.getTabs().length == 0){
 				$scope.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.projects.tpl.Projects.home("search").url, remove:true});
@@ -93,7 +77,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 			}
 			
 		});
-		
 		
 	};
 	

@@ -1,11 +1,8 @@
 package models.utils.dao;
 
-import java.sql.Types;
 import java.util.List;
 
 import javax.sql.DataSource;
-
-import models.utils.ListObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

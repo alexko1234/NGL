@@ -3,9 +3,6 @@ package models.utils.dao;
 import java.sql.Types;
 import java.util.List;
 
-import models.laboratory.instrument.description.Instrument;
-import models.laboratory.instrument.description.dao.InstrumentMappingQuery;
-
 import org.springframework.asm.Type;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.SqlParameter;

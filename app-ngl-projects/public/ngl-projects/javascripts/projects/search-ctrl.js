@@ -82,20 +82,25 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 
 
 
-angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', 'lists', function($scope, $filter, lists){
+angular.module('home').controller('SearchFormCtrl', ['$scope', 'lists', function($scope, lists){
+	
 	$scope.lists = lists;
+
+	$scope.search = function(){
+		$scope.setForm($scope.form);
+		$scope.datatable.search(convertForm($scope.form));
+	};
 	
-	
-	$scope.reset = function(){
+	$scope.reset = function() {
 		$scope.form = {
 				
 		}
 	};
 	
 	var init = function(){
-		$scope.lists.refresh.states({objectTypeCode:"Project"});
-		$scope.lists.refresh.projectTypes();
-		$scope.lists.refresh.projectCategories();
+		$scope.lists.refresh.projects();
+		$scope.lists.refresh.types({objectTypeCode:"Project"});
+		$scope.lists.refresh.states({objectTypeCode:"Project"});		
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();

@@ -4,8 +4,6 @@ import java.sql.Types;
 import java.util.List;
 
 import models.laboratory.common.description.CommonInfoType;
-import models.laboratory.common.description.State;
-import models.laboratory.common.description.dao.StateDAO;
 import models.utils.ListObject;
 
 import org.springframework.asm.Type;
