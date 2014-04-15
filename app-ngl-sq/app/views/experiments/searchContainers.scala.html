@@ -6,7 +6,7 @@
 			<input class="form-control" type="text" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getProjects() | filter:$viewValue | limitTo:20" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.project")'>
 			}
 			@formGroup{
-			<select class="form-control" ng-model="form.processCategory" ng-hide="newExperiment != 'new'" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
+			<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
 				<option value="">@Messages("processes.select.processCategory")</option>
 			</select>
 			}
@@ -27,7 +27,7 @@
 			<input class="form-control" type="date" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
 			}
 			@formGroup{
-			<select class="form-control" ng-model="form.experimentCategory" ng-hide="newExperiment != 'new'" ng-options="experimentCategory.name for experimentCategory in lists.getExperimentCategories()" ng-change="changeExperimentCategory()">
+			<select class="form-control" ng-model="form.experimentCategory" ng-options="experimentCategory.name for experimentCategory in lists.getExperimentCategories()" ng-change="changeExperimentCategory()">
 				<option value="">@Messages("experiments.select.experimentCategory")</option>
 			</select>
 			}
@@ -37,7 +37,7 @@
 			<input class="form-control" type="date" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
 			}
 			@formGroup{	
-			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-disabled="!form.experimentCategory && newExperiment == 'new'" ng-options="experimentType.name for experimentType in lists.getExperimentTypes()" ng-change="changeExperimentType()">
+			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-disabled="!form.experimentCategory" ng-options="experimentType.name for experimentType in lists.getExperimentTypes()" ng-change="changeExperimentType()">
 				<option value="">@Messages("experiments.select.experimentType")</option>
 			</select>
 			}

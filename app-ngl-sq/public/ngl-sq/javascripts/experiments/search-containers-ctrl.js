@@ -1,6 +1,6 @@
 "use strict";
 
-function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lists) {
+angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams', '$filter','datatable','basket','lists', function ($scope,$routeParams, $filter, datatable,basket, lists) {
 	$scope.lists = lists;
 	
 	$scope.datatableConfig = {
@@ -93,7 +93,7 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 		$scope.errors.experimentType = {};
 		
 		
-		if($scope.form.experimentType || $scope.newExperiment != "new"){ 		
+		if($scope.form.experimentType){ 		
 			var jsonSearch = {};
 			
 			jsonSearch.stateCode = 'A';	//default state code for containers		
@@ -121,7 +121,7 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 			$scope.datatable.search(jsonSearch);
 		}else{
 			$scope.errors.experimentType = "alert-danger";
-		}							
+		}						
 	};
 	
 	$scope.addToBasket = function(containers){
@@ -129,7 +129,7 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 			this.basket.add(containers[i]);
 		}
 		
-		if(($scope.form.experimentType || $scope.newExperiment != "new") && this.basket.length() > 0 && $scope.getTabs().length === 1){
+		if(($scope.form.experimentType) && this.basket.length() > 0 && $scope.getTabs().length === 1){
 			$scope.addTabs({label:$scope.form.experimentType.name,href:"/experiments/new/"+$scope.form.experimentType.code,remove:false});
 		}
 	};
@@ -172,5 +172,4 @@ function SearchContainerCtrl($scope,$routeParams, $filter, datatable,basket, lis
 	} else {
 		$scope.form = $scope.getForm();		
 	}
-}
-SearchContainerCtrl.$inject = ['$scope','$routeParams', '$filter','datatable','basket','lists'];
+}]);

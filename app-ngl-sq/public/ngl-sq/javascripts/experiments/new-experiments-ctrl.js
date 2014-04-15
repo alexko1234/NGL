@@ -1,4 +1,4 @@
-function ListNewCtrl($scope, datatable) {
+angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable',function ($scope, datatable) {
 	
 	$scope.datatableConfig = {
 			columns:[{
@@ -60,5 +60,4 @@ function ListNewCtrl($scope, datatable) {
 	$scope.basket = $scope.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
 	$scope.form = $scope.getForm();
-};
-ListNewCtrl.$inject = ['$scope', 'datatable'];
+}]);

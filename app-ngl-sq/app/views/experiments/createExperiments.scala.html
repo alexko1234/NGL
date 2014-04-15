@@ -176,6 +176,7 @@
 									auto-select="lists.get('containerSupportCategories')"
 									ng-model="experiment.value.instrument.outContainerSupportCategoryCode"
 									ng-readonly="!experiment.instrumentInformation.enabled"
+									ng-change="getInputTemplate()"
 									ng-options="instrumentCategory.code as instrumentCategory.name for instrumentCategory in lists.get('containerSupportCategories')"
 									ng-disabled="!experiment.instrumentInformation.enabled"
 									ng-hide="!experiment.value.instrument.typeCode || experiment.outputVoid">
@@ -240,10 +241,12 @@
 		
 		</div>
 </div>
-<div class="row">
-	<div class="col-md-12 col-lg-12" datatable="datatable"></div>						
+<div ng-include="experiment.inputTemplate">
+
 </div>
-	
+<div ng-include="getOutputTemplate().url">
+
+</div>
 <div class="row">
 <div class="col-md-12 col-lg-12">
 <div class="panel panel-default">

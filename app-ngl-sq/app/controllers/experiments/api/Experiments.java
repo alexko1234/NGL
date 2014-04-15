@@ -233,6 +233,8 @@ public class Experiments extends CommonController{
 	public static Result nextState(String code){
 		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
 		
+		Logger.info(Json.toJson(exp).toString());
+		
 		Form<Experiment> experimentFilledForm = experimentForm.fill(exp);
 		
 		ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());

@@ -1,16 +1,24 @@
 package controllers.experiments.tpl;
 
+import static play.data.Form.form;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.OneToOne;
+
+import org.codehaus.jackson.JsonNode;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.Routes;
+import play.data.Form;
 import play.i18n.Messages;
 import play.libs.Json;
 import play.mvc.Result;
@@ -25,6 +33,9 @@ import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
 public class Experiments extends CommonController{
+	
+	final static Form<Experiment> experimentForm = form(Experiment.class);
+	
 	public static Result home(String code){
 		return ok(home.render(code));
 	}
@@ -39,6 +50,21 @@ public class Experiments extends CommonController{
 	
 	public static Result newExperiments(String experimentTypeCode){
 		return ok(newExperiments.render());
+	}
+	
+	
+	public static Result getInputTemplate(String atomicType, String inputCategory){
+		if(atomicType.equals("OneToOne")){
+			if(inputCategory.equals("tube")){
+				return ok(views.html.experiments.oneToOne.inputs.tube.render());
+			}
+		}else if(atomicType.equals("ManyToOne")){
+			if(inputCategory.equals("mapcard")){
+				return ok(views.html.experiments.oneToOne.inputs.tube.render());
+			}
+		}
+		
+		return badRequest("Not implemented");
 	}
 	
 	public static Result firstEditExperiment(String experimentTypeCode){
@@ -108,6 +134,7 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.api.routes.javascript.ExperimentTypes.list(),
   	    		controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.newExperiments(),
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.getInputTemplate(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.home(),
   	    		controllers.experiments.api.routes.javascript.Experiments.list(),
   	    		controllers.experiments.api.routes.javascript.ExperimentTypeNodes.list(),
