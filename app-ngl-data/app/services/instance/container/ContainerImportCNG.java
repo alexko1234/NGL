@@ -2,6 +2,8 @@ package services.instance.container;
 
 import java.sql.SQLException;
 import java.util.List;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.container.instance.Container;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
@@ -28,9 +30,23 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 
 		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError, true);
 			
-		limsServices.updateLimsSamples(samps, contextError);
+		limsServices.updateLimsSamples(samps, contextError, "creation");
 		
-		Logger.debug("start loading containers");
+		
+		Logger.debug("start updating samples");
+		
+		samples = limsServices.findSampleToModify(contextError, null);
+		
+		for (Sample sample : samples) {
+			MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
+		}
+		samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError, true);
+			
+		limsServices.updateLimsSamples(samps, contextError, "update");
+
+		/*
+		
+		Logger.debug("start loading containers");		
 		
 		List<Container> containers = limsServices.findContainerToCreate(contextError);
 		
@@ -39,8 +55,24 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		
 		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError, true);
 		
-		limsServices.updateLimsContainers(ctrs, contextError);
+		limsServices.updateLimsContainers(ctrs, contextError, "creation");
+
 		
+		Logger.debug("start updating containers");		
+		
+		containers = limsServices.findContainerToModify(contextError);
+		
+		//common method for CNS & CNG
+		ContainerHelper.createSupportFromContainers(containers, contextError);
+		
+		for (Container container : containers) {
+			MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code);
+		}
+		ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError, true);
+		
+		limsServices.updateLimsContainers(ctrs, contextError, "update");
+
+		*/ 
 		Logger.debug("end loading");
 				
 	}
