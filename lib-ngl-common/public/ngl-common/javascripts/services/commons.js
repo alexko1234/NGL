@@ -96,7 +96,7 @@ angular.module('commonsServices', []).
     					load(jsRoutes.controllers.processes.api.ProcessCategories.list().url,params,'processCategories');
     				},
     				processTypes : function(params){
-    					load(jsRoutes.controllers.commons.api.ProcessTypes.list().url,params,'processTypes');
+    					load(jsRoutes.controllers.processes.api.ProcessTypes.list().url,params,'processTypes');
     				},
        				projectCategories : function(params){
     					load(jsRoutes.controllers.projects.api.ProjectCategories.list().url,params,'projectCategories');
