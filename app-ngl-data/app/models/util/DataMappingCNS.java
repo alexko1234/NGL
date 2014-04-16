@@ -413,7 +413,7 @@ public class DataMappingCNS {
 			return "IW-E";
 		}
 		else if(etatTubeLimsCode==1){
-			return "IW-QC";
+			return "A-QC";
 		}
 		else if(etatTubeLimsCode==3){
 			return "IW-V";

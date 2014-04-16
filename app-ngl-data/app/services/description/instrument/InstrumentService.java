@@ -55,7 +55,7 @@ public class InstrumentService {
 		l.add(newInstrumentCategory("QuBit","qubit"));
 		l.add(newInstrumentCategory("qPCR","qpcr"));
 		l.add(newInstrumentCategory("Main","hand"));
-		
+		l.add(newInstrumentCategory("CBot","cbot"));
 		l.add(newInstrumentCategory("Sequenceurs Illumina","seq-illumina"));
 		l.add(newInstrumentCategory("Cartographie Optique Opgen","opt-map-opgen"));
 	
@@ -117,6 +117,26 @@ public class InstrumentService {
 				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
+		l.add(newInstrumentUsedType("cBot", "cBot", InstrumentCategory.find.findByCode("cbot"), getPropertiesCBot(), 
+				getInstruments(
+						createInstrument("cBot1", "cBot1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
+						createInstrument("cBot2", "cBot2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
+						createInstrument("cBot3", "cBot3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
+						createInstrument("cBot4", "cBot4", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS))), 
+				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-8"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		l.add(newInstrumentUsedType("cBot-interne", "cBot-interne", InstrumentCategory.find.findByCode("cbot"), getPropertiesCBot(), 
+				getInstruments(
+						createInstrument("cBot Fluor A", "cBot-Fluor-A", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
+						createInstrument("cBot Fluor B", "cBot-Fluor-B", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
+						createInstrument("cBot Platine A", "cBot-Platine-A", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
+						createInstrument("cBot Platine B", "cBot-Platine-B", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
+						createInstrument("cBot Mimosa", "cBot-Mimosa", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
+						createInstrument("cBot Melisse", "cBot-Melisse", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS))), 
+				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
 		//CNG et CNS
 		l.add(newInstrumentUsedType("GAIIx", "GAIIx", InstrumentCategory.find.findByCode("seq-illumina"), null, 
 				getInstrumentGAII(),
@@ -144,6 +164,13 @@ public class InstrumentService {
 	
 
 	
+	private static List<PropertyDefinition> getPropertiesCBot() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Type lectures","readType"
+        		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
+        return propertyDefinitions;
+	}
+
 	private static List<PropertyDefinition> getHiseq2000Properties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Position","location"

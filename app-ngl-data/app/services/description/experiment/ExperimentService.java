@@ -65,6 +65,7 @@ public class ExperimentService {
 		l.add(newProtocol("Depot_Illumina_prt_2","depot_illumina_ptr_2","path5","1", ProtocolCategory.find.findByCode("production")));
 		l.add(newProtocol("Depot_Illumina_prt_3","depot_illumina_ptr_3","path6","1", ProtocolCategory.find.findByCode("production")));
 		l.add(newProtocol("Depot_Opgen_prt_1","depot_opgen_ptr_1","path7","1", ProtocolCategory.find.findByCode("production")));
+		l.add(newProtocol("PrepFC_CBot_ptr_sox139_1","prepfc_cbot_ptr_sox139_1","path7","1", ProtocolCategory.find.findByCode("production")));
 
 		DAOHelpers.saveModels(Protocol.class, l, errors);
 		
@@ -120,7 +121,7 @@ public class ExperimentService {
 		l.add(newExperimentType("Void Opgen Illumina","void-opgen-depot",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
 		//Prepaflowcell : to finish
-		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell", ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, null, null, "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell", ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,  getProtocols("prepfc_cbot_ptr_sox139_1"), null, "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		//Depot solexa
 		l.add(newExperimentType("Depot Illumina", "illumina-depot"
@@ -139,12 +140,13 @@ public class ExperimentService {
 	private static void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 		newExperimentTypeNode("void-banque", getExperimentTypes("void-banque").get(0), false, false, null, null, null).save();
 		newExperimentTypeNode("void-qpcr", getExperimentTypes("void-qpcr").get(0), false, false, null, null, null).save();
+		newExperimentTypeNode("void-illumina-depot", getExperimentTypes("void-illumina-depot").get(0), false, false, null, null, null).save();
 		newExperimentTypeNode("void-opgen-depot", getExperimentTypes("void-opgen-depot").get(0), false, false, null, null, null).save();
 		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("void-banque"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
 		newExperimentTypeNode("librairie-indexing", getExperimentTypes("librairie-indexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
 		newExperimentTypeNode("librairie-dualindexing", getExperimentTypes("librairie-dualindexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
 		newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie-indexing","librairie-dualindexing"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
-		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,null,null,null).save();
+		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("void-illumina-depot"),null,null).save();
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),null,null).save();
 		newExperimentTypeNode("opgen-depot",getExperimentTypes("opgen-depot").get(0),false,false,getExperimentTypeNodes("void-opgen-depot"),null,null).save();
 
