@@ -4,13 +4,15 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 	/* buttons section */
 	$scope.save = function(){
 
-		//to not save empty comment in Mongo
 		var endProcess = false;
+		
+		//to not save empty comment in Mongo
 		var comments = null;
 		var txt = $scope.form.comment;
 		if (txt != null && txt != "") {
 			comments =[{comment:txt, creationDate:new Date(), createUser:"ngsrg"}];
-		}	
+		}
+		//end
 		
 		var state = {code:$scope.form.state.code, user:"ngsrg"};
 			
@@ -25,7 +27,10 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 		project.categoryCode =  $scope.form.projectCategory;
 		project.comments = comments;		
 		project.state = state;
-		project.traceInformation = traceInformation;
+		
+		project.projectUmbrellaCodes = $scope.form.projectUmbrellaCodes;
+		
+		project.traceInformation = traceInformation; //utile ?
 		
 		endProcess = true;
 		
@@ -64,6 +69,7 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 		$scope.lists.refresh.states({objectTypeCode:"Project"});
 		$scope.lists.refresh.projectTypes();
 		$scope.lists.refresh.projectCategories();
+		$scope.lists.refresh.projectUmbrellas();
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();

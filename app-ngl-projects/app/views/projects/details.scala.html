@@ -100,6 +100,15 @@
 						<div bt-select class="form-control" ng-switch-when="true" ng-model="project.categoryCode" bt-options="category.code as category.name for category in lists.getProjectCategories()"></div>
 					</div>	
 				}
+				@views.html.helper.columnLabelValue(Messages("projects.projectUmbrellaCodes")){
+					<div ng-switch on="isEditMode()">
+						<ul ng-switch-when="false">
+							<li ng-repeat="p in lists.getProjectUmbrellas()  | filter:{ code: project.projectUmbrellaCodes }">{{p.code + ":" + p.name}}</li>
+						</ul>
+						<div bt-select class="form-control" ng-switch-when="true" multiple="true" ng-model="project.projectUmbrellaCodes" bt-options="p.code as p.name for p in lists.getProjectUmbrellas()"></div>
+					</div>
+				}
+				
 			}
 			
 			</div>

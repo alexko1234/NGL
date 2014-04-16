@@ -29,6 +29,15 @@ POST   	/api/projects									controllers.projects.api.Projects.save()
 PUT   	/api/projects/:code 							controllers.projects.api.Projects.update(code: java.lang.String)
 DELETE	/api/projects/:code								controllers.projects.api.Projects.delete(code:java.lang.String)
 
+#projectUmbrella api
+GET    	/api/projectUmbrellas               			controllers.projectUmbrellas.api.ProjectUmbrellas.list()
+GET    	/api/projectUmbrellas/:code               		controllers.projectUmbrellas.api.ProjectUmbrellas.get(code: java.lang.String)
+HEAD	/api/projectUmbrellas/:code               		controllers.projectUmbrellas.api.ProjectUmbrellas.head(code: java.lang.String)
+POST   	/api/projectUmbrellas							controllers.projectUmbrellas.api.ProjectUmbrellas.save()
+PUT   	/api/projectUmbrellas/:code 					controllers.projectUmbrellas.api.ProjectUmbrellas.update(code: java.lang.String)
+DELETE	/api/projectUmbrellas/:code						controllers.projectUmbrellas.api.ProjectUmbrellas.delete(code:java.lang.String)
+
+
 GET		/api/commons/types								controllers.commons.api.CommonInfoTypes.list()
 GET		/api/commons/states								controllers.commons.api.States.list()
 

@@ -63,6 +63,12 @@
 					</div>	
 				}
 				
+				@views.html.helper.columnLabelValue(Messages("projects.projectUmbrellaCodes")){
+					<div>
+						<div bt-select class="form-control" multiple="true" ng-model="form.projectUmbrellaCodes" bt-options="p.code as p.name for p in lists.getProjectUmbrellas()"></div>
+					</div>								
+				}
+				
 			}
 			
 			</div>

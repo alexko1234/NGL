@@ -22,7 +22,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		else {
 			objProj.comments[0].createUser = "ngsrg";
 		}
-		objProj.state = {code:objProj.state.code, user:"ngsrg"};		
+		objProj.state = {code:objProj.state.code, user:"ngsrg"};	
 		
 		//update database
 		$http.put(jsRoutes.controllers.projects.api.Projects.update($routeParams.code).url, objProj).success(function(data) {
@@ -41,7 +41,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 			$scope.stopEditMode();
 		});
 	};
-	
 	
 
 	/* main section  */
@@ -70,6 +69,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 			$scope.lists.refresh.states({objectTypeCode:"Project"});
 			$scope.lists.refresh.projectTypes();
 			$scope.lists.refresh.projectCategories();
+			$scope.lists.refresh.projectUmbrellas();
 			
 			if($scope.getTabs().length == 0){
 				$scope.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.projects.tpl.Projects.home("search").url, remove:true});

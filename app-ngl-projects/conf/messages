@@ -45,8 +45,12 @@ search.placeholder.regexCode = Regex pour le code
 
 #projects
 projects.menu = Projets
-projects.menu.search = Recherche
-projects.menu.add = Ajouter un projet
+projects.menu.search = Recherche / Mise à jour
+projects.menu.add = Ajout
+projectUmbrellas.menu = Projets maîtres
+projectUmbrellas.menu.search = Recherche / Mise à jour
+projectUmbrellas.menu.add = Ajout
+dispaching.menu = Affectation projets
 
 projects.page.title = Projets
 projects.page.tab.validate = Projets à évaluer
@@ -62,7 +66,8 @@ projects.type = Type
 projects.stateCode = Etat
 projects.state.code = Etat
 projects.state.updatedAt = Mis à jour le: 
-projects.state.by = par:  
+projects.state.by = par:
+projects.projectUmbrellaCodes = Projets maîtres  
 
 
 #button

@@ -17,7 +17,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.InstanceValidationHelper;
 import validation.project.instance.ProjectValidationHelper;
 import fr.cea.ig.DBObject;
 
@@ -41,6 +40,8 @@ public class Project extends DBObject implements IValidation{
 	public Map<String, PropertyValue> properties;
 	public List<Comment> comments;
 	public Boolean bioInfoAnalysis = Boolean.FALSE;
+	
+	public List<String> projectUmbrellaCodes;
 	
 	
 	public Project(){

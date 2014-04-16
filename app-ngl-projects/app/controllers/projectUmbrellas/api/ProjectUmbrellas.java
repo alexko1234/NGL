@@ -1,15 +1,13 @@
-package controllers.projects.api;
+package controllers.projectUmbrellas.api;
 
 import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
-import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.project.instance.Project;
+import models.laboratory.project.instance.ProjectUmbrella;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import net.vz.mongodb.jackson.DBQuery;
@@ -27,79 +25,71 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
 import controllers.QueryFieldsForm;
+import controllers.projects.api.ProjectsController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 /**
  * Controller around Project object
  *
  */
-public class Projects extends ProjectsController {
+public class ProjectUmbrellas extends ProjectsController {
 
 	
-	final static Form<ProjectsSearchForm> searchForm = form(ProjectsSearchForm.class); 
-	final static Form<Project> projectForm = form(Project.class);
+	final static Form<ProjectUmbrellasSearchForm> searchForm = form(ProjectUmbrellasSearchForm.class); 
+	final static Form<ProjectUmbrella> projectForm = form(ProjectUmbrella.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep");
 
 
 	public static Result list(){
-		Form<ProjectsSearchForm> filledForm = filledFormQueryString(searchForm, ProjectsSearchForm.class);
-		ProjectsSearchForm form = filledForm.get();
+		Form<ProjectUmbrellasSearchForm> filledForm = filledFormQueryString(searchForm, ProjectUmbrellasSearchForm.class);
+		ProjectUmbrellasSearchForm form = filledForm.get();
 		BasicDBObject keys = getKeys(form);
 		if(form.datatable){			
-			MongoDBResult<Project> results = mongoDBFinder(InstanceConstants.PROJECT_COLL_NAME, form, Project.class, getQuery(form), keys);			
-			List<Project> projects = results.toList();
-			return ok(Json.toJson(new DatatableResponse<Project>(projects, results.count())));
-		}else if(form.list){
+			MongoDBResult<ProjectUmbrella> results = mongoDBFinder(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, form, ProjectUmbrella.class, getQuery(form), keys);			
+			List<ProjectUmbrella> projectUmbrellas = results.toList();
+			return ok(Json.toJson(new DatatableResponse<ProjectUmbrella>(projectUmbrellas, results.count())));
+		} else if (form.list) {
 			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("name", 1);
 			keys.put("code", 1);
-			if(null == form.orderBy)form.orderBy = "code";
-			if(null == form.orderSense)form.orderSense = 0;
-			MongoDBResult<Project> results = mongoDBFinder(InstanceConstants.PROJECT_COLL_NAME, form, Project.class, getQuery(form), keys);			
-			List<Project> projects = results.toList();			
-			return ok(Json.toJson(toListObjects(projects)));
-		}else{
-			if(null == form.orderBy)form.orderBy = "code";
-			if(null == form.orderSense)form.orderSense = 0;
-			MongoDBResult<Project> results = mongoDBFinder(InstanceConstants.PROJECT_COLL_NAME, form, Project.class, getQuery(form), keys);	
-			List<Project> projects = results.toList();
+			if (null == form.orderBy) form.orderBy = "code";
+			if (null == form.orderSense) form.orderSense = 0;
+			MongoDBResult<ProjectUmbrella> results = mongoDBFinder(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, form, ProjectUmbrella.class, getQuery(form), keys);			
+			List<ProjectUmbrella> projectUmbrellas = results.toList();			
+			return ok(Json.toJson(toListObjects(projectUmbrellas)));
+		} else {
+			if (null == form.orderBy) form.orderBy = "code";
+			if (null == form.orderSense) form.orderSense = 0;
+			MongoDBResult<ProjectUmbrella> results = mongoDBFinder(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, form, ProjectUmbrella.class, getQuery(form), keys);	
+			List<ProjectUmbrella> projects = results.toList();
 			return ok(Json.toJson(projects));
 		}
 	}
 
 	
 
-	private static List<ListObject> toListObjects(List<Project> projects){
+	private static List<ListObject> toListObjects(List<ProjectUmbrella> proj) {
 		List<ListObject> lo = new ArrayList<ListObject>();
-		for(Project p : projects){
+		for (ProjectUmbrella p : proj) {
 			lo.add(new ListObject(p.code, p.name));
 		}
 		return lo;
 	}
 	
-	private static Query getQuery(ProjectsSearchForm form) {
+	private static Query getQuery(ProjectUmbrellasSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
 		
-		if(CollectionUtils.isNotEmpty(form.projectCodes)){
+		if (CollectionUtils.isNotEmpty(form.projectCodes)) {
 			queries.add(DBQuery.in("code", form.projectCodes));
-		}else if(StringUtils.isNotBlank(form.projectCode)){
+		} else if(StringUtils.isNotBlank(form.projectCode)) {
 			queries.add(DBQuery.is("code", form.projectCode));
 		}
 		
-		if (StringUtils.isNotBlank(form.stateCode)) { //all
-			queries.add(DBQuery.is("state.code", form.stateCode));
-		}else if (CollectionUtils.isNotEmpty(form.stateCodes)) { //all
-			queries.add(DBQuery.in("state.code", form.stateCodes));
-		}
 		
-		if (CollectionUtils.isNotEmpty(form.typeCodes)) { //all
-			queries.add(DBQuery.in("typeCode", form.typeCodes));
-		}
-		
-		if(queries.size() > 0){
+		if (queries.size() > 0) {
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
 
@@ -107,7 +97,7 @@ public class Projects extends ProjectsController {
 	}
 	
 	public static Result get(String code) {
-		Project projectValue = getProject(code);
+		ProjectUmbrella projectValue = getProjectUmbrella(code);
 		if (projectValue != null) {		
 			return ok(Json.toJson(projectValue));					
 		} else {
@@ -115,30 +105,22 @@ public class Projects extends ProjectsController {
 		}
 	}
 	
-	public static Result head(String code){
-		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, code)){			
+	public static Result head(String code) {
+		if (MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, ProjectUmbrella.class, code)) { 			
 			return ok();					
-		}else{
+		} else {
 			return notFound();
 		}
 	}
 
 
 	public static Result save() {
-		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
-		Project projectInput = filledForm.get();
+		Form<ProjectUmbrella> filledForm = getFilledForm(projectForm, ProjectUmbrella.class);
+		ProjectUmbrella projectInput = filledForm.get();
 
 		if (null == projectInput._id) { 
 			projectInput.traceInformation = new TraceInformation();
-			projectInput.traceInformation.setTraceInformation(getCurrentUser());
-			
-			if(null == projectInput.state){
-				projectInput.state = new State();
-			}
-			projectInput.state.code = "N";
-			projectInput.state.user = getCurrentUser();
-			projectInput.state.date = new Date();		
-			
+			projectInput.traceInformation.setTraceInformation(getCurrentUser());			
 		} else {
 			return badRequest("use PUT method to update the project");
 		}
@@ -148,7 +130,7 @@ public class Projects extends ProjectsController {
 		projectInput.validate(ctxVal);
 
 		if (!ctxVal.hasErrors()) {
-			projectInput = MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, projectInput);
+			projectInput = MongoDBDAO.save(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, projectInput);
 			return ok(Json.toJson(projectInput));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
@@ -157,15 +139,15 @@ public class Projects extends ProjectsController {
 
 
 	public static Result update(String code) {
-		Project project = getProject(code);
+		ProjectUmbrella project = getProjectUmbrella(code);
 		if (project == null) {
-			return badRequest("Project with code "+code+" not exist");
+			return badRequest("ProjectUmbrella with code "+code+" not exist");
 		}
 
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
-		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
-		Project projectInput = filledForm.get();
+		Form<ProjectUmbrella> filledForm = getFilledForm(projectForm, ProjectUmbrella.class);
+		ProjectUmbrella projectInput = filledForm.get();
 		
 		if(queryFieldsForm.fields == null){
 			if (code.equals(projectInput.code)) {
@@ -175,14 +157,11 @@ public class Projects extends ProjectsController {
 					Logger.error("traceInformation is null !!");
 				}
 				
-				//if(!project.state.code.equals(projectInput.state.code)){
-				//	return badRequest("You cannot change the state code. Please used the state url ! ");
-				//}
 				ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 	
 				ctxVal.setUpdateMode();
 				projectInput.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
-					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, projectInput);
+					MongoDBDAO.update(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, projectInput);
 					return ok(Json.toJson(projectInput));
 				}else {
 					return badRequest(filledForm.errorsAsJson());
@@ -200,9 +179,9 @@ public class Projects extends ProjectsController {
 			if(!filledForm.hasErrors()){
 				TraceInformation ti = project.traceInformation;
 				ti.setTraceInformation(getCurrentUser());
-				MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, 
-						DBQuery.and(DBQuery.is("code", code)), getBuilder(projectInput, queryFieldsForm.fields, Project.class).set("traceInformation", ti));
-				return ok(Json.toJson(getProject(code)));
+				MongoDBDAO.update(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, ProjectUmbrella.class, 
+						DBQuery.and(DBQuery.is("code", code)), getBuilder(projectInput, queryFieldsForm.fields, ProjectUmbrella.class).set("traceInformation", ti));
+				return ok(Json.toJson(getProjectUmbrella(code)));
 			}else{
 				return badRequest(filledForm.errorsAsJson());
 			}			
@@ -211,13 +190,14 @@ public class Projects extends ProjectsController {
 
 
 	public static Result delete(String code) {
-		Project project = getProject(code);
+		ProjectUmbrella project = getProjectUmbrella(code);
 		if (project == null) {
 			return badRequest();
 		}		
-		MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, project);	
+		MongoDBDAO.delete(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, project);	
 		return ok();
 	}
 
 
 }
+

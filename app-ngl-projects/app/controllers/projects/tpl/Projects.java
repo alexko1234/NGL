@@ -14,8 +14,8 @@ import views.components.datatable.DatatableHelpers;
 import views.html.projects.*;
 
 /**
- * Controller around Run object
- * @author galbini
+ * Controller around Project object
+ * @author dnoisett
  *
  */
 public class Projects extends CommonController {
@@ -63,7 +63,8 @@ public class Projects extends CommonController {
   	    		controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
   	    		controllers.commons.api.routes.javascript.States.list(),
   	    		controllers.projects.api.routes.javascript.ProjectTypes.list(),
-  	    		controllers.projects.api.routes.javascript.ProjectCategories.list()
+  	    		controllers.projects.api.routes.javascript.ProjectCategories.list(),
+  	    		controllers.projectUmbrellas.api.routes.javascript.ProjectUmbrellas.list() 
   	    	)	  	      
   	    );
   	  }
