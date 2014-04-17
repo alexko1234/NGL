@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.cea.ig.MongoDBDAO;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -159,6 +161,51 @@ public class ContainerHelper {
 	
 	}
 
+	
+	public static void updateSupportFromUpdatedContainers(List<Container> updatedContainers, ContextValidation contextValidation){
+		
+		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
+		
+		for (Container container : updatedContainers) {
+			if (container.support != null) {
+				ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code, container.support.categoryCode,"ngl");
+				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
+				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);							
+
+				if (!mapSupports.containsKey(newSupport.code)) {
+					mapSupports.put(newSupport.code, newSupport);
+				}
+				else {
+					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
+					InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
+					InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
+				}
+				
+			}
+		}
+		
+		for (Map.Entry<String,ContainerSupport> e : mapSupports.entrySet()) {
+			ContainerSupport dbCs = MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, e.getKey());
+			
+			ContainerSupport updatedCs = e.getValue();
+			
+			updatedCs.traceInformation = dbCs.traceInformation;
+			updatedCs.traceInformation.modifyDate = new Date();
+			updatedCs.traceInformation.modifyUser = "ngl";
+			
+			if (!( dbCs.projectCodes.containsAll(updatedCs.projectCodes) && dbCs.sampleCodes.containsAll(updatedCs.sampleCodes) 
+					&& updatedCs.projectCodes.containsAll(dbCs.projectCodes) && updatedCs.sampleCodes.containsAll(dbCs.sampleCodes)) ) {
+				
+				MongoDBDAO.deleteByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, e.getKey());
+				
+				InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, updatedCs, contextValidation, true);
+			}
+		}
+	
+		
+	
+	}
+	
 	public static List<Content> contentFromSampleCode(List<Content> contents,
 			String sampleCode) {
 		List<Content> contentsFind=new ArrayList<Content>();

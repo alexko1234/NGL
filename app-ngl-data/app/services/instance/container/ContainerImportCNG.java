@@ -1,6 +1,7 @@
 package services.instance.container;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import fr.cea.ig.MongoDBDAO;
@@ -23,7 +24,6 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 
 	@Override
 	public void runImport() throws SQLException, DAOException {
-		
 		Logger.debug("start loading samples");
 		
 		List<Sample> samples = limsServices.findSampleToCreate(contextError, null) ;
@@ -38,13 +38,17 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		samples = limsServices.findSampleToModify(contextError, null);
 		
 		for (Sample sample : samples) {
+			Sample oldSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
+			sample.traceInformation = oldSample.traceInformation;
+			sample.traceInformation.modifyDate = new Date();
+			sample.traceInformation.modifyUser = InstanceHelpers.getUser();
+			
 			MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
 		}
 		samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError, true);
 			
 		limsServices.updateLimsSamples(samps, contextError, "update");
 
-		/*
 		
 		Logger.debug("start loading containers");		
 		
@@ -62,17 +66,22 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		
 		containers = limsServices.findContainerToModify(contextError);
 		
-		//common method for CNS & CNG
-		ContainerHelper.createSupportFromContainers(containers, contextError);
+		//new method for CNS & CNG
+		ContainerHelper.updateSupportFromUpdatedContainers(containers, contextError);
 		
 		for (Container container : containers) {
+			Container oldContainer = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code);
+			container.traceInformation = oldContainer.traceInformation;
+			container.traceInformation.modifyDate = new Date();
+			container.traceInformation.modifyUser = InstanceHelpers.getUser();
+			
 			MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code);
 		}
 		ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError, true);
 		
 		limsServices.updateLimsContainers(ctrs, contextError, "update");
-
-		*/ 
+		 
+		
 		Logger.debug("end loading");
 				
 	}
