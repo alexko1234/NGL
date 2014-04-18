@@ -76,7 +76,9 @@ public class Processes extends CommonController{
 				ContextValidation contextValidation=new ContextValidation(filledForm.errors());
 				contextValidation.setCreationMode();
 				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
-				Workflows.nextContainerState(value,new ContextValidation(filledForm.errors()));
+				if(!contextValidation.hasErrors()){
+					Workflows.nextContainerState(value,new ContextValidation(filledForm.errors()));
+				}
 			}
 		}
 		if (!filledForm.hasErrors()) {
