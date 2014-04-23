@@ -66,6 +66,7 @@ public class ExperimentService {
 		l.add(newProtocol("Depot_Illumina_prt_3","depot_illumina_ptr_3","path6","1", ProtocolCategory.find.findByCode("production")));
 		l.add(newProtocol("Depot_Opgen_prt_1","depot_opgen_ptr_1","path7","1", ProtocolCategory.find.findByCode("production")));
 		l.add(newProtocol("PrepFC_CBot_ptr_sox139_1","prepfc_cbot_ptr_sox139_1","path7","1", ProtocolCategory.find.findByCode("production")));
+		l.add(newProtocol("Proto_QC_v1","proto_qc_v1","path7","1", ProtocolCategory.find.findByCode("production")));
 
 		DAOHelpers.saveModels(Protocol.class, l, errors);
 		
@@ -104,10 +105,10 @@ public class ExperimentService {
 		
 		
 		//qc
-		l.add(newExperimentType("Bioanalyzer Non Ampli","bioanalyzer-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), null, getInstrumentUsedTypes("agilent-2100"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newExperimentType("Bioanalyzer Ampli","bioanalyzer-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), null, getInstrumentUsedTypes("agilent-2100"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newExperimentType("QuBit","qubit",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("iqubit"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newExperimentType("qPCR","qpcr",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, null, getInstrumentUsedTypes("iqpcr"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Bioanalyzer Non Ampli","bioanalyzer-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Bioanalyzer Ampli","bioanalyzer-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("QuBit","qubit",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, getProtocols("proto_qc_v1"), getInstrumentUsedTypes("iqubit"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("qPCR","qpcr",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, getProtocols("proto_qc_v1"), getInstrumentUsedTypes("iqpcr"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		//purif
 		l.add(newExperimentType("Ampure Non Ampli","ampure-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, getInstrumentUsedTypes("hand"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
