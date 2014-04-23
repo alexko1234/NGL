@@ -21,18 +21,9 @@ add.title.name=Nouveau projet
 menu.projects = Projets
 
 
-#valuation
-valuation.menu = Evaluation
-valuation.menu.projects = Projets
-valuation.value.FALSE = Non
-valuation.value.TRUE = Oui
-valuation.value.UNSET = -
-
-
 #search
 search.form = Formulaire
 search.config = Configuration
-
 search.placeholder.projects = Sélect. des projets
 search.placeholder.project = Sélect. un projet
 search.placeholder.run = Sélect. un projet
@@ -41,6 +32,7 @@ search.placeholder.states = Sélect. des états
 search.placeholder.types = Sélect. des types
 search.placeholder.valid = Sélect. une évaluation
 search.placeholder.regexCode = Regex pour le code
+search.placeholder.projectUmbrella = Sélect. un projet maître
 
 
 #projects
@@ -50,7 +42,6 @@ projects.menu.add = Ajout
 projectUmbrellas.menu = Projets maîtres
 projectUmbrellas.menu.search = Recherche / Mise à jour
 projectUmbrellas.menu.add = Ajout
-dispaching.menu = Affectation projets
 
 projects.page.title = Projets
 projects.page.tab.validate = Projets à évaluer
@@ -67,7 +58,11 @@ projects.stateCode = Etat
 projects.state.code = Etat
 projects.state.updatedAt = Mis à jour le: 
 projects.state.by = par:
+projects.projectCodes = Projets
 projects.projectUmbrellaCodes = Projets maîtres  
+projectUmbrellas.code = Code
+projectUmbrellas.name = Nom
+projects.projectCodesSelected = Projets rattachés
 
 
 #button

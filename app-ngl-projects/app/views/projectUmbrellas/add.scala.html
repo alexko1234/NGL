@@ -65,39 +65,15 @@
 							<input type="text" class="form-control" ng-model="form.name">
 						</div>
 					}
-	
-					@columnLabelValue(Messages("projects.state.code")){
-						<div>
-							<div bt-select class="form-control" ng-model="form.state.code" bt-options="state.code as state.name for state in lists.getStates()"></div>
-						</div>	
-					}
-										
-					@columnLabelValue(Messages("projects.type")){
-						<div>
-							<div bt-select class="form-control" ng-model="form.projectType" bt-options="projectType.code as projectType.name for projectType in lists.getProjectTypes()"></div>
-						</div>
-					}
-					
-					@columnLabelValue(Messages("projects.category.type")){
-						<div>
-							<div bt-select class="form-control" ng-model="form.projectCategory" bt-options="projectCategory.code as projectCategory.name for projectCategory in lists.getProjectCategories()"></div>
-						</div>
-					}
-					
-					@columnLabelValue(Messages("projects.comments")){
-						<div>
-							<textarea class="form-control" ng-model="form.comment"></textarea>
-						</div>	
-					}
 				}
 			</div>
 			
 			<div class="row">
-				@column6(){			
-					@columnLabelValue(Messages("projects.projectUmbrellaCodes")){
-						<select size="30" name="allProjects" ng-model="form.allProjects" multiple="true" ng-options="p.code as (p.code + ':' + p.name) for p in lists.getProjectUmbrellas()">
-						</select>						
-					}			
+				@column6(){	
+					@columnLabelValue(Messages("projects.projectCodes")){
+						<select size="30" name="allProjects" ng-model="form.allProjects" multiple="true" ng-options="p.code as (p.code + ':' + p.name) for p in lists.getProjects()">
+						</select>
+					}
 				}
 				
 				@column1(){
@@ -106,7 +82,7 @@
 				}
 				
 				@column3(){				
-					<select size="30" name="selectedProjects" ng-model="project.projectUmbrellaCodes" multiple="true" ng-options="code for code in form.selectedProjects">
+					<select size="30" name="selectedProjects" ng-model="projectUmbrella.projectCodes" multiple="true" ng-options="code for code in form.selectedProjects">
 					</select>
 				}
 			</div>

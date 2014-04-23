@@ -24,6 +24,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		}
 		objProj.state = {code:objProj.state.code, user:"ngsrg"};	
 		
+		objProj.projectUmbrellaCodes = $scope.form.selectedProjects;
+		
 		//update database
 		$http.put(jsRoutes.controllers.projects.api.Projects.update($routeParams.code).url, objProj).success(function(data) {
 			$scope.messages.setSuccess("save");
@@ -42,12 +44,33 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		});
 	};
 	
+	$scope.addItem = function() {
+		for (var i=0; i<$scope.form.allProjects.length; i++) {
+			$scope.form.selectedProjects.push($scope.form.allProjects[i]);
+		}
+		
+	};
+	
+	$scope.removeItem = function() {
+		var itemSelected;
+		var idx;
+		for (var i=0; i<$scope.project.projectUmbrellaCodes.length; i++) {
+			itemSelected = $scope.project.projectUmbrellaCodes[i];
+			idx = $scope.form.selectedProjects.indexOf(itemSelected);
+			$scope.form.selectedProjects.splice(idx,1);
+		}
+	};
+	
 
 	/* main section  */
 	var init = function(){
 		
 		$scope.messages = messages();
 		$scope.lists = lists;
+		$scope.lists.refresh.states({objectTypeCode:"Project"});
+		$scope.lists.refresh.projectTypes();
+		$scope.lists.refresh.projectCategories();
+		$scope.lists.refresh.projectUmbrellas();
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();
@@ -63,18 +86,19 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 			if (data2.comments == null || data2.comments.length == 0) {
 				data2.comments = [{comment:""}];
 			}
-			$scope.project = data2;
+			$scope.project = data2;	
 			
-			
-			$scope.lists.refresh.states({objectTypeCode:"Project"});
-			$scope.lists.refresh.projectTypes();
-			$scope.lists.refresh.projectCategories();
-			$scope.lists.refresh.projectUmbrellas();
+			$scope.form.allProjects = lists.getProjectUmbrellas(); 		
+			if ($scope.project.projectUmbrellaCodes != null) {
+				$scope.form.selectedProjects = angular.copy($scope.project.projectUmbrellaCodes);
+			}
+			else {
+				$scope.form.selectedProjects = [];
+			}
 			
 			if($scope.getTabs().length == 0){
 				$scope.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.projects.tpl.Projects.home("search").url, remove:true});
-				$scope.addTabs({label:$scope.project.code, href:jsRoutes.controllers.projects.tpl.Projects.get($scope.project.code).url, remove:true})									
-
+				$scope.addTabs({label:$scope.project.code, href:jsRoutes.controllers.projects.tpl.Projects.get($scope.project.code).url, remove:true});							
 				$scope.activeTab($scope.getTabs(1));
 			}
 			

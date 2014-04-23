@@ -1,10 +1,35 @@
 @()
 
+@column1()(value: Html) = {
+	<div class="col-md-1 col-lg-1">
+		@value
+	</div>
+}
 
-
-@column()(value: Html) = {
+@column3()(value: Html) = {
 	<div class="col-md-3 col-lg-3">
 		@value
+	</div>
+}
+
+@column4()(value: Html) = {
+	<div class="col-md-4 col-lg-4">
+		@value
+	</div>
+}
+
+@column6()(value: Html) = {
+	<div class="col-md-6 col-lg-6">
+		@value
+	</div>
+}
+
+@columnLabelValue(label:String)(value: Html) = {
+	<div class="form-group">
+	    <label class="col-md-2 col-lg-2 control-label">@label</label>
+	    <div class="col-md-10 col-lg-10">
+	      @value
+	    </div>
 	</div>
 }
 
@@ -48,69 +73,96 @@
 	<div class="col-md-12 col-lg-12">
 		<form class="form-horizontal">
 			<div class="row">
-			@column(){
-				@views.html.helper.columnLabelValue(Messages("projects.code")){
-					<p class="form-control-static">{{project.code}}</p>
-				}
-				
-				@views.html.helper.columnLabelValue(Messages("projects.name")){
-					<div ng-switch on="isEditMode()">
-						<p class="form-control-static" ng-switch-when="false">{{project.name}}</p>
-						<input type="text" class="form-control" ng-switch-when="true" ng-model="project.name">
-					</div>
-				}
-
-				@views.html.helper.columnLabelValue(Messages("projects.state.code")){
-					<div ng-switch on="isEditMode()">
-						<div ng-switch-when="false">
-							<p class="form-control-static">{{project.state.code | codes:'state'}}</p>	
-							@dataState()
-						</div>
-						<div bt-select class="form-control" ng-model="project.state.code" ng-switch-when="true" bt-options="state.code as state.name for state in lists.getStates()"></div>
-					</div>				
-				}
+				@column6(){
+					@columnLabelValue(Messages("projects.code")){
+						<p class="form-control-static">{{project.code}}</p>
+					}
 					
-				@views.html.helper.columnLabelValue(Messages("projects.traceInformation.creationDate")){
-					<p class="form-control-static">{{project.traceInformation.creationDate | date:'@Messages("date.format")'}}</p>	
-				}
-
-				@views.html.helper.columnLabelValue(Messages("projects.traceInformation.createUser")){
-					<p class="form-control-static">{{project.traceInformation.createUser}}</p>	
+					@columnLabelValue(Messages("projects.name")){
+						<div ng-switch on="isEditMode()">
+							<p class="form-control-static" ng-switch-when="false">{{project.name}}</p>
+							<input type="text" class="form-control" ng-switch-when="true" ng-model="project.name">
+						</div>
+					}
+	
+					@columnLabelValue(Messages("projects.state.code")){
+						<div ng-switch on="isEditMode()">
+							<div ng-switch-when="false">
+								<p class="form-control-static">{{project.state.code | codes:'state'}}</p>	
+								@dataState()
+							</div>
+							<div bt-select class="form-control" ng-model="project.state.code" ng-switch-when="true" bt-options="state.code as state.name for state in lists.getStates()"></div>
+						</div>				
+					}
+						
+					@columnLabelValue(Messages("projects.traceInformation.creationDate")){
+						<p class="form-control-static">{{project.traceInformation.creationDate | date:'@Messages("date.format")'}}</p>	
+					}
+	
+					@columnLabelValue(Messages("projects.traceInformation.createUser")){
+						<p class="form-control-static">{{project.traceInformation.createUser}}</p>	
+					}
+					
+					@columnLabelValue(Messages("projects.comments")){
+						<div ng-switch on="isEditMode()">
+							<p class="form-control-static" ng-switch-when="false">{{project.comments[0].comment}}</p>
+							<textarea class="form-control" ng-switch-when="true" ng-model="project.comments[0].comment"></textarea>
+						</div>	
+					}	
 				}
 				
-				@views.html.helper.columnLabelValue(Messages("projects.comments")){
-					<div ng-switch on="isEditMode()">
-						<p class="form-control-static" ng-switch-when="false">{{project.comments[0].comment}}</p>
-						<textarea class="form-control" ng-switch-when="true" ng-model="project.comments[0].comment"></textarea>
-					</div>	
-				}
-				
-			}
+				@column4(){
+					@columnLabelValue(Messages("projects.type")){
+						<div ng-switch on="isEditMode()">
+							<p class="form-control-static" ng-switch-when="false">{{project.typeCode  | codes:'type'}}</p>
+							<div bt-select class="form-control" ng-switch-when="true" ng-model="project.typeCode" bt-options="type.code as type.name for type in lists.getProjectTypes()"></div>
+						</div>
+					}
+					
+					@columnLabelValue(Messages("projects.category.type")){
+						<div ng-switch on="isEditMode()">
+							<p class="form-control-static" ng-switch-when="false">{{project.categoryCode  | codes:'project_cat'}}</p>
+							<div bt-select class="form-control" ng-switch-when="true" ng-model="project.categoryCode" bt-options="category.code as category.name for category in lists.getProjectCategories()"></div>
+						</div>	
+					}
+				}				
+			</div>
 			
-			@column(){
-				@views.html.helper.columnLabelValue(Messages("projects.type")){
+			<div class="row">
+				@column6(){			
+					@columnLabelValue(Messages("projects.projectUmbrellaCodes")){
+						<div ng-switch on="isEditMode()">
+							<div ng-switch-when="false"> 
+							<ul ng-repeat="p in lists.getProjectUmbrellas() | filterByCodesInStringArray:project.projectUmbrellaCodes">
+								<li>{{p.code + ":" + p.name}}</li>
+							</ul>
+							</div>
+							<div ng-switch-when="true"> 						
+								<select size="30" name="allProjects" ng-model="form.allProjects" multiple="true" ng-options="p.code as (p.code + ':' + p.name) for p in lists.getProjectUmbrellas()">
+								</select>
+							</div>
+						</div>
+						
+					}							
+				}
+				
+				@column1(){
 					<div ng-switch on="isEditMode()">
-						<p class="form-control-static" ng-switch-when="false">{{project.typeCode  | codes:'type'}}</p>
-						<div bt-select class="form-control" ng-switch-when="true" ng-model="project.typeCode" bt-options="type.code as type.name for type in lists.getProjectTypes()"></div>
+						<div ng-switch-when="true">
+							<input type="button" ng-click="addItem()" value=">>" />&nbsp; 
+							<input type="button" ng-click="removeItem()" value="<<" />&nbsp;
+						</div>
 					</div>
 				}
-				@views.html.helper.columnLabelValue(Messages("projects.category.type")){
-					<div ng-switch on="isEditMode()">
-						<p class="form-control-static" ng-switch-when="false">{{project.categoryCode  | codes:'project_cat'}}</p>
-						<div bt-select class="form-control" ng-switch-when="true" ng-model="project.categoryCode" bt-options="category.code as category.name for category in lists.getProjectCategories()"></div>
-					</div>	
-				}
-				@views.html.helper.columnLabelValue(Messages("projects.projectUmbrellaCodes")){
-					<div ng-switch on="isEditMode()">
-						<ul ng-switch-when="false">
-							<li ng-repeat="p in lists.getProjectUmbrellas()  | filter:{ code: project.projectUmbrellaCodes }">{{p.code + ":" + p.name}}</li>
-						</ul>
-						<div bt-select class="form-control" ng-switch-when="true" multiple="true" ng-model="project.projectUmbrellaCodes" bt-options="p.code as p.name for p in lists.getProjectUmbrellas()"></div>
-					</div>
-				}
 				
-			}
-			
+				@column3(){				
+					<div ng-switch on="isEditMode()">
+						<div ng-switch-when="true"> 
+							<select size="30" name="selectedProjects" ng-model="project.projectUmbrellaCodes" multiple="true" ng-options="code for code in form.selectedProjects">
+							</select>
+						</div>
+					</div>
+				}			
 			</div>
 		</form>
 	</div>

@@ -5,11 +5,12 @@
 # Home page
 GET     /                           					controllers.main.tpl.Main.home()
 
-GET	   	/projects/:homecode/home						controllers.projects.tpl.Projects.home(homecode: java.lang.String)
-GET	   	/projects/:code									controllers.projects.tpl.Projects.get(code: java.lang.String)
 
 
 #project tpl
+GET	   	/projects/:homecode/home						controllers.projects.tpl.Projects.home(homecode: java.lang.String)
+GET	   	/projects/:code									controllers.projects.tpl.Projects.get(code: java.lang.String)
+
 GET		/tpl/projects/details							controllers.projects.tpl.Projects.details()
 GET		/tpl/projects/search/:type						controllers.projects.tpl.Projects.search(type: java.lang.String)
 GET	   	/tpl/projects/add								controllers.projects.tpl.Projects.add()
@@ -17,8 +18,23 @@ GET	   	/tpl/projects/add								controllers.projects.tpl.Projects.add()
 GET		/tpl/projects/js-routes							controllers.projects.tpl.Projects.javascriptRoutes()
 
 
+#projectUmbrella tpl
+
+GET	   	/projectUmbrellas/:homecode/home				controllers.projectUmbrellas.tpl.ProjectUmbrellas.home(homecode: java.lang.String)
+GET	   	/projectUmbrellas/:code							controllers.projectUmbrellas.tpl.ProjectUmbrellas.get(code: java.lang.String)
+
+GET		/tpl/projectUmbrellas/details					controllers.projectUmbrellas.tpl.ProjectUmbrellas.details()
+GET		/tpl/projectUmbrellas/search/:type				controllers.projectUmbrellas.tpl.ProjectUmbrellas.search(type: java.lang.String)
+GET	   	/tpl/projectUmbrellas/add						controllers.projectUmbrellas.tpl.ProjectUmbrellas.add()
+
+GET		/tpl/projectUmbrellas/js-routes					controllers.projectUmbrellas.tpl.ProjectUmbrellas.javascriptRoutes()
+
+
+#lists api
 GET		/api/projects/types								controllers.projects.api.ProjectTypes.list()
 GET		/api/projects/categories						controllers.projects.api.ProjectCategories.list()
+GET		/api/commons/types								controllers.commons.api.CommonInfoTypes.list()
+GET		/api/commons/states								controllers.commons.api.States.list()
 
 
 #project api
@@ -27,7 +43,8 @@ GET    	/api/projects/:code               				controllers.projects.api.Projects.
 HEAD	/api/projects/:code               				controllers.projects.api.Projects.head(code: java.lang.String)
 POST   	/api/projects									controllers.projects.api.Projects.save()
 PUT   	/api/projects/:code 							controllers.projects.api.Projects.update(code: java.lang.String)
-DELETE	/api/projects/:code								controllers.projects.api.Projects.delete(code:java.lang.String)
+#DELETE	/api/projects/:code								controllers.projects.api.Projects.delete(code:java.lang.String)
+
 
 #projectUmbrella api
 GET    	/api/projectUmbrellas               			controllers.projectUmbrellas.api.ProjectUmbrellas.list()
@@ -35,16 +52,15 @@ GET    	/api/projectUmbrellas/:code               		controllers.projectUmbrellas
 HEAD	/api/projectUmbrellas/:code               		controllers.projectUmbrellas.api.ProjectUmbrellas.head(code: java.lang.String)
 POST   	/api/projectUmbrellas							controllers.projectUmbrellas.api.ProjectUmbrellas.save()
 PUT   	/api/projectUmbrellas/:code 					controllers.projectUmbrellas.api.ProjectUmbrellas.update(code: java.lang.String)
-DELETE	/api/projectUmbrellas/:code						controllers.projectUmbrellas.api.ProjectUmbrellas.delete(code:java.lang.String)
-
-
-GET		/api/commons/types								controllers.commons.api.CommonInfoTypes.list()
-GET		/api/commons/states								controllers.commons.api.States.list()
-
+#DELETE	/api/projectUmbrellas/:code						controllers.projectUmbrellas.api.ProjectUmbrellas.delete(code:java.lang.String)
 
 
 #migration
 GET		/migration										controllers.migration.Migration.migration()
+
+
+->  /authentication authentication.Routes
+
 
 
 # Map static resources from the /public folder to the /assets URL path

@@ -1,7 +1,6 @@
 @(nav: String = "")
 
 @import play.mvc.Http.Context
-@import play.api.Play
 
   <!-- Navbar
     ================================================== -->
@@ -25,17 +24,10 @@
 				<li class="dropdown @("active".when(nav.startsWith("projectUmbrellas")))">	
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="projectUmbrellas">@Messages("projectUmbrellas.menu")<b class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="projectUmbrellas">
-						<li class="@("active".when(nav == "projectUmbrellas.search"))"><a href="@controllers.projects.tpl.routes.Projects.home("search")">@Messages("projectUmbrellas.menu.search")</a></li>	
-						<li class="@("active".when(nav == "projectUmbrellas.add"))"><a href="@controllers.projects.tpl.routes.Projects.home("add")">@Messages("projectUmbrellas.menu.add")</a></li>	
+						<li class="@("active".when(nav == "projectUmbrellas.search"))"><a href="@controllers.projectUmbrellas.tpl.routes.ProjectUmbrellas.home("search")">@Messages("projectUmbrellas.menu.search")</a></li>	
+						<li class="@("active".when(nav == "projectUmbrellas.add"))"><a href="@controllers.projectUmbrellas.tpl.routes.ProjectUmbrellas.home("add")">@Messages("projectUmbrellas.menu.add")</a></li>	
 					</ul>
 				</li>
-				<li class="dropdown @("active".when(nav.startsWith("dispaching")))">	
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="dispaching">@Messages("dispaching.menu")<b class="caret"></b></a>
-					<ul class="dropdown-menu" role="menu" aria-labelledby="dispaching">
-						<li class="@("active".when(nav == "dispaching"))"><a href="@controllers.projects.tpl.routes.Projects.home("dispaching")">@Messages("dispaching.menu")</a></li>	
-					</ul>
-				</li>
-
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
@@ -48,6 +40,7 @@
 					</ul>
 				</li>				
 			</ul>
+			
 		</div>
 	</div>		
 </nav>

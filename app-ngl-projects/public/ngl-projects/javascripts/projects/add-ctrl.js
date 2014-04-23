@@ -3,7 +3,6 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 
 	/* buttons section */
 	$scope.save = function(){
-
 		var endProcess = false;
 		
 		//to not save empty comment in Mongo
@@ -14,58 +13,51 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 		}
 		//end
 		
-		var state = {code:$scope.form.state.code, user:"ngsrg"};
-			
-		var traceInformation = new Object();
-		traceInformation.creationDate = new Date();
-		traceInformation.createUser = "ngsrg";
-		
 		var project = new Object();			
 		project.code = $scope.form.code;
 		project.name = $scope.form.name;
 		project.typeCode = $scope.form.projectType;
 		project.categoryCode =  $scope.form.projectCategory;
 		project.comments = comments;		
-		project.state = state;
-		
-		project.projectUmbrellaCodes = $scope.form.projectUmbrellaCodes;
-		
-		project.traceInformation = traceInformation; //utile ?
+		project.state = {code:$scope.form.state.code, user:"ngsrg"};
+		project.projectUmbrellaCodes = $scope.form.selectedProjects;
 		
 		endProcess = true;
 		
 		if (endProcess) {
-			//save database
 			$http.post(jsRoutes.controllers.projects.api.Projects.save().url, project).success(function(data) {
 				$scope.messages.setSuccess("save");
 			});
 		}
 	};
 
-	$scope.cancel = function(){
-		$scope.messages.clear();
-		updateData(true);				
-	};
-
-	var updateData = function(isCancel){
-		$http.get(jsRoutes.controllers.projects.api.Projects.get($routeParams.code).url).success(function(data) {
-			$scope.project = data;	
-			$scope.stopEditMode();
-		});
-	};
-	
 	$scope.reset = function(){
 		$scope.form = {
 				
 		}
 	};
 	
+	$scope.addItem = function() {
+		for (var i=0; i<$scope.form.allProjects.length; i++) {
+			$scope.form.selectedProjects.push($scope.form.allProjects[i]);
+		}
+		
+	};
+	
+	$scope.removeItem = function() {
+		var itemSelected;
+		var idx;
+		for (var i=0; i<$scope.project.projectUmbrellaCodes.length; i++) {
+			itemSelected = $scope.project.projectUmbrellaCodes[i];
+			idx = $scope.form.selectedProjects.indexOf(itemSelected);
+			$scope.form.selectedProjects.splice(idx,1);
+		}
+	};
+	
 	
 	var init = function(){
-		
 		$scope.messages = messages();
 		$scope.lists = lists;
-		
 		$scope.lists.refresh.states({objectTypeCode:"Project"});
 		$scope.lists.refresh.projectTypes();
 		$scope.lists.refresh.projectCategories();
@@ -76,7 +68,10 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 		}else{
 			$scope.reset();
 		}
-
+		
+		$scope.form.allProjects = lists.getProjectUmbrellas(); 		
+		$scope.form.selectedProjects = [];
+		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('add');
 		}

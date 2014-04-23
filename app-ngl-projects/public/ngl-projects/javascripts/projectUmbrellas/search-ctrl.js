@@ -13,22 +13,6 @@ var columns = [
 			    	type :"String",
 			    	order:false,
 			    	edit:false
-				},
-				{	property:"typeCode",
-					header: "projects.typeCode",
-					type :"String",
-			    	order:false,
-			    	edit:false
-				},
-				{	property:"state.code",
-					filter:"codes:'state'",					
-					header: "projects.stateCode",
-					type :"String",
-					order:false,
-					edit:false,
-					choiceInList:false,
-			    	listStyle:'bt-select',
-			    	possibleValues:'listsTable.getStates()'	
 				}
 			];						
 	return columns;
@@ -45,12 +29,12 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 	var datatableConfig = {
 			order :{by:'code', reverse:false},
 			search:{
-				url:jsRoutes.controllers.projects.api.Projects.list()
+				url:jsRoutes.controllers.projectUmbrellas.api.ProjectUmbrellas.list()
 			},
 			show:{
 				active:true,
 				add :function(line){
-					$scope.addTabs({label:line.code,href:jsRoutes.controllers.projects.tpl.Projects.get(line.code).url, remove:true});
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.projectUmbrellas.tpl.ProjectUmbrellas.get(line.code).url, remove:true});
 				}
 			},
 			columns : getColumns()
@@ -70,7 +54,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.projects.tpl.Projects.home("search").url, remove:true});
+			$scope.addTabs({label:Messages('projectUmbrellas.menu.search'), href:jsRoutes.controllers.projectUmbrellas.tpl.ProjectUmbrellas.home("search").url, remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
 	};
@@ -98,9 +82,7 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', 'lists', function
 	};
 	
 	var init = function(){
-		$scope.lists.refresh.projects();
-		$scope.lists.refresh.types({objectTypeCode:"Project"});
-		$scope.lists.refresh.states({objectTypeCode:"Project"});		
+		$scope.lists.refresh.projectUmbrellas();	
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();
