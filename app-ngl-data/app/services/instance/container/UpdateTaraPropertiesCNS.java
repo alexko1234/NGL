@@ -28,10 +28,10 @@ import fr.cea.ig.MongoDBDAO;
 
 public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 
-	public UpdateTaraPropertiesCNS(String name,
+	public UpdateTaraPropertiesCNS(
 			FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration) {
-		super(name, durationFromStart, durationFromNextIteration);
+		super("UpdateTara", durationFromStart, durationFromNextIteration);
 	
 	}
 

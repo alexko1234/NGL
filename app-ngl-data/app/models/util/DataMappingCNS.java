@@ -427,7 +427,7 @@ public class DataMappingCNS {
 		else if(etatTubeLimsCode==8 || etatTubeLimsCode==9){
 			return "IS";
 		}
-		else if(etatTubeLimsCode==7 || etatTubeLimsCode==10 || etatTubeLimsCode==12 || etatTubeLimsCode==13 || etatTubeLimsCode==5){
+		else if(etatTubeLimsCode==7 || etatTubeLimsCode==10 | etatTubeLimsCode==11 || etatTubeLimsCode==12 || etatTubeLimsCode==13 || etatTubeLimsCode==5){
 			return "UA";
 		}
 		

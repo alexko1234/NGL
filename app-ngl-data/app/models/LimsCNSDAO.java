@@ -62,7 +62,7 @@ import fr.cea.ig.MongoDBDAO;
 @Repository
 public class LimsCNSDAO{
 
-	private JdbcTemplate jdbcTemplate;
+	public JdbcTemplate jdbcTemplate;
 
 	public static final String LIMS_CODE="limsCode";
 	private static final String SAMPLE_ADPATER="isAdapters";
@@ -325,7 +325,7 @@ public class LimsCNSDAO{
 			public Content mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Content sampleUsed = new Content(rs.getString("sampleCode"),null,null);
-				
+
 				// Todo add properties from ExperimentType
 				sampleUsed.properties=new HashMap<String, PropertyValue>();
 				sampleUsed.properties.put("percentPerLane", new PropertySingleValue(rs.getFloat("percentPerLane")));
@@ -571,6 +571,28 @@ public class LimsCNSDAO{
 
 		}
 		contextError.removeKeyFromRootKeyName("updateRunLims");
+
+	}
+
+
+	public void updateReadSetLims(ReadSet readSet, boolean inNGL,
+			ContextValidation contextError)throws SQLException {
+
+		String rootKeyName="updateReadSetLims.readSet["+readSet.code+"]";
+		contextError.addKeyToRootKeyName(rootKeyName);
+
+		try{
+			String sql="pm_LotsequenceInNGL @lseqnom=?, @InNGL=?";
+			Logger.debug(sql+readSet.code);
+			int intInNGL = (inNGL) ? 1 : 0;
+			this.jdbcTemplate.update(sql, readSet.code,intInNGL);
+
+		} catch(DataAccessException e){
+			contextError.addErrors("",e.getMessage(), readSet.code);
+		}
+
+		contextError.removeKeyFromRootKeyName(rootKeyName);
+
 
 	}
 

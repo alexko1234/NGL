@@ -23,8 +23,11 @@ GET		/api/description/processes				controllers.description.processes.Processes.s
 GET		/api/description/runs					controllers.description.runs.Runs.save()
 GET		/api/description/treatments				controllers.description.runs.Treatments.save()
 
-GET		/migration								controllers.migration.MigrationContainer.migration()
-GET		/migrationcontent							controllers.migration.MigrationContent.migration()
+GET		/migrationcontent						controllers.migration.MigrationContent.migration()
+GET		/migrationstate						    controllers.migration.MigrationStateContainer.migration()
+GET		/migration						    	controllers.migration.MigrationReadSetFileCNS.migration()
+
+#GET 	/update/readsetfile/:code				controllers.migration.MigrationReadSetFileCNS.updateFileReadSet(code: java.lang.String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               			controllers.Assets.at(path="/public", file)

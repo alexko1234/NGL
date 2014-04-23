@@ -121,7 +121,7 @@ public class ExperimentService {
 		l.add(newExperimentType("Void Opgen Illumina","void-opgen-depot",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
 		//Prepaflowcell : to finish
-		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell", ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,  getProtocols("prepfc_cbot_ptr_sox139_1"), null, "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell", ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,  getProtocols("prepfc_cbot_ptr_sox139_1"), getInstrumentUsedTypes("cBot-interne","cBot"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		//Depot solexa
 		l.add(newExperimentType("Depot Illumina", "illumina-depot"
