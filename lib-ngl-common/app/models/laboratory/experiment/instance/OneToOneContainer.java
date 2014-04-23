@@ -72,7 +72,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 		ContextValidation contextValidation = new ContextValidation();
 
-		if(outputContainerUsed.code!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class, this.outputContainerUsed.code)){
+		if(outputContainerUsed!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class, this.outputContainerUsed.code)){
 			// ContainerSupport
 			ContainerSupport support=ContainerSupportHelper.createSupport(this.outputContainerUsed.locationOnContainerSupport.code
 					,this.outputContainerUsed.locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);

@@ -14,6 +14,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.valuation.instance.ValuationCriteria;
@@ -454,7 +455,7 @@ public class CommonValidationHelper {
 	
 	public static void validationContainerSupportCode (String containerSupportCode, ContextValidation contextValidation) {		
 		if (ValidationHelper.required(contextValidation, containerSupportCode, "containerSupportCode")) {
-			if (! MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.is("support.code", containerSupportCode))) {
+			if (! MongoDBDAO.checkObjectExist(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,  DBQuery.is("code", containerSupportCode))) {
 				contextValidation.addErrors("containerSupportCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, containerSupportCode);
 			}
 		}		 

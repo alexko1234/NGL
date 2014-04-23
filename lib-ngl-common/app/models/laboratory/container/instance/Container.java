@@ -129,7 +129,10 @@ public class Container extends DBObject implements IValidation {
 	
 	@JsonIgnore
 	public List<Process> getCurrentProcesses() {
-		return MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code",inputProcessCodes)).toList();
+		List<Process> processes=new ArrayList<Process>();
+		processes= MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code",inputProcessCodes)).toList();
+		return processes;
+		
 	}
 
 		
