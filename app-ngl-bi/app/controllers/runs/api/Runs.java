@@ -175,6 +175,10 @@ public class Runs extends RunsController {
 					DBQuery.in("lanes.valuation.resolutionCodes", form.resolutionCodes)));			
 		}
 		
+		if(null != form.valuationUser){
+			queries.add(DBQuery.is("valuation.user", form.valuationUser));
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}

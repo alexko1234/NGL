@@ -147,6 +147,10 @@ public class ReadSets extends ReadSetsController{
 			queries.add(DBQuery.in("bioinformaticValuation.resolutionCodes", form.bioinformaticResolutionCodes));
 		}
 		
+		if(null != form.productionValuationUser){
+			queries.add(DBQuery.is("bioinformaticValuation.user", form.productionValuationUser));
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}

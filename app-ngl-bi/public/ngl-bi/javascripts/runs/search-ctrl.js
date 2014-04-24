@@ -38,7 +38,7 @@ var columns = [
 					render:'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in listsTable.getResolutions()" ng-edit="false"></div>',
 					type :"text",
 					hide:true
-				}
+				} 
 			];						
 	return columns;
 }

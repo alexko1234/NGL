@@ -28,6 +28,8 @@ public class RunsSearchForm extends ListForm {
     public Date fromDate;
     public Date toDate;
     
+    public String valuationUser;
+    
     public Boolean keep;
     
     public List<String> instrumentCodes;

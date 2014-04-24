@@ -44,9 +44,13 @@
 		@formGroup{					
 			<div class="form-control" bt-select ng-model="form.bioinformaticValidCode" placeholder="@Messages("search.placeholder.bioinformaticValid")" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
 		}
+		
 		@formGroup{	
-			<div  class="form-control" bt-select ng-model="form.bioinformaticResolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.bioinformaticResolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()"></div>														
-		}		
+			<input type="text" class="form-control" ng-model="form.productionValuationUser" placeholder='@Messages("search.placeholder.valuationReadSetUser")'>
+		}
+		
+		
+				
 	}
 	@columnSearchForm{
 		@formGroup{

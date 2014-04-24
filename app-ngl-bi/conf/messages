@@ -69,6 +69,8 @@ search.placeholder.bioinformaticResolutions = Sélect. des resol. bioinfo.
 search.placeholder.runResolutions = Sélect. des resol. de run
 search.placeholder.laneResolutions = Sélect. des resol. de lane
 search.placeholder.resolutions = Sélect. des resol. de run / lane
+search.placeholder.valuationRunUser = Run évalué par : 
+search.placeholder.valuationReadSetUser = ReadSet évalué par : 
 
 button.search = Rechercher
 button.reset = Réinitialiser
