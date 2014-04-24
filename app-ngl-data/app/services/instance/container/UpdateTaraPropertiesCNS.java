@@ -56,9 +56,7 @@ public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 	
 				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("properties.limsCode.value",limsCode)).toList();
 	
-				if(samples.size()!=1 ) {
-					contextError.addErrors("sample."+LimsCNSDAO.LIMS_CODE,"error.noObject",limsCode);
-				}else {
+				if(samples.size()==1 ){
 					Sample sample =samples.get(0);
 	
 					Boolean adaptater;
