@@ -93,8 +93,8 @@
 				@column1(){
 					<div ng-switch on="isEditMode()">
 						<div ng-switch-when="true">
-							<input type="button" ng-click="addItem()" value=">>" />&nbsp; 
-							<input type="button" ng-click="removeItem()" value="<<" />&nbsp;
+							<button type="button" class="btn btn-default btn-block" ng-click="addItem()"><i class="fa fa-forward"></i></button> 
+							<button type="button" class="btn btn-default btn-block" ng-click="removeItem()"><i class="fa fa-backward"></i></button>
 						</div>
 					</div>
 				}
