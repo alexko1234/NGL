@@ -154,8 +154,7 @@ public class MigrationReadSetFileCNS  extends CommonController {
 
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class
 						, DBQuery.is("code",run.runCode)
-						,DBUpdate.set("valuation",run.valuationRun)
-							.set("state.code",run.stateCode));
+						,DBUpdate.set("valuation",run.valuationRun));
 				i=1;
 			}
 
