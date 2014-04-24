@@ -92,11 +92,11 @@ public class DataMappingCNS {
 			return "IW-QC";
 		} else if(state.equals("En_traitement")){
 			return "IP-QC";
-		} else if (state.equals("Traite") && validation==TBoolean.UNSET){
-			return "IW-QC";
-		} else if (state.equals("Traite") && validation==TBoolean.TRUE){
+		} else if (state.equals("Traite") && validation.equals(TBoolean.UNSET)){
+			return "IW-V";
+		} else if (state.equals("Traite") && validation.equals(TBoolean.TRUE)){
 			return "A";
-		} else if (state.equals("Traite") && validation==TBoolean.FALSE){
+		} else if (state.equals("Traite") && validation.equals(TBoolean.FALSE)){
 			return "UA";
 		} else if(state.equals("Non_traite") || state.equals("Sans_sequence") || state.equals("Indefini")){
 			return "UA";

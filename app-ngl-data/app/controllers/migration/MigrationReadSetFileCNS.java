@@ -7,10 +7,10 @@ import java.util.List;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
-import models.laboratory.container.instance.Container;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.util.DataMappingCNS;
+import models.util.Workflows;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBUpdate;
@@ -73,7 +73,7 @@ public class MigrationReadSetFileCNS  extends CommonController {
 	public static Result migration(){
 
 		ContextValidation ctxVal=new ContextValidation();
-		List<Container> containersCollBck = MongoDBDAO.find(RUN_COLL_NAME_BCK, Container.class).toList();
+		List<Run> containersCollBck = MongoDBDAO.find(RUN_COLL_NAME_BCK, Run.class).toList();
 		if(containersCollBck.size() == 0){
 
 			Logger.info(">>>>>>>>>>> Update Run/Lane/ReadSet/File starts");
@@ -87,14 +87,14 @@ public class MigrationReadSetFileCNS  extends CommonController {
 			}
 
 			Logger.info(">>>>>>>>>>> Update Run/Lane/ReadSet/File finish");
-		
+			if(!ctxVal.hasErrors()){
+				return ok("Update Run/Piste/ReadSet/Files ok");
+			}else {
+				return badRequest(ctxVal.errors.toString());
+			}
 		}
-		
-		if(ctxVal.hasErrors())
-		{	
-			return badRequest(ctxVal.errors.toString());
-		}else{
-			return ok("Update Run/Piste/ReadSet/Files ok");
+		else {
+			return badRequest("Migration deja faite !");
 		}
 	}
 
@@ -149,18 +149,20 @@ public class MigrationReadSetFileCNS  extends CommonController {
 		});
 
 		int i=0;
-		for(RunPisteValuation run:results){
+		for(RunPisteValuation runPiste:results){
 			if(i==0){
 
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class
-						, DBQuery.is("code",run.runCode)
-						,DBUpdate.set("valuation",run.valuationRun));
+						, DBQuery.is("code",runPiste.runCode)
+						,DBUpdate.set("valuation",runPiste.valuationRun));
+				Run run =MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,runPiste.runCode);
+				Workflows.nextRunState(contextValidation, run);
 				i=1;
 			}
 
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-					DBQuery.is("code",run.runCode).is("lanes.number", run.laneNumero)
-					, DBUpdate.set("lanes.$.valuation",run.valudationLane));			
+					DBQuery.is("code",runPiste.runCode).is("lanes.number", runPiste.laneNumero)
+					, DBUpdate.set("lanes.$.valuation",runPiste.valudationLane));			
 		}
 	}
 

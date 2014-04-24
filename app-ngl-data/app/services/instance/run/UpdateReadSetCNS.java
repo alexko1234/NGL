@@ -1,6 +1,7 @@
 package services.instance.run;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import models.LimsCNSDAO;
@@ -46,7 +47,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 				updateReadSet(newReadSet, contextError);
 				updateFiles(newReadSet,contextError);		
 			}else {
-				contextError.addErrors( "code", "error.codeNotExist");
+				contextError.addErrors( "code", "error.codeNotExist",newReadSet.code);
 			}
 			
 			//limsServices.updateReadSetLims(newReadSet, true, contextError);
@@ -71,8 +72,8 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 								.set("archiveDate",newReadSet.archiveDate)
 									.set("archiveId", newReadSet.archiveId)
 									  .set("state",newReadSet.state)
-									  	.set("traceInformation.modifyDate", newReadSet.traceInformation.modifyDate)
-									  		.set("traceInformation.modifyUser", newReadSet.traceInformation.modifyUser));
+									  	.set("traceInformation.modifyDate", new Date())
+									  		.set("traceInformation.modifyUser", "lims"));
 		
 	}
 

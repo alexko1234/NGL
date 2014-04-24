@@ -510,7 +510,7 @@ public class LimsCNSDAO{
 				readSet.runTypeCode=run.typeCode;
 				readSet.sampleCode=rs.getString("sampleCode");
 				readSet.state=new State();
-				readSet.state.code=DataMappingCNS.getStateReadSetFromLims(rs.getString("state"),TBoolean.valueOf(rs.getString("validationProduction")));
+				readSet.state.code=DataMappingCNS.getStateReadSetFromLims(rs.getString("state"),TBoolean.valueOf(rs.getString("validationBioinformatic")));
 				readSet.state.date= new Date();
 				readSet.state.user="lims";
 
