@@ -1,20 +1,16 @@
 package lims.cns.services;
 
-import java.util.Arrays;
-import java.util.Collections;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.list.TreeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import play.Logger;
 import play.Logger.ALogger;
-
-
 
 import lims.cns.dao.LimsAbandonDAO;
 import lims.models.experiment.ContainerSupport;
@@ -27,6 +23,8 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+
+
 @Service
 public class LimsRunServices implements ILimsRunServices{
 

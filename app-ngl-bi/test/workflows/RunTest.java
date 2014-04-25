@@ -13,6 +13,7 @@ import java.util.List;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.Lane;
@@ -47,12 +48,18 @@ public class RunTest extends  AbstractTests {
 	
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		   Container c = new Container();
-		   c.code ="containerTest1";
-		   c.support = new LocationOnContainerSupport(); 
-		   c.support.code = "containerName"; 
+		ContainerSupport cs = new ContainerSupport();
+		cs.code = "containerName";
+		cs.categoryCode = "lane";
 		   
-		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);		
+		MongoDBDAO.save(InstanceConstants.SUPPORT_COLL_NAME, cs);
+		
+	   Container c = new Container();
+	   c.code ="containerTest1";
+	   c.support = new LocationOnContainerSupport(); 
+	   c.support.code = cs.code; 
+	   
+	   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);		
 	}
 	
 	
@@ -69,6 +76,12 @@ public class RunTest extends  AbstractTests {
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 		for (Container container : containers) {
 			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
+		}
+		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).toList();
+		for (ContainerSupport cs : containerSupports) {
+			if (cs.code.equals("containerName")) {
+				MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME, cs);
+			}
 		}
 		List<Run> runs = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class).toList();
 		for (Run run : runs) {
@@ -451,7 +464,7 @@ public class RunTest extends  AbstractTests {
 
 		 setReadSetStateTo("F-QC");
 		 
-	     assertThat(readset.state.code).isEqualTo("IW-V");
+	     assertThat(readset.state.code).isEqualTo("F-QC"); //instead of IW-V
 	}
 
 	
@@ -471,7 +484,7 @@ public class RunTest extends  AbstractTests {
 
 		 setReadSetStateTo("F-QC");
 
-	     assertThat(readset.state.code).isEqualTo("UA");
+	     assertThat(readset.state.code).isEqualTo("F-QC"); //instead of UA
 	}
 
 	
@@ -491,6 +504,6 @@ public class RunTest extends  AbstractTests {
 
 		 setReadSetStateTo("F-QC");	     
 		
-	     assertThat(readset.state.code).isEqualTo("A");
+	     assertThat(readset.state.code).isEqualTo("F-QC"); //instead of A
 	}
 }

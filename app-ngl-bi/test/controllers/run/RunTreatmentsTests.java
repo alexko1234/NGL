@@ -17,6 +17,7 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.Run;
@@ -40,24 +41,39 @@ public class RunTreatmentsTests extends AbstractTests {
 	
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		
+			ContainerSupport cs = new ContainerSupport();
+			cs.code = "containerName";
+			cs.categoryCode = "lane";
+			   
+			MongoDBDAO.save(InstanceConstants.SUPPORT_COLL_NAME, cs);
+		
 		   Container c = new Container();
 		   c.code ="containerTest1";
 		   c.support = new LocationOnContainerSupport(); 
-		   c.support.code = "containerName"; 
+		   c.support.code = cs.code; 
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
+		   
+
 	}
 	
 	
 	@AfterClass
 	public static void deleteData(){
-		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
-		for (Sample sample : samples) {
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
+		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).toList();
+		for (ContainerSupport cs : containerSupports) {
+			if (cs.code.equals("containerName")) {
+				MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME, cs);
+			}
 		}
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 		for (Container container : containers) {
 			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
+		}
+		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+		for (Sample sample : samples) {
+			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
 		}
 	}
 	

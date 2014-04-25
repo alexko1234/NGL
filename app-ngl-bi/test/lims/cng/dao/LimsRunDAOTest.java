@@ -15,11 +15,12 @@ public class LimsRunDAOTest extends AbstractTests {
 
 	@Test
 	 public void getInstruments() {
-		LimsRunServices  limsRunServices = Spring.getBeanOfType(LimsRunServices.class);
-		Assert.assertNotNull(limsRunServices);
-		List<Instrument> instruments  = limsRunServices.getInstruments();
-		Assert.assertTrue(instruments.size() > 0);
-		
+		if (play.Play.application().configuration().getString("institute").equals("CNG")) {
+			LimsRunServices  limsRunServices = Spring.getBeanOfType(LimsRunServices.class);
+			Assert.assertNotNull(limsRunServices);
+			List<Instrument> instruments  = limsRunServices.getInstruments();
+			Assert.assertTrue(instruments.size() > 0);
+		}
 	}
 
 }

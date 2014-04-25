@@ -66,6 +66,8 @@ public abstract class AbstractTests {
 		config.put("db.lims.user", "ngl_bi_dev");
 		config.put("db.lims.password", "toto");
 		config.put("db.lims.jndiName", "lims");
+
+		
 		
 		config.put("db.limscns.driver", "net.sourceforge.jtds.jdbc.Driver");
 		config.put("db.limscns.url", "jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims");
@@ -86,7 +88,7 @@ public abstract class AbstractTests {
 	    config.put("auth.method", "cas");
 	    config.put("auth.application", "ngl-bi");
 	    
-	    config.put("institute", "CNS");
+	    config.put("institute", "CNG");
 	    config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
 	    config.put("rules.key", "nglBI");
 	    config.put("rules.changesets", "rules/cng/changesets/changesets.xml");

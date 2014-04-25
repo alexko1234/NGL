@@ -21,6 +21,7 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.File;
@@ -52,11 +53,19 @@ import static utils.RunMockHelper.*;
 public class RunValidationTest extends AbstractTests {
 	
 	static Container c;
+	static ContainerSupport cs;
 	static Sample s;
 	static Project p;
 	
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException { 
+
+	   		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).toList();
+			for (ContainerSupport cs : containerSupports) {
+				if (cs.code.equals("containerName")) {
+					MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME, cs);
+				}
+			} 
 		
 	   		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 			for (Container container : containers) {
@@ -64,6 +73,7 @@ public class RunValidationTest extends AbstractTests {
 					MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
 				}
 			}   
+			
 	   		List<Project> projects = MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList();
 			for (Project project : projects) {
 				if (project.code.equals("ProjectCode")) {
@@ -77,14 +87,23 @@ public class RunValidationTest extends AbstractTests {
 					MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
 				}
 			}
+			
+			
+			ContainerSupport cs = new ContainerSupport();
+			cs.code = "containerName";
+			cs.categoryCode = "lane";
+			   
+			MongoDBDAO.save(InstanceConstants.SUPPORT_COLL_NAME, cs);
+			   
 				
 		   Container c = new Container();
-		   c.code ="containerTest1";
-		   c.support = new LocationOnContainerSupport(); 
-		   c.support.code = "containerName"; 
+		   c.code ="containerTest1"; 
+		   c.support = new LocationOnContainerSupport();
+		   c.support.code = cs.code; 
 		   
 		   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);
 		   
+
 		   Project p = new Project();
 		   p.code = "ProjectCode";
 		   p.typeCode = "default-project";
@@ -109,6 +128,12 @@ public class RunValidationTest extends AbstractTests {
 	
 	@AfterClass
 	public static void deleteData(){
+		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).toList();
+		for (ContainerSupport cs : containerSupports) {
+			if (cs.code.equals("containerName")) {
+				MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME, cs);
+			}
+		}
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 		for (Container container : containers) {
 			if (container.support.code.equals("containerName")) {
@@ -1121,7 +1146,7 @@ public class RunValidationTest extends AbstractTests {
 		run.typeCode = "RHS2000";
 		
 		Valuation v = new Valuation();
-		v.criteriaCode = "criteria-low";
+		//v.criteriaCode = "criteria-low";
 		v.date = new Date();
 		v.resolutionCodes = null;
 		v.user = "dnoisett";
