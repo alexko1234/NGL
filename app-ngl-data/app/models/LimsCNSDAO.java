@@ -575,28 +575,6 @@ public class LimsCNSDAO{
 	}
 
 
-	public void updateReadSetLims(ReadSet readSet, boolean inNGL,
-			ContextValidation contextError)throws SQLException {
-
-		String rootKeyName="updateReadSetLims.readSet["+readSet.code+"]";
-		contextError.addKeyToRootKeyName(rootKeyName);
-
-		try{
-			String sql="pm_LotsequenceInNGL @lseqnom=?, @InNGL=?";
-			Logger.debug(sql+readSet.code);
-			int intInNGL = (inNGL) ? 1 : 0;
-			this.jdbcTemplate.update(sql, readSet.code,intInNGL);
-
-		} catch(DataAccessException e){
-			contextError.addErrors("",e.getMessage(), readSet.code);
-		}
-
-		contextError.removeKeyFromRootKeyName(rootKeyName);
-
-
-	}
-
-
 	public List<File> findFileToCreateFromReadSet(final ReadSet readSet,final ContextValidation contextError)throws SQLException {
 
 		List<File> results = this.jdbcTemplate.query("pl_FileUnReadSetToNGL @readSetCode=?",new Object[]{readSet.code} 

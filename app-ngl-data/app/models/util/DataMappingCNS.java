@@ -413,7 +413,9 @@ public class DataMappingCNS {
 			return "IW-E";
 		}
 		else if(etatTubeLimsCode==1){
-			return "A-QC";
+			return "IW-V";
+			// l'etat n'existe pas encore en prod
+			//return "A-QC";
 		}
 		else if(etatTubeLimsCode==3){
 			return "IW-V";
