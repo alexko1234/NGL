@@ -61,19 +61,19 @@ public abstract class AbstractTests {
 		config.put("db.default.logStatements", "true");
 		config.put("db.default.jndiName", "ngl");
 		
-		config.put("db.lims.driver", "org.postgresql.Driver");
-		config.put("db.lims.url", "jdbc:postgresql://db.cng.fr/solexadev");
-		config.put("db.lims.user", "ngl_bi_dev");
-		config.put("db.lims.password", "toto");
-		config.put("db.lims.jndiName", "lims");
+		//config.put("db.lims.driver", "org.postgresql.Driver");
+		//config.put("db.lims.url", "jdbc:postgresql://db.cng.fr/solexadev");
+		//config.put("db.lims.user", "ngl_bi_dev");
+		//config.put("db.lims.password", "toto");
+		//config.put("db.lims.jndiName", "lims");
 
 		
 		
-		config.put("db.limscns.driver", "net.sourceforge.jtds.jdbc.Driver");
-		config.put("db.limscns.url", "jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims");
-		config.put("db.limscns.user", "www");
-		config.put("db.limscns.password", "wawiwo");
-		config.put("db.limscns.jndiName", "limscns");
+		config.put("db.lims.driver", "net.sourceforge.jtds.jdbc.Driver");
+		config.put("db.lims.url", "jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims");
+		config.put("db.lims.user", "www");
+		config.put("db.lims.password", "wawiwo");
+		config.put("db.lims.jndiName", "lims");
 		
 		
 		//config.put("asset.url","http://192.168.243.231:9001");
@@ -88,7 +88,7 @@ public abstract class AbstractTests {
 	    config.put("auth.method", "cas");
 	    config.put("auth.application", "ngl-bi");
 	    
-	    config.put("institute", "CNG");
+	    config.put("institute", "CNS");
 	    config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
 	    config.put("rules.key", "nglBI");
 	    config.put("rules.changesets", "rules/cng/changesets/changesets.xml");
