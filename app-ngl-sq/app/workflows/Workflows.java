@@ -299,7 +299,7 @@ public class Workflows {
 	public static void nextContainerState(Process process,
 			ContextValidation contextValidation) {
 		State nextState=new State();
-		if(process.state.code != null && process.state.code.equals("N")){
+		if(process.state != null && process.state.code.equals("N")){
 			nextState.code="A";
 		}
 
