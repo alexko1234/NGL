@@ -47,8 +47,6 @@ public class ProjectUmbrella extends DBObject implements IValidation {
 		ProjectValidationHelper.validateId(this, contextValidation);
 		ProjectValidationHelper.validateCode(this, InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, contextValidation);
 		ProjectValidationHelper.validateTraceInformation(traceInformation, contextValidation);
-		
-		ProjectValidationHelper.synchronizeProjectLists(this, contextValidation);
 
 	}
 	

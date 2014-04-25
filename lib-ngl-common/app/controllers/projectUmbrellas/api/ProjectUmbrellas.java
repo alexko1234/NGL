@@ -7,10 +7,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.project.instance.Project;
 import models.laboratory.project.instance.ProjectUmbrella;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import net.vz.mongodb.jackson.DBQuery;
+import net.vz.mongodb.jackson.DBUpdate;
 import net.vz.mongodb.jackson.DBQuery.Query;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -124,6 +126,8 @@ public class ProjectUmbrellas extends ProjectsController {
 		} else {
 			return badRequest("use PUT method to update the project");
 		}
+		
+		synchronizeProjectUmbrellaCodes(projectInput);
 
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
 		ctxVal.setCreationMode();
@@ -156,6 +160,8 @@ public class ProjectUmbrellas extends ProjectsController {
 				}else{
 					Logger.error("traceInformation is null !!");
 				}
+				
+				synchronizeProjectUmbrellaCodes(projectInput);
 				
 				ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 	
 				ctxVal.setUpdateMode();
@@ -197,7 +203,17 @@ public class ProjectUmbrellas extends ProjectsController {
 		MongoDBDAO.delete(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, project);	
 		return ok();
 	}
-
+	
+	public static void synchronizeProjectUmbrellaCodes(ProjectUmbrella projectUmbrella) {
+		for (String code : projectUmbrella.projectCodes) {
+			if (!MongoDBDAO.checkObjectExist(InstanceConstants.PROJECT_COLL_NAME, Project.class, 
+					DBQuery.and(DBQuery.is("code", code), DBQuery.in("projectUmbrellaCodes", projectUmbrella.code)))) {
+				//add the value in the other list : the child project needs to be linked to his father! 
+				MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", code), 
+						DBUpdate.push("projectUmbrellaCodes", projectUmbrella.code));
+			}
+		}
+	}
 
 }
 
