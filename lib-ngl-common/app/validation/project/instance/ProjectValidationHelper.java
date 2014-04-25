@@ -40,7 +40,6 @@ public class ProjectValidationHelper extends CommonValidationHelper {
 	
 	}
 	
-	
 	public static void synchronizeProjectLists(Project project, ContextValidation contextValidation) {
 		for (String code : project.projectUmbrellaCodes) {
 			if (!MongoDBDAO.checkObjectExist(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, ProjectUmbrella.class, 

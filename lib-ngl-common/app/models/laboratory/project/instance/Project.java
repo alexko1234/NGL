@@ -76,7 +76,7 @@ public class Project extends DBObject implements IValidation{
 		//ProjectValidationHelper.validateStateCode(typeCode,stateCode, contextValidation);
 		ProjectValidationHelper.validateProjectType(typeCode,properties, contextValidation);
 		
-		ProjectValidationHelper.synchronizeProjectLists(this, contextValidation);
+		//ProjectValidationHelper.synchronizeProjectLists(this, contextValidation);
 
 	}
 
