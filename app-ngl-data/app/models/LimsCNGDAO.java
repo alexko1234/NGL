@@ -179,7 +179,7 @@ public class LimsCNGDAO {
 			sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 
 			sample.code=rs.getString("code");
-			//Logger.debug("Sample code :"+sample.code);
+			Logger.debug("Sample code :"+sample.code);
 			
 			String sampleTypeCode=SAMPLE_TYPE_CODE_DEFAULT;
 			
@@ -315,6 +315,7 @@ public class LimsCNGDAO {
 			});
 		}
 		else { // mass loading
+			Logger.debug("call v_sample_updated_tongl");
 			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl order by code, project, comments",new Object[]{}
 			,new RowMapper<Sample>() {
 				@SuppressWarnings("rawtypes")
@@ -373,6 +374,7 @@ public class LimsCNGDAO {
 			});
 		}
 		else { // mass loading
+			Logger.debug("call v_sample_tongl");
 			results = this.jdbcTemplate.query("select * from v_sample_tongl order by code, project, comments",new Object[]{}
 			,new RowMapper<Sample>() {
 				@SuppressWarnings("rawtypes")
@@ -405,7 +407,7 @@ public class LimsCNGDAO {
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 		
 		container.code=rs.getString("code");
-		//Logger.debug("Container code :"+container.code);
+		Logger.debug("Container code :"+container.code);
 		
 		container.categoryCode=CONTAINER_CATEGORY_CODE;
 		
@@ -594,7 +596,7 @@ public class LimsCNGDAO {
 	public List<Container> findContainerToCreate(final ContextValidation contextError, String containerCode) throws DAOException {
 
 		List<Container> results = null;
-		if (containerCode != null) 
+		if (containerCode != null) {
 			results = this.jdbcTemplate.query("select * from v_flowcell_tongl where code = ? and isavailable = true order by code, project, code_sample, tag", new Object[]{containerCode} 
 			,new RowMapper<Container>() {
 				@SuppressWarnings("rawtypes")
@@ -607,7 +609,9 @@ public class LimsCNGDAO {
 					return c;
 				}
 			});
-		else
+		}
+		else {
+			Logger.debug("call v_flowcell_tongl ");
 			results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
 			,new RowMapper<Container>() {
 				@SuppressWarnings("rawtypes")
@@ -619,7 +623,8 @@ public class LimsCNGDAO {
 					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr); 
 					return c;
 				}
-			}); 		
+			});
+		}
 		return demultiplexContainer(results);			
 	}
 	
@@ -646,7 +651,7 @@ public class LimsCNGDAO {
 	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCode) throws DAOException {
 
 		List<Container> results = null;
-		if (containerCode != null) 
+		if (containerCode != null) {
 			results = this.jdbcTemplate.query("select * from v_flowcell_updated_tongl where code = ? and isavailable = true order by code, project, code_sample, tag", new Object[]{containerCode} 
 			,new RowMapper<Container>() {
 				@SuppressWarnings("rawtypes")
@@ -659,7 +664,9 @@ public class LimsCNGDAO {
 					return c;
 				}
 			});
-		else
+		}
+		else {
+			Logger.debug("call v_flowcell_updated_tongl ");
 			results = this.jdbcTemplate.query("select * from v_flowcell_updated_tongl where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
 			,new RowMapper<Container>() {
 				@SuppressWarnings("rawtypes")
@@ -671,7 +678,8 @@ public class LimsCNGDAO {
 					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr); 
 					return c;
 				}
-			}); 		
+			});
+		}
 		return demultiplexContainer(results);			
 	}
 
@@ -688,12 +696,12 @@ public class LimsCNGDAO {
 		
 		String key, column;
 		if (mode.equals("creation")) {
-			key = "updateImportDate";
+			key = "update_ImportDate";
 			column = "nglimport_date";
 		}
 		else {
-			key = "updateUpdateDate";
-			column = "nglupdate_date";			
+			key = "update_UpdateDate";
+			column = "ngl_update_date";			
 		}
 		contextError.addKeyToRootKeyName(key);
 		
@@ -718,18 +726,26 @@ public class LimsCNGDAO {
 		
 		String key, column;
 		if (mode.equals("creation")) {
-			key = "updateImportDate";
+			key = "update_ImportDate";
 			column = "nglimport_date";
 		}
 		else {
-			key = "updateUpdateDate";
-			column = "nglupdate_date";			
+			key = "update_UpdateDate";
+			column = "ngl_update_date";			
 		}
 		
 		contextError.addKeyToRootKeyName(key);
 		
 		String sql = "UPDATE t_sample SET " + column + " = ? WHERE stock_barcode = ?";
 		List<Object[]> parameters = new ArrayList<Object[]>();
+		for (Sample sample : samples) {
+	        parameters.add(new Object[] {new Date(), sample.code}); 
+		}
+		this.jdbcTemplate.batchUpdate(sql, parameters);  
+		
+		//new
+		sql = "UPDATE t_individual SET " + column + " = ? WHERE id in (select individual_id from t_sample where stock_barcode = ?)";
+		parameters = new ArrayList<Object[]>();
 		for (Sample sample : samples) {
 	        parameters.add(new Object[] {new Date(), sample.code}); 
 		}
@@ -749,12 +765,12 @@ public class LimsCNGDAO {
 
 		String key, column;
 		if (mode.equals("creation")) {
-			key = "updateImportDate";
+			key = "update_ImportDate";
 			column = "nglimport_date";
 		}
 		else {
-			key = "updateUpdateDate";
-			column = "nglupdate_date";			
+			key = "update_UpdateDate";
+			column = "ngl_update_date";			
 		}
 		
 		contextError.addKeyToRootKeyName(key);
@@ -765,6 +781,15 @@ public class LimsCNGDAO {
 	        parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
 		}
 		this.jdbcTemplate.batchUpdate(sql, parameters);  
+		
+		//new 
+		sql = "UPDATE t_sample_lane SET " + column + " = ? WHERE lane_id = ?";
+		parameters = new ArrayList<Object[]>();
+		for (Container container : containers) {
+	        parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
+		}
+		this.jdbcTemplate.batchUpdate(sql, parameters);   
+		
 		
 		contextError.removeKeyFromRootKeyName(key);
 	}

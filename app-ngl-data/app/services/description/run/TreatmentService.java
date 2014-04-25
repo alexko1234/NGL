@@ -75,7 +75,7 @@ public class TreatmentService {
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), getTreatmentTypeContext("single", Boolean.FALSE)), DescriptionFactory.getInstitutes(Institute.CODE.CNS), "37,50"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationColi,contaminationVector,contaminationPhiX", getContaminationTreatmentPropertyDefinitions(), 
-				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("pairs", Boolean.FALSE), getTreatmentTypeContext("single", Boolean.FALSE)), DescriptionFactory.getInstitutes(Institute.CODE.CNS), "35,36,60"));
+				Arrays.asList(getTreatmentTypeContext("read1",Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), getTreatmentTypeContext("single", Boolean.FALSE)), DescriptionFactory.getInstitutes(Institute.CODE.CNS), "35,36,60"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", getTaxonomyTreatmentPropertyDefinitions(), 
 				getTreatmentTypeContexts("read1"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), "70"));
