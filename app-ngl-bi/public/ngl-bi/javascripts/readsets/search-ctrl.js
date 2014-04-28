@@ -416,19 +416,16 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$http', 'da
 					break;
 				}
 			}
-			
-			for(var i = 0; i  < property.expressions.length; i++){
-				var expression = property.expressions[i];
-				if($parse(expression.rule)({pValue : $parse(propertyName)(value)})){
-					return expression.result;
+			if(property){
+				for(var i = 0; i  < property.expressions.length; i++){
+					var expression = property.expressions[i];
+					if($parse(expression.rule)({context:value, pValue : $parse(propertyName)(value)})){
+						return expression.result;
+					}
 				}
-			}
-			
-			
-		}else{
-			return undefined;
+			}					
 		}
-		
+		return undefined;			
 	};
 	
 	
