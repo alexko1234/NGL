@@ -201,7 +201,7 @@ public class RunsTests extends AbstractTests {
 		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(r)));
         assertThat(status(result)).isEqualTo(OK);
         
-        // update readSetCodes
+        // update masterReadSetCodes
 		List<String> a = new ArrayList<String>();
 		a.add(r.code);
 		a.add(r.code);

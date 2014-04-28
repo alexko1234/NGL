@@ -77,6 +77,23 @@ function getStateColumns(columns){
 			    	choiceInList:true,
 			    	listStyle:'bt-select',
 			    	possibleValues:'listsTable.getStates()'});
+	
+	columns.push({	property:"productionValuation.valid",
+					filter:"codes:'valuation'",
+					header: "readsets.productionValuation.valid",
+					type :"text",
+			    	order:true    	
+	});
+	
+	
+	columns.push({	property:"bioinformaticValuation.valid",
+					filter:"codes:'valuation'",
+					header: "readsets.bioinformaticValuation.valid",
+					type :"text",
+					order:true
+	});
+
+	
 	return columns;
 };
 function getValuationColumns(columns){	
@@ -184,7 +201,7 @@ function updateForm(form, page){
 	if (page && page.indexOf('valuation') == 0) {
 		if(form.stateCodes === undefined || form.stateCodes.length === 0) {
 			//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
-			form.stateCodes = ["IW-V","IP-V"];
+			form.stateCodes = ["IW-VQC"];
 		}		
 	}
 	form.excludes = ["files"];
@@ -233,7 +250,7 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', '$http
 			//If we want to show the 2 states used to filter the data...
 			//$scope.form.stateCodes = ["IW-V","IP-V"];
 			//Reduce data to the set of states specific to the valuation
-			$scope.states = [{code:"IW-V",name:Codes("state.IW-V")},{code:"IP-V",name:Codes("state.IP-V")}];
+			$scope.states = [{code:"IW-VQC",name:Codes("state.IW-VQC")}];
 		}
 		
 		$scope.lists.refresh.projects();

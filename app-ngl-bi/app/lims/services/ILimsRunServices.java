@@ -24,6 +24,6 @@ public interface ILimsRunServices {
 
 	void valuationRun(Run run);
 	
-	void valuationReadSet(ReadSet readSet);
+	void valuationReadSet(ReadSet readSet, boolean firstTime);
 	
 }

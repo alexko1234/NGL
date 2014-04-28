@@ -175,8 +175,5 @@ public class Files extends ReadSetsController {
 		return ok();
 	}
 	
-	public static Result workflow(String readsetCode, String fullname, String stateCode){
-		return badRequest("Not implemented");
-	}
 
 }

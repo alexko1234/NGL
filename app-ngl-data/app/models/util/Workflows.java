@@ -1,13 +1,17 @@
 package models.util;
 
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.TransientState;
+import models.laboratory.container.instance.Container;
 import models.laboratory.project.instance.Project;
+import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -25,11 +29,18 @@ import play.libs.Akka;
 import rules.services.RulesActor;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
+import validation.run.instance.AnalysisValidationHelper;
 import validation.run.instance.RunValidationHelper;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 
+
+
+
+import com.mongodb.BasicDBObject;
 import com.typesafe.config.ConfigFactory;
+
+import controllers.CommonController;
 
 import fr.cea.ig.MongoDBDAO;
 
@@ -119,6 +130,8 @@ public class Workflows {
 			ArrayList<Object> facts = new ArrayList<Object>();
 			facts.add(run);		
 			rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("rules.key"),ruleStatRG),null);
+		}else if("F-V".equals(run.state.code)){
+			//Spring.getBeanOfType(ILimsRunServices.class).valuationRun(run);
 		}
 	}
 
@@ -157,15 +170,14 @@ public class Workflows {
 				Logger.error("sampleOnContainer null for "+readSet.code);
 			}
 			
-		}else if("F-VQC".equals(readSet.state.code)){	
-			//synchronize the two valuation
+		}else if("F-VQC".equals(readSet.state.code)){
+			//Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet, true);	
 			if(TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
 				readSet.bioinformaticValuation.valid = readSet.productionValuation.valid;
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 						DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation.valid", readSet.bioinformaticValuation.valid));
 			}
 		} else if("IW-BA".equals(readSet.state.code)){
-			//reinit the bioinformaticValuation
 			readSet.bioinformaticValuation.valid = TBoolean.UNSET;
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 					DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation.valid", readSet.bioinformaticValuation.valid));
@@ -200,7 +212,7 @@ public class Workflows {
 				nextStep.code = "F-VQC";
 			}		
 		}else if("F-VQC".equals(readSet.state.code)){
-			if(isReadSetHasBA(readSet) && TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
+			if(isHasBA(readSet) && TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
 				nextStep.code = "IW-BA";
 			}else{
 				if(TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
@@ -222,23 +234,18 @@ public class Workflows {
 				nextStep.code = "A";
 			}else { //FALSE or UNSET
 				nextStep.code = "UA";
-			}			
+			}
+			//if change valuation when final step
+			//Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet, false);	
 		}
 		setReadSetState(contextValidation, readSet, nextStep);
 	}
 	
-	/**
-	 * BioInformatics analysis depend of the projet and the lib type
-	 * @param readSet
-	 * @return
-	 */
-	private static boolean isReadSetHasBA(ReadSet readSet){
-		
+	
+	private static boolean isHasBA(ReadSet readSet){
 		Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
-		if(null != p && p.bioInfoAnalysis){
-			return readSet.code.matches("^.+_.+F_.+_.+$");
-		}else if( null == p){
-			Logger.error("Project is null for readset = "+readSet.code);
+		if(p.bioInfoAnalysis){
+			return readSet.code.matches("^.+_.+F_.+_.+$"); //TODO matche PE of type F
 		}
 		return false;
 	}
@@ -294,8 +301,70 @@ public class Workflows {
 		return nextState;
 	}
 
-	
-	
-	
+
+	public static void setAnalysisState(ContextValidation contextValidation, Analysis analysis, State nextState) {
+		//on valide l'état			
+		contextValidation.setUpdateMode();
+		AnalysisValidationHelper.validateState(analysis.typeCode, nextState, contextValidation);
+		if(!contextValidation.hasErrors() && !nextState.code.equals(analysis.state.code)){
+			boolean goBack = goBack(analysis.state, nextState);
+			if(goBack)Logger.debug(analysis.code+" : back to the workflow. "+analysis.state.code +" -> "+nextState.code);		
+			
+			analysis.traceInformation = updateTraceInformation(analysis.traceInformation, nextState); 
+			analysis.state = updateHistoricalNextState(analysis.state, nextState);
+			
+			MongoDBDAO.update(InstanceConstants.ANALYSIS_COLL_NAME,  Analysis.class, 
+					DBQuery.is("code", analysis.code),
+					DBUpdate.set("state", analysis.state).set("traceInformation",analysis.traceInformation));
+			
+			applyAnalysisRules(contextValidation, analysis);
+			nextAnalysisState(contextValidation, analysis);
+		}		
+		
+	}
+
+
+	private static void applyAnalysisRules(ContextValidation contextValidation, Analysis analysis) {
+		if("IP-BA".equals(analysis.state.code)){
+			for(String rsCode : analysis.masterReadSetCodes){
+				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode);
+				State nextStep = cloneState(readSet.state);
+				nextStep.code = "IP-BA";
+				setReadSetState(contextValidation, readSet, nextStep);
+			}
+		}else if("F-BA".equals(analysis.state.code)){
+			//update readset if necessary
+			for(String rsCode : analysis.masterReadSetCodes){
+				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode);
+				if(TBoolean.TRUE.equals(analysis.valuation.valid)){
+					readSet.bioinformaticValuation.valid = TBoolean.TRUE;
+					readSet.bioinformaticValuation.date = new Date();
+					readSet.bioinformaticValuation.user = CommonController.getCurrentUser();
+					
+					readSet.traceInformation.modifyDate = new Date();
+					readSet.traceInformation.modifyUser = CommonController.getCurrentUser();
+					
+					
+					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
+							DBQuery.is("code", rsCode), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation).set("traceInformation", readSet.traceInformation));
+				}
+				State nextStep = cloneState(readSet.state);
+				nextStep.code = "F-BA";
+				setReadSetState(contextValidation, readSet, nextStep);				
+			}							
+		}		
+	}
+
+
+	public static void nextAnalysisState(ContextValidation contextValidation, Analysis analysis) {
+		State nextStep = cloneState(analysis.state);
+		if("IP-BA".equals(analysis.state.code)){
+			if(!TBoolean.UNSET.equals(analysis.valuation.valid)){
+				nextStep.code = "F-BA";
+			}			
+		}
+		setAnalysisState(contextValidation, analysis, nextStep);
+		
+	}
 
 }

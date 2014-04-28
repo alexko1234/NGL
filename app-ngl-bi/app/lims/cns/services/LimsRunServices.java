@@ -4,6 +4,8 @@ package lims.cns.services;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.collections.list.TreeList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import play.Logger;
 import play.Logger.ALogger;
 
 import lims.cns.dao.LimsAbandonDAO;
+import lims.models.LotSeqValuation;
 import lims.models.experiment.ContainerSupport;
 import lims.models.experiment.Experiment;
 import lims.models.instrument.Instrument;
@@ -78,9 +81,9 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	@Override
 	public void valuationRun(Run run) {
 		try{
-			dao.updateRunAbandon(run.code, getAbandon(run.valuation), 47);
+			dao.updateRunAbandon(run.code, getAbandon(run.valuation, run.code), 47);
 			for(Lane lane: run.lanes){
-				dao.updatePisteAbandon(run.code, lane.number, getAbandon(lane.valuation), 47);
+				dao.updatePisteAbandon(run.code, lane.number, getAbandon(lane.valuation, run.code), 47);
 			}
 		}catch(Throwable t){
 			//TODO mail to prod ???
@@ -88,21 +91,32 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		}
 	}
 	@Override
-	public void valuationReadSet(ReadSet readSet) {
+	public void valuationReadSet(ReadSet readSet, boolean firstTime) {
 		try{
-			List<TacheHD> taches = dao.listTacheHD(readSet.code);
-			Integer tacheId = null;
-			if(taches.size() > 1){
-				Logger.warn("several tachehd "+readSet.code);
-				logger.error(readSet.code+" : Plusieurs Tache");
-				//TODO mail to prod ???
-			}else if(taches.size() == 1){
-				tacheId = taches.get(0).tacco;
+			
+			if(firstTime){
+				List<TacheHD> taches = dao.listTacheHD(readSet.code);
+				Integer tacheId = null;
+				if(taches.size() > 1){
+					Logger.warn("several tachehd "+readSet.code);
+					logger.error(readSet.code+" : Plusieurs Tache");
+					//TODO mail to prod ???
+				}else if(taches.size() == 1){
+					tacheId = taches.get(0).tacco;
+				}else{
+					Logger.warn("0 tachehd "+readSet.code);
+				}
+				dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), getCR(readSet.productionValuation), tacheId, 55);
+				if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
+					dao.updateLotsequenceAbandonBI(readSet.code, getAbandon(readSet.bioinformaticValuation, readSet.code));
+				}
 			}else{
-				Logger.warn("0 tachehd "+readSet.code);
+				LotSeqValuation lsv = dao.getLotsequenceValuation(readSet.code);
+				dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), getCR(readSet.productionValuation), lsv.tacco, 55);
+				if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
+					dao.updateLotsequenceAbandonBI(readSet.code, getAbandon(readSet.bioinformaticValuation, readSet.code));
+				}
 			}
-			dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation), getCR(readSet.productionValuation), tacheId, 55);
-			dao.updateLotsequenceAbandonBI(readSet.code, getAbandon(readSet.bioinformaticValuation));
 		}catch(Throwable t){
 			//TODO mail to prod ???
 			logger.error(readSet.code+" : "+t.getMessage());
@@ -111,7 +125,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 
 
 	private Integer getCR(Valuation valuation) {
-		List<String> resos = new TreeList();
+		Set<String> resos = new TreeSet<String>();
 		if(null != valuation.resolutionCodes){
 			resos.addAll(valuation.resolutionCodes);
 		}
@@ -119,33 +133,30 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		for(String s : resos){
 			sb.append(s+";");
 		}
-
+		Integer v = null;
 		if(sb.length() > 0){
-			return crmapping.get(sb.toString());
-		}else{
-			return null;
+			v = crmapping.get(sb.toString());			
 		}
-
-
+		return (v != null) ? v : 47;		
 	}
 
-	private Integer getAbandon(Valuation valuation) {
+	private Integer getAbandon(Valuation valuation, String code) {
 		if(TBoolean.FALSE.equals(valuation.valid)){
 			return 1; //abandon=true
 		}else if(TBoolean.TRUE.equals(valuation.valid)){
 			return 0; //abandon = false;
 		}else{
-			throw new RuntimeException("Mise à jour abandon run dans lims mais valuation à UNSET");
+			throw new RuntimeException("Abandon : Mise à jour abandon run ou readset ("+code+") dans lims mais valuation à UNSET");
 		}
 	}
 
-	private Integer getSeqVal(Valuation valuation) {
+	private Integer getSeqVal(Valuation valuation, String code) {
 		if(TBoolean.FALSE.equals(valuation.valid)){
 			return 0; //a abandonner
 		}else if(TBoolean.TRUE.equals(valuation.valid)){
 			return 1; //valide;
 		}else{
-			throw new RuntimeException("Mise à jour abandon run dans lims mais valuation à UNSET");
+			return 2;
 		}
 	}
 

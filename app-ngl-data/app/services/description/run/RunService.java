@@ -8,6 +8,7 @@ import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.ValuationCriteria;
+import models.laboratory.run.description.AnalysisType;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.description.RunCategory;
 import models.laboratory.run.description.RunType;
@@ -23,10 +24,13 @@ public class RunService {
 	
 	public static void main(Map<String, List<ValidationError>> errors)  throws DAOException {
 		DAOHelpers.removeAll(ReadSetType.class, ReadSetType.find);
+		DAOHelpers.removeAll(AnalysisType.class, AnalysisType.find);
+		
 		DAOHelpers.removeAll(RunType.class, RunType.find);
 		DAOHelpers.removeAll(RunCategory.class, RunCategory.find);
 		
 		saveReadSetType(errors);
+		saveAnalysisType(errors);
 		saveRunCategories(errors);
 		saveRunType(errors);
 	}
@@ -37,6 +41,13 @@ public class RunService {
 		l.add(DescriptionFactory.newReadSetType("RSARGUS","RSARGUS",  null, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
 		
 		DAOHelpers.saveModels(ReadSetType.class, l, errors);
+	}
+	
+	public static void saveAnalysisType(Map<String, List<ValidationError>> errors) throws DAOException {
+		List<AnalysisType> l = new ArrayList<AnalysisType>();
+		l.add(DescriptionFactory.newAnalysisType("BAC pool assembly","BPA",  null, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
+		
+		DAOHelpers.saveModels(AnalysisType.class, l, errors);
 	}
 
 	public static void saveRunCategories(Map<String, List<ValidationError>> errors) throws DAOException {

@@ -38,8 +38,8 @@ public class ReadSet extends DBObject implements IValidation{
 	public String sampleCode; //nom de l'ind / ech //used for search
 	public String projectCode;
 	
-	public Valuation productionValuation = new Valuation();
-	public Valuation bioinformaticValuation = new Valuation();
+	public Valuation productionValuation = new Valuation();    //TODO rename to QCValuation
+	public Valuation bioinformaticValuation = new Valuation(); //TODO rename to bioinformaticUsable
 	
     
 	public String path;
@@ -54,10 +54,11 @@ public class ReadSet extends DBObject implements IValidation{
 	//insert after ngsrg
 	public SampleOnContainer sampleOnContainer;
 	
+	//TODO BA Ref !!!!
 	
 	/*
 	 * for "archives" optimization purpose (query links)
-	*/
+	 */
 	
 
 	/*

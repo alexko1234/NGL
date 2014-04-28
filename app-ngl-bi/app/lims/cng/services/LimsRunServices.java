@@ -101,7 +101,7 @@ public class LimsRunServices implements ILimsRunServices {
 	}
 	
 	@Override
-	public void valuationReadSet(ReadSet readSet) {
+	public void valuationReadSet(ReadSet readSet, boolean firstTime) {
 		Logger.warn("Not Implemented");		
 	}
 	

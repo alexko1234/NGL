@@ -2,11 +2,13 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
 import play.api.Play;
+import play.api.modules.spring.Spring;
 import play.data.format.Formatters;
 import play.mvc.Action;
 import play.mvc.Http.Request;
@@ -58,7 +60,14 @@ public class Global extends GlobalSettings {
 		return super.onRequest(request, actionMethod);
 	}
 
-
+	@Override
+    public <A> A getControllerInstance(Class<A> controllerClass) throws Exception {
+      try{
+		return Spring.getBeanOfType(controllerClass);
+      } catch (NoSuchElementException e){
+    	  return super.getControllerInstance(controllerClass);
+      }
+	}
 
 
 	/**

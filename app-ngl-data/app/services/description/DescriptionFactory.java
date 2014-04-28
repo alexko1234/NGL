@@ -2,6 +2,7 @@ package services.description;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Institute;
@@ -30,6 +31,7 @@ import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
+import models.laboratory.run.description.AnalysisType;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.description.RunCategory;
 import models.laboratory.run.description.RunType;
@@ -638,13 +640,36 @@ public class DescriptionFactory {
 	 */
 	public static ReadSetType newReadSetType(String name, String code, List<PropertyDefinition> propertiesDefinitions, List<ValuationCriteria> valCriterias, List<Institute> institutes) throws DAOException {
 		ReadSetType rt = new ReadSetType();
-		rt.code =code.toLowerCase();
+		rt.code =code;
 		rt.name =name;
 		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.ReadSet.name());
 		rt.propertiesDefinitions = propertiesDefinitions;
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.ReadSet);
 		rt.institutes = institutes; 
 		rt.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.ReadSet);
+		//rt.criterias = valCriterias;
+		return rt;
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param propertiesDefinitions
+	 * @param valCriterias
+	 * @param institutes
+	 * @return
+	 * @throws DAOException
+	 */
+	public static AnalysisType newAnalysisType(String name, String code, List<PropertyDefinition> propertiesDefinitions, List<ValuationCriteria> valCriterias, List<Institute> institutes) throws DAOException {
+		AnalysisType rt = new AnalysisType();
+		rt.code =code;
+		rt.name =name;
+		rt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Analysis.name());
+		rt.propertiesDefinitions = propertiesDefinitions;
+		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Analysis);
+		rt.institutes = institutes; 
+		rt.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.Analysis);
 		//rt.criterias = valCriterias;
 		return rt;
 	}
@@ -804,6 +829,8 @@ public class DescriptionFactory {
 		v.institutes = institutes;
 		return v;
 	}
+
+	
 
 
 }

@@ -100,7 +100,39 @@ POST  	/api/readsets/:code/files									controllers.readsets.api.Files.save(cod
 PUT     /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.update(code: java.lang.String, fullname: java.lang.String)
 DELETE  /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
 DELETE	/api/runs/:code/files										controllers.readsets.api.Files.deleteByRunCode(code: java.lang.String)
-PUT		/api/readsets/:code/files/:fullname/workflow/:stateCode		controllers.readsets.api.Files.workflow(code: java.lang.String, fullname: java.lang.String, stateCode:java.lang.String)
+
+#analyses
+GET    	/api/analyses	                 			@controllers.analyses.api.Analyses.list()
+GET	   	/api/analyses/:code							@controllers.analyses.api.Analyses.get(code)
+HEAD   	/api/analyses/:code							@controllers.analyses.api.Analyses.head(code)
+POST 	/api/analyses								@controllers.analyses.api.Analyses.save()
+PUT    	/api/analyses/:code							@controllers.analyses.api.Analyses.update(code)
+DELETE	/api/analyses/:code							@controllers.analyses.api.Analyses.delete(code: java.lang.String)
+
+PUT		/api/analyses/batch/state					@controllers.analyses.api.Analyses.stateBatch()
+PUT		/api/analyses/:code/state					@controllers.analyses.api.Analyses.state(code:java.lang.String)
+PUT		/api/analyses/batch/valuation		 		@controllers.analyses.api.Analyses.valuationBatch()
+PUT		/api/analyses/:code/valuation		 		@controllers.analyses.api.Analyses.valuation(code:java.lang.String)
+PUT     /api/analyses/batch/properties				@controllers.analyses.api.Analyses.propertiesBatch()
+PUT     /api/analyses/:code/properties				@controllers.analyses.api.Analyses.properties(code: java.lang.String)
+
+GET		/api/analyses/:code/treatments				@controllers.analyses.api.AnalysisTreatments.list(code: java.lang.String)
+GET		/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.get(code: java.lang.String, trCode: java.lang.String)
+HEAD	/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.head(code: java.lang.String, trCode: java.lang.String)
+POST	/api/analyses/:code/treatments				@controllers.analyses.api.AnalysisTreatments.save(code: java.lang.String)
+PUT		/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.update(code: java.lang.String, trCode: java.lang.String)
+DELETE	/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.delete(code: java.lang.String, trCode: java.lang.String)
+
+#readset file
+GET     /api/analyses/:code/files					@controllers.analyses.api.Files.list(code: java.lang.String)
+GET     /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.get(code: java.lang.String, fullname: java.lang.String)
+HEAD    /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.head(code: java.lang.String, fullname: java.lang.String)
+POST  	/api/analyses/:code/files					@controllers.analyses.api.Files.save(code: java.lang.String)
+PUT     /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.update(code: java.lang.String, fullname: java.lang.String)
+DELETE  /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
+
+
+
 
 
 #reporting configuration
@@ -168,4 +200,4 @@ GET     /assets/*file               				controllers.Assets.at(path="/public", fi
 GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
 
-
+GET 	/createtest									controllers.migration.PrepaDataBle.createTest()

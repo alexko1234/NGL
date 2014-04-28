@@ -14,8 +14,9 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
 
     <context:annotation-config />
-    <context:component-scan base-package="lims.cns" />
+    <context:component-scan base-package="lims.cng" />
     <context:component-scan base-package="models" />
+    <context:component-scan base-package="controllers" />
     
     <jee:jndi-lookup id="ngl" jndi-name="ngl" />
     <jee:jndi-lookup id="lims" jndi-name="lims"/>

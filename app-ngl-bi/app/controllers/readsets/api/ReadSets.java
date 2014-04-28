@@ -135,6 +135,10 @@ public class ReadSets extends ReadSetsController{
 			queries.add(DBQuery.regex("code", Pattern.compile(form.regexCode)));
 		}
 		
+		if (StringUtils.isNotBlank(form.regexSampleCode)) { //all
+			queries.add(DBQuery.regex("sampleCode", Pattern.compile(form.regexSampleCode)));
+		}
+		
 		if (CollectionUtils.isNotEmpty(form.instrumentCodes)) { //all
 			queries.add(DBQuery.regex("runCode", Pattern.compile(findRegExpFromStringList(form.instrumentCodes))));
 		}
@@ -427,7 +431,6 @@ public class ReadSets extends ReadSetsController{
 					.set("bioinformaticValuation", valuations.bioinformaticValuation)
 					.set("traceInformation", getUpdateTraceInformation(readSet)));								
 			readSet = getReadSet(code);
-			//TODO Update old lims !
 			Workflows.nextReadSetState(ctxVal, readSet);
 			return ok(Json.toJson(readSet));
 		} else {
@@ -455,7 +458,6 @@ public class ReadSets extends ReadSetsController{
 							.set("bioinformaticValuation", element.data.bioinformaticValuation)
 							.set("traceInformation", getUpdateTraceInformation(readSet)));								
 					readSet = getReadSet(readSet.code);
-					//TODO Update old lims !
 					Workflows.nextReadSetState(ctxVal, readSet);
 					response.add(new DatatableBatchResponseElement(OK, readSet, element.index));
 				}else {
@@ -533,11 +535,6 @@ public class ReadSets extends ReadSetsController{
 		productionVal.user = getCurrentUser();
 		bioinfoVal.date = new Date();
 		bioinfoVal.user = getCurrentUser();
-		//par defaut si validation bioinfo pas rempli alors même que prod
-		//TODO Project Dependant
-		if(TBoolean.UNSET.equals(bioinfoVal.valid)){
-			bioinfoVal.valid = productionVal.valid;
-		}
 		
 		ReadSetValidationHelper.validateValuation(readSet.typeCode, productionVal, ctxVal);
 		ReadSetValidationHelper.validateValuation(readSet.typeCode, bioinfoVal, ctxVal);		

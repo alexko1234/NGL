@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import lims.models.LotSeqValuation;
 import lims.models.runs.EtatTacheHD;
 import lims.models.runs.TacheHD;
 
@@ -43,6 +44,12 @@ public class LimsAbandonDAO {
         return results;
     }
     
+    public LotSeqValuation getLotsequenceValuation(String lseqnom){
+    	Logger.info("pl_LotsequenceValuationToNGL @lseqnom="+lseqnom);
+        LotSeqValuation results = this.jdbcTemplate.queryForObject("pl_LotsequenceValuationToNGL @lseqnom=?",
+        		new Object[]{lseqnom}, new BeanPropertyRowMapper<LotSeqValuation>(LotSeqValuation.class));
+        return results;
+    }
     
     public void updateRunAbandon(String runhnom, Integer runhabandon, Integer cptreco){
     	Logger.info("pm_RunhdAbandon @runhnom='"+runhnom+"', @runhabandon="+runhabandon+", @cptreco="+cptreco );

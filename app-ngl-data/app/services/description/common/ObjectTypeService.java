@@ -34,6 +34,7 @@ public class ObjectTypeService {
 			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Reagent.name() ), errors);
 			DAOHelpers.saveModel(ObjectType.class, DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Import.name() ), errors);
 			DAOHelpers.saveModel(ObjectType.class,DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Treatment.name() ), errors);
+			DAOHelpers.saveModel(ObjectType.class,DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Analysis.name() ), errors);
 	}
 	
 	

@@ -48,29 +48,40 @@ public class StateService {
 		l.add(newState("Terminé", "F", true, 1000, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name()) ));
 		l.add(newState("Terminé en erreur", "FE", true, 1000, StateCategory.find.findByCode("F"), null));
 		l.add(newState("Terminé en ", "FS", true, 1000, StateCategory.find.findByCode("F"), null));
-		l.add(newState("Evaluation en attente", "IW-V", true, 601, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()) ));
-		l.add(newState("Evaluation en cours", "IP-V", true, 651, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()) ));
-		l.add(newState("Evaluation terminée", "F-V", true, 701, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()) ));		
+		l.add(newState("Contrôle qualité en attente", "IW-QC", true, 400, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()) ));	
+		l.add(newState("Contrôle qualité en cours", "IP-QC", true, 450, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()) ));	
+		l.add(newState("Contrôle qualité terminé", "F-QC", true, 500, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()) ));	
+		l.add(newState("Evaluation en attente", "IW-V", true, 600, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name()) ));
+		l.add(newState("Evaluation en cours", "IP-V", true, 650, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name()) ));
+		l.add(newState("Evaluation terminée", "F-V", true, 699, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name()) ));		
 		//NGL-SQ
-		l.add(newState("Nouveau", "N", true, 0, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name(),ObjectType.CODE.Container.name()) ));
+		l.add(newState("Nouveau", "N", true, 0, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name(),ObjectType.CODE.Container.name(),ObjectType.CODE.Analysis.name()) ));
 		l.add(newState("En cours", "IP", true, 500, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name()) ));
-		l.add(newState("Processus en attente", "IW-P", true, 101, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name())));
-		l.add(newState("Expérience en attente", "IW-E", true, 201, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name())));
+		l.add(newState("Processus en attente", "IW-P", true, 100, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name())));
+		l.add(newState("Expérience en attente", "IW-E", true, 200, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name())));
 		l.add(newState("En cours d'utilisation", "IU", true, 250, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name())));
 		l.add(newState("En stock", "IS", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name())));
 		l.add(newState("Disponible controle qualité", "A-QC", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name())));
 		l.add(newState("Disponible purif", "A-PF", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name())));
 		//NGL-BI
 		l.add(newState("Séquençage en cours", "IP-S", true, 150, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Run.name())));
-		l.add(newState("Séquençage en echec", "FE-S", true, 199, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name())));
-		l.add(newState("Séquençage terminé", "F-S", true, 200, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name())));	
-		l.add(newState("Read generation en attente", "IW-RG", true, 201, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Run.name())));
+		l.add(newState("Séquençage en echec", "FE-S", true, 190, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name())));
+		l.add(newState("Séquençage terminé", "F-S", true, 199, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name())));	
+		
+		l.add(newState("Read generation en attente", "IW-RG", true, 200, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Run.name())));
 		l.add(newState("Read generation en cours", "IP-RG", true, 250, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name())));
-		l.add(newState("Read generation terminée", "F-RG", true, 300, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()) ));
-		l.add(newState("Contrôle qualité en attente", "IW-QC", true, 401, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));	
-		l.add(newState("Contrôle qualité en cours", "IP-QC", true, 450, StateCategory.find.findByCode("IP"), getObjectTypes( ObjectType.CODE.ReadSet.name()) ));	
-		l.add(newState("Contrôle qualité terminé", "F-QC", true, 500, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));	
-
+		l.add(newState("Read generation terminée", "F-RG", true, 299, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()) ));
+		
+		l.add(newState("Evaluation QC en attente", "IW-VQC", true, 600, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));
+		l.add(newState("Evaluation QC terminée", "F-VQC", true, 699, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));		
+		
+		l.add(newState("Analyse BI en attente", "IW-BA", true, 700, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));
+		l.add(newState("Analyse BI en cours", "IP-BA", true, 750, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));
+		l.add(newState("Analyse BI terminée", "F-BA", true, 799, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));		
+		
+		l.add(newState("Evaluation Aanalyse BI en attente", "IW-VBA", true, 800, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));
+		l.add(newState("Evaluation Aanalyse BI terminée", "F-VBA", true, 899, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));		
+		
 		DAOHelpers.saveModels(State.class, l, errors);
 	}
 
