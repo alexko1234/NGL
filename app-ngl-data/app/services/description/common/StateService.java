@@ -72,15 +72,15 @@ public class StateService {
 		l.add(newState("Read generation en cours", "IP-RG", true, 250, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name())));
 		l.add(newState("Read generation terminée", "F-RG", true, 299, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()) ));
 		
-		l.add(newState("Evaluation QC en attente", "IW-VQC", true, 600, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));
-		l.add(newState("Evaluation QC terminée", "F-VQC", true, 699, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));		
+		l.add(newState("EVAL. QC en attente", "IW-VQC", true, 600, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));
+		l.add(newState("EVAL. QC terminée", "F-VQC", true, 699, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));		
 		
 		l.add(newState("Analyse BI en attente", "IW-BA", true, 700, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));
 		l.add(newState("Analyse BI en cours", "IP-BA", true, 750, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));
 		l.add(newState("Analyse BI terminée", "F-BA", true, 799, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));		
 		
-		l.add(newState("Evaluation Aanalyse BI en attente", "IW-VBA", true, 800, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));
-		l.add(newState("Evaluation Aanalyse BI terminée", "F-VBA", true, 899, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));		
+		l.add(newState("EVAL. Analyse BI en attente", "IW-VBA", true, 800, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));
+		l.add(newState("EVAL. Analyse BI terminée", "F-VBA", true, 899, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));		
 		
 		DAOHelpers.saveModels(State.class, l, errors);
 	}
