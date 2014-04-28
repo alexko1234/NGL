@@ -224,6 +224,10 @@ public class Workflows {
 			}
 		}else if("F-BA".equals(readSet.state.code)){
 			nextStep.code = "IW-VBA";
+		}else if("IW-VBA".equals(readSet.state.code)){
+			if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
+				nextStep.code = "F-VBA";
+			}		
 		}else if("F-VBA".equals(readSet.state.code)){
 			if(TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
 					nextStep.code = "A";
