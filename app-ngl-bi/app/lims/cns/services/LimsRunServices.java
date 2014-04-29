@@ -99,12 +99,13 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				Integer tacheId = null;
 				if(taches.size() > 1){
 					Logger.warn("several tachehd "+readSet.code);
-					logger.error(readSet.code+" : Plusieurs Tache");
+					logger.error(readSet.code+" : Plusieurs Taches");
 					//TODO mail to prod ???
 				}else if(taches.size() == 1){
 					tacheId = taches.get(0).tacco;
 				}else{
 					Logger.warn("0 tachehd "+readSet.code);
+					logger.error(readSet.code+" : O Tache");
 				}
 				dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), getCR(readSet.productionValuation), tacheId, 55);
 				if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
