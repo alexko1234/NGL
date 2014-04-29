@@ -34,7 +34,7 @@
   
   <appender name="SMTP_ERROR" class="ch.qos.logback.classic.net.SMTPAppender">			
 			<smtpHost>${mail.smtp.host}</smtpHost>
-			<to>${error.mail.to}</to>
+			<to>galbini@genoscope.cns.fr,jguy@genoscope.cns.fr</to>
 			<from>${error.mail.from}</from>			
 			<subject>NGL-BI : Error </subject>
 			<layout class="ch.qos.logback.classic.html.HTMLLayout">

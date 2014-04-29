@@ -52,8 +52,7 @@ public class Analyses extends DocumentController<Analysis>{
 	final static List<String> authorizedUpdateFields = Arrays.asList("code");
 	
 	public Analyses() {
-		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);
-		Logger.error("New !!");
+		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		
 	}
 	
 	//@Permission(value={"reading"})
