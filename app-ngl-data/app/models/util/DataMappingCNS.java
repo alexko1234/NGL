@@ -62,7 +62,8 @@ public class DataMappingCNS {
 		if(state.equals(TBoolean.UNSET)){
 			return "F-RG";
 		}
-		else return "F";
+		else return "F-V";
+		
 	}
 
 	public static String getRunTypeCodeMapping(String insCategoryCode) {
@@ -93,12 +94,16 @@ public class DataMappingCNS {
 		} else if(state.equals("En_traitement")){
 			return "IP-QC";
 		} else if (state.equals("Traite") && validation.equals(TBoolean.UNSET)){
-			return "IW-V";
+			return "IW-VQC";
 		} else if (state.equals("Traite") && validation.equals(TBoolean.TRUE)){
 			return "A";
 		} else if (state.equals("Traite") && validation.equals(TBoolean.FALSE)){
 			return "UA";
-		} else if(state.equals("Non_traite") || state.equals("Sans_sequence") || state.equals("Indefini")){
+		} else if (state.equals("Non_traite") && validation.equals(TBoolean.TRUE)){
+			return "A";
+		} else if (state.equals("Non_traite") && validation.equals(TBoolean.FALSE)){
+			return "UA";
+		} else if(state.equals("Sans_sequence") || state.equals("Indefini")){
 			return "UA";
 		}
 		
