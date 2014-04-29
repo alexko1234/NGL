@@ -69,11 +69,11 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 				, DBQuery.is("code", newReadSet.code)
 				, DBUpdate.set("productionValuation", newReadSet.productionValuation)
 							.set("bioinformaticValuation", newReadSet.bioinformaticValuation)
-								.set("archiveDate",newReadSet.archiveDate)
-									.set("archiveId", newReadSet.archiveId)
-									  .set("state",newReadSet.state)
-									  	.set("traceInformation.modifyDate", new Date())
-									  		.set("traceInformation.modifyUser", "lims"));
+							.set("archiveDate",newReadSet.archiveDate)
+							.set("archiveId", newReadSet.archiveId)
+							.set("state",newReadSet.state)
+							.set("traceInformation.modifyDate", new Date())
+							.set("traceInformation.modifyUser", "lims"));
 		
 	}
 

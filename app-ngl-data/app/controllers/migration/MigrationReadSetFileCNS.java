@@ -2,9 +2,11 @@ package controllers.migration;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import models.LimsCNSDAO;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.ReadSet;
@@ -80,10 +82,15 @@ public class MigrationReadSetFileCNS  extends CommonController {
 			backupCollections();
 
 			List<Run> runs=MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class).toList();
-
+			Logger.info("Nb Run : "+runs.size());
+			int i = 0;
 			for(Run run:runs){
-				updateRunPiste(run.code,ctxVal);
+				i++;
+				updateRunPiste(run,ctxVal);
 				UpdateReadSetCNS.updateReadSet(run, ctxVal);
+				if((i % 100) == 0){
+					Logger.info("Nb Run Traité : "+i);
+				}
 			}
 
 			Logger.info(">>>>>>>>>>> Update Run/Lane/ReadSet/File finish");
@@ -107,13 +114,14 @@ public class MigrationReadSetFileCNS  extends CommonController {
 	}
 
 
-	public static void updateRunPiste(String runCode,ContextValidation contextValidation){
+	public static void updateRunPiste(Run run,ContextValidation contextValidation){
 		class RunPisteValuation{
 			public String runCode;
 			public Integer laneNumero;			
 			public Valuation valuationRun;
 			public Valuation valudationLane;
 			public String stateCode;
+			
 		}
 
 		String sql="select runCode=r.runhnom, laneNumero=p.pistnum " +
@@ -122,7 +130,7 @@ public class MigrationReadSetFileCNS  extends CommonController {
 				",validationDateRun=isnull(runhdaban,convert(smalldatetime,'01/01/2000',103))"+
 				",validationValidPiste=case when (select count(*) from Lotsequence where lseqval=2 and Lotsequence.runhco=r.runhco)>0 then  'UNSET' when runhabandon=1 then 'FALSE' else 'TRUE' end"+
 				", validationDatePiste=isnull(runhdaban,convert(smalldatetime,'01/01/2000',103))"+
-				" from Runhd r, Piste p where p.runhco=r.runhco and r.runhnom='"+runCode+"'";
+				" from Runhd r, Piste p where p.runhco=r.runhco and r.runhnom='"+run.code+"'";
 
 
 		//Logger.debug("SQL "+sql);
@@ -151,11 +159,15 @@ public class MigrationReadSetFileCNS  extends CommonController {
 		int i=0;
 		for(RunPisteValuation runPiste:results){
 			if(i==0){
-
+				State state = run.state;
+				state.code = runPiste.stateCode;
+				state.date = new Date();
+				state.user = "lims";
+				
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class
 						, DBQuery.is("code",runPiste.runCode)
-						,DBUpdate.set("valuation",runPiste.valuationRun));
-				Run run =MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,runPiste.runCode);
+						, DBUpdate.set("valuation",runPiste.valuationRun).set("state",state));
+				run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,runPiste.runCode);
 				Workflows.nextRunState(contextValidation, run);
 				i=1;
 			}
