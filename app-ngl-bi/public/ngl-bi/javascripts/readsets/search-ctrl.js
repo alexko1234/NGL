@@ -204,11 +204,11 @@ function updateForm(form, page, $scope){
 			form.stateCodes = ["IW-VQC", "IW-VBA"];
 		}		
 	}
-	if($scope && $scope.datatableConfigCustom.reportingConfiguration){
+	if($scope && $scope.datatableConfigCustom.reportingConfiguration && $scope.datatableConfigCustom.reportingConfiguration.queryConfiguration){
 		var queryParams = $scope.datatableConfigCustom.reportingConfiguration.queryConfiguration;
-		if(queryParams.includeKeys && queryParams.includeKeys.length > 0){
+		if(queryParams && queryParams.includeKeys && queryParams.includeKeys.length > 0){
 			form.includes = queryParams.includeKeys;
-		}else if(queryParams.excludeKeys && queryParams.excludeKeys.length > 0){
+		}else if(queryParams && queryParams.excludeKeys && queryParams.excludeKeys.length > 0){
 			form.excludes = queryParams.excludeKeys;
 		}else{
 			form.excludes = ["files", "treatments"];
