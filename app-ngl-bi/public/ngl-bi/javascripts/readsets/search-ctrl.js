@@ -201,7 +201,7 @@ function updateForm(form, page, $scope){
 	if (page && page.indexOf('valuation') == 0) {
 		if(form.stateCodes === undefined || form.stateCodes.length === 0) {
 			//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
-			form.stateCodes = ["IW-VQC"];
+			form.stateCodes = ["IW-VQC", "IW-VBA"];
 		}		
 	}
 	if($scope && $scope.datatableConfigCustom.reportingConfiguration){
