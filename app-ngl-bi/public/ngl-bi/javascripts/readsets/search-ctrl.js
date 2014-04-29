@@ -197,14 +197,25 @@ function convertForm(iform){
 	return form
 };
 
-function updateForm(form, page){
+function updateForm(form, page, $scope){
 	if (page && page.indexOf('valuation') == 0) {
 		if(form.stateCodes === undefined || form.stateCodes.length === 0) {
 			//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
 			form.stateCodes = ["IW-VQC"];
 		}		
 	}
-	form.excludes = ["files"];
+	if($scope && $scope.datatableConfigCustom.reportingConfiguration){
+		var queryParams = $scope.datatableConfigCustom.reportingConfiguration.queryConfiguration;
+		if(queryParams.includeKeys && queryParams.includeKeys.length > 0){
+			form.includes = queryParams.includeKeys;
+		}else if(queryParams.excludeKeys && queryParams.excludeKeys.length > 0){
+			form.excludes = queryParams.excludeKeys;
+		}else{
+			form.excludes = ["files", "treatments"];
+		}
+	}else{
+		form.excludes = ["files", "treatments"];
+	}
 	return form;
 }
 
@@ -219,7 +230,7 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', '$http
 	};
 	
 	$scope.search = function(){
-		$scope.form = updateForm($scope.form, $scope.getHomePage());
+		$scope.form = updateForm($scope.form, $scope.getHomePage(), $scope);
 		$scope.setForm($scope.form);
 		$scope.datatable.search(convertForm($scope.form));
 	};
@@ -236,15 +247,18 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', '$http
 		if($scope.datatableConfigCustom.reportingConfigurationCode){
 			$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get($scope.datatableConfigCustom.reportingConfigurationCode).url)
 					.success(function(data) {
-						$scope.datatable.setColumnsConfig(data.columns)
-						
+						$scope.datatableConfigCustom.reportingConfiguration = data;
+						$scope.search();
+						$scope.datatable.setColumnsConfig(data.columns);						
 			});
 		}else{
+			$scope.datatableConfigCustom.reportingConfiguration = undefined;
 			$scope.datatable.setColumnsConfig($scope.datatableConfigCustom.defaultColumns);
+			$scope.search();
 		}
+		
 	}
 	
-	var defaultColumns;
 	var init = function(){		
 		if ($scope.isHomePage('valuation') || $scope.isHomePage('valuationWheat')) {
 			//If we want to show the 2 states used to filter the data...

@@ -131,6 +131,9 @@ angular.module('datatableServices', []).
 									return Messages(key, args);
 								}
 							},
+							spinner:{
+								start:false
+							},
 							showTotalNumberRecords:true,
 							compact:true //mode compact pour le nom des bouttons
 						},
@@ -171,8 +174,10 @@ angular.module('datatableServices', []).
 			    				this.lastSearchParams = params;
 			    				var url = this.getUrlFunction(this.config.search.url);
 			    				if(url){
+			    					this.config.spinner.start = true;
 			    					$http.get(url(),{params:this.getParams(params), datatable:this}).success(function(data, status, headers, config) {
-			    						config.datatable.setData(data.data, data.recordsNumber);		    						
+			    						config.datatable.setData(data.data, data.recordsNumber);
+			    						config.datatable.config.spinner.start = false;
 			    					});
 			    				}else{
 			    					throw 'no url define for search ! ';
@@ -552,7 +557,8 @@ angular.module('datatableServices', []).
 		    				if(this.config.save.active){
 		    					this.config.save.number = 0;
 		    					this.config.save.error = 0;
-		    					this.config.save.start = true;		    					
+		    					this.config.save.start = true;
+		    					this.config.spinner.start = true;
 		    					this.config.messages.text = undefined;
 		    					this.config.messages.clazz = undefined;
 		    					var data = [];
@@ -695,7 +701,8 @@ angular.module('datatableServices', []).
 		    						this.config.edit.start = false;
 		    					}
 		    					this.config.save.error = 0;
-		    					this.config.save.start = false;	
+		    					this.config.save.start = false;
+		    					this.config.spinner.start = false;
 		    					
 		    				}
 	    					
@@ -1458,7 +1465,7 @@ angular.module('datatableServices', []).
   		    	replace:true,
   		    	template:
   		    		'<div name="dt-table" class="row"><div class="col-md-12 col-lg-12">'
-  		    		+'<div class="inProgress" ng-if="dtTable.config.save.start"><button class="btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>'
+  		    		+'<div class="inProgress" ng-if="dtTable.config.spinner.start"><button class="btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>'
   		    		+'<form class="form-inline">'
   		    		+'<table class="table table-condensed table-hover table-bordered">'
   		    		+'<thead>'

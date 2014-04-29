@@ -14,7 +14,7 @@ public class ReportingConfiguration extends DBObject implements IValidation {
 	public TraceInformation traceInformation;
 	public List<String> pageCodes; //code des pages sur lesquelles on souhaite l'afficher
 	public List<Column> columns;
-	public QueryConfiguration queryParameters;
+	public QueryConfiguration queryConfiguration;
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
