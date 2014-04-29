@@ -155,26 +155,26 @@ public class MigrationReadSetFileCNS  extends CommonController {
 				return runPisteValuation;
 			}
 		});
-
-		int i=0;
+		//first update lane
 		for(RunPisteValuation runPiste:results){
-			if(i==0){
-				State state = run.state;
-				state.code = runPiste.stateCode;
-				state.date = new Date();
-				state.user = "lims";
-				
-				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class
-						, DBQuery.is("code",runPiste.runCode)
-						, DBUpdate.set("valuation",runPiste.valuationRun).set("state",state));
-				run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,runPiste.runCode);
-				Workflows.nextRunState(contextValidation, run);
-				i=1;
-			}
-
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.is("code",runPiste.runCode).is("lanes.number", runPiste.laneNumero)
 					, DBUpdate.set("lanes.$.valuation",runPiste.valudationLane));			
+		}
+		
+		//then update run
+		if(results.size() > 0){
+			RunPisteValuation runPiste = results.get(0);
+			State state = run.state;
+			state.code = runPiste.stateCode;
+			state.date = new Date();
+			state.user = "lims";
+			
+			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class
+					, DBQuery.is("code",runPiste.runCode)
+					, DBUpdate.set("valuation",runPiste.valuationRun).set("state",state));
+			run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,runPiste.runCode);
+			Workflows.nextRunState(contextValidation, run);
 		}
 	}
 
