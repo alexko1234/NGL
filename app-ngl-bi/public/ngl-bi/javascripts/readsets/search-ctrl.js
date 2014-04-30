@@ -197,7 +197,7 @@ function updateForm(form, page, $scope){
 	if (page && page.indexOf('valuation') == 0) {
 		if(form.stateCodes === undefined || form.stateCodes.length === 0) {
 			//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
-			form.stateCodes = ["IW-VQC", "IW-VBA"];
+			form.stateCodes = ["IW-VQC", "IP-VQC", "IW-VBA"];
 		}		
 	}
 	if($scope && $scope.datatableConfigCustom.reportingConfiguration && $scope.datatableConfigCustom.reportingConfiguration.queryConfiguration){
@@ -256,11 +256,11 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', '$http
 	}
 	
 	var init = function(){		
-		if ($scope.isHomePage('valuation') || $scope.isHomePage('valuationWheat')) {
+		if ($scope.isHomePage('valuation')) {
 			//If we want to show the 2 states used to filter the data...
 			//$scope.form.stateCodes = ["IW-V","IP-V"];
 			//Reduce data to the set of states specific to the valuation
-			$scope.states = [{code:"IW-VQC",name:Codes("state.IW-VQC")}];
+			$scope.states = [{code:"IW-VQC",name:Codes("state.IW-VQC")},{code:"IP-VQC",name:Codes("state.IP-VQC")},{code:"IW-VBA",name:Codes("state.IW-VBA")}];
 		}
 		
 		$scope.lists.refresh.projects();
