@@ -21,7 +21,7 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 		project.comments = comments;		
 		project.state = {code:$scope.form.state.code, user:"ngsrg"};
 		project.umbrellaProjectCodes = $scope.form.selectedProjects;
-		project.bioinformaticanalysis = $scope.form.bioinformaticAnalysis;
+		project.bioinformaticAnalysis = $scope.form.bioinformaticAnalysis;
 		
 		endProcess = true;
 		
