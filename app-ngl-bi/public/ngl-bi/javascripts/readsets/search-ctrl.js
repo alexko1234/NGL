@@ -1,7 +1,5 @@
 "use strict";
 
-
-
 function getCommonColumns(columns){
 	
 	columns.push({	property:"code",
@@ -172,14 +170,12 @@ function getBatchColumns(columns){
 	columns.push({	property:"properties.isSentCCRT.value",
 					header: "readsets.properties.isSentCCRT",
 					type :"boolean",
-					order:true,
-			    	edit:true
+					edit:true
     	});
 	columns.push({	property:"properties.isSentCollaborator.value",
 					header: "readsets.properties.isSentCollaborator",
 					type :"boolean",
-					order:true,
-			    	edit:true
+					edit:true
     	});
 	
 	
