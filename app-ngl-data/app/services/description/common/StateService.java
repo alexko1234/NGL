@@ -51,9 +51,9 @@ public class StateService {
 		l.add(newState("Contrôle qualité en attente", "IW-QC", true, 400, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()) ));	
 		l.add(newState("Contrôle qualité en cours", "IP-QC", true, 450, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()) ));	
 		l.add(newState("Contrôle qualité terminé", "F-QC", true, 500, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()) ));	
-		l.add(newState("Evaluation en attente", "IW-V", true, 600, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()) ));
+		l.add(newState("Evaluation en attente", "IW-V", true, 600, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name(), ObjectType.CODE.Analysis.name()) ));
 		l.add(newState("Evaluation en cours", "IP-V", true, 625, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()) ));
-		l.add(newState("Evaluation terminée", "F-V", true, 649, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()) ));		
+		l.add(newState("Evaluation terminée", "F-V", true, 649, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name(), ObjectType.CODE.Analysis.name()) ));		
 		//NGL-SQ
 		l.add(newState("Nouveau", "N", true, 0, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name(),ObjectType.CODE.Container.name(),ObjectType.CODE.Analysis.name()) ));
 		l.add(newState("En cours", "IP", true, 500, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name()) ));
@@ -73,14 +73,15 @@ public class StateService {
 		l.add(newState("Read generation terminée", "F-RG", true, 299, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()) ));
 		
 		l.add(newState("EVAL. QC en attente", "IW-VQC", true, 650, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));
+		l.add(newState("EVAL. QC en cours", "IP-VQC", true, 675, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));		
 		l.add(newState("EVAL. QC terminée", "F-VQC", true, 699, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));		
 		
 		l.add(newState("Analyse BI en attente", "IW-BA", true, 700, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));
 		l.add(newState("Analyse BI en cours", "IP-BA", true, 750, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));
 		l.add(newState("Analyse BI terminée", "F-BA", true, 799, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));		
 		
-		l.add(newState("EVAL. Analyse BI en attente", "IW-VBA", true, 800, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));
-		l.add(newState("EVAL. Analyse BI terminée", "F-VBA", true, 899, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name(),ObjectType.CODE.Analysis.name()) ));		
+		l.add(newState("EVAL. Analyse BI en attente", "IW-VBA", true, 800, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));
+		l.add(newState("EVAL. Analyse BI terminée", "F-VBA", true, 899, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name()) ));		
 		
 		DAOHelpers.saveModels(State.class, l, errors);
 	}
