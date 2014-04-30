@@ -130,8 +130,8 @@
 		 					<label>
 							<input type="checkbox"  ng-model="project.bioinformaticAnalysis" ng-if="isEditMode()">	
 							</label>
-						</div>						
-						<p class="form-control-static" ng-switch on="project.bioinformaticAnalysis.value" ng-if="!isEditMode()">
+						</div>				
+						<p class="form-control-static" ng-switch on="project.bioinformaticAnalysis" ng-if="!isEditMode()">
 							<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
 							<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
 						</p>					
