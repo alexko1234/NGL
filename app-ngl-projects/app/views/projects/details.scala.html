@@ -128,10 +128,10 @@
 					@columnLabelValue(Messages("projects.bioinformaticanalysis")){
 						<div class="checkbox" ng-if="isEditMode()">
 		 					<label>
-							<input type="checkbox"  ng-model="project.bioinfomaticAnalysis" ng-if="isEditMode()">	
+							<input type="checkbox"  ng-model="project.bioinformaticAnalysis" ng-if="isEditMode()">	
 							</label>
 						</div>						
-						<p class="form-control-static" ng-switch on="project.bioinfomaticAnalysis.value" ng-if="!isEditMode()">
+						<p class="form-control-static" ng-switch on="project.bioinformaticAnalysis.value" ng-if="!isEditMode()">
 							<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
 							<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
 						</p>					
