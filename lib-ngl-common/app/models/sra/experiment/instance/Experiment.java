@@ -25,7 +25,7 @@ public class Experiment extends DBObject implements IValidation {
 	public String libraryLayoutOrientation = null;	 // champs de la proc renseigné à "forward" ou "forward-reverse" ssi paired */
 	public String libraryName = null;               // required 
 	public String libraryConstructionProtocol = null; // fixé à "none provided" par defaut, mais forme libre
-	public String typePlatform = null;      // required et contrainte, L454 ou illumina en fonction de plateform_map de la proc
+	public String typePlatform = "ILLUMINA";      // required et contrainte, L454 ou illumina en fonction de plateform_map de la proc
 	// InstrumentUsedType de run ou code= machine et typeCode la techno
 	public String instrumentModel = null;   // required et contrainte et depend de plateformType.
 	// Actuellement forcement Illumina puisque collection Illumina

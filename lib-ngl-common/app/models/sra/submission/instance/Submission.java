@@ -17,7 +17,7 @@ public class Submission extends DBObject implements IValidation {
 	public String projectCode;     // required pour nos stats //Reference code de la collection project NGL
  	public String accession;       // numeros d'accession attribué par ebi */
 	public Date submissionDate;
-
+	public String configurationCode; // identifiant de la configuration utilisé pour cette soumission
 	public List<String> studyCodes = new ArrayList<String>();
 	public List<String> sampleCodes = new ArrayList<String>();
 	public List<String> experimentCodes = new ArrayList<String>();

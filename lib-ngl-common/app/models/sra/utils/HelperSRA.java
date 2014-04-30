@@ -1,6 +1,7 @@
 package models.sra.utils;
 
 import models.sra.study.instance.Study;
+import models.sra.submission.instance.Submission;
 import models.sra.sample.instance.Sample;
 import models.sra.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
@@ -32,4 +33,17 @@ public class HelperSRA {
 	public static Boolean checkCodeStudyExistInStudyCollection(String codeStudy) {
 		return MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "code", codeStudy);
 	}
+	// Verifie que le codeSubmission existe bien dans la collection Submission
+	public static Boolean checkCodeSubmissionExistInSubmissionCollection(String codeSubmission) {
+		return MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code", codeSubmission);
+	}
+	// Verifie que le codeStudy existe bien dans la collection Submission
+	public static Boolean checkCodeProjectExistInSubmissionCollection(String codeProject) {
+		return MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "projectCode", codeProject);
+	}	
+	
+
+	
+	
+	
 }
