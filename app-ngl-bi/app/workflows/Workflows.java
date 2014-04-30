@@ -211,7 +211,11 @@ public class Workflows {
 		}else if("IW-VQC".equals(readSet.state.code)){
 			if(!TBoolean.UNSET.equals(readSet.productionValuation.valid)){
 				nextStep.code = "F-VQC";
-			}		
+			}
+		}else if("IP-VQC".equals(readSet.state.code)){
+			if(!TBoolean.UNSET.equals(readSet.productionValuation.valid)){
+					nextStep.code = "F-VQC";
+				}		
 		}else if("F-VQC".equals(readSet.state.code)){
 			if(isHasBA(readSet) && TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
 				nextStep.code = "IW-BA";

@@ -68,9 +68,6 @@ public class ReadSets extends ReadSetsController{
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
 		
-		form.orderBy = null;
-		form.orderSense = null;
-		
 		if(form.datatable){			
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
 			List<ReadSet> readSets = results.toList();
