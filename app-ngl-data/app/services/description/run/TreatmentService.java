@@ -46,73 +46,137 @@ public class TreatmentService {
 		l.add(DescriptionFactory.newTreatmentContext("Read2","read2"));
 		l.add(DescriptionFactory.newTreatmentContext("Pairs","pairs"));
 		l.add(DescriptionFactory.newTreatmentContext("Single","single"));
+		
 		DAOHelpers.saveModels(TreatmentContext.class, l, errors);
 	}
 	
 	public static void saveTreatmentType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<TreatmentType> l = new ArrayList<TreatmentType>();
 		// common CNS - CNG
-		l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", getSAVTreatmentPropertyDefinitions(), 
-				Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "10"));
+		l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
+				getSAVPropertyDefinitions(), 
+				Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "10"));
 		
-		l.add(DescriptionFactory.newTreatmentType("NGSRG","ngsrg-illumina", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "ngsrg", getNGSRGTreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "20"));		
+		l.add(DescriptionFactory.newTreatmentType("NGSRG","ngsrg-illumina", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "ngsrg", 
+				getNGSRGPropertyDefinitions(), 
+				getTreatmentTypeContexts("default"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "20"));		
 		
-		l.add(DescriptionFactory.newTreatmentType("Global","global", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.global.name()), "global", getReadSetTreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "0"));
+		l.add(DescriptionFactory.newTreatmentType("Global","global", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.global.name()), "global", 
+				getReadSetPropertyDefinitions(), 
+				getTreatmentTypeContexts("default"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "0"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Read Quality","read-quality", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "readQualityRaw,readQualityClean", getReadQualityTreatmentPropertyDefinitions(), 
-				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "30,83"));
+		l.add(DescriptionFactory.newTreatmentType("Read Quality","read-quality", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "readQualityRaw,readQualityClean", 
+				getReadQualityPropertyDefinitions(), 
+				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "30,83"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Duplicates","duplicates", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "duplicatesRaw,duplicatesClean", getDuplicatesTreatmentPropertyDefinitions(), 
-				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE)), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "32,86"));
+		l.add(DescriptionFactory.newTreatmentType("Duplicates","duplicates", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "duplicatesRaw,duplicatesClean", 
+				getDuplicatesPropertyDefinitions(), 
+				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE)), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "32,86"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Mapping","mapping", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mapping", getMappingTreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("pairs", "default"), DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "90"));
+		l.add(DescriptionFactory.newTreatmentType("Mapping","mapping", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mapping", 
+				getMappingPropertyDefinitions(), 
+				getTreatmentTypeContexts("pairs", "default"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "90"));
 		
 		// specific CNS
-		l.add(DescriptionFactory.newTreatmentType("Trimming","trimming", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "trimmingStd,trimmingVector", getTrimmingTreatmentPropertyDefinitions(), 
-				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), getTreatmentTypeContext("single", Boolean.FALSE)), DescriptionFactory.getInstitutes(Institute.CODE.CNS), "37,50"));
+		l.add(DescriptionFactory.newTreatmentType("Trimming","trimming", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "trimmingStd,trimmingVector", 
+				getTrimmingPropertyDefinitions(), 
+				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), 
+				getTreatmentTypeContext("single", Boolean.FALSE)), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "33,50"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationColi,contaminationVector,contaminationPhiX", getContaminationTreatmentPropertyDefinitions(), 
-				Arrays.asList(getTreatmentTypeContext("read1",Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), getTreatmentTypeContext("single", Boolean.FALSE)), DescriptionFactory.getInstitutes(Institute.CODE.CNS), "35,36,60"));
+		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationColi,contaminationVector,contaminationPhiX", 
+				getContaminationPropertyDefinitions(), 
+				Arrays.asList(getTreatmentTypeContext("read1",Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), 
+				getTreatmentTypeContext("single", Boolean.FALSE)), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "35,36,60"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", getTaxonomyTreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("read1"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), "70"));
+		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", 
+				getTaxonomyPropertyDefinitions(), 
+				getTreatmentTypeContexts("read1"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "70"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Sorting Ribo","sorting-ribo", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sortingRibo", getSortingRiboTreatmentPropertyDefinitions(), 
-				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), getTreatmentTypeContext("single", Boolean.FALSE)), DescriptionFactory.getInstitutes(Institute.CODE.CNS), "80"));
+		l.add(DescriptionFactory.newTreatmentType("Sorting Ribo","sorting-ribo", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sortingRibo", 
+				getSortingRiboPropertyDefinitions(), 
+				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), getTreatmentTypeContext("single", Boolean.FALSE)), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "80"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Merging","merging", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "merging", getMergingTreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), "100"));
+		l.add(DescriptionFactory.newTreatmentType("Merging","merging", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "merging", 
+				getMergingPropertyDefinitions(), 
+				getTreatmentTypeContexts("pairs"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "100"));
 		
+		l.add(DescriptionFactory.newTreatmentType("Merging BA","merging-ba", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.bpa.name()), "mergingBA", 
+				getMergingBAPropertyDefinitions(), 
+				getTreatmentTypeContexts("pairs"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "110"));
+		
+		l.add(DescriptionFactory.newTreatmentType("Assembly","assembly", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.bpa.name()), "assembly", 
+				getAssemblyPropertyDefinitions(), 
+				getTreatmentTypeContexts("pairs"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "120"));
+		
+		l.add(DescriptionFactory.newTreatmentType("Scaffolding","scaffolding", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.bpa.name()), "scaffolding", 
+				getScaffoldingPropertyDefinitions(), 
+				getTreatmentTypeContexts("pairs"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "130"));
+
+		l.add(DescriptionFactory.newTreatmentType("Gap Closing","gapClosing", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.bpa.name()), "gapClosing", 
+				getGapClosingPropertyDefinitions(), 
+				getTreatmentTypeContexts("pairs"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "140"));
+
 		//specific CNG 
-		l.add(DescriptionFactory.newTreatmentType("alignSingleRead BLAT","alignsingleread-blat", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "alignSingleReadBLATRaw", getASRBTreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("read1", "read2"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), "50"));
+		l.add(DescriptionFactory.newTreatmentType("alignSingleRead BLAT","alignsingleread-blat", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "alignSingleReadBLATRaw", 
+				getASRBPropertyDefinitions(), 
+				getTreatmentTypeContexts("read1", "read2"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "50"));
 		
-		l.add(DescriptionFactory.newTreatmentType("alignSingleRead SOAP2","alignsingleread-soap2", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "alignSingleReadSOAP2Raw", getASRSTreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("read1", "read2"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), "60"));
+		l.add(DescriptionFactory.newTreatmentType("alignSingleRead SOAP2","alignsingleread-soap2", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "alignSingleReadSOAP2Raw", 
+				getASRSPropertyDefinitions(), 
+				getTreatmentTypeContexts("read1", "read2"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "60"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Exome","exome", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "exome", getExomeTreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), "100"));
+		l.add(DescriptionFactory.newTreatmentType("Exome","exome", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "exome", 
+				getExomeTreatmentPropertyDefinitions(), 
+				getTreatmentTypeContexts("pairs"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "100"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Whole Genome","whole-genome", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "wholeGenome", getWholeExomeTreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), "110"));
+		l.add(DescriptionFactory.newTreatmentType("Whole Genome","whole-genome", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "wholeGenome", 
+				getWholeExomeTreatmentPropertyDefinitions(), 
+				getTreatmentTypeContexts("pairs"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "110"));
 		
-		l.add(DescriptionFactory.newTreatmentType("RNAseq","rna-seq", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "RNAseq", getRnaSeqTreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), "120"));
+		l.add(DescriptionFactory.newTreatmentType("RNAseq","rna-seq", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "RNAseq", 
+				getRnaSeqTreatmentPropertyDefinitions(), 
+				getTreatmentTypeContexts("pairs"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "120"));
 		
-		l.add(DescriptionFactory.newTreatmentType("ChiPseq","chip-seq", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "ChiPseq", getChiPSeqTreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("read1"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), "130"));
+		l.add(DescriptionFactory.newTreatmentType("ChiPseq","chip-seq", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "ChiPseq", 
+				getChiPSeqTreatmentPropertyDefinitions(), 
+				getTreatmentTypeContexts("read1"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "130"));
 		
-		l.add(DescriptionFactory.newTreatmentType("ChiPseq-PE","chipseq-pe", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "ChiPseqPE", getChiPSeqPETreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), "130"));
+		l.add(DescriptionFactory.newTreatmentType("ChiPseq-PE","chipseq-pe", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "ChiPseqPE", 
+				getChiPSeqPETreatmentPropertyDefinitions(), 
+				getTreatmentTypeContexts("pairs"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "130"));
 		
-		l.add(DescriptionFactory.newTreatmentType("FAIREseq","faire-seq", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "FAIREseq", getFaireSeqTreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("read1"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), "150"));
+		l.add(DescriptionFactory.newTreatmentType("FAIREseq","faire-seq", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "FAIREseq", 
+				getFaireSeqTreatmentPropertyDefinitions(), 
+				getTreatmentTypeContexts("read1"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "150"));
+		
 		//TODO : level parameter must be verified
-		l.add(DescriptionFactory.newTreatmentType("Sample Control","sample-control", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sampleControl", getSampleControlTreatmentPropertyDefinitions(), 
-				getTreatmentTypeContexts("pairs"), DescriptionFactory.getInstitutes(Institute.CODE.CNG), "160"));
+		l.add(DescriptionFactory.newTreatmentType("Sample Control","sample-control", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sampleControl", 
+				getSampleControlTreatmentPropertyDefinitions(), 
+				getTreatmentTypeContexts("pairs"), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "160"));
 		DAOHelpers.saveModels(TreatmentType.class, l, errors);
 	}
 	
@@ -133,7 +197,7 @@ public class TreatmentService {
 	
 	
 	
-	private static List<PropertyDefinition> getASRBTreatmentPropertyDefinitions() throws DAOException {
+	private static List<PropertyDefinition> getASRBPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mappedReads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
@@ -155,7 +219,7 @@ public class TreatmentService {
 	}
 	
 
-	private static List<PropertyDefinition> getASRSTreatmentPropertyDefinitions() throws DAOException {
+	private static List<PropertyDefinition> getASRSPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mappedReads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
@@ -301,7 +365,7 @@ public class TreatmentService {
 		return propertyDefinitions;
 	}
 	
-	private static List<PropertyDefinition> getNGSRGTreatmentPropertyDefinitions() throws DAOException {
+	private static List<PropertyDefinition> getNGSRGPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         //Run level
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("flowcellPosition","flowcellPosition", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
@@ -339,7 +403,7 @@ public class TreatmentService {
         return propertyDefinitions;
 	}
 	
-	private static List<PropertyDefinition> getReadSetTreatmentPropertyDefinitions() throws DAOException {
+	private static List<PropertyDefinition> getReadSetPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         // just readset level
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("usefulSequences","usefulSequences", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
@@ -348,7 +412,7 @@ public class TreatmentService {
 	}
 	
 	
-	private static List<PropertyDefinition> getSAVTreatmentPropertyDefinitions() throws DAOException {
+	private static List<PropertyDefinition> getSAVPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("clusterDensity","clusterDensity",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("clusterDensityStd","clusterDensityStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
@@ -377,7 +441,7 @@ public class TreatmentService {
 		return propertyDefinitions;
 	}
 		
-	public static List<PropertyDefinition> getReadQualityTreatmentPropertyDefinitions() throws DAOException{
+	public static List<PropertyDefinition> getReadQualityPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScore","qualScore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
@@ -390,16 +454,13 @@ public class TreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("positionN","positionN",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));				
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("suspectedKmers.Kmer","suspectedKmers.Kmer",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("suspectedKmers.nbOccurences","suspectedKmers.nbOccurences",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, false, "object_list"));		
-		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("suspectedPrimers","suspectedPrimers",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, false, "list"));
-		
-		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("maxSizeReads","maxSizeReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("maxSizeReadsPercent","maxSizeReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, false, "single"));
 		return propertyDefinitions;		
 	}
 	
-	public static List<PropertyDefinition> getDuplicatesTreatmentPropertyDefinitions() throws DAOException{
+	public static List<PropertyDefinition> getDuplicatesPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimateDuplicatedReads","estimateDuplicatedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Long.class, true, "single"));
@@ -411,7 +472,7 @@ public class TreatmentService {
 		return propertyDefinitions;		
 	}
 	
-	public static List<PropertyDefinition> getTrimmingTreatmentPropertyDefinitions() throws DAOException{
+	public static List<PropertyDefinition> getTrimmingPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sizeRange","sizeRange",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsInput","readsInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
@@ -430,7 +491,7 @@ public class TreatmentService {
 		return propertyDefinitions;		
 	}
 	
-	public static List<PropertyDefinition> getContaminationTreatmentPropertyDefinitions() throws DAOException{
+	public static List<PropertyDefinition> getContaminationPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsInput","readsInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs, Level.CODE.Single), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("removedReads","removedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs, Level.CODE.Single), Long.class, true, "single"));
@@ -440,7 +501,7 @@ public class TreatmentService {
 		return propertyDefinitions;		
 	}
 	
-	public static List<PropertyDefinition> getTaxonomyTreatmentPropertyDefinitions() throws DAOException{
+	public static List<PropertyDefinition> getTaxonomyPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("organism","organism",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true, "single"));
@@ -461,7 +522,7 @@ public class TreatmentService {
 		return propertyDefinitions;		
 	}
 	
-	public static List<PropertyDefinition> getSortingRiboTreatmentPropertyDefinitions() throws DAOException{
+	public static List<PropertyDefinition> getSortingRiboPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsInput","readsInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("no_rRNA","no_rRNA",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, true, "single"));
@@ -475,7 +536,7 @@ public class TreatmentService {
 		return propertyDefinitions;		
 	}
 	
-	public static List<PropertyDefinition> getMappingTreatmentPropertyDefinitions() throws DAOException{
+	public static List<PropertyDefinition> getMappingPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nonChimericAlignedReads","nonChimericAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
@@ -500,7 +561,7 @@ public class TreatmentService {
 		return propertyDefinitions;		
 	}
 	
-	public static List<PropertyDefinition> getMergingTreatmentPropertyDefinitions() throws DAOException{
+	public static List<PropertyDefinition> getMergingPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mergedReads","mergedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
@@ -513,5 +574,108 @@ public class TreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("overlapDistrib","overlapDistrib",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, true, "img"));
 		return propertyDefinitions;		
 	}
+	
+	
+	public static List<PropertyDefinition> getMergingBAPropertyDefinitions() throws DAOException{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reads input","readsInput", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Merged Reads","mergedReads", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% merged reads","mergedReadsPercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mediane size (bases)","medianeSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Average size (bases)","avgSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Min size (bases)","minSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Max size (bases)","maxSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Overlap distribution","overlapDistrib", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Image.class, true, "img"));
+		return propertyDefinitions;		
+	}
+	
+	
+	public static List<PropertyDefinition> getAssemblyPropertyDefinitions() throws DAOException{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//for further development
+		/*
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("N50 contig size","N50ContigSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of contigs","N50ContigNb", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("N80 contig size","N80ContigSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of contigs","N80ContigNb", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("N90 contig size","N90ContigSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of contigs","N90ContigNb", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Assembly size","assemblyContigSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of contigs","assemblyContigNb", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Smallest contig size","minContigSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Largest contig size","maxContigSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Average contig size","averageContigSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Float.class, true, "single"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Size","contigSizeRepartition.size", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number","contigSizeRepartition.contigNumber", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent","contigSizeRepartition.contigPercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cumulative size","contigSizeRepartition.cumulativeSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));	 
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% cumulative size","contigSizeRepartition.cumulativeSizePercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Float.class, true, "single"));
+		*/
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Assembly statistics","assemblyStatistics",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), String.class, true, "single"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percentage of assembled reads","readsAssembledPercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Float.class, true, "single"));
+
+		return propertyDefinitions;		
+	}
+	
+	
+	public static List<PropertyDefinition> getScaffoldingPropertyDefinitions() throws DAOException{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		//for further development
+		/*
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Path","path",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), String.class, true, "single"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("N50 scaffold size","N50ScaffoldSize",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of scaffolds","N50ScaffoldNb",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("N80 scaffold size","N80ScaffoldSize",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of scaffolds","N80ScaffoldNb",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("N90 scaffold size","N90ScaffoldSize",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of scaffolds","N90ScaffoldNb",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Assembly size","assemblyScaffoldSize",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Long.class, true, "single"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of scaffolds","assemblyScaffoldNb",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Smallest scaffold size","minScaffoldSize",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Largest scaffold size","maxScaffoldSize",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Average scaffold size","averageScaffoldSize",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Float.class, true, "single"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Size","scaffoldSizeRepartition.size", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number","scaffoldSizeRepartition.scaffoldNumber", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent","scaffoldSizeRepartition.scaffoldPercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cumulative size","scaffoldSizeRepartition.cumulativeSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));	 
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% cumulative size","scaffoldSizeRepartition.cumulativeSizePercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Float.class, true, "single"));
+		*/
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Scaffolding statistics","scaffoldingStatistics",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), String.class, true, "single"));
+
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nombre de paires satisfaisantes","nbPairedSatisfied",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nombre de paires non satisfaisantes","nbPairedUnsatisfied",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb paires mappées","nbMappedPairs",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences mappées","nbMappedSequences",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille d'insert médiane","medianInsertSize",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Float.class, true, "single"));
+		
+		return propertyDefinitions;		
+	}
+	
+	
+	public static List<PropertyDefinition> getGapClosingPropertyDefinitions() throws DAOException{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Actual gap sum","actualGapSum", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Extended gap sum","extendGapSum", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Actual gap count","actualGapCount", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Extended gap count","extendGapCount", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
+
+		return propertyDefinitions;		
+	}
+		
+		
+	
+	
+	
 }
 

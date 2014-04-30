@@ -5,19 +5,17 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
   function($scope, $http, $routeParams, $filter, messages, lists) {
 		
 	$scope.reset = function(){
-		$scope.form = {
-				
+		$scope.form = {				
 		}
 	};
 	
 	
 	/* buttons section */
 	$scope.update = function(){
-		var objProj = angular.copy($scope.projectUmbrella);
-		
+		var objProj = angular.copy($scope.umbrellaProject);
 		objProj.projectCodes = $scope.form.selectedProjects;
 		
-		$http.put(jsRoutes.controllers.projectUmbrellas.api.ProjectUmbrellas.update($routeParams.code).url, objProj).success(function(data) {
+		$http.put(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.update($routeParams.code).url, objProj).success(function(data) {
 			$scope.messages.setSuccess("save");
 		});
 	};
@@ -28,8 +26,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	};
 	
 	var updateData = function(isCancel){
-		$http.get(jsRoutes.controllers.projectUmbrellas.api.ProjectUmbrellas.get($routeParams.code).url).success(function(data) {
-			$scope.projectUmbrella = data;	
+		$http.get(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.get($routeParams.code).url).success(function(data) {
+			$scope.umbrellaProject = data;	
 			$scope.stopEditMode();
 		});
 	};
@@ -43,12 +41,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	};
 	
 	$scope.removeItem = function() {
-		var itemSelected;
-		var idx;
-		for (var i=0; i<$scope.projectUmbrella.projectCodes.length; i++) {
-			itemSelected = $scope.projectUmbrella.projectCodes[i];
-			idx = $scope.form.selectedProjects.indexOf(itemSelected);
-			$scope.form.selectedProjects.splice(idx,1);
+		var itemSelected, idxItemSelected;
+		for (var i=0; i<$scope.umbrellaProject.projectCodes.length; i++) {
+			itemSelected = $scope.umbrellaProject.projectCodes[i];
+			idxItemSelected = $scope.form.selectedProjects.indexOf(itemSelected);
+			$scope.form.selectedProjects.splice(idxItemSelected,1);
 		}
 	};
 	
@@ -65,23 +62,25 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 			$scope.reset();
 		}
 		
-		$scope.stopEditMode();
-		
+		$scope.stopEditMode();	
 
-		$http.get(jsRoutes.controllers.projectUmbrellas.api.ProjectUmbrellas.get($routeParams.code).url).success(function(data) {
-			$scope.projectUmbrella = data;		
+		$http.get(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.get($routeParams.code).url).success(function(data) {
+			$scope.umbrellaProject = data;		
 			
 			$scope.form.allProjects = lists.getProjects(); 		
-			if ($scope.projectUmbrella.projectCodes != null) {
-				$scope.form.selectedProjects = angular.copy($scope.projectUmbrella.projectCodes);
+			if ($scope.umbrellaProject.projectCodes != null) {
+				$scope.form.selectedProjects = angular.copy($scope.umbrellaProject.projectCodes);
 			}
 			else {
 				$scope.form.selectedProjects = [];
 			}
+			if ($scope.form.allProjects == undefined) {
+				$scope.form.allProjects = [];
+			}
 		
 			if($scope.getTabs().length == 0){
-				$scope.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.projectUmbrellas.tpl.ProjectUmbrellas.home("search").url, remove:true});
-				$scope.addTabs({label:$scope.projectUmbrella.code, href:jsRoutes.controllers.projectUmbrellas.tpl.ProjectUmbrellas.get($scope.projectUmbrella.code).url, remove:true});
+				$scope.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.home("search").url, remove:true});
+				$scope.addTabs({label:$scope.umbrellaProject.code, href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.get($scope.umbrellaProject.code).url, remove:true});
 				$scope.activeTab($scope.getTabs(1));
 			}
 			
@@ -90,6 +89,5 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	};
 	
 	init();
-	
 	
 }]);

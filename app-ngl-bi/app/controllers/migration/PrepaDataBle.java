@@ -39,7 +39,7 @@ public class PrepaDataBle extends CommonController{
 			p._id = null;
 			p.code = "TEST";
 			p.name = "TEST";
-			p.bioInfoAnalysis = true;
+			p.bioinfomaticAnalysis = true;
 			MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, p);
 		}
 		/*

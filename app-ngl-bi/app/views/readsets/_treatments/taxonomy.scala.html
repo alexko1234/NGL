@@ -89,34 +89,34 @@
 					<div class="panel panel-default">
 					  <!-- Default panel contents -->
 					  <div class="panel-heading"><strong>@Messages("readsets.treatments.taxonomy.divisionBilan")</strong></div>
-					 <table class="table table-condensed table-hover table-bordered">
-						<thead>						
-						<tr>
-							<th>
-								@Messages("readsets.treatments.taxonomy.divisionBilan.division")
-							</th>
-							<th>
-								@Messages("readsets.treatments.taxonomy.divisionBilan.nbSeq")
-							</th>
-							<th>
-								@Messages("readsets.treatments.taxonomy.divisionBilan.percent")
-							</th>
-						</tr>					
-						</thead>
-						<tbody>
-						<tr ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.divisionBilan.value">
-							<td>							
-								 {{obj.division}}
-							</td>
-							<td>
-								 {{obj.nbSeq | number}}												
-							</td>
-							<td>
-								 {{ obj.percent | number:2}} @Messages("unit.percent")												
-							</td>
-						</tr>
-						</tbody>
-					</table>
+						 <table class="table table-condensed table-hover table-bordered">
+							<thead>						
+							<tr>
+								<th>
+									@Messages("readsets.treatments.taxonomy.divisionBilan.division")
+								</th>
+								<th>
+									@Messages("readsets.treatments.taxonomy.divisionBilan.nbSeq")
+								</th>
+								<th>
+									@Messages("readsets.treatments.taxonomy.divisionBilan.percent")
+								</th>
+							</tr>					
+							</thead>
+							<tbody>
+							<tr ng-repeat="obj in readset.treatments[treatments.getTreatment().code].read1.divisionBilan.value">
+								<td>							
+									 {{obj.division}}
+								</td>
+								<td>
+									 {{obj.nbSeq | number}}												
+								</td>
+								<td>
+									 {{ obj.percent | number:2}} @Messages("unit.percent")												
+								</td>
+							</tr>
+							</tbody>
+						</table>
 					</div>				
 				</div>
 				<div class="col-md-3 col-lg-3">

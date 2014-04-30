@@ -84,6 +84,14 @@
 						</div>
 					}
 					
+					@columnLabelValue(Messages("projects.bioinformaticanalysis")){
+						<div>
+		 					<label>
+								<input type="checkbox"  ng-model="form.bioinfomaticAnalysis">	
+							</label>
+						</div>						
+					}
+					
 					@columnLabelValue(Messages("projects.comments")){
 						<div>
 							<textarea class="form-control" ng-model="form.comment"></textarea>
@@ -94,8 +102,8 @@
 			
 			<div class="row">
 				@column6(){			
-					@columnLabelValue(Messages("projects.projectUmbrellaCodes")){
-						<select size="30" name="allProjects" ng-model="form.allProjects" multiple="true" ng-options="p.code as (p.code + ':' + p.name) for p in lists.getProjectUmbrellas()">
+					@columnLabelValue(Messages("projects.umbrellaProjectCodes")){
+						<select size="30" name="allProjects" ng-model="form.allProjects" multiple="true" ng-options="p.code as (p.code + ':' + p.name) for p in lists.getUmbrellaProjects()">
 						</select>						
 					}			
 				}
@@ -106,7 +114,7 @@
 				}
 				
 				@column3(){				
-					<select size="30" name="selectedProjects" ng-model="project.projectUmbrellaCodes" multiple="true" ng-options="code for code in form.selectedProjects">
+					<select size="30" name="selectedProjects" ng-model="project.umbrellaProjectCodes" multiple="true" ng-options="code for code in form.selectedProjects">
 					</select>
 				}
 			</div>

@@ -5,7 +5,7 @@
 @form() = {	
 	@columnSearchForm{
 		@formGroup{
-			<input type="text" class="form-control" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getProjectUmbrellas() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.projectUmbrella")'>				
+			<input type="text" class="form-control" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getUmbrellaProjects() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.umbrellaProject")'>				
 		}
 	}		
 }

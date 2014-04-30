@@ -29,18 +29,16 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 	var datatableConfig = {
 			order :{by:'code', reverse:false},
 			search:{
-				url:jsRoutes.controllers.projectUmbrellas.api.ProjectUmbrellas.list()
+				url:jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.list()
 			},
 			show:{
 				active:true,
 				add :function(line){
-					$scope.addTabs({label:line.code,href:jsRoutes.controllers.projectUmbrellas.tpl.ProjectUmbrellas.get(line.code).url, remove:true});
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.get(line.code).url, remove:true});
 				}
 			},
 			columns : getColumns()
 	};
-	
-	
 	
 	var init = function(){
 		//to avoid to lost the previous search
@@ -54,15 +52,13 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('projectUmbrellas.menu.search'), href:jsRoutes.controllers.projectUmbrellas.tpl.ProjectUmbrellas.home("search").url, remove:true});
+			$scope.addTabs({label:Messages('umbrellaProjects.menu.search'), href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.home("search").url, remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
 	};
 	
 	init();
 }]);
-
-
 
 
 
@@ -82,7 +78,7 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', 'lists', function
 	};
 	
 	var init = function(){
-		$scope.lists.refresh.projectUmbrellas();	
+		$scope.lists.refresh.umbrellaProjects();	
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();
@@ -93,10 +89,3 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', 'lists', function
 	init();
 	
 }]);
-
-
-
-
-
-
-

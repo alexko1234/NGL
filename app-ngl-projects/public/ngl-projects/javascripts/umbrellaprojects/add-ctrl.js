@@ -3,8 +3,8 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 	
 	/* buttons section */
 	$scope.save = function(){
-		var projectUmbrella = {code:$scope.form.code, name:$scope.form.name, projectCodes:$scope.form.selectedProjects};			
-		$http.post(jsRoutes.controllers.projectUmbrellas.api.ProjectUmbrellas.save().url, projectUmbrella).success(function(data) {
+		var umbrellaProject = {code:$scope.form.code, name:$scope.form.name, projectCodes:$scope.form.selectedProjects};			
+		$http.post(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.save().url, umbrellaProject).success(function(data) {
 			$scope.messages.setSuccess("save");
 		});
 	};
@@ -24,12 +24,11 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 	};
 	
 	$scope.removeItem = function() {
-		var itemSelected;
-		var idx;
-		for (var i=0; i<$scope.projectUmbrella.projectCodes.length; i++) {
-			itemSelected = $scope.projectUmbrella.projectCodes[i];
-			idx = $scope.form.selectedProjects.indexOf(itemSelected);
-			$scope.form.selectedProjects.splice(idx,1);
+		var itemSelected, idxItemSelected;
+		for (var i=0; i<$scope.umbrellaProject.projectCodes.length; i++) {
+			itemSelected = $scope.umbrellaProject.projectCodes[i];
+			idxItemSelected = $scope.form.selectedProjects.indexOf(itemSelected);
+			$scope.form.selectedProjects.splice(idxItemSelected,1);
 		}
 	};
 	
@@ -45,7 +44,10 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 			$scope.reset();
 		}
 		
-		$scope.form.allProjects = lists.getProjects(); 				
+		$scope.form.allProjects = lists.getProjects(); 	
+		if ($scope.form.allProjects == undefined) {
+			$scope.form.allProjects = [];
+		}
 		$scope.form.selectedProjects = [];
 		
 		if(angular.isUndefined($scope.getHomePage())){

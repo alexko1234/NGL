@@ -125,20 +125,31 @@
 							<div bt-select class="form-control" ng-switch-when="true" ng-model="project.categoryCode" bt-options="category.code as category.name for category in lists.getProjectCategories()"></div>
 						</div>	
 					}
+					@columnLabelValue(Messages("projects.bioinformaticanalysis")){
+						<div class="checkbox" ng-if="isEditMode()">
+		 					<label>
+							<input type="checkbox"  ng-model="project.bioinfomaticAnalysis" ng-if="isEditMode()">	
+							</label>
+						</div>						
+						<p class="form-control-static" ng-switch on="project.bioinfomaticAnalysis.value" ng-if="!isEditMode()">
+							<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
+							<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
+						</p>					
+					}
 				}				
 			</div>
 			
 			<div class="row">
 				@column6(){			
-					@columnLabelValue(Messages("projects.projectUmbrellaCodes")){
+					@columnLabelValue(Messages("projects.umbrellaProjectCodes")){
 						<div ng-switch on="isEditMode()">
 							<div ng-switch-when="false"> 
-							<ul ng-repeat="p in lists.getProjectUmbrellas() | filterByCodesInStringArray:project.projectUmbrellaCodes">
-								<li>{{p.code + ":" + p.name}}</li>
-							</ul>
+								<ul ng-repeat="p in lists.getUmbrellaProjects() | filterByCodesInStringArray:project.umbrellaProjectCodes">
+									<li>{{p.code + ":" + p.name}}</li>
+								</ul>
 							</div>
 							<div ng-switch-when="true"> 						
-								<select size="30" name="allProjects" ng-model="form.allProjects" multiple="true" ng-options="p.code as (p.code + ':' + p.name) for p in lists.getProjectUmbrellas()">
+								<select size="30" name="allProjects" ng-model="form.allProjects" multiple="true" ng-options="p.code as (p.code + ':' + p.name) for p in lists.getUmbrellaProjects()">
 								</select>
 							</div>
 						</div>
@@ -158,7 +169,7 @@
 				@column3(){				
 					<div ng-switch on="isEditMode()">
 						<div ng-switch-when="true"> 
-							<select size="30" name="selectedProjects" ng-model="project.projectUmbrellaCodes" multiple="true" ng-options="code for code in form.selectedProjects">
+							<select size="30" name="selectedProjects" ng-model="project.umbrellaProjectCodes" multiple="true" ng-options="code for code in form.selectedProjects">
 							</select>
 						</div>
 					</div>

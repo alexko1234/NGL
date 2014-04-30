@@ -7,13 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.State;
-import models.laboratory.common.description.StateCategory;
 import models.utils.ListObject;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
@@ -27,7 +28,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 
 	protected StateDAO() {
 		super("state", State.class,StateMappingQuery.class, 
-				"SELECT t.id,t.name,t.code,t.active,t.position,t.fk_state_category " +
+				"SELECT t.id,t.name,t.code,t.active,t.position,t.fk_state_category, t.display " +
 				"FROM state as t ", true);
 	}
 
@@ -46,13 +47,13 @@ public class StateDAO extends AbstractDAOMapping<State>{
 
 	@Override
 	public long save(State state) throws DAOException {
-		//Check if category exist
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("code", state.code);
 		parameters.put("name", state.name);
 		parameters.put("active", state.active);
 		parameters.put("position", state.position);
 		parameters.put("fk_state_category", state.category.id);
+		parameters.put("display", state.display);
 		
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		state.id = newId;
@@ -71,7 +72,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 			removeObjectTypes(id);
 		}
 		if(objectTypes!=null && objectTypes.size()>0){
-			String sql = "INSERT INTO state_object_type (fk_state, fk_object_type) VALUES(?,?)";
+			String sql = "INSERT INTO state_object_type (fk_state, fk_object_type) VALUES (?,?)";
 			for(ObjectType objectType:objectTypes){
 				if(objectType == null || objectType.id == null ){
 					throw new DAOException("objectType is mandatory");
@@ -88,8 +89,8 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	
 	@Override
 	public void update(State state) throws DAOException {
-		String sql = "UPDATE state SET code=?, name=?, active=?, position=?, fk_state_category=? WHERE id=?";
-		jdbcTemplate.update(sql, state.code, state.name, state.active, state.position, state.id, state.category.id);
+		String sql = "UPDATE state SET code=?, name=?, active=?, position=?, fk_state_category=?, display=? WHERE id=?";
+		jdbcTemplate.update(sql, state.code, state.name, state.active, state.position, state.id, state.category.id, state.display);
 	}
 	
 	public List<ListObject> findAllForContainerList(){
@@ -159,6 +160,23 @@ public class StateDAO extends AbstractDAOMapping<State>{
 				" where t.code=? and c.code=?";
 		return( initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR),
 				 new SqlParameter("c.code", Types.VARCHAR)).findObject(code, typeCode) != null )? true : false;	
+	}
+
+
+	public List<State> findByDisplayAndObjectTypeCode(Boolean display, ObjectType.CODE objectTypeCode) throws DAOException {
+		if (null == objectTypeCode || null == display) {
+			throw new DAOException("code is mandatory");
+		}
+		String sql = sqlCommon+
+				"JOIN state_object_type so ON so.fk_state=t.id "+
+				"JOIN object_type o ON so.fk_object_type=o.id "+
+				"WHERE t.display=? AND o.code=? ORDER BY position";		
+		
+		Object[] sqlParameters = new SqlParameter[2];
+		sqlParameters[0] = new SqlParameter("t.display", Types.BOOLEAN);
+		sqlParameters[1] = new SqlParameter("o.code", Types.VARCHAR);
+		
+		return initializeMapping(sql, (SqlParameter[])sqlParameters).execute(display, objectTypeCode.name());	
 	}
 
 }

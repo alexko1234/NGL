@@ -104,8 +104,8 @@ angular.module('commonsServices', []).
     				projectTypes : function(params){
     					load(jsRoutes.controllers.projects.api.ProjectTypes.list().url,params,'projectTypes');
     				},
-    				projectUmbrellas : function(params){
-    					load(jsRoutes.controllers.projectUmbrellas.api.ProjectUmbrellas.list().url,params,'projectUmbrellas');
+    				umbrellaProjects : function(params){
+    					load(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.list().url,params,'umbrellaProjects');
     				},
     				valuationCriterias: function(params){
     					load(jsRoutes.controllers.valuation.api.ValuationCriterias.list().url,params,'valuationCriterias');    					
@@ -189,7 +189,7 @@ angular.module('commonsServices', []).
     			getProcessTypes : function(){return results['processTypes'];},
     			getProjectCategories : function(){return results['projectCategories'];},
     			getProjectTypes : function(){return results['projectTypes'];},
-    			getProjectUmbrellas : function(){return results['projectUmbrellas'];},
+    			getUmbrellaProjects : function(){return results['umbrellaProjects'];},
     			getSamples : function(){return results['samples'];},
     			getUsers : function(){return results['users'];},
     			getSupports : function(){return results['supports'];},

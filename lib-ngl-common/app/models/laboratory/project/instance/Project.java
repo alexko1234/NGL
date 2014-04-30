@@ -39,9 +39,9 @@ public class Project extends DBObject implements IValidation{
 	public TraceInformation traceInformation;
 	public Map<String, PropertyValue> properties;
 	public List<Comment> comments;
-	public Boolean bioInfoAnalysis = Boolean.FALSE;
+	public Boolean bioinfomaticAnalysis = Boolean.FALSE;
 	
-	public List<String> projectUmbrellaCodes;
+	public List<String> umbrellaProjectCodes;
 	
 	
 	public Project(){

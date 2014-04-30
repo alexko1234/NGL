@@ -19,36 +19,46 @@ public class States extends CommonController {
     final static Form<StatesSearchForm> stateForm = form(StatesSearchForm.class);
 
     public static Result list() throws DAOException {
-	Form<StatesSearchForm> stateFilledForm = filledFormQueryString(
-		stateForm, StatesSearchForm.class);
-	StatesSearchForm statesSearch = stateFilledForm.get();
-
-	List<State> values = new ArrayList<State>(0);
-	if (null != statesSearch.objectTypeCode) {
-	    values = State.find.findByObjectTypeCode(ObjectType.CODE
-		    .valueOf(statesSearch.objectTypeCode));
-	}
-
-	if (statesSearch.datatable) {
-	    return ok(Json.toJson(new DatatableResponse<State>(values, values
-		    .size())));
-	} else if (statesSearch.list) {
-	    List<ListObject> valuesListObject = new ArrayList<ListObject>();
-	    for (State s : values) {
-		valuesListObject.add(new ListObject(s.code, s.name));
-	    }
-	    return ok(Json.toJson(valuesListObject));
-	} else {
-	    return ok(Json.toJson(values));
-	}
+		Form<StatesSearchForm> stateFilledForm = filledFormQueryString(
+			stateForm, StatesSearchForm.class);
+		StatesSearchForm statesSearch = stateFilledForm.get();
+	
+		List<State> values = new ArrayList<State>(0);
+		if (null != statesSearch.display) {
+		    values = State.find.findByDisplayAndObjectTypeCode(statesSearch.display, ObjectType.CODE
+			    .valueOf(statesSearch.objectTypeCode));
+		}
+		else {
+			if (null != statesSearch.objectTypeCode) 
+			    values = State.find.findByObjectTypeCode(ObjectType.CODE.valueOf(statesSearch.objectTypeCode));
+			else 
+				return notFound();
+		}
+	
+		if (statesSearch.datatable) {
+		    return ok(Json.toJson(new DatatableResponse<State>(values, values
+			    .size())));
+		} else if (statesSearch.list) {
+		    List<ListObject> valuesListObject = new ArrayList<ListObject>();
+		    for (State s : values) {
+		    	if (null != statesSearch.display) 
+		    		valuesListObject.add(new ListObject(s.code, s.name, s.display));
+		    	else	
+		    		valuesListObject.add(new ListObject(s.code, s.name));
+		    }
+		    return ok(Json.toJson(valuesListObject));
+		} else {
+		    return ok(Json.toJson(values));
+		}
     }
 
     public static Result get(String code) throws DAOException {
-	State state = State.find.findByCode(code);
-	if (state != null) {
-	    return ok(Json.toJson(state));
-	} else {
-	    return notFound();
-	}
+		State state = State.find.findByCode(code);
+		if (state != null) {
+		    return ok(Json.toJson(state));
+		} else {
+		    return notFound();
+		}
     }
+    
 }

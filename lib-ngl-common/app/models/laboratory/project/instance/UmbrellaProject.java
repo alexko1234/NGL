@@ -14,27 +14,27 @@ import net.vz.mongodb.jackson.MongoCollection;
 import fr.cea.ig.DBObject;
 
 /**
- * Instance ProjectUmbrella is stocked in Collection mongodb ProjectUmbrella
- * A projectUmbrella contains from one to n projects
+ * Instance UmbrellaProject is stocked in a MongoDB Collection named "ngl_project.UmbrellaProject"
+ * An UmbrellaProject references one to n projects
  * Use by "ngl-projects" application
  * 
  * @author dnoisett
  *
  */
 
-@MongoCollection(name="ProjectUmbrella")
-public class ProjectUmbrella extends DBObject implements IValidation {
+@MongoCollection(name="UmbrellaProject")
+public class UmbrellaProject extends DBObject implements IValidation {
 
 	public String name;
 	public TraceInformation traceInformation;
 	public List<String> projectCodes;
 	
 	
-	public ProjectUmbrella(){
+	public UmbrellaProject(){
 		traceInformation=new TraceInformation();
 	}
 	
-	public ProjectUmbrella(String code, String name){
+	public UmbrellaProject(String code, String name){
 		this.code=code;
 		this.name=name;
 		traceInformation=new TraceInformation();
@@ -45,7 +45,7 @@ public class ProjectUmbrella extends DBObject implements IValidation {
 	public void validate(ContextValidation contextValidation) {
 				
 		ProjectValidationHelper.validateId(this, contextValidation);
-		ProjectValidationHelper.validateCode(this, InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, contextValidation);
+		ProjectValidationHelper.validateCode(this, InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, contextValidation);
 		ProjectValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 
 	}

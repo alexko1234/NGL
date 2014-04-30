@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 
-import models.laboratory.common.description.ResolutionCategory;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
 import models.utils.dao.DAOException;
@@ -43,6 +42,7 @@ public class StateMappingQuery extends MappingSqlQuery<State>{
 			throw new SQLException(e);
 		}
 		state.category=category;
+		state.display = rs.getBoolean("display");
 		return state;
 	}
 

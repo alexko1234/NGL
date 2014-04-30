@@ -3,7 +3,7 @@
 angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , function($scope, datatable) {
 
 	var datatableConfig = {
-			order :{by:'sequencingStartDate', reverse:true, mode:'local'},
+			order :{by:'sequencingStartDate', reverse:true, mode:'remote'},
 			search:{
 				url:jsRoutes.controllers.runs.api.Runs.list()
 			},

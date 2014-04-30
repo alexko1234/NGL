@@ -3,7 +3,7 @@ package controllers.projects.api;
 import net.vz.mongodb.jackson.DBQuery;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
-import models.laboratory.project.instance.ProjectUmbrella;
+import models.laboratory.project.instance.UmbrellaProject;
 import models.utils.InstanceConstants;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
@@ -30,20 +30,20 @@ public class ProjectsController extends CommonController {
 		return ti;
 	}
 	
-    protected static ProjectUmbrella getProjectUmbrella(String code) {
-    	ProjectUmbrella proj = MongoDBDAO.findByCode(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, ProjectUmbrella.class, code);
+    protected static UmbrellaProject getUmbrellaProject(String code) {
+    	UmbrellaProject proj = MongoDBDAO.findByCode(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, code);
     	return proj;
     }
     
-    protected static ProjectUmbrella getProjectUmbrella(String code, String...keys) {
-    	MongoDBResult<ProjectUmbrella> projects = MongoDBDAO.find(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, ProjectUmbrella.class, DBQuery.is("code", code), getIncludeKeys(keys));
+    protected static UmbrellaProject getProjectUmbrella(String code, String...keys) {
+    	MongoDBResult<UmbrellaProject> projects = MongoDBDAO.find(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.is("code", code), getIncludeKeys(keys));
     	if(projects.size() == 1)
     	    return projects.toList().get(0);
     	else
     	    return null;
         }
         
-        protected static TraceInformation getUpdateTraceInformation(ProjectUmbrella proj) {
+        protected static TraceInformation getUpdateTraceInformation(UmbrellaProject proj) {
     		TraceInformation ti = proj.traceInformation;
     		ti.setTraceInformation(getCurrentUser());
     		return ti;

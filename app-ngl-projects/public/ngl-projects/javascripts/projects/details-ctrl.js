@@ -13,7 +13,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	
 	/* buttons section */
 	$scope.update = function(){
-		//copy data
 		var objProj = angular.copy($scope.project);
 		//to not save empty comment in Mongo
 		if (objProj.comments[0].comment == null || objProj.comments[0].comment == "") {
@@ -22,11 +21,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		else {
 			objProj.comments[0].createUser = "ngsrg";
 		}
-		objProj.state = {code:objProj.state.code, user:"ngsrg"};	
+		objProj.state = {code:objProj.state.code, user:"ngsrg"};		
+		objProj.umbrellaProjectCodes = $scope.form.selectedProjects;
 		
-		objProj.projectUmbrellaCodes = $scope.form.selectedProjects;
-		
-		//update database
 		$http.put(jsRoutes.controllers.projects.api.Projects.update($routeParams.code).url, objProj).success(function(data) {
 			$scope.messages.setSuccess("save");
 		});
@@ -52,12 +49,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	};
 	
 	$scope.removeItem = function() {
-		var itemSelected;
-		var idx;
-		for (var i=0; i<$scope.project.projectUmbrellaCodes.length; i++) {
-			itemSelected = $scope.project.projectUmbrellaCodes[i];
-			idx = $scope.form.selectedProjects.indexOf(itemSelected);
-			$scope.form.selectedProjects.splice(idx,1);
+		var itemSelected, idxItemSelected;
+		for (var i=0; i<$scope.project.umbrellaProjectCodes.length; i++) {
+			itemSelected = $scope.project.umbrellaProjectCodes[i];
+			idxItemSelected = $scope.form.selectedProjects.indexOf(itemSelected);
+			$scope.form.selectedProjects.splice(idxItemSelected,1);
 		}
 	};
 	
@@ -70,7 +66,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		$scope.lists.refresh.states({objectTypeCode:"Project"});
 		$scope.lists.refresh.projectTypes();
 		$scope.lists.refresh.projectCategories();
-		$scope.lists.refresh.projectUmbrellas();
+		$scope.lists.refresh.umbrellaProjects();
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();
@@ -88,12 +84,15 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 			}
 			$scope.project = data2;	
 			
-			$scope.form.allProjects = lists.getProjectUmbrellas(); 		
-			if ($scope.project.projectUmbrellaCodes != null) {
-				$scope.form.selectedProjects = angular.copy($scope.project.projectUmbrellaCodes);
+			$scope.form.allProjects = lists.getUmbrellaProjects(); 		
+			if ($scope.project.umbrellaProjectCodes != null) {
+				$scope.form.selectedProjects = angular.copy($scope.project.umbrellaProjectCodes);
 			}
 			else {
 				$scope.form.selectedProjects = [];
+			}
+			if ($scope.form.allProjects == undefined) {
+				$scope.form.allProjects = [];
 			}
 			
 			if($scope.getTabs().length == 0){

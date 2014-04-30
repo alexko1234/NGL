@@ -4,7 +4,6 @@ import java.util.List;
 
 import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.dao.StateDAO;
-import models.laboratory.run.description.RunCategory;
 import models.utils.ListObject;
 import models.utils.Model;
 import models.utils.dao.DAOException;
@@ -23,43 +22,45 @@ public class State extends Model<State> {
     public StateCategory category;
     public List<ObjectType> objectTypes;
     
+    public Boolean display;
+    
 
     public static StateFinder find = new StateFinder();
 
     public State() {
-	super(StateDAO.class.getName());
+    	super(StateDAO.class.getName());
     }
 
     public static class StateFinder extends Finder<State> {
 
-	public StateFinder() {
-	    super(StateDAO.class.getName());
-	}
-
-	public List<State> findByCategoryCode(String code) throws DAOException {
-	    return ((StateDAO) getInstance()).findByCategoryCode(code);
-	}
-
-	public List<State> findByTypeCode(String typeCode) throws DAOException {
-	    return ((StateDAO) getInstance()).findByTypeCode(typeCode);
-	}
-
-	public boolean isCodeExistForTypeCode(String code, String typeCode)
-		throws DAOException {
-	    return ((StateDAO) getInstance()).isCodeExistForTypeCode(code,
-		    typeCode);
-	}
-
-	public List<ListObject> findAllForContainerList() throws DAOException {
-	    return ((StateDAO) getInstance()).findAllForContainerList();
-	}
-
-	public List<State> findByObjectTypeCode(CODE objectTypeCode)
-		throws DAOException {
-	    return ((StateDAO) getInstance())
-		    .findByObjectTypeCode(objectTypeCode);
-
+		public StateFinder() {
+		    super(StateDAO.class.getName());
+		}
+	
+		public List<State> findByCategoryCode(String code) throws DAOException {
+		    return ((StateDAO) getInstance()).findByCategoryCode(code);
+		}
+	
+		public List<State> findByTypeCode(String typeCode) throws DAOException {
+		    return ((StateDAO) getInstance()).findByTypeCode(typeCode);
+		}
+	
+		public boolean isCodeExistForTypeCode(String code, String typeCode)
+			throws DAOException {
+		    return ((StateDAO) getInstance()).isCodeExistForTypeCode(code,
+			    typeCode);
+		}
+	
+		public List<ListObject> findAllForContainerList() throws DAOException {
+		    return ((StateDAO) getInstance()).findAllForContainerList();
+		}
+	
+		public List<State> findByObjectTypeCode(CODE objectTypeCode) throws DAOException {
+		    return ((StateDAO) getInstance()).findByObjectTypeCode(objectTypeCode);
+		}
+	    
+		public List<State> findByDisplayAndObjectTypeCode(Boolean display, CODE objectTypeCode) throws DAOException {
+		    return ((StateDAO) getInstance()).findByDisplayAndObjectTypeCode(display, objectTypeCode);
 		}
     }
-
 }

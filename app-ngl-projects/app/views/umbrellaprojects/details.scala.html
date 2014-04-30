@@ -42,7 +42,7 @@
 			 <button class="btn btn-default" ng-if="!isEditMode()" ng-click="startEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
 		</div>
 	 	<h1>	
-		 	<span>{{projectUmbrella.code}}</span> 
+		 	<span>{{umbrellaProject.code}}</span> 
 		 </h1>
 	</div>
 </div>
@@ -56,14 +56,14 @@
 		<form class="form-horizontal">
 			<div class="row">
 				@column6(){
-					@columnLabelValue(Messages("projectUmbrellas.code")){
-						<p class="form-control-static">{{projectUmbrella.code}}</p>
+					@columnLabelValue(Messages("umbrellaProjects.code")){
+						<p class="form-control-static">{{umbrellaProject.code}}</p>
 					}
 					
-					@columnLabelValue(Messages("projectUmbrellas.name")){
+					@columnLabelValue(Messages("umbrellaProjects.name")){
 						<div ng-switch on="isEditMode()">
-							<p class="form-control-static" ng-switch-when="false">{{projectUmbrella.name}}</p>
-							<input type="text" class="form-control" ng-switch-when="true" ng-model="projectUmbrella.name">
+							<p class="form-control-static" ng-switch-when="false">{{umbrellaProject.name}}</p>
+							<input type="text" class="form-control" ng-switch-when="true" ng-model="umbrellaProject.name">
 						</div>
 					}
 				}
@@ -75,7 +75,7 @@
 						<div ng-switch on="isEditMode()">
 						
 							<div ng-switch-when="false"> 
-								<ul ng-repeat="p in lists.getProjects()  | filterByCodesInStringArray:projectUmbrella.projectCodes">
+								<ul ng-repeat="p in lists.getProjects()  | filterByCodesInStringArray:umbrellaProject.projectCodes">
 									<li>{{p.code + ":" + p.name}}</li>
 								</ul>
 							</div>
@@ -102,7 +102,7 @@
 				@column3(){				
 					<div ng-switch on="isEditMode()">
 						<div ng-switch-when="true"> 
-							<select size="30" name="selectedProjects" ng-model="projectUmbrella.projectCodes" multiple="true" ng-options="code for code in form.selectedProjects">
+							<select size="30" name="selectedProjects" ng-model="umbrellaProject.projectCodes" multiple="true" ng-options="code for code in form.selectedProjects">
 							</select>
 						</div>
 					</div>

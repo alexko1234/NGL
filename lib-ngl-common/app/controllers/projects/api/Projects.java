@@ -10,7 +10,7 @@ import java.util.List;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
-import models.laboratory.project.instance.ProjectUmbrella;
+import models.laboratory.project.instance.UmbrellaProject;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import net.vz.mongodb.jackson.DBQuery;
@@ -172,6 +172,9 @@ public class Projects extends ProjectsController {
 		Form<Project> filledForm = getFilledForm(projectForm, Project.class);
 		Project projectInput = filledForm.get();
 		
+		//synchronization of the 2 lists of projects (projectCodes & projectUmbrellaCodes)
+		synchronizeProjectCodes(projectInput);		
+		
 		if(queryFieldsForm.fields == null){
 			if (code.equals(projectInput.code)) {
 				if(null != projectInput.traceInformation){
@@ -179,9 +182,6 @@ public class Projects extends ProjectsController {
 				}else{
 					Logger.error("traceInformation is null !!");
 				}
-				
-				//synchronization of the 2 lists of projects (projectCodes & projectUmbrellaCodes)
-				synchronizeProjectCodes(projectInput);
 				
 				ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 	
 				ctxVal.setUpdateMode();
@@ -225,11 +225,11 @@ public class Projects extends ProjectsController {
 	}
 	
 	public static void synchronizeProjectCodes(Project project) {
-		for (String code : project.projectUmbrellaCodes) {
-			if (!MongoDBDAO.checkObjectExist(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, ProjectUmbrella.class, 
+		for (String code : project.umbrellaProjectCodes) {
+			if (!MongoDBDAO.checkObjectExist(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, 
 					DBQuery.and(DBQuery.is("code", code), DBQuery.in("projectCodes", project.code)))) {
 				//add the value in the other list 
-				MongoDBDAO.update(InstanceConstants.PROJECT_UMBRELLA_COLL_NAME, ProjectUmbrella.class, DBQuery.is("code", code), 
+				MongoDBDAO.update(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.is("code", code), 
 						DBUpdate.push("projectCodes", project.code));
 			}
 		}

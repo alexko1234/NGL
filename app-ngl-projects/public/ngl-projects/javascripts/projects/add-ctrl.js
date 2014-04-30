@@ -20,7 +20,8 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 		project.categoryCode =  $scope.form.projectCategory;
 		project.comments = comments;		
 		project.state = {code:$scope.form.state.code, user:"ngsrg"};
-		project.projectUmbrellaCodes = $scope.form.selectedProjects;
+		project.umbrellaProjectCodes = $scope.form.selectedProjects;
+		project.bioinformaticanalysis = $scope.form.bioinformaticanalysis;
 		
 		endProcess = true;
 		
@@ -45,12 +46,11 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 	};
 	
 	$scope.removeItem = function() {
-		var itemSelected;
-		var idx;
-		for (var i=0; i<$scope.project.projectUmbrellaCodes.length; i++) {
-			itemSelected = $scope.project.projectUmbrellaCodes[i];
-			idx = $scope.form.selectedProjects.indexOf(itemSelected);
-			$scope.form.selectedProjects.splice(idx,1);
+		var itemSelected, idxItemSelected;
+		for (var i=0; i<$scope.project.umbrellaProjectCodes.length; i++) {
+			itemSelected = $scope.project.umbrellaProjectCodes[i];
+			idxItemSelected = $scope.form.selectedProjects.indexOf(itemSelected);
+			$scope.form.selectedProjects.splice(idxItemSelected,1);
 		}
 	};
 	
@@ -61,7 +61,7 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 		$scope.lists.refresh.states({objectTypeCode:"Project"});
 		$scope.lists.refresh.projectTypes();
 		$scope.lists.refresh.projectCategories();
-		$scope.lists.refresh.projectUmbrellas();
+		$scope.lists.refresh.umbrellaProjects();
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();
@@ -69,7 +69,10 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 			$scope.reset();
 		}
 		
-		$scope.form.allProjects = lists.getProjectUmbrellas(); 		
+		$scope.form.allProjects = lists.getUmbrellaProjects(); 		
+		if ($scope.form.allProjects == undefined) {
+			$scope.form.allProjects = [];
+		}
 		$scope.form.selectedProjects = [];
 		
 		if(angular.isUndefined($scope.getHomePage())){

@@ -83,7 +83,8 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', 'lists
 	
 	var init = function(){
 		$scope.lists.refresh.projects();
-		$scope.lists.refresh.states({objectTypeCode:"Run"});
+		$scope.lists.refresh.states({objectTypeCode:"Run", display:true});
+		
 		$scope.lists.refresh.types({objectTypeCode:"Run"});
 		$scope.lists.refresh.runs();
 		$scope.lists.refresh.instruments({categoryCode:"seq-illumina"});
@@ -186,7 +187,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', 'datatable', 'li
 			$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("state").url,remove:true});
 			$scope.activeTab(0); // desactive le lien !
 		}
-		$scope.listsTable.refresh.states({objectTypeCode:"Run"});
+		$scope.lists.refresh.states({objectTypeCode:"Run", display:true});
 		$scope.listsTable.refresh.resolutions({objectTypeCode:"Run"});
 	};
 	

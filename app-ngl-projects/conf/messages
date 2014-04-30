@@ -32,16 +32,16 @@ search.placeholder.states = Sélect. des états
 search.placeholder.types = Sélect. des types
 search.placeholder.valid = Sélect. une évaluation
 search.placeholder.regexCode = Regex pour le code
-search.placeholder.projectUmbrella = Sélect. un projet maître
+search.placeholder.umbrellaProject = Sélect. un projet maître
 
 
 #projects
 projects.menu = Projets
 projects.menu.search = Recherche / Mise à jour
 projects.menu.add = Ajout
-projectUmbrellas.menu = Projets maîtres
-projectUmbrellas.menu.search = Recherche / Mise à jour
-projectUmbrellas.menu.add = Ajout
+umbrellaProjects.menu = Projets maîtres
+umbrellaProjects.menu.search = Recherche / Mise à jour
+umbrellaProjects.menu.add = Ajout
 
 projects.page.title = Projets
 projects.page.tab.validate = Projets à évaluer
@@ -59,10 +59,11 @@ projects.state.code = Etat
 projects.state.updatedAt = Mis à jour le: 
 projects.state.by = par:
 projects.projectCodes = Projets
-projects.projectUmbrellaCodes = Projets maîtres  
-projectUmbrellas.code = Code
-projectUmbrellas.name = Nom
+projects.umbrellaProjectCodes = Projets maîtres  
+umbrellaProjects.code = Code
+umbrellaProjects.name = Nom
 projects.projectCodesSelected = Projets rattachés
+projects.bioinformaticanalysis = Analyse bio-informatique
 
 
 #button

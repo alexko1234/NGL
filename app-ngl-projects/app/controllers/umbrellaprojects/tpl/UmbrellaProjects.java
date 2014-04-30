@@ -1,4 +1,4 @@
-package controllers.projectUmbrellas.tpl;
+package controllers.umbrellaprojects.tpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +11,14 @@ import play.mvc.Result;
 import views.components.datatable.DatatableColumn;
 import views.components.datatable.DatatableConfig;
 import views.components.datatable.DatatableHelpers;
-import views.html.projectUmbrellas.*;
+import views.html.umbrellaprojects.*;
 
 /**
- * Controller around Projectumbrella object
+ * Controller around UmbrellaProject object
  * @author dnoisett
  *
  */
-public class ProjectUmbrellas extends CommonController {
+public class UmbrellaProjects extends CommonController {
 	
 	public static Result home(String homecode) {
 		return ok(home.render(homecode));
@@ -51,16 +51,17 @@ public class ProjectUmbrellas extends CommonController {
   	    return ok(  	    		
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
-  	    		controllers.projectUmbrellas.tpl.routes.javascript.ProjectUmbrellas.home(),  
-  	    		controllers.projectUmbrellas.tpl.routes.javascript.ProjectUmbrellas.get(), 
-  	    		controllers.projectUmbrellas.tpl.routes.javascript.ProjectUmbrellas.add(),
-  	    		controllers.projectUmbrellas.tpl.routes.javascript.ProjectUmbrellas.search(),
-  	    		controllers.projectUmbrellas.api.routes.javascript.ProjectUmbrellas.get(),
-  	    		controllers.projectUmbrellas.api.routes.javascript.ProjectUmbrellas.update(),
-  	    		controllers.projectUmbrellas.api.routes.javascript.ProjectUmbrellas.list(),
-  	    		controllers.projectUmbrellas.api.routes.javascript.ProjectUmbrellas.save(),
+  	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.home(),  
+  	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.get(), 
+  	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.add(),
+  	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.search(),
+  	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.details(),
+  	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.get(),
+  	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.update(),
+  	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.list(),
+  	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.save(),
   	    		controllers.projects.api.routes.javascript.Projects.list()
-  	    		//,controllers.projectUmbrellas.api.routes.javascript.ProjectUmbrellas.delete()
+  	    		//,controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.delete()
   	    	)	  	      
   	    );
   	  }
