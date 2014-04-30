@@ -273,6 +273,7 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', '$http
 		$scope.lists.refresh.instruments({categoryCode:"seq-illumina"});
 		$scope.lists.refresh.reportConfigs({pageCodes:["readsets"+"-"+$scope.getHomePage()]});
 		$scope.lists.refresh.resolutions({objectTypeCode:"ReadSet"});
+		$scope.lists.refresh.users();
 		
 		if(angular.isDefined($scope.getForm())){
 			$scope.form = $scope.getForm();

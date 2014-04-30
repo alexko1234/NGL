@@ -176,6 +176,7 @@ GET		/migration									controllers.migration.MigrationUpdateSampleOnContainer.m
 #Common
 GET		/api/commons/states							controllers.commons.api.States.list()
 GET		/api/commons/states/:code					controllers.commons.api.States.get(code: java.lang.String)
+GET		/api/commons/users							controllers.commons.api.Users.list()
 
 GET		/api/commons/types							controllers.commons.api.CommonInfoTypes.list()
 

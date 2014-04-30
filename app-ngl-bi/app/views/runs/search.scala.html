@@ -10,7 +10,7 @@
 				<div  class="form-control" bt-select ng-model="form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in lists.getStates()" ></div>							
 			}
 			@formGroup{	
-				<input type="text" class="form-control" ng-model="form.valuationUser" placeholder='@Messages("search.placeholder.valuationRunUser")'>
+				<input type="text" class="form-control" ng-model="form.valuationUser" typeahead="valuationUser.name as valuationUser.name for valuationUser in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.valuationRunUser")'>
 			}
 	}		
 	@columnSearchForm{		

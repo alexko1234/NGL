@@ -46,7 +46,7 @@
 		}
 		
 		@formGroup{	
-			<input type="text" class="form-control" ng-model="form.productionValuationUser" placeholder='@Messages("search.placeholder.valuationReadSetUser")'>
+			<input type="text" class="form-control" ng-model="form.productionValuationUser" typeahead="productionValuationUser.name as productionValuationUser.name for productionValuationUser in lists.getUsers() | filter:$viewValue | limitTo:20"  placeholder='@Messages("search.placeholder.valuationReadSetUser")'>
 		}
 		
 		

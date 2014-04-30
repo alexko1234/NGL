@@ -79,7 +79,8 @@ public class ReadSets extends CommonController {
   	      		controllers.valuation.api.routes.javascript.ValuationCriterias.get(),
 	    		controllers.projects.api.routes.javascript.Projects.list(),	    		
   	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.list(),
-  	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.get()
+  	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),
+  	      		controllers.commons.api.routes.javascript.Users.list()
 	      		
   	      )	  	      
   	    );
