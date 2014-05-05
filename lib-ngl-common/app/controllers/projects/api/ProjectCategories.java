@@ -47,8 +47,4 @@ public class ProjectCategories extends CommonController{
 		}	
 	}
 	
-	public static Result get(String code) throws DAOException{
-		ProjectCategory pc =   ProjectCategory.find.findByCode(code);
-		return ok(Json.toJson(pc));
-	}	
 }

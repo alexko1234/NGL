@@ -114,14 +114,14 @@
 				@column4(){
 					@columnLabelValue(Messages("projects.type")){
 						<div ng-switch on="isEditMode()">
-							<p class="form-control-static" ng-switch-when="false">{{project.typeCode  | codes:'type'}}</p>
+							<p class="form-control-static" ng-switch-when="false">{{project.typeCode | codes:'type'}}</p>
 							<div bt-select class="form-control" ng-switch-when="true" ng-model="project.typeCode" bt-options="type.code as type.name for type in lists.getProjectTypes()"></div>
 						</div>
 					}
 					
 					@columnLabelValue(Messages("projects.category.type")){
 						<div ng-switch on="isEditMode()">
-							<p class="form-control-static" ng-switch-when="false">{{form.categoryName}}</p>
+							<p class="form-control-static" ng-switch-when="false">{{project.categoryCode | codes:'category'}}</p>
 							<div bt-select class="form-control" ng-switch-when="true" ng-model="project.categoryCode" bt-options="category.code as category.name for category in lists.getProjectCategories()"></div>
 						</div>	
 					}
