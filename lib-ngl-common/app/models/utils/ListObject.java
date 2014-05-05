@@ -11,8 +11,6 @@ public class ListObject{
 	public String name;
 	public String code;
 	
-	public Boolean display;
-	
 	public ListObject(){
 		this.name = "";
 		this.code = "";
@@ -21,13 +19,6 @@ public class ListObject{
 	public ListObject(String code, String label){
 		this.name = label;
 		this.code = code;
-	}
-	
-	
-	public ListObject(String code, String label, Boolean display){
-		this.name = label;
-		this.code = code;
-		this.display = display;
 	}
 	
 	
