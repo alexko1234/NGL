@@ -94,7 +94,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 				List<Object> list=new ArrayList<Object>();
 				list.add(newRun);
 				try{
-					Logger.debug("Run Rules from Run"+run.code);
+					Logger.debug("Run Rules from Run "+run.code);
 					new RulesServices().callRules(ConfigFactory.load().getString("rules.key"),"rg_1",list);
 				}catch (Exception e) {
 					contextValidation.addErrors("rules", e.toString()+ "runCode :"+run.code, run.code);
