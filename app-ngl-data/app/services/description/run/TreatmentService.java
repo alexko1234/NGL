@@ -111,22 +111,22 @@ public class TreatmentService {
 				getTreatmentTypeContexts("pairs"), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "100"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Merging BA","merging-ba", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.bpa.name()), "mergingBA", 
+		l.add(DescriptionFactory.newTreatmentType("Merging BA","merging-ba", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ba.name()), "mergingBA", 
 				getMergingBAPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "110"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Assembly","assembly", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.bpa.name()), "assembly", 
+		l.add(DescriptionFactory.newTreatmentType("Assembly","assembly", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ba.name()), "assembly", 
 				getAssemblyPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "120"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Scaffolding","scaffolding", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.bpa.name()), "scaffolding", 
+		l.add(DescriptionFactory.newTreatmentType("Scaffolding","scaffolding", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ba.name()), "scaffolding", 
 				getScaffoldingPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "130"));
 
-		l.add(DescriptionFactory.newTreatmentType("Gap Closing","gapClosing", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.bpa.name()), "gapClosing", 
+		l.add(DescriptionFactory.newTreatmentType("Gap Closing","gapClosing", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ba.name()), "gapClosing", 
 				getGapClosingPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "140"));
