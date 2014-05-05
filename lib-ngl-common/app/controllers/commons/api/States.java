@@ -41,10 +41,7 @@ public class States extends CommonController {
 		} else if (statesSearch.list) {
 		    List<ListObject> valuesListObject = new ArrayList<ListObject>();
 		    for (State s : values) {
-		    	if (null != statesSearch.display) 
-		    		valuesListObject.add(new ListObject(s.code, s.name, s.display));
-		    	else	
-		    		valuesListObject.add(new ListObject(s.code, s.name));
+		    	valuesListObject.add(new ListObject(s.code, s.name));
 		    }
 		    return ok(Json.toJson(valuesListObject));
 		} else {
