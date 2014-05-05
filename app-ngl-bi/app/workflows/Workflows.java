@@ -345,6 +345,13 @@ public class Workflows {
 			//update readset if necessary
 			for(String rsCode : analysis.masterReadSetCodes){
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode);
+				State nextStep = cloneState(readSet.state);
+				nextStep.code = "F-BA";
+				setReadSetState(contextValidation, readSet, nextStep);				
+			}							
+		}else if("F-V".equals(analysis.state.code)){
+			for(String rsCode : analysis.masterReadSetCodes){
+				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode);
 				if(TBoolean.TRUE.equals(analysis.valuation.valid)){
 					readSet.bioinformaticValuation.valid = TBoolean.TRUE;
 					readSet.bioinformaticValuation.date = new Date();
@@ -358,20 +365,24 @@ public class Workflows {
 							DBQuery.is("code", rsCode), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation).set("traceInformation", readSet.traceInformation));
 				}
 				State nextStep = cloneState(readSet.state);
-				nextStep.code = "F-BA";
+				nextStep.code = "F-VBA";
 				setReadSetState(contextValidation, readSet, nextStep);				
-			}							
-		}		
+			}		
+		}
 	}
 
 
 	public static void nextAnalysisState(ContextValidation contextValidation, Analysis analysis) {
 		State nextStep = cloneState(analysis.state);
-		if("IP-BA".equals(analysis.state.code)){
+		
+		if("F-BA".equals(analysis.state.code)){
+			nextStep.code = "IW-V";
+		}else if("IW-V".equals(analysis.state.code)){
 			if(!TBoolean.UNSET.equals(analysis.valuation.valid)){
-				nextStep.code = "F-BA";
-			}			
+				nextStep.code = "F-V";
+			}
 		}
+		
 		setAnalysisState(contextValidation, analysis, nextStep);
 		
 	}
