@@ -32,6 +32,8 @@ GET		/tpl/umbrellaprojects/js-routes					controllers.umbrellaprojects.tpl.Umbrel
 #lists api
 GET		/api/projects/types								controllers.projects.api.ProjectTypes.list()
 GET		/api/projects/categories						controllers.projects.api.ProjectCategories.list()
+GET		/api/projects/categories/:code						controllers.projects.api.ProjectCategories.get(code: java.lang.String)
+
 GET		/api/commons/types								controllers.commons.api.CommonInfoTypes.list()
 GET		/api/commons/states								controllers.commons.api.States.list()
 

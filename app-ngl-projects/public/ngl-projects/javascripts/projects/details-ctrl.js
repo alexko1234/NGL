@@ -84,6 +84,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 			}
 			$scope.project = data2;	
 			
+			$scope.form.categoryName = "N/A";
+			$http.get(jsRoutes.controllers.projects.api.ProjectCategories.get($scope.project.categoryCode).url).success(function(catg) {
+				$scope.form.categoryName = catg.name;
+			});
+			
 			$scope.form.allProjects = lists.getUmbrellaProjects(); 		
 			if ($scope.project.umbrellaProjectCodes != null) {
 				$scope.form.selectedProjects = angular.copy($scope.project.umbrellaProjectCodes);

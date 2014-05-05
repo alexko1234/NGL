@@ -46,4 +46,9 @@ public class ProjectCategories extends CommonController{
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}
+	
+	public static Result get(String code) throws DAOException{
+		ProjectCategory pc =   ProjectCategory.find.findByCode(code);
+		return ok(Json.toJson(pc));
+	}	
 }

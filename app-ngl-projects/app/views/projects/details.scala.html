@@ -121,7 +121,7 @@
 					
 					@columnLabelValue(Messages("projects.category.type")){
 						<div ng-switch on="isEditMode()">
-							<p class="form-control-static" ng-switch-when="false">{{project.categoryCode  | codes:'project_cat'}}</p>
+							<p class="form-control-static" ng-switch-when="false">{{form.categoryName}}</p>
 							<div bt-select class="form-control" ng-switch-when="true" ng-model="project.categoryCode" bt-options="category.code as category.name for category in lists.getProjectCategories()"></div>
 						</div>	
 					}
