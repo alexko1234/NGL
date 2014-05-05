@@ -83,8 +83,7 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', 'lists
 	
 	var init = function(){
 		$scope.lists.refresh.projects();
-		$scope.lists.refresh.states({objectTypeCode:"Run", display:true});
-		
+		$scope.lists.refresh.states({objectTypeCode:"Run", display:true});		
 		$scope.lists.refresh.types({objectTypeCode:"Run"});
 		$scope.lists.refresh.runs();
 		$scope.lists.refresh.instruments({categoryCode:"seq-illumina"});

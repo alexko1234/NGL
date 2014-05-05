@@ -170,14 +170,12 @@ function getBatchColumns(columns){
 	columns.push({	property:"properties.isSentCCRT.value",
 					header: "readsets.properties.isSentCCRT",
 					type :"boolean",
-					order:true,
-			    	edit:true
+					edit:true
     	});
 	columns.push({	property:"properties.isSentCollaborator.value",
 					header: "readsets.properties.isSentCollaborator",
 					type :"boolean",
-					order:true,
-			    	edit:true
+					edit:true
     	});
 	
 	
@@ -266,8 +264,7 @@ angular.module('home').controller('SearchFormCtrl', ['$scope', '$filter', '$http
 		}
 		
 		$scope.lists.refresh.projects();
-		$scope.lists.refresh.states({objectTypeCode:"ReadSet", display:true});		
-		
+		$scope.lists.refresh.states({objectTypeCode:"ReadSet", display:true});				
 		$scope.lists.refresh.types({objectTypeCode:"Run"});
 		$scope.lists.refresh.runs();
 		$scope.lists.refresh.instruments({categoryCode:"seq-illumina"});
