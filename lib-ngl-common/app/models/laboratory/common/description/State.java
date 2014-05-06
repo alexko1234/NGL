@@ -22,7 +22,7 @@ public class State extends Model<State> {
     public StateCategory category;
     public List<ObjectType> objectTypes;
     
-    public Boolean display;
+    public boolean display;
     
 
     public static StateFinder find = new StateFinder();

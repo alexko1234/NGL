@@ -28,7 +28,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 
 	protected StateDAO() {
 		super("state", State.class,StateMappingQuery.class, 
-				"SELECT t.id,t.name,t.code,t.active,t.position,t.fk_state_category, t.display " +
+				"SELECT t.id, t.name,t.code,t.active,t.position,t.fk_state_category, t.display " +
 				"FROM state as t ", true);
 	}
 
