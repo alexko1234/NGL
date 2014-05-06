@@ -1,25 +1,7 @@
 @()
 
-@column1()(value: Html) = {
-	<div class="col-md-1 col-lg-1">
-		@value
-	</div>
-}
-
-@column3()(value: Html) = {
-	<div class="col-md-3 col-lg-3">
-		@value
-	</div>
-}
-
-@column4()(value: Html) = {
-	<div class="col-md-4 col-lg-4">
-		@value
-	</div>
-}
-
-@column6()(value: Html) = {
-	<div class="col-md-6 col-lg-6">
+@column(size:Int)(value: Html) = {
+	<div class="col-md-@size col-lg-@size">
 		@value
 	</div>
 }
@@ -55,7 +37,7 @@
 	<div class="col-md-12 col-lg-12">
 		<form class="form-horizontal">
 			<div class="row">
-				@column6(){
+				@column(6){
 					@columnLabelValue(Messages("umbrellaProjects.code")){
 						<p class="form-control-static">{{umbrellaProject.code}}</p>
 					}
@@ -70,7 +52,7 @@
 			</div>
 				
 			<div class="row">
-				@column6(){	
+				@column(6){	
 					@columnLabelValue(Messages("projects.projectCodes")){
 						<div ng-switch on="isEditMode()">
 						
@@ -90,7 +72,7 @@
 					
 				}	
 				
-				@column1(){
+				@column(1){
 					<div ng-switch on="isEditMode()">
 						<div ng-switch-when="true">
 							<button type="button" class="btn btn-default btn-block" ng-click="addItem()"><i class="fa fa-forward"></i></button> 
@@ -99,7 +81,7 @@
 					</div>
 				}
 				
-				@column3(){				
+				@column(3){				
 					<div ng-switch on="isEditMode()">
 						<div ng-switch-when="true"> 
 							<select size="30" name="selectedProjects" ng-model="umbrellaProject.projectCodes" multiple="true" ng-options="code for code in form.selectedProjects">

@@ -1,25 +1,7 @@
 @()
 
-@column1()(value: Html) = {
-	<div class="col-md-1 col-lg-1">
-		@value
-	</div>
-}
-
-@column3()(value: Html) = {
-	<div class="col-md-3 col-lg-3">
-		@value
-	</div>
-}
-
-@column4()(value: Html) = {
-	<div class="col-md-4 col-lg-4">
-		@value
-	</div>
-}
-
-@column6()(value: Html) = {
-	<div class="col-md-6 col-lg-6">
+@column(size:Int)(value: Html) = {
+	<div class="col-md-@size col-lg-@size">
 		@value
 	</div>
 }
@@ -35,12 +17,12 @@
 
 @dataState()() = {
 	<p>
-	@Messages("symbol.delimiter.parenthesis.open")
-	<label>@Messages("projects.state.updatedAt")</label> <time>{{project.state.date  | date:'@Messages("date.format")'}}</time>
+		@Messages("symbol.delimiter.parenthesis.open")
+		<label>@Messages("projects.state.updatedAt")</label> <time>{{project.state.date  | date:'@Messages("date.format")'}}</time>
 	</p>
 	<p>
-	<label>@Messages("projects.state.by")</label> <data>{{project.state.user}}</data>
-	@Messages("symbol.delimiter.parenthesis.close")
+		<label>@Messages("projects.state.by")</label> {{project.state.user}}
+		@Messages("symbol.delimiter.parenthesis.close")
 	</p> 				
 }
 
@@ -73,7 +55,7 @@
 	<div class="col-md-12 col-lg-12">
 		<form class="form-horizontal">
 			<div class="row">
-				@column6(){
+				@column(6){
 					@columnLabelValue(Messages("projects.code")){
 						<p class="form-control-static">{{project.code}}</p>
 					}
@@ -111,7 +93,7 @@
 					}	
 				}
 				
-				@column4(){
+				@column(4){
 					@columnLabelValue(Messages("projects.type")){
 						<div ng-switch on="isEditMode()">
 							<p class="form-control-static" ng-switch-when="false">{{project.typeCode | codes:'type'}}</p>
@@ -140,7 +122,7 @@
 			</div>
 			
 			<div class="row">
-				@column6(){			
+				@column(6){			
 					@columnLabelValue(Messages("projects.umbrellaProjectCodes")){
 						<div ng-switch on="isEditMode()">
 							<div ng-switch-when="false"> 
@@ -157,7 +139,7 @@
 					}							
 				}
 				
-				@column1(){
+				@column(1){
 					<div ng-switch on="isEditMode()">
 						<div ng-switch-when="true">
 							<button type="button" class="btn btn-default btn-block" ng-click="addItem()"><i class="fa fa-forward"></i></button> 
@@ -166,7 +148,7 @@
 					</div>
 				}
 				
-				@column3(){				
+				@column(3){				
 					<div ng-switch on="isEditMode()">
 						<div ng-switch-when="true"> 
 							<select size="30" name="selectedProjects" ng-model="project.umbrellaProjectCodes" multiple="true" ng-options="code for code in form.selectedProjects">

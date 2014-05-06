@@ -1,25 +1,7 @@
 @()
 
-@column1()(value: Html) = {
-	<div class="col-md-1 col-lg-1">
-		@value
-	</div>
-}
-
-@column3()(value: Html) = {
-	<div class="col-md-3 col-lg-3">
-		@value
-	</div>
-}
-
-@column4()(value: Html) = {
-	<div class="col-md-4 col-lg-4">
-		@value
-	</div>
-}
-
-@column6()(value: Html) = {
-	<div class="col-md-6 col-lg-6">
+@column(size:Int)(value: Html) = {
+	<div class="col-md-@size col-lg-@size">
 		@value
 	</div>
 }
@@ -53,7 +35,7 @@
 	<div class="col-md-12 col-lg-12">
 		<form class="form-horizontal">
 			<div class="row">
-				@column6(){
+				@column(6){
 					@columnLabelValue(Messages("projects.code")){
 						<div>
 							<input type="text" class="form-control" ng-model="form.code">
@@ -101,19 +83,19 @@
 			</div>
 			
 			<div class="row">
-				@column6(){			
+				@column(6){			
 					@columnLabelValue(Messages("projects.umbrellaProjectCodes")){
 						<select size="30" name="allProjects" ng-model="form.allProjects" multiple="true" ng-options="p.code as (p.code + ':' + p.name) for p in lists.getUmbrellaProjects()">
 						</select>						
 					}			
 				}
 				
-				@column1(){
+				@column(1){
 					<button type="button" class="btn btn-default btn-block" ng-click="addItem()"><i class="fa fa-forward"></i></button> 
 					<button type="button" class="btn btn-default btn-block" ng-click="removeItem()"><i class="fa fa-backward"></i></button>
 				}
 				
-				@column3(){				
+				@column(3){				
 					<select size="30" name="selectedProjects" ng-model="project.umbrellaProjectCodes" multiple="true" ng-options="code for code in form.selectedProjects">
 					</select>
 				}
