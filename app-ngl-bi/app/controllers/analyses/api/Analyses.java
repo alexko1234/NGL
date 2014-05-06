@@ -49,7 +49,7 @@ public class Analyses extends DocumentController<Analysis>{
 	final static Form<State> stateForm = form(State.class);
 	final static Form<AnalysesBatchElement> batchElementForm = form(AnalysesBatchElement.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final static List<String> authorizedUpdateFields = Arrays.asList("code");
+	final static List<String> authorizedUpdateFields = Arrays.asList("code","masterReadSetCodes","readSetCodes");
 	
 	public Analyses() {
 		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		
