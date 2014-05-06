@@ -205,12 +205,12 @@ public class Analyses extends DocumentController<Analysis>{
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
 			
-			if(!filledForm.hasErrors() && queryFieldsForm.fields.contains("code")){
+			if(!ctxVal.hasErrors() && queryFieldsForm.fields.contains("code")){
 				ctxVal.setCreationMode();
 				CommonValidationHelper.validateCode(input, collectionName, ctxVal);
 			}
 			
-			if(!filledForm.hasErrors()){
+			if(!ctxVal.hasErrors()){
 				updateObject(DBQuery.and(DBQuery.is("code", code)), 
 						getBuilder(input, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 				if(queryFieldsForm.fields.contains("code") && null != input.code){

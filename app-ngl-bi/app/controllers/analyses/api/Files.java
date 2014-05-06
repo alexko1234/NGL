@@ -120,7 +120,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
 			
-			if(queryFieldsForm.fields.contains("fullname")){
+			if(!ctxVal.hasErrors() && queryFieldsForm.fields.contains("fullname")){
 				ctxVal.setCreationMode();
 				FileValidationHelper.validateFileFullName(fileInput.fullname, ctxVal);
 			}
