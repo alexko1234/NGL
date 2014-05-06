@@ -30,14 +30,20 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 	List<Project> projects = limsServices.findProjectToCreate(contextValidation) ;
 		
 		for(Project project:projects){
-	
+	/*
 			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code)){
 				MongoDBDAO.deleteByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code);
 				//Logger.debug("Project to create :"+project.code);
 			}
+			
+			*/
+			
+			if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code)){
+				InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,project,contextValidation);
+			}
 		}
 	
-		InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextValidation);
+		//InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextValidation);
 		
 	}
 }
