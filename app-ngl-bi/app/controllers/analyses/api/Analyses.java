@@ -205,7 +205,7 @@ public class Analyses extends DocumentController<Analysis>{
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
 			
-			if(queryFieldsForm.fields.contains("code")){
+			if(!filledForm.hasErrors() && queryFieldsForm.fields.contains("code")){
 				ctxVal.setCreationMode();
 				CommonValidationHelper.validateCode(input, collectionName, ctxVal);
 			}
