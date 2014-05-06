@@ -171,7 +171,6 @@ HEAD	/api/alerts/:code               			controllers.alerts.api.Alerts.head(code:
 
 #migration
 GET		/migration									controllers.migration.MigrationUpdateSampleOnContainer.migration()
-GET		/migrationDR								controllers.migration.MigrationDesactivationReadSet.migration()
 
 #Common
 GET		/api/commons/states							controllers.commons.api.States.list()
