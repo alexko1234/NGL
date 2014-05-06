@@ -7,6 +7,7 @@ import net.vz.mongodb.jackson.DBUpdate.Builder;
 
 import org.bson.BSONObject;
 
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -178,9 +179,14 @@ public abstract class MongoCommonController<T extends DBObject> extends NewCommo
 	 */
 	protected void validateIfFieldsArePresentInForm(
 			ContextValidation ctxVal, List<String> fields, Form<?> filledForm) {
+		Object o = filledForm.get();
 		for(String field: fields){
-			if(filledForm.field(field).value() == null){
-				ctxVal.addErrors(field, "error.notdefined");
+			try {
+				if(o.getClass().getField(field).get(o) == null){
+					ctxVal.addErrors(field, "error.notdefined");
+				}
+			}catch(Exception e){
+				Logger.error(e.getMessage());
 			}
 		}	
 		
