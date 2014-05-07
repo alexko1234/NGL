@@ -540,6 +540,56 @@ public class LimsCNSDAO{
 		});
 		return results;
 	}
+	
+	
+	public ReadSet findReadSetToUpdate(final ReadSet readSet,
+			final ContextValidation contextError) throws SQLException{
+		ReadSet results = this.jdbcTemplate.queryForObject("pl_ReadSetUnRunToNGL @readSetCode=?",new Object[]{readSet.code} 
+		,new RowMapper<ReadSet>() {
+			@SuppressWarnings("rawtypes")
+			public ReadSet mapRow(ResultSet rs, int rowNum) throws SQLException {
+				ReadSet readSet=new ReadSet();
+				readSet.code=rs.getString("code");
+				readSet.archiveId=rs.getString("archiveId");
+				readSet.archiveDate=rs.getDate("archiveDate");
+				readSet.dispatch=rs.getBoolean("dispatch");
+				readSet.laneNumber=rs.getInt("laneNumber");
+				readSet.path=rs.getString("readSetPath");
+				readSet.projectCode=rs.getString("projectCode");
+				readSet.runCode=readSet.runCode;
+				readSet.runTypeCode=readSet.runTypeCode;
+				readSet.sampleCode=rs.getString("sampleCode");
+				readSet.state=new State();
+				readSet.state.code=DataMappingCNS.getStateReadSetFromLims(rs.getString("state"),TBoolean.valueOf(rs.getString("validationBioinformatic")));
+				readSet.state.date= new Date();
+				readSet.state.user="lims";
+
+				readSet.state.historical=new ArrayList<TransientState>();		
+				readSet.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",1));
+				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",2));	
+
+				readSet.traceInformation=new TraceInformation();
+				readSet.traceInformation.setTraceInformation("lims");
+				readSet.typeCode=READSET_DEFAULT_CODE;
+				readSet.archiveDate=rs.getDate("archiveDate");
+				readSet.archiveId=rs.getString("archiveId");
+				readSet.runSequencingStartDate=rs.getDate("runSequencingStartDate");
+				//To valide
+				readSet.bioinformaticValuation=new Valuation();
+				readSet.bioinformaticValuation.valid=TBoolean.valueOf(rs.getString("validationBioinformatic"));
+				readSet.bioinformaticValuation.date=new Date();
+				readSet.bioinformaticValuation.user="lims";
+				readSet.productionValuation=new Valuation();
+				readSet.productionValuation.valid=TBoolean.valueOf(rs.getString("validationProduction"));
+				readSet.productionValuation.date=rs.getDate("validationProductionDate");
+				readSet.productionValuation.user="lims";
+				readSet.treatments.put(NGSRG_CODE,newTreatment(contextError,rs,Level.CODE.ReadSet,NGSRG_CODE,NGSRG_CODE,RUN_TYPE_CODE));
+				readSet.treatments.put(GLOBAL_CODE,newTreatment(contextError,rs,Level.CODE.ReadSet,GLOBAL_CODE,GLOBAL_CODE,GLOBAL_CODE));
+				return readSet;
+			}
+		});
+		return results;
+	}
 
 	public void updateRunLims(List<Run> updateRuns,
 			ContextValidation contextError)throws SQLException {

@@ -32,9 +32,30 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException,
 	RulesException {
-		updateReadSet(new Run(),contextError);
+		updateReadSetArchive(contextError);
 	}
 
+	
+	public void updateReadSetArchive(ContextValidation contextError) {
+		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  DBQuery.and(DBQuery.is("dispatch", true), DBQuery.notExists("archiveId"))).toList();
+		Logger.info("nb ReadSet ="+readSets.size());
+		for(ReadSet rs : readSets){
+			ReadSet updateRS;
+			try {
+				updateRS = limsServices.findReadSetToUpdate(rs, contextError);
+				logger.info("Update ReadSet ="+rs.getCode());
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
+						, DBQuery.is("code", rs.code)
+						, DBUpdate.set("archiveDate",updateRS.archiveDate)
+									.set("archiveId", updateRS.archiveId)
+									.set("traceInformation.modifyDate", new Date())
+									.set("traceInformation.modifyUser", "lims"));
+				} catch (SQLException e) {
+					logger.error(e.getMessage());
+				}
+		}		
+	}
+	
 
 	public static void updateReadSet(Run run,ContextValidation contextError) {
 		List<ReadSet> readSets=null;

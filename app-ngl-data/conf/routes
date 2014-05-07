@@ -26,6 +26,7 @@ GET		/api/description/treatments				controllers.description.runs.Treatments.save
 GET		/migrationcontent						controllers.migration.MigrationContent.migration()
 GET		/migrationstate						    controllers.migration.MigrationStateContainer.migration()
 GET		/migration						    	controllers.migration.MigrationReadSetFileCNS.migration()
+GET		/updatersarchive				    	controllers.migration.MigrationReadSetArchiveId.migration()
 
 #GET 	/update/readsetfile/:code				controllers.migration.MigrationReadSetFileCNS.updateFileReadSet(code: java.lang.String)
 
