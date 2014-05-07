@@ -23,7 +23,7 @@ containers.table.valid = Valide
 containers.table.supportCode = Code Support
 
 containers.select.state =  Sélect. un état
-containers.select.categoryCode =  Sélect. un type
+containers.select.categoryCode =  Sélect. un type de container
 containers.select.categorySupportCode =  Sélect. un type de support--
 
 #search
