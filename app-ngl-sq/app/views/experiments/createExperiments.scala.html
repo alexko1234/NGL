@@ -32,6 +32,8 @@
 <div class="col-md-12 col-lg-12 ">
 	<div class="page-header">
 	<div class="btn-toolbar pull-right">
+			<button class="btn btn-default" ng-show="experiment.value.state.code == 'N'" ng-disabled="experiment.value._id == null || !experiment.experimentInformation.enabled" ng-click="saveAllAndChangeState()" >@Messages("experiments.begin_progress")</button>
+			<button  class="btn btn-default"  ng-show="experiment.value.state.code == 'IP'" ng-disabled="experiment.value._id == null || !experiment.experimentInformation.enabled" ng-click="saveAllAndChangeState()" >@Messages("experiments.finish")</button>
 		<div class="btn-group " id="experiment_action">
 			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown"> Actions <span
 				class="caret"></span>
@@ -40,7 +42,7 @@
 				<li><a href="#" ng-disabled="experiment.value.stateCode != 'IP' || !experiment.experimentInformation.enabled"  ng-click="generateSampleSheet()" >@Messages("experiments.sampleSheet")</a></li>
 			</ul>
 		</div>
-		<button class="btn btn-primary" ng-click="saveAll();" data-toggle="tooltip" title="@Messages("experiments.save_all")">
+		<button class="btn btn-primary" ng-click="saveAllPromise();" data-toggle="tooltip" title="@Messages("experiments.save_all")">
 			<i class="fa fa-save"></i>
 		</button>
 		<button class="btn btn-default"  data-toggle="modal" data-target="#myModal">@Messages("experiment.addComment")</button>
@@ -95,18 +97,13 @@
 							</select>
 					}	
 			   	 	@columnLabelValue(Messages("experiments.state")){
-			   	 		<b>{{experiment.value.state.code | codes:'state'}}</b>
-						<div ng-switch on="experiment.value.state.code">
-								<button class="btn btn-default" ng-switch-when="N" ng-disabled="experiment.value._id == null || !experiment.experimentInformation.enabled" ng-click="changeState()" >@Messages("experiments.begin_progress")</button>
-								<!--<button  class="btn btn-default" ng-switch-when="IP" ng-click="changeState('OK')" >@Messages("experiments.ok")</button>-->
-								<button  class="btn btn-default" ng-switch-when="IP" ng-disabled="experiment.value._id == null || !experiment.experimentInformation.enabled" ng-click="changeState()" >@Messages("experiments.finish")</button>
-							</div>
+			   	 		<p class="form-control-static">{{experiment.value.state.code | codes:'state'}}</p>
 					}
 			    	@columnLabelValue(Messages("experiments.resolution")){
 							<div class="form-control"  bt-select ng-model="experiment.value.state.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" 
 									bt-options="resolution.code as resolution.name for resolution in lists.get('resolutions')" 
 									ng-disabled="!experiment.experimentInformation.enabled"
-									ng-readonly="!experiment.experimentInformation.enabled">
+									ng-readonly="!experiment.experimentInformation.enabled" auto-select>
 							</div>	
 					}	
 					
@@ -134,7 +131,7 @@
 			<div class="col-md-5 col-lg-5">
 				<div class="panel panel-default">
 			  	<div class="panel-heading">
-			  	<div class="btn-group pull-right" ng-switch on="experiment.experimentInformation.enabled">
+			  	<div class="btn-group pull-right" ng-switch on="experiment.instrumentInformation.enabled">
 						<button class="btn btn-default btn-xs" ng-click="experiment.instrumentInformation.toggleEdit();experiment.instrumentProperties.toggleEdit()" ng-switch-when="false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="fa fa-edit"></i></button>
 						<button class="btn btn-default btn-xs" ng-click="experiment.instrumentInformation.toggleEdit();experiment.instrumentProperties.toggleEdit()" ng-switch-when="true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="fa fa-undo"></i></button>	
 				  </div>
@@ -147,7 +144,7 @@
 						<select class="form-control"
 					ng-change="getInstruments()"
 					ng-model="experiment.value.instrument.typeCode"
-					auto-select="lists.get('instrumentUsedTypes')"
+					auto-select
 					ng-readonly="!experiment.instrumentInformation.enabled"
 					ng-options="instrumentUsedType.code as instrumentUsedType.name for instrumentUsedType in lists.get('instrumentUsedTypes')"
 					ng-disabled="!experiment.instrumentInformation.enabled">
@@ -173,7 +170,7 @@
 					<label class="col-md-6 col-lg-6 control-label">@Messages("experiments.intrumentCategory")</label>
 					<div class="col-md-6 col-lg-6">
 									<select  class="form-control"
-									auto-select="lists.get('containerSupportCategories')"
+									auto-select
 									ng-model="experiment.value.instrument.outContainerSupportCategoryCode"
 									ng-readonly="!experiment.instrumentInformation.enabled"
 									ng-change="getInputTemplate()"

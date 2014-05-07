@@ -35,6 +35,19 @@
 			</select>
 		}	
 	}
+	@columnSearchForm{
+			@formGroup{			
+				<input class="form-control" type="date" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
+			}
+			@formGroup{	
+				<input class="form-control" type="date" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
+			}
+	}
+	@columnSearchForm{
+			@formGroup{		
+			<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.user")'>
+			}
+	}
 }
 
 @searchForm(form)()()

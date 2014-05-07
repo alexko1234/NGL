@@ -23,6 +23,31 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"type":"date"
 		},
 		{
+			"header":Messages("containers.table.sampleCodes"),
+			"property":"sampleCodes",
+			"order":true,
+			"type":"text"
+		},
+		{
+			"header":Messages("containers.table.projectCodes"),
+			"property":"projectCodes",
+			"order":true,
+			"type":"text"
+		},
+		{
+			"header":Messages("containers.table.fromExperimentTypeCodes"),
+			"property":"fromExperimentTypeCodes",
+			"order":true,
+			"type":"text"
+		},
+		{
+			"header":Messages("containers.table.valid"),
+			"property":"valuation.valid",
+			"order":true,
+			"type":"text",
+			"filter":"codes:'valuation'",
+		},
+		{
 			"header":Messages("containers.table.createUser"),
 			"property":"traceInformation.createUser",
 			"order":true,
@@ -75,7 +100,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.basket.reset();
 		
 		$scope.form.experimentType = undefined;
-		
+
 		if($scope.form.processType && $scope.form.experimentCategory){
 			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code}, true);
 		}else if($scope.form.experimentCategory){
@@ -89,6 +114,22 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}
 	};
 	
+	$scope.getContainerStateCode = function(experimentCategory){
+		var stateCode = "A";
+		console.log(experimentCategory);
+		switch(experimentCategory){
+			case "qualitycontrol": stateCode = 'A-QC';
+								   break;
+			case "transfert": 	   stateCode = 'A-TF';
+							       break;
+			case "purification":   stateCode = 'A-PF';
+								   break;
+			default:               stateCode = 'A';
+		}
+		
+		return stateCode;
+	};
+	
 	$scope.search = function(){
 		$scope.errors.experimentType = {};
 		
@@ -96,7 +137,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		if($scope.form.experimentType){ 		
 			var jsonSearch = {};
 			
-			jsonSearch.stateCode = 'A';	//default state code for containers		
+			jsonSearch.stateCode = $scope.getContainerStateCode($scope.form.experimentCategory.code);	 
+			
 			if($scope.form.projectCode){
 				jsonSearch.projectCodes = $scope.form.projectCode;
 			}			
@@ -162,13 +204,17 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	}
 	
 	if(angular.isUndefined($scope.getForm())){
-		$scope.form = {};
+		$scope.form = {experimentCategory:{}};
 		$scope.setForm($scope.form);
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.types({objectTypeCode:"Process"}, true);
 		$scope.lists.refresh.processCategories();
 		$scope.lists.refresh.experimentCategories();
 		$scope.lists.refresh.users();
+		if($scope.newExperiment != "new"){
+			$scope.form.experimentCategory.code = $scope.newExperiment;
+			$scope.changeExperimentCategory();
+		}
 	} else {
 		$scope.form = $scope.getForm();		
 	}

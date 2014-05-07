@@ -29,6 +29,12 @@
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
 								<li class="@("active".when(nav ==  "experiments.search"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("search")">@Messages("experiments.menu.search")</a></li>
 								<li class="@("active".when(nav ==  "experiments.new"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("new")">@Messages("experiments.menu.creation")</a></li>
+								<li class="@("active".when(nav ==  "experiments.purification"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("purification")">@Messages("experiments.menu.purification")</a></li>
+								<li class="@("active".when(nav ==  "experiments.qualitycontrol"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("qualitycontrol")">@Messages("experiments.menu.qualitycontrol")</a></li>
+								<li class="@("active".when(nav ==  "experiments.transfert"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("transfert")">@Messages("experiments.menu.transfert")</a></li>
+								<li class="@("active".when(nav ==  "experiments.transformation"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("transformation")">@Messages("experiments.menu.transformation")</a></li>
+								<li class="@("active".when(nav ==  "experiments.voidprocess"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("voidprocess")">@Messages("experiments.menu.voidprocess")</a></li>
+							
 							</ul>
   						</li>						
 			</ul>

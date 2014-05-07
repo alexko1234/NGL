@@ -1,5 +1,8 @@
 package controllers.processes.api;
 
+import java.util.Date;
+import java.util.List;
+
 import controllers.ListForm;
 
 public class ProcessesSearchForm extends ListForm{
@@ -9,6 +12,9 @@ public class ProcessesSearchForm extends ListForm{
 	public String projectCode;
 	public String supportCode;
 	public String stateCode;
+	public Date fromDate;
+	public Date toDate;
+	public List<String> users;
 	
 	@Override
 	public String toString() {

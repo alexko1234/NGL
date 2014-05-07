@@ -43,6 +43,16 @@
 				</select>		
 			}
 		}
+		@columnSearchForm{
+			@formGroup{		
+			<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.user")'>
+			}
+			@formGroup{
+			<select class="form-control" ng-model="form.state" ng-options="stateCode.name for stateCode in lists.getStates()" ng-change="search()">
+				<option value="">@Messages("experiments.select.state")</option>
+			</select>
+			}	
+		}
 }
 
 @searchForm(form)()()

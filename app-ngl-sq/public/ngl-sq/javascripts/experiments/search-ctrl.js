@@ -52,6 +52,20 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				"order":true,
 				"hide":true,
 				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.creationDate"),
+				"property":"traceInformation.creationDate",
+				"order":true,
+				"hide":true,
+				"type":"date"
+			},
+			{
+				"header":Messages("containers.table.resolutionCodes"),
+				"property":"state.resolutionCodes",
+				"order":true,
+				"hide":true,
+				"type":"date"
 			}
 			],
 			show:{
@@ -116,7 +130,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	};
 	
 	$scope.search = function(){		
-		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.type || $scope.form.fromDate || $scope.form.toDate){
+		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.type || $scope.form.fromDate || $scope.form.toDate || $scope.form.state || $scope.form.user){
 			var jsonSearch = {};			
 
 			if($scope.form.projectCode){
@@ -131,6 +145,14 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			
 			if($scope.form.type){
 				jsonSearch.typeCode = $scope.form.type.code;
+			}
+			
+			if($scope.form.state){
+				jsonSearch.stateCode = $scope.form.state.code;
+			}
+
+			if($scope.form.user){
+				jsonSearch.users = $scope.form.user;
 			}
 			
 			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
@@ -153,6 +175,8 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		$scope.lists.refresh.processCategories();
 		$scope.lists.refresh.experimentCategories();
 		$scope.lists.refresh.projects();
+		$scope.lists.refresh.users();
+		$scope.lists.refresh.states({objectTypeCode:"Experiment"});
 		
 	}else{
 		$scope.form = $scope.getForm();			

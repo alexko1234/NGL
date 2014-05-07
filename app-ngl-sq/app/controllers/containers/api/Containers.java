@@ -12,6 +12,7 @@ import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.processes.description.ProcessType;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -158,6 +159,8 @@ public class Containers extends CommonController {
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("support", 1);
+			
+			
 			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
 			List<Container> containers = results.toList();
 			List<LocationOnContainerSupport> containerSupports = new ArrayList<LocationOnContainerSupport>();
@@ -240,9 +243,17 @@ public class Containers extends CommonController {
 		
 		if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isEmpty(containersSearch.experimentTypeCode)){
 			List<String> listePrevious = ExperimentType.find.findVoidProcessExperimentTypeCode(containersSearch.processTypeCode);
+			ProcessType processType = ProcessType.find.findByCode(containersSearch.processTypeCode);
+			List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
+			
+			for(ExperimentType e:experimentTypes){
+				listePrevious.add(e.code);
+			}
+			
 			if(null != listePrevious && listePrevious.size() > 0){
 				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.size("fromExperimentTypeCodes", 0)));
-			}	    		    	
+			}	    		 
+			
 		}
 		
 		if(containersSearch.fromExperimentTypeCodes != null){

@@ -13,9 +13,16 @@ public class ExperimentSearchForm extends ListForm{
 	public List<String> sampleCodes;
 	public Date fromDate;
 	public Date toDate;
+	public String stateCode;
+	public List<String> users;
 	
 	@Override
 	public String toString() {
-		return "ExperimentSearch [typeCode=" + typeCode + "]";
+		return "ExperimentSearchForm [typeCode=" + typeCode
+				+ ", processTypeCode=" + processTypeCode + ", categoryCode="
+				+ categoryCode + ", projectCodes=" + projectCodes
+				+ ", sampleCodes=" + sampleCodes + ", fromDate=" + fromDate
+				+ ", toDate=" + toDate + ", stateCode=" + stateCode
+				+ ", users=" + users + "]";
 	}
 }

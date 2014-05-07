@@ -28,7 +28,7 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 				columnMode:true
 			},
 			messages:{
-				active:true,
+				active:false,
 				columnMode:true
 			},
 			extraHeaders:{
@@ -107,8 +107,12 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data.name,"outputInstrumentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{"0":"Outputs","1":"Instruments"}));
 	});
 	
-	$scope.$on('addOutputColumns', function(e) {
+	$scope.addOutputColumns = function(){
 		$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Code","outputContainerUsed.code",false, true,true,"String",false,undefined,{"0":"Outputs"}));
+	};
+	
+	$scope.$on('addOutputColumns', function(e) {
+		$scope.addOutputColumns();
 	});
 	
 	$scope.$on('inputToExperiment', function(e, atomicTransfertMethod) {
@@ -186,28 +190,56 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 		}
 	});
 	
+	$scope.$on('save', function(e, promises, func) {
+		promises.push($scope.datatable.save());
+		$scope.$emit('viewSaved', promises, func);
+	});
+	
+	$scope.refreshView = function(){
+		var i = 0;
+		var k = 0;
+		while($scope.experiment.value.atomicTransfertMethods[i] != undefined){
+			if($scope.experimentType.atomicTransfertMethod != "ManyToOne"){
+				$scope.datatable.displayResult[i].data.state = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.state
+			}else{
+				var j = 0;
+				while($scope.experiment.value.atomicTransfertMethods[k].inputContainerUseds[j] != undefined){
+					$scope.datatable.displayResult[k].data.state = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].state;
+					k++;
+				}
+			}
+			i++;
+		 }
+	};
+	
+	$scope.$on('refresh', function(e) {
+		$scope.refreshView();
+		
+		$scope.$emit('viewRefeshed');
+	});
+	
 	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {
 		for(var i=0;i<$scope.datatable.displayResult.length;i++){
 			if(atomicTransfertMethod == "ManyToOne"){
 				if($scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed!=undefined){
-					$scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.instrumentProperties = $scope.datatable.displayResult[i].outputInstrumentProperties;
-					$scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.experimentProperties = $scope.datatable.displayResult[i].outputExperimentProperties;					
+					$scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.instrumentProperties = $scope.datatable.displayResult[i].data.outputInstrumentProperties;
+					$scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.experimentProperties = $scope.datatable.displayResult[i].data.outputExperimentProperties;					
 				}
 			}else{
 				if(atomicTransfertMethod == "OneToMany"){
 					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds!=undefined){
 						for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[i].length;j++){
-							$scope.experiment.value.atomicTransfertMethods[i].ouputContainerUseds[j].instrumentProperties = $scope.datatable.displayResult[i].outputInstrumentProperties;
+							$scope.experiment.value.atomicTransfertMethods[i].ouputContainerUseds[j].instrumentProperties = $scope.datatable.displayResult[i].data.outputInstrumentProperties;
 							
-							$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].experimentProperties = $scope.datatable.displayResult[i].outputExperimentProperties;
+							$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].experimentProperties = $scope.datatable.displayResult[i].data.outputExperimentProperties;
 							i++;
 						}
 					}
 				}else if(atomicTransfertMethod != "OneToVoid"){
 					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed!=undefined){
-						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties = $scope.datatable.displayResult[i].outputInstrumentProperties;					
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties = $scope.datatable.displayResult[i].data.outputInstrumentProperties;					
 						
-						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties = $scope.datatable.displayResult[i].outputExperimentProperties;					
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties = $scope.datatable.displayResult[i].data.outputExperimentProperties;					
 					}
 				}
 			}
@@ -246,6 +278,10 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 			}
 		});
 	};
+	
+	$scope.getContainersPromise = function(){
+		
+	}
 	
 	$scope.loadExperiment = function (){
 		var containers = [];
@@ -286,11 +322,19 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 			$scope.datatable.setData(containers,containers.length);
 			$scope.getInstruments(true);
 			$scope.experimentToInput($scope.experimentType.atomicTransfertMethod);
+
+			if($scope.isOutputGenerated()){
+				$scope.addOutputColumns();
+				$scope.addExperimentPropertiesOutputsColumns();
+				$scope.addInstrumentPropertiesOutputsColumns();
+			}
 		});
 	};
 	
 	//Init
 	$scope.datatable = datatable($scope, $scope.datatableConfig);
+	//$scope.test = oneToOne($scope,"datatable", "none");
+	
 	if($scope.experiment.editMode){
 		$scope.loadExperiment();
 	}else{

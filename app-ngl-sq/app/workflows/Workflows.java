@@ -109,6 +109,7 @@ public class Workflows {
 
 		if(state.code!=null){
 			setContainerState(experiment.getAllInPutContainer(), state, contextValidation);
+			//Il faut mettre à jour le state du container dans l'experiment.atomicTransfereMethod
 		}
 	}
 
@@ -141,6 +142,7 @@ public class Workflows {
 
 			if(nextState.code!=null && containerUsed!=null){
 				setContainerState(containerUsed.code, nextState, contextValidation);
+				//Il faut mettre à jour le state du container dans l'experiment.atomicTransfereMethod
 			}
 		}
 
@@ -180,18 +182,19 @@ public class Workflows {
 		state.user=InstanceHelpers.getUser();
 
 		for(Process process:container.getCurrentProcesses()){
-			if(container.state.code.equals("A") && checkProcessState("N",container.inputProcessCodes)){
+			if(container.state.code.equals("IU") && checkProcessState("N",container.inputProcessCodes)){
 				state.code="IP";
 			}else if(container.state.code.equals("IW-P") && checkProcessState("IP",container.inputProcessCodes)){
 				state.code="F";
 			}
 		}
 
-		if(container.state.code.equals("IW-E")){
+		/*if(container.state.code.equals("IW-E")){//?
 			state.code= "IP";
-		} 
+		} */
+		
 		//TODO mettre en fin de process les processus
-		if(state.code !=null){
+		if(state.code != null){
 			setProcessState(container.inputProcessCodes,state,contextValidation);
 		}
 	}

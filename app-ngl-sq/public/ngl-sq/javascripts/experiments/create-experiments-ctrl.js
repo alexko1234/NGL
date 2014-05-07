@@ -261,7 +261,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	
 	$scope.saveAllPromise = function(){
 		var promises = [];
-		
+		$scope.$broadcast('save', promises, $scope.saveAll);
+	};
+	
+	$scope.$on('viewSaved', function(e, promises, func) {
 		$scope.message.details = {};
 		$scope.message.isDetails = false;
 		
@@ -279,18 +282,17 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	
 			promises.push($scope.experiment.experimentProperties.save());
 	
-			//promises.push($scope.datatable.save());
-	
 			promises.push($scope.saveContainers());
 		}else{
 			promises.push($scope.save());
 		}
 		
-		return promises;
-	};
+		if(func){
+			func(promises);
+		}
+	});
 	
-	$scope.saveAll = function(){
-		var promises = $scope.saveAllPromise();
+	$scope.saveAll = function(promises){
 		$q.all(promises).then(function (res) {
 			if(	$scope.message.text != Messages('experiments.msg.save.error')){
 				$scope.message.clazz="alert alert-success";
@@ -300,6 +302,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			$scope.experiment.experimentInformation.enabled = true;
 			$scope.experiment.instrumentProperties.enabled = true;
 			$scope.experiment.instrumentInformation.enabled = true;
+			$scope.$broadcast('refresh');
 		});
 	};
 	
@@ -322,8 +325,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		});
 	};
 	
-	$scope.changeState = function(){
-		var promises = $scope.saveAllPromise();
+	$scope.saveAllAndChangeState = function(){
+		var promises = [];
+		$scope.$broadcast('save', promises, $scope.changeState);
+	};
+	
+	$scope.changeState = function(promises){
 		$q.all(promises).then(function (res) {
 			$scope.experiment.experimentProperties.enabled = true;
 			$scope.experiment.experimentInformation.enabled = true;
@@ -378,12 +385,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		if(atomicTransfertMethod == "ManyToOne"){
 			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[]};
 			for(var i=0;i<containers.length;i++){
-				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:containers[i].code,instrumentProperties:{},experimentProperties:{}});
+				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:containers[i].code,instrumentProperties:{},experimentProperties:{},state:containers[i].state});
 			}
 		}else{
 			for(var i=0;i<containers.length;i++){
 				$scope.experiment.value.atomicTransfertMethods[i] = {class:atomicTransfertMethod, inputContainerUsed:[]};
-				$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed = {code:containers[i].code,instrumentProperties:{},experimentProperties:{}};
+				$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed = {code:containers[i].code,instrumentProperties:{},experimentProperties:{},state:containers[i].state};
 				
 				if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToVoid"){
 					$scope.experiment.outputVoid = true;
@@ -589,6 +596,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		$scope.experimentType.atomicTransfertMethod = atomicTransfertMethod;
 		if(experiment != ""){
 			experiment =  JSON.parse(experiment);
+			$scope.experiment.value.typeCode = experiment.typeCode;
 		}
 		
 		$scope.form = $scope.getForm();
@@ -611,12 +619,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			$scope.experiment.value = experiment;
 			
 			$scope.addExperimentPropertiesInputsColumns();
-			
-			if($scope.isOutputGenerated()){
-				$scope.$broadcast('addOutputColumns');
-				$scope.addExperimentPropertiesOutputsColumns();
-				$scope.addInstrumentPropertiesOutputsColumns();
-			}
 		}
 	};
 }]);

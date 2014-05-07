@@ -3,6 +3,7 @@ package controllers.processes.tpl;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import models.laboratory.common.description.PropertyDefinition;
@@ -14,6 +15,7 @@ import models.utils.dao.DAOException;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 
+import play.Logger;
 import play.Routes;
 import play.data.Form;
 import play.i18n.Messages;
@@ -97,10 +99,16 @@ public class Processes extends CommonController{
 				if(processType != null && processType.propertiesDefinitions != null) {
 					List<PropertyDefinition> propertyDefinition = processType.propertiesDefinitions;
 					for(PropertyDefinition p : propertyDefinition) {
-						if(!p.choiceInList){
-							columns.add(DatatableHelpers.getColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false));
+						DatatableColumn c = null;
+						Logger.info(p.valueType);
+						if(!p.valueType.equals("java.util.Date")){
+							c = DatatableHelpers.getColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false);
 						}else{
-							DatatableColumn c = DatatableHelpers.getColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false,p.choiceInList);
+							c = DatatableHelpers.getDateColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false);
+							
+						}
+						if(p.choiceInList){
+							c.choiceInList = p.choiceInList;
 							if(p.possibleValues != null){
 								c.possibleValues = new ArrayList<Object>();
 								for(Value v: p.possibleValues){
@@ -108,8 +116,8 @@ public class Processes extends CommonController{
 									c.possibleValues.add(l);
 								}
 							}
-							columns.add(c);
 						}
+						columns.add(c);
 					}
 				}
 			} catch (DAOException e) {
@@ -140,7 +148,8 @@ public class Processes extends CommonController{
 						controllers.projects.api.routes.javascript.Projects.list(),
 		  	    		controllers.samples.api.routes.javascript.Samples.list(),
 		  	    		controllers.supports.api.routes.javascript.Supports.list(),
-		  	    		controllers.commons.api.routes.javascript.States.list()
+		  	    		controllers.commons.api.routes.javascript.States.list(),
+		  	    		controllers.commons.api.routes.javascript.Users.list()
 						)	  	      
 				);
 	}

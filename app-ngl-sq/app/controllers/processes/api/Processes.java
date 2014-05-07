@@ -17,6 +17,7 @@ import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
@@ -187,7 +188,18 @@ public class Processes extends CommonController{
 		if(StringUtils.isNotEmpty(processesSearch.stateCode)){
 			queryElts.add(DBQuery.is("state.code", processesSearch.stateCode));
 		}
+		if(processesSearch.users != null){
+			queryElts.add(DBQuery.in("traceInformation.createUser", processesSearch.stateCode));
+		}
+		
+		if(null != processesSearch.fromDate){
+			queryElts.add(DBQuery.greaterThanEquals("traceInformation.creationDate", processesSearch.fromDate));
+		}
 
+		if(null != processesSearch.toDate){
+			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(processesSearch.toDate, 1))));
+		}
+		
 		if(StringUtils.isNotEmpty(processesSearch.supportCode)){
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field

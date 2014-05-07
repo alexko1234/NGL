@@ -65,7 +65,9 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	};
 	
 	$scope.search = function(){	
-		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.processType || $scope.form.processCategory || $scope.form.processesSupportCode || $scope.form.state){
+		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.processType 
+				|| $scope.form.processCategory || $scope.form.processesSupportCode || $scope.form.state || $scope.form.user
+				|| $scope.form.fromDate || $scope.form.toDate){
 			var jsonSearch = {};
 			if($scope.form.projectCode){
 				jsonSearch.projectCode = $scope.form.projectCode;
@@ -90,6 +92,14 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			if($scope.form.state){
 				jsonSearch.stateCode = $scope.form.state.code;
 			}
+			
+			if($scope.form.user){
+				jsonSearch.users = $scope.form.user;
+			}
+			
+			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
+			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate, Messages("date.format").toUpperCase()).valueOf();
+			
 			
 			$scope.datatable.search(jsonSearch);						
 		}else{
@@ -127,13 +137,13 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.processCategories();
 		$scope.lists.refresh.supports();
+		$scope.lists.refresh.users();
 		$scope.lists.refresh.states({objectTypeCode:"Process"});
 	}else{
 		$scope.form = $scope.getForm();			
 	}
 	
 	$scope.datatable = datatable($scope, $scope.datatableConfig);
-	
 	if($scope.form.project || $scope.form.type){
 		$scope.search();
 	}
