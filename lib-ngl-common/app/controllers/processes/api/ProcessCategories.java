@@ -34,7 +34,6 @@ public class ProcessCategories extends CommonController{
 			}else if(processCategoriesSearch.list){
 				List<ListObject> lop = new ArrayList<ListObject>();
 				for(ProcessCategory et:processCategories){
-					Logger.debug(Json.toJson(et).toString());
 					lop.add(new ListObject(et.code, et.name));
 				}
 				return Results.ok(Json.toJson(lop));

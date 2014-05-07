@@ -244,22 +244,53 @@ angular.module('commonsServices', []).
     					 }
     				 };
     			}    					
-    			};
+    		};
     	//If the select or multiple choices contain 1 element, this directive select it automaticaly
-    	//USE: As attribut, auto-select="theListOfChoice"
-    	}).directive('autoSelect', function() {
+    	//EXAMPLE: <select ng-model="x" ng-option="x as x for x in x" auto-select>...</select>
+    	}).directive('autoSelect',['$parse', function($parse) {
+    		var OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?(?:\s+group\s+by\s+(.*))?\s+for\s+(?:([\$\w][\$\w\d]*)|(?:\(\s*([\$\w][\$\w\d]*)\s*,\s*([\$\w][\$\w\d]*)\s*\)))\s+in\s+(.*)$/;
     		return {
-    			restrict: 'A',
     			require: 'ngModel',
     			link: function(scope, element, attrs, ngModel) {
-					 scope.$watch(attrs.autoSelect, function(newVal) {
-						if(newVal && newVal.length == 1){
-							ngModel.$setViewValue(newVal[0].code);
-						}
-					 });
+    				var valOption = undefined;
+					if(attrs.ngOptions){	
+						valOption = attrs.ngOptions;
+					}else if(attrs.btOptions){
+						valOption = attrs.btOptions;
+					}
+					
+					if(valOption != undefined){
+						var match = valOption.match(OPTIONS_REGEXP);
+						var model = $parse(match[7]);
+						scope.$watch(model, function(value){
+							if(value){
+				                if(value.length == 1){
+									ngModel.$setViewValue(value[0].code);
+								}
+							}
+				        });
+					}else{
+						console.log("ng-options or bt-options required");
+					}
     			}
     		};
-    	}).directive('btSelect',  ['$parse', '$document', '$window', function($parse,$document, $window)  {
+    	//Return the timestamp of the date in an input
+    	//EXAMPLE: <input type="date" ng-model="x" date-timestamp/> the value of x in the scope will be a timestamp
+    	}]).directive('dateTimestamp', function() {
+            return {
+                require: 'ngModel',
+                link: function(scope, ele, attr, ngModel) {
+                    // view to model
+                    ngModel.$parsers.push(function(value) {
+                    	var date = Date.parse(value);
+                    	if(!isNaN(date) && value.length==10){
+                    		return date;
+                    	}
+                    	return value;
+                    });
+                }
+            }
+        }).directive('btSelect',  ['$parse', '$document', '$window', function($parse,$document, $window)  {
 			//0000111110000000000022220000000000000000000000333300000000000000444444444444444000000000555555555555555000000066666666666666600000000000000007777000000000000000000088888
     		var BT_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*))\s+in\s+([\s\S]+?)$/;                        
     		//var BT_OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
