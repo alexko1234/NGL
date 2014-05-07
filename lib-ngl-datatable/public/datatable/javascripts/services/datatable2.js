@@ -1278,6 +1278,14 @@ angular.module('datatableServices', []).
 		    				return Messages(value);
 		    			},
 		    			
+		    			getDateTimestamp : function(colType){
+		    				if(colType==="date"){
+		    					return 'date-timestamp';
+		    				}
+		    				
+		    				return '';
+		    			},
+		    			
 		    			getEditElement : function(col, header){
 		    				var editElement = '';
 		    				var ngChange = '"';
@@ -1288,7 +1296,7 @@ angular.module('datatableServices', []).
 		    				if(col.type === "boolean"){
 		    					editElement = '<input class="form-control" dt-html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+this.getNgModel(col, header)+ngChange+'/>';
 		    				}else if(!col.choiceInList){
-		    					editElement = '<input class="form-control" dt-html-filter="{{col.type}}" type="'+col.type+'" class="input-small" ng-model="'+this.getNgModel(col, header)+ngChange+'/>';
+		    					editElement = '<input class="form-control" dt-html-filter="{{col.type}}" type="'+col.type+'" class="input-small" ng-model="'+this.getNgModel(col, header)+ngChange+this.getDateTimestamp(col.type)+'/>';
 		    				}else if(col.choiceInList){
 		    					switch (col.listStyle) { 
 		    						case "radio":
@@ -1661,7 +1669,7 @@ angular.module('datatableServices', []).
 					    		   	convertedData = $filter('number')(convertedData);
 					    	   }
 					    	
-					    	return convertedData;
+					    	  return convertedData;
 					    });   
 					  }
 					}
