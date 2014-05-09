@@ -1,0 +1,175 @@
+"use strict";
+
+angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 
+                                                function($scope, $routeParams, datatable, mainService, tabService, searchService) {
+	
+	var datatableConfig = {
+			order :{by:'code', reverse : true},
+			search:{
+				url:jsRoutes.controllers.analyses.api.Analyses.list()
+			},
+			show:{
+				active:true,
+				add :function(line){
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.analyses.tpl.Analyses.get(line.code).url,remove:true});
+				}
+			},
+			hide:{
+				active:true
+			}
+	};
+
+	$scope.search = function(){
+		$scope.searchService.search($scope.datatable);
+	};
+	
+	$scope.reset = function(){
+		$scope.searchService.reset();
+	};
+		
+	if(angular.isUndefined(mainService.getHomePage())){
+		mainService.setHomePage('search');
+		tabService.addTabs({label:Messages('analyses.menu.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("search").url,remove:true});
+		tabService.activeTab(0); // desactive le lien !
+	}
+	
+	$scope.searchService = searchService();	
+	$scope.searchService.setRouteParams($routeParams);
+	
+	//to avoid to lost the previous search
+	if(angular.isUndefined(mainService.getDatatable())){
+		$scope.datatable = datatable($scope, datatableConfig);
+		mainService.setDatatable($scope.datatable);
+		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());		
+	}else{
+		$scope.datatable = mainService.getDatatable();			
+	}		
+	$scope.search();
+	
+}]);
+
+
+angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 
+                                                          function($scope, $routeParams, datatable, mainService, tabService, searchService) {
+	
+	var datatableConfig = {
+			order :{by:'code', reverse : true},
+			search:{
+				url:jsRoutes.controllers.analyses.api.Analyses.list()
+			},
+			edit : {
+				active:true,
+				columnMode:true		    	
+			},			
+			save : {
+				active:true,
+				url: jsRoutes.controllers.analyses.api.Analyses.valuationBatch().url,				
+				batch:true,
+				method:'put',
+				value:function(line){return {code:line.code,valuation:line.valuation};}				
+			},
+			show:{
+				active:true,
+				add :function(line){
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.analyses.tpl.Analyses.get(line.code).url,remove:true});
+				}
+			},
+			hide:{
+				active:true
+			},
+			messages : {active:true}
+	};
+
+	$scope.search = function(){
+		$scope.searchService.search($scope.datatable);
+	};
+	
+	$scope.reset = function(){
+		$scope.searchService.reset();
+	};
+	
+	if(angular.isUndefined(mainService.getHomePage())){
+		mainService.setHomePage('valuation');
+		tabService.addTabs({label:Messages('analyse.page.tab.validate'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("valuation").url,remove:true});
+		tabService.activeTab(0); // desactive le lien !
+	}
+	
+	$scope.searchService = searchService();		
+	$scope.searchService.setRouteParams($routeParams);
+	
+	//to avoid to lost the previous search
+	if(angular.isUndefined(mainService.getDatatable())){
+		$scope.datatable = datatable($scope, datatableConfig);
+		mainService.setDatatable($scope.datatable);
+		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());			
+	}else{
+		$scope.datatable = mainService.getDatatable();			
+	}		
+	$scope.search();
+	
+}]);
+
+
+angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 
+                                                      function($scope, $routeParams, datatable, mainService, tabService, searchService) {
+	
+	var datatableConfig = {
+			order :{by:'code', reverse : true},
+			search:{
+				url:jsRoutes.controllers.analyses.api.Analyses.list()
+			},
+			edit : {
+				active:true,
+				columnMode:true		    	
+			},			
+			save : {
+				active:true,
+				url: jsRoutes.controllers.analyses.api.Analyses.stateBatch().url,				
+				batch:true,
+				method:'put',
+				value:function(line){return {code:line.code,state:line.state};}				
+			},
+			show:{
+				active:true,
+				add :function(line){
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.analyses.tpl.Analyses.get(line.code).url,remove:true});
+				}
+			},
+			hide:{
+				active:true
+			},
+			messages : {active:true}
+	};
+
+	$scope.search = function(){
+		$scope.searchService.search($scope.datatable);
+	};
+	
+	$scope.reset = function(){
+		$scope.searchService.reset();
+	};
+	
+	if(angular.isUndefined(mainService.getHomePage())){
+		mainService.setHomePage('state');
+		tabService.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("state").url,remove:true});
+		tabService.activeTab(0); // desactive le lien !
+	}
+	$scope.searchService = searchService();
+	$scope.searchService.setRouteParams($routeParams);
+	
+	//to avoid to lost the previous search
+	if(angular.isUndefined(mainService.getDatatable())){
+		$scope.datatable = datatable($scope, datatableConfig);
+		mainService.setDatatable($scope.datatable);
+		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());								
+	}else{
+		$scope.datatable = mainService.getDatatable();			
+	}		
+	$scope.search();
+	
+}]);
+
+
+
+
+

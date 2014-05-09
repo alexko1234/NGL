@@ -25,8 +25,9 @@ title.run=Run
 title.archives=Archives
 
 #menu
-menu.runs = Runs
-menu.archives = Archives
+
+archives.menu=Archives
+archives.menu.search = Rechercher
 
 #page field value
 page.archives.fvalue.archive.0 = Tout
@@ -68,7 +69,8 @@ search.placeholder.productionResolutions = Sélect. des resol. QC.
 search.placeholder.bioinformaticResolutions = Sélect. des resol. bioinfo.
 search.placeholder.runResolutions = Sélect. des resol. de run
 search.placeholder.laneResolutions = Sélect. des resol. de lane
-search.placeholder.resolutions = Sélect. des resol. de run / lane
+search.placeholder.runLaneResolutions = Sélect. des resol. de run / lane
+search.placeholder.resolutions = Sélect. des resol.
 search.placeholder.valuationRunUser = Run évalué par : 
 search.placeholder.valuationReadSetUser = ReadSet évalué par : 
 
@@ -80,7 +82,11 @@ button.readsets.show = Voir Readsets
 button.readsets.valuation = Evaluer Readsets
 button.edit = Editer
 
-
+############
+#
+# RUN
+#
+############
 runs.page.title=Runs
 runs.menu = Runs
 runs.menu.search = Recherche
@@ -161,7 +167,11 @@ runs.lane.showOrHide = Afficher/Masquer la lane
 
 runs.readsets.title = Readsets
 
-
+############
+#
+# READSETS
+#
+############
 readsets.page.title=Readsets
 readsets.page.tab.validate = Readsets à Evaluer
 readsets.menu = Readsets
@@ -382,8 +392,35 @@ readsets.files.isUsable = Oui
 readsets.files.isNotUsable = Non
 readsets.files.path = Chemin
 
-file.state.code.a = Disponible
-file.state.code.ua = Non disponible 
+############
+#
+# Analyses
+#
+############
+analyses.page.title=Analyses
+analyses.menu = Analyses
+analyses.menu.search = Recherche
+analyses.menu.state = Changement d''Etat
+analyses.menu.valuation = Evaluation
+
+analyse.page.tab.validate = Analyses à Evaluer
+
+
+analyses.code = Code
+analyses.typeCode = Type
+analyses.masterReadSetCodes = Code ReadSets Maitre
+analyses.readSetCodes = Code ReadSets 
+analyses.projectCodes = Projects
+analyses.sampleCodes = Echantillons
+analyses.stateCode = Etat
+analyses.valuation.valid = Valid ?
+analyses.valuation.resolutions = Comptes Rendus
+
+############
+#
+# COMMON
+#
+############
 
 treatments.context.read1 = Read 1
 treatments.context.read2 = Read 2

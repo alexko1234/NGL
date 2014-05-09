@@ -42,9 +42,17 @@
 					</ul>
 				</li>
 		
+				<li class="dropdown @("active".when(nav.startsWith("analyses")))">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="readsets">@Messages("analyses.menu")<b class="caret"></b></a>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="readsets">
+						<li class="@("active".when(nav == "analyses.search"))"><a href="@controllers.analyses.tpl.routes.Analyses.home("search")">@Messages("analyses.menu.search")</a></li>																				
+						<li class="@("active".when(nav == "analyses.valuation"))"><a href="@controllers.analyses.tpl.routes.Analyses.home("valuation")">@Messages("analyses.menu.valuation")</a></li>	
+						<li class="@("active".when(nav == "analyses.state"))"><a href="@controllers.analyses.tpl.routes.Analyses.home("state")">@Messages("analyses.menu.state")</a></li>
+					</ul>
+				</li>
 
 				<li class="@("active".when(nav == "archives.search"))">
-					<a href="@controllers.archives.tpl.routes.ReadSets.home("search")">@Messages("menu.archives.search")</a>
+					<a href="@controllers.archives.tpl.routes.ReadSets.home("search")">@Messages("archives.menu")</a>
 				</li>						
 			</ul>
 

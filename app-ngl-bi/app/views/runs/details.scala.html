@@ -12,9 +12,9 @@
 	<div class="col-md-12 col-lg-12 ">
 	<div class="page-header" ng-init="init()">
 		<div class="btn-toolbar pull-right">
-			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
-			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
-			 <button class="btn btn-default" ng-if="!isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					
+			 <button class="btn btn-default" ng-if="mainService.mainService.isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+			 <button class="btn btn-default" ng-if="mainService.isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
+			 <button class="btn btn-default" ng-if="!mainService.isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					
 		</div>
 	
 	 	<h1  ng-switch on="run.valuation.valid">
@@ -49,7 +49,7 @@
 				  
 				 
 				  @views.html.helper.columnLabelValue(Messages("runs.valuation.valid")){
-			     	<div ng-switch on="isEditMode()">
+			     	<div ng-switch on="mainService.isEditMode()">
 						<p ng-switch-when="false" class="form-control-static" ng-model='run.valuation.valid' codes="valuation"/>
 						<div ng-switch-when="true">
 							<div bt-select class="form-control" ng-model="run.valuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
@@ -58,11 +58,11 @@
 				   }
 				  
 			    @views.html.helper.columnLabelValue(Messages("runs.valuation.resolutions")){
-			    	<div bt-select class="form-control" ng-model="run.valuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ng-edit="isEditMode()"></div>					
+			    	<div bt-select class="form-control" ng-model="run.valuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ng-edit="mainService.isEditMode()"></div>					
 			   }
 				
 				@views.html.helper.columnLabelValue(Messages("runs.valuation.criteria")){
-						<div ng-switch on="isEditMode()">
+						<div ng-switch on="mainService.isEditMode()">
 							<p class="form-control-static" ng-switch-when="false" ng-model="run.valuation.criteriaCode" codes="valuation_criteria"/>
 							<div ng-switch-when="true">
 								<div bt-select class="form-control" ng-model="run.valuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></div>
@@ -75,7 +75,7 @@
 				}
 				
 				@views.html.helper.columnLabelValue(Messages("runs.valuation.comment")){
-					<div ng-switch on="isEditMode()">
+					<div ng-switch on="mainService.isEditMode()">
 						<p class="form-control-static" ng-switch-when="false" ng-bind="run.valuation.comment"></p>
 						<textarea class="form-control" ng-model="run.valuation.comment" ng-switch-when="true"></textarea>					
 					</div>				
@@ -99,12 +99,12 @@
 				<p class="form-control-static">{{run.treatments.ngsrg["default"].nbBase.value | number}}</p>
 			}
 			@views.html.helper.columnLabelValue(Messages("runs.keep")){
-				<div class="checkbox" ng-if="isEditMode()">
+				<div class="checkbox" ng-if="mainService.isEditMode()">
  					<label>
-					<input type="checkbox"  ng-model="run.keep" ng-if="isEditMode()">	
+					<input type="checkbox"  ng-model="run.keep" ng-if="mainService.isEditMode()">	
 					</label>
 				</div>								
-				<p class="form-control-static" ng-switch on="run.keep" ng-if="!isEditMode()">
+				<p class="form-control-static" ng-switch on="run.keep" ng-if="!mainService.isEditMode()">
 					<i ng-switch-when="true" class="fa fa-check-square-o fa-lf"></i>
 					<i ng-switch-default class="fa fa-square-o fa-lg"></i>
 				</p>																				
@@ -171,7 +171,7 @@
 			<div class="btn-group pull-right">
 				<button type="submit" ng-click="search()"  	class="btn btn-info" title='@Messages("button.search")' data-toggle="tooltip"  ><i class="fa fa-search"></i></button>
 				<button ng-click="showReadSets()" class="btn btn-default" >@Messages("button.readsets.show")</button>
-				<button ng-click="valuateReadSets()" class="btn btn-default" ng-if="isEditMode()">@Messages("button.readsets.valuation")</button>
+				<button ng-click="valuateReadSets()" class="btn btn-default" ng-if="mainService.isEditMode()">@Messages("button.readsets.valuation")</button>
 			</div>	
 			<div class="form-group">
 				<div bt-select class="form-control" ng-model="form.laneNumbers" multiple="true" placeholder="@Messages("search.placeholder.lanes")" bt-options="l.number as l.number for l in laneOptions"></div>

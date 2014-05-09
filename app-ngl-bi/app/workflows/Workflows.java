@@ -180,6 +180,8 @@ public class Workflows {
 			}
 		} else if("IW-BA".equals(readSet.state.code)){
 			readSet.bioinformaticValuation.valid = TBoolean.UNSET;
+			readSet.bioinformaticValuation.date = null;
+			readSet.bioinformaticValuation.user = null;
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 					DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation.valid", readSet.bioinformaticValuation.valid));
 		} else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code))	{
@@ -349,6 +351,27 @@ public class Workflows {
 				nextStep.code = "F-BA";
 				setReadSetState(contextValidation, readSet, nextStep);				
 			}							
+		}else if("IW-V".equals(analysis.state.code)){
+			for(String rsCode : analysis.masterReadSetCodes){
+				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode);
+				//if different of state IW-VBA
+				if(!"IW-VBA".equals(readSet.state.code)){
+					readSet.bioinformaticValuation.valid = TBoolean.UNSET;
+					readSet.bioinformaticValuation.date = null;
+					readSet.bioinformaticValuation.user = null;
+					
+					readSet.traceInformation.modifyDate = new Date();
+					readSet.traceInformation.modifyUser = CommonController.getCurrentUser();
+						
+						
+					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
+							DBQuery.is("code", rsCode), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation).set("traceInformation", readSet.traceInformation));
+					
+					State nextStep = cloneState(readSet.state);
+					nextStep.code = "IW-VBA";
+					setReadSetState(contextValidation, readSet, nextStep);
+				}
+			}		
 		}else if("F-V".equals(analysis.state.code)){
 			for(String rsCode : analysis.masterReadSetCodes){
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode);
@@ -381,6 +404,10 @@ public class Workflows {
 		}else if("IW-V".equals(analysis.state.code)){
 			if(!TBoolean.UNSET.equals(analysis.valuation.valid)){
 				nextStep.code = "F-V";
+			}
+		}else if("F-V".equals(analysis.state.code)){
+			if(TBoolean.UNSET.equals(analysis.valuation.valid)){
+				nextStep.code = "IW-V";
 			}
 		}
 		

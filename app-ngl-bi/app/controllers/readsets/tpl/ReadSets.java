@@ -28,13 +28,7 @@ public class ReadSets extends CommonController {
 	}
 	
 	public static Result search(String type) {
-
-		if (!"valuation".equals(type)) {
-			return ok(search.render(Boolean.TRUE));
-		} else {
-			return ok(search.render(Boolean.FALSE));
-		}
-
+		return ok(search.render());		
 	}
 	
 	public static Result details() {

@@ -1,5 +1,5 @@
 "use strict";
-angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biCommonsServices', 'ui.bootstrap'], function($routeProvider, $locationProvider) {
+angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biCommonsServices', 'ui.bootstrap','ngl-bi.ReadSetsServices'], function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/readsets/search/home', {
 		templateUrl : '/tpl/readsets/search/default',
@@ -9,10 +9,7 @@ angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biComm
 		templateUrl : '/tpl/readsets/search/valuation',
 		controller : 'SearchValuationCtrl'
 	});
-	$routeProvider.when('/readsets/valuationWheat/home', {
-		templateUrl : '/tpl/readsets/search/valuation',
-		controller : 'SearchValuationWheatCtrl'
-	});
+	
 	$routeProvider.when('/readsets/state/home', {
 		templateUrl : '/tpl/readsets/search/state',
 		controller : 'SearchStateCtrl'

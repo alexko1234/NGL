@@ -208,6 +208,7 @@ public class Analyses extends DocumentController<Analysis>{
 			if(!ctxVal.hasErrors() && queryFieldsForm.fields.contains("code")){
 				ctxVal.setCreationMode();
 				CommonValidationHelper.validateCode(input, collectionName, ctxVal);
+				//TODO Update READSET
 			}
 			
 			if(!ctxVal.hasErrors()){
@@ -278,6 +279,9 @@ public class Analyses extends DocumentController<Analysis>{
 		Valuation input = filledForm.get();
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		ctxVal.setUpdateMode();
+		input.date = new Date();
+		input.user = getCurrentUser();
+		
 		CommonValidationHelper.validateValuation(objectInDB.typeCode, input, ctxVal);
 		if(!ctxVal.hasErrors()) {
 			updateObject(DBQuery.and(DBQuery.is("code", code)), DBUpdate.set("valuation", input)
@@ -301,6 +305,8 @@ public class Analyses extends DocumentController<Analysis>{
 			if(null != objectInDB){
 				ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 				ctxVal.setUpdateMode();
+				element.data.valuation.date = new Date();
+				element.data.valuation.user = getCurrentUser();
 				CommonValidationHelper.validateValuation(objectInDB.typeCode, element.data.valuation, ctxVal);
 				if (!ctxVal.hasErrors()) {
 					updateObject(DBQuery.and(DBQuery.is("code", objectInDB.code)), DBUpdate.set("valuation", element.data.valuation)

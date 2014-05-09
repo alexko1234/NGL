@@ -79,6 +79,41 @@ angular.module('biCommonsServices', []).
     			getTreatment : getTreatment,
     			getTreatments : getTreatments
     		};
+    	}]).factory('valuationService',['$parse', 'lists', function($parse, lists){
+    		var criterias = undefined;
+    		var valuationCriteriaClass = function(value, propertyName){
+    			
+    			if(!criterias && lists.getValuationCriterias().length > 0){
+    				var values = lists.getValuationCriterias();
+    				criterias = {};
+    				for(var i = 0 ; i < values.length; i++){
+    					criterias[values[i].code] = values[i]; 
+    				}
+    			}else if(value.productionValuation.criteriaCode && criterias[value.productionValuation.criteriaCode]){
+    				
+    				var criteria = criterias[value.productionValuation.criteriaCode];
+    				var property;
+    				for(var i = 0; i < criteria.properties.length; i++){
+    					if(criteria.properties[i].name === propertyName){
+    						property = criteria.properties[i];
+    						break;
+    					}
+    				}
+    				if(property){
+    					for(var i = 0; i  < property.expressions.length; i++){
+    						var expression = property.expressions[i];
+    						if($parse(expression.rule)({context:value, pValue : $parse(propertyName)(value)})){
+    							return expression.result;
+    						}
+    					}
+    				}					
+    			}
+    			return undefined;			
+    		};
+    		return function() {
+    			criterias = undefined;
+    			return {valuationCriteriaClass : valuationCriteriaClass};
+    		};
     	}]).directive('treatments', function() {
     		return {
     			restrict: 'A',

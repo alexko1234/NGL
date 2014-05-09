@@ -102,6 +102,13 @@ DELETE  /api/readsets/:code/files/:fullname							controllers.readsets.api.Files
 DELETE	/api/runs/:code/files										controllers.readsets.api.Files.deleteByRunCode(code: java.lang.String)
 
 #analyses
+GET	   	/analyses/:homecode/home					controllers.analyses.tpl.Analyses.home(homecode: java.lang.String)
+GET	   	/analyses/:code								controllers.analyses.tpl.Analyses.get(code: java.lang.String)
+GET	   	/analyses/:code/valuation					controllers.analyses.tpl.Analyses.valuation(code: java.lang.String)
+GET		/tpl/analyses/search/:type					controllers.analyses.tpl.Analyses.search(type: java.lang.String)
+GET		/tpl/analyses/details						controllers.analyses.tpl.Analyses.details()
+GET		/tpl/analyses/js-routes						controllers.analyses.tpl.Analyses.javascriptRoutes()
+
 GET    	/api/analyses	                 			@controllers.analyses.api.Analyses.list()
 GET	   	/api/analyses/:code							@controllers.analyses.api.Analyses.get(code)
 HEAD   	/api/analyses/:code							@controllers.analyses.api.Analyses.head(code)

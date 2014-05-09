@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$window', '$filter', 'datatable', 'messages', 'lists', 'treatments', 
-                                                  function($scope, $http, $q, $routeParams, $window, $filter, datatable, messages, lists, treatments) {
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$window', '$filter', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', 
+                                                  function($scope, $http, $q, $routeParams, $window, $filter, mainService, tabService, datatable, messages, lists, treatments) {
 	/* configuration datatables */	
 	var lanesDTConfig = {
 			name:'lanesDT',
@@ -188,7 +188,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	};
 	
 	$scope.activeEditMode = function(){
-		$scope.startEditMode();
+		$scope.mainService.startEditMode();
 		$scope.lanesDT.setEdit();		
 	}
 	
@@ -242,7 +242,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
 			if(isCancel && !isValuationMode()){
 				$scope.lanesDT.cancel();
-				$scope.stopEditMode();
+				$scope.mainService.stopEditMode();
 			}else{
 				$scope.lanesDT.setEdit();
 			}			
@@ -250,33 +250,34 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	}
 	
 	var isValuationMode = function(){
-		return ($scope.isHomePage('valuation') || $routeParams.page === 'valuation');
+		return ($scope.mainService.isHomePage('valuation') || $routeParams.page === 'valuation');
 	}
 	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
 		$scope.treatments = treatments;
-		$scope.stopEditMode();
+		$scope.mainService = mainService;
+		$scope.mainService.stopEditMode();
 		
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
 			
 			
-			if($scope.getTabs().length == 0){
+			if(tabService.getTabs().length == 0){
 				if(isValuationMode()){ //valuation mode
-					$scope.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:true});
-					$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.valuation($scope.run.code).url,remove:true})
+					tabService.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:true});
+					tabService.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.valuation($scope.run.code).url,remove:true})
 				}else{ //detail mode
-					$scope.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:true});
-					$scope.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.get($scope.run.code).url,remove:true})									
+					tabService.addTabs({label:Messages('runs.menu.search'),href:jsRoutes.controllers.runs.tpl.Runs.home("search").url,remove:true});
+					tabService.addTabs({label:$scope.run.code,href:jsRoutes.controllers.runs.tpl.Runs.get($scope.run.code).url,remove:true})									
 				}
-				$scope.activeTab($scope.getTabs(1));
+				tabService.activeTab(tabService.getTabs(1));
 			}
 			
 			$scope.lanesDT = datatable($scope, lanesDTConfig);
 			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
 			if(isValuationMode()){
-				$scope.startEditMode();	
+				$scope.mainService.startEditMode();	
 				$scope.lanesDT.setEdit();
 			}
 			$scope.lists.refresh.resolutions({typeCode:$scope.run.typeCode});

@@ -1,52 +1,46 @@
-@(isNotValuation: Boolean)
+@()
 
 @import views.html.helper._
 @form() = {
 
 	@columnSearchForm{
 		@formGroup{
-			<input type="text" class="form-control" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getProjects() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.project")'>
-		}
-		@if(isNotValuation) {
-			@formGroup{
-				<div class="form-control" bt-select ng-model="form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in lists.getStates()"></div>			
-			}								
+			<input type="text" class="form-control" ng-model="searchService.form.projectCode" typeahead="project.code as project.code for project in searchService.lists.getProjects() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.project")'>
 		}
 		
-		@if(!isNotValuation) {
-			@formGroup{
-				<div class="form-control" bt-select ng-model="form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in states"></div>
-			}						
-		}
+		@formGroup{
+			<div class="form-control" bt-select ng-model="searchService.form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in searchService.states()"></div>			
+		}								
+		
 		@formGroup{	
-			<div  class="form-control" bt-select ng-model="form.instrumentCodes" multiple="true" placeholder="@Messages("search.placeholder.instruments")" bt-options="instrument.code as instrument.code for instrument in lists.getInstruments()"></div>
+			<div  class="form-control" bt-select ng-model="searchService.form.instrumentCodes" multiple="true" placeholder="@Messages("search.placeholder.instruments")" bt-options="instrument.code as instrument.code for instrument in searchService.lists.getInstruments()"></div>
 		}
 		
 				
 	}
 	@columnSearchForm{
 		@formGroup{
-			<input type="text" class="form-control" ng-model="form.sampleCode"  typeahead="sample.code as sample.code for sample in lists.getSamples() | filter:$viewValue | limitTo:20"  ng-focus="refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>
+			<input type="text" class="form-control" ng-model="searchService.form.sampleCode"  typeahead="sample.code as sample.code for sample in searchService.lists.getSamples() | filter:$viewValue | limitTo:20"  ng-focus="searchService.refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>
 		}
 		@formGroup{
-			<div class="form-control" bt-select ng-model="form.productionValidCode" placeholder="@Messages("search.placeholder.productionValid")" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
+			<div class="form-control" bt-select ng-model="searchService.form.productionValidCode" placeholder="@Messages("search.placeholder.productionValid")" bt-options="valid.code as valid.name for valid in searchService.lists.getValuations()"></div>
 		}
 		
 		@formGroup{	
-			<div  class="form-control" bt-select ng-model="form.productionResolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.productionResolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()"></div>														
+			<div  class="form-control" bt-select ng-model="searchService.form.productionResolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.productionResolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()"></div>														
 		}
 		
 	}
 	@columnSearchForm{
 		@formGroup{					
-			<input type="text" class="form-control" ng-model="form.regexCode" placeholder='@Messages("search.placeholder.regexCode")'>
+			<input type="text" class="form-control" ng-model="searchService.form.regexCode" placeholder='@Messages("search.placeholder.regexCode")'>
 		}
 		@formGroup{					
-			<div class="form-control" bt-select ng-model="form.bioinformaticValidCode" placeholder="@Messages("search.placeholder.bioinformaticValid")" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
+			<div class="form-control" bt-select ng-model="searchService.form.bioinformaticValidCode" placeholder="@Messages("search.placeholder.bioinformaticValid")" bt-options="valid.code as valid.name for valid in searchService.lists.getValuations()"></div>
 		}
 		
 		@formGroup{	
-			<input type="text" class="form-control" ng-model="form.productionValuationUser" typeahead="productionValuationUser.name as productionValuationUser.name for productionValuationUser in lists.getUsers() | filter:$viewValue | limitTo:20"  placeholder='@Messages("search.placeholder.valuationReadSetUser")'>
+			<input type="text" class="form-control" ng-model="searchService.form.productionValuationUser" typeahead="productionValuationUser.name as productionValuationUser.name for productionValuationUser in searchService.lists.getUsers() | filter:$viewValue | limitTo:20"  placeholder='@Messages("search.placeholder.valuationReadSetUser")'>
 		}
 		
 		
@@ -54,34 +48,30 @@
 	}
 	@columnSearchForm{
 		@formGroup{
-			<input type="text" class="form-control" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
+			<input type="text" class="form-control" ng-model="searchService.form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
 		}	
 		
 		@formGroup{					
-			<div class="form-control" bt-select ng-model="form.runTypeCodes" multiple="true" placeholder="@Messages("search.placeholder.runtypes")" bt-options="type.code as type.name for type in lists.getTypes()"></div>			
+			<div class="form-control" bt-select ng-model="searchService.form.runTypeCodes" multiple="true" placeholder="@Messages("search.placeholder.runtypes")" bt-options="type.code as type.name for type in searchService.lists.getTypes()"></div>			
 		}
 	}
 	@columnSearchForm{
 		@formGroup{
-			<input type="text" class="form-control" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
+			<input type="text" class="form-control" ng-model="searchService.form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
 		}
 		
 		@formGroup{					
-			<input type="text" class="form-control" ng-model="form.runCode" typeahead="run.code as run.name for run in lists.getRuns() | filter:$viewValue | limitTo:20"  placeholder='@Messages("search.placeholder.run")'>
+			<input type="text" class="form-control" ng-model="searchService.form.runCode" typeahead="run.code as run.name for run in searchService.lists.getRuns() | filter:$viewValue | limitTo:20"  placeholder='@Messages("search.placeholder.run")'>
 		}
 					
 	}					
 }
 
-@formAttrs() = {
-	ng-controller="SearchFormCtrl"
-}
-
 @buttons() = {
 	@formGroup{
-		<div class="form-control" bt-select ng-model="datatableConfigCustom.reportingConfigurationCode" ng-change="updateColumn()" placeholder="@Messages("search.placeholder.reporting.configuration")" bt-options="valid.code as valid.name for valid in lists.get('reportConfigs')" ng-if="lists.get('reportConfigs').length > 0"></div>
+		<div class="form-control" bt-select ng-model="searchService.reportingConfigurationCode" ng-change="updateColumn()" placeholder="@Messages("search.placeholder.reporting.configuration")" bt-options="valid.code as valid.name for valid in searchService.lists.get('reportConfigs')" ng-if="searchService.lists.get('reportConfigs').length > 0"></div>
 	}
 	
 }
-@searchForm(form, formAttrs)(buttons)()
+@searchForm(form)(buttons)()
 
