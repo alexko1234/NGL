@@ -77,78 +77,78 @@ angular.module('commonsServices', []).
     		};    		
     		
     		var refresh = {
-    				resolutions : function(params){
-    					load(jsRoutes.controllers.commons.api.Resolutions.list().url,params,'resolutions');
+    				resolutions : function(params, key){
+    					load(jsRoutes.controllers.commons.api.Resolutions.list().url,params,(key)?key:'resolutions');
     				},
-    				instruments : function(params){
-    					load(jsRoutes.controllers.instruments.api.Instruments.list().url,params,'instruments');
+    				instruments : function(params, key){
+    					load(jsRoutes.controllers.instruments.api.Instruments.list().url,params,(key)?key:'instruments');
     				},
-    				instrumentCategories : function(params){
-    					load(jsRoutes.controllers.instruments.api.InstrumentCategories.list().url,params,'instrumentCategories');
+    				instrumentCategories : function(params, key){
+    					load(jsRoutes.controllers.instruments.api.InstrumentCategories.list().url,params,(key)?key:'instrumentCategories');
     				},
-    				instrumentUsedTypes : function(params){
-    					load(jsRoutes.controllers.instruments.api.InstrumentUsedTypes.list().url,params,'instrumentUsedTypes');
+    				instrumentUsedTypes : function(params, key){
+    					load(jsRoutes.controllers.instruments.api.InstrumentUsedTypes.list().url,params,(key)?key:'instrumentUsedTypes');
     				},
-    				containerSupportCategories : function(params){
-    					load(jsRoutes.controllers.containers.api.ContainerSupportCategories.list().url,params,'containerSupportCategories');
+    				containerSupportCategories : function(params, key){
+    					load(jsRoutes.controllers.containers.api.ContainerSupportCategories.list().url,params,(key)?key:'containerSupportCategories');
     				},
-    				processCategories : function(params){
-    					load(jsRoutes.controllers.processes.api.ProcessCategories.list().url,params,'processCategories');
+    				processCategories : function(params, key){
+    					load(jsRoutes.controllers.processes.api.ProcessCategories.list().url,params,(key)?key:'processCategories');
     				},
-    				processTypes : function(params){
-    					load(jsRoutes.controllers.processes.api.ProcessTypes.list().url,params,'processTypes');
+    				processTypes : function(params, key){
+    					load(jsRoutes.controllers.processes.api.ProcessTypes.list().url,params,(key)?key:'processTypes');
     				},
-       				projectCategories : function(params){
-    					load(jsRoutes.controllers.projects.api.ProjectCategories.list().url,params,'projectCategories');
+       				projectCategories : function(params, key){
+    					load(jsRoutes.controllers.projects.api.ProjectCategories.list().url,params,(key)?key:'projectCategories');
     				},
-    				projectTypes : function(params){
-    					load(jsRoutes.controllers.projects.api.ProjectTypes.list().url,params,'projectTypes');
+    				projectTypes : function(params, key){
+    					load(jsRoutes.controllers.projects.api.ProjectTypes.list().url,params,(key)?key:'projectTypes');
     				},
-    				umbrellaProjects : function(params){
-    					load(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.list().url,params,'umbrellaProjects');
+    				umbrellaProjects : function(params, key){
+    					load(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.list().url,params,(key)?key:'umbrellaProjects');
     				},
-    				valuationCriterias: function(params){
-    					load(jsRoutes.controllers.valuation.api.ValuationCriterias.list().url,params,'valuationCriterias');    					
+    				valuationCriterias: function(params, key){
+    					load(jsRoutes.controllers.valuation.api.ValuationCriterias.list().url,params,(key)?key:'valuationCriterias');    					
     				},
-    				supports : function(params){
-    					load(jsRoutes.controllers.supports.api.Supports.list().url,params,'supports'); 
+    				supports : function(params, key){
+    					load(jsRoutes.controllers.supports.api.Supports.list().url,params,(key)?key:'supports'); 
     				},
-    				projects : function(params){
-    					load(jsRoutes.controllers.projects.api.Projects.list().url,params,'projects');    					
+    				projects : function(params, key){
+    					load(jsRoutes.controllers.projects.api.Projects.list().url,params,(key)?key:'projects');    					
     				},
-    				samples : function(params){
-    					load(jsRoutes.controllers.samples.api.Samples.list().url,params,'samples');    					
+    				samples : function(params, key){
+    					load(jsRoutes.controllers.samples.api.Samples.list().url,params,(key)?key:'samples');    					
     				},
-    				users : function(params){
-    					load(jsRoutes.controllers.commons.api.Users.list().url,params,'users');    					
+    				users : function(params, key){
+    					load(jsRoutes.controllers.commons.api.Users.list().url,params,(key)?key:'users');    					
     				},
-    				states : function(params){
-    					load(jsRoutes.controllers.commons.api.States.list().url,params,'states');    				
+    				states : function(params, key){
+    					load(jsRoutes.controllers.commons.api.States.list().url,params,(key)?key:'states');    				
     				},
-    				protocols : function(params){
-    					load(jsRoutes.controllers.experiments.api.Protocols.list().url,params,'protocols');    				
+    				protocols : function(params, key){
+    					load(jsRoutes.controllers.experiments.api.Protocols.list().url,params,(key)?key:'protocols');    				
     				},
-    				types : function(params, multi){
+    				types : function(params, multi, key){
     					var name = "types";
     					if(multi!=undefined){
     						name = params.objectTypeCode+'Types';
     					}
-    					load(jsRoutes.controllers.commons.api.CommonInfoTypes.list().url,params,name);    				
+    					load(jsRoutes.controllers.commons.api.CommonInfoTypes.list().url,params,(key)?key:name);    				
     				},
-    				containerCategories : function(params){
-    					load(jsRoutes.controllers.containers.api.ContainerCategories.list().url,params,'containerCategories');
+    				containerCategories : function(params, key){
+    					load(jsRoutes.controllers.containers.api.ContainerCategories.list().url,params,(key)?key:'containerCategories');
     				},
-    				experimentCategories : function(params){
-    					load(jsRoutes.controllers.experiments.api.ExperimentCategories.list().url,params,'experimentCategories');
+    				experimentCategories : function(params, key){
+    					load(jsRoutes.controllers.experiments.api.ExperimentCategories.list().url,params,(key)?key:'experimentCategories');
     				},
-    				experimentTypes : function(params){
-    					load(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url,params,'experimentTypes');
+    				experimentTypes : function(params, key){
+    					load(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url,params,(key)?key:'experimentTypes');
     				},
-    				runs : function(params){
-    					load(jsRoutes.controllers.runs.api.Runs.list().url,params,'runs');    				
+    				runs : function(params, key){
+    					load(jsRoutes.controllers.runs.api.Runs.list().url,params,(key)?key:'runs');    				
     				},
-    				reportConfigs : function(params){
-    					load(jsRoutes.controllers.reporting.api.ReportingConfigurations.list().url,params,'reportConfigs');    				
+    				reportConfigs : function(params, key){
+    					load(jsRoutes.controllers.reporting.api.ReportingConfigurations.list().url,params,(key)?key:'reportConfigs');    				
     				},
     				all : function(params){
     					this.resolutions(params);
@@ -167,20 +167,20 @@ angular.module('commonsServices', []).
     		
     		
     		
-    		function load(url, params, values){
+    		function load(url, params, key){
     			if(angular.isUndefined(params)){
     				params = {};
     			}
     			params.list = true;
-    			$http.get(url,{params:params,values:values}).success(function(data, status, headers, config) {
-    				results[config.values]=data;    				
+    			$http.get(url,{params:params,key:key}).success(function(data, status, headers, config) {
+    				results[config.key]=data;    				
     			});
     		}
     		
     		return {
     			refresh : refresh,
-    			get : function(values){return results[values];},
-    			clear : function(values){results[values] = undefined;},
+    			get : function(key){return results[key];},
+    			clear : function(key){results[key] = undefined;},
     			getResolutions : function(){return results['resolutions'];},
     			getValuationCriterias : function(){return results['valuationCriterias'];},
     			getProjects : function(){return results['projects'];},
