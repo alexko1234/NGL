@@ -363,10 +363,11 @@ public class Workflows {
 					
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 							DBQuery.is("code", rsCode), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation).set("traceInformation", readSet.traceInformation));
-				}
-				State nextStep = cloneState(readSet.state);
-				nextStep.code = "F-VBA";
-				setReadSetState(contextValidation, readSet, nextStep);				
+					
+					State nextStep = cloneState(readSet.state);
+					nextStep.code = "F-VBA";
+					setReadSetState(contextValidation, readSet, nextStep);
+				}								
 			}		
 		}
 	}
