@@ -22,7 +22,7 @@ import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 
 
-public abstract class MongoCommonController<T extends DBObject> extends NewCommonController<T>{
+public abstract class MongoCommonController<T extends DBObject> extends APICommonController<T>{
 
 	protected String collectionName;
 	
