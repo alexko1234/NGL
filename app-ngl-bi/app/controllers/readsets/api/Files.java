@@ -159,6 +159,9 @@ public class Files extends ReadSetsController {
 		if (null == readSet) {
 			return badRequest();
 		}
+		
+		//TODO Doit marcher {$pull : {"files" : {"fullname" : {$regex : "trim"}}}}
+		
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("code", readsetCode), DBQuery.is("files.fullname", fullname)), DBUpdate.unset("files.$").set("traceInformation", getUpdateTraceInformation(readSet)));
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",readsetCode), DBUpdate.pull("files", null));
 		return ok();

@@ -316,11 +316,11 @@ public class ReadSets extends ReadSetsController{
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
 							DBQuery.and(DBQuery.is("code",readSet.runCode),DBQuery.is("lanes.number",readSet.laneNumber)), 
 							DBUpdate.pull("lanes.$.readSetCodes", readSetCode));
+					
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-							DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.is("lanes.number", readSetInput.laneNumber)), 
+							DBQuery.and(DBQuery.is("code", readSet.runCode), DBQuery.is("lanes.number", readSet.laneNumber)), 
 							DBUpdate.push("lanes.$.readSetCodes", readSetInput.code));
-
-					readSetCode = readSetInput.code;
+					readSetCode = readSetInput.code;											
 				}
 				return ok(Json.toJson(getReadSet(readSetCode)));
 			}else{
