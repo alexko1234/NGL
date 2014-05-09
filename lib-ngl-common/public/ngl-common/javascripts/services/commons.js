@@ -280,9 +280,27 @@ angular.module('commonsServices', []).
             return {
                 require: 'ngModel',
                 link: function(scope, ele, attr, ngModel) {
+                	//Convert the date to dd/mm/yyyy format, based on the date.format in Messages.
+                	//this function reconized dd/MM/yyyy and MM/dd/yyyy
+                	//Need to be extended when new format added
+                	var dateConverter = function(date){
+                		var format = Messages("date.format");
+                		
+                		var m = date.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+                		
+                		if((m)){
+                			if(format ==="dd/MM/yyyy"){
+                				return m[2]+"/"+m[1]+"/"+m[3];
+                			}	
+                		}else{
+                			console.log("This format is not implemented");
+                		}
+                		return date;
+                	};
+                	
                     // view to model
                     ngModel.$parsers.push(function(value) {
-                    	var date = Date.parse(value);
+                    	var date = Date.parse(dateConverter(value)); // date convert needed: MM/dd/yyyy
                     	if(!isNaN(date) && value.length==10){
                     		return date;
                     	}
