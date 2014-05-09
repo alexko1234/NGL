@@ -105,6 +105,7 @@ public class Supports extends CommonController {
 			cs.experimentTypeCode = supportsSearch.experimentTypeCode;
 			cs.processTypeCode = supportsSearch.processTypeCode;
 			cs.stateCode = supportsSearch.stateCode;
+			cs.fromExperimentTypeCodes = supportsSearch.fromExperimentTypeCodes;
 			
 			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList();
 			Logger.debug("Containers "+containers.size());

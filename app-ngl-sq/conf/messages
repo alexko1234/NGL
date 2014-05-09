@@ -85,6 +85,9 @@ processes.select.processCategory = Sélect. une categorie de processus
 processes.select.project = Sélect. un projet
 processes.select.sample = Sélect. un échantillon
 
+processes.placeholder.fromDate = Process. depuis le (jj/mm/aaaa)
+processes.placeholder.toDate = Process. jusqu''au (jj/mm/aaaa)
+
 
 #experiments
 experiments.title = Experiences
@@ -149,7 +152,7 @@ search.placeholder.valuation = Sélect une évaluation
 
 experiments.table.code = Code experience
 experiments.table.projectCodes = Code Projets
-experiments.table.volume.value = Volume
+experiments.table.volume.value = quantité initiale (nanogramme)
 experiments.table.sampleCodes = Code échantillons
 
 experiments.intrumentCategory = Contenant sortie

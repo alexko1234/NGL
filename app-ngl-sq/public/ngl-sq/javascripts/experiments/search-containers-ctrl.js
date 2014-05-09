@@ -1,6 +1,6 @@
 "use strict";
 
-angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams', '$filter','datatable','basket','lists', function ($scope,$routeParams, $filter, datatable,basket, lists) {
+angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams', '$filter','datatable','basket','lists','$http', function ($scope,$routeParams, $filter, datatable,basket, lists, $http) {
 	$scope.lists = lists;
 	
 	$scope.datatableConfig = {
@@ -79,15 +79,21 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.changeProcessCategory = function(){
-		$scope.form.experimentType = undefined;
-		$scope.form.experimentCategory = undefined;
+		
+		if($scope.newExperiment == "new"){
+			$scope.form.experimentType = undefined;
+			$scope.form.experimentCategory = undefined;
+		}
+		
 		$scope.form.processType = undefined;
 		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
 	};
 	
 	$scope.changeProcessType = function(){
-		$scope.form.experimentType = undefined;
-		$scope.form.experimentCategory = undefined;
+		if($scope.newExperiment == "new"){
+			$scope.form.experimentType = undefined;
+			$scope.form.experimentCategory = undefined;
+		}
 	};
 	
 	$scope.reset = function(){
@@ -153,6 +159,11 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 				jsonSearch.experimentTypeCode = $scope.form.experimentType.code;
 			}
 			
+			
+			if($scope.form.fromExperimentTypeCodes){
+				jsonSearch.fromExperimentTypeCodes = $scope.form.fromExperimentTypeCodes;
+			}
+			
 			if($scope.form.user){
 				jsonSearch.users = $scope.form.user;
 			}
@@ -178,6 +189,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	
 	//init
 	$scope.errors = {};
+	$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url).success(function(data, status, headers, config) {
+		$scope.experimentTypeList=data;    				
+	});
 	if(angular.isUndefined($scope.getDatatable())){
 		$scope.datatable = datatable($scope, $scope.datatableConfig);
 		$scope.setDatatable($scope.datatable);	
