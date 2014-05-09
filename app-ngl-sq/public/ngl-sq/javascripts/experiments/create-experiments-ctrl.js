@@ -63,8 +63,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 						$http.put(jsRoutes.controllers.experiments.api.Experiments.updateExperimentInformations($scope.experiment.value.code).url, $scope.experiment.value)
 						.success(function(data, status, headers, config) {
 							if(data!=null){
-								//$scope.message.clazz="alert alert-success";
-								//$scope.message.text=Messages('experiments.msg.save.sucess')
 								$scope.experiment.value = data;
 							}
 						})
@@ -117,8 +115,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					$http.put(jsRoutes.controllers.experiments.api.Experiments.updateExperimentProperties($scope.experiment.value.code).url, $scope.experiment.value)
 					.success(function(data, status, headers, config) {
 						if(data!=null){
-							//$scope.message.clazz="alert alert-success";
-							//$scope.message.text=Messages('experiments.msg.save.sucess')
 							$scope.experiment.value = data;
 							$scope.$broadcast('experimentToInput', $scope.experimentType.atomicTransfertMethod);
 						}
@@ -164,8 +160,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				$http.put(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentInformations($scope.experiment.value.code).url, $scope.experiment.value)
 				.success(function(data, status, headers, config) {
 					if(data!=null){
-						//$scope.message.clazz="alert alert-success";
-						//$scope.message.text=Messages('experiments.msg.save.sucess')
 						$scope.experiment.value = data;
 					}
 				})
@@ -195,8 +189,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					$http.put(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentProperties($scope.experiment.value.code).url, $scope.experiment.value)
 					.success(function(data, status, headers, config) {
 						if(data!=null){
-							//$scope.message.clazz="alert alert-success";
-							//$scope.message.text=Messages('experiments.msg.save.sucess')
 							$scope.experiment.value = data;
 							$scope.$broadcast('experimentToInput', $scope.experimentType.atomicTransfertMethod);
 						}
@@ -222,8 +214,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		$http.put(jsRoutes.controllers.experiments.api.Experiments.updateContainers($scope.experiment.value.code).url, $scope.experiment.value)
 		.success(function(data, status, headers, config) {
 			if(data!=null){
-				//$scope.message.clazz="alert alert-success";
-				//$scope.message.text += Messages('experiments.msg.save.sucess')
 				$scope.experiment.value = data;
 			}
 		})
@@ -347,7 +337,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 						$scope.$broadcast('addOutputColumns');
 						$scope.addExperimentPropertiesOutputsColumns();
 						$scope.addInstrumentPropertiesOutputsColumns();
-						$scope.$broadcast('experimentToInput', $scope.experimentType.atomicTransfertMethod);
+						$scope.$broadcast('experimentToOutput', $scope.experimentType.atomicTransfertMethod);
 					}
 				}
 			})

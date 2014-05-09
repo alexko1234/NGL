@@ -60,7 +60,7 @@ public class Experiments extends CommonController{
 			}
 		}else if(atomicType.equals("ManyToOne")){
 			if(inputCategory.equals("mapcard")){
-				return ok(views.html.experiments.oneToOne.inputs.tube.render());
+				return ok(views.html.experiments.manyToOne.inputs.mapcard.render());
 			}
 		}
 		

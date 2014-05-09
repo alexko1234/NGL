@@ -1,4 +1,4 @@
-angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne) {
+angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne) {
 	$scope.datatableConfig = {
 			columnsUrl : jsRoutes.controllers.experiments.tpl.Experiments.getEditExperimentColumns().url,
 			compact:false,
@@ -149,9 +149,8 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 	
 	$scope.refreshView = function(){
 		var i = 0;
-		var k = 0;
 		while($scope.experiment.value.atomicTransfertMethods[i] != undefined){
-			$scope.datatable.displayResult[i].data.state = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.state;
+			$scope.datatable.displayResult[i].data.state = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.state
 			i++;
 		 }
 	};
@@ -172,8 +171,8 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 	
 	//Init
 	$scope.datatable = datatable($scope, $scope.datatableConfig);
-	$scope.atomicTransfere = oneToOne($scope,"datatable", "none");
-	
+	$scope.atomicTransfere = manyToOne($scope, "datatable", "none");
+
 	if($scope.experiment.editMode){
 		$scope.atomicTransfere.loadExperiment();
 	}else{
