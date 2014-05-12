@@ -47,7 +47,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 				
 					var oneToX = {
 						experimentToInput : function(){
-							if(inputType == "datatable"){
+							if(inputType === "datatable"){
 								for(var i=0;i<$scope.datatable.displayResult.length;i++){
 									$scope.datatable.displayResult[i].data.inputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties;
 									$scope.datatable.displayResult[i].data.inputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties;
@@ -55,7 +55,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							}
 						},
 						inputToExperiment : function(){
-							if(inputType == "datatable"){
+							if(inputType === "datatable"){
 								for(var i=0;i<$scope.datatable.displayResult.length;i++){
 									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties = $scope.datatable.displayResult[i].data.inputInstrumentProperties;
 									$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties = $scope.datatable.displayResult[i].data.inputExperimentProperties;
@@ -74,7 +74,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 				
 					var manyToX = {
 						experimentToInput : function(){
-							if(inputType == "datatable"){
+							if(inputType === "datatable"){
 								for(var i=0;i<$scope.datatable.displayResult.length;i++){
 									for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[0].length;j++){
 										$scope.datatable.displayResult[i].data.inputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUsed[j].instrumentProperties;
@@ -85,7 +85,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							}
 						},
 						inputToExperiment : function(){
-							if(inputType == "datatable"){
+							if(inputType === "datatable"){
 								for(var i=0;i<$scope.datatable.displayResult.length;i++){
 									for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[0].length;j++){
 										$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[j].instrumentProperties = $scope.datatable.displayResult[i].data.inputInstrumentProperties;
@@ -107,7 +107,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 				
 				var xToOne = {
 					experimentToOutput : function(){
-						if(outputType == "none"){
+						if(outputType === "none"){
 							for(var i=0;i<$scope.datatable.displayResult.length;i++){
 								if($scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed!=undefined){
 									$scope.datatable.displayResult[i].data.outputContainerUsed = $scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed;
@@ -118,7 +118,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 						}
 					},
 					outputToExperiment : function(){
-						if(outputType == "none"){
+						if(outputType === "none"){
 							for(var i=0;i<$scope.datatable.displayResult.length;i++){
 								if($scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed != undefined){
 									$scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.instrumentProperties = $scope.datatable.displayResult[i].data.outputInstrumentProperties;					
@@ -139,7 +139,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 				
 				var xToMany = {
 					experimentToOutput : function(){
-						if(outputType == "none"){
+						if(outputType === "none"){
 							for(var i=0;i<$scope.datatable.displayResult.length;i++){
 								if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds!=undefined){
 									$scope.datatable.displayResult[i].data.outputContainerUseds = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds;
@@ -153,7 +153,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 						}
 					},
 					outputToExperiment : function(){
-						if(outputType == "none"){
+						if(outputType === "none"){
 							for(var i=0;i<$scope.datatable.displayResult.length;i++){
 								if($scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds!=undefined){
 									$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds = $scope.datatable.displayResult[i].data.outputContainerUseds;
@@ -234,12 +234,12 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							});
 						},
 						loadExperiment : function(){
-							if(inputType == "datatable"){
+							if(inputType === "datatable"){
 								this.loadExperimentDatatable();
 							}
 						},
 						newExperiment : function(){
-							if(inputType == "datatable"){
+							if(inputType === "datatable"){
 								varexperimentCommonFunctions.newExperimentDatatable();
 							}
 						},
@@ -316,7 +316,6 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 						var promises = [];
 						var i = 0;
 						while($scope.experiment.value.atomicTransfertMethods[i] != null){
-							console.log($scope.experiment.value.atomicTransfertMethods[i]);
 							for(var j=0;j<$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length;j++){
 								var promise = $http.get(jsRoutes.controllers.containers.api.Containers.get($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].code).url)
 								.success(function(data, status, headers, config) {
@@ -346,12 +345,12 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 						});
 					},
 					loadExperiment : function(){
-						if(inputType == "datatable"){
+						if(inputType === "datatable"){
 							this.loadExperimentDatatable();
 						}
 					},
 					newExperiment : function(){
-						if(inputType == "datatable"){
+						if(inputType === "datatable"){
 							varexperimentCommonFunctions.newExperimentDatatable();
 						}
 					}

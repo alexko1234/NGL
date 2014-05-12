@@ -113,7 +113,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		if($scope.form.processType && $scope.form.experimentCategory){
 			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code}, true);
 		}else if($scope.form.experimentCategory){
-			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code}, true);
+			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code});
 		}
 	};
 	

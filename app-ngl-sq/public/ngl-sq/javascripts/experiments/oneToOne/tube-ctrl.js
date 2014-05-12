@@ -143,7 +143,7 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 	});
 	
 	$scope.$on('save', function(e, promises, func) {
-		promises.push($scope.datatable.save());
+		$scope.datatable.save();
 		$scope.$emit('viewSaved', promises, func);
 	});
 	

@@ -60,7 +60,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			save:function(){
 					if($scope.experiment.value._id){
 						$scope.clearMessages();
-						$http.put(jsRoutes.controllers.experiments.api.Experiments.updateExperimentInformations($scope.experiment.value.code).url, $scope.experiment.value)
+						return $http.put(jsRoutes.controllers.experiments.api.Experiments.updateExperimentInformations($scope.experiment.value.code).url, $scope.experiment.value)
 						.success(function(data, status, headers, config) {
 							if(data!=null){
 								$scope.experiment.value = data;
@@ -112,7 +112,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					$scope.$broadcast('InputToExperiment', $scope.experimentType.atomicTransfertMethod);
 					$scope.$broadcast('OutputToExperiment', $scope.experimentType.atomicTransfertMethod);
 					
-					$http.put(jsRoutes.controllers.experiments.api.Experiments.updateExperimentProperties($scope.experiment.value.code).url, $scope.experiment.value)
+					return $http.put(jsRoutes.controllers.experiments.api.Experiments.updateExperimentProperties($scope.experiment.value.code).url, $scope.experiment.value)
 					.success(function(data, status, headers, config) {
 						if(data!=null){
 							$scope.experiment.value = data;
@@ -157,7 +157,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			$scope.clearMessages();
 			if(this.instruments.selected){
 				$scope.experiment.value.instrument.code = this.instruments.selected.code;
-				$http.put(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentInformations($scope.experiment.value.code).url, $scope.experiment.value)
+				return $http.put(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentInformations($scope.experiment.value.code).url, $scope.experiment.value)
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						$scope.experiment.value = data;
@@ -180,38 +180,32 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			this.enabled = !this.enabled;
 		},
 		save:function(){
-			if($scope.experiment.value._id){
-				if($scope.experiment.value.instrument.code){
-					$scope.clearMessages();
-					$scope.$broadcast('inputToExperiment', $scope.experimentType.atomicTransfertMethod);
-					$scope.$broadcast('outputToExperiment', $scope.experimentType.atomicTransfertMethod);
-					
-					$http.put(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentProperties($scope.experiment.value.code).url, $scope.experiment.value)
-					.success(function(data, status, headers, config) {
-						if(data!=null){
-							$scope.experiment.value = data;
-							$scope.$broadcast('experimentToInput', $scope.experimentType.atomicTransfertMethod);
-						}
-					})
-					.error(function(data, status, headers, config) {
-						$scope.message.clazz = "alert alert-danger";
-						$scope.message.text += Messages('experiments.msg.save.error');
+				$scope.clearMessages();
+				$scope.$broadcast('inputToExperiment', $scope.experimentType.atomicTransfertMethod);
+				$scope.$broadcast('outputToExperiment', $scope.experimentType.atomicTransfertMethod);
+				
+				return $http.put(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentProperties($scope.experiment.value.code).url, $scope.experiment.value)
+				.success(function(data, status, headers, config) {
+					if(data!=null){
+						$scope.experiment.value = data;
+						$scope.$broadcast('experimentToInput', $scope.experimentType.atomicTransfertMethod);
+					}
+				})
+				.error(function(data, status, headers, config) {
+					$scope.message.clazz = "alert alert-danger";
+					$scope.message.text += Messages('experiments.msg.save.error');
 
-						$scope.message.details += data;
-						$scope.message.isDetails = true;
-						alert("error");
-					});
-				}
-			}else{
-			$scope.save();
-		}
+					$scope.message.details += data;
+					$scope.message.isDetails = true;
+					alert("error");
+				});
 		}
 	};
 
 	
 	$scope.saveContainers = function(){
 		$scope.clearMessages();
-		$http.put(jsRoutes.controllers.experiments.api.Experiments.updateContainers($scope.experiment.value.code).url, $scope.experiment.value)
+		return $http.put(jsRoutes.controllers.experiments.api.Experiments.updateContainers($scope.experiment.value.code).url, $scope.experiment.value)
 		.success(function(data, status, headers, config) {
 			if(data!=null){
 				$scope.experiment.value = data;
@@ -250,8 +244,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	
 	$scope.saveAllPromise = function(){
-		var promises = [];
-		$scope.$broadcast('save', promises, $scope.saveAll);
+		if(!$scope.saveInProgress){
+			$scope.saveInProgress = true;
+			var promises = [];
+			$scope.$broadcast('save', promises, $scope.saveAll);
+		}
 	};
 	
 	$scope.$on('viewSaved', function(e, promises, func) {
@@ -262,7 +259,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		$scope.experiment.experimentInformation.enabled = false;
 		$scope.experiment.instrumentProperties.enabled = false;
 		$scope.experiment.instrumentInformation.enabled = false;
-		
+		console.log($scope.experiment.value._id);
 		if($scope.experiment.value._id != undefined){
 			promises.push($scope.experiment.instrumentProperties.save());
 	
@@ -283,6 +280,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	});
 	
 	$scope.saveAll = function(promises){
+		console.log(promises);
 		$q.all(promises).then(function (res) {
 			if(	$scope.message.text != Messages('experiments.msg.save.error')){
 				$scope.message.clazz="alert alert-success";
@@ -293,16 +291,18 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			$scope.experiment.instrumentProperties.enabled = true;
 			$scope.experiment.instrumentInformation.enabled = true;
 			$scope.$broadcast('refresh');
+			$scope.saveInProgress = false;
 		});
 	};
 	
 	$scope.save = function(){
-		$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment.value)
+		return $http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment.value)
 		.success(function(data, status, headers, config) {
 			if(data!=null){
 				$scope.message.clazz="alert alert-success";
 				$scope.message.text=Messages('experiments.msg.save.sucess')
 				$scope.experiment.value = data;
+				$scope.saveInProgress = false;
 			}
 		})
 		.error(function(data, status, headers, config) {
@@ -316,8 +316,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	
 	$scope.saveAllAndChangeState = function(){
-		var promises = [];
-		$scope.$broadcast('save', promises, $scope.changeState);
+		if(!$scope.saveInProgress){
+			var promises = [];
+			$scope.$broadcast('save', promises, $scope.changeState);
+			$scope.saveInProgress = true;
+		}
 	};
 	
 	$scope.changeState = function(promises){
@@ -338,6 +341,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 						$scope.addExperimentPropertiesOutputsColumns();
 						$scope.addInstrumentPropertiesOutputsColumns();
 						$scope.$broadcast('experimentToOutput', $scope.experimentType.atomicTransfertMethod);
+						$scope.saveInProgress = false;
 					}
 				}
 			})
