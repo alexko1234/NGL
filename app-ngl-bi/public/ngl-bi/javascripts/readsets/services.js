@@ -164,7 +164,7 @@
 					
 					return columns;
 				},
-				
+				isRouteParam:false,
 				lists : lists,
 				form : undefined,
 				reportingConfigurationCode:undefined,
@@ -176,13 +176,14 @@
 						break;
 					}
 					if(count > 0){
+						this.isRouteParam = true;
 						this.form = $routeParams;
 					}
 				},
 				
 				updateForm : function(){
 					if (mainService.isHomePage('valuation')) {
-						if(this.form.stateCodes === undefined || this.form.stateCodes.length === 0) {
+						if(!this.isRouteParam && (this.form.stateCodes === undefined || this.form.stateCodes.length === 0)) {
 							//No stateCodes selected, the filter by default (on the only two possible states for the valuation) is applied
 							this.form.stateCodes = ["IW-VQC", "IP-VQC", "IW-VBA"];
 						}		
