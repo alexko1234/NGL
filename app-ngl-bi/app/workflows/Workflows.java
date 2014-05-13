@@ -121,7 +121,7 @@ public class Workflows {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
 					DBQuery.is("code", run.code), DBUpdate.set("dispatch", Boolean.TRUE));
 			
-			List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code)).toList();
+			List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code), getReadSetKeys()).toList();
 			for(ReadSet readSet: readSets){
 				State nextReadSetState = cloneState(run.state);
 				setReadSetState(contextValidation, readSet, nextReadSetState);
@@ -133,8 +133,39 @@ public class Workflows {
 			rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("rules.key"),ruleStatRG),null);
 		}else if("F-V".equals(run.state.code)){
 			Spring.getBeanOfType(ILimsRunServices.class).valuationRun(run);
+			//For all lane with VALID = FALSE so we put VALID=FALSE on each read set
+			for (Lane lane : run.lanes) {
+				if (lane.valuation.valid.equals(TBoolean.FALSE)) {
+					List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+							DBQuery.and(DBQuery.is("runCode", run.code), DBQuery.is("laneNumber", lane.number)), getReadSetKeys()).toList();
+					if(readSets.size() != lane.readSetCodes.size())Logger.error("Problem with number of readsets for run = "+run.code+" and lane = "+lane.number+". Nb RS in lane = "+lane.readSetCodes.size()+", nb RS by query = "+readSets.size());
+					for(ReadSet readSet: readSets){
+						if(TBoolean.UNSET.equals(readSet.productionValuation.valid)){
+							readSet.productionValuation.valid = TBoolean.FALSE;
+							readSet.productionValuation.date = new Date();
+							readSet.productionValuation.user = CommonController.getCurrentUser();
+							if(null == readSet.productionValuation.resolutionCodes)readSet.productionValuation.resolutionCodes = new ArrayList<String>(1);
+							readSet.productionValuation.resolutionCodes.add("Run-abandonLane");
+							
+							readSet.traceInformation.modifyDate = new Date();
+							readSet.traceInformation.modifyUser = CommonController.getCurrentUser();
+								
+							MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
+									DBQuery.is("code", readSet.code), DBUpdate.set("productionValuation", readSet.productionValuation).set("traceInformation", readSet.traceInformation));
+							nextReadSetState(contextValidation, readSet);					
+						}
+					}					
+				}
+			}	
 		}
 	}
+
+	private static BasicDBObject getReadSetKeys() {
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("treatments", 0);
+		return keys;
+	}
+
 
 	public static void setReadSetState(ContextValidation contextValidation, ReadSet readSet, State nextState) {
 		
@@ -338,7 +369,7 @@ public class Workflows {
 	private static void applyAnalysisRules(ContextValidation contextValidation, Analysis analysis) {
 		if("IP-BA".equals(analysis.state.code)){
 			for(String rsCode : analysis.masterReadSetCodes){
-				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode);
+				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode, getReadSetKeys());
 				State nextStep = cloneState(readSet.state);
 				nextStep.code = "IP-BA";
 				setReadSetState(contextValidation, readSet, nextStep);
@@ -346,14 +377,14 @@ public class Workflows {
 		}else if("F-BA".equals(analysis.state.code)){
 			//update readset if necessary
 			for(String rsCode : analysis.masterReadSetCodes){
-				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode);
+				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode, getReadSetKeys());
 				State nextStep = cloneState(readSet.state);
 				nextStep.code = "F-BA";
 				setReadSetState(contextValidation, readSet, nextStep);				
 			}							
 		}else if("IW-V".equals(analysis.state.code)){
 			for(String rsCode : analysis.masterReadSetCodes){
-				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode);
+				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode, getReadSetKeys());
 				//if different of state IW-VBA
 				if(!"IW-VBA".equals(readSet.state.code)){
 					readSet.bioinformaticValuation.valid = TBoolean.UNSET;
@@ -374,7 +405,7 @@ public class Workflows {
 			}		
 		}else if("F-V".equals(analysis.state.code)){
 			for(String rsCode : analysis.masterReadSetCodes){
-				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode);
+				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode, getReadSetKeys());
 				if(TBoolean.TRUE.equals(analysis.valuation.valid)){
 					readSet.bioinformaticValuation.valid = TBoolean.TRUE;
 					readSet.bioinformaticValuation.date = new Date();

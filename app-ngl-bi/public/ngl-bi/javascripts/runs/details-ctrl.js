@@ -245,6 +245,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				$scope.mainService.stopEditMode();
 			}else{
 				$scope.lanesDT.setEdit();
+				$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg", "sampleOnContainer"]}}).success(function(data) {
+					$scope.readSetsDT.setData(data, data.length);				
+				});
 			}			
 		});
 	}
