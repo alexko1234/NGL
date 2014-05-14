@@ -62,6 +62,10 @@ public class Experiments extends CommonController{
 			if(inputCategory.equals("mapcard")){
 				return ok(views.html.experiments.manyToOne.inputs.mapcard.render());
 			}
+		}else if(atomicType.equals("OneToVoid")){
+			if(inputCategory.equals("void")){
+				return ok(views.html.experiments.oneToVoid.inputs.voidContainer.render());
+			}
 		}
 		
 		return badRequest("Not implemented");

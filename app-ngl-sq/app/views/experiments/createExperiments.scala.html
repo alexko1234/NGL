@@ -159,6 +159,7 @@
 											ng-options="instrumentInformation.code as instrumentInformation.name for instrumentInformation in lists.get('instruments')"
 											ng-disabled="!experiment.instrumentInformation.enabled"
 											ng-hide="!experiment.value.instrument.typeCode"
+											ng-change="getInputTemplate()"
 											>
 												<option value="">@Messages("experiments.select.instrument")</option>
 											</select>

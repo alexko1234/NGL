@@ -93,6 +93,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		if($scope.newExperiment == "new"){
 			$scope.form.experimentType = undefined;
 			$scope.form.experimentCategory = undefined;
+		}else{
+			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code});
 		}
 	};
 	
@@ -108,7 +110,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.form.experimentType = undefined;
 
 		if($scope.form.processType && $scope.form.experimentCategory){
-			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code}, true);
+			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code});
 		}else if($scope.form.experimentCategory){
 			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code});
 		}

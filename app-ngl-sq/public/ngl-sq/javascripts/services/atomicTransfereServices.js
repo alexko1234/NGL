@@ -360,4 +360,130 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 				return manyToOne;
 			};
 		return constructor;
-	}]);
+	}]).factory('oneToVoid',['$rootScope','oneToX','$http', '$parse', '$q', 'experimentCommonFunctions',  function($rootScope, oneToX, $http, $parse, $q, experimentCommonFunctions){
+		
+		var constructor = function($scope, inputType){
+			var inputType = inputType;
+			var varOneToX = undefined;
+		    
+		    var varexperimentCommonFunctions = undefined;
+			
+			var init = function(){
+				varOneToX = oneToX($scope, inputType);
+				varexperimentCommonFunctions = experimentCommonFunctions($scope);
+				
+			};
+		
+			var manyToOne = {
+				experimentToInput : function(){
+					varOneToX.experimentToInput();
+				},
+				inputToExperiment : function(){
+					varOneToX.inputToExperiment();
+				},
+				
+				loadExperimentDatatable : function(){
+					var containers = [];
+					var promises = [];
+					var i = 0;
+					while($scope.experiment.value.atomicTransfertMethods[i] != null){
+						var promise = $http.get(jsRoutes.controllers.containers.api.Containers.get($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.code).url)
+						.success(function(data, status, headers, config) {
+							$scope.clearMessages();
+								if(data!=null){
+									containers.push(data);
+								}
+							})
+						.error(function(data, status, headers, config) {
+							alert("error");
+						});
+						
+						promises.push(promise);
+						
+						i++;
+					}
+					$q.all(promises).then(function (res) {
+						$scope.datatable.setData(containers,containers.length);
+						$scope.getInstruments(true);
+					});
+				},
+				loadExperiment : function(){
+					if(inputType === "datatable"){
+						this.loadExperimentDatatable();
+					}
+				},
+				newExperiment : function(){
+					if(inputType === "datatable"){
+						varexperimentCommonFunctions.newExperimentDatatable();
+					}
+				}
+			};
+			
+			init();
+			return manyToOne;
+		};
+	return constructor;
+}]).factory('manyToVoid',['$rootScope','manyToX','$http', '$parse', '$q', 'experimentCommonFunctions',  function($rootScope, manyToX, $http, $parse, $q, experimentCommonFunctions){
+	
+	var constructor = function($scope, inputType){
+		var inputType = inputType;
+		var varManyToX = undefined;
+	    
+	    var varexperimentCommonFunctions = undefined;
+		
+		var init = function(){
+			varManyToX = manyToX($scope, inputType);
+			varexperimentCommonFunctions = experimentCommonFunctions($scope);
+			
+		};
+	
+		var manyToOne = {
+			experimentToInput : function(){
+				varManyToX.experimentToInput();
+			},
+			inputToExperiment : function(){
+				varManyToX.inputToExperiment();
+			},
+			
+			loadExperimentDatatable : function(){
+				var containers = [];
+				var promises = [];
+				var i = 0;
+				while($scope.experiment.value.atomicTransfertMethods[i] != null){
+					for(var j=0;j<$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length;j++){
+						var promise = $http.get(jsRoutes.controllers.containers.api.Containers.get($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].code).url)
+						.success(function(data, status, headers, config) {
+							$scope.clearMessages();
+								if(data!=null){
+									containers.push(data);
+								}
+							})
+						.error(function(data, status, headers, config) {
+							alert("error");
+						});
+						promises.push(promise);
+					}
+					i++;
+				}
+				$q.all(promises).then(function (res) {
+					$scope.datatable.setData(containers,containers.length);
+					$scope.getInstruments(true);
+				});
+			},
+			loadExperiment : function(){
+				if(inputType === "datatable"){
+					this.loadExperimentDatatable();
+				}
+			},
+			newExperiment : function(){
+				if(inputType === "datatable"){
+					varexperimentCommonFunctions.newExperimentDatatable();
+				}
+			}
+		};
+		
+		init();
+		return manyToOne;
+	};
+return constructor;
+}]);

@@ -34,7 +34,7 @@
 		}
 		@columnSearchForm{			
 			@formGroup{	
-			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-disabled="!form.experimentCategory" ng-options="experimentType.name for experimentType in lists.getExperimentTypes()" ng-change="changeExperimentType()">
+			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-disabled="!form.experimentCategory" ng-options="experimentType.name for experimentType in lists.get('experimentTypes')" ng-change="changeExperimentType()">
 				<option value="">@Messages("experiments.select.experimentType")</option>
 			</select>
 			}

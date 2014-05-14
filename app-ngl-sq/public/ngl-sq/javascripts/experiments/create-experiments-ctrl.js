@@ -76,7 +76,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 						$scope.save();
 					}
 			}
-		};
+	};
 	
 	$scope.isOutputGenerated = function(){
 		var j = 1;
@@ -95,6 +95,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	$scope.getInputTemplate = function(){
 		if($scope.experiment.value.instrument.outContainerSupportCategoryCode){
 			$scope.experiment.inputTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getInputTemplate($scope.experimentType.atomicTransfertMethod, $scope.experiment.value.instrument.outContainerSupportCategoryCode).url;
+		}else if($scope.experiment.value.instrument.typeCode && $scope.lists.get('containerSupportCategories').length == 0){
+			$scope.experiment.inputTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getInputTemplate($scope.experimentType.atomicTransfertMethod, 'void').url;
 		}
 	};
 	
@@ -282,7 +284,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	$scope.saveAll = function(promises){
 		console.log(promises);
 		$q.all(promises).then(function (res) {
-			if(	$scope.message.text != Messages('experiments.msg.save.error')){
+			if($scope.message.text != Messages('experiments.msg.save.error')){
 				$scope.message.clazz="alert alert-success";
 				$scope.message.text=Messages('experiments.msg.save.sucess');
 			}
@@ -292,7 +294,15 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			$scope.experiment.instrumentInformation.enabled = true;
 			$scope.$broadcast('refresh');
 			$scope.saveInProgress = false;
-		});
+		},function(reason) {
+		    console.log(reason);
+		    $scope.experiment.experimentProperties.enabled = true;
+			$scope.experiment.experimentInformation.enabled = true;
+			$scope.experiment.instrumentProperties.enabled = true;
+			$scope.experiment.instrumentInformation.enabled = true;
+			$scope.$broadcast('refresh');
+			$scope.saveInProgress = false;
+		  });
 	};
 	
 	$scope.save = function(){
@@ -311,7 +321,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 
 			$scope.message.details = data;
 			$scope.message.isDetails = true;
-			alert("error");
 		});
 	};
 	
@@ -357,7 +366,15 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					$scope.message.clazz="alert alert-success";
 					$scope.message.text=Messages('experiments.msg.save.sucess');
 				}
+			}, function(reason){
+				$scope.saveInProgress = false;
 			});
+		}, function(reason){
+			$scope.experiment.experimentProperties.enabled = true;
+			$scope.experiment.experimentInformation.enabled = true;
+			$scope.experiment.instrumentProperties.enabled = true;
+			$scope.experiment.instrumentInformation.enabled = true;
+			$scope.saveInProgress = false;
 		});
 	};
 
@@ -588,6 +605,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		$scope.experimentType.category= {};
 		$scope.experimentType.category.code = experimentCategoryCode;
 		$scope.experimentType.atomicTransfertMethod = atomicTransfertMethod;
+		console.log($scope.experimentType.atomicTransfertMethod);
 		if(experiment != ""){
 			experiment =  JSON.parse(experiment);
 			$scope.experiment.value.typeCode = experiment.typeCode;

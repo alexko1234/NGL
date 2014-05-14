@@ -111,7 +111,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	$scope.changeExperimentCategory = function(){
 		$scope.form.experimentType = undefined;
 		if($scope.form.processType && $scope.form.experimentCategory){
-			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code}, true);
+			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code});
 		}else if($scope.form.experimentCategory){
 			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code});
 		}
