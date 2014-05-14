@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['directives'], function($routeProvider, $locationProvider) {
+angular.module('home', ['ngRoute','directives'], function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/modules/twitter-bootstrap', {
 		templateUrl : '/assets/ngl-devguide/html/modules/twitter-bootstrap/documentation.html'

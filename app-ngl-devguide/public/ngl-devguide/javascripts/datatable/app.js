@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['directives','datatableServices'], function($routeProvider, $locationProvider) {
+angular.module('home', ['directives','datatableServices','ngRoute'], function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/datatable/demo', {
 		templateUrl : '/assets/ngl-devguide/html/datatable/demo.html',

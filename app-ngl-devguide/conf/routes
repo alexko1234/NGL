@@ -11,6 +11,8 @@ GET     /naming-rules/:submenu       controllers.Application.namingRules(submenu
 GET     /technologies                controllers.Application.technologies()
 GET     /modules/:name                	controllers.Application.modules(name:String)
 
+GET     /services/:name                	controllers.Application.services(name:String)
+
 GET     /datatable                 controllers.Application.datatable()
 GET     /datatable/demo            controllers.Application.datatableDemo()
 GET     /datatable/get-examples            controllers.Datatable.getExamples()

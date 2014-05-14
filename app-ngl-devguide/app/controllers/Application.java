@@ -23,6 +23,10 @@ public class Application extends Controller {
 		 return ok(modules.render(name));	       
 	 }
 	 
+	 public static Result services(String name) {
+		 return ok(services.render(name));	       
+	 }
+	 
 	 public static Result datatable() {
 		 return ok(datatableDoc.render());	       
 	 }

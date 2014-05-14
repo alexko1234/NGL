@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['directives'], function($routeProvider, $locationProvider) {
+angular.module('home', ['ngRoute','directives'], function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/naming-rules/introduction', {
 		templateUrl : '/assets/ngl-devguide/html/naming-rules/introduction.html'

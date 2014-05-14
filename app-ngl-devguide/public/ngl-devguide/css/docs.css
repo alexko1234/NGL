@@ -8,7 +8,8 @@ hr {
 }
 
 section {
-	padding-top:30px
+	padding-top:30px;
+	padding-left:190px;
 }
 
 .example:after {
@@ -36,6 +37,7 @@ section {
 
 .subnav {
 	width:180px;
+	float: left;
 	
 }
 
