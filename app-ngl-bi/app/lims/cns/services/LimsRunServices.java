@@ -92,7 +92,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				dao.updatePisteAbandon(run.code, lane.number, getAbandon(lane.valuation, run.code), 47);
 			}
 		}catch(Throwable t){
-			Logger.error(run.code+" : "+t.getMessage());
+			logger.error(run.code+" : "+t.getMessage());
 		}
 	}
 	@Override
@@ -122,7 +122,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				}
 			}
 		}catch(Throwable t){
-			Logger.error(readSet.code+" : "+t.getMessage());
+			logger.error(readSet.code+" : "+t.getMessage());
 		}
 	}
 
