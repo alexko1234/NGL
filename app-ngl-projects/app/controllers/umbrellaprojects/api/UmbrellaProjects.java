@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.project.instance.Project;
 import models.laboratory.project.instance.UmbrellaProject;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
@@ -17,6 +16,7 @@ import net.vz.mongodb.jackson.DBQuery.Query;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Controller;
 
 import com.mongodb.BasicDBObject;
 
@@ -26,29 +26,34 @@ import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
+import controllers.DocumentController;
 import controllers.QueryFieldsForm;
-import controllers.projects.api.ProjectsController;
-import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 /**
  * Controller around Project object
  *
  */
-public class UmbrellaProjects extends ProjectsController {
+@Controller
+public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 
 	
 	final static Form<UmbrellaProjectsSearchForm> searchForm = form(UmbrellaProjectsSearchForm.class); 
 	final static Form<UmbrellaProject> projectForm = form(UmbrellaProject.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep");
+	
+	public UmbrellaProjects() {
+		super(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class);		
+	}
 
 
-	public static Result list(){
+	public Result list(){
 		Form<UmbrellaProjectsSearchForm> filledForm = filledFormQueryString(searchForm, UmbrellaProjectsSearchForm.class);
 		UmbrellaProjectsSearchForm form = filledForm.get();
+		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
 		if(form.datatable){			
-			MongoDBResult<UmbrellaProject> results = mongoDBFinder(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, form, UmbrellaProject.class, getQuery(form), keys);			
+			MongoDBResult<UmbrellaProject> results = mongoDBFinder(form, q, keys);			
 			List<UmbrellaProject> umbrellaProjects = results.toList();
 			return ok(Json.toJson(new DatatableResponse<UmbrellaProject>(umbrellaProjects, results.count())));
 		} else if (form.list) {
@@ -58,13 +63,13 @@ public class UmbrellaProjects extends ProjectsController {
 			keys.put("code", 1);
 			if (null == form.orderBy) form.orderBy = "code";
 			if (null == form.orderSense) form.orderSense = 0;
-			MongoDBResult<UmbrellaProject> results = mongoDBFinder(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, form, UmbrellaProject.class, getQuery(form), keys);			
+			MongoDBResult<UmbrellaProject> results = mongoDBFinder(form, q, keys);			
 			List<UmbrellaProject> umbrellaProjects = results.toList();			
 			return ok(Json.toJson(toListObjects(umbrellaProjects)));
 		} else {
 			if (null == form.orderBy) form.orderBy = "code";
 			if (null == form.orderSense) form.orderSense = 0;
-			MongoDBResult<UmbrellaProject> results = mongoDBFinder(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, form, UmbrellaProject.class, getQuery(form), keys);	
+			MongoDBResult<UmbrellaProject> results = mongoDBFinder(form, q, keys);	
 			List<UmbrellaProject> projects = results.toList();
 			return ok(Json.toJson(projects));
 		}
@@ -98,8 +103,8 @@ public class UmbrellaProjects extends ProjectsController {
 		return query;
 	}
 	
-	public static Result get(String code) {
-		UmbrellaProject projectValue = getUmbrellaProject(code);
+	public Result get(String code) {
+		UmbrellaProject projectValue = getObject(code);
 		if (projectValue != null) {		
 			return ok(Json.toJson(projectValue));					
 		} else {
@@ -107,8 +112,8 @@ public class UmbrellaProjects extends ProjectsController {
 		}
 	}
 	
-	public static Result head(String code) {
-		if (MongoDBDAO.checkObjectExistByCode(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, code)) { 			
+	public Result head(String code) {
+		if (isObjectExist(code)) { 			
 			return ok();					
 		} else {
 			return notFound();
@@ -116,8 +121,8 @@ public class UmbrellaProjects extends ProjectsController {
 	}
 
 
-	public static Result save() {
-		Form<UmbrellaProject> filledForm = getFilledForm(projectForm, UmbrellaProject.class);
+	public Result save() {
+		Form<UmbrellaProject> filledForm = getMainFilledForm();
 		UmbrellaProject projectInput = filledForm.get();
 
 		if (null == projectInput._id) { 
@@ -134,7 +139,7 @@ public class UmbrellaProjects extends ProjectsController {
 		projectInput.validate(ctxVal);
 
 		if (!ctxVal.hasErrors()) {
-			projectInput = MongoDBDAO.save(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, projectInput);
+			projectInput = saveObject(projectInput);
 			return ok(Json.toJson(projectInput));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
@@ -142,15 +147,15 @@ public class UmbrellaProjects extends ProjectsController {
 	}
 
 
-	public static Result update(String code) {
-		UmbrellaProject project = getUmbrellaProject(code);
-		if (project == null) {
+	public Result update(String code) {
+		UmbrellaProject objectInDB = getObject(code);
+		if (objectInDB == null) {
 			return badRequest("ProjectUmbrella with code "+code+" not exist");
 		}
 
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
-		Form<UmbrellaProject> filledForm = getFilledForm(projectForm, UmbrellaProject.class);
+		Form<UmbrellaProject> filledForm = getMainFilledForm();
 		UmbrellaProject projectInput = filledForm.get();
 		
 		synchronizeUmbrellaProjectCodes(projectInput);		
@@ -167,7 +172,7 @@ public class UmbrellaProjects extends ProjectsController {
 				ctxVal.setUpdateMode();
 				projectInput.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
-					MongoDBDAO.update(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, projectInput);
+					updateObject(projectInput);
 					return ok(Json.toJson(projectInput));
 				}else {
 					return badRequest(filledForm.errorsAsJson());
@@ -183,11 +188,9 @@ public class UmbrellaProjects extends ProjectsController {
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
 			if(!filledForm.hasErrors()){
-				TraceInformation ti = project.traceInformation;
-				ti.setTraceInformation(getCurrentUser());
-				MongoDBDAO.update(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, 
-						DBQuery.and(DBQuery.is("code", code)), getBuilder(projectInput, queryFieldsForm.fields, UmbrellaProject.class).set("traceInformation", ti));
-				return ok(Json.toJson(getUmbrellaProject(code)));
+				updateObject(DBQuery.and(DBQuery.is("code", code)), 
+						getBuilder(projectInput, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
+				return ok(Json.toJson(getObject(code)));
 			}else{
 				return badRequest(filledForm.errorsAsJson());
 			}			
@@ -195,22 +198,20 @@ public class UmbrellaProjects extends ProjectsController {
 	}
 
 
-	public static Result delete(String code) {
-		UmbrellaProject project = getUmbrellaProject(code);
+	public Result delete(String code) {
+		UmbrellaProject project = getObject(code);
 		if (project == null) {
 			return badRequest();
 		}		
-		MongoDBDAO.delete(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, project);	
+		deleteObject(code);	
 		return ok();
 	}
 	
-	public static void synchronizeUmbrellaProjectCodes(UmbrellaProject umbrellaProject) {
+	public void synchronizeUmbrellaProjectCodes(UmbrellaProject umbrellaProject) {
 		for (String code : umbrellaProject.projectCodes) {
-			if (!MongoDBDAO.checkObjectExist(InstanceConstants.PROJECT_COLL_NAME, Project.class, 
-					DBQuery.and(DBQuery.is("code", code), DBQuery.in("umbrellaProjectCodes", umbrellaProject.code)))) {
+			if (!isObjectExist(DBQuery.and(DBQuery.is("code", code), DBQuery.in("umbrellaProjectCodes", umbrellaProject.code)))) {
 				//add the value in the other list : the child project needs to be linked to his father! 
-				MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", code), 
-						DBUpdate.push("umbrellaProjectCodes", umbrellaProject.code));
+				updateObject(DBQuery.is("code", code), DBUpdate.push("umbrellaProjectCodes", umbrellaProject.code));
 			}
 		}
 	}

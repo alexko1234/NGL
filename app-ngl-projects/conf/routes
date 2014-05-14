@@ -38,21 +38,21 @@ GET		/api/commons/states								controllers.commons.api.States.list()
 
 
 #project api
-GET    	/api/projects               					controllers.projects.api.Projects.list()
-GET    	/api/projects/:code               				controllers.projects.api.Projects.get(code: java.lang.String)
-HEAD	/api/projects/:code               				controllers.projects.api.Projects.head(code: java.lang.String)
-POST   	/api/projects									controllers.projects.api.Projects.save()
-PUT   	/api/projects/:code 							controllers.projects.api.Projects.update(code: java.lang.String)
-#DELETE	/api/projects/:code								controllers.projects.api.Projects.delete(code:java.lang.String)
+GET    	/api/projects               					@controllers.projects.api.Projects.list()
+GET    	/api/projects/:code               				@controllers.projects.api.Projects.get(code: java.lang.String)
+HEAD	/api/projects/:code               				@controllers.projects.api.Projects.head(code: java.lang.String)
+POST   	/api/projects									@controllers.projects.api.Projects.save()
+PUT   	/api/projects/:code 							@controllers.projects.api.Projects.update(code: java.lang.String)
+#DELETE	/api/projects/:code								@controllers.projects.api.Projects.delete(code:java.lang.String)
 
 
 #umbrellaProject api
-GET    	/api/umbrellaprojects               			controllers.umbrellaprojects.api.UmbrellaProjects.list()
-GET    	/api/umbrellaprojects/:code               		controllers.umbrellaprojects.api.UmbrellaProjects.get(code: java.lang.String)
-HEAD	/api/umbrellaprojects/:code               		controllers.umbrellaprojects.api.UmbrellaProjects.head(code: java.lang.String)
-POST   	/api/umbrellaprojects							controllers.umbrellaprojects.api.UmbrellaProjects.save()
-PUT   	/api/umbrellaprojects/:code 					controllers.umbrellaprojects.api.UmbrellaProjects.update(code: java.lang.String)
-#DELETE	/api/umbrellaprojects/:code						controllers.umbrellaprojects.api.UmbrellaProjects.delete(code:java.lang.String)
+GET    	/api/umbrellaprojects               			@controllers.umbrellaprojects.api.UmbrellaProjects.list()
+GET    	/api/umbrellaprojects/:code               		@controllers.umbrellaprojects.api.UmbrellaProjects.get(code: java.lang.String)
+HEAD	/api/umbrellaprojects/:code               		@controllers.umbrellaprojects.api.UmbrellaProjects.head(code: java.lang.String)
+POST   	/api/umbrellaprojects							@controllers.umbrellaprojects.api.UmbrellaProjects.save()
+PUT   	/api/umbrellaprojects/:code 					@controllers.umbrellaprojects.api.UmbrellaProjects.update(code: java.lang.String)
+#DELETE	/api/umbrellaprojects/:code						@controllers.umbrellaprojects.api.UmbrellaProjects.delete(code:java.lang.String)
 
 
 #migration
