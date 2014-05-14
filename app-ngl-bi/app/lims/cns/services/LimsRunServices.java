@@ -36,7 +36,8 @@ public class LimsRunServices implements ILimsRunServices{
 
 	ALogger logger = Logger.of("CNS");
 
-	private Map<String, Integer> crmapping;
+	private Map<String, Integer> crScoring;
+	private Map<Integer, Integer> scoreMapping;
 
 	/*
 	 *
@@ -53,14 +54,19 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	 */
 
 	public LimsRunServices() {
-		crmapping = new HashMap<String, Integer>();
-		crmapping.put("TAXO-contaMatOri;", 9);
-		crmapping.put("Qlte-duplicat;", 42);
-		crmapping.put("Qlte-repartitionBases;", 41);
-		crmapping.put("Qlte-duplicat;TAXO-contaMatOri;", 43);
-		crmapping.put("Qlte-repartitionBases;TAXO-contaMatOri;", 44);
-		crmapping.put("Qlte-duplicat;Qlte-repartitionBases;", 45);
-		crmapping.put("Qlte-duplicat;Qlte-repartitionBases;TAXO-contaMatOri;", 46);
+		crScoring = new HashMap<String, Integer>();
+		crScoring.put("TAXO-contaMatOri", 1);
+		crScoring.put("Qlte-duplicat", 2);
+		crScoring.put("Qlte-repartitionBases", 4);
+		
+		scoreMapping = new HashMap<Integer, Integer>();
+		scoreMapping.put(1, 9);
+		scoreMapping.put(2, 42);
+		scoreMapping.put(4, 41);
+		scoreMapping.put(3, 43);
+		scoreMapping.put(5, 44);
+		scoreMapping.put(6, 45);
+		scoreMapping.put(7, 46);
 	}
 
 	@Override
@@ -122,19 +128,15 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 
 
 	private Integer getCR(Valuation valuation) {
-		Set<String> resos = new TreeSet<String>();
-		if(null != valuation.resolutionCodes){
-			resos.addAll(valuation.resolutionCodes);
+		int score = 0;
+		for(String cr : valuation.resolutionCodes){
+			score += (crScoring.get(cr) != null)?crScoring.get(cr).intValue():0;
+			
 		}
-		StringBuilder sb = new StringBuilder();
-		for(String s : resos){
-			sb.append(s+";");
-		}
-		Integer v = null;
-		if(sb.length() > 0){
-			v = crmapping.get(sb.toString());			
-		}
-		return (v != null) ? v : 47;		
+		
+		Integer crId = scoreMapping.get(score);
+		Logger.debug("CR_ID= "+crId);
+		return (crId != null) ? crId : 47;		
 	}
 
 	private Integer getAbandon(Valuation valuation, String code) {
