@@ -77,7 +77,7 @@ GET		/api/experiment/instrument-properties/:instrumentUsedTypeCode	controllers.e
 GET		/api/samples/list												controllers.samples.api.Samples.list()
 
 #projects
-GET		/api/projects/list												controllers.projects.api.Projects.list()
+GET		/api/projects/list												@controllers.projects.api.Projects.list()
 
 #instruments
 GET		/api/instruments/types  										controllers.instruments.api.InstrumentUsedTypes.list()

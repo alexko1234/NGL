@@ -191,7 +191,7 @@ GET		/api/commons/resolutions  					controllers.commons.api.Resolutions.list()
 GET		/api/lists/valuation-criterias				controllers.lists.api.Lists.valuationCriterias()
 
 #projects
-GET		/api/projects							controllers.projects.api.Projects.list()
+GET		/api/projects							@controllers.projects.api.Projects.list()
 
 #instruments
 GET		/api/instruments							controllers.instruments.api.Instruments.list()

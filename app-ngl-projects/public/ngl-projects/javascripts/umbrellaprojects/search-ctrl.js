@@ -1,6 +1,3 @@
-"use strict";
-
-
 angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 
   function($scope, $routeParams, datatable, mainService, tabService, searchService) {
 	
@@ -14,21 +11,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 				add :function(line){
 					tabService.addTabs({label:line.code,href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.get(line.code).url, remove:true});
 				}
-			},
-			columns :  [
-					    {  	property:"code",
-					    	header: "projects.code",
-					    	type :"String",
-					    	order:true,
-					    	edit:false
-						},
-					    {  	property:"name",
-					    	header: "projects.name",
-					    	type :"String",
-					    	order:false,
-					    	edit:false
-						}
-					]
+			}
 	};
 	
 	$scope.search = function(){
@@ -59,6 +42,6 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 	}
 	$scope.search();
 	
+	
 }]);
-
 

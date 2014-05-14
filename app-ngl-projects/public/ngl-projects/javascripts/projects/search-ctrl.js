@@ -13,37 +13,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 				add :function(line){
 					tabService.addTabs({label:line.code,href:jsRoutes.controllers.projects.tpl.Projects.get(line.code).url, remove:true});
 				}
-			},
-			columns : [
-					    {  	property:"code",
-					    	header: "projects.code",
-					    	type :"String",
-					    	order:true,
-					    	edit:false
-						},
-					    {  	property:"name",
-					    	header: "projects.name",
-					    	type :"String",
-					    	order:false,
-					    	edit:false
-						},
-						{	property:"typeCode",
-							header: "projects.typeCode",
-							type :"String",
-					    	order:false,
-					    	edit:false
-						},
-						{	property:"state.code",
-							filter:"codes:'state'",					
-							header: "projects.stateCode",
-							type :"String",
-							order:false,
-							edit:false,
-							choiceInList:false,
-					    	listStyle:'bt-select',
-					    	possibleValues:'listsTable.getStates()'	
-						}
-					]				
+			}	
 	};
 	
 	$scope.search = function(){
