@@ -1,14 +1,11 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routeParams', 'messages', 'lists',   
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routeParams', 'messages', 'lists', 'mainService', 'tabService',    
                                                   
-  function($scope, $http, $routeParams, messages, lists) {
+  function($scope, $http, $routeParams, messages, lists, mainService, tabService) {
 		
-	$scope.reset = function(){
-		$scope.form = {
-				
-		}
-	};
+	$scope.form = {				
+	}
 	
 	
 	/* buttons section */
@@ -68,13 +65,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		$scope.lists.refresh.projectCategories();
 		$scope.lists.refresh.umbrellaProjects();
 		
-		if(angular.isDefined($scope.getForm())){
-			$scope.form = $scope.getForm();
-		}else{
-			$scope.reset();
-		}
 		
-		$scope.stopEditMode();
+		$scope.mainService = mainService;
+		$scope.mainService.stopEditMode();
 
 		$http.get(jsRoutes.controllers.projects.api.Projects.get($routeParams.code).url).success(function(data) {
 
@@ -95,10 +88,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 				$scope.form.allProjects = [];
 			}
 			
-			if($scope.getTabs().length == 0){
-				$scope.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.projects.tpl.Projects.home("search").url, remove:true});
-				$scope.addTabs({label:$scope.project.code, href:jsRoutes.controllers.projects.tpl.Projects.get($scope.project.code).url, remove:true});							
-				$scope.activeTab($scope.getTabs(1));
+			if(tabService.getTabs().length == 0){
+				tabService.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.projects.tpl.Projects.home("search").url, remove:true});
+				tabService.addTabs({label:$scope.project.code, href:jsRoutes.controllers.projects.tpl.Projects.get($scope.project.code).url, remove:true});							
+				tabService.activeTab(tabService.getTabs(1));
 			}
 			
 		});

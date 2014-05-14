@@ -1,13 +1,11 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routeParams', '$filter', 'messages', 'lists', 
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routeParams', '$filter', 'messages', 'lists', 'mainService', 'tabService', 
                                                                                                     
-  function($scope, $http, $routeParams, $filter, messages, lists) {
+  function($scope, $http, $routeParams, $filter, messages, lists, mainService, tabService) {
 		
-	$scope.reset = function(){
-		$scope.form = {				
-		}
-	};
+	$scope.form = {				
+	}
 	
 	
 	/* buttons section */
@@ -56,13 +54,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		$scope.lists = lists;
 		$scope.lists.refresh.projects();
 		
-		if(angular.isDefined($scope.getForm())){
-			$scope.form = $scope.getForm();
-		}else{
-			$scope.reset();
-		}
-		
-		$scope.stopEditMode();	
+		$scope.mainService = mainService;
+		$scope.mainService.stopEditMode();
 
 		$http.get(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.get($routeParams.code).url).success(function(data) {
 			$scope.umbrellaProject = data;		
@@ -78,10 +71,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 				$scope.form.allProjects = [];
 			}
 		
-			if($scope.getTabs().length == 0){
-				$scope.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.home("search").url, remove:true});
-				$scope.addTabs({label:$scope.umbrellaProject.code, href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.get($scope.umbrellaProject.code).url, remove:true});
-				$scope.activeTab($scope.getTabs(1));
+			if(tabService.getTabs().length == 0){
+				tabService.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.home("search").url, remove:true});
+				tabService.addTabs({label:$scope.umbrellaProject.code, href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.get($scope.umbrellaProject.code).url, remove:true});
+				tabService.activeTab(tabService.getTabs(1));
 			}
 			
 		});

@@ -19,9 +19,9 @@
 	<div class="col-md-12 col-lg-12 ">
 	<div class="page-header" ng-init="init()">
 		<div class="btn-toolbar pull-right">
-			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="update()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
-			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
-			 <button class="btn btn-default" ng-if="!isEditMode()" ng-click="startEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
+			 <button class="btn btn-default" ng-if="mainService.isEditMode()" ng-click="update()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+			 <button class="btn btn-default" ng-if="mainService.isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
+			 <button class="btn btn-default" ng-if="!mainService.isEditMode()" ng-click="startEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
 		</div>
 	 	<h1>	
 		 	<span>{{umbrellaProject.code}}</span> 
@@ -43,7 +43,7 @@
 					}
 					
 					@columnLabelValue(Messages("umbrellaProjects.name")){
-						<div ng-switch on="isEditMode()">
+						<div ng-switch on="mainService.isEditMode()">
 							<p class="form-control-static" ng-switch-when="false">{{umbrellaProject.name}}</p>
 							<input type="text" class="form-control" ng-switch-when="true" ng-model="umbrellaProject.name">
 						</div>
@@ -54,7 +54,7 @@
 			<div class="row">
 				@column(6){	
 					@columnLabelValue(Messages("projects.projectCodes")){
-						<div ng-switch on="isEditMode()">
+						<div ng-switch on="mainService.isEditMode()">
 						
 							<div ng-switch-when="false"> 
 								<ul ng-repeat="p in lists.getProjects()  | filterByCodesInStringArray:umbrellaProject.projectCodes">
@@ -73,7 +73,7 @@
 				}	
 				
 				@column(1){
-					<div ng-switch on="isEditMode()">
+					<div ng-switch on="mainService.isEditMode()">
 						<div ng-switch-when="true">
 							<button type="button" class="btn btn-default btn-block" ng-click="addItem()"><i class="fa fa-forward"></i></button> 
 							<button type="button" class="btn btn-default btn-block" ng-click="removeItem()"><i class="fa fa-backward"></i></button>
@@ -82,7 +82,7 @@
 				}
 				
 				@column(3){				
-					<div ng-switch on="isEditMode()">
+					<div ng-switch on="mainService.isEditMode()">
 						<div ng-switch-when="true"> 
 							<select size="30" name="selectedProjects" ng-model="umbrellaProject.projectCodes" multiple="true" ng-options="code for code in form.selectedProjects">
 							</select>

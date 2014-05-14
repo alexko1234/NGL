@@ -5,17 +5,14 @@
 @form() = {	
 	@columnSearchForm{
 		@formGroup{
-			<input type="text" class="form-control" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getUmbrellaProjects() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.umbrellaProject")'>				
+			<input type="text" class="form-control" ng-model="searchService.form.projectCode" typeahead="project.code as project.code for project in lists.getUmbrellaProjects() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.umbrellaProject")'>				
 		}
 	}		
 }
 
-@formAttrs() = {
-	ng-controller="SearchFormCtrl" ng-init="init()"
-}
 
 @if(isForm) {
-	@searchForm(form,formAttrs)()()
+	@searchForm(form)()()
 }
 
 @if(!isForm) {

@@ -1,30 +1,8 @@
 "use strict";
 
-function getColumns() {
-var columns = [
-			    {  	property:"code",
-			    	header: "projects.code",
-			    	type :"String",
-			    	order:true,
-			    	edit:false
-				},
-			    {  	property:"name",
-			    	header: "projects.name",
-			    	type :"String",
-			    	order:false,
-			    	edit:false
-				}
-			];						
-	return columns;
-};
 
-function convertForm(iform){
-	var form = angular.copy(iform);
-	return form;
-};
-
-
-angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'datatable', function($scope, $routeParams, datatable) {
+angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 
+  function($scope, $routeParams, datatable, mainService, tabService, searchService) {
 	
 	var datatableConfig = {
 			order :{by:'code', reverse:false},
@@ -34,58 +12,53 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 			show:{
 				active:true,
 				add :function(line){
-					$scope.addTabs({label:line.code,href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.get(line.code).url, remove:true});
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.get(line.code).url, remove:true});
 				}
 			},
-			columns : getColumns()
+			columns :  [
+					    {  	property:"code",
+					    	header: "projects.code",
+					    	type :"String",
+					    	order:true,
+					    	edit:false
+						},
+					    {  	property:"name",
+					    	header: "projects.name",
+					    	type :"String",
+					    	order:false,
+					    	edit:false
+						}
+					]
 	};
 	
-	var init = function(){
-		//to avoid to lost the previous search
-		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, datatableConfig);			
-			$scope.datatable.search(convertForm($routeParams),'search');
-			$scope.setDatatable($scope.datatable);
-		}else{
-			$scope.datatable = $scope.getDatatable();
-		}
-		
-		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('search');
-			$scope.addTabs({label:Messages('umbrellaProjects.menu.search'), href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.home("search").url, remove:true});
-			$scope.activeTab(0); // desactive le lien !
-		}
-	};
-	
-	init();
-}]);
-
-
-
-angular.module('home').controller('SearchFormCtrl', ['$scope', 'lists', function($scope, lists){
-	
-	$scope.lists = lists;
-
 	$scope.search = function(){
-		$scope.setForm($scope.form);
-		$scope.datatable.search(convertForm($scope.form));
+		$scope.searchService.search($scope.datatable);
 	};
 	
-	$scope.reset = function() {
-		$scope.form = {
-				
-		}
+	$scope.reset = function(){
+		$scope.searchService.reset();
 	};
+
 	
-	var init = function(){
-		$scope.lists.refresh.umbrellaProjects();	
-		
-		if(angular.isDefined($scope.getForm())){
-			$scope.form = $scope.getForm();
-		}else{
-			$scope.reset();
-		}
-	};
-	init();
+	if(angular.isUndefined(mainService.getHomePage())){
+		mainService.setHomePage('search');
+		tabService.addTabs({label:Messages('umbrellaProjects.menu.search'), href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.home("search").url, remove:true});
+		tabService.activeTab(0); // desactive le lien !
+	}
+	
+	$scope.searchService = searchService();	
+	$scope.searchService.setRouteParams($routeParams);
+	
+	//to avoid to lost the previous search
+	if(angular.isUndefined(mainService.getDatatable())){
+		$scope.datatable = datatable($scope, datatableConfig);			
+		mainService.setDatatable($scope.datatable);
+		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());
+	}else{
+		$scope.datatable = mainService.getDatatable();
+	}
+	$scope.search();
 	
 }]);
+
+

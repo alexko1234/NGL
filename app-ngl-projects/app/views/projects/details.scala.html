@@ -31,9 +31,9 @@
 	<div class="col-md-12 col-lg-12 ">
 	<div class="page-header" ng-init="init()">
 		<div class="btn-toolbar pull-right">
-			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="update()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
-			 <button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
-			 <button class="btn btn-default" ng-if="!isEditMode()" ng-click="startEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
+			 <button class="btn btn-default" ng-if="mainService.isEditMode()" ng-click="update()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+			 <button class="btn btn-default" ng-if="mainService.isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
+			 <button class="btn btn-default" ng-if="!mainService.isEditMode()" ng-click="startEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
 		</div>
 	 	<h1 ng-switch on="project.state.code">	
 		 	<span ng-switch-when="IP" class="text-danger">{{project.code}}</span> 
@@ -61,14 +61,14 @@
 					}
 					
 					@columnLabelValue(Messages("projects.name")){
-						<div ng-switch on="isEditMode()">
+						<div ng-switch on="mainService.isEditMode()">
 							<p class="form-control-static" ng-switch-when="false">{{project.name}}</p>
 							<input type="text" class="form-control" ng-switch-when="true" ng-model="project.name">
 						</div>
 					}
 	
 					@columnLabelValue(Messages("projects.state.code")){
-						<div ng-switch on="isEditMode()">
+						<div ng-switch on="mainService.isEditMode()">
 							<div ng-switch-when="false">
 								<p class="form-control-static">{{project.state.code | codes:'state'}}</p>	
 								@dataState()
@@ -86,7 +86,7 @@
 					}
 					
 					@columnLabelValue(Messages("projects.comments")){
-						<div ng-switch on="isEditMode()">
+						<div ng-switch on="mainService.isEditMode()">
 							<p class="form-control-static" ng-switch-when="false">{{project.comments[0].comment}}</p>
 							<textarea class="form-control" ng-switch-when="true" ng-model="project.comments[0].comment"></textarea>
 						</div>	
@@ -95,25 +95,25 @@
 				
 				@column(4){
 					@columnLabelValue(Messages("projects.type")){
-						<div ng-switch on="isEditMode()">
+						<div ng-switch on="mainService.isEditMode()">
 							<p class="form-control-static" ng-switch-when="false">{{project.typeCode | codes:'type'}}</p>
 							<div bt-select class="form-control" ng-switch-when="true" ng-model="project.typeCode" bt-options="type.code as type.name for type in lists.getProjectTypes()"></div>
 						</div>
 					}
 					
 					@columnLabelValue(Messages("projects.category.type")){
-						<div ng-switch on="isEditMode()">
+						<div ng-switch on="mainService.isEditMode()">
 							<p class="form-control-static" ng-switch-when="false">{{project.categoryCode | codes:'project_cat'}}</p>
 							<div bt-select class="form-control" ng-switch-when="true" ng-model="project.categoryCode" bt-options="category.code as category.name for category in lists.getProjectCategories()"></div>
 						</div>	
 					}
 					@columnLabelValue(Messages("projects.bioinformaticanalysis")){
-						<div class="checkbox" ng-if="isEditMode()">
+						<div class="checkbox" ng-if="mainService.isEditMode()">
 		 					<label>
-							<input type="checkbox"  ng-model="project.bioinformaticAnalysis" ng-if="isEditMode()">	
+							<input type="checkbox"  ng-model="project.bioinformaticAnalysis">	
 							</label>
 						</div>				
-						<p class="form-control-static" ng-switch on="project.bioinformaticAnalysis" ng-if="!isEditMode()">
+						<p class="form-control-static" ng-switch on="project.bioinformaticAnalysis" ng-if="!mainService.isEditMode()">
 							<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
 							<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
 						</p>					
@@ -124,7 +124,7 @@
 			<div class="row">
 				@column(6){			
 					@columnLabelValue(Messages("projects.umbrellaProjectCodes")){
-						<div ng-switch on="isEditMode()">
+						<div ng-switch on="mainService.isEditMode()">
 							<div ng-switch-when="false"> 
 								<ul ng-repeat="p in lists.getUmbrellaProjects() | filterByCodesInStringArray:project.umbrellaProjectCodes">
 									<li>{{p.code + ":" + p.name}}</li>
@@ -140,7 +140,7 @@
 				}
 				
 				@column(1){
-					<div ng-switch on="isEditMode()">
+					<div ng-switch on="mainService.isEditMode()">
 						<div ng-switch-when="true">
 							<button type="button" class="btn btn-default btn-block" ng-click="addItem()"><i class="fa fa-forward"></i></button> 
 							<button type="button" class="btn btn-default btn-block" ng-click="removeItem()"><i class="fa fa-backward"></i></button>
@@ -149,7 +149,7 @@
 				}
 				
 				@column(3){				
-					<div ng-switch on="isEditMode()">
+					<div ng-switch on="mainService.isEditMode()">
 						<div ng-switch-when="true"> 
 							<select size="30" name="selectedProjects" ng-model="project.umbrellaProjectCodes" multiple="true" ng-options="code for code in form.selectedProjects">
 							</select>
