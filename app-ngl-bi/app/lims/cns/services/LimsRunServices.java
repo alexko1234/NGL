@@ -86,8 +86,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				dao.updatePisteAbandon(run.code, lane.number, getAbandon(lane.valuation, run.code), 47);
 			}
 		}catch(Throwable t){
-			//TODO mail to prod ???
-			logger.warn(run.code+" : "+t.getMessage());
+			Logger.error(run.code+" : "+t.getMessage());
 		}
 	}
 	@Override
@@ -98,14 +97,12 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				List<TacheHD> taches = dao.listTacheHD(readSet.code);
 				Integer tacheId = null;
 				if(taches.size() > 1){
-					Logger.warn("several tachehd "+readSet.code);
-					logger.warn(readSet.code+" : Plusieurs Taches");
+					logger.error(readSet.code+" : Plusieurs Taches");
 					//TODO mail to prod ???
 				}else if(taches.size() == 1){
 					tacheId = taches.get(0).tacco;
 				}else{
-					Logger.warn("0 tachehd "+readSet.code);
-					logger.warn(readSet.code+" : O Tache");
+					logger.error(readSet.code+" : O Tache");
 				}
 				dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), getCR(readSet.productionValuation), tacheId, 55);
 				if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
@@ -119,8 +116,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				}
 			}
 		}catch(Throwable t){
-			//TODO mail to prod ???
-			logger.warn(readSet.code+" : "+t.getMessage());
+			Logger.error(readSet.code+" : "+t.getMessage());
 		}
 	}
 
