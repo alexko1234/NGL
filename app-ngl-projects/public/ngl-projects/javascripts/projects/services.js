@@ -53,7 +53,6 @@
 					}
 				},
 				
-
 				convertForm : function(){
 					var _form = angular.copy(this.form);
 					if(_form.fromDate)_form.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
@@ -62,7 +61,6 @@
 				},
 				
 				search : function(datatable){
-					this.updateForm();
 					mainService.setForm(this.form);
 					datatable.search(this.convertForm());
 				},
@@ -71,17 +69,14 @@
 					this.form = {};
 				},
 				
-				/*
 				states : function(){
 					return this.lists.get('statetrue');
 				}
-				*/
 		};
 		
-		return function(){
-			
+		return function() {
 			searchService.lists.refresh.projects();
-			//searchService.lists.refresh.states({objectTypeCode:"Project", display:true},'statetrue');				
+			searchService.lists.refresh.states({objectTypeCode:"Project", display:true},'statetrue');				
 			searchService.lists.refresh.states({objectTypeCode:"Project"});							
 			searchService.lists.refresh.types({objectTypeCode:"Project"});
 			
@@ -90,7 +85,6 @@
 			}else{
 				searchService.reset();
 			}
-			
 			return searchService;		
 		}
 	}

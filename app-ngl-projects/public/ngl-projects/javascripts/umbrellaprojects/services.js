@@ -37,7 +37,6 @@
 					}
 				},
 				
-
 				convertForm : function(){
 					var _form = angular.copy(this.form);
 					if(_form.fromDate)_form.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
@@ -45,9 +44,7 @@
 					return _form
 				},
 
-				
 				search : function(datatable){
-					this.updateForm();
 					mainService.setForm(this.form);
 					datatable.search(this.convertForm());
 				},
@@ -55,21 +52,16 @@
 				reset : function(){
 					this.form = {};
 				}
-				
-
 		};
 		
-		return function(){
-			
+		return function() {			
 			searchService.lists.refresh.umbrellaProjects();
-			//searchService.lists.refresh.projects();
 			
 			if(angular.isDefined(mainService.getForm())){
 				searchService.form = mainService.getForm();
 			}else{
 				searchService.reset();
 			}
-			
 			return searchService;		
 		}
 	}
