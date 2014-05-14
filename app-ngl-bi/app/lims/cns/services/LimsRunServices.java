@@ -133,9 +133,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			score += (crScoring.get(cr) != null)?crScoring.get(cr).intValue():0;
 			
 		}
-		
 		Integer crId = scoreMapping.get(score);
-		Logger.debug("CR_ID= "+crId);
 		return (crId != null) ? crId : 47;		
 	}
 
