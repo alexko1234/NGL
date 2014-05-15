@@ -23,7 +23,7 @@ public class ResolutionService {
 		saveResolutions(errors);	
 	}
 		
-	
+		
 	public static void saveResolutionCategories(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<ResolutionCategory> l = new ArrayList<ResolutionCategory>();
 		
