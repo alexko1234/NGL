@@ -58,16 +58,8 @@ public class FindDAOTest extends AbstractTests {
 		CommonInfoType cTypeId = CommonInfoType.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(CommonInfoType.find.isCodeExist(""));
-		
 		CommonInfoType typeRun = CommonInfoType.find.findByObjectTypeCode(ObjectType.CODE.Run).get(0);
 		Assert.assertNotNull(typeRun);
-
-		/*
-		CommonInfoTypeDAO citDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		Assert.assertNotNull(citDAO.findByName(typeRun.name));
-		ObjectType otRun = ObjectType.find.findByCode("Run");
-		Assert.assertNotNull(citDAO.findByTypeNameAndType(typeRun.name, otRun.id));
-		*/
 	}
 	
 	@Test 
@@ -104,8 +96,7 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(pc2);
 		ProjectCategory pc3 = ProjectCategory.find.findById(pc.id);
 		Assert.assertNotNull(pc3);
-		Assert.assertFalse(ProjectCategory.find.isCodeExist("")); 
-		
+		Assert.assertFalse(ProjectCategory.find.isCodeExist("")); 		
 	}
 	
 	@Test
@@ -128,7 +119,6 @@ public class FindDAOTest extends AbstractTests {
 		}
 		Assert.assertFalse(ReagentType.find.isCodeExist(""));
 	}
-
 
 	@Test
 	public void RunTypeFindTest() throws DAOException {
@@ -209,9 +199,7 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertFalse(ContainerSupportCategory.find.isCodeExist(""));
 		Assert.assertNotNull(ContainerSupportCategory.find.findByContainerCategoryCode(""));
 		Assert.assertNotNull(ContainerSupportCategory.find.findByExperimentTypeCode(""));
-		
 		Assert.assertFalse(ContainerSupportCategory.find.isCodeExist("")); 
-		
 		//internal fcts
 		ContainerSupportCategoryDAO cscDAO = Spring.getBeanOfType(ContainerSupportCategoryDAO.class); 
 		InstrumentUsedType iut =  InstrumentUsedType.find.findByCode("hand");
@@ -247,11 +235,9 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(et6);
 		List<String> lstr = ExperimentType.find.findVoidProcessExperimentTypeCode("");
 		Assert.assertEquals(0, lstr.size()); 
-		
 		//internal fct
 		ExperimentTypeDAO etDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 		etDAO.findByProcessTypeId(pt.id);
-		
 	}
 
 	
@@ -265,7 +251,6 @@ public class FindDAOTest extends AbstractTests {
 		Institute cTypeId = Institute.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(Institute.find.isCodeExist(""));
-		
 		//internal fcts
 		InstituteDAO institDAO = Spring.getBeanOfType(InstituteDAO.class);
 		CommonInfoType citInstrument = CommonInfoType.find.findByObjectTypeCode(ObjectType.CODE.Instrument).get(0);
@@ -279,15 +264,9 @@ public class FindDAOTest extends AbstractTests {
 		MeasureUnit cType = MeasureUnit.find.findByCode(type.code);
 		Assert.assertNotNull(cType);
 		MeasureUnit cTypeId = MeasureUnit.find.findById(type.id);
-		Assert.assertNotNull(cTypeId);
-	
+		Assert.assertNotNull(cTypeId);	
 		Assert.assertNotNull(MeasureUnit.find.findByValue(type.code));
 		Assert.assertFalse(MeasureUnit.find.isCodeExist(""));
-		
-		/*
-		MeasureUnitDAO mDAO = Spring.getBeanOfType(MeasureUnitDAO.class);
-		Assert.assertNotNull(mDAO.findByMeasureCategory(type.category.id));
-		*/
 	}
 
 	@Test
@@ -311,8 +290,7 @@ public class FindDAOTest extends AbstractTests {
 	
 	@Test
 	public void PropertyDefinitionFindTest2() throws DAOException {
-		Assert.assertNotNull(PropertyDefinition.find.isCodeExist(""));
-		
+		Assert.assertNotNull(PropertyDefinition.find.isCodeExist(""));		
 		//internal fcts
 		CommonInfoType citTreatment = CommonInfoType.find.findByObjectTypeCode(ObjectType.CODE.Treatment).get(0);
 		PropertyDefinitionDAO pDAO = Spring.getBeanOfType(PropertyDefinitionDAO.class);
@@ -334,7 +312,6 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertTrue(exist);
 		exist=Protocol.find.isCodeExistForTypeCode(protocol.code, "test");
 		Assert.assertFalse(exist);
-		
 		ProtocolDAO pDAO = Spring.getBeanOfType(ProtocolDAO.class);
 		Assert.assertNull(pDAO.findById(Long.valueOf(0)));
 		Assert.assertNull(pDAO.findByName(""));
@@ -349,17 +326,12 @@ public class FindDAOTest extends AbstractTests {
 		Resolution cTypeId = Resolution.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(Resolution.find.isCodeExist(""));
-		
 		type = Resolution.find.findByCategoryCode(type.category.code).get(0);
 		Assert.assertNotNull(type);
-
 		Assert.assertNotNull(Resolution.find.findByObjectTypeCode(ObjectType.CODE.Run));
-		
 		CommonInfoType cit = CommonInfoType.find.findByObjectTypeCode(ObjectType.CODE.Run).get(0); 
 		Assert.assertNotNull(Resolution.find.findByTypeCode(cit.code));
-		
 		Assert.assertFalse(Resolution.find.isCodeExistForTypeCode("", ""));
-		
 		//internal fcts
 		ResolutionDAO rDAO = Spring.getBeanOfType(ResolutionDAO.class);
 		Assert.assertNotNull(rDAO.findByCommonInfoTypeId(cit.id));
@@ -381,28 +353,7 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(State.find.findByObjectTypeCode(ObjectType.CODE.Sample));
 		Assert.assertNotNull(State.find.findByTypeCode(""));
 		Assert.assertFalse(State.find.isCodeExistForTypeCode("",""));
-		
-		//StateDAO sDAO = Spring.getBeanOfType(StateDAO.class);
-		//Assert.assertNotNull(sDAO.findByCommonInfoType(0));
-		//Assert.assertNotNull(sDAO.findByObjectTypeId(Long.valueOf(0)));		
 	}
-	
-	@Test
-	public void ValuationCriteriaFindTest() throws DAOException {
-		ValuationCriteria c =  ValuationCriteria.find.findAll().get(0);
-		Assert.assertNotNull(c);
-		ValuationCriteria cType =  ValuationCriteria.find.findByCode(c.code);
-		Assert.assertNotNull(cType);
-		ValuationCriteria cTypeId =  ValuationCriteria.find.findById(c.id);
-		Assert.assertNotNull(cTypeId);
-		Assert.assertFalse(ValuationCriteria.find.isCodeExist(""));
-		CommonInfoType cit = CommonInfoType.find.findByCode("RHS2000");
-		ValuationCriteria.find.findByTypeCode(cit.code);
-		
-		//ValuationCriteria cType2 =  ValuationCriteria.find.findByCommonInfoType(cit.id).get(0);
-		//Assert.assertNotNull(cType2);
-	}
-	
 	
 	@Test(expected=EmptyResultDataAccessException.class)
 	public void InstrumentUsedTypeFindTest() throws DAOException {
@@ -414,7 +365,6 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(InstrumentUsedType.find.isCodeExist(""));
 		Assert.assertNotNull(InstrumentUsedType.find.findByExperimentTypeCode(""));		
-		
 		InstrumentUsedTypeDAO iDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
 		List<InstrumentUsedType> liut = new ArrayList<InstrumentUsedType>();
 		liut = iDAO.findByExperimentId(0);
@@ -447,6 +397,7 @@ public class FindDAOTest extends AbstractTests {
 		instrumentQuery.typeCode = "ARGUS";
 		instrumentQuery.categoryCode = "opt-map-opgen";
 		intruments = Instrument.find.findByQueryParams(instrumentQuery);
+		Assert.assertNotNull(intruments);
 		
 		instrumentQuery = new InstrumentQueryParams();
 		instrumentQuery.typeCodes =new ArrayList();
@@ -454,7 +405,7 @@ public class FindDAOTest extends AbstractTests {
 		instrumentQuery.categoryCodes = new ArrayList();
 		instrumentQuery.categoryCodes.add("opt-map-opgen");
 		intruments = Instrument.find.findByQueryParams(instrumentQuery);
-		Assert.assertNotNull(intruments);
+		Assert.assertNotNull(intruments);		
 	}
 
 }
