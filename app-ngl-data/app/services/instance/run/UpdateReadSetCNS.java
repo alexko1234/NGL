@@ -37,23 +37,31 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 
 	
 	public void updateReadSetArchive(ContextValidation contextError) {
-		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  DBQuery.and(DBQuery.is("dispatch", true), DBQuery.notExists("archiveId"))).toList();
-		Logger.info("nb ReadSet ="+readSets.size());
+		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
+				DBQuery.and(DBQuery.is("dispatch", true), DBQuery.is("archiveId", null))).toList();
+		
+		logger.info("nb ReadSet ="+readSets.size());
 		for(ReadSet rs : readSets){
 			ReadSet updateRS;
 			try {
 				updateRS = limsServices.findReadSetToUpdate(rs, contextError);
 				logger.info("Update ReadSet ="+rs.getCode());
-				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
-						, DBQuery.is("code", rs.code)
-						, DBUpdate.set("archiveDate",updateRS.archiveDate)
-									.set("archiveId", updateRS.archiveId)
-									.set("traceInformation.modifyDate", new Date())
-									.set("traceInformation.modifyUser", "lims"));
-				} catch (SQLException e) {
-					logger.error(e.getMessage());
+				if(updateRS.archiveDate != null && updateRS.archiveId != null){
+					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
+							, DBQuery.is("code", rs.code)
+							, DBUpdate.set("archiveDate",updateRS.archiveDate)
+										.set("archiveId", updateRS.archiveId)
+										.set("traceInformation.modifyDate", new Date())
+										.set("traceInformation.modifyUser", "lims"));					
+				}else if(updateRS.archiveDate == null && updateRS.archiveId != null){
+					logger.error("Probleme archivage date null / id not null : "+rs.getCode());
+				}else if(updateRS.archiveDate != null && updateRS.archiveId == null){
+					logger.error("Probleme archivage date not null / id null : "+rs.getCode());
 				}
-		}		
+			} catch (SQLException e) {
+				logger.error(e.getMessage());
+			}
+		}
 	}
 	
 
