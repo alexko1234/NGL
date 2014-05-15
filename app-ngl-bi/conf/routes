@@ -177,7 +177,8 @@ GET    	/api/alerts/:code               			controllers.alerts.api.Alerts.get(cod
 HEAD	/api/alerts/:code               			controllers.alerts.api.Alerts.head(code: java.lang.String)
 
 #migration
-GET		/migration									controllers.migration.MigrationUpdateSampleOnContainer.migration()
+#GET		/migration									controllers.migration.MigrationUpdateSampleOnContainer.migration()
+GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
 
 #Common
 GET		/api/commons/states							controllers.commons.api.States.list()

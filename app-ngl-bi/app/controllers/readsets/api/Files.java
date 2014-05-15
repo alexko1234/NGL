@@ -74,14 +74,7 @@ public class Files extends ReadSetsController {
 		
 		Form<File> filledForm = getFilledForm(fileForm, File.class);
 		File file = filledForm.get();
-		
-		if(null == file.state){
-			file.state = new State();
-		}
-		file.state.code = "N";
-		file.state.user = getCurrentUser();
-		file.state.date = new Date();	
-		
+				
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		ctxVal.putObject("readSet", readSet);
 		ctxVal.setCreationMode();

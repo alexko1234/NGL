@@ -60,14 +60,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 		
 		Form<File> filledForm = getSubFilledForm();
 		File inputFile = filledForm.get();
-		
-		if(null == inputFile.state){
-			inputFile.state = new State();
-		}
-		inputFile.state.code = "N";
-		inputFile.state.user = getCurrentUser();
-		inputFile.state.date = new Date();	
-		
+				
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		ctxVal.putObject("analysis", objectInDB);
 		ctxVal.setCreationMode();
