@@ -37,7 +37,8 @@ public class MigrationReadSetArchiveId  extends CommonController {
 		ContextValidation contextError=new ContextValidation();
 		
 		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
-				DBQuery.and(DBQuery.is("dispatch", true), DBQuery.is("archiveId", null))).toList();
+				DBQuery.and(DBQuery.is("dispatch", true), DBQuery.is("archiveId", null), DBQuery.notEquals("state.code", "UA"))).toList();
+		
 		Logger.info("nb ReadSet ="+readSets.size());
 		
 		for(ReadSet rs : readSets){
@@ -46,14 +47,14 @@ public class MigrationReadSetArchiveId  extends CommonController {
 				updateRS = limsServices.findReadSetToUpdate(rs, contextError);
 				//Logger.info("Update ReadSet ="+rs.getCode());
 				if(updateRS.archiveDate != null && updateRS.archiveId != null){
-					/*
+					
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
 							, DBQuery.is("code", rs.code)
 							, DBUpdate.set("archiveDate",updateRS.archiveDate)
 										.set("archiveId", updateRS.archiveId)
 										.set("traceInformation.modifyDate", new Date())
 										.set("traceInformation.modifyUser", "lims"));
-										*/					
+															
 				}else if(updateRS.archiveDate == null && updateRS.archiveId != null){
 					Logger.error("Probleme archivage date null / id not null : "+rs.getCode());
 				}else if(updateRS.archiveDate != null && updateRS.archiveId == null){
