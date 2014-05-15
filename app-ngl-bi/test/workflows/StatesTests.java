@@ -35,7 +35,7 @@ import utils.RunMockHelper;
 import validation.ContextValidation;
 
 
-public class RunTest extends  AbstractTests {	
+public class StatesTests extends  AbstractTests {	
 	
 	static Container c;
 	Run run;
@@ -467,7 +467,7 @@ public class RunTest extends  AbstractTests {
 
 		 setReadSetStateTo("F-QC");
 		 
-	     assertThat(readset.state.code).isEqualTo("F-QC"); //instead of IW-V
+	     assertThat(readset.state.code).isEqualTo("IW-VQC"); //instead of IW-V
 	}
 
 	
@@ -487,7 +487,7 @@ public class RunTest extends  AbstractTests {
 
 		 setReadSetStateTo("F-QC");
 
-	     assertThat(readset.state.code).isEqualTo("F-QC"); //instead of UA
+	     assertThat(readset.state.code).isEqualTo("UA");
 	}
 
 	
@@ -507,6 +507,6 @@ public class RunTest extends  AbstractTests {
 
 		 setReadSetStateTo("F-QC");	     
 		
-	     assertThat(readset.state.code).isEqualTo("F-QC"); //instead of A
+	     assertThat(readset.state.code).isEqualTo("A"); //instead of A
 	}
 }
