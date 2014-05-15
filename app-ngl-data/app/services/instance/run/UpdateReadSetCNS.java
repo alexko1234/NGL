@@ -38,7 +38,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 	
 	public void updateReadSetArchive(ContextValidation contextError) {
 		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
-				DBQuery.and(DBQuery.is("dispatch", true), DBQuery.is("archiveId", null))).toList();
+				DBQuery.and(DBQuery.is("dispatch", true), DBQuery.is("archiveId", null), DBQuery.notEquals("state.code", "UA"))).toList();
 		
 		logger.info("nb ReadSet ="+readSets.size());
 		for(ReadSet rs : readSets){
