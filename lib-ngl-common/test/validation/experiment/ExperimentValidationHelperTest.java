@@ -13,7 +13,6 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentQueryParams;
 import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.instrument.instance.InstrumentUsed;
 import models.utils.dao.DAOException;
 
 import org.junit.AfterClass;
