@@ -1,5 +1,8 @@
-angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams', 'messages', 'lists', function($scope, $http, $routeParams, messages, lists) {
+angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams', 'messages', 'lists',  'mainService', 
+  function($scope, $http, $routeParams, messages, lists, mainService) {
 	
+	$scope.form = {				
+	}
 
 	/* buttons section */
 	$scope.save = function(){
@@ -63,11 +66,8 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 		$scope.lists.refresh.projectCategories();
 		$scope.lists.refresh.umbrellaProjects();
 		
-		if(angular.isDefined($scope.getForm())){
-			$scope.form = $scope.getForm();
-		}else{
-			$scope.reset();
-		}
+		$scope.mainService = mainService;
+		$scope.mainService.startEditMode();
 		
 		$scope.form.allProjects = lists.getUmbrellaProjects(); 		
 		if ($scope.form.allProjects == undefined) {
@@ -75,10 +75,14 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 		}
 		$scope.form.selectedProjects = [];
 		
-		if(angular.isUndefined($scope.getHomePage())){
-			$scope.setHomePage('add');
+		if(angular.isUndefined(mainService.getHomePage())){
+			mainService.setHomePage('add');
 		}
+
 	};
 	
 	init();
 }]);
+
+
+
