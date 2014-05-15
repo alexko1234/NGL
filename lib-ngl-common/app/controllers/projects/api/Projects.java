@@ -79,7 +79,7 @@ public class Projects extends DocumentController<Project> {
 
 	
 
-	private static List<ListObject> toListObjects(List<Project> projects){
+	private List<ListObject> toListObjects(List<Project> projects){
 		List<ListObject> lo = new ArrayList<ListObject>();
 		for(Project p : projects){
 			lo.add(new ListObject(p.code, p.name));
@@ -87,7 +87,7 @@ public class Projects extends DocumentController<Project> {
 		return lo;
 	}
 	
-	private static Query getQuery(ProjectsSearchForm form) {
+	private Query getQuery(ProjectsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
 		
@@ -112,23 +112,6 @@ public class Projects extends DocumentController<Project> {
 		}
 
 		return query;
-	}
-	
-	public Result get(String code) {
-		Project projectValue = getObject(code);
-		if (projectValue != null) {		
-			return ok(Json.toJson(projectValue));					
-		} else {
-			return notFound();
-		}
-	}
-	
-	public Result head(String code) {
-		if(isObjectExist(code)) {			
-			return ok();					
-		} else {
-			return notFound();
-		}
 	}
 
 
@@ -218,15 +201,6 @@ public class Projects extends DocumentController<Project> {
 		}
 	}
 
-
-	public Result delete(String code) {
-		Project project = getObject(code);
-		if (project == null) {
-			return badRequest();
-		}		
-		deleteObject(code);	
-		return ok();
-	}
 	
 	public void synchronizeProjectCodes(Project project) {
 		for (String code : project.umbrellaProjectCodes) {
