@@ -31,8 +31,13 @@ public class RemoveStateFromFile  extends CommonController {
 			List<ReadSetOld2> rds = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld2.class).toList();
 			Logger.debug("migre "+rds.size()+" readSets");
 			for(ReadSetOld2 rd : rds){
-				for (FileOld2 f : rd.files) {
-					migreFile(rd, f);		
+				if (rd.files != null) {
+					for (FileOld2 f : rd.files) {
+						migreFile(rd, f);		
+					}
+				}
+				else {
+					Logger.warn("Pas de fichier pour le Readset avec le code : " + rd.code);
 				}
 			}	
 		
