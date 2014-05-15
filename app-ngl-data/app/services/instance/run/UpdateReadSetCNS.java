@@ -54,11 +54,14 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 										.set("traceInformation.modifyDate", new Date())
 										.set("traceInformation.modifyUser", "lims"));					
 				}else if(updateRS.archiveDate == null && updateRS.archiveId != null){
+					contextError.addErrors("archiveDate", "Probleme archivage date null / id not null : "+rs.getCode());
 					logger.error("Probleme archivage date null / id not null : "+rs.getCode());
 				}else if(updateRS.archiveDate != null && updateRS.archiveId == null){
+					contextError.addErrors("archiveId", "Probleme archivage date not null / id null : "+rs.getCode());
 					logger.error("Probleme archivage date not null / id null : "+rs.getCode());
 				}
 			} catch (SQLException e) {
+				contextError.addErrors("database", e.getMessage());
 				logger.error(e.getMessage());
 			}
 		}
