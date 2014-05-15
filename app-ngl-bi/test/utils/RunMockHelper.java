@@ -176,8 +176,6 @@ public class RunMockHelper {
 		file.typeCode = "42";
 		file.usable = true;
 		
-		file.state = getState("F-QC");
-		
 		file.properties.put("label", new PropertySingleValue("thelabel"));
 		file.properties.put("asciiEncoding", new PropertySingleValue("xxx"));
 		

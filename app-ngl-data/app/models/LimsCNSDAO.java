@@ -634,10 +634,6 @@ public class LimsCNSDAO{
 				File file=new File();
 				file.extension=rs.getString("extension");
 				file.fullname=rs.getString("fullname");
-				file.state=new State();
-				file.state.code="A";
-				file.state.date=new Date();
-				file.state.user="lims";
 				file.typeCode=rs.getString("typeCode");
 				file.usable=rs.getBoolean("usable");
 

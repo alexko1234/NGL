@@ -1233,7 +1233,6 @@ public class RunValidationTest extends AbstractTests {
 		file.usable = null;	
 		file.properties.put("asciiEncoding", new PropertySingleValue(""));
 		file.properties.put("label", new PropertySingleValue(""));
-		file.state = getState("A");
 		return file;
 	}
 	  
