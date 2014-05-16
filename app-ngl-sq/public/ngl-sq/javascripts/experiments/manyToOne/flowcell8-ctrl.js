@@ -1,4 +1,4 @@
-angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne) {
+angular.module('home').controller('Flowcell8Ctrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne) {
 	$scope.datatableConfig = {
 			columnsUrl : jsRoutes.controllers.experiments.tpl.Experiments.getEditExperimentColumns().url,
 			compact:false,
@@ -46,11 +46,12 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 	});
 	
 	$scope.$on('deleteInstrumentPropertiesInputs', function(e, header) {
-		 $scope.datatable.config.columns.forEach(function(column, index){
-				if(column.extraHeaders != undefined && column.extraHeaders[1] == header){
-					$scope.datatable.deleteColumn(index);
+		 for(var i=0;i<$scope.datatable.config.columns.length;i++){
+				if($scope.datatable.config.columns[i].extraHeaders != undefined && $scope.datatable.config.columns[i].extraHeaders[1] == header){
+					$scope.datatable.deleteColumn(i);
+					i--;
 				}
-			});
+			}
 	});
 	
 	$scope.$on('addInstrumentPropertiesInput', function(e, data, possibleValues) {
@@ -142,7 +143,7 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 	});
 	
 	$scope.$on('save', function(e, promises, func) {
-		$scope.datatable.save();
+		promises.push($scope.datatable.save());
 		$scope.$emit('viewSaved', promises, func);
 	});
 	
@@ -166,8 +167,8 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 	
 	//Init
 	$scope.datatable = datatable($scope, $scope.datatableConfig);
-	$scope.atomicTransfere = oneToOne($scope,"datatable", "none");
-	
+	$scope.atomicTransfere = manyToOne($scope, "", "none");
+
 	if($scope.experiment.editMode){
 		$scope.atomicTransfere.loadExperiment();
 	}else{

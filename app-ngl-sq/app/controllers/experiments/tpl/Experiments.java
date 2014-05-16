@@ -61,6 +61,8 @@ public class Experiments extends CommonController{
 		}else if(atomicType.equals("ManyToOne")){
 			if(inputCategory.equals("mapcard")){
 				return ok(views.html.experiments.manyToOne.inputs.mapcard.render());
+			}else if(inputCategory.equals("flowcell-8")){
+				return ok(views.html.experiments.manyToOne.inputs.flowcell8.render());
 			}
 		}else if(atomicType.equals("OneToVoid")){
 			if(inputCategory.equals("void")){

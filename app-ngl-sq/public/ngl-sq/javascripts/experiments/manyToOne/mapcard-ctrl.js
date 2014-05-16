@@ -45,13 +45,13 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 		$scope.atomicTransfere.experimentToInput();
 	});
 	
+	$
 	$scope.$on('deleteInstrumentPropertiesInputs', function(e, header) {
-		 for(var i=0;i<$scope.datatable.config.columns.length;i++){
-				if($scope.datatable.config.columns[i].extraHeaders != undefined && $scope.datatable.config.columns[i].extraHeaders[1] == header){
-					$scope.datatable.deleteColumn(i);
-					i--;
+		 $scope.datatable.config.columns.forEach(function(column, index){
+				if(column.extraHeaders != undefined && column.extraHeaders[1] == header){
+					$scope.datatable.deleteColumn(index);
 				}
-			}
+			});
 	});
 	
 	$scope.$on('addInstrumentPropertiesInput', function(e, data, possibleValues) {
@@ -148,11 +148,6 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 	});
 	
 	$scope.refreshView = function(){
-		var i = 0;
-		while($scope.experiment.value.atomicTransfertMethods[i] != undefined){
-			$scope.datatable.displayResult[i].data.state = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.state
-			i++;
-		 }
 	};
 	
 	$scope.$on('refresh', function(e) {

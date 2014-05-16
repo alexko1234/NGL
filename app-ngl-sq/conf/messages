@@ -13,12 +13,12 @@ containers.table.supportCategoryCode = Catégorie de support
 containers.table.categoryCode = Catégorie de container
 containers.table.projectCodes = Codes Projets
 containers.table.sampleCodes = Codes Echantillons
-containers.table.fromExperimentTypeCodes = Type d''Expérience
+containers.table.fromExperimentTypeCodes = Type d'Expérience
 containers.table.state.code = Code état
 containers.table.support.name = Support
 containers.table.stateCode = Code Etat
 containers.table.creationDate = Date de création
-containers.table.createUser = Création par
+containers.table.createUser = Créé par
 containers.table.valid = Valide
 containers.table.supportCode = Code Support
 
@@ -125,11 +125,11 @@ experiments.begin_progress = Demarrer la progression
 experiments.sampleSheet = Feuille de route
 experiments.finish  = Terminer
 experiments.finished  = Terminé
-experiments.type = Type D''expérience
+experiments.type = Type D'expérience
 experiments.resolution = Résolution expérience
 experiments.protocol = Protocole
 experiments.creationDate = Date de création
-experiments.createUser = Crée par
+experiments.createUser = Créé par
 experiments.modifyDate = Date de modification
 experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
@@ -152,7 +152,7 @@ search.placeholder.valuation = Sélect une évaluation
 
 experiments.table.code = Code experience
 experiments.table.projectCodes = Code Projets
-experiments.table.volume.value = quantité initiale (nanogramme)
+experiments.table.volume.value = Quantité initiale (ng)
 experiments.table.sampleCodes = Code échantillons
 
 experiments.intrumentCategory = Contenant sortie

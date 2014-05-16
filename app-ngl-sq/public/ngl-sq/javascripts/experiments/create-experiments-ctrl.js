@@ -135,15 +135,15 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	$scope.addExperimentPropertiesInputsColumns = function(){
 		var data = $scope.experiment.experimentProperties.inputs;
 		if(data != undefined){
-			for(var i=0; i<data.length;i++){
-				if($scope.getLevel( data[i].levels, "ContainerIn")){		
-					if(data[i].choiceInList){
-						var possibleValues = $scope.possibleValuesToMap(data[i].possibleValues);
+			data.forEach(function(property){
+				if($scope.getLevel( property.levels, "ContainerIn")){		
+					if(property.choiceInList){
+						var possibleValues = $scope.possibleValuesToMap(property.possibleValues);
 					}
-					$scope.$broadcast('addExperimentPropertiesInput', data, possibleValues);
+					$scope.$broadcast('addExperimentPropertiesInput', property, possibleValues);
 				}
-			}
-			$scope.$broadcast('addExperimentPropertiesInputToScope', data);		
+			});
+			$scope.$broadcast('addExperimentPropertiesInputToScope', property);		
 		}
 	};
 	
@@ -359,12 +359,14 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				$scope.message.text = Messages('experiments.msg.save.error');
 				$scope.message.details = data;
 				$scope.message.isDetails = true;
+				$scope.saveInProgress = false;
 			});
 			
 			 promise.then(function(res) {
 				if(	$scope.message.text != Messages('experiments.msg.save.error')){
 					$scope.message.clazz="alert alert-success";
 					$scope.message.text=Messages('experiments.msg.save.sucess');
+					$scope.saveInProgress = false;
 				}
 			}, function(reason){
 				$scope.saveInProgress = false;
@@ -382,7 +384,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		$http.get(jsRoutes.controllers.experiments.api.ExperimentTypeNodes.list().url,{params:{"code":code}})
 			.success(function(data, status, headers, config) {
 				$scope.clearMessages();
-				if(data!=null){
+				if(data != null && data[0] !=null){
 					$scope.experiment.doPurif = data[0].doPurification;
 					$scope.experiment.doQc = data[0].doQualityControl;
 				}
@@ -395,18 +397,18 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
 		if(atomicTransfertMethod == "ManyToOne"){
 			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[]};
-			for(var i=0;i<containers.length;i++){
-				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:containers[i].code,instrumentProperties:{},experimentProperties:{},state:containers[i].state});
-			}
+			containers.forEach(function(container){
+				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state});
+			});
 		}else{
-			for(var i=0;i<containers.length;i++){
-				$scope.experiment.value.atomicTransfertMethods[i] = {class:atomicTransfertMethod, inputContainerUsed:[]};
-				$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed = {code:containers[i].code,instrumentProperties:{},experimentProperties:{},state:containers[i].state};
+			containers.forEach(function(container,index){
+				$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod, inputContainerUsed:[]};
+				$scope.experiment.value.atomicTransfertMethods[index].inputContainerUsed = {code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state};
 				
-				if($scope.experiment.value.atomicTransfertMethods[i].class == "OneToVoid"){
+				if($scope.experiment.value.atomicTransfertMethods[index].class == "OneToVoid"){
 					$scope.experiment.outputVoid = true;
 				}
-			}
+			});
 		}
 	};
 	
@@ -415,10 +417,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 
 		angular.element(document).ready(function() {
 			if($scope.experiment.experimentProperties.inputs != undefined){
-				for(i=0; i<$scope.experiment.experimentProperties.inputs.length;i++){
-					var getter = $parse("experiment.value.experimentProperties."+$scope.experiment.experimentProperties.inputs[i].code+".value");
+				$scope.experiment.experimentProperties.inputs.forEach(function(input){
+					var getter = $parse("experiment.value.experimentProperties."+input.code+".value");
 					getter.assign($scope,"");
-				}
+				});
 
 				$scope.addExperimentPropertiesInputsColumns();
 			}
@@ -450,21 +452,18 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		if(loaded == false){
 			$scope.experiment.value.instrumentProperties = {};
 			if($scope.experimentType.atomicTransfertMethod == "ManyToOne"){
-				var i = 0;
-				while($scope.experiment.value.atomicTransfertMethods[i] != undefined){
-					var j = 0;
-					while($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j] != undefined){
-						$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].instrumentProperties = {};
-						j++;
-					}
-					i++;
-				}
+				$scope.experiment.value.atomicTransfertMethods = $scope.experiment.value.atomicTransfertMethods.map(function(atomicTransfertMethod){
+					atomicTransfertMethod.inputContainerUseds = atomicTransfertMethod.inputContainerUseds.map(function(inputContainerUsed){
+						inputContainerUsed.instrumentProperties = {};
+						return inputContainerUsed;
+					});
+					return atomicTransfertMethod;
+				});
 			}else{
-				var i = 0;
-				while($scope.experiment.value.atomicTransfertMethods[i] != undefined){
-						$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties = {};
-						i++;
-				}
+				$scope.experiment.value.atomicTransfertMethods = $scope.experiment.value.atomicTransfertMethods.map(function(atomicTransfertMethod){
+						atomicTransfertMethod.inputContainerUsed.instrumentProperties = {};
+						return atomicTransfertMethod;
+				});
 			}
 		}
 
@@ -500,28 +499,24 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 
 			$scope.experiment.instrumentProperties.inputs = data;
 
-			for(var i=0; i<data.length;i++){	
+			data.forEach(function(property){
 				//Creation of the properties on the scope
 				if(loaded == false){
-					var getter = $parse("experiment.value.instrumentProperties."+data[i].code+".value");
+					var getter = $parse("experiment.value.instrumentProperties."+property.code+".value");
 					getter.assign($scope,"");
 				}
 				
-				if($scope.getLevel( data[i].levels,"ContainerIn")){
-					if(data[i].choiceInList){
-						var possibleValues = [];
-						var j = 0;
-						while(data[i].possibleValues[j] != undefined){
-							possibleValues[j] = {};
-							possibleValues[j].name = data[i].possibleValues[j].value;
-							possibleValues[j].code = data[i].possibleValues[j].value;
-							j++;
-						}
+				if($scope.getLevel( property.levels,"ContainerIn")){
+					if(property.choiceInList){
+						//var possibleValues = [];
+						var possibleValues = property.possibleValues.map(function(propertyPossibleValue){
+							return {"name":propertyPossibleValue.value,"code":propertyPossibleValue.value};
+						});
 					}
 					
-					$scope.$broadcast('addInstrumentPropertiesInput', data[i], possibleValues);
+					$scope.$broadcast('addInstrumentPropertiesInput', property, possibleValues);
 				}
-			}
+			});
 			
 			$scope.$broadcast('addInstrumentPropertiesInputToScope', data);
 		})
@@ -535,17 +530,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	
 	$scope.possibleValuesToSelect = function(possibleValues){
-		var selectPossibleValues = [];
-
-		for(var i=0;i<possibleValues.length;i++){
-			var value = possibleValues[i].value;
-			var possibleValue = {};
-			possibleValue.code = value;
-			possibleValue.name = value;
-			selectPossibleValues[i] = possibleValue;
-		}
-
-		return selectPossibleValues;
+		return possibleValues.map(function(possibleValue){
+			return {"code":possibleValue.value,"name":possibleValue.value};
+		});
 	};
 	
 	$scope.addExperimentPropertiesOutputsColumns = function(){
@@ -553,15 +540,16 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			var data = $scope.experiment.experimentProperties.inputs;
 			var outputGenerated = $scope.isOutputGenerated();
 			
-			for(var i=0; i<data.length;i++){
-				if($scope.getLevel( data[i].levels, "ContainerOut")){
-					if(data[i].choiceInList){
-						var possibleValues = $scope.possibleValuesToSelect(data[i].possibleValues);
+			data.forEach(function(property){
+				if($scope.getLevel( property.levels, "ContainerOut")){
+					if(property.choiceInList){
+						var possibleValues = $scope.possibleValuesToSelect(property.possibleValues);
 					}
 					
-					$scope.$broadcast('addExperimentPropertiesOutput', data, possibleValues);
+					$scope.$broadcast('addExperimentPropertiesOutput', property, possibleValues);
 				}
-			}
+			});
+			
 			if(outputGenerated){
 				$scope.$broadcast('addExperimentPropertiesOutputToScope', data);
 			}
@@ -572,15 +560,15 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		var data = $scope.experiment.instrumentProperties.inputs;		
 		var outputGenerated = $scope.isOutputGenerated();
 		
-		for(var i=0; i<data.length;i++){
-			if($scope.getLevel( data[i].levels,"ContainerOut")){	 					
-				if(data[i].choiceInList){
-					var possibleValues = $scope.possibleValuesToSelect(data[i].possibleValues);
+		data.forEach(function(property){
+			if($scope.getLevel( property.levels,"ContainerOut")){	 					
+				if(property.choiceInList){
+					var possibleValues = $scope.possibleValuesToSelect(property.possibleValues);
 				}
 
-				$scope.$broadcast('addInstrumentPropertiesOutput', data, possibleValues);
+				$scope.$broadcast('addInstrumentPropertiesOutput', property, possibleValues);
 			}
-		}
+		});
 		
 		if(outputGenerated){
 			$scope.$broadcast('addInstrumentPropertiesOutputToScope', data);
