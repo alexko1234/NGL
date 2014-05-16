@@ -87,7 +87,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		}
 		
 		if(angular.isUndefined($scope.getBasket())){
-			$scope.basket = basket($scope);			
+			$scope.basket = basket();			
 			$scope.setBasket($scope.basket);
 		}else{
 			$scope.basket = $scope.getBasket();

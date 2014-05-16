@@ -213,7 +213,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	}
 	
 	if(angular.isUndefined($scope.getBasket())){
-		$scope.basket = basket($scope);			
+		$scope.basket = basket();			
 		$scope.setBasket($scope.basket);
 	} else {
 		$scope.basket = $scope.getBasket();

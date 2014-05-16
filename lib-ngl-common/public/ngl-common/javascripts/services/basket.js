@@ -2,7 +2,7 @@
 
 angular.module('basketServices', []).
 factory('basket', ['$http', function($http){ //service to manage baskets local
-	var constructor = function($scope, iConfig){
+	var constructor = function(iConfig){
 		var baskets = {
 			config : undefined,
 			configMaster : undefined,
