@@ -1,6 +1,9 @@
 package controllers.migration;
 
+import java.util.List;
+
 import controllers.CommonController;
+import controllers.migration.models.FileOld2;
 import controllers.migration.models.ReadSetOld2;
 
 import net.vz.mongodb.jackson.DBQuery;
@@ -22,14 +25,29 @@ public class RemoveStateFromFile  extends CommonController {
 		
 		JacksonDBCollection<ReadSet, String> readSetsCollBck = MongoDBDAO.getCollection(READSET_ILLUMINA_BCK, ReadSet.class);
 		if(readSetsCollBck.count() == 0){
-			
 			Logger.info("Migration readset start");
-			
-			backupReadSet();			
-			
-			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.exists("files.state"), 
+			backupReadSet();
+
+			//Requête qui ne fonctionne que sur la collection de DEV du CNG, pas celle du CNS !
+			/*
+			 MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.exists("files"), DBQuery.exists("files.state")), 
 					DBUpdate.unset("files.$.state"), true);
+			*/ 
 			 	
+
+			//donc retour à la veille méthode !
+			List<ReadSetOld2> rds = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld2.class).toList();
+			Logger.debug("migre "+rds.size()+" readSets");
+			for(ReadSetOld2 rd : rds){
+				if (rd.files != null) {
+					for (FileOld2 f : rd.files) {
+						migreFile(rd, f);		
+					}
+				}
+				else {
+					Logger.warn("Pas de fichier pour le Readset avec le code : " + rd.code);
+				}
+			}	
 		
 		}else{
 			Logger.info("Migration readset already execute !");
@@ -39,7 +57,13 @@ public class RemoveStateFromFile  extends CommonController {
 		return ok("Migration Finish");
 	}
 
-	
+	private static void migreFile(ReadSetOld2 readSet, FileOld2 file) {		
+		MongoDBDAO.update(
+				InstanceConstants.READSET_ILLUMINA_COLL_NAME,
+				ReadSetOld2.class,
+				DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", file.fullname)),
+				DBUpdate.unset("files.$.state"));
+	}
 	
 	private static void backupReadSet() {
 		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" start");		
@@ -47,5 +71,3 @@ public class RemoveStateFromFile  extends CommonController {
 		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" end");	
 	}
 }
-
-
