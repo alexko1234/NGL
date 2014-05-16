@@ -47,7 +47,7 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 	
 	$
 	$scope.$on('deleteInstrumentPropertiesInputs', function(e, header) {
-		 $scope.datatable.config.columns.forEach(function(column, index){
+			angular.forEach($scope.datatable.config.columns, function(column, index){
 				if(column.extraHeaders != undefined && column.extraHeaders[1] == header){
 					$scope.datatable.deleteColumn(index);
 				}
