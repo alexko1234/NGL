@@ -135,7 +135,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	$scope.addExperimentPropertiesInputsColumns = function(){
 		var data = $scope.experiment.experimentProperties.inputs;
 		if(data != undefined){
-			data.forEach(function(property){
+			angular.forEach(data, function(property){
 				if($scope.getLevel( property.levels, "ContainerIn")){		
 					if(property.choiceInList){
 						var possibleValues = $scope.possibleValuesToMap(property.possibleValues);
@@ -397,11 +397,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
 		if(atomicTransfertMethod == "ManyToOne"){
 			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[]};
-			containers.forEach(function(container){
+			angular.forEach(containers, function(container){
 				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state});
 			});
 		}else{
-			containers.forEach(function(container,index){
+			angular.forEach(containers, function(container,index){
 				$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod, inputContainerUsed:[]};
 				$scope.experiment.value.atomicTransfertMethods[index].inputContainerUsed = {code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state};
 				
@@ -417,7 +417,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 
 		angular.element(document).ready(function() {
 			if($scope.experiment.experimentProperties.inputs != undefined){
-				$scope.experiment.experimentProperties.inputs.forEach(function(input){
+				angular.forEach($scope.experiment.experimentProperties.inputs, function(input){
 					var getter = $parse("experiment.value.experimentProperties."+input.code+".value");
 					getter.assign($scope,"");
 				});
@@ -499,7 +499,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 
 			$scope.experiment.instrumentProperties.inputs = data;
 
-			data.forEach(function(property){
+			angular.forEach(data, function(property){
 				//Creation of the properties on the scope
 				if(loaded == false){
 					var getter = $parse("experiment.value.instrumentProperties."+property.code+".value");
@@ -540,7 +540,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			var data = $scope.experiment.experimentProperties.inputs;
 			var outputGenerated = $scope.isOutputGenerated();
 			
-			data.forEach(function(property){
+			angular.forEach(data, function(property){
 				if($scope.getLevel( property.levels, "ContainerOut")){
 					if(property.choiceInList){
 						var possibleValues = $scope.possibleValuesToSelect(property.possibleValues);
@@ -560,7 +560,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		var data = $scope.experiment.instrumentProperties.inputs;		
 		var outputGenerated = $scope.isOutputGenerated();
 		
-		data.forEach(function(property){
+		angular.forEach(data, function(property){
 			if($scope.getLevel( property.levels,"ContainerOut")){	 					
 				if(property.choiceInList){
 					var possibleValues = $scope.possibleValuesToSelect(property.possibleValues);

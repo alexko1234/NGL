@@ -6,12 +6,12 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 						var containers = [];
 						var promises = [];
 						$scope.basket = $scope.getBasket().get();
-						$scope.basket.forEach(function(basket){
+						angular.forEach($scope.basket, function(basket){
 							var promise = $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{supportCode:basket.code}})
 							.success(function(data, status, headers, config) {
 								$scope.clearMessages();
 								if(data!=null){
-									data.forEach(function(container){
+									angular.forEach(data, function(container){
 										containers.push(container);
 									});
 								}
@@ -203,7 +203,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 						loadExperimentDatatable : function(){
 							var containers = [];
 							var promises = [];
-							$scope.experiment.value.atomicTransfertMethods.forEach(function(atomicTransfertMethod){
+							angular.forEach($scope.experiment.value.atomicTransfertMethods, function(atomicTransfertMethod){
 								var promise = $http.get(jsRoutes.controllers.containers.api.Containers.get(atomicTransfertMethod.inputContainerUsed.code).url)
 								.success(function(data, status, headers, config) {
 									$scope.clearMessages();
@@ -311,8 +311,8 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 					loadExperimentDatatable : function(){
 						var containers = [];
 						var promises = [];
-						$scope.experiment.value.atomicTransfertMethods.forEach(function(atomicTransfertMethod){
-							atomicTransfertMethod.inputContainerUseds.forEach(function(inputContainerUsed){
+						angular.forEach($scope.experiment.value.atomicTransfertMethods, function(atomicTransfertMethod){
+							angular.forEach(atomicTransfertMethod.inputContainerUseds, function(inputContainerUsed){
 								var promise = $http.get(jsRoutes.controllers.containers.api.Containers.get(inputContainerUsed.code).url)
 								.success(function(data, status, headers, config) {
 									$scope.clearMessages();
@@ -380,7 +380,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 				loadExperimentDatatable : function(){
 					var containers = [];
 					var promises = [];
-					$scope.experiment.value.atomicTransfertMethods.forEach(function(atomicTransfertMethod){
+					angular.forEach($scope.experiment.value.atomicTransfertMethods, function(atomicTransfertMethod){
 						var promise = $http.get(jsRoutes.controllers.containers.api.Containers.get(atomicTransfertMethod.inputContainerUsed.code).url)
 						.success(function(data, status, headers, config) {
 							$scope.clearMessages();
@@ -440,8 +440,8 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 			loadExperimentDatatable : function(){
 				var containers = [];
 				var promises = [];
-				$scope.experiment.value.atomicTransfertMethods.forEach(function(atomicTransfertMethod){
-							atomicTransfertMethod.inputContainerUseds.forEach(function(inputContainerUsed){
+					angular.forEach($scope.experiment.value.atomicTransfertMethods, function(atomicTransfertMethod){
+							angular.forEach(atomicTransfertMethod.inputContainerUseds,function(inputContainerUsed){
 						var promise = $http.get(jsRoutes.controllers.containers.api.Containers.get(inputContainerUsed.code).url)
 						.success(function(data, status, headers, config) {
 							$scope.clearMessages();
