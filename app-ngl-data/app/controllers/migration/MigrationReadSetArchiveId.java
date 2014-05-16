@@ -37,7 +37,7 @@ public class MigrationReadSetArchiveId  extends CommonController {
 		ContextValidation contextError=new ContextValidation();
 		
 		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
-				DBQuery.and(DBQuery.is("dispatch", true), DBQuery.is("archiveId", null), DBQuery.notEquals("state.code", "UA"))).toList();
+				DBQuery.and(DBQuery.is("dispatch", true), DBQuery.is("archiveId", null))).toList();
 		
 		Logger.info("nb ReadSet ="+readSets.size());
 		
