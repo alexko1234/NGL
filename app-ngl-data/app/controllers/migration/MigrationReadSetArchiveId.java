@@ -45,7 +45,7 @@ public class MigrationReadSetArchiveId  extends CommonController {
 			ReadSet updateRS;
 			try {
 				updateRS = limsServices.findReadSetToUpdate(rs, contextError);
-				//Logger.info("Update ReadSet ="+rs.getCode());
+				Logger.info("Update ReadSet ="+rs.getCode());
 				if(updateRS.archiveDate != null && updateRS.archiveId != null){
 					
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
