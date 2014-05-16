@@ -39,7 +39,7 @@ function SearchManipsCtrl($scope, $http, datatable, basket) {
 			$scope.activeTab($scope.getTabs(0));
 		}
 		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, datatableConfig);
+			$scope.datatable = datatable(datatableConfig);
 			$scope.setDatatable($scope.datatable);	
 			
 		}else{
@@ -47,7 +47,7 @@ function SearchManipsCtrl($scope, $http, datatable, basket) {
 		}
 
 		if(angular.isUndefined($scope.getBasket())){
-			$scope.basket = basket($scope);			
+			$scope.basket = basket();			
 			$scope.setBasket($scope.basket);
 		}else{
 			$scope.basket = $scope.getBasket();

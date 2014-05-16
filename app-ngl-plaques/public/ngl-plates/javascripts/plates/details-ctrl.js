@@ -90,7 +90,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 	
 	$scope.init = function(){
 		$scope.clearMessages();		
-		$scope.datatable = datatable($scope, datatableConfig);
+		$scope.datatable = datatable(datatableConfig);
 		$scope.plate = {code:undefined, wells:undefined, typeCode:undefined, typeName:undefined, validQC:'UNSET', validRun:'UNSET'};
 		$scope.lists = lists;
 		if(angular.isUndefined($scope.getHomePage())){
@@ -101,7 +101,7 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 		}
 		
 		if(angular.isUndefined($scope.getBasket())){
-			$scope.basket = basket($scope);			
+			$scope.basket = basket();			
 			$scope.setBasket($scope.basket);			
 		}else{			
 			$scope.basket = $scope.getBasket();
