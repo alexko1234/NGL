@@ -65,7 +65,7 @@ DELETE	/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.ap
 GET	   	/readsets/:homecode/home				controllers.readsets.tpl.ReadSets.home(homecode: java.lang.String)
 GET	   	/readsets/:code							controllers.readsets.tpl.ReadSets.get(code: java.lang.String)
 GET	   	/readsets/:code/valuation				controllers.readsets.tpl.ReadSets.valuation(code: java.lang.String)
-GET		/tpl/readsets/search/:type				controllers.readsets.tpl.ReadSets.search(type: java.lang.String)
+GET		/tpl/readsets/search					controllers.readsets.tpl.ReadSets.search()
 GET		/tpl/readsets/details					controllers.readsets.tpl.ReadSets.details()
 GET		/tpl/readsets/treatments/:code			controllers.readsets.tpl.ReadSets.treatments(code: java.lang.String)
 GET		/tpl/readsets/js-routes					controllers.readsets.tpl.ReadSets.javascriptRoutes()
@@ -192,14 +192,20 @@ GET		/api/commons/resolutions  					controllers.commons.api.Resolutions.list()
 GET		/api/lists/valuation-criterias				controllers.lists.api.Lists.valuationCriterias()
 
 #projects
-GET		/api/projects							@controllers.projects.api.Projects.list()
+GET		/api/projects								@controllers.projects.api.Projects.list()
 
 #instruments
 GET		/api/instruments							controllers.instruments.api.Instruments.list()
 
 #samples
-GET		/api/samples							controllers.samples.api.Samples.list()
+GET		/api/samples								controllers.samples.api.Samples.list()
 GET		/api/samples/:code							controllers.samples.api.Samples.get(code: java.lang.String)
+
+#stats
+#GET	   	/stats/:homecode/home						controllers.stats.tpl.Stats.home(homecode: java.lang.String)
+#GET		/tpl/stats/config/:type						controllers.stats.tpl.Stats.config(type: java.lang.String)
+#GET		/tpl/stats/show								controllers.stats.tpl.Stats.show()
+#GET		/tpl/stats/js-routes						controllers.stats.tpl.Stats.javascriptRoutes()
 
 ->  /authentication authentication.Routes
 
@@ -207,5 +213,3 @@ GET		/api/samples/:code							controllers.samples.api.Samples.get(code: java.lan
 GET     /assets/*file               				controllers.Assets.at(path="/public", file)
 GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
-
-GET 	/createtest									controllers.migration.PrepaDataBle.createTest()
