@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 'valuationService',
-                                                 function($scope, $routeParams, datatable, mainService, tabService, searchService, valuationService) { 
+angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'readSetsSearchService', 'valuationService',
+                                                 function($scope, $routeParams, datatable, mainService, tabService, readSetsSearchService, valuationService) { 
     
 	var datatableConfig = {
 			order :{by:'runSequencingStartDate', reverse : true},
@@ -30,14 +30,14 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'data
 	$scope.updateColumn = function(){
 		$scope.searchService.updateColumn($scope.datatable);
 	};
-
+	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('search');
 		tabService.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
-	$scope.searchService = searchService();	
+	$scope.searchService = readSetsSearchService();	
 	$scope.searchService.setRouteParams($routeParams);
 	$scope.valuationService = valuationService();
 		
@@ -55,8 +55,8 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'data
 
 
 
-angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParams', '$parse', 'datatable', 'mainService', 'tabService', 'searchService', 'valuationService', 
-                                                          function($scope, $routeParams, $parse, datatable, mainService, tabService, searchService, valuationService) {
+angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParams', '$parse', 'datatable', 'mainService', 'tabService', 'readSetsSearchService', 'valuationService', 
+                                                          function($scope, $routeParams, $parse, datatable, mainService, tabService, readSetsSearchService, valuationService) {
 	var datatableConfig = {
 			order :{by:'runSequencingStartDate', reverse : true},
 			search:{
@@ -103,7 +103,7 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
-	$scope.searchService = searchService();		
+	$scope.searchService = readSetsSearchService();		
 	$scope.searchService.setRouteParams($routeParams);
 	$scope.valuationService = valuationService();
 	//to avoid to lost the previous search
@@ -119,8 +119,8 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 }]);
 
 
-angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 
-                                                      function($scope, $routeParams, datatable, mainService, tabService, searchService) {
+angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'readSetsSearchService', 
+                                                      function($scope, $routeParams, datatable, mainService, tabService, readSetsSearchService) {
 
 	var datatableConfig = {
 			order :{by:'runSequencingStartDate', reverse : true},
@@ -165,7 +165,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
-	$scope.searchService = searchService();		
+	$scope.searchService = readSetsSearchService();		
 	$scope.searchService.setRouteParams($routeParams);
 	
 	//to avoid to lost the previous search
@@ -180,8 +180,8 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 }]);
 
 
-angular.module('home').controller('SearchBatchCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 
-                                                      function($scope, $routeParams, datatable, mainService, tabService, searchService) {
+angular.module('home').controller('SearchBatchCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'readSetsSearchService', 
+                                                      function($scope, $routeParams, datatable, mainService, tabService, readSetsSearchService) {
 
 	var datatableConfig = {
 			order :{by:'runSequencingStartDate', reverse : true},
@@ -226,7 +226,7 @@ angular.module('home').controller('SearchBatchCtrl', ['$scope', '$routeParams', 
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
-	$scope.searchService = searchService();		
+	$scope.searchService = readSetsSearchService();		
 	$scope.searchService.setRouteParams($routeParams);
 	
 	//to avoid to lost the previous search
