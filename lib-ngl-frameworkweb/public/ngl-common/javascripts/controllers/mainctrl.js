@@ -381,6 +381,7 @@ angular.module('home').factory('tabService', ['$location', function($location){
 angular.module('home').factory('mainService', function(){
 	//contain each tab of on element of the datatable
 		var api = {
+			cache : {},
 			basketMaster : undefined,
 			datatableMaster : undefined,
 			form : undefined,
@@ -465,6 +466,16 @@ angular.module('home').factory('mainService', function(){
 			 */
 			isEditMode : function(){
 				return this.editMode;
+			},
+			
+			put : function(name, value){
+				this.cache[name] = value;
+			},
+			get : function(name){
+				return this.cache[name];
+			},
+			remove : function(name){
+				this.cache[name] = undefined;
 			}
 		};	
 		return api;			
