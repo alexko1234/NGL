@@ -1,7 +1,7 @@
  "use strict";
  
  angular.module('ngl-bi.ReadSetsServices', []).
-	factory('searchService', ['$http', 'mainService', 'lists', function($http, mainService, lists){
+	factory('readSetsSearchService', ['$http', 'mainService', 'lists', function($http, mainService, lists){
 		
 		var searchService = {
 				getColumns:function(){
