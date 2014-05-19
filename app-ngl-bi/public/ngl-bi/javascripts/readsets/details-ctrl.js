@@ -1,7 +1,7 @@
  "use strict";
 
- angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', 'datatable', 'messages', 'lists', 'treatments', '$window', 
-                                                   function($scope, $http, $q, $routeParams, datatable, messages, lists, treatments, $window) {
+ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 
+                                                   function($scope, $http, $q, $routeParams, mainService, tabService, datatable, messages, lists, treatments, $window) {
 	
 	$scope.goToRun=function(){
 		$window.open(jsRoutes.controllers.runs.tpl.Runs.get($scope.readset.runCode).url, 'runs');
@@ -35,13 +35,13 @@
 		$scope.messages.clear();
 		updateData();
 		if(!isValuationMode()){
-			$scope.stopEditMode();
+			mainService.stopEditMode();
 		}
 		
 	};
 	
 	$scope.activeEditMode = function(){
-		$scope.startEditMode();			
+		mainService.startEditMode();			
 	}
 	
 	$scope.setImage = function(imageData, imageName, treatmentContext, treatmentCode, imageFullSizeWidth, imageFullSizeHeight) {
@@ -73,7 +73,7 @@
 	}
 	
 	var isValuationMode = function(){
-		return ($scope.isHomePage('valuation') || $scope.isHomePage('valuationWheat') || ($routeParams.page && $routeParams.page.indexOf('valuation') == 0));
+		return (mainService.isHomePage('valuation') || ($routeParams.page && $routeParams.page.indexOf('valuation') == 0));
 	}
 	
 	
@@ -81,24 +81,24 @@
 		$scope.messages = messages();
 		$scope.lists = lists;
 		$scope.treatments = treatments;
-		$scope.stopEditMode();
+		mainService.stopEditMode();
 		if(isValuationMode()){
-			$scope.startEditMode();
+			mainService.startEditMode();
 			
 		}
 		
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.get($routeParams.code).url).success(function(data) {
 			$scope.readset = data;	
 				
-			if($scope.getTabs().length == 0){
+			if(tabService.getTabs().length == 0){
 				if(isValuationMode()){ //valuation mode
-					$scope.addTabs({label:Messages('readsets.page.tab.validate'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("valuation").url,remove:true});
-					$scope.addTabs({label:$scope.readset.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.valuation( $scope.readset.code).url,remove:true})
+					tabService.addTabs({label:Messages('readsets.page.tab.validate'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("valuation").url,remove:true});
+					tabService.addTabs({label:$scope.readset.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.valuation( $scope.readset.code).url,remove:true})
 				}else{ //detail mode
-					$scope.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:true});
-					$scope.addTabs({label:$scope.readset.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.get($scope.readset.code).url,remove:true})									
+					tabService.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:true});
+					tabService.addTabs({label:$scope.readset.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.get($scope.readset.code).url,remove:true})									
 				}
-				$scope.activeTab($scope.getTabs(1));
+				tabService.activeTab($scope.getTabs(1));
 			}
 			
 			$scope.lists.refresh.resolutions({typeCode:$scope.readset.typeCode});
