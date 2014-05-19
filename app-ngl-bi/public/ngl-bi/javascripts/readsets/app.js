@@ -2,21 +2,22 @@
 angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biCommonsServices', 'ui.bootstrap','ngl-bi.ReadSetsServices'], function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/readsets/search/home', {
-		templateUrl : '/tpl/readsets/search/default',
+		templateUrl : '/tpl/readsets/search',
 		controller : 'SearchCtrl'
 	});
+	
 	$routeProvider.when('/readsets/valuation/home', {
-		templateUrl : '/tpl/readsets/search/valuation',
+		templateUrl : '/tpl/readsets/search',
 		controller : 'SearchValuationCtrl'
 	});
 	
 	$routeProvider.when('/readsets/state/home', {
-		templateUrl : '/tpl/readsets/search/state',
+		templateUrl : '/tpl/readsets/search',
 		controller : 'SearchStateCtrl'
 	});
 	
 	$routeProvider.when('/readsets/batch/home', {
-		templateUrl : '/tpl/readsets/search/batch',
+		templateUrl : '/tpl/readsets/search',
 		controller : 'SearchBatchCtrl'
 	});
 	
