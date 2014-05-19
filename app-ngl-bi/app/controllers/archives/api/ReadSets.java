@@ -74,9 +74,9 @@ public class ReadSets extends CommonController{
 		if (archive.intValue() == 0) { //all
 			query = DBQuery.is("dispatch", true);
 		} else if(archive.intValue() == 1) { //archive
-			query = DBQuery.and(DBQuery.is("dispatch", true), DBQuery.exists("archiveId"));
+			query = DBQuery.and(DBQuery.is("dispatch", true), DBQuery.notEquals("archiveId", null));
 		} else { //not archive value = 2
-			query = DBQuery.and(DBQuery.is("dispatch", true), DBQuery.notExists("archiveId"));
+			query = DBQuery.and(DBQuery.is("dispatch", true), DBQuery.is("archiveId",null), DBQuery.notEquals("state.code","UA"));
 		}
 		return query;
 	}
