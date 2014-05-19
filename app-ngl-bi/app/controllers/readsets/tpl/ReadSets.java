@@ -27,7 +27,7 @@ public class ReadSets extends CommonController {
 		return ok(home.render("valuation")); 
 	}
 	
-	public static Result search(String type) {
+	public static Result search() {
 		return ok(search.render());		
 	}
 	
