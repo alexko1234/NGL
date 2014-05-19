@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.run.instance.FileValidationHelper;
@@ -16,7 +17,7 @@ public class File implements IValidation {
 	public String extension;
 	public Boolean usable = Boolean.FALSE;
 	public String typeCode; //id du type de fichier
-	
+	public State state; //TODO remove later
 	public Map<String, PropertyValue> properties = new HashMap<String, PropertyValue>();
 
 	/*
