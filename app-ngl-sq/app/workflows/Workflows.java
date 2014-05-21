@@ -121,8 +121,8 @@ public class Workflows {
 
 			if(experiment.categoryCode.equals("transformation")){
 				if(experiment.state.code.equals("F") && doQC(experiment)){
-					//nextState.code="A-QC";
-					nextState.code="IW-QC";
+					nextState.code="A-QC";
+					//nextState.code="IW-QC";
 				}/*else if(experiment.state.code.equals("F") && doPurif()){
 				nextState.code="A-PURIF";
 			}else if(experiment.state.code.equals("F") && doTransfert()){
