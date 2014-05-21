@@ -195,7 +195,6 @@ readsets.projectCode = Projet
 readsets.sampleCode = Echantillon
 readsets.creationdate = Date de Création
 readsets.stateCode = Etat
-readsets.productionValuation.valid = Valide Production ?
 readsets.bioinformaticValuation.valid = Valide BioInfo ?
 
 readsets.productionValuation.comment = Détails évaluation 
@@ -430,3 +429,26 @@ treatments.context.default = Default
 
 title.report.property.selection = Sélectionnner vos champs
 title.report.property.configuration = Configurer vos champs
+
+#############
+#
+#config tara
+#
+#############
+readsets.sampleOnContainer.properties.taraStation = Station
+readsets.sampleOnContainer.properties.depth = Profondeur
+readsets.sampleOnContainer.properties.porosity = Porosité
+readsets.sampleOnContainer.properties.iteration = Itération
+readsets.sampleOnContainer.properties.percentPerLane = % Déposé
+readsets.treatments.duplicatesRaw.pairs.estimateDuplicatedReadsPercent = % Duplicats Pairs
+readsets.treatments.duplicatesRaw.read1.estimateDuplicatedReadsPercent = % Duplicats R1
+readsets.treatments.duplicatesRaw.read2.estimateDuplicatedReadsPercent = % Duplicats R2
+readsets.treatments.duplicatesRaw.pairs.estimateDuplicatedReadsNTimes.value.9 = % Duplicats ≥11 Pairs
+readsets.treatments.duplicatesRaw.read1.estimateDuplicatedReadsNTimes.value.9 = % Duplicats ≥11 R1
+readsets.treatments.duplicatesRaw.read2.estimateDuplicatedReadsNTimes.value.9 = % Duplicats ≥11 R2
+readsets.treatments.taxonomy.read1.divisionBilan.bacterium = % Bactérie
+readsets.treatments.taxonomy.read1.divisionBilan.eukaryota = % Eucaryote
+readsets.treatments.taxonomy.read1.krona.fungi = % Fungi
+readsets.treatments.sortingRibo.read1.rRNAPercent = % rRNA R1
+readsets.treatments.sortingRibo.read2.rRNAPercent = % rRNA R2
+readsets.treatments.sortingRibo.single.rRNAPercent = % rRNA Single
