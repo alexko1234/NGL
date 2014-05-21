@@ -238,6 +238,7 @@ public class InstrumentService {
 		instruments.add(createInstrument("CHROME", "CHROME", false, "/env/atelier/solexa_CHROME", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		instruments.add(createInstrument("MERCURE", "MERCURE", true, "/env/atelier/solexa_MERCURE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		instruments.add(createInstrument("SOUFRE", "SOUFRE", true, "/env/atelier/solexa_SOUFRE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add( createInstrument("PHOSPHORE", "PHOSPHORE", true, "/env/atelier/solexa_PHOSPHORE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		return instruments;
 	}
 
@@ -256,9 +257,7 @@ public class InstrumentService {
 		instruments.add( createInstrument("HISEQ10", "HISEQ10", true, "/env/export/cngstkprd003/v_igseq7/HISEQ10/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		instruments.add( createInstrument("HISEQ11", "HISEQ11", true, "/env/export/cngstkprd003/v_igseq7/HISEQ11/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		instruments.add( createInstrument("HISEQ10", "HISEQ10", false, "/env/export/cngstkprd003/v_igseq7/HISEQ10/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add( createInstrument("HISEQ11", "HISEQ11", false, "/env/export/cngstkprd003/v_igseq7/HISEQ11/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		
-		instruments.add( createInstrument("PHOSPHORE", "PHOSPHORE", true, "/env/atelier/solexa_PHOSPHORE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("HISEQ11", "HISEQ11", false, "/env/export/cngstkprd003/v_igseq7/HISEQ11/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));		
 		instruments.add( createInstrument("FLUOR", "FLUOR", true, "/env/atelier/solexa_FLUOR", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		instruments.add( createInstrument("PLATINE", "PLATINE", true, "/env/atelier/solexa_PLATINE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		return instruments;
