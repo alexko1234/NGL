@@ -72,7 +72,11 @@ public class ReadSets extends ReadSetsController{
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
 			List<ReadSet> readSets = results.toList();
 			return ok(Json.toJson(new DatatableResponse<ReadSet>(readSets, results.count())));
-		}else{
+		}else if(form.count){
+			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
+			int count = results.count();
+			return ok(Json.toJson(count));
+		}else {
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
 			List<ReadSet> readSets = results.toList();
 			return ok(Json.toJson(readSets));

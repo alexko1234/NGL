@@ -51,6 +51,13 @@
 					</ul>
 				</li>
 
+				<li class="dropdown @("active".when(nav.startsWith("stats")))">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="readsets">@Messages("stats.menu")<b class="caret"></b></a>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="readsets">
+						<li class="@("active".when(nav == "stats.readsets"))"><a href="@controllers.stats.tpl.routes.Stats.home("readsets")">@Messages("stats.menu.readsets")</a></li>																				
+					</ul>
+				</li>
+
 				<li class="@("active".when(nav == "archives.search"))">
 					<a href="@controllers.archives.tpl.routes.ReadSets.home("search")">@Messages("archives.menu")</a>
 				</li>						
