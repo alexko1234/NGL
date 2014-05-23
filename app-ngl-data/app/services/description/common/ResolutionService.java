@@ -50,6 +50,14 @@ public class ResolutionService {
 		l.add(DescriptionFactory.newResolutionCategory("Problème déclaration LIMS", "LIMS", (short) 60));
 		l.add(DescriptionFactory.newResolutionCategory("Informations", "Info", (short) 65));
 		
+		
+		//Analysis
+		l.add(DescriptionFactory.newResolutionCategory("Merging", "BA-MERG", (short) 10));
+		l.add(DescriptionFactory.newResolutionCategory("Contigage", "CTG", (short) 20));
+		l.add(DescriptionFactory.newResolutionCategory("Size Filter", "SIZE", (short) 30));
+		l.add(DescriptionFactory.newResolutionCategory("Scaffolding", "SCAFF", (short) 40));
+		l.add(DescriptionFactory.newResolutionCategory("Gap Closing", "GAP", (short) 50));
+		
 		// for experiment	
 		l.add(DescriptionFactory.newResolutionCategory("Default", "Default", (short) 0));
 		
@@ -185,7 +193,28 @@ public class ResolutionService {
 		l.add(newResolution("% lec mergées","MERG-PercLecMerg",ResolutionCategory.find.findByCode("MERG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 1));
 		l.add(newResolution("médiane lect mergées","MERG-MedLecMerg",ResolutionCategory.find.findByCode("MERG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.ReadSet.name()), (short) 2));
 
-		
+		//Analysis
+		l.add(newResolution("% merging","MERG-mergingPercent",ResolutionCategory.find.findByCode("BA-MERG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 1));
+		l.add(newResolution("reads size","MERG-readSize",ResolutionCategory.find.findByCode("BA-MERG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 2));
+		l.add(newResolution("N50","CTG-N50",ResolutionCategory.find.findByCode("CTG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 1));
+		l.add(newResolution("cumul","CTG-cumul",ResolutionCategory.find.findByCode("CTG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short)2));
+		l.add(newResolution("nb contigs","CTG-nbCtgs",ResolutionCategory.find.findByCode("CTG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short)3));
+		l.add(newResolution("max size","CTG-maxSize",ResolutionCategory.find.findByCode("CTG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short)4));
+		l.add(newResolution("assembled reads","CTG-assReads",ResolutionCategory.find.findByCode("CTG"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short)5));
+		l.add(newResolution("% lost bases","SIZE-lostBasesPerc",ResolutionCategory.find.findByCode("SIZE"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short)1));
+		l.add(newResolution("N50","SCAFF-N50",ResolutionCategory.find.findByCode("SCAFF"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 1));
+		l.add(newResolution("cumul","SCAFF-cumul",ResolutionCategory.find.findByCode("SCAFF"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 2));
+		l.add(newResolution("nb scaff","SCAFF-nbScaff",ResolutionCategory.find.findByCode("SCAFF"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 3));
+		l.add(newResolution("max size","SCAFF-maxSize",ResolutionCategory.find.findByCode("SCAFF"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 4));
+		l.add(newResolution("median insert size","SCAFF-medInsertSize",ResolutionCategory.find.findByCode("SCAFF"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 5));
+		l.add(newResolution("% satisfied pairs","SCAFF-satisfPairsPerc",ResolutionCategory.find.findByCode("SCAFF"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 6));
+		l.add(newResolution("% N","SCAFF-Npercent",ResolutionCategory.find.findByCode("SCAFF"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 7));
+		l.add(newResolution("gap sum","GAP-sum",ResolutionCategory.find.findByCode("GAP"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 1));
+		l.add(newResolution("gap count","GAP-count",ResolutionCategory.find.findByCode("GAP"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 2));
+		l.add(newResolution("corrected gap sum","GAP-correctedSum",ResolutionCategory.find.findByCode("GAP"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 3));
+		l.add(newResolution("corrected gap count","GAP-correctedCount",ResolutionCategory.find.findByCode("GAP"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 4));
+		l.add(newResolution("% N","GAP-Npercent",ResolutionCategory.find.findByCode("GAP"), DescriptionFactory.getInstitutes(Institute.CODE.CNS), DescriptionFactory.getObjectTypes(ObjectType.CODE.Analysis.name()), (short) 5));
+
 		
 		
 		//Experiment
