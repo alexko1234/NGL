@@ -56,6 +56,8 @@ search.placeholder.toDate = Run jusqu''au (jj/mm/aaaa)
 search.placeholder.states = Sélect. des états
 search.placeholder.instruments = Sélect. des instruments
 search.placeholder.types = Sélect. des types
+search.placeholder.type = Sélect. un type
+search.placeholder.properties = Sélect. des propriétés
 search.placeholder.runtypes = Sélect. des types de run
 search.placeholder.runs = Sélect. des runs
 search.placeholder.run = Sélect. un run
@@ -73,6 +75,7 @@ search.placeholder.runLaneResolutions = Sélect. des resol. de run / lane
 search.placeholder.resolutions = Sélect. des resol.
 search.placeholder.valuationRunUser = Run évalué par : 
 search.placeholder.valuationReadSetUser = ReadSet évalué par : 
+search.placeholder.property = Select. une propriété
 
 button.search = Rechercher
 button.reset = Réinitialiser
@@ -81,6 +84,7 @@ button.cancel = Annuler
 button.readsets.show = Voir Readsets
 button.readsets.valuation = Evaluer Readsets
 button.edit = Editer
+button.add = Ajouter
 
 ############
 #
@@ -195,6 +199,7 @@ readsets.projectCode = Projet
 readsets.sampleCode = Echantillon
 readsets.creationdate = Date de Création
 readsets.stateCode = Etat
+readsets.productionValuation.valid = Valide Production ?
 readsets.bioinformaticValuation.valid = Valide BioInfo ?
 
 readsets.productionValuation.comment = Détails évaluation 
@@ -415,6 +420,25 @@ analyses.stateCode = Etat
 analyses.valuation.valid = Valid ?
 analyses.valuation.resolutions = Comptes Rendus
 
+
+############
+#
+# Stats
+#
+############
+stats.page.title=Statistiques
+stats.menu = Statistiques
+stats.menu.readsets = Readsets
+stats.page.tab.readsets.select = Selectionner des Readsets
+stats.page.tab.readsets.config = Configuration Statistique
+stats.page.tab.show = Visualiser les Graphiques
+
+stats.typeCode = Type
+stats.property = Propriété
+
+button.query.addbasket = Ajouter la requête dans le panier
+query.title = Titre
+query.form = Paramètres
 ############
 #
 # COMMON

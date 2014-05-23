@@ -202,10 +202,10 @@ GET		/api/samples								controllers.samples.api.Samples.list()
 GET		/api/samples/:code							controllers.samples.api.Samples.get(code: java.lang.String)
 
 #stats
-#GET	   	/stats/:homecode/home						controllers.stats.tpl.Stats.home(homecode: java.lang.String)
-#GET		/tpl/stats/config/:type						controllers.stats.tpl.Stats.config(type: java.lang.String)
-#GET		/tpl/stats/show								controllers.stats.tpl.Stats.show()
-#GET		/tpl/stats/js-routes						controllers.stats.tpl.Stats.javascriptRoutes()
+GET	   	/stats/:homecode/home						controllers.stats.tpl.Stats.home(homecode: java.lang.String)
+GET		/tpl/stats/config/:type						controllers.stats.tpl.Stats.config(type: java.lang.String)
+GET		/tpl/stats/show								controllers.stats.tpl.Stats.show()
+GET		/tpl/stats/js-routes						controllers.stats.tpl.Stats.javascriptRoutes()
 
 ->  /authentication authentication.Routes
 
