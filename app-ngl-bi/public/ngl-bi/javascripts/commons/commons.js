@@ -3,22 +3,37 @@
 angular.module('biCommonsServices', []).
     	factory('treatments',['$q','$http','$filter', function($q,$http,$filter){
     		var _treatments = [];
-    		var _treatment = {};
-    		
-    		
+    		var _treatment = {};    		
+    		var codeLastActive = undefined;
     		/**
     		 * Set one element of list active
     		 */
     		function activeTreatment(value){
     			if(angular.isDefined(value)){
     				_treatment = value;
-    				value.clazz='active';
     				for(var i = 0; i < _treatments.length; i++){
     					if(_treatments[i].code != _treatment.code){
     						_treatments[i].clazz='';
+    					}else{
+    						_treatments[i].clazz='active';
+    						codeLastActive=_treatments[i].code;
     					}
     				}
     			} 
+    		};
+    		
+    		function activeLastTreatment(){
+    			var find = false;
+				for(var i = 0; i < _treatments.length; i++){
+					if(_treatments[i].code == codeLastActive){
+						_treatment = _treatments[i];
+						_treatments[i].clazz='active';
+						find = true;
+					}else{
+						_treatments[i].clazz='';    						
+					}
+				}
+				if(!find)activeTreatment(_treatments[0]);
     		};
     		
     		function init(treatments, url, excludes){
@@ -40,7 +55,7 @@ angular.module('biCommonsServices', []).
 						_treatments.push({code:result.config.key, name:Messages("readsets.treatments."+result.config.key), url:url(result.data.code).url, order:displayOrder(result, key) });
 					}
 					_treatments = $filter("orderBy")(_treatments,"order");
-					activeTreatment(_treatments[0]);		
+					activeLastTreatment();		
 				});
     		};
     		
