@@ -296,7 +296,7 @@ angular.module('commonsServices', []).
                     });
                 }
             }
-        }).directive('btSelect',  ['$parse', '$document', '$window', function($parse,$document, $window)  {
+        }).directive('btSelect',  ['$parse', '$document', '$window', '$filter', function($parse,$document, $window, $filter)  {
 			//0000111110000000000022220000000000000000000000333300000000000000444444444444444000000000555555555555555000000066666666666666600000000000000007777000000000000000000088888
     		var BT_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*))\s+in\s+([\s\S]+?)$/;                        
     		//var BT_OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
@@ -315,6 +315,7 @@ angular.module('commonsServices', []).
   		    			+'<div class="dropdown" ng-switch-when="true">'
   				        +'<input type="text" ng-class="inputClass" data-toggle="dropdown" role="button" value="{{selectedItemLabel()}}" style="cursor:context-menu;"/>'
   				        +'<ul class="dropdown-menu {{btDropdownClass}}"  role="menu">'
+  				        +'<li ng-if="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)"/></li>'
   				        +'<li ng-repeat-start="item in getItems()" ng-if="groupBy(item, $index)" class="divider"></li>'
   				        +'<li class="dropdown-header" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></li>'
 		    	  		+'<li ng-repeat-end ng-click="selectItem(item, $event)">'
@@ -341,12 +342,14 @@ angular.module('commonsServices', []).
 	      		          multiple = attr.multiple || false,
 	      		          btOptions = attr.btOptions,
 	      		          editMode = (attr.ngEdit)?$parse(attr.ngEdit):undefined,
-	      		          placeholder = attr.placeholder;
+	      		          placeholder = attr.placeholder,
+	      		          filter = attr.filter || false;
 
 	      		      var optionsConfig = parseBtsOptions(btOptions);
 	      		      var items = [];
 	      		      var selectedLabels = [];
 	      		      var groupByLabels = [];
+	      		      var filterValue;
 	      		      
 	      		      function parseBtsOptions(input){
 	      		    	  var match = input.match(BT_OPTIONS_REGEXP);
@@ -377,12 +380,25 @@ angular.module('commonsServices', []).
 		                trackFn = track ? $parse(match[8]) : null,
 	                */
 	      		   
+	      		     scope.filter = filter; 
+	      		     scope.setFilterValue = function(value){
+	      		    	filterValue = value
+	      		     };
+	      		     
+	      		     
 	      		     scope.isEdit = function(){
 	      		    	 return (editMode)?editMode(scope):true;
 	      		     } 
 	      		      
 	      		     scope.getItems = function(){
-	      		    	 return items;
+	      		    	 if(scope.isEdit() && scope.filter){
+	      		    		var filter = {};
+	      		    		var getter = $parse(optionsConfig.viewMapper.replace(optionsConfig.itemName+'.',''));
+	      		    		getter.assign(filter, filterValue);
+	      		    		return $filter('limitTo')($filter('filter')(items, filter), 20);
+	      		    	 }else{
+	      		    		return items;
+	      		    	 }
 	      		     };
 	      		    
 	      		    scope.groupBy = function(item, index){
@@ -399,54 +415,60 @@ angular.module('commonsServices', []).
 	      		    	return false;	      		    	
 	      		    }; 
 	      		    
-	      		      scope.selectedItemLabel = function(){
-	      		    	  return selectedLabels.join();
-	      		      };  
-	      	        
-	      		      scope.itemGroupByLabel = function(item){
-	      		    	 return optionsConfig.groupByGetter(item);
-	      		      }
+      		      scope.selectedItemLabel = function(){
+      		    	  return selectedLabels.join();
+      		      };  
+      	        
+      		      scope.itemGroupByLabel = function(item){
+      		    	 return optionsConfig.groupByGetter(item);
+      		      }
+      		      
+      		      scope.itemLabel = function(item){	      		    	
+      		    	 return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
+      		      };
+      		      
+      		      scope.itemValue = function(item){
+      		    	 return item[optionsConfig.modelMapper.replace(optionsConfig.itemName+'.','')];  
+      		      };
+      		      
+      		      scope.selectItem = function(item, $event){
+      		    	  if(multiple){
+      		    			var selectedValues = ngModelCtrl.$viewValue || [];
+      		    		    var newSelectedValues = [];
+      		    			var itemValue = scope.itemValue(item);
+      		    			var find = false;
+      		    			for(var i = 0; i < selectedValues.length; i ++){
+      		    				if(selectedValues[i] !== itemValue){
+      		    					newSelectedValues.push(selectedValues[i]);
+      		    				}else{
+      		    					find = true;
+      		    				}
+      		    			}
+      		    			if(!find){
+      		    				newSelectedValues.push(itemValue);
+      		    			}
+      		    			selectedValues = newSelectedValues;
+      		    			
+      		    			ngModelCtrl.$setViewValue(selectedValues);
+      		    			ngModelCtrl.$render();
+      		    			$event.preventDefault();
+      		    			$event.stopPropagation();
+      		    	  	}else{
+      		    	  		if(scope.itemValue(item) !== ngModelCtrl.$viewValue){
+      		    	  			ngModelCtrl.$setViewValue(scope.itemValue(item));
+      		    	  		}else{
+      		    	  			ngModelCtrl.$setViewValue(null);
+      		    	  		}
+      		    	  		ngModelCtrl.$render();
+      		    	  		
+      		    	  	}
+      		      };
+      		      scope.inputClick = function($event){
+      		    	$event.preventDefault();
+	    			$event.stopPropagation();
+      		      };
 	      		      
-	      		      scope.itemLabel = function(item){	      		    	
-	      		    	 return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
-	      		      };
 	      		      
-	      		      scope.itemValue = function(item){
-	      		    	 return item[optionsConfig.modelMapper.replace(optionsConfig.itemName+'.','')];  
-	      		      };
-	      		      
-	      		      scope.selectItem = function(item, $event){
-	      		    	  if(multiple){
-	      		    			var selectedValues = ngModelCtrl.$viewValue || [];
-	      		    		    var newSelectedValues = [];
-	      		    			var itemValue = scope.itemValue(item);
-	      		    			var find = false;
-	      		    			for(var i = 0; i < selectedValues.length; i ++){
-	      		    				if(selectedValues[i] !== itemValue){
-	      		    					newSelectedValues.push(selectedValues[i]);
-	      		    				}else{
-	      		    					find = true;
-	      		    				}
-	      		    			}
-	      		    			if(!find){
-	      		    				newSelectedValues.push(itemValue);
-	      		    			}
-	      		    			selectedValues = newSelectedValues;
-	      		    			
-	      		    			ngModelCtrl.$setViewValue(selectedValues);
-	      		    			ngModelCtrl.$render();
-	      		    			$event.preventDefault();
-	      		    			$event.stopPropagation();
-	      		    	  	}else{
-	      		    	  		if(scope.itemValue(item) !== ngModelCtrl.$viewValue){
-	      		    	  			ngModelCtrl.$setViewValue(scope.itemValue(item));
-	      		    	  		}else{
-	      		    	  			ngModelCtrl.$setViewValue(null);
-	      		    	  		}
-	      		    	  		ngModelCtrl.$render();
-	      		    	  		
-	      		    	  	}
-	      		      };
 	      		   ngModelCtrl.$render = render;
 	      		    
 	      		      // TODO(vojta): can't we optimize this ? astuce provenant du select de angular
@@ -467,7 +489,7 @@ angular.module('commonsServices', []).
 		      	    	if(!angular.isArray(modelValues)){
 		      	    		modelValues = [modelValues];
 		      	    	}
-		      	    	if(items){
+		      	    	if(items.length > 0){
 			      	    	for(var i = 0; i < items.length; i++){
 			      	    		var item = items[i];
 			      	    		item.selected = false;
@@ -489,7 +511,38 @@ angular.module('commonsServices', []).
 	      	        };  
 	      		  }
   		    };
-    	}]).filter('filters',['$filter',function ($filter) {
+    	}]).directive('chart', function() {
+    	    return {
+    	        restrict: 'E',
+    	        template: '<div></div>',
+    	        scope: {
+    	            chartData: "=value",
+    	            chartObj: "=?"
+    	        },
+    	        transclude: true,
+    	        replace: true,
+    	        link: function($scope, $element, $attrs) {
+
+    	            //Update when charts data changes
+    	            $scope.$watch('chartData', function(value) {
+    	                if (!value)
+    	                    return;
+
+    	                // use default values if nothing is specified in the given settings
+    	                $scope.chartData.chart.renderTo = $scope.chartData.chart.renderTo || $element[0];
+    	                if ($attrs.type)
+    	                    $scope.chartData.chart.type = $scope.chartData.chart.type || $attrs.type;
+    	                if ($attrs.height)
+    	                    $scope.chartData.chart.height = $scope.chartData.chart.height || $attrs.height;
+    	                if ($attrs.width)
+    	                    $scope.chartData.chart.width = $scope.chartData.chart.type || $attrs.width;
+
+    	                $scope.chartObj = new Highcharts.Chart($scope.chartData);
+    	            });
+    	        }
+    	    };
+
+    	}).filter('filters',['$filter',function ($filter) {
     		return function (array, expressions) {
     			if (!angular.isArray(expressions)) expressions = [expressions];
     			var filtered = [];

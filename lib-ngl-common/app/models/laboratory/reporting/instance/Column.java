@@ -9,16 +9,21 @@ public class Column implements IValidation{
 	public String property; 
 	public String type;
 	public Boolean order;
+	public Boolean edit;
+	public Boolean hide;
+	
 	public String format;
 	public String render; //angular expression
 	public String filter; //angular expression
-	public Boolean edit;
+	
 	public String choiceInList;
 	public String listStyle;
 	public String possibleValues;
 	public String tdClass;
 	public String groupBy;
-	public Boolean hide;
+	
+	public Boolean tableMode = Boolean.TRUE;
+	public Boolean chartMode  = Boolean.FALSE;
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
