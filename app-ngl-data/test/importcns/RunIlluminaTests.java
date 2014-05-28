@@ -36,6 +36,7 @@ import services.instance.container.ContainerImportCNS;
 import services.instance.container.UpdateTaraPropertiesCNS;
 import services.instance.project.ProjectImportCNS;
 import services.instance.run.RunImportCNS;
+import services.instance.sample.UpdateSampleCNS;
 import utils.AbstractTests;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
@@ -47,6 +48,7 @@ public class RunIlluminaTests extends AbstractTests{
 	static List<String> runCodes=new ArrayList<String>();
 	static List<String> prepaCodes=new ArrayList<String>();
 	static List<String> runDelete=new ArrayList<String>();
+	static List<String> sampleCodes=new ArrayList<String>();
 
 	@AfterClass
 	public static  void deleteData() throws DAOException, InstantiationException,
@@ -70,7 +72,8 @@ public class RunIlluminaTests extends AbstractTests{
 	
 		//Run Tara pour tester udpdate Tara
 		runCodes.add("131205_MERCURE_C3959ACXX");
-		
+		//Run ble
+		runCodes.add("140429_FLUOR_H89E9ADXX");
 		runDelete.addAll(runCodes);
 		// Miseq
 		prepaCodes.add("A7PE4");
@@ -82,6 +85,11 @@ public class RunIlluminaTests extends AbstractTests{
 		// prepaflowcell tag=null
 		prepaCodes.add("C3K2AACXX");
 		prepaCodes.add("C3959ACXX");
+		//ble
+		prepaCodes.add("H89E9ADXX");
+		
+		sampleCodes.add("BFY_AAA");
+
 	}
 
 	@Test
@@ -216,6 +224,32 @@ public class RunIlluminaTests extends AbstractTests{
 
 	}
 	
+	
+	@Test
+	public void updateSampleTest() throws SQLException, DAOException{
+		
+		List<ReadSet> readSetsBefore=MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.in("sampleOnContainer.sampleCode", sampleCodes)).toList();
+		assertThat(readSetsBefore.size()).isEqualTo(sampleCodes.size());
+		List<Container> containersBefore=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("sampleCodes", sampleCodes)).toList();
+		assertThat(containersBefore.size()).isNotEqualTo(0);
+		List<Sample> samplesBefore=MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.in("code", sampleCodes)).toList();
+
+		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.in("sampleOnContainer.sampleCode", sampleCodes),
+					DBUpdate.set("sampleOnContainer.properties.taxonSize",new PropertySingleValue(23)),true);
+		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("contents.sampleCode", sampleCodes),
+				DBUpdate.set("contents.$.properties.taxonSize",new PropertySingleValue(23)),true);
+		MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", sampleCodes),
+				DBUpdate.set("properties.taxonSize",new PropertySingleValue(23)),true);
+		
+		
+		ContextValidation contextValidation=new ContextValidation();
+		UpdateSampleCNS.updateSampleFromTara(contextValidation, sampleCodes);
+		List<Sample> samples=MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.in("code",sampleCodes)).toList();
+		
+		assertThat(samples.size()).isEqualTo(sampleCodes.size());
+
+
+	}
 	//@Test
 	/*public void rulesRunCNSTest() throws RulesException{
 		List<Object> list=new ArrayList<Object>();
