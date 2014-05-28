@@ -58,7 +58,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		crScoring.put("TAXO-contaMatOri", 1);
 		crScoring.put("Qlte-duplicat", 2);
 		crScoring.put("Qlte-repartitionBases", 4);
-		
+
 		scoreMapping = new HashMap<Integer, Integer>();
 		scoreMapping.put(1, 9);
 		scoreMapping.put(2, 42);
@@ -98,7 +98,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	@Override
 	public void valuationReadSet(ReadSet readSet, boolean firstTime) {
 		try{
-			
+
 			if(firstTime){
 				List<TacheHD> taches = dao.listTacheHD(readSet.code);
 				Integer tacheId = null;
@@ -129,9 +129,11 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 
 	private Integer getCR(Valuation valuation) {
 		int score = 0;
-		for(String cr : valuation.resolutionCodes){
-			score += (crScoring.get(cr) != null)?crScoring.get(cr).intValue():0;
-			
+		if(valuation.resolutionCodes !=null){
+			for(String cr : valuation.resolutionCodes){
+				score += (crScoring.get(cr) != null)?crScoring.get(cr).intValue():0;
+
+			}
 		}
 		Integer crId = scoreMapping.get(score);
 		return (crId != null) ? crId : 47;		
