@@ -9,6 +9,7 @@ import models.LimsCNSDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.instance.Sample;
 import models.util.DataMappingCNS;
 import models.utils.InstanceConstants;
@@ -21,6 +22,8 @@ import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
+import validation.sample.instance.SampleValidationHelper;
+import validation.utils.ValidationHelper;
 
 import com.mongodb.MongoException;
 
@@ -67,6 +70,8 @@ public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 					}
 					
 					String importTypeCode=DataMappingCNS.getImportTypeCode(true,adaptater);
+					
+					ValidationHelper.validateProperties(contextError,taraProperties, ImportType.find.findByCode(importTypeCode).propertiesDefinitions);
 					
 					if(!importTypeCode.equals(sample.importTypeCode)){
 						MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sample.code),DBUpdate.set("importTypeCode",sample.importTypeCode));
