@@ -10,14 +10,15 @@ import services.instance.parameter.IndexImportCNS;
 import services.instance.project.ProjectImportCNS;
 import services.instance.run.RunImportCNS;
 import services.instance.run.UpdateReadSetCNS;
+import services.instance.sample.UpdateSampleCNS;
 
 public class ImportDataCNS{
 
 	public ImportDataCNS(){
 
 		// Import Projects tous les jours à 16h00
-		new ProjectImportCNS(Duration.create(ImportDataUtil.nextExecutionInSeconds(1,00),TimeUnit.SECONDS)
-				,Duration.create(1,TimeUnit.DAYS));
+		new ProjectImportCNS(Duration.create(ImportDataUtil.nextExecutionInSeconds(16,00),TimeUnit.SECONDS)
+				,Duration.create(4,TimeUnit.HOURS));
 		new IndexImportCNS(Duration.create(ImportDataUtil.nextExecutionInSeconds(3,00),TimeUnit.SECONDS)
 				,Duration.create(7,TimeUnit.DAYS));
 		
@@ -30,6 +31,8 @@ public class ImportDataCNS{
 	    new UpdateTaraPropertiesCNS(Duration.create(ImportDataUtil.nextExecutionInSeconds(2,00),TimeUnit.SECONDS)
 				,Duration.create(1,TimeUnit.DAYS));
 	    
+	    new UpdateSampleCNS(Duration.create(3,TimeUnit.MINUTES)
+				,Duration.create(1,TimeUnit.HOURS));
 	}
 
 }
