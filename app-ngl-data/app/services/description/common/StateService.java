@@ -48,9 +48,9 @@ public class StateService {
 		l.add(newState("Terminé", "F", true, 1000, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name()), true));		
 		
 		
-		l.add(newState("Contrôle qualité en attente", "IW-QC", true, 400, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()), true));	
-		l.add(newState("Contrôle qualité en cours", "IP-QC", true, 450, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()), true));
-		l.add(newState("Contrôle qualité terminé", "F-QC", true, 500, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()), false));
+		l.add(newState("Contrôle qualité en attente", "IW-QC", true, 400, StateCategory.find.findByCode("IW"), getObjectTypes( ObjectType.CODE.ReadSet.name()), true));	
+		l.add(newState("Contrôle qualité en cours", "IP-QC", true, 450, StateCategory.find.findByCode("IP"), getObjectTypes( ObjectType.CODE.ReadSet.name()), true));
+		l.add(newState("Contrôle qualité terminé", "F-QC", true, 500, StateCategory.find.findByCode("F"), getObjectTypes( ObjectType.CODE.ReadSet.name()), false));
 		l.add(newState("Evaluation en attente", "IW-V", true, 800, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.Analysis.name()), true));
 		l.add(newState("Evaluation en cours", "IP-V", true, 825, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name()),  true));
 		l.add(newState("Evaluation terminée", "F-V", true, 849, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.Analysis.name()), true));		
