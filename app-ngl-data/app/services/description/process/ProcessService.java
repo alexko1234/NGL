@@ -42,20 +42,13 @@ public class ProcessService {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		l.add(DescriptionFactory.newProcessType("Librairie PE sans sizing", "Lib-PE-NoSizing", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie-indexing","amplification"), 
 				getExperimentTypes("fragmentation").get(0), getExperimentTypes("amplification").get(0), getExperimentTypes("void-banque").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newProcessType("qPCR et normalisation", "qPCR-normalisation", ProcessCategory.find.findByCode("pre-sequencing"), getPropertyDefinitionsqPCR(), getExperimentTypes("solution-stock"), 
+		l.add(DescriptionFactory.newProcessType("qPCR et normalisation", "qPCR-normalisation", ProcessCategory.find.findByCode("pre-sequencing"), getPropertyDefinitionsIlluminaDepot(), getExperimentTypes("solution-stock"), 
 				getExperimentTypes("solution-stock").get(0), getExperimentTypes("solution-stock").get(0), getExperimentTypes("void-qpcr").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepot() , getExperimentTypes("prepa-flowcell","illumina-depot"), getExperimentTypes("prepa-flowcell").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("void-illumina-depot").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newProcessType("Run Opgen", "opgen-run", ProcessCategory.find.findByCode("mapping"),getPropertyDefinitionsOpgenDepot() , getExperimentTypes("opgen-depot"), getExperimentTypes("opgen-depot").get(0), getExperimentTypes("opgen-depot").get(0),getExperimentTypes("void-opgen-depot").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
 
-	private static List<PropertyDefinition> getPropertyDefinitionsqPCR() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Type MapCard","mapcardType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("standard","HD"), "single"));
-		return propertyDefinitions;
-	}
 
 	private static List<PropertyDefinition> getPropertyDefinitionsOpgenDepot() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
