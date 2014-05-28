@@ -70,6 +70,9 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	
 					if(sample!=null){
 						newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
+						if(!contextError.hasErrors()){
+							limsServices.updateMaterielLims(newSample, contextError);
+						}
 					}
 					contextError.removeKeyFromRootKeyName(rootKeyName);
 	
