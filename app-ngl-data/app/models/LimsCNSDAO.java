@@ -310,6 +310,37 @@ public class LimsCNSDAO{
 
 		contextError.removeKeyFromRootKeyName("updateMaterielmanipLims");
 	}
+	
+	
+	public void updateMaterielLims(Sample sample,ContextValidation contextError) throws SQLException{
+
+		String rootKeyName=null;
+
+			contextError.addKeyToRootKeyName("updateMaterielLims");
+			rootKeyName="container["+sample.code+"]";
+			contextError.addKeyToRootKeyName(rootKeyName);
+
+			if(sample.code==null)
+			{
+				contextError.addErrors("code","error.NotExist",sample.code);
+
+			}else {
+				try{
+
+					String sql="pm_SampleInNGL @code=?";
+					Logger.debug(sql+sample.code);
+					this.jdbcTemplate.update(sql, sample.code);
+
+				} catch(DataAccessException e){
+
+					contextError.addErrors("",e.getMessage(), sample.code);
+				}
+			}
+
+			contextError.removeKeyFromRootKeyName(rootKeyName);
+
+		contextError.removeKeyFromRootKeyName("updateMaterielLims");
+	}
 
 
 	/**
@@ -671,6 +702,33 @@ public class LimsCNSDAO{
 				});
 		return results;
 
+	}
+
+
+	public List<String> findSampleUpdated(List<String> sampleCodes) {
+		String sql="select code=rtrim(prsco)+'_'+rtrim(adnnom) from Materiel m, Useadn u where u.adnco=m.adnco and ";
+		if(sampleCodes==null){
+			sql=sql+"  datediff(day,uaddm,uadInNGL)<0";
+		}else {
+			//Pour les tests unitaires
+			sql=sql+" rtrim(prsco)+'_'+rtrim(adnnom) in (";
+			for(String code:sampleCodes){
+				sql=sql+"'"+code+"',";
+			}
+			sql=sql+"'')";
+		}
+		//Search Sample to modify
+		List<String> results =  this.jdbcTemplate.query(sql 
+				,new RowMapper<String>() {
+
+			public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+				
+				return rs.getString("code");
+			}
+
+		}); 
+
+		return results;
 	}
 
 
