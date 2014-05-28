@@ -89,7 +89,7 @@ public class DataMappingCNS {
 	//A revoir avec Julie validation bio et prod
 	public static String getStateReadSetFromLims(String state,TBoolean validation) {
 	//	Logger.debug("State :"+state+", Validation :"+validation);
-		if(state.equals("A_traiter")){
+		if(state.equals("A_traiter") || state.equals("Indefini")){
 			return "IW-QC";
 		} else if(state.equals("En_traitement")){
 			return "IP-QC";
@@ -103,7 +103,7 @@ public class DataMappingCNS {
 			return "A";
 		} else if (state.equals("Non_traite") && validation.equals(TBoolean.FALSE)){
 			return "UA";
-		} else if(state.equals("Sans_sequence") || state.equals("Indefini")){
+		} else if(state.equals("Sans_sequence")){
 			return "UA";
 		}
 		
@@ -411,8 +411,9 @@ public class DataMappingCNS {
 		*/
 	}
 	
+	/* Premiere version */
 	
-	public static String getStateFromStateTubeLims(int etatTubeLimsCode){
+/*	public static String getStateFromStateTubeLims(int etatTubeLimsCode){
 
 		if(etatTubeLimsCode==0){
 			return "IW-E";
@@ -426,7 +427,7 @@ public class DataMappingCNS {
 			return "IW-V";
 		}
 		else if(etatTubeLimsCode==4){
-			return "A";
+			return "IW-P";
 		}
 		else if(etatTubeLimsCode==6 || etatTubeLimsCode==2){
 			return "IU";
@@ -441,6 +442,20 @@ public class DataMappingCNS {
 		return null;
 	}
 	
+*/	
+	public static String getStateFromStateTubeLims(int etatTubeLimsCode){
+		
+		if(etatTubeLimsCode==4){
+			return "IW-P";
+		}
+		else if(etatTubeLimsCode==8){
+			return "IS";
+		}
+		else {
+			return "UA";
+		}
+		
+	}
 	
 	public static String getStateFromStatePrepaflowcellLims(int etatPrepaLimsCode){
 		if(etatPrepaLimsCode==0){ return "IU"; } 
