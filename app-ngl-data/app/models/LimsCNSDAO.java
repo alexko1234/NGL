@@ -424,6 +424,7 @@ public class LimsCNSDAO{
 				run.traceInformation = ti; 
 
 				contextValidation.addKeyToRootKeyName("run["+run.code+"]");
+				run.treatments=new HashMap<String, Treatment>();
 				run.treatments.put(NGSRG_CODE,newTreatment(contextValidation,rs, Level.CODE.Run,NGSRG_CODE,NGSRG_CODE,RUN_TYPE_CODE));
 				contextValidation.removeKeyFromRootKeyName("run["+run.code+"]");
 

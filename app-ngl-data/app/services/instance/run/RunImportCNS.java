@@ -2,6 +2,7 @@ package services.instance.run;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import models.laboratory.common.description.Level;
@@ -60,9 +61,25 @@ public class RunImportCNS extends AbstractImportDataCNS{
 				
 				//Save Run du Lims si n'existe pas ou n'est pas transféré dans NGL
 				Run newRun=MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class, run.code);
-				if(newRun==null || !newRun.treatments.containsKey("ngsrg")){
+				if(newRun==null){
 					Logger.debug("Save Run "+run.code + " mode "+contextError.getMode());
 					newRun=(Run) InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, ctx, true);
+				} else {
+					
+					Logger.debug("Update Run "+run.code + " mode "+contextError.getMode());	
+					ctx.setCreationMode();
+					ctx.putObject("level", Level.CODE.Run);
+					ctx.putObject("run", run);
+					run.treatments.get("ngsrg").validate(ctx);
+
+					// State, dispatch, treatement ngsrg
+					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+							DBQuery.is("code", run.code),
+							DBUpdate.set("treatments.ngsrg",run.treatments.get("ngsrg"))
+										.set("state",run.state)
+											.set("dispatch",run.dispatch)
+												.set("traceInformation.modifyUser","lims")
+													.set("traceInformation.modifyDate",new Date()));
 				}
 				
 				//Si Run non null creation des lanes ou traitement ngsrg
