@@ -58,30 +58,32 @@ public class RunImportCNS extends AbstractImportDataCNS{
 				rootKeyName="run["+run.code+"]";
 				ContextValidation ctx=new ContextValidation();
 				ctx.addKeyToRootKeyName(rootKeyName);
-				
+
 				//Save Run du Lims si n'existe pas ou n'est pas transféré dans NGL
 				Run newRun=MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class, run.code);
 				if(newRun==null){
 					Logger.debug("Save Run "+run.code + " mode "+contextError.getMode());
 					newRun=(Run) InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run, ctx, true);
 				} else {
-					
+
 					Logger.debug("Update Run "+run.code + " mode "+contextError.getMode());	
 					ctx.setCreationMode();
 					ctx.putObject("level", Level.CODE.Run);
 					ctx.putObject("run", run);
 					run.treatments.get("ngsrg").validate(ctx);
 
-					// State, dispatch, treatement ngsrg
-					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-							DBQuery.is("code", run.code),
-							DBUpdate.set("treatments.ngsrg",run.treatments.get("ngsrg"))
-										.set("state",run.state)
-											.set("dispatch",run.dispatch)
-												.set("traceInformation.modifyUser","lims")
-													.set("traceInformation.modifyDate",new Date()));
+					if(!ctx.hasErrors()){
+
+						MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+								DBQuery.is("code", run.code),
+								DBUpdate.set("treatments.ngsrg",run.treatments.get("ngsrg"))
+								.set("state",run.state)
+								.set("dispatch",run.dispatch)
+								.set("traceInformation.modifyUser","lims")
+								.set("traceInformation.modifyDate",new Date()));
+					}
 				}
-				
+
 				//Si Run non null creation des lanes ou traitement ngsrg
 				if(newRun!=null && !ctx.hasErrors()){
 					Run runLanes=createLaneFromRun(newRun, ctx);
@@ -89,11 +91,11 @@ public class RunImportCNS extends AbstractImportDataCNS{
 						newRuns.add(runLanes);
 					}
 				}
-				
+
 				if(ctx.hasErrors()){
 					contextError.errors.putAll(ctx.errors);
 				}
-				
+
 				ctx.removeKeyFromRootKeyName(rootKeyName);
 
 			}
@@ -153,7 +155,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 							DBQuery.is("code", newRun.code),
 							DBUpdate.push("lanes", lane));
-					
+
 					Logger.debug("Save new Lanes "+lane.number+"from Run "+newRun.code);
 
 				}
@@ -213,9 +215,9 @@ public class RunImportCNS extends AbstractImportDataCNS{
 	}
 
 	public static List<ReadSet> createReadSetFromRun(Run run,ContextValidation contextValidation)throws SQLException, DAOException {
-		
+
 		List<ReadSet> newReadSets=new ArrayList<ReadSet>();
-		
+
 		//Delete old readSet from run
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code))){
 			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code));
@@ -237,7 +239,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 				}
 
 				InstanceHelpers.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet, contextValidation,true);
-				
+
 				if(!contextValidation.hasErrors()){
 
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class
@@ -249,7 +251,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 							,DBUpdate.addToSet("projectCodes", readSet.projectCode).addToSet("sampleCodes", readSet.sampleCode));
 
 					createFileFromReadSet(readSet,contextValidation);
-					
+
 					SampleOnContainer sampleOnContainer = InstanceHelpers.getSampleOnContainer(readSet);
 					if(null != sampleOnContainer){
 						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
@@ -257,18 +259,18 @@ public class RunImportCNS extends AbstractImportDataCNS{
 					}else{
 						contextValidation.addErrors( "sampleOneContainer", "error.codeNotExist");
 					}
-					
+
 					if(!contextValidation.hasErrors()){
-					newReadSets.add(readSet);
+						newReadSets.add(readSet);
 					}
 				}
-				
-				
+
+
 				contextValidation.removeKeyFromRootKeyName(rootKeyName);
 
 			}
 		}
 		return newReadSets;
 	}
-	
+
 }
