@@ -253,8 +253,8 @@ public class InstrumentService {
 	
 	public static List<Instrument> getInstrumentHiseq2500() throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add( createInstrument("HISEQ9", "HISEQ9", false, "/env/export/cngstkprd003/v_igseq6/HISEQ9/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		instruments.add( createInstrument("HISEQ9", "HISEQ9", true, "/env/export/cngstkprd003/v_igseq6/HISEQ9/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("HISEQ9", "HISEQ9", true, "/env/export/cngstkprd003/v_igseq6/HISEQ9/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		instruments.add( createInstrument("HISEQ9", "HISEQ9", false, "/env/export/cngstkprd003/v_igseq6/HISEQ9/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		instruments.add( createInstrument("HISEQ10", "HISEQ10", true, "/env/export/cngstkprd003/v_igseq7/HISEQ10/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		instruments.add( createInstrument("HISEQ11", "HISEQ11", true, "/env/export/cngstkprd003/v_igseq7/HISEQ11/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		instruments.add( createInstrument("HISEQ10", "HISEQ10", false, "/env/export/cngstkprd003/v_igseq7/HISEQ10/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
