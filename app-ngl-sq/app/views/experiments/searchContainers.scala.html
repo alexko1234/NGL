@@ -2,6 +2,12 @@
 @import views.html.helper._
 @form() = {
 	@columnSearchForm{
+		@formGroup{	
+			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('purifications')" ng-change="changeExperimentType()">
+				<option value="">@Messages("experiments.select.experimentType.purifications")</option>
+			</select>
+			}
+			<hr>
 			@formGroup{
 			<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
 				<option value="">@Messages("processes.select.processCategory")</option>
@@ -13,7 +19,13 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-			<select class="form-control" ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()">
+			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('qualitycontrols')" ng-change="changeExperimentType()">
+				<option value="">@Messages("experiments.select.experimentType.qualitycontrols")</option>
+			</select>
+			}
+			<hr>
+			@formGroup{	
+			<select class="form-control" ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()">
 				<option value="">@Messages("processes.select.processType")</option>
 			</select>		
 			}
@@ -23,21 +35,23 @@
 			
 		}
 		@columnSearchForm{
-			@formGroup{
-			<select class="form-control" ng-disabled="newExperiment != 'new'" ng-model="form.experimentCategory" ng-options="experimentCategory.name for experimentCategory in lists.getExperimentCategories()" ng-change="changeExperimentCategory()">
-				<option value="">@Messages("experiments.select.experimentCategory")</option>
+				@formGroup{	
+			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('transferts')" ng-change="changeExperimentType()">
+				<option value="">@Messages("experiments.select.experimentType.transferts")</option>
 			</select>
 			}
+			<hr>
 			@formGroup{		
 			<input class="form-control" type="date" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
 			}
 		}
 		@columnSearchForm{			
 			@formGroup{	
-			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-disabled="!form.experimentCategory" ng-options="experimentType.name for experimentType in lists.get('experimentTypes')" ng-change="changeExperimentType()">
-				<option value="">@Messages("experiments.select.experimentType")</option>
+			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('transformations')" ng-change="changeExperimentType()">
+				<option value="">@Messages("experiments.select.experimentType.transformations")</option>
 			</select>
 			}
+			<hr>
 			@formGroup{		
 			<input class="form-control" type="date" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
 			}
@@ -46,6 +60,7 @@
 			@formGroup{		
 			<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.user")'>
 			}
+			<hr>
 			@formGroup{
 			<div class="form-control" bt-select ng-model="form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("experiments.select.experimentTypeCode")" 
 				bt-options="expType.code as expType.name for expType in experimentTypeList">

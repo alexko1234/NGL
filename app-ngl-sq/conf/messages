@@ -139,6 +139,10 @@ experiments.msg.save.error = Sauvegarde echouée
 experiments.msg.details = [détails]
 
 experiments.select.experimentType = Sélect. un type d''experience
+experiments.select.experimentType.purifications = Sélect. une purification
+experiments.select.experimentType.transformations = Sélect. une transformation
+experiments.select.experimentType.transferts = Sélect. un transfert
+experiments.select.experimentType.qualitycontrols = Sélect. un control qualité
 experiments.select.experimentCategory = Sélect. une categorie d''experience
 experiments.select.instrument = Sélect. un instrument
 experiments.select.resolutions = Sélect. une resolution

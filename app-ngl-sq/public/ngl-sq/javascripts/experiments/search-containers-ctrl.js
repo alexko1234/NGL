@@ -79,41 +79,19 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.changeProcessCategory = function(){
-		
-		if($scope.newExperiment == "new"){
-			$scope.form.experimentType = undefined;
-			$scope.form.experimentCategory = undefined;
-		}
-		
 		$scope.form.processType = undefined;
 		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
-	};
-	
-	$scope.changeProcessType = function(){
-		if($scope.newExperiment == "new"){
-			$scope.form.experimentType = undefined;
-			$scope.form.experimentCategory = undefined;
-		}else{
-			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code});
-		}
 	};
 	
 	$scope.reset = function(){
 		$scope.form = {}
 	};
-
-	$scope.changeExperimentCategory = function(){
-		$scope.removeTab(1);
-		
-		$scope.basket.reset();
-		
-		$scope.form.experimentType = undefined;
-
-		if($scope.form.processType && $scope.form.experimentCategory){
-			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code});
-		}else if($scope.form.experimentCategory){
-			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code});
-		}
+	
+	$scope.loadExperimentTypesLists = function(){
+		$scope.lists.refresh.experimentTypes({categoryCode:"purification"}, "purifications");
+		$scope.lists.refresh.experimentTypes({categoryCode:"qualitycontrol"}, "qualitycontrols");
+		$scope.lists.refresh.experimentTypes({categoryCode:"transfert"}, "transferts");
+		$scope.lists.refresh.experimentTypes({categoryCode:"transformation"}, "transformations");
 	};
 	
 	$scope.refreshSamples = function(){
@@ -202,8 +180,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	}
 	if($routeParams.newExperiment === undefined){
 		$scope.newExperiment = "new";
-	}else{
-		$scope.newExperiment = $routeParams.newExperiment;
 	}
 	
 	if(angular.isUndefined($scope.getHomePage())){
@@ -227,10 +203,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.lists.refresh.processCategories();
 		$scope.lists.refresh.experimentCategories();
 		$scope.lists.refresh.users();
-		if($scope.newExperiment != "new"){
-			$scope.form.experimentCategory.code = $scope.newExperiment;
-			$scope.changeExperimentCategory();
-		}
+		$scope.loadExperimentTypesLists();
+		
 	} else {
 		$scope.form = $scope.getForm();		
 	}

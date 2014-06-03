@@ -27,6 +27,18 @@
 		@formGroup{
 			<input class="form-control" type="text" ng-model="form.containerSupportCode"  typeahead="support.code as support.name for support in lists.getSupports() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.support")'>			
 		}
+		@formGroup{
+			<select class="form-control" ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()">
+				<option value="">@Messages("containers.select.categorySupportCode")</option>
+			</select>
+		}
+	}
+	@columnSearchForm{
+		@formGroup{
+			<div class="form-control" bt-select ng-model="form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("experiments.select.experimentTypeCode")" 
+				bt-options="expType.code as expType.name for expType in lists.getExperimentTypes()">
+			</div>
+		}
 	}
 }
 
