@@ -58,7 +58,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{
-				<select class="form-control" ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()">
+				<select class="form-control" ng-class="errors.containerSupportCategory"  ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()">
 					<option value="">@Messages("containers.select.categorySupportCode")</option>
 				</select>
 			}
