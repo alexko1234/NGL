@@ -27,10 +27,9 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							$scope.datatable.setData(containers,containers.length);
 							$scope.doPurifOrQc($scope.experiment.value.typeCode);
 							$scope.getInstruments();
-							if(angular.isUndefined($scope.form.experiment)) {
+							if(!$scope.experiment.editMode) {
 								$scope.init_experiment(containers, $scope.experimentType.atomicTransfertMethod);
-							}else {
-								$scope.experiment = $scope.form.experiment;
+							}else{
 								$scope.addExperimentPropertiesInputsColumns();
 							}
 						});

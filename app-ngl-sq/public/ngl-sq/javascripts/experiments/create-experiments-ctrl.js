@@ -636,7 +636,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			.success(function(data, status, headers, config) {
 				$scope.experimentType.category = data.category;
 				$scope.experimentType.atomicTransfertMethod = data.atomicTransfertMethod;
-				experiment.typeCode = $scope.experimentType.code;
+				experiment.typeCode =  data.code;
 			})
 			.error(function(data, status, headers, config) {
 				$scope.message.clazz = "alert alert-danger";
@@ -661,14 +661,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				
 				if(!$routeParams.experimentCode){
 					$scope.experiment.editMode=false;
+					$scope.experiment.value = experiment;
 				}else{
 					$scope.experiment.editMode=true;
 					$scope.experiment.value.instrument.outContainerSupportCategoryCode = experiment.instrument.outContainerSupportCategoryCode;
-					
 					$scope.getInputTemplate();
-					
 					$scope.experiment.value = experiment;
-					
 					$scope.addExperimentPropertiesInputsColumns();
 				}
 			});
