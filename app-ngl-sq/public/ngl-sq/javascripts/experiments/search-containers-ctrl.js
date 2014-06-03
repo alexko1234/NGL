@@ -122,6 +122,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	
 	$scope.search = function(){
 		$scope.errors.experimentType = {};
+		$scope.errors.containerSupportCategory = {};
 		
 		
 		if($scope.form.experimentType && $scope.form.containerSupportCategory){ 		
@@ -162,7 +163,11 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			
 			$scope.datatable.search(jsonSearch);
 		}else{
-			$scope.errors.experimentType = "alert-danger";
+			if(!$scope.form.experimentType){
+				$scope.errors.experimentType = "alert-danger";
+			}else{
+				$scope.errors.containerSupportCategory = "alert-danger";
+			}
 		}						
 	};
 	
