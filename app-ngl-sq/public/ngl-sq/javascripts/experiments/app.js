@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['ngRoute','datatableServices','basketServices', 'commonsServices','ui.bootstrap','atomicTransfereServices'], function($routeProvider, $locationProvider) {
+angular.module('home', ['ngRoute','datatableServices','basketServices', 'commonsServices','ui.bootstrap','atomicTransfereServices','dragndropServices'], function($routeProvider, $locationProvider) {
 	$routeProvider.when('/experiments/new/home', {
 		templateUrl : jsRoutes.controllers.experiments.tpl.Experiments.searchSupports().url,
 		controller : 'SearchContainerCtrl'
@@ -20,12 +20,12 @@ angular.module('home', ['ngRoute','datatableServices','basketServices', 'commons
 	});
 	
 	$routeProvider.when('/experiments/create/:experimentTypeCode', {
-		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.firstEditExperiment(params.experimentTypeCode).url},
+		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.createOrEditExperiment().url},
 		controller : 'CreateNewCtrl'
 	});
 	
 	$routeProvider.when('/experiments/edit/:experimentCode', {
-		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.editExperiment(params.experimentCode).url},
+		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.createOrEditExperiment().url},
 		controller : 'CreateNewCtrl'
 	});
 	

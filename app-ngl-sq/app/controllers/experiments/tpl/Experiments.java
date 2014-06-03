@@ -62,7 +62,7 @@ public class Experiments extends CommonController{
 			if(inputCategory.equals("mapcard")){
 				return ok(views.html.experiments.manyToOne.inputs.mapcard.render());
 			}else if(inputCategory.equals("flowcell-8")){
-				return ok(views.html.experiments.manyToOne.inputs.flowcell8.render());
+				return ok(views.html.experiments.manyToOne.inputs.flowcell.render(8));
 			}
 		}else if(atomicType.equals("OneToVoid")){
 			if(inputCategory.equals("void")){
@@ -73,21 +73,13 @@ public class Experiments extends CommonController{
 		return badRequest("Not implemented");
 	}
 	
-	public static Result firstEditExperiment(String experimentTypeCode){
-		ExperimentType experimentType = null;
-		try{
-			experimentType = ExperimentType.find.findByCode(experimentTypeCode);
-		}catch(models.utils.dao.DAOException e){
-			
-		}
-		
-		List<PropertyDefinition> props = experimentProperties(experimentTypeCode);
+	public static Result createOrEditExperiment(){
 	
-		return ok(createExperiments.render(experimentType.category.code, experimentType.atomicTransfertMethod,Json.toJson(props),null));
+		return ok(createExperiments.render());
 	}
 	
-	public static Result editExperiment(String experimentCode){
-		Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
+	/*public static Result editExperiment(String experimentCode){
+		/*Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
 		ExperimentType experimentType = null;
 		try{
 			experimentType = ExperimentType.find.findByCode(experiment.typeCode);
@@ -96,9 +88,8 @@ public class Experiments extends CommonController{
 		}
 		
 		List<PropertyDefinition> props = experimentProperties(experiment.typeCode);
-
-		return ok(createExperiments.render(experimentType.category.code, experimentType.atomicTransfertMethod,Json.toJson(props),Json.toJson(experiment)));
-	}
+		return ok(createExperiments.render());
+	}*/
 	
 	public static Result getEditExperimentColumns(){
 		
@@ -138,15 +129,16 @@ public class Experiments extends CommonController{
   	    		controllers.processes.api.routes.javascript.ProcessCategories.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
   	    		controllers.experiments.api.routes.javascript.ExperimentTypes.list(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentTypes.get(),
   	    		controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.newExperiments(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.getInputTemplate(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.home(),
   	    		controllers.experiments.api.routes.javascript.Experiments.list(),
   	    		controllers.experiments.api.routes.javascript.ExperimentTypeNodes.list(),
-  	    		controllers.experiments.tpl.routes.javascript.Experiments.firstEditExperiment(),
-  	    		controllers.experiments.tpl.routes.javascript.Experiments.editExperiment(),
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.createOrEditExperiment(),
   	    		controllers.experiments.api.routes.javascript.Experiments.generateOutput(),
+  	    		controllers.experiments.api.routes.javascript.Experiments.get(),
   	    		controllers.experiments.api.routes.javascript.Experiments.updateExperimentInformations(),
   	    		controllers.experiments.api.routes.javascript.Experiments.updateExperimentProperties(),
   	    		controllers.experiments.api.routes.javascript.Experiments.updateInstrumentInformations(),
@@ -174,16 +166,4 @@ public class Experiments extends CommonController{
   	      )	  	      
   	    );
   	}
-	
-	private static List<PropertyDefinition> experimentProperties(String experimentTypeCode){
-		 ExperimentType expType = null;
-		try {
-			expType = ExperimentType.find.findByCode(experimentTypeCode);
-		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return expType.propertiesDefinitions;
-	}
 }

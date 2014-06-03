@@ -19,6 +19,20 @@ public class ExperimentTypes extends CommonController{
 	
 	final static Form<ExperimentTypesSearchForm> experimentTypeForm = form(ExperimentTypesSearchForm.class);
 	
+	public static Result get(String code){
+		ExperimentType experimentType = null;
+		try {
+			experimentType = ExperimentType.find.findByCode(code);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(experimentType == null){
+			return notFound();
+		}
+		return ok(Json.toJson(experimentType));
+	}
+	
 	public static Result list() throws DAOException{
 		Form<ExperimentTypesSearchForm> experimentTypeFilledForm = filledFormQueryString(experimentTypeForm,ExperimentTypesSearchForm.class);
 		ExperimentTypesSearchForm experimentTypesSearch = experimentTypeFilledForm.get();

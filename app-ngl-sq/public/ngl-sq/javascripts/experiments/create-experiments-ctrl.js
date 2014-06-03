@@ -1,4 +1,4 @@
-angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','lists','$parse','$q','$position', function($scope,$window, $http,lists,$parse,$q,$position) {
+angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','lists','$parse','$q','$position','$routeParams', function($scope,$window, $http,lists,$parse,$q,$position,$routeParams) {
 	$scope.experiment = {
 		outputGenerated:false,
 		outputVoid:false,
@@ -587,38 +587,90 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		return false;
 	};
 	
-	$scope.init = function(experimentCategoryCode, atomicTransfertMethod, experiment){
-	
-		$scope.experimentType =  {};
-		$scope.experimentType.category= {};
-		$scope.experimentType.category.code = experimentCategoryCode;
-		$scope.experimentType.atomicTransfertMethod = atomicTransfertMethod;
-		console.log($scope.experimentType.atomicTransfertMethod);
-		if(experiment != ""){
-			experiment =  JSON.parse(experiment);
-			$scope.experiment.value.typeCode = experiment.typeCode;
-		}
-		
-		$scope.form = $scope.getForm();
-		if($scope.form != undefined && $scope.form.experimentType != undefined){
-			$scope.experiment.value.typeCode = $scope.form.experimentType.code;
-		}
-		$scope.lists = lists;
-	
-		$scope.lists.refresh.instrumentUsedTypes({"experimentTypeCode":$scope.experiment.value.typeCode});
-		$scope.lists.refresh.protocols({"experimentTypeCode":$scope.experiment.value.typeCode});
-		$scope.lists.refresh.resolutions({"objectTypeCode":"Experiment"});
-		$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
-		
-		if(experiment == ""){
-			$scope.experiment.editMode=false;
-		}else{
-			$scope.experiment.editMode=true;
-			$scope.experiment.value.instrument.outContainerSupportCategoryCode = experiment.instrument.outContainerSupportCategoryCode;
-			$scope.getInputTemplate();
-			$scope.experiment.value = experiment;
-			
-			$scope.addExperimentPropertiesInputsColumns();
+	$scope.experimentType =  {};
+	var promise = $q.when($scope.experimentType);
+	var experiment = {
+		code:"",
+		typeCode:"",
+		state:{
+			resolutionCodes:[],
+			code:"N"
+		},
+		protocolCode:"",
+		instrument:{
+			code:"",
+			categoryCode:"",
+			outContainerSupportCategoryCode:""
+		},
+		atomicTransfertMethods:[],
+		comments:[],
+		traceInformation:{
+			createUser:"",
+			creationDate:"",
+			modifyUser:"",
+			modifyDate:""
 		}
 	};
+	if($routeParams.experimentCode){
+	   console.log($routeParams.experimentCode);
+	   promise = $http.get(jsRoutes.controllers.experiments.api.Experiments.get($routeParams.experimentCode).url)
+		.success(function(data, status, headers, config) {
+			experiment = data;
+		})
+		.error(function(data, status, headers, config) {
+			$scope.message.clazz = "alert alert-danger";
+			$scope.message.text = Messages('experiments.msg.save.error');
+
+			$scope.message.details = data;
+			$scope.message.isDetails = true;
+		});
+	}
+		promise.then(function(result) {
+			if($routeParams.experimentTypeCode){
+				$scope.experimentType.code = $routeParams.experimentTypeCode;
+			}else{
+				$scope.experimentType.code = experiment.typeCode;
+			}
+			
+			promise = $http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.get($scope.experimentType.code).url)
+			.success(function(data, status, headers, config) {
+				$scope.experimentType.category = data.category;
+				$scope.experimentType.atomicTransfertMethod = data.atomicTransfertMethod;
+				experiment.typeCode = $scope.experimentType.code;
+			})
+			.error(function(data, status, headers, config) {
+				$scope.message.clazz = "alert alert-danger";
+				$scope.message.text = Messages('experiments.msg.save.error');
+
+				$scope.message.details = data;
+				$scope.message.isDetails = true;
+			});
+			promise.then(function(result) {
+				$scope.lists = lists;
+				$scope.lists.clear("containerSupportCategories");
+				$scope.lists.clear("instruments");
+				$scope.lists.clear("instrumentUsedTypes");
+				$scope.lists.clear("protocols");
+				$scope.lists.clear("resolutions");
+				$scope.lists.clear("states");
+				
+				$scope.lists.refresh.instrumentUsedTypes({"experimentTypeCode":experiment.typeCode});
+				$scope.lists.refresh.protocols({"experimentTypeCode":experiment.typeCode});
+				$scope.lists.refresh.resolutions({"objectTypeCode":"Experiment"});
+				$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
+				
+				if(!$routeParams.experimentCode){
+					$scope.experiment.editMode=false;
+				}else{
+					$scope.experiment.editMode=true;
+					$scope.experiment.value.instrument.outContainerSupportCategoryCode = experiment.instrument.outContainerSupportCategoryCode;
+					
+					$scope.getInputTemplate();
+					
+					$scope.experiment.value = experiment;
+					
+					$scope.addExperimentPropertiesInputsColumns();
+				}
+			});
+	  });
 }]);

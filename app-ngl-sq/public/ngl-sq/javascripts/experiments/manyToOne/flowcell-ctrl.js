@@ -1,4 +1,4 @@
-angular.module('home').controller('Flowcell8Ctrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne) {
+angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne) {
 	$scope.datatableConfig = {
 			columnsUrl : jsRoutes.controllers.experiments.tpl.Experiments.getEditExperimentColumns().url,
 			compact:false,
@@ -165,10 +165,26 @@ angular.module('home').controller('Flowcell8Ctrl',['$scope', '$window','datatabl
 		$scope.atomicTransfere.experimentToOutput();
 	});
 	
+	$scope.drop = function(e, data) {
+		var array_regexp = /^(.+)\[([0-9])\]+/;
+		var model = e.dataTransfer.getData('Model');
+		var match = model.match(array_regexp);
+		if(!match){
+			$scope[model].splice( $scope[model].indexOf(data), 1);
+		}else{
+			$scope[match[1]][match[2]].splice( $scope[match[1]][match[2]].indexOf(data), 1);
+		}
+	}
+	
 	//Init
 	$scope.datatable = datatable($scope, $scope.datatableConfig);
 	$scope.atomicTransfere = manyToOne($scope, "", "none");
-
+	$scope.containers = [{"code":"h2ERD"},{"code":"zdfgrgtr3"}];
+	$scope.flowcells = [];
+	//init flowcells
+	for(var i=0;i<8;i++){
+		$scope.flowcells[i] = [];
+	}
 	if($scope.experiment.editMode){
 		$scope.atomicTransfere.loadExperiment();
 	}else{

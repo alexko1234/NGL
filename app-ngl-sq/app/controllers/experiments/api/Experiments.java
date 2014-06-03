@@ -66,6 +66,15 @@ public class Experiments extends CommonController{
 		return badRequest(experimentFilledForm.errorsAsJson());
 	}
 
+	public static Result get(String code){
+		Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
+		if(experiment == null){
+			return notFound();
+		}
+		return ok(Json.toJson(experiment));
+	}
+	
+	
 	public static Result generateOutput(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
