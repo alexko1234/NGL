@@ -18,7 +18,7 @@ public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSup
 	protected ContainerSupportCategoryDAO() {
 		super("container_support_category", ContainerSupportCategory.class,
 				ContainerSupportCategoryMappingQuery.class ,
-				"select t.id, t.code, t.name, t.nbColumn, t.nbLine, t.nbUsableContainer, t.fk_container_category from container_support_category as t",true);
+				"select DISTINCT t.id, t.code, t.name, t.nbColumn, t.nbLine, t.nbUsableContainer, t.fk_container_category from container_support_category as t",true);
 	}
 	
 	

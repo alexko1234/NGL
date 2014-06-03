@@ -93,9 +93,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	
 	$scope.getTemplate = function(){
+		console.log("get template== "+$scope.experiment.outputVoid);
 		if($scope.experiment.value.instrument.outContainerSupportCategoryCode){
 			$scope.experiment.inputTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getTemplate($scope.experimentType.atomicTransfertMethod, $scope.experiment.value.instrument.inContainerSupportCategoryCode,$scope.experiment.value.instrument.outContainerSupportCategoryCode).url;
-		}else if($scope.experiment.value.instrument.typeCode && ($scope.lists.get('containerSupportCategories') == undefined || $scope.lists.get('containerSupportCategories').length == 0)){
+		}else if($scope.experiment.outputVoid){
 			$scope.experiment.inputTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getTemplate($scope.experimentType.atomicTransfertMethod, $scope.experiment.value.instrument.inContainerSupportCategoryCode,'void').url;
 		}
 	};
@@ -442,7 +443,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			$scope.experiment.instrumentProperties.inputs = [];
 			$scope.experiment.instrumentInformation.instrumentCategorys.inputs = [];
 		}
-		console.log("get Instrument");
+		
 		$scope.$broadcast('deleteInstrumentPropertiesInputs', "Instruments");
 		$scope.$broadcast('deleteInstrumentPropertiesOutputs', "Instruments");
 		
@@ -633,6 +634,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			.success(function(data, status, headers, config) {
 				$scope.experimentType.category = data.category;
 				$scope.experimentType.atomicTransfertMethod = data.atomicTransfertMethod;
+				if($scope.experimentType.atomicTransfertMethod == "OneToVoid"){
+					$scope.experiment.outputVoid = true;
+					$scope.getTemplate();
+				}
 				experiment.typeCode =  data.code;
 			})
 			.error(function(data, status, headers, config) {

@@ -75,6 +75,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.changeExperimentType = function(){
+		$scope.form.containerSupportCategory = undefined;
 		$scope.lists.clear("containerSupportCategories");
 		if($scope.form.experimentType){
 			$scope.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.form.experimentType.code});
