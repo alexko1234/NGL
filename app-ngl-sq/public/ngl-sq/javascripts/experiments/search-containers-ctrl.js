@@ -75,6 +75,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.changeExperimentType = function(){
+		$scope.removeTab(1);
+		$scope.basket.reset();
 		$scope.form.containerSupportCategory = undefined;
 		$scope.lists.clear("containerSupportCategories");
 		if($scope.form.experimentType){
@@ -169,6 +171,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			}else{
 				$scope.errors.containerSupportCategory = "alert-danger";
 			}
+			$scope.datatable.setData({},0);
+			$scope.basket.reset();
 		}						
 	};
 	
