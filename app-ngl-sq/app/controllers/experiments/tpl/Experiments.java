@@ -53,19 +53,19 @@ public class Experiments extends CommonController{
 	}
 	
 	
-	public static Result getInputTemplate(String atomicType, String inputCategory){
+	public static Result getTemplate(String atomicType, String inputCategory, String outputCategory){
 		if(atomicType.equals("OneToOne")){
-			if(inputCategory.equals("tube")){
+			if(outputCategory.equals("tube")){
 				return ok(views.html.experiments.oneToOne.inputs.tube.render());
 			}
 		}else if(atomicType.equals("ManyToOne")){
-			if(inputCategory.equals("mapcard")){
+			if(outputCategory.equals("mapcard")){
 				return ok(views.html.experiments.manyToOne.inputs.mapcard.render());
-			}else if(inputCategory.equals("flowcell-8")){
+			}else if(outputCategory.equals("flowcell-8")){
 				return ok(views.html.experiments.manyToOne.inputs.flowcell.render(8));
 			}
 		}else if(atomicType.equals("OneToVoid")){
-			if(inputCategory.equals("void")){
+			if(outputCategory.equals("void")){
 				return ok(views.html.experiments.oneToVoid.inputs.voidContainer.render());
 			}
 		}
@@ -77,19 +77,7 @@ public class Experiments extends CommonController{
 	
 		return ok(createExperiments.render());
 	}
-	
-	/*public static Result editExperiment(String experimentCode){
-		/*Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
-		ExperimentType experimentType = null;
-		try{
-			experimentType = ExperimentType.find.findByCode(experiment.typeCode);
-		}catch(models.utils.dao.DAOException e){
-			
-		}
-		
-		List<PropertyDefinition> props = experimentProperties(experiment.typeCode);
-		return ok(createExperiments.render());
-	}*/
+
 	
 	public static Result getEditExperimentColumns(){
 		
@@ -132,7 +120,7 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.api.routes.javascript.ExperimentTypes.get(),
   	    		controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.newExperiments(),
-  	    		controllers.experiments.tpl.routes.javascript.Experiments.getInputTemplate(),
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.getTemplate(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.home(),
   	    		controllers.experiments.api.routes.javascript.Experiments.list(),
   	    		controllers.experiments.api.routes.javascript.ExperimentTypeNodes.list(),

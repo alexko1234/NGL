@@ -189,7 +189,7 @@
 									auto-select
 									ng-model="experiment.value.instrument.outContainerSupportCategoryCode"
 									ng-readonly="!experiment.instrumentInformation.enabled"
-									ng-change="getInputTemplate()"
+									ng-change="getTemplate()"
 									ng-options="instrumentCategory.code as instrumentCategory.name for instrumentCategory in lists.get('containerSupportCategories')"
 									ng-disabled="!experiment.instrumentInformation.enabled"
 									ng-hide="!experiment.value.instrument.typeCode || experiment.outputVoid">

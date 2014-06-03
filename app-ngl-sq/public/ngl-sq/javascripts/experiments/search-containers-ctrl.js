@@ -75,6 +75,10 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.changeExperimentType = function(){
+		$scope.lists.clear("containerSupportCategories");
+		if($scope.form.experimentType){
+			$scope.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.form.experimentType.code});
+		}
 		this.search();
 	};
 	
@@ -120,7 +124,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.errors.experimentType = {};
 		
 		
-		if($scope.form.experimentType){ 		
+		if($scope.form.experimentType && $scope.form.containerSupportCategory){ 		
 			var jsonSearch = {};
 			
 			jsonSearch.stateCode = $scope.getContainerStateCode($scope.form.experimentCategory.code);	 
@@ -134,6 +138,11 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			if($scope.form.processType){
 				jsonSearch.processTypeCode = $scope.form.processType.code;
 			}		
+			
+
+			if($scope.form.containerSupportCategory){
+				jsonSearch.categoryCode = $scope.form.containerSupportCategory;
+			}
 			
 			if($scope.form.experimentType){
 				jsonSearch.experimentTypeCode = $scope.form.experimentType.code;

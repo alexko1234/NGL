@@ -92,15 +92,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	
 	};
 	
-	$scope.getInputTemplate = function(){
+	$scope.getTemplate = function(){
 		if($scope.experiment.value.instrument.outContainerSupportCategoryCode){
-			$scope.experiment.inputTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getInputTemplate($scope.experimentType.atomicTransfertMethod, $scope.experiment.value.instrument.outContainerSupportCategoryCode).url;
-		}else if($scope.experiment.value.instrument.typeCode && $scope.lists.get('containerSupportCategories').length == 0){
-			$scope.experiment.inputTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getInputTemplate($scope.experimentType.atomicTransfertMethod, 'void').url;
+			$scope.experiment.inputTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getTemplate($scope.experimentType.atomicTransfertMethod, $scope.experiment.value.instrument.inContainerSupportCategoryCode,$scope.experiment.value.instrument.outContainerSupportCategoryCode).url;
+		}else if($scope.experiment.value.instrument.typeCode && ($scope.lists.get('containerSupportCategories') == undefined || $scope.lists.get('containerSupportCategories').length == 0)){
+			$scope.experiment.inputTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getTemplate($scope.experimentType.atomicTransfertMethod, $scope.experiment.value.instrument.inContainerSupportCategoryCode,'void').url;
 		}
-	};
-	
-	$scope.getOutputTemplate = function(){
 	};
 	
 	$scope.experiment.experimentProperties = {
@@ -445,7 +442,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			$scope.experiment.instrumentProperties.inputs = [];
 			$scope.experiment.instrumentInformation.instrumentCategorys.inputs = [];
 		}
-
+		console.log("get Instrument");
 		$scope.$broadcast('deleteInstrumentPropertiesInputs', "Instruments");
 		$scope.$broadcast('deleteInstrumentPropertiesOutputs', "Instruments");
 		
@@ -660,13 +657,16 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
 				
 				if(!$routeParams.experimentCode){
+					$scope.form = $scope.getForm();
+					experiment.instrument.inContainerSupportCategoryCode = $scope.form.containerSupportCategory;
 					$scope.experiment.editMode=false;
 					$scope.experiment.value = experiment;
 				}else{
 					$scope.experiment.editMode=true;
 					$scope.experiment.value.instrument.outContainerSupportCategoryCode = experiment.instrument.outContainerSupportCategoryCode;
-					$scope.getInputTemplate();
 					$scope.experiment.value = experiment;
+					$scope.getInstruments();
+					$scope.getTemplate();
 					$scope.addExperimentPropertiesInputsColumns();
 				}
 			});
