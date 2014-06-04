@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$window', '$filter', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', 
-                                                  function($scope, $http, $q, $routeParams, $window, $filter, mainService, tabService, datatable, messages, lists, treatments) {
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$window', '$filter', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', 'valuationService', 
+                                                  function($scope, $http, $q, $routeParams, $window, $filter, mainService, tabService, datatable, messages, lists, treatments, valuationService) {
 	/* configuration datatables */	
 	var lanesDTConfig = {
 			name:'lanesDT',
@@ -108,7 +108,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			pagination:{active:false},
 			select:{active:false},
 			showTotalNumberRecords:false,
-			cancel : {active:false},						
+			cancel : {active:false},		
 			columns : [
 				{  	property:"laneNumber",
 					header: "readsets.laneNumber",
@@ -155,13 +155,15 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			    	header: "readsets.treatments.ngsrg_illumina.Q30",
 			    	type :"Number",
 			    	format:2,
-			    	order:false
+			    	order:false,
+			    	tdClass : "valuationService.valuationCriteriaClass({readsets:value.data}, run.valuation.criteriaCode, 'readsets.' + col.property)"
 				},
 				{  	property:"treatments.ngsrg.default.qualityScore.value",
 			    	header: "readsets.treatments.ngsrg_illumina.qualityScore",
 			    	type :"Number",
 			    	format:2,
-			    	order:false
+			    	order:false,
+			    	tdClass : "valuationService.valuationCriteriaClass({readsets:value.data}, run.valuation.criteriaCode, 'readsets.' + col.property)"
 				},			
 				{	property:"productionValuation.valid",
 					header: "readsets.productionValuation.valid",
@@ -191,13 +193,13 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		$scope.mainService.startEditMode();
 		$scope.lanesDT.setEdit();		
 	}
-	
+
 	
 	
 	/* readset section */
 	
 	$scope.form = {
-	}	
+	};	
 	
 	$scope.search = function(){
 		//get lane numbers selected
@@ -207,10 +209,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code,laneNumbers:laneNum}}).success(function(data) {
 			$scope.readSetsDT.setData(data, data.length);
 		});
-	}
+	};
 	
-	
-	
+
 	$scope.showReadSets = function(){
 		var laneNumbers={value:''};
 		angular.forEach($scope.form.laneNumbers, function(value, key){
@@ -255,16 +256,27 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	var isValuationMode = function(){
 		return ($scope.mainService.isHomePage('valuation') || $routeParams.page === 'valuation');
 	}
+	
+	$scope.highLight = function(prop){
+			if (lists.getValuationCriterias()) {
+				return "bg-" + $scope.valuationService.valuationCriteriaClass($scope.run, $scope.run.valuation.criteriaCode, prop);
+			}
+			else {
+				return "";
+			}
+	};
+	
 	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
 		$scope.treatments = treatments;
 		$scope.mainService = mainService;
 		$scope.mainService.stopEditMode();
+		$scope.valuationService = valuationService();
 		
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
-			$scope.run = data;	
 			
+			$scope.run = data;
 			
 			if(tabService.getTabs().length == 0){
 				if(isValuationMode()){ //valuation mode
@@ -294,7 +306,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			
 			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg", "sampleOnContainer"]}}).success(function(data) {
 				$scope.readSetsDT = datatable($scope, readSetsDTConfig);
-				$scope.readSetsDT.setData(data, data.length);				
+				$scope.readSetsDT.setData(data, data.length);	
 			});
 		});
 		
@@ -319,7 +331,7 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 			cancel : {active:false},
 			lines : {
 				trClass : function(value){
-					if(value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
+					if(value.number == $scope.run.treatments.ngsrg["default"].controlLane.value && $scope.run.valuation.criteriaCode == undefined){
 		    			return "info";
 		    		}		    		
 				}
@@ -331,7 +343,12 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 			    	},
 			    	header: Messages("runs.lane.code"),
 			    	type :"String",
-			    	order:false
+			    	order:false,
+			    	tdClass : function(value){
+			    		if(value.number == $scope.run.treatments.ngsrg["default"].controlLane.value) {
+			    			return "info";
+			    		}
+			    	}
 				},
 				{  	property:function(value){
 						if(angular.isDefined(value.treatments.ngsrg["default"].nbCycleRead2)){
@@ -347,12 +364,14 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 				{  	property:"treatments.ngsrg.default.nbCluster.value",
 			    	header: Messages("runs.lane.ngsrg_illumina.nbCluster"),
 			    	type :"Number",
-			    	order:false
+			    	order:false,
+			    	tdClass : "valuationService.valuationCriteriaClass({lanes:value.data}, run.valuation.criteriaCode, 'lanes.' + col.property)"
 				},
 				{  	property:"treatments.ngsrg.default.percentClusterIlluminaFilter.value",
 			    	header: Messages("runs.lane.ngsrg_illumina.percentClusterIlluminaFilter"),
 			    	type :"Number",
-			    	order:false
+			    	order:false,
+			    	tdClass : "valuationService.valuationCriteriaClass({lanes:value.data}, run.valuation.criteriaCode, 'lanes.' + col.property)"
 				},
 				{  	property:"treatments.ngsrg.default.nbClusterIlluminaFilter.value",
 			    	header: Messages("runs.lane.ngsrg_illumina.nbClusterIlluminaFilter"),
@@ -362,7 +381,8 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 				{  	property:"treatments.ngsrg.default.percentClusterInternalAndIlluminaFilter.value",
 			    	header: Messages("runs.lane.ngsrg_illumina.percentClusterInternalAndIlluminaFilter"),
 			    	type :"Number",
-			    	order:false
+			    	order:false,
+			    	tdClass : "valuationService.valuationCriteriaClass({lanes:value.data}, run.valuation.criteriaCode, 'lanes.' + col.property)"
 				},
 				{  	property:"treatments.ngsrg.default.nbClusterInternalAndIlluminaFilter.value",
 			    	header: Messages("runs.lane.ngsrg_illumina.nbClusterInternalAndIlluminaFilter"),
@@ -377,7 +397,8 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 				{  	property:"treatments.ngsrg.default.seqLossPercent.value",
 			    	header: Messages("runs.lane.ngsrg_illumina.seqLossPercent"),
 			    	type :"Number",
-			    	order:false
+			    	order:false,
+			    	tdClass : "valuationService.valuationCriteriaClass({lanes:value.data}, run.valuation.criteriaCode, 'lanes.' + col.property)"
 				}
 				/*,
 				{  	property:"treatments.ngsrg.default.phasing.value",

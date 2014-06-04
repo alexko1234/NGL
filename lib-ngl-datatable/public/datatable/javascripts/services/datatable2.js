@@ -1523,7 +1523,7 @@ angular.module('datatableServices', []).
 	    			};
 	    			scope.getTdClass = function(data, col){
 	    				if(angular.isFunction(col.tdClass)){
-	    					return col.tdClass(data, col.property, $parse);
+	    					return col.tdClass(data);
 	    				} else if(angular.isString(col.tdClass)){
 	    					//we try to evaluation the string against the scope
 	    					return this.$eval(col.tdClass) || col.tdClass;

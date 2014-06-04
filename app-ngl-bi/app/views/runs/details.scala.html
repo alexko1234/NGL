@@ -91,17 +91,22 @@
 				<p class="form-control-static">{{run.treatments.ngsrg["default"].nbClusterTotal.value | number}}</p>
 			}
 			@views.html.helper.columnLabelValue(Messages("runs.percentClusterIlluminaFilter")){
-				<p class="form-control-static">{{run.treatments.ngsrg["default"].percentClusterIlluminaFilter.value | number}}</p>
+				<p class="form-control-static" ng-class="highLight('treatments.ngsrg.default.percentClusterIlluminaFilter.value')">
+					{{run.treatments.ngsrg["default"].percentClusterIlluminaFilter.value | number}}
+				</p>
 			}
 			@views.html.helper.columnLabelValue(Messages("runs.nbClusterIlluminaFilter")){
 				<p class="form-control-static">{{run.treatments.ngsrg["default"].nbClusterIlluminaFilter.value	| number}}}</p>
+				
 			@views.html.helper.columnLabelValue(Messages("runs.nbBase")){
-				<p class="form-control-static">{{run.treatments.ngsrg["default"].nbBase.value | number}}</p>
+				<p class="form-control-static" ng-class="highLight('treatments.ngsrg.default.nbBase.value')">
+					{{run.treatments.ngsrg["default"].nbBase.value | number}}
+				</p>
 			}
 			@views.html.helper.columnLabelValue(Messages("runs.keep")){
 				<div class="checkbox" ng-if="mainService.isEditMode()">
  					<label>
-					<input type="checkbox"  ng-model="run.keep" ng-if="mainService.isEditMode()">	
+						<input type="checkbox"  ng-model="run.keep" ng-if="mainService.isEditMode()">	
 					</label>
 				</div>								
 				<p class="form-control-static" ng-switch on="run.keep" ng-if="!mainService.isEditMode()">

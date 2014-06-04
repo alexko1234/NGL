@@ -117,17 +117,16 @@ angular.module('biCommonsServices', []).
     		};
     	}]).factory('valuationService',['$parse', 'lists', function($parse, lists){
     		var criterias = undefined;
-    		var valuationCriteriaClass = function(value, propertyName){
-    			
+    		var valuationCriteriaClass = function(value, criteriaCode, propertyName){
     			if(!criterias && lists.getValuationCriterias().length > 0){
     				var values = lists.getValuationCriterias();
     				criterias = {};
     				for(var i = 0 ; i < values.length; i++){
     					criterias[values[i].code] = values[i]; 
     				}
-    			}else if(value.productionValuation.criteriaCode && criterias[value.productionValuation.criteriaCode]){
+    			}else if (criteriaCode && criterias[criteriaCode]) {
     				
-    				var criteria = criterias[value.productionValuation.criteriaCode];
+    				var criteria = criterias[criteriaCode];
     				var property;
     				for(var i = 0; i < criteria.properties.length; i++){
     					if(criteria.properties[i].name === propertyName){
@@ -142,7 +141,7 @@ angular.module('biCommonsServices', []).
     							return expression.result;
     						}
     					}
-    				}					
+    				}
     			}
     			return undefined;			
     		};
