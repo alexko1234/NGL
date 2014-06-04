@@ -65,7 +65,7 @@
 						<div ng-switch on="mainService.isEditMode()">
 							<p class="form-control-static" ng-switch-when="false" ng-model="run.valuation.criteriaCode" codes="valuation_criteria"/>
 							<div ng-switch-when="true">
-								<div bt-select class="form-control" ng-model="run.valuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></div>
+								<div bt-select class="form-control" ng-model="run.valuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias() |orderBy:'name'"></div>
 							</div>
 						</div>
 				}
