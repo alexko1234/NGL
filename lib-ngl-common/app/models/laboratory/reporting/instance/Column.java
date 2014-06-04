@@ -22,8 +22,8 @@ public class Column implements IValidation{
 	public String tdClass;
 	public String groupBy;
 	
-	public Boolean tableMode = Boolean.TRUE;
-	public Boolean chartMode  = Boolean.FALSE;
+	public String[] modes; //chart or table or the two
+	public Integer position;
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
