@@ -4,6 +4,7 @@ import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import validation.run.instance.ReadSetValidationHelper;
 import validation.run.instance.RunValidationHelper;
 import views.components.datatable.DatatableBatchRequestElement;
 import views.components.datatable.DatatableBatchResponseElement;
+import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 import controllers.CommonController;
@@ -60,13 +62,14 @@ public class ReadSets extends ReadSetsController{
 	final static Form<ReadSetBatchElement> batchElementForm = form(ReadSetBatchElement.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("code");
+	final static  List<String> defaultKeys =  Arrays.asList("code", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties");
 	//@Permission(value={"reading"})
 	public static Result list() {
 		Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);
 		ReadSetsSearchForm form = filledForm.get();
 		
-		Query q = getQuery(form);
-		BasicDBObject keys = getKeys(form);
+		Query q = getQuery(form);		
+		BasicDBObject keys = getKeys(updateForm(form));
 		
 		if(form.datatable){			
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
@@ -83,6 +86,14 @@ public class ReadSets extends ReadSetsController{
 		}
 	}
 	
+	private static DatatableForm updateForm(ReadSetsSearchForm form) {
+		if(form.includes.contains("default")){
+			form.includes.remove("default");
+			form.includes.addAll(defaultKeys);
+		}
+		return form;
+	}
+
 	private static Query getQuery(ReadSetsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
