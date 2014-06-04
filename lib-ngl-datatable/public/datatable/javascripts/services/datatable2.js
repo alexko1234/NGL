@@ -27,7 +27,8 @@ angular.module('datatableServices', []).
 													"possibleValues":null, //The list of possible choices
 													"format" : null, //number format or date format or datetime format
 													"extraHeaders":{"0":"Inputs"}, //the extraHeaders list
-													"tdClass : function with data and property as parameter than return css class or just the css class"
+													"tdClass : function with data and property as parameter than return css class or just the css class",
+													"position": position of the column
 													"
 												  }*/
 							columnsUrl:undefined, //Load columns config
@@ -1034,6 +1035,7 @@ angular.module('datatableServices', []).
 			    				}
 		    					
 		    					var settings = $.extend(true, [], this.configColumnDefault, columns);
+		    					settings = $filter('orderBy')(settings, 'position');
 			    	    		this.config.columns = angular.copy(settings);
 			    	    		this.configMaster.columns = angular.copy(settings);
 			    	    		this.newExtraHeaderConfig();
