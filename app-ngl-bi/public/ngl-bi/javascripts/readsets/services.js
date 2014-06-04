@@ -1,174 +1,224 @@
  "use strict";
  
  angular.module('ngl-bi.ReadSetsServices', []).
-	factory('readSetsSearchService', ['$http', 'mainService', 'lists', function($http, mainService, lists){
+	factory('readSetsSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
+		
+		var getColumns = function(){
+			var columns = [];
+			columns.push({	property:"code",
+				    	  	header: "readsets.code",
+				    	  	type :"text",		    	  	
+				    	  	order:true,
+				    	  	position:1});
+			columns.push({	property:"runCode",
+							header: "readsets.runCode",
+							type :"text",
+							order:true,
+				    	  	position:2});
+			columns.push({	property:"laneNumber",
+							header: "readsets.laneNumber",
+							type :"text",
+							order:true,
+				    	  	position:3});
+			columns.push({	property:"projectCode",
+							header: "readsets.projectCode",
+							type :"text",
+							order:true,
+				    	  	position:4});
+			columns.push({	property:"sampleCode",
+							header: "readsets.sampleCode",
+							type :"text",
+							order:true,
+				    	  	position:5});
+			columns.push({	property:"runSequencingStartDate",
+							header: "runs.sequencingStartDate",
+							type :"date",
+							order:true,
+				    	  	position:6});
+			if(mainService.getHomePage() == 'search'){
+					columns.push({	property:"state.code",
+									filter:"codes:'state'",
+									header: "readsets.stateCode",
+									type :"text",
+									order:true,
+						    	  	position:7});
+					
+					columns.push({	property:"productionValuation.valid",
+									filter:"codes:'valuation'",
+									header: "readsets.productionValuation.valid",
+									type :"text",
+							    	order:true,
+						    	  	position:70});
+					
+					columns.push({	property:"productionValuation.resolutionCodes",
+									header: "readsets.productionValuation.resolutions",
+									render:'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									type :"text",
+									hide:true,
+						    	  	position:72});
+					
+					columns.push({	property:"bioinformaticValuation.valid",
+									filter:"codes:'valuation'",
+									header: "readsets.bioinformaticValuation.valid",
+									type :"text",
+							    	order:true,
+						    	  	position:80});
+					
+					columns.push({	property:"bioinformaticValuation.resolutionCodes",
+									header: "readsets.bioinformaticValuation.resolutions",
+									render:'<div bt-select ng-model="value.data.bioinformaticValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									type :"text",
+									hide:true,
+						    	  	position:82});
+			}else if(mainService.getHomePage() == 'valuation'){
+					columns.push({	property:"state.code",
+									filter:"codes:'state'",
+									header: "readsets.stateCode",
+									type :"text",
+									order:true,
+						    	  	position:7});
+					
+					columns.push({	property:"productionValuation.valid",
+									filter:"codes:'valuation'",
+									header: "readsets.productionValuation.valid",
+									type :"text",
+							    	order:true,
+							    	edit:true,
+							    	choiceInList:true,
+							    	listStyle:'bt-select',
+							    	possibleValues:'searchService.lists.getValuations()',
+						    	  	position:70
+							    	});
+					
+					columns.push({	property:"productionValuation.criteriaCode",
+									filter:"codes:'valuation_criteria'",
+									header: "readsets.productionValuation.criteria",
+									type :"text",
+							    	edit:true,
+							    	choiceInList:true,
+							    	listStyle:'bt-select',
+							    	possibleValues:'searchService.lists.getValuationCriterias()',
+						    	  	position:71
+				    });
+					
+					columns.push({	property:"productionValuation.resolutionCodes",
+									header: "readsets.productionValuation.resolutions",
+									render:'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									type :"text",
+							    	edit:true,
+							    	choiceInList:true,
+							    	listStyle:'bt-select-multiple',
+							    	possibleValues:'searchService.lists.getResolutions()',
+							    	groupBy:'category.name',
+						    	  	position:72
+							    		
+					});
+					
+					columns.push({	property:"bioinformaticValuation.valid",
+									filter:"codes:'valuation'",
+									header: "readsets.bioinformaticValuation.valid",
+									type :"text",
+									order:true,
+							    	edit:true,
+							    	choiceInList:true,
+							    	listStyle:'bt-select',
+							    	possibleValues:'searchService.lists.getValuations()',
+						    	  	position:80
+							    	});	
+					
+			}else if(mainService.getHomePage() == 'state'){
+					columns.push({	property:"state.code",
+									filter:"codes:'state'",
+									header: "readsets.stateCode",
+									type :"text",
+									edit:true,
+									order:true,
+							    	choiceInList:true,
+							    	listStyle:'bt-select',
+							    	possibleValues:'searchService.lists.getStates()',
+						    	  	position:7});
+					
+					columns.push({	property:"productionValuation.valid",
+									filter:"codes:'valuation'",
+									header: "readsets.productionValuation.valid",
+									type :"text",
+							    	order:true,
+						    	  	position:70    	
+					});
+					
+					columns.push({	property:"bioinformaticValuation.valid",
+									filter:"codes:'valuation'",
+									header: "readsets.bioinformaticValuation.valid",
+									type :"text",
+									order:true,
+						    	  	position:80
+					});
+					
+			}else if(mainService.getHomePage() == 'batch'){
+					columns.push({	property:"productionValuation.valid",
+									filter:"codes:'valuation'",
+									header: "readsets.productionValuation.valid",
+									type :"text",
+							    	order:true,
+						    	  	position:70    	
+							    	});
+					columns.push({	property:"bioinformaticValuation.valid",
+									filter:"codes:'valuation'",
+									header: "readsets.bioinformaticValuation.valid",
+									type :"text",
+									order:true,
+						    	  	position:80
+				    });
+					
+					columns.push({	property:"properties.isSentCCRT.value",
+									header: "readsets.properties.isSentCCRT",
+									type :"boolean",
+									edit:true,
+						    	  	position:90
+				    });
+					columns.push({	property:"properties.isSentCollaborator.value",
+									header: "readsets.properties.isSentCollaborator",
+									type :"boolean",
+									edit:true,
+						    	  	position:91
+					});
+			}
+			
+			return columns;
+		};
+		
+		var isInit = false;
+		
+		var initListService = function(){
+			if(!isInit){
+				lists.refresh.projects();
+				lists.refresh.states({objectTypeCode:"ReadSet", display:true},'statetrue');
+				lists.refresh.states({objectTypeCode:"ReadSet"});			
+				lists.refresh.resolutions({objectTypeCode:"ReadSet"});
+				lists.refresh.valuationCriterias({objectTypeCode:"ReadSet"});
+				lists.refresh.types({objectTypeCode:"Run"});
+				lists.refresh.runs();
+				lists.refresh.instruments({categoryCode:"seq-illumina"});
+				//TODO Warn if pass to one application page
+				lists.refresh.reportConfigs({pageCodes:["readsets"+"-"+mainService.getHomePage()]});
+				lists.refresh.reportConfigs({pageCodes:["readsets-addcolumns"]}, "readsets-addcolumns");
+				
+				lists.refresh.resolutions({objectTypeCode:"ReadSet"});
+				lists.refresh.users();
+				isInit=true;
+			}
+		};
 		
 		var searchService = {
-				getColumns:function(){
-					var columns = [];
-					columns.push({	property:"code",
-						    	  	header: "readsets.code",
-						    	  	type :"text",		    	  	
-						    	  	order:true});
-					columns.push({	property:"runCode",
-									header: "readsets.runCode",
-									type :"text",
-									order:true});
-					columns.push({	property:"laneNumber",
-									header: "readsets.laneNumber",
-									type :"text",
-									order:true});
-					columns.push({	property:"projectCode",
-									header: "readsets.projectCode",
-									type :"text",
-									order:true});
-					columns.push({	property:"sampleCode",
-									header: "readsets.sampleCode",
-									type :"text",
-									order:true});
-					columns.push({	property:"runSequencingStartDate",
-									header: "runs.sequencingStartDate",
-									type :"date",
-									order:true});
-					if(mainService.getHomePage() == 'search'){
-							columns.push({	property:"state.code",
-											filter:"codes:'state'",
-											header: "readsets.stateCode",
-											type :"text",
-											order:true});
-							
-							columns.push({	property:"productionValuation.valid",
-											filter:"codes:'valuation'",
-											header: "readsets.productionValuation.valid",
-											type :"text",
-									    	order:true});
-							
-							columns.push({	property:"productionValuation.resolutionCodes",
-											header: "readsets.productionValuation.resolutions",
-											render:'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
-											type :"text",
-											hide:true});
-							
-							columns.push({	property:"bioinformaticValuation.valid",
-											filter:"codes:'valuation'",
-											header: "readsets.bioinformaticValuation.valid",
-											type :"text",
-									    	order:true});
-							
-							columns.push({	property:"bioinformaticValuation.resolutionCodes",
-											header: "readsets.bioinformaticValuation.resolutions",
-											render:'<div bt-select ng-model="value.data.bioinformaticValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
-											type :"text",
-											hide:true});
-					}else if(mainService.getHomePage() == 'valuation'){
-							columns.push({	property:"state.code",
-											filter:"codes:'state'",
-											header: "readsets.stateCode",
-											type :"text",
-											order:true});
-							
-							columns.push({	property:"productionValuation.valid",
-											filter:"codes:'valuation'",
-											header: "readsets.productionValuation.valid",
-											type :"text",
-									    	order:true,
-									    	edit:true,
-									    	choiceInList:true,
-									    	listStyle:'bt-select',
-									    	possibleValues:'searchService.lists.getValuations()'
-									    	});
-							
-							columns.push({	property:"productionValuation.criteriaCode",
-											filter:"codes:'valuation_criteria'",
-											header: "readsets.productionValuation.criteria",
-											type :"text",
-									    	edit:true,
-									    	choiceInList:true,
-									    	listStyle:'bt-select',
-									    	possibleValues:'searchService.lists.getValuationCriterias()'
-						    });
-							
-							columns.push({	property:"productionValuation.resolutionCodes",
-											header: "readsets.productionValuation.resolutions",
-											render:'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
-											type :"text",
-									    	edit:true,
-									    	choiceInList:true,
-									    	listStyle:'bt-select-multiple',
-									    	possibleValues:'searchService.lists.getResolutions()',
-									    	groupBy:'category.name'
-									    		
-							});
-							
-							columns.push({	property:"bioinformaticValuation.valid",
-											filter:"codes:'valuation'",
-											header: "readsets.bioinformaticValuation.valid",
-											type :"text",
-											order:true,
-									    	edit:true,
-									    	choiceInList:true,
-									    	listStyle:'bt-select',
-									    	possibleValues:'searchService.lists.getValuations()'
-									    	});	
-							
-					}else if(mainService.getHomePage() == 'state'){
-							columns.push({	property:"state.code",
-											filter:"codes:'state'",
-											header: "readsets.stateCode",
-											type :"text",
-											edit:true,
-											order:true,
-									    	choiceInList:true,
-									    	listStyle:'bt-select',
-									    	possibleValues:'searchService.lists.getStates()'});
-							
-							columns.push({	property:"productionValuation.valid",
-											filter:"codes:'valuation'",
-											header: "readsets.productionValuation.valid",
-											type :"text",
-									    	order:true    	
-							});
-							
-							columns.push({	property:"bioinformaticValuation.valid",
-											filter:"codes:'valuation'",
-											header: "readsets.bioinformaticValuation.valid",
-											type :"text",
-											order:true
-							});
-							
-					}else if(mainService.getHomePage() == 'batch'){
-							columns.push({	property:"productionValuation.valid",
-											filter:"codes:'valuation'",
-											header: "readsets.productionValuation.valid",
-											type :"text",
-									    	order:true    	
-									    	});
-							columns.push({	property:"bioinformaticValuation.valid",
-											filter:"codes:'valuation'",
-											header: "readsets.bioinformaticValuation.valid",
-											type :"text",
-											order:true
-						    });
-							
-							columns.push({	property:"properties.isSentCCRT.value",
-											header: "readsets.properties.isSentCCRT",
-											type :"boolean",
-											edit:true
-						    });
-							columns.push({	property:"properties.isSentCollaborator.value",
-											header: "readsets.properties.isSentCollaborator",
-											type :"boolean",
-											edit:true
-							});
-					}
-					
-					return columns;
-				},
+				getColumns:getColumns,
+				datatable:undefined,
 				isRouteParam:false,
 				lists : lists,
 				form : undefined,
 				reportingConfigurationCode:undefined,
 				reportingConfiguration:undefined,
+				additionalsColumns:[],
+				selectedAddColumns:[],
 				setRouteParams:function($routeParams){
 					var count = 0;
 					for(var p in $routeParams){
@@ -196,10 +246,14 @@
 						}else if(queryParams && queryParams.excludeKeys && queryParams.excludeKeys.length > 0){
 							this.form.excludes = queryParams.excludeKeys;
 						}else{
-							this.form.excludes = ["files", "treatments"];
+							this.form.includes = ["default"];
 						}
 					}else{
-						this.form.excludes = ["files", "treatments"];
+						this.form.includes = ["default"];
+					}
+					
+					for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
+						this.form.includes.push(this.selectedAddColumns[i].property);
 					}
 				},
 				
@@ -210,35 +264,21 @@
 					return _form
 				},
 				
-				refreshSamples : function(){
-					if(this.form.projectCode){
-						this.lists.refresh.samples({projectCode:this.form.projectCode});
-					}
+				resetForm : function(){
+					this.form = {};
 				},
 				
-				search : function(datatable){
+				
+				search : function(){
 					this.updateForm();
 					mainService.setForm(this.form);
-					datatable.search(this.convertForm());
+					this.datatable.search(this.convertForm());
 				},
 				
-				updateColumn : function(datatable){
-					if(this.reportingConfigurationCode){
-						$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get(this.reportingConfigurationCode).url,{searchService:this, datatable:datatable})
-								.success(function(data, status, headers, config) {
-									config.searchService.reportingConfiguration = data;
-									config.searchService.search(datatable);
-									config.datatable.setColumnsConfig(data.columns);						
-						});
-					}else{
-						this.reportingConfiguration = undefined;
-						datatable.setColumnsConfig(this.getColumns());
-						this.search(datatable);
+				refreshSamples : function(){
+					if(this.form.projectCodes){
+						this.lists.refresh.samples({projectCodes:this.form.projectCodes});
 					}
-					
-				},
-				reset : function(){
-					this.form = {};
 				},
 				
 				states : function(){
@@ -247,31 +287,97 @@
 					}else{
 						return this.lists.get('statetrue');
 					}
+				},
+				/**
+				 * Update column when change reportingConfiguration
+				 */
+				updateColumn : function(){
+					this.resetDatatableColumns();
+					if(this.reportingConfigurationCode){
+						$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get(this.reportingConfigurationCode).url,{searchService:this, datatable:this.datatable})
+								.success(function(data, status, headers, config) {
+									config.searchService.reportingConfiguration = data;
+									config.datatable.setColumnsConfig(data.columns);
+									config.searchService.search();
+															
+						});
+					}else{
+						this.reportingConfiguration = undefined;
+						this.datatable.setColumnsConfig(this.getColumns());
+						this.search();
+					}
+					
+				},
+				
+				initAdditionalColumns:function(){
+					if(lists.get("readsets-addcolumns") && lists.get("readsets-addcolumns").length === 1){
+						var formColumns = [];
+						var allColumns = angular.copy(lists.get("readsets-addcolumns")[0].columns);
+						var nbElementByColumn = Math.ceil(allColumns.length / 5); //5 columns
+						for(var i = 0; i  < 5 && allColumns.length > 0 ; i++){
+							formColumns.push(allColumns.splice(0, nbElementByColumn));	    								
+						}
+						this.additionalsColumns = formColumns;
+					}
+				},
+				
+				getAddColumnsToForm : function(){
+					if(this.additionalsColumns.length === 0){
+						this.initAdditionalColumns();
+					}else{
+						return this.additionalsColumns;
+					}					
+				},				
+				addColumnsToDatatable:function(){
+					this.reportingConfiguration, this.reportingConfigurationCode = undefined;
+					this.selectedAddColumns = [];
+					for(var i = 0 ; i < this.additionalsColumns.length ; i++){
+						for(var j = 0; j < this.additionalsColumns[i].length; j++){
+							if(this.additionalsColumns[i][j].select){
+								this.selectedAddColumns.push(this.additionalsColumns[i][j]);
+							}
+						}
+					}
+					this.datatable.setColumnsConfig(this.getColumns().concat(this.selectedAddColumns));
+					this.search();
+					
+				},	
+				resetDatatableColumns:function(){
+					this.additionalsColumns=[];
+					this.selectedAddColumns=[];
+					this.initAdditionalColumns();
+					this.datatable.setColumnsConfig(this.getColumns());
+					this.search();
+				},
+				/**
+				 * initialise the service
+				 */
+				init : function($routeParams, datatableConfig){
+					initListService();
+					
+					//to avoid to lost the previous search
+					if(datatableConfig && angular.isUndefined(mainService.getDatatable())){
+						searchService.datatable = datatable(null, datatableConfig);
+						mainService.setDatatable(searchService.datatable);
+						searchService.datatable.setColumnsConfig(getColumns());		
+					}else if(angular.isDefined(mainService.getDatatable())){
+						searchService.datatable = mainService.getDatatable();			
+					}	
+					
+					
+					if(angular.isDefined(mainService.getForm())){
+						searchService.form = mainService.getForm();
+					}else{
+						searchService.resetForm();
+					}
+					
+					if(angular.isDefined($routeParams)){
+						this.setRouteParams($routeParams);
+					}
 				}
 		};
 		
-		return function(){
-			
-			searchService.lists.refresh.projects();
-			searchService.lists.refresh.states({objectTypeCode:"ReadSet", display:true},'statetrue');
-			searchService.lists.refresh.states({objectTypeCode:"ReadSet"});			
-			searchService.lists.refresh.resolutions({objectTypeCode:"ReadSet"});
-			searchService.lists.refresh.valuationCriterias({objectTypeCode:"ReadSet"});
-			searchService.lists.refresh.types({objectTypeCode:"Run"});
-			searchService.lists.refresh.runs();
-			searchService.lists.refresh.instruments({categoryCode:"seq-illumina"});
-			searchService.lists.refresh.reportConfigs({pageCodes:["readsets"+"-"+mainService.getHomePage()]});
-			searchService.lists.refresh.resolutions({objectTypeCode:"ReadSet"});
-			searchService.lists.refresh.users();
-			
-			if(angular.isDefined(mainService.getForm())){
-				searchService.form = mainService.getForm();
-			}else{
-				searchService.reset();
-			}
-			
-			return searchService;		
-		}
+		return searchService;				
 	}
 ]);
  

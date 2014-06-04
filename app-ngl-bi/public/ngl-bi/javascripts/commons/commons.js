@@ -3,6 +3,7 @@
 angular.module('biCommonsServices', []).
     	factory('treatments',['$q','$http','$filter', function($q,$http,$filter){
     		var _treatments = [];
+    		var _allTreatments = {};
     		var _treatment = {};    		
     		var codeLastActive = undefined;
     		/**
@@ -36,27 +37,47 @@ angular.module('biCommonsServices', []).
 				if(!find)activeTreatment(_treatments[0]);
     		};
     		
+    		function prepareCurrentTreatments(){
+    			for(var key in _allTreatments){
+    				if(_allTreatments[key].show){
+    					_treatments.push(_allTreatments[key]);
+    				}    				
+    			}
+    			_treatments = $filter("orderBy")(_treatments,"order");
+				activeLastTreatment();	
+    		};
+    		
     		function init(treatments, url, excludes){
-    			_treatments = [];
     			_treatment = {};
+    			_treatments = [];
     			var queries = [];
 				
+    			for(var key in _allTreatments){
+    				_allTreatments[key].show = false;
+    			}
+    			
     			for (var key in treatments) {
 					var treatment = treatments[key];	
-					if(angular.isUndefined(excludes) || angular.isUndefined(excludes[treatment.code])){
+					if(!_allTreatments[key] && (angular.isUndefined(excludes) || angular.isUndefined(excludes[treatment.code]))){
 						queries.push($http.get(jsRoutes.controllers.treatmenttypes.api.TreatmentTypes.get(treatment.typeCode).url, 
 								{key:key})	
 						);
-					}								
-    			}				
-    			$q.all(queries).then(function(results){
-					for(var i = 0; i  < results.length; i++){
-						var result = results[i];
-						_treatments.push({code:result.config.key, name:Messages("readsets.treatments."+result.config.key), url:url(result.data.code).url, order:displayOrder(result, key) });
+					}else if(_allTreatments[key]){
+						_allTreatments[key].show = true;						
 					}
-					_treatments = $filter("orderBy")(_treatments,"order");
-					activeLastTreatment();		
-				});
+    			}	
+    			if(queries.length > 0){
+    				$q.all(queries).then(function(results){
+    					for(var i = 0; i  < results.length; i++){
+    						var result = results[i];
+    						_allTreatments[result.config.key]={code:result.config.key, name:Messages("readsets.treatments."+result.config.key), url:url(result.data.code).url, order:displayOrder(result, key), show:true};
+    					}
+    					prepareCurrentTreatments();    					
+    				});
+    			}else{
+    				prepareCurrentTreatments();
+    			}
+    			
     		};
     		
     		function displayOrder(result, key) {
