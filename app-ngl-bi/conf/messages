@@ -443,6 +443,11 @@ stats.property = Propriété
 button.query.addbasket = Ajouter la requête dans le panier
 query.title = Titre
 query.form = Paramètres
+query.nbResults = Nb. Résultats
+
+stat.typelabel.zscore = z-score
+stat.typelabel.histogram = histogramme
+
 ############
 #
 # COMMON
