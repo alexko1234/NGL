@@ -443,6 +443,7 @@ public class TreatmentService {
 		
 	public static List<PropertyDefinition> getReadQualityPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//TODO: set names / alfresco
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScore","qualScore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistribution","nuclDistribution",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
@@ -457,6 +458,7 @@ public class TreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("suspectedPrimers","suspectedPrimers",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, false, "list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("maxSizeReads","maxSizeReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("maxSizeReadsPercent","maxSizeReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("maxSize","maxSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, false, "single"));
 		return propertyDefinitions;		
 	}
 	
