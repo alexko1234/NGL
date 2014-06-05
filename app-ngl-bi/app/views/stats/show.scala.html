@@ -1,5 +1,13 @@
 @()
 
-<chart value="chart1"></chart>
 
-<chart value="chart2"></chart>
+<div class="row">
+	<div class="col-md-12 col-lg-12" datatable="chartsReadSetsService.datatable()"></div>
+</div>
+
+
+<div class="row" ng-repeat="chart in chartsReadSetsService.charts()">
+	<div class="col-md-12 col-lg-12">
+		<chart value="chart"></chart>
+	</div>
+</div>
