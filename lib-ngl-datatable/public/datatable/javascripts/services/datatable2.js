@@ -2,7 +2,7 @@
 
 angular.module('datatableServices', []).
     	factory('datatable', ['$http','$filter','$parse','$compile', '$sce', '$window', '$q', function($http, $filter,$parse,$compile,$sce,$window, $q){ //service to manage datatable
-    		var constructor = function($scope, iConfig){
+    		var constructor = function(iConfig){
 				var datatable = {
 						configDefault:{
 							name:"datatable",
@@ -55,6 +55,7 @@ angular.module('datatableServices', []).
 								mode:'remote', //or local
 								by : undefined,
 								reverse : false,
+								callback:undefined, //used to have a callback after order all element. the datatable is pass to callback method and number of error
 								columns:{}//key is the column index
 							},
 							show : {
@@ -398,10 +399,14 @@ angular.module('datatableServices', []).
     							}
 		    					if(!this.isRemoteMode(this.config.order.mode)){
 		    						this.sortAllResult(); //sort all the result
-				    				this.computeDisplayResult(); //redefined the result must be displayed
+				    				this.computeDisplayResult(); //redefined the result must be displayed				    				
 			    				} else if(this.config.order.active){
 			    					this.searchWithLastParams();
-			    				}		    					
+			    				}	
+		    					
+		    					if(angular.isFunction(this.config.order.callback)){
+			    					this.config.order.callback(this);
+			    				}
 		    				} else{
 		    					//console.log("order is not active !!!");
 		    				}
@@ -1323,6 +1328,11 @@ angular.module('datatableServices', []).
 		    				return '<div class="form-group">'+editElement+'</div>';
 		    			}
     			};
+				
+				if(arguments.length == 2){
+					iConfig = arguments[1];
+					console.log("used bad constructor for datatable, only one argument is required the config");
+				}
 				
 				datatable.setConfig(iConfig);
     			
