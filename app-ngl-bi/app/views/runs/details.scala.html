@@ -121,7 +121,7 @@
 				<p class="form-control-static">{{run.treatments.ngsrg["default"].nbCycle.value}}</p>
 			}
 			@views.html.helper.columnLabelValue(Messages("runs.controlLane")){
-				<p class="form-control-static">{{run.treatments.ngsrg["default"].controlLane.value}}</p>
+				<p class="form-control-static" ng-class="highLightCtrlLane()">{{run.treatments.ngsrg["default"].controlLane.value}}</p>
 			}
 			@views.html.helper.columnLabelValue(Messages("runs.containerSupportCode")){
 				<p class="form-control-static">{{run.containerSupportCode}}</p>

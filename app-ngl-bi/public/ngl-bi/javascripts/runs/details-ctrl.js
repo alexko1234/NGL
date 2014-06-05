@@ -266,6 +266,13 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			}
 	};
 	
+	$scope.highLightCtrlLane = function(){
+		if ($scope.run && $scope.run.treatments && $scope.run.treatments.ngsrg["default"].controlLane.value) 
+			return "bg-info";
+		else 
+			return undefined;
+	}
+	
 	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
@@ -346,7 +353,7 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 			    	order:false,
 			    	tdClass : function(value){
 			    		if(value.number == $scope.run.treatments.ngsrg["default"].controlLane.value) {
-			    			return "info";
+			    			return "info"; 
 			    		}
 			    	}
 				},
