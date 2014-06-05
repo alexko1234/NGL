@@ -324,9 +324,8 @@
 				getAddColumnsToForm : function(){
 					if(this.additionalsColumns.length === 0){
 						this.initAdditionalColumns();
-					}else{
-						return this.additionalsColumns;
-					}					
+					}
+					return this.additionalsColumns;									
 				},				
 				addColumnsToDatatable:function(){
 					this.reportingConfiguration, this.reportingConfigurationCode = undefined;

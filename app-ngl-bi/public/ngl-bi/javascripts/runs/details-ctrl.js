@@ -258,11 +258,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	}
 	
 	$scope.highLight = function(prop){
-			if (lists.getValuationCriterias()) {
+			if (lists.getValuationCriterias() && $scope.run) {
 				return "bg-" + $scope.valuationService.valuationCriteriaClass($scope.run, $scope.run.valuation.criteriaCode, prop);
 			}
 			else {
-				return "";
+				return undefined;
 			}
 	};
 	
