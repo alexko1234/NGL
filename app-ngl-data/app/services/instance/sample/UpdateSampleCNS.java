@@ -46,10 +46,10 @@ public class UpdateSampleCNS extends AbstractImportDataCNS{
 
 		for(String sampleCode:results){
 			Sample sample=limsServices.findSampleToCreate(contextError, sampleCode);
-
+			ContextValidation contextValidation = new ContextValidation();
 			MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
-			Sample newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
-			if(!contextError.hasErrors()){
+			Sample newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextValidation,true);
+			if(!contextValidation.hasErrors()){
 				limsServices.updateMaterielLims(newSample, contextError);
 
 				SampleType sampleType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
@@ -66,6 +66,8 @@ public class UpdateSampleCNS extends AbstractImportDataCNS{
 
 				SampleHelper.updateSampleProperties(sampleCode, properties);
 
+			}else {
+				contextError.errors.putAll(contextValidation.errors);
 			}
 		}
 
