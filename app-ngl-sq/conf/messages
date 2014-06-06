@@ -26,6 +26,10 @@ containers.select.state =  Sélect. un état
 containers.select.categoryCode =  Sélect. un type de container
 containers.select.categorySupportCode =  Sélect. un type de support--
 
+#Supports table
+supports.table.code= Support
+
+
 #search
 search.placeholder.projects = Sélect. des projets
 search.placeholder.samples = Sélect. des échantillons
