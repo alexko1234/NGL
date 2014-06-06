@@ -28,12 +28,12 @@ public class OneToVoidContainer extends AtomicTransfertMethod {
 
 	@Override
 	public List<ContainerUsed> getOutputContainers() {
-		return null;
+		return new ArrayList<ContainerUsed>();
 	}
 
 	@Override
 	public ContextValidation saveOutputContainers(Experiment experiment) {
-		return null;
+		return new ContextValidation();
 	}
 
 }
