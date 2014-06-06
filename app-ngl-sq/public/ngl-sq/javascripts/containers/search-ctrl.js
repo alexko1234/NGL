@@ -12,20 +12,21 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 					"type":"text"
 			},
 			{
+				"header":Messages("containers.table.support.position"),
+				"property":"support.position",
+				"order":true,
+				"type":"text"
+			},
+			{
 				"header":Messages("containers.table.supportCategoryCode"),
 				"property":"support.categoryCode",
 				"order":true,
 				"type":"text"
 			},
+			
 			{
-				"header":Messages("containers.table.code"),
-				"property":"code",
-				"order":true,
-				"type":"text"
-			},
-			{
-				"header":Messages("containers.table.categoryCode"),
-				"property":"categoryCode",
+				"header":Messages("containers.table.projectCodes"),
+				"property":"projectCodes",
 				"order":true,
 				"type":"text"
 			},
@@ -34,25 +35,6 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 				"property":"sampleCodes",
 				"order":true,
 				"type":"text"
-			},
-			{
-				"header":Messages("containers.table.projectCodes"),
-				"property":"projectCodes",
-				"order":true,
-				"type":"text"
-			},
-			{
-				"header":Messages("containers.table.fromExperimentTypeCodes"),
-				"property":"fromExperimentTypeCodes",
-				"order":true,
-				"type":"text"
-			},
-			{
-				"header":Messages("containers.table.valid"),
-				"property":"valuation.valid",
-				"order":true,
-				"type":"text",
-				"filter":"codes:'valuation'",
 			},
 			{
 				"header":Messages("containers.table.state.code"),
@@ -65,11 +47,24 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 				"filter":"codes:'state'"
 			},
 			{
+				"header":Messages("containers.table.valid"),
+				"property":"valuation.valid",
+				"order":true,
+				"type":"text",
+				"filter":"codes:'valuation'",
+			},
+			{
 				"header":Messages("containers.table.creationDate"),
 				"property":"traceInformation.creationDate",
 				"order":true,
 				"type":"date"
 			},
+			{
+				"header":Messages("containers.table.fromExperimentTypeCodes"),
+				"property":"fromExperimentTypeCodes",
+				"order":true,
+				"type":"text"
+			}
 		],
 		search:{
 			url:jsRoutes.controllers.containers.api.Containers.list()
@@ -99,6 +94,21 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		
 		if($scope.form.type){
 			$scope.search();
+		}
+	};
+	
+	$scope.changeProcessType = function(){
+		if($scope.form.processCategory){
+			$scope.search();
+		}else{
+			$scope.form.processType = undefined;	
+		}
+	};
+	
+	$scope.changeProcessCategory = function(){
+		$scope.form.processType = undefined;
+		if($scope.form.processCategory){
+		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
 		}
 	};
 	
@@ -170,6 +180,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		$scope.lists.refresh.experimentTypes();
 		$scope.lists.refresh.supports();
 		$scope.lists.refresh.projects();
+		$scope.lists.refresh.processCategories();
 		$scope.lists.refresh.states({objectTypeCode:"Container"});
 	}
 }]);

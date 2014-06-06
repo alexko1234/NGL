@@ -5,27 +5,28 @@ containers.title = Containers
 containers.menu = Containers
 containers.menu.creation = Création
 containers.menu.search = Rechercher
-containers.tabs.search = Recherche container
+containers.tabs.search = Recherche Container
 
 #Containers table
-containers.table.code = Code Container
-containers.table.supportCategoryCode = Catégorie de support
+containers.table.code = Container
+containers.table.supportCategoryCode = Catégorie de support container
 containers.table.categoryCode = Catégorie de container
-containers.table.projectCodes = Codes Projets
-containers.table.sampleCodes = Codes Echantillons
-containers.table.fromExperimentTypeCodes = Type d'Expérience
-containers.table.state.code = Code état
-containers.table.support.name = Support
+containers.table.projectCodes = Projet(s)
+containers.table.sampleCodes = Echantillon(s)
+containers.table.fromExperimentTypeCodes = Issu du type d'Expérience
+containers.table.state.code = Etat
+containers.table.support.name = Support Container
 containers.table.stateCode = Code Etat
-containers.table.creationDate = Date de création
+containers.table.creationDate = Date de création container
 containers.table.createUser = Créé par
 containers.table.valid = Valide
-containers.table.supportCode = Code Support
+containers.table.supportCode = Support Container
+containers.table.support.position= Position
 
 containers.select.state =  Sélect. un état
-containers.select.categoryCode =  Sélect. un type de container
+containers.select.categoryCode =  Sélect. catégorie container
 containers.select.categorySupportCode =  Sélect. un type de support--
-
+containers.select.fromExperimentTypeCodes=Issu du type d'Expérience
 #Supports table
 supports.table.code= Support
 
@@ -48,8 +49,8 @@ processes.title = Processus
 processes.menu = Processus
 processes.menu.creation = Création
 processes.menu.search = Rechercher
-processes.tabs.search = Recherche processus
-processes.tabs.create = Création processus
+processes.tabs.search = Recherche Processus
+processes.tabs.create = Création Processus
 processes.create = Crée un processus
 processes.save = Sauvegarder
 
@@ -96,8 +97,8 @@ processes.placeholder.toDate = Process. jusqu''au (jj/mm/aaaa)
 #experiments
 experiments.title = Experiences
 experiments.menu = Experiences
-experiments.tabs.search = Recherche experience
-experiments.tabs.create = Création experience
+experiments.tabs.search = Recherche Expérience
+experiments.tabs.create = Création Expérience
 experiments.menu.creation = Création
 experiments.menu.search = Rechercher
 experiments.menu.purification = Créer une Purification
@@ -117,7 +118,6 @@ experiments.state = Etat
 experiments.intrument = Instrument
 experiments.status = Statut
 experiments.intrumentUsedType = Type d''instrument
-experiments.tabs.search = Recherche
 experiments.generateOutput = Generer tube sortie
 experiment.noComments = Pas de commentaire
 experiment.leaveComment = Laissez votre commentaire
