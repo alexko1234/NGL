@@ -5,6 +5,7 @@ import static services.description.DescriptionFactory.newInstrumentUsedType;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
 import static services.description.DescriptionFactory.newValues;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -195,7 +196,10 @@ public class InstrumentService {
 	
 	private static List<PropertyDefinition> getArgusProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Référence Carte", "mapcardRef", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));	
+        propertyDefinitions.add(newPropertiesDefinition("Type de MapCard", "mapcardType", LevelService.getLevels(Level.CODE.Instrument),String.class, true, newValues("standard","HD"), "single"));
+        propertyDefinitions.add(newPropertiesDefinition("Référence Carte", "mapcardRef", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Enzyme de restriction", "restrictionEnzyme", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("BamHI "," NheI "," SpeI "," ApaLI "," MIuI "," NdeI "," AfIII "," KpnI "," Ncol "," XbaI "," BgIII "," EcoRI "," HindIII "," NotI "," PvuII "," XhoI"), "single"));
+	//	propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Enzyme selection","selectionEnzyme",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
         return propertyDefinitions;
 	}
 
