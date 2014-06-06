@@ -280,10 +280,10 @@
 						this.lists.refresh.samples({projectCodes:this.form.projectCodes});
 					}
 				},
-				
+				valuationStates : [{code:"IW-VQC",name:Codes("state.IW-VQC")},{code:"IP-VQC",name:Codes("state.IP-VQC")},{code:"IW-VBA",name:Codes("state.IW-VBA")}],
 				states : function(){
 					if (mainService.isHomePage('valuation')) {
-						return [{code:"IW-VQC",name:Codes("state.IW-VQC")},{code:"IP-VQC",name:Codes("state.IP-VQC")},{code:"IW-VBA",name:Codes("state.IW-VBA")}];
+						return this.valuationStates;
 					}else{
 						return this.lists.get('statetrue');
 					}
