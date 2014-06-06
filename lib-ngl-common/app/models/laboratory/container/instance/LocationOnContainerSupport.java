@@ -4,14 +4,13 @@ package models.laboratory.container.instance;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.stock.instance.Stock;
 import models.utils.HelperObjects;
-import models.utils.InstanceConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.container.instance.ContainerSupportValidationHelper;
-import validation.utils.BusinessValidationHelper;
 
 
 
@@ -42,6 +41,11 @@ public class LocationOnContainerSupport implements IValidation {
 	// Container Position in support
 	public String column;
 	public String line;
+	
+	@JsonProperty("position")
+	public String getPosition() {
+	    return column+line;
+	}
 	
 	@JsonIgnore
 	public ContainerSupportCategory getContainerSupportCategory(){
