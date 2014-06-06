@@ -172,7 +172,7 @@
 	var init = function(){
 		$scope.$watch('readset', function() {
 			if(angular.isDefined($scope.readset)){
-				$scope.NGSRG = datatable($scope, NGSRGConfig);
+				$scope.NGSRG = datatable(NGSRGConfig);
 				var data = {};
 				data.ngsrg = $scope.readset.treatments.ngsrg['default'];
 				data.sampleOnContainer = $scope.readset.sampleOnContainer;

@@ -60,7 +60,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 	
 	
 	var init = function(){
-		$scope.datatable = datatable($scope, datatableConfig);
+		$scope.datatable = datatable(datatableConfig);
 		$scope.search(2);
 		
 		if(angular.isUndefined($scope.getHomePage())){

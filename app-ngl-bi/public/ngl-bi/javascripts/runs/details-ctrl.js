@@ -296,7 +296,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				tabService.activeTab(tabService.getTabs(1));
 			}
 			
-			$scope.lanesDT = datatable($scope, lanesDTConfig);
+			$scope.lanesDT = datatable(lanesDTConfig);
 			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
 			if(isValuationMode()){
 				$scope.mainService.startEditMode();	
@@ -312,7 +312,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			$scope.laneOptions = $filter('orderBy')($scope.run.lanes, 'number');
 			
 			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg", "sampleOnContainer"]}}).success(function(data) {
-				$scope.readSetsDT = datatable($scope, readSetsDTConfig);
+				$scope.readSetsDT = datatable(readSetsDTConfig);
 				$scope.readSetsDT.setData(data, data.length);	
 			});
 		});
@@ -353,7 +353,7 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 			    	order:false,
 			    	tdClass : function(value){
 			    		if(value.number == $scope.run.treatments.ngsrg["default"].controlLane.value) {
-			    			return "info"; 
+			    			return "info";
 			    		}
 			    	}
 				},
@@ -426,7 +426,7 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 	var init = function(){
 		$scope.$watch('run', function() {
 			if(angular.isDefined($scope.run)){
-				$scope.lanesNGSRG = datatable($scope, lanesNGSRGConfig);
+				$scope.lanesNGSRG = datatable(lanesNGSRGConfig);
 				$scope.lanesNGSRG.setData($scope.run.lanes, $scope.run.lanes.length);
 			}
 		}); 
@@ -770,10 +770,10 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 						$scope.alerts[data[i].code] = data[i]; 
 					}
 					
-					$scope.lanesSAVR1 = datatable($scope,  lanesSAVR1Config);
+					$scope.lanesSAVR1 = datatable(lanesSAVR1Config);
 					$scope.lanesSAVR1.setData($scope.run.lanes, $scope.run.lanes.length);
 					
-					$scope.lanesSAVR2 = datatable($scope,  lanesSAVR2Config);
+					$scope.lanesSAVR2 = datatable(lanesSAVR2Config);
 					$scope.lanesSAVR2.setData($scope.run.lanes, $scope.run.lanes.length);
 					
 				});

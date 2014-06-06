@@ -356,7 +356,7 @@
 					
 					//to avoid to lost the previous search
 					if(datatableConfig && angular.isUndefined(mainService.getDatatable())){
-						searchService.datatable = datatable(null, datatableConfig);
+						searchService.datatable = datatable(datatableConfig);
 						mainService.setDatatable(searchService.datatable);
 						searchService.datatable.setColumnsConfig(getColumns());		
 					}else if(angular.isDefined(mainService.getDatatable())){

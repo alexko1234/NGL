@@ -38,7 +38,7 @@ angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datat
 	
 	//to avoid to lost the previous search
 	if(angular.isUndefined(mainService.getDatatable())){
-		$scope.datatable = datatable($scope, datatableConfig);
+		$scope.datatable = datatable(datatableConfig);
 		mainService.setDatatable($scope.datatable);
 		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());		
 	}else{
@@ -99,7 +99,7 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 	
 	//to avoid to lost the previous search
 	if(angular.isUndefined(mainService.getDatatable())){
-		$scope.datatable = datatable($scope, datatableConfig);
+		$scope.datatable = datatable(datatableConfig);
 		mainService.setDatatable($scope.datatable);
 		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());			
 	}else{
@@ -159,7 +159,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 	
 	//to avoid to lost the previous search
 	if(angular.isUndefined(mainService.getDatatable())){
-		$scope.datatable = datatable($scope, datatableConfig);
+		$scope.datatable = datatable(datatableConfig);
 		mainService.setDatatable($scope.datatable);
 		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());								
 	}else{

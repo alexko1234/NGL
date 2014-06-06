@@ -50,13 +50,13 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 	
 	
 	$scope.init = function(){
-		$scope.runsIPS = datatable($scope, datatableConfig);			
+		$scope.runsIPS = datatable(datatableConfig);			
 		$scope.runsIPS.search({stateCodes:["IP-S"], excludes:["lanes","treatments"]});
-		$scope.runsIPRG = datatable($scope, datatableConfig);			
+		$scope.runsIPRG = datatable(datatableConfig);			
 		$scope.runsIPRG.search({stateCodes:["IP-RG"], excludes:["lanes","treatments"]});
-		$scope.runsIWV_IPV = datatable($scope, datatableConfig);			
+		$scope.runsIWV_IPV = datatable(datatableConfig);			
 		$scope.runsIWV_IPV.search({stateCodes:["IW-V","IP-V"], excludes:["lanes","treatments"]});	
-		$scope.runsKeep = datatable($scope, datatableConfig);			
+		$scope.runsKeep = datatable(datatableConfig);			
 		$scope.runsKeep.search({keep:true});	
 	}	
 }]);
