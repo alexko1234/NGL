@@ -5,7 +5,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	
 	$scope.datatableConfig = {
 		columns:[{
-			"header":Messages("containers.table.code"),
+			"header":Messages("supports.table.code"),
 			"property":"code",
 			"order":true,
 			"type":"text"
