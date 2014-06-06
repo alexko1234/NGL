@@ -21,6 +21,9 @@ input[type="checkbox"] {
 	margin: 2px 0 0;
 }
 
+.input-group-btn .btn.btn-default {
+	height:29px; /*compliance with form-control where height:29px*/
+}
 
 /*additionnal class*/
 .text-overflow{

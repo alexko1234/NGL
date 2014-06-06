@@ -313,7 +313,13 @@ angular.module('commonsServices', []).
 			    	  	+'</ul>'
   		    			+'</div>'
   		    			+'<div class="dropdown" ng-switch-when="true">'
-  				        +'<input type="text" ng-class="inputClass" data-toggle="dropdown" role="button" value="{{selectedItemLabel()}}" style="cursor:context-menu;"/>'
+  				        
+  		    			+'<div class="input-group">'
+  		    			+'<input type="text" ng-class="inputClass" data-toggle="dropdown" role="button"  ng-model="selectedLabels" readonly/>'
+  		    			+'<div class="input-group-btn">'
+  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">'
+  		    			+'<span class="caret"></span>'
+  		    			+'</button>'
   				        +'<ul class="dropdown-menu {{btDropdownClass}}"  role="menu">'
   				        +'<li ng-if="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)"/></li>'
   				        +'<li ng-repeat-start="item in getItems()" ng-if="groupBy(item, $index)" class="divider"></li>'
@@ -324,6 +330,9 @@ angular.module('commonsServices', []).
 		    	  		+'<span class="text" ng-bind="itemLabel(item)" style="margin-right:30px;"></span>'		    	  		
 		    	  		+'</a></li>'
 		    	  		+'</ul>'
+		    	  		
+		    	  		+'</div>'
+		    	  		+'</div>'
 		    	  		+'</div>'
 		    	  		+'</div>'
 		    	  		,
@@ -347,7 +356,6 @@ angular.module('commonsServices', []).
 
 	      		      var optionsConfig = parseBtsOptions(btOptions);
 	      		      var items = [];
-	      		      var selectedLabels = [];
 	      		      var groupByLabels = [];
 	      		      var filterValue;
 	      		      
@@ -361,6 +369,7 @@ angular.module('commonsServices', []).
 	
 		      		    return {
 		      		        itemName:match[4],
+		      		        sourceKey:match[5],
 		      		        source:$parse(match[5]),
 		      		        viewMapper:match[2] || match[1],
 		      		        modelMapper:match[1],
@@ -414,11 +423,7 @@ angular.module('commonsServices', []).
 	      		    	}
 	      		    	return false;	      		    	
 	      		    }; 
-	      		    
-      		      scope.selectedItemLabel = function(){
-      		    	  return selectedLabels.join();
-      		      };  
-      	        
+	      		  
       		      scope.itemGroupByLabel = function(item){
       		    	 return optionsConfig.groupByGetter(item);
       		      }
@@ -468,23 +473,21 @@ angular.module('commonsServices', []).
 	    			$event.stopPropagation();
       		      };
 	      		      
+      		      
+      		      scope.$watch(optionsConfig.sourceKey, function(newValue, oldValue){
+      		    	  if(newValue && newValue.length > 0){
+      		    		if(items.length == 0){
+      		    			items = angular.copy(newValue);  
+      		    			render();
+      		    		}
+      		    	  }
+      		      });
 	      		      
 	      		   ngModelCtrl.$render = render;
-	      		    
-	      		      // TODO(vojta): can't we optimize this ? astuce provenant du select de angular
-	      		    scope.$watch(render);
-	      		  
-	      		    
 	      		   
 	      		    function render() {
-	      		    	
-	      		    	selectedLabels = [];
-	      		    	
-	      		    	if(items.length == 0){ //load only once the possible values
-	      		    		var v = optionsConfig.source(scope) || []; //copy avoid conflict with other same values
-	      		    		items = angular.copy(v);
-	      		    	}
-	      		    	
+	      		    	var selectedLabels = [];
+	      		    		      		    	
 		      	    	var modelValues = ngModelCtrl.$modelValue || [];
 		      	    	if(!angular.isArray(modelValues)){
 		      	    		modelValues = [modelValues];
@@ -507,9 +510,12 @@ angular.module('commonsServices', []).
 		      	    	}
 		      	    	if(modelValues.length === 0){
 		      	    		selectedLabels.push(placeholder);
-		      	    	}      	    		
-	      	        };  
+		      	    	} 	
+		      	    	scope.selectedLabels = selectedLabels;
+	      	        };
+	      	        
 	      		  }
+	      		  
   		    };
     	}]).directive('chart', function() {
     	    return {
