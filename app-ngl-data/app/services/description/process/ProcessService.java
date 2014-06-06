@@ -31,11 +31,14 @@ public class ProcessService {
 
 	public static void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Optical mapping", "mapping"));		
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));
+			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
+			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
+			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));
+		}
+		
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Optical mapping", "mapping"));
 		DAOHelpers.saveModels(ProcessCategory.class, l, errors);
 
 	}
