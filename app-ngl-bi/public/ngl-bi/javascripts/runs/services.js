@@ -113,7 +113,7 @@
 			searchService.lists.refresh.instruments({categoryCode:"seq-illumina"});
 			searchService.lists.refresh.users();
 			
-			searchService.lists.refresh.valuationCriterias({objectTypeCode:"Run"});
+			searchService.lists.refresh.valuationCriterias({objectTypeCode:"Run",orderBy:'name'});
 			
 			if(angular.isDefined(mainService.getForm())){
 				searchService.form = mainService.getForm();
