@@ -200,18 +200,29 @@ public class Processes extends CommonController{
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(processesSearch.toDate, 1))));
 		}
 		
-		if(StringUtils.isNotEmpty(processesSearch.supportCode)){
+		if(StringUtils.isNotEmpty(processesSearch.supportCode) || StringUtils.isNotEmpty(processesSearch.containerSupportCategory)){
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
 			
 			ContainersSearchForm cs = new ContainersSearchForm();
 			cs.supportCode = processesSearch.supportCode;
-			
+			cs.containerSupportCategory=processesSearch.containerSupportCategory;
+
 			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList();
+			
+			List<Query> queryContainer = new ArrayList<Query>();
 			for(Container c: containers){
-				queryElts.add(DBQuery.or(DBQuery.is("containerInputCode", c.code)));
+				queryContainer.add(DBQuery.is("containerInputCode", c.code));
 			}
+			
+			if(queryContainer.size()!=0){
+				queryElts.add(DBQuery.or(queryContainer.toArray(new Query[queryContainer.size()])));
+			}else {
+				queryElts.add(DBQuery.notExists("containerInputCode"));
+			}
+			
+			Logger.debug("Nb containers find"+containers.size());
 		}
 		
 		if(queryElts.size() > 0){

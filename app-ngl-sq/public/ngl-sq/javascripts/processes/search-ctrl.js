@@ -97,6 +97,10 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				jsonSearch.users = $scope.form.user;
 			}
 			
+			if($scope.form.containerSupportCategory){
+				jsonSearch.containerSupportCategory = $scope.form.containerSupportCategory;
+			}
+			
 			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate, Messages("date.format").toUpperCase()).valueOf();
 			
@@ -134,6 +138,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	if(angular.isUndefined($scope.getForm())){
 		$scope.form = {};
 		$scope.setForm($scope.form);
+		$scope.lists.refresh.containerSupportCategories();
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.processCategories();
 		$scope.lists.refresh.supports();

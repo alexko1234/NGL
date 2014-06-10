@@ -12,6 +12,7 @@ public class ProcessesSearchForm extends ListForm{
 	public String projectCode;
 	public String supportCode;
 	public String stateCode;
+	public String containerSupportCategory;
 	public Date fromDate;
 	public Date toDate;
 	public List<String> users;
@@ -20,6 +21,8 @@ public class ProcessesSearchForm extends ListForm{
 	public String toString() {
 		return "ProcessesSearchForm [typeCode=" + typeCode + ", categoryCode="
 				+ categoryCode + ", sampleCode=" + sampleCode
-				+ ", projectCode=" + projectCode + "]";
+				+ ", projectCode=" + projectCode + ",supportCode="+supportCode 
+				+ ", stateCode="+stateCode+", containerSupportCategory="+containerSupportCategory
+				+"]";
 	}
 }
