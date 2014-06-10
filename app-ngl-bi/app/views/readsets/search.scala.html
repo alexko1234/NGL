@@ -23,10 +23,11 @@
 	}
 	@columnSearchForm{
 		@formGroup{
+		@**
 			<input type="text" class="form-control" ng-model="searchService.form.sampleCode"  typeahead="sample.code as sample.code for sample in searchService.lists.getSamples() | filter:$viewValue | limitTo:20"  ng-focus="searchService.refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>
-			@**
-			**<div class="form-control" bt-select ng-model="searchService.form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in searchService.lists.getSamples()" ng-focus="searchService.refreshSamples()"></div>			
-			**@
+		**@	
+			<div class="form-control" bt-select ng-model="searchService.form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in searchService.lists.getSamples()" ng-focus="searchService.refreshSamples()"></div>			
+			
 		}
 		@formGroup{
 			<div class="form-control" bt-select ng-model="searchService.form.productionValidCode" placeholder="@Messages("search.placeholder.productionValid")" bt-options="valid.code as valid.name for valid in searchService.lists.getValuations()"></div>

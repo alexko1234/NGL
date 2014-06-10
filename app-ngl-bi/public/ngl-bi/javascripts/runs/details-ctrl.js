@@ -267,7 +267,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	};
 	
 	$scope.highLightCtrlLane = function(){
-		if ($scope.run && $scope.run.treatments && $scope.run.treatments.ngsrg["default"].controlLane.value) 
+		if ($scope.run && $scope.run.treatments && $scope.run.treatments.ngsrg &&  $scope.run.treatments.ngsrg["default"].controlLane.value) 
 			return "bg-info";
 		else 
 			return undefined;
