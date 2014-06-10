@@ -14,18 +14,19 @@
 					mode:'local'
 				},
 				columns : [
-				           {	
-				        	   property:"typeCode",
-				        	   header: "stats.typeCode",
-				        	   type :"text",		    	  	
-				        	   order:true
-				           },
-				           {
-				        	   property:"column.header",
-				        	   header: "stats.property",
-				        	   type :"text",
-				        	   order:true
-				           }
+							{
+								   property:"column.header",
+								   header: "stats.property",
+								   type :"text",
+								   order:true
+							},
+					           {	
+					        	   property:"typeCode",
+					        	   header: "stats.typeCode",
+					        	   type :"text",		    	  	
+					        	   order:true
+					           }
+				           
 				]
 		};
 		
@@ -50,7 +51,7 @@
 				},
 				reset : function(){
 					this.select =  {
-							typeCode:undefined,
+							typeCode:'z-score',
 							properties:[]
 						};
 				},

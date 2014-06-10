@@ -31,7 +31,7 @@ angular.module('home').controller('StatsSearchReadSetsCtrl',['$scope', '$routePa
 	};
 	
 	$scope.reset = function(){
-		$scope.searchService.reset();
+		$scope.searchService.resetForm();
 	};
 
 		
@@ -39,6 +39,7 @@ angular.module('home').controller('StatsSearchReadSetsCtrl',['$scope', '$routePa
 		var query = {form : angular.copy($scope.searchService.convertForm())};
 		query.form.includes = undefined;
 		query.form.excludes = undefined;
+		$scope.basket.reset();
 		$scope.basket.add(query);		
 	};
 	
