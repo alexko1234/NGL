@@ -121,8 +121,15 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		}
 	};
 	
+	$scope.loadExperimentTypesLists = function(){
+		$scope.lists.refresh.experimentTypes({categoryCode:"purification"}, "purifications");
+		$scope.lists.refresh.experimentTypes({categoryCode:"qualitycontrol"}, "qualitycontrols");
+		$scope.lists.refresh.experimentTypes({categoryCode:"transfert"}, "transferts");
+		$scope.lists.refresh.experimentTypes({categoryCode:"transformation"}, "transformations");
+	};
+	
 	$scope.search = function(){		
-		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.type || $scope.form.fromDate || $scope.form.toDate || $scope.form.state || $scope.form.user){
+		if($scope.form.experimentType || $scope.form.projectCode || $scope.form.sampleCode || $scope.form.type || $scope.form.fromDate || $scope.form.toDate || $scope.form.state || $scope.form.user){
 			var jsonSearch = {};			
 
 			if($scope.form.projectCode){
@@ -147,6 +154,10 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				jsonSearch.users = $scope.form.user;
 			}
 			
+			if($scope.form.experimentType){
+				jsonSearch.typeCode = $scope.form.experimentType;
+			}
+			
 			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate, Messages("date.format").toUpperCase()).valueOf();
 			
@@ -169,7 +180,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.users();
 		$scope.lists.refresh.states({objectTypeCode:"Experiment"});
-		
+		$scope.loadExperimentTypesLists();
 	}else{
 		$scope.form = $scope.getForm();			
 	}

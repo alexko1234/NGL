@@ -161,6 +161,11 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 				jsonSearch.users = $scope.form.user;
 			}
 			
+			if($scope.form.supportCode){
+				jsonSearch.code = $scope.form.supportCode;
+			}
+			
+			
 			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate, Messages("date.format").toUpperCase()).valueOf();
 			

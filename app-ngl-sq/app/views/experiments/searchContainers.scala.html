@@ -8,48 +8,40 @@
 			</select>
 			}
 			<hr>
-			@formGroup{
-			<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
-				<option value="">@Messages("processes.select.processCategory")</option>
-			</select>
-			}
-			@formGroup{
-			<div class="form-control" bt-select ng-model="form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("experiments.select.experimentTypeCode")" 
-				bt-options="expType.code as expType.name for expType in experimentTypeList">
-			</div>
-			}
-		
-		}
-		@columnSearchForm{
-		@formGroup{	
-			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('purifications')" ng-change="changeExperimentType()">
-				<option value="">@Messages("experiments.select.experimentType.purifications")</option>
-			</select>
-			}
-			<hr>
-			@formGroup{	
-			<select class="form-control" ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()">
-				<option value="">@Messages("processes.select.processType")</option>
-			</select>		
+			@formGroup{		
+				<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.user")'>
 			}
 			@formGroup{		
-			
-			<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.user")'>
+				<input class="form-control" type="text" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getProjects() | filter:$viewValue | limitTo:20" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.project")'>
 			}
-			
+					
 		}
 		@columnSearchForm{
 			@formGroup{	
-			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('qualitycontrols')" ng-change="changeExperimentType()">
-				<option value="">@Messages("experiments.select.experimentType.qualitycontrols")</option>
-			</select>
+				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('purifications')" ng-change="changeExperimentType()">
+					<option value="">@Messages("experiments.select.experimentType.purifications")</option>
+				</select>
 			}
 			<hr>
 			@formGroup{		
-			<input class="form-control" type="text" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getProjects() | filter:$viewValue | limitTo:20" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.project")'>
+				<input class="form-control" type="date" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
 			}
 			@formGroup{		
-			<input class="form-control" type="date" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
+				<input class="form-control" type="text" ng-model="form.sampleCode" typeahead="sample.code as sample.code for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-click="refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>
+			}
+		}
+		@columnSearchForm{
+			@formGroup{	
+				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('qualitycontrols')" ng-change="changeExperimentType()">
+					<option value="">@Messages("experiments.select.experimentType.qualitycontrols")</option>
+				</select>
+			}
+			<hr>
+			@formGroup{		
+				<input class="form-control" type="date" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
+			}
+			@formGroup{		
+				<input class="form-control" type="text" ng-model="form.supportCode" placeholder='@Messages("search.placeholder.support")'>
 			}
 		}
 		@columnSearchForm{
@@ -59,12 +51,12 @@
 			</select>
 			}
 			<hr>
-			@formGroup{		
-			<input class="form-control" type="text" ng-model="form.sampleCode" typeahead="sample.code as sample.code for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-click="refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>
+			@formGroup{
+				<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
+					<option value="">@Messages("processes.select.processCategory")</option>
+				</select>
 			}
-			@formGroup{		
-			<input class="form-control" type="date" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
-			}
+						
 		}
 		@columnSearchForm{
 			@formGroup{
@@ -73,6 +65,11 @@
 				</select>
 			}
 			<hr>
+			@formGroup{	
+				<select class="form-control" ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()">
+					<option value="">@Messages("processes.select.processType")</option>
+				</select>		
+			}
 			
 		
 		}
