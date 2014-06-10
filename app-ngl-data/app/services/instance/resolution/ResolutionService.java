@@ -18,10 +18,19 @@ public class ResolutionService {
 	
 	public static void main(ContextValidation ctx) {
 		
-		if (play.Play.application().configuration().getString("institute").contains("CNG")) {
-			saveResolutionsCNG(ctx);
+		boolean all = true;
+		if (play.Play.application().configuration().getString("institute") != null) {
+			if (play.Play.application().configuration().getString("institute").equals("CNG")) {
+				saveResolutionsCNG(ctx);
+				all = false;
+			}
+			if (play.Play.application().configuration().getString("institute").equals("CNS")) {
+				saveResolutionsCNS(ctx);
+				all = false;
+			}
 		}
-		if (play.Play.application().configuration().getString("institute").contains("CNS")) {
+		if (all) {
+			saveResolutionsCNG(ctx);
 			saveResolutionsCNS(ctx);
 		}
 	}
