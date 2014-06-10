@@ -356,7 +356,7 @@ angular.module('commonsServices', []).
 
 	      		      var optionsConfig = parseBtsOptions(btOptions);
 	      		      var items = [];
-	      		      var groupByLabels = [];
+	      		      var groupByLabels = {};
 	      		      var filterValue;
 	      		      
 	      		      function parseBtsOptions(input){
@@ -411,6 +411,10 @@ angular.module('commonsServices', []).
 	      		     };
 	      		    
 	      		    scope.groupBy = function(item, index){
+	      		    	if(index === 0){ //when several call
+	      		    		groupByLabels = {};
+	      		    	}
+	      		    	
 	      		    	if(optionsConfig.groupByGetter && scope.isEdit()){
 	      		    		if(index === 0 || (index > 0 && optionsConfig.groupByGetter(items[index-1]) !== optionsConfig.groupByGetter(item))){
 	      		    			return true;
@@ -419,7 +423,7 @@ angular.module('commonsServices', []).
 	      		    		if(item.selected && !groupByLabels[optionsConfig.groupByGetter(item)]){
 	      		    			groupByLabels[optionsConfig.groupByGetter(item)] = true;
 	      		    			return true;
-	      		    		}	
+	      		    		}	      		    		
 	      		    	}
 	      		    	return false;	      		    	
 	      		    }; 
@@ -476,10 +480,8 @@ angular.module('commonsServices', []).
       		      
       		      scope.$watch(optionsConfig.sourceKey, function(newValue, oldValue){
       		    	  if(newValue && newValue.length > 0){
-      		    		if(items.length == 0){
-      		    			items = angular.copy(newValue);  
-      		    			render();
-      		    		}
+      		    		items = angular.copy(newValue);  
+      		    		render();      		    		
       		    	  }
       		      });
 	      		      
@@ -491,18 +493,15 @@ angular.module('commonsServices', []).
 		      	    	var modelValues = ngModelCtrl.$modelValue || [];
 		      	    	if(!angular.isArray(modelValues)){
 		      	    		modelValues = [modelValues];
-		      	    	}
+		      	    	}		      	    	
 		      	    	if(items.length > 0){
 			      	    	for(var i = 0; i < items.length; i++){
 			      	    		var item = items[i];
 			      	    		item.selected = false;
-		      		    		for(var j = 0; j < modelValues.length; j++){
+			      	    		for(var j = 0; j < modelValues.length; j++){
 			      	    			var modelValue = modelValues[j];
 			      	    			if(scope.itemValue(item) === modelValue){
-			      	    				if(optionsConfig.groupByGetter){
-			      	    					groupByLabels[optionsConfig.groupByGetter(item)]=false;
-			      	    				}
-				      	    			item.selected = true;
+			      	    				item.selected = true;
 				      		    		selectedLabels.push(scope.itemLabel(item));
 				      	    		}
 			      	    		}	      	    		
