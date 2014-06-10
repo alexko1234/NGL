@@ -14,6 +14,41 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				"type":"text"
 			},
 			{
+				"header":Messages("containers.table.supportCode"),
+				"property":"support.code",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.support.categoryCode"),
+				"property":"support.categoryCode",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.fromExperimentTypeCodes"),
+				"property":"fromExperimentTypeCodes",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.support.position"),
+				"property":"support.position",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.valid"),
+				"property":"valuation.valid",
+				"order":true,
+				"type":"text",
+				"filter":"codes:'valuation'"
+			},
+			{
 				"header":Messages("processes.table.projectCodes"),
 				"property":"projectCodes",
 				"order":true,
@@ -28,13 +63,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				"type":"text"
 			},
 			{
-				"header":Messages("containers.table.valid"),
-				"property":"valuation.valid",
-				"order":true,
-				"type":"text",
-				"filter":"codes:'valuation'"
-			},
-			{
 				"header":Messages("containers.table.state.code"),
 				"property":"state.code",
 				"order":true,
@@ -45,13 +73,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			{
 				"header":Messages("containers.table.categoryCode"),
 				"property":"categoryCode",
-				"order":true,
-				"hide":true,
-				"type":"text"
-			},
-			{
-				"header":Messages("containers.table.fromExperimentTypeCodes"),
-				"property":"fromExperimentTypeCodes",
 				"order":true,
 				"hide":true,
 				"type":"text"

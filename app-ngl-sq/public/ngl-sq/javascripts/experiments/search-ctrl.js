@@ -10,6 +10,42 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				"type":"text"
 			},
 			{
+				"header":Messages("experiments.table.categoryCode"),
+				"property":"categoryCode",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("experiments.table.typeCode"),
+				"property":"typeCode",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("experiments.table.state.code"),
+				"property":"state.code",
+				"order":true,
+				"type":"text",
+				"hide":true,
+				"filter":"codes:'state'"
+			},
+			{
+				"header":Messages("experiments.table.resolutionCodes"),
+				"property":"state.resolutionCodes",
+				"order":true,
+				"hide":true,
+				"type":"date"
+			},
+			{
+				"header":Messages("containers.table.creationDate"),
+				"property":"traceInformation.creationDate",
+				"order":true,
+				"hide":true,
+				"type":"date"
+			},
+			{
 				"header":Messages("experiments.table.projectCodes"),
 				"property":"projectCodes",
 				"order":true,
@@ -22,50 +58,6 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				"order":true,
 				"hide":true,
 				"type":"text"
-			},
-			{
-				"header":Messages("containers.table.valid"),
-				"property":"valuation.valid",
-				"order":true,
-				"hide":true,
-				"type":"text",
-				"filter":"codes:'valuation'"
-			},
-			{
-				"header":Messages("containers.table.state.code"),
-				"property":"state.code",
-				"order":true,
-				"type":"text",
-				"hide":true,
-				"filter":"codes:'state'"
-			},
-			{
-				"header":Messages("experiments.table.categoryCode"),
-				"property":"categoryCode",
-				"order":true,
-				"hide":true,
-				"type":"text"
-			},
-			{
-				"header":Messages("containers.table.fromExperimentTypeCodes"),
-				"property":"typeCode",
-				"order":true,
-				"hide":true,
-				"type":"text"
-			},
-			{
-				"header":Messages("containers.table.creationDate"),
-				"property":"traceInformation.creationDate",
-				"order":true,
-				"hide":true,
-				"type":"date"
-			},
-			{
-				"header":Messages("containers.table.resolutionCodes"),
-				"property":"state.resolutionCodes",
-				"order":true,
-				"hide":true,
-				"type":"date"
 			}
 			],
 			show:{
