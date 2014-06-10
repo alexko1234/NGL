@@ -317,7 +317,7 @@ angular.module('commonsServices', []).
   		    			+'<div class="input-group">'
   		    			+'<input type="text" ng-class="inputClass" data-toggle="dropdown" role="button"  ng-model="selectedLabels" readonly/>'
   		    			+'<div class="input-group-btn">'
-  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">'
+  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="open()">'
   		    			+'<span class="caret"></span>'
   		    			+'</button>'
   				        +'<ul class="dropdown-menu {{btDropdownClass}}"  role="menu">'
@@ -358,6 +358,7 @@ angular.module('commonsServices', []).
 	      		      var items = [];
 	      		      var groupByLabels = {};
 	      		      var filterValue;
+	      		      var ngFocus = attr.ngFocus;
 	      		      
 	      		      function parseBtsOptions(input){
 	      		    	  var match = input.match(BT_OPTIONS_REGEXP);
@@ -394,6 +395,11 @@ angular.module('commonsServices', []).
 	      		    	filterValue = value
 	      		     };
 	      		     
+	      		     scope.open = function(){
+	      		    	 if(ngFocus){
+	      		    		$parse(ngFocus)(scope);  
+	      		    	 }
+	      		     };
 	      		     
 	      		     scope.isEdit = function(){
 	      		    	 return (editMode)?editMode(scope):true;
