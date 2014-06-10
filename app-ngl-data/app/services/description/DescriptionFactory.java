@@ -17,6 +17,7 @@ import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
 import models.laboratory.common.description.ValuationCriteria;
 import models.laboratory.common.description.Value;
+import models.laboratory.common.instance.StateResolution;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
@@ -45,6 +46,7 @@ import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 import play.Logger;
+
 
 public class DescriptionFactory {
 
@@ -348,6 +350,27 @@ public class DescriptionFactory {
 		r.displayOrder = displayOrder;
 		return r;
 	}
+	
+	public static StateResolution newStateResolution(String name, String code,
+			String categoryCode, Short displayOrder, String level) {
+			StateResolution sr = new StateResolution();
+			sr.code = code;
+			sr.name = name;
+			sr.categoryCode = categoryCode;
+			sr.displayOrder = displayOrder;
+			sr.level = level;
+			return sr;
+		}
+	
+	public static StateResolution newStateResolution(String name, String code,
+			String categoryCode, Short displayOrder) {
+			StateResolution sr = new StateResolution();
+			sr.code = code;
+			sr.name = name;
+			sr.categoryCode = categoryCode;
+			sr.displayOrder = displayOrder;
+			return sr;
+		}
 	
 	/**
 	 * 

@@ -23,6 +23,11 @@ GET		/api/description/processes				controllers.description.processes.Processes.s
 GET		/api/description/runs					controllers.description.runs.Runs.save()
 GET		/api/description/treatments				controllers.description.runs.Treatments.save()
 
+
+GET		/api/instance/resolutions				controllers.instance.Resolutions.save()
+
+
+
 GET		/migrationcontent						controllers.migration.MigrationContent.migration()
 GET		/migrationstate						    controllers.migration.MigrationStateContainer.migration()
 GET		/migration						    	controllers.migration.MigrationReadSetFileCNS.migration()
