@@ -438,6 +438,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		
 	};
 	
+	$scope.getInstrumentsTrigger = function(){
+		$scope.getInstruments(false);
+		$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,false);
+	};
+	
 	$scope.getInstruments = function(loaded){
 		if($scope.experiment.value.instrument.typeCode === null){
 			$scope.experiment.instrumentProperties.inputs = [];
@@ -469,7 +474,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			$scope.getInstrumentCategory($scope.experiment.value.instrument.typeCode);
 			$scope.lists.refresh.instruments({"typeCode":$scope.experiment.value.instrument.typeCode});
 			$scope.lists.refresh.containerSupportCategories({"instrumentUsedTypeCode":$scope.experiment.value.instrument.typeCode});
-			$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,loaded);
 		}
 	};
 	

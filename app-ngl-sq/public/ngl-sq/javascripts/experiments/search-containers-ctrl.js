@@ -197,7 +197,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.experimentTypeList=data;    				
 	});
 	if(angular.isUndefined($scope.getDatatable())){
-		$scope.datatable = datatable($scope, $scope.datatableConfig);
+		$scope.datatable = datatable($scope.datatableConfig);
 		$scope.setDatatable($scope.datatable);	
 	} else {
 		$scope.datatable = $scope.getDatatable();

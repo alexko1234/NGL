@@ -142,7 +142,7 @@
 			    
 			    @columnLabelValue(Messages("experiments.intrumentUsedType")){
 						<select class="form-control"
-					ng-change="getInstruments()"
+					ng-change="getInstrumentsTrigger()"
 					ng-model="experiment.value.instrument.typeCode"
 					auto-select
 					ng-readonly="!experiment.instrumentInformation.enabled"

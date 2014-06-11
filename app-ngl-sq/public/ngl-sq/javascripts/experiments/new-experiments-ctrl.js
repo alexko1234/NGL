@@ -56,7 +56,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable',function
 	};
 	
 	//init
-	$scope.datatable = datatable($scope, $scope.datatableConfig);
+	$scope.datatable = datatable($scope.datatableConfig);
 	$scope.basket = $scope.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
 	$scope.form = $scope.getForm();

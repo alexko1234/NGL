@@ -177,7 +177,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	}
 	
 	//Init
-	$scope.datatable = datatable($scope, $scope.datatableConfig);
+	$scope.datatable = datatable($scope.datatableConfig);
 	$scope.atomicTransfere = manyToOne($scope, "", "none");
 	$scope.containers = [{"code":"h2ERD"},{"code":"zdfgrgtr3"}];
 	$scope.flowcells = [];

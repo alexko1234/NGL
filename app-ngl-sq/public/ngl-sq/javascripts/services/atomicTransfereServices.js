@@ -218,7 +218,8 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							});
 							$q.all(promises).then(function (res) {
 								$scope.datatable.setData(containers,containers.length);
-								$scope.getInstruments(true);
+								//$scope.getInstruments(true);
+								$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,true);
 								$scope.atomicTransfere.experimentToInput();
 								$scope.atomicTransfere.experimentToOutput();
 
