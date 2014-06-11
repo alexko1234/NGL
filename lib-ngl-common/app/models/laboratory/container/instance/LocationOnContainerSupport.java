@@ -42,11 +42,6 @@ public class LocationOnContainerSupport implements IValidation {
 	public String column;
 	public String line;
 	
-	@JsonProperty("position")
-	public String getPosition() {
-	    return column+line;
-	}
-	
 	@JsonIgnore
 	public ContainerSupportCategory getContainerSupportCategory(){
 		return new HelperObjects<ContainerSupportCategory>().getObject(ContainerSupportCategory.class, categoryCode);
