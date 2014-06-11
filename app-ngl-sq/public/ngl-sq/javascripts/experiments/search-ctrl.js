@@ -155,7 +155,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			}
 			
 			if($scope.form.experimentType){
-				jsonSearch.typeCode = $scope.form.experimentType;
+				jsonSearch.typeCode = $scope.form.experimentType.code;
 			}
 			
 			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
