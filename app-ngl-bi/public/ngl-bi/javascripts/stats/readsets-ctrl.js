@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('StatsSearchReadSetsCtrl',['$scope', '$routeParams', 'mainService', 'tabService','readSetsSearchService', 'basket',
-                                                              function($scope, $routeParams, mainService, tabService, readSetsSearchService, basket) { 
+angular.module('home').controller('StatsSearchReadSetsCtrl',['$scope', '$routeParams', 'mainService', 'tabService','readSetsSearchService', 'basket', 'valuationService',
+                                                              function($scope, $routeParams, mainService, tabService, readSetsSearchService, basket, valuationService) { 
 
 	var datatableConfig = {
 			order :{by:'runSequencingStartDate', reverse : true},
@@ -45,7 +45,7 @@ angular.module('home').controller('StatsSearchReadSetsCtrl',['$scope', '$routePa
 	
 	$scope.searchService = readSetsSearchService;	
 	$scope.searchService.init($routeParams, datatableConfig);
-	
+	$scope.valuationService = valuationService();
 	if(angular.isUndefined(mainService.getBasket())){
 		$scope.basket = basket();			
 		mainService.setBasket($scope.basket);

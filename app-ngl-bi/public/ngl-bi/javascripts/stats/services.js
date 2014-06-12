@@ -41,13 +41,14 @@
 		
 		var statsService = {
 				datatable:undefined,
+				statsTypes : [{code:'z-score', name:Messages("stat.typelabel.zscore")},{code:'simple-value', name:Messages("stat.typelabel.simplevalue")}],
 				statColumns:[],
 				select : {
 					typeCode:'z-score',
 					properties:[]
 				},
 				getStatsTypes : function(){
-					return [{code:'z-score', name:Messages("stat.typelabel.zscore")}];//,{code:'histogram', name:Messages("stat.typelabel.histogram")}];
+					return this.statsTypes;//,{code:'histogram', name:Messages("stat.typelabel.histogram")}];
 				},
 				reset : function(){
 					this.select =  {
@@ -318,6 +319,8 @@ factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($h
 			var statsConfig = statsConfigs[i];
 			if("z-score" === statsConfig.typeCode){
 				charts.push(getZScoreChart(statsConfig));
+			}else if("simple-value" === statsConfig.typeCode){
+				charts.push(getSimpleValueChart(statsConfig));
 			}else{
 				throw 'not manage'+statsConfig.typeCode;
 			}
@@ -396,6 +399,47 @@ factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($h
 					} ]
 		        },
 		        series: [{type : 'column', name:'z-score', data:zscodeData, turboThreshold:0}]
+		    };
+		return chart;
+	};
+	
+	var getSimpleValueChart = function(statsConfig){
+		var property = getProperty(statsConfig.column);
+		var data = readsetDatatable.getData();
+		var statData = data.map(function(x){return {name:x.code,  y:$parse(property)(x)};});
+		
+		var chart = {
+		        chart: {
+		        	zoomType : 'x',
+		        	height:770
+		        },
+		        title: {
+		        	text : Messages(statsConfig.column.header)
+		        },
+		        tooltip: {
+		        	formatter: function() {
+		                var s = '<b>'+ this.point.name +'</b>';
+		                	s += '<br/>'+ this.point.series.name +': '+ this.point.y ;		                    	                
+		                return s;
+		            }   
+		        },
+		        xAxis: {
+		        	title: {
+		        		text: 'Readsets',
+		        	}, 
+		        	labels : {
+						enabled : false,
+						rotation : -75
+					},
+					type: "category",
+					tickPixelInterval:1
+		        },
+		        yAxis: {
+		            title: {
+		                text: Messages(statsConfig.column.header)
+		            }
+		        },
+		        series: [{type : 'column', name:Messages(statsConfig.column.header), data:statData, turboThreshold:0}]
 		    };
 		return chart;
 	}
