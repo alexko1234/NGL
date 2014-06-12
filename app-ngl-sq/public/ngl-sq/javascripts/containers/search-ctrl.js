@@ -165,7 +165,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 	};
 	
 	//init
-	$scope.datatable = datatable($scope, $scope.datatableConfig);		
+	$scope.datatable = datatable($scope.datatableConfig);		
 	if(angular.isUndefined($scope.getHomePage())){
 		$scope.setHomePage('new');
 		$scope.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("new").url,remove:false});

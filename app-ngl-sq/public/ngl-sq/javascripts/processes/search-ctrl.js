@@ -148,7 +148,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		$scope.form = $scope.getForm();			
 	}
 	
-	$scope.datatable = datatable($scope, $scope.datatableConfig);
+	$scope.datatable = datatable($scope.datatableConfig);
 	if($scope.form.project || $scope.form.type){
 		$scope.search();
 	}
