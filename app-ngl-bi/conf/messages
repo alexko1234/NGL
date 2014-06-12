@@ -446,7 +446,7 @@ query.form = Paramètres
 query.nbResults = Nb. Résultats
 
 stat.typelabel.zscore = z-score
-stat.typelabel.histogram = histogramme
+stat.typelabel.simplevalue = valeur de la propriété
 
 ############
 #

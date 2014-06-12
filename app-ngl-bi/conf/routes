@@ -196,6 +196,9 @@ GET		/api/projects								@controllers.projects.api.Projects.list()
 
 #instruments
 GET		/api/instruments							controllers.instruments.api.Instruments.list()
+GET		/api/instruments/:code						controllers.instruments.api.Instruments.get(code: java.lang.String)
+PUT		/api/instruments/:code						controllers.instruments.api.Instruments.update(code: java.lang.String)
+
 
 #samples
 GET		/api/samples								controllers.samples.api.Samples.list()
