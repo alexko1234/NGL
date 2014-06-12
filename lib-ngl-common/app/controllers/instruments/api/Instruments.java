@@ -6,20 +6,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.instrument.description.Instrument;
+import models.laboratory.run.instance.Run;
+import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
+import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
+import fr.cea.ig.MongoDBDAO;
 
 public class Instruments extends CommonController{
-	final static Form<InstrumentsSearchForm> instrumentForm = form(InstrumentsSearchForm.class);
+	final static Form<InstrumentsSearchForm> instrumentSearchForm = form(InstrumentsSearchForm.class);
 
+	final static Form<Instrument> instrumentForm = form(Instrument.class);
+
+	
 	public static Result list() throws DAOException{
-		Form<InstrumentsSearchForm> instrumentTypeFilledForm = filledFormQueryString(instrumentForm,InstrumentsSearchForm.class);
+		Form<InstrumentsSearchForm> instrumentTypeFilledForm = filledFormQueryString(instrumentSearchForm,InstrumentsSearchForm.class);
 		InstrumentsSearchForm instrumentsQueryParams = instrumentTypeFilledForm.get();
 
 		List<Instrument> instruments;
@@ -37,13 +45,40 @@ public class Instruments extends CommonController{
 				for(Instrument et:instruments){
 					lop.add(new ListObject(et.code, et.name));
 				}
-				return Results.ok(Json.toJson(lop));
+				return ok(Json.toJson(lop));
 			}else{
-				return Results.ok(Json.toJson(instruments));
+				return ok(Json.toJson(instruments));
 			}
 		}catch (DAOException e) {
 			e.printStackTrace();
 			return  Results.internalServerError(e.getMessage());
 		}	
+	}
+	
+	public static Result get(String code) throws DAOException{
+		Instrument instrument =  Instrument.find.findByCode(code);
+		if (instrument != null) {
+			return ok(Json.toJson(instrument));
+		}else{
+			return notFound();
+		}
+		
+	}
+	
+	public static Result update(String code) throws DAOException{
+		Instrument instrument =  Instrument.find.findByCode(code);
+		if (instrument == null) {
+			return badRequest("Instrument with code "+code+" not exist");
+		}
+		Form<Instrument> filledForm = getFilledForm(instrumentForm, Instrument.class);
+		Instrument instrumentInput = filledForm.get();
+		
+		if (code.equals(instrumentInput.code)) {
+				instrumentInput.update();
+				return ok(Json.toJson(instrumentInput));
+			
+		}else{
+			return badRequest("instrument code are not the same");
+		}		
 	}
 }
