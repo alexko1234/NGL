@@ -116,18 +116,6 @@ factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($h
 				}
 			},
 			columns : [
-			           {	
-			        	   property:"title",
-			        	   header: "query.title",
-			        	   type :"text",		    	  	
-			        	   order:true
-			           },
-			           {	
-			        	   property:"nbResults",
-			        	   header: "query.nbResults",
-			        	   type :"number",		    	  	
-			        	   order:true
-			           },
 			           {
 			        	   property:"form",
 			        	   render:function(v){
@@ -135,6 +123,12 @@ factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($h
 			        	   },
 			        	   header: "query.form",
 			        	   type :"text"
+			           },
+			           {	
+			        	   property:"nbResults",
+			        	   header: "query.nbResults",
+			        	   type :"number",		    	  	
+			        	   order:true
 			           }
 			]
 	};
