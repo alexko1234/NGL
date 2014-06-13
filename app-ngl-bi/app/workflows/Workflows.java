@@ -338,8 +338,8 @@ public class Workflows {
 	private static State cloneState(State state) {
 		State nextState = new State();
 		nextState.code = state.code;
-		nextState.date = state.date;
-		nextState.user = state.user;
+		nextState.date = new Date();
+		nextState.user = CommonController.getCurrentUser();
 		return nextState;
 	}
 
