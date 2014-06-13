@@ -168,7 +168,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	//init
 	if(angular.isUndefined($scope.getHomePage())){
 		$scope.setHomePage('search');
-		$scope.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:false});
+		$scope.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:true});
 		$scope.activeTab(0);
 	}
 	if(angular.isUndefined($scope.getForm())){
