@@ -434,7 +434,7 @@ stats.page.title=Statistiques
 stats.menu = Statistiques
 stats.menu.readsets = Readsets
 stats.page.tab.readsets.select = Selectionner des Readsets
-stats.page.tab.readsets.config = Configuration Statistique
+stats.page.tab.readsets.config = Configuration Statistiques
 stats.page.tab.show = Visualiser les Graphiques
 
 stats.typeCode = Type
@@ -443,7 +443,7 @@ stats.property = Propriété
 button.query.addbasket = Ajouter la requête dans le panier
 query.title = Titre
 query.form = Paramètres
-query.nbResults = Nb. Résultats
+query.nbResults = Nombre de Résultats
 
 stat.typelabel.zscore = z-score
 stat.typelabel.simplevalue = valeur de la propriété
