@@ -328,6 +328,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 						});
 						$q.all(promises).then(function (res) {
 							$scope.datatable.setData(containers,containers.length);
+							$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,true);
 							$scope.getInstruments(true);
 							$scope.atomicTransfere.experimentToInput();
 							$scope.atomicTransfere.experimentToOutput();
@@ -396,6 +397,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 					});
 					$q.all(promises).then(function (res) {
 						$scope.datatable.setData(containers,containers.length);
+						$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,true);
 						$scope.getInstruments(true);
 					});
 				},
