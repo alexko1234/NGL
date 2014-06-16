@@ -134,14 +134,15 @@ public class ContainerHelper {
 	public static String generateContainerCode(String categoryCode){
 		return (categoryCode+"-"+getSimpleDateFormat().format(new Date())).toUpperCase();
 	}
+
 	
-	public static void createSupportFromContainers(List<Container> containers,ContextValidation contextValidation){
+	public static void createSupportFromContainers(List<Container> containers, Map<String, PropertyValue<String>> mapSupportsCodeSeq, ContextValidation contextValidation){
 		
 		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
 		
 		for (Container container : containers) {
 			if (container.support != null) {
-				ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code, container.support.categoryCode,"ngl");
+				ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
 				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
 				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);							
 
@@ -162,13 +163,13 @@ public class ContainerHelper {
 	}
 
 	
-	public static void updateSupportFromUpdatedContainers(List<Container> updatedContainers, ContextValidation contextValidation){
+	public static void updateSupportFromUpdatedContainers(List<Container> updatedContainers, Map<String, PropertyValue<String>> mapSupportsCodeSeq, ContextValidation contextValidation){
 		
 		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
 		
 		for (Container container : updatedContainers) {
 			if (container.support != null) {
-				ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code, container.support.categoryCode,"ngl");
+				ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
 				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
 				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);							
 

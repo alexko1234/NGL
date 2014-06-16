@@ -17,7 +17,6 @@ import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
 import models.laboratory.common.description.ValuationCriteria;
 import models.laboratory.common.description.Value;
-import models.laboratory.common.instance.StateResolution;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
@@ -351,25 +350,25 @@ public class DescriptionFactory {
 		return r;
 	}
 	
-	public static StateResolution newStateResolution(String name, String code,
+	public static models.laboratory.common.instance.Resolution newMongoResolution(String name, String code,
 			String categoryCode, Short displayOrder, String level) {
-			StateResolution sr = new StateResolution();
-			sr.code = code;
-			sr.name = name;
-			sr.categoryCode = categoryCode;
-			sr.displayOrder = displayOrder;
-			sr.level = level;
-			return sr;
+			models.laboratory.common.instance.Resolution ir = new models.laboratory.common.instance.Resolution();
+			ir.code = code;
+			ir.name = name;
+			ir.categoryCode = categoryCode;
+			ir.displayOrder = displayOrder;
+			ir.level = level;
+			return ir;
 		}
 	
-	public static StateResolution newStateResolution(String name, String code,
+	public static models.laboratory.common.instance.Resolution newMongoResolution(String name, String code,
 			String categoryCode, Short displayOrder) {
-			StateResolution sr = new StateResolution();
-			sr.code = code;
-			sr.name = name;
-			sr.categoryCode = categoryCode;
-			sr.displayOrder = displayOrder;
-			return sr;
+			models.laboratory.common.instance.Resolution ir = new models.laboratory.common.instance.Resolution();
+			ir.code = code;
+			ir.name = name;
+			ir.categoryCode = categoryCode;
+			ir.displayOrder = displayOrder;
+			return ir;
 		}
 	
 	/**

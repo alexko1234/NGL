@@ -16,6 +16,7 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.project.instance.Project;
@@ -484,6 +485,7 @@ public class LimsCNGDAO {
 	}
 	
 	
+	
 	public List<Container> demultiplexContainer(List<Container> results) throws DAOException {
 		//affect all the project codes /samples /tags to the same container (for having unique codes of containers) 
 		/// required to have an ordered list (see ORDER BY clause in the sql of the view)
@@ -573,6 +575,31 @@ public class LimsCNGDAO {
 		
 		return results;
 	}
+	
+	/**
+	 * set sequencingProgramType to containerSupport
+	 * @param rs
+	 * @param rowNum
+	 * @param ctxErr
+	 * @return
+	 * @throws SQLException
+	 */
+	public ContainerSupport commonContainerSupportMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
+		ContainerSupport containerSupport = new ContainerSupport();
+		
+		containerSupport.code = rs.getString("code_support");
+		
+		if (rs.getString("seq_program_type").equals("PE") || rs.getString("seq_program_type").equals("SR")) {
+			containerSupport.properties= new HashMap<String, PropertyValue>();
+			containerSupport.properties.put("sequencingProgramType", new PropertySingleValue(rs.getString("seq_program_type")));
+		}
+		else {
+			Logger.error("Wrong value of seq_program_type : " + rs.getString("seq_program_type") + "! (expected SE ou PR) for code : " + rs.getString("code_support")); 
+		}
+
+		return containerSupport;
+	}	
+
 	
 	
 	/**
@@ -681,6 +708,40 @@ public class LimsCNGDAO {
 			});
 		}
 		return demultiplexContainer(results);			
+	}
+	
+	
+	public HashMap<String, PropertyValue<String>>  setSequencingProgramTypeToContainerSupport(final ContextValidation contextError, String mode)  throws DAOException {
+		List<ContainerSupport> results = null;
+		String sqlVw;
+		if (mode.equals("creation")) {
+			sqlVw = "v_flowcell_tongl"; 
+		}
+		else {
+			sqlVw = "v_flowcell_updated_tongl";
+		}
+		results = this.jdbcTemplate.query("select code_support, seq_program_type from " + sqlVw + " where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
+		,new RowMapper<ContainerSupport>() {
+			@SuppressWarnings("rawtypes")
+			public ContainerSupport mapRow(ResultSet rs, int rowNum) throws SQLException {
+				ResultSet rs0 = rs;
+				int rowNum0 = rowNum;
+				ContextValidation ctxErr = contextError; 
+				@SuppressWarnings("rawtypes")
+				ContainerSupport c=  commonContainerSupportMapRow(rs0, rowNum0, ctxErr); 
+				return c;
+			}
+		});
+		//map data
+		HashMap<String,PropertyValue<String>> mapCodeSupportSequencing = new HashMap<String,PropertyValue<String>>();
+		for (ContainerSupport result : results) {
+			if (!mapCodeSupportSequencing.containsKey(result.code)) {
+				mapCodeSupportSequencing.put(result.code, result.properties.get("sequencingProgramType"));
+			}
+		}
+		
+		
+		return mapCodeSupportSequencing;
 	}
 
 	

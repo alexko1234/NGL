@@ -2,10 +2,13 @@ package services.instance.container;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import fr.cea.ig.MongoDBDAO;
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -24,6 +27,8 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 
 	@Override
 	public void runImport() throws SQLException, DAOException {
+		
+		/******************************************************************************************/
 		Logger.debug("start loading samples");
 		
 		List<Sample> samples = limsServices.findSampleToCreate(contextError, null) ;
@@ -32,7 +37,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 			
 		limsServices.updateLimsSamples(samps, contextError, "creation");
 		
-		
+		/******************************************************************************************/
 		Logger.debug("start updating samples");
 		
 		samples = limsServices.findSampleToModify(contextError, null);
@@ -48,26 +53,31 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError, true);
 			
 		limsServices.updateLimsSamples(samps, contextError, "update");
-
 		
+
+		/******************************************************************************************/
 		Logger.debug("start loading containers");		
 		
 		List<Container> containers = limsServices.findContainerToCreate(contextError);
+
+		HashMap<String, PropertyValue<String>> mapCodeSupportSeq = limsServices.setSequencingProgramTypeToContainerSupport(contextError, "creation");
 		
 		//common method for CNS & CNG
-		ContainerHelper.createSupportFromContainers(containers, contextError);
+		ContainerHelper.createSupportFromContainers(containers, mapCodeSupportSeq, contextError);
 		
 		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError, true);
 		
 		limsServices.updateLimsContainers(ctrs, contextError, "creation");
 
-		
+		/******************************************************************************************/
 		Logger.debug("start updating containers");		
 		
 		containers = limsServices.findContainerToModify(contextError);
 		
+		mapCodeSupportSeq = limsServices.setSequencingProgramTypeToContainerSupport(contextError, "update");
+		
 		//new method for CNS & CNG
-		ContainerHelper.updateSupportFromUpdatedContainers(containers, contextError);
+		ContainerHelper.updateSupportFromUpdatedContainers(containers, mapCodeSupportSeq, contextError);
 		
 		for (Container container : containers) {
 			Container oldContainer = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code);
@@ -81,7 +91,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		
 		limsServices.updateLimsContainers(ctrs, contextError, "update");
 		 
-		
+		/******************************************************************************************/
 		Logger.debug("end loading");
 				
 	}

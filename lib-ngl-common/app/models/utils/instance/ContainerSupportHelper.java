@@ -2,8 +2,10 @@ package models.utils.instance;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
@@ -48,7 +50,7 @@ public class ContainerSupportHelper {
 		return containerSupport;
 	}
 
-	public static ContainerSupport createSupport(String supportCode,String categoryCode,String user){
+	public static ContainerSupport createSupport(String supportCode, PropertyValue sequencingProgramType, String categoryCode, String user){
 		ContainerSupport s = new ContainerSupport(); 
 
 		s.code = supportCode;	
@@ -63,8 +65,13 @@ public class ContainerSupportHelper {
 		s.traceInformation.setTraceInformation(user);
 		s.valuation = new Valuation();
 
-		//TODO: a verifier
 		s.valuation.valid = TBoolean.UNSET;
+		
+		if (sequencingProgramType != null) {
+			HashMap<String, PropertyValue> prop = new HashMap<String, PropertyValue>();
+			prop.put("sequencingProgramType", sequencingProgramType);
+			s.properties = prop;
+		}
 
 		return s;
 	}

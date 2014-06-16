@@ -122,7 +122,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		
 		ContainerImportCNS.saveSampleFromContainer(contextError,containers,sqlContent);
 		
-		ContainerHelper.createSupportFromContainers(containers, contextError);
+		ContainerHelper.createSupportFromContainers(containers, null, contextError);
 	
 		List<Container> newContainers=new ArrayList<Container>();
 	

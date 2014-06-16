@@ -460,5 +460,22 @@ public class CommonValidationHelper {
 			}
 		}		 
 	}
+	
+	
+	
+	public static void validateCategoryCode(String categoryCode, ContextValidation contextValidation){
+		try{
+			if(required(contextValidation, categoryCode, "code")){
+				if(!models.laboratory.common.description.ResolutionCategory.find.isCodeExist(categoryCode)){
+					contextValidation.addErrors("resolutions.categoryCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, categoryCode);
+				}
+			}
+		}catch(DAOException e){
+			throw new RuntimeException(e);
+		}
+		
+	}
+	
+	
 
 }
