@@ -24,7 +24,7 @@ public class ContainerSupport extends DBObject implements IValidation{
 	public TraceInformation traceInformation;
 	public List<String> projectCodes;
 	public List<String> sampleCodes;
-	
+	public Map<String, PropertyValue> properties;
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
