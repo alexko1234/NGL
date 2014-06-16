@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import models.LimsCNSDAO;
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -26,6 +27,8 @@ import validation.sample.instance.SampleValidationHelper;
 import validation.utils.ValidationHelper;
 
 import com.mongodb.MongoException;
+
+import controllers.description.commons.Levels;
 
 import fr.cea.ig.MongoDBDAO;
 
@@ -71,12 +74,12 @@ public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 					
 					String importTypeCode=DataMappingCNS.getImportTypeCode(true,adaptater);
 					
-					ValidationHelper.validateProperties(contextError,taraProperties, ImportType.find.findByCode(importTypeCode).propertiesDefinitions);
+					ValidationHelper.validateProperties(contextError,taraProperties, ImportType.find.findByCode(importTypeCode).getPropertyDefinitionByLevel(Level.CODE.Content));
 					
 					if(!importTypeCode.equals(sample.importTypeCode)){
 						MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sample.code),DBUpdate.set("importTypeCode",sample.importTypeCode));
 					}
-
+					
 					SampleHelper.updateSampleProperties(sample.code,taraProperties);
 					
 				}
