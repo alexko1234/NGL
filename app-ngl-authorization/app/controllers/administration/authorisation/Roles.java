@@ -80,9 +80,6 @@ public class Roles extends Controller {
 				}else{
 					return ok(addRole.render(filledForm,PermissionHelper.getMapPerm(),"permissions","id",true));
 				}
-				
-				
-				
 			}		
 		}
 	  
