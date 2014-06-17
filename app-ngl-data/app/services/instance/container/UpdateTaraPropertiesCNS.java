@@ -74,6 +74,7 @@ public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 					
 					String importTypeCode=DataMappingCNS.getImportTypeCode(true,adaptater);
 					
+					taraProperties.remove(LimsCNSDAO.LIMS_CODE);
 					ValidationHelper.validateProperties(contextError,taraProperties, ImportType.find.findByCode(importTypeCode).getPropertyDefinitionByLevel(Level.CODE.Content));
 					
 					if(!importTypeCode.equals(sample.importTypeCode)){
