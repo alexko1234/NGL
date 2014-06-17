@@ -62,7 +62,6 @@ public class ReadSets extends CommonController {
   	    		controllers.runs.api.routes.javascript.Runs.list(),
   	    		controllers.runs.api.routes.javascript.RunTreatments.get(),
   	    		controllers.runs.tpl.routes.javascript.Runs.get(),
-  	    		controllers.commons.api.routes.javascript.Resolutions.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.commons.api.routes.javascript.States.list(),
   	    		controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
@@ -74,8 +73,8 @@ public class ReadSets extends CommonController {
 	    		controllers.projects.api.routes.javascript.Projects.list(),	    		
   	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.list(),
   	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),
-  	      		controllers.commons.api.routes.javascript.Users.list()
-	      		
+  	      		controllers.commons.api.routes.javascript.Users.list(),
+  	      		controllers.commons.api.routes.javascript.Resolutions.list()
   	      )	  	      
   	    );
   	  }

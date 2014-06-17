@@ -145,14 +145,13 @@ public class AddSequencingProgramType  extends CommonController {
 				//update properties
 				/*
 				WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", oldContainerSupport.code),   
-						DBUpdate.set("properties", properties)); 
-				
+						DBUpdate.set("properties", properties)); 				
 				if(StringUtils.isNotEmpty(r.getError())){
 					Logger.error("Set property sequencingProgramType : "+oldContainerSupport.code+" / "+r.getError());
 				}
 				 */
 				
-				//global update of the object to have the _type (json subtype) 
+				//global update of the object to have the _type (json subtype) like in the import 
 				MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, oldContainerSupport);
 				
 				

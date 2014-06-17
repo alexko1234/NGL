@@ -50,7 +50,7 @@
 				<div  class="form-control" bt-select ng-model="searchService.form.instrumentCodes" multiple="true" placeholder="@Messages("search.placeholder.instruments")" bt-options="instrument.code as instrument.code for instrument in searchService.lists.getInstruments()"></div>
 			}
 			@formGroup{	
-			<div  class="form-control" bt-select ng-model="searchService.form.resolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.runLaneResolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()"></div>														
+			<div  class="form-control" bt-select ng-model="searchService.form.resolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.runLaneResolutions")" bt-options="valid.code as valid.name group by valid.categoryCode for valid in searchService.lists.getResolutions()"></div>														
 			}
 	}
 }

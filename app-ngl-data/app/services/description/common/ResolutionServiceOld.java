@@ -14,7 +14,7 @@ import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
 import static services.description.DescriptionFactory.*;
 
-public class ResolutionService {
+public class ResolutionServiceOld {
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{		
 		DAOHelpers.removeAll(Resolution.class, Resolution.find);
 		DAOHelpers.removeAll(ResolutionCategory.class, ResolutionCategory.find);

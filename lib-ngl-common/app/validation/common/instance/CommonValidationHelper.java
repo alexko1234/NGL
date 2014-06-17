@@ -10,6 +10,7 @@ import play.Logger;
 
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
+import models.laboratory.common.instance.ResolutionConfigurations;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
@@ -371,18 +372,14 @@ public class CommonValidationHelper {
 	}
 	
 	public static void validateResolutionCodes(String typeCode, List<String> resoCodes, ContextValidation contextValidation){
-		try{
-			if(null != resoCodes){
-				int i = 0;
-				for(String resoCode: resoCodes){
-					if(!models.laboratory.common.description.Resolution.find.isCodeExistForTypeCode(resoCode, typeCode)){
-						contextValidation.addErrors("resolutionCodes["+i+"]", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, resoCode);
-					}
-					i++;
+		if(null != resoCodes){
+			int i = 0;
+			for(String resoCode: resoCodes){
+				if (! MongoDBDAO.checkObjectExist(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, DBQuery.and(DBQuery.is("resolutions.code", resoCode), DBQuery.in("typeCodes", typeCode)))) {
+					contextValidation.addErrors("resolutionCodes["+i+"]", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, resoCode);
 				}
+				i++;
 			}
-		}catch(DAOException e){
-			throw new RuntimeException(e);
 		}
 	}
 	

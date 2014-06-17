@@ -87,7 +87,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				{	property:"valuation.resolutionCodes",
 					header: "runs.lane.valuation.resolutions",
 					render:function(value){						
-						return '<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ng-edit="false"></div>';
+						return '<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.categoryCode for valid in lists.getResolutions()" ng-edit="false"></div>';
 					},
 					type :"String",
 			    	edit:true,
@@ -302,7 +302,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				$scope.mainService.startEditMode();	
 				$scope.lanesDT.setEdit();
 			}
-			$scope.lists.refresh.resolutions({typeCode:$scope.run.typeCode});
+			
+			$scope.lists.refresh.resolutions({typeCode:$scope.run.typeCode, objectTypeCode:"Run"});
+
 			$scope.lists.refresh.valuationCriterias({typeCode:$scope.run.typeCode, objectTypeCode:"Run", orderBy:'name'});
 			
 			if(angular.isDefined($scope.run.lanes[0].treatments)){

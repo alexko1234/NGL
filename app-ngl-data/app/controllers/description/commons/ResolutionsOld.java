@@ -10,16 +10,16 @@ import play.Logger;
 import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.Result;
-import services.description.common.ResolutionService;
+import services.description.common.ResolutionServiceOld;
 import controllers.CommonController;
 
-public class Resolutions extends CommonController {
+public class ResolutionsOld extends CommonController {
 	
 	
 	public static Result save(){
 		try {
 			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
-			ResolutionService.main(errors);
+			ResolutionServiceOld.main(errors);
 			if (errors.size() > 0) {
 				return badRequest(Json.toJson(errors));
 			} else {

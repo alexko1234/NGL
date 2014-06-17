@@ -1,31 +1,41 @@
 package models.laboratory.common.instance;
 
-import java.util.List;
+import models.utils.InstanceConstants;
+import validation.ContextValidation;
 
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.DBObject;
 
-public class Resolution extends DBObject implements IValidation {
+public class Resolution implements IValidation {
 	
-	public String  code;
-    public String type;
-    public List<StateResolution> stateResolutions;
+	public String code;
+    public String name;
+    public String categoryCode;
+    public Short displayOrder;
+    public String level = "default";
     
-    public TraceInformation traceInformation;
+	public Resolution() {
+		super();
+	}
+	
     
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		
-		//TODO : validate attributes
-		TraceInformation t = new TraceInformation();
-		t.setTraceInformation("ngsrg");
-		this.traceInformation = t;
-		
-		//add trace information
-		CommonValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
+    	contextValidation.putObject("resolutions", this);
+    	
+    	CommonValidationHelper.validateUniqueFieldValue(contextValidation, "code", this.code, ResolutionConfigurations.class, InstanceConstants.RESOLUTION_COLL_NAME );
+    	
+    	ValidationHelper.required(contextValidation, this.name, "name");
+    	
+    	CommonValidationHelper.validateCategoryCode(categoryCode, contextValidation);
+    	
+    	ValidationHelper.required(contextValidation, this.displayOrder, "displayOrder");
+    	
+    	contextValidation.removeObject("resolutions");
+    	
 	}
 
 }

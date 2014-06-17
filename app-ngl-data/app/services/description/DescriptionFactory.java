@@ -350,7 +350,7 @@ public class DescriptionFactory {
 		return r;
 	}
 	
-	public static models.laboratory.common.instance.Resolution newMongoResolution(String name, String code,
+	public static models.laboratory.common.instance.Resolution newResolution(String name, String code,
 			String categoryCode, Short displayOrder, String level) {
 			models.laboratory.common.instance.Resolution ir = new models.laboratory.common.instance.Resolution();
 			ir.code = code;
@@ -361,7 +361,7 @@ public class DescriptionFactory {
 			return ir;
 		}
 	
-	public static models.laboratory.common.instance.Resolution newMongoResolution(String name, String code,
+	public static models.laboratory.common.instance.Resolution newResolution(String name, String code,
 			String categoryCode, Short displayOrder) {
 			models.laboratory.common.instance.Resolution ir = new models.laboratory.common.instance.Resolution();
 			ir.code = code;

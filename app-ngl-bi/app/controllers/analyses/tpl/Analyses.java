@@ -53,7 +53,7 @@ public class Analyses extends CommonController {
   	    		controllers.analyses.api.routes.javascript.Analyses.valuationBatch(),
   	    		controllers.analyses.api.routes.javascript.Analyses.properties(),
   	    		controllers.analyses.api.routes.javascript.Analyses.propertiesBatch(),
-  	    		controllers.commons.api.routes.javascript.Resolutions.list(),
+  	    		//controllers.commons.api.routes.javascript.Resolutions.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.commons.api.routes.javascript.States.list(),
   	    		controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
@@ -62,7 +62,8 @@ public class Analyses extends CommonController {
 	    		controllers.projects.api.routes.javascript.Projects.list(),	    		
   	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.list(),
   	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),
-  	      		controllers.commons.api.routes.javascript.Users.list()
+  	      		controllers.commons.api.routes.javascript.Users.list(),
+  	      		controllers.commons.api.routes.javascript.Resolutions.list()
 	      		
   	      )	  	      
   	    );

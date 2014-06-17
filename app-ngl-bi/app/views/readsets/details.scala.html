@@ -87,7 +87,7 @@
 						</div>
 					}				
 					@views.html.helper.columnLabelValue(Messages("readsets.productionValuation.resolutions")){
-							<div bt-select  class="form-control" ng-model="readset.productionValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ng-edit="isEditMode()"></div>							
+							<div bt-select  class="form-control" ng-model="readset.productionValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name group by valid.categoryCode for valid in lists.getResolutions()" ng-edit="isEditMode()"></div>							
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.productionValuation.criteria")){
 						<div ng-switch on="isEditMode()">
@@ -119,7 +119,7 @@
 						</div>
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.bioinformaticValuation.resolutions")){
-						<div bt-select  class="form-control" ng-model="readset.bioinformaticValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ng-edit="isEditMode()"></div>
+						<div bt-select  class="form-control" ng-model="readset.bioinformaticValuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name group by valid.categoryCode for valid in lists.getResolutions()" ng-edit="isEditMode()"></div>
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.bioinformaticValuation.criteria")){
 						<div ng-switch on="isEditMode()">
