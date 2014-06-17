@@ -55,10 +55,10 @@ public class PermissionHelper {
 	 * @param allPermission if user need to have all the permission(true) or just one of these(false)
 	 * @return true if the user can access to the resources
 	 */
-	public static boolean checkPermission(Session ses,  ArrayList<String> codePermission, String allPermission) {
+	public static boolean checkPermission(Session ses,  List<String> codePermission, boolean allPermission) {
 		User user = User.find.where().eq("login", ses.get(COOKIE_SESSION)).findUnique();  
 		if(user!=null) {
-			if(allPermission.equals("false")){
+			if(!allPermission){
 				for(Role role:user.roles) {
 					for(models.administration.authorisation.Permission perm:role.permissions) {
 						for(String permissionAsk:codePermission){
@@ -109,7 +109,7 @@ public class PermissionHelper {
 	 * @param teams the name of the teams you want to verify
 	 * @return  if the user is in one of these team
 	 */
-	public static boolean checkTeam(Session ses, ArrayList<String> teams) {
+	public static boolean checkTeam(Session ses, List<String> teams) {
 		//By default -> [""]
 		if(teams.size() < 2 && teams.get(0).equalsIgnoreCase(""))
 			return true;

@@ -25,5 +25,5 @@ import play.mvc.With;
 public @interface Permission {
 	String[] value() default "";//name/value permission
 	String[] teams() default "";//the teams
-	String  allPermissions() default "false";//need to have all the permission(true) or just one(false) 
+	boolean  allPermissions() default false;//need to have all the permission(true) or just one(false) 
 }
