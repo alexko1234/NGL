@@ -39,6 +39,7 @@ DELETE	/api/processus/:code											controllers.processes.api.Processes.delete
 GET		/api/processus													controllers.processes.api.Processes.list()
 GET		/api/processus/types											controllers.processes.api.ProcessTypes.list()
 GET		/api/processus/categories										controllers.processes.api.ProcessCategories.list()
+GET		/api/processus/:code											controllers.processes.api.Processes.get(code:java.lang.String)
 
 #experiments tpl
 GET 	/experiments/:homecode/home																controllers.experiments.tpl.Experiments.home(homecode:java.lang.String)

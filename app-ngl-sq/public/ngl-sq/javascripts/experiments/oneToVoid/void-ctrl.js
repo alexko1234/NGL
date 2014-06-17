@@ -118,7 +118,7 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 	});
 	
 	//Init
-	$scope.datatable = datatable($scope, $scope.datatableConfig);
+	$scope.datatable = datatable($scope.datatableConfig);
 	$scope.atomicTransfere = oneToVoid($scope,"datatable");
 	
 	if($scope.experiment.editMode){

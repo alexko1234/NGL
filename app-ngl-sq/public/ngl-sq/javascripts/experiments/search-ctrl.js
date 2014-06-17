@@ -91,8 +91,10 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	$scope.changeProcessCategory = function(){
 		$scope.form.experimentType = undefined;
 		$scope.form.experimentCategory = undefined;
+		if($scope.form.processCategory){
+			$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
+		}
 		$scope.form.processType = undefined;
-		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
 	};
 	
 	$scope.changeProcessType = function(){
@@ -129,7 +131,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	};
 	
 	$scope.search = function(){		
-		if($scope.form.experimentType || $scope.form.projectCode || $scope.form.sampleCode || $scope.form.type || $scope.form.fromDate || $scope.form.toDate || $scope.form.state || $scope.form.user){
+		if($scope.form.processType || $scope.form.experimentType || $scope.form.projectCode || $scope.form.sampleCode || $scope.form.type || $scope.form.fromDate || $scope.form.toDate || $scope.form.state || $scope.form.user){
 			var jsonSearch = {};			
 
 			if($scope.form.projectCode){

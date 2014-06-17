@@ -9,6 +9,7 @@ import java.util.List;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -42,6 +43,14 @@ public class Processes extends CommonController{
 	final static Form<Process> processForm = form(Process.class);
 	final static Form<ProcessesSearchForm> processesSearchForm = form(ProcessesSearchForm.class);
 
+	public static Result get(String code){
+		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
+		if(process == null){
+			return notFound();
+		}
+		return ok(Json.toJson(process));
+	}
+	
 	public static Result save(){
 		Form<Process> filledForm = getFilledForm(processForm,Process.class);
 		Process value = null;
