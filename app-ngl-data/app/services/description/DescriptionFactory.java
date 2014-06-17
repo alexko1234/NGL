@@ -11,7 +11,6 @@ import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.ResolutionCategory;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
@@ -44,6 +43,7 @@ import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
+import models.laboratory.common.instance.Resolution;
 import play.Logger;
 
 
@@ -338,9 +338,9 @@ public class DescriptionFactory {
 	 * @param objTypes
 	 * @return
 	 */
-	public static Resolution newResolution(String name, String code,
+	public static models.laboratory.common.description.Resolution newResolution(String name, String code,
 		ResolutionCategory category, List<Institute> institutes, List<ObjectType> objTypes, Short displayOrder) {
-		Resolution r = new Resolution();
+		models.laboratory.common.description.Resolution r = new models.laboratory.common.description.Resolution();
 		r.code = code;
 		r.name = name;
 		r.category = category;
@@ -350,24 +350,47 @@ public class DescriptionFactory {
 		return r;
 	}
 	
-	public static models.laboratory.common.instance.Resolution newResolution(String name, String code,
-			String categoryCode, Short displayOrder, String level) {
-			models.laboratory.common.instance.Resolution ir = new models.laboratory.common.instance.Resolution();
+	/**
+	 * define a resolution in MongoDB 
+	 * @param name
+	 * @param code
+	 * @param categoryName
+	 * @param displayOrder
+	 * @param level
+	 * @param categoryDisplayOrder
+	 * @return
+	 */
+	public static Resolution newResolution(String name, String code,
+			String categoryName, Short displayOrder, Short categoryDisplayOrder, String level) {
+			Resolution ir = new Resolution();
 			ir.code = code;
 			ir.name = name;
-			ir.categoryCode = categoryCode;
+			ir.category = new models.laboratory.common.instance.ResolutionCategory(); 
+			ir.category.name = categoryName;
 			ir.displayOrder = displayOrder;
+			ir.category.displayOrder = categoryDisplayOrder; 
 			ir.level = level;
 			return ir;
 		}
 	
-	public static models.laboratory.common.instance.Resolution newResolution(String name, String code,
-			String categoryCode, Short displayOrder) {
-			models.laboratory.common.instance.Resolution ir = new models.laboratory.common.instance.Resolution();
+	/**
+	 * define a resolution in MongoDB
+	 * @param name
+	 * @param code
+	 * @param categoryName
+	 * @param displayOrder
+	 * @param categoryDisplayOrder
+	 * @return
+	 */
+	public static Resolution newResolution(String name, String code,
+			String categoryName, Short displayOrder, Short categoryDisplayOrder) {
+			Resolution ir = new Resolution();
 			ir.code = code;
 			ir.name = name;
-			ir.categoryCode = categoryCode;
+			ir.category = new models.laboratory.common.instance.ResolutionCategory(); 
+			ir.category.name = categoryName;
 			ir.displayOrder = displayOrder;
+			ir.category.displayOrder = categoryDisplayOrder; 
 			return ir;
 		}
 	
@@ -465,9 +488,7 @@ public class DescriptionFactory {
 		et.protocols = protocols;
 		et.instrumentUsedTypes = instrumentUsedTypes;
 		et.states = State.find.findByObjectTypeCode(ObjectType.CODE.Experiment);
-		et.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.Experiment);
-		et.atomicTransfertMethod=atomicTransfertMethod;
-		
+		et.atomicTransfertMethod=atomicTransfertMethod;		
 		et.institutes = institutes;
 		return et;
 	}
@@ -579,7 +600,6 @@ public class DescriptionFactory {
 		pt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Process.name());
 		pt.propertiesDefinitions = propertiesDefinitions;
 		pt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Process);
-		pt.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.Process);
 		pt.firstExperimentType = firstExperimentType;
 		pt.lastExperimentType = lastExperimentType;
 		pt.voidExperimentType = voidExperimentType;
@@ -669,7 +689,6 @@ public class DescriptionFactory {
 		rt.propertiesDefinitions = propertiesDefinitions;
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.ReadSet);
 		rt.institutes = institutes; 
-		rt.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.ReadSet);
 		//rt.criterias = valCriterias;
 		return rt;
 	}
@@ -692,8 +711,6 @@ public class DescriptionFactory {
 		rt.propertiesDefinitions = propertiesDefinitions;
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Analysis);
 		rt.institutes = institutes; 
-		rt.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.Analysis);
-		//rt.criterias = valCriterias;
 		return rt;
 	}
 	
@@ -719,8 +736,6 @@ public class DescriptionFactory {
 		rt.propertiesDefinitions = propertiesDefinitions;
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Run);
 		rt.institutes = institutes;
-		rt.resolutions = Resolution.find.findByObjectTypeCode(ObjectType.CODE.Run);
-		//rt.criterias = valCriterias;
 		return rt;
 	}
 	
@@ -793,34 +808,7 @@ public class DescriptionFactory {
 		return states;
 	}
 
-	/**
-	 * 
-	 * @param codes
-	 * @return
-	 * @throws DAOException
-	 */
-	public static List<Resolution> getResolutionsByCategoryCode(String...codes) throws DAOException {
-		List<Resolution> resolutions = new ArrayList<Resolution>();
-		for(String code: codes){
-			resolutions.addAll(Resolution.find.findByCategoryCode(code));
-		}
-		return resolutions;
-	}
-	
-	/**
-	 * 
-	 * @param codes
-	 * @return
-	 * @throws DAOException
-	 */
-	public static List<Resolution> getResolutions(String...codes) throws DAOException {
-		List<Resolution> resolutions = new ArrayList<Resolution>();
-		for(String code: codes){
-			resolutions.add(Resolution.find.findByCode(code));
-		}
-		return resolutions;
-	}
-	
+
 	/**
 	 * 
 	 * @param codes
@@ -852,8 +840,6 @@ public class DescriptionFactory {
 		v.institutes = institutes;
 		return v;
 	}
-
-	
 
 
 }

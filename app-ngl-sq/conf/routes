@@ -91,7 +91,7 @@ GET		/api/instruments												controllers.instruments.api.Instruments.list()
 #Common
 GET		/api/commons/states												controllers.commons.api.States.list()
 GET		/api/commons/types												controllers.commons.api.CommonInfoTypes.list()
-GET		/api/commons/resolutions  										@controllers.commons.api.Resolutions.list()
+GET		/api/commons/resolutions  										@controllers.resolutions.api.Resolutions.list()
 GET		/api/commons/users  											controllers.commons.api.Users.list()
 
 # load data

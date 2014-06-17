@@ -78,7 +78,7 @@ angular.module('commonsServices', []).
     		
     		var refresh = {
     				resolutions : function(params, key){
-    					load(jsRoutes.controllers.commons.api.Resolutions.list().url,params,(key)?key:'resolutions');
+    					load(jsRoutes.controllers.resolutions.api.Resolutions.list().url,params,(key)?key:'resolutions');
     				},
     				instruments : function(params, key){
     					load(jsRoutes.controllers.instruments.api.Instruments.list().url,params,(key)?key:'instruments');

@@ -52,7 +52,7 @@
 					
 					columns.push({	property:"productionValuation.resolutionCodes",
 									header: "readsets.productionValuation.resolutions",
-									render:'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.categoryCode for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									render:'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
 									type :"text",
 									hide:true,
 						    	  	position:72});
@@ -66,7 +66,7 @@
 					
 					columns.push({	property:"bioinformaticValuation.resolutionCodes",
 									header: "readsets.bioinformaticValuation.resolutions",
-									render:'<div bt-select ng-model="value.data.bioinformaticValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.categoryCode for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									render:'<div bt-select ng-model="value.data.bioinformaticValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
 									type :"text",
 									hide:true,
 						    	  	position:82});
@@ -103,7 +103,7 @@
 					
 					columns.push({	property:"productionValuation.resolutionCodes",
 									header: "readsets.productionValuation.resolutions",
-									render:'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.categoryCode for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									render:'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
 									type :"text",
 							    	edit:true,
 							    	choiceInList:true,

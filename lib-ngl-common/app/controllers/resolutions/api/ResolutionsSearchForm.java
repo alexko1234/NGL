@@ -1,4 +1,4 @@
-package controllers.commons.api;
+package controllers.resolutions.api;
 
 import models.laboratory.common.description.ObjectType.CODE;
 import controllers.ListForm;

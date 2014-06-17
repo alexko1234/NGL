@@ -1,4 +1,4 @@
-package controllers.commons.api;
+package controllers.resolutions.api;
 
 import java.util.Collection;
 import java.util.List;

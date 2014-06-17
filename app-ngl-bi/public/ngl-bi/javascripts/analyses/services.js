@@ -52,7 +52,7 @@
 								    	order:true});
 						columns.push({	property:"valuation.resolutionCodes",
 										header: "analyses.valuation.resolutions",
-										render:'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.categoryCode for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+										render:'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
 										type :"text",
 										hide:true});
 					}else{
@@ -68,7 +68,7 @@
 						
 						columns.push({	property:"valuation.resolutionCodes",
 										header: "analyses.valuation.resolutions",
-										render:'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.categoryCode for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+										render:'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
 										type :"text",
 								    	edit:true,
 								    	choiceInList:true,

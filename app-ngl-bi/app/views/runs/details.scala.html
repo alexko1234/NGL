@@ -58,7 +58,7 @@
 				   }
 				  
 			    @views.html.helper.columnLabelValue(Messages("runs.valuation.resolutions")){
-			    	<div bt-select class="form-control" ng-model="run.valuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name group by valid.categoryCode for valid in lists.getResolutions()" ng-edit="mainService.isEditMode()"></div>					
+			    	<div bt-select class="form-control" ng-model="run.valuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ng-edit="mainService.isEditMode()"></div>					
 			   }
 				
 				@views.html.helper.columnLabelValue(Messages("runs.valuation.criteria")){

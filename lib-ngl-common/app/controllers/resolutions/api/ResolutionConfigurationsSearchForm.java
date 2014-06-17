@@ -1,4 +1,4 @@
-package controllers.commons.api;
+package controllers.resolutions.api;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.instance.Resolution;
 import controllers.ListForm;
 
-public class ResolutionConfigsSearchForm extends ListForm{
+public class ResolutionConfigurationsSearchForm extends ListForm{
 	
 	public String typeCode;
 	public List<String> typeCodes;

@@ -1,4 +1,4 @@
-package controllers.commons.api;
+package controllers.resolutions.api;
 
 import static play.data.Form.form;
 
@@ -31,7 +31,7 @@ import fr.cea.ig.MongoDBResult;
 @Controller
 public class Resolutions extends DocumentController<ResolutionConfigurations> {
 	
-	final static Form<ResolutionConfigsSearchForm> searchForm = form(ResolutionConfigsSearchForm.class); 
+	final static Form<ResolutionConfigurationsSearchForm> searchForm = form(ResolutionConfigurationsSearchForm.class); 
 	final static Form<ResolutionConfigurations> resolutionConfigurationsForm = form(ResolutionConfigurations.class);
 	
 	public Resolutions() {
@@ -40,8 +40,8 @@ public class Resolutions extends DocumentController<ResolutionConfigurations> {
 
 
 	public Result list() {
-		Form<ResolutionConfigsSearchForm> filledForm = filledFormQueryString(searchForm, ResolutionConfigsSearchForm.class);
-		ResolutionConfigsSearchForm form = filledForm.get();
+		Form<ResolutionConfigurationsSearchForm> filledForm = filledFormQueryString(searchForm, ResolutionConfigurationsSearchForm.class);
+		ResolutionConfigurationsSearchForm form = filledForm.get();
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
 
@@ -77,7 +77,7 @@ public class Resolutions extends DocumentController<ResolutionConfigurations> {
 		return resos;
 	}
 	
-	private Query getQuery(ResolutionConfigsSearchForm form) {
+	private Query getQuery(ResolutionConfigurationsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;		
 		
