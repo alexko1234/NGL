@@ -139,9 +139,6 @@ PUT     /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.up
 DELETE  /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
 
 
-
-
-
 #reporting configuration
 GET    	/api/reporting/configs    	           			controllers.reporting.api.ReportingConfigurations.list()
 GET	   	/api/reporting/configs/:code					controllers.reporting.api.ReportingConfigurations.get(code)
@@ -189,7 +186,6 @@ GET		/api/commons/types							controllers.commons.api.CommonInfoTypes.list()
 
 #list
 GET		/api/commons/resolutions  					@controllers.commons.api.Resolutions.list()
-GET		/api/lists/valuation-criterias				controllers.lists.api.Lists.valuationCriterias()
 
 #projects
 GET		/api/projects								@controllers.projects.api.Projects.list()
@@ -203,6 +199,16 @@ PUT		/api/instruments/:code						controllers.instruments.api.Instruments.update(
 #samples
 GET		/api/samples								controllers.samples.api.Samples.list()
 GET		/api/samples/:code							controllers.samples.api.Samples.get(code: java.lang.String)
+
+
+#containers api
+GET		/api/containers								controllers.containers.api.Containers.list()
+GET		/api/containers/:code						controllers.containers.api.Containers.get(code:java.lang.String)
+
+#supports api
+GET		/api/supports								controllers.supports.api.Supports.list()
+GET		/api/supports/:code							controllers.supports.api.Supports.get(code:java.lang.String)
+
 
 #stats
 GET	   	/stats/:homecode/home						controllers.stats.tpl.Stats.home(homecode: java.lang.String)
