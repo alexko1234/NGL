@@ -338,7 +338,7 @@ public class DescriptionFactory {
 	}
 
 	/**
-	 * 
+	 * deprecated (for old resolution)
 	 * @param name
 	 * @param code
 	 * @param category
@@ -359,7 +359,7 @@ public class DescriptionFactory {
 	}
 	
 	/**
-	 * define a resolution in MongoDB 
+	 * define a resolution in MongoDB (with specific level) 
 	 * @param name
 	 * @param code
 	 * @param categoryName
@@ -374,9 +374,7 @@ public class DescriptionFactory {
 			ir.code = code;
 			ir.name = name;
 			ir.displayOrder = displayOrder;
-			ir.category = new ResolutionCategory(); 
-			ir.category.name = rc.name;
-			ir.category.displayOrder = rc.displayOrder; 
+			ir.category = new ResolutionCategory(rc.name, rc.displayOrder); 
 			ir.level = level;
 			return ir;
 		}
@@ -395,14 +393,14 @@ public class DescriptionFactory {
 			ir.code = code;
 			ir.name = name;
 			ir.displayOrder = displayOrder;
-			ir.category = new ResolutionCategory(); 
-			ir.category.name = rc.name;
-			ir.category.displayOrder = rc.displayOrder; 
+			ir.category = new ResolutionCategory(rc.name, rc.displayOrder); 
 			return ir;
 		}
 	
+
+	
 	/**
-	 * 
+	 * define institute
 	 * @param name
 	 * @param code
 	 * @return

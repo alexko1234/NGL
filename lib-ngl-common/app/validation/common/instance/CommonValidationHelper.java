@@ -368,14 +368,18 @@ public class CommonValidationHelper {
 	
 	public static void validateResolutionCodes(List<String> resoCodes,ContextValidation contextValidation){
 			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
-			validateResolutionCodes(typeCode, resoCodes, contextValidation);		
+			validateResolutionCodes(typeCode, resoCodes, contextValidation);
 	}
 	
 	public static void validateResolutionCodes(String typeCode, List<String> resoCodes, ContextValidation contextValidation){
 		if(null != resoCodes){
 			int i = 0;
 			for(String resoCode: resoCodes){
-				if (! MongoDBDAO.checkObjectExist(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, DBQuery.and(DBQuery.is("resolutions.code", resoCode), DBQuery.in("typeCodes", typeCode)))) {
+				
+				List<String> typeCodes = new ArrayList<String>();
+				typeCodes.add(typeCode);
+				
+				if (! MongoDBDAO.checkObjectExist(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, DBQuery.and(DBQuery.is("resolutions.code", resoCode), DBQuery.in("typeCodes", typeCodes)))) {
 					contextValidation.addErrors("resolutionCodes["+i+"]", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, resoCode);
 				}
 				i++;

@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Resolution;
+import models.laboratory.common.instance.Resolution;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.ResolutionConfigurations;
 import models.laboratory.common.instance.State;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
@@ -13,16 +14,21 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentQueryParams;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
+import net.vz.mongodb.jackson.DBQuery;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import fr.cea.ig.MongoDBDAO;
+
 import utils.AbstractTests;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
+
 
 public class ExperimentValidationHelperTest extends AbstractTests {
 
@@ -39,10 +45,14 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 		protocol=new Protocol();
 		protocol=Protocol.find.findByExperimentTypeCode(experimentType.code).get(0);
 
-		List<Resolution> resolutions=Resolution.find.findByTypeCode(experimentType.code);
+		List<String> experimentTypes = new ArrayList<String>();
+		experimentTypes.add(experimentType.code);		
+		List<ResolutionConfigurations> resolutionConfigurations = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, DBQuery.in("typeCodes", experimentTypes)).toList();
 		resolutionList=new ArrayList<String>();
-		for(Resolution res:resolutions){
-			resolutionList.add(res.code);
+		for (ResolutionConfigurations rc : resolutionConfigurations) {
+			for(Resolution reso: rc.resolutions) {
+				resolutionList.add(reso.code);
+			}
 		}
 		instrumentUsedType=InstrumentUsedType.find.findByExperimentTypeCode(experimentType.code).get(0);
 		InstrumentQueryParams instrumentsQueryParams=new InstrumentQueryParams();
