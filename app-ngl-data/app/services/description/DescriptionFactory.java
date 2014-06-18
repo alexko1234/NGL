@@ -11,7 +11,6 @@ import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.ResolutionCategory;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
 import models.laboratory.common.description.ValuationCriteria;
@@ -43,6 +42,7 @@ import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
+import models.laboratory.common.instance.ResolutionCategory;
 import models.laboratory.common.instance.Resolution;
 import play.Logger;
 
@@ -79,9 +79,17 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static ResolutionCategory newResolutionCategory(String name, String code, Short displayOrder) throws DAOException {		
-		ResolutionCategory  rc = new ResolutionCategory();
+	public static models.laboratory.common.description.ResolutionCategory newResolutionCategory(String name, String code, Short displayOrder) throws DAOException {		
+		models.laboratory.common.description.ResolutionCategory  rc = new models.laboratory.common.description.ResolutionCategory();
 		rc.code = code;
+		rc.name = name;
+		rc.displayOrder = displayOrder;
+		return rc; 
+	}
+	
+	
+	public static ResolutionCategory newResolutionCategory(String name, Short displayOrder) {		
+		ResolutionCategory  rc = new ResolutionCategory();
 		rc.name = name;
 		rc.displayOrder = displayOrder;
 		return rc; 
@@ -339,7 +347,7 @@ public class DescriptionFactory {
 	 * @return
 	 */
 	public static models.laboratory.common.description.Resolution newResolution(String name, String code,
-		ResolutionCategory category, List<Institute> institutes, List<ObjectType> objTypes, Short displayOrder) {
+			models.laboratory.common.description.ResolutionCategory category, List<Institute> institutes, List<ObjectType> objTypes, Short displayOrder) {
 		models.laboratory.common.description.Resolution r = new models.laboratory.common.description.Resolution();
 		r.code = code;
 		r.name = name;
@@ -361,14 +369,14 @@ public class DescriptionFactory {
 	 * @return
 	 */
 	public static Resolution newResolution(String name, String code,
-			String categoryName, Short displayOrder, Short categoryDisplayOrder, String level) {
+			 ResolutionCategory rc, Short displayOrder, String level) {
 			Resolution ir = new Resolution();
 			ir.code = code;
 			ir.name = name;
-			ir.category = new models.laboratory.common.instance.ResolutionCategory(); 
-			ir.category.name = categoryName;
 			ir.displayOrder = displayOrder;
-			ir.category.displayOrder = categoryDisplayOrder; 
+			ir.category = new ResolutionCategory(); 
+			ir.category.name = rc.name;
+			ir.category.displayOrder = rc.displayOrder; 
 			ir.level = level;
 			return ir;
 		}
@@ -382,15 +390,14 @@ public class DescriptionFactory {
 	 * @param categoryDisplayOrder
 	 * @return
 	 */
-	public static Resolution newResolution(String name, String code,
-			String categoryName, Short displayOrder, Short categoryDisplayOrder) {
+	public static Resolution newResolution(String name, String code, ResolutionCategory rc, Short displayOrder) {
 			Resolution ir = new Resolution();
 			ir.code = code;
 			ir.name = name;
-			ir.category = new models.laboratory.common.instance.ResolutionCategory(); 
-			ir.category.name = categoryName;
 			ir.displayOrder = displayOrder;
-			ir.category.displayOrder = categoryDisplayOrder; 
+			ir.category = new ResolutionCategory(); 
+			ir.category.name = rc.name;
+			ir.category.displayOrder = rc.displayOrder; 
 			return ir;
 		}
 	
@@ -488,6 +495,7 @@ public class DescriptionFactory {
 		et.protocols = protocols;
 		et.instrumentUsedTypes = instrumentUsedTypes;
 		et.states = State.find.findByObjectTypeCode(ObjectType.CODE.Experiment);
+		//et.resolutions = models.laboratory.common.description.Resolution.find.findByObjectTypeCode(ObjectType.CODE.Experiment);
 		et.atomicTransfertMethod=atomicTransfertMethod;		
 		et.institutes = institutes;
 		return et;
@@ -600,6 +608,7 @@ public class DescriptionFactory {
 		pt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Process.name());
 		pt.propertiesDefinitions = propertiesDefinitions;
 		pt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Process);
+		//pt.resolutions = models.laboratory.common.description.Resolution.find.findByObjectTypeCode(ObjectType.CODE.Process);
 		pt.firstExperimentType = firstExperimentType;
 		pt.lastExperimentType = lastExperimentType;
 		pt.voidExperimentType = voidExperimentType;
@@ -711,6 +720,8 @@ public class DescriptionFactory {
 		rt.propertiesDefinitions = propertiesDefinitions;
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Analysis);
 		rt.institutes = institutes; 
+		//rt.resolutions = models.laboratory.common.description.Resolution.find.findByObjectTypeCode(ObjectType.CODE.Analysis);
+		//rt.criterias = valCriterias;
 		return rt;
 	}
 	
@@ -736,6 +747,8 @@ public class DescriptionFactory {
 		rt.propertiesDefinitions = propertiesDefinitions;
 		rt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Run);
 		rt.institutes = institutes;
+		//rt.resolutions = models.laboratory.common.description.Resolution.find.findByObjectTypeCode(ObjectType.CODE.Run);
+		//rt.criterias = valCriterias;
 		return rt;
 	}
 	
