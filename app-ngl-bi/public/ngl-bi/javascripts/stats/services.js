@@ -95,9 +95,7 @@
 		};
 		
 		return statsService;				
-	}
-		
-	
+	}			
 ]).
 factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($http, $q, datatable){
 	var datatableConfig = {
@@ -111,8 +109,7 @@ factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($h
 				active:true,
 				mode:'local',
 				callback:function(datatable){
-					mainService.getBasket().reset();
-					mainService.getBasket().add(datatable.getData());
+					queriesService.queries = datatable.getData();					
 				}
 			},
 			columns : [
@@ -138,9 +135,11 @@ factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($h
 	var updateResultQueries = function(queries){
 		var promises = [];
 		for(var i = 0; i < queries.length ; i++){
-			var form = angular.copy(queries[i].form);
-			form.count = true;
-			promises.push($http.get(url,{params:form, query:queries[i]}));			
+			if(!queries.nbResults){
+				var form = angular.copy(queries[i].form);
+				form.count = true;
+				promises.push($http.get(url,{params:form, query:queries[i]}));
+			}
 		}
 		return promises;
 	}
@@ -148,25 +147,23 @@ factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($h
 	
 	var queriesService = {
 			datatable:undefined,
-			getData : function(){
-				return this.datatable.getData();
-			},
-			isData : function(){
-				return (this.datatable && this.datatable.getData().length > 0);
-			},
-			init:function(queries){
+			queries:[],						
+			loadDatatable:function(){
 				this.datatable = datatable(datatableConfig);
-				if(queries && queries.length > 0){
-					$q.all(updateResultQueries(queries)).then(function(results){
+				if(this.queries && this.queries.length > 0){
+					$q.all(updateResultQueries(this.queries)).then(function(results){
 						angular.forEach(results, function(value, key){
 							value.config.query.nbResults = value.data;																
 						});	
-						queriesService.datatable.setData(queries, queries.length);
+						queriesService.datatable.setData(queriesService.queries, queriesService.queries.length);
 					});	
 										
 				} else {
 					queriesService.datatable.setData([], 0);
 				}
+			},
+			addQuery : function(query){
+				this.queries = [query];
 			}
 	};
 	
@@ -271,9 +268,9 @@ factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($h
 	var charts = [];
 	var statsConfigs, queriesConfigs = [];
 	var loadData = function(){
-		if(statsConfigReadSetsService.isData() && queriesConfigReadSetsService.isData()){
+		if(statsConfigReadSetsService.isData() && queriesConfigReadSetsService.queries.length > 0){
 			statsConfigs =  	statsConfigReadSetsService.getData();
-			queriesConfigs =  queriesConfigReadSetsService.getData();
+			queriesConfigs =  queriesConfigReadSetsService.queries;
 			var properties = ["default"];
 			for(var i = 0; i < statsConfigs.length; i++){
 				properties.push(statsConfigs[i].column.property);
@@ -299,7 +296,7 @@ factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($h
 				readsetDatatable.setColumnsConfig(defaultDatatableColumns.concat(statsConfigs.map(function(statsConfig){
 					statsConfig.column.order=true;
 					return statsConfig.column;
-					})))
+				})));
 				readsetDatatable.setData(data, data.length);
 				computeCharts();
 				

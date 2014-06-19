@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('StatsSearchReadSetsCtrl',['$scope', '$routeParams', 'mainService', 'tabService','readSetsSearchService', 'basket', 'valuationService',
-                                                              function($scope, $routeParams, mainService, tabService, readSetsSearchService, basket, valuationService) { 
+angular.module('home').controller('StatsSearchReadSetsCtrl',['$scope', '$routeParams', 'mainService', 'tabService','readSetsSearchService', 'valuationService','queriesConfigReadSetsService',
+                                                              function($scope, $routeParams, mainService, tabService, readSetsSearchService, valuationService, queriesConfigReadSetsService) { 
 
 	var datatableConfig = {
 			order :{by:'runSequencingStartDate', reverse : true},
@@ -13,7 +13,7 @@ angular.module('home').controller('StatsSearchReadSetsCtrl',['$scope', '$routePa
 			},
 			otherButtons:{
 				active:true,
-				template:'<button class="btn btn-default" ng-click="addToBasket()" data-toggle="tooltip" title="'+Messages("button.query.addbasket")+'"><i class="fa fa-shopping-cart"></i> (<span ng-bind="basket.length()"/>)</button>'
+				template:'<button class="btn btn-default" ng-click="addToBasket()" data-toggle="tooltip" title="'+Messages("button.query.addbasket")+'"><i class="fa fa-shopping-cart"></i> (<span ng-bind="queriesConfigService.queries.length"/>)</button>'
 			}
 	};
 
@@ -39,19 +39,15 @@ angular.module('home').controller('StatsSearchReadSetsCtrl',['$scope', '$routePa
 		var query = {form : angular.copy($scope.searchService.convertForm())};
 		query.form.includes = undefined;
 		query.form.excludes = undefined;
-		$scope.basket.reset();
-		$scope.basket.add(query);		
+		$scope.queriesConfigService.addQuery(query);			
 	};
 	
 	$scope.searchService = readSetsSearchService;	
 	$scope.searchService.init($routeParams, datatableConfig);
 	$scope.valuationService = valuationService();
-	if(angular.isUndefined(mainService.getBasket())){
-		$scope.basket = basket();			
-		mainService.setBasket($scope.basket);
-	}else{
-		$scope.basket = mainService.getBasket();
-	}
+		
+	$scope.queriesConfigService = queriesConfigReadSetsService;
+	mainService.put('queriesConfigReadSetsService', $scope.queriesConfigService);
 	
 	$scope.search();
 	
@@ -81,9 +77,14 @@ angular.module('home').controller('StatsConfigReadSetsCtrl',['$scope', 'mainServ
 		$scope.statsConfigService = mainService.get('statsConfigReadSetsService');
 	}
 	
-	$scope.queriesConfigService = queriesConfigReadSetsService;
-	$scope.queriesConfigService.init(mainService.getBasket().get());
-	mainService.put('queriesConfigReadSetsService', $scope.queriesConfigService);
+	
+	if(angular.isUndefined(mainService.get('queriesConfigReadSetsService'))){
+		$scope.queriesConfigService = queriesConfigReadSetsService;
+		mainService.put('queriesConfigReadSetsService', $scope.queriesConfigService);
+	}else{
+		$scope.queriesConfigService = mainService.get('queriesConfigReadSetsService');
+	}	
+	$scope.queriesConfigService.loadDatatable();	
 }]);
 
 angular.module('home').controller('StatsShowReadSetsCtrl',['$scope',  'mainService', 'tabService', 'chartsReadSetsService',

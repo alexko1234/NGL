@@ -105,7 +105,7 @@
 				},
 				
 				refreshSamples : function(){
-					if(this.form.projectCodes){
+					if(this.form.projectCodes && this.form.projectCodes.length > 0){
 						this.lists.refresh.samples({projectCodes:this.form.projectCodes});
 					}
 				},
