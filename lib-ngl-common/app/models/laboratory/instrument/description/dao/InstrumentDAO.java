@@ -18,6 +18,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
+import play.Logger;
+
 @Repository
 public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 
@@ -90,8 +92,8 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 		}
 		try {
 			try{
-				String sql = "select distinct t.id FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t")+" WHERE t.code=?";
-				long id =  this.jdbcTemplate.queryForLong(sql, code);
+				String sql = "select min(t.id) as id FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t")+" WHERE t.code=?";
+				Long id =  this.jdbcTemplate.queryForLong(sql, code);
 				if(id > 0){
 					return Boolean.TRUE;
 				}else{
