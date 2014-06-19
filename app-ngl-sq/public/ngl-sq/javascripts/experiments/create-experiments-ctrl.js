@@ -464,6 +464,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		if($scope.experiment.value.instrument.typeCode === null){
 			$scope.experiment.instrumentProperties.inputs = [];
 			$scope.experiment.instrumentInformation.instrumentCategorys.inputs = [];
+			
 		}
 		
 		$scope.$broadcast('deleteInstrumentPropertiesInputs', "Instruments");
@@ -471,6 +472,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		
 		if(loaded == false){
 			$scope.experiment.value.instrumentProperties = {};
+			$scope.experiment.value.instrument.outContainerSupportCategoryCode = "";
 			if($scope.experimentType.atomicTransfertMethod == "ManyToOne"){
 				$scope.experiment.value.atomicTransfertMethods = $scope.experiment.value.atomicTransfertMethods.map(function(atomicTransfertMethod){
 					atomicTransfertMethod.inputContainerUseds = atomicTransfertMethod.inputContainerUseds.map(function(inputContainerUsed){
@@ -480,10 +482,15 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					return atomicTransfertMethod;
 				});
 			}else{
-				$scope.experiment.value.atomicTransfertMethods = $scope.experiment.value.atomicTransfertMethods.map(function(atomicTransfertMethod){
+				for(var i=0;i< $scope.experiment.value.atomicTransfertMethods.length;i++){
+					 $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties = {};
+				}
+				
+				//Bug with the map ?
+				/*$scope.experiment.value.atomicTransfertMethods = $scope.experiment.value.atomicTransfertMethods.map(function(atomicTransfertMethod){
 						atomicTransfertMethod.inputContainerUsed.instrumentProperties = {};
 						return atomicTransfertMethod;
-				});
+				});*/
 			}
 		}
 
