@@ -12,8 +12,14 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 					"type":"text"
 			},
 			{
-				"header":Messages("containers.table.support.position"),
-				"property":"support.position",
+				"header":Messages("containers.table.support.column"),
+				"property":"support.column",
+				"order":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.support.line"),
+				"property":"support.line",
 				"order":true,
 				"type":"text"
 			},
