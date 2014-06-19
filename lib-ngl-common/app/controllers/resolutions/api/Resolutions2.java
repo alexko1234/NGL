@@ -8,8 +8,8 @@ import org.springframework.stereotype.Controller;
 import play.libs.Json;
 import play.mvc.Result;
 
-import models.laboratory.common.instance.ResolutionConfigurations;
-import models.laboratory.common.instance.Resolution;
+import models.laboratory.resolutions.instance.Resolution;
+import models.laboratory.resolutions.instance.ResolutionConfigurations;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;

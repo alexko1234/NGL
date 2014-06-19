@@ -3,7 +3,7 @@ package controllers.resolutions.api;
 import java.util.List;
 
 import models.laboratory.common.description.ObjectType.CODE;
-import models.laboratory.common.instance.Resolution;
+import models.laboratory.resolutions.instance.Resolution;
 import controllers.ListForm;
 
 public class ResolutionConfigurationsSearchForm extends ListForm{

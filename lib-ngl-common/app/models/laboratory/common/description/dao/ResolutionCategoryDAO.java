@@ -3,7 +3,7 @@ package models.laboratory.common.description.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.laboratory.common.description.ResolutionCategory;
+import models.laboratory.resolutions.description.ResolutionCategory;
 import models.utils.dao.AbstractDAODefault;
 import models.utils.dao.DAOException;
 

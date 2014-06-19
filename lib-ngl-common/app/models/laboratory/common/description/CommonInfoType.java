@@ -11,6 +11,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.common.description.dao.StateDAO;
+import models.laboratory.resolutions.description.Resolution;
 import models.utils.ListObject;
 import models.utils.Model;
 import models.utils.Model.Finder;

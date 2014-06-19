@@ -5,8 +5,8 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.laboratory.common.instance.ResolutionConfigurations;
-import models.laboratory.common.instance.Resolution;
+import models.laboratory.resolutions.instance.Resolution;
+import models.laboratory.resolutions.instance.ResolutionConfigurations;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;

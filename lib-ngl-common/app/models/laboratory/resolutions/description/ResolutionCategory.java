@@ -1,5 +1,6 @@
-package models.laboratory.common.description;
+package models.laboratory.resolutions.description;
 
+import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.common.description.dao.ResolutionCategoryDAO;
 
 

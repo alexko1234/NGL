@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.instance.Resolution;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.ResolutionConfigurations;
 import models.laboratory.common.instance.State;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
@@ -14,6 +12,8 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentQueryParams;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.resolutions.instance.Resolution;
+import models.laboratory.resolutions.instance.ResolutionConfigurations;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;

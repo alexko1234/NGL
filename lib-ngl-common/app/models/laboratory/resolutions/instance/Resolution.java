@@ -1,4 +1,4 @@
-package models.laboratory.common.instance;
+package models.laboratory.resolutions.instance;
 
 import models.utils.InstanceConstants;
 import validation.ContextValidation;

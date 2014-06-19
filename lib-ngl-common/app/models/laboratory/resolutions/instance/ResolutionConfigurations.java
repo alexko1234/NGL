@@ -1,7 +1,8 @@
-package models.laboratory.common.instance;
+package models.laboratory.resolutions.instance;
 
 import java.util.List;
 
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.stock.instance.Stock;
 import models.utils.InstanceConstants;
 

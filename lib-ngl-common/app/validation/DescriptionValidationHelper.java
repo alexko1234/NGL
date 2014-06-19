@@ -3,7 +3,6 @@ package validation;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.experiment.description.ExperimentType;
@@ -11,6 +10,7 @@ import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.reagent.description.ReagentType;
+import models.laboratory.resolutions.description.Resolution;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
 

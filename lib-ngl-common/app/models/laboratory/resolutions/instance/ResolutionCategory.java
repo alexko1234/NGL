@@ -1,4 +1,4 @@
-package models.laboratory.common.instance;
+package models.laboratory.resolutions.instance;
 
 public class ResolutionCategory {
 	public String name;

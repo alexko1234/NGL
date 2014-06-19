@@ -12,9 +12,9 @@ import services.description.DescriptionFactory;
 import fr.cea.ig.MongoDBDAO;
 
 import validation.ContextValidation;
-import models.laboratory.common.instance.ResolutionCategory;
-import models.laboratory.common.instance.ResolutionConfigurations;
-import models.laboratory.common.instance.Resolution;
+import models.laboratory.resolutions.instance.Resolution;
+import models.laboratory.resolutions.instance.ResolutionCategory;
+import models.laboratory.resolutions.instance.ResolutionConfigurations;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 

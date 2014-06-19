@@ -29,6 +29,8 @@ import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
+import models.laboratory.resolutions.instance.Resolution;
+import models.laboratory.resolutions.instance.ResolutionCategory;
 import models.laboratory.run.description.AnalysisType;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.description.RunCategory;
@@ -42,8 +44,6 @@ import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
-import models.laboratory.common.instance.ResolutionCategory;
-import models.laboratory.common.instance.Resolution;
 import play.Logger;
 
 
@@ -79,8 +79,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static models.laboratory.common.description.ResolutionCategory newResolutionCategory(String name, String code, Short displayOrder) throws DAOException {		
-		models.laboratory.common.description.ResolutionCategory  rc = new models.laboratory.common.description.ResolutionCategory();
+	public static models.laboratory.resolutions.description.ResolutionCategory newResolutionCategory(String name, String code, Short displayOrder) throws DAOException {		
+		models.laboratory.resolutions.description.ResolutionCategory  rc = new models.laboratory.resolutions.description.ResolutionCategory();
 		rc.code = code;
 		rc.name = name;
 		rc.displayOrder = displayOrder;
@@ -346,9 +346,9 @@ public class DescriptionFactory {
 	 * @param objTypes
 	 * @return
 	 */
-	public static models.laboratory.common.description.Resolution newResolution(String name, String code,
-			models.laboratory.common.description.ResolutionCategory category, List<Institute> institutes, List<ObjectType> objTypes, Short displayOrder) {
-		models.laboratory.common.description.Resolution r = new models.laboratory.common.description.Resolution();
+	public static models.laboratory.resolutions.description.Resolution newResolution(String name, String code,
+			models.laboratory.resolutions.description.ResolutionCategory category, List<Institute> institutes, List<ObjectType> objTypes, Short displayOrder) {
+		models.laboratory.resolutions.description.Resolution r = new models.laboratory.resolutions.description.Resolution();
 		r.code = code;
 		r.name = name;
 		r.category = category;

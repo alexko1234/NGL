@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import models.laboratory.common.instance.Resolution;
+import models.laboratory.resolutions.instance.Resolution;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;

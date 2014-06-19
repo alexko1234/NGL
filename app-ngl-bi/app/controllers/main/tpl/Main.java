@@ -4,8 +4,8 @@ package controllers.main.tpl;
 import java.util.List;
 
 import models.laboratory.common.description.CodeLabel;
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.dao.CodeLabelDAO;
+import models.laboratory.resolutions.description.Resolution;
 import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
 import controllers.CommonController;

@@ -1,6 +1,10 @@
-package models.laboratory.common.description;
+package models.laboratory.resolutions.description;
 
 import java.util.List;
+
+import models.laboratory.common.description.Institute;
+import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.dao.ResolutionDAO;
 import models.utils.Model;
 import models.utils.dao.DAOException;

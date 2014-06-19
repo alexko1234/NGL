@@ -6,8 +6,8 @@ import java.util.Map;
 
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.ObjectType;
-import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.ResolutionCategory;
+import models.laboratory.resolutions.description.Resolution;
+import models.laboratory.resolutions.description.ResolutionCategory;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;

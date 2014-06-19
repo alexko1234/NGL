@@ -4,7 +4,7 @@ import static play.data.Form.form;
 
 import java.util.List;
 
-import models.laboratory.common.description.Resolution;
+import models.laboratory.resolutions.description.Resolution;
 import models.utils.dao.DAOException;
 import play.Logger;
 import play.data.Form;

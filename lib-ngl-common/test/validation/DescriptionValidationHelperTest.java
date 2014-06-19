@@ -1,7 +1,6 @@
 package validation;
 
 import static org.fest.assertions.Assertions.assertThat;
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
@@ -12,6 +11,7 @@ import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.reagent.description.ReagentType;
+import models.laboratory.resolutions.description.Resolution;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;

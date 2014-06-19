@@ -10,13 +10,13 @@ import play.Logger;
 
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
-import models.laboratory.common.instance.ResolutionConfigurations;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.project.instance.Project;
+import models.laboratory.resolutions.instance.ResolutionConfigurations;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
@@ -467,7 +467,7 @@ public class CommonValidationHelper {
 	public static void validateCategoryCode(String categoryCode, ContextValidation contextValidation){
 		try{
 			if(required(contextValidation, categoryCode, "code")){
-				if(!models.laboratory.common.description.ResolutionCategory.find.isCodeExist(categoryCode)){
+				if(!models.laboratory.resolutions.description.ResolutionCategory.find.isCodeExist(categoryCode)){
 					contextValidation.addErrors("resolutions.categoryCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, categoryCode);
 				}
 			}

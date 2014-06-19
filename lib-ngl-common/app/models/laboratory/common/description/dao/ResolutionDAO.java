@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.ObjectType;
-import models.laboratory.common.description.Resolution;
+import models.laboratory.resolutions.description.Resolution;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;

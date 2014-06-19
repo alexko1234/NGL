@@ -3,7 +3,6 @@ package models.dao;
 
 import java.util.List;
 
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
@@ -11,6 +10,7 @@ import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.reagent.description.ReagentType;
+import models.laboratory.resolutions.description.Resolution;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
