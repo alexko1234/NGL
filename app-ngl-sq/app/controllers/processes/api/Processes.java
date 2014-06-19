@@ -18,6 +18,7 @@ import models.utils.dao.DAOException;
 import net.vz.mongodb.jackson.DBQuery;
 import net.vz.mongodb.jackson.DBQuery.Query;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -178,11 +179,15 @@ public class Processes extends CommonController{
 
 		Logger.info("Process Query : "+processesSearch);
 
-		if(StringUtils.isNotEmpty(processesSearch.projectCode)){
+		if (CollectionUtils.isNotEmpty(processesSearch.projectCodes)) { //all
+			queryElts.add(DBQuery.in("projectCode", processesSearch.projectCodes));
+		}else if(StringUtils.isNotBlank(processesSearch.projectCode)){
 			queryElts.add(DBQuery.is("projectCode", processesSearch.projectCode));
 		}
-
-		if(StringUtils.isNotEmpty(processesSearch.sampleCode)){
+		
+		if (CollectionUtils.isNotEmpty(processesSearch.sampleCodes)) { //all
+			queryElts.add(DBQuery.in("sampleCode", processesSearch.sampleCodes));
+		}else if(StringUtils.isNotBlank(processesSearch.sampleCode)){
 			queryElts.add(DBQuery.is("sampleCode", processesSearch.sampleCode));
 		}
 

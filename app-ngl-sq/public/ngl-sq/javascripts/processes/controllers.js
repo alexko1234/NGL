@@ -124,22 +124,22 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	};
 	
 	$scope.refreshSamples = function(){
-		if($scope.form.projectCode){
-			lists.refresh.samples({projectCode:$scope.form.projectCode});
+		if($scope.form.projectCodes && $scope.form.projectCodes.length>0){
+			lists.refresh.samples({projectCodes:$scope.form.projectCodes});
 		}
 	};
 	
 	$scope.search = function(){	
-		if($scope.form.projectCode || $scope.form.sampleCode || $scope.form.processType || $scope.form.containerSupportCode 
+		if($scope.form.projectCodes || $scope.form.sampleCodes || $scope.form.processType || $scope.form.containerSupportCode 
 				|| $scope.form.fromExperimentTypeCodes || $scope.form.containerSupportCategory){
 			var jsonSearch = {};
 			jsonSearch.stateCode = 'IW-P';
-			if($scope.form.projectCode){
-				jsonSearch.projectCode = $scope.form.projectCode;
+			if($scope.form.projectCodes){
+				jsonSearch.projectCodes = $scope.form.projectCodes;
 			}			
 			
-			if($scope.form.sampleCode){
-				jsonSearch.sampleCode = $scope.form.sampleCode;
+			if($scope.form.sampleCodes){
+				jsonSearch.sampleCodes = $scope.form.sampleCodes;
 			}				
 			
 			if($scope.form.containerSupportCategory){

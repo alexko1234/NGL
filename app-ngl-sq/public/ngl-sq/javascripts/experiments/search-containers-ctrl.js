@@ -102,8 +102,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.refreshSamples = function(){
-		if($scope.form.projectCode){
-			lists.refresh.samples({projectCode:$scope.form.projectCode});
+		if($scope.form.projectCodes && $scope.form.projectCodes.length>0){
+			lists.refresh.samples({projectCodes:$scope.form.projectCodes});
 		}
 	};
 	
@@ -133,11 +133,11 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			
 			jsonSearch.stateCode = $scope.getContainerStateCode($scope.form.experimentCategory.code);	 
 			
-			if($scope.form.projectCode){
-				jsonSearch.projectCodes = $scope.form.projectCode;
+			if($scope.form.projectCodes){
+				jsonSearch.projectCodes = $scope.form.projectCodes;
 			}			
-			if($scope.form.sampleCode){
-				jsonSearch.sampleCodes = $scope.form.sampleCode;
+			if($scope.form.sampleCodes){
+				jsonSearch.sampleCodes = $scope.form.sampleCodes;
 			}			
 			if($scope.form.processType){
 				jsonSearch.processTypeCode = $scope.form.processType.code;

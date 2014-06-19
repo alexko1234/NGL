@@ -11,8 +11,8 @@
 			@formGroup{		
 				<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.user")'>
 			}
-			@formGroup{		
-				<input class="form-control" type="text" ng-model="form.projectCode" typeahead="project.code as project.code for project in lists.getProjects() | filter:$viewValue | limitTo:20" data-min-length="1" data-items="20" placeholder='@Messages("search.placeholder.project")'>
+			@formGroup{
+				<div class="form-control" bt-select ng-model="form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in lists.getProjects()"></div>
 			}
 					
 		}
@@ -27,7 +27,7 @@
 				<input class="form-control" type="date" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
 			}
 			@formGroup{		
-				<input class="form-control" type="text" ng-model="form.sampleCode" typeahead="sample.code as sample.code for sample in lists.getSamples() | filter:$viewValue | limitTo:20" ng-click="refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>
+				<div class="form-control" bt-select ng-model="form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in lists.getSamples()" ng-focus="refreshSamples()"></div>			
 			}
 		}
 		@columnSearchForm{
@@ -52,7 +52,7 @@
 			}
 			<hr>
 			@formGroup{
-				<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
+				<select class="form-control" ng-model="form.processCategory"  ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
 					<option value="">@Messages("processes.select.processCategory")</option>
 				</select>
 			}
@@ -60,7 +60,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{
-				<select class="form-control" ng-class="errors.containerSupportCategory"  ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()">
+				<select class="form-control" ng-class="errors.containerSupportCategory" auto-select=""  ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()">
 					<option value="">@Messages("containers.select.categorySupportCode")</option>
 				</select>
 			}
@@ -70,8 +70,6 @@
 					<option value="">@Messages("processes.select.processType")</option>
 				</select>		
 			}
-			
-		
 		}
 }
 

@@ -117,22 +117,22 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 	};
 	
 	$scope.refreshSamples = function(){
-		if($scope.form.projectCode){
-			lists.refresh.samples({projectCode:$scope.form.projectCode});
+		if($scope.form.projectCodes && $scope.form.projectCodes.length>0){
+			lists.refresh.samples({projectCodes:$scope.form.projectCodes});
 		}
 	};
 
 	$scope.search = function(){		
-		if($scope.form.projectCode || $scope.form.sampleCode || ($scope.form.fromExperimentTypeCodes && $scope.form.fromExperimentTypeCodes.length > 0) || $scope.form.containerCategory 
+		if($scope.form.projectCodes || $scope.form.sampleCodes || ($scope.form.fromExperimentTypeCodes && $scope.form.fromExperimentTypeCodes.length > 0) || $scope.form.containerCategory 
 			|| $scope.form.containerSupportCategory || $scope.form.state || $scope.form.containerSupportCode  || $scope.form.valuations){	
 			
 			var jsonSearch = {};
 			
-			if($scope.form.projectCode){
-				jsonSearch.projectCodes = $scope.form.projectCode;
+			if($scope.form.projectCodes){
+				jsonSearch.projectCodes = $scope.form.projectCodes;
 			}			
-			if($scope.form.sampleCode){
-				jsonSearch.sampleCodes = $scope.form.sampleCode;
+			if($scope.form.sampleCodes){
+				jsonSearch.sampleCodes = $scope.form.sampleCodes;
 			}		
 			
 			if($scope.form.valuations){
