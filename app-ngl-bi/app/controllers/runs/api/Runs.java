@@ -284,6 +284,13 @@ public class Runs extends RunsController {
 				ti.setTraceInformation(getCurrentUser());
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 						DBQuery.and(DBQuery.is("code", code)), getBuilder(runInput, queryFieldsForm.fields, Run.class).set("traceInformation", ti));
+				/*
+				if(queryFieldsForm.fields.contains("code") && null != runInput.code){
+					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+							DBQuery.is("runCode", code), 
+							DBUpdate.set("runCode", runInput.code));
+				}
+				*/
 				return ok(Json.toJson(getRun(code)));
 			}else{
 				return badRequest(filledForm.errorsAsJson());

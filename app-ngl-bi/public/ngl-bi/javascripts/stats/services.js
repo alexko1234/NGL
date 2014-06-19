@@ -293,9 +293,20 @@ factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($h
 				}, values);	
 				var data = values.r;
 				readsetDatatable = datatable(datatableConfig);
-				readsetDatatable.setColumnsConfig(defaultDatatableColumns.concat(statsConfigs.map(function(statsConfig){
-					statsConfig.column.order=true;
-					return statsConfig.column;
+				
+				var statsConfigsU = statsConfigs.filter(function(statsConfig){
+					if(!this[statsConfig.column.name]){
+						this[statsConfig.column.name] = true;
+						return true;
+					}else{
+						return false;
+					}
+				}, []);
+				
+				readsetDatatable.setColumnsConfig(defaultDatatableColumns.concat(statsConfigsU.map(function(statsConfig){
+					var column = angular.copy(statsConfig.column);
+					column.order=true;
+					return column;
 				})));
 				readsetDatatable.setData(data, data.length);
 				computeCharts();
