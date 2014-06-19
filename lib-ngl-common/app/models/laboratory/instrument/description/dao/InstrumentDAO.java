@@ -87,19 +87,19 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 	
 	@Override //because code is not unique for Instrument
 	public Boolean isCodeExist(String code) throws DAOException {
-		if(null == code){
+		if (null == code) {
 			throw new DAOException("code is mandatory");
 		}
 		try {
-			try{
-				String sql = "select min(t.id) as id FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t")+" WHERE t.code=?";
-				Long id =  this.jdbcTemplate.queryForLong(sql, code);
-				if(id > 0){
+			try {
+				String sql = "select distinct(t.code) as code FROM instrument as t "+DAOHelpers.getInstrumentSQLForInstitute("t")+" WHERE t.code=?";
+				String returnCode =  this.jdbcTemplate.queryForObject(sql, String.class, code);
+				if (returnCode != null) {
 					return Boolean.TRUE;
-				}else{
+				} else {
 					return Boolean.FALSE;
 				}
-			}catch (EmptyResultDataAccessException e ) {
+			} catch (EmptyResultDataAccessException e) {
 				return Boolean.FALSE;
 			}
 		} catch (DataAccessException e) {
