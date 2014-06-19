@@ -27,6 +27,7 @@ import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
+import play.mvc.BodyParser;
 import play.mvc.Result;
 import play.mvc.Results;
 import validation.ContextValidation;
@@ -34,7 +35,6 @@ import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 
 import com.mongodb.BasicDBObject;
-import com.ning.http.util.DateUtil;
 
 import controllers.CodeHelper;
 import controllers.CommonController;
@@ -262,6 +262,7 @@ public class Experiments extends CommonController{
 	 * @return the created experiment
 	 * @throws DAOException 
 	 */
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result save() throws DAOException{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();

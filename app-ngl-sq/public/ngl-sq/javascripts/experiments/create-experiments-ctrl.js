@@ -28,6 +28,23 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		}
 	};
 	
+	$scope.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
+		$scope.modalImage = imageData;
+		
+		$scope.modalTitle = imageName;
+	
+		var margin = 25;		
+		var zoom = Math.min((document.body.clientWidth - margin) / imageFullSizeWidth, 1);
+
+		$scope.modalWidth = imageFullSizeWidth * zoom;
+		$scope.modalHeight = imageFullSizeHeight * zoom; //in order to conserve image ratio
+		$scope.modalLeft = (document.body.clientWidth - $scope.modalWidth)/2;
+	
+		$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;
+	
+		$scope.modalTop = $scope.modalTop - 50; //height of header and footer
+	}
+	
 	$scope.experiment.comments = {
 			save:function(){
 				$scope.clearMessages();

@@ -25,7 +25,25 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-
+<!-- ----------------------------------------------------------------------------- -->
+<!-- Modal to display image in full size -->
+	<div id="modalImage" class="modal fade"  tabindex="-1" role="dialog"
+		aria-labelledby="modalImageLabel" aria-hidden="true" style="left:{{modalLeft}}px; top:{{modalTop}}px;position:fixed;width:100%">
+		
+    		<div class="modal-content" style="width:{{modalWidth}}px; border:0px">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="modal-title">{{modalTitle}}</h3>	
+				</div>
+				<div class="modal-body" style="padding:0px">
+					<img src="data:image/png;base64,{{modalImage}}" style="width:{{modalWidth}}px; height:{{modalHeight}}px;" />
+				</div>
+				<div class="modal-footer">
+				</div>
+			</div>
+		
+	</div>
+<!-- -------------------------------------------------------------------------------- -->
 
 
 <div class="row">
@@ -168,17 +186,30 @@
 			   <div class="form-group" ng-repeat="instp in experiment.instrumentProperties.inputs"  ng-if="getLevel(instp.levels,'Instrument')">
 								
 						<label  class="col-md-6 col-lg-6 control-label">{{instp.name}}</label>
-						<div class="col-md-6 col-lg-6" ng-switch on="instp.choiceInList">
-							<input class="form-control" type="text" ng-switch-when="false" class="input-small"
-								ng-readonly="!experiment.instrumentInformation.enabled"
-								ng-model="experiment.value.instrumentProperties[instp.code].value" />
-							
-							<select class="form-control" ng-options="opt.value as opt.value for opt in instp.possibleValues"  
-								ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" 
-								ng-model="experiment.value.instrumentProperties[instp.code].value" ng-switch-when="true" 
-								select-auto="instp.possibleValues">
-						    <option value="">Sélect. {{instp.name}}</option>
-						    </select>
+					
+						<div class="col-md-6 col-lg-6" ng-if="instp.valueType == 'java.awt.Image'">
+							<input type="file" base64-img="experiment.value.instrumentProperties[instp.code]" />
+							 <div class="thumbnail col-md-6 col-lg-6" data-target="#modalImage" role="button" data-toggle="modal" 
+						    ng-click="setImage(experiment.value.instrumentProperties[instp.code].value,experiment.value.instrumentProperties[instp.code].fullname,experiment.value.instrumentProperties[instp.code].width,
+						    experiment.value.instrumentProperties[instp.code].height)">
+							 <a href="#">
+							<img ng-show="experiment.value.instrumentProperties[instp.code].value != ''" src="data:image/{{experiment.value.instrumentProperties[instp.code].extension}};base64,{{experiment.value.instrumentProperties[instp.code].value}}">
+							</a>
+							</div>
+						</div>
+						<div ng-if="instp.valueType != 'java.awt.Image'">
+							<div class="col-md-6 col-lg-6" ng-switch on="instp.choiceInList">
+								<input class="form-control" type="text" ng-switch-when="false" class="input-small"
+									ng-readonly="!experiment.instrumentInformation.enabled"
+									ng-model="experiment.value.instrumentProperties[instp.code].value" />
+								
+								<select class="form-control" ng-options="opt.value as opt.value for opt in instp.possibleValues"  
+									ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" 
+									ng-model="experiment.value.instrumentProperties[instp.code].value" ng-switch-when="true" 
+									select-auto="instp.possibleValues">
+							    <option value="">Sélect. {{instp.name}}</option>
+							    </select>
+							</div>
 						</div>
 				</div>	
 				
