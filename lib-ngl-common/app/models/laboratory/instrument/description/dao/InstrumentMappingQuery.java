@@ -7,9 +7,9 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import models.laboratory.common.description.Institute;
+import models.laboratory.common.description.Resolution;
+import models.laboratory.common.description.ResolutionCategory;
 import models.laboratory.instrument.description.Instrument;
-import models.laboratory.resolutions.description.Resolution;
-import models.laboratory.resolutions.description.ResolutionCategory;
 import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;

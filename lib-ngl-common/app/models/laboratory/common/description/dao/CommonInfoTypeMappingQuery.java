@@ -10,9 +10,9 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.ValuationCriteria;
-import models.laboratory.resolutions.description.Resolution;
 import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;

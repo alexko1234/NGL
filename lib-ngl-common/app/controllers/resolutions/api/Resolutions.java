@@ -3,6 +3,7 @@ package controllers.resolutions.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import models.laboratory.resolutions.instance.Resolution;
@@ -43,26 +44,11 @@ public class Resolutions extends DocumentController<ResolutionConfigurations> {
 		Form<ResolutionConfigurationsSearchForm> filledForm = filledFormQueryString(searchForm, ResolutionConfigurationsSearchForm.class);
 		ResolutionConfigurationsSearchForm form = filledForm.get();
 		Query q = getQuery(form);
-		BasicDBObject keys = getKeys(form);
-
-		if(form.list) {
-			keys = new BasicDBObject();
-			keys.put("_id", 0);//Don't need the _id field
-			keys.put("name", 1);
-			keys.put("code", 1);
-			keys.put("objectTypeCode", 1);
-			keys.put("typeCodes", 1);
-			keys.put("resolutions", 1);
-			if (null == form.orderBy) form.orderBy = "code";
-			if (null == form.orderSense) form.orderSense = 0;
-			MongoDBResult<ResolutionConfigurations> results = mongoDBFinder(form, q, keys);			
-			List<ResolutionConfigurations> resolutionConfigurations = results.toList();			
-			return ok(Json.toJson(toListResolutions(resolutionConfigurations)));
-		}
-		else {
-			//TODO 
-			return null;
-		}
+		
+		MongoDBResult<ResolutionConfigurations> results = mongoDBFinder(form, q);			
+		List<ResolutionConfigurations> resolutionConfigurations = results.toList();			
+		return ok(Json.toJson(toListResolutions(resolutionConfigurations)));
+		
 	}
 	
 	
@@ -74,6 +60,7 @@ public class Resolutions extends DocumentController<ResolutionConfigurations> {
 				resos.add(reso);
 			}
 		}
+		Collections.sort(resos);
 		return resos;
 	}
 	

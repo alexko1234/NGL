@@ -2,7 +2,7 @@ package models.laboratory.resolutions.instance;
 
 public class ResolutionCategory {
 	public String name;
-	public short displayOrder;
+	public Short displayOrder;
 	
 	public ResolutionCategory() {
 		
