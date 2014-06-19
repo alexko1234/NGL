@@ -79,8 +79,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static models.laboratory.resolutions.description.ResolutionCategory newResolutionCategory(String name, String code, Short displayOrder) throws DAOException {		
-		models.laboratory.resolutions.description.ResolutionCategory  rc = new models.laboratory.resolutions.description.ResolutionCategory();
+	public static models.laboratory.common.description.ResolutionCategory newResolutionCategory(String name, String code, Short displayOrder) throws DAOException {		
+		models.laboratory.common.description.ResolutionCategory  rc = new models.laboratory.common.description.ResolutionCategory();
 		rc.code = code;
 		rc.name = name;
 		rc.displayOrder = displayOrder;
@@ -346,9 +346,9 @@ public class DescriptionFactory {
 	 * @param objTypes
 	 * @return
 	 */
-	public static models.laboratory.resolutions.description.Resolution newResolution(String name, String code,
-			models.laboratory.resolutions.description.ResolutionCategory category, List<Institute> institutes, List<ObjectType> objTypes, Short displayOrder) {
-		models.laboratory.resolutions.description.Resolution r = new models.laboratory.resolutions.description.Resolution();
+	public static models.laboratory.common.description.Resolution newResolution(String name, String code,
+			models.laboratory.common.description.ResolutionCategory category, List<Institute> institutes, List<ObjectType> objTypes, Short displayOrder) {
+		models.laboratory.common.description.Resolution r = new models.laboratory.common.description.Resolution();
 		r.code = code;
 		r.name = name;
 		r.category = category;

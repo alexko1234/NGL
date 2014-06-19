@@ -12,7 +12,7 @@ import services.description.common.ValuationCriteriaService;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 import services.description.common.ObjectTypeService;
-import services.description.common.ResolutionServiceOld;
+import services.description.common.ResolutionService;
 import services.description.common.StateService;
 import services.description.container.ContainerService;
 import services.description.experiment.ExperimentService;
@@ -35,7 +35,7 @@ public class All extends CommonController {
 			ValuationCriteriaService.main(errors);
 			ObjectTypeService.main(errors);
 			StateService.main(errors); 
-			ResolutionServiceOld.main(errors); 
+			//ResolutionService.main(errors); 
 			LevelService.main(errors);
 			MeasureService.main(errors);
 			ContainerService.main(errors);
