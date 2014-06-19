@@ -311,12 +311,15 @@ angular.module('commonsServices', []).
 	        				  scope.base64Img._type = "img";
 	        				  scope.base64Img.fullname = file.name;
 	        				  
+	        				  //Get the extension
 	        				  var matchExtension = file.type.match(/^image\/(.*)/);
 	        				  scope.base64Img.extension = matchExtension[1];
 	        				  
+	        				  //Get the base64 without the extension feature
 	        				  var matchBase64 = e.target.result.match(/^.*,(.*)/);
 	        				  scope.base64Img.value = matchBase64[1];
 	        				  
+	        				  //Load image from the base64 to get the width and height
 	        				  var img = new Image();
 	        				  img.src =  e.target.result;
 
@@ -329,8 +332,7 @@ angular.module('commonsServices', []).
 	
 				      elem.on('change', function() {
 				    	  	file = elem[0].files[0];
-				    	  	console.log(file);
-				        	reader.readAsDataURL(elem[0].files[0]);
+				    	  	reader.readAsDataURL(elem[0].files[0]);
 				      });
         		 }
         		};
