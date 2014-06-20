@@ -7,13 +7,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	$scope.datatableConfig = {
 		columns:[
 			{
-				"header":Messages("containers.table.code"),
-				"property":"code",
-				"order":true,
-				"hide":true,
-				"type":"text"
-			},
-			{
 				"header":Messages("containers.table.supportCode"),
 				"property":"support.code",
 				"order":true,
@@ -28,15 +21,29 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				"type":"text"
 			},
 			{
-				"header":Messages("containers.table.fromExperimentTypeCodes"),
-				"property":"fromExperimentTypeCodes",
+				"header":Messages("containers.table.support.column"),
+				"property":"support.column",
 				"order":true,
 				"hide":true,
 				"type":"text"
 			},
 			{
-				"header":Messages("containers.table.support.position"),
-				"property":"support.position",
+				"header":Messages("containers.table.support.line"),
+				"property":"support.line",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.code"),
+				"property":"code",
+				"order":true,
+				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.fromExperimentTypeCodes"),
+				"property":"fromExperimentTypeCodes",
 				"order":true,
 				"hide":true,
 				"type":"text"
@@ -69,13 +76,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				"hide":true,
 				"type":"text",
 				"filter":"codes:'state'"
-			},
-			{
-				"header":Messages("containers.table.categoryCode"),
-				"property":"categoryCode",
-				"order":true,
-				"hide":true,
-				"type":"text"
 			}
 		],
 		search:{

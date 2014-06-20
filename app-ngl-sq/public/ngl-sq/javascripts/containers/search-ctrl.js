@@ -12,6 +12,12 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 					"type":"text"
 			},
 			{
+				"header":Messages("containers.table.supportCategoryCode"),
+				"property":"support.categoryCode",
+				"order":true,
+				"type":"text"
+			},
+			{
 				"header":Messages("containers.table.support.column"),
 				"property":"support.column",
 				"order":true,
@@ -23,13 +29,6 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 				"order":true,
 				"type":"text"
 			},
-			{
-				"header":Messages("containers.table.supportCategoryCode"),
-				"property":"support.categoryCode",
-				"order":true,
-				"type":"text"
-			},
-			
 			{
 				"header":Messages("containers.table.projectCodes"),
 				"property":"projectCodes",
