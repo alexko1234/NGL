@@ -122,7 +122,14 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		
 		ContainerImportCNS.saveSampleFromContainer(contextError,containers,sqlContent);
 		
-		ContainerHelper.createSupportFromContainers(containers, null, contextError);
+		Map<String,PropertyValue<String>> propertiesContainerSupports=new HashMap<String, PropertyValue<String>>();
+		for(Container container : containers){
+			if(!propertiesContainerSupports.containsKey(container.support.code)){
+				propertiesContainerSupports.put(container.support.code, container.properties.get("sequencingProgramType"));
+			}
+		}
+		
+		ContainerHelper.createSupportFromContainers(containers,propertiesContainerSupports, contextError);
 	
 		List<Container> newContainers=new ArrayList<Container>();
 	
@@ -188,6 +195,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 
 		container.properties= new HashMap<String, PropertyValue>();
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("limsCode")));
+		container.properties.put("sequencingProgramType", new PropertySingleValue(rs.getString("sequencingProgramType")));
 		
 		if(rs.getString("receptionDate")!=null){
 			container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));
