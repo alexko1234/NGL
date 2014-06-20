@@ -93,7 +93,7 @@ public class Experiments extends CommonController{
 		dc.filter = "codes:'state'";
 		columns.add(dc);
 		DatatableColumn dd =DatatableHelpers.getColumn("mesuredVolume.value", Messages.get("experiments.table.volume.value"),true, true, true,false,extraHeaders);
-		dd.filter = " number:2 ";
+		dd.filter = " number:3 ";
 		columns.add(dd);
 		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes"), true, false, true,false,extraHeaders));
 		
