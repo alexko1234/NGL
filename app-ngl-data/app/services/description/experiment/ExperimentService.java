@@ -104,7 +104,7 @@ public class ExperimentService {
 
 			//library
 			l.add(newExperimentType("Fragmentation","fragmentation",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("fragmentation_ptr_sox140_1"), getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
-			l.add(newExperimentType("Librairie indexing","librairie-indexing",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(), getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			l.add(newExperimentType("Librairie indexée","librairie-indexing",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(), getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			l.add(newExperimentType("Librairie dual indexing","librairie-dualindexing",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(), getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			l.add(newExperimentType("Amplification","amplification",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand","thermo"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 

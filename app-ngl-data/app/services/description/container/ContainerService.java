@@ -47,8 +47,8 @@ public class ContainerService {
 		List<ContainerSupportCategory> l = new ArrayList<ContainerSupportCategory>();
 		l.add(newContainerSupportCategory("Tube", "tube", 1, 1, 1, ContainerCategory.find.findByCode("tube")));
 		l.add(newContainerSupportCategory("MapCard", "mapcard", 1, 1, 1, ContainerCategory.find.findByCode("mapcard")));
-		l.add(newContainerSupportCategory("Sheet 96", "sheet-96",12, 8, 96, ContainerCategory.find.findByCode("well")));
-		l.add(newContainerSupportCategory("Sheet 384", "sheet-384",24,96,384, ContainerCategory.find.findByCode("well")));
+		l.add(newContainerSupportCategory("Plaque 96", "sheet-96",12, 8, 96, ContainerCategory.find.findByCode("well")));
+		l.add(newContainerSupportCategory("Plaque 384", "sheet-384",24,96,384, ContainerCategory.find.findByCode("well")));
 		l.add(newContainerSupportCategory("Flowcell 8", "flowcell-8",8,1,8, ContainerCategory.find.findByCode("lane")));
 		l.add(newContainerSupportCategory("Flowcell 2", "flowcell-2",2,1,2, ContainerCategory.find.findByCode("lane")));
 		l.add(newContainerSupportCategory("Flowcell 1", "flowcell-1",1,1,1, ContainerCategory.find.findByCode("lane")));
