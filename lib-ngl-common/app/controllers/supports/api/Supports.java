@@ -74,6 +74,10 @@ public class Supports extends CommonController {
 		}
 	}
 	
+	public static Result updateBatch(){
+		return ok();
+	}
+	
 	/**
 	 * Construct the support query
 	 * @param supportsSearch

@@ -102,7 +102,7 @@ public class Containers extends CommonController {
 	public static Result list() throws DAOException{
 		Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
 		ContainersSearchForm containersSearch = containerFilledForm.get();
-
+		containersSearch.orderBy="code";
 		DBQuery.Query query = getQuery(containersSearch);
 		if(containersSearch.datatable){
 			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
