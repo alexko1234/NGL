@@ -7,7 +7,6 @@ GET     /                           			controllers.Application.index()
 
 GET		/api/description/all					controllers.description.All.save()
 GET		/api/description/commons/states			controllers.description.commons.States.save()
-GET		/api/description/commons/resolutionsOld	controllers.description.commons.ResolutionsOld.save()
 GET		/api/description/commons/measures		controllers.description.commons.Measures.save()
 GET		/api/description/commons/levels			controllers.description.commons.Levels.save()
 GET		/api/description/commons/institutes		controllers.description.commons.Institutes.save()
