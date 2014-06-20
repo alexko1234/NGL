@@ -10,7 +10,6 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.TransientState;
-import models.laboratory.container.instance.Container;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.File;

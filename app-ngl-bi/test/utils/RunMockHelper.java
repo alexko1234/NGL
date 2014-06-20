@@ -45,6 +45,10 @@ public class RunMockHelper {
 		return Json.toJson(treatment);
 	}
 	
+	public static JsonNode getJsonState(State state) {
+		return Json.toJson(state);
+	}
+	
 	
 	
 

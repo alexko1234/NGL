@@ -1,17 +1,25 @@
 package workflows;
 
 import static org.fest.assertions.Assertions.assertThat;
+
+import fr.cea.ig.authentication.Authenticate;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.status;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import junit.framework.Assert;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.TransientState;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
@@ -28,11 +36,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import play.Logger;
+import play.mvc.Http;
 import play.mvc.Result;
 import fr.cea.ig.MongoDBDAO;
 import utils.AbstractTests;
 import utils.RunMockHelper;
 import validation.ContextValidation;
+import validation.run.instance.RunValidationHelper;
+
+import static org.mockito.Mockito.*; 
 
 
 public class StatesTests extends  AbstractTests {	
@@ -44,6 +56,21 @@ public class StatesTests extends  AbstractTests {
 	Project project;
 	Result r1;
 	Result r2;
+	
+	/*
+	private static final Http.Request request = mock(Http.Request.class);
+	
+	
+	private void initHttpContext() {
+	    Map<String, String> flashData = Collections.emptyMap();
+	    Map<String, Object> argData = Collections.emptyMap();
+	    Long id = 2L;
+	    play.api.mvc.RequestHeader header = mock(play.api.mvc.RequestHeader.class);
+	    Http.Context context = new Http.Context(id, header, request, flashData, flashData, argData);
+	    context.request().setUsername("ngsrg");	    
+	    Http.Context.current.set(context);
+	}
+	*/
 	
 	
 	@BeforeClass
@@ -59,10 +86,10 @@ public class StatesTests extends  AbstractTests {
 	   c.support = new LocationOnContainerSupport(); 
 	   c.support.code = cs.code; 
 	   
-	   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);		
+	   MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, c);	
 	}
 	
-	
+
 	@AfterClass
 	public static void deleteData(){
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
@@ -139,31 +166,10 @@ public class StatesTests extends  AbstractTests {
 		readsetCodes.add(readset.code);
 		lane.readSetCodes = readsetCodes;  
 	}
-	
-	
-	public void setRunStateTo(String stateCode) {
-		 State nextState = new State();
-		 nextState.code = stateCode;
-		 nextState.date = new Date();
-		 nextState.user = "testeur";
-		 Workflows.setRunState(new ContextValidation(), run, nextState);
-	}
-	
-
-	
-	public void setReadSetStateTo(String stateCode) {
-		 State nextState = new State();
-		 nextState.code = stateCode;
-		 nextState.date = new Date();
-		 nextState.user = "testeur";
-		 Workflows.setReadSetState(new ContextValidation(), readset, nextState);
-	}
 
 	
 	
-	
-	
-	
+
 	@Test
 	public void testPrepareData() {
 		prepareData();
@@ -171,342 +177,362 @@ public class StatesTests extends  AbstractTests {
 		assertThat(status(r2)).isEqualTo(OK);
 	}
 	
-	
 	@Test
 	public void testRunStateN() {
 		prepareData();	
 		assertThat(run.state.code).isEqualTo("N");
 	}
-	
+
 	@Test
 	public void testRunStateIPS() {
-		 prepareData();
-		 setRunStateTo("IP-S");
-		 assertThat(run.state.code).isEqualTo("IP-S"); 
+		 prepareData();		 
+  
+		run.state.code = "IP-S";
+		run.state.user = "test";
+
+		//controllers.runs.api.State.update
+		r1 = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(run.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));		
+		assertThat(run.state.code).isEqualTo("IP-S");
 	}  
 
 
 	@Test
 	public void testRunStateFES() {
 		prepareData();
-		setRunStateTo("IP-S");
-		setRunStateTo("FE-S");
-	    assertThat(run.state.code).isEqualTo("FE-S");
+		
+		run.state.code = "FE-S";
+		run.state.user = "test";
+
+		//controllers.runs.api.State.update
+		r1 = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(run.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+		assertThat(r.state.code).isEqualTo("FE-S");
 	}
 	
-
+	
 	@Test
 	public void testRunStateFS() {
-		prepareData();		
-		setRunStateTo("IP-S");
-		setRunStateTo("FE-S");
-		setRunStateTo("F-S");
-	    assertThat(run.state.code).isEqualTo("IW-RG");
+		prepareData();
+		
+		run.state.code = "F-S";
+		run.state.user = "test";
+
+		//controllers.runs.api.State.update
+		r1 = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(run.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+		assertThat(r.state.code).isEqualTo("IW-RG");
 	}
-	
+
 	
 	@Test
 	public void testRunStateIPRG() {
-		prepareData();	     
-		setRunStateTo("IP-S");
-		setRunStateTo("FE-S");
-		setRunStateTo("F-S");
-		setRunStateTo("IP-RG");
-		assertThat(run.state.code).isEqualTo("IP-RG");
+		prepareData();
+
+		run.state.code = "IP-RG";
+		run.state.user = "test";
+
+		r1 = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(run.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+		assertThat(r.state.code).isEqualTo("IP-RG");
 	}
-	
 	
 	
 	@Test
 	public void testRunStateFRG() {
-		prepareData();	
-		setRunStateTo("IP-S");
-		setRunStateTo("FE-S");
-		setRunStateTo("F-S");
-		setRunStateTo("IP-RG");
-		setRunStateTo("F-RG");
-		assertThat(run.state.code).isEqualTo("IW-V");
+		prepareData();
+
+		run.state.code = "F-RG";
+		run.state.user = "test";
+
+		r1 = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(run.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+		assertThat(r.state.code).isEqualTo("IW-V");
 	}
-	     
+	
+	
 	 
 	@Test
 	public void testRunStateIPV() {
 		prepareData();
-		setRunStateTo("IP-S");
-		setRunStateTo("FE-S");
-		setRunStateTo("F-S");
-		setRunStateTo("IP-RG");
-		setRunStateTo("F-RG");
-		setRunStateTo("IP-V");
-		assertThat(run.state.code).isEqualTo("IP-V");
+
+		run.state.code = "IP-V";
+		run.state.user = "test";
+
+		r1 = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(run.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+		assertThat(r.state.code).isEqualTo("IP-V");
 	}
 
 	
 	@Test
 	public void testRunStateFV() {
 		prepareData();
-		setRunStateTo("IP-S");	
-		setRunStateTo("FE-S");
-		setRunStateTo("F-S");
-		setRunStateTo("IP-RG");
-		setRunStateTo("F-RG");
-		setRunStateTo("IP-V");
-        //make complete valuation
-        run.valuation.valid = TBoolean.TRUE;
-        for (Lane l : run.lanes) {
-       	l.valuation.valid = TBoolean.TRUE;
-        }
-        Workflows.nextRunState(new ContextValidation(), run);
-        
-         assertThat(run.state.code).isEqualTo("F-V");
-	}
-	
-	
-	@Test
-	public void testRunStateFV2() {
-		prepareData();	
-		setRunStateTo("IP-S");	
-		setRunStateTo("FE-S");
-		setRunStateTo("F-S");
-		setRunStateTo("IP-RG");
-		setRunStateTo("F-RG");
-		setRunStateTo("IP-V");
-        //make complete valuation
-        run.valuation.valid = TBoolean.TRUE;
-        for (Lane l : run.lanes) {
-       	l.valuation.valid = TBoolean.TRUE;
-        }
-        Workflows.nextRunState(new ContextValidation(), run);
-        Workflows.nextRunState(new ContextValidation(), run);
-        
-        assertThat(run.state.code).isEqualTo("F-V");
-	}
-	
-	
-	
-	@Test
-	public void testRunStateBackToFV() {
-		prepareData();	
-		setRunStateTo("IP-S");		
-		setRunStateTo("FE-S");		
-		setRunStateTo("F-S");
-		setRunStateTo("IP-RG");	     
-		setRunStateTo("F-RG");
-		setRunStateTo("IP-V");
-        //make complete valuation
+
+		run.state.code = "F-V";
+		run.state.user = "test";
+
+		//make complete valuation
         run.valuation.valid = TBoolean.TRUE;
         for (Lane l : run.lanes) {
         	l.valuation.valid = TBoolean.TRUE;
         }
-        Workflows.nextRunState(new ContextValidation(), run);
-                
-        run.lanes.get(0).valuation.valid = TBoolean.FALSE; // Valuation non completed
-        
-         Workflows.nextRunState(new ContextValidation(), run);
-        
-         assertThat(run.state.code).isEqualTo("F-V");    
+
+		r1 = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(run.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+		assertThat(r.state.code).isEqualTo("IP-V");
 	}
-	
-	
-	
-	
-	@Test
-	public void testRunStateBackToIPV() {
-		prepareData();	
-		setRunStateTo("IP-S");
-		setRunStateTo("FE-S");
-		setRunStateTo("F-S");
-		setRunStateTo("IP-RG");
-		setRunStateTo("F-RG");
-		setRunStateTo("IP-V");
-        //make complete valuation
-        run.valuation.valid = TBoolean.TRUE;
-        for (Lane l : run.lanes) {
-        	l.valuation.valid = TBoolean.TRUE;
-        }
-        
-        Workflows.nextRunState(new ContextValidation(), run);
-                
-        run.lanes.get(0).valuation.valid = TBoolean.FALSE; // Valuation non completed
-        
-         Workflows.nextRunState(new ContextValidation(), run);
-        
-         run.lanes.get(0).valuation.valid = TBoolean.UNSET;
-        
-         Workflows.nextRunState(new ContextValidation(), run);
-        
-         assertThat(run.state.code).isEqualTo("IP-V");
-	}
-	
+
 	
 
 	@Test
-	public void testRunStateIPV_IPV() {
-		prepareData();	
-		setRunStateTo("IP-S");
-		setRunStateTo("FE-S");	
-		setRunStateTo("F-S");
-		setRunStateTo("IP-RG");
-		setRunStateTo("F-RG");
-		setRunStateTo("IP-V");	
-        //make complete valuation
+	public void testRunStateStayToN() {
+		prepareData();
+		
+		run.state.code = "N";
+		run.state.user = "test";
+
+		//make complete valuation
         run.valuation.valid = TBoolean.TRUE;
         for (Lane l : run.lanes) {
         	l.valuation.valid = TBoolean.TRUE;
         }
-        
-        Workflows.nextRunState(new ContextValidation(), run);
                 
         run.lanes.get(0).valuation.valid = TBoolean.FALSE; // Valuation non completed
         
-         Workflows.nextRunState(new ContextValidation(), run);	
-        
-         run.lanes.get(0).valuation.valid = TBoolean.UNSET;
-        
-         Workflows.nextRunState(new ContextValidation(), run);
-        
-         //assertThat(run.lanes.get(0).valuation.valid).isEqualTo(TBoolean.UNSET);
-         
-         Workflows.nextRunState(new ContextValidation(), run);        
-         
-         assertThat(run.state.code).isEqualTo("IP-V");  
+		r1 = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(run.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+		assertThat(r.state.code).isEqualTo("N");
 	}
-
-        
 	
+	
+	@Test
+	public void testRunStateStayToIPV() {
+		prepareData();
+		
+		run.state.code = "IP-V";
+		run.state.user = "test";
+
+		//make complete valuation
+        run.valuation.valid = TBoolean.TRUE;
+        for (Lane l : run.lanes) {
+        	l.valuation.valid = TBoolean.TRUE;
+        }
+                
+        run.lanes.get(0).valuation.valid = TBoolean.FALSE; // Valuation non completed
+        
+		r1 = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(run.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+		assertThat(r.state.code).isEqualTo("IP-V");
+	}
+	
+
 	@Test
 	public void testRunStateIWRG() {
-		prepareData();        
-		setRunStateTo("IW-RG");		
-	    assertThat(run.state.code).isEqualTo("IW-RG");
-	}
-	     
-
-	
-	@Test
-	public void testRunStateIPRG2() {
 		prepareData();
-		setRunStateTo("IW-RG");
-		setRunStateTo("IP-RG");
-	    assertThat(run.state.code).isEqualTo("IP-RG");
-	}
-
-
-	
-	@Test
-	public void testRunStateIWVorIPV() {
-		prepareData();
-		setRunStateTo("IW-RG");
-		setRunStateTo("IP-RG");
-		setRunStateTo("F-RG");
-
-		boolean bUnset = true;
-		for (Lane l : run.lanes) {
-			if (l.valuation.valid != TBoolean.UNSET) bUnset = false;
-		}
 		
-		if (run.valuation.valid == TBoolean.UNSET && bUnset) {
-			assertThat(run.state.code).isEqualTo("IW-V");
-		}
-		else {
-			assertThat(run.state.code).isEqualTo("IP-V");
-		}
+		run.state.code = "IW-RG";
+		run.state.user = "test";
+
+		//make complete valuation
+        run.valuation.valid = TBoolean.TRUE;
+        for (Lane l : run.lanes) {
+        	l.valuation.valid = TBoolean.TRUE;
+        }
+                
+        run.lanes.get(0).valuation.valid = TBoolean.FALSE; // Valuation non completed
+        
+		r1 = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(run.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+		assertThat(r.state.code).isEqualTo("IW-RG");	
 	}
-	
-	
+
+	//a vérifier
+	@Test
+	public void testRunStateIWV() {
+		prepareData();
+
+		run.state.code = "IW-V";
+		run.state.user = "test";
+
+		//make complete valuation
+        run.valuation.valid = TBoolean.TRUE;
+ 
+        Assert.assertTrue(Workflows.atLeastOneValuation(run) == true);
+        
+		r1 = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(run.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
+		//TODO : A Vérifier  
+		assertThat(r.state.code).isEqualTo("IW-V");	
+	}
+		
 	
 	@Test
 	public void testReadSetStateN() {
 		prepareData();
+
 		assertThat(run.state.code).isEqualTo("N");
 		assertThat(readset.state.code).isEqualTo("N");
 	}
         
 
-
-	
 	@Test
 	public void testReadSetStateIWQC() {
 		prepareData();
 		
+		readset.state.code = "IW-QC";
+		readset.state.user = "test";
+		
 		readset.bioinformaticValuation.valid = TBoolean.FALSE;
 
-		setReadSetStateTo("IW-QC");
-	        
-	    assertThat(readset.state.code).isEqualTo("IW-QC");
+		r1 = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readset.code), fakeRequest().withJsonBody(RunMockHelper.getJsonState(readset.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		ReadSet rd = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",readset.code));
+		assertThat(rd.state.code).isEqualTo("IW-QC");
+	}
+	
+	@Test
+	public void testReadSetStateIWVQC() {
+		prepareData();
+		
+		readset.state.code = "IW-VQC";
+		readset.state.user = "test";
+		
+		readset.productionValuation.valid = TBoolean.FALSE;
+
+		r1 = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readset.code), fakeRequest().withJsonBody(RunMockHelper.getJsonState(readset.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		ReadSet rd = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",readset.code));
+		assertThat(rd.state.code).isEqualTo("A");
 	}
 
 
-	
 	@Test
 	public void testReadSetStateIPQC() {
 		prepareData();
 		
+		readset.state.code = "IP-QC";
+		readset.state.user = "test";
+
 		readset.bioinformaticValuation.valid = TBoolean.FALSE;
 
-		setReadSetStateTo("IW-QC");
-		setReadSetStateTo("IP-QC");
-		 
-	    assertThat(readset.state.code).isEqualTo("IP-QC");
-	}
-	
-
-	
-	
-	@Test
-	public void testReadSetStateIWV() {
-		prepareData();
+		r1 = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readset.code), fakeRequest().withJsonBody(RunMockHelper.getJsonState(readset.state)));
+		assertThat(status(r1)).isEqualTo(OK);
 		
-		 readset.bioinformaticValuation.valid = TBoolean.FALSE;
-
-		 setReadSetStateTo("IW-QC");
-		 setReadSetStateTo("IP-QC");
-
-		 readset.bioinformaticValuation.valid = TBoolean.UNSET;
-		 readset.productionValuation.valid = TBoolean.UNSET;
-
-		 setReadSetStateTo("F-QC");
-		 
-	     assertThat(readset.state.code).isEqualTo("IW-VQC"); //instead of IW-V
+		ReadSet rd = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",readset.code));
+		assertThat(rd.state.code).isEqualTo("IP-QC");
 	}
-
 	
-
 
 	@Test
-	public void testReadSetStateUA() {
+	public void testReadSetStateIPVQC() {
 		prepareData();
 		
-		 readset.bioinformaticValuation.valid = TBoolean.FALSE;
+		readset.state.code = "IP-VQC";
+		readset.state.user = "test";
 
-		 setReadSetStateTo("IW-QC");
-		 setReadSetStateTo("IP-QC");
+		readset.productionValuation.valid = TBoolean.FALSE;
+		
+		r1 = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readset.code), fakeRequest().withJsonBody(RunMockHelper.getJsonState(readset.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		ReadSet rd = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",readset.code));
+		assertThat(rd.state.code).isEqualTo("A");
+	}
+	
 
-		 readset.bioinformaticValuation.valid = TBoolean.FALSE;
-		 readset.productionValuation.valid = TBoolean.FALSE;
+	@Test
+	public void testReadSetStateIWBA() {
+		prepareData();
+		
+		readset.state.code = "IW-BA";
+		readset.state.user = "test";
+		
+		readset.bioinformaticValuation.valid = TBoolean.UNSET;
+		readset.productionValuation.valid = TBoolean.UNSET;
 
-		 setReadSetStateTo("F-QC");
-
-	     assertThat(readset.state.code).isEqualTo("UA");
+		r1 = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readset.code), fakeRequest().withJsonBody(RunMockHelper.getJsonState(readset.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		ReadSet rd = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",readset.code));
+		assertThat(rd.state.code).isEqualTo("IW-BA");
 	}
 
 	
-	     
+	@Test
+	public void testReadSetStateIWVBA() {
+		prepareData();
+		
+		readset.state.code = "IW-VBA";
+		readset.state.user = "test";
+		
+		readset.bioinformaticValuation.valid = TBoolean.UNSET;
+		readset.productionValuation.valid = TBoolean.UNSET;
 
+		r1 = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readset.code), fakeRequest().withJsonBody(RunMockHelper.getJsonState(readset.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		ReadSet rd = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",readset.code));
+		assertThat(rd.state.code).isEqualTo("A");
+	}
+
+
+	@Test
+	public void testReadSetStateFVBA() {
+		prepareData();
+
+		readset.state.code = "F-VBA";
+		readset.state.user = "test";
+
+		readset.bioinformaticValuation.valid = TBoolean.FALSE;
+		readset.productionValuation.valid = TBoolean.FALSE;
+
+		r1 = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readset.code), fakeRequest().withJsonBody(RunMockHelper.getJsonState(readset.state)));
+		assertThat(status(r1)).isEqualTo(OK);
+		
+		ReadSet rd = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",readset.code));
+		assertThat(rd.state.code).isEqualTo("A");
+	}
+
+		
 	@Test
 	public void testReadSetStateA() {
 		prepareData();
+
+		readset.state.code = "A";
+		readset.state.user = "test";
+
+		readset.bioinformaticValuation.valid = TBoolean.TRUE;
+		readset.productionValuation.valid = TBoolean.TRUE;
+
+		r1 = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readset.code), fakeRequest().withJsonBody(RunMockHelper.getJsonState(readset.state)));
+		assertThat(status(r1)).isEqualTo(OK);
 		
-		 readset.bioinformaticValuation.valid = TBoolean.FALSE;
-
-		 setReadSetStateTo("IW-QC");
-		 setReadSetStateTo("IP-QC");
-
-		 readset.bioinformaticValuation.valid = TBoolean.TRUE;
-		 readset.productionValuation.valid = TBoolean.TRUE;
-
-		 setReadSetStateTo("F-QC");	     
-		
-	     assertThat(readset.state.code).isEqualTo("A"); //instead of A
+		ReadSet rd = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",readset.code));
+		assertThat(rd.state.code).isEqualTo("A");
 	}
 }
