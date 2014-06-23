@@ -8,18 +8,12 @@ import static play.test.Helpers.callAction;
 import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.status;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.Assert;
 
-import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
-import models.laboratory.common.instance.TransientState;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
@@ -35,16 +29,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import play.Logger;
-import play.mvc.Http;
 import play.mvc.Result;
 import fr.cea.ig.MongoDBDAO;
 import utils.AbstractTests;
 import utils.RunMockHelper;
-import validation.ContextValidation;
-import validation.run.instance.RunValidationHelper;
-
-import static org.mockito.Mockito.*; 
 
 
 public class StatesTests extends  AbstractTests {	
@@ -57,24 +45,35 @@ public class StatesTests extends  AbstractTests {
 	Result r1;
 	Result r2;
 	
-	/*
-	private static final Http.Request request = mock(Http.Request.class);
-	
-	
-	private void initHttpContext() {
-	    Map<String, String> flashData = Collections.emptyMap();
-	    Map<String, Object> argData = Collections.emptyMap();
-	    Long id = 2L;
-	    play.api.mvc.RequestHeader header = mock(play.api.mvc.RequestHeader.class);
-	    Http.Context context = new Http.Context(id, header, request, flashData, flashData, argData);
-	    context.request().setUsername("ngsrg");	    
-	    Http.Context.current.set(context);
-	}
-	*/
-	
-	
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+		for (Sample sample : samples) {
+			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample);
+		}
+		List<Project> projects = MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList();
+		for (Project project : projects) {
+			MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, project);
+		}
+		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
+		for (Container container : containers) {
+			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
+		}
+		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).toList();
+		for (ContainerSupport cs : containerSupports) {
+			if (cs.code.equals("containerName")) {
+				MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME, cs);
+			}
+		}
+		List<Run> runs = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class).toList();
+		for (Run run : runs) {
+			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);
+		}		
+		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class).toList();
+		for (ReadSet readSet : readSets) {
+			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);
+		}
+		
 		ContainerSupport cs = new ContainerSupport();
 		cs.code = "containerName";
 		cs.categoryCode = "lane";
@@ -195,7 +194,7 @@ public class StatesTests extends  AbstractTests {
 		assertThat(status(r1)).isEqualTo(OK);
 		
 		Run r = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));		
-		assertThat(run.state.code).isEqualTo("IP-S");
+		assertThat(r.state.code).isEqualTo("IP-S");
 	}  
 
 
