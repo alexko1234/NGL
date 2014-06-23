@@ -270,7 +270,7 @@ public class ResolutionService {
 		l.add(newResolution("fluidique","PbM-fluidiq", resolutionCategories.get("PbM"), (short) 4));
 		l.add(newResolution("laser","PbM-laser", resolutionCategories.get("PbM"), (short) 5));
 		l.add(newResolution("camera","PbM-camera", resolutionCategories.get("PbM"), (short) 6));
-		l.add(newResolution("focus","PbM-focus", resolutionCategories.get("PbM"), (short) 7));    //a voir
+		l.add(newResolution("focus","PbM-focus", resolutionCategories.get("PbM"), (short) 7));    
 		l.add(newResolution("pb de vide","PbM-pbVide", resolutionCategories.get("PbM"), (short) 8));
 		l.add(newResolution("PE module","PbM-PEmodule", resolutionCategories.get("PbM"), (short) 9));
 		l.add(newResolution("cBot","PbM-cBot", resolutionCategories.get("PbM"), (short) 10));		
