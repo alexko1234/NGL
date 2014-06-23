@@ -68,7 +68,7 @@ public class ResolutionService {
 		resoCategories.put("SAV", new ResolutionCategory("Problème qualité : SAV", (short) 10)); //10 for CNG only
 		resoCategories.put("PbM", new ResolutionCategory("Problème machine", (short) 20));
 		resoCategories.put("PbR", new ResolutionCategory("Problème réactifs", (short) 30)); 
-		resoCategories.put("LIB", new ResolutionCategory("Problème librairie", (short) 50)); 
+		resoCategories.put("LIB", new ResolutionCategory("Librairie", (short) 50)); 
 		resoCategories.put("PbI", new ResolutionCategory("Problème informatique", (short) 60));
 		resoCategories.put("Info", new ResolutionCategory("Informations", (short) 70)); 
 		resoCategories.put("QC", new ResolutionCategory("Observations QC", (short) 80));
@@ -222,6 +222,8 @@ public class ResolutionService {
 	}
 	
 	
+	
+	
 	public static void createReadSetResolutionCNG(ContextValidation ctx) {
 		
 		List<Resolution> l = new ArrayList<Resolution>();
@@ -242,8 +244,8 @@ public class ResolutionService {
 		
 		l.add(newResolution("sexe incorrect","Sample-sexeIncorrect", resolutionCategories.get("Sample"),(short) 1));
 		
-		l.add(newResolution("test Dev","Info-testDev", resolutionCategories.get("INFO"),(short) 1));
-		l.add(newResolution("test Prod","Info-testProd", resolutionCategories.get("INFO"),(short) 2));
+		l.add(newResolution("test Dev","Info-testDev", resolutionCategories.get("Info"),(short) 1));
+		l.add(newResolution("test Prod","Info-testProd", resolutionCategories.get("Info"),(short) 2));
 		
 		l.add(newResolution("erreur Experimental Type","LIMS-erreurExpType", resolutionCategories.get("LIMS"),(short) 1));
 		
