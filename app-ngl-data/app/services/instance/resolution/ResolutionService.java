@@ -68,9 +68,9 @@ public class ResolutionService {
 		resoCategories.put("SAV", new ResolutionCategory("Problème qualité : SAV", (short) 10)); //10 for CNG only
 		resoCategories.put("PbM", new ResolutionCategory("Problème machine", (short) 20));
 		resoCategories.put("PbR", new ResolutionCategory("Problème réactifs", (short) 30)); 
-		resoCategories.put("LIB", new ResolutionCategory("Librairie", (short) 50)); 
+		resoCategories.put("LIB", new ResolutionCategory("Problème librairie", (short) 50)); 
 		resoCategories.put("PbI", new ResolutionCategory("Problème informatique", (short) 60));
-		resoCategories.put("Info", new ResolutionCategory("Informations", (short) 70)); 
+		resoCategories.put("RUN-Info", new ResolutionCategory("Informations", (short) 70)); 
 		resoCategories.put("QC", new ResolutionCategory("Observations QC", (short) 80));
 		//ReadSet
 		resoCategories.put("Run", new ResolutionCategory("Problème run", (short) 5));
@@ -106,7 +106,7 @@ public class ResolutionService {
 		resoCategories.put("MAP", new ResolutionCategory("Problème mapping", (short) 40));
 		resoCategories.put("MERG", new ResolutionCategory("Problème merging", (short) 45));	
 		//Analysis
-		resoCategories.put("MERG", new ResolutionCategory("Merging", (short) 10)); 
+		resoCategories.put("BA-MERG", new ResolutionCategory("Merging", (short) 10)); 
 		resoCategories.put("CTG", new ResolutionCategory("Contigage", (short) 20));
 		resoCategories.put("SIZE", new ResolutionCategory("Size Filter", (short) 30));
 		resoCategories.put("SCAFF", new ResolutionCategory("Scaffolding", (short) 40));
@@ -200,8 +200,8 @@ public class ResolutionService {
 		l.add(newResolution("retard robocopy","PbI-robocopy", resolutionCategories.get("PbI"), (short) 7));
 		l.add(newResolution("erreur paramétrage run","PbI-parametrageRun", resolutionCategories.get("PbI"), (short) 8));
 		
-		l.add(newResolution("run de validation","Info-runValidation", resolutionCategories.get("Info"), (short) 1));
-		l.add(newResolution("remboursement","Info-remboursement", resolutionCategories.get("Info"), (short) 2));
+		l.add(newResolution("run de validation","Info-runValidation", resolutionCategories.get("RUN-Info"), (short) 1));
+		l.add(newResolution("remboursement","Info-remboursement", resolutionCategories.get("RUN-Info"), (short) 2));
 
 		l.add(newResolution("intensité B.M.S","QC-intBMS", resolutionCategories.get("QC"), (short) 1));
 		l.add(newResolution("tiles out","QC-tilesOut", resolutionCategories.get("QC"), (short) 2));
@@ -388,8 +388,8 @@ public class ResolutionService {
 		
 		List<Resolution> l = new ArrayList<Resolution>();
 
-		l.add(newResolution("% merging","MERG-BA-MERGPercent", resolutionCategories.get("MERG"),(short) 1));
-		l.add(newResolution("reads size","MERG-readSize", resolutionCategories.get("MERG"),(short) 2));
+		l.add(newResolution("% merging","MERG-BA-MERGPercent", resolutionCategories.get("BA-MERG"),(short) 1));
+		l.add(newResolution("reads size","MERG-readSize", resolutionCategories.get("BA-MERG"),(short) 2));
 		
 		l.add(newResolution("N50","CTG-N50", resolutionCategories.get("CTG"),(short) 1));
 		l.add(newResolution("cumul","CTG-cumul", resolutionCategories.get("CTG"),(short)2));
