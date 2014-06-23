@@ -21,11 +21,21 @@ import models.utils.InstanceHelpers;
 public class ResolutionService {
 	
 
-	private static HashMap<String, ResolutionCategory> resolutionCategories = createResolutionCategories(); 
+	private static HashMap<String, ResolutionCategory> resolutionCategories; 
 
 
-	public static void main(ContextValidation ctx) {		
-		Logger.debug("Start create resolutions");
+	public static void main(ContextValidation ctx) {	
+		
+		Logger.info("Start create resolution categories ...");
+		if (play.Play.application().configuration().getString("institute").equals("CNG")) {
+			resolutionCategories = createResolutionCategoriesCNG();
+		}
+		else { // CNS
+			resolutionCategories = createResolutionCategoriesCNS();
+		}
+		Logger.info("End create resolution categories");
+		
+		Logger.info("Start create resolutions ...");
 		boolean all = true;
 		if (play.Play.application().configuration().getString("institute") != null) {
 			if (play.Play.application().configuration().getString("institute").equals("CNG")) {
@@ -41,22 +51,45 @@ public class ResolutionService {
 			saveResolutionsCNG(ctx);
 			saveResolutionsCNS(ctx);
 		}
-		Logger.debug("End create resolutions");
+		Logger.info("End create resolutions");
 	}
 	
 
 	
-	public static HashMap<String, ResolutionCategory> createResolutionCategories(){	
+	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNG(){	
 		HashMap<String, ResolutionCategory> resoCategories = new HashMap<String, ResolutionCategory>();
 		
 		//Run
+		resoCategories.put("SAV", new ResolutionCategory("Problème qualité : SAV", (short) 10)); //10 for CNG only
 		resoCategories.put("PbM", new ResolutionCategory("Problème machine", (short) 20));
 		resoCategories.put("PbR", new ResolutionCategory("Problème réactifs", (short) 30)); 
-		resoCategories.put("SAV", new ResolutionCategory("Problème qualité : SAV", (short) 40));
-		resoCategories.put("RUN-LIB", new ResolutionCategory("Problème librairie", (short) 50));
+		resoCategories.put("LIB", new ResolutionCategory("Problème librairie", (short) 50)); //Run-LIB
 		resoCategories.put("PbI", new ResolutionCategory("Problème informatique", (short) 60));
-		resoCategories.put("RUN-Info", new ResolutionCategory("Informations", (short) 70));
+		resoCategories.put("Info", new ResolutionCategory("Informations", (short) 70)); // RUN-Info
 		resoCategories.put("QC", new ResolutionCategory("Observations QC", (short) 80));
+		//ReadSet
+		resoCategories.put("Run", new ResolutionCategory("Problème run", (short) 5));
+		resoCategories.put("Qte", new ResolutionCategory("Problème quantité", (short) 15));
+		resoCategories.put("IND", new ResolutionCategory("Problème indexing", (short) 20));
+		resoCategories.put("Qlte", new ResolutionCategory("Problème qualité", (short) 25));
+		resoCategories.put("MAP", new ResolutionCategory("Problème mapping", (short) 40));
+		resoCategories.put("Sample", new ResolutionCategory("Problème échantillon", (short) 55));
+		resoCategories.put("LIMS", new ResolutionCategory("Problème déclaration LIMS", (short) 60));
+		resoCategories.put("Info", new ResolutionCategory("Informations", (short) 65));		
+		//Analysis
+		//Experiment			
+		return resoCategories;
+	}
+	
+
+	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNS(){	
+		HashMap<String, ResolutionCategory> resoCategories = new HashMap<String, ResolutionCategory>();
+		//Run
+		resoCategories.put("PbM", new ResolutionCategory("Problème machine", (short) 20));
+		resoCategories.put("PbR", new ResolutionCategory("Problème réactifs", (short) 30)); 
+		resoCategories.put("SAV", new ResolutionCategory("Problème qualité : SAV", (short) 40)); //40 for CNS only
+		resoCategories.put("PbI", new ResolutionCategory("Problème informatique", (short) 60));
+		resoCategories.put("Info", new ResolutionCategory("Informations", (short) 70));
 		//ReadSet
 		resoCategories.put("Run", new ResolutionCategory("Problème run", (short) 5));
 		resoCategories.put("LIB", new ResolutionCategory("Problème librairie", (short) 10));
@@ -66,12 +99,9 @@ public class ResolutionService {
 		resoCategories.put("TAXO", new ResolutionCategory("Problème taxon", (short) 30));
 		resoCategories.put("RIBO", new ResolutionCategory("Problème ribosomes", (short) 35));
 		resoCategories.put("MAP", new ResolutionCategory("Problème mapping", (short) 40));
-		resoCategories.put("MERG", new ResolutionCategory("Problème BA-MERG", (short) 45));	
-		resoCategories.put("Sample", new ResolutionCategory("Problème échantillon", (short) 55));
-		resoCategories.put("LIMS", new ResolutionCategory("Problème déclaration LIMS", (short) 60));
-		resoCategories.put("INFO", new ResolutionCategory("Informations", (short) 65));		
+		resoCategories.put("MERG", new ResolutionCategory("Problème merging", (short) 45));	
 		//Analysis
-		resoCategories.put("BA-MERG", new ResolutionCategory("Merging", (short) 10));
+		resoCategories.put("MERG", new ResolutionCategory("Merging", (short) 10)); //BA-MERG
 		resoCategories.put("CTG", new ResolutionCategory("Contigage", (short) 20));
 		resoCategories.put("SIZE", new ResolutionCategory("Size Filter", (short) 30));
 		resoCategories.put("SCAFF", new ResolutionCategory("Scaffolding", (short) 40));
@@ -81,7 +111,6 @@ public class ResolutionService {
 		
 		return resoCategories;
 	}
-	
 
 	
 	public static void saveResolutionsCNG(ContextValidation ctx) {	
@@ -120,17 +149,6 @@ public class ResolutionService {
 		l.add(newResolution("PE module","PbM-PEmodule", resolutionCategories.get("PbM"), (short) 9));
 		l.add(newResolution("zone de dépôt","PbM-zoneDepot", resolutionCategories.get("PbM"), (short) 10));				
 		l.add(newResolution("cBot","PbM-cBot", resolutionCategories.get("PbM"), (short) 11));		
-			
-		l.add(newResolution("indéterminé","PbR-indetermine", resolutionCategories.get("PbR"), (short) 1));
-		l.add(newResolution("flowcell","PbR-FC", resolutionCategories.get("PbR"), (short) 2));
-		l.add(newResolution("cBot","PbR-cBot", resolutionCategories.get("PbR"), (short) 3));
-		l.add(newResolution("séquencage","PbR-sequencage", resolutionCategories.get("PbR"), (short) 4));
-		l.add(newResolution("indexing","PbR-indexing", resolutionCategories.get("PbR"), (short) 5));
-		l.add(newResolution("PE module","PbR-PEmodule", resolutionCategories.get("PbR"), (short) 6));
-		l.add(newResolution("rehyb primer R1","PbR-rehybR1", resolutionCategories.get("PbR"), (short) 7));
-		l.add(newResolution("rehyb primer R2","PbR-rehybR2", resolutionCategories.get("PbR"), (short) 8));
-		l.add(newResolution("erreur réactifs","PbR-erreurReac", resolutionCategories.get("PbR"), (short) 9));
-		l.add(newResolution("rajout réactifs","PbR-ajoutReac", resolutionCategories.get("PbR"), (short) 10));
 		
 		l.add(newResolution("intensité","SAV-intensite", resolutionCategories.get("SAV"), (short) 1));		
 		l.add(newResolution("intensité faible A","SAV-intFbleA", resolutionCategories.get("SAV"), (short) 2));
@@ -150,12 +168,23 @@ public class ResolutionService {
 		l.add(newResolution("index non représenté","SAV-indexNonPresent", resolutionCategories.get("SAV"), (short) 16));
 		l.add(newResolution("index sous-représenté","SAV-indexFblePerc", resolutionCategories.get("SAV"), (short) 17));
 		l.add(newResolution("indexing / demultiplexage","SAV-IndDemultiplex", resolutionCategories.get("SAV"), (short) 18));
+			
+		l.add(newResolution("indéterminé","PbR-indetermine", resolutionCategories.get("PbR"), (short) 1));
+		l.add(newResolution("flowcell","PbR-FC", resolutionCategories.get("PbR"), (short) 2));
+		l.add(newResolution("cBot","PbR-cBot", resolutionCategories.get("PbR"), (short) 3));
+		l.add(newResolution("séquencage","PbR-sequencage", resolutionCategories.get("PbR"), (short) 4));
+		l.add(newResolution("indexing","PbR-indexing", resolutionCategories.get("PbR"), (short) 5));
+		l.add(newResolution("PE module","PbR-PEmodule", resolutionCategories.get("PbR"), (short) 6));
+		l.add(newResolution("rehyb primer R1","PbR-rehybR1", resolutionCategories.get("PbR"), (short) 7));
+		l.add(newResolution("rehyb primer R2","PbR-rehybR2", resolutionCategories.get("PbR"), (short) 8));
+		l.add(newResolution("erreur réactifs","PbR-erreurReac", resolutionCategories.get("PbR"), (short) 9));
+		l.add(newResolution("rajout réactifs","PbR-ajoutReac", resolutionCategories.get("PbR"), (short) 10));
 		
-		l.add(newResolution("construction librairie","LIB-construction", resolutionCategories.get("RUN-LIB"), (short) 1));
-		l.add(newResolution("cause profil : librairie","LIB-profilIntLib", resolutionCategories.get("RUN-LIB"), (short) 2));
-		l.add(newResolution("cause profil : exp type","LIB-profilIntExpType", resolutionCategories.get("RUN-LIB"), (short) 3));
-		l.add(newResolution("pb dilution","LIB-pbDilution", resolutionCategories.get("RUN-LIB"), (short) 4));
-		l.add(newResolution("pb dilution spike-In","LIB-pbDilSpikeIn", resolutionCategories.get("RUN-LIB"), (short) 5));
+		l.add(newResolution("construction librairie","LIB-construction", resolutionCategories.get("LIB"), (short) 1));
+		l.add(newResolution("cause profil : librairie","LIB-profilIntLib", resolutionCategories.get("LIB"), (short) 2));
+		l.add(newResolution("cause profil : exp type","LIB-profilIntExpType", resolutionCategories.get("LIB"), (short) 3));
+		l.add(newResolution("pb dilution","LIB-pbDilution", resolutionCategories.get("LIB"), (short) 4));
+		l.add(newResolution("pb dilution spike-In","LIB-pbDilSpikeIn", resolutionCategories.get("LIB"), (short) 5));
 		
 		l.add(newResolution("indéterminé","PbI-indetermine", resolutionCategories.get("PbI"), (short) 1));
 		l.add(newResolution("PC","PbI-PC", resolutionCategories.get("PbI"), (short) 2));
@@ -166,8 +195,8 @@ public class ResolutionService {
 		l.add(newResolution("retard robocopy","PbI-robocopy", resolutionCategories.get("PbI"), (short) 7));
 		l.add(newResolution("erreur paramétrage run","PbI-parametrageRun", resolutionCategories.get("PbI"), (short) 8));
 		
-		l.add(newResolution("run de validation","Info-runValidation", resolutionCategories.get("RUN-Info"), (short) 1));
-		l.add(newResolution("remboursement","Info-remboursement", resolutionCategories.get("RUN-Info"), (short) 2));
+		l.add(newResolution("run de validation","Info-runValidation", resolutionCategories.get("Info"), (short) 1));
+		l.add(newResolution("remboursement","Info-remboursement", resolutionCategories.get("Info"), (short) 2));
 
 		l.add(newResolution("intensité B.M.S","QC-intBMS", resolutionCategories.get("QC"), (short) 1));
 		l.add(newResolution("tiles out","QC-tilesOut", resolutionCategories.get("QC"), (short) 2));
@@ -206,10 +235,10 @@ public class ResolutionService {
 						
 		l.add(newResolution("% mapping faible","MAP-PercMappingFble", resolutionCategories.get("MAP"),(short) 1));
 		
+		l.add(newResolution("sexe incorrect","Sample-sexeIncorrect", resolutionCategories.get("Sample"),(short) 1));
+		
 		l.add(newResolution("test Dev","Info-testDev", resolutionCategories.get("INFO"),(short) 1));
 		l.add(newResolution("test Prod","Info-testProd", resolutionCategories.get("INFO"),(short) 2));
-		
-		l.add(newResolution("sexe incorrect","Sample-sexeIncorrect", resolutionCategories.get("Sample"),(short) 1));
 		
 		l.add(newResolution("erreur Experimental Type","LIMS-erreurExpType", resolutionCategories.get("LIMS"),(short) 1));
 		
@@ -272,11 +301,11 @@ public class ResolutionService {
 		l.add(newResolution("reboot PC","PbI-rebootPC", resolutionCategories.get("PbI"), (short) 6));
 		l.add(newResolution("erreur paramétrage run","PbI-parametrageRun", resolutionCategories.get("PbI"), (short) 7));
 		
-		l.add(newResolution("run de validation","Info-runValidation", resolutionCategories.get("RUN-Info"), (short) 1));
-		l.add(newResolution("arret séquenceur","Info-arretSeq", resolutionCategories.get("RUN-Info"), (short) 2));
-		l.add(newResolution("arret logiciel","Info_arretLogiciel", resolutionCategories.get("RUN-Info"), (short) 3));
-		l.add(newResolution("remboursement","Info-remboursement", resolutionCategories.get("RUN-Info"), (short) 4));
-		l.add(newResolution("flowcell redéposée","Info-FCredeposee", resolutionCategories.get("RUN-Info"), (short) 5));		
+		l.add(newResolution("run de validation","Info-runValidation", resolutionCategories.get("Info"), (short) 1));
+		l.add(newResolution("arrêt séquenceur","Info-arretSeq", resolutionCategories.get("Info"), (short) 2));
+		l.add(newResolution("arrêt logiciel","Info_arretLogiciel", resolutionCategories.get("Info"), (short) 3));
+		l.add(newResolution("remboursement","Info-remboursement", resolutionCategories.get("Info"), (short) 4));
+		l.add(newResolution("flowcell redéposée","Info-FCredeposee", resolutionCategories.get("Info"), (short) 5));		
 		
 		ResolutionConfigurations r = new ResolutionConfigurations();
 		r.code = "runReso";
@@ -301,20 +330,20 @@ public class ResolutionService {
 		List<Resolution> l = new ArrayList<Resolution>();
 
 		l.add(newResolution("lane abandonnée","Run-abandonLane", resolutionCategories.get("Run"), (short) 1));
-
-		l.add(newResolution("Q30","Qlte-Q30", resolutionCategories.get("Qlte"),(short) 1));				
-		l.add(newResolution("répartition bases","Qlte-repartitionBases", resolutionCategories.get("Qlte"), (short) 2));				
-		l.add(newResolution("adaptateurs/Kmers","Qlte-adapterKmer", resolutionCategories.get("Qlte"),(short) 3));		
-		l.add(newResolution("duplicat > 30","Qlte-duplicat", resolutionCategories.get("Qlte"),(short) 4));
 		
 		l.add(newResolution("pb protocole banque","LIB-pbProtocole", resolutionCategories.get("LIB"),(short) 1));
 		l.add(newResolution("erreur dépôt banque","LIB-erreurDepot", resolutionCategories.get("LIB"),(short) 2));
 		
 		l.add(newResolution("seq valides insuf","Qte-seqValInsuf", resolutionCategories.get("Qte"),(short) 1));
 		l.add(newResolution("seq utiles insuf","Qte-seqUtileInsuf", resolutionCategories.get("Qte"),(short) 2));
-
+		
 		l.add(newResolution("pb demultiplexage","IND-pbDemultiplex", resolutionCategories.get("IND"),(short) 1));
 		l.add(newResolution("pb manip","IND-pbManip", resolutionCategories.get("IND"),(short) 2));
+
+		l.add(newResolution("Q30","Qlte-Q30", resolutionCategories.get("Qlte"),(short) 1));				
+		l.add(newResolution("répartition bases","Qlte-repartitionBases", resolutionCategories.get("Qlte"), (short) 2));				
+		l.add(newResolution("adaptateurs/Kmers","Qlte-adapterKmer", resolutionCategories.get("Qlte"),(short) 3));		
+		l.add(newResolution("duplicat > 30","Qlte-duplicat", resolutionCategories.get("Qlte"),(short) 4));
 				
 		l.add(newResolution("conta indéterminée","TAXO-contaIndeterm", resolutionCategories.get("TAXO"),(short) 1));
 		l.add(newResolution("conta manip","TAXO-contaManip", resolutionCategories.get("TAXO"),(short) 2));
@@ -352,8 +381,8 @@ public class ResolutionService {
 		
 		List<Resolution> l = new ArrayList<Resolution>();
 
-		l.add(newResolution("% BA-MERG","MERG-BA-MERGPercent", resolutionCategories.get("BA-MERG"),(short) 1));
-		l.add(newResolution("reads size","MERG-readSize", resolutionCategories.get("BA-MERG"),(short) 2));
+		l.add(newResolution("% merging","MERG-BA-MERGPercent", resolutionCategories.get("MERG"),(short) 1));
+		l.add(newResolution("reads size","MERG-readSize", resolutionCategories.get("MERG"),(short) 2));
 		
 		l.add(newResolution("N50","CTG-N50", resolutionCategories.get("CTG"),(short) 1));
 		l.add(newResolution("cumul","CTG-cumul", resolutionCategories.get("CTG"),(short)2));
