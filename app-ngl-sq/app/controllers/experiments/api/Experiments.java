@@ -31,6 +31,7 @@ import play.mvc.BodyParser;
 import play.mvc.Result;
 import play.mvc.Results;
 import validation.ContextValidation;
+import validation.experiment.instance.ExperimentValidationHelper;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 
@@ -46,6 +47,7 @@ public class Experiments extends CommonController{
 	final static Form<Experiment> experimentForm = form(Experiment.class);
 	final static Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
 
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result updateExperimentInformations(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
@@ -74,7 +76,7 @@ public class Experiments extends CommonController{
 		return ok(Json.toJson(experiment));
 	}
 	
-	
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result generateOutput(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
@@ -98,12 +100,17 @@ public class Experiments extends CommonController{
 		}
 	}
 
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result updateInstrumentInformations(String code) throws DAOException{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
+		ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
+		
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
+		exp.instrument.validate(ctxValidation);
+		
 		if (!experimentFilledForm.hasErrors()) {
 
 			Builder builder = new DBUpdate.Builder();
@@ -116,6 +123,7 @@ public class Experiments extends CommonController{
 		return badRequest(experimentFilledForm.errorsAsJson());
 	}
 
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result updateExperimentProperties(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
@@ -134,15 +142,22 @@ public class Experiments extends CommonController{
 		return badRequest(experimentFilledForm.errorsAsJson());
 	}
 
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result updateInstrumentProperties(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 		
+		ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
+		ctxValidation.putObject("stateCode", "IP");
+		ctxValidation.setUpdateMode();
+		
 		Logger.debug("Experiment update properties :"+exp.code);
+		
+		ExperimentValidationHelper.validateInstrumentUsed(exp.instrument,exp.instrumentProperties,ctxValidation);
 		
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 		try {
-		exp= ExperimentHelper.updateInstrumentCategory(exp);
+			exp= ExperimentHelper.updateInstrumentCategory(exp);
 		} catch (DAOException e) {
 			Logger.error(e.getMessage());
 		}
@@ -172,6 +187,7 @@ public class Experiments extends CommonController{
 		return ok(Json.toJson(instrumentUsedType.propertiesDefinitions));
 	}
 
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result updateComments(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
@@ -193,6 +209,7 @@ public class Experiments extends CommonController{
 		return badRequest(experimentFilledForm.errorsAsJson());
 	}
 
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result updateContainers(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
@@ -210,6 +227,7 @@ public class Experiments extends CommonController{
 		return badRequest(experimentFilledForm.errorsAsJson());
 	}
 
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result updateStateCode(String code, String stateCode){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
