@@ -10,7 +10,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.parameter.Index;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.DBQuery;
+import org.mongojack.DBQuery;
 import fr.cea.ig.MongoDBDAO;
 
 public abstract class AbstractSampleSheetsfactory {

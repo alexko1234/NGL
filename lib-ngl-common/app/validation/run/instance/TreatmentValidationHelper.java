@@ -19,7 +19,7 @@ import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-import net.vz.mongodb.jackson.DBQuery;
+import org.mongojack.DBQuery;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;

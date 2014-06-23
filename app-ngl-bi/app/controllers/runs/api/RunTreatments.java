@@ -1,8 +1,8 @@
 package controllers.runs.api;
 
 import static play.data.Form.form;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 import models.laboratory.common.description.Level;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;

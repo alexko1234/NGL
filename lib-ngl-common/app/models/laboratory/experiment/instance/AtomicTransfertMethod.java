@@ -10,11 +10,11 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.utils.dao.DAOException;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonSubTypes;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.codehaus.jackson.annotate.JsonTypeInfo.As;
-import org.codehaus.jackson.annotate.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import  com.fasterxml.jackson.annotation.JsonSubTypes;
+import  com.fasterxml.jackson.annotation.JsonTypeInfo;
+import  com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import  com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 import validation.ContextValidation;
 import validation.IValidation;

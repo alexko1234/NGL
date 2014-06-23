@@ -5,10 +5,10 @@ import controllers.CommonController;
 
 
 
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
-import net.vz.mongodb.jackson.JacksonDBCollection;
-import net.vz.mongodb.jackson.WriteResult;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+import org.mongojack.JacksonDBCollection;
+import org.mongojack.WriteResult;
 
 import fr.cea.ig.MongoDBDAO;
 
@@ -49,8 +49,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
 public class AddSequencingProgramType  extends CommonController {

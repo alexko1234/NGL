@@ -21,8 +21,8 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.AfterClass;

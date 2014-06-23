@@ -3,10 +3,22 @@ package models.laboratory.experiment.instance;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import controllers.CommonController;
+
+import validation.ContextValidation;
+
+
+import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.instance.PropertyValue;
+
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerSupportCategory;
+
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
@@ -14,10 +26,10 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
-import models.utils.instance.ContainerSupportHelper;
-import net.vz.mongodb.jackson.DBQuery;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import org.mongojack.DBQuery;
+import models.utils.instance.ContainerSupportHelper;
+import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
 

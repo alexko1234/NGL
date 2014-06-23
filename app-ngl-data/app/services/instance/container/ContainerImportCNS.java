@@ -26,9 +26,11 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
+
 import models.utils.instance.ContainerSupportHelper;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
 import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;

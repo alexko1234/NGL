@@ -1,9 +1,9 @@
 package controllers;
 
 import java.util.List;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBQuery.Query;
-import net.vz.mongodb.jackson.DBUpdate.Builder;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate.Builder;
 
 import org.bson.BSONObject;
 

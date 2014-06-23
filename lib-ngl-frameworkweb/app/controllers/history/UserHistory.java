@@ -9,6 +9,10 @@ import play.mvc.Http.Context;
 import play.mvc.Http.RequestBody;
 import play.mvc.Result;
 import fr.cea.ig.MongoDBDAO;
+import play.mvc.Result;
+import play.libs.F;
+import play.libs.F.Function0;
+import play.libs.F.Promise;
 /** 
  * Write user action into database
  * 
@@ -23,7 +27,7 @@ public class UserHistory extends Action.Simple{
 
 	@Override
 	//function called by play
-	public Result call(Http.Context context) throws Throwable {
+	public  F.Promise<Result> call(Http.Context context) throws Throwable {
 		if(Play.application().configuration().getBoolean("useraction.trace") != null && Play.application().configuration().getBoolean("useraction.trace") != false){
 			String params = "";
 			String action = "";
@@ -40,7 +44,7 @@ public class UserHistory extends Action.Simple{
 			params = Json.toJson(context.request().queryString()).toString();
 			
 			action = context.request().toString();
-			Result res = null;
+			 F.Promise<Result> res = null;
 			
 			if(context.request().uri().startsWith("/api/") && !context.request().uri().contains("/authentication")){
 				long start = System.currentTimeMillis();

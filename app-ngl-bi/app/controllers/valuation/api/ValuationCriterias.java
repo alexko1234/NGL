@@ -12,8 +12,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBQuery.Query;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 
 import com.mongodb.BasicDBObject;
 

@@ -1,7 +1,7 @@
 package controllers;
 
 import static play.data.Form.form;
-import net.vz.mongodb.jackson.DBQuery.Query;
+import org.mongojack.DBQuery.Query;
 import models.laboratory.common.instance.TraceInformation;
 import play.data.Form;
 import play.libs.Json;

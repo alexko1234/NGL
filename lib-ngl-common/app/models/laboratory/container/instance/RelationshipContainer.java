@@ -4,9 +4,9 @@ import java.util.List;
 
 import models.laboratory.container.description.ContainerCategory;
 import models.utils.HelperObjects;
-import net.vz.mongodb.jackson.MongoCollection;
+import org.mongojack.MongoCollection;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;

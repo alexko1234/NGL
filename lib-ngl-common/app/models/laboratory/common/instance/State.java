@@ -3,7 +3,7 @@ package models.laboratory.common.instance;
 import java.util.Date;
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;

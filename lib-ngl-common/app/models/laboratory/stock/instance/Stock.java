@@ -2,14 +2,14 @@ package models.laboratory.stock.instance;
 
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;
 
 
 
-import net.vz.mongodb.jackson.MongoCollection;
+import org.mongojack.MongoCollection;
 import fr.cea.ig.DBObject;
 
 

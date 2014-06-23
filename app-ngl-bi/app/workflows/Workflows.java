@@ -5,7 +5,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
+import akka.actor.ActorRef;
+import akka.actor.Props;
+
+import com.typesafe.config.ConfigFactory;
+
+import play.Logger;
+import play.libs.Akka;
+import rules.services.RulesActor;
+import rules.services.RulesMessage;
+
+import org.mongojack.DBQuery;
+
+import org.mongojack.DBUpdate;
+import fr.cea.ig.MongoDBDAO;
+
+
 import lims.services.ILimsRunServices;
+
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
@@ -20,9 +38,9 @@ import models.laboratory.run.instance.SampleOnContainer;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
-import net.vz.mongodb.jackson.WriteResult;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+import org.mongojack.WriteResult;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.libs.Akka;
@@ -46,7 +64,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class Workflows {
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(new Props(RulesActor.class));
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
 	private static final String ruleStatRG="rg_1";
 			
 	

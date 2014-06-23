@@ -1,14 +1,17 @@
 package models.utils;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
+import ch.qos.logback.core.util.TimeUtil;
 
-import play.libs.WS;
-import play.libs.WS.Response;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import play.libs.ws.WS;
+import play.libs.ws.WSResponse;
 
 
 // TODO
@@ -33,7 +36,7 @@ public class HttpReference<T> implements IFetch<T> {
 	@Override
 	public T getObject() {
 		// execute GET external URL
-		Response reponse = WS.url(code).get().get();
+		WSResponse reponse = WS.url(code).get().get(10, TimeUnit.SECONDS);
 
 		//if (reponse.getStatus()!=play.mvc.Http.Status.OK) throw new Exception  
 				

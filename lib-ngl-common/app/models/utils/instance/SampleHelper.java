@@ -8,8 +8,8 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 import fr.cea.ig.MongoDBDAO;
 
 public class SampleHelper {

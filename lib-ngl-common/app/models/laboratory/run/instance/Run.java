@@ -1,7 +1,5 @@
 package models.laboratory.run.instance;
 
-
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import play.Logger;
 
 import models.laboratory.common.description.Level;

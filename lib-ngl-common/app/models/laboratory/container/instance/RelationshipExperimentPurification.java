@@ -1,13 +1,13 @@
 package models.laboratory.container.instance;
 
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;
 
 
-import net.vz.mongodb.jackson.MongoCollection;
+import org.mongojack.MongoCollection;
 
 /*
  * Instances of RelationshipExperimentPurification are stored in MongoDB collection named RelationshipExperimentPurification 

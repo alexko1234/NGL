@@ -3,7 +3,7 @@ package models.laboratory.run.instance;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentUsedType;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.common.instance.CommonValidationHelper;

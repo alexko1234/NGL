@@ -7,10 +7,10 @@ import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
-import net.vz.mongodb.jackson.JacksonDBCollection;
-import net.vz.mongodb.jackson.WriteResult;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+import org.mongojack.JacksonDBCollection;
+import org.mongojack.WriteResult;
 import play.Logger;
 import play.mvc.Result;
 import controllers.CommonController;
@@ -52,14 +52,14 @@ public class MigrationProjectCode extends CommonController {
 		if(null != w.getError())
 			Logger.error(colName+" "+w.getError());
 		
-		int nb1 = w.getSavedIds().length;
+		int nb1 = w.getSavedIds().size();
 		//2nd pull
 		w = MongoDBDAO.update(colName, Project.class, 
 				DBQuery.and(DBQuery.is("projectCodes", oldProjectCode)), 
 				DBUpdate.pull("projectCodes", oldProjectCode));		
 		if(null != w.getError())
 			Logger.error(colName+" "+w.getError());
-		int nb2 = w.getSavedIds().length;
+		int nb2 = w.getSavedIds().size();
 		
 		Logger.info(colName+" = "+nb1+" / "+nb2);
 	}

@@ -11,11 +11,10 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.MongoCollection;
+import org.mongojack.MongoCollection;
 
-import org.codehaus.jackson.annotate.JsonAnyGetter;
-import org.codehaus.jackson.annotate.JsonAnySetter;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import validation.ContextValidation;
 import validation.IValidation;

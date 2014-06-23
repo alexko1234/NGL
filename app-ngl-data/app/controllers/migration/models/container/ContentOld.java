@@ -5,7 +5,7 @@ import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ContentOld {
 

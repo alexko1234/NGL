@@ -5,8 +5,8 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.stock.instance.Stock;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBQuery.Query;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
@@ -21,7 +21,7 @@ public class ContainerSupportValidationHelper extends CommonValidationHelper{
 			Query query=DBQuery.and(DBQuery.is("support.line",containerSupport.line),
 					DBQuery.is("support.column", containerSupport.column),
 					DBQuery.is("support.code",containerSupport.code));
-			if (MongoDBDAO.getCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class).count(query)!=0 ) {
+			if (MongoDBDAO.getCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class).getCount(query)!=0 ) {
 				//TODO revoir le message d'erreur
 				contextValidation.addErrors("supportCode.line.column", ValidationConstants.ERROR_NOTUNIQUE_MSG, containerSupport.code,containerSupport.line,containerSupport.column);		
 			}

@@ -16,9 +16,10 @@ import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
 import models.utils.instance.StateHelper;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
-import net.vz.mongodb.jackson.DBUpdate.Builder;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+import org.mongojack.DBUpdate.Builder;
+
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -131,11 +132,12 @@ public class Experiments extends CommonController{
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
 		if (!experimentFilledForm.hasErrors()) {
+			if(exp.experimentProperties != null){
+				Builder builder = new DBUpdate.Builder();
+				builder = builder.set("experimentProperties",exp.experimentProperties);
 
-			Builder builder = new DBUpdate.Builder();
-			builder = builder.set("experimentProperties",exp.experimentProperties);
-
-			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			}
 			return ok(Json.toJson(exp));
 		}
 
@@ -148,7 +150,7 @@ public class Experiments extends CommonController{
 		Experiment exp = experimentFilledForm.get();
 		
 		ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
-		ctxValidation.putObject("stateCode", "IP");
+		ctxValidation.putObject("stateCode", exp.state.code);
 		ctxValidation.setUpdateMode();
 		
 		Logger.debug("Experiment update properties :"+exp.code);
@@ -162,11 +164,12 @@ public class Experiments extends CommonController{
 			Logger.error(e.getMessage());
 		}
 		if (!experimentFilledForm.hasErrors()) {
-
-			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
+			
+			if(exp.instrumentProperties != null){
+				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
 						DBQuery.is("code", exp.code),
 						DBUpdate.set("instrumentProperties",exp.instrumentProperties).set("instrument",exp.instrument));
-			
+			}
 			return ok(Json.toJson(exp));
 		}
 
@@ -355,6 +358,10 @@ public class Experiments extends CommonController{
 			queryElts.add(DBQuery.in("projectCodes", experimentSearch.projectCodes));
 		}
 
+		if(experimentSearch.projectCode != null){
+			queryElts.add(DBQuery.in("projectCodes", experimentSearch.projectCode));
+		}
+		
 		if(null != experimentSearch.fromDate){
 			queryElts.add(DBQuery.greaterThanEquals("traceInformation.creationDate", experimentSearch.fromDate));
 		}
@@ -365,6 +372,10 @@ public class Experiments extends CommonController{
 
 		if(experimentSearch.sampleCodes != null){
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCodes));
+		}
+		
+		if(experimentSearch.sampleCode != null){
+			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCode));
 		}
 		
 		if(experimentSearch.users != null){

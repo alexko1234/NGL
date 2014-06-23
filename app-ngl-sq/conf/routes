@@ -12,7 +12,6 @@ GET		/tpl/containers/js-routes										controllers.containers.tpl.Containers.ja
 
 #containers api
 GET		/api/containers													controllers.containers.api.Containers.list()
-GET		/api/containers/supports										controllers.containers.api.Containers.list_supports()
 #TODO a revoir plutot /api/containers/supports/categories
 GET		/api/containers/container-support-categories  					controllers.containers.api.ContainerSupportCategories.list()
 GET		/api/containers/categories										controllers.containers.api.ContainerCategories.list()

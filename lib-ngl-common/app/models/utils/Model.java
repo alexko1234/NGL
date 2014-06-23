@@ -3,7 +3,7 @@ package models.utils;
 
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 import models.utils.dao.AbstractDAO;

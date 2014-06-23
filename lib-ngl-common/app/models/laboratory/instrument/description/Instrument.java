@@ -3,7 +3,7 @@ package models.laboratory.instrument.description;
 
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.laboratory.common.description.Institute;
 import models.laboratory.instrument.description.dao.InstrumentDAO;

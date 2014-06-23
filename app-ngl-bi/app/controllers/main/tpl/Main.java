@@ -3,11 +3,18 @@ package controllers.main.tpl;
 
 import java.util.List;
 
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
 import models.laboratory.common.description.CodeLabel;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.dao.CodeLabelDAO;
-import models.laboratory.valuation.instance.ValuationCriteria;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
+
+import models.laboratory.valuation.instance.ValuationCriteria;
+
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import jsmessages.JsMessages;
@@ -22,14 +29,27 @@ import views.html.home ;
 
 public class Main extends CommonController {
 
+   final static JsMessages messages = JsMessages.create(play.Play.application());	
 	
    public static Result home() {
+	   
+	   ReadSet readSetInput= new ReadSet();
+	   readSetInput.projectCode = "projetttt";
+	   readSetInput.sampleCode = "sampleeee";
+	   readSetInput.code = "THECODE";
+	   
+		//To avoid "double" values
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+				DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("projectCodes", readSetInput.projectCode)), 
+				DBUpdate.push("projectCodes", readSetInput.projectCode));
+	   
 	   return ok(home.render());
         
     }
    
    public static Result jsMessages() {
-       return ok(JsMessages.generate("Messages", lang())).as("application/javascript");
+       return ok(messages.generate("Messages")).as("application/javascript");
+
    }
    
    public static Result jsCodes() {

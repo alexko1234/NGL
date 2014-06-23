@@ -17,8 +17,8 @@ import models.util.DataMappingCNS;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
 import org.springframework.jdbc.core.RowMapper;
 

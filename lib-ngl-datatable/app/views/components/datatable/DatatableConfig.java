@@ -3,7 +3,7 @@ package views.components.datatable;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 
 import play.Logger;

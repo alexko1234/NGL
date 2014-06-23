@@ -1,5 +1,6 @@
 package controllers;
 
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,12 +9,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate.Builder;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate.Builder;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.bson.BSONObject;
-import org.codehaus.jackson.JsonNode;
 
 import play.data.DynamicForm;
 import play.data.Form;
@@ -55,7 +58,7 @@ public abstract class CommonController extends Controller{
 	protected static <T> List<Form<T>> getFilledFormList(Form<T> form, Class<T> clazz) {		
 		JsonNode json = request().body().asJson();
 		List<Form<T>> results = new ArrayList<Form<T>>();
-		Iterator<JsonNode> iterator = json.getElements();
+		Iterator<JsonNode> iterator = json.elements();
 		
 		while(iterator.hasNext()){
 			JsonNode jsonChild = iterator.next();

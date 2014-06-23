@@ -4,9 +4,9 @@ import controllers.CommonController;
 import controllers.migration.models.FileOld2;
 import controllers.migration.models.ReadSetOld2;
 
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
-import net.vz.mongodb.jackson.JacksonDBCollection;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+import org.mongojack.JacksonDBCollection;
 
 import fr.cea.ig.MongoDBDAO;
 

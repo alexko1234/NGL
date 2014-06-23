@@ -9,8 +9,10 @@ public class ExperimentSearchForm extends ListForm{
 	public String typeCode;
 	public String processTypeCode;
 	public String categoryCode;
+	public String projectCode;
 	public List<String> projectCodes;
 	public List<String> sampleCodes;
+	public String sampleCode;
 	public Date fromDate;
 	public Date toDate;
 	public String stateCode;

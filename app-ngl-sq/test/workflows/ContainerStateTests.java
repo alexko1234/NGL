@@ -5,7 +5,7 @@ import java.util.Date;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.DBQuery;
+import org.mongojack.DBQuery;
 
 import org.junit.Assert;
 import org.junit.Test;

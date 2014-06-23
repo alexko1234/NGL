@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import play.data.DynamicForm;
 import play.data.Form;
@@ -59,7 +59,7 @@ public abstract class APICommonController<T> extends Controller{
 	protected <P> List<Form<P>> getFilledFormList(Form<P> form, Class<P> clazz) {		
 		JsonNode json = request().body().asJson();
 		List<Form<P>> results = new ArrayList<Form<P>>();
-		Iterator<JsonNode> iterator = json.getElements();
+		Iterator<JsonNode> iterator = json.elements();
 		
 		while(iterator.hasNext()){
 			JsonNode jsonChild = iterator.next();

@@ -20,9 +20,9 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
-import net.vz.mongodb.jackson.JacksonDBCollection;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+import org.mongojack.JacksonDBCollection;
 import play.Logger;
 import play.libs.Akka;
 import play.mvc.Result;
@@ -42,7 +42,7 @@ public class Migration extends CommonController {
 	
 	private static final String RUN_ILLUMINA_BEFORE_RECALCUL = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_BEFORE_RECALCUL";
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(new Props(RulesActor.class));
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
 	private static final String ruleStatRG="rg_1";
 	
 	

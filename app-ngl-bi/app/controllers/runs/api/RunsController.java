@@ -2,7 +2,7 @@ package controllers.runs.api;
 
 import com.mongodb.BasicDBObject;
 
-import net.vz.mongodb.jackson.DBQuery;
+import org.mongojack.DBQuery;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;

@@ -5,7 +5,7 @@ import models.laboratory.reagent.description.ReagentType;
 import models.utils.HelperObjects;
 import models.utils.InstanceConstants;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 import validation.ContextValidation;

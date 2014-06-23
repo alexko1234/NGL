@@ -17,14 +17,14 @@ import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import net.vz.mongodb.jackson.DBQuery;
+import org.mongojack.DBQuery;
 
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
-import play.modules.mongodb.jackson.MongoDB;
+import play.modules.mongojack.MongoDB;
 import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
@@ -151,7 +151,7 @@ public class Containers extends CommonController {
 			keysSupport.put("support.code",true);
 			keysSupport.put("support.categoryCode",true);
 		    
-			BasicDBList supportDBObject = (BasicDBList) MongoDB.getCollection(InstanceConstants.CONTAINER_COLL_NAME, Container.class, String.class).group(keysSupport, query, test,"function ( curr, result ) { }");
+			BasicDBList supportDBObject = (BasicDBList) MongoDB.getCollection(InstanceConstants.CONTAINER_COLL_NAME, Container.class, String.class).group(keysSupport, test, test,"function ( curr, result ) { }");
 			Iterator itr = supportDBObject.iterator();
 		    
 			while(itr.hasNext()) {

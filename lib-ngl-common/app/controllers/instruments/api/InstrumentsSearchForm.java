@@ -2,7 +2,7 @@ package controllers.instruments.api;
 
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonUnwrapped;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import models.laboratory.instrument.description.InstrumentQueryParams;
 import controllers.ListForm;

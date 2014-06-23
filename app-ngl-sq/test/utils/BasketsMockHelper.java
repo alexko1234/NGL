@@ -2,7 +2,7 @@ package utils;
 
 import models.laboratory.container.instance.Basket;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import play.libs.Json;
 

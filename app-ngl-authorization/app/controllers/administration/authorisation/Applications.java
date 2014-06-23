@@ -4,7 +4,7 @@ import static play.data.Form.form;
 import models.administration.authorisation.Application;
 import models.administration.authorisation.Permission;
 
-import org.codehaus.jackson.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import com.avaje.ebean.Page;
 

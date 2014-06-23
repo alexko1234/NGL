@@ -36,10 +36,12 @@ public class PropertyImgValue extends PropertyFileValue {
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
-		super.validate(contextValidation); 
-		ValidationHelper.required(contextValidation, this.width, propertyDefinition.code + ".width");
-		ValidationHelper.required(contextValidation, this.height, propertyDefinition.code + ".height");
+		if(this.value != null){
+			PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
+			super.validate(contextValidation); 
+			ValidationHelper.required(contextValidation, this.width, propertyDefinition.code + ".width");
+			ValidationHelper.required(contextValidation, this.height, propertyDefinition.code + ".height");
+		}
 	}
 
 

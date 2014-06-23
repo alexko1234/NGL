@@ -1,6 +1,6 @@
 package controllers.projects.api;
 
-import net.vz.mongodb.jackson.DBQuery;
+import org.mongojack.DBQuery;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
 import models.laboratory.project.instance.UmbrellaProject;

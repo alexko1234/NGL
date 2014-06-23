@@ -17,9 +17,9 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBQuery.Query;
-import net.vz.mongodb.jackson.DBUpdate;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

@@ -5,7 +5,7 @@ import java.util.Date;
 import models.administration.authorisation.User;
 import models.utils.HelperObjects;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;
@@ -39,10 +39,6 @@ public class Comment implements IValidation {
 		
 	}
 
-	@JsonIgnore
-	public User getCreateUser(){
-		return new HelperObjects<User>().getObject(User.class, createUser);
-	}
 
 	@Override
 	public void validate(ContextValidation contextValidation) {

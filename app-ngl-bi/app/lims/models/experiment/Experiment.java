@@ -4,8 +4,8 @@ import java.util.Date;
 
 import lims.models.instrument.Instrument;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion;
 
 import play.data.validation.Constraints.Required;
 

@@ -14,14 +14,15 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
 import org.junit.Test;
 
 import fr.cea.ig.MongoDBDAO;
 
 import play.data.validation.ValidationError;
+import play.libs.Json;
 
 import utils.AbstractTests;
 import validation.ContextValidation;
@@ -59,7 +60,7 @@ public class experimentTests extends AbstractTests{
 		
 		
 		exp.instrumentProperties = new HashMap<String, PropertyValue>();
-		exp.instrumentProperties.put("restrictionEnzyme", pImgValue);
+		exp.instrumentProperties.put("enzymeChooser", pImgValue);
 		
 		showErrors(cv);
 		
@@ -69,19 +70,26 @@ public class experimentTests extends AbstractTests{
 		
 		Experiment expBase = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, "TESTYANNEXP");
 		
-		assertThat(expBase.instrumentProperties.get("restrictionEnzyme").value);
+		assertThat(expBase.instrumentProperties.get("enzymeChooser").value);
 		
 		ExperimentValidationHelper.validateInstrumentUsed(exp.instrument,exp.instrumentProperties,cv);
 		
+		pImgValue.fullname = "test";
+		
+		expBase.instrumentProperties.clear();
+		expBase.instrumentProperties.put("enzymeChooser", pImgValue);
+		
+		//System.out.println(Json.toJson(expBase).toString());
+		
 		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
-				DBQuery.is("code", exp.code),
-				DBUpdate.set("instrumentProperties",exp.instrumentProperties));
+				DBQuery.is("code", expBase.code),
+				DBUpdate.set("instrumentProperties",expBase.instrumentProperties));
 		
 		System.out.println("update");
 		
 		Experiment expBase2 = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, "TESTYANNEXP");
 		
-		assertThat(expBase2.instrumentProperties.get("restrictionEnzyme").value);
+		assertThat(expBase2.instrumentProperties.get("enzymeChooser").value);
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, "TESTYANNEXP");
 	}

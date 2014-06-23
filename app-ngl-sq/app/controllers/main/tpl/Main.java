@@ -16,6 +16,8 @@ import controllers.authorisation.Permission;
 
 public class Main extends CommonController{
 
+   final static JsMessages messages = JsMessages.create(play.Play.application());
+
    public static Result home() {
         return ok(home.render());
    }
@@ -52,7 +54,9 @@ public class Main extends CommonController{
    
    
    public static Result jsMessages() {
-       return ok(JsMessages.generate("Messages")).as("application/javascript");
+	   
+	   
+       return ok(messages.generate("Messages")).as("application/javascript");
    }
 
 }

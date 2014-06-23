@@ -5,7 +5,7 @@ import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
-import net.vz.mongodb.jackson.MongoCollection;
+import org.mongojack.MongoCollection;
 import fr.cea.ig.DBObject;
 
 @MongoCollection(name="Reagent")

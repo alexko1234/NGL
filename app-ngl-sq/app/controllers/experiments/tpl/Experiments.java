@@ -9,7 +9,7 @@ import java.util.Map;
 
 import javax.persistence.OneToOne;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentType;
@@ -149,8 +149,7 @@ public class Experiments extends CommonController{
 				controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
 				controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
-  	    		controllers.commons.api.routes.javascript.Users.list(),
-  	    		controllers.containers.api.routes.javascript.Containers.list_supports()
+  	    		controllers.commons.api.routes.javascript.Users.list()
   	    		
   	      )	  	      
   	    );

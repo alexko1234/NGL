@@ -23,17 +23,25 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
+
 import models.utils.ListObject;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBQuery.Query;
-import net.vz.mongodb.jackson.DBUpdate;
-import net.vz.mongodb.jackson.DBUpdate.Builder;
+import  org.mongojack.DBUpdate.Builder;
+
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+import org.mongojack.WriteResult;
+import org.mongojack.DBQuery.Query;
+
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.apache.commons.collections.CollectionUtils;
+
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonNode;
+
 
 import com.mongodb.BasicDBObject;
+
 import com.typesafe.config.ConfigFactory;
 
 import akka.actor.ActorRef;
@@ -71,10 +79,11 @@ public class Runs extends RunsController {
 	final static Form<Valuation> valuationForm = form(Valuation.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep");
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(new Props(RulesActor.class));
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
 
 	//@Permission(value={"reading"})
 	public static Result list(){
+
 		Form<RunsSearchForm> filledForm = filledFormQueryString(searchForm, RunsSearchForm.class);
 		RunsSearchForm form = filledForm.get();
 		BasicDBObject keys = getKeys(form);

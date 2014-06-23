@@ -12,9 +12,9 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
-import net.vz.mongodb.jackson.DBQuery.Query;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+import org.mongojack.DBQuery.Query;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

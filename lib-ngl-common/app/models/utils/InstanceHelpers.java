@@ -17,7 +17,7 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.SampleOnContainer;
-import net.vz.mongodb.jackson.DBQuery;
+import org.mongojack.DBQuery;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;

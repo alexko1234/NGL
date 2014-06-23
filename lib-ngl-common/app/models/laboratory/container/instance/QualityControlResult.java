@@ -2,7 +2,7 @@ package models.laboratory.container.instance;
 
 import java.util.Map;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 import validation.ContextValidation;

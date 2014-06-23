@@ -3,7 +3,7 @@ package models.utils;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Object used to retrieve an object define in the NGL SQL DB.

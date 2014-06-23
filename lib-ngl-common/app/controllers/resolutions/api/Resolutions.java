@@ -9,8 +9,8 @@ import java.util.List;
 import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.resolutions.instance.ResolutionConfigurations;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBQuery.Query;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

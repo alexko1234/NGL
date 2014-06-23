@@ -3,6 +3,12 @@ package controllers.migration.models;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import validation.ContextValidation;
+
+import models.laboratory.common.instance.State;
+
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.run.instance.Run;
 

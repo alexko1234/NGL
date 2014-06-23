@@ -15,9 +15,9 @@ import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.MongoCollection;
+import org.mongojack.MongoCollection;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;

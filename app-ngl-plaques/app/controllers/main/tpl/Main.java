@@ -15,14 +15,17 @@ import play.mvc.Result;
 import views.html.home;
 
 public class Main extends CommonController {
+  
+	final static JsMessages messages = JsMessages.create(play.Play.application());
 	
 	public static Result home() {
 		   return ok(home.render());
 	        
 	}
 
+
    public static Result jsMessages() {
-       return ok(JsMessages.generate("Messages")).as("application/javascript");
+       return ok(messages.generate("Messages")).as("application/javascript");
    }
 
    public static Result jsCodes() {

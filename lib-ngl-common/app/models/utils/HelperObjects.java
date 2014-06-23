@@ -5,7 +5,7 @@ import java.util.List;
 
 import models.utils.dao.DAOException;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import play.Logger;
 

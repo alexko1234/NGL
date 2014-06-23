@@ -3,7 +3,7 @@
 @import models.administration.authorisation.Role
 @implicitField = @{ FieldConstructor(helper.tbformvertical.f) }
 
-@searchForm(handler: FieldConstructor, lang : Lang = implicitly[Lang]) = {
+@searchForm(handler: FieldConstructor) = {
 	
 	@helper.form(action = controllers.administration.authorisation.routes.Roles.list(), args = 'class -> "well form-search") {		
 		
@@ -12,7 +12,7 @@
                 args = 'placeholder -> "Label",
                 'class -> "search-query",
                 '_label -> "Label"  
-            )(handler = handler, lang)
+            )(handler = handler)
                           				
 	}
 } 

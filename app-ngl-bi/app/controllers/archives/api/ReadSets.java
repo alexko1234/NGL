@@ -8,10 +8,10 @@ import java.util.Map;
 
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBQuery.Query;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 
 import play.Logger;

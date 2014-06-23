@@ -4,7 +4,7 @@ package validation.run.instance;
 import java.util.List;
 import java.util.Map;
 
-import net.vz.mongodb.jackson.DBQuery;
+import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
 

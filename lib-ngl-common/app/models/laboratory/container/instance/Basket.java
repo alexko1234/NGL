@@ -6,7 +6,7 @@ import fr.cea.ig.DBObject;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.experiment.instance.ContainerUsed;
-import net.vz.mongodb.jackson.MongoCollection;
+import org.mongojack.MongoCollection;
 
 @MongoCollection(name="Basket")
 public class Basket extends DBObject{

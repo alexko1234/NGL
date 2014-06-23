@@ -3,7 +3,7 @@ package models.laboratory.experiment.instance;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import play.Logger;
 import validation.ContextValidation;

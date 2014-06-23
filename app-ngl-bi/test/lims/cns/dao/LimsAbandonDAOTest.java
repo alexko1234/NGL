@@ -2,7 +2,8 @@ package lims.cns.dao;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
+
 import lims.models.runs.EtatTacheHD;
 import lims.models.runs.TacheHD;
 
@@ -18,9 +19,9 @@ public class LimsAbandonDAOTest extends AbstractTests {
 	public void getTacheHD() {
 		if (play.Play.application().configuration().getString("institute").equals("CNS")) {
 			LimsAbandonDAO  dao = Spring.getBeanOfType(LimsAbandonDAO.class);
-			Assert.assertNotNull(dao);
+			assertNotNull(dao);
 			List<TacheHD> taches = dao.listTacheHD("20626");
-			Assert.assertTrue(taches.size() == 0);
+			assertTrue(taches.size() == 0);
 		}
 	}
 
@@ -28,10 +29,10 @@ public class LimsAbandonDAOTest extends AbstractTests {
 	public void getEtatTacheHD() {
 		if (play.Play.application().configuration().getString("institute").equals("CNS")) {
 			LimsAbandonDAO  dao = Spring.getBeanOfType(LimsAbandonDAO.class);
-			Assert.assertNotNull(dao);
+			assertNotNull(dao);
 			List<EtatTacheHD> etaches = dao.listEtatTacheHD();
 			Logger.debug("Nb Etat tache = "+etaches.size());
-			Assert.assertTrue(etaches.size() > 0);
+			assertTrue(etaches.size() > 0);
 		}
 		
 	}

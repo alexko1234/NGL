@@ -3,7 +3,7 @@
 @import helper._
 
 @helper.form(action = controllers.dataload.routes.SampleLoad.uploadDataFromCSVFile(), args = 'class -> "well form-search") {
-		     @helper.tbInputText(
+		     @** @helper.tbInputText(
 				field = dataForm("sampleType"), 
                 args = '_label -> "Sample Type",
                 '_showConstraints -> false
@@ -20,7 +20,7 @@
 				field = dataForm("File Name"), 
                 args = '_label -> "File Name",
                 '_showConstraints -> false  
-            )				
+            )	*@			
             
             <input type="submit" value="Load Data">	
             		

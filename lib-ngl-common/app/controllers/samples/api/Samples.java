@@ -11,7 +11,7 @@ import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
-import net.vz.mongodb.jackson.DBQuery;
+import org.mongojack.DBQuery;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -80,7 +80,7 @@ public class Samples extends CommonController{
 	private static DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		if(StringUtils.isNotEmpty(samplesSearch.projectCode)){
-			queryElts.add(DBQuery.is("projectCodes", samplesSearch.projectCode));
+			queryElts.add(DBQuery.in("projectCodes", samplesSearch.projectCode));
 		}
 
 		if(samplesSearch.projectCodes != null && samplesSearch.projectCodes.size() > 0){

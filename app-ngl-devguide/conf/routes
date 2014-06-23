@@ -16,6 +16,7 @@ GET     /services/:name                	controllers.Application.services(name:St
 GET     /datatable                 controllers.Application.datatable()
 GET     /datatable/demo            controllers.Application.datatableDemo()
 GET     /datatable/get-examples            controllers.Datatable.getExamples()
+GET     /datatable/get-examples-pagination            controllers.Datatable.getExamplesPagination()
 
 ###############
 #Example Pages

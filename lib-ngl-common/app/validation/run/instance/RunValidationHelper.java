@@ -11,7 +11,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import play.Logger;
 
-import net.vz.mongodb.jackson.DBQuery;
+import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
 

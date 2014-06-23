@@ -7,11 +7,11 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.run.description.TreatmentType;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.DBQuery;
+import org.mongojack.DBQuery;
 
-import org.codehaus.jackson.annotate.JsonAnyGetter;
-import org.codehaus.jackson.annotate.JsonAnySetter;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import  com.fasterxml.jackson.annotation.JsonAnyGetter;
+import  com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;

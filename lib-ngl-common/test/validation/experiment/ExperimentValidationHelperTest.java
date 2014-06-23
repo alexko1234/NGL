@@ -16,7 +16,7 @@ import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.resolutions.instance.ResolutionConfigurations;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-import net.vz.mongodb.jackson.DBQuery;
+import org.mongojack.DBQuery;
 
 import org.junit.AfterClass;
 import org.junit.Assert;

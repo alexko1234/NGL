@@ -1,13 +1,16 @@
 package controllers.runs.api;
 
 import static play.data.Form.form;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.DBQuery;
-import net.vz.mongodb.jackson.DBUpdate;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;

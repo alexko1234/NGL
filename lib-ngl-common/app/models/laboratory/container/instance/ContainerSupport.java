@@ -9,7 +9,7 @@ import models.laboratory.common.instance.Valuation;
 import models.utils.InstanceConstants;
 import models.laboratory.common.instance.PropertyValue;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;

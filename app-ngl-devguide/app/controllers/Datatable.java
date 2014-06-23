@@ -21,4 +21,15 @@ public class Datatable extends Controller{
 		
 		return ok(Json.toJson(new DatatableResponse(tubes, tubes.size())));
 	}
+	
+	public static Result getExamplesPagination(){
+		List<Tube> tubes = new ArrayList<Tube>();
+		for(int i=0;i<100;i++){
+			tubes.add(new Tube("test"+i,""+(i*i+i+4),"N","AX_"+i));
+			tubes.add(new Tube("test"+i,""+(i*i+i+6),"IWP","AP_"+i));
+			tubes.add(new Tube("test"+i,""+(i*i+i+2),"IWP","KI_"+i*10));
+		}
+		
+		return ok(Json.toJson(new DatatableResponse(tubes, tubes.size())));
+	}
 }

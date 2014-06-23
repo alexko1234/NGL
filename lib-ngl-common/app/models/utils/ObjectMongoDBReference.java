@@ -1,8 +1,8 @@
 package models.utils;
 
-import net.vz.mongodb.jackson.MongoCollection;
+import org.mongojack.MongoCollection;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;

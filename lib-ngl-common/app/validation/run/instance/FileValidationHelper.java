@@ -12,7 +12,7 @@ import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-import net.vz.mongodb.jackson.DBQuery;
+import org.mongojack.DBQuery;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;

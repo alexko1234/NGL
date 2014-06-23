@@ -4,7 +4,7 @@ import java.util.List;
 
 import models.laboratory.common.instance.TraceInformation;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import  com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;

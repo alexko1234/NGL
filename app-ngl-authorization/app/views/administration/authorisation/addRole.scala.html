@@ -9,9 +9,9 @@
 	@helper.tbInputText(roleForm("label"),'_label->"Label",disabled)
 	<div style="width:400px;height:80px;overflow: auto;">
 	 @if(roleForm("id").value == null || roleForm("id").value == "") {
-		 @helper.tbMultipleCheckBox(roleForm("permissions"),Nil,map.toMap,"id",'_label->"Role permissions",disabled)
+		 @** @helper.tbMultipleCheckBox(roleForm("permissions"),Nil,map.toMap,"id",'_label->"Role permissions",disabled) *@
 	 } else {
-	 		 @helper.tbMultipleCheckBox(roleForm("permissions"), roleForm.get.permissions.map(v => v.id.toString()).toList,map.toMap,"id",'_label->"Role permissions",disabled) <br>
+	 		@** @helper.tbMultipleCheckBox(roleForm("permissions"), roleForm.get.permissions.map(v => v.id.toString()).toList,map.toMap,"id",'_label->"Role permissions",disabled) *@ <br>
 	 	
 	 }
 	 </div>

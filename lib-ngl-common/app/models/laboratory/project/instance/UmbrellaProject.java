@@ -2,7 +2,7 @@ package models.laboratory.project.instance;
 
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;
@@ -10,7 +10,7 @@ import validation.project.instance.ProjectValidationHelper;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.utils.InstanceConstants;
-import net.vz.mongodb.jackson.MongoCollection;
+import org.mongojack.MongoCollection;
 import fr.cea.ig.DBObject;
 
 /**

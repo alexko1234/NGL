@@ -1,9 +1,9 @@
-@(dataForm: Form[controllers.utils.DataTableForm], tableForm: Form[models.administration.authorisation.User])
+ @(dataForm: Form[controllers.utils.DataTableForm], tableForm: Form[models.administration.authorisation.User])
 @import helper._
 @import models.administration.authorisation.User
 @implicitField = @{ FieldConstructor(helper.tbformvertical.f) }
 
-@searchForm(handler: FieldConstructor, lang : Lang = implicitly[Lang]) = {
+@searchForm(handler: FieldConstructor) = {
 	
 	@helper.form(action = controllers.administration.authorisation.routes.Users.list(), args = 'class -> "well form-search") {		
 		
@@ -12,28 +12,28 @@
                 args = 'placeholder -> "Firstname",
                 'class -> "search-query",
                 '_label -> "Firstname"  
-            )(handler = handler, lang)
+            )(handler = handler)
             
             	@helper.tbInputText(
 				field = dataForm("search_2"), 
                 args = 'placeholder -> "Lastname",
                 'class -> "search-query",
                 '_label -> "Lastname"  
-            )(handler = handler, lang)
+            )(handler = handler)
             
             	@helper.tbInputText(
 				field = dataForm("search_3"), 
                 args = 'placeholder -> "Login",
                 'class -> "search-query",
                 '_label -> "Login"  
-            )(handler = handler, lang)
+            )(handler = handler)
             
             	@helper.tbInputText(
 				field = dataForm("search_4"), 
                 args = 'placeholder -> "Email",
                 'class -> "search-query",
                 '_label -> "Email"  
-            )(handler = handler, lang)
+            )(handler = handler)
                           				
 	}
 } 

@@ -306,8 +306,12 @@ angular.module('commonsServices', []).
 	        		  var reader = new FileReader();
 	        		  var file;
 	        		  
+	        		  scope.base64Img._type = "img";
+	        		  scope.base64Img.value = null;
+	        		  
 	        		  reader.onload = function (e) {
 	        			  scope.$apply(function () {
+	        				  
 	        				  scope.base64Img._type = "img";
 	        				  scope.base64Img.fullname = file.name;
 	        				  

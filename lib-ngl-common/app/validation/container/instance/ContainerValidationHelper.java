@@ -2,6 +2,17 @@ package validation.container.instance;
 
 import java.util.List;
 
+
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
+
+import play.modules.mongojack.MongoDB;
+
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Valuation;
+
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;

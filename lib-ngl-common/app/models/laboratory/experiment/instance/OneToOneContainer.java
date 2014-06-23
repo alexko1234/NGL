@@ -4,7 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import controllers.authorisation.PermissionHelper;
+
+import validation.ContextValidation;
+
+
+import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.instance.PropertyValue;
+
 import models.laboratory.common.instance.State;
+
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -17,7 +28,6 @@ import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 import play.Logger;
 import validation.ContextValidation;
