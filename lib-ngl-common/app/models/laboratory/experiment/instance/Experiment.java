@@ -13,6 +13,8 @@ import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
 import net.vz.mongodb.jackson.MongoCollection;
 
+import org.codehaus.jackson.annotate.JsonAnyGetter;
+import org.codehaus.jackson.annotate.JsonAnySetter;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import validation.ContextValidation;
@@ -40,6 +42,7 @@ public class Experiment extends DBObject implements IValidation {
 	
 	public TraceInformation traceInformation;
 	public Map<String,PropertyValue> experimentProperties;
+	
 	public Map<String, PropertyValue> instrumentProperties;
 	
 	public InstrumentUsed instrument;

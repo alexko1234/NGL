@@ -75,7 +75,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.changeExperimentType = function(){
+		$scope.removeTab(2);
 		$scope.removeTab(1);
+
 		$scope.basket.reset();
 		$scope.form.containerSupportCategory = undefined;
 		$scope.lists.clear("containerSupportCategories");
