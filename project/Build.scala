@@ -56,7 +56,7 @@ object ApplicationBuild extends Build {
    object Dependencies {
    	val nglcommonDependencies = Seq(
 		javaCore, javaJdbc,javaEbean,javaWs,
-		"fr.cea.ig" %% "play-spring-module" % "1.2-SNAPSHOT",
+		"fr.cea.ig" %% "play-spring-module" % "1.3-SNAPSHOT",
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
 	     "net.sf.opencsv" % "opencsv" % "2.0",
@@ -78,10 +78,10 @@ object ApplicationBuild extends Build {
    	    javaCore,
 		javaWs,
    	    "javax.mail" % "mail" % "1.4.2",
-   	    "fr.cea.ig" %% "mongodbplugin" % "1.1-SNAPSHOT",
+   	    "fr.cea.ig" %% "mongodbplugin" % "1.2-SNAPSHOT",
    	    "org.drools" % "drools-core" % "5.5.0.Final",
 	     "org.drools" % "drools-compiler" % "5.5.0.Final",
-		 "fr.cea.ig.modules" %% "authentication" % "1.1-SNAPSHOT"
+		 "fr.cea.ig.modules" %% "authentication" % "1.2-SNAPSHOT"
    	    )
    	val nglbiDependencies = Seq(
 	        // Add your project dependencies here,
@@ -97,7 +97,7 @@ object ApplicationBuild extends Build {
 		)
 	val nglauthDependencies = Seq(
 	javaCore, javaJdbc,javaEbean,
-	"fr.cea.ig" %% "bootstrap" % "1.1-SNAPSHOT"
+	"fr.cea.ig" %% "bootstrap" % "1.2-SNAPSHOT"
 
 		)
    val nglplaquesDependencies = Seq(
