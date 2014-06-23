@@ -199,7 +199,10 @@ public class InstrumentService {
         propertyDefinitions.add(newPropertiesDefinition("Type de MapCard", "mapcardType", LevelService.getLevels(Level.CODE.Instrument),String.class, true, newValues("standard","HD"), "single"));
         propertyDefinitions.add(newPropertiesDefinition("Référence Carte", "mapcardRef", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Enzyme de restriction", "restrictionEnzyme", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("BamHI "," NheI "," SpeI "," ApaLI "," MIuI "," NdeI "," AfIII "," KpnI "," Ncol "," XbaI "," BgIII "," EcoRI "," HindIII "," NotI "," PvuII "," XhoI"), "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Enzyme selection","selectionEnzyme",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Enzyme selection","enzymeChooser",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Photo digestion","digestionForTracking",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Statistiques MapCard","mapCardStatistics",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Statistiques Contigs","contigStatistics",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
         return propertyDefinitions;
 	}
 
