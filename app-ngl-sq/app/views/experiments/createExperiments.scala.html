@@ -189,12 +189,15 @@
 					
 						<div class="col-md-6 col-lg-6" ng-if="instp.valueType == 'java.awt.Image'">
 							<input type="file" base64-img="experiment.value.instrumentProperties[instp.code]" />
-							 <div class="thumbnail col-md-6 col-lg-6" data-target="#modalImage" role="button" data-toggle="modal" 
-						    ng-click="setImage(experiment.value.instrumentProperties[instp.code].value,experiment.value.instrumentProperties[instp.code].fullname,experiment.value.instrumentProperties[instp.code].width,
-						    experiment.value.instrumentProperties[instp.code].height)">
-							 <a href="#">
-							<img ng-show="experiment.value.instrumentProperties[instp.code].value != ''" src="data:image/{{experiment.value.instrumentProperties[instp.code].extension}};base64,{{experiment.value.instrumentProperties[instp.code].value}}">
+							<div class="thumbnail col-md-6 col-lg-6">
+							<button class="close pull-right" ng-click="experiment.value.instrumentProperties[instp.code].value = ''" ng-show="experiment.value.instrumentProperties[instp.code].value != ''">&times;</button>
+							
+							 <div data-target="#modalImage" role="button" data-toggle="modal" >
+						     <a href="#">
+							<img ng-click="setImage(experiment.value.instrumentProperties[instp.code].value,experiment.value.instrumentProperties[instp.code].fullname,experiment.value.instrumentProperties[instp.code].width,
+						    experiment.value.instrumentProperties[instp.code].height)" ng-show="experiment.value.instrumentProperties[instp.code].value != ''" src="data:image/{{experiment.value.instrumentProperties[instp.code].extension}};base64,{{experiment.value.instrumentProperties[instp.code].value}}">
 							</a>
+							</div>
 							</div>
 						</div>
 						<div ng-if="instp.valueType != 'java.awt.Image'">
