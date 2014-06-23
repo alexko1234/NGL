@@ -63,19 +63,20 @@ public abstract class AbstractTests {
 		config.put("db.tara.url","jdbc:mysql://mysqlcns.genoscope.cns.fr:3307/Tara");
 		config.put("db.tara.user","lims_user");
 		config.put("db.tara.password","Lims_PassWrd");
-		config.put("db.tara.jndiName","tara");
-
-				config.put("casUrlValidator","https://cas.genoscope.cns.fr:8443/cas/serviceValidate");
-		config.put("casUrlLogin","https://cas.genoscope.cns.fr:8443/cas/login");
-		config.put("casRenew","false");
-		config.put("casMode","debug");
 
 		config.put("mongodb.database","NGL-TESTU");
 		config.put("mongodb.credentials","testu:testu");
 		config.put("mongodb.servers","mongodev.genoscope.cns.fr:27017");
 		config.put("ehcacheplugin", "disabled");
 		config.put("mongodbJacksonMapperCloseOnStop", "disabled");
-
+		
+		config.put("auth.cas.urlvalidator", "https://cas.genoscope.cns.fr:8443/cas/serviceValidate");
+		config.put("auth.cas.urllogin", "https://cas.genoscope.cns.fr:8443/cas/login");
+		config.put("auth.cas.renew", "false");
+	    config.put("auth.mode", "debug");
+	    config.put("auth.method", "cas");
+	    config.put("auth.application", "ngl-bi");
+	    
 		config.put("asset.url","http://192.168.243.231:9001");
 		config.put("ebean.default", "models.*");
 		return config;
