@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import play.Logger;
-import services.description.DescriptionFactory;
 
 import fr.cea.ig.MongoDBDAO;
 
@@ -18,6 +17,13 @@ import models.laboratory.resolutions.instance.ResolutionConfigurations;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 
+/**
+ * Create Resolutions : for more flexibility, these data are created in a specific collection (in MongoDB) 
+ * instead of being created in the description database
+ * 23-06-2014  
+ * @author dnoisett
+ *
+ */
 public class ResolutionService {
 	
 
@@ -27,29 +33,28 @@ public class ResolutionService {
 	public static void main(ContextValidation ctx) {	
 		
 		Logger.info("Start create resolution categories ...");
+		boolean all = true;
 		if (play.Play.application().configuration().getString("institute").equals("CNG")) {
 			resolutionCategories = createResolutionCategoriesCNG();
+			all = false;
 		}
-		else { // CNS
+		if (play.Play.application().configuration().getString("institute").equals("CNS")) {
 			resolutionCategories = createResolutionCategoriesCNS();
+			all = false;
+		}
+		if (all) {
+			Logger.error("You need to specify only one institute ! ");
 		}
 		Logger.info("End create resolution categories");
 		
 		Logger.info("Start create resolutions ...");
-		boolean all = true;
 		if (play.Play.application().configuration().getString("institute") != null) {
 			if (play.Play.application().configuration().getString("institute").equals("CNG")) {
 				saveResolutionsCNG(ctx);
-				all = false;
 			}
 			if (play.Play.application().configuration().getString("institute").equals("CNS")) {
 				saveResolutionsCNS(ctx);
-				all = false;
 			}
-		}
-		if (all) {
-			saveResolutionsCNG(ctx);
-			saveResolutionsCNS(ctx);
 		}
 		Logger.info("End create resolutions");
 	}
@@ -63,9 +68,9 @@ public class ResolutionService {
 		resoCategories.put("SAV", new ResolutionCategory("Problème qualité : SAV", (short) 10)); //10 for CNG only
 		resoCategories.put("PbM", new ResolutionCategory("Problème machine", (short) 20));
 		resoCategories.put("PbR", new ResolutionCategory("Problème réactifs", (short) 30)); 
-		resoCategories.put("LIB", new ResolutionCategory("Problème librairie", (short) 50)); //Run-LIB
+		resoCategories.put("LIB", new ResolutionCategory("Problème librairie", (short) 50)); 
 		resoCategories.put("PbI", new ResolutionCategory("Problème informatique", (short) 60));
-		resoCategories.put("Info", new ResolutionCategory("Informations", (short) 70)); // RUN-Info
+		resoCategories.put("Info", new ResolutionCategory("Informations", (short) 70)); 
 		resoCategories.put("QC", new ResolutionCategory("Observations QC", (short) 80));
 		//ReadSet
 		resoCategories.put("Run", new ResolutionCategory("Problème run", (short) 5));
@@ -101,7 +106,7 @@ public class ResolutionService {
 		resoCategories.put("MAP", new ResolutionCategory("Problème mapping", (short) 40));
 		resoCategories.put("MERG", new ResolutionCategory("Problème merging", (short) 45));	
 		//Analysis
-		resoCategories.put("MERG", new ResolutionCategory("Merging", (short) 10)); //BA-MERG
+		resoCategories.put("MERG", new ResolutionCategory("Merging", (short) 10)); 
 		resoCategories.put("CTG", new ResolutionCategory("Contigage", (short) 20));
 		resoCategories.put("SIZE", new ResolutionCategory("Size Filter", (short) 30));
 		resoCategories.put("SCAFF", new ResolutionCategory("Scaffolding", (short) 40));
@@ -265,7 +270,7 @@ public class ResolutionService {
 		l.add(newResolution("fluidique","PbM-fluidiq", resolutionCategories.get("PbM"), (short) 4));
 		l.add(newResolution("laser","PbM-laser", resolutionCategories.get("PbM"), (short) 5));
 		l.add(newResolution("camera","PbM-camera", resolutionCategories.get("PbM"), (short) 6));
-		l.add(newResolution("focus","PbM-focus", resolutionCategories.get("PbM"), (short) 7));
+		l.add(newResolution("focus","PbM-focus", resolutionCategories.get("PbM"), (short) 7));    //a voir
 		l.add(newResolution("pb de vide","PbM-pbVide", resolutionCategories.get("PbM"), (short) 8));
 		l.add(newResolution("PE module","PbM-PEmodule", resolutionCategories.get("PbM"), (short) 9));
 		l.add(newResolution("cBot","PbM-cBot", resolutionCategories.get("PbM"), (short) 10));		
