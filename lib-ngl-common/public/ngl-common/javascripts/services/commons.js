@@ -305,7 +305,10 @@ angular.module('commonsServices', []).
         		 link: function (scope, elem, attrs, ngModel) {
 	        		  var reader = new FileReader();
 	        		  var file;
-	        		  scope.base64Img = undefined;
+	        		  console.log(scope.base64Img);
+	        		  if(scope.base64Img ==  {"value":""}){
+	        			  scope.base64Img = undefined;
+	        		  }
 	        		  
 	        		  reader.onload = function (e) {
 	        			  scope.$apply(function () {

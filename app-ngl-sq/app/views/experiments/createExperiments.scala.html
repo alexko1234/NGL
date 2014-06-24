@@ -189,15 +189,15 @@
 					
 						<div class="col-md-6 col-lg-6" ng-if="instp.valueType == 'java.awt.Image'">
 							<input type="file" base64-img="experiment.value.instrumentProperties[instp.code]" />
-							<div class="thumbnail col-md-6 col-lg-6"  ng-show="experiment.value.instrumentProperties[instp.code].value != null" >
-							<button class="close pull-right" ng-click="experiment.value.instrumentProperties[instp.code] = undefined" ng-show="experiment.value.instrumentProperties[instp.code].value != ''">&times;</button>
-							
-							 <div data-target="#modalImage" role="button" data-toggle="modal" >
-						     <a href="#">
-							<img ng-click="setImage(experiment.value.instrumentProperties[instp.code].value,experiment.value.instrumentProperties[instp.code].fullname,experiment.value.instrumentProperties[instp.code].width,
-						    experiment.value.instrumentProperties[instp.code].height)" src="data:image/{{experiment.value.instrumentProperties[instp.code].extension}};base64,{{experiment.value.instrumentProperties[instp.code].value}}">
-							</a>
-							</div>
+							<div class="thumbnail col-md-6 col-lg-6"  ng-show="experiment.value.instrumentProperties[instp.code] != undefined && experiment.value.instrumentProperties[instp.code].value != ''" >
+								<button class="close pull-right" ng-click="experiment.value.instrumentProperties[instp.code] = undefined" ng-show="experiment.value.instrumentProperties[instp.code].value != ''">&times;</button>
+								
+								 <div data-target="#modalImage" role="button" data-toggle="modal" >
+							     <a href="#">
+								<img ng-click="setImage(experiment.value.instrumentProperties[instp.code].value,experiment.value.instrumentProperties[instp.code].fullname,experiment.value.instrumentProperties[instp.code].width,
+							    experiment.value.instrumentProperties[instp.code].height)" src="data:image/{{experiment.value.instrumentProperties[instp.code].extension}};base64,{{experiment.value.instrumentProperties[instp.code].value}}">
+								</a>
+								</div>
 							</div>
 						</div>
 						<div ng-if="instp.valueType != 'java.awt.Image'">
