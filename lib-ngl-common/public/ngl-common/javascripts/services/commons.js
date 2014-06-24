@@ -305,32 +305,33 @@ angular.module('commonsServices', []).
         		 link: function (scope, elem, attrs, ngModel) {
 	        		  var reader = new FileReader();
 	        		  var file;
-	        		  
-	        		  scope.base64Img._type = "img";
-	        		  scope.base64Img.value = null;
+	        		  scope.base64Img = undefined;
 	        		  
 	        		  reader.onload = function (e) {
 	        			  scope.$apply(function () {
-	        				  
-	        				  scope.base64Img._type = "img";
-	        				  scope.base64Img.fullname = file.name;
-	        				  
-	        				  //Get the extension
-	        				  var matchExtension = file.type.match(/^image\/(.*)/);
-	        				  scope.base64Img.extension = matchExtension[1];
-	        				  
-	        				  //Get the base64 without the extension feature
-	        				  var matchBase64 = e.target.result.match(/^.*,(.*)/);
-	        				  scope.base64Img.value = matchBase64[1];
-	        				  
-	        				  //Load image from the base64 to get the width and height
-	        				  var img = new Image();
-	        				  img.src =  e.target.result;
-
-	        				  img.onload = function(){
-	        					  scope.base64Img.width = img.width;
-	        					  scope.base64Img.height = img.height;
-	        				  };
+	        				  if(e.target.result!= undefined && e.target.result != ""){
+		        				  scope.base64Img = {};
+		        				  scope.base64Img._type = "img";
+		        				  scope.base64Img.fullname = file.name;
+		        				  
+		        				  //Get the extension
+		        				  var matchExtension = file.type.match(/^image\/(.*)/);
+		        				  scope.base64Img.extension = matchExtension[1];
+		        				  
+		        				  //Get the base64 without the extension feature
+		        				  var matchBase64 = e.target.result.match(/^.*,(.*)/);
+		        				  scope.base64Img.value = matchBase64[1];
+		        				  //Load image from the base64 to get the width and height
+		        				  var img = new Image();
+		        				  img.src =  e.target.result;
+	
+		        				  img.onload = function(){
+		        					  scope.base64Img.width = img.width;
+		        					  scope.base64Img.height = img.height;
+		        				  };
+	        				  }else{
+	        					  scope.base64Img = undefined;
+	        				  }
 	        			  });
 	        		  }
 	
