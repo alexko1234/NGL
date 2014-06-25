@@ -69,7 +69,7 @@ public class Resolutions extends DocumentController<ResolutionConfigurations> {
 		Query query = null;		
 		
 		if (StringUtils.isNotBlank(form.typeCode)) { 
-			queries.add(DBQuery.is("typeCodes", form.typeCode));
+			queries.add(DBQuery.in("typeCodes", form.typeCode));
 		}else if (CollectionUtils.isNotEmpty(form.typeCodes)) { 
 			queries.add(DBQuery.in("typeCodes", form.typeCodes));
 		}
