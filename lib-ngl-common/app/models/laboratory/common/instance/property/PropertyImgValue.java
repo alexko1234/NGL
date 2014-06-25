@@ -28,10 +28,11 @@ public class PropertyImgValue extends PropertyFileValue {
 	
 	public Integer width;
 	public Integer height;
+	public String path; //for information
 	
 	@Override
 	public String toString() {
-		return "PropertyImgValue [fullname=" + fullname + ", ext=" + extension + ", width=" + width + ", height=" + height  +", class="+value.getClass().getName()+"]";
+		return "PropertyImgValue [fullname=" + fullname + ", ext=" + extension + ", width=" + width + ", height=" + height  +", path=" + path + ", class=" +value.getClass().getName()+"]";
 	}
 	
 	@Override
