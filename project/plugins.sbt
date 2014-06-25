@@ -9,10 +9,7 @@ addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.3.0")
 
 
 // web plugins
-
-addSbtPlugin("com.typesafe.sbt" % "sbt-coffeescript" % "1.0.0")
-
-addSbtPlugin("com.typesafe.sbt" % "sbt-less" % "1.0.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-web" % "1.0.1-2014-06-25-e085c11")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-jshint" % "1.0.0")
 
