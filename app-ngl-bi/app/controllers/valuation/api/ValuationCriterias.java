@@ -67,7 +67,7 @@ public class ValuationCriterias extends CommonController {
 		if (CollectionUtils.isNotEmpty(form.typeCodes)) { //all
 			queries.add(DBQuery.in("typeCodes", form.typeCodes));
 		}else if(StringUtils.isNotBlank(form.typeCode)){
-			queries.add(DBQuery.is("typeCodes", form.typeCode));
+			queries.add(DBQuery.in("typeCodes", form.typeCode));
 		}
 		
 		if(queries.size() > 0){

@@ -93,13 +93,13 @@ public class Analyses extends DocumentController<Analysis>{
 		if (CollectionUtils.isNotEmpty(form.projectCodes)) { //all
 			queries.add(DBQuery.in("projectCodes", form.projectCodes));
 		}else if (StringUtils.isNotBlank(form.projectCode)) { //all
-			queries.add(DBQuery.is("projectCodes", form.projectCode));
+			queries.add(DBQuery.in("projectCodes", form.projectCode));
 		}
 		
 		if (CollectionUtils.isNotEmpty(form.sampleCodes)) { //all
 			queries.add(DBQuery.in("sampleCodes", form.sampleCodes));
 		}else if (StringUtils.isNotBlank(form.sampleCode)) { //all
-			queries.add(DBQuery.is("sampleCodes", form.sampleCode));
+			queries.add(DBQuery.in("sampleCodes", form.sampleCode));
 		}
 		
 		if (CollectionUtils.isNotEmpty(form.typeCodes)) { //all
