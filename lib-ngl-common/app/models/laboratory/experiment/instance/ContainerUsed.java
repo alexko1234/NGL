@@ -8,6 +8,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.utils.HelperObjects;
+import models.utils.InstanceConstants;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -56,7 +57,12 @@ public class ContainerUsed implements IValidation{
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		CommonValidationHelper.validateContainerCode(code, contextValidation);
+		if(contextValidation.getObject("stateCode").equals("IP")){
+			CommonValidationHelper.validateUniqueInstanceCode(contextValidation, code, Container.class, InstanceConstants.CONTAINER_COLL_NAME);
+		}
+		else {
+			CommonValidationHelper.validateContainerCode(code, contextValidation);
+		}
 		//TODO validate experimentProperties ?? 
 		//TODO validate instrumentProperties ??
 	}

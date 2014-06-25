@@ -24,7 +24,9 @@ public class ExperimentHelper {
 
 		if (!contextValidation.hasErrors()) {
 			for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-				exp.atomicTransfertMethods.get(i).createOutputContainerUsed(exp);
+				contextValidation.addKeyToRootKeyName("atomicTransfertMethods["+i+"]");
+				exp.atomicTransfertMethods.get(i).createOutputContainerUsed(exp,contextValidation);
+				contextValidation.removeKeyFromRootKeyName("atomicTransfertMethods["+i+"]");
 			}
 		}
 	}

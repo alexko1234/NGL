@@ -32,6 +32,7 @@ import models.utils.instance.ContainerSupportHelper;
 import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
+import validation.utils.ValidationConstants;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
@@ -45,56 +46,59 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 	}
 
 	@Override
-	public void createOutputContainerUsed(Experiment experiment) throws DAOException {
+	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) throws DAOException {
 
 		if(this.outputContainerUsed==null){
+			
 			if(this.inputContainerUsed!=null){
-			String outPutContainerCode=ContainerHelper.generateContainerCode(experiment.instrument.outContainerSupportCategoryCode);
-			this.outputContainerUsed = new ContainerUsed(outPutContainerCode);
-			
-			LocationOnContainerSupport support=new LocationOnContainerSupport();
-			support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
-			// Same position 
-			ContainerSupportCategory containerSupportCategory=ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode);
-			
-			if(containerSupportCategory.nbColumn==1 && containerSupportCategory.nbLine==1){
-				support.line="1";
-				support.code = outputContainerUsed.code;
-				support.column="1";
-			}else {
-				Logger.error("Location in support not implemented");
-			}
+				
+				String outPutContainerCode=ContainerHelper.generateContainerCode(experiment.instrument.outContainerSupportCategoryCode);
+				this.outputContainerUsed = new ContainerUsed(outPutContainerCode);
 
-			this.outputContainerUsed.locationOnContainerSupport=support;
-			
+				LocationOnContainerSupport support=new LocationOnContainerSupport();
+				support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
+				// Same position 
+				ContainerSupportCategory containerSupportCategory=ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode);
+
+				if(containerSupportCategory.nbColumn==1 && containerSupportCategory.nbLine==1){
+					support.line="1";
+					support.code = outputContainerUsed.code;
+					support.column="1";
+				}else {
+					contextValidation.addErrors("locationOnContainerSupport",ValidationConstants.ERROR_NOTDEFINED_MSG);
+					Logger.error("Location in support not implemented");
+				}
+
+				this.outputContainerUsed.locationOnContainerSupport=support;
+
 			}else{
-				Logger.error("InputContainerUsed is not null");
+				contextValidation.addErrors("inputContainerUsed", ValidationConstants.ERROR_NOTEXISTS_MSG);
 			}
+			
 		}else {
-			Logger.error("OutputContainerUsed is not null");
+			contextValidation.addErrors("outputContainerUsed", ValidationConstants.ERROR_ID_NOTNULL_MSG);
 		}
-
+		return contextValidation;
 	}
 
 
 	@Override
 	public ContextValidation saveOutputContainers(Experiment experiment) {
 
-		ContextValidation contextValidation = new ContextValidation();
-
+		ContextValidation contextValidation=new ContextValidation();
 		if(outputContainerUsed!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class, this.outputContainerUsed.code)){
 			// ContainerSupport
 			ContainerSupport support=ContainerSupportHelper.createSupport(this.outputContainerUsed.locationOnContainerSupport.code, null, 
 					this.outputContainerUsed.locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);
-			
-			
+
+
 			// Container
 			Container outputContainer = new Container();
 			outputContainer.code=this.outputContainerUsed.code;
 			outputContainer.traceInformation = new TraceInformation();
 			outputContainer.traceInformation.setTraceInformation(experiment.traceInformation.modifyUser);
 			outputContainer.categoryCode=this.outputContainerUsed.categoryCode;
-					
+
 			Container inputContainer=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,inputContainerUsed.code);
 			//Add content
 			ContainerHelper.addContent(inputContainer, outputContainer, experiment);
@@ -107,7 +111,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 			support.projectCodes=new ArrayList<String>(inputContainer.projectCodes);
 			support.sampleCodes=new ArrayList<String>(inputContainer.sampleCodes);
-			
+
 			contextValidation.setCreationMode();
 			contextValidation.addKeyToRootKeyName("support["+support.code+"]");
 			InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME,support, contextValidation);
@@ -120,7 +124,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 
 		} else {
-			Logger.debug("OutputContainerUsed.code is null");
+			contextValidation.addErrors("locationOnContainerSupport.code", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG);
 		}
 
 		return contextValidation;

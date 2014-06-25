@@ -35,7 +35,7 @@ public abstract class AtomicTransfertMethod implements IValidation {
 	
 	public int position;
 	public Comment comment;
-	public abstract void createOutputContainerUsed(Experiment experiment) throws DAOException;
+	public abstract ContextValidation createOutputContainerUsed(Experiment experiment, ContextValidation contextValidation) throws DAOException;
 	@JsonIgnore
 	public abstract List<ContainerUsed> getInputContainers();
 	public abstract List<ContainerUsed> getOutputContainers();

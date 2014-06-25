@@ -16,7 +16,8 @@ public class OneToVoidContainer extends AtomicTransfertMethod {
 	}
 
 	@Override
-	public void createOutputContainerUsed(Experiment experiment) {
+	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) {
+		return contextValidation;
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import play.Logger;
 import validation.ContextValidation;
+import validation.utils.ValidationConstants;
 
 public class OneToManyContainer extends AtomicTransfertMethod {
 
@@ -19,16 +20,18 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	}
 	
 	@Override
-	public void createOutputContainerUsed(Experiment experiment) {
+	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) {
 		Logger.error("Not implemented");
-		
+		contextValidation.addErrors("locationOnContainerSupport",ValidationConstants.ERROR_NOTDEFINED_MSG);
+		return contextValidation;
 	}
 	
 	@Override
 	public ContextValidation saveOutputContainers(Experiment experiment) {
+		ContextValidation contextValidation=new ContextValidation();
+		contextValidation.addErrors("locationOnContainerSupport",ValidationConstants.ERROR_NOTDEFINED_MSG);
 		Logger.error("Not implemented");
-		return null;
-	
+		return contextValidation;
 	}
 
 

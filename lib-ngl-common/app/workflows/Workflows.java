@@ -48,17 +48,13 @@ public class Workflows {
 			experiment.state = StateHelper.updateHistoricalNextState(experiment.state, nextState);
 			experiment.state=nextState;
 
-			if(!ctxValidation.hasErrors()){
-				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,  Experiment.class, 
-						DBQuery.is("code", experiment.code),
-						//DBUpdate.set("state", experiment.state).set("traceInformation",experiment.traceInformation));
-						DBUpdate.set("state", experiment.state).set("traceInformation",experiment.traceInformation));
-			}
 
 			if(experiment.state.code.equals("IP")){
 				try {
 					ExperimentHelper.generateOutputContainerUsed(experiment, ctxValidation);
-					MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiment);
+					if(!ctxValidation.hasErrors()){
+						MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiment);
+					}
 				} catch (DAOException e) {
 					throw new RuntimeException();
 				}
@@ -68,7 +64,14 @@ public class Workflows {
 					nextOutputContainerState(experiment, ctxValidation);
 				}
 
-			}		
+			}
+			
+			if(!ctxValidation.hasErrors()){
+				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,  Experiment.class, 
+						DBQuery.is("code", experiment.code),
+						DBUpdate.set("state", experiment.state).set("traceInformation",experiment.traceInformation));
+			}
+			
 			if(!ctxValidation.hasErrors()){
 				nextInputContainerState(experiment, ctxValidation);
 			}
@@ -128,7 +131,11 @@ public class Workflows {
 			}else if(experiment.state.code.equals("F") && doTransfert()){
 				nextState.code="A-TRANSFERT";
 				}*/else if(experiment.state.code.equals("F") && endOfProcess(containerUsed.code,experiment.typeCode)){
-				nextState.code="IW-P";
+					if(experiment.typeCode.equals("opgen-depot")){
+						nextState.code="F";
+					}else {
+						nextState.code="IW-P";
+					}
 				}else {
 				nextState.code="A";
 				}
