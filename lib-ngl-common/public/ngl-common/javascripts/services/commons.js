@@ -368,7 +368,7 @@ angular.module('commonsServices', []).
   		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="open()">'
   		    			+'<span class="caret"></span>'
   		    			+'</button>'
-  				        +'<ul class="dropdown-menu"  role="menu">'
+  				        +'<ul class="dropdown-menu dropdown-menu-right"  role="menu">'
   				        +'<li ng-if="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)"/></li>'
   				        +'<li ng-repeat-start="item in getItems()" ng-if="groupBy(item, $index)" class="divider"></li>'
   				        +'<li class="dropdown-header" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></li>'
