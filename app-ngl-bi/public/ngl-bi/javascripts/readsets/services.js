@@ -266,6 +266,8 @@
 				
 				resetForm : function(){
 					this.form = {};
+					//start last 1 year
+					this.form.fromDate=moment().year(moment().year()-1).format(Messages("date.format").toUpperCase());					
 				},
 				
 				

@@ -4,7 +4,8 @@ angular.module('home').controller('StatsSearchReadSetsCtrl',['$scope', '$routePa
                                                               function($scope, $routeParams, mainService, tabService, readSetsSearchService, valuationService, queriesConfigReadSetsService) { 
 
 	var datatableConfig = {
-			order :{by:'runSequencingStartDate', reverse : true},
+			pagination:{mode:'local'},
+			order :{mode:'local',by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
 			},

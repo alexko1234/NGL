@@ -4,7 +4,8 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'main
                                                  function($scope, $routeParams, mainService, tabService, readSetsSearchService, valuationService) { 
     
 	var datatableConfig = {
-			order :{by:'runSequencingStartDate', reverse : true},
+			pagination:{mode:'local'},
+			order :{mode:'local', by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
 			},
@@ -46,7 +47,8 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'main
 angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParams', '$parse', 'mainService', 'tabService', 'readSetsSearchService', 'valuationService', 
                                                           function($scope, $routeParams, $parse, mainService, tabService, readSetsSearchService, valuationService) {
 	var datatableConfig = {
-			order :{by:'runSequencingStartDate', reverse : true},
+			pagination:{mode:'local'},
+			order :{mode:'local', by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
 			},
@@ -101,7 +103,8 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
                                                       function($scope, $routeParams, mainService, tabService, readSetsSearchService) {
 
 	var datatableConfig = {
-			order :{by:'runSequencingStartDate', reverse : true},
+			pagination:{mode:'local'},
+			order :{mode:'local', by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
 			},
@@ -150,7 +153,8 @@ angular.module('home').controller('SearchBatchCtrl', ['$scope', '$routeParams', 
                                                       function($scope, $routeParams, mainService, tabService, readSetsSearchService) {
 
 	var datatableConfig = {
-			order :{by:'runSequencingStartDate', reverse : true},
+			pagination:{mode:'local'},
+			order :{mode:'local', by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
 			},

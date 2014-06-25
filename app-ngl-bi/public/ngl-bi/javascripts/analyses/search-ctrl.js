@@ -4,7 +4,8 @@ angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datat
                                                 function($scope, $routeParams, datatable, mainService, tabService, searchService) {
 	
 	var datatableConfig = {
-			order :{by:'code', reverse : true},
+			pagination:{mode:'local'},			
+			order :{mode:'local', by:'code', reverse : true},
 			search:{
 				url:jsRoutes.controllers.analyses.api.Analyses.list()
 			},
@@ -53,7 +54,8 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
                                                           function($scope, $routeParams, datatable, mainService, tabService, searchService) {
 	
 	var datatableConfig = {
-			order :{by:'code', reverse : true},
+			pagination:{mode:'local'},
+			order :{mode:'local', by:'code', reverse : true},
 			search:{
 				url:jsRoutes.controllers.analyses.api.Analyses.list()
 			},
@@ -114,7 +116,8 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
                                                       function($scope, $routeParams, datatable, mainService, tabService, searchService) {
 	
 	var datatableConfig = {
-			order :{by:'code', reverse : true},
+			pagination:{mode:'local'},
+			order :{mode:'local', by:'code', reverse : true},
 			search:{
 				url:jsRoutes.controllers.analyses.api.Analyses.list()
 			},

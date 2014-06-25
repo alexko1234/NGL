@@ -3,9 +3,12 @@
 angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 
                                                  function($scope, $routeParams, datatable, mainService, tabService, searchService) {
 	var datatableConfig = {
-			order :{by:'sequencingStartDate', reverse:true},
+			order :{mode:'local', by:'sequencingStartDate', reverse:true},
 			search:{
 				url:jsRoutes.controllers.runs.api.Runs.list()
+			},
+			pagination:{
+				mode:'local'
 			},
 			show:{
 				active:true,
@@ -50,9 +53,12 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService',
                                                           function($scope, $routeParams, datatable, mainService, tabService, searchService) {
 	var datatableConfig = {
-			order :{by:'sequencingStartDate', reverse:true},
+			order :{mode:'local', by:'sequencingStartDate', reverse:true},
 			search:{
 				url:jsRoutes.controllers.runs.api.Runs.list()
+			},
+			pagination:{
+				mode:'local'
 			},
 			show:{
 				active:true,
@@ -98,9 +104,12 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
                                                       function($scope, $routeParams, datatable, mainService, tabService, searchService) {
 
 	var datatableConfig = {
-			order :{by:'sequencingStartDate', reverse:true},
+			order :{mode:'local', by:'sequencingStartDate', reverse:true},
 			search:{
 				url:jsRoutes.controllers.runs.api.Runs.list()
+			},
+			pagination:{
+				mode:'local'
 			},
 			edit : {
 				active:true,
