@@ -12,5 +12,7 @@ public class ListForm extends DatatableForm {
 	public Boolean count = Boolean.FALSE;
 	
 	public Integer limit = 5000; //limit the number or element in the result
+
+	
 	
 }

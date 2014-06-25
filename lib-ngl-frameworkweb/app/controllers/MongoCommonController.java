@@ -75,13 +75,16 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		MongoDBResult<T> results = null;
 		if(form.datatable){
 			results = MongoDBDAO.find(collectionName, type, query) 
-					.sort(form.orderBy, Sort.valueOf(form.orderSense))
-					.page(form.pageNumber,form.numberRecordsPerPage); 
+					.sort(form.orderBy, Sort.valueOf(form.orderSense));
+			if(form.isServerPagination()){
+				results.page(form.pageNumber,form.numberRecordsPerPage); 
+			}
 		}else{
 			results = MongoDBDAO.find(collectionName, type, query) 
 					.sort(form.orderBy, Sort.valueOf(form.orderSense))
 					.limit(form.limit);
 		}
+		
 		return results;
 	}
 
@@ -89,13 +92,16 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		MongoDBResult<T> results = null;
 		if(form.datatable){
 			results = MongoDBDAO.find(collectionName, type, query, keys) 
-					.sort(form.orderBy, Sort.valueOf(form.orderSense))
-					.page(form.pageNumber,form.numberRecordsPerPage); 
+					.sort(form.orderBy, Sort.valueOf(form.orderSense));
+			if(form.isServerPagination()){
+				results.page(form.pageNumber,form.numberRecordsPerPage); 
+			}
 		}else{
 			results = MongoDBDAO.find(collectionName, type, query, keys) 
 					.sort(form.orderBy, Sort.valueOf(form.orderSense))
 					.limit(form.limit);
 		}
+		
 		return results;
 	}
 	
