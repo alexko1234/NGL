@@ -51,7 +51,7 @@ public class InstrumentService {
 		List<InstrumentCategory> l = new ArrayList<InstrumentCategory>();
 		l.add(newInstrumentCategory("Covaris","covaris"));
 		l.add(newInstrumentCategory("Spri","spri"));
-		l.add(newInstrumentCategory("Thermo","thermo"));
+		l.add(newInstrumentCategory("Thermocycleur","thermo"));
 		l.add(newInstrumentCategory("Agilent","agilent"));
 		l.add(newInstrumentCategory("QuBit","qubit"));
 		l.add(newInstrumentCategory("qPCR","qpcr"));
