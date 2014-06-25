@@ -77,7 +77,7 @@ public class Experiments extends CommonController{
 		return ok(Json.toJson(experiment));
 	}
 	
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	/*@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result generateOutput(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
@@ -100,6 +100,7 @@ public class Experiments extends CommonController{
 			return badRequest(experimentFilledForm.errorsAsJson());
 		}
 	}
+	*/
 
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result updateInstrumentInformations(String code) throws DAOException{

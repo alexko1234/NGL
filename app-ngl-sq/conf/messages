@@ -43,7 +43,7 @@ search.placeholder.toDate = Jusqu''au (jj/mm/aaaa)
 search.placeholder.states = Sélect. des états
 search.placeholder.instruments = Sélect. des instruments
 search.placeholder.types = Sélect. des types
-search.placeholder.user = Crée par
+search.placeholder.user = Créé par
 search.placeholder.support = Sélect. un code support
 
 #processes
