@@ -953,10 +953,14 @@ angular.module('datatableServices', []).
 	    						params = {};
 	    					}
 		    				params.datatable = true;
-		    				if(this.config.pagination.active && this.isRemoteMode(this.config.pagination.mode)){
-		    					params.pageNumber = this.config.pagination.pageNumber;
-		    					params.numberRecordsPerPage = this.config.pagination.numberRecordsPerPage;		    					
+		    				if(this.config.pagination.active){
+		    					params.paginationMode = this.config.pagination.mode;
+		    					if(this.isRemoteMode(this.config.pagination.mode)){
+		    						params.pageNumber = this.config.pagination.pageNumber;
+			    					params.numberRecordsPerPage = this.config.pagination.numberRecordsPerPage;
+		    					}
 		    				}
+		    				
 		    				if(this.config.order.active && this.isRemoteMode(this.config.order.mode)){
 		    					params.orderBy = this.config.order.by;
 		    					params.orderSense = (this.config.order.reverse)?"-1":"1";

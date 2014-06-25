@@ -10,6 +10,13 @@ public class DatatableForm {
 	public Integer pageNumber = DatatableConfig.DEFAULT_PAGE_NUMBER;
 	public String orderBy;
 	
+	public String paginationMode = "REMOTE";
+	
+	
+	public boolean isServerPagination() {
+		return "REMOTE".equalsIgnoreCase(paginationMode);
+	}
+	
 	public List<String> excludes = new ArrayList<String>(0);
 	public List<String> includes = new ArrayList<String>(0);
 	
