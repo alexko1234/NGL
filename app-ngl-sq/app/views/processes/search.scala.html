@@ -5,7 +5,7 @@
 		
 	@columnSearchForm{
 		@formGroup{
-			<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
+			<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
 				<option value="">@Messages("processes.select.processCategory")</option>
 			</select>
 		}
@@ -17,7 +17,7 @@
 	@columnSearchForm{	
 	
 		@formGroup{
-			<select class="form-control" ng-model="form.processType" ng-options="typeCode.name for typeCode in lists.getProcessTypes()" ng-change="changeProcessTypeCode()">
+			<select class="form-control" ng-model="form.processType" ng-options="typeCode.name for typeCode in lists.getProcessTypes()" ng-change="changeProcessTypeCode()" auto-select>
 				<option value="">@Messages("processes.select.processType")</option>
 			</select>
 		}
@@ -29,7 +29,7 @@
 	
 	@columnSearchForm{
 		@formGroup{
-			<select class="form-control" ng-model="form.state" ng-options="stateCode.name for stateCode in lists.getStates()" ng-change="search()">
+			<select class="form-control" ng-model="form.state" ng-options="stateCode.name for stateCode in lists.getStates()" ng-change="search()" auto-select>
 				<option value="">@Messages("containers.select.state")</option>
 			</select>
 		}	
@@ -48,12 +48,12 @@
 	}
 	@columnSearchForm{
 			@formGroup{
-			<select class="form-control" ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()">
+			<select class="form-control" ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()" auto-select>
 				<option value="">@Messages("containers.select.categorySupportCode")</option>
 			</select>
 			}
 			@formGroup{	
-			<input class="form-control" type="text" ng-model="form.processesSupportCode"  typeahead="support.code as support.name for support in lists.getSupports() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.support")'>
+			<input class="form-control" type="text" ng-model="form.processesSupportCode"  typeahead="support.code as support.name for support in lists.getSupports() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.support")' >
 			}
 	}
 }

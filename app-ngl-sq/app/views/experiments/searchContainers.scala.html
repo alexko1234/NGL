@@ -3,7 +3,7 @@
 @form() = {
 	@columnSearchForm{			
 			@formGroup{	
-			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('transformations')" ng-change="changeExperimentType()">
+			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('transformations')" ng-change="changeExperimentType()" auto-select>
 				<option value="">@Messages("experiments.select.experimentType.transformations")</option>
 			</select>
 			}
@@ -18,7 +18,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('purifications')" ng-change="changeExperimentType()">
+				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('purifications')" ng-change="changeExperimentType()" auto-select>
 					<option value="">@Messages("experiments.select.experimentType.purifications")</option>
 				</select>
 			}
@@ -32,7 +32,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('qualitycontrols')" ng-change="changeExperimentType()">
+				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('qualitycontrols')" ng-change="changeExperimentType()" auto-select>
 					<option value="">@Messages("experiments.select.experimentType.qualitycontrols")</option>
 				</select>
 			}
@@ -46,13 +46,13 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('transferts')" ng-change="changeExperimentType()">
+			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('transferts')" ng-change="changeExperimentType()" auto-select>
 				<option value="">@Messages("experiments.select.experimentType.transferts")</option>
 			</select>
 			}
 			<hr>
 			@formGroup{
-				<select class="form-control" ng-model="form.processCategory"  ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
+				<select class="form-control" ng-model="form.processCategory"  ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
 					<option value="">@Messages("processes.select.processCategory")</option>
 				</select>
 			}
@@ -60,13 +60,13 @@
 		}
 		@columnSearchForm{
 			@formGroup{
-				<select class="form-control" ng-class="errors.containerSupportCategory" auto-select=""  ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()">
+				<select class="form-control" ng-class="errors.containerSupportCategory" auto-select=""  ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()" auto-select>
 					<option value="">@Messages("containers.select.categorySupportCode")</option>
 				</select>
 			}
 			<hr>
 			@formGroup{	
-				<select class="form-control" ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()">
+				<select class="form-control" ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
 					<option value="">@Messages("processes.select.processType")</option>
 				</select>		
 			}

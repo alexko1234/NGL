@@ -645,4 +645,8 @@ angular.module('commonsServices', []).
     		return function(input){
     			return Messages(input);    			
     		}
+    	}).filter('inttostring', function(){
+    		return function(input){
+    			return String(input);    			
+    		}
     	});

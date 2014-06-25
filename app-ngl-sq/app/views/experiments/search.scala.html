@@ -3,15 +3,15 @@
 @form() = {
 		@columnSearchForm{
 			@formGroup{	
-				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('transformations')" ng-change="changeExperimentType()">
+				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('transformations')" ng-change="changeExperimentType()" auto-select>
 					<option value="">@Messages("experiments.select.experimentType.transformations")</option>
 				</select>
 			}
 			@formGroup{
-				<div class="form-control" bt-select ng-model="form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in lists.getProjects()"></div>
+				<div class="form-control" bt-select ng-model="form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in lists.getProjects()" auto-select></div>
 			}
 			@formGroup{
-				<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
+				<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
 					<option value="">@Messages("processes.select.processCategory")</option>
 				</select>
 			}
@@ -19,15 +19,15 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('purifications')" ng-change="changeExperimentType()">
+				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('purifications')" ng-change="changeExperimentType()" auto-select>
 					<option value="">@Messages("experiments.select.experimentType.purifications")</option>
 				</select>
 			}
 			@formGroup{	
-					<div class="form-control" bt-select ng-model="form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in lists.getSamples()" ng-focus="refreshSamples()"></div>			
+					<div class="form-control" bt-select ng-model="form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in lists.getSamples()" ng-focus="refreshSamples()" auto-select></div>			
 			}
 			@formGroup{		
-				<select class="form-control" ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()">
+				<select class="form-control" ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
 					<option value="">@Messages("processes.select.processType")</option>
 				</select>
 			}
@@ -35,7 +35,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('qualitycontrols')" ng-change="changeExperimentType()">
+				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('qualitycontrols')" ng-change="changeExperimentType()" auto-select>
 					<option value="">@Messages("experiments.select.experimentType.qualitycontrols")</option>
 				</select>
 			}
@@ -45,7 +45,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('transferts')" ng-change="changeExperimentType()">
+				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('transferts')" ng-change="changeExperimentType()" auto-select>
 					<option value="">@Messages("experiments.select.experimentType.transferts")</option>
 				</select>
 			}
@@ -58,7 +58,7 @@
 			<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.user")'>
 			}
 			@formGroup{
-			<select class="form-control" ng-model="form.state" ng-options="stateCode.name for stateCode in lists.getStates()" ng-change="search()">
+			<select class="form-control" ng-model="form.state" ng-options="stateCode.name for stateCode in lists.getStates()" ng-change="search()" auto-select>
 				<option value="">@Messages("experiments.select.state")</option>
 			</select>
 			}	

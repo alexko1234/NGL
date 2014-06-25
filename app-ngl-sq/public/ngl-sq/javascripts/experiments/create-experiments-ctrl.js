@@ -456,8 +456,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	
 	$scope.getInstrumentsTrigger = function(){
-		$scope.getInstruments(false);
-		$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,false);
+		console.log($scope.experiment.value.instrument);
+		
+		if($scope.experiment.value.instrument != undefined && $scope.experiment.value.instrument.typeCode != null){
+			$scope.getInstruments(false);
+			$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,false);
+		}
 	};
 	
 	$scope.getInstruments = function(loaded){

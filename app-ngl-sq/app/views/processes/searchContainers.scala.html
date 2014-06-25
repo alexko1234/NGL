@@ -4,28 +4,28 @@
 
 	@columnSearchForm{		
 		@formGroup{
-		<select class="form-control" ng-class="errors.processCategory" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
+		<select class="form-control" ng-class="errors.processCategory" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
 			<option value="">@Messages("processes.select.processCategory")</option>
 		</select>
 		}
 		@formGroup{
-			<div class="form-control" bt-select ng-model="form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in lists.getProjects()"></div>
+			<div class="form-control" bt-select ng-model="form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in lists.getProjects()" ></div>
 		}
 	}
 	@columnSearchForm{
 		@formGroup{
-		<select class="form-control" ng-class="errors.processType" ng-model="form.processType" ng-options="processType.name for processType in  lists.getProcessTypes()" ng-change="changeProcessType()">
+		<select class="form-control" ng-class="errors.processType" ng-model="form.processType" ng-options="processType.name for processType in  lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
 			<option value="">@Messages("processes.select.processType")</option>
 		</select>		
 		}
 		@formGroup{
-			<div class="form-control" bt-select ng-model="form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in lists.getSamples()" ng-focus="refreshSamples()"></div>			
+			<div class="form-control" bt-select ng-model="form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in lists.getSamples()" ng-focus="refreshSamples()" ></div>			
 		}
 	}
 	
 	@columnSearchForm{
 		@formGroup{
-			<select class="form-control" ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()">
+			<select class="form-control" ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()" auto-select>
 				<option value="">@Messages("containers.select.categorySupportCode")</option>
 			</select>
 		}
@@ -36,7 +36,7 @@
 	@columnSearchForm{
 		@formGroup{
 			<div class="form-control" bt-select ng-model="form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromExperimentTypeCodes")" 
-				bt-options="expType.code as expType.name for expType in lists.getExperimentTypes()">
+				bt-options="expType.code as expType.name for expType in lists.getExperimentTypes()" auto-select>
 			</div>
 		}
 	}

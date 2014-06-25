@@ -110,7 +110,8 @@
 								ng-model="experiment.value.protocolCode"
 								ng-readonly="!experiment.experimentInformation.enabled"
 								ng-options="protocol.code as protocol.name for protocol in lists.get('protocols')"
-								ng-disabled="!experiment.experimentInformation.enabled">
+								ng-disabled="!experiment.experimentInformation.enabled"
+								auto-select>
 									<option value="">@Messages("experiments.select.protocols")</option>
 							</select>
 					}	
@@ -121,7 +122,8 @@
 							<div class="form-control"  bt-select ng-model="experiment.value.state.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" 
 									bt-options="resolution.code as resolution.name for resolution in lists.get('resolutions')" 
 									ng-disabled="!experiment.experimentInformation.enabled"
-									ng-readonly="!experiment.experimentInformation.enabled" auto-select>
+									ng-readonly="!experiment.experimentInformation.enabled" 
+									auto-select>
 							</div>	
 					}	
 					
@@ -134,7 +136,12 @@
 								ng-readonly="!experiment.experimentProperties.enabled"
 								ng-model="experiment.value.experimentProperties[expp.code].value" />
 								
-							<select class="form-control"  ng-readonly="!experiment.experimentInformation.enabled" ng-disabled="!experiment.experimentInformation.enabled" ng-model="experiment.value.experimentProperties[expp.code].value" ng-switch-when="true" >
+							<select class="form-control"  
+									ng-readonly="!experiment.experimentInformation.enabled" 
+									ng-disabled="!experiment.experimentInformation.enabled" 
+									ng-model="experiment.value.experimentProperties[expp.code].value" 
+									ng-switch-when="true" 
+									auto-select>
 								<option ng-repeat="opt in expp.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
 							   </select>
 						</div>
@@ -178,6 +185,7 @@
 											ng-disabled="!experiment.instrumentInformation.enabled"
 											ng-hide="!experiment.value.instrument.typeCode"
 											ng-change="getInputTemplate()"
+											auto-select
 											>
 												<option value="">@Messages("experiments.select.instrument")</option>
 											</select>
@@ -209,7 +217,7 @@
 								<select class="form-control" ng-options="opt.value as opt.value for opt in instp.possibleValues"  
 									ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" 
 									ng-model="experiment.value.instrumentProperties[instp.code].value" ng-switch-when="true" 
-									select-auto="instp.possibleValues">
+									auto-select>
 							    <option value="">Sélect. {{instp.name}}</option>
 							    </select>
 							</div>

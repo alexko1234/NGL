@@ -25,12 +25,12 @@
 	}
 	@columnSearchForm{
 			@formGroup{
-			<select class="form-control" ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()">
+			<select class="form-control" ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()" auto-select>
 				<option value="">@Messages("containers.select.categorySupportCode")</option>
 			</select>
 		}
 		@formGroup{
-			<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()">
+			<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
 				<option value="">@Messages("processes.select.processCategory")</option>
 			</select>
 		}
@@ -41,7 +41,7 @@
 			<input class="form-control" type="text" ng-model="form.containerSupportCode"  typeahead="support.code as support.name for support in lists.getSupports() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.support")'>			
 		}
 		@formGroup{	
-			<select class="form-control" ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()">
+			<select class="form-control" ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
 				<option value="">@Messages("processes.select.processType")</option>
 			</select>		
 			}
