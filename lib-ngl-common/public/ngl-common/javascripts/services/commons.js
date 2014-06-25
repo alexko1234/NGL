@@ -306,7 +306,7 @@ angular.module('commonsServices', []).
 	        		  var reader = new FileReader();
 	        		  var file;
 	        		  console.log(scope.base64Img);
-	        		  if(scope.base64Img ==  {"value":""}){
+	        		  if(scope.base64Img != undefined && scope.base64Img.value == ""){
 	        			  scope.base64Img = undefined;
 	        		  }
 	        		  
