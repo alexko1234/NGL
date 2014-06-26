@@ -219,7 +219,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	}
 }]);
 
-angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable', function($scope, datatable) {
+angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http', function($scope, datatable,$http) {
 
 	$scope.datatableConfig = {
 			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns($scope.getForm().processType).url,
@@ -244,6 +244,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable', functio
 				url:jsRoutes.controllers.processes.api.Processes.save(),
 				callback : function(datatable){
 					$scope.basket.reset();
+					$scope.getColumns();
 				},
 				value:function(line){var val=line; val.support=undefined; return val;}
 			},
@@ -259,6 +260,24 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable', functio
 				active:true
 			}
 	};
+	
+	$scope.getColumns = function(){
+		var typeCode = "";
+		if($scope.form.processType){
+			typeCode = $scope.form.processType;
+		}
+		
+		$http.get(jsRoutes.controllers.processes.tpl.Processes.searchColumns().url,{params:{"typeCode":typeCode}})
+		.success(function(data, status, headers, config) {
+			if(data!=null){
+				$scope.datatable.setColumnsConfig(data);
+			}
+		})
+		.error(function(data, status, headers, config) {
+		
+		});
+	};
+	
 	
 	//init
 	$scope.form = $scope.getForm();
