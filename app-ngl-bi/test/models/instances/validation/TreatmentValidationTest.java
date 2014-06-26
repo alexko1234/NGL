@@ -123,7 +123,7 @@ public class TreatmentValidationTest extends AbstractTests {
 			return lf;
 	 }
 	 
-	 private Treatment getNewTreatmentPropertyDetailsOK() {		
+	private Treatment getNewTreatmentPropertyDetailsOK() {			
 		Treatment t = new Treatment();
 		t.code =  "readQualityRaw";		
 		t.typeCode =  "read-quality";
@@ -174,11 +174,83 @@ public class TreatmentValidationTest extends AbstractTests {
 		l2.add(m5);
 		lpObj2.value=l2;
 		m.put("readWithNpercentDetails", lpObj2);
-						
+		
+		/***/
+		PropertyObjectListValue lpObj3 = new PropertyObjectListValue();
+		List l3 = new ArrayList();
+		
+		HashMap<String, Object> m6 = new HashMap<String, Object>();
+		m6.put("positionInReads",1);
+		m6.put("numberOfN",2);
+		
+		l3.add(m6);
+		lpObj3.value=l3;
+		m.put("positionNdetails", lpObj3);
+		
+		/***/
+		PropertyObjectListValue lpObj4 = new PropertyObjectListValue();
+		List l4 = new ArrayList();
+		
+		HashMap<String, Object> m7 = new HashMap<String, Object>();
+		m7.put("readsLength",1);
+		m7.put("percentOfReads",2.F);
+		
+		l4.add(m7);
+		lpObj4.value=l4;
+		m.put("readSizeDistributionDetails", lpObj4);
+		
+		/***/
+		PropertyObjectListValue lpObj5 = new PropertyObjectListValue();
+		List l5 = new ArrayList();
+		
+		HashMap<String, Object> m8 = new HashMap<String, Object>();
+		m8.put("position",1);
+		m8.put("minQualityScore",2);
+		m8.put("maxQualityScore",50);
+		m8.put("meanQualityScore",17.F);
+		m8.put("Q1",21);
+		m8.put("medianQualityScore",16.F);
+		m8.put("Q3",34);
+		m8.put("lowerWhisker",18);
+		m8.put("upperWhisker",37);
+		
+		l5.add(m8);
+		lpObj5.value=l5;
+		m.put("qualScoreDetails", lpObj5);
+		
+		/***/
+		PropertyObjectListValue lpObj6 = new PropertyObjectListValue();
+		List l6 = new ArrayList();
+		
+		HashMap<String, Object> m9 = new HashMap<String, Object>();
+		m9.put("readPosition",1);
+		m9.put("APercent",20.F);
+		m9.put("TPercent",20.F);
+		m9.put("CPercent",20.F);
+		m9.put("GPercent",20.F);
+		m9.put("NPercent",20.F);
+		
+		l6.add(m9);
+		lpObj6.value=l6;
+		m.put("nuclDistributionDetails", lpObj6);
+		
+		/***/
+		PropertyObjectListValue lpObj7 = new PropertyObjectListValue();
+		List l7 = new ArrayList();
+		
+		HashMap<String, Object> m10 = new HashMap<String, Object>();
+		m10.put("percentGCcontent",1.F);
+		m10.put("percentOfReads",50.F);
+		
+		l7.add(m10);
+		lpObj7.value=l7;
+		m.put("GCDistributionDetails", lpObj7);
+
+		
 		/*set the context*/
 		t.set("read1", m);
 		return t; 
-	 }
+	}
 	 
 	 
 	
