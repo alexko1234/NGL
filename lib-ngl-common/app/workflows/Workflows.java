@@ -191,7 +191,7 @@ public class Workflows {
 		for(Process process:container.getCurrentProcesses()){
 			if(container.state.code.equals("IU") && checkProcessState("N",container.inputProcessCodes)){
 				state.code="IP";
-			}else if(container.state.code.equals("IW-P") && checkProcessState("IP",container.inputProcessCodes)){
+			}else if(container.state.code.equals("UA") && checkProcessState("IP",container.inputProcessCodes)){
 				state.code="F";
 			}
 		}
