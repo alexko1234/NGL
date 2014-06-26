@@ -9,6 +9,7 @@ import static play.test.Helpers.running;
 import static play.test.Helpers.status;
 import static play.test.Helpers.contentAsString;
 
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Map;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertyImgValue;
+import models.laboratory.common.instance.property.PropertyObjectListValue;
 import models.laboratory.common.instance.property.PropertyObjectValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.common.instance.PropertyValue;
@@ -102,6 +104,84 @@ public class TreatmentValidationTest extends AbstractTests {
 		}
 	}	
 	
+	 private PropertyImgValue getPropertyImgValue() {
+			PropertyImgValue pImg = new PropertyImgValue();
+			pImg.value = getData();
+			pImg.fullname = "titi.jpg";
+			pImg.extension = "jpg";
+			pImg.width = 400;
+			pImg.height = 300;
+			return pImg;
+	 }
+	 
+	 private List<Float> getListFloat() {
+			List<Float> lf = new ArrayList<Float>();
+			Float f = 2.F;
+			for (int i=0; i<101; i++) {
+				lf.add(f);
+			}
+			return lf;
+	 }
+	 
+	 private Treatment getNewTreatmentPropertyDetailsOK() {		
+		Treatment t = new Treatment();
+		t.code =  "readQualityRaw";		
+		t.typeCode =  "read-quality";
+		t.categoryCode = "quality";
+		
+		//define map of property values
+		Map<String,PropertyValue> m = new HashMap<String,PropertyValue>();				 
+		
+		m.put("sampleInput", new PropertySingleValue(100));
+		m.put("qualScore",getPropertyImgValue());
+		m.put("nuclDistribution", getPropertyImgValue());
+		m.put("readWithNpercent", getPropertyImgValue());
+		m.put("readSizeDistribution", getPropertyImgValue());
+		m.put("adapterContamination", getPropertyImgValue());
+		m.put("GCDistribution", getPropertyImgValue());
+		m.put("positionN", getPropertyImgValue());
+		m.put("maxSizeReads", new PropertySingleValue(100));
+		m.put("maxSizeReadsPercent", new PropertySingleValue(100));
+
+		PropertyObjectListValue lpObj = new PropertyObjectListValue();
+		List l = new ArrayList();
+		
+		HashMap<String, Object> m2 = new HashMap<String, Object>(); 
+		m2.put("adapterName", "RNA_PCR_MK1(rev)");
+		m2.put("contaminationIntensities", getListFloat());
+
+		HashMap<String, Object> m3 = new HashMap<String, Object>();
+		m3.put("adapterName", "totoAdaptateur");
+		m3.put("contaminationIntensities", getListFloat());
+		
+		l.add(m2);
+		l.add(m3);
+		lpObj.value=l;				
+		m.put("adapterDetails", lpObj);
+		
+		PropertyObjectListValue lpObj2 = new PropertyObjectListValue();
+		List l2 = new ArrayList();
+		
+		HashMap<String, Object> m4 = new HashMap<String, Object>();
+		m4.put("nbOfN",1);
+		m4.put("percentOfReads",2.F);
+		
+		HashMap<String, Object> m5 = new HashMap<String, Object>();
+		m5.put("nbOfN",2);
+		m5.put("percentOfReads",2.F);
+		
+		l2.add(m4);
+		l2.add(m5);
+		lpObj2.value=l2;
+		m.put("readWithNpercentDetails", lpObj2);
+						
+		/*set the context*/
+		t.set("read1", m);
+		return t; 
+	 }
+	 
+	 
+	
 	private Treatment getNewTreatmentForReadSet() {
 		Treatment t = new Treatment();
 		t.code =  "ngsrg";		
@@ -119,23 +199,26 @@ public class TreatmentValidationTest extends AbstractTests {
 		return t;
 	}
 	
-	private Treatment getNewTreatmentSampleControlOK() {
-		
+	private Treatment getNewTreatmentSampleControlOK() {	
 		Treatment t = new Treatment();
 		t.code =  "sampleControl";		
 		t.typeCode =  "sample-control";
 		t.categoryCode = "quality";
-		
 		//define map of property values
 		Map<String,PropertyValue> m = new HashMap<String,PropertyValue>();
 		m.put("sampleInput", new PropertySingleValue(100));
 		m.put("sampleSexe",new PropertySingleValue("M"));
 		m.put("samplesComparison",new PropertySingleValue(0.50));	
 		t.set("pairs", m);
-		
 		return t;
 	}
 	
+	private byte[] getData() {
+		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
+			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
+			    0x30, 0x30, (byte)0x9d };
+		return data;
+	}
 	
 	private Treatment getNewTreatmentTaxonomyOK() {
 		Treatment t = new Treatment();
@@ -174,10 +257,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		p.value=m2;
 		m.put("keywordBilan", p);
 
-	
-		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
-			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
-			    0x30, 0x30, (byte)0x9d };
+		byte[] data = getData(); 
 		
 		PropertyFileValue pf = null;
 		pf = new PropertyFileValue();
@@ -186,7 +266,6 @@ public class TreatmentValidationTest extends AbstractTests {
 		pf.extension = "html";
 		m.put("krona",pf);
 		
-			
 		PropertyImgValue pi = null;
 		pi = new PropertyImgValue();
 		pi.value = data;
@@ -196,7 +275,6 @@ public class TreatmentValidationTest extends AbstractTests {
 		pi.height = 300;
 		m.put("phylogeneticTree",pi);
 		
-	
 		t.set("read1", m);
 		
 		return t;
@@ -241,34 +319,28 @@ public class TreatmentValidationTest extends AbstractTests {
 		p.value=m2;
 		m.put("keywordBilan", p);
 
-		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
-			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
-			    0x30, 0x30, (byte)0x9d };
-		
 		PropertyFileValue pf = null;
 		pf = new PropertyFileValue();
-		pf.value = data;
+		pf.value = getData();
 		pf.fullname = "krona.html";
 		pf.extension = "html";
 		m.put("krona",pf);
-		
-			
+					
 		PropertyImgValue pi = null;
 		pi = new PropertyImgValue();
-		pi.value = data;
+		pi.value = getData();
 		pi.fullname = "phylogeneticTree.jpg";
 		pi.extension = "jpg";
 		pi.width = 400;
 		pi.height = 300;
 		m.put("phylogeneticTree",pi);
 		
-		
 		t.set("read1", m);
 		
 		return t;
 	}
 	
-	
+	/*** tests begins here ! *************************************/
 	
 	@Test
 	public void testValidatePropertyChoiceInListOK() {
@@ -303,21 +375,16 @@ public class TreatmentValidationTest extends AbstractTests {
 		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNS")) {
 			Treatment t = getNewTreatmentTaxonomyBad();
 			
-			ContextValidation ctxVal = new ContextValidation(); 
-			
+			ContextValidation ctxVal = new ContextValidation(); 			
 			Level.CODE levelCode = Level.CODE.ReadSet; 
 			ctxVal.putObject("level", levelCode);
-			
-			//add readset to ctxVal
 			ReadSet readset = RunMockHelper.newReadSet("rdCode");
 			ctxVal.putObject("readSet", readset);
-			
 			ctxVal.setCreationMode();
 			
 			t.validate(ctxVal);
 			
 			assertThat(ctxVal.errors).hasSize(2);
-			
 			assertThat(ctxVal.errors.toString()).contains(ERROR_VALUENOTAUTHORIZED_MSG);
 		}
 	}
@@ -330,14 +397,10 @@ public class TreatmentValidationTest extends AbstractTests {
 			Treatment t = getNewTreatmentForReadSet();
 					
 			ContextValidation ctxVal = new ContextValidation(); 
-			
 			Level.CODE levelCode = Level.CODE.ReadSet; 
 			ctxVal.putObject("level", levelCode);
-			
-			//add readset to ctxVal
 			ReadSet readset = RunMockHelper.newReadSet("rdCode");
-			ctxVal.putObject("readSet", readset);
-			
+			ctxVal.putObject("readSet", readset);			
 			ctxVal.setCreationMode();
 			
 			t.validate(ctxVal);
@@ -357,11 +420,8 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
-		
-		//add readset to ctxVal
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
 		ctxVal.putObject("readSet", readset);
-		
 		ctxVal.setUpdateMode();
 		
 		ReadSet readSetExists = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
@@ -387,13 +447,8 @@ public class TreatmentValidationTest extends AbstractTests {
 		Treatment t = getNewTreatmentForReadSet();
 				
 		ContextValidation ctxVal = new ContextValidation(); 
-		//Level.CODE levelCode = Level.CODE.ReadSet; 
-		//ctxVal.putObject("level", levelCode);
-		
-		//add readset to ctxVal
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		ctxVal.putObject("readSet", readset);
-		
+		ctxVal.putObject("readSet", readset);		
 		ctxVal.setCreationMode();
 		
 		try {
@@ -408,6 +463,8 @@ public class TreatmentValidationTest extends AbstractTests {
 		assertThat(msgErreur).isEqualTo("missing level parameter");
 	}
 	
+    
+    
 	 @Test
 	 public void testValidationTreatmentErrorMissingCode() {	
 		Boolean b = false;
@@ -419,14 +476,12 @@ public class TreatmentValidationTest extends AbstractTests {
 		ContextValidation ctxVal = new ContextValidation(); 
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
-		
-		//add readset to ctxVal
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		ctxVal.putObject("readSet", readset);
-		
+		ctxVal.putObject("readSet", readset);		
 		ctxVal.setCreationMode();
 		
 		t.validate(ctxVal);
+		
 		assertThat(ctxVal.errors.size()).isGreaterThan(0);
 		assertThat(ctxVal.errors.toString()).contains(ERROR_REQUIRED_MSG);
 		assertThat(ctxVal.errors.toString()).contains("code");
@@ -442,11 +497,8 @@ public class TreatmentValidationTest extends AbstractTests {
 		ContextValidation ctxVal = new ContextValidation(); 
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
-		
-		//add readset to ctxVal
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		ctxVal.putObject("readSet", readset);
-		
+		ctxVal.putObject("readSet", readset);		
 		ctxVal.setCreationMode();
 		
 		t.validate(ctxVal);
@@ -468,11 +520,8 @@ public class TreatmentValidationTest extends AbstractTests {
 		ContextValidation ctxVal = new ContextValidation(); 
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
-		
-		//add readset to ctxVal
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		ctxVal.putObject("readSet", readset);
-		
+		ctxVal.putObject("readSet", readset);		
 		ctxVal.setCreationMode();
 		
 		t.validate(ctxVal);
@@ -494,11 +543,8 @@ public class TreatmentValidationTest extends AbstractTests {
 		ContextValidation ctxVal = new ContextValidation(); 
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
-		
-		//add readset to ctxVal
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		ctxVal.putObject("readSet", readset);
-		
+		ctxVal.putObject("readSet", readset);		
 		ctxVal.setCreationMode();
 		
 		t.validate(ctxVal);
@@ -519,11 +565,8 @@ public class TreatmentValidationTest extends AbstractTests {
 		ContextValidation ctxVal = new ContextValidation(); 
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
-		
-		//add readset to ctxVal
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		ctxVal.putObject("readSet", readset);
-		
+		ctxVal.putObject("readSet", readset);		
 		ctxVal.setCreationMode();
 		
 		ReadSet readSetExists = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
@@ -613,13 +656,9 @@ public class TreatmentValidationTest extends AbstractTests {
 		ContextValidation ctxVal = new ContextValidation(); 
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
-		
-		//add readset to ctxVal
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		ctxVal.putObject("readSet", readset);
-		
-		//in this case, we must be in update mode
-		ctxVal.setUpdateMode();
+		ctxVal.putObject("readSet", readset);		
+		ctxVal.setUpdateMode(); //in this case, we must be in update mode
 		
 		ReadSet readSetExists = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
 		if(readSetExists==null){
@@ -646,11 +685,8 @@ public class TreatmentValidationTest extends AbstractTests {
 			ContextValidation ctxVal = new ContextValidation(); 
 			Level.CODE levelCode = Level.CODE.ReadSet; 
 			ctxVal.putObject("level", levelCode);
-			
-			//add readset to ctxVal
 			ReadSet readset = RunMockHelper.newReadSet("rdCode");
-			ctxVal.putObject("readSet", readset);
-			
+			ctxVal.putObject("readSet", readset);			
 			ctxVal.setCreationMode();
 			
 			t.validate(ctxVal);
@@ -661,32 +697,27 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 	
 
-	
-	
 	 //@Test(expected=java.lang.NumberFormatException.class)
 	 @Test
 	 public void testValidateTreatmentErrorBadTypeValue() {
-		    	Treatment t = null; 
-	    		ContextValidation ctxVal = new ContextValidation();  
-	    		Level.CODE levelCode = Level.CODE.ReadSet; 
-	    		ctxVal.putObject("level", levelCode);
-						   
-				t = getNewTreatmentForReadSet();
-				
-				t.results().get("default").remove("nbReadIllumina");
-				//must generate a error (because of a bad value)
-				t.results().get("default").put("nbReadIllumina", new PropertySingleValue("un"));	
-	    		
-	    		//add readset to ctxVal
-	    		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-	    		ctxVal.putObject("readSet", readset);
-	    		
-	    		ctxVal.setCreationMode();
-	    		
-	    		t.validate(ctxVal);
+	    	Treatment t = null; 
+    		ContextValidation ctxVal = new ContextValidation();  
+    		Level.CODE levelCode = Level.CODE.ReadSet; 
+    		ctxVal.putObject("level", levelCode);
+    		ReadSet readset = RunMockHelper.newReadSet("rdCode");
+    		ctxVal.putObject("readSet", readset);	    		
+    		ctxVal.setCreationMode();
+					   
+			t = getNewTreatmentForReadSet();
+			
+			t.results().get("default").remove("nbReadIllumina");
+			//must generate a error (because of a bad value)
+			t.results().get("default").put("nbReadIllumina", new PropertySingleValue("un"));	
+    		
+    		t.validate(ctxVal);
 
-	    		assertThat(ctxVal.errors).hasSize(1);
-	    		assertThat(ctxVal.errors.toString()).contains(ERROR_BADTYPE_MSG);
+    		assertThat(ctxVal.errors).hasSize(1);
+    		assertThat(ctxVal.errors.toString()).contains(ERROR_BADTYPE_MSG);
 	}
 	
 	
@@ -709,11 +740,8 @@ public class TreatmentValidationTest extends AbstractTests {
 			ContextValidation ctxVal = new ContextValidation(); 
 			Level.CODE levelCode = Level.CODE.ReadSet; 
 			ctxVal.putObject("level", levelCode);
-			
-			//add readset to ctxVal
 			ReadSet readset = RunMockHelper.newReadSet("rdCode");
 			ctxVal.putObject("readSet", readset);
-			
 			ctxVal.setCreationMode();
 			
 			t.validate(ctxVal);
@@ -722,4 +750,25 @@ public class TreatmentValidationTest extends AbstractTests {
 			assertThat(ctxVal.errors.toString()).contains(ERROR_VALUENOTAUTHORIZED_MSG);	
 	}
 	 
+
+	 
+		@Test
+		public void testValidatePropertyDetailsOK() {
+			Treatment t = getNewTreatmentPropertyDetailsOK();
+						
+			ContextValidation ctxVal = new ContextValidation(); 			
+			Level.CODE levelCode = Level.CODE.ReadSet; 
+			ctxVal.putObject("level", levelCode);
+			ReadSet readset = RunMockHelper.newReadSet("rdCode");
+			ctxVal.putObject("readSet", readset);
+			
+			ctxVal.setCreationMode();
+			
+			t.validate(ctxVal);
+			
+			assertThat(ctxVal.errors).hasSize(0);
+		}
+		
+		
+
 }

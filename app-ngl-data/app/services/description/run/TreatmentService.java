@@ -198,206 +198,206 @@ public class TreatmentService {
 	
 	private static List<PropertyDefinition> getASRBPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mappedReads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mappedReadsPercent","mappedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("reads100pcMatchBases","reads100pcMatchBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("reads100pcMatchBasesPerc","reads100pcMatchBasesPerc", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("reads90pcMatchBases","reads90pcMatchBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("reads90pcMatchBasesPerc","reads90pcMatchBasesPerc", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("alignedBases","alignedBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbErrors","nbErrors", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbInsertions","nbInsertions", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbDeletions","nbDeletions", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbMismatches","nbMismatches", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbPerfectReads","nbPerfectReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("coverageDistribution","coverageDistribution", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("errorPosition","errorPosition", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualityValueDistribution","qualityValueDistribution", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of mapped reads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent of mapped reads","mappedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of reads with 100% of matching bases","reads100pcMatchBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent of reads with 100% of matching bases","reads100pcMatchBasesPerc", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of reads with >=90% of matching bases","reads90pcMatchBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent of reads with >=90% of matching bases","reads90pcMatchBasesPerc", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of aligned bases","alignedBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of errors","nbErrors", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of insertions","nbInsertions", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of deletions","nbDeletions", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of mismatches","nbMismatches", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of perfect reads","nbPerfectReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reference genome coverage","coverageDistribution", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Errors position in reads","errorPosition", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("observed quality values in reads","qualityValueDistribution", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "single"));
 		return propertyDefinitions;
 	}
 	
 
 	private static List<PropertyDefinition> getASRSPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mappedReads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mappedReadsPercent","mappedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("alignedBases","alignedBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbMismatches","nbMismatches", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mismatchesPercent","mismatchesPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("errorPosition","errorPosition", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of mapped reads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent of mapped reads","mappedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of aligned bases","alignedBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of mismatches","nbMismatches", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent of mismatches","mismatchesPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Errors position in reads (SOAP 2)","errorPosition", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "single"));
 		return propertyDefinitions;
 	}
 
 	private static List<PropertyDefinition> getExomeTreatmentPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbReads","nbReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mappedReads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mappedReadsPercent","mappedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("pairingPercent","pairingPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("duplicatedReads","duplicatedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("duplicatedReadsPercent","duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sizeRegionsTiled","sizeRegionsTiled", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("targetPercent","targetPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("percentNT30X","percentNT30X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("percentNT20X","percentNT20X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("percentNT10X","percentNT10X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("percentNT5X","percentNT5X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbRegions0X","nbRegions0X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("regions0XPercent","regions0XPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbRegionsFullCover","nbRegionsFullCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("regionsFullCoverPercent","regionsFullCoverPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("meanCover","meanCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("medianCover","medianCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sdCover","sdCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads","nbReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mapped reads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Mapped reads","mappedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Pairing","pairingPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Duplicated reads","duplicatedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Duplicated Reads","duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Size Regions Tiled","sizeRegionsTiled", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent target","targetPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 30X","percentNT30X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 20X","percentNT20X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 10X","percentNT10X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 5X","percentNT5X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb regions 0X","nbRegions0X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent regions 0X","regions0XPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb regions full cover","nbRegionsFullCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Regions Full Cover","regionsFullCoverPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mean cover","meanCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Median cover","medianCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("SD cover","sdCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
 		return propertyDefinitions;
 	}
 
 	private static List<PropertyDefinition> getWholeExomeTreatmentPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbReads","nbReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mappedReads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mappedReadsPercent","mappedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("pairingPercent","pairingPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("duplicatedReads","duplicatedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("duplicatedReadsPercent","duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("percentNT30X","percentNT30X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("percentNT20X","percentNT20X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("percentNT10X","percentNT10X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("percentNT5X","percentNT5X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbRegions0X","nbRegions0X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("regions0XPercent","regions0XPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("meanCover","meanCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("medianCover","medianCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sdCover","sdCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads","nbReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mapped reads","mappedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Mapped reads","mappedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Pairing","pairingPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Duplicated reads","duplicatedReads", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent Duplicated Reads","duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 30X","percentNT30X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 20X","percentNT20X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 10X","percentNT10X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent NT 5X","percentNT5X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb regions 0X","nbRegions0X", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent regions 0X","regions0XPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mean cover","meanCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Median cover","medianCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("SD cover","sdCover", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
 		return propertyDefinitions;
 	}
 	
 	private static List<PropertyDefinition> getRnaSeqTreatmentPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("storedPairsPercent","storedPairsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("storedForwardReadPercent","storedForwardReadPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("storedReverseReadPercent","storedReverseReadPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rejectedPairsPercent","rejectedPairsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("alignedReadsPercent","alignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("uniqueReadsPercent","uniqueReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("uniqueAlignedReadsPercent","uniqueAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mismatchPercent","mismatchPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("duplicatedReadsPercent","duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("insertLengthMean","insertLengthMean", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("insertLengthMeanSd","insertLengthMeanSd", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("1SenseAlignedReadsPercent","1SenseAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("2SenseAlignedReadsPercent","2SenseAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNAPercent","rRNAPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("intragenicReadsPercent","intragenicReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("exonicReadsPercent","exonicReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("proteinCodingGenes","proteinCodingGenes", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("proteinCodingTranscripts","proteinCodingTranscripts", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("lncRNAGenes","lncRNAGenes", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("lncRNATranscripts","lncRNATranscripts", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% both surviving","storedPairsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% R1 only surviving","storedForwardReadPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% R2 only surviving","storedReverseReadPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% dropped","rejectedPairsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% mapped reads","alignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% unique mapped reads","uniqueReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% unique mapped reads of total","uniqueAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% base mismatch","mismatchPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% duplicated mapped reads","duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mean insert length","insertLengthMean", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("SD insert length","insertLengthMeanSd", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% R1 sense","1SenseAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% R2 sense","2SenseAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% rRNA","rRNAPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% intragenic","intragenicReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% exonic","exonicReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb protein coding genes","proteinCodingGenes", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb protein coding transcripts","proteinCodingTranscripts", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb lincRNA genes","lncRNAGenes", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb lincRNA transcripts","lncRNATranscripts", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
 		return propertyDefinitions;
 	}
 	
 	
 	private static List<PropertyDefinition> getChiPSeqTreatmentPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("storedReadsPercent","storedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rejectedReadsPercent","rejectedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("alignedReadsPercent","alignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("uniqueReadsPercent","uniqueReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("uniqueAlignedReadsPercent","uniqueAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mismatchPercent","mismatchPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("duplicatedReadsPercent","duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("insertLengthMean","insertLengthMean", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("insertLengthMeanSd","insertLengthMeanSd", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNAPercent","rRNAPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% both surviving","storedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% dropped","rejectedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% mapped reads","alignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% unique mapped reads","uniqueReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% unique mapped reads of total","uniqueAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% base mismatch","mismatchPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% duplicated mapped reads","duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mean insert length","insertLengthMean", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("SD insert length","insertLengthMeanSd", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% rRNA","rRNAPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
 		return propertyDefinitions;
 	}
 		
 	private static List<PropertyDefinition> getChiPSeqPETreatmentPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("storedReadsPercent","storedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("storedForwardReadPercent", "storedForwardReadPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("storedReverseReadPercent", "storedReverseReadPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rejectedReadsPercent", "rejectedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("alignedReadsPercent", "alignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("uniqueReadsPercent", "uniqueReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("uniqueAlignedReadsPercent", "uniqueAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mismatchPercent", "mismatchPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("duplicatedReadsPercent", "duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("insertLengthMean", "insertLengthMean", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("insertLengthMeanSd", "insertLengthMeanSd", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("1SenseAlignedReadsPercent", "1SenseAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("2SenseAlignedReadsPercent", "2SenseAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNAPercent","rRNAPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("intragenicReadsPercent", "intragenicReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("exonicReadsPercent", "exonicReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% both surviving","storedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% R1 only surviving", "storedForwardReadPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% R2 only surviving", "storedReverseReadPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% dropped", "rejectedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% mapped reads", "alignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% unique mapped reads", "uniqueReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% unique mapped reads of total", "uniqueAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% base mismatch", "mismatchPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% duplicated mapped reads", "duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mean insert length", "insertLengthMean", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("SD insert length", "insertLengthMeanSd", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% R1 sense", "1SenseAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% R2 sense", "2SenseAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% rRNA","rRNAPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% intragenic", "intragenicReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% exonic", "exonicReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
 		return propertyDefinitions;
 	}
 
 	private static List<PropertyDefinition> getFaireSeqTreatmentPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("storedReadsPercent","storedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rejectedReadsPercent","rejectedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("alignedReadsPercent","alignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("uniqueReadsPercent","uniqueReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("uniqueAlignedReadsPercent","uniqueAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mismatchPercent","mismatchPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("duplicatedReadsPercent","duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("insertLengthMean","insertLengthMean", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("insertLengthMeanSd","insertLengthMeanSd", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNAPercent","rRNAPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% both surviving","storedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% dropped","rejectedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mapping Rate","alignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Unique Rate of mapped","uniqueReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mapped Unique Rate of Total","uniqueAlignedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Base Mismatch Rate","mismatchPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Duplication Rate of Mapped","duplicatedReadsPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Insert Length Mean","insertLengthMean", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Standard Deviation","insertLengthMeanSd", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNA rate","rRNAPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));
 		return propertyDefinitions;
 	}
 
 	private static List<PropertyDefinition> getSampleControlTreatmentPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//TODO : Level "pairs" must be confirmed 
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleSexe","sampleSexe", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), String.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("samplesComparison","samplesComparison", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample sexe","sampleSexe", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), String.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Samples comparison","samplesComparison", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
 		return propertyDefinitions;
 	}
 	
 	private static List<PropertyDefinition> getNGSRGPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         //Run level
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("flowcellPosition","flowcellPosition", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbCycle","nbCycle", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("flowcellVersion","flowcellVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbClusterIlluminaFilter","nbClusterIlluminaFilter", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.Default), Long.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("percentClusterIlluminaFilter","percentClusterIlluminaFilter", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.Default), Double.class, false, "single"));        
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbBase","nbBase", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mismatch","mismatch", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Boolean.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("controlLane","controlLane", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Integer.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rtaVersion","rtaVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbClusterTotal","nbClusterTotal", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Position flowcell","flowcellPosition", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb cycles","nbCycle", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version flowcell","flowcellVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb clusters filt. (total)","nbClusterIlluminaFilter", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% clusters filtrés (Illumina)","percentClusterIlluminaFilter", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.Default), Double.class, false, "single"));        
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases (total)","nbBase", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mismatch autorisé pour le démultiplexage","mismatch", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Boolean.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Integer.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version RTA","rtaVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb clusters (total)","nbClusterTotal", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
         //Lane & ReadSet level
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbCluster","nbCluster", LevelService.getLevels(Level.CODE.Lane, Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb clusters","nbCluster", LevelService.getLevels(Level.CODE.Lane, Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
         // Lane level
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("prephasing","prephasing", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("percentClusterInternalAndIlluminaFilter","percentClusterInternalAndIlluminaFilter", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Double.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("phasing","phasing", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbCycleReadIndex2","nbCycleReadIndex2", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Integer.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbCycleRead2","nbCycleRead2", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Integer.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbCycleRead1","nbCycleRead1", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Integer.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbCycleReadIndex1","nbCycleReadIndex1", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Integer.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbBaseInternalAndIlluminaFilter","nbBaseInternalAndIlluminaFilter", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Long.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbClusterInternalAndIlluminaFilter","nbClusterInternalAndIlluminaFilter", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Long.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("seqLossPercent","seqLossPercent", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Float.class, false, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Prephasing","prephasing", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences filtrées (interne)","percentClusterInternalAndIlluminaFilter", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Double.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Phasing","phasing", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb cycles read index2","nbCycleReadIndex2", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Integer.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb cycles read2","nbCycleRead2", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Integer.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb cycles read1","nbCycleRead1", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Integer.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb cycles read index1","nbCycleReadIndex1", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Integer.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases (filtre Illumina + interne)","nbBaseInternalAndIlluminaFilter", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences (filtre Illumina + interne)","nbClusterInternalAndIlluminaFilter", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Perte","seqLossPercent", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Float.class, false, "single"));
         // ReadSet level
         //nbCluster define in the lane level for the 2 levels
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Q30","Q30", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbBases","nbBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("fraction","fraction", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualityScore","qualityScore", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nbReadIllumina","nbReadIllumina", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("validSeqPercent","validSeqPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Float.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% >= Q30","Q30", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases","nbBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Fraction de run","fraction", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score qualité moyen","qualityScore", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb Read Illumina","nbReadIllumina", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences valides/piste","validSeqPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Float.class, false, "single"));
                  
         return propertyDefinitions;
 	}
@@ -405,71 +405,104 @@ public class TreatmentService {
 	private static List<PropertyDefinition> getReadSetPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         // just readset level
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("usefulSequences","usefulSequences", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
-        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("usefulBases","usefulBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Useful sequences","usefulSequences", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Useful bases","usefulBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
         return propertyDefinitions;
 	}
 	
 	
 	private static List<PropertyDefinition> getSAVPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("clusterDensity","clusterDensity",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("clusterDensityStd","clusterDensityStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("clusterPFPerc","clusterPFPerc",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("clusterPFPercStd","clusterPFPercStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("phasing","phasing",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("prephasing","prephasing",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("reads","reads",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsPF","readsPF",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Density","clusterDensity",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","clusterDensityStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Cluster PF","clusterPFPerc",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","clusterPFPercStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Phasing","phasing",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Prephasing","prephasing",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reads","reads",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reads PF","readsPF",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("greaterQ30Perc","greaterQ30Perc",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("cyclesErrRated","cyclesErrRated",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("alignedPerc","alignedPerc",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("alignedPercStd","alignedPercStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("errorRatePerc","errorRatePerc",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("errorRatePercStd","errorRatePercStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("errorRatePercCycle35","errorRatePercCycle35",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1,Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("errorRatePercCycle35Std","errorRatePercCycle35Std",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("errorRatePercCycle75","errorRatePercCycle75",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("errorRatePercCycle75Std","errorRatePercCycle75Std",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("errorRatePercCycle100","errorRatePercCycle100",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("errorRatePercCycle100Std","errorRatePercCycle100Std",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("intensityCycle1","intensityCycle1",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("intensityCycle1Std","intensityCycle1Std",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1,Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("intensityCycle20Perc","intensityCycle20Perc",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("intensityCycle20PercStd","intensityCycle20PercStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cycles Err Rated","cyclesErrRated",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Aligned","alignedPerc",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","alignedPercStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Error Rate","errorRatePerc",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","errorRatePercStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Error Rate cycle 35","errorRatePercCycle35",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1,Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","errorRatePercCycle35Std",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Error Rate cycle 75","errorRatePercCycle75",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","errorRatePercCycle75Std",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Error Rate cycle 100","errorRatePercCycle100",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","errorRatePercCycle100Std",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Intensity cycle 1","intensityCycle1",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","intensityCycle1Std",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1,Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Intensity cycle 20","intensityCycle20Perc",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","intensityCycle20PercStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "single"));
 		return propertyDefinitions;
 	}
-		
+	
 	public static List<PropertyDefinition> getReadQualityPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		//TODO: set names / alfresco
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScore","qualScore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistribution","nuclDistribution",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readWithNpercent","readWithNpercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readSizeDistribution","readSizeDistribution",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("adapterContamination","adapterContamination",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("adapters","adapters",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, false, "list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("GCDistribution","GCDistribution",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("positionN","positionN",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));				
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("suspectedKmers.Kmer","suspectedKmers.Kmer",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, false, "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("suspectedKmers.nbOccurences","suspectedKmers.nbOccurences",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, false, "object_list"));		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("suspectedPrimers","suspectedPrimers",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, false, "list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("maxSizeReads","maxSizeReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, false, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("maxSizeReadsPercent","maxSizeReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, false, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("maxSize","maxSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Quality scores for each read position","qualScore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution of nucleotids for each read position","nuclDistribution",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent of reads with sequenced N","readWithNpercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Read size distribution","readSizeDistribution",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Contamination adaptateurs : liste d'adaptateurs vs cycles run","adapterContamination",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Adaptateurs sur-représentés","adapters",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Proportion of reads for different values of G+C content","GCDistribution",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Position of N in reads","positionN",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));				
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Suspected Kmers (Kmer)","suspectedKmers.Kmer",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Suspected Kmers (Nb occurences)","suspectedKmers.nbOccurences",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, false, "object_list"));		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Suspected primers","suspectedPrimers",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Estimation du nb de lectures de taille","maxSizeReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Pourcentage de lectures de taille","maxSizeReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille maximale de lecture","maxSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, false, "single"));
+		
+		//new properties to generate image
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("adapterContaminationDetails.adapterName","adapterContaminationDetails.adapterName",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("adapterContaminationDetails.contaminationIntensities","adapterContaminationDetails.contaminationIntensities",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), List.class, true, "object_list"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readWithNpercentDetails.numberOfN","readWithNpercentDetails.numberOfN",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readWithNpercentDetails.percentOfReads","readWithNpercentDetails.percentOfReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("positionNdetails.positionInReads","positionNdetails.positionInReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("positionNdetails.numberOfN","positionNdetails.numberOfN",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readSizeDistributionDetails.readsLength","readSizeDistributionDetails.readsLength",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readSizeDistributionDetails.percentOfReads","readSizeDistributionDetails.percentOfReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.position","qualScoreDetails.position",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.minQualityScore","qualScoreDetails.minQualityScore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.maxQualityScore","qualScoreDetails.maxQualityScore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.meanQualityScore","qualScoreDetails.meanQualityScore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.Q1","qualScoreDetails.Q1",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.medianQualityScore","qualScoreDetails.medianQualityScore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.Q3","qualScoreDetails.Q3",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.lowerWhisker","qualScoreDetails.lowerWhisker",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.upperWhisker","qualScoreDetails.upperWhisker",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistributionDetails.readPosition","nuclDistributionDetails.readPosition",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistributionDetails.APercent","nuclDistributionDetails.APercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistributionDetails.CPercent","nuclDistributionDetails.CPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistributionDetails.GPercent","nuclDistributionDetails.GPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistributionDetails.TPercent","nuclDistributionDetails.TPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistributionDetails.NPercent","nuclDistributionDetails.NPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("GCDistributionDetails.percentGCcontent","GCDistributionDetails.percentGCcontent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), String.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("GCDistributionDetails.percentOfReads","GCDistributionDetails.percentOfReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+		
 		return propertyDefinitions;		
 	}
 	
 	public static List<PropertyDefinition> getDuplicatesPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimateDuplicatedReads","estimateDuplicatedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimateDuplicatedReadsPercent","estimateDuplicatedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimateDuplicatedReadsNTimes.times","estimateDuplicatedReadsNTimes.times",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimateDuplicatedReadsNTimes.percent","estimateDuplicatedReadsNTimes.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimateUniqueReads","estimateUniqueReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimateUniqueReadsPercent","estimateUniqueReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimation lectures dupliquées","estimateDuplicatedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimation % lectures dupliquées","estimateDuplicatedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("lectures dupliquées X+1 fois (nb)","estimateDuplicatedReadsNTimes.times",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("lectures dupliquées X+1 fois (%)","estimateDuplicatedReadsNTimes.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Float.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimation lectures uniques","estimateUniqueReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimation % lectures uniques","estimateUniqueReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Pairs), Float.class, true, "single"));
 		return propertyDefinitions;		
 	}
 	
@@ -485,7 +518,7 @@ public class TreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nucleotides trim.","nucleotidesTrim",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Rejected (short)","trimRejectedShort",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Rejected (length0)","trimRejectedLength0",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("TrimStored","trimStored",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Trim. Stored","trimStored",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Long.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Stored pairs","storedPairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Rejected pairs","rejectedPairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("stored singleton","storedSingleton",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Single), Long.class, true, "single"));
@@ -494,85 +527,85 @@ public class TreatmentService {
 	
 	public static List<PropertyDefinition> getContaminationPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsInput","readsInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs, Level.CODE.Single), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("removedReads","removedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs, Level.CODE.Single), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("remainingReads","remainingReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs, Level.CODE.Single), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("removedReadsPercent","removedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs, Level.CODE.Single), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("remainingNucleotides","remainingNucleotides",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs), Long.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reads input","readsInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs, Level.CODE.Single), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Removed reads","removedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs, Level.CODE.Single), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Remaining reads","remainingReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs, Level.CODE.Single), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% removed reads","removedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs, Level.CODE.Single), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Remaining nucleotides","remainingNucleotides",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs), Long.class, false, "single"));
 		return propertyDefinitions;		
 	}
 	
 	public static List<PropertyDefinition> getTaxonomyPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("organism","organism",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("taxonomy","taxonomy",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("taxonBilan.taxon","taxonBilan.taxon",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("taxonBilan.nbSeq","taxonBilan.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("taxonBilan.percent","taxonBilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "single"));	
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("divisionBilan.division","divisionBilan.division",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true,
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Organisme","organism",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taxonomie","taxonomy",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true, "list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan par taxon (taxon)","taxonBilan.taxon",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan par taxon (nb seq)","taxonBilan.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan par taxon (%)","taxonBilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "object_list"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan par division (division)","divisionBilan.division",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true,
 				DescriptionFactory.newValues("eukaryota","bacteria","cellular organisms","archaea","viruses"), "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("divisionBilan.nbSeq","divisionBilan.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true, "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("divisionBilan.percent","divisionBilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("keywordBilan.keyword","keywordBilan.keyword",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true, 
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan par division (nb seq)","divisionBilan.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan par division (%)","divisionBilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan par mot-clé (mot-clé)","keywordBilan.keyword",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true, 
 				DescriptionFactory.newValues("mitochondri","virus","chloroplast","transposase",	"BAC"), "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("keywordBilan.nbSeq","keywordBilan.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true, "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("keywordBilan.percent","keywordBilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan par mot-clé (nb seq)","keywordBilan.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan par mot-clé (%)","keywordBilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Float.class, true, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("krona","krona",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), File.class, true, "file"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("phylogeneticTree","phylogeneticTree",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Arbre phylogénétique","phylogeneticTree",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Image.class, false, "img"));
 		return propertyDefinitions;		
 	}
 	
 	public static List<PropertyDefinition> getSortingRiboPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readsInput","readsInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("no_rRNA","no_rRNA",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reads input","readsInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Non-rRNA","no_rRNA",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNA","rRNA",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNAPercent","rRNAPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNABilan.type","rRNABilan.type",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), String.class, true,
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% rRNA","rRNAPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan rRNA (type)","rRNABilan.type",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), String.class, true,
 				DescriptionFactory.newValues("PhiX", "Eukaryotic 18S", "Eukaryotic 28S", "Bacteria 16S", "Bacteria 23S", "Archeae 16S", "Archeae 23S", "Rfam 5.8S", "Rfam 5S"), "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("rRNABilan.percent","rRNABilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Float.class, true, "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("usefulSequences","usefulSequences",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("usefulBases","usefulBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan rRNA (%)","rRNABilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Float.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Useful sequences","usefulSequences",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Useful bases","usefulBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, false, "single"));
 		return propertyDefinitions;		
 	}
 	
 	public static List<PropertyDefinition> getMappingPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nonChimericAlignedReads","nonChimericAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("FRAlignedReads","FRAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("RFAlignedReads","RFAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("FFAlignedReads","FFAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("RRAlignedReads","RRAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("transAlignedReads","transAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("singleAlignedReads","singleAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nonChimericAlignedReadsPercent","nonChimericAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("FRAlignedReadsPercent","FRAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("RFAlignedReadsPercent","RFAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("FFAlignedReadsPercent","FFAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("RRAlignedReadsPercent","RRAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("transAlignedReadsPercent","transAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("singleAlignedReadsPercent","singleAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("MPReadDistanceSeparation","MPReadDistanceSeparation",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, true, "img"));		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimatedMPInsertSize","estimatedMPInsertSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, false, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("PEReadDistanceSeparation","PEReadDistanceSeparation",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, true, "img"));	
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("estimatedPEInsertSize","estimatedPEInsertSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, false, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("reference","reference",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), String.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Non-chimeric aligned reads","nonChimericAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("FR (PE) aligned reads","FRAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("RF (MP) aligned reads","RFAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("FF aligned reads","FFAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("RR aligned reads","RRAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Trans aligned reads","transAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Single aligned reads","singleAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% non-chimeric aligned reads","nonChimericAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% FR (PE) aligned reads","FRAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% RF (MP) aligned reads","RFAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% FF aligned reads","FFAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% RR aligned reads","RRAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Trans aligned reads","transAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Single aligned reads","singleAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distance between MP reads","MPReadDistanceSeparation",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, true, "img"));		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("MP insert size estimated","estimatedMPInsertSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distance between PE reads","PEReadDistanceSeparation",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, true, "img"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("PE insert size estimated","estimatedPEInsertSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reference","reference",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), String.class, true, "single"));
 		return propertyDefinitions;		
 	}
 	
 	public static List<PropertyDefinition> getMergingPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sampleInput","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mergedReads","mergedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mergedReadsPercent","mergedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("medianeSize","medianeSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("avgSize","avgSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("minSize","minSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("maxSize","maxSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mergedReadsDistrib","mergedReadsDistrib",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, false, "img"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("overlapDistrib","overlapDistrib",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Merged reads","mergedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% merged reads","mergedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mediane size (bases)","medianeSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Average size (bases)","avgSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Min size (bases)","minSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Max size (bases)","maxSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Merged reads distribution","mergedReadsDistrib",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Overlap distribution","overlapDistrib",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, true, "img"));
 		return propertyDefinitions;		
 	}
 	
@@ -592,8 +625,7 @@ public class TreatmentService {
 	
 	
 	public static List<PropertyDefinition> getAssemblyPropertyDefinitions() throws DAOException{
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
 		//for further development
 		/*
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("N50 contig size","N50ContigSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));
@@ -613,12 +645,9 @@ public class TreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percent","contigSizeRepartition.contigPercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Float.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cumulative size","contigSizeRepartition.cumulativeSize", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Integer.class, true, "single"));	 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% cumulative size","contigSizeRepartition.cumulativeSizePercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Default), Float.class, true, "single"));
-		*/
-		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Assembly statistics","assemblyStatistics",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), String.class, true, "single"));
-		
+		*/		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Assembly statistics","assemblyStatistics",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), String.class, true, "single"));	
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percentage of assembled reads","readsAssembledPercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Float.class, true, "single"));
-
 		return propertyDefinitions;		
 	}
 	
@@ -651,8 +680,6 @@ public class TreatmentService {
 		*/
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Scaffolding statistics","scaffoldingStatistics",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), String.class, true, "single"));
-
-		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nombre de paires satisfaisantes","nbPairedSatisfied",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Float.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nombre de paires non satisfaisantes","nbPairedUnsatisfied",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Float.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb paires mappées","nbMappedPairs",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Float.class, true, "single"));
@@ -665,12 +692,10 @@ public class TreatmentService {
 	
 	public static List<PropertyDefinition> getGapClosingPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Actual gap sum","actualGapSum", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Extended gap sum","extendGapSum", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Actual gap count","actualGapCount", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Extended gap count","extendGapCount", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
-
 		return propertyDefinitions;		
 	}
 		

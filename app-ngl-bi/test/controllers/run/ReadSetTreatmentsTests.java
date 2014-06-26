@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertyImgValue;
+import models.laboratory.common.instance.property.PropertyObjectListValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -76,12 +78,12 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 		}
 	}
 	
-	private void createRdCode() {
+	private void createRdCode(String suffixe) {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","DIDIER_TESTFORTRT"));
 		if(runDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 		}
-		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
+		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode" + suffixe));
 		if(readSetDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,readSetDelete._id);
 		}
@@ -106,7 +108,7 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 		Lane lane2 = RunMockHelper.newLane(2);
 		List<Lane> lanes = new ArrayList<Lane>();
 		
-		ReadSet readset = RunMockHelper.newReadSet("rdCode");
+		ReadSet readset = RunMockHelper.newReadSet("rdCode" + suffixe);
 		readset.runCode = run.code;
 		
 		lanes.add(lane);
@@ -138,9 +140,94 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 		return t;
 	}
 	
+	private byte[] getData() {
+		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
+			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
+			    0x30, 0x30, (byte)0x9d };
+		return data;
+	}
+	
+	private PropertyImgValue getPropertyImgValue() {
+			PropertyImgValue pImg = new PropertyImgValue();
+			pImg.value = getData();
+			pImg.fullname = "titi.jpg";
+			pImg.extension = "jpg";
+			pImg.width = 400;
+			pImg.height = 300;
+			return pImg;
+	}
+	 
+	private List<Float> getListFloat() {
+			List<Float> lf = new ArrayList<Float>();
+			Float f = 2.F;
+			for (int i=0; i<101; i++) {
+				lf.add(f);
+			}
+			return lf;
+	}
+	 
+	private Treatment getNewTreatmentPropertyDetailsOK() {			
+				Treatment t = new Treatment();
+				t.code =  "readQualityRaw";		
+				t.typeCode =  "read-quality";
+				t.categoryCode = "quality";
+				
+				//define map of property values
+				Map<String,PropertyValue> m = new HashMap<String,PropertyValue>();				 
+				
+				m.put("sampleInput", new PropertySingleValue(100));
+				m.put("qualScore",getPropertyImgValue());
+				m.put("nuclDistribution", getPropertyImgValue());
+				m.put("readWithNpercent", getPropertyImgValue());
+				m.put("readSizeDistribution", getPropertyImgValue());
+				m.put("adapterContamination", getPropertyImgValue());
+				m.put("GCDistribution", getPropertyImgValue());
+				m.put("positionN", getPropertyImgValue());
+				m.put("maxSizeReads", new PropertySingleValue(100));
+				m.put("maxSizeReadsPercent", new PropertySingleValue(100));
+
+				PropertyObjectListValue lpObj = new PropertyObjectListValue();
+				List l = new ArrayList();
+				
+				HashMap<String, Object> m2 = new HashMap<String, Object>(); 
+				m2.put("adapterName", "RNA_PCR_MK1(rev)");
+				m2.put("contaminationIntensities", getListFloat());
+
+				HashMap<String, Object> m3 = new HashMap<String, Object>();
+				m3.put("adapterName", "totoAdaptateur");
+				m3.put("contaminationIntensities", getListFloat());
+				
+				l.add(m2);
+				l.add(m3);
+				lpObj.value=l;				
+				m.put("adapterDetails", lpObj);
+				
+				PropertyObjectListValue lpObj2 = new PropertyObjectListValue();
+				List l2 = new ArrayList();
+				
+				HashMap<String, Object> m4 = new HashMap<String, Object>();
+				m4.put("nbOfN",1);
+				m4.put("percentOfReads",2.F);
+				
+				HashMap<String, Object> m5 = new HashMap<String, Object>();
+				m5.put("nbOfN",2);
+				m5.put("percentOfReads",2.F);
+				
+				l2.add(m4);
+				l2.add(m5);
+				lpObj2.value=l2;
+				m.put("readWithNpercentDetails", lpObj2);
+				
+				
+				/*set the context*/
+				t.set("read1", m);
+				return t; 
+	}
+	
+	
 	@Test
 	public void testSave() {
-		createRdCode();
+		createRdCode("");
 		    	 
 		Treatment t = getNewTreatmentForReadSet();
 
@@ -154,11 +241,28 @@ public class ReadSetTreatmentsTests extends AbstractTests {
         assertThat(entry.getKey()).isEqualTo("ngsrg");
 	}
 	
+	@Test
+	public void testSavePropertyDetailsOK() {
+		String suffixe = "2";
+		createRdCode(suffixe);
+		
+		Treatment t = getNewTreatmentPropertyDetailsOK();
+		
+		Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"+suffixe),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		//query for control
+        ReadSet r = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"+suffixe));
+        assertThat(r.treatments.size()).isEqualTo(1);
+        Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
+        assertThat(entry.getKey()).isEqualTo("readQualityRaw");
+		
+	}
 	
 	
 	@Test
 	public void testUpdate() {
-	    createRdCode();
+	    createRdCode("");
 		    	 
 		Treatment t = getNewTreatmentForReadSet();
 		
@@ -166,7 +270,7 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 		assertThat(status(result)).isEqualTo(OK);
 		
 		Map<String,PropertyValue> m2 = new HashMap<String,PropertyValue>();
-		m2.put("nbCluster", new PropertySingleValue(18)); // valeur simple
+		m2.put("nbCluster", new PropertySingleValue(18)); // simple value
 		m2.put("nbBases", new PropertySingleValue(18));
 		m2.put("fraction", new PropertySingleValue(18));
 		m2.put("Q30", new PropertySingleValue(18));
@@ -190,7 +294,7 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 	
 	@Test
 	public void testDelete() {		
-	    createRdCode();
+	    createRdCode("");
 		    	 
 		Treatment t = getNewTreatmentForReadSet();
 		
@@ -208,7 +312,7 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 	
 	@Test
 	public void testGet() { 
-	    createRdCode();
+	    createRdCode("");
 		    	 
 		Treatment t = getNewTreatmentForReadSet();
 		
@@ -221,7 +325,7 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 	
 	@Test
 	public void testHead() { 
-	    createRdCode();
+	    createRdCode("");
 		    	 
 		Treatment t = getNewTreatmentForReadSet();
 		
@@ -231,5 +335,6 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 		result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.head("rdCode", t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
 		assertThat(status(result)).isEqualTo(OK);
 	}
+	
 		
 }
