@@ -4,9 +4,6 @@
 @form() = {	
 	@columnSearchForm{
 			@formGroup{
-			@**
-				<!-- input type="text" class="form-control" ng-model="searchService.form.projectCode" typeahead="project.code as project.code for project in searchService.lists.getProjects() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.project")'-->				
-			**@	
 				<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in searchService.lists.getProjects()"></div>			
 		
 			}

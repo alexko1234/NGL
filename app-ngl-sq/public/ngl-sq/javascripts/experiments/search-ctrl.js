@@ -39,11 +39,18 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				"type":"date"
 			},
 			{
-				"header":Messages("containers.table.creationDate"),
+				"header":Messages("experiments.table.creationDate"),
 				"property":"traceInformation.creationDate",
 				"order":true,
 				"hide":true,
 				"type":"date"
+			},
+			{
+				"header":Messages("experiments.table.createUser"),
+				"property":"traceInformation.createUser",
+				"order":true,
+				"hide":true,
+				"type":"text"
 			},
 			{
 				"header":Messages("experiments.table.projectCodes"),
@@ -92,7 +99,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		$scope.form.experimentType = undefined;
 		$scope.form.experimentCategory = undefined;
 		if($scope.form.processCategory){
-			$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
+			$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory});
 		}
 		$scope.form.processType = undefined;
 	};
@@ -105,9 +112,9 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	$scope.changeExperimentCategory = function(){
 		$scope.form.experimentType = undefined;
 		if($scope.form.processType && $scope.form.experimentCategory){
-			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code, processTypeCode:$scope.form.processType.code});
+			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory, processTypeCode:$scope.form.processType});
 		}else if($scope.form.experimentCategory){
-			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory.code});
+			$scope.lists.refresh.experimentTypes({categoryCode:$scope.form.experimentCategory});
 		}
 	};
 	
@@ -141,15 +148,15 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				jsonSearch.sampleCodes = $scope.form.sampleCodes;
 			}			
 			if($scope.form.processType){
-				jsonSearch.processTypeCode = $scope.form.processType.code;
+				jsonSearch.processTypeCode = $scope.form.processType;
 			}		
 			
 			if($scope.form.type){
-				jsonSearch.typeCode = $scope.form.type.code;
+				jsonSearch.typeCode = $scope.form.type;
 			}
 			
 			if($scope.form.state){
-				jsonSearch.stateCode = $scope.form.state.code;
+				jsonSearch.stateCode = $scope.form.state;
 			}
 
 			if($scope.form.user){
@@ -157,7 +164,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			}
 			
 			if($scope.form.experimentType){
-				jsonSearch.typeCode = $scope.form.experimentType.code;
+				jsonSearch.typeCode = $scope.form.experimentType;
 			}
 			
 			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();

@@ -51,7 +51,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable',function
 	
 	$scope.newExperiment = function(){
 		if(this.basket.length() > 0 && $scope.getTabs().length === 2){
-			$scope.addTabs({label:$scope.form.experimentType.name+" config",href:"/experiments/create/"+$scope.getForm().experimentType.code,remove:false});
+			$scope.addTabs({label:$scope.form.experimentType+" config",href:"/experiments/create/"+$scope.getForm().experimentType,remove:false});
 		}
 	};
 	

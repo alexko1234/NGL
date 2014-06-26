@@ -3,9 +3,8 @@
 @form() = {
 	@columnSearchForm{			
 			@formGroup{	
-			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('transformations')" ng-change="changeExperimentType()" auto-select>
-				<option value="">@Messages("experiments.select.experimentType.transformations")</option>
-			</select>
+			<div bt-select placeholder="@Messages("experiments.select.experimentType.transformations")" class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('transformations')" ng-change="changeExperimentType()" auto-select>
+			</div>
 			}
 			<hr>
 			@formGroup{		
@@ -18,9 +17,8 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('purifications')" ng-change="changeExperimentType()" auto-select>
-					<option value="">@Messages("experiments.select.experimentType.purifications")</option>
-				</select>
+				<div bt-select placeholder="@Messages("experiments.select.experimentType.purifications")" class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('purifications')" ng-change="changeExperimentType()" auto-select>
+				</div>
 			}
 			<hr>
 			@formGroup{		
@@ -32,9 +30,8 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-				<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('qualitycontrols')" ng-change="changeExperimentType()" auto-select>
-					<option value="">@Messages("experiments.select.experimentType.qualitycontrols")</option>
-				</select>
+				<div bt-select placeholder="@Messages("experiments.select.experimentType.qualitycontrols")" class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('qualitycontrols')" ng-change="changeExperimentType()" auto-select>
+				</div>
 			}
 			<hr>
 			@formGroup{		
@@ -46,29 +43,25 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-			<select class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" ng-options="experimentType.name for experimentType in lists.get('transferts')" ng-change="changeExperimentType()" auto-select>
-				<option value="">@Messages("experiments.select.experimentType.transferts")</option>
-			</select>
+			<div bt-select placeholder="@Messages("experiments.select.experimentType.transferts")" class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('transferts')" ng-change="changeExperimentType()" auto-select>
+			</div>
 			}
 			<hr>
 			@formGroup{
-				<select class="form-control" ng-model="form.processCategory"  ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
-					<option value="">@Messages("processes.select.processCategory")</option>
-				</select>
+				<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="form.processCategory"  bt-options="processCategory.code as processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
+				</div>
 			}
 						
 		}
 		@columnSearchForm{
 			@formGroup{
-				<select class="form-control" ng-class="errors.containerSupportCategory" auto-select=""  ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()" auto-select>
-					<option value="">@Messages("containers.select.categorySupportCode")</option>
-				</select>
+				<div bt-select placeholder="@Messages("containers.select.categorySupportCode")" class="form-control" ng-class="errors.containerSupportCategory" auto-select=""  ng-model="form.containerSupportCategory" bt-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()" auto-select>
+				</div>
 			}
 			<hr>
 			@formGroup{	
-				<select class="form-control" ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
-					<option value="">@Messages("processes.select.processType")</option>
-				</select>		
+				<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-model="form.processType" bt-options="processType.code as processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
+				</div>		
 			}
 		}
 }

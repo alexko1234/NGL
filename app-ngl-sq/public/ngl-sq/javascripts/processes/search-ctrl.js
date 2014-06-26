@@ -32,18 +32,6 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			$scope.form.processType = undefined;	
 		}
 	};
-	
-	$scope.changeProject = function(){
-		if($scope.form.project){
-				$scope.lists.refresh.samples({projectCode:$scope.form.project.code});
-			}else{
-				$scope.lists.clear("samples");
-			}
-		
-		if($scope.form.type){
-			$scope.search();
-		}
-	};
 
 	$scope.reset = function(){
 		$scope.form = {};
@@ -58,7 +46,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	
 	$scope.changeProcessCategory = function(){
 		if($scope.form.processCategory){
-			$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
+			$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory});
 		}else{
 			$scope.lists.clear("processTypes");
 		}
@@ -78,11 +66,11 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			}				
 			
 			if($scope.form.processType){
-				jsonSearch.typeCode = $scope.form.processType.code;
+				jsonSearch.typeCode = $scope.form.processType;
 			}
 			
 			if($scope.form.processCategory){
-				jsonSearch.categoryCode = $scope.form.processCategory.code;
+				jsonSearch.categoryCode = $scope.form.processCategory;
 			}
 			
 			if($scope.form.processesSupportCode){
@@ -90,7 +78,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			}
 			
 			if($scope.form.state){
-				jsonSearch.stateCode = $scope.form.state.code;
+				jsonSearch.stateCode = $scope.form.state;
 			}
 			
 			if($scope.form.user){
@@ -114,7 +102,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	$scope.getColumns = function(){
 		var typeCode = "";
 		if($scope.form.processType){
-			typeCode = $scope.form.processType.code;
+			typeCode = $scope.form.processType;
 		}
 		
 		$http.get(jsRoutes.controllers.processes.tpl.Processes.searchColumns().url,{params:{"typeCode":typeCode}})

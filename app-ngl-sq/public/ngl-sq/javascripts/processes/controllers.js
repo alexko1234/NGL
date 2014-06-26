@@ -95,7 +95,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	
 	$scope.changeProcessCategory = function(){
 		if($scope.form.processCategory){
-			$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
+			$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory});
 		}else{
 			$scope.lists.clear("processTypes");
 		}
@@ -105,18 +105,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		$scope.removeTab(1);
 		$scope.basket.reset();
 		this.search();
-	};
-	
-	$scope.changeProject = function(){
-		if($scope.form.project){
-				$scope.lists.refresh.samples({projectCode:$scope.form.project.code});
-			}else{
-				$scope.lists.clear("samples");
-			}
-		
-		if($scope.form.type){
-			$scope.search();
-		}
 	};
 	
 	$scope.reset = function(){
@@ -131,7 +119,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	
 	$scope.search = function(){	
 		if($scope.form.projectCodes || $scope.form.sampleCodes || $scope.form.processType || $scope.form.containerSupportCode 
-				|| $scope.form.fromExperimentTypeCodes || $scope.form.containerSupportCategory){
+				|| $scope.form.fromExperimentTypeCodes || $scope.form.containerSupportCategory  || $scope.form.valuations){
 			var jsonSearch = {};
 			jsonSearch.stateCode = 'IW-P';
 			if($scope.form.projectCodes){
@@ -150,8 +138,12 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				jsonSearch.fromExperimentTypeCodes = $scope.form.fromExperimentTypeCodes;
 			}
 			
+			if($scope.form.valuations){
+				jsonSearch.valuations = $scope.form.valuations;
+			}
+			
 			if($scope.form.processType){
-				jsonSearch.processTypeCode = $scope.form.processType.code;
+				jsonSearch.processTypeCode = $scope.form.processType;
 			}
 			
 			if($scope.form.containerSupportCode){
@@ -173,14 +165,14 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 							sampleCode: containers[i].sampleCodes[j],
 							containerInputCode: containers[i].code,
 							support: containers[i].support,
-							typeCode:$scope.form.processType.code,
-							categoryCode:$scope.form.processCategory.code,
+							typeCode:$scope.form.processType,
+							categoryCode:$scope.form.processCategory,
 							properties:{}
 					};			
 					this.basket.add(processus);
 				}
 			}
-			$scope.addTabs({label:$scope.form.processType.name,href:$scope.form.processType.code,remove:false});
+			$scope.addTabs({label:$scope.form.processType,href:$scope.form.processType,remove:false});
 		}else{
 			if(!$scope.form.processCategory){
 				$scope.errors.processCategory = "alert-danger";
@@ -193,7 +185,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	//init
 	$scope.errors = {};
 	if(angular.isUndefined($scope.getDatatable())){
-		$scope.datatable = datatable($scope, $scope.datatableConfig);			
+		$scope.datatable = datatable($scope.datatableConfig);			
 		$scope.setDatatable($scope.datatable);	
 	}else{
 		$scope.datatable = $scope.getDatatable();
@@ -230,7 +222,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable', function($scope, datatable) {
 
 	$scope.datatableConfig = {
-			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns($scope.getForm().processType.code).url,
+			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns($scope.getForm().processType).url,
 			pagination:{
 				active:false
 			},		

@@ -135,10 +135,13 @@ experiments.type = Type d''expérience
 experiments.resolution = Résolution expérience
 experiments.protocol = Protocole
 experiments.creationDate = Date de création
-experiments.createUser = Créé par
+experiments.createUser = Expérience Créée par
 experiments.modifyDate = Date de modification
 experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
+
+experiment.placeholder.fromDate = Expérience depuis le (jj/mm/aaaa)
+experiment.placeholder.toDate = Expérience jusqu'au (jj/mm/aaaa)
 
 experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée
@@ -169,6 +172,8 @@ experiments.table.typeCode = Type
 experiments.table.state.code = Etat
 experiments.table.resolutionCodes = Résolution
 experiments.intrumentCategory = Contenant sortie
+experiments.table.creationDate = Date de création
+experiments.table.createUser = Expérience Créée par
 
 button.newexperiment = Créer une expérience
 

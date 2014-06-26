@@ -82,14 +82,14 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.form.containerSupportCategory = undefined;
 		$scope.lists.clear("containerSupportCategories");
 		if($scope.form.experimentType){
-			$scope.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.form.experimentType.code});
+			$scope.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.form.experimentType});
 		}
 		this.search();
 	};
 	
 	$scope.changeProcessCategory = function(){
 		$scope.form.processType = undefined;
-		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory.code});
+		$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory});
 	};
 	
 	$scope.reset = function(){
@@ -133,7 +133,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		if($scope.form.experimentType && $scope.form.containerSupportCategory){ 		
 			var jsonSearch = {};
 			
-			jsonSearch.stateCode = $scope.getContainerStateCode($scope.form.experimentCategory.code);	 
+			jsonSearch.stateCode = $scope.getContainerStateCode($scope.form.experimentCategory);	 
 			
 			if($scope.form.projectCodes){
 				jsonSearch.projectCodes = $scope.form.projectCodes;
@@ -142,7 +142,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 				jsonSearch.sampleCodes = $scope.form.sampleCodes;
 			}			
 			if($scope.form.processType){
-				jsonSearch.processTypeCode = $scope.form.processType.code;
+				jsonSearch.processTypeCode = $scope.form.processType;
 			}		
 			
 
@@ -151,7 +151,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			}
 			
 			if($scope.form.experimentType){
-				jsonSearch.experimentTypeCode = $scope.form.experimentType.code;
+				jsonSearch.experimentTypeCode = $scope.form.experimentType;
 			}
 			
 			
@@ -189,7 +189,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}
 		
 		if(($scope.form.experimentType) && this.basket.length() > 0 && $scope.getTabs().length === 1){
-			$scope.addTabs({label:$scope.form.experimentType.name,href:"/experiments/new/"+$scope.form.experimentType.code,remove:false});
+			$scope.addTabs({label:$scope.form.experimentType,href:"/experiments/new/"+$scope.form.experimentType,remove:false});
 		}
 	};
 	

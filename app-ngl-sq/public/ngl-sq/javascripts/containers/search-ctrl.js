@@ -158,7 +158,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			
 			
 			if($scope.form.state){
-				jsonSearch.stateCode = $scope.form.state.code;
+				jsonSearch.stateCode = $scope.form.state;
 			}	
 			
 			if($scope.form.containerSupportCode){

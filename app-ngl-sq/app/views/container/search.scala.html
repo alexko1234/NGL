@@ -7,9 +7,8 @@
 			<div class="form-control" bt-select ng-model="form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in lists.getProjects()"></div>
 		}
 		@formGroup{
-			<select class="form-control" ng-model="form.state" ng-options="stateCode.name for stateCode in lists.getStates()" ng-change="search()">
-				<option value="">@Messages("containers.select.state")</option>
-			</select>
+			<div bt-select placeholder="@Messages("containers.select.state")" class="form-control" ng-model="form.state" bt-options="stateCode.code as stateCode.name for stateCode in lists.getStates()" ng-change="search()">
+			</div>
 		}	
 	}
 	@columnSearchForm{
@@ -25,14 +24,12 @@
 	}
 	@columnSearchForm{
 			@formGroup{
-			<select class="form-control" ng-model="form.containerSupportCategory" ng-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()" auto-select>
-				<option value="">@Messages("containers.select.categorySupportCode")</option>
-			</select>
+			<div bt-select placeholder="@Messages("containers.select.categorySupportCode")" class="form-control" ng-model="form.containerSupportCategory" bt-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()" auto-select>
+			</div>
 		}
 		@formGroup{
-			<select class="form-control" ng-model="form.processCategory" ng-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
-				<option value="">@Messages("processes.select.processCategory")</option>
-			</select>
+			<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="form.processCategory" bt-options="processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
+			</div>
 		}
 			
 	}
@@ -41,10 +38,9 @@
 			<input class="form-control" type="text" ng-model="form.containerSupportCode"  typeahead="support.code as support.name for support in lists.getSupports() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.support")'>			
 		}
 		@formGroup{	
-			<select class="form-control" ng-model="form.processType"  ng-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
-				<option value="">@Messages("processes.select.processType")</option>
-			</select>		
-			}
+			<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-model="form.processType" bt-options="processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
+			</div>	
+		}
 	}
 	@columnSearchForm{
 		@formGroup{
