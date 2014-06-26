@@ -157,17 +157,17 @@ public class TreatmentValidationTest extends AbstractTests {
 		l.add(m2);
 		l.add(m3);
 		lpObj.value=l;				
-		m.put("adapterDetails", lpObj);
+		m.put("adapterContaminationDetails", lpObj);
 		
 		PropertyObjectListValue lpObj2 = new PropertyObjectListValue();
 		List l2 = new ArrayList();
 		
 		HashMap<String, Object> m4 = new HashMap<String, Object>();
-		m4.put("nbOfN",1);
+		m4.put("numberOfN",1);
 		m4.put("percentOfReads",2.F);
 		
 		HashMap<String, Object> m5 = new HashMap<String, Object>();
-		m5.put("nbOfN",2);
+		m5.put("numberOfN",2);
 		m5.put("percentOfReads",2.F);
 		
 		l2.add(m4);

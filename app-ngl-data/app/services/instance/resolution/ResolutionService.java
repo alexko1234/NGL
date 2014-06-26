@@ -104,7 +104,8 @@ public class ResolutionService {
 		resoCategories.put("TAXO", new ResolutionCategory("Problème taxon", (short) 30));
 		resoCategories.put("RIBO", new ResolutionCategory("Problème ribosomes", (short) 35));
 		resoCategories.put("MAP", new ResolutionCategory("Problème mapping", (short) 40));
-		resoCategories.put("MERG", new ResolutionCategory("Problème merging", (short) 45));	
+		resoCategories.put("MERG", new ResolutionCategory("Problème merging", (short) 45));
+		resoCategories.put("Info", new ResolutionCategory("Informations", (short) 50));
 		//Analysis
 		resoCategories.put("BA-MERG", new ResolutionCategory("Merging", (short) 10)); 
 		resoCategories.put("CTG", new ResolutionCategory("Contigage", (short) 20));
@@ -113,6 +114,8 @@ public class ResolutionService {
 		resoCategories.put("GAP", new ResolutionCategory("Gap Closing", (short) 50));
 		//Experiment	
 		resoCategories.put("Default", new ResolutionCategory("Default", (short) 0));
+		
+		
 		
 		return resoCategories;
 	}
@@ -369,6 +372,8 @@ public class ResolutionService {
 		
 		l.add(newResolution("% lec mergées","MERG-PercLecMerg", resolutionCategories.get("MERG"),(short) 1));
 		l.add(newResolution("médiane lect mergées","MERG-MedLecMerg", resolutionCategories.get("MERG"),(short) 2));
+		
+		l.add(newResolution("test Dev","Info-testDev", resolutionCategories.get("Info"),(short) 1));
 		
 		ResolutionConfigurations r = new ResolutionConfigurations();
 		r.code = "readSetReso";

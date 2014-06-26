@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertyImgValue;
 import models.laboratory.common.instance.property.PropertyObjectListValue;
@@ -165,7 +166,36 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 			}
 			return lf;
 	}
-	 
+	
+	/*
+	 * 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("positionNdetails.positionInReads","positionNdetails.positionInReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("positionNdetails.numberOfN","positionNdetails.numberOfN",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readSizeDistributionDetails.readsLength","readSizeDistributionDetails.readsLength",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("readSizeDistributionDetails.percentOfReads","readSizeDistributionDetails.percentOfReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.position","qualScoreDetails.position",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.minQualityScore","qualScoreDetails.minQualityScore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.maxQualityScore","qualScoreDetails.maxQualityScore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.meanQualityScore","qualScoreDetails.meanQualityScore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.Q1","qualScoreDetails.Q1",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.medianQualityScore","qualScoreDetails.medianQualityScore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.Q3","qualScoreDetails.Q3",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.lowerWhisker","qualScoreDetails.lowerWhisker",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("qualScoreDetails.upperWhisker","qualScoreDetails.upperWhisker",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistributionDetails.readPosition","nuclDistributionDetails.readPosition",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistributionDetails.APercent","nuclDistributionDetails.APercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistributionDetails.CPercent","nuclDistributionDetails.CPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistributionDetails.GPercent","nuclDistributionDetails.GPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistributionDetails.TPercent","nuclDistributionDetails.TPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nuclDistributionDetails.NPercent","nuclDistributionDetails.NPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("GCDistributionDetails.percentGCcontent","GCDistributionDetails.percentGCcontent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("GCDistributionDetails.percentOfReads","GCDistributionDetails.percentOfReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Float.class, true, "object_list"));
+
+
+	 */
 	private Treatment getNewTreatmentPropertyDetailsOK() {			
 				Treatment t = new Treatment();
 				t.code =  "readQualityRaw";		
@@ -200,17 +230,17 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 				l.add(m2);
 				l.add(m3);
 				lpObj.value=l;				
-				m.put("adapterDetails", lpObj);
+				m.put("adapterContaminationDetails", lpObj);
 				
 				PropertyObjectListValue lpObj2 = new PropertyObjectListValue();
 				List l2 = new ArrayList();
 				
 				HashMap<String, Object> m4 = new HashMap<String, Object>();
-				m4.put("nbOfN",1);
+				m4.put("numberOfN",1);
 				m4.put("percentOfReads",2.F);
 				
 				HashMap<String, Object> m5 = new HashMap<String, Object>();
-				m5.put("nbOfN",2);
+				m5.put("numberOfN",2);
 				m5.put("percentOfReads",2.F);
 				
 				l2.add(m4);
@@ -218,11 +248,214 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 				lpObj2.value=l2;
 				m.put("readWithNpercentDetails", lpObj2);
 				
+				/***/
+				PropertyObjectListValue lpObj3 = new PropertyObjectListValue();
+				List l3 = new ArrayList();
+				
+				HashMap<String, Object> m6 = new HashMap<String, Object>();
+				m6.put("positionInReads",1);
+				m6.put("numberOfN",2);
+				
+				l3.add(m6);
+				lpObj3.value=l3;
+				m.put("positionNdetails", lpObj3);
+				
+				/***/
+				PropertyObjectListValue lpObj4 = new PropertyObjectListValue();
+				List l4 = new ArrayList();
+				
+				HashMap<String, Object> m7 = new HashMap<String, Object>();
+				m7.put("readsLength",1);
+				m7.put("percentOfReads",2.F);
+				
+				l4.add(m7);
+				lpObj4.value=l4;
+				m.put("readSizeDistributionDetails", lpObj4);
+				
+				/***/
+				PropertyObjectListValue lpObj5 = new PropertyObjectListValue();
+				List l5 = new ArrayList();
+				
+				HashMap<String, Object> m8 = new HashMap<String, Object>();
+				m8.put("position",1);
+				m8.put("minQualityScore",2);
+				m8.put("maxQualityScore",50);
+				m8.put("meanQualityScore",17.F);
+				m8.put("Q1",21);
+				m8.put("medianQualityScore",16.F);
+				m8.put("Q3",34);
+				m8.put("lowerWhisker",18);
+				m8.put("upperWhisker",37);
+				
+				l5.add(m8);
+				lpObj5.value=l5;
+				m.put("qualScoreDetails", lpObj5);
+				
+				/***/
+				PropertyObjectListValue lpObj6 = new PropertyObjectListValue();
+				List l6 = new ArrayList();
+				
+				HashMap<String, Object> m9 = new HashMap<String, Object>();
+				m9.put("readPosition",1);
+				m9.put("APercent",20.F);
+				m9.put("TPercent",20.F);
+				m9.put("CPercent",20.F);
+				m9.put("GPercent",20.F);
+				m9.put("NPercent",20.F);
+				
+				l6.add(m9);
+				lpObj6.value=l6;
+				m.put("nuclDistributionDetails", lpObj6);
+				
+				/***/
+				PropertyObjectListValue lpObj7 = new PropertyObjectListValue();
+				List l7 = new ArrayList();
+				
+				HashMap<String, Object> m10 = new HashMap<String, Object>();
+				m10.put("percentGCcontent",1.F);
+				m10.put("percentOfReads",50.F);
+				
+				l7.add(m10);
+				lpObj7.value=l7;
+				m.put("GCDistributionDetails", lpObj7);
+
 				
 				/*set the context*/
 				t.set("read1", m);
 				return t; 
 	}
+	
+	
+	
+	private Treatment getNewTreatmentPropertyDetailsOK2() {			
+		Treatment t = new Treatment();
+		t.code =  "readQualityRaw";		
+		t.typeCode =  "read-quality";
+		t.categoryCode = "quality";
+		
+		//define map of property values
+		Map<String,PropertyValue> m = new HashMap<String,PropertyValue>();				 
+		
+		m.put("sampleInput", new PropertySingleValue(100));
+		m.put("qualScore",getPropertyImgValue());
+		m.put("nuclDistribution", getPropertyImgValue());
+		m.put("readWithNpercent", getPropertyImgValue());
+		m.put("readSizeDistribution", getPropertyImgValue());
+		m.put("adapterContamination", getPropertyImgValue());
+		m.put("GCDistribution", getPropertyImgValue());
+		m.put("positionN", getPropertyImgValue());
+		m.put("maxSizeReads", new PropertySingleValue(100));
+		m.put("maxSizeReadsPercent", new PropertySingleValue(100));
+
+		PropertyObjectListValue lpObj = new PropertyObjectListValue();
+		List l = new ArrayList();
+		
+		HashMap<String, Object> m2 = new HashMap<String, Object>();
+		//These are the differences !
+		m2.put("adapterName", "tutu");
+		m2.put("contaminationIntensities", getListFloat());
+
+		HashMap<String, Object> m3 = new HashMap<String, Object>();
+		m3.put("adapterName", "titi");
+		m3.put("contaminationIntensities", getListFloat());
+		
+		l.add(m2);
+		l.add(m3);
+		lpObj.value=l;				
+		m.put("adapterContaminationDetails", lpObj);
+		
+		PropertyObjectListValue lpObj2 = new PropertyObjectListValue();
+		List l2 = new ArrayList();
+		
+		HashMap<String, Object> m4 = new HashMap<String, Object>();
+		m4.put("numberOfN",1);
+		m4.put("percentOfReads",2.F);
+		
+		HashMap<String, Object> m5 = new HashMap<String, Object>();
+		m5.put("numberOfN",2);
+		m5.put("percentOfReads",2.F);
+		
+		l2.add(m4);
+		l2.add(m5);
+		lpObj2.value=l2;
+		m.put("readWithNpercentDetails", lpObj2);
+		
+		/***/
+		PropertyObjectListValue lpObj3 = new PropertyObjectListValue();
+		List l3 = new ArrayList();
+		
+		HashMap<String, Object> m6 = new HashMap<String, Object>();
+		m6.put("positionInReads",1);
+		m6.put("numberOfN",2);
+		
+		l3.add(m6);
+		lpObj3.value=l3;
+		m.put("positionNdetails", lpObj3);
+		
+		/***/
+		PropertyObjectListValue lpObj4 = new PropertyObjectListValue();
+		List l4 = new ArrayList();
+		
+		HashMap<String, Object> m7 = new HashMap<String, Object>();
+		m7.put("readsLength",1);
+		m7.put("percentOfReads",2.F);
+		
+		l4.add(m7);
+		lpObj4.value=l4;
+		m.put("readSizeDistributionDetails", lpObj4);
+		
+		/***/
+		PropertyObjectListValue lpObj5 = new PropertyObjectListValue();
+		List l5 = new ArrayList();
+		
+		HashMap<String, Object> m8 = new HashMap<String, Object>();
+		m8.put("position",1);
+		m8.put("minQualityScore",2);
+		m8.put("maxQualityScore",50);
+		m8.put("meanQualityScore",17.F);
+		m8.put("Q1",21);
+		m8.put("medianQualityScore",16.F);
+		m8.put("Q3",34);
+		m8.put("lowerWhisker",18);
+		m8.put("upperWhisker",37);
+		
+		l5.add(m8);
+		lpObj5.value=l5;
+		m.put("qualScoreDetails", lpObj5);
+		
+		/***/
+		PropertyObjectListValue lpObj6 = new PropertyObjectListValue();
+		List l6 = new ArrayList();
+		
+		HashMap<String, Object> m9 = new HashMap<String, Object>();
+		m9.put("readPosition",1);
+		m9.put("APercent",20.F);
+		m9.put("TPercent",20.F);
+		m9.put("CPercent",20.F);
+		m9.put("GPercent",20.F);
+		m9.put("NPercent",20.F);
+		
+		l6.add(m9);
+		lpObj6.value=l6;
+		m.put("nuclDistributionDetails", lpObj6);
+		
+		/***/
+		PropertyObjectListValue lpObj7 = new PropertyObjectListValue();
+		List l7 = new ArrayList();
+		
+		HashMap<String, Object> m10 = new HashMap<String, Object>();
+		m10.put("percentGCcontent",1.F);
+		m10.put("percentOfReads",50.F);
+		
+		l7.add(m10);
+		lpObj7.value=l7;
+		m.put("GCDistributionDetails", lpObj7);
+
+		
+		/*set the context*/
+		t.set("read1", m);
+		return t; 
+}
 	
 	
 	@Test
@@ -239,24 +472,6 @@ public class ReadSetTreatmentsTests extends AbstractTests {
         assertThat(r.treatments.size()).isEqualTo(1);
         Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
         assertThat(entry.getKey()).isEqualTo("ngsrg");
-	}
-	
-	@Test
-	public void testSavePropertyDetailsOK() {
-		String suffixe = "2";
-		createRdCode(suffixe);
-		
-		Treatment t = getNewTreatmentPropertyDetailsOK();
-		
-		Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"+suffixe),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
-		assertThat(status(result)).isEqualTo(OK);
-		
-		//query for control
-        ReadSet r = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"+suffixe));
-        assertThat(r.treatments.size()).isEqualTo(1);
-        Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
-        assertThat(entry.getKey()).isEqualTo("readQualityRaw");
-		
 	}
 	
 	
@@ -336,5 +551,58 @@ public class ReadSetTreatmentsTests extends AbstractTests {
 		assertThat(status(result)).isEqualTo(OK);
 	}
 	
+	
+	@Test
+	public void testSavePropertyDetailsOK() {
+		String suffixe = "2";
+		createRdCode(suffixe);
 		
+		Treatment t = getNewTreatmentPropertyDetailsOK();
+		
+		Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"+suffixe),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		//query for control
+        ReadSet r = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"+suffixe));
+        assertThat(r.treatments.size()).isEqualTo(1);
+        Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
+        assertThat(entry.getKey()).isEqualTo("readQualityRaw");	
+	}
+	
+
+	@Test
+	public void testUpdatePropertyDetailsOK() {
+		String suffixe = "2";
+		createRdCode(suffixe);
+		
+		Treatment t = getNewTreatmentPropertyDetailsOK();
+		
+		Result result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.save("rdCode"+suffixe),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		t = getNewTreatmentPropertyDetailsOK2();
+		
+		result = callAction(controllers.readsets.api.routes.ref.ReadSetTreatments.update("rdCode"+suffixe,t.code),fakeRequest().withJsonBody(RunMockHelper.getJsonTreatment(t)));
+		assertThat(status(result)).isEqualTo(OK);
+		
+		//query for control
+        ReadSet r = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"+suffixe));
+        assertThat(r.treatments.size()).isEqualTo(1);
+        Map.Entry<String, Treatment> entry = r.treatments.entrySet().iterator().next();
+        assertThat(entry.getKey()).isEqualTo("readQualityRaw");	
+        
+        boolean bFind = false;
+        for (Map.Entry<String,PropertyValue> e : r.treatments.get("readQualityRaw").results().get("read1").entrySet()) {
+        	Logger.debug("e.toString()=" + e.toString());
+        	if (e.getKey().equals("nuclDistributionDetails")) {
+        		bFind=true;
+        		break;
+        				
+        	}	
+        }	
+        assertThat(bFind).isEqualTo(true);
+        	
+		
+	}
 }
+
