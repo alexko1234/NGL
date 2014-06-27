@@ -45,10 +45,9 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	};
 	
 	$scope.changeProcessCategory = function(){
+		$scope.lists.clear("processTypes");
 		if($scope.form.processCategory){
 			$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory});
-		}else{
-			$scope.lists.clear("processTypes");
 		}
 	};
 	

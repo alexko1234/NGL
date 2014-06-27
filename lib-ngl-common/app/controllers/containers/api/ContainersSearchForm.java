@@ -1,5 +1,6 @@
 package controllers.containers.api;
 
+import java.util.Date;
 import java.util.List;
 
 import controllers.ListForm;
@@ -17,6 +18,8 @@ public class ContainersSearchForm extends ListForm{
 	public String containerSupportCategory;
 	public List<String> fromExperimentTypeCodes;
 	public List<String> valuations;
+	public Date fromDate;
+	public Date toDate;
 	
 	@Override
 	public String toString() {
@@ -28,6 +31,7 @@ public class ContainersSearchForm extends ListForm{
 				+ ", supportCode=" + supportCode
 				+ ", containerSupportCategory=" + containerSupportCategory
 				+ ", fromExperimentTypeCodes=" + fromExperimentTypeCodes
-				+ ", valuations=" + valuations + "]";
+				+ ", valuations=" + valuations + ", fromDate=" + fromDate
+				+ ", toDate=" + toDate + "]";
 	}
 }

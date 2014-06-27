@@ -19,6 +19,7 @@ import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import org.mongojack.DBQuery;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
@@ -267,6 +268,14 @@ public class Containers extends CommonController {
 		
 		if(containersSearch.fromExperimentTypeCodes != null){
 			queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));
+		}
+		
+		if(null != containersSearch.fromDate){
+			queryElts.add(DBQuery.greaterThanEquals("traceInformation.creationDate", containersSearch.fromDate));
+		}
+
+		if(null != containersSearch.toDate){
+			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(containersSearch.toDate, 1))));
 		}
 		
 		if(containersSearch.valuations != null){

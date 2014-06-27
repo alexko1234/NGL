@@ -129,7 +129,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 
 	$scope.search = function(){		
 		if($scope.form.projectCodes || $scope.form.sampleCodes || ($scope.form.fromExperimentTypeCodes && $scope.form.fromExperimentTypeCodes.length > 0) || $scope.form.containerCategory 
-			|| $scope.form.containerSupportCategory || $scope.form.state || $scope.form.containerSupportCode  || $scope.form.valuations){	
+			|| $scope.form.containerSupportCategory || $scope.form.state || $scope.form.containerSupportCode  || $scope.form.valuations || $scope.form.fromDate || $scope.form.toDate){	
 			
 			var jsonSearch = {};
 			
@@ -165,6 +165,9 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 				jsonSearch.supportCode = $scope.form.containerSupportCode;
 			}	
 			
+			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
+			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate, Messages("date.format").toUpperCase()).valueOf();
+			
 			$scope.datatable.search(jsonSearch);
 		}
 	};
@@ -182,7 +185,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		$scope.lists.refresh.containerSupportCategories();
 		
 		$scope.lists.refresh.containerCategories();
-		$scope.lists.refresh.experimentTypes();
+		$scope.lists.refresh.experimentTypes({"categoryCode":"transformation"});
 		$scope.lists.refresh.supports();
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.processCategories();

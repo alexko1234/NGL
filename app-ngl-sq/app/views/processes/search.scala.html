@@ -16,7 +16,7 @@
 	@columnSearchForm{	
 	
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-model="form.processType" bt-options="typeCode.code as typeCode.name for typeCode in lists.getProcessTypes()" ng-change="changeProcessTypeCode()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.processType")" ng-disabled="form.processCategory == undefined" class="form-control" ng-model="form.processType" bt-options="typeCode.code as typeCode.name for typeCode in lists.getProcessTypes()" ng-change="changeProcessTypeCode()" auto-select>
 			</div>
 		}
 		@formGroup{	
@@ -27,7 +27,7 @@
 	
 	@columnSearchForm{
 		@formGroup{
-		<div bt-select placeholder="@Messages("containers.select.state")" class="form-control" ng-model="form.state" bt-options="stateCode.code as stateCode.name for stateCode in lists.getStates()" ng-change="search()" auto-select>
+		<div bt-select placeholder="@Messages("processes.select.state")" class="form-control" ng-model="form.state" bt-options="stateCode.code as stateCode.name for stateCode in lists.getStates()" ng-change="search()" auto-select>
 		</div>
 		}	
 		@formGroup{

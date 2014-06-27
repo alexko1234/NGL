@@ -13,7 +13,7 @@
 	}
 	@columnSearchForm{
 		@formGroup{
-		<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-class="errors.processType" ng-model="form.processType" bt-options="processType.code as processType.name for processType in  lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
+		<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-disabled="form.processCategory == undefined" ng-class="errors.processType" ng-model="form.processType" bt-options="processType.code as processType.name for processType in  lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
 		</div>		
 		}
 		@formGroup{

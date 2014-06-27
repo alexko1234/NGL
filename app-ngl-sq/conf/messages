@@ -25,6 +25,9 @@ containers.table.support.categoryCode = Categorie support
 containers.table.support.line = Y
 containers.table.support.column = X
 
+containers.placeholder.fromDate = Création container depuis le
+containers.placeholder.toDate = Création container jusqu'au
+
 containers.select.state =  Sélect. un état container
 containers.select.categoryCode =  Sélect. catégorie container
 containers.select.categorySupportCode =  Sélect. catégorie support
@@ -91,6 +94,7 @@ processes.select.processType = Sélect. un type de processus
 processes.select.processCategory = Sélect. une categorie de processus
 processes.select.project = Sélect. un projet
 processes.select.sample = Sélect. un échantillon
+processes.select.state = Sélect. un état processus
 
 processes.placeholder.fromDate = Process. depuis le (jj/mm/aaaa)
 processes.placeholder.toDate = Process. jusqu''au (jj/mm/aaaa)

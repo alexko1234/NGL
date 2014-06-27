@@ -10,6 +10,9 @@
 			<div bt-select placeholder="@Messages("containers.select.state")" class="form-control" ng-model="form.state" bt-options="stateCode.code as stateCode.name for stateCode in lists.getStates()" ng-change="search()">
 			</div>
 		}	
+		@formGroup{			
+				<input class="form-control" type="date" ng-model="form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")'>
+			}
 	}
 	@columnSearchForm{
 		@formGroup{
@@ -21,6 +24,9 @@
 				bt-options="valuation.code as valuation.name for valuation in lists.getValuations()">
 			</div>	
 		}
+		@formGroup{		
+				<input class="form-control" type="date" ng-model="form.toDate" placeholder='@Messages("containers.placeholder.toDate")'>
+			}
 	}
 	@columnSearchForm{
 			@formGroup{

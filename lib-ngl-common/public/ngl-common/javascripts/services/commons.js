@@ -264,8 +264,9 @@ angular.module('commonsServices', []).
 						var model = $parse(match[7]);
 						scope.$watch(model, function(value){
 							if(value){
-				                if(value.length == 1){
+				                if(value.length === 1){
 									ngModel.$setViewValue(value[0].code);
+									ngModel.$render();
 								}
 							}
 				        });
@@ -305,7 +306,6 @@ angular.module('commonsServices', []).
         		 link: function (scope, elem, attrs, ngModel) {
 	        		  var reader = new FileReader();
 	        		  var file;
-	        		  console.log(scope.base64Img);
 	        		  if(scope.base64Img != undefined && scope.base64Img.value == ""){
 	        			  scope.base64Img = undefined;
 	        		  }
@@ -365,7 +365,7 @@ angular.module('commonsServices', []).
   		    			+'<div class="input-group">'
   		    			+'<input type="text" style="background:white" ng-class="inputClass" ng-model="selectedLabels" readonly/>'
   		    			+'<div class="input-group-btn">'
-  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-click="open()">'
+  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
   		    			+'<span class="caret"></span>'
   		    			+'</button>'
   				        +'<ul class="dropdown-menu dropdown-menu-right"  role="menu">'
@@ -403,7 +403,6 @@ angular.module('commonsServices', []).
 	      		      var groupByLabels = {};
 	      		      var filterValue;
 	      		      var ngFocus = attr.ngFocus;
-	      		      
 	      		      function parseBtsOptions(input){
 	      		    	  var match = input.match(BT_OPTIONS_REGEXP);
 		      		      if (!match) {
@@ -445,9 +444,13 @@ angular.module('commonsServices', []).
 	      		    	 }
 	      		     };
 	      		     
+	      		     scope.isDisabled = function(){
+	      		    	return (attr.ngDisabled)?scope.$parent.$eval(attr.ngDisabled):false;
+	      		     };
+	      		     
 	      		     scope.isEdit = function(){
 	      		    	 return (editMode)?editMode(scope):true;
-	      		     } 
+	      		     };
 	      		      
 	      		     scope.getItems = function(){
 	      		    	 if(scope.isEdit() && scope.filter){
