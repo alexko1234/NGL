@@ -70,7 +70,8 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 	});
 	
 	$scope.addOutputColumns = function(){
-		$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Code","outputContainerUsed.code",false, true,true,"String",false,undefined,{"0":"Outputs"}));
+		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.code"),"outputContainerUsed.code",false, true,true,"String",false,undefined,{"0":"Outputs"}));
+		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.stateCode"),"outputContainerUsed.state.code  | codes:'state'",false, true,true,"String",false,undefined,{"0":"Outputs"}));
 	};
 	
 	$scope.$on('addOutputColumns', function(e) {
@@ -147,12 +148,11 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 	});
 	
 	$scope.refreshView = function(){
-		
+		$scope.atomicTransfere.reloadContainersDatatable();
 	};
 	
-	$scope.$on('refresh', function(e) {
+	$scope.$on('refreshView', function(e) {
 		$scope.refreshView();
-		
 		$scope.$emit('viewRefeshed');
 	});
 	
@@ -173,5 +173,4 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 	}else{
 		$scope.atomicTransfere.newExperiment();
 	}
-	console.log("aaa");
 }]);

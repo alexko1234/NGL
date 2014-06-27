@@ -276,7 +276,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		$scope.experiment.experimentInformation.enabled = false;
 		$scope.experiment.instrumentProperties.enabled = false;
 		$scope.experiment.instrumentInformation.enabled = false;
-		console.log($scope.experiment.value._id);
 		if($scope.experiment.value._id != undefined){
 			promises.push($scope.experiment.instrumentProperties.save());
 	
@@ -297,7 +296,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	});
 	
 	$scope.saveAll = function(promises){
-		console.log(promises);
 		$q.all(promises).then(function (res) {
 			if($scope.message.text != Messages('experiments.msg.save.error')){
 				$scope.message.clazz="alert alert-success";
@@ -367,6 +365,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 						$scope.$broadcast('experimentToOutput', $scope.experimentType.atomicTransfertMethod);
 						$scope.saveInProgress = false;
 					}
+					$scope.$broadcast('refreshView');
 				}
 			})
 			.error(function(data, status, headers, config) {
@@ -456,8 +455,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	
 	$scope.getInstrumentsTrigger = function(){
-		console.log($scope.experiment.value.instrument);
-		
 		if($scope.experiment.value.instrument != undefined && $scope.experiment.value.instrument.typeCode != null){
 			$scope.getInstruments(false);
 			$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,false);
@@ -642,7 +639,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		}
 	};
 	if($routeParams.experimentCode){
-	   console.log($routeParams.experimentCode);
 	   promise = $http.get(jsRoutes.controllers.experiments.api.Experiments.get($routeParams.experimentCode).url)
 		.success(function(data, status, headers, config) {
 			experiment = data;
