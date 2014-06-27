@@ -11,11 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.instance.State;
-//import models.laboratory.common.description.State;
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
@@ -223,13 +224,17 @@ public class Runs extends RunsController {
 			runInput.traceInformation = new TraceInformation();
 			runInput.traceInformation.setTraceInformation(getCurrentUser());
 			
-			if(null == runInput.state){
+			if (null == runInput.state) {
 				runInput.state = new State();
 			}
 			runInput.state.code = "N";
 			runInput.state.user = getCurrentUser();
-			runInput.state.date = new Date();		
+			runInput.state.date = new Date();
 			
+			if (null == runInput.properties.get("sequencingProgramType")) {
+				PropertyValue sequencingProgramType = getSequencingProgramType(runInput.containerSupportCode);
+				runInput.properties.put("sequencingProgramType", sequencingProgramType); 
+			}
 		} else {
 			return badRequest("use PUT method to update the readset");
 		}
@@ -365,6 +370,16 @@ public class Runs extends RunsController {
 			return badRequest();
 		
 		return ok();
+	}
+	
+	private static PropertyValue getSequencingProgramType(String containerSupportCode) {
+		ContainerSupport cs = MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, containerSupportCode);
+		if (cs != null && cs.properties != null && cs.properties.get("sequencingProgramType") != null) {
+			return cs.properties.get("sequencingProgramType");
+		}
+		else {
+			return null;
+		}
 	}
 
 }

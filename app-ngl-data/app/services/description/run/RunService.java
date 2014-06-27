@@ -59,11 +59,11 @@ public class RunService {
 	
 	public static void saveRunType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunType> l = new ArrayList<RunType>();
-		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), null, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
-		l.add(DescriptionFactory.newRunType("RHS2500","RHS2500", 8, RunCategory.find.findByCode("illumina"), null, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
-		l.add(DescriptionFactory.newRunType("RHS2500R","RHS2500R", 2, RunCategory.find.findByCode("illumina"), null, null,  DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newRunType("RMISEQ","RMISEQ", 1, RunCategory.find.findByCode("illumina"), null, null,  DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newRunType("RGAIIx","RGAIIx", 1, RunCategory.find.findByCode("illumina"), null, null,  DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null, DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newRunType("RHS2500","RHS2500", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null, DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newRunType("RHS2500R","RHS2500R", 2, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null,  DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("RMISEQ","RMISEQ", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null,  DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("RGAIIx","RGAIIx", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null,  DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newRunType("RARGUS","RARGUS", 1, RunCategory.find.findByCode("opgen"), null, null,  DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(RunType.class, l, errors);
@@ -75,10 +75,16 @@ public class RunService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("label","label",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("isSentCCRT","isSentCCRT",LevelService.getLevels(Level.CODE.ReadSet), Boolean.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("isSentCollaborator","isSentCollaborator",LevelService.getLevels(Level.CODE.ReadSet), Boolean.class, false, "single"));
-		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("md5","md5",LevelService.getLevels(Level.CODE.File), String.class, false, "single"));
 		return propertyDefinitions;
 	}
+	
+	private static List<PropertyDefinition> getRunIlluminaPropertyDefinitions() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sequencingProgramType","sequencingProgramType",LevelService.getLevels(Level.CODE.Run), String.class, true, "single"));
+		return propertyDefinitions;
+	}
+	
 	
 	private static List<ValuationCriteria> getValuationCriterias(String...codes) throws DAOException {
 		List<ValuationCriteria> valuationCriterias = new ArrayList<ValuationCriteria>();
