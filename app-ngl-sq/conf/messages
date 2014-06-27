@@ -146,6 +146,7 @@ experiment.comments = Commentaires
 
 experiment.placeholder.fromDate = Expérience depuis le (jj/mm/aaaa)
 experiment.placeholder.toDate = Expérience jusqu'au (jj/mm/aaaa)
+experiment.placeholder.user = Expérience créée par
 
 experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée

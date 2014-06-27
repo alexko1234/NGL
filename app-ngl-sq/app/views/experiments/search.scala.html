@@ -37,6 +37,9 @@
 			@formGroup{			
 				<input class="form-control" type="date" ng-model="form.fromDate" placeholder='@Messages("experiment.placeholder.fromDate")'>
 			}
+			@formGroup{		
+				<input class="form-control" type="text" ng-model="form.supportCode" placeholder='@Messages("search.placeholder.support")'>
+			}
 		}
 		@columnSearchForm{
 			@formGroup{	
@@ -49,7 +52,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{		
-			<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.user")'>
+			<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("experiment.placeholder.user")'>
 			}
 			@formGroup{
 			<div bt-select placeholder="@Messages("experiments.select.state")" class="form-control" ng-model="form.state" bt-options="stateCode.code as stateCode.name for stateCode in lists.getStates()" ng-change="search()" auto-select>
