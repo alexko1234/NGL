@@ -4,7 +4,7 @@
    <ul class="nav nav-tabs margin-bottom-5">
    	<li class="active"><a href="#" data-target="#main" data-toggle="tab">@Messages("readsets.treatments.taxonomy.tabs.bilan")</a></li>
    	<li><a href="#" data-target="#krona" data-toggle="tab">@Messages("readsets.treatments.taxonomy.tabs.krona")</a></li>    
-   	<li ng-show="hasImage()"><a href="#" data-target="#phylogeneticTree" data-toggle="tab">@Messages("readsets.treatments.taxonomy.tabs.phylogeneticTree")</a></li>	    	
+   	<li ng-show="isDataExistsForPhylogeneticTree()"><a href="#" data-target="#phylogeneticTree" data-toggle="tab">@Messages("readsets.treatments.taxonomy.tabs.phylogeneticTree")</a></li>	    	
    </ul>
 		
 	<div class="tab-content">
@@ -162,7 +162,7 @@
 			<iframe class="col-md-12 col-lg-12" ng-bind-src="krona" style="border:0;height:1500px" />
 		</div>
 			
-		<div class="tab-pane" id="phylogeneticTree"  ng-show="hasImage()">
+		<div class="tab-pane" id="phylogeneticTree"  ng-show="isDataExistsForPhylogeneticTree()">
 		    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
 			ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.value,'phylogeneticTree','','taxonomy', 
 			readset.treatments[treatments.getTreatment().code].read1.phylogeneticTree.width,

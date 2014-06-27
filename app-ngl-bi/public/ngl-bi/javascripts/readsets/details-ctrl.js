@@ -199,15 +199,28 @@
 
 
  angular.module('home').controller('TaxonomyCtrl', ['$scope', function($scope) {
-	var init = function() {		
-		$scope.$watch('readset', function() { 
-			if (angular.isDefined($scope.readset)) {				
-				$scope.krona = "data:text/html;base64,"+$scope.readset.treatments[$scope.treatments.getTreatment().code].read1.krona.value;
-				
-				$scope.ncbiUrl = Messages("readsets.treatments.taxonomy.beginNcbiUrl");
+	 
+		$scope.isDataExistsForPhylogeneticTree = function() {
+			var b = true;
+			if (angular.isDefined($scope.readset.treatments)) {
+				var treatments = $scope.readset.treatments;
+				if (!angular.isDefined(treatments["taxonomy"].read1.phylogeneticTree) ||
+						( angular.isDefined(treatments["taxonomy"].read1.phylogeneticTree.value) && (treatments["taxonomy"].read1.phylogeneticTree.value == null) ) ) {
+					b = false;
+				}
 			}
-		});
-	}
-	
-	init();
+			return b;
+		}
+			
+		var init = function() {		
+			$scope.$watch('readset', function() { 
+				if (angular.isDefined($scope.readset)) {				
+					$scope.krona = "data:text/html;base64,"+$scope.readset.treatments[$scope.treatments.getTreatment().code].read1.krona.value;
+					
+					$scope.ncbiUrl = Messages("readsets.treatments.taxonomy.beginNcbiUrl");
+				}
+			});
+		}
+		
+		init();
 }]);
