@@ -4,8 +4,10 @@ import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -116,8 +118,9 @@ public class Containers extends CommonController {
 			keys.put("code", 1);
 			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);							
 			int count = results.count();
-			
-			return ok(Json.toJson(count));
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", count);
+			return ok(Json.toJson(m));
 		}else if(containersSearch.list){
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
