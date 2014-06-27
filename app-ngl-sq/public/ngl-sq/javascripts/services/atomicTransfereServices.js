@@ -464,7 +464,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 					},
 					newExperiment : function(){
 						if(inputType === "datatable"){
-							varexperimentCommonFunctions.newExperimentDatatable();
+							varExperimentCommonFunctions.newExperimentDatatable();
 						}
 					}
 				};
