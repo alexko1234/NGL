@@ -76,6 +76,18 @@
 		return (mainService.isHomePage('valuation') || ($routeParams.page && $routeParams.page.indexOf('valuation') == 0));
 	}
 	
+	$scope.hasImage = function() {
+		var bShow = true;
+		if ($scope.readset.treatments !== undefined) { 
+			var treatments = $scope.readset.treatments;
+			if ((treatments["taxonomy"].read1.phylogeneticTree === undefined) || 
+					(treatments["taxonomy"].read1.phylogeneticTree.value !== undefined && treatments["taxonomy"].read1.phylogeneticTree.value === null) ) {
+				bShow = false;
+			}
+		}
+		return bShow;
+	}
+	
 	
 	var init = function(){
 		$scope.messages = messages();
