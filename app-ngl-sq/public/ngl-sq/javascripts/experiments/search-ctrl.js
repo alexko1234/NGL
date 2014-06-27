@@ -78,7 +78,8 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				
 			},
 			order:{
-				by:'code'
+				by:'traceInformation.creationDate',
+				reverse :true
 			},
 			edit:{
 				active:true
