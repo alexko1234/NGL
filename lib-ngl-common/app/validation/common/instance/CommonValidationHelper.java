@@ -394,10 +394,10 @@ public class CommonValidationHelper {
 
 	public static void validateCriteriaCode(String typeCode, String criteriaCode, ContextValidation contextValidation) {
 		if (null != criteriaCode) {
-			Query q = DBQuery.and(DBQuery.is("code", criteriaCode), DBQuery.is("typeCodes", typeCode));
+			Query q = DBQuery.and(DBQuery.is("code", criteriaCode), DBQuery.in("typeCodes", typeCode));
 			if(!MongoDBDAO.checkObjectExist(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class, q)){
 				contextValidation.addErrors("criteriaCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, criteriaCode);
-			}				
+			}
 		}		
 	}
 	
