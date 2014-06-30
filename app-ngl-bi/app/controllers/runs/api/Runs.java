@@ -231,10 +231,8 @@ public class Runs extends RunsController {
 			runInput.state.user = getCurrentUser();
 			runInput.state.date = new Date();
 			
-			if (null == runInput.properties.get("sequencingProgramType")) {
-				PropertyValue sequencingProgramType = getSequencingProgramType(runInput.containerSupportCode);
-				runInput.properties.put("sequencingProgramType", sequencingProgramType); 
-			}
+			runInput.properties = getProperties(runInput.containerSupportCode);
+			
 		} else {
 			return badRequest("use PUT method to update the readset");
 		}
@@ -372,10 +370,10 @@ public class Runs extends RunsController {
 		return ok();
 	}
 	
-	private static PropertyValue getSequencingProgramType(String containerSupportCode) {
+	private static Map<String, PropertyValue> getProperties(String containerSupportCode) {
 		ContainerSupport cs = MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, containerSupportCode);
-		if (cs != null && cs.properties != null && cs.properties.get("sequencingProgramType") != null) {
-			return cs.properties.get("sequencingProgramType");
+		if (cs != null && cs.properties != null) {
+			return cs.properties;
 		}
 		else {
 			return null;
