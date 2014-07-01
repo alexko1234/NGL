@@ -73,13 +73,8 @@
 				@views.html.helper.columnLabelValue(Messages("runs.valuation.user")){
 					<p class="form-control-static" >{{run.valuation.user}} ({{run.valuation.date | date:'@Messages("date.format")'}})</p>
 				}
+							
 				
-				@views.html.helper.columnLabelValue(Messages("runs.valuation.comment")){
-					<div ng-switch on="mainService.isEditMode()">
-						<p class="form-control-static" ng-switch-when="false" ng-bind="run.valuation.comment"></p>
-						<textarea class="form-control" ng-model="run.valuation.comment" ng-switch-when="true"></textarea>					
-					</div>				
-				}
 			}
 			
 			
@@ -105,7 +100,7 @@
 			}
 			@views.html.helper.columnLabelValue(Messages("runs.keep")){
 				<div class="checkbox" ng-if="mainService.isEditMode()">
- 					<label>
+ 					<label class="control-label">
 						<input type="checkbox"  ng-model="run.keep" ng-if="mainService.isEditMode()">	
 					</label>
 				</div>								
@@ -144,7 +139,31 @@
 				<p class="form-control-static">{{run.instrumentUsed.typeCode}}</p>
 			}
 		}
-		</div>		
+		</div>	
+		
+		
+		
+		<div class="row">
+			<div ng-switch on="mainService.isEditMode()">
+				<div class="tableDiv" ng-switch-when="false">
+					<div class="tableCellDiv">
+						<label class="control-label alignToRightBorderOfColumn" >@Messages("runs.valuation.comment")</label>
+					</div>
+					<div class="tableCellDiv" ng-show="comment!=''">
+		   				<textarea style="background-color:white" class="form-control addSpaceBetweenLabelAndValue" ng-model="run.valuation.comment" cols="150" readonly></textarea>
+	   				</div>
+	   			</div>
+	   			<div class="tableDiv" ng-switch-when="true">
+	   				<div class="tableCellDiv">
+						<label class="control-label alignToRightBorderOfColumn">@Messages("runs.valuation.comment")</label>
+					</div>
+					<div class="tableCellDiv">
+						<textarea class="form-control addSpaceBetweenLabelAndValue" ng-model="run.valuation.comment" cols="150"></textarea>
+					</div>
+				</div>
+	  		</div>
+  		</div>
+  		
 	</form>		
 </div>
 </div>

@@ -285,6 +285,13 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			
 			$scope.run = data;
 			
+			if (data.valuation.comment != undefined && data.valuation.comment != null) {
+				$scope.comment = data.valuation.comment.trim();
+			}
+			else {
+				$scope.comment = "";
+			}
+			
 			if(tabService.getTabs().length == 0){
 				if(isValuationMode()){ //valuation mode
 					tabService.addTabs({label:Messages('runs.page.tab.validate'),href:jsRoutes.controllers.runs.tpl.Runs.home("valuation").url,remove:true});
