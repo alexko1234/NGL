@@ -698,6 +698,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					$scope.experiment.editMode=true;
 					$scope.experiment.value.instrument.outContainerSupportCategoryCode = experiment.instrument.outContainerSupportCategoryCode;
 					$scope.experiment.value = experiment;
+					if($scope.experiment.value.state.code === "F"){
+						$scope.experiment.instrumentProperties.enabled = false;
+						$scope.experiment.experimentProperties.enabled = false;
+						$scope.experiment.instrumentInformation.enabled = false;
+						$scope.experiment.experimentInformation.enabled = false;
+					}
 					$scope.getInstruments();
 					$scope.getTemplate();
 					$scope.addExperimentPropertiesInputsColumns();
