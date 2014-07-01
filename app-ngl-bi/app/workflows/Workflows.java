@@ -233,7 +233,7 @@ public class Workflows {
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 					DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation.valid", readSet.bioinformaticValuation.valid));
 		} else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code))	{
-			//met les fichier dipo ou non dès que le read set est valider
+			//met les fichiers dipo ou non dès que le read set est valider
 			State state = cloneState(readSet.state);
 			if (null != readSet.files) {
 				for(File f : readSet.files){

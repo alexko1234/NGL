@@ -47,7 +47,7 @@ public class MigrationProjectCode extends CommonController {
 	private static void updateProjectCodes(String colName) {
 		//1er push		
 		WriteResult w = MongoDBDAO.update(colName, Project.class, 
-				DBQuery.and(DBQuery.is("projectCodes", oldProjectCode)), 
+				DBQuery.and(DBQuery.in("projectCodes", oldProjectCode)), 
 				DBUpdate.push("projectCodes", newProjectCode));	
 		if(null != w.getError())
 			Logger.error(colName+" "+w.getError());
@@ -55,7 +55,7 @@ public class MigrationProjectCode extends CommonController {
 		int nb1 = w.getSavedIds().size();
 		//2nd pull
 		w = MongoDBDAO.update(colName, Project.class, 
-				DBQuery.and(DBQuery.is("projectCodes", oldProjectCode)), 
+				DBQuery.and(DBQuery.in("projectCodes", oldProjectCode)), 
 				DBUpdate.pull("projectCodes", oldProjectCode));		
 		if(null != w.getError())
 			Logger.error(colName+" "+w.getError());
