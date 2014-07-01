@@ -46,12 +46,12 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('deleteInstrumentPropertiesInputs', function(e, header) {
-		 for(var i=0;i<$scope.datatable.config.columns.length;i++){
+		/* for(var i=0;i<$scope.datatable.config.columns.length;i++){
 				if($scope.datatable.config.columns[i].extraHeaders != undefined && $scope.datatable.config.columns[i].extraHeaders[1] == header){
 					$scope.datatable.deleteColumn(i);
 					i--;
 				}
-			}
+			}*/
 	});
 	
 	$scope.$on('addInstrumentPropertiesInput', function(e, data, possibleValues) {
@@ -83,7 +83,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
-		for(var i=0;i<$scope.datatable.getData().length;i++){
+		/*for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerIn")){
 					var getter = $parse("datatable.displayResult["+i+"].inputInstrumentProperties."+data[j].code+".value");
@@ -94,11 +94,11 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					}
 				}
 			}
-		}
+		}*/
 	});
 	
 	$scope.$on('addExperimentPropertiesOutputToScope', function(e, data) {
-		for(var i=0;i<$scope.datatable.getData().length;i++){
+		/*for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
 					var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
@@ -109,11 +109,11 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					}
 				}
 			}
-		}
+		}*/
 	});
 	
 	$scope.$on('addExperimentPropertiesInputToScope', function(e, data) {
-		for(var i=0;i<$scope.datatable.getData().length;i++){
+		/*for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerIn")){
 					var getter = $parse("datatable.displayResult["+i+"].inputExperimentProperties."+data[j].code+".value");
@@ -124,11 +124,11 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					}
 				}
 			}
-		}
+		}*/
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutputToScope', function(e, data) {
-		for(var i=0;i<$scope.datatable.getData().length;i++){
+		/*for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
 					var getter = $parse("datatable.displayResult["+i+"].outputInstrumentProperties."+data[j].code+".value");
@@ -139,7 +139,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					}
 				}
 			}
-		}
+		}*/
 	});
 	
 	$scope.$on('save', function(e, promises, func) {

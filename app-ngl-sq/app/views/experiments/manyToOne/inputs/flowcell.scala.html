@@ -16,7 +16,7 @@
 	@for(i <- 0 to laneCount-1) {
 	<tr>
 		<td>
-			@i
+			@(i+1)
 		</td>
 		<td ng-model="flowcells[@i]" droppable style="width:200px;height:20px">
 			<table class="table">
