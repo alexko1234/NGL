@@ -36,9 +36,9 @@ public class Samples extends CommonController{
 		Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, code);
 		if(sample != null){
 			return ok(Json.toJson(sample));
+		}else{
+			return notFound();
 		}
-
-		return badRequest();
 	}
 
 	public static Result list(){

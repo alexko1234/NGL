@@ -43,7 +43,7 @@ public class ReadSetValidationHelper extends CommonValidationHelper {
 						DBQuery.elemMatch("lanes", 
 							DBQuery.and(
 								DBQuery.is("number", laneNumber),
-								DBQuery.is("readSetCodes", readSetCode)))));
+								DBQuery.in("readSetCodes", readSetCode)))));
 	}
 	
 	public static void validateReadSetType(String typeCode,	Map<String, PropertyValue> properties, ContextValidation contextValidation) {
