@@ -25,8 +25,8 @@ containers.table.support.categoryCode = Categorie support
 containers.table.support.line = Y
 containers.table.support.column = X
 
-containers.placeholder.fromDate = Création container depuis le
-containers.placeholder.toDate = Création container jusqu'au
+containers.placeholder.fromDate = Création container depuis le (jj/mm/aaaa)
+containers.placeholder.toDate = Création container jusqu''au (jj/mm/aaaa)
 
 containers.select.state =  Sélect. un état container
 containers.select.categoryCode =  Sélect. catégorie container
@@ -145,7 +145,7 @@ experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
 
 experiment.placeholder.fromDate = Expérience depuis le (jj/mm/aaaa)
-experiment.placeholder.toDate = Expérience jusqu'au (jj/mm/aaaa)
+experiment.placeholder.toDate = Expérience jusqu''au (jj/mm/aaaa)
 experiment.placeholder.user = Expérience créée par
 
 experiments.msg.save.sucess = Sauvegarde réussie
