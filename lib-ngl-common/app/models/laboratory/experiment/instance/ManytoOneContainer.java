@@ -57,11 +57,15 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 			if(this.inputContainerUseds!=null){
 
 				String outPutContainerCode=null;
-				//Condition à supprimer 
-				if(experiment.instrumentProperties.get("mapcardRef").value==null){
+
+				if(experiment.instrumentProperties.get("containerSupportCode")==null){
 					outPutContainerCode=ContainerHelper.generateContainerCode(experiment.instrument.outContainerSupportCategoryCode);
 				}else{
-					outPutContainerCode=experiment.instrumentProperties.get("mapcardRef").value.toString();
+					if(experiment.instrumentProperties.get("containerSupportCode").value!=null){
+						outPutContainerCode=experiment.instrumentProperties.get("containerSupportCode").value.toString();
+					}else {
+						contextValidation.addErrors("containerSupportCode",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG);
+					}
 				}
 
 				this.outputContainerUsed = new ContainerUsed(outPutContainerCode);
