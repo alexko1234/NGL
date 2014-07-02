@@ -802,20 +802,6 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 
 
 
-angular.module('home').controller('WorkflowCtrl',['$scope',  'mainService', 'tabService', 
-                                                           function($scope,mainService, tabService) { 
-	var init = function(){
-		$scope.mainService = mainService;
-		$scope.mainService.stopEditMode();
-		
-		$scope.statusCode = "N"; //a déterminer dynamiquement en fct du paramètre
-				
-	};
-	
-	init();
-}]);
-
-
 
 
 
