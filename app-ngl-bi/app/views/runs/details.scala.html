@@ -100,7 +100,7 @@
 			}
 			@views.html.helper.columnLabelValue(Messages("runs.keep")){
 				<div class="checkbox" ng-if="mainService.isEditMode()">
- 					<label class="control-label">
+ 					<label>
 						<input type="checkbox"  ng-model="run.keep" ng-if="mainService.isEditMode()">	
 					</label>
 				</div>								
@@ -149,7 +149,7 @@
 					<div class="form-group">
 						<label class="col-md-2 col-lg-2 control-label">@Messages("runs.valuation.comment")</label>
 						<div class="col-md-10 col-lg-10" ng-show="comment!=''">
-			   				<textarea style="background-color:white" class="form-control" ng-model="run.valuation.comment" cols="150" readonly></textarea>
+			   				<textarea style="background-color:white" class="form-control" ng-model="run.valuation.comment" readonly></textarea>
 		   				</div>
 		   			</div>
 	   			</div>
@@ -157,7 +157,7 @@
 	   				<div class="form-group">
 						<label class="col-md-2 col-lg-2 control-label">@Messages("runs.valuation.comment")</label>
 						<div class="col-md-10 col-lg-10">
-							<textarea class="form-control" ng-model="run.valuation.comment" cols="150"></textarea>
+							<textarea class="form-control" ng-model="run.valuation.comment"></textarea>
 						</div>
 					</div>
 				</div>
