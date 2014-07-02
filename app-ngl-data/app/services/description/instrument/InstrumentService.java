@@ -167,8 +167,12 @@ public class InstrumentService {
 	
 	private static List<PropertyDefinition> getPropertiesCBot() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Type lectures","readType"
-        		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
+        propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
+        		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
+        propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
+        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Rapid FC PE HS 2500-v1","Rapid FC SR HS 2500-v1",
+        				"FC Miseq-v2","FC Miseq-v3","Paired End FC Hiseq-v3","Single FC Hiseq-v3"),"single"));
+        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
         return propertyDefinitions;
 	}
 
@@ -197,7 +201,7 @@ public class InstrumentService {
 	private static List<PropertyDefinition> getArgusProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Type de MapCard", "mapcardType", LevelService.getLevels(Level.CODE.Instrument),String.class, true, newValues("standard","HD"), "single"));
-        propertyDefinitions.add(newPropertiesDefinition("Référence Carte", "mapcardRef", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
+        propertyDefinitions.add(newPropertiesDefinition("Référence Carte", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Enzyme de restriction", "restrictionEnzyme", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("BamHI "," NheI "," SpeI "," ApaLI "," MIuI "," NdeI "," AfIII "," KpnI "," Ncol "," XbaI "," BgIII "," EcoRI "," HindIII "," NotI "," PvuII "," XhoI"), "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Tableau sélection enzyme","enzymeChooser",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Photo digestion","digestionForTracking",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));

@@ -96,7 +96,7 @@ public class ExperimentService {
 				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_opgen_ptr_1"), getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		//Prepaflowcell : to finish
 		l.add(newExperimentType("Void Depot Illumina","void-illumina-depot",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell", ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,  getProtocols("prepfc_cbot_ptr_sox139_1"), getInstrumentUsedTypes("cBot-interne","cBot"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell", ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),  getProtocols("prepfc_cbot_ptr_sox139_1"), getInstrumentUsedTypes("cBot-interne","cBot"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
@@ -140,6 +140,8 @@ public class ExperimentService {
 
 
 
+	
+
 	private static void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
 		newExperimentTypeNode("void-opgen-depot", getExperimentTypes("void-opgen-depot").get(0), false, false, null, null, null).save();
@@ -176,6 +178,31 @@ public class ExperimentService {
 		return DAOHelpers.getModelByCodes(ExperimentTypeNode.class,ExperimentTypeNode.find, codes);
 	}
 
+	private static List<PropertyDefinition> getPropertyDefinitionsPrepaflowcell() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//Outputcontainer
+		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		
+		//InputContainer
+		propertyDefinitions.add(newPropertiesDefinition("Volume à engager dénat", "engageVolume1", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume NaOH", "NaOHVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume EB", "EBVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Concentration finale Dénat ", "finalConcentration1", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume final Dénat", "finalVolume1", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume à engager dilution", "engageVolume2", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume HTI", "HTIVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume Phix", "phixVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume final Dilution", "finalVolume2", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Concentration finale Dilution", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume à déposer", "putInVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		
+		return propertyDefinitions;
+	}
 
 	private static List<PropertyDefinition> getPropertyDefinitionsLibIndexing() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
