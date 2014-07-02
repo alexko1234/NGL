@@ -145,20 +145,20 @@
 		
 		<div class="row">
 			<div ng-switch on="mainService.isEditMode()">
-				<div class="tableDiv" ng-switch-when="false">
-					<div class="tableCellDiv">
-						<label class="control-label alignToRightBorderOfColumn" >@Messages("runs.valuation.comment")</label>
-					</div>
-					<div class="tableCellDiv" ng-show="comment!=''">
-		   				<textarea style="background-color:white" class="form-control addSpaceBetweenLabelAndValue" ng-model="run.valuation.comment" cols="150" readonly></textarea>
-	   				</div>
+				<div class="col-md-9 col-lg-9" ng-switch-when="false">
+					<div class="form-group">
+						<label class="col-md-2 col-lg-2 control-label">@Messages("runs.valuation.comment")</label>
+						<div class="col-md-10 col-lg-10" ng-show="comment!=''">
+			   				<textarea style="background-color:white" class="form-control" ng-model="run.valuation.comment" cols="150" readonly></textarea>
+		   				</div>
+		   			</div>
 	   			</div>
-	   			<div class="tableDiv" ng-switch-when="true">
-	   				<div class="tableCellDiv">
-						<label class="control-label alignToRightBorderOfColumn">@Messages("runs.valuation.comment")</label>
-					</div>
-					<div class="tableCellDiv">
-						<textarea class="form-control addSpaceBetweenLabelAndValue" ng-model="run.valuation.comment" cols="150"></textarea>
+	   			<div class="col-md-9 col-lg-9" ng-switch-when="true">
+	   				<div class="form-group">
+						<label class="col-md-2 col-lg-2 control-label">@Messages("runs.valuation.comment")</label>
+						<div class="col-md-10 col-lg-10">
+							<textarea class="form-control" ng-model="run.valuation.comment" cols="150"></textarea>
+						</div>
 					</div>
 				</div>
 	  		</div>

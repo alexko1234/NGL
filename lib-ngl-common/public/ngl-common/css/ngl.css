@@ -60,20 +60,3 @@ input[type="checkbox"] {
 .drag, .over{
 	  background-color: #f1f1f1;
 }
-
-.tableDiv {
-	display: table;
-}
-
-.tableCellDiv {
-	display: table-cell; 
-	vertical-align: top;
-}
-
-.alignToRightBorderOfColumn {
-	margin-left:90px;
-}
-
-.addSpaceBetweenLabelAndValue {
-	margin-left:20px;
-}

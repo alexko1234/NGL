@@ -73,6 +73,7 @@
 	<div class="tab-content">
 	<div class="tab-pane active" id="general">		
 			<form class="form-horizontal">
+				<div class="row">
 				@column(){
 					@views.html.helper.columnLabelValue(Messages("readsets.code")){
 						<p class="form-control-static">{{readset.code}}</p>
@@ -97,12 +98,6 @@
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.valuation.user")){
 						<p class="form-control-static" >{{readset.productionValuation.user}} ({{readset.productionValuation.date | date:'@Messages("date.format")'}})</p>
-					}
-					@views.html.helper.columnLabelValue(Messages("readsets.productionValuation.comment")){
-						<div ng-switch on="isEditMode()">
-							<p class="form-control-static" ng-switch-when="false" ng-bind="readset.productionValuation.comment"></p>
-							<textarea ng-switch-when="true"  class="form-control" ng-model="readset.productionValuation.comment"></textarea>
-						</div>	
 					}
 				}
 				@column(){
@@ -143,6 +138,29 @@
 						<p class="form-control-static" >{{runNGSRG["default"].nbCycle.value}}</p>
 					}
 				}
+				</div>
+				
+				<div class="row">
+					<div ng-switch on="isEditMode()">
+						<div class="col-md-8 col-lg-8" ng-switch-when="false">
+							<div class="form-group">
+								<label class="col-md-3 col-lg-3 control-label">@Messages("readsets.productionValuation.comment")</label>
+								<div class="col-md-9 col-lg-9" ng-show="comment!=''">
+					   				<textarea style="background-color:white" class="form-control" ng-model="readset.productionValuation.comment" cols="150" readonly></textarea>
+				   				</div>
+				   			</div>
+			   			</div>
+			   			<div class="col-md-8 col-lg-8" ng-switch-when="true">
+			   				<div class="form-group">
+								<label class="col-md-3 col-lg-3 control-label">@Messages("readsets.productionValuation.comment")</label>
+								<div class="col-md-9 col-lg-9">
+									<textarea class="form-control" ng-model="readset.productionValuation.comment" cols="150"></textarea>
+								</div>
+							</div>
+						</div>
+			  		</div>		  		
+		  		</div>
+		  		
 			</form>		
 		</div>
 	
