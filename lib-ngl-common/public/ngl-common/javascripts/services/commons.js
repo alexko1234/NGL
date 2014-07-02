@@ -363,7 +363,7 @@ angular.module('commonsServices', []).
   		    			+'<div class="dropdown" ng-switch-when="true">'
   				        
   		    			+'<div class="input-group">'
-  		    			+'<input type="text" style="background:white" ng-class="inputClass" ng-model="selectedLabels" readonly/>'
+  		    			+'<input type="text" style="background:white" ng-class="inputClass" ng-model="selectedLabels" placeholder="{{placeholder}}" readonly/>'
   		    			+'<div class="input-group-btn">'
   		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
   		    			+'<span class="caret"></span>'
@@ -389,13 +389,14 @@ angular.module('commonsServices', []).
 	       		  // if ngModel is not defined, we don't need to do anything
 	      		      if (!ctrls[0]) return;
 	      		      scope.inputClass = element.attr("class");
+	      		      scope.placeholder = attr.placeholder;
+    		          
 	      		      element.attr("class",''); //remove custom class
 	      		     
 	      		      var ngModelCtrl = ctrls[0],
 	      		          multiple = attr.multiple || false,
 	      		          btOptions = attr.btOptions,
 	      		          editMode = (attr.ngEdit)?$parse(attr.ngEdit):undefined,
-	      		          placeholder = attr.placeholder,
 	      		          filter = attr.filter || false;
 
 	      		      var optionsConfig = parseBtsOptions(btOptions);
@@ -560,9 +561,6 @@ angular.module('commonsServices', []).
 			      	    		}	      	    		
 			      	    	}
 		      	    	}
-		      	    	if(modelValues.length === 0){
-		      	    		selectedLabels.push(placeholder);
-		      	    	} 	
 		      	    	scope.selectedLabels = selectedLabels;
 	      	        };
 	      	        
