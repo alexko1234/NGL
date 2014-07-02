@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$window', '$filter', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', 'valuationService', 
-                                                  function($scope, $http, $q, $routeParams, $window, $filter, mainService, tabService, datatable, messages, lists, treatments, valuationService) {
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$window', '$filter', '$sce', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', 'valuationService', 
+                                                  function($scope, $http, $q, $routeParams, $window, $filter, $sce, mainService, tabService, datatable, messages, lists, treatments, valuationService) {
 	/* configuration datatables */	
 	var lanesDTConfig = {
 			name:'lanesDT',
@@ -271,7 +271,16 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			return "bg-info";
 		else 
 			return undefined;
-	}
+	};
+	
+    $scope.deliberatelyTrustHTMLComment = function() {
+    	if ($scope.run && $scope.run.valuation.comment && $scope.run.valuation.comment != null) {
+    		return $sce.trustAsHtml($scope.run.valuation.comment.trim().replace(/\n/g, "<br>"));
+    	}	
+    	else {
+    		return "";
+    	}
+    };
 	
 	var init = function(){
 		$scope.messages = messages();
@@ -284,13 +293,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			
 			$scope.run = data;
-			
-			if (data.valuation.comment != undefined && data.valuation.comment != null) {
-				$scope.comment = data.valuation.comment.trim();
-			}
-			else {
-				$scope.comment = "";
-			}
 			
 			if(tabService.getTabs().length == 0){
 				if(isValuationMode()){ //valuation mode
@@ -795,4 +797,27 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 	
 	init();
 }]);
+
+
+
+
+
+angular.module('home').controller('WorkflowCtrl',['$scope',  'mainService', 'tabService', 
+                                                           function($scope,mainService, tabService) { 
+	var init = function(){
+		$scope.mainService = mainService;
+		$scope.mainService.stopEditMode();
+		
+		$scope.statusCode = "N"; //a déterminer dynamiquement en fct du paramètre
+				
+	};
+	
+	init();
+}]);
+
+
+
+
+
+
 

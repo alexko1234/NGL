@@ -1,7 +1,7 @@
  "use strict";
 
- angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 
-                                                   function($scope, $http, $q, $routeParams, mainService, tabService, datatable, messages, lists, treatments, $window) {
+ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$sce', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 
+                                                   function($scope, $http, $q, $routeParams, $sce, mainService, tabService, datatable, messages, lists, treatments, $window) {
 	
 	$scope.goToRun=function(){
 		$window.open(jsRoutes.controllers.runs.tpl.Runs.get($scope.readset.runCode).url, 'runs');
@@ -86,7 +86,17 @@
 			}
 		}
 		return bShow;
-	}
+	};
+	
+	
+    $scope.deliberatelyTrustHTMLComment = function() {
+		if ($scope.readset && $scope.readset.productionValuation.comment && $scope.readset.productionValuation.comment != null) {
+			return $sce.trustAsHtml($scope.readset.productionValuation.comment.trim().replace(/\n/g, "<br>"));
+		}
+		else {
+			return "";
+		}
+    };
 	
 	
 	var init = function(){
