@@ -7,7 +7,7 @@ public class Level extends Model<Level>{
 	
 	public enum CODE {Container, ContainerIn, ContainerOut, Content, ContentIn, ContentOut, Experiment, Instrument, 
 		Project, Process, Run, Sample, SampleUsed, Lane, ReadSet, File,
-		Read1, Read2, Single, Pairs, Default, Analysis};
+		Read1, Read2, Single, Pairs, Default, Analysis, ContainerSupport,ContainerSupportIn,ContainerSupportOut};
 		
 	public static Finder<Level> find = new Finder<Level>(LevelDAO.class.getName()); 
 	
