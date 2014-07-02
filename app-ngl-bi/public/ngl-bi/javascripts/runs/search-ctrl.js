@@ -44,8 +44,10 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 	}else{
 		$scope.datatable = mainService.getDatatable();
 	}
-	$scope.search();
 	
+	$scope.searchService.form.fromDate=moment().month(moment().month()-1).format(Messages("date.format").toUpperCase());	
+	$scope.search();	
+	$scope.searchService.form.fromDate=undefined;
 	
 }]);
 
@@ -158,7 +160,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 	}else{
 		$scope.datatable = mainService.getDatatable();
 	}
-	$scope.search();		
+		
 }]);
 
 

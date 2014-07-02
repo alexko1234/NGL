@@ -4,6 +4,7 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'main
                                                  function($scope, $routeParams, mainService, tabService, readSetsSearchService, valuationService) { 
     
 	var datatableConfig = {
+			group:{active:true},
 			pagination:{mode:'local'},
 			order :{mode:'local', by:'runSequencingStartDate', reverse : true},
 			search:{
@@ -37,8 +38,10 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'main
 	$scope.searchService = readSetsSearchService;
 	$scope.searchService.init($routeParams, datatableConfig)
 	$scope.valuationService = valuationService();
-				
+	
+	$scope.searchService.form.fromDate=moment().month(moment().month()-1).format(Messages("date.format").toUpperCase());	
 	$scope.search();	
+	$scope.searchService.form.fromDate=undefined;
 }]);
 
 
@@ -144,8 +147,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 	
 	$scope.searchService = readSetsSearchService;
 	$scope.searchService.init($routeParams, datatableConfig)
-	
-	$scope.search();	
+			
 }]);
 
 
@@ -194,7 +196,6 @@ angular.module('home').controller('SearchBatchCtrl', ['$scope', '$routeParams', 
 	
 	$scope.searchService = readSetsSearchService;
 	$scope.searchService.init($routeParams, datatableConfig)
-	
-	$scope.search();	
+			
 	
 }]);

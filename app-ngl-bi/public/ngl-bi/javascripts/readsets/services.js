@@ -24,6 +24,7 @@
 							header: "readsets.projectCode",
 							type :"text",
 							order:true,
+							group:true,
 				    	  	position:4});
 			columns.push({	property:"sampleCode",
 							header: "readsets.sampleCode",
@@ -265,9 +266,7 @@
 				},
 				
 				resetForm : function(){
-					this.form = {};
-					//start last 1 year
-					this.form.fromDate=moment().year(moment().year()-1).format(Messages("date.format").toUpperCase());					
+					this.form = {};									
 				},
 				
 				
