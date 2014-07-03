@@ -267,15 +267,23 @@ angular.module('datatableServices', []).
 					    				});
 				    					//compute for each number column the sum
 				    					numberColumns.forEach(function(column){
-				    						var property = column.property;
-				    						//must be improve if filter in property
-				    						var columnSetter = $parse(property);
-				    						property += (column.filter)?'|'+column.filter:'';
-				    						var columnGetter = $parse(property);
+				    						var propertyGetter = column.property;
+				    						propertyGetter += (column.filter)?'|'+column.filter:'';
+				    						
+				    						var propertySetter = column.property.split('|',2)[0];
+				    						
+				    						var columnSetter = $parse(propertySetter);
+				    						var columnGetter = $parse(propertyGetter);
 				    						var result = groupData.reduce(function(value, element){
 				    							return value += columnGetter(element);
-				    						}, 0);			    						
-				    						columnSetter.assign(group, result);
+				    						}, 0);		
+				    						if(!isNaN(result)){
+				    							try{
+				    								columnSetter.assign(group, result);
+				    							}catch(e){
+				    								console.log("computeGroup Error : "+e);
+				    							}
+				    						}
 				    					});
 				    					groups[key] = group;
 				    					
