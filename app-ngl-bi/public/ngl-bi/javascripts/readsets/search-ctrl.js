@@ -4,7 +4,7 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'main
                                                  function($scope, $routeParams, mainService, tabService, readSetsSearchService, valuationService) { 
     
 	var datatableConfig = {
-			group:{active:true},
+			group:{active:true, by:"projectCode"},
 			pagination:{mode:'local'},
 			order :{mode:'local', by:'runSequencingStartDate', reverse : true},
 			search:{
@@ -39,9 +39,6 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'main
 	$scope.searchService.init($routeParams, datatableConfig)
 	$scope.valuationService = valuationService();
 	
-	$scope.searchService.form.fromDate=moment().month(moment().month()-1).format(Messages("date.format").toUpperCase());	
-	$scope.search();	
-	$scope.searchService.form.fromDate=undefined;
 }]);
 
 

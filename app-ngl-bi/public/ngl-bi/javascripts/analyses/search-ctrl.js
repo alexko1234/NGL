@@ -45,7 +45,6 @@ angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datat
 	}else{
 		$scope.datatable = mainService.getDatatable();			
 	}		
-	$scope.search();
 	
 }]);
 
@@ -168,7 +167,6 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 	}else{
 		$scope.datatable = mainService.getDatatable();			
 	}		
-	$scope.search();
 	
 }]);
 

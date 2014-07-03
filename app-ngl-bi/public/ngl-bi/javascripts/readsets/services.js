@@ -13,6 +13,7 @@
 			columns.push({	property:"runCode",
 							header: "readsets.runCode",
 							type :"text",
+							group:true,
 							order:true,
 				    	  	position:2});
 			columns.push({	property:"laneNumber",
@@ -29,6 +30,7 @@
 			columns.push({	property:"sampleCode",
 							header: "readsets.sampleCode",
 							type :"text",
+							group:true,
 							order:true,
 				    	  	position:5});
 			columns.push({	property:"runSequencingStartDate",
@@ -368,7 +370,7 @@
 					if(angular.isDefined(mainService.getForm())){
 						searchService.form = mainService.getForm();
 					}else{
-						searchService.resetForm();
+						searchService.resetForm();						
 					}
 					
 					if(angular.isDefined($routeParams)){

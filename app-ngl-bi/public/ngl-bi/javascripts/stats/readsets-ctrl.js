@@ -50,9 +50,6 @@ angular.module('home').controller('StatsSearchReadSetsCtrl',['$scope', '$routePa
 	$scope.queriesConfigService = queriesConfigReadSetsService;
 	mainService.put('queriesConfigReadSetsService', $scope.queriesConfigService);
 	
-	$scope.search();
-	
-	
 }]);
 
 angular.module('home').controller('StatsConfigReadSetsCtrl',['$scope', 'mainService', 'tabService', 'basket', 'statsConfigReadSetsService','queriesConfigReadSetsService',
