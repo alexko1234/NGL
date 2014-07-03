@@ -8,6 +8,7 @@ datatable.button.edit=Edit
 datatable.button.sort=Order
 datatable.button.save=Save
 datatable.button.remove=Remove
+datatable.button.group = Group / Ungroup
 datatable.button.length=Size ({0})
 datatable.totalNumberRecords = {0} Result(s)
 
