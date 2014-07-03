@@ -256,7 +256,9 @@
 					}
 					
 					for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
-						this.form.includes.push(this.selectedAddColumns[i].property);
+						//remove .value if present to manage correctly properties
+						
+						this.form.includes.push(this.selectedAddColumns[i].property.replace('.value',''));
 					}
 				},
 				
