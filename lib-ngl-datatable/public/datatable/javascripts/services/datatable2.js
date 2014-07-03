@@ -136,6 +136,13 @@ angular.module('datatableServices', []).
 							spinner:{
 								start:false
 							},
+							group:{
+								active:false,
+								by:undefined,
+								showButton:true,
+								after:true,
+								columns:{}
+							},
 							showTotalNumberRecords:true,
 							compact:true //mode compact pour le nom des bouttons
 						},
@@ -143,8 +150,7 @@ angular.module('datatableServices', []).
     					configMaster:undefined,
     					allResult:undefined,
     					displayResult:undefined,
-    					//displayResultMaster:undefined,
-    					totalNumberRecords:undefined,
+    					totalNumberRecords:0,
     					lastSearchParams : undefined, //used with pagination when length or page change
     					inc:0, //used for unique column ids
     					configColumnDefault:{
@@ -203,8 +209,10 @@ angular.module('datatableServices', []).
 		    				if(configPagination.active && !this.isRemoteMode(configPagination.mode)){
 		    					this.config.pagination.pageNumber=0;
 		    				}
+		    				
 		    				this.allResult = data;
 		    				this.totalNumberRecords = recordsNumber;
+		    				this.computeGroup();
 		    				this.sortAllResult();
 		    				this.computeDisplayResult();
 		    				this.computePaginationList();
@@ -228,10 +236,127 @@ angular.module('datatableServices', []).
 			    					this.allResult.push(data[i]);				    				
 			    				}
 			    				this.totalNumberRecords = this.allResult.length;
+			    				this.computeGroup();
 			    				this.sortAllResult();
 			    				this.computeDisplayResult();
 			    				this.computePaginationList();
 			    			}
+		    			},
+		    			/**
+		    			 * compute the group
+		    			 */
+		    			computeGroup: function(){
+		    				if(this.config.group.active && this.config.group.by){
+		    						var groupGetter = $parse(this.config.group.by);
+			    					var groupValues = this.allResult.reduce(function(array, value){
+			    						var groupValue = groupGetter(value);
+				    					if(!array[groupValue]){
+				    						array[groupValue]=[];
+				    					}
+				    					array[groupValue].push(value);
+				    					return array;
+				    				}, {});
+				    				var groups = {}
+				    				for(var key in groupValues){
+				    					var group = {};
+				    					var groupData = groupValues[key];
+				    					
+				    					groupGetter.assign(group, key);
+				    					var numberColumns = this.getColumnsConfig().filter(function(column){
+					    					return (column.type === 'number');
+					    				});
+				    					//compute for each number column the sum
+				    					numberColumns.forEach(function(column){
+				    						var property = column.property;
+				    						//must be improve if filter in property
+				    						var columnSetter = $parse(property);
+				    						property += (column.filter)?'|'+column.filter:'';
+				    						var columnGetter = $parse(property);
+				    						var result = groupData.reduce(function(value, element){
+				    							return value += columnGetter(element);
+				    						}, 0);			    						
+				    						columnSetter.assign(group, result);
+				    					});
+				    					groups[key] = group;
+				    					
+				    				}			    				
+				    				this.config.group.data = groups;			    				
+		    				}else{
+		    					this.config.group.data = undefined;
+		    				}
+		    				
+		    			},
+		    			/**
+		    			 * set the order column name
+		    			 * @param orderColumnName : column name
+		    			 */
+		    			setGroupColumn : function(columnPropertyName, columnId){
+		    				if(this.config.group.active){
+		    					
+		    					if(this.config.group.by != columnPropertyName){
+		    						this.config.group.by = columnPropertyName;		    						
+		    						for(var i = 0; i < this.config.columns.length; i++){
+			    						if(this.config.columns[i].id === columnId){
+			    							this.config.group.columns[this.config.columns[i].id] = true;
+			    						}else{
+			    							this.config.group.columns[this.config.columns[i].id] = false;
+			    						}		    							    						
+			    					}
+		    					}else{
+		    						this.config.group.columns[columnId] = !this.config.group.columns[columnId];
+		    						if(!this.config.group.columns[columnId]){
+		    							this.config.group.by = undefined;
+		    						}
+		    					}
+		    					
+		    					
+		    					if(this.config.edit.active && this.config.edit.start){
+    								//TODO add a warning popup
+    								console.log("edit is active, you lost all modification !!");
+    								this.config.edit = angular.copy(this.configMaster.edit); //reinit edit
+    							}
+		    					
+		    					this.computeGroup();
+		    					this.sortAllResult(); //sort all the result
+				    			this.computeDisplayResult(); //redefined the result must be displayed				    				
+			    				
+		    					if(angular.isFunction(this.config.group.callback)){
+			    					this.config.group.callback(this);
+			    				}
+		    				} else{
+		    					//console.log("order is not active !!!");
+		    				}
+		    			},
+		    			getGroupColumnClass : function(columnId){
+		    				if(this.config.group.active){
+		    					if(!this.config.group.columns[columnId]) {return 'fa fa-bars';}
+	    						else  {return 'fa fa-outdent';}		    							    							    							    						    					    					
+		    				} else{
+		    					//console.log("order is not active !!!");
+		    				}
+		    			},
+		    			addGroup : function(displayResultTmp){
+		    				var displayResult = [];
+	    					var groupGetter = $parse(this.config.group.by);
+	    					var groupConfig = this.config.group;
+	    					displayResultTmp.forEach(function(element, index, array){
+	    						/* previous mode */
+	    						if(!groupConfig.after && (index === 0 
+	    								|| groupGetter(element.data) !== groupGetter(array[index-1].data))){
+	    							var line = {edit:undefined, selected:undefined, trClass:undefined, group:true};
+	    							this.push({data:groupConfig.data[groupGetter(element.data)], line:line});
+	    						}		    						
+	    						this.push(element);
+	    						
+	    						/* after mode */
+	    						if(groupConfig.after && (index === (array.length - 1) 
+	    								|| groupGetter(element.data) !== groupGetter(array[index+1].data))){
+	    							var line = {edit:undefined, selected:undefined, trClass:undefined, group:true};
+	    							this.push({data:groupConfig.data[groupGetter(element.data)], line:line});
+	    						}		    						
+	    						
+	    					},displayResult);
+	    					return displayResult;
 		    			},
 		    			/**
 		    			 * Selected only the records will be displayed.
@@ -250,18 +375,23 @@ angular.module('datatableServices', []).
 		    					_displayResult = angular.copy(this.allResult);		    					
 		    				}
 		    				
-		    				this.displayResult = [];
+		    				var displayResultTmp = [];
 		    				angular.forEach(_displayResult, function(value, key){
-		    					 var line = {edit:undefined, selected:undefined, trClass:undefined};
+		    					 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false};
 	    						 this.push({data:value, line:line});
-	    					}, this.displayResult);
+	    					}, displayResultTmp);
+		    				
+		    				//group function
+		    				if(this.config.group.active && this.config.group.data){
+		    					this.displayResult = this.addGroup(displayResultTmp);					
+		    				}else{
+		    					this.displayResult = displayResultTmp;
+		    				}
 		    				
 		    				if(this.config.edit.byDefault){
 		    					this.config.edit.withoutSelect = true;
 		    					this.setEdit();
-		    				}
-		    				
-		    				//this.displayResultMaster = angular.copy(this.displayResult);		    				
+		    				}		    						    				    				
 		    			},
 		    			//pagination functions
 		    			/**
@@ -369,7 +499,12 @@ angular.module('datatableServices', []).
 		    			 */
 		    			sortAllResult : function(){
 		    				if(this.config.order.active && !this.isRemoteMode(this.config.order.mode)){
-		    					this.allResult = $filter('orderBy')(this.allResult,this.config.order.by,this.config.order.reverse);		    					
+		    					if(this.config.group.active && this.config.group.by ){
+		    						var orderSense = (this.config.order.reverse)?'-':'+';
+		    						this.allResult = $filter('orderBy')(this.allResult,[this.config.group.by, orderSense+this.config.order.by]);		    						
+		    					}else{
+		    						this.allResult = $filter('orderBy')(this.allResult,this.config.order.by,this.config.order.reverse);	
+		    					}		    					    					
 		    				}
 		    			},	
 		    			/**
@@ -847,7 +982,7 @@ angular.module('datatableServices', []).
 		    				if(this.config.select.active){
 			    				this.config.select.isSelectAll = value;
 			    				for(var i = 0; i < this.displayResult.length; i++){
-			    					if(value){
+			    					if(value && !this.displayResult[i].line.group){
 			    						this.displayResult[i].line.selected=true;
 			    						this.displayResult[i].line.trClass="info";
 			    					}else{
@@ -1041,6 +1176,17 @@ angular.module('datatableServices', []).
 			    					}
 			    					
 			    					columns[i].cells = [];//Init
+			    					
+			    					if(this.config.group.active && (columns[i].property === this.config.group.by)){
+			    						this.config.group.columns[columns[i].id] = true;
+			    					}else{
+			    						this.config.group.columns[columns[i].id] = false;
+			    					}
+			    					if(this.config.order.active && (columns[i].property === this.config.order.by)){
+			    						this.config.order.columns[columns[i].id] = true;
+			    					}else{
+			    						this.config.order.columns[columns[i].id] = false;
+			    					}
 			    				}
 		    					
 		    					var settings = $.extend(true, [], this.configColumnDefault, columns);
@@ -1500,9 +1646,10 @@ angular.module('datatableServices', []).
   		    		+	'<th id="{{column.id}}" ng-repeat="column in dtTable.getColumnsConfig()" ng-if="!dtTable.isHide(column.id)">'
   		    		+	'<span ng-bind="dtTable.getHeader(column.header)"/>'
   		    		+	'<div class="btn-group pull-right">'
-  		    		+	'<button class="btn btn-xs" ng-click="dtTable.setEdit(column.id)" ng-if="dtTable.isShowButton(\'edit\', column)" ng-disabled="!dtTable.canEdit()" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.edit\')"><i class="fa fa-edit"></i></button>'
-  		    		+	'<button class="btn btn-xs" ng-click="dtTable.setOrderColumn(column.property, column.id)" ng-if="dtTable.isShowButton(\'order\', column)" ng-disabled="!dtTable.canOrder()" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.sort\')"><i ng-class="dtTable.getOrderColumnClass(column.id)"></i></button>'
+  		    		+	'<button class="btn btn-xs" ng-click="dtTable.setEdit(column.id)" ng-if="dtTable.isShowButton(\'edit\', column)" ng-disabled="!dtTable.canEdit()" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'
+  		    		+	'<button class="btn btn-xs" ng-click="dtTable.setOrderColumn(column.property, column.id)" ng-if="dtTable.isShowButton(\'order\', column)" ng-disabled="!dtTable.canOrder()" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.sort\')}}"><i ng-class="dtTable.getOrderColumnClass(column.id)"></i></button>'
   		    		+	'<button class="btn btn-xs" ng-click="dtTable.setHideColumn(column.id)" ng-if="dtTable.isShowButton(\'hide\', column)" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.hide\')}}"><i class="fa fa-eye-slash"></i></button>'
+  		    		+	'<button class="btn btn-xs" ng-click="dtTable.setGroupColumn(column.property, column.id)" ng-if="dtTable.isShowButton(\'group\', column)" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.group\')}}"><i ng-class="dtTable.getGroupColumnClass(column.id)"></i></button>'  		    		
   		    		+	'</div>'
   		    		+	'</th>'
   		    		+'</tr>'
@@ -1513,7 +1660,7 @@ angular.module('datatableServices', []).
   		    		+			'<div dt-cell-header/>'
   		    		+		'</td>'
   		    		+	'</tr>'
-  		    		+	'<tr ng-repeat="value in dtTable.displayResult | orderBy:dtTable.config.orderBy:dtTable.config.orderReverse" ng-click="select(value.line)" ng-class="getTrClass(value.data, value.line, this)">'
+  		    		+	'<tr ng-repeat="value in dtTable.displayResult" ng-click="select(value.line)" ng-class="getTrClass(value.data, value.line, this)">'
   		    		+		'<td ng-repeat="col in dtTable.config.columns" rowspan="{{col.cells[$parent.$index].rowSpan}}" ng-hide="dtTable.isHide(col.id)" ng-class="getTdClass(value.data, col, this)">'
   		    		+		'<div dt-cell/>'
   		    		+		'</td>'
@@ -1527,11 +1674,13 @@ angular.module('datatableServices', []).
   		    			var dtTable = this.dtTable;
 	    				if(line.trClass){
 	    					return line.trClass; 
-	    				}else if(angular.isFunction(dtTable.config.lines.trClass)){
+	    				} else if(angular.isFunction(dtTable.config.lines.trClass)){
 	    					return dtTable.config.lines.trClass(data, line);
 	    				} else if(angular.isString(dtTable.config.lines.trClass)){
 	    					return this.$eval(dtTable.config.lines.trClass) || dtTable.config.lines.trClass;
-	    				}else{
+	    				} else if(line.group){
+	    					return "active";
+	    				} else{
 	    					return '';
 	    				}		    				
 	    			};
@@ -1552,7 +1701,7 @@ angular.module('datatableServices', []).
 						var dtTable = this.dtTable;
 						if(dtTable.config.select.active){
 		    				if(line){
-		    					if(!line.selected){
+		    					if(!line.selected  && !line.group){
 		    						line.selected=true;
 		    						line.trClass="info";
 		    					}
