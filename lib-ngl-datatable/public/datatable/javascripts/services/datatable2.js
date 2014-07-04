@@ -1187,11 +1187,13 @@ angular.module('datatableServices', []).
 			    					
 			    					if(this.config.group.active && (columns[i].property === this.config.group.by)){
 			    						this.config.group.columns[columns[i].id] = true;
+			    						columns[i].group = true;
 			    					}else{
 			    						this.config.group.columns[columns[i].id] = false;
 			    					}
 			    					if(this.config.order.active && (columns[i].property === this.config.order.by)){
 			    						this.config.order.columns[columns[i].id] = true;
+			    						columns[i].order = true;
 			    					}else{
 			    						this.config.order.columns[columns[i].id] = false;
 			    					}
@@ -1554,11 +1556,11 @@ angular.module('datatableServices', []).
   		    	template:'<div name="dt-toolbar" class="row margin-bottom-3"><div class="col-md-12 col-lg-12">'
   		    		+'<div class="btn-toolbar pull-left" name="dt-toolbar-buttons" ng-if="dtTable.isShowToolbarButtons()">'
   		    		+'<div class="btn-group"  ng-switch on="dtTable.config.select.isSelectAll">'
-  		    		+	'<button class="btn btn-default" ng-click="dtTable.selectAll(true)" ng-show="dtTable.isShowButton(\'select\')" ng-switch-when="false" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.selectall\')}}">'
+  		    		+	'<button class="btn btn-default" ng-click="dtTable.selectAll(true)" ng-if="dtTable.isShowButton(\'select\')" ng-switch-when="false" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.selectall\')}}">'
   		    		+		'<i class="fa fa-check-square"></i>'
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{messagesDatatable(\'datatable.button.selectall\')}}</span>'
   		    		+	'</button>'
-  		    		+	'<button class="btn btn-default" ng-click="dtTable.selectAll(false)" ng-show="dtTable.isShowButton(\'select\')" ng-switch-when="true" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.unselectall\')}}">'
+  		    		+	'<button class="btn btn-default" ng-click="dtTable.selectAll(false)" ng-if="dtTable.isShowButton(\'select\')" ng-switch-when="true" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.unselectall\')}}">'
   		    		+		'<i class="fa fa-square"></i>'
     				+		'<span ng-if="!dtTable.isCompactMode()"> {{messagesDatatable(\'datatable.button.unselectall\')}}</span>'
   		    		+	'</button>'
@@ -1600,7 +1602,7 @@ angular.module('datatableServices', []).
   		    		+'<div class="btn-group" ng-if="dtTable.isShowOtherButtons()" dt-compile="dtTable.config.otherButtons.template"></div>'
   		    		+'</div>'
   		    		+'<div class="btn-toolbar pull-right" name="dt-toolbar-results"  ng-if="dtTable.isShowToolbarResults()">'
-  		    		+	'<button class="btn btn-info" disabled="disabled" ng-show="dtTable.config.showTotalNumberRecords">{{messagesDatatable(\'datatable.totalNumberRecords\', dtTable.totalNumberRecords)}}</button>'
+  		    		+	'<button class="btn btn-info" disabled="disabled" ng-if="dtTable.config.showTotalNumberRecords">{{messagesDatatable(\'datatable.totalNumberRecords\', dtTable.totalNumberRecords)}}</button>'
   		    		+'</div>'
   		    		+'<div class="btn-toolbar pull-right" name="dt-toolbar-pagination"  ng-if="dtTable.isShowToolbarPagination()">'
   		    		+	'<div class="btn-group" ng-if="dtTable.isShowPagination()">'
@@ -1629,7 +1631,7 @@ angular.module('datatableServices', []).
   		    	replace:true,
   		    	template:
   		    		'<div name="dt-messages" class="row"><div class="col-md-12 col-lg-12">'
-  		    		+'<div ng-class="dtTable.config.messages.clazz" ng-show="dtTable.config.messages.text !== undefined"><strong>{{dtTable.config.messages.text}}</strong>'
+  		    		+'<div ng-class="dtTable.config.messages.clazz" ng-if="dtTable.config.messages.text !== undefined"><strong>{{dtTable.config.messages.text}}</strong>'
   		    		+'</div>'
   		    		+'</div></div>'
   		    		,
@@ -1669,7 +1671,7 @@ angular.module('datatableServices', []).
   		    		+		'</td>'
   		    		+	'</tr>'
   		    		+	'<tr ng-repeat="value in dtTable.displayResult" ng-click="select(value.line)" ng-class="getTrClass(value.data, value.line, this)">'
-  		    		+		'<td ng-repeat="col in dtTable.config.columns" rowspan="{{col.cells[$parent.$index].rowSpan}}" ng-hide="dtTable.isHide(col.id)" ng-class="getTdClass(value.data, col, this)">'
+  		    		+		'<td ng-repeat="col in dtTable.config.columns" rowspan="{{col.cells[$parent.$index].rowSpan}}" ng-if="!dtTable.isHide(col.id)" ng-class="getTdClass(value.data, col, this)">'
   		    		+		'<div dt-cell/>'
   		    		+		'</td>'
   		    		+	'</tr>'
