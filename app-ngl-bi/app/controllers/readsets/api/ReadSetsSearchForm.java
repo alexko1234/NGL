@@ -43,5 +43,7 @@ public class ReadSetsSearchForm extends ListForm{
     public List<String> bioinformaticResolutionCodes;
     
     public String productionValuationUser;
+    
+    public List<String> existingFields, notExistingFields;
 	 
 }
