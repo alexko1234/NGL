@@ -39,6 +39,10 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'main
 	$scope.searchService.init($routeParams, datatableConfig)
 	$scope.valuationService = valuationService();
 	
+	if($scope.searchService.isRouteParam){
+		$scope.search();
+	}
+	
 }]);
 
 
