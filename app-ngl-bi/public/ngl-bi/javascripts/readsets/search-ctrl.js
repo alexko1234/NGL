@@ -4,7 +4,7 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'main
                                                  function($scope, $routeParams, mainService, tabService, readSetsSearchService, valuationService) { 
     
 	var datatableConfig = {
-			group:{active:true, by:"projectCode"},
+			group:{active:true},
 			pagination:{mode:'local'},
 			order :{mode:'local', by:'runSequencingStartDate', reverse : true},
 			search:{
