@@ -1,12 +1,15 @@
 @(laneCount:java.lang.Integer)
 
 <div class="row" ng-controller="FlowcellCtrl">
-	<div ng-model="containers" droppable style="position:relative;float:left;width:200px;margin-right:20px">
-		<p  ng-if="containers.length==0">Input</p>
+	<div ng-model="inputContainers" droppable style="position:relative;float:left;width:200px;margin-right:20px">
+		<p  ng-if="inputContainers.length==0">Input</p>
 		<table class="table" >
-			<tr ng-model="container" ng-repeat="container in containers" draggable>
+			<tr ng-model="container" ng-repeat="container in inputContainers" draggable>
 				<td>
 					{{container.code}}
+				</td>
+				<td>
+				<button ng-click="duplicateContainer(container)"><i class="fa fa-plus-square"></i></button>
 				</td>
 			</tr>
 		</table>
@@ -18,15 +21,17 @@
 		<td>
 			@(i+1)
 		</td>
-		<td ng-model="flowcells[@i]" droppable style="width:200px;height:20px">
+		<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable style="width:200px;height:20px">
 			<table class="table">
-			<tr ng-repeat="flowcell in flowcells[@i]"  ng-model="flowcell"  draggable>
-				<td>
-					{{flowcell.code}}
-				</td>
-			</tr>
+				<tr ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds"  ng-model="flowcell"  draggable>
+					<td>
+						{{flowcell.code}}
+					</td>
+				</tr>
 			</table>
 		</td>
 	</tr>
 	}
+	</table>
+	<div class="col-md-12 col-lg-12" datatable="datatable"></div>
 </div>

@@ -134,6 +134,7 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.api.routes.javascript.Experiments.getInstrumentProperties(),
   	    		controllers.experiments.api.routes.javascript.Experiments.updateComments(),
   	    		controllers.experiments.api.routes.javascript.Experiments.nextState(),
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.edit(),
   	    		controllers.instruments.api.routes.javascript.Instruments.list(),
   	    		controllers.instruments.api.routes.javascript.InstrumentUsedTypes.list(),
   	    		controllers.instruments.api.routes.javascript.InstrumentCategories.list(),

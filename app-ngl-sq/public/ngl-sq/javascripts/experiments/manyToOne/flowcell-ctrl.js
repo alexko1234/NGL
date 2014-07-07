@@ -1,6 +1,80 @@
 angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne) {
 	$scope.datatableConfig = {
-			columnsUrl : jsRoutes.controllers.experiments.tpl.Experiments.getEditExperimentColumns().url,
+			columns:[{
+						"header":Messages("containers.table.supportCode"),
+						"property":"support.code",
+						"order":true,
+						"type":"text",
+						"extraHeaders":{"0":"Inputs"}
+					},
+					{
+						"header":Messages("containers.table.supportCategoryCode"),
+						"property":"support.categoryCode",
+						"order":true,
+						"type":"text",
+						"extraHeaders":{"0":"Inputs"}
+					},
+					{
+						"header":Messages("containers.table.support.column"),
+						"property":"support.column",
+						"order":true,
+						"type":"text",
+						"extraHeaders":{"0":"Inputs"}
+					},
+					{
+						"header":Messages("containers.table.support.line"),
+						"property":"support.line",
+						"order":true,
+						"type":"text",
+						"extraHeaders":{"0":"Inputs"}
+					},
+					{
+						"header":Messages("containers.table.projectCodes"),
+						"property":"projectCodes",
+						"order":true,
+						"type":"text",
+						"extraHeaders":{"0":"Inputs"}
+					},
+					{
+						"header":Messages("containers.table.sampleCodes"),
+						"property":"sampleCodes",
+						"order":true,
+						"type":"text",
+						"extraHeaders":{"0":"Inputs"}
+					},
+					{
+						"header":Messages("containers.table.state.code"),
+						"property":"state.code",
+						"order":true,
+						"type":"text",
+						"edit":true,
+						"choiceInList": true,
+						"possibleValues":'lists.getStates()',
+						"filter":"codes:'state'",
+						"extraHeaders":{"0":"Inputs"}
+					},
+					{
+						"header":Messages("containers.table.valid"),
+						"property":"valuation.valid",
+						"order":true,
+						"type":"text",
+						"filter":"codes:'valuation'",
+						"extraHeaders":{"0":"Inputs"}
+					},
+					{
+						"header":Messages("containers.table.creationDate"),
+						"property":"traceInformation.creationDate",
+						"order":true,
+						"type":"date",
+						"extraHeaders":{"0":"Inputs"}
+					},
+					{
+						"header":Messages("containers.table.fromExperimentTypeCodes"),
+						"property":"fromExperimentTypeCodes",
+						"order":true,
+						"type":"text",
+						"extraHeaders":{"0":"Inputs"}
+					}],
 			compact:false,
 			pagination:{
 				active:false
@@ -59,6 +133,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
+		console.log("ADD TEST");
 		$scope.datatable.addColumn(2,$scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"}));
 	});
 	
@@ -79,6 +154,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('inputToExperiment', function(e, atomicTransfertMethod) {
+		console.log("LALALA");
 		$scope.atomicTransfere.inputToExperiment();
 	});
 	
@@ -113,7 +189,17 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('addExperimentPropertiesInputToScope', function(e, data) {
-		/*for(var i=0;i<$scope.datatable.getData().length;i++){
+		/*angular.forEach(data ,function(property){
+			if($scope.getLevel(property.levels, "ContainerOut")){
+					for(var i=0;i<$scope.inputContainers.length;i++){
+						var getter = $parse("inputContainers["+i+"].experimentProperties."+property.code+".value");
+						console.log("inputContainers["+i+"].experimentProperties."+property.code+".value");
+						getter.assign($scope,"");
+					}
+				}
+			});
+		});*/
+		for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerIn")){
 					var getter = $parse("datatable.displayResult["+i+"].inputExperimentProperties."+data[j].code+".value");
@@ -124,7 +210,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					}
 				}
 			}
-		}*/
+		}
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutputToScope', function(e, data) {
@@ -165,21 +251,40 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		$scope.atomicTransfere.experimentToOutput();
 	});
 	
+	$scope.duplicateContainer = function(container){
+		$scope.inputContainers.push(angular.copy(container));
+	};
+	
 	$scope.drop = function(e, data) {
-		var array_regexp = /^(.+)\[([0-9])\]+/;
+		//capture the number of the atomicTransfertMethod
+		var array_regexp = /^experiment.value.atomicTransfertMethods\[([0-9]+)\].+/;
 		var model = e.dataTransfer.getData('Model');
+		
 		var match = model.match(array_regexp);
 		if(!match){
-			$scope[model].splice( $scope[model].indexOf(data), 1);
+			$scope[model].splice($scope[model].indexOf(data), 1);
 		}else{
-			$scope[match[1]][match[2]].splice( $scope[match[1]][match[2]].indexOf(data), 1);
+			$scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.splice($scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.indexOf(data), 1);
 		}
-	}
+	};
+	
+	$scope.beforeDropData = function(e, data, ngModel){
+		var array_regexp = /^experiment.value.atomicTransfertMethods\[([0-9]+)\].+/;
+		var model = ngModel;
+		
+		var match = model.match(array_regexp);
+		if(match){
+			data.locationOnContainerSupport.line = parseInt(match[1])+1;
+			data.locationOnContainerSupport.column = 1;
+		}
+		
+		return data;
+	};
 	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);
-	$scope.atomicTransfere = manyToOne($scope, "", "none");
-	$scope.containers = [{"code":"h2ERD"},{"code":"zdfgrgtr3"}];
+	$scope.atomicTransfere = manyToOne($scope, "dragndrop", "datatable");
+	$scope.inputContainers = [];
 	$scope.flowcells = [];
 	//init flowcells
 	for(var i=0;i<8;i++){

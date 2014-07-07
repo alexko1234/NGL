@@ -63,7 +63,7 @@
 		<button class="btn btn-primary" ng-disabled="saveInProgress == true" ng-click="saveAllPromise();" data-toggle="tooltip" title="@Messages("experiments.save_all")">
 			<i class="fa fa-save"></i>
 		</button>
-		<button class="btn btn-default"  data-toggle="modal" data-target="#myModal">@Messages("experiment.addComment")</button>
+		<button class="btn btn-default"  ng-disabled="experiment.value._id == null || !experiment.experimentInformation.enabled"  data-toggle="modal" data-target="#myModal">@Messages("experiment.addComment")</button>
 		
 										
 	</div>
@@ -196,13 +196,13 @@
 						<label  class="col-md-6 col-lg-6 control-label">{{instp.name}}</label>
 					
 						<div class="col-md-6 col-lg-6" ng-if="instp.valueType == 'java.awt.Image'">
-							<input type="file" base64-img="experiment.value.instrumentProperties[instp.code]" />
-							<div class="thumbnail col-md-6 col-lg-6"  ng-show="experiment.value.instrumentProperties[instp.code] != undefined && experiment.value.instrumentProperties[instp.code].value != ''" >
+							<input type="file" ng-disabled="!experiment.instrumentInformation.enabled" base64-img="experiment.value.instrumentProperties[instp.code]" />
+							<div ng-click="setImage(experiment.value.instrumentProperties[instp.code].value,experiment.value.instrumentProperties[instp.code].fullname,experiment.value.instrumentProperties[instp.code].width,
+							    experiment.value.instrumentProperties[instp.code].height)" class="thumbnail col-md-6 col-lg-6"  ng-show="experiment.value.instrumentProperties[instp.code] != undefined && experiment.value.instrumentProperties[instp.code].value != ''" >
 								
 								 <div data-target="#modalImage" role="button" data-toggle="modal" >
 							     <a href="#">
-								<img ng-click="setImage(experiment.value.instrumentProperties[instp.code].value,experiment.value.instrumentProperties[instp.code].fullname,experiment.value.instrumentProperties[instp.code].width,
-							    experiment.value.instrumentProperties[instp.code].height)" src="data:image/{{experiment.value.instrumentProperties[instp.code].extension}};base64,{{experiment.value.instrumentProperties[instp.code].value}}">
+								<img  src="data:image/{{experiment.value.instrumentProperties[instp.code].extension}};base64,{{experiment.value.instrumentProperties[instp.code].value}}">
 								</a>
 									
 								</div>
@@ -213,12 +213,13 @@
 							<div class="col-md-6 col-lg-6" ng-switch on="instp.choiceInList">
 								<input class="form-control" type="text" ng-switch-when="false" class="input-small"
 									ng-readonly="!experiment.instrumentInformation.enabled"
-									ng-model="experiment.value.instrumentProperties[instp.code].value" />
+									ng-model="experiment.value.instrumentProperties[instp.code].value"
+									ng-disabled="!experiment.instrumentInformation.enabled"/>
 								
 								<select class="form-control" ng-options="opt.value as opt.value for opt in instp.possibleValues"  
 									ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" 
 									ng-model="experiment.value.instrumentProperties[instp.code].value" ng-switch-when="true" 
-									auto-select>
+									auto-select ng-disabled="!experiment.instrumentInformation.enabled">
 							    <option value="">Sélect. {{instp.name}}</option>
 							    </select>
 							</div>

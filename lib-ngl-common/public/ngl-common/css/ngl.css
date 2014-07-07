@@ -57,6 +57,11 @@ input[type="checkbox"] {
 	margin-bottom:0px;
 }
 
+.draggable{
+	 cursor:move;
+}
+
 .drag, .over{
 	  background-color: #f1f1f1;
 }
+

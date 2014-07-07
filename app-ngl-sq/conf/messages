@@ -27,11 +27,12 @@ containers.table.support.column = X
 
 containers.placeholder.fromDate = Création container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Création container jusqu''au (jj/mm/aaaa)
+containers.placeholder.user = Container crée par
 
 containers.select.state =  Sélect. un état container
 containers.select.categoryCode =  Sélect. catégorie container
 containers.select.categorySupportCode =  Sélect. catégorie support
-containers.select.fromExperimentTypeCodes=Issu du type d''expérience
+containers.select.fromExperimentTypeCodes= Container issu du type d''expérience
 #Supports table
 supports.table.code= Support
 
@@ -98,6 +99,7 @@ processes.select.state = Sélect. un état processus
 
 processes.placeholder.fromDate = Process. depuis le (jj/mm/aaaa)
 processes.placeholder.toDate = Process. jusqu''au (jj/mm/aaaa)
+processes.placeholder.user = Process. Créé par
 
 
 #experiments

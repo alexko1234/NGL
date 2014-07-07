@@ -16,10 +16,10 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 			ngModel:'='
 		},
     	link: function(scope, element, attrs) {
-            // this gives us the native JS object
 			var OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?(?:\s+group\s+by\s+(.*))?\s+for\s+(?:([\$\w][\$\w\d]*)|(?:\(\s*([\$\w][\$\w\d]*)\s*,\s*([\$\w][\$\w\d]*)\s*\)))\s+in\s+(.*)$/;
             var REPEAT_REGEXP = /^\s*(.+)\s+in\s+(.*?)\s*(\s+track\s+by\s+(.+)\s*)?$/;
-			var el = element[0];
+            // this gives us the native JS object
+            var el = element[0];
 			var getModel = function(){
 				if(attrs.ngRepeat){
 					var model = attrs.ngRepeat;
@@ -33,6 +33,7 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 				
 				return "";
 			};
+			element.addClass('draggable'); 
             el.draggable = true;
             el.addEventListener(
                 'dragstart',
@@ -63,15 +64,15 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
           drop: '&', // parent
           model: '=ngModel'
         },
-        link: function(scope, element) {
-          // again we need the native object
+        link: function(scope, element, attrs) {
+          //Again we need the native object
           var el = element[0];
           
           el.addEventListener(
             'dragover',
             function(e) {
               e.dataTransfer.dropEffect = 'move';
-              // allows us to drop
+              //Allows us to drop
               if (e.preventDefault) e.preventDefault();
               this.classList.add('over');
               return false;
@@ -111,12 +112,18 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 				
 				//We check that the data is not already in the model
 				if(scope.model.indexOf(draggedData) == -1){
+					var beforeDropDataFn = scope.$parent.beforeDropData;
+					
+					if ('undefined' !== typeof beforeDropDataFn) {
+						draggedData = beforeDropDataFn(e, draggedData, attrs.ngModel);
+					}
+					
 					scope.model.push(draggedData);
 				
-					var fn = scope.$parent.drop;
+					var dropFn = scope.$parent.drop;
 
-					if ('undefined' !== typeof fn) {
-						fn(e, draggedData);
+					if ('undefined' !== typeof dropFn) {
+						dropFn(e, draggedData);
 					}
 				}
     		 });

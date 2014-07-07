@@ -6,6 +6,7 @@ import java.util.List;
 import controllers.ListForm;
 
 public class ExperimentSearchForm extends ListForm{
+	public String code;
 	public String typeCode;
 	public String processTypeCode;
 	public String categoryCode;
@@ -17,6 +18,7 @@ public class ExperimentSearchForm extends ListForm{
 	public Date toDate;
 	public String stateCode;
 	public List<String> users;
+	public String containerSupportCode;
 	
 	@Override
 	public String toString() {

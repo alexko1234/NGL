@@ -139,7 +139,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	};
 	
 	$scope.search = function(){		
-		if($scope.form.processType || $scope.form.experimentType || $scope.form.projectCodes || $scope.form.sampleCodes || $scope.form.type || $scope.form.fromDate || $scope.form.toDate || $scope.form.state || $scope.form.user){
+		if($scope.form.processType || $scope.form.experimentType || $scope.form.projectCodes || $scope.form.sampleCodes || $scope.form.type || $scope.form.fromDate || $scope.form.toDate || $scope.form.state || $scope.form.user || $scope.form.containerSupportCode){
 			var jsonSearch = {};			
 
 			if($scope.form.projectCodes){
@@ -151,6 +151,10 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			if($scope.form.processType){
 				jsonSearch.processTypeCode = $scope.form.processType;
 			}		
+			
+			if($scope.form.containerSupportCode){
+				jsonSearch.containerSupportCode = $scope.form.containerSupportCode;
+			}
 			
 			if($scope.form.type){
 				jsonSearch.typeCode = $scope.form.type;

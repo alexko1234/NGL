@@ -2,36 +2,60 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 	
 			var constructor = function($scope){
 				var common = {
-					newExperimentDatatable : function(){
-						var containers = [];
-						var promises = [];
-						$scope.basket = $scope.getBasket().get();
-						angular.forEach($scope.basket, function(basket){
-							var promise = $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{supportCode:basket.code}})
-							.success(function(data, status, headers, config) {
-								$scope.clearMessages();
-								if(data!=null){
-									angular.forEach(data, function(container){
-										containers.push(container);
-									});
-								}
-							})
-							.error(function(data, status, headers, config) {
-								alert("error");
+						newExperiment: function(fn){
+							var containers = [];
+							var promises = [];
+							$scope.basket = $scope.getBasket().get();
+							angular.forEach($scope.basket, function(basket){
+								var promise = $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{supportCode:basket.code}})
+								.success(function(data, status, headers, config) {
+									$scope.clearMessages();
+									if(data!=null){
+										angular.forEach(data, function(container){
+											containers.push(container);
+										});
+									}
+								})
+								.error(function(data, status, headers, config) {
+									alert("error");
+								});
+								promises.push(promise);
 							});
-							promises.push(promise);
+							
+							$q.all(promises).then(function (res) {
+								//console.log(containers);
+								//$scope.datatable.setData(containers,containers.length);
+								fn(containers);
+								$scope.doPurifOrQc($scope.experiment.value.typeCode);
+								$scope.getInstruments();
+								if(!$scope.experiment.editMode) {
+									$scope.init_experiment(containers, $scope.experimentType.atomicTransfertMethod);
+								}else{
+									$scope.addExperimentPropertiesInputsColumns();
+								}
+							});
+						},
+					newExperimentDatatable : function(){
+						this.newExperiment(function(containers){
+							$scope.datatable.setData(containers,containers.length);
+						});
+					},
+					containersToContainerUseds : function(containers){
+						var containerUseds = [];
+						angular.forEach(containers, function(container){
+							containerUseds.push({"code":container.code,"state":container.state,"instrumentProperties":{},"experimentProperties":{},
+								"percentage":100,"categoryCode":container.categoryCode,"volume":container.mesuredVolume,
+								"concentration":container.mesuredConcentration, "contents":container.contents,"locationOnContainerSupport":container.support});
 						});
 						
-						$q.all(promises).then(function (res) {
+						return containerUseds;
+					},
+					newExperimentDragndrop : function(){
+						var that = this;
+						this.newExperiment(function(containers){
 							console.log(containers);
+							$scope.inputContainers = that.containersToContainerUseds(containers);
 							$scope.datatable.setData(containers,containers.length);
-							$scope.doPurifOrQc($scope.experiment.value.typeCode);
-							$scope.getInstruments();
-							if(!$scope.experiment.editMode) {
-								$scope.init_experiment(containers, $scope.experimentType.atomicTransfertMethod);
-							}else{
-								$scope.addExperimentPropertiesInputsColumns();
-							}
 						});
 					},
 					loadContainer : function(containerUsed){
@@ -119,7 +143,21 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 								}
 							}
 						},
+						searchContainer : function(code){
+							var i = 0;
+							while($scope.experiment.value.atomicTransfertMethods[i] != undefined){
+								for(var j=0;j<$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length;j++){
+									if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].code == code){
+										return {"x":i,"y":j};
+									}
+								}
+								i++;
+							}
+							return {};
+						},
 						inputToExperiment : function(){
+							console.log("InputToExperiment");
+							console.log(inputType);
 							if(inputType === "datatable"){
 								for(var i=0;i<$scope.datatable.displayResult.length;i++){
 									for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[0].length;j++){
@@ -127,6 +165,12 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 										$scope.experiment.value.atomicTransfertMethods[0].inputContainerUsed[j].experimentProperties = $scope.datatable.displayResult[i].data.inputExperimentProperties;
 										i++;
 									}
+								}
+							}else if(inputType === "dragndrop"){
+								for(var i=0;i<$scope.datatable.displayResult.length;i++){
+									var pos = this.searchContainer($scope.datatable.displayResult[i].data.code);
+									$scope.experiment.value.atomicTransfertMethods[pos.x].inputContainerUseds[pos.y].instrumentProperties = $scope.datatable.displayResult[i].data.inputInstrumentProperties;
+								    $scope.experiment.value.atomicTransfertMethods[pos.x].inputContainerUsed[pos.y].experimentProperties = $scope.datatable.displayResult[i].data.inputExperimentProperties;
 								}
 							}
 						},
@@ -426,7 +470,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							that.experimentToOutput();
 						});
 					},
-					loadExperimentDatatable : function(){
+					loadExperimentCommon : function(fn){
 						var promises = [];
 						var resultInput = varManyToX.loadInputContainers($scope.experiment.value.atomicTransfertMethods);
 						promises = promises.concat(resultInput.promises);
@@ -437,19 +481,14 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 						
 						
 						$q.all(promises).then(function (res) {
-							$scope.datatable.setData(resultInput.containers,resultInput.containers.length);
-							if($scope.experiment.value.state.code === "F"){
-								var allData = $scope.datatable.getData();
-								angular.forEach(allData, function(data){
-									data.outputContainerUsed = resultOutput.containers[0];
-								});
-								$scope.datatable.setData(allData,allData.length);
+							if ('undefined' !== typeof fn) {
+								fn(resultInput);
 							}
 							$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,true);
 							$scope.getInstruments(true);
 							$scope.atomicTransfere.experimentToInput();
 							$scope.atomicTransfere.experimentToOutput();
-							console.log($scope.isOutputGenerated());
+						
 							if($scope.isOutputGenerated()){
 								$scope.addOutputColumns();
 								$scope.addExperimentPropertiesOutputsColumns();
@@ -459,12 +498,34 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 					},
 					loadExperiment : function(){
 						if(inputType === "datatable"){
-							this.loadExperimentDatatable();
+							this.loadExperimentCommon(function(resultInput){
+								$scope.datatable.setData(resultInput.containers,resultInput.containers.length);
+								if($scope.experiment.value.state.code === "F"){
+									var allData = $scope.datatable.getData();
+									angular.forEach(allData, function(data){
+										data.outputContainerUsed = resultOutput.containers[0];
+									});
+									$scope.datatable.setData(allData,allData.length);
+								}
+							});
+						}else if(inputType === "dragndrop"){
+							this.loadExperimentCommon(function(resultInput){
+								$scope.datatable.setData(resultInput.containers,resultInput.containers.length);
+								if($scope.experiment.value.state.code === "F"){
+									var allData = $scope.datatable.getData();
+									angular.forEach(allData, function(data){
+										data.outputContainerUsed = resultOutput.containers[0];
+									});
+									$scope.datatable.setData(allData,allData.length);
+								}
+							});
 						}
 					},
 					newExperiment : function(){
 						if(inputType === "datatable"){
 							varExperimentCommonFunctions.newExperimentDatatable();
+						}else if(inputType === "dragndrop"){
+							varExperimentCommonFunctions.newExperimentDragndrop();
 						}
 					}
 				};

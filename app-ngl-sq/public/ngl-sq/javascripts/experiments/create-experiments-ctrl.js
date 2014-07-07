@@ -1,4 +1,4 @@
-angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','lists','$parse','$q','$position','$routeParams', function($scope,$window, $http,lists,$parse,$q,$position,$routeParams) {
+angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','lists','$parse','$q','$position','$routeParams','$location', function($scope,$window, $http,lists,$parse,$q,$position,$routeParams,$location) {
 	$scope.experiment = {
 		outputGenerated:false,
 		outputVoid:false,
@@ -27,6 +27,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			}
 		}
 	};
+	$scope.message = {};
 	
 	$scope.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
 		$scope.modalImage = imageData;
@@ -55,6 +56,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 						$scope.message.clazz="alert alert-success";
 						$scope.message.text=Messages('experiments.msg.save.sucess')
 						$scope.experiment.value = data;
+						$scope.experiment.comment = "";
 					}
 				})
 				.error(function(data, status, headers, config) {
@@ -149,16 +151,17 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	
 	$scope.addExperimentPropertiesInputsColumns = function(){
 		var data = $scope.experiment.experimentProperties.inputs;
+		console.log("ADDExpProp");
 		if(data != undefined){
 			angular.forEach(data, function(property){
-				if($scope.getLevel( property.levels, "ContainerIn")){		
+				if($scope.getLevel( property.levels, "ContainerOut")){// ContainerIn
 					if(property.choiceInList){
 						var possibleValues = $scope.possibleValuesToMap(property.possibleValues);
 					}
 					$scope.$broadcast('addExperimentPropertiesInput', property, possibleValues);
 				}
 			});
-			$scope.$broadcast('addExperimentPropertiesInputToScope', property);		
+			$scope.$broadcast('addExperimentPropertiesInputToScope', data);		
 		}
 	};
 	
@@ -287,6 +290,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	
 			promises.push($scope.saveContainers());
 		}else{
+			//$scope.$broadcast('inputToExperiment', $scope.experimentType.atomicTransfertMethod);
+			//$scope.$broadcast('outputToExperiment', $scope.experimentType.atomicTransfertMethod);
+			console.log("Experiment");
+			console.log($scope.experiment.value);
 			promises.push($scope.save());
 		}
 		
@@ -326,6 +333,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				$scope.message.text=Messages('experiments.msg.save.sucess')
 				$scope.experiment.value = data;
 				$scope.saveInProgress = false;
+				$location.path(jsRoutes.controllers.experiments.tpl.Experiments.edit(data.code).url);
 			}
 		})
 		.error(function(data, status, headers, config) {
@@ -410,6 +418,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
 		if(atomicTransfertMethod == "ManyToOne"){
+			/*for(var i=0;i<8;i++){
+				$scope.experiment.value.atomicTransfertMethods[i] = {class:atomicTransfertMethod, inputContainerUseds:[]};
+			}*/
 			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[]};
 			angular.forEach(containers, function(container){
 				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state});
@@ -427,6 +438,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	
 	$scope.create_experiment = function(containers, atomicTransfertMethod){
+		console.log("CREATE");
 		$scope.init_atomicTransfert(containers,atomicTransfertMethod);
 
 		angular.element(document).ready(function() {
@@ -435,7 +447,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					var getter = $parse("experiment.value.experimentProperties."+input.code+".value");
 					getter.assign($scope,"");
 				});
-
+				console.log("addExperimentPropertiesInputsColumns");
 				$scope.addExperimentPropertiesInputsColumns();
 			}
 		});
@@ -525,14 +537,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		.success(function(data, status, headers, config) {
 
 			$scope.experiment.instrumentProperties.inputs = data;
-
 			angular.forEach(data, function(property){
 				//Creation of the properties on the scope
 				if(loaded == false){
 					var getter = $parse("experiment.value.instrumentProperties."+property.code+".value");
 					getter.assign($scope,"");
 				}
-				
 				if($scope.getLevel( property.levels,"ContainerIn")){
 					if(property.choiceInList){
 						//var possibleValues = [];
@@ -666,6 +676,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					$scope.experiment.outputVoid = true;
 					$scope.getTemplate();
 				}
+				$scope.experiment.experimentProperties.inputs = data.propertiesDefinitions;
 				experiment.typeCode =  data.code;
 			})
 			.error(function(data, status, headers, config) {

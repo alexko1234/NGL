@@ -6,15 +6,15 @@ import java.util.Map;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.utils.HelperObjects;
 import models.utils.InstanceConstants;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.common.instance.CommonValidationHelper;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 public class ContainerUsed implements IValidation{
@@ -25,6 +25,9 @@ public class ContainerUsed implements IValidation{
 	public LocationOnContainerSupport locationOnContainerSupport;
 	// Take for inputContainer or Create for outputContainer
 	public PropertyValue volume;
+	public PropertyValue concentration;
+	
+	public List<Content> contents;
 	
 	public Float percentage;
 	// Proprietes a renseigner en fonction du type d'experiment ou d'instrument

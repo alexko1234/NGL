@@ -351,6 +351,10 @@ public class Experiments extends CommonController{
 
 		Logger.info("Experiment Query : "+experimentSearch);
 
+		if(StringUtils.isNotEmpty(experimentSearch.code)){
+			queryElts.add(DBQuery.is("code", experimentSearch.code));
+		}
+		
 		if(StringUtils.isNotEmpty(experimentSearch.typeCode)){
 			queryElts.add(DBQuery.is("typeCode", experimentSearch.typeCode));
 		}
@@ -373,6 +377,10 @@ public class Experiments extends CommonController{
 
 		if(experimentSearch.sampleCodes != null){
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCodes));
+		}
+		
+		if(experimentSearch.containerSupportCode != null){
+			queryElts.add(DBQuery.is("instrumentProperties.containerSupportCode.value", experimentSearch.containerSupportCode));
 		}
 		
 		if(experimentSearch.sampleCode != null){
