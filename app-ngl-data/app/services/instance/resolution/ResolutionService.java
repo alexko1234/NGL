@@ -242,13 +242,18 @@ public class ResolutionService {
 		l.add(newResolution("répartition bases","Qlte-repartitionBases", resolutionCategories.get("Qlte"), (short) 2));
 		l.add(newResolution("% adaptateurs détectés","Qlte-adapterPercent", resolutionCategories.get("Qlte"),(short) 3));
 		l.add(newResolution("% duplicat élevé","Qlte-duplicatElevee", resolutionCategories.get("Qlte"),(short) 4));
-						
+		
+		l.add(newResolution("% NT 30X","Qlte-30XntPercent", resolutionCategories.get("Qlte"),(short)5));
+		l.add(newResolution("% Target","Qlte-targetPercent", resolutionCategories.get("Qlte"),(short)6));
+
+		
 		l.add(newResolution("% mapping faible","MAP-PercMappingFble", resolutionCategories.get("MAP"),(short) 1));
 		
 		l.add(newResolution("sexe incorrect","Sample-sexeIncorrect", resolutionCategories.get("Sample"),(short) 1));
 		
 		l.add(newResolution("test Dev","Info-testDev", resolutionCategories.get("Info"),(short) 1));
 		l.add(newResolution("test Prod","Info-testProd", resolutionCategories.get("Info"),(short) 2));
+		l.add(newResolution("redo effectué","Info-redoDone", resolutionCategories.get("Info"),(short) 3));
 		
 		l.add(newResolution("erreur Experimental Type","LIMS-erreurExpType", resolutionCategories.get("LIMS"),(short) 1));
 		
