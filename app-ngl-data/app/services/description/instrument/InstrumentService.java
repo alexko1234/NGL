@@ -59,7 +59,7 @@ public class InstrumentService {
 		l.add(newInstrumentCategory("CBot","cbot"));
 		l.add(newInstrumentCategory("Sequenceurs Illumina","seq-illumina"));
 		l.add(newInstrumentCategory("Cartographie Optique Opgen","opt-map-opgen"));
-	
+		l.add(newInstrumentCategory("Extérieur","extseq"));
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 		
 	}
@@ -158,6 +158,10 @@ public class InstrumentService {
 		l.add(newInstrumentUsedType("ARGUS", "ARGUS", InstrumentCategory.find.findByCode("opt-map-opgen"), getArgusProperties(), 
 				getInstrumentOpgen(),
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"mapcard"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));	
+		l.add(newInstrumentUsedType("EXTSOLEXA", "EXTSOLEXA", InstrumentCategory.find.findByCode("extseq"), null, 
+				getInstrumentExtSolexa(),
+				getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1","flowcell-8"}),null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
@@ -202,10 +206,10 @@ public class InstrumentService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Type de MapCard", "mapcardType", LevelService.getLevels(Level.CODE.Instrument),String.class, true, newValues("standard","HD"), "single"));
         propertyDefinitions.add(newPropertiesDefinition("Référence Carte", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Enzyme de restriction", "restrictionEnzyme", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("BamHI "," NheI "," SpeI "," ApaLI "," MIuI "," NdeI "," AfIII "," KpnI "," Ncol "," XbaI "," BgIII "," EcoRI "," HindIII "," NotI "," PvuII "," XhoI"), "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Enzyme de restriction", "restrictionEnzyme", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("AfIII","ApaLI","BamHI","BgIII","EcoRI","HindIII","KpnI","MIuI","Ncol","NdeI","NheI","NotI","PvuII","SpeI","XbaI","XhoI"), "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Tableau sélection enzyme","enzymeChooser",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Photo digestion","digestionForTracking",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Statistiques Analyse","analyseStatistics",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Metrix","anlyseMetrics",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Statistiques Contigs","contigStatistics",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
         return propertyDefinitions;
 	}
@@ -278,6 +282,14 @@ public class InstrumentService {
 	public static List<Instrument> getInstrumentOpgen()throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add( createInstrument("APOLLON", "APOLLON", true, "/env/atelier/opgen/APOLLON", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
+	
+	public static List<Instrument> getInstrumentExtSolexa()throws DAOException{
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add( createInstrument("EXTGAIIX", "EXTGAIIX", true, "/env/atelier", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("EXTHISEQ", "EXTHISEQ", true, "/env/atelier", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("EXTMISEQ", "EXTMISEQ", true, "/env/atelier", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		return instruments;
 	}
 	

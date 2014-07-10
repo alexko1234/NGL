@@ -56,18 +56,18 @@ public class ProcessService {
 				
 		}
 		
-		l.add(DescriptionFactory.newProcessType("Run Opgen", "opgen-run", ProcessCategory.find.findByCode("mapping"),getPropertyDefinitionsOpgenDepot() , getExperimentTypes("opgen-depot"), getExperimentTypes("opgen-depot").get(0), getExperimentTypes("opgen-depot").get(0),getExperimentTypes("void-opgen-depot").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newProcessType("Run Opgen", "opgen-run", ProcessCategory.find.findByCode("mapping"),null , getExperimentTypes("opgen-depot"), getExperimentTypes("opgen-depot").get(0), getExperimentTypes("opgen-depot").get(0),getExperimentTypes("void-opgen-depot").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
 
 
-	private static List<PropertyDefinition> getPropertyDefinitionsOpgenDepot() throws DAOException {
+	/*private static List<PropertyDefinition> getPropertyDefinitionsOpgenDepot() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type MapCard","mapcardType"
 						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("standard","HD"), "single"));
 		return propertyDefinitions;
-	}
+	}*/
 
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepot() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

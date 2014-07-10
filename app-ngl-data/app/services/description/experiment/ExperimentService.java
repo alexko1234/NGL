@@ -185,21 +185,21 @@ public class ExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
 		
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Volume à engager dénat", "engageVolume1", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Volume NaOH", "NaOHVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Volume EB", "EBVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume à engager dénat", "engageVolume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume NaOH", "NaOHVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume EB", "EBVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "single"));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Concentration finale Dénat ", "finalConcentration1", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Volume final Dénat", "finalVolume1", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Concentration finale Dénat ", "finalConcentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume final Dénat", "finalVolume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "single"));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume à engager dilution", "engageVolume2", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Volume HTI", "HTIVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Volume Phix", "phixVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume à engager dilution", "engageVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume HTI", "HTIVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume Phix", "phixVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "single"));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume final Dilution", "finalVolume2", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume final Dilution", "finalVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Concentration finale Dilution", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume à déposer", "putInVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume à déposer", "putInVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "single"));
 		
 		return propertyDefinitions;
 	}
