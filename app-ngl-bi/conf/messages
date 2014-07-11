@@ -423,6 +423,7 @@ analyses.sampleCodes = Echantillons
 analyses.stateCode = Etat
 analyses.valuation.valid = Valid ?
 analyses.valuation.resolutions = Comptes Rendus
+analyses.valuation.criteria = Critères éval.
 
 
 ############

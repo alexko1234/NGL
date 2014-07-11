@@ -139,12 +139,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			    	header: "readsets.treatments.ngsrg_illumina.validSeqPercent",
 			    	type :"Number",
 			    	format:2,
-			    	order:false
+			    	order:false,
+			    	tdClass : "valuationService.valuationCriteriaClass({readsets:value.data}, run.valuation.criteriaCode, 'readsets.' + col.property)"
 				},
 				{  	property:"treatments.ngsrg.default.nbCluster.value",
 			    	header: "readsets.treatments.ngsrg_illumina.nbCluster",
 			    	type :"Number",
-			    	order:false
+			    	order:false,
+			    	tdClass : "valuationService.valuationCriteriaClass({readsets:value.data}, run.valuation.criteriaCode, 'readsets.' + col.property)"
 				},
 				{  	property:"treatments.ngsrg.default.nbBases.value",
 			    	header: "readsets.treatments.ngsrg_illumina.nbBases",
@@ -258,7 +260,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	}
 	
 	$scope.highLight = function(prop){
-			if (lists.getValuationCriterias() && $scope.run) {
+			if (lists.getValuationCriterias() && $scope.run && $scope.run.valuation) {
 				return "bg-" + $scope.valuationService.valuationCriteriaClass($scope.run, $scope.run.valuation.criteriaCode, prop);
 			}
 			else {
@@ -274,7 +276,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	};
 	
     $scope.deliberatelyTrustHTMLComment = function() {
-    	if ($scope.run && $scope.run.valuation.comment && $scope.run.valuation.comment != null) {
+    	if ($scope.run && $scope.run.valuation && $scope.run.valuation.comment && $scope.run.valuation.comment != null) {
     		return $sce.trustAsHtml($scope.run.valuation.comment.trim().replace(/\n/g, "<br>"));
     	}	
     	else {
@@ -289,6 +291,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		$scope.mainService = mainService;
 		$scope.mainService.stopEditMode();
 		$scope.valuationService = valuationService();
+		$scope.run = {};
 		
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			
@@ -313,7 +316,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			}
 			
 			$scope.lists.refresh.resolutions({typeCode:$scope.run.typeCode, objectTypeCode:"Run"});
-
+			
+			$scope.lists.clear("valuationCriterias");
 			$scope.lists.refresh.valuationCriterias({typeCode:$scope.run.typeCode, objectTypeCode:"Run", orderBy:'name'});
 			
 			if(angular.isDefined($scope.run.lanes[0].treatments)){
@@ -327,7 +331,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				$scope.readSetsDT.setData(data, data.length);	
 			});
 		});
-		
 		
 	};
 	
@@ -436,7 +439,7 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 	
 	var init = function(){
 		$scope.$watch('run', function() {
-			if(angular.isDefined($scope.run)){
+			if(angular.isDefined($scope.run) && angular.isDefined($scope.run.lanes)){
 				$scope.lanesNGSRG = datatable(lanesNGSRGConfig);
 				$scope.lanesNGSRG.setData($scope.run.lanes, $scope.run.lanes.length);
 			}
@@ -797,8 +800,6 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 	
 	init();
 }]);
-
-
 
 
 

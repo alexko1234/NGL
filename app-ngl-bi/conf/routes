@@ -19,6 +19,7 @@ GET	   	/runs/:code									controllers.runs.tpl.Runs.get(code: java.lang.String
 GET	   	/runs/:code/valuation						controllers.runs.tpl.Runs.valuation(code: java.lang.String)
 GET		/tpl/runs/search/:type						controllers.runs.tpl.Runs.search(type: java.lang.String)
 GET		/tpl/runs/details							controllers.runs.tpl.Runs.details()
+GET		/tpl/runs/workflow							controllers.runs.tpl.Runs.workflow()
 GET		/tpl/runs/lanes/treatments/:code			controllers.runs.tpl.Runs.laneTreatments(code: java.lang.String)
 GET		/tpl/runs/js-routes							controllers.runs.tpl.Runs.javascriptRoutes()
 #run api

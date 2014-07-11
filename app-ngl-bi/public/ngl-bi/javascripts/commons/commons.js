@@ -119,7 +119,8 @@ angular.module('biCommonsServices', []).
     		var criterias = undefined;
     		var valuationCriteriaClass = function(value, criteriaCode, propertyName){
     			//init criterias
-    			if((!criterias || !criterias[criteriaCode]) && lists.getValuationCriterias().length > 0 ){
+    			console.log(" lists.getValuationCriterias().length=" +  lists.getValuationCriterias().length);
+    			if((!criterias || !criterias[criteriaCode]) && lists.getValuationCriterias() && lists.getValuationCriterias().length > 0 ){
     				var values = lists.getValuationCriterias();
     				criterias = {};
     				for(var i = 0 ; i < values.length; i++){

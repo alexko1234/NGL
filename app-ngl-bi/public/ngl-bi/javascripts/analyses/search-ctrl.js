@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 
-                                                function($scope, $routeParams, datatable, mainService, tabService, searchService) {
+angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'analysisSearchService',  'valuationService',
+                                                function($scope, $routeParams, datatable, mainService, tabService, analysisSearchService, valuationService) {
 	
 	var datatableConfig = {
 			pagination:{mode:'local'},			
@@ -21,7 +21,7 @@ angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datat
 	};
 
 	$scope.search = function(){
-		$scope.searchService.search($scope.datatable);
+		$scope.searchService.search();
 	};
 	
 	$scope.reset = function(){
@@ -34,23 +34,21 @@ angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datat
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
-	$scope.searchService = searchService();	
-	$scope.searchService.setRouteParams($routeParams);
+	$scope.searchService = analysisSearchService;	
+	$scope.searchService.init($routeParams, datatableConfig);
 	
-	//to avoid to lost the previous search
-	if(angular.isUndefined(mainService.getDatatable())){
-		$scope.datatable = datatable(datatableConfig);
-		mainService.setDatatable($scope.datatable);
-		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());		
-	}else{
-		$scope.datatable = mainService.getDatatable();			
-	}		
+	$scope.valuationService = valuationService();
+	
+	if($scope.searchService.isRouteParam){
+		$scope.search();
+	}
+
 	
 }]);
 
 
-angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 
-                                                          function($scope, $routeParams, datatable, mainService, tabService, searchService) {
+angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'analysisSearchService', 'valuationService',
+                                                          function($scope, $routeParams, datatable, mainService, tabService, analysisSearchService, valuationService) {
 	
 	var datatableConfig = {
 			pagination:{mode:'local'},
@@ -82,7 +80,7 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 	};
 
 	$scope.search = function(){
-		$scope.searchService.search($scope.datatable);
+		$scope.searchService.search();
 	};
 	
 	$scope.reset = function(){
@@ -95,24 +93,20 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
-	$scope.searchService = searchService();		
-	$scope.searchService.setRouteParams($routeParams);
+	$scope.searchService = analysisSearchService;	
+	$scope.searchService.init($routeParams, datatableConfig);
 	
-	//to avoid to lost the previous search
-	if(angular.isUndefined(mainService.getDatatable())){
-		$scope.datatable = datatable(datatableConfig);
-		mainService.setDatatable($scope.datatable);
-		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());			
-	}else{
-		$scope.datatable = mainService.getDatatable();			
-	}		
-	$scope.search();
+	$scope.valuationService = valuationService();
+	
+	if($scope.searchService.isRouteParam){
+		$scope.search();
+	}
 	
 }]);
 
 
-angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 
-                                                      function($scope, $routeParams, datatable, mainService, tabService, searchService) {
+angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'analysisSearchService', 
+                                                      function($scope, $routeParams, datatable, mainService, tabService, analysisSearchService) {
 	
 	var datatableConfig = {
 			pagination:{mode:'local'},
@@ -156,17 +150,13 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 		tabService.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("state").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
-	$scope.searchService = searchService();
-	$scope.searchService.setRouteParams($routeParams);
+
+	$scope.searchService = analysisSearchService;	
+	$scope.searchService.init($routeParams, datatableConfig);
 	
-	//to avoid to lost the previous search
-	if(angular.isUndefined(mainService.getDatatable())){
-		$scope.datatable = datatable(datatableConfig);
-		mainService.setDatatable($scope.datatable);
-		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());								
-	}else{
-		$scope.datatable = mainService.getDatatable();			
-	}		
+	if($scope.searchService.isRouteParam){
+		$scope.search();
+	}
 	
 }]);
 

@@ -43,8 +43,10 @@
 				@views.html.helper.columnLabelValue(Messages("runs.code")){
 					<p class="form-control-static">{{run.code}}</p>
 				}
+
 				@views.html.helper.columnLabelValue(Messages("runs.state.code")){
-					<p class="form-control-static"  ng-model='run.state.code' codes="state"></p>
+		        <modal-chart-v2 modal-id="myModal" modal-header-text="Run Status Flow" modal-body-text="Current status is highlighted in green !" state="run.state.code" states="lists.getStates()">
+		        </modal-chart-v2>
 				}
 				  
 				 
