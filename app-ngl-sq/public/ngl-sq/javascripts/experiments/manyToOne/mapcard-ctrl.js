@@ -83,6 +83,17 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 		$scope.atomicTransfere.inputToExperiment();
 	});
 	
+	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
+			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[]};
+			angular.forEach(containers, function(container){
+				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state});
+			});
+	};
+	
+	$scope.$on('initAtomicTransfert', function(e, containers, atomicTransfertMethod) {
+		$scope.init_atomicTransfert(containers, atomicTransfertMethod);
+	});
+	
 	$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
 		for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
@@ -114,14 +125,16 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 	});
 	
 	$scope.$on('addExperimentPropertiesInputToScope', function(e, data) {
-		for(var i=0;i<$scope.datatable.getData().length;i++){
-			for(var j=0; j<data.length;j++){
-				if($scope.getLevel( data[j].levels, "ContainerIn")){
-					var getter = $parse("datatable.displayResult["+i+"].inputExperimentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code].value);
-					}else{
-						getter.assign($scope,"");
+		if($scope.datatable.getData() != undefined){
+			for(var i=0;i<$scope.datatable.getData().length;i++){
+				for(var j=0; j<data.length;j++){
+					if($scope.getLevel( data[j].levels, "ContainerIn")){
+						var getter = $parse("datatable.displayResult["+i+"].inputExperimentProperties."+data[j].code+".value");
+						if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code].value);
+						}else{
+							getter.assign($scope,"");
+						}
 					}
 				}
 			}
@@ -169,6 +182,8 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 	$scope.datatable = datatable($scope.datatableConfig);
 	$scope.atomicTransfere = manyToOne($scope, "datatable", "none");
 
+	$scope.experiment.outputGenerated = $scope.isOutputGenerated();
+	
 	if($scope.experiment.editMode){
 		$scope.atomicTransfere.loadExperiment();
 	}else{

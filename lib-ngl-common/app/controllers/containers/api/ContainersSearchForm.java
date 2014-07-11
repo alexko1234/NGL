@@ -6,6 +6,8 @@ import java.util.List;
 import controllers.ListForm;
 
 public class ContainersSearchForm extends ListForm{
+	
+	public String code;
 	public String projectCode;
 	public List<String> projectCodes;
 	public String stateCode;
@@ -20,6 +22,8 @@ public class ContainersSearchForm extends ListForm{
 	public List<String> valuations;
 	public Date fromDate;
 	public Date toDate;
+	public String column;
+	public String line;
 	
 	@Override
 	public String toString() {

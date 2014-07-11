@@ -111,6 +111,20 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 		 }
 	};
 	
+	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
+		angular.forEach(containers, function(container,index){
+			$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod, inputContainerUsed:[]};
+			$scope.experiment.value.atomicTransfertMethods[index].inputContainerUsed = {code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state};
+			$scope.experiment.outputVoid = true;
+
+		});
+	};
+
+	$scope.$on('initAtomicTransfert', function(e, containers, atomicTransfertMethod) {
+		$scope.init_atomicTransfert(containers, atomicTransfertMethod);
+	});
+
+	
 	$scope.$on('refresh', function(e) {
 		$scope.refreshView();
 		

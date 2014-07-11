@@ -292,7 +292,17 @@
   <div class="panel-heading">@Messages("experiment.comments")</div>
   <div class="panel-body">
    <ul class="list-group">
-   <li class="list-group-item" ng-repeat="com in experiment.value.comments">{{com.comment}}</li>   
+   <li class="list-group-item" ng-repeat="com in experiment.value.comments">
+   <div class="row">
+   <div class="col-lg-1" style="text-align:center">
+  		<img src="http://www.naijaticketshop.com/images/default_profile.jpg" width=64 height=64 alt="{{com.createUser}}" style="margin-left:auto;margin-right:auto"/><br>
+   		<b>{{com.createUser}}</b><br>
+    	{{com.creationDate | date:'yyyy-MM-dd HH:mm:ss'}}
+   	</div>
+    <div class="col-lg-8">
+     	{{com.comment}}
+    </div>
+   </li>   
   </ul>
   </div>
 </div>

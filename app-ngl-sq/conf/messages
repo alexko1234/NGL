@@ -24,6 +24,10 @@ containers.table.supportCode = Support container
 containers.table.support.categoryCode = Categorie support
 containers.table.support.line = Y
 containers.table.support.column = X
+containers.table.percentage = % à déposer
+containers.table.tags = Index
+containers.table.sampleTypes = Type samples
+containers.table.libProcessTypeCodes = Type librairie
 
 containers.placeholder.fromDate = Création container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Création container jusqu''au (jj/mm/aaaa)

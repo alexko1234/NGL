@@ -198,7 +198,13 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	}else{
 		$scope.form = $scope.getForm();			
 	}
-	$scope.datatable = datatable($scope.datatableConfig);
+	
+	if(angular.isUndefined($scope.getDatatable())){
+		$scope.datatable = datatable($scope.datatableConfig);
+		$scope.setDatatable($scope.datatable);
+	}else{
+		$scope.datatable = $scope.getDatatable();
+	}
 	if($scope.form.type){
 		$scope.search();
 	}

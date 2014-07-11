@@ -222,6 +222,10 @@ public class Containers extends CommonController {
 		}else if(containersSearch.projectCode != null){
 			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCode));
 		}
+		
+		if(StringUtils.isNotEmpty(containersSearch.code)){
+			queryElts.add(DBQuery.is("code", containersSearch.code));
+		}
 
 		if(StringUtils.isNotEmpty(containersSearch.stateCode)){
 			queryElts.add(DBQuery.is("state.code", containersSearch.stateCode));
@@ -304,6 +308,15 @@ public class Containers extends CommonController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		
+		if(StringUtils.isNotEmpty(containersSearch.column)){
+			queryElts.add(DBQuery.is("support.column", containersSearch.column));
+			
+		}
+		
+		if(StringUtils.isNotEmpty(containersSearch.line)){
+			queryElts.add(DBQuery.is("support.line", containersSearch.line));
 		}
 		
 		if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){

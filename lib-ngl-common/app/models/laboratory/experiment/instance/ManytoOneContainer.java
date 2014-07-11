@@ -3,22 +3,10 @@ package models.laboratory.experiment.instance;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import controllers.CommonController;
-
-import validation.ContextValidation;
-
-
-import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.instance.PropertyValue;
-
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerSupportCategory;
-
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
@@ -26,21 +14,23 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
-
-import org.mongojack.DBQuery;
 import models.utils.instance.ContainerSupportHelper;
-import org.mongojack.DBQuery;
 
-import fr.cea.ig.MongoDBDAO;
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
 
 import play.Logger;
-
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import fr.cea.ig.MongoDBDAO;
+
 public class ManytoOneContainer extends AtomicTransfertMethod{
 
-	public int inputNumber;
+	public String line;
+	public String column;
 
 	public List<ContainerUsed> inputContainerUseds;
 	public ContainerUsed outputContainerUsed;
@@ -78,6 +68,10 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 				if(containerSupportCategory.nbColumn==1 && containerSupportCategory.nbLine==1){
 					support.line="1";
 					support.column="1";
+					support.code=outPutContainerCode;
+				}else if(StringUtils.isNotEmpty(this.line) && StringUtils.isNotEmpty(this.column)) {
+					support.line=this.line;
+					support.column=this.column;
 					support.code=outPutContainerCode;
 				}else {
 					contextValidation.addErrors("locationOnContainerSupport",ValidationConstants.ERROR_NOTDEFINED_MSG);

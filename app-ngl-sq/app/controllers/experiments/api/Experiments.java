@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -16,13 +17,12 @@ import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
 import models.utils.instance.StateHelper;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.mongojack.DBUpdate.Builder;
-
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+import org.mongojack.DBUpdate.Builder;
 
 import play.Logger;
 import play.api.modules.spring.Spring;
@@ -46,7 +46,9 @@ import fr.cea.ig.MongoDBResult;
 public class Experiments extends CommonController{
 
 	final static Form<Experiment> experimentForm = form(Experiment.class);
+	final static Form<Comment> commentForm = form(Comment.class);
 	final static Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
+	
 
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result updateExperimentInformations(String code){
@@ -191,26 +193,22 @@ public class Experiments extends CommonController{
 		return ok(Json.toJson(instrumentUsedType.propertiesDefinitions));
 	}
 
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
-	public static Result updateComments(String code){
-		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
-		Experiment exp = experimentFilledForm.get();
+	public static Result addComment(String code){
+		Form<Comment> commentFilledForm = getFilledForm(commentForm,Comment.class);
+		Comment com = commentFilledForm.get();
 
-		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
+		com.createUser = getCurrentUser();
 
-		if (!experimentFilledForm.hasErrors()) {
-			if(exp._id == null){
-				exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
-			}else{
-				Builder builder = new DBUpdate.Builder();
-				builder=builder.set("comments",exp.comments);
+		if (!commentFilledForm.hasErrors()) {
+			Builder builder = new DBUpdate.Builder();
+			builder=builder.push("comments",com);
 
-				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
-			}
-			return ok(Json.toJson(exp));
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+			
+			return ok(Json.toJson(com));
 		}
 
-		return badRequest(experimentFilledForm.errorsAsJson());
+		return badRequest(commentFilledForm.errorsAsJson());
 	}
 
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
@@ -223,7 +221,10 @@ public class Experiments extends CommonController{
 	
 		if (!experimentFilledForm.hasErrors()) {
 		
-			MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+			Builder builder = new DBUpdate.Builder();
+			builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
+
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			//Workflows.nextInputContainerState(exp, new ContextValidation(experimentFilledForm.errors()));
 			return ok(Json.toJson(exp));
 		}

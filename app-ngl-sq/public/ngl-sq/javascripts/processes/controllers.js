@@ -240,7 +240,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			},
 			save:{
 				active:true,
-				withoutEdit:false,
+				withoutEdit:true,
 				url:jsRoutes.controllers.processes.api.Processes.save(),
 				callback : function(datatable){
 					$scope.basket.reset();

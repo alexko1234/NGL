@@ -59,7 +59,7 @@ PUT		/api/experiments/:code/experiment-information					controllers.experiments.a
 PUT		/api/experiments/:code/experiment-properties					controllers.experiments.api.Experiments.updateExperimentProperties(code:java.lang.String)
 PUT		/api/experiments/:code/instrument-information					controllers.experiments.api.Experiments.updateInstrumentInformations(code:java.lang.String)
 PUT		/api/experiments/:code/instrument-properties					controllers.experiments.api.Experiments.updateInstrumentProperties(code:java.lang.String)
-PUT		/api/experiments/:code/comment									controllers.experiments.api.Experiments.updateComments(code:java.lang.String)
+PUT		/api/experiments/:code/comment									controllers.experiments.api.Experiments.addComment(code:java.lang.String)
 PUT		/api/experiments/:code/state/:state								controllers.experiments.api.Experiments.updateStateCode(code:java.lang.String,state:java.lang.String)
 PUT		/api/experiments/:code/state									controllers.experiments.api.Experiments.nextState(code:java.lang.String)
 PUT		/api/experiments/:code/containers								controllers.experiments.api.Experiments.updateContainers(code:java.lang.String)
