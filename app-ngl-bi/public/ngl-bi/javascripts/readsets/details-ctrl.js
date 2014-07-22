@@ -222,3 +222,33 @@
 		
 		init();
 }]);
+ 
+ 
+ 
+ angular.module('home').controller('MappingCtrl', ['$scope', function($scope) {
+	 
+		$scope.isDataExistsForRead1 = function() {
+			var b = true;
+			if (angular.isDefined($scope.readset.treatments)) {
+				var treatments = $scope.readset.treatments;
+				if (((!angular.isDefined(treatments["mapping"].read1)) || (!angular.isDefined(treatments["mapping"].read1.errorPosition.value))) ||
+						( angular.isDefined(treatments["mapping"].read1.errorPosition.value) && (treatments["mapping"].read1.errorPosition.value == null) ))  {
+					b = false;
+				}
+			}
+			return b;
+		}
+		
+		$scope.isDataExistsForRead2 = function() {
+			var b = true;
+			if (angular.isDefined($scope.readset.treatments)) {
+				var treatments = $scope.readset.treatments;
+				if (((!angular.isDefined(treatments["mapping"].read2)) || (!angular.isDefined(treatments["mapping"].read2.errorPosition.value))) ||
+						( angular.isDefined(treatments["mapping"].read2.errorPosition.value) && (treatments["mapping"].read2.errorPosition.value == null) ))  {
+					b = false;
+				}
+			}
+			return b;
+		}
+
+}]);
