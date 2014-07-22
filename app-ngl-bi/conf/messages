@@ -163,13 +163,16 @@ runs.lane.sav.read1 = Read 1
 runs.lane.sav.read2 = Read 2
 runs.lane.sav.clusterDensity = Density (K/mm2)
 runs.lane.sav.clusterPF = % Cluster PF
-runs.lane.sav.phasing = % Phas/Prephas
+runs.lane.sav.clusterPFSd = % Cluster PF SD
+runs.lane.sav.phasing = % Phasing
+runs.lane.sav.prephasing = % Prephasing
 runs.lane.sav.reads = Reads (M)
 runs.lane.sav.readsPF = Reads PF (M)
 runs.lane.sav.greaterQ30Perc = % >= Q30
 runs.lane.sav.cyclesErrRated = Cycles Err Rated
 runs.lane.sav.alignedPerc = % Alignement
 runs.lane.sav.errorRatePerc = % Error Rate
+runs.lane.sav.errorRatePercSd = % Error Rate SD
 runs.lane.sav.errorRatePercCycle35 = % Error Rate Cycle 35
 runs.lane.sav.errorRatePercCycle75 = % Error Rate Cycle 75
 runs.lane.sav.errorRatePercCycle100 = % Error Rate Cycle 100
