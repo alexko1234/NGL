@@ -74,8 +74,8 @@ angular.module('commonsServices', []).
     				valuations : [{code:"TRUE", name:Messages("valuation.value.TRUE")},
     				                 {code:"FALSE", name:Messages("valuation.value.FALSE")},
     				                 {code:"UNSET", name:Messages("valuation.value.UNSET")}],
-    				sentCCRT : [{value:"true", name:Messages("sentCCRT.value.TRUE")}],
-    				sentCollaborator : [{value:"true", name:Messages("sentCollaborator.value.TRUE")}]
+    				sentCCRT : [{value:"true", name:Messages("sentCCRT.value.TRUE")}, {value:"false", name:Messages("sentCCRT.value.FALSE")}],
+    				sentCollaborator : [{value:"true", name:Messages("sentCollaborator.value.TRUE")}, {value:"false", name:Messages("sentCollaborator.value.FALSE")}]
     		};    		
     		
     		var refresh = {
