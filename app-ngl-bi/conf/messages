@@ -51,7 +51,9 @@ valuation.value.TRUE = Oui
 valuation.value.FALSE = Non
 valuation.value.UNSET = -
 sentCCRT.value.TRUE = Oui
+sentCCRT.value.FALSE = Non
 sentCollaborator.value.TRUE = Oui
+sentCollaborator.value.FALSE = Non
 
 search.placeholder.projects = Sélect. des projets
 search.placeholder.samples = Sélect. des échantillons

@@ -174,13 +174,22 @@ public class ReadSets extends ReadSetsController{
 			queries.add(DBQuery.is("bioinformaticValuation.user", form.productionValuationUser));
 		}
 		
-
-		if (Boolean.valueOf(form.isSentCCRT)) { 
-			queries.add(DBQuery.is("properties.isSentCCRT.value", Boolean.valueOf(form.isSentCCRT)));
+		if (StringUtils.isNotBlank(form.isSentCCRT)) {
+			if (Boolean.valueOf(form.isSentCCRT)) { 
+				queries.add(DBQuery.is("properties.isSentCCRT.value", Boolean.valueOf(form.isSentCCRT)));
+			}
+			else {
+				queries.add(DBQuery.notEquals("properties.isSentCCRT.value", !Boolean.valueOf(form.isSentCCRT))); 
+			}
 		}
 		
-		if (Boolean.valueOf(form.isSentCollaborator)) { 
-			queries.add(DBQuery.is("properties.isSentCollaborator.value", Boolean.valueOf(form.isSentCollaborator)));
+		if (StringUtils.isNotBlank(form.isSentCollaborator)) {
+			if (Boolean.valueOf(form.isSentCollaborator)) { 
+				queries.add(DBQuery.is("properties.isSentCollaborator.value", Boolean.valueOf(form.isSentCollaborator)));
+			}
+			else {
+				queries.add(DBQuery.notEquals("properties.isSentCollaborator.value", !Boolean.valueOf(form.isSentCollaborator))); 
+			}
 		}
 		
 		if (CollectionUtils.isNotEmpty(form.existingFields)) { //all
