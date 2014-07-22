@@ -82,7 +82,7 @@ public class TreatmentService {
 		
 		l.add(DescriptionFactory.newTreatmentType("Mapping","mapping", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mapping", 
 				getMappingPropertyDefinitions(), 
-				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE)), 
+				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), getTreatmentTypeContext("default", Boolean.TRUE)), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "90"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Trimming","trimming", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "trimmingStd,trimmingVector", 
@@ -91,13 +91,13 @@ public class TreatmentService {
 				getTreatmentTypeContext("single", Boolean.FALSE)), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG), "33,50"));
 		
-		//specific CNS
 		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationColi,contaminationVector,contaminationPhiX", 
 				getContaminationPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), 
 				getTreatmentTypeContext("single", Boolean.FALSE)), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG), "35,36,60"));
 		
+		//specific CNS
 		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", 
 				getTaxonomyPropertyDefinitions(), 
 				getTreatmentTypeContexts("read1"), 
@@ -172,7 +172,7 @@ public class TreatmentService {
 		l.add(DescriptionFactory.newTreatmentType("ChiPseq-PE","chipseq-pe", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "ChiPseqPE", 
 				getChiPSeqPETreatmentPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "130"));
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "140"));
 		
 		l.add(DescriptionFactory.newTreatmentType("FAIREseq","faire-seq", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "FAIREseq", 
 				getFaireSeqTreatmentPropertyDefinitions(), 
