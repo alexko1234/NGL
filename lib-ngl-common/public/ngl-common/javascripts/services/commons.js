@@ -73,7 +73,9 @@ angular.module('commonsServices', []).
     		var results = {
     				valuations : [{code:"TRUE", name:Messages("valuation.value.TRUE")},
     				                 {code:"FALSE", name:Messages("valuation.value.FALSE")},
-    				                 {code:"UNSET", name:Messages("valuation.value.UNSET")}]
+    				                 {code:"UNSET", name:Messages("valuation.value.UNSET")}],
+    				sentCCRT : [{value:"true", name:Messages("sentCCRT.value.TRUE")}],
+    				sentCollaborator : [{value:"true", name:Messages("sentCollaborator.value.TRUE")}]
     		};    		
     		
     		var refresh = {
@@ -207,7 +209,9 @@ angular.module('commonsServices', []).
 	    						}
     					   },
     			getInstruments : function(){return results['instruments'];},		   
-    			getValuations : function(){return results['valuations'];}
+    			getValuations : function(){return results['valuations'];},
+    			getSentCCRT : function(){return results['sentCCRT'];},
+    			getSentCollaborator : function(){return results['sentCollaborator'];}
     			
     		};
     		

@@ -70,12 +70,12 @@ public class TreatmentService {
 				getTreatmentTypeContexts("default"), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "0"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Read Quality","read-quality", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "readQualityRaw,readQualityTrim,readQualityClean", 
+		l.add(DescriptionFactory.newTreatmentType("Read Quality","read-quality", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "readQualityRaw,readQualityClean", 
 				getReadQualityPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "30,83"));
 		
-		l.add(DescriptionFactory.newTreatmentType("Duplicates","duplicates", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "duplicatesRaw,duplicatesTrim,duplicatesClean", 
+		l.add(DescriptionFactory.newTreatmentType("Duplicates","duplicates", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "duplicatesRaw,duplicatesClean", 
 				getDuplicatesPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE)), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS), "32,86"));
@@ -96,7 +96,7 @@ public class TreatmentService {
 				getContaminationPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), 
 				getTreatmentTypeContext("single", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "35,36,60"));
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG), "35,36,60"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", 
 				getTaxonomyPropertyDefinitions(), 

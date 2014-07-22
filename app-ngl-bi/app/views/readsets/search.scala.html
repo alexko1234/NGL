@@ -1,4 +1,4 @@
-@()
+@(mode : String)
 
 @import views.html.helper._
 @form() = {
@@ -61,6 +61,11 @@
 		@formGroup{					
 			<div class="form-control" bt-select ng-model="searchService.form.runTypeCodes" multiple="true" placeholder="@Messages("search.placeholder.runtypes")" bt-options="type.code as type.name for type in searchService.lists.getTypes()"></div>			
 		}
+		@formGroup{	
+			@if(mode == "batch") {
+				<div class="form-control" bt-select ng-model="searchService.form.isSentCCRT" placeholder="@Messages("search.placeholder.isSentCCRT")" bt-options="valid.value as valid.name for valid in searchService.lists.getSentCCRT()"></div>
+			}
+		}
 	}
 	@columnSearchForm{
 		@formGroup{
@@ -69,6 +74,11 @@
 		
 		@formGroup{					
 			<input type="text" class="form-control" ng-model="searchService.form.runCode" typeahead="run.code as run.name for run in searchService.lists.getRuns() | filter:$viewValue | limitTo:20"  placeholder='@Messages("search.placeholder.run")'>
+		}
+		@formGroup{
+			@if(mode == "batch") {
+				<div class="form-control" bt-select ng-model="searchService.form.isSentCollaborator" placeholder="@Messages("search.placeholder.isSentCollaborator")" bt-options="valid.value as valid.name for valid in searchService.lists.getSentCollaborator()"></div>
+			}
 		}
 					
 	}					

@@ -2,13 +2,15 @@
 <div class="row">
 <div class="col-md-11 col-lg-11">
 <ul class="nav nav-tabs margin-bottom-5">
-	<li class="active"><a href="#" data-target="#data" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.data")</a></li>
+	<li><a href="#" data-target="#read1" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read1")</a></li>
+	<li><a href="#" data-target="#read2" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read2")</a></li>
+	<li class="active"><a href="#" data-target="#pairs" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.pairs")</a></li>
 	<li><a href="#" data-target="#ref" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.ref")</a></li>    	
 </ul>
 
 <div class="tab-content">
 
- <div class="tab-pane active" id="data">
+ <div class="tab-pane active" id="pairs">
 
 	<div class="row"> 
 		<div class="col-md-12 col-lg-12">
@@ -106,6 +108,37 @@
 	<div class="row"> 
 		<div class="col-md-10 col-lg-10">
 			<pre>{{readset.treatments[treatments.getTreatment().code].default.reference.value}}</pre>
+		</div>
+	</div>
+ </div> 
+ 
+ 
+  <div class="tab-pane" id="read1">
+	<div class="row"> 
+		<div class="col-md-4 col-lg-4">
+			<div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
+			ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.errorPosition.value,'Errors position in reads','','mapping',
+			readset.treatments[treatments.getTreatment().code].read1.errorPosition.width,
+			readset.treatments[treatments.getTreatment().code].read1.errorPosition.height)">
+			 <a href="#">
+			    <img id="read1.errorPosition" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.errorPosition.value}}" />
+			 </a>   
+		    </div>
+		</div>
+	</div>
+ </div> 
+ 
+  <div class="tab-pane" id="read2">
+	<div class="row"> 
+		<div class="col-md-4 col-lg-4">
+			<div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
+			ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.errorPosition.value,'Errors position in reads','','mapping',
+			readset.treatments[treatments.getTreatment().code].read2.errorPosition.width,
+			readset.treatments[treatments.getTreatment().code].read2.errorPosition.height)">
+			 <a href="#">
+			    <img id="read2.errorPosition" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read2.errorPosition.value}}" />
+			 </a>   
+		    </div>
 		</div>
 	</div>
  </div> 

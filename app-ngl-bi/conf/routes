@@ -66,7 +66,7 @@ DELETE	/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.ap
 GET	   	/readsets/:homecode/home				controllers.readsets.tpl.ReadSets.home(homecode: java.lang.String)
 GET	   	/readsets/:code							controllers.readsets.tpl.ReadSets.get(code: java.lang.String)
 GET	   	/readsets/:code/valuation				controllers.readsets.tpl.ReadSets.valuation(code: java.lang.String)
-GET		/tpl/readsets/search					controllers.readsets.tpl.ReadSets.search()
+GET		/tpl/readsets/search/:mode				controllers.readsets.tpl.ReadSets.search(mode : java.lang.String)
 GET		/tpl/readsets/details					controllers.readsets.tpl.ReadSets.details()
 GET		/tpl/readsets/treatments/:code			controllers.readsets.tpl.ReadSets.treatments(code: java.lang.String)
 GET		/tpl/readsets/js-routes					controllers.readsets.tpl.ReadSets.javascriptRoutes()

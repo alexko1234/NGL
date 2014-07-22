@@ -45,5 +45,7 @@ public class ReadSetsSearchForm extends ListForm{
     public String productionValuationUser;
     
     public List<String> existingFields, notExistingFields;
+    
+    public String isSentCCRT, isSentCollaborator;
 	 
 }
