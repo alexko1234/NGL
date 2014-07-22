@@ -296,8 +296,9 @@ readsets.treatments.mapping.reference = Assembly reference
 readsets.treatments.mapping.100percent = 100 %
 readsets.treatments.mapping.MPReadDistanceSeparation =  Distance between MP reads
 readsets.treatments.mapping.PEReadDistanceSeparation = Distance between PE reads
-readsets.treatments.mapping.estimatedPEInsertSize=Estimated PE insert size
-readsets.treatments.mapping.estimatedMPInsertSize=Estimated MP insert size
+readsets.treatments.mapping.estimatedPEInsertSize = Estimated PE insert size
+readsets.treatments.mapping.estimatedMPInsertSize = Estimated MP insert size
+readsets.treatments.mapping.readPosition = Errors position in reads
 
 readsets.treatments.merging.mergedReads = Merged reads
 readsets.treatments.merging.medianeSize = Mediane size (bases)
