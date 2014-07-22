@@ -466,7 +466,7 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 			},
 			lines : {
 				trClass : function(value){
-					if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
+					if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value  && $scope.run.valuation.criteriaCode == undefined){
 		    			return "info";
 		    		}		    		
 				}
@@ -479,7 +479,12 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 					    	header: "runs.lane.code",
 					    	type :"String",
 					    	order:false,
-					    	extraHeaders:{"0":Messages("runs.lane.sav.read1")}
+					    	extraHeaders:{"0":Messages("runs.lane.sav.read1")},
+					    	tdClass : function(value){
+					    		if(angular.isDefined($scope.run.treatments.ngsrg) && (value.number == $scope.run.treatments.ngsrg["default"].controlLane.value)) {
+					    			return "info";
+					    		}
+					    	}
 						},
 						{  	property:function(value){
 							return $filter('number')(value.treatments.sav.read1.clusterDensity.value,2) +' +/- '+$filter('number')(value.treatments.sav.read1.clusterDensityStd.value,2);						
@@ -633,7 +638,7 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 			},
 			lines : {
 				trClass : function(value){
-					if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value){
+					if(angular.isDefined($scope.run.treatments.ngsrg) && value.number == $scope.run.treatments.ngsrg["default"].controlLane.value  && $scope.run.valuation.criteriaCode == undefined){
 			    		return "info";
 		    		}		    		
 				}
@@ -646,7 +651,12 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 			    	header: "runs.lane.code",
 			    	type :"String",
 			    	order:false,
-			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
+			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")},
+			    	tdClass : function(value){
+			    		if(angular.isDefined($scope.run.treatments.ngsrg) && (value.number == $scope.run.treatments.ngsrg["default"].controlLane.value)) {
+			    			return "info";
+			    		}
+			    	}
 				},
 				{  	property:function(value){
 					return $filter('number')(value.treatments.sav.read2.clusterDensity.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.clusterDensityStd.value,2);						
