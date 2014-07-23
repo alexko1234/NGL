@@ -308,28 +308,30 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				tabService.activeTab(tabService.getTabs(1));
 			}
 			
-			$scope.lanesDT = datatable(lanesDTConfig);
-			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
-			if(isValuationMode()){
-				$scope.mainService.startEditMode();	
-				$scope.lanesDT.setEdit();
-			}
-			
 			$scope.lists.refresh.resolutions({typeCode:$scope.run.typeCode, objectTypeCode:"Run"});
 			
 			$scope.lists.clear("valuationCriterias");
 			$scope.lists.refresh.valuationCriterias({typeCode:$scope.run.typeCode, objectTypeCode:"Run", orderBy:'name'});
 			
-			if(angular.isDefined($scope.run.lanes[0].treatments)){
-				$scope.treatments.init($scope.run.lanes[0].treatments, jsRoutes.controllers.runs.tpl.Runs.laneTreatments);				
+			if ($scope.run.typeCode != "RARGUS") {
+				$scope.lanesDT = datatable(lanesDTConfig);
+				$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
+				if(isValuationMode()){
+					$scope.mainService.startEditMode();	
+					$scope.lanesDT.setEdit();
+				}
+				
+				if(angular.isDefined($scope.run.lanes[0].treatments)){
+					$scope.treatments.init($scope.run.lanes[0].treatments, jsRoutes.controllers.runs.tpl.Runs.laneTreatments);				
+				}
+				
+				$scope.laneOptions = $filter('orderBy')($scope.run.lanes, 'number');
+				
+				$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg", "sampleOnContainer"]}}).success(function(data) {
+					$scope.readSetsDT = datatable(readSetsDTConfig);
+					$scope.readSetsDT.setData(data, data.length);	
+				});
 			}
-			
-			$scope.laneOptions = $filter('orderBy')($scope.run.lanes, 'number');
-			
-			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg", "sampleOnContainer"]}}).success(function(data) {
-				$scope.readSetsDT = datatable(readSetsDTConfig);
-				$scope.readSetsDT.setData(data, data.length);	
-			});
 		});
 		
 	};
@@ -439,7 +441,7 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 	
 	var init = function(){
 		$scope.$watch('run', function() {
-			if(angular.isDefined($scope.run) && angular.isDefined($scope.run.lanes)){
+			if(angular.isDefined($scope.run) && angular.isDefined($scope.run.lanes) && ($scope.run.lanes != null)){
 				$scope.lanesNGSRG = datatable(lanesNGSRGConfig);
 				$scope.lanesNGSRG.setData($scope.run.lanes, $scope.run.lanes.length);
 			}
@@ -825,7 +827,7 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 	
 	var init = function(){
 		$scope.$watch('run', function() {
-			if(angular.isDefined($scope.run)){
+			if (angular.isDefined($scope.run) && angular.isDefined($scope.run.lanes)  && ($scope.run.lanes != null)) {
 								
 				$http.get(jsRoutes.controllers.alerts.api.Alerts.list().url, {params:{regexCode:$scope.run.code+'*'}})
 					.success(function(data, status, headers, config) {
