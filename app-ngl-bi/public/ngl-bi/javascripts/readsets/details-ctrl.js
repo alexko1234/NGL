@@ -45,11 +45,26 @@
 	}
 	
 	$scope.getModalData = function() {
-		if (angular.isDefined($scope.bioinformaticAnalysis) && $scope.bioinformaticAnalysis) {
+		if (angular.isDefined($scope.readset) && angular.isDefined($scope.bioinformaticAnalysis) && $scope.bioinformaticAnalysis) {
 			return "readSetStatesWithAnalysisBA";
 		}
 		else {
 			return "readSetStatesWithoutAnalysisBA";
+		}
+	};
+	
+	
+	$scope.getHighLightCode = function() {
+		if (angular.isDefined($scope.readset)) {
+			var x = $scope.readset.state.code;
+			if (angular.isDefined($scope.bioinformaticAnalysis) && $scope.bioinformaticAnalysis) {
+				for (var s=0; s<$scope.readset.state.historical.length; s++) {
+					if ($scope.readset.state.historical[s].code == "IW-VBA") {
+						x = "UA-2";
+					}
+				}
+			}
+			return x;
 		}
 	};
 	

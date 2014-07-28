@@ -288,6 +288,12 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		return "runStates";
 	};
 	
+	$scope.getHighLightCode = function() {
+		if (angular.isDefined($scope.run.state)) {
+			return $scope.run.state.code;
+		}
+	};
+	
 	
 	var init = function(){
 		$scope.messages = messages();

@@ -583,7 +583,7 @@ angular.module('biCommonsServices', []).
     			function populateChart(chart) {
     				
     				 scope.$watch('modalData', function () { 
-    					 var data, highLightCode;
+    					 var data, highLightCode = scope.highlight;
     					 
     					 if (scope.modalData == "runStates") {
     	    	        		//hard coded list in order to conserve the order (we exclude status 'N');
@@ -599,8 +599,6 @@ angular.module('biCommonsServices', []).
     	    	        	               {code:'FE-S',name:'Séquençage en échec', separatorLine:false, specificColor:true} 
     	    	        	              ]} 
     	    	        	             ];
-    	    	        		
-    	    	        		highLightCode = scope.state;
     	    	        	}
     	    	        	if (scope.modalData == "readSetStatesWithoutAnalysisBA") {
     	    	        		data=[
@@ -613,8 +611,6 @@ angular.module('biCommonsServices', []).
     	  										                  {code:'F-VQC',name:'EVAL. QC terminé', separatorLine:true, children : [
     	  										                       {code:'A',name:'Disponible', separatorLine:false}, 
     	  										                       {code:'UA',name:'Indisponible', separatorLine:false} ]}]}]}]}]}]}]}];
-    	    	        		
-    	    	        		highLightCode = scope.state;
     	    	        	}
     	    	        	if (scope.modalData == "readSetStatesWithAnalysisBA") {
     	    	        		data=[
@@ -634,16 +630,7 @@ angular.module('biCommonsServices', []).
     	                                                                                  {code:'UA-2',name:'Indisponible', separatorLine:false} ]}]}]}]}] 
     	  										                       }, 
     	  										                       {code:'UA',name:'Indisponible', separatorLine:false} ]}]}]}]}]}]}]} ];
-    	    	        		
-    	    	        		//manage particular case of "UA-2"
-    	    	        		highLightCode = scope.state; 
-    	    	        		if (scope.state == "UA") {
-    	    	        			for (var s=0; s<scope.historical.length; s++) {
-        	    						if (scope.historical[s].code == "IW-VBA") {
-        	    							highLightCode = "UA-2"; 
-        	    						}
-        	    					}
-    	    	        		}
+
     	    	        	}
     	    	        	
     		    	        
@@ -659,9 +646,15 @@ angular.module('biCommonsServices', []).
     						    	            boxWidth:160,
     						    	            boxHeight:25, //memo : 25 for arial 9 : do not change (bug with height property)
     						    				offsetXText:100, //old 200
-    						    	            offsetYText:32 }; 
+    						    	            offsetYText:32 };
+    	    	            
+    	    	            scope.$watch('highlight', function () { 
+    	    	            	highLightCode = scope.highlight;
+    	    	            	
+    	    	            	renderChart(chart.renderer, 0, data, highLightCode, globalParam.offsetXText, globalParam.offsetYText, false, globalParam);
+    	    	            });
     	   	            
-    	    	            renderChart(chart.renderer, 0, data, highLightCode, globalParam.offsetXText, globalParam.offsetYText, false, globalParam);
+    	    	            
     	    	            
     		            }, true);
     			} 
@@ -702,7 +695,7 @@ angular.module('biCommonsServices', []).
     	        link: linker,
     	        template: linkTemplate,
     	        transclude: false,
-    	        scope: {state: "=", historical: "=", modalData: "="}
+    	        scope: {state: "=", historical: "=", modalData: "=", highlight: "=" }
     	    };
     	    
     	}]);

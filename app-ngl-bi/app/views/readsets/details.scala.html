@@ -80,8 +80,8 @@
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.state.code")){
 
-						<modal-chart modal-id="myReadSetChartModal" modal-bg-color="white" modal-width="700" modal-height="700" 
-		        			ng-attr-modal-data="getModalData()" modal-header-text="ReadSet Status Flow" modal-body-text="" state="readset.state.code" historical="readset.state.historical">
+						<modal-chart modal-id="myReadSetChartModal" modal-bg-color="white" modal-width="700" modal-height="700" modal-header-text="ReadSet Status Flow" modal-body-text="" 
+		        			ng-attr-modal-data="getModalData()" state="readset.state.code" historical="readset.state.historical" ng-attr-highlight="getHighLightCode()">
 		        		</modal-chart>
 					}
 					
