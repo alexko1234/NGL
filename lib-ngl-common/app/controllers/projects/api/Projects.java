@@ -76,6 +76,10 @@ public class Projects extends DocumentController<Project> {
 			return ok(Json.toJson(projects));
 		}
 	}
+	
+	public Result get(String code) {
+		return ok(Json.toJson(super.getObject(code)));
+	}
 
 	
 

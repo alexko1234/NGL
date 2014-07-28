@@ -273,7 +273,7 @@ readsets.treatments.ngsrg_illumina.nbReadIllumina = Nb Read Illumina
 
 readsets.treatments.mapping.tabs.read1 = Read 1
 readsets.treatments.mapping.tabs.read2 = Read 2
-readsets.treatments.mapping.tabs.pairs = Pairs
+readsets.treatments.mapping.tabs.pairs = Données (R1+R2)
 readsets.treatments.mapping.tabs.ref = Référence
 readsets.treatments.mapping.number = Number
 readsets.treatments.mapping.totalReadsPercent = % total reads

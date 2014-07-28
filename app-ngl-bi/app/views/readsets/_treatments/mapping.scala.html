@@ -58,7 +58,7 @@
 	
 	<div class="row">
 	    <div class="col-md-4 col-lg-4">
-		    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
+		    <div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
 			ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.value,'PEReadDistanceSeparation','','mapping',
 			readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.width,
 			readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.height)">
@@ -68,7 +68,7 @@
 		    </div>
 	    </div>
 	    <div class="col-md-4 col-lg-4">
-		    <div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
+		    <div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
 			ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.value,'MPReadDistanceSeparation','','mapping',
 			readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.width,
 			readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.height)">
@@ -115,8 +115,8 @@
  
   <div class="tab-pane" id="read1" ng-show="isDataExistsForRead1()">
 	<div class="row"> 
-		<div class="col-md-4 col-lg-4">
-			<div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal" 
+		<div class="col-md-8 col-lg-8">
+			<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
 			ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.errorPosition.value,'readPosition','Read1','mapping',
 			readset.treatments[treatments.getTreatment().code].read1.errorPosition.width,
 			readset.treatments[treatments.getTreatment().code].read1.errorPosition.height)">
@@ -130,8 +130,8 @@
  
   <div class="tab-pane" id="read2" ng-show="isDataExistsForRead2()">
 	<div class="row"> 
-		<div class="col-md-4 col-lg-4">
-			<div class="thumbnail" data-target="#myModal" role="button" data-toggle="modal"  
+		<div class="col-md-8 col-lg-8">
+			<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal"  
 			ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.errorPosition.value,'readPosition','Read2','mapping',
 			readset.treatments[treatments.getTreatment().code].read2.errorPosition.width,
 			readset.treatments[treatments.getTreatment().code].read2.errorPosition.height)">

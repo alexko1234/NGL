@@ -44,6 +44,15 @@
 		mainService.startEditMode();			
 	}
 	
+	$scope.getModalData = function() {
+		if (angular.isDefined($scope.bioinformaticAnalysis) && $scope.bioinformaticAnalysis) {
+			return "readSetStatesWithAnalysisBA";
+		}
+		else {
+			return "readSetStatesWithoutAnalysisBA";
+		}
+	};
+	
 	$scope.setImage = function(imageData, imageName, treatmentContext, treatmentCode, imageFullSizeWidth, imageFullSizeHeight) {
 		$scope.modalImage = imageData;
 	
@@ -124,6 +133,10 @@
 			
 			$http.get(jsRoutes.controllers.runs.api.RunTreatments.get($scope.readset.runCode, "ngsrg").url).success(function(data) {
 				$scope.runNGSRG = data;	
+			});	
+			
+			$http.get(jsRoutes.controllers.projects.api.Projects.get($scope.readset.projectCode).url).success(function(data) {
+				$scope.bioinformaticAnalysis = data.bioinformaticAnalysis;	
 			});	
 		});
 	};

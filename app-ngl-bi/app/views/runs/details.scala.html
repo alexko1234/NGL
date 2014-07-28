@@ -45,8 +45,9 @@
 				}
 
 				@views.html.helper.columnLabelValue(Messages("runs.state.code")){
-		        <modal-chart-v2 modal-id="myModal" modal-header-text="Run Status Flow" modal-body-text="Current status is highlighted in green !" state="run.state.code" states="lists.getStates()">
-		        </modal-chart-v2>
+		        <modal-chart modal-id="myRunChartModal" modal-bg-color="white" modal-width="700" modal-height="700" 
+		        	ng-attr-modal-data="getModalData()" modal-header-text="Run Status Flow" modal-body-text="" state="run.state.code"  historical="run.state.historical">
+		        </modal-chart>
 				}
 				  
 				 

@@ -46,10 +46,6 @@ public class Runs extends CommonController {
 		return ok(details.render());
 	}
 	
-	public static Result workflow() {
-		return ok(workflow.render());
-	}
-	
 	public static Result laneTreatments(String code) {
 		return ok(laneTreatments.render(code));
 	}

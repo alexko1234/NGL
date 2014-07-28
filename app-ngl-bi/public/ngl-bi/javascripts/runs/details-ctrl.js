@@ -283,6 +283,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
     		return "";
     	}
     };
+    
+	$scope.getModalData = function() {
+		return "runStates";
+	};
+	
 	
 	var init = function(){
 		$scope.messages = messages();

@@ -19,7 +19,7 @@
 
 <!-- ----------------------------------------------------------------------------- -->
 <!-- Modal to display image in full size -->
-	<div id="myModal" class="modal fade"  tabindex="-1" role="dialog"
+	<div id="myImageModal" class="modal fade"  tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true" style="left:{{modalLeft}}px; top:{{modalTop}}px;position:fixed;width:100%">
 		
     		<div class="modal-content" style="width:{{modalWidth}}px; border:0px">
@@ -79,8 +79,14 @@
 						<p class="form-control-static">{{readset.code}}</p>
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.state.code")){
-						<p class="form-control-static" ng-bind="readset.state.code|codes:'state'"/>
+
+						<modal-chart modal-id="myReadSetChartModal" modal-bg-color="white" modal-width="700" modal-height="700" 
+		        			ng-attr-modal-data="getModalData()" modal-header-text="ReadSet Status Flow" modal-body-text="" state="readset.state.code" historical="readset.state.historical">
+		        		</modal-chart>
 					}
+					
+
+		        
 					@views.html.helper.columnLabelValue(Messages("readsets.productionValuation.valid")){
 						<div ng-switch on="isEditMode()">
 							<p class="form-control-static" ng-switch-when="false" ng-bind="readset.productionValuation.valid|codes:'valuation'"/>
