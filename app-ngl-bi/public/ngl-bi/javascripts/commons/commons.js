@@ -413,7 +413,7 @@ angular.module('biCommonsServices', []).
     	    										"</div>"+
     	    									"</div>");
     	    
-    	    var linkTemplate = "<a href='#{{modalId}}' id='linkTo{{modalId}}' role='button' data-toggle='modal' class='btn small_link_button'>{{state | codes:'state'}}</a>";  // not angular.element !
+    	    var linkTemplate = "<a href='#{{modalId}}' id='linkTo{{modalId}}' role='button' data-toggle='modal' class='btn small_link_button'>{{modalCurrentCode | codes:'state'}}</a>";  // not angular.element !
     	    
     	    var linker = function (scope, element, attrs) {
     	    	
@@ -483,8 +483,15 @@ angular.module('biCommonsServices', []).
     			
     			
     			function drawComment(ren, data, offsetXText, offsetYText, globalParam) {
-    				if (data.date != undefined && data.date != null) {
-	    				ren.label($filter('date')(data.date, 'dd/MM/yyyy  HH:mm:ss'), offsetXText + globalParam.boxWidth+15, offsetYText)
+    				if (data.comment != undefined && data.comment != null) {
+						var lbl = data.comment.label;
+						if (data.comment.type == 'datetime') {
+							lbl = $filter('date')(data.comment.label, Messages("datetime.format"))
+						}
+						if (data.comment.type == 'datetime') {
+							lbl = $filter('date')(data.comment.label, Messages("date.format"))
+						}
+	    				ren.label(lbl, offsetXText + globalParam.boxWidth+15, offsetYText)
 	    				.css({
 		                    color: 'darkgray',
 		                    fontStyle: '9px',
@@ -582,10 +589,10 @@ angular.module('biCommonsServices', []).
     			
     			function populateChart(chart) {
     				
-    				 scope.$watch('modalData', function () { 
-    					 var data, highLightCode = scope.highlight;
+    				 scope.$watch('modalDataConfig', function () { 
+    					 var data;
     					 
-    					 if (scope.modalData == "runStates") {
+    					 if (scope.modalDataConfig == "runStates") {
     	    	        		//hard coded list in order to conserve the order (we exclude status 'N');
     	    	        		data=[
     	    	        	              {code:'IP-S',name:'Séquençage en cours', separatorLine:false,  children : [ 
@@ -600,7 +607,7 @@ angular.module('biCommonsServices', []).
     	    	        	              ]} 
     	    	        	             ];
     	    	        	}
-    	    	        	if (scope.modalData == "readSetStatesWithoutAnalysisBA") {
+    	    	        	if (scope.modalDataConfig == "readSetStatesWithoutAnalysisBA") {
     	    	        		data=[
     	    	        		          {code:'IP-RG',name:'Read Generation en cours', separatorLine:false,  children : [ 
     	      	        	               {code:'F-RG',name:'Read Generation terminé', separatorLine:true, children : [
@@ -612,7 +619,7 @@ angular.module('biCommonsServices', []).
     	  										                       {code:'A',name:'Disponible', separatorLine:false}, 
     	  										                       {code:'UA',name:'Indisponible', separatorLine:false} ]}]}]}]}]}]}]}];
     	    	        	}
-    	    	        	if (scope.modalData == "readSetStatesWithAnalysisBA") {
+    	    	        	if (scope.modalDataConfig == "readSetStatesWithAnalysisBA") {
     	    	        		data=[
     	    	        		          {code:'IP-RG',name:'Read Generation en cours', separatorLine:false,  children : [ 
     	      	        	               {code:'F-RG',name:'Read Generation terminé', separatorLine:true, children : [
@@ -634,8 +641,8 @@ angular.module('biCommonsServices', []).
     	    	        	}
     	    	        	
     		    	        
-    	    	        	if (scope.historical != undefined && scope.historical != null && scope.historical.length > 0) {
-    		    	        	data = updateDataWithDates(data, scope.historical, 0);
+    	    	        	if (scope.modalHistoricalData != undefined && scope.modalHistoricalData != null && scope.modalHistoricalData.length > 0) {
+    		    	        	data = updateDataWithComment(data, scope.modalHistoricalData, 0);
     		    	        }
 
 
@@ -648,10 +655,9 @@ angular.module('biCommonsServices', []).
     						    				offsetXText:100, //old 200
     						    	            offsetYText:32 };
     	    	            
-    	    	            scope.$watch('highlight', function () { 
-    	    	            	highLightCode = scope.highlight;
-    	    	            	
-    	    	            	renderChart(chart.renderer, 0, data, highLightCode, globalParam.offsetXText, globalParam.offsetYText, false, globalParam);
+    	    	            scope.$watch('modalHighlightCode', function () { 
+
+    	    	            	renderChart(chart.renderer, 0, data, scope.modalHighlightCode, globalParam.offsetXText, globalParam.offsetYText, false, globalParam);
     	    	            });
     	   	            
     	    	            
@@ -672,16 +678,16 @@ angular.module('biCommonsServices', []).
     			};
     			
     			
-    			function updateDataWithDates(data, historical, currentLevel) {
+    			function updateDataWithComment(data, historical, currentLevel) {
     				for (var i=0; i<data.length; i++) {
     					for (var j=0; j<historical.length; j++) {
     						if (data[i].code == historical[j].code) {
-    							data[i].date = historical[j].date;	
+    							data[i].comment = {label:historical[j].date,type:'datetime'};	
     							break;
     						} 
     					}
     					if (data[i].children != undefined && data[i].children != null && data[i].children.length != 0) {
-    						updateDataWithDates(data[i].children, historical, currentLevel+1);
+    						updateDataWithComment(data[i].children, historical, currentLevel+1);
     					}
     				}	
     				return data;
@@ -695,7 +701,7 @@ angular.module('biCommonsServices', []).
     	        link: linker,
     	        template: linkTemplate,
     	        transclude: false,
-    	        scope: {state: "=", historical: "=", modalData: "=", highlight: "=" }
+    	        scope: {modalCurrentCode: "=", modalHistoricalData: "=", modalDataConfig: "=", modalHighlightCode: "=" }
     	    };
     	    
     	}]);

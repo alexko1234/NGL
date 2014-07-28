@@ -44,7 +44,7 @@
 		mainService.startEditMode();			
 	}
 	
-	$scope.getModalData = function() {
+	$scope.getModalDataConfig = function() {
 		if (angular.isDefined($scope.readset) && angular.isDefined($scope.bioinformaticAnalysis) && $scope.bioinformaticAnalysis) {
 			return "readSetStatesWithAnalysisBA";
 		}
@@ -54,7 +54,7 @@
 	};
 	
 	
-	$scope.getHighLightCode = function() {
+	$scope.getModalHighLightCode = function() {
 		if (angular.isDefined($scope.readset)) {
 			var x = $scope.readset.state.code;
 			if (angular.isDefined($scope.bioinformaticAnalysis) && $scope.bioinformaticAnalysis) {

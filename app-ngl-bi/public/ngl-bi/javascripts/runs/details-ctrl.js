@@ -284,11 +284,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
     	}
     };
     
-	$scope.getModalData = function() {
+	$scope.getModalDataConfig = function() {
 		return "runStates";
 	};
 	
-	$scope.getHighLightCode = function() {
+	$scope.getModalHighLightCode = function() {
 		if (angular.isDefined($scope.run.state)) {
 			return $scope.run.state.code;
 		}

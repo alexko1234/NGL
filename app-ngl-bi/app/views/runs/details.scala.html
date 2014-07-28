@@ -45,8 +45,8 @@
 				}
 
 				@views.html.helper.columnLabelValue(Messages("runs.state.code")){
-		        <modal-chart modal-id="myRunChartModal" modal-bg-color="white" modal-width="700" modal-height="700" 
-		        	ng-attr-modal-data="getModalData()" modal-header-text="Run Status Flow" modal-body-text="" state="run.state.code"  historical="run.state.historical" ng-attr-highlight="getHighLightCode()">
+		        <modal-chart modal-id="myRunChartModal" modal-bg-color="white" modal-width="700" modal-height="700" modal-header-text="Run Status Flow" modal-body-text=""  
+		        	ng-attr-modal-data-config="getModalDataConfig()" ng-attr-modal-current-code="run.state.code"  modal-historical-data="run.state.historical" ng-attr-modal-highlight-code="getModalHighLightCode()">
 		        </modal-chart>
 				}
 				  
