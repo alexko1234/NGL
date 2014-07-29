@@ -70,7 +70,7 @@ public class AddSequencingProgramType  extends CommonController {
 		if (jdbcTemplate == null) {
 			Logger.debug("jdbcTemplate is null !");
 		}
-		 List<ContainerSupport> results = jdbcTemplate.query("select code_support, seq_program_type from v_flowcell_tongl_reprise where isavailable = true order by code", new Object[]{} 
+		 List<ContainerSupport> results = jdbcTemplate.query("select code_support, seq_program_type from v_flowcell_tongl_reprise order by code", new Object[]{} 
 		,new RowMapper<ContainerSupport>() {
 			@SuppressWarnings("rawtypes")
 			public ContainerSupport mapRow(ResultSet rs, int rowNum) throws SQLException {
