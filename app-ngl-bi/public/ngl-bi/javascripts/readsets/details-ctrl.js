@@ -56,15 +56,15 @@
 	
 	$scope.getModalHighLightCode = function() {
 		if (angular.isDefined($scope.readset)) {
-			var x = $scope.readset.state.code;
-			if (angular.isDefined($scope.bioinformaticAnalysis) && $scope.bioinformaticAnalysis) {
+			var code = $scope.readset.state.code;
+			if ($scope.readset.state.code == "UA" && angular.isDefined($scope.bioinformaticAnalysis) && $scope.bioinformaticAnalysis) {
 				for (var s=0; s<$scope.readset.state.historical.length; s++) {
 					if ($scope.readset.state.historical[s].code == "IW-VBA") {
-						x = "UA-2";
+						code = "UA-2"; //for highlight the second "unavailable" box !
 					}
 				}
 			}
-			return x;
+			return code;
 		}
 	};
 	

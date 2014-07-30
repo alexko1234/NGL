@@ -610,24 +610,24 @@ angular.module('biCommonsServices', []).
     	    	        	if (scope.modalDataConfig == "readSetStatesWithoutAnalysisBA") {
     	    	        		data=[
     	    	        		          {code:'IP-RG',name:'Read Generation en cours', separatorLine:false,  children : [ 
-    	      	        	               {code:'F-RG',name:'Read Generation terminé', separatorLine:true, children : [
+    	      	        	               {code:'F-RG',name:'Read Generation terminée', separatorLine:true, children : [
     	  										{code:'IW-QC',name:'Contrôle qualité en attente', separatorLine:false, children : [
     	  										     {code:'IP-QC',name:'Contrôle qualité en cours', separatorLine:false, children : [
-    	  										         {code:'F-QC',name:'Contrôle qualité terminée', separatorLine:true, children : [
+    	  										         {code:'F-QC',name:'Contrôle qualité terminé', separatorLine:true, children : [
     	  										             {code:'IW-VQC',name:'EVAL. QC en attente', separatorLine:false, children : [
-    	  										                  {code:'F-VQC',name:'EVAL. QC terminé', separatorLine:true, children : [
+    	  										                  {code:'F-VQC',name:'EVAL. QC terminée', separatorLine:true, children : [
     	  										                       {code:'A',name:'Disponible', separatorLine:false}, 
     	  										                       {code:'UA',name:'Indisponible', separatorLine:false} ]}]}]}]}]}]}]}];
     	    	        	}
     	    	        	if (scope.modalDataConfig == "readSetStatesWithAnalysisBA") {
     	    	        		data=[
     	    	        		          {code:'IP-RG',name:'Read Generation en cours', separatorLine:false,  children : [ 
-    	      	        	               {code:'F-RG',name:'Read Generation terminé', separatorLine:true, children : [
+    	      	        	               {code:'F-RG',name:'Read Generation terminée', separatorLine:true, children : [
     	  										{code:'IW-QC',name:'Contrôle qualité en attente', separatorLine:false, children : [
     	  										     {code:'IP-QC',name:'Contrôle qualité en cours', separatorLine:false, children : [
-    	  										         {code:'F-QC',name:'Contrôle qualité terminée', separatorLine:true, children : [
+    	  										         {code:'F-QC',name:'Contrôle qualité terminé', separatorLine:true, children : [
     	  										             {code:'IW-VQC',name:'EVAL. QC en attente', separatorLine:false, children : [
-    	  										                  {code:'F-VQC',name:'EVAL. QC terminé', separatorLine:true, children : [
+    	  										                  {code:'F-VQC',name:'EVAL. QC terminée', separatorLine:true, children : [
     	  										                       {code:'IW-BA',name:'Analyses BI en attente', separatorLine:false, children : [
     	                                                                   {code:'IP-BA',name:'Analyses BI en cours', separatorLine:false, children : [
     	                                                                        {code:'F-BA',name:'Analyses BI terminée', separatorLine:true, children : [
@@ -640,22 +640,20 @@ angular.module('biCommonsServices', []).
 
     	    	        	}
     	    	        	
-    		    	        
-    	    	        	if (scope.modalHistoricalData != undefined && scope.modalHistoricalData != null && scope.modalHistoricalData.length > 0) {
-    		    	        	data = updateDataWithComment(data, scope.modalHistoricalData, 0);
-    		    	        }
-
-
 
     	    	            // Draw the flow chart
     	    	            var globalParam = { spaceVbetween2box:20, 
-    						    	            spaceHbetween2box:150,
+    						    	            spaceHbetween2box:100,
     						    	            boxWidth:160,
     						    	            boxHeight:25, //memo : 25 for arial 9 : do not change (bug with height property)
     						    				offsetXText:100, //old 200
     						    	            offsetYText:32 };
     	    	            
-    	    	            scope.$watch('modalHighlightCode', function () { 
+    	    	            scope.$watch('modalHighlightCode', function () {
+    	    	            	
+        	    	        	if (scope.modalHistoricalData != undefined && scope.modalHistoricalData != null && scope.modalHistoricalData.length > 0) {
+        		    	        	data = updateDataWithComment(data, scope.modalHistoricalData, scope.modalHighlightCode);
+        		    	        }
 
     	    	            	renderChart(chart.renderer, 0, data, scope.modalHighlightCode, globalParam.offsetXText, globalParam.offsetYText, false, globalParam);
     	    	            });
@@ -678,7 +676,23 @@ angular.module('biCommonsServices', []).
     			};
     			
     			
-    			function updateDataWithComment(data, historical, currentLevel) {
+    			function updateHistoricalWithUA2(historical, highlightCode) {
+    				if (highlightCode == "UA-2") {
+    					for (var i=historical.length; i>1; i--) {
+    						if (historical[i-1].code == "UA") {
+    							historical[i-1].code = "UA-2";
+    							break;
+    						}
+    					}
+    				}
+    				return historical;
+    			};
+    			
+    			
+    			function updateDataWithComment(data, historical, highlightCode) {
+    				//to set date to the appropriate "unavailable" box (the second and not the first) 
+    				historical = updateHistoricalWithUA2(historical, highlightCode); 
+    				
     				for (var i=0; i<data.length; i++) {
     					for (var j=0; j<historical.length; j++) {
     						if (data[i].code == historical[j].code) {
@@ -687,7 +701,7 @@ angular.module('biCommonsServices', []).
     						} 
     					}
     					if (data[i].children != undefined && data[i].children != null && data[i].children.length != 0) {
-    						updateDataWithComment(data[i].children, historical, currentLevel+1);
+    						updateDataWithComment(data[i].children, historical, highlightCode);
     					}
     				}	
     				return data;
