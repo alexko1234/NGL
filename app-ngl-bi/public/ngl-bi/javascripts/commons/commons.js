@@ -127,7 +127,7 @@ angular.module('biCommonsServices', []).
     				}
     			}
     			
-    			if (criteriaCode && criterias[criteriaCode]) {
+    			if (angular.isDefined(criterias) && criteriaCode && criterias[criteriaCode]) {
     				var criteria = criterias[criteriaCode];
     				var property;
     				for(var i = 0; i < criteria.properties.length; i++){
