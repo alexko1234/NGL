@@ -19,6 +19,15 @@ import controllers.CommonController;
 public class Users extends CommonController{
 	final static Form<UserSearchFrom> userForm = form(UserSearchFrom.class);
 	
+	public static Result get(String login){
+		User user = User.find.where().like("login", login).findUnique();
+		if(user == null){
+			return notFound(login);
+		}
+		
+		return ok(Json.toJson(user));
+	}
+	
 	public static Result list(){
 		Form<UserSearchFrom> userFilledForm = filledFormQueryString(userForm,UserSearchFrom.class);
 		UserSearchFrom usersSearch = userFilledForm.get();
