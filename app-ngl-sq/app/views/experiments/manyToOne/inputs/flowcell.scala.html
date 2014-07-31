@@ -2,7 +2,7 @@
 
 <div class="row" ng-controller="FlowcellCtrl">
 	<div style="width:1000px;margin-right:auto;margin-left:auto">
-		<div ng-model="inputContainers" droppable style="position:relative;float:left;width:200px;margin-right:20px">
+		<div ng-model="inputContainers" droppable style="position:relative;float:left;width:400px;margin-right:20px">
 			<p  ng-if="inputContainers.length==0">Inputs</p>
 			<table ng-show="inputContainers.length>0" class="table pull-left" style="margin-right:50px" >
 				<th>
@@ -50,7 +50,7 @@
 			</table>
 		</div>
 	
-		<table class="table pull-right" style="width:200px;">
+		<table class="table" style="width:200px;">
 		@for(i <- 0 to laneCount-1) {
 		<tr>
 			<td>
