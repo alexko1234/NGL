@@ -458,6 +458,8 @@ query.title = Titre
 query.form = Paramètres
 query.nbResults = Nombre de Résultats
 
+error.query.empty = Attention! Pas de requête dans le panier
+
 stat.typelabel.zscore = z-score
 stat.typelabel.simplevalue = valeur de la propriété
 

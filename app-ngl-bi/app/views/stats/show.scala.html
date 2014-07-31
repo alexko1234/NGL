@@ -5,9 +5,18 @@
 	<div class="col-md-12 col-lg-12" datatable="chartsReadSetsService.datatable()"></div>
 </div>
 
-
-<div class="row" ng-repeat="chart in chartsReadSetsService.charts()">
-	<div class="col-md-12 col-lg-12">
-		<chart value="chart"></chart>
+<div ng-switch on="queriesConfigService.queries.length > 0">
+	<div ng-switch-when="true">
+		<div class="row" ng-repeat="chart in chartsReadSetsService.charts()">
+			<div class="col-md-12 col-lg-12">
+				<chart value="chart"></chart>
+			</div>
+		</div>
 	</div>
+	<div ng-switch-when="false">
+		<div class="alert alert-danger">
+			<strong>@Messages("error.query.empty")</strong>
+		</div>
+	</div>	
 </div>
+	

@@ -85,8 +85,8 @@ angular.module('home').controller('StatsConfigReadSetsCtrl',['$scope', 'mainServ
 	$scope.queriesConfigService.loadDatatable();	
 }]);
 
-angular.module('home').controller('StatsShowReadSetsCtrl',['$scope',  'mainService', 'tabService', 'chartsReadSetsService',
-                                                              function($scope,mainService, tabService, chartsReadSetsService) { 
+angular.module('home').controller('StatsShowReadSetsCtrl',['$scope',  'mainService', 'tabService', 'chartsReadSetsService', 'queriesConfigReadSetsService',
+                                                              function($scope,mainService, tabService, chartsReadSetsService, queriesConfigReadSetsService) { 
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('search');
@@ -96,6 +96,8 @@ angular.module('home').controller('StatsShowReadSetsCtrl',['$scope',  'mainServi
 		
 		tabService.activeTab(2); // desactive le lien !
 	}
+	
+	$scope.queriesConfigService = queriesConfigReadSetsService;
 	
 	$scope.chartsReadSetsService = chartsReadSetsService;
 	$scope.chartsReadSetsService.init();
