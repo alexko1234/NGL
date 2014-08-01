@@ -78,12 +78,10 @@ public class Global extends GlobalSettings {
 		 		Logger.info("NGL reporting has started");
 				try {
 					
-					String institute=play.Play.application().configuration().getString("reporting.institute");
-					Logger.info("Reporting institute "+ institute);
+					String institute=play.Play.application().configuration().getString("institute");
+					Logger.info("institute for the reporting : "+ institute);
 				
-					if(institute.equals("CNG")){
-						//new ReportingCNG();
-					}else if (institute.equals("CNS")){
+					if (institute.equals("CNS")) {
 						 new RunReportingCNS();
 					} else {
 						throw new RuntimeException("La valeur de l'attribut reporting.institute dans application.conf n'a pas d'implementation");
