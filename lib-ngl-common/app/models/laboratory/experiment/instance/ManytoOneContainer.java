@@ -42,7 +42,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 	@Override
 	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) throws DAOException {
 
-		if(this.outputContainerUsed==null){
+		if(this.outputContainerUsed!=null){
 
 			if(this.inputContainerUseds!=null){
 
@@ -58,7 +58,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 					}
 				}
 
-				this.outputContainerUsed = new ContainerUsed(outPutContainerCode);
+				this.outputContainerUsed.code=outPutContainerCode;
 
 				LocationOnContainerSupport support=new LocationOnContainerSupport();
 				support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
@@ -84,7 +84,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 				contextValidation.addErrors("inputContainerUsed", ValidationConstants.ERROR_NOTEXISTS_MSG);
 			}
 		}else {
-			contextValidation.addErrors("outputContainerUsed", ValidationConstants.ERROR_ID_NOTNULL_MSG);
+			contextValidation.addErrors("outputContainerUsed", ValidationConstants.ERROR_NOTEXISTS_MSG);
 		}
 
 		return contextValidation; 
