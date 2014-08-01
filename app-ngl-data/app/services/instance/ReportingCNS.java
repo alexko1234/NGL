@@ -61,7 +61,7 @@ public class ReportingCNS extends AbstractReporting {
 		    		"Liste des readsets à l\'état IW-VQC, pour lesquels le traitement sortingRibo n\'existe pas et dont le sampleType est dans la liste : depletedRNA ;  mRNA ; total-RNA ; sRNA ; cDNA",
 		    		"Liste des readsets à l\'état IW-VQC, pour lesquels le traitement taxonomy n\'existe pas."};
 		    String subHeader1 = "Nombre de résultats : ";
-		    String subHeader2 = "Détails (Code readset, Code run, Etat readset) : ";
+		    String subHeader2 = "Détails : ";
 		    String lineReturn = "<br>";
 		    String separatorLine = "--------------------------------------------";
 		    

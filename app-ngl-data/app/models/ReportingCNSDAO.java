@@ -68,8 +68,9 @@ public class ReportingCNSDAO {
 				break;
 		}
 		ArrayList<String> lines = new ArrayList<String>(); 
-		StringBuffer buffer = new StringBuffer();
+		StringBuffer buffer;
 		for (ReadSet readSet : readSets) {
+			buffer = new StringBuffer();
 			buffer.append("code : ").append(readSet.code);
 			buffer.append(", runCode : ").append(readSet.runCode);
 			buffer.append(", stateCode : ").append(readSet.state.code);
