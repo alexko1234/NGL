@@ -7,6 +7,7 @@ import play.GlobalSettings;
 import play.Logger;
 import services.instance.ImportDataCNG;
 import services.instance.ImportDataCNS;
+import services.instance.RunReportingCNS;
 
 
 public class Global extends GlobalSettings {
@@ -16,6 +17,8 @@ public class Global extends GlobalSettings {
 		Logger.info("NGL has started");
 		
 		importData();
+		
+		generateReporting();
 	 
 	}
 
@@ -45,25 +48,53 @@ public class Global extends GlobalSettings {
 
 	  public static void importData(){
 		  
-			if(play.Play.application().configuration().getBoolean("import.data")){
+			if (play.Play.application().configuration().getBoolean("import.data")) {
 				
 		 		Logger.info("NGL import data has started");
-			try {
+				try {
+					
+					String institute=play.Play.application().configuration().getString("import.institute");
+					Logger.info("Import institute "+ institute);
 				
-				String institute=play.Play.application().configuration().getString("import.institute");
-				Logger.info("Import institute "+ institute);
-			
-				if(institute.equals("CNG")){
-					new ImportDataCNG();
-				}else if (institute.equals("CNS")){
-					 new ImportDataCNS();
-				} else {
-					throw new RuntimeException("La valeur de l'attribut institute dans application.conf n'a pas d'implementation");
+					if(institute.equals("CNG")){
+						new ImportDataCNG();
+					}else if (institute.equals("CNS")){
+						 new ImportDataCNS();
+					} else {
+						throw new RuntimeException("La valeur de l'attribut import.institute dans application.conf n'a pas d'implementation");
+					}
+					
+				}catch(Exception e){
+					throw new RuntimeException("L'attribut import.institute dans application.conf n'est pas renseigné");
 				}
 				
-			}catch(Exception e){
-				throw new RuntimeException("L'attribut institute dans application.conf n'est pas renseigné");
-			}
-			}else { Logger.info("No import data"); }
+			} else { Logger.info("No import data"); }
 	  }
+	  
+	  public static void generateReporting(){
+		  
+			if (play.Play.application().configuration().getBoolean("reporting.active")) {
+				
+		 		Logger.info("NGL reporting has started");
+				try {
+					
+					String institute=play.Play.application().configuration().getString("reporting.institute");
+					Logger.info("Reporting institute "+ institute);
+				
+					if(institute.equals("CNG")){
+						//new ReportingCNG();
+					}else if (institute.equals("CNS")){
+						 new RunReportingCNS();
+					} else {
+						throw new RuntimeException("La valeur de l'attribut reporting.institute dans application.conf n'a pas d'implementation");
+					}
+					
+				}catch(Exception e){
+					throw new RuntimeException("L'attribut reporting.institute dans application.conf n'est pas renseigné");
+				}
+				
+			} else { Logger.info("No reporting"); }
+	  }
+	  
+	  
 }
