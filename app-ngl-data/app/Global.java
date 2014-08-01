@@ -7,7 +7,7 @@ import play.GlobalSettings;
 import play.Logger;
 import services.instance.ImportDataCNG;
 import services.instance.ImportDataCNS;
-import services.instance.RunReportingCNS;
+import services.reporting.RunReportingCNS;
 
 
 public class Global extends GlobalSettings {
@@ -84,11 +84,11 @@ public class Global extends GlobalSettings {
 					if (institute.equals("CNS")) {
 						 new RunReportingCNS();
 					} else {
-						throw new RuntimeException("La valeur de l'attribut reporting.institute dans application.conf n'a pas d'implementation");
+						throw new RuntimeException("La valeur de l'attribut institute dans application.conf n'a pas d'implementation");
 					}
 					
 				}catch(Exception e){
-					throw new RuntimeException("L'attribut reporting.institute dans application.conf n'est pas renseigné");
+					throw new RuntimeException("L'attribut institute dans application.conf n'est pas renseigné");
 				}
 				
 			} else { Logger.info("No reporting"); }

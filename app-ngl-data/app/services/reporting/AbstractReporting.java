@@ -1,4 +1,4 @@
-package services.instance;
+package services.reporting;
 
 import java.io.UnsupportedEncodingException;
 

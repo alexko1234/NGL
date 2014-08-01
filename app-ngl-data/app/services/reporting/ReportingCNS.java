@@ -1,4 +1,4 @@
-package services.instance;
+package services.reporting;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class ReportingCNS extends AbstractReporting {
 			//get parameters for email
 			String expediteur = ConfigFactory.load().getString("reporting.email.from"); 
 			String dest = ConfigFactory.load().getString("reporting.email.to");   
-			String subject = ConfigFactory.load().getString("reporting.email.subject") + " " + ConfigFactory.load().getString("reporting.institute");
+			String subject = ConfigFactory.load().getString("reporting.email.subject") + " " + ConfigFactory.load().getString("institute");
 		    Set<String> destinataires = new HashSet<String>();
 		    destinataires.addAll(Arrays.asList(dest.split(",")));
 		    
