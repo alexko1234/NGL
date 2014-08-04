@@ -80,9 +80,10 @@
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.state.code")){
 
-						<modal-chart modal-id="myReadSetChartModal" modal-bg-color="white" modal-width="700" modal-height="700" modal-header-text="ReadSet Status Flow" modal-body-text="" 
-		        			ng-attr-modal-data-config="getModalDataConfig()" ng-attr-modal-current-code="readset.state.code" modal-historical-data="readset.state.historical" ng-attr-modal-highlight-code="getModalHighLightCode()">
-		        		</modal-chart>
+						<workflow-chart ng-attr-modal-bg-color="white" ng-attr-modal-width="700" ng-attr-modal-height="700" ng-attr-modal-header-text='@Messages("readsets.modal.header.text")' ng-attr-modal-body-text="" 
+		        			ng-attr-modal-data-config="getModalDataConfig()" ng-attr-modal-current-code="readset.state.code" ng-attr-modal-historical-data="readset.state.historical" ng-attr-modal-highlight-code="getModalHighLightCode()">
+		        		
+		        		</workflow-chart>
 					}
 					
 

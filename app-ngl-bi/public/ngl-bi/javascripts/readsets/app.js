@@ -1,5 +1,5 @@
 "use strict";
-angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biCommonsServices', 'ui.bootstrap','ngl-bi.ReadSetsServices'], function($routeProvider, $locationProvider) {
+angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biCommonsServices', 'biWorkflowChartServices', 'ui.bootstrap','ngl-bi.ReadSetsServices'], function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/readsets/search/home', {
 		templateUrl : '/tpl/readsets/search/default',

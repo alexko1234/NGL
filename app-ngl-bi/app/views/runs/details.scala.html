@@ -50,9 +50,9 @@
 						<p class="form-control-static" ng-model='run.state.code' codes="state"></p>
 					</div>
 					<div ng-switch-when="false">
-				        <modal-chart modal-id="myRunChartModal" modal-bg-color="white" modal-width="700" modal-height="700" modal-header-text="Run Status Flow" modal-body-text=""  
-				        	ng-attr-modal-data-config="getModalDataConfig()" ng-attr-modal-current-code="run.state.code"  modal-historical-data="run.state.historical" ng-attr-modal-highlight-code="getModalHighLightCode()">
-				        </modal-chart>
+				        <workflow-chart ng-attr-modal-bg-color="white" ng-attr-modal-width="700" ng-attr-modal-height="700" ng-attr-modal-header-text='@Messages("runs.modal.header.text")' ng-attr-modal-body-text=""  
+				        	ng-attr-modal-data-config="getModalDataConfig()" ng-attr-modal-current-code="run.state.code"  ng-attr-modal-historical-data="run.state.historical" ng-attr-modal-highlight-code="getModalHighLightCode()">
+				        </workflow-chart>
 				    </div>
 				</div>
 				}

@@ -93,9 +93,10 @@
 					this.form = {};
 				},
 				
+				valuationStates : [{code:"IW-V",name:Codes("state.IW-V")}],
 				states : function(){
 					if (mainService.isHomePage('valuation')) {
-						return [{code:"IW-V",name:Codes("state.IW-V")}];
+						return this.valuationStates;
 					}else{
 						return this.lists.get('statetrue');
 					}

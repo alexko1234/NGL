@@ -86,6 +86,7 @@ search.placeholder.valuationReadSetUser = ReadSet évalué par :
 search.placeholder.property = Sélect. une propriété
 search.placeholder.isSentCCRT = Envoyé CCRT ?
 search.placeholder.isSentCollaborator = Envoyé Collaborateur ?
+search.placeholder.sequencingProgramTypes = Type de lectures
 
 button.search = Rechercher
 button.reset = Réinitialiser
@@ -183,6 +184,12 @@ runs.lane.sav.alerts = Alertes
 runs.lane.showOrHide = Afficher/Masquer la lane 
 
 runs.readsets.title = Readsets
+
+runs.modal.header.text = Run status flow
+
+#search
+sequencingProgramType.value.PE = Pair End
+sequencingProgramType.value.SR = Single Read
 
 ############
 #
@@ -412,6 +419,8 @@ readsets.files.isUsable = Oui
 readsets.files.isNotUsable = Non
 readsets.files.path = Chemin
 
+readsets.modal.header.text = ReadSet status flow
+
 ############
 #
 # Analyses
@@ -500,3 +509,5 @@ readsets.treatments.taxonomy.read1.krona.fungi = % Fungi
 readsets.treatments.sortingRibo.read1.rRNAPercent = % rRNA R1
 readsets.treatments.sortingRibo.read2.rRNAPercent = % rRNA R2
 readsets.treatments.sortingRibo.single.rRNAPercent = % rRNA Single
+
+
