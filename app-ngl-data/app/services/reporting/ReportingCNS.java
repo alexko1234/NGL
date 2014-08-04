@@ -1,6 +1,5 @@
 package services.reporting;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -8,19 +7,21 @@ import java.util.List;
 import java.util.Set;
 
 import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 
 import org.mongojack.DBQuery;
-
 import com.mongodb.MongoException;
-import com.typesafe.config.ConfigFactory;
-
 import fr.cea.ig.MongoDBDAO;
+
+import com.typesafe.config.ConfigFactory;
 
 import mail.MailServiceException;
 import mail.MailServices;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import scala.concurrent.duration.FiniteDuration;
+
+import services.reporting.txt.*;
 
 
 public class ReportingCNS extends AbstractReporting {
@@ -29,12 +30,14 @@ public class ReportingCNS extends AbstractReporting {
 			FiniteDuration durationFromNextIteration) {
 		super("ReportingCNS", durationFromStart, durationFromNextIteration);
 	}
-
+	
+	
 	@Override
 	public void runReporting() throws UnsupportedEncodingException, MessagingException {
+		
 		try {
 			
-			//get parameters for email
+			//Get global parameters for email
 			String expediteur = ConfigFactory.load().getString("reporting.email.from"); 
 			String dest = ConfigFactory.load().getString("reporting.email.to");   
 			String subject = ConfigFactory.load().getString("reporting.email.subject") + " " + ConfigFactory.load().getString("institute");
@@ -42,21 +45,9 @@ public class ReportingCNS extends AbstractReporting {
 		    destinataires.addAll(Arrays.asList(dest.split(",")));
 		    
 		    MailServices mailService = new MailServices();
-
-		    //dnoisett, rem : getContentType : expected text/html found text/plain. Why ? :
-		    //How set contentType ?
-		    /*
-			Properties properties = System.getProperties();
-			properties.put("mail.smtp.host", "smtp.genoscope.cns.fr");
-			Session session = Session.getInstance(properties, null);
-		    Message msg = new MimeMessage(session);
-		    System.out.println("msg.getContentType()=" + msg.getContentType()); 
-		    //msg.getContentType() = text/plain ! 
-		    */ 
 		    
-		    //Generate stringBuffer
-		    //1. Define constants;
-		    int nbQueryTypes = 5;
+		    //Define constants;
+		    Integer nbQueries = 5;
 		    StringBuffer buffer = new StringBuffer();
 		    String[] headers = {"1) QC en cours bloqué", 
 		    					"2) Readsets à évaluer : Read Quality (RAW) manquant", 
@@ -70,47 +61,44 @@ public class ReportingCNS extends AbstractReporting {
 		    	"Liste des readsets à l\'état IW-VQC, pour lesquels le traitement taxonomy n\'existe pas."};
 		    String subHeader1 = "Nombre de résultats : ";
 		    String subHeader2 = "Détails : ";
-		    String lineReturn = "<br>";
 		    String separatorLine = "--------------------------------------------";
+		    String lineReturn = "<br>";
 		    
-		    int[] nb = new int[nbQueryTypes];
-		    for (int i=0; i<nbQueryTypes; i++) {
-		    	nb[i] = getQuery(i+1).size();
+		    //Get data
+		    Integer[] nb = new Integer[nbQueries.intValue()];  
+		    ArrayList<ArrayList<String>> listResults = new ArrayList<ArrayList<String>>();
+		    ArrayList<String> results = new ArrayList<String>();
+		    String[] subHeaders2 = new String[nbQueries.intValue()];
+		    for (int i=0; i<nbQueries.intValue(); i++) {
+		    	nb[i] = getQueryResults(i+1).size();
+		    	if (nb[i] > 0)  
+		    		subHeaders2[i] = subHeader2 + getColumnHeaders(i+1);
+		    	else
+		    		subHeaders2[i] = "";
+		    	results = getQueryResults(i+1);
+		    	listResults.add(results);
 		    }
 		    
-
-		    //2. Concatenation
-		    for (int i=0; i<nbQueryTypes; i++) {
-		    	
-		    	buffer.append(headers[i]).append(lineReturn).append(comments[i]).append(lineReturn).append(lineReturn);
-		    	
-		    	buffer.append(subHeader1).append(nb[i]).append(lineReturn).append(lineReturn);
-		    	
-		    	List<String> results = null;
-		    	results = getQuery(i+1);
-		    	
-		    	if ((nb[i] > 0) && (results != null)) {
-		    		buffer.append(subHeader2).append(lineReturn);
-		    		
-			    	for (String result : results) {	
-			    		buffer.append(result).append(lineReturn);
-			    	}			    	
-			    	buffer.append(lineReturn);
-		    	}
-		    	
-		    	buffer.append(separatorLine).append(lineReturn);
-		    }
-		    
-		    //Send mail using parameters and string buffer
-		    mailService.sendMail(expediteur, destinataires, subject, new String(buffer.toString().getBytes(), "iso-8859-1"));
+		    String content = reportingCNS.render(nbQueries, headers, comments, subHeader1, subHeaders2, nb, listResults, lineReturn, separatorLine).body();
+		    		    
+		    //Send mail using global parameters and content
+		    mailService.sendMail(expediteur, destinataires, subject, content);
 		    
 		} catch (MailServiceException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
+	public static String getColumnHeaders(int queryId) {
+		if (queryId == 4) 
+			return "code,runCode,stateCode,sampleTypeCode";
+		else
+			return "code,runCode,stateCode";
+	}
+
 	
-	public static List<String> getQuery(int queryId) throws MongoException {
+	public static ArrayList<String> getQueryResults(int queryId) throws MongoException {
 		List<ReadSet> readSets = null;
 		switch(queryId) {
 			case 1:
@@ -136,13 +124,11 @@ public class ReportingCNS extends AbstractReporting {
 		}
 		ArrayList<String> lines = new ArrayList<String>(); 
 		StringBuffer buffer;
-		for (ReadSet readSet : readSets) {
+		for (ReadSet readSet : readSets) { 
 			buffer = new StringBuffer();
-			buffer.append("code : ").append(readSet.code);
-			buffer.append(", runCode : ").append(readSet.runCode);
-			buffer.append(", stateCode : ").append(readSet.state.code);
+			buffer.append(readSet.code).append(",").append(readSet.runCode).append(",").append(readSet.state.code);
 			if (queryId==4) {
-				buffer.append(", sampleTypeCode : ").append(readSet.sampleOnContainer.sampleTypeCode);
+				buffer.append(",").append(readSet.sampleOnContainer.sampleTypeCode);
 			}
 			lines.add(buffer.toString());
 		}

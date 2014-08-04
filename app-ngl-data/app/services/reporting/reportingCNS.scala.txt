@@ -1,0 +1,26 @@
+@(nbQueries : java.lang.Integer, headers : Array[java.lang.String], comments : Array[java.lang.String], subHeader1 : java.lang.String, subHeaders2 : Array[java.lang.String], nb : Array[java.lang.Integer], listResults : java.util.ArrayList[java.util.ArrayList[java.lang.String]], lineReturn : java.lang.String, separatorLine : java.lang.String)
+
+
+@for(i<-0 until nbQueries){
+
+	@(headers(i)) @(lineReturn)
+	
+	@(comments(i)) @(lineReturn)
+	
+	@(subHeader1) @(nb(i)) @(lineReturn)
+	
+	@(subHeaders2(i)) @(lineReturn)
+	
+	@for(result <- listResults(i)) {
+		@(result) @(lineReturn)
+	}
+	
+	@if(listResults(i).size > 0) {
+		@(lineReturn)
+	} 
+
+	@(separatorLine)
+	
+	@(lineReturn)
+
+}
