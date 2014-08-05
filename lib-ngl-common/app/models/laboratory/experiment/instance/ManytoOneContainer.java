@@ -7,6 +7,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerSupportCategory;
+import models.laboratory.container.description.dao.ContainerSupportCategoryDAO;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
@@ -42,49 +43,60 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 	@Override
 	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) throws DAOException {
 
-		if(this.outputContainerUsed!=null){
+		//	if(this.outputContainerUsed!=null){
 
-			if(this.inputContainerUseds!=null){
+		if(this.inputContainerUseds!=null){
 
-				String outPutContainerCode=null;
-
-				if(experiment.instrumentProperties.get("containerSupportCode")==null){
-					outPutContainerCode=ContainerHelper.generateContainerCode(experiment.instrument.outContainerSupportCategoryCode);
-				}else{
-					if(experiment.instrumentProperties.get("containerSupportCode").value!=null){
-						outPutContainerCode=experiment.instrumentProperties.get("containerSupportCode").value.toString();
-					}else {
-						contextValidation.addErrors("containerSupportCode",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG);
-					}
-				}
-
-				this.outputContainerUsed.code=outPutContainerCode;
-
-				LocationOnContainerSupport support=new LocationOnContainerSupport();
-				support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
-				// Same position 
-				ContainerSupportCategory containerSupportCategory=ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode);
-
-				if(containerSupportCategory.nbColumn==1 && containerSupportCategory.nbLine==1){
-					support.line="1";
-					support.column="1";
-					support.code=outPutContainerCode;
-				}else if(StringUtils.isNotEmpty(this.line) && StringUtils.isNotEmpty(this.column)) {
-					support.line=this.line;
-					support.column=this.column;
-					support.code=outPutContainerCode;
-				}else {
-					contextValidation.addErrors("locationOnContainerSupport",ValidationConstants.ERROR_NOTDEFINED_MSG);
-				}
-
-				this.outputContainerUsed.locationOnContainerSupport=support;
-				this.outputContainerUsed.validate(contextValidation);
-
+			ContainerSupportCategory containerSupportCategory=ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode);
+			
+			//Code outPutContainer
+			String outPutContainerCode=null;
+			if(experiment.instrumentProperties.get("containerSupportCode")==null){
+				outPutContainerCode=ContainerHelper.generateContainerCode(experiment.instrument.outContainerSupportCategoryCode);
 			}else{
-				contextValidation.addErrors("inputContainerUsed", ValidationConstants.ERROR_NOTEXISTS_MSG);
+				if(experiment.instrumentProperties.get("containerSupportCode").value!=null){
+					if(containerSupportCategory.nbColumn==1 && containerSupportCategory.nbLine==1)
+					{
+						outPutContainerCode=experiment.instrumentProperties.get("containerSupportCode").value.toString();
+
+					} else {
+						outPutContainerCode=experiment.instrumentProperties.get("containerSupportCode").value.toString()+'_'+this.line;
+					}
+				}else {
+					contextValidation.addErrors("containerSupportCode",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG);
+				}
 			}
-		}else {
-			contextValidation.addErrors("outputContainerUsed", ValidationConstants.ERROR_NOTEXISTS_MSG);
+			
+
+			if(this.outputContainerUsed!=null){
+				this.outputContainerUsed.code=outPutContainerCode;
+			}else {
+				this.outputContainerUsed = new ContainerUsed(outPutContainerCode);
+			}
+			
+			if(experiment.instrument.outContainerSupportCategoryCode!=null)
+				this.outputContainerUsed.categoryCode=ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode).containerCategory.code;
+
+
+			LocationOnContainerSupport support=new LocationOnContainerSupport();
+			support.categoryCode=experiment.instrument.outContainerSupportCategoryCode; 
+			if(containerSupportCategory.nbColumn==1 && containerSupportCategory.nbLine==1){
+				support.line="1";
+				support.column="1";
+				support.code=outPutContainerCode;
+			}else if(StringUtils.isNotEmpty(this.line) && StringUtils.isNotEmpty(this.column)) {
+				support.line=this.line;
+				support.column=this.column;
+				support.code=outPutContainerCode;
+			}else {
+				contextValidation.addErrors("locationOnContainerSupport",ValidationConstants.ERROR_NOTDEFINED_MSG);
+			}
+			this.outputContainerUsed.locationOnContainerSupport=support;
+
+			this.outputContainerUsed.validate(contextValidation);
+
+		}else{
+			contextValidation.addErrors("inputContainerUsed", ValidationConstants.ERROR_NOTEXISTS_MSG);
 		}
 
 		return contextValidation; 
@@ -96,8 +108,12 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 		if(outputContainerUsed.code!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, this.outputContainerUsed.code)){
 			// ContainerSupport
-			ContainerSupport support=ContainerSupportHelper.createSupport(this.outputContainerUsed.locationOnContainerSupport.code, null,
-					this.outputContainerUsed.locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);
+			ContainerSupport support =MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME,ContainerSupport.class, this.outputContainerUsed.locationOnContainerSupport.code);
+			if(support==null){
+				support=ContainerSupportHelper.createSupport(this.outputContainerUsed.locationOnContainerSupport.code, null,
+						this.outputContainerUsed.locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);
+			}
+
 
 			// Container
 			Container outputContainer = new Container();
