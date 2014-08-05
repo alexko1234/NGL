@@ -28,7 +28,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 
 	protected StateDAO() {
 		super("state", State.class,StateMappingQuery.class, 
-				"SELECT t.id, t.name,t.code,t.active,t.position,t.fk_state_category, t.display " +
+				"SELECT t.id, t.name,t.code,t.active,t.position,t.fk_state_category, t.display, t.functionnal_group " +
 				"FROM state as t ", true);
 	}
 
@@ -54,6 +54,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		parameters.put("position", state.position);
 		parameters.put("fk_state_category", state.category.id);
 		parameters.put("display", state.display);
+		parameters.put("functionnal_group", state.functionnalGroup);
 		
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		state.id = newId;
@@ -89,8 +90,8 @@ public class StateDAO extends AbstractDAOMapping<State>{
 	
 	@Override
 	public void update(State state) throws DAOException {
-		String sql = "UPDATE state SET code=?, name=?, active=?, position=?, fk_state_category=?, display=? WHERE id=?";
-		jdbcTemplate.update(sql, state.code, state.name, state.active, state.position, state.id, state.category.id, state.display);
+		String sql = "UPDATE state SET code=?, name=?, active=?, position=?, fk_state_category=?, display=?, functionnal_group=? WHERE id=?";
+		jdbcTemplate.update(sql, state.code, state.name, state.active, state.position, state.id, state.category.id, state.display, state.functionnalGroup);
 	}
 	
 	public List<ListObject> findAllForContainerList(){

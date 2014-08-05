@@ -439,7 +439,7 @@ public class DescriptionFactory {
 	 * @param objTypes
 	 * @return
 	 */
-	public static State newState(String name, String code, boolean active,	int position, StateCategory category, List<ObjectType> objTypes, boolean display) {
+	public static State newState(String name, String code, boolean active,	int position, StateCategory category, List<ObjectType> objTypes, boolean display, String functionnalGroup) {
 		State s = new State();
 		s.code = code;
 		s.name = name;
@@ -448,6 +448,7 @@ public class DescriptionFactory {
 		s.category = category;
 		s.objectTypes = objTypes; 
 		s.display = display;
+		s.functionnalGroup = functionnalGroup;
 		return s;
 	}
 

@@ -43,6 +43,7 @@ public class StateMappingQuery extends MappingSqlQuery<State>{
 		}
 		state.category=category;
 		state.display = rs.getBoolean("display");
+		state.functionnalGroup=rs.getString("functionnal_group");
 		return state;
 	}
 

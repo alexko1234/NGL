@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('biWorkflowChartServices', []).
-	directive('workflowChart', ['$compile', '$http', '$q', '$filter', function ($compile, $http, $q, $filter) {
+	directive('workflowChart', ['$compile', '$http', '$q', '$filter', 'lists', function ($compile, $http, $q, $filter, lists) {
     		
 	    var modalTemplate = angular.element("<div id='{{modalId}}' class='modal'  tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true' style='left:100px; top:100px;overflow:hidden'>"+
 	    										"<div class='modal-content' style='width:{{modalContentWidth}}px; height:{{modalContentHeight}}px; border:0px'>"+
@@ -15,7 +15,7 @@ angular.module('biWorkflowChartServices', []).
 	    										"</div>"+
 	    									"</div>");
 	    
-	    var linkTemplate = "<a href='#{{modalId}}' id='linkTo{{modalId}}' role='button' data-toggle='modal' class='btn small_link_button'>{{modalCurrentCode | codes:'state'}}</a>";  // not angular.element !
+	    var linkTemplate = "<a href='#{{modalId}}' id='linkTo{{modalId}}' role='button' data-toggle='modal' class='btn small_link_button'>{{modalCurrentCode | codes:'state'}}</a>";
 	    
 	    var linker = function (scope, element, attrs) {
 	    	
@@ -27,6 +27,7 @@ angular.module('biWorkflowChartServices', []).
 	        scope.modalHeight = attrs.modalHeight;
 	        scope.modalContentWidth = parseFloat(scope.modalWidth) + 100;
 	        scope.modalContentHeight = parseFloat(scope.modalHeight) + 100;
+	        scope.lists = lists;
 	        
 	        $compile(element.contents())(scope);
 	        var newTemplate = $compile(modalTemplate)(scope);
@@ -38,6 +39,7 @@ angular.module('biWorkflowChartServices', []).
 	            show: false
 	        });
 	        
+	        
 			element.on('click', function(event) {
 			    event.preventDefault();
 	            $q.when(createEmptyChart()).then(function(chart) {
@@ -45,6 +47,7 @@ angular.module('biWorkflowChartServices', []).
 	            	}
 	            );                
 			});
+			
 	        
 			function createEmptyChart() {
 			 	var chart1 = new Highcharts.Chart({
@@ -60,11 +63,11 @@ angular.module('biWorkflowChartServices', []).
 			};
 			
 			
-			function drawLabel(ren, data, highLightCode, offsetXText, offsetYText, globalParam) {
+			function drawLabel(ren, data, offsetXText, offsetYText, globalParam) {
 				ren.label(data.name, offsetXText, offsetYText)
                 .attr({
-                    fill: getFillColor(data.code, highLightCode),
-                    stroke: getBorderColor(data.code, highLightCode, data.specificColor),
+                    fill: getFillColor(data.code, scope.modalCurrentCode),
+                    stroke: getBorderColor(data.code, scope.modalCurrentCode, data.specificColor),
                     'stroke-width': 2,
                     padding: 5,
                     width: globalParam.boxWidth,
@@ -72,7 +75,7 @@ angular.module('biWorkflowChartServices', []).
                     r: 5
                 })
                 .css({
-                    color: getFontColor(data.code, highLightCode, data.specificColor),
+                    color: getFontColor(data.code, scope.modalCurrentCode, data.specificColor),
                     fontStyle: '10px', // not 10!
                     fontWeight: 'normal',
                     fontFamily: 'arial'
@@ -128,9 +131,9 @@ angular.module('biWorkflowChartServices', []).
  			}
 			
 			
-			function drawSeparatorLine(ren, data, offsetY, globalParam) {
+			function drawSeparatorLine(ren, offsetY, globalParam) {
 				var offsetXLine = globalParam.offsetXText -10;
-				var offsetYLine = offsetY  + globalParam.boxHeight + globalParam.spaceVbetween2box*0.75;
+				var offsetYLine = offsetY;
 				var offsetXLine2 = globalParam.offsetXText + globalParam.boxWidth+20;
 				
                 ren.path(['M', offsetXLine, offsetYLine, 'L', offsetXLine2, offsetYLine])
@@ -143,127 +146,73 @@ angular.module('biWorkflowChartServices', []).
 			}
 			
 			
-			function renderChart(renderer, currentLevel, data, highLightCode, offsetXText, offsetYText, hasSeparatorLine, globalParam) {
+			function renderChart(renderer, data, globalParam) {
 				
-				var offsetXText2, offsetYText2 = offsetYText;    	
-				
-				if (currentLevel > 0) {
-					offsetYText2 += globalParam.spaceVbetween2box + globalParam.boxHeight;
-				}
-				if (hasSeparatorLine) {
-					offsetYText2 += globalParam.spaceVbetween2box / 2;
-				}
+				var offsetXText = globalParam.offsetXText;
+				var offsetYText = globalParam.offsetYText;				
+				var offsetXText2 = offsetXText, offsetYText2 = offsetYText;    	
 
 				for (var i=0; i<data.length; i++) {
-					if (data.length == 1) {
-						offsetXText2 = offsetXText;
-					}
-					else {
-						if (data.length % 2 == 0) {
-							offsetXText2 = offsetXText + i * (globalParam.spaceHbetween2box + globalParam.boxWidth);
+					
+					if (i > 0) {
+						if (data[i].position != data[i-1].position) {
+							offsetYText2 += globalParam.spaceVbetween2box + globalParam.boxHeight;
+							
+							if ((data[i].functionnalGroup != undefined) && (data[i].functionnalGroup != null) && (data[i].functionnalGroup != data[i-1].functionnalGroup)) {
+								
+								drawSeparatorLine(renderer, offsetYText2 - globalParam.spaceVbetween2box/4, globalParam); 
+								
+								offsetYText2 += globalParam.spaceVbetween2box / 2;
+							}
+							drawArrow(renderer, offsetXText, offsetXText2, offsetYText, offsetYText2, globalParam);
 						}
 						else {
-							offsetXText2 = offsetXText - (((data.length-1) / 2) - i) * (globalParam.spaceHbetween2box + globalParam.boxWidth);
+							offsetXText2 = offsetXText + (globalParam.spaceHbetween2box + globalParam.boxWidth);
+							
+							drawArrow(renderer, offsetXText, offsetXText2, offsetYText -  globalParam.spaceVbetween2box - globalParam.boxHeight , offsetYText2, globalParam);
 						}
+						
 					}
 					
-					if (currentLevel > 0) {
-						drawArrow(renderer, offsetXText, offsetXText2, offsetYText, offsetYText2, globalParam);
-					}
+					drawLabel(renderer, data[i], offsetXText2, offsetYText2, globalParam); 
 					
-					drawLabel(renderer, data[i], highLightCode, offsetXText2, offsetYText2, globalParam); 
-					
-					if (data[i].separatorLine) {
-						drawSeparatorLine(renderer, data[i], offsetYText2, globalParam); // old /2
-						hasSeparatorLine = true;
-					}
-					else {
-						hasSeparatorLine = false;
-					}
-					
-					if (data[i].children != undefined && data[i].children != null && data[i].children.length != 0) {
-						// call again renderChart for the new level (currentLevel+1)
-						renderChart(renderer, currentLevel+1, data[i].children, highLightCode, offsetXText2, offsetYText2, hasSeparatorLine, globalParam);  
-					}
+					offsetXText = offsetXText2;
+					offsetYText = offsetYText2;
 				}
 				
 			}
 			
 			function populateChart(chart) {
 				
-				 scope.$watch('modalDataConfig', function () { 
-					 var data;
-					 
-					 if (scope.modalDataConfig == "runStates") {
-	    	        		//hard coded list in order to conserve the order (we exclude status 'N');
-	    	        		data=[
-	    	        	              {code:'IP-S',name:'Séquençage en cours', separatorLine:false,  children : [ 
-	    	        	               {code:'F-S',name:'Séquençage terminé', separatorLine:true, children : [
-											{code:'IW-RG',name:'Read generation en attente', separatorLine:false, children : [
-											     {code:'IP-RG',name:'Read generation en cours', separatorLine:false, children : [
-											         {code:'F-RG',name:'Read generation terminée', separatorLine:true, children : [
-											             {code:'IW-V',name:'Evaluation en attente', separatorLine:false, children : [
-											                  {code:'IP-V',name:'Evaluation en cours', separatorLine:false, children : [
-											                       {code:'F-V',name:'Evaluation terminée', separatorLine:false}]}]}]}]}]}]}, 
-	    	        	               {code:'FE-S',name:'Séquençage en échec', separatorLine:false, specificColor:true} 
-	    	        	              ]} 
-	    	        	             ];
-	    	        	}
-	    	        	if (scope.modalDataConfig == "readSetStatesWithoutAnalysisBA") {
-	    	        		data=[
-	    	        		          {code:'IP-RG',name:'Read Generation en cours', separatorLine:false,  children : [ 
-	      	        	               {code:'F-RG',name:'Read Generation terminée', separatorLine:true, children : [
-	  										{code:'IW-QC',name:'Contrôle qualité en attente', separatorLine:false, children : [
-	  										     {code:'IP-QC',name:'Contrôle qualité en cours', separatorLine:false, children : [
-	  										         {code:'F-QC',name:'Contrôle qualité terminé', separatorLine:true, children : [
-	  										             {code:'IW-VQC',name:'EVAL. QC en attente', separatorLine:false, children : [
-	  										                  {code:'F-VQC',name:'EVAL. QC terminée', separatorLine:true, children : [
-	  										                       {code:'A',name:'Disponible', separatorLine:false}, 
-	  										                       {code:'UA',name:'Indisponible', separatorLine:false} ]}]}]}]}]}]}]}];
-	    	        	}
-	    	        	if (scope.modalDataConfig == "readSetStatesWithAnalysisBA") {
-	    	        		data=[
-	    	        		          {code:'IP-RG',name:'Read Generation en cours', separatorLine:false,  children : [ 
-	      	        	               {code:'F-RG',name:'Read Generation terminée', separatorLine:true, children : [
-	  										{code:'IW-QC',name:'Contrôle qualité en attente', separatorLine:false, children : [
-	  										     {code:'IP-QC',name:'Contrôle qualité en cours', separatorLine:false, children : [
-	  										         {code:'F-QC',name:'Contrôle qualité terminé', separatorLine:true, children : [
-	  										             {code:'IW-VQC',name:'EVAL. QC en attente', separatorLine:false, children : [
-	  										                  {code:'F-VQC',name:'EVAL. QC terminée', separatorLine:true, children : [
-	  										                       {code:'IW-BA',name:'Analyses BI en attente', separatorLine:false, children : [
-	                                                                   {code:'IP-BA',name:'Analyses BI en cours', separatorLine:false, children : [
-	                                                                        {code:'F-BA',name:'Analyses BI terminée', separatorLine:true, children : [
-	                                                                           {code:'IW-VBA',name:'EVAL. Analyses BI en attente', separatorLine:false, children : [
-	                                                                              {code:'F-VBA',name:'EVAL. Analyses BI terminé', separatorLine:true, children : [
-	                                                                                  {code:'A',name:'Disponible', separatorLine:false}, 
-	                                                                                  {code:'UA-2',name:'Indisponible', separatorLine:false} ]}]}]}]}] 
-	  										                       }, 
-	  										                       {code:'UA',name:'Indisponible', separatorLine:false} ]}]}]}]}]}]}]} ];
+				 scope.$watch('modalData', function() { 
+					
+					 //get data
+					var data = triData(scope.modalData); 
+    	            
+    	        	if (scope.modalHistoricalData != undefined && scope.modalHistoricalData != null && scope.modalHistoricalData.length > 0) {
+	    	        	data = updateDataWithComment(data, scope.modalHistoricalData);
+	    	        }
+    	        	
+    	            // Draw the flow chart
+    	            var globalParam = { spaceVbetween2box:20, 
+					    	            spaceHbetween2box:100,
+					    	            boxWidth:160,
+					    	            boxHeight:25, //memo : 25 for arial 9 : do not change (bug with height property)
+					    				offsetXText:100, //old 200
+					    	            offsetYText:32 };
 
-	    	        	}
-	    	        	
-
-	    	            // Draw the flow chart
-	    	            var globalParam = { spaceVbetween2box:20, 
-						    	            spaceHbetween2box:100,
-						    	            boxWidth:160,
-						    	            boxHeight:25, //memo : 25 for arial 9 : do not change (bug with height property)
-						    				offsetXText:100, //old 200
-						    	            offsetYText:32 };
-	    	            
-	    	            scope.$watch('modalHighlightCode', function () {
-	    	            	
-    	    	        	if (scope.modalHistoricalData != undefined && scope.modalHistoricalData != null && scope.modalHistoricalData.length > 0) {
-    		    	        	data = updateDataWithComment(data, scope.modalHistoricalData, scope.modalHighlightCode);
-    		    	        }
-
-	    	            	renderChart(chart.renderer, 0, data, scope.modalHighlightCode, globalParam.offsetXText, globalParam.offsetYText, false, globalParam);
-	    	            });
-	   	            
-	    	            
-	    	            
-		            }, true);
+	            	renderChart(chart.renderer, data, globalParam);
+        
+		        }, true);
+				 
 			} 
+			
+			
+			function triData(data) {
+				data.sort(function(a, b){return a.position-b.position});
+				return data;
+			}
+			
 	    	
 	    	function getFillColor(code1, code2) {
 				return (code1==code2?'#4BACC6':'#F2F2F2');
@@ -278,32 +227,13 @@ angular.module('biWorkflowChartServices', []).
 			};
 			
 			
-			function updateHistoricalWithUA2(historical, highlightCode) {
-				if (highlightCode == "UA-2") {
-					for (var i=historical.length; i>1; i--) {
-						if (historical[i-1].code == "UA") {
-							historical[i-1].code = "UA-2";
-							break;
-						}
-					}
-				}
-				return historical;
-			};
-			
-			
-			function updateDataWithComment(data, historical, highlightCode) {
-				//to set date to the appropriate "unavailable" box (the second and not the first) 
-				historical = updateHistoricalWithUA2(historical, highlightCode); 
-				
+			function updateDataWithComment(data, historical) {
 				for (var i=0; i<data.length; i++) {
 					for (var j=0; j<historical.length; j++) {
 						if (data[i].code == historical[j].code) {
 							data[i].comment = {label:historical[j].date,type:'datetime'};	
 							break;
 						} 
-					}
-					if (data[i].children != undefined && data[i].children != null && data[i].children.length != 0) {
-						updateDataWithComment(data[i].children, historical, highlightCode);
 					}
 				}	
 				return data;
@@ -317,7 +247,7 @@ angular.module('biWorkflowChartServices', []).
 	        link: linker,
 	        template: linkTemplate,
 	        transclude: false,
-	        scope: {modalCurrentCode: "=", modalHistoricalData: "=", modalDataConfig: "=", modalHighlightCode: "=" },
+	        scope: {modalCurrentCode: "=", modalHistoricalData: "=", modalData: "="},
 	    };
 	    
 	}]);

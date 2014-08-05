@@ -23,6 +23,7 @@ public class State extends Model<State> {
     public List<ObjectType> objectTypes;
     
     public boolean display;
+    public String functionnalGroup;
     
 
     public static StateFinder find = new StateFinder();

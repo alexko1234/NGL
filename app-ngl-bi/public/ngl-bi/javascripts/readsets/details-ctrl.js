@@ -42,30 +42,6 @@
 	
 	$scope.activeEditMode = function(){
 		mainService.startEditMode();			
-	}
-	
-	$scope.getModalDataConfig = function() {
-		if (angular.isDefined($scope.readset) && angular.isDefined($scope.bioinformaticAnalysis) && $scope.bioinformaticAnalysis) {
-			return "readSetStatesWithAnalysisBA";
-		}
-		else {
-			return "readSetStatesWithoutAnalysisBA";
-		}
-	};
-	
-	
-	$scope.getModalHighLightCode = function() {
-		if (angular.isDefined($scope.readset)) {
-			var code = $scope.readset.state.code;
-			if ($scope.readset.state.code == "UA" && angular.isDefined($scope.bioinformaticAnalysis) && $scope.bioinformaticAnalysis) {
-				for (var s=0; s<$scope.readset.state.historical.length; s++) {
-					if ($scope.readset.state.historical[s].code == "IW-VBA") {
-						code = "UA-2"; //for highlight the second "unavailable" box !
-					}
-				}
-			}
-			return code;
-		}
 	};
 	
 	$scope.setImage = function(imageData, imageName, treatmentContext, treatmentCode, imageFullSizeWidth, imageFullSizeHeight) {
@@ -137,6 +113,7 @@
 			
 			$scope.lists.refresh.resolutions({typeCode:$scope.readset.typeCode});
 			$scope.lists.refresh.valuationCriterias({typeCode:$scope.readset.typeCode, objectTypeCode:"ReadSet"});
+			$scope.lists.refresh.states({objectTypeCode:"ReadSet"});
 			
 			if(angular.isDefined($scope.readset.treatments)){				
 				$scope.treatments.init($scope.readset.treatments, jsRoutes.controllers.readsets.tpl.ReadSets.treatments, {global:true});				
@@ -152,6 +129,22 @@
 			
 			$http.get(jsRoutes.controllers.projects.api.Projects.get($scope.readset.projectCode).url).success(function(data) {
 				$scope.bioinformaticAnalysis = data.bioinformaticAnalysis;	
+			});	
+			
+			$http.get(jsRoutes.controllers.commons.api.States.list().url,  {params: {objectTypeCode:"ReadSet"}}).success(function(data) {
+				for (var i=0; i<data.length; i++) {
+					if (data[i].code == "N") {
+						data.splice(i,1);
+						break;
+					}
+				}
+				for (var i=0; i<data.length; i++) {
+					if (data[i].code == "F") {
+						data.splice(i,1);
+						break;
+					}
+				}
+				$scope.states = data;	
 			});	
 		});
 	};
