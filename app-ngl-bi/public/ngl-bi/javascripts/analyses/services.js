@@ -178,9 +178,8 @@
 						$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get(this.reportingConfigurationCode).url,{searchService:this, datatable:this.datatable})
 								.success(function(data, status, headers, config) {
 									config.searchService.reportingConfiguration = data;
-									config.datatable.setColumnsConfig(data.columns);
 									config.searchService.search();
-															
+									config.datatable.setColumnsConfig(data.columns);																								
 						});
 					}else{
 						this.reportingConfiguration = undefined;
@@ -210,7 +209,8 @@
 					return this.additionalsColumns;									
 				},				
 				addColumnsToDatatable:function(){
-					this.reportingConfiguration, this.reportingConfigurationCode = undefined;
+					this.reportingConfiguration = undefined;
+					this.reportingConfigurationCode = undefined;
 					this.selectedAddColumns = [];
 					for(var i = 0 ; i < this.additionalsColumns.length ; i++){
 						for(var j = 0; j < this.additionalsColumns[i].length; j++){
@@ -233,8 +233,7 @@
 				 */
 				
 				resetDatatableColumns:function(){
-					this.datatable.setColumnsConfig(this.getColumns());
-					this.search();
+					this.datatable.setColumnsConfig(this.getColumns());					
 				},
 				
 				
