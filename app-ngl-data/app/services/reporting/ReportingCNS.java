@@ -46,40 +46,23 @@ public class ReportingCNS extends AbstractReporting {
 		    
 		    MailServices mailService = new MailServices();
 		    
-		    //Define constants;
-		    Integer nbQueries = 5;
-		    StringBuffer buffer = new StringBuffer();
-		    String[] headers = {"1) QC en cours bloqué", 
-		    					"2) Readsets à évaluer : Read Quality (RAW) manquant", 
-		    					"3) Readsets à évaluer : Read Quality (CLEAN) manquant",
-		    					"4) Readsets à évaluer : SortingRibo manquant",
-		    					"5) Readsets à évaluer : Taxonomy manquant"};
-		    String[] comments = {"Liste des readsets à l\'état IP-QC, pour lesquels le traitement readQualityRaw n\'existe pas.",
-		    	"Liste des readsets à l\'état IW-VQC, pour lesquels le traitement readQualityRaw n\'existe pas.",
-		    	"Liste des readsets à l\'état IW-VQC, pour lesquels le traitement readQualityClean n\'existe pas.",
-		    	"Liste des readsets à l\'état IW-VQC, pour lesquels le traitement sortingRibo n\'existe pas et dont le sampleType est dans la liste : depletedRNA ;  mRNA ; total-RNA ; sRNA ; cDNA",
-		    	"Liste des readsets à l\'état IW-VQC, pour lesquels le traitement taxonomy n\'existe pas."};
-		    String subHeader1 = "Nombre de résultats : ";
-		    String subHeader2 = "Détails : ";
-		    String separatorLine = "--------------------------------------------";
-		    String lineReturn = "<br>";
-		    
-		    //Get data
-		    Integer[] nb = new Integer[nbQueries.intValue()];  
+		    //Get data 
+		    int nbQueries = 5;
+		    Integer[] nbResults = new Integer[nbQueries];  
 		    ArrayList<ArrayList<String>> listResults = new ArrayList<ArrayList<String>>();
 		    ArrayList<String> results = new ArrayList<String>();
-		    String[] subHeaders2 = new String[nbQueries.intValue()];
-		    for (int i=0; i<nbQueries.intValue(); i++) {
-		    	nb[i] = getQueryResults(i+1).size();
-		    	if (nb[i] > 0)  
-		    		subHeaders2[i] = subHeader2 + getColumnHeaders(i+1);
+		    String[] subHeaders2 = new String[nbQueries];
+		    for (int i=0; i<nbQueries; i++) {
+		    	nbResults[i] = getQueryResults(i+1).size();
+		    	if (nbResults[i] > 0)  
+		    		subHeaders2[i] = getColumnHeaders(i+1);
 		    	else
 		    		subHeaders2[i] = "";
 		    	results = getQueryResults(i+1);
 		    	listResults.add(results);
 		    }
 		    
-		    String content = reportingCNS.render(nbQueries, headers, comments, subHeader1, subHeaders2, nb, listResults, lineReturn, separatorLine).body();
+		    String content = reportingCNS.render(subHeaders2, nbResults, listResults).body();
 		    		    
 		    //Send mail using global parameters and content
 		    mailService.sendMail(expediteur, destinataires, subject, content);
