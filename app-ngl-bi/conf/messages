@@ -38,7 +38,8 @@ page.archives.fvalue.archive.2 = Non Archivés
 search.form = Formulaire
 search.config = Configuration
 
-search.tab.columns = Choix Colonnes
+search.tab.addcolumns = Colonnes supplémentaires
+search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres
 
 
