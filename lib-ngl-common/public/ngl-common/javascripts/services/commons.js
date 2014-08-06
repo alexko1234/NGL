@@ -367,7 +367,7 @@ angular.module('commonsServices', []).
   		    			+'<div class="dropdown" ng-switch-when="true">'
   				        
   		    			+'<div class="input-group">'
-  		    			+'<input type="text" style="background:white" ng-class="inputClass" ng-model="selectedLabels" placeholder="{{placeholder}}" readonly/>'
+  		    			+'<input type="text" style="background:white" ng-class="inputClass" ng-model="selectedLabels" placeholder="{{placeholder}}" title="{{placeholder}}" readonly/>'
   		    			+'<div class="input-group-btn">'
   		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
   		    			+'<span class="caret"></span>'
