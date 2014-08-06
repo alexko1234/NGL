@@ -40,7 +40,7 @@ public class ReportingCNS extends AbstractReporting {
 			//Get global parameters for email
 			String expediteur = ConfigFactory.load().getString("reporting.email.from"); 
 			String dest = ConfigFactory.load().getString("reporting.email.to");   
-			String subject = ConfigFactory.load().getString("reporting.email.subject") + " " + ConfigFactory.load().getString("institute");
+			String subject = ConfigFactory.load().getString("reporting.email.subject") + " " + ConfigFactory.load().getString("institute") + " " + ConfigFactory.load().getString("ngl.env");
 		    Set<String> destinataires = new HashSet<String>();
 		    destinataires.addAll(Arrays.asList(dest.split(",")));
 		    
