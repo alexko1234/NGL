@@ -96,8 +96,7 @@
 		
 		return statsService;				
 	}			
-]).
-factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($http, $q, datatable){
+]).factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($http, $q, datatable){
 	var datatableConfig = {
 			search : {
 				active:false

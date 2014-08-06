@@ -3,7 +3,7 @@ angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biComm
                         'ngl-bi.StatsServices','ngl-bi.ReadSetsServices', 'basketServices'], function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/stats/readsets/home', {
-		templateUrl : '/tpl/readsets/search/default',
+		templateUrl : '/tpl/readsets/search',
 		controller : 'StatsSearchReadSetsCtrl'
 	});
 	
