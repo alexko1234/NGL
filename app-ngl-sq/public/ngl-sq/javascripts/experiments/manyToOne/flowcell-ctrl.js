@@ -9,17 +9,17 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					},
 					{
 						"header":Messages("containers.table.support.column"),
-						"property":"inputX",
+						"property":"outputX",
 						"order":true,
 						"type":"text",
-						"extraHeaders":{"0":"Inputs"}
+						"extraHeaders":{"0":"Outputs"}
 					},
 					{
 						"header":Messages("containers.table.support.line"),
-						"property":"inputY",
+						"property":"outputY",
 						"order":true,
 						"type":"text",
-						"extraHeaders":{"0":"Inputs"}
+						"extraHeaders":{"0":"Outputs"}
 					},
 					{
 						"header":Messages("containers.table.percentage"),
@@ -27,6 +27,13 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 						"order":true,
 						"type":"text",
 						"edit":false,
+						"extraHeaders":{"0":"Inputs"}
+					},
+					{
+						"header":Messages("containers.table.state.code"),
+						"property":"inputState.code",
+						"order":true,
+						"type":"text",
 						"extraHeaders":{"0":"Inputs"}
 					},
 					{
@@ -47,33 +54,13 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					},
 					{
 						"header":Messages("containers.table.libProcessTypeCodes"),
-						"property":"inputLibProcessTypeCodes",
+						"property":"inputLibProcessTypeCodes.value",
 						"order":true,
 						"type":"text",
 						"edit":false,
 						"extraHeaders":{"0":"Inputs"}
-					},
-					{
-						"header":Messages("containers.table.state.code"),
-						"property":"inputState.code",
-						"order":true,
-						"type":"text",
-						"extraHeaders":{"0":"Inputs"}
-					},
-					{
-						"header":Messages("containers.table.support.column"),
-						"property":"outputX",
-						"order":true,
-						"type":"text",
-						"extraHeaders":{"0":"Outputs"}
-					},
-					{
-						"header":Messages("containers.table.support.line"),
-						"property":"outputY",
-						"order":true,
-						"type":"text",
-						"extraHeaders":{"0":"Outputs"}
-					}],
+					}
+					],
 			compact:false,
 			pagination:{
 				active:false
@@ -124,20 +111,20 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('deleteInstrumentPropertiesInputs', function(e, header) {
-		/* for(var i=0;i<$scope.datatable.config.columns.length;i++){
+		for(var i=0;i<$scope.datatable.config.columns.length;i++){
 				if($scope.datatable.config.columns[i].extraHeaders != undefined && $scope.datatable.config.columns[i].extraHeaders[1] == header){
 					$scope.datatable.deleteColumn(i);
 					i--;
 				}
-			}*/
+		}
 	});
 	
 	$scope.$on('addInstrumentPropertiesInput', function(e, data, possibleValues) {
-		$scope.datatable.addColumn(3,$scope.datatable.newColumn(data.name,"inputInstrumentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"}));
+		$scope.datatable.addColumn(4,$scope.datatable.newColumn(data.name,"inputInstrumentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"}));
 	});
 	
 	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
-		$scope.datatable.addColumn(3,$scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"}));
+		$scope.datatable.addColumn(4 ,$scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"}));
 	});
 	
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
@@ -150,7 +137,6 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.addOutputColumns = function(){
-		//$scope.datatable.addColumn(-1,$scope.datatable.newColumn("Code","outputContainerUsed.code",false, true,true,"String",false,undefined,{"0":"Outputs"}));
 	};
 	
 	$scope.$on('addOutputColumns', function(e) {
@@ -162,30 +148,34 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
-		/*for(var i=0;i<$scope.datatable.getData().length;i++){
-			for(var j=0; j<data.length;j++){
-				if($scope.getLevel( data[j].levels, "ContainerIn")){
-					var getter = $parse("datatable.displayResult["+i+"].inputInstrumentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code].value);
-					}else{
-						getter.assign($scope,"");
+		if($scope.datatable.getData() != undefined){
+			for(var i=0;i<$scope.datatable.getData().length;i++){
+				for(var j=0; j<data.length;j++){
+					if($scope.getLevel( data[j].levels, "ContainerIn")){
+						var getter = $parse("datatable.displayResult["+i+"].inputInstrumentProperties."+data[j].code+".value");
+						if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code].value);
+						}else{
+							getter.assign($scope,"");
+						}
 					}
 				}
 			}
-		}*/
+		}
 	});
 	
 	$scope.addExperimentOutputDatatableToScope = function(){
 		var data = $scope.experiment.experimentProperties.inputs;
-		for(var i=0;i<$scope.datatable.getData().length;i++){
-			for(var j=0; j<data.length;j++){
-				if($scope.getLevel( data[j].levels, "ContainerOut")){
-					var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value);
-					}else{
-						getter.assign($scope,"");
+		if($scope.datatable.getData() != undefined){
+			for(var i=0;i<$scope.datatable.getData().length;i++){
+				for(var j=0; j<data.length;j++){
+					if($scope.getLevel( data[j].levels, "ContainerOut")){
+						var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
+						if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value);
+						}else{
+							getter.assign($scope,"");
+						}
 					}
 				}
 			}
@@ -229,18 +219,20 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutputToScope', function(e, data) {
-		/*for(var i=0;i<$scope.datatable.getData().length;i++){
-			for(var j=0; j<data.length;j++){
-				if($scope.getLevel( data[j].levels, "ContainerOut")){
-					var getter = $parse("datatable.displayResult["+i+"].outputInstrumentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code].value);
-					}else{
-						getter.assign($scope,"");
+		if($scope.datatable.getData() != undefined){
+			for(var i=0;i<$scope.datatable.getData().length;i++){
+				for(var j=0; j<data.length;j++){
+					if($scope.getLevel( data[j].levels, "ContainerOut")){
+						var getter = $parse("datatable.displayResult["+i+"].outputInstrumentProperties."+data[j].code+".value");
+						if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code].value);
+						}else{
+							getter.assign($scope,"");
+						}
 					}
 				}
 			}
-		}*/
+		}
 	});
 	
 	$scope.$on('save', function(e, promises, func) {
@@ -303,8 +295,6 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		if(match){
 			$scope.experiment.value.atomicTransfertMethods[match[1]].line = parseInt(match[1])+1;
 			$scope.experiment.value.atomicTransfertMethods[match[1]].column = 1;
-			//data.locationOnContainerSupport.line = parseInt(match[1])+1;
-			//data.locationOnContainerSupport.column = 1;
 		}
 		
 		return data;
@@ -316,16 +306,23 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		}
 	};
 	
+	$scope.hideRow = function(index){
+		$scope.rows[index] = !$scope.rows[index];
+	};
+	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);
 	$scope.experiment.outputGenerated = true;
 	$scope.atomicTransfere = manyToOne($scope, "dragndrop", "datatable");
 	$scope.inputContainers = [];
 	$scope.flowcells = [];
+	$scope.rows = [];
 	//init flowcells
 	for(var i=0;i<8;i++){
 		$scope.flowcells[i] = [];
+		$scope.rows[i] = true;
 	}
+	
 	if($scope.experiment.editMode){
 		$scope.atomicTransfere.loadExperiment();
 	}else{

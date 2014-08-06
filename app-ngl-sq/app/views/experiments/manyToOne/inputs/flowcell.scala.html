@@ -1,10 +1,10 @@
 @(laneCount:java.lang.Integer)
 
 <div class="row" ng-controller="FlowcellCtrl">
-	<div style="width:1000px;margin-right:auto;margin-left:auto">
-		<div ng-model="inputContainers" droppable style="position:relative;float:left;margin-right:20px">
-			<p  ng-if="inputContainers.length==0">Inputs</p>
-			<table ng-show="inputContainers.length>0" class="table pull-left" style="margin-right:50px" >
+	<div class="col-md-12 col-lg-12" style="margin-right:auto;margin-left:auto">
+		<div ng-model="inputContainers" droppable class="col-md-5 col-lg-5" style="border-width:1px;border-style:dashed;border-color:black;">
+			<p  ng-if="inputContainers.length==0 && experiment.value.state.code == 'N'"><i class="fa fa-download"></i> Inputs</p>
+			<table ng-show="inputContainers.length>0" class="table">
 				<th>
 					<td>
 						@Messages("containers.table.percentage")
@@ -49,15 +49,19 @@
 				</tr>
 			</table>
 		</div>
-	
+		<div class="col-md-5 col-lg-5">
+		<h2>@Messages("experiments.flowcell.design") :</h2>
 		<table class="table" style="width:200px;">
 		@for(i <- 0 to laneCount-1) {
 		<tr>
 			<td>
-				@(i+1)
+				<button ng-click="hideRow(@i)"><i ng-show="rows[@i]" class="fa fa-eye-slash"></i><i  ng-show="!rows[@i]" class="fa fa-eye"></i></button>
+			</td>
+			<td>
+				<b>@(i+1)</b>
 			</td>
 			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable style="width:200px;height:20px">
-				<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="table">
+				<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && rows[@i]" class="table">
 				<th>
 					<td>
 						@Messages("containers.table.percentage")
@@ -99,7 +103,7 @@
 					</tr>
 				</table>
 			</td>
-			<td>
+			<td ng-show="rows[@i]">
 			<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="table">
 				<th>
 					<td ng-repeat="property in experiment.containerOutProperties">
@@ -109,11 +113,11 @@
 			    <tr>
 			    <td>
 			    </td>
-					<td style="min-width: 70px" ng-repeat="property in experiment.containerOutProperties">
+					<td style="min-width:70px" ng-repeat="property in experiment.containerOutProperties">
 								<div ng-switch on="property.choiceInList">
 								<input class="form-control" type="text" ng-switch-when="false" 
 									ng-readonly="!experiment.experimentProperties.enabled"
-									placeholder="{{property.name}}"
+									
 									ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties[property.code].value"
 								/>
 									
@@ -132,6 +136,7 @@
 		</tr>
 		}
 		</table>
+		</div>
 	</div>
 	<div class="col-md-12 col-lg-12" datatable="datatable"></div>
 </div>

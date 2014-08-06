@@ -149,6 +149,7 @@ experiments.createUser = Expérience Créée par
 experiments.modifyDate = Date de modification
 experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
+experiments.flowcell.design = Composition flowcell
 
 experiment.placeholder.fromDate = Expérience depuis le (jj/mm/aaaa)
 experiment.placeholder.toDate = Expérience jusqu''au (jj/mm/aaaa)
