@@ -35,8 +35,7 @@ public class MigrationUpdateSampleOnContainer extends CommonController {
 			List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class).toList();
 			Logger.debug("migre "+readSets.size()+" readSets");
 			for(ReadSet readSet : readSets){
-				migreReadSet(readSet);
-				
+				migreReadSet(readSet);				
 			}
 			Logger.info("Migration readset end");
 						
