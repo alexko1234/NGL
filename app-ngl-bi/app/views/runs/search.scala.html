@@ -11,16 +11,12 @@
 				<div  class="form-control" bt-select ng-model="searchService.form.stateCodes" multiple="true" placeholder="@Messages("search.placeholder.states")" bt-options="state.code as state.name for state in searchService.states()" ></div>							
 			}
 			@formGroup{	
-				<input type="text" class="form-control" ng-model="searchService.form.valuationUser" typeahead="valuationUser.name as valuationUser.name for valuationUser in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.valuationRunUser")'>
+				<input type="text" class="form-control" ng-model="searchService.form.valuationUser" typeahead="valuationUser.name as valuationUser.name for valuationUser in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.valuationRunUser")' title='@Messages("search.placeholder.valuationRunUser")'>
 			}
 	}		
 	@columnSearchForm{		
 			@formGroup{
-			@**		
-				<input type="text" class="form-control" ng-model="searchService.form.sampleCode"  typeahead="sample.code as sample.name for sample in searchService.lists.getSamples() | filter:$viewValue | limitTo:20" ng-focus="searchService.refreshSamples()" placeholder='@Messages("search.placeholder.sample")'>				
-			**@
 				<div class="form-control" bt-select ng-model="searchService.form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in searchService.lists.getSamples()" ng-focus="searchService.refreshSamples()"></div>			
-		
 			}
 			@formGroup{
 				<div  class="form-control" bt-select ng-model="searchService.form.typeCodes" multiple="true" placeholder="@Messages("search.placeholder.types")" bt-options="type.code as type.name for type in searchService.lists.getTypes()"></div>			
@@ -28,7 +24,7 @@
 	}		
 	@columnSearchForm{		
 			@formGroup{		
-				<input type="text" class="form-control" ng-model="searchService.form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
+				<input type="text" class="form-control" ng-model="searchService.form.fromDate" placeholder='@Messages("search.placeholder.fromDate")' title='@Messages("search.placeholder.fromDate")'>
 			}
 			@formGroup{
 				<div  class="form-control" bt-select ng-model="searchService.form.validCode" placeholder="@Messages("search.placeholder.valid")" bt-options="valid.code as valid.name for valid in searchService.lists.getValuations()"></div>
@@ -36,10 +32,11 @@
 	}		
 	@columnSearchForm{		
 			@formGroup{	
-				<input type="text" class="form-control" ng-model="searchService.form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
+				<input type="text" class="form-control" ng-model="searchService.form.toDate" placeholder='@Messages("search.placeholder.toDate")' title='@Messages("search.placeholder.toDate")'>
 			}
 			@formGroup{
-				<input type="text" class="form-control"  ng-model="searchService.form.code"  typeahead="run.code as run.name for run in searchService.lists.getRuns() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.run")'>
+				<input type="text" class="form-control"  ng-model="searchService.form.code"  typeahead="run.code as run.name for run in searchService.lists.getRuns() | filter:$viewValue | limitTo:20" 
+					placeholder='@Messages("search.placeholder.run")' title='@Messages("search.placeholder.run")'>
 			}	
 	}
 	@columnSearchForm{		
@@ -47,7 +44,7 @@
 				<div  class="form-control" bt-select ng-model="searchService.form.instrumentCodes" multiple="true" placeholder="@Messages("search.placeholder.instruments")" bt-options="instrument.code as instrument.code for instrument in searchService.lists.getInstruments()"></div>
 			}
 			@formGroup{	
-			<div  class="form-control" bt-select ng-model="searchService.form.resolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.runLaneResolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()"></div>														
+				<div  class="form-control" bt-select ng-model="searchService.form.resolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.runLaneResolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()"></div>														
 			}
 	}
 }

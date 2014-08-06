@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.BasicDBObject;
 
 import models.laboratory.common.instance.PropertyValue;
@@ -182,7 +183,7 @@ public class ReadSets extends ReadSetsController{
 				queries.add(DBQuery.notEquals("properties.isSentCCRT.value", !Boolean.valueOf(form.isSentCCRT))); 
 			}
 		}
-		
+		//TODO must be change to used a generic system
 		if (StringUtils.isNotBlank(form.isSentCollaborator)) {
 			if (Boolean.valueOf(form.isSentCollaborator)) { 
 				queries.add(DBQuery.is("properties.isSentCollaborator.value", Boolean.valueOf(form.isSentCollaborator)));
@@ -203,7 +204,6 @@ public class ReadSets extends ReadSetsController{
 				queries.add(DBQuery.notExists(field));
 			}
 		}
-		
 		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
