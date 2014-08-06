@@ -3,7 +3,7 @@
 angular.module('biWorkflowChartServices', []).
 	directive('workflowChart', ['$compile', '$http', '$q', '$filter', 'lists', function ($compile, $http, $q, $filter, lists) {
     		
-	    var modalTemplate = angular.element("<div id='{{modalId}}' class='modal'  tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true' style='left:100px; top:100px;overflow:hidden'>"+
+	    var modalTemplate = "<div id='{{modalId}}' class='modal'  tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true' style='left:100px; top:100px;overflow:hidden'>"+
 	    										"<div class='modal-content' style='width:{{modalContentWidth}}px; height:{{modalContentHeight}}px; border:0px'>"+
 	    											"<div class='modal-header'>"+
 	    												"<h3 id='myModalChartLabel'>{{modalHeaderText}}</h3>" +
@@ -13,7 +13,7 @@ angular.module('biWorkflowChartServices', []).
 	    												"<div id='container0'></div>"+
 	    											"</div>"+
 	    										"</div>"+
-	    									"</div>");
+	    									"</div>";
 	    
 	    var linkTemplate = "<a href='#{{modalId}}' id='linkTo{{modalId}}' role='button' data-toggle='modal' class='btn small_link_button'>{{modalCurrentCode | codes:'state'}}</a>";
 	    
@@ -28,17 +28,6 @@ angular.module('biWorkflowChartServices', []).
 	        scope.modalContentWidth = parseFloat(scope.modalWidth) + 100;
 	        scope.modalContentHeight = parseFloat(scope.modalHeight) + 100;
 	        scope.lists = lists;
-	        
-	        $compile(element.contents())(scope);
-	        var newTemplate = $compile(modalTemplate)(scope);
-
-	        $(newTemplate).appendTo('body');
-	    
-	        $("#" + scope.modalId).modal({
-	            backdrop: false,
-	            show: false
-	        });
-	        
 	        
 			element.on('click', function(event) {
 			    event.preventDefault();
@@ -245,7 +234,7 @@ angular.module('biWorkflowChartServices', []).
 	        restrict: "E",
 	        replace: false,
 	        link: linker,
-	        template: linkTemplate,
+	        template: modalTemplate + linkTemplate,
 	        transclude: false,
 	        scope: {modalCurrentCode: "=", modalHistoricalData: "=", modalData: "="},
 	    };
