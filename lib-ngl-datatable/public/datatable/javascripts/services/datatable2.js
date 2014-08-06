@@ -1556,6 +1556,13 @@ angular.module('datatableServices', []).
 		    			});  		    			
 		    		};
 		    		
+		    		scope.dtTableAsync.setPageNumber = function(page){
+		    			scope.dtTable.setSpinner(true);
+		    			asyncSetPageNumber(page).then(function(){
+		    				scope.dtTable.setSpinner(false);  		    				
+		    			});  		    			
+		    		};
+		    		
 		    		scope.dtTableAsync.setEdit = function(columnId){
 		    			scope.dtTable.setSpinner(true);
 		    			asyncSetEdit(columnId).then(function(){
@@ -1605,7 +1612,7 @@ angular.module('datatableServices', []).
 	    			    return deferred.promise;
 	    			};
 			    	
-			    	function asyncPageNumber(page) {
+			    	function asyncSetPageNumber(page) {
 	    			    var deferred = $q.defer();
 	    			    setTimeout(function() {
 	    			    	scope.dtTable.setPageNumber(page); 
