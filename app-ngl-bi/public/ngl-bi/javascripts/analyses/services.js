@@ -173,7 +173,6 @@
 				 * Update column when change reportingConfiguration
 				 */
 				updateColumn : function(){
-					this.resetDatatableColumns();
 					if(this.reportingConfigurationCode){
 						$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get(this.reportingConfigurationCode).url,{searchService:this, datatable:this.datatable})
 								.success(function(data, status, headers, config) {
@@ -233,7 +232,8 @@
 				 */
 				
 				resetDatatableColumns:function(){
-					this.datatable.setColumnsConfig(this.getColumns());					
+					this.datatable.setColumnsConfig(this.getColumns());
+					this.search();
 				},
 				
 				

@@ -297,7 +297,7 @@
 				 * Update column when change reportingConfiguration
 				 */
 				updateColumn : function(){
-					this.resetDatatableColumns();
+					this.initAdditionalColumns();
 					if(this.reportingConfigurationCode){
 						$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get(this.reportingConfigurationCode).url,{searchService:this, datatable:this.datatable})
 								.success(function(data, status, headers, config) {
@@ -314,6 +314,9 @@
 				},
 				
 				initAdditionalColumns:function(){
+					this.additionalsColumns=[];
+					this.selectedAddColumns=[];
+					
 					if(lists.get("readsets-addcolumns") && lists.get("readsets-addcolumns").length === 1){
 						var formColumns = [];
 						var allColumns = angular.copy(lists.get("readsets-addcolumns")[0].columns);
@@ -347,11 +350,9 @@
 					
 				},	
 				resetDatatableColumns:function(){
-					this.additionalsColumns=[];
-					this.selectedAddColumns=[];
 					this.initAdditionalColumns();
 					this.datatable.setColumnsConfig(this.getColumns());
-					//this.search();
+					this.search();
 				},
 				/**
 				 * initialise the service
