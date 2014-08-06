@@ -1,5 +1,7 @@
 package services.description.run;
 
+import static services.description.DescriptionFactory.newPropertiesDefinition;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -81,8 +83,9 @@ public class RunService {
 	
 	private static List<PropertyDefinition> getRunIlluminaPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sequencingProgramType","sequencingProgramType",LevelService.getLevels(Level.CODE.Run), String.class, false, "single"));
-		return propertyDefinitions;
+		propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
+	        		, LevelService.getLevels(Level.CODE.Run),String.class, false, DescriptionFactory.newValues("SR","PE"),"single"));
+	    return propertyDefinitions;
 	}
 	
 	
