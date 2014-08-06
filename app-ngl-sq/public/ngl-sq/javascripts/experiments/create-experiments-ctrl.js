@@ -155,7 +155,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			angular.forEach(data, function(property){
 				if($scope.getLevel( property.levels, "ContainerIn")){
 					if(property.choiceInList){
-						var possibleValues = $scope.possibleValuesToMap(property.possibleValues);
+						var possibleValues = $scope.possibleValuesToSelect(property.possibleValues);
 					}
 					$scope.$broadcast('addExperimentPropertiesInput', property, possibleValues);
 				}
