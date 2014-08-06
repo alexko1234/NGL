@@ -60,12 +60,12 @@ angular.module('biWorkflowChartServices', []).
                     'stroke-width': 2,
                     padding: 5,
                     width: globalParam.boxWidth,
-                    //height:globalParam.boxHeight,
+                    //height:globalParam.boxHeight, bug?
                     r: 5
                 })
                 .css({
                     color: getFontColor(data.code, scope.modalCurrentCode, data.specificColor),
-                    fontStyle: '10px', // not 10!
+                    fontStyle: '10px',
                     fontWeight: 'normal',
                     fontFamily: 'arial'
                 })
@@ -73,7 +73,7 @@ angular.module('biWorkflowChartServices', []).
                 .shadow(true);
 				
 				drawComment(ren, data, offsetXText, offsetYText, globalParam);
-			}
+			};
 			
 			
 			function drawComment(ren, data, offsetXText, offsetYText, globalParam) {
@@ -94,7 +94,7 @@ angular.module('biWorkflowChartServices', []).
 	                })
 	                .add()
 				}	
-			}
+			};
 			
 			
 			
@@ -117,7 +117,7 @@ angular.module('biWorkflowChartServices', []).
 				}
 				
 				arrow.attr({'stroke-width': 2, stroke: 'darkgray'}).add();
- 			}
+ 			};
 			
 			
 			function drawSeparatorLine(ren, offsetY, globalParam) {
@@ -132,17 +132,15 @@ angular.module('biWorkflowChartServices', []).
                     dashstyle: 'dash'
                 })
                 .add();
-			}
+			};
 			
 			
-			function renderChart(renderer, data, globalParam) {
-				
+			function renderChart(renderer, data, globalParam) {				
 				var offsetXText = globalParam.offsetXText;
 				var offsetYText = globalParam.offsetYText;				
 				var offsetXText2 = offsetXText, offsetYText2 = offsetYText;    	
 
-				for (var i=0; i<data.length; i++) {
-					
+				for (var i=0; i<data.length; i++) {	
 					if (i > 0) {
 						if (data[i].position != data[i-1].position) {
 							offsetYText2 += globalParam.spaceVbetween2box + globalParam.boxHeight;
@@ -159,48 +157,41 @@ angular.module('biWorkflowChartServices', []).
 							offsetXText2 = offsetXText + (globalParam.spaceHbetween2box + globalParam.boxWidth);
 							
 							drawArrow(renderer, offsetXText, offsetXText2, offsetYText -  globalParam.spaceVbetween2box - globalParam.boxHeight , offsetYText2, globalParam);
-						}
-						
+						}	
 					}
-					
 					drawLabel(renderer, data[i], offsetXText2, offsetYText2, globalParam); 
 					
 					offsetXText = offsetXText2;
 					offsetYText = offsetYText2;
 				}
-				
-			}
+			};
 			
-			function populateChart(chart) {
-				
+			
+			function populateChart(chart) {	
 				 scope.$watch('modalData', function() { 
 					
-					 //get data
-					var data = triData(scope.modalData); 
+					var data = sortData(scope.modalData); 
     	            
     	        	if (scope.modalHistoricalData != undefined && scope.modalHistoricalData != null && scope.modalHistoricalData.length > 0) {
 	    	        	data = updateDataWithComment(data, scope.modalHistoricalData);
 	    	        }
     	        	
-    	            // Draw the flow chart
     	            var globalParam = { spaceVbetween2box:20, 
 					    	            spaceHbetween2box:100,
 					    	            boxWidth:160,
-					    	            boxHeight:25, //memo : 25 for arial 9 : do not change (bug with height property)
-					    				offsetXText:100, //old 200
+					    	            boxHeight:25,
+					    				offsetXText:100,
 					    	            offsetYText:32 };
 
-	            	renderChart(chart.renderer, data, globalParam);
-        
+	            	renderChart(chart.renderer, data, globalParam);        
 		        }, true);
-				 
-			} 
+			};
 			
 			
-			function triData(data) {
+			function sortData(data) {
 				data.sort(function(a, b){return a.position-b.position});
 				return data;
-			}
+			};
 			
 	    	
 	    	function getFillColor(code1, code2) {
@@ -236,7 +227,7 @@ angular.module('biWorkflowChartServices', []).
 	        link: linker,
 	        template: modalTemplate + linkTemplate,
 	        transclude: false,
-	        scope: {modalCurrentCode: "=", modalHistoricalData: "=", modalData: "="},
+	        scope: {modalCurrentCode: "=", modalHistoricalData: "=", modalData: "="}
 	    };
 	    
 	}]);
