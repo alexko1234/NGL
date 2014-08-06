@@ -1153,6 +1153,7 @@ angular.module('datatableServices', []).
 		    			 */
 		    			setColumnsConfig: function(columns){
 		    				if(angular.isDefined(columns)){
+		    					var initPosition = 1000000;
 		    					for(var i = 0 ; i < columns.length; i++){
 		    						
 		    						if(!columns[i].type || columns[i].type.toLowerCase() === "string"){
@@ -1201,11 +1202,17 @@ angular.module('datatableServices', []).
 			    					}else{
 			    						this.config.order.columns[columns[i].id] = false;
 			    					}
+			    					
+			    					//ack to keep the default order in chrome
+			    					if(null === columns[i].position || undefined === columns[i].position){
+			    						columns[i].position = initPosition++;
+			    					}
 			    				}
 		    					
 		    					var settings = $.extend(true, [], this.configColumnDefault, columns);
 		    					settings = $filter('orderBy')(settings, 'position');
-			    	    		this.config.columns = angular.copy(settings);
+		    					
+		    					this.config.columns = angular.copy(settings);
 			    	    		this.configMaster.columns = angular.copy(settings);
 			    	    		this.newExtraHeaderConfig();
 		    			    }
