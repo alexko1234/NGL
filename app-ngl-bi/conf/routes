@@ -205,10 +205,12 @@ GET		/api/samples/:code							controllers.samples.api.Samples.get(code: java.lan
 #containers api
 GET		/api/containers								controllers.containers.api.Containers.list()
 GET		/api/containers/:code						controllers.containers.api.Containers.get(code:java.lang.String)
+HEAD	/api/containers/:code						controllers.containers.api.Containers.head(code:java.lang.String)
 
 #supports api
 GET		/api/supports								controllers.supports.api.Supports.list()
 GET		/api/supports/:code							controllers.supports.api.Supports.get(code:java.lang.String)
+HEAD	/api/supports/:code							controllers.supports.api.Supports.head(code:java.lang.String)
 
 
 #stats
