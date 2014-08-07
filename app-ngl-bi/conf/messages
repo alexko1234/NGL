@@ -123,6 +123,7 @@ runs.intrumentCategoryCode = Catégorie Instrument
 runs.intrumentTypeCode = Type d''Instrument
 runs.state.code = Etat
 runs.keep = A conserver ?
+runs.deleted = Supprimer ?
 runs.valuation.valid = Valide ?
 runs.valuation.resolutions = Comptes Rendus
 runs.valuation.user = Evalué par

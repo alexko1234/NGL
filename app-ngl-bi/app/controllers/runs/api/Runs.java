@@ -78,7 +78,7 @@ public class Runs extends RunsController {
 	final static Form<Run> runForm = form(Run.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static Form<Valuation> valuationForm = form(Valuation.class);
-	final static List<String> authorizedUpdateFields = Arrays.asList("keep");
+	final static List<String> authorizedUpdateFields = Arrays.asList("keep","deleted");
 	
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
 

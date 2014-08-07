@@ -111,10 +111,17 @@
 			@views.html.helper.columnLabelValue(Messages("runs.keep")){
 				<div class="checkbox" ng-if="mainService.isEditMode()">
  					<label>
-						<input type="checkbox"  ng-model="run.keep" ng-if="mainService.isEditMode()">	
+						<input type="checkbox"  ng-model="run.keep" ng-disabled="run.deleted">	
 					</label>
 				</div>								
 				<p class="form-control-static" ng-switch on="run.keep" ng-if="!mainService.isEditMode()">
+					<i ng-switch-when="true" class="fa fa-check-square-o fa-lf"></i>
+					<i ng-switch-default class="fa fa-square-o fa-lg"></i>
+				</p>																				
+			}
+			
+			@views.html.helper.columnLabelValue(Messages("runs.deleted")){
+				<p class="form-control-static" ng-switch on="run.deleted">
 					<i ng-switch-when="true" class="fa fa-check-square-o fa-lf"></i>
 					<i ng-switch-default class="fa fa-square-o fa-lg"></i>
 				</p>																				
