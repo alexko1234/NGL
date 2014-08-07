@@ -1510,7 +1510,7 @@ angular.module('datatableServices', []).
 				return datatable;
     		}
     		return constructor;
-    	}]).directive('datatable', ['$parse', '$q', function($parse, $q){
+    	}]).directive('datatable', ['$parse', '$q', '$timeout', function($parse, $q, $timeout){
     		return {
   		    	restrict: 'A',
   		    	replace:true,
@@ -1551,119 +1551,57 @@ angular.module('datatableServices', []).
 		    		
 			    	scope.dtTableAsync.cancel = function(elt){
 		    			scope.dtTable.setSpinner(true);
-		    			asyncCancel().then(function(){
+		    			$timeout(function(){scope.dtTable.cancel()}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
-		    			});  		    			
+		    			});
+		    			
+		    					    			
 		    		};
 			    	
 		    		scope.dtTableAsync.setNumberRecordsPerPage = function(elt){
 		    			scope.dtTable.setSpinner(true);
-		    			asyncNumberRecordsPerPage(elt).then(function(){
+		    			$timeout(function(){scope.dtTable.setNumberRecordsPerPage(elt)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
-		    			});  		    			
+		    			});
+		    			
+		    				    			
 		    		};
 		    		
 		    		scope.dtTableAsync.setPageNumber = function(page){
 		    			scope.dtTable.setSpinner(true);
-		    			asyncSetPageNumber(page).then(function(){
+		    			$timeout(function(){scope.dtTable.setPageNumber(page)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
-		    			});  		    			
+		    			});  		    				    			    		
 		    		};
 		    		
 		    		scope.dtTableAsync.setEdit = function(columnId){
 		    			scope.dtTable.setSpinner(true);
-		    			asyncSetEdit(columnId).then(function(){
+		    			$timeout(function(){scope.dtTable.setEdit(columnId)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
-		    			});
+		    			});		    			
 		    		};
 		    		
 		    		scope.dtTableAsync.setOrderColumn = function(columnProperty, columnId){
 		    			scope.dtTable.setSpinner(true);
-		    			asyncSetOrderColumn(columnProperty, columnId).then(function(){
+		    			$timeout(function(){scope.dtTable.setOrderColumn(columnProperty, columnId)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
-		    			});
+		    			});	
+		    			
 		    		};
-		    		
 		    		
 		    		scope.dtTableAsync.setHideColumn = function(columnId){
 		    			scope.dtTable.setSpinner(true);
-		    			asyncSetHideColumn(columnId).then(function(){
+		    			$timeout(function(){scope.dtTable.setHideColumn(columnId)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
 		    			});
 		    		};
 		    		
 		    		scope.dtTableAsync.setGroupColumn = function(columnProperty, columnId){
 		    			scope.dtTable.setSpinner(true);
-		    			asyncSetGroupColumn(columnProperty, columnId).then(function(){
+		    			$timeout(function(){scope.dtTable.setGroupColumn(columnProperty, columnId)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
 		    			});
-		    		};
-			    	
-		    		//private method
-			    	
-		    		function asyncCancel() {
-	    			    var deferred = $q.defer();
-	    			    setTimeout(function() {
-	    			    	scope.dtTable.cancel(); 
-	    			    	deferred.resolve();
-	    			    });
-	    			    return deferred.promise;
-	    			};
-		    		
-			    	function asyncNumberRecordsPerPage(elt) {
-	    			    var deferred = $q.defer();
-	    			    setTimeout(function() {
-	    			    	scope.dtTable.setNumberRecordsPerPage(elt); 
-	    			    	deferred.resolve();
-	    			    });
-	    			    return deferred.promise;
-	    			};
-			    	
-			    	function asyncSetPageNumber(page) {
-	    			    var deferred = $q.defer();
-	    			    setTimeout(function() {
-	    			    	scope.dtTable.setPageNumber(page); 
-	    			    	deferred.resolve();
-	    			    });
-	    			    return deferred.promise;
-	    			};
-		    		
-	    			function asyncSetEdit(columnId){
-	    				var deferred = $q.defer();
-	    			    setTimeout(function() {
-	    			    	scope.dtTable.setEdit(columnId); 
-	    			    	deferred.resolve();
-	    			    });
-	    			    return deferred.promise;
-	    			};
-	    			
-	    			function asyncSetOrderColumn(columnProperty, columnId){
-	    				var deferred = $q.defer();
-	    			    setTimeout(function() {
-	    			    	scope.dtTable.setOrderColumn(columnProperty, columnId); 
-	    			    	deferred.resolve();
-	    			    });
-	    			    return deferred.promise;
-	    			};
-	    			
-	    			function asyncSetHideColumn(columnId){
-	    				var deferred = $q.defer();
-	    			    setTimeout(function() {
-	    			    	scope.dtTable.setHideColumn(columnId); 
-	    			    	deferred.resolve();
-	    			    });
-	    			    return deferred.promise;
-	    			};
-	    			
-	    			function asyncSetGroupColumn(columnProperty, columnId){
-	    				var deferred = $q.defer();
-	    			    setTimeout(function() {
-	    			    	scope.dtTable.setGroupColumn(columnProperty, columnId); 
-	    			    	deferred.resolve();
-	    			    });
-	    			    return deferred.promise;
-	    			};
-
+		    		};			    	
        		    } 		    		
     		};
     	}]).directive('dtForm', function(){
