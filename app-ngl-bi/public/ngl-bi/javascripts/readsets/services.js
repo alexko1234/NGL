@@ -127,7 +127,19 @@
 							    	listStyle:'bt-select',
 							    	possibleValues:'searchService.lists.getValuations()',
 						    	  	position:80
-							    	});	
+					});	
+					
+					columns.push({	property:"bioinformaticValuation.resolutionCodes",
+									header: "readsets.bioinformaticValuation.resolutions",
+									render:'<div bt-select ng-model="value.data.bioinformaticValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									type :"text",
+									edit:true,
+							    	choiceInList:true,
+							    	listStyle:'bt-select-multiple',
+							    	possibleValues:'searchService.lists.getResolutions()',
+							    	groupBy:'category.name',
+						    	  	position:82
+					});
 					
 			}else if(mainService.getHomePage() == 'state'){
 					columns.push({	property:"state.code",
