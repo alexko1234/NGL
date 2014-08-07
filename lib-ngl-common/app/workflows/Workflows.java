@@ -59,7 +59,12 @@ public class Workflows {
 					throw new RuntimeException();
 				}
 			}else if(experiment.state.code.equals("F")){
-				ExperimentHelper.saveOutputContainerUsed(experiment, ctxValidation);
+				try {
+					ExperimentHelper.saveOutputContainerUsed(experiment, ctxValidation);
+				} catch (DAOException e) {
+					throw new RuntimeException();
+				}
+				Logger.debug("Apres saveOutputContainerUsed");
 				if(!ctxValidation.hasErrors()){
 					nextOutputContainerState(experiment, ctxValidation);
 				}
@@ -117,7 +122,7 @@ public class Workflows {
 	}
 
 	public static void nextOutputContainerState(Experiment experiment,ContextValidation contextValidation) {
-		for(ContainerUsed containerUsed:experiment.getAllOutPutContainer()){
+		for(ContainerUsed containerUsed:experiment.getAllOutPutContainerWhithInPutContainer()){
 
 			State nextState=new State();
 			nextState.user=experiment.traceInformation.modifyUser;
@@ -160,6 +165,8 @@ public class Workflows {
 		Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class,code);
 		ProcessType processType;
 		try {
+			Logger.debug("Container :"+code);
+			if(container.getCurrentProcesses()==null) return true;
 			processType = ProcessType.find.findByCode(container.getCurrentProcesses().get(0).typeCode);
 			if(processType.lastExperimentType.code.equals(typeCode)){
 				return true;
@@ -172,6 +179,22 @@ public class Workflows {
 		}
 	}
 
+	private static boolean nextExperiment(String typeCode) {
+		List<ExperimentType> experimentTypes;
+		try {
+			experimentTypes = ExperimentType.find.findNextExperimentTypeForAnExperimentTypeCode(typeCode);
+			if(experimentTypes!=null && experimentTypes.size() >0){
+				return true;
+			}else {
+				return false;
+			}
+
+		} catch (DAOException e) {
+			throw new RuntimeException();
+		}
+	}
+
+	
 	private static boolean doQC(Experiment experiment) {
 		try{
 			ExperimentTypeNode experimentTypeNode=ExperimentTypeNode.find.findByCode(experiment.typeCode);
