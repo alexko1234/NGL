@@ -100,6 +100,7 @@ public class Main extends CommonController {
 		sb.append("\"taraFilterCode.0.8-5\":\"GGMM\",");
 		sb.append("\"taraFilterCode.0.8-20\":\"GGQQ\",");
 		sb.append("\"taraFilterCode.0.8-180\":\"GGSS\",");
+		sb.append("\"taraFilterCode.0.8-200\":\"GGRR\",");
 		sb.append("\"taraFilterCode.0.8-inf\":\"GGZZ\",");
 		sb.append("\"taraFilterCode.1.6-20\":\"IIQQ\",");
 		sb.append("\"taraFilterCode.3-20\":\"KKQQ\",");
@@ -112,7 +113,7 @@ public class Main extends CommonController {
 		sb.append("\"taraFilterCode.300-inf\":\"TTZZ\",");
 		sb.append("\"taraFilterCode.pool\":\"YYYY\",");
 		sb.append("\"taraFilterCode.inf-inf\":\"ZZZZ\",");
-
+			
 		sb.append("\"taraDepthCode.CTL\":\"CTL\",");
 		sb.append("\"taraDepthCode.Deep Chlorophyl Maximum\":\"DCM\",");
 		sb.append("\"taraDepthCode.DCM and OMZ Pool\":\"DOP\",");
@@ -141,7 +142,9 @@ public class Main extends CommonController {
 		sb.append("\"taraDepthCode.Surface and OMZ Pool\":\"SOP\",");
 		sb.append("\"taraDepthCode.Surface\":\"SUR\",");
 		sb.append("\"taraDepthCode.Sub-MixedLayer@100m\":\"SXL\",");
-
+		sb.append("\"taraDepthCode.Other\":\"OTH\",");
+		sb.append("\"taraDepthCode.DiscreteDepth\":\"ZZZ\",");
+		
 	}
 
 }
