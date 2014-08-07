@@ -18,6 +18,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
@@ -67,13 +68,13 @@ public class ContainerHelper {
 	}
 
 
-	public static void addContent(Container inputContainer, Container outputContainer , Experiment experiment) {
+	public static void addContent(Container inputContainer, Container outputContainer , Experiment experiment) throws DAOException {
 		
 		//Copy all properties
 		outputContainer.contents.addAll(inputContainer.contents);
 		outputContainer.projectCodes=InstanceHelpers.addCodesList(inputContainer.projectCodes,outputContainer.projectCodes);
 		outputContainer.sampleCodes=InstanceHelpers.addCodesList(inputContainer.sampleCodes,outputContainer.sampleCodes);
-		outputContainer.categoryCode = experiment.instrument.outContainerSupportCategoryCode;
+		outputContainer.categoryCode = ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode).containerCategory.code;
 		outputContainer.inputProcessCodes=InstanceHelpers.addCodesList(inputContainer.inputProcessCodes,outputContainer.inputProcessCodes);
 		outputContainer.processTypeCode=inputContainer.processTypeCode;
 

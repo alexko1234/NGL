@@ -34,7 +34,7 @@ public class ExperimentHelper {
 
 
 
-	public static void saveOutputContainerUsed(Experiment exp, ContextValidation contextValidation){
+	public static void saveOutputContainerUsed(Experiment exp, ContextValidation contextValidation) throws DAOException{
 
 		if (!contextValidation.hasErrors()) {
 			for(int i=0;i<exp.atomicTransfertMethods.size();i++){

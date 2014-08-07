@@ -83,7 +83,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 
 	@Override
-	public ContextValidation saveOutputContainers(Experiment experiment) {
+	public ContextValidation saveOutputContainers(Experiment experiment) throws DAOException {
 
 		ContextValidation contextValidation=new ContextValidation();
 		if(outputContainerUsed!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class, this.outputContainerUsed.code)){
