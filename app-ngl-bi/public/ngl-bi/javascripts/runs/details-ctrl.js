@@ -18,7 +18,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			},
 			save : {
 				active:true,
-				keepEdit:true,
 				showButton : false,
 				changeClass : false,
 				url:function(line){
@@ -46,6 +45,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 								$scope.messages.setError("save");	
 							}else{
 								$scope.messages.setSuccess("save");
+								$scope.mainService.stopEditMode();
 								updateData();
 							}
 						});					
@@ -188,10 +188,13 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	
 	$scope.cancel = function(){
 		$scope.messages.clear();
+		$scope.lanesDT.cancel();
+		$scope.mainService.stopEditMode();
 		updateData(true);				
 	};
 	
 	$scope.activeEditMode = function(){
+		$scope.messages.clear();
 		$scope.mainService.startEditMode();
 		$scope.lanesDT.setEdit();		
 	}
@@ -243,6 +246,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
 			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
+			/*
 			if(isCancel && !isValuationMode()){
 				$scope.lanesDT.cancel();
 				$scope.mainService.stopEditMode();
@@ -251,7 +255,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg", "sampleOnContainer"]}}).success(function(data) {
 					$scope.readSetsDT.setData(data, data.length);				
 				});
-			}			
+			}
+			*/			
 		});
 	}
 	

@@ -26,6 +26,7 @@
 				$scope.messages.setError("save");	
 			}else{
 				$scope.messages.setSuccess("save");
+				mainService.stopEditMode();
 				updateData();
 			}
 		});						
@@ -33,14 +34,12 @@
 	
 	$scope.cancel = function(){
 		$scope.messages.clear();
-		updateData();
-		if(!isValuationMode()){
-			mainService.stopEditMode();
-		}
-		
+		mainService.stopEditMode();
+		updateData();				
 	};
 	
 	$scope.activeEditMode = function(){
+		$scope.messages.clear();
 		mainService.startEditMode();			
 	};
 	
@@ -93,8 +92,7 @@
 		$scope.treatments = treatments;
 		mainService.stopEditMode();
 		if(isValuationMode()){
-			mainService.startEditMode();
-			
+			mainService.startEditMode();			
 		}
 		
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.get($routeParams.code).url).success(function(data) {
