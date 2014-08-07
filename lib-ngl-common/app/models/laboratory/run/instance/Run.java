@@ -40,7 +40,9 @@ public class Run extends DBObject implements IValidation {
     public Set<String> sampleCodes = new TreeSet<String>();
     
     public Boolean keep = Boolean.FALSE;
-   
+    public Boolean deleted = Boolean.FALSE;
+    
+    
     public TraceInformation traceInformation;
     public InstrumentUsed instrumentUsed; //Instrument used to obtain the run
     public Map<String,Treatment> treatments = new HashMap<String,Treatment>();

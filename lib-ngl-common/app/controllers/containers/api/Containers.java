@@ -55,7 +55,15 @@ public class Containers extends CommonController {
 
 		return badRequest();
 	}
-
+	
+	public static Result head(String code) {
+		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code)){			
+			return ok();					
+		}else{
+			return notFound();
+		}	
+	}
+	
 	public static Result updateBatch(){
 		List<Form<ContainerBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerBatchElement.class);
 		

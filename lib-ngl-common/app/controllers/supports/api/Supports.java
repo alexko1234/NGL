@@ -45,6 +45,14 @@ public class Supports extends CommonController {
 		return badRequest();
 	}
 	
+	public static Result head(String code) {
+		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, code)){			
+			return ok();					
+		}else{
+			return notFound();
+		}	
+	}
+	
 	public static Result list() throws DAOException{
 		Form<SupportsSearchForm> supportFilledForm = filledFormQueryString(supportForm,SupportsSearchForm.class);
 		SupportsSearchForm supportsSearch = supportFilledForm.get();
