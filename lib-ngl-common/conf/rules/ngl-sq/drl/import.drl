@@ -1,0 +1,8 @@
+#created on: Aug 6, 2014
+package rules
+
+import play.Logger;
+import java.util.Map;
+import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
+import models.laboratory.experiment.instance.ManytoOneContainer;

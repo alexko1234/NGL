@@ -1,0 +1,15 @@
+#created on: Aug 6, 2014
+#Rules for calculations
+package rules
+
+rule "volume stock engaged in denat"
+	@nglSQ( calculations )
+	dialect "java"
+	salience 500
+	no-loop
+    when
+    	 $experiment:Experiment($stateCode : state.code, $stateCode=="IP")
+    	 $atomicTransfert: ManytoOneContainer( )
+   	then
+   		Logger.debug("Calculation Test  "+ $experiment.code+ " "+ $atomicTransfert.position);
+   	end
