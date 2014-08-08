@@ -2,8 +2,8 @@
 
 <div class="row" ng-controller="FlowcellCtrl">
 	<div class="col-md-12 col-lg-12" style="margin-right:auto;margin-left:auto">
-		<div ng-model="inputContainers" droppable class="col-md-5 col-lg-5" style="border-width:1px;border-style:dashed;border-color:black;">
-			<p  ng-if="inputContainers.length==0 && experiment.value.state.code == 'N'"><i class="fa fa-download"></i> Inputs</p>
+		<div ng-model="inputContainers" droppable class="col-md-6 col-lg-6" style="margin-bottom:10px;border-width:1px;border-style:dashed;border-color:black;">
+			<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p>
 			<table ng-show="inputContainers.length>0" class="table">
 				<th>
 					<td>
@@ -29,18 +29,18 @@
 						<input class="form-control" type="text" placeholder="" class="input-small" ng-model="container.percentage" />
 					</td>
 					<td>
-						<div ng-repeat="content in container.contents">
-							{{content.properties.tag}}
-						</div>
+						<div ng-repeat="content in container.contents | unique:'properties.tag.value'">
+								{{content.properties.tag.value}}
+							</div>
 					</td>
 					<td>
-						<div ng-repeat="content in container.contents">
+						<div ng-repeat="content in container.contents | unique:'sampleTypeCode'">
 							{{content.sampleTypeCode}}
 						</div>
 					</td>
 					<td>
-						<div ng-repeat="content in container.contents">
-							{{content.libProcessTypeCode}}
+						<div ng-repeat="content in container.contents | unique:'properties.libProcessTypeCode.value'">
+							{{content.properties.libProcessTypeCode.value}}
 						</div>
 					</td>
 					<td>
@@ -86,20 +86,20 @@
 							<input class="form-control " type="text" placeholder="" class="input-small" ng-model="flowcell.percentage" />
 						</td>
 						<td>
-							<div ng-repeat="content in flowcell.contents">
-								{{content.properties.tag}}
+						<div ng-repeat="content in flowcell.contents | unique:'properties.tag.value'">
+								{{content.properties.tag.value}}
 							</div>
-						</td>
-						<td>
-							<div ng-repeat="content in flowcell.contents">
-								{{content.sampleTypeCode}}
-							</div>
-						</td>
-						<td>
-							<div ng-repeat="content in flowcell.contents">
-								{{content.libProcessTypeCode}}
-							</div>
-						</td>
+					</td>
+					<td>
+						<div ng-repeat="content in flowcell.contents | unique:'sampleTypeCode'">
+							{{content.sampleTypeCode}}
+						</div>
+					</td>
+					<td>
+						<div ng-repeat="content in flowcell.contents | unique:'properties.libProcessTypeCode.value'">
+							{{content.properties.libProcessTypeCode.value}}
+						</div>
+					</td>
 					</tr>
 				</table>
 			</td>

@@ -7,16 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.OneToOne;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
-import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
-import models.utils.InstanceConstants;
-import models.utils.dao.DAOException;
-import play.Logger;
 import play.Routes;
 import play.data.Form;
 import play.i18n.Messages;
@@ -30,7 +21,6 @@ import views.html.experiments.newExperiments;
 import views.html.experiments.search;
 import views.html.experiments.searchContainers;
 import controllers.CommonController;
-import fr.cea.ig.MongoDBDAO;
 
 public class Experiments extends CommonController{
 	
@@ -61,8 +51,9 @@ public class Experiments extends CommonController{
 		}else if(atomicType.equals("ManyToOne")){
 			if(outputCategory.equals("mapcard")){
 				return ok(views.html.experiments.manyToOne.inputs.mapcard.render());
-			}else if(outputCategory.equals("flowcell-8")){
-				return ok(views.html.experiments.manyToOne.inputs.flowcell.render(8));
+			}else if(outputCategory.startsWith("flowcell-")){
+				String[] flowcellNumber = outputCategory.split("-");
+				return ok(views.html.experiments.manyToOne.inputs.flowcell.render(Integer.parseInt(flowcellNumber[1])));
 			}
 		}else if(atomicType.equals("OneToVoid")){
 			if(outputCategory.equals("void")){

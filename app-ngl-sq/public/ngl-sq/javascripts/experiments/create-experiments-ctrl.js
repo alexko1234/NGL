@@ -113,6 +113,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	
 	$scope.getTemplate = function(){
+		console.log("GET TEMPLATE");
 		if($scope.experiment.value.instrument.outContainerSupportCategoryCode){
 			$scope.experiment.inputTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getTemplate($scope.experimentType.atomicTransfertMethod, $scope.experiment.value.instrument.inContainerSupportCategoryCode,$scope.experiment.value.instrument.outContainerSupportCategoryCode).url;
 		}else if($scope.experiment.outputVoid){
@@ -422,8 +423,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		angular.element(document).ready(function() {
 			if($scope.experiment.experimentProperties.inputs != undefined){
 				angular.forEach($scope.experiment.experimentProperties.inputs, function(input){
-					var getter = $parse("experiment.value.experimentProperties."+input.code+".value");
-					getter.assign($scope,"");
+					if($scope.getLevel( input.levels, "Experiment")){
+						var getter = $parse("experiment.value.experimentProperties."+input.code+".value");
+						getter.assign($scope,"");
+					}
 				});
 			}
 		});
@@ -450,6 +453,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	
 	$scope.getInstruments = function(loaded){
+		$scope.experiment.value.instrument.outContainerSupportCategoryCode = "";
 		if($scope.experiment.value.instrument.typeCode === null){
 			$scope.experiment.instrumentProperties.inputs = [];
 			$scope.experiment.instrumentInformation.instrumentCategorys.inputs = [];
@@ -462,14 +466,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		if(loaded == false){
 			$scope.experiment.value.instrumentProperties = {};
 			$scope.experiment.value.instrument.outContainerSupportCategoryCode = "";
-			if($scope.experimentType.atomicTransfertMethod == "ManyToOne"){
-				$scope.experiment.value.atomicTransfertMethods = $scope.experiment.value.atomicTransfertMethods.map(function(atomicTransfertMethod){
-					atomicTransfertMethod.inputContainerUseds = atomicTransfertMethod.inputContainerUseds.map(function(inputContainerUsed){
-						inputContainerUsed.instrumentProperties = {};
-						return inputContainerUsed;
-					});
-					return atomicTransfertMethod;
-				});
+			if($scope.experimentType.atomicTransfertMethod == "ManyToOne"){				
+				for(var i=0;i< $scope.experiment.value.atomicTransfertMethods.length;i++){
+					for(var j=0;j<$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length;j++){
+						$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].instrumentProperties = {};
+					}
+				}
 			}else{
 				for(var i=0;i< $scope.experiment.value.atomicTransfertMethods.length;i++){
 					 $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties = {};

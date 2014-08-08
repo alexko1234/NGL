@@ -9,6 +9,7 @@ import java.util.List;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.InstanceConstants;
@@ -20,6 +21,7 @@ import models.utils.instance.StateHelper;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.drools.runtime.StatefulKnowledgeSession;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
@@ -31,12 +33,15 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
 import play.mvc.Results;
+import rules.services.RulesException;
+import rules.services.RulesServices;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 
 import com.mongodb.BasicDBObject;
+import com.typesafe.config.ConfigFactory;
 
 import controllers.CodeHelper;
 import controllers.CommonController;
@@ -48,6 +53,8 @@ public class Experiments extends CommonController{
 	final static Form<Experiment> experimentForm = form(Experiment.class);
 	final static Form<Comment> commentForm = form(Comment.class);
 	final static Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
+	
+	private static final String calculationsRules ="calculations";
 	
 
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
@@ -131,6 +138,32 @@ public class Experiments extends CommonController{
 	public static Result updateExperimentProperties(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.add(exp);
+		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
+				ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get(i);
+				facts.add(atomic);
+			}
+		}
+		
+		RulesServices rulesServices = new RulesServices();
+        StatefulKnowledgeSession kSession;
+        List<Object> factsAfterRules = null;
+        try {
+            kSession = rulesServices.getKnowledgeBase().newStatefulKnowledgeSession();
+            factsAfterRules = rulesServices.callRules(ConfigFactory.load().getString("rules.key"), calculationsRules, facts, kSession);
+            kSession.dispose();
+        } catch (RulesException e) {
+            throw new RuntimeException();
+        }
+
+        for(Object obj:factsAfterRules){
+            if(ManytoOneContainer.class.isInstance(obj)){
+              exp.atomicTransfertMethods.remove(((ManytoOneContainer)obj).position);
+              exp.atomicTransfertMethods.put(((ManytoOneContainer)obj).position,(ManytoOneContainer) obj);
+            }
+        }
 
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 

@@ -44,9 +44,24 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 					containersToContainerUseds : function(containers){
 						var containerUseds = [];
 						angular.forEach(containers, function(container){
+						
+							/*var tags  = [];
+							var sampleTypes = [];
+							var libProcessTypeCodes = [];
+							angular.forEach(container.contents, function(content){
+								if(content.properties.tag != undefined && tags.indexOf(content.properties.tag.value) == -1){
+									tags.push(content.properties.tag.value);
+								}
+								if(content.sampleTypeCode && sampleTypes.indexOf(content.sampleTypeCode) == -1){
+									sampleTypes.push(content.sampleTypeCode);
+								}
+								if(content.properties.libProcessTypeCode && libProcessTypeCodes.indexOf(content.properties.libProcessTypeCode.value) == -1){
+									libProcessTypeCodes.push(content.properties.libProcessTypeCode.value);
+								}
+							});*/
 							containerUseds.push({"code":container.code,"state":container.state,"instrumentProperties":{},"experimentProperties":{},
 								"percentage":100,"categoryCode":container.categoryCode,"volume":container.mesuredVolume,
-								"concentration":container.mesuredConcentration, "contents":container.contents,"locationOnContainerSupport":container.support});
+								"concentration":container.mesuredConcentration,"contents":container.contents/*,"contentsInput":{"tags":tags,"sampleTypes":sampleTypes,"libProcessTypeCodes":libProcessTypeCodes}*/,"locationOnContainerSupport":container.support});
 						});
 						
 						return containerUseds;
@@ -555,9 +570,15 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 									var sampleTypes = [];
 									var libProcessTypeCodes = [];
 									angular.forEach(containerIn.contents, function(content){
-										tags.push(content.properties.tag);
-										sampleTypes.push(content.sampleTypeCode);
-										libProcessTypeCodes.push(content.properties.libProcessTypeCode);
+										if(content.properties.tag != undefined && tags.indexOf(content.properties.tag.value) == -1){
+											tags.push(content.properties.tag.value);
+										}
+										if(sampleTypes.indexOf(content.sampleTypeCode) == -1){
+											sampleTypes.push(content.sampleTypeCode);
+										}
+										if(libProcessTypeCodes.indexOf(content.properties.libProcessTypeCode.value) == -1){
+											libProcessTypeCodes.push(content.properties.libProcessTypeCode.value);
+										}
 									});
 									
 									var container = {"inputCode":containerIn.code,"inputSupportCode":containerIn.support.code,

@@ -54,7 +54,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					},
 					{
 						"header":Messages("containers.table.libProcessTypeCodes"),
-						"property":"inputLibProcessTypeCodes.value",
+						"property":"inputLibProcessTypeCodes",
 						"order":true,
 						"type":"text",
 						"edit":false,
@@ -128,8 +128,10 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
+		if($scope.experiment.containerOutProperties.indexOf(data) == -1){
 			$scope.experiment.containerOutProperties.push(data);
 			$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",false, true,true,"String",data.choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"}));
+		}
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutput', function(e, data, possibleValues) {
@@ -264,7 +266,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
 			for(var i=0;i<8;i++){
-				$scope.experiment.value.atomicTransfertMethods[i] = {class:atomicTransfertMethod, line:(i+1), column:1,inputContainerUseds:[],outputContainerUsed:{experimentProperties:{}}};
+				$scope.experiment.value.atomicTransfertMethods[i] = {class:atomicTransfertMethod, line:(i+1), column:1, position:(i+1),inputContainerUseds:[],outputContainerUsed:{experimentProperties:{}}};
 			}
 	};
 	
