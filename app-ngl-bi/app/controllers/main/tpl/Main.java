@@ -73,11 +73,6 @@ public class Main extends CommonController {
 			.append("\":\"").append(vc.name).append("\",");
 		}
 		
-		
-		sb.append("\"valuation.TRUE\":\"Oui\",");
-		sb.append("\"valuation.FALSE\":\"Non\",");
-		sb.append("\"valuation.UNSET\":\"---\"");
-		
 		if("CNS".equalsIgnoreCase(Play.application().configuration().getString("institute"))){
 			patchTara(sb);
 		}
@@ -88,7 +83,7 @@ public class Main extends CommonController {
 	}
 
 	private static void patchTara(StringBuilder sb) {
-		sb.append(",\"taraFilterCode.0-0.2\":\"AACC\",");
+		sb.append("\"taraFilterCode.0-0.2\":\"AACC\",");
 		sb.append("\"taraFilterCode.0-inf\":\"AAZZ\",");
 		sb.append("\"taraFilterCode.0.1-0.2\":\"BBCC\",");
 		sb.append("\"taraFilterCode.0.2-0.45\":\"CCEE\",");

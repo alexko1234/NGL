@@ -19,6 +19,7 @@ home.runs.keep = Runs à conserver
 
 
 
+
 #page title
 title.runs=Runs
 title.run=Run
@@ -123,7 +124,7 @@ runs.intrumentCategoryCode = Catégorie Instrument
 runs.intrumentTypeCode = Type d''Instrument
 runs.state.code = Etat
 runs.keep = A conserver ?
-runs.deleted = Supprimer ?
+runs.deleted = Supprimé
 runs.valuation.valid = Valide ?
 runs.valuation.resolutions = Comptes Rendus
 runs.valuation.user = Evalué par

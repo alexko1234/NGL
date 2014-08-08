@@ -121,10 +121,7 @@
 			}
 			
 			@views.html.helper.columnLabelValue(Messages("runs.deleted")){
-				<p class="form-control-static" ng-switch on="run.deleted">
-					<i ng-switch-when="true" class="fa fa-check-square-o fa-lf"></i>
-					<i ng-switch-default class="fa fa-square-o fa-lg"></i>
-				</p>																				
+				<p class="form-control-static" ng-bind="run.deleted | codes:'boolean'"/>																				
 			}
 		}
 		
@@ -174,7 +171,7 @@
 	   				<div class="form-group">
 						<label class="col-md-2 col-lg-2 control-label">@Messages("runs.valuation.comment")</label>
 						<div class="col-md-10 col-lg-10">
-							<textarea class="form-control" ng-model="run.valuation.comment"></textarea>
+							<textarea class="form-control" ng-model="run.valuation.comment" rows="3"></textarea>
 						</div>
 					</div>
 				</div>
