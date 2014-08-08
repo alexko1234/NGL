@@ -38,8 +38,10 @@
 		}
 		
 		@formGroup{	
-			<input type="text" class="form-control" ng-model="searchService.form.productionValuationUser" typeahead="productionValuationUser.name as productionValuationUser.name for productionValuationUser in searchService.lists.getUsers() | filter:$viewValue | limitTo:20"  placeholder='@Messages("search.placeholder.valuationReadSetUser")' title='@Messages("search.placeholder.valuationReadSetUser")'>
+			<div  class="form-control" bt-select ng-model="searchService.form.bioinformaticResolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.bioinformaticResolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()"></div>														
 		}
+		
+		
 	}
 	@columnSearchForm{
 		@formGroup{
@@ -48,6 +50,10 @@
 		
 		@formGroup{					
 			<div class="form-control" bt-select ng-model="searchService.form.runTypeCodes" multiple="true" placeholder="@Messages("search.placeholder.runtypes")" bt-options="type.code as type.name for type in searchService.lists.getTypes()"></div>			
+		}
+		
+		@formGroup{	
+			<input type="text" class="form-control" ng-model="searchService.form.productionValuationUser" typeahead="productionValuationUser.name as productionValuationUser.name for productionValuationUser in searchService.lists.getUsers() | filter:$viewValue | limitTo:20"  placeholder='@Messages("search.placeholder.valuationReadSetUser")' title='@Messages("search.placeholder.valuationReadSetUser")'>
 		}
 	}
 	@columnSearchForm{
