@@ -47,7 +47,10 @@
 			<div class="form-control" bt-select ng-model="searchService.form.typeCodes" multiple="true" placeholder="@Messages("search.placeholder.types")" bt-options="type.code as type.name for type in searchService.lists.getTypes()"></div>			
 		}
 				
-	}			
+	}	
+	
+	@columnSearchForm{
+	}		
 }
 
 @buttons() = {
