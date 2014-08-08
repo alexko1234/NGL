@@ -294,8 +294,8 @@
 				readsetDatatable = datatable(datatableConfig);
 				
 				var statsConfigsU = statsConfigs.filter(function(statsConfig){
-					if(!this[statsConfig.column.name]){
-						this[statsConfig.column.name] = true;
+					if(!this[statsConfig.column.property]){
+						this[statsConfig.column.property] = true;
 						return true;
 					}else{
 						return false;
