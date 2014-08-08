@@ -13,6 +13,7 @@ import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.common.instance.CommonValidationHelper;
+import validation.container.ContainerUsedValidation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -65,9 +66,10 @@ public class ContainerUsed implements IValidation{
 		}
 		else {
 			CommonValidationHelper.validateContainerCode(code, contextValidation);
+		} 
+		if(contextValidation.getObject("typeCode")!=null){
+			ContainerUsedValidation.validateExperimentProperties(contextValidation.getObject("typeCode").toString(),experimentProperties,contextValidation);
 		}
-		//TODO validate experimentProperties ?? 
-		//TODO validate instrumentProperties ??
 	}
 
 }
