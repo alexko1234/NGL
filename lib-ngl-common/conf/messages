@@ -32,3 +32,11 @@ msg.error.remove =  Erreur de suppression.
 authentification.dropdown_list.username=Nom
 authentification.dropdown_list.profile=Profil
 authentification.dropdown_list.signout=Se déconnecter
+
+boolean.true = Oui
+boolean.false = Non
+boolean.unset = ---
+
+valuation.TRUE = Oui
+valuation.FALSE = Non
+valuation.UNSET = ---

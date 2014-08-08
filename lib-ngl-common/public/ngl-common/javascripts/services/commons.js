@@ -240,11 +240,11 @@ angular.module('commonsServices', []).
     			restrict: 'A',
     			require: 'ngModel',
     			link: function(scope, element, attrs, ngModel) {
-    				 if(!ngModel) return;
+    				if(!ngModel) return;
     				 var type = attrs.codes;
     				 ngModel.$render = function() {
     					 if(ngModel.$viewValue){
-    						 element.html(Codes(type+"."+ngModel.$viewValue));
+    						 element.html(Messages(Codes(type+"."+ngModel.$viewValue)));
     					 }
     				 };
     			}    					
@@ -693,7 +693,7 @@ angular.module('commonsServices', []).
     	    };
     	}]).filter('codes', function(){
     		return function(input, key){
-    			if(input)return Codes(key+"."+input);
+    			if(input !== undefined) return Messages(Codes(key+"."+input));
     			return undefined;
     		}
     	}).filter('messages', function(){
