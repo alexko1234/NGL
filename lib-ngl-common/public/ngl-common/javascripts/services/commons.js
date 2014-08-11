@@ -323,19 +323,24 @@ angular.module('commonsServices', []).
 		        				  
 		        				  //Get the extension
 		        				  var matchExtension = file.type.match(/^image\/(.*)/);
-		        				  scope.base64Img.extension = matchExtension[1];
-		        				  
-		        				  //Get the base64 without the extension feature
-		        				  var matchBase64 = e.target.result.match(/^.*,(.*)/);
-		        				  scope.base64Img.value = matchBase64[1];
-		        				  //Load image from the base64 to get the width and height
-		        				  var img = new Image();
-		        				  img.src =  e.target.result;
-	
-		        				  img.onload = function(){
-		        					  scope.base64Img.width = img.width;
-		        					  scope.base64Img.height = img.height;
-		        				  };
+			        				  if(matchExtension && matchExtension.length > 1){
+			        				  scope.base64Img.extension = matchExtension[1];
+			        				  
+			        				  //Get the base64 without the extension feature
+			        				  var matchBase64 = e.target.result.match(/^.*,(.*)/);
+			        				  scope.base64Img.value = matchBase64[1];
+			        				  //Load image from the base64 to get the width and height
+			        				  var img = new Image();
+			        				  img.src =  e.target.result;
+		
+			        				  img.onload = function(){
+			        					  scope.base64Img.width = img.width;
+			        					  scope.base64Img.height = img.height;
+			        				  };
+		        				  }else{
+		        					 alert("This is not an image...");
+		        					 scope.base64Img = undefined;
+		        				  }
 	        				  }else{
 	        					  scope.base64Img = undefined;
 	        				  }

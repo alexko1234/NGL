@@ -5,22 +5,23 @@
 		<div ng-model="inputContainers" droppable class="col-md-6 col-lg-6" style="margin-bottom:10px;border-width:1px;border-style:dashed;border-color:black;">
 			<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p>
 			<table ng-show="inputContainers.length>0" class="table">
-				<th>
-					<td>
+				<tr>
+					<th>
+						@Messages("containers.table.code")
+					</th>
+					<th>
 						@Messages("containers.table.percentage")
-					</td>
-					<td>
+					</th>
+					<th>
 						@Messages("containers.table.tags")
-					</td>
-					<td>
+					</th>
+					<th>
 						@Messages("containers.table.sampleTypes")
-					</td>
-					<td>
+					</th>
+					<th>
 						@Messages("containers.table.libProcessTypeCodes")
-					</td>
-					<td>
-					</td>
-				</th>
+					</th>
+				</tr>
 				<tr ng-model="container" ng-repeat="container in inputContainers" draggable>
 					<td>
 						<button ng-click="deleteInput(container)"><i class="fa fa-trash-o"></i></button>
@@ -65,14 +66,12 @@
 			</td>
 			<td ng-show="rows[@i]">
 			<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="table">
-				<th>
-					<td ng-repeat="property in experiment.containerOutProperties">
+				<tr>
+					<th ng-repeat="property in experiment.containerOutProperties">
 						{{property.name}}
-					</td>
-				</th>
+					</th>
+				</tr>
 			    <tr>
-			    <td>
-			    </td>
 					<td style="min-width:70px" ng-repeat="property in experiment.containerOutProperties">
 								<div ng-switch on="property.choiceInList">
 								<input class="form-control" type="text" ng-switch-when="false" 
@@ -95,22 +94,23 @@
 			</td>
 			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable style="width:200px;height:20px">
 				<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && rows[@i]" class="table">
-				<th>
-					<td>
+				<tr>
+					<th>
+						@Messages("containers.table.code")
+					</th>
+					<th>
 						@Messages("containers.table.percentage")
-					</td>
-					<td>
+					</th>
+					<th>
 						@Messages("containers.table.tags")
-					</td>
-					<td>
+					</th>
+					<th>
 						@Messages("containers.table.sampleTypes")
-					</td>
-					<td>
+					</th>
+					<th>
 						@Messages("containers.table.libProcessTypeCodes")
-					</td>
-					<td>
-					</td>
-				</th>
+					</th>
+				</tr>
 					<tr ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds"  ng-model="flowcell"  draggable>
 						<td>
 							{{flowcell.code}}
