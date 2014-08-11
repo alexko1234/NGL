@@ -8,6 +8,7 @@ import java.util.List;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -263,10 +264,20 @@ public class Experiments extends CommonController{
 		
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
-
-			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
-			//Workflows.nextInputContainerState(exp, new ContextValidation(experimentFilledForm.errors()));
-			return ok(Json.toJson(exp));
+			ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
+			ArrayList<Object> validationfacts = new ArrayList<Object>();
+			validationfacts.add(exp);
+			for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+				if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
+					ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get(i);
+					validationfacts.add(atomic);
+				}
+			}
+			ExperimentValidationHelper.validateRules(validationfacts, ctxValidation);
+			if(!ctxValidation.hasErrors()){
+				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+				return ok(Json.toJson(exp));
+			}
 		}
 
 		return badRequest(experimentFilledForm.errorsAsJson());
