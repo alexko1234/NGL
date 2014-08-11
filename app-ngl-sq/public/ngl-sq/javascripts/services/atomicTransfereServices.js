@@ -570,13 +570,13 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 									var sampleTypes = [];
 									var libProcessTypeCodes = [];
 									angular.forEach(containerIn.contents, function(content){
-										if(content.properties.tag != undefined && tags.indexOf(content.properties.tag.value) == -1){
+										if(content.properties.tag != undefined && content.properties.tag != undefined && tags.indexOf(content.properties.tag.value) == -1){
 											tags.push(content.properties.tag.value);
 										}
 										if(sampleTypes.indexOf(content.sampleTypeCode) == -1){
 											sampleTypes.push(content.sampleTypeCode);
 										}
-										if(libProcessTypeCodes.indexOf(content.properties.libProcessTypeCode.value) == -1){
+										if(content.properties.libProcessTypeCode != undefined && libProcessTypeCodes.indexOf(content.properties.libProcessTypeCode.value) == -1){
 											libProcessTypeCodes.push(content.properties.libProcessTypeCode.value);
 										}
 									});

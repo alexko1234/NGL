@@ -124,7 +124,10 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
-		$scope.datatable.addColumn(4 ,$scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"}));
+		var column = $scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
+		//column.position = data.displayOrder;
+		//console.log(data.name+" - "+data.displayOrder);
+		$scope.datatable.addColumn(data.displayOrder+4 ,column);
 	});
 	
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
@@ -265,9 +268,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	};
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
-			for(var i=0;i<8;i++){
-				$scope.experiment.value.atomicTransfertMethods[i] = {class:atomicTransfertMethod, line:(i+1), column:1, position:(i+1),inputContainerUseds:[],outputContainerUsed:{experimentProperties:{}}};
-			}
+		for(var i=0;i<8;i++){
+			$scope.experiment.value.atomicTransfertMethods[i] = {class:atomicTransfertMethod, line:(i+1), column:1, position:(i+1),inputContainerUseds:[],outputContainerUsed:{experimentProperties:{}}};
+		}
 	};
 	
 	$scope.$on('initAtomicTransfert', function(e, containers, atomicTransfertMethod) {
@@ -306,6 +309,14 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		for(var i=0;i<$scope.experiment.value.atomicTransfertMethods[lineNumber].inputContainerUseds.length;i++){
 			$scope.experiment.value.atomicTransfertMethods[lineNumber].inputContainerUseds.experimentProperties[property].value = value;
 		}
+	};
+	
+	$scope.deleteInput = function(container){
+		$scope.inputContainers.splice($scope.inputContainers.indexOf(container), 1);
+	};
+	
+	$scope.deleteInputOnAtomic = function(index, container){
+		$scope.experiment.value.atomicTransfertMethods[index].inputContainerUseds.splice($scope.experiment.value.atomicTransfertMethods[index].inputContainerUseds.indexOf(container),1);
 	};
 	
 	$scope.hideRow = function(index){

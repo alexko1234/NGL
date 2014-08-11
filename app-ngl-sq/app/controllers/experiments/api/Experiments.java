@@ -138,33 +138,6 @@ public class Experiments extends CommonController{
 	public static Result updateExperimentProperties(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
-		ArrayList<Object> facts = new ArrayList<Object>();
-		facts.add(exp);
-		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
-				ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get(i);
-				facts.add(atomic);
-			}
-		}
-		
-		RulesServices rulesServices = new RulesServices();
-        StatefulKnowledgeSession kSession;
-        List<Object> factsAfterRules = null;
-        try {
-            kSession = rulesServices.getKnowledgeBase().newStatefulKnowledgeSession();
-            factsAfterRules = rulesServices.callRules(ConfigFactory.load().getString("rules.key"), calculationsRules, facts, kSession);
-            kSession.dispose();
-        } catch (RulesException e) {
-            throw new RuntimeException();
-        }
-
-        for(Object obj:factsAfterRules){
-            if(ManytoOneContainer.class.isInstance(obj)){
-              exp.atomicTransfertMethods.remove(((ManytoOneContainer)obj).position);
-              exp.atomicTransfertMethods.put(((ManytoOneContainer)obj).position,(ManytoOneContainer) obj);
-            }
-        }
-
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
 		if (!experimentFilledForm.hasErrors()) {
@@ -248,10 +221,44 @@ public class Experiments extends CommonController{
 	public static Result updateContainers(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
-
+		
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 		exp= ExperimentHelper.setProjetAndSamples(exp);
 	
+		ContextValidation contextValidation = new ContextValidation();
+		contextValidation.setUpdateMode();
+		contextValidation.putObject("stateCode", exp.state.code);
+		contextValidation.putObject("typeCode", exp.typeCode);
+		
+		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
+
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.add(exp);
+		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get((i-1)))){
+				ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get((i-1));
+				facts.add(atomic);
+			}
+		}
+		
+		RulesServices rulesServices = new RulesServices();
+        StatefulKnowledgeSession kSession;
+        List<Object> factsAfterRules = null;
+        try {
+            kSession = rulesServices.getKnowledgeBase().newStatefulKnowledgeSession();
+            factsAfterRules = rulesServices.callRules(ConfigFactory.load().getString("rules.key"), calculationsRules, facts, kSession);
+            kSession.dispose();
+        } catch (RulesException e) {
+            throw new RuntimeException();
+        }
+
+        for(Object obj:factsAfterRules){
+            if(ManytoOneContainer.class.isInstance(obj)){
+              exp.atomicTransfertMethods.remove(((ManytoOneContainer)obj).position);
+              exp.atomicTransfertMethods.put(((ManytoOneContainer)obj).position,(ManytoOneContainer) obj);
+            }
+        }
+		
 		if (!experimentFilledForm.hasErrors()) {
 		
 			Builder builder = new DBUpdate.Builder();

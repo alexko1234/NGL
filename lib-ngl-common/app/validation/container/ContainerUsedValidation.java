@@ -17,7 +17,8 @@ public class ContainerUsedValidation extends CommonValidationHelper{
 		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,true);
 		if(exType!=null){
 			contextValidation.addKeyToRootKeyName("experimentproperties");
-			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertyDefinitionByLevel(Level.CODE.ContainerIn,Level.CODE.ContainerOut), true);
+			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertyDefinitionByLevel(Level.CODE.ContainerIn), false);
+			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertyDefinitionByLevel(Level.CODE.ContainerOut), false);
 			contextValidation.removeKeyFromRootKeyName("experimentproperties");
 		}
 	}
