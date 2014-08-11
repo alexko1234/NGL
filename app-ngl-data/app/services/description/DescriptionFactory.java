@@ -1,6 +1,7 @@
 package services.description;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import models.laboratory.common.description.AbstractCategory;
@@ -13,6 +14,7 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
+import models.laboratory.common.description.StateHierarchy;
 import models.laboratory.common.description.ValuationCriteria;
 import models.laboratory.common.description.Value;
 import models.laboratory.container.description.ContainerCategory;
@@ -153,7 +155,6 @@ public class DescriptionFactory {
 	 * @param code
 	 * @param levels
 	 * @param type
-	 * @param required
 	 * @param values
 	 * @param propertyValueType TODO
 	 * @return
@@ -489,6 +490,16 @@ public class DescriptionFactory {
 		s.display = display;
 		s.functionnalGroup = functionnalGroup;
 		return s;
+	}
+	
+	
+	public static StateHierarchy newStateHierarchy(String childCode, String parentCode, String objectTypeCode) {
+		StateHierarchy sh = new StateHierarchy();
+		sh.code = childCode + "_" + objectTypeCode.toUpperCase();
+		sh.childStateCode = childCode;
+		sh.parentStateCode = parentCode;
+		sh.objectTypeCode = objectTypeCode;
+		return sh;
 	}
 
 	/**
@@ -873,6 +884,20 @@ public class DescriptionFactory {
 		}
 		return objectTypes;
 	}
+	
+	
+	public static HashMap<ObjectType, State> getHierarchies(String...hierarchies)  throws DAOException {
+		HashMap<ObjectType, State> hm = new HashMap<ObjectType, State>();
+		for (String hierarchy: hierarchies) {
+			String str[]=hierarchy.split(":");
+			String objectTypeCode = str[0];
+			String stateCode = str[1];
+			hm.put(ObjectType.find.findByCode(objectTypeCode), State.find.findByCode(stateCode));
+		}
+		return hm;
+		
+	}
+	
 
 	/**
 	 * 

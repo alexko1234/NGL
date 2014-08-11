@@ -13,11 +13,16 @@ import static services.description.DescriptionFactory.*;
 public class StateService {
 	
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{		
+		
+		DAOHelpers.removeAll(StateHierarchy.class, StateHierarchy.find);
+		
 		DAOHelpers.removeAll(State.class, State.find);
 		DAOHelpers.removeAll(StateCategory.class, StateCategory.find);
-
+		
 		saveStateCategories(errors);	
 		saveStates(errors);	
+		
+		saveStatesHierarchy(errors);
 	}
 	
 	
@@ -84,6 +89,53 @@ public class StateService {
 		l.add(newState("EVAL. Analyse BI terminée", "F-VBA", true, 899, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name()), false, "VBA"));		
 		
 		DAOHelpers.saveModels(State.class, l, errors);
+	}
+	
+	
+	/**
+	 * Creates hierarchical relation between states in order to draw states flow (directive workflowChart)
+	 * Graphic representation is made by the directive "workflowChart"
+	 * @param errors
+	 * @throws DAOException
+	 */
+	public static void saveStatesHierarchy(Map<String, List<ValidationError>> errors) throws DAOException{
+		List<StateHierarchy> l = new ArrayList<StateHierarchy>();
+		
+		//ReadSet
+		l.add(newStateHierarchy("IP-RG","IP-RG", ObjectType.CODE.ReadSet.name()));
+		l.add(newStateHierarchy("F-RG","IP-RG", ObjectType.CODE.ReadSet.name()));
+		
+		l.add(newStateHierarchy("IW-QC","F-RG", ObjectType.CODE.ReadSet.name()));
+		l.add(newStateHierarchy("IP-QC","IW-QC", ObjectType.CODE.ReadSet.name()));
+		l.add(newStateHierarchy("F-QC","IP-QC", ObjectType.CODE.ReadSet.name()));
+		
+		l.add(newStateHierarchy("IW-VQC","F-QC", ObjectType.CODE.ReadSet.name()));
+		l.add(newStateHierarchy("F-VQC","IW-VQC", ObjectType.CODE.ReadSet.name()));
+		
+		l.add(newStateHierarchy("IW-BA","F-VQC", ObjectType.CODE.ReadSet.name()));
+		l.add(newStateHierarchy("IP-BA","IW-BA", ObjectType.CODE.ReadSet.name()));
+		l.add(newStateHierarchy("F-BA","IP-BA", ObjectType.CODE.ReadSet.name()));
+		
+		l.add(newStateHierarchy("IW-VBA","F-BA", ObjectType.CODE.ReadSet.name()));
+		l.add(newStateHierarchy("F-VBA","IW-VBA", ObjectType.CODE.ReadSet.name()));
+		
+		l.add(newStateHierarchy("A","F-VBA", ObjectType.CODE.ReadSet.name()));
+		l.add(newStateHierarchy("UA","F-VBA", ObjectType.CODE.ReadSet.name()));
+		
+		//Run
+		l.add(newStateHierarchy("IP-S","IP-S", ObjectType.CODE.Run.name()));
+		l.add(newStateHierarchy("F-S","IP-S", ObjectType.CODE.Run.name()));
+		l.add(newStateHierarchy("FE-S","IP-S", ObjectType.CODE.Run.name()));
+		
+		l.add(newStateHierarchy("IW-RG","F-S", ObjectType.CODE.Run.name()));
+		l.add(newStateHierarchy("IP-RG","IW-RG", ObjectType.CODE.Run.name()));  //different with ReadSet
+		l.add(newStateHierarchy("F-RG","IP-RG", ObjectType.CODE.Run.name()));
+
+		l.add(newStateHierarchy("IW-V","F-RG", ObjectType.CODE.Run.name()));
+		l.add(newStateHierarchy("IP-V","IW-V", ObjectType.CODE.Run.name()));
+		l.add(newStateHierarchy("F-V","IP-V", ObjectType.CODE.Run.name()));
+		
+		DAOHelpers.saveModels(StateHierarchy.class, l, errors);
 	}
 
 	

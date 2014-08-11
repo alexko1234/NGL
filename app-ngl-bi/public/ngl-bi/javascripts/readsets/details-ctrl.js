@@ -129,20 +129,8 @@
 				$scope.bioinformaticAnalysis = data.bioinformaticAnalysis;	
 			});	
 			
-			$http.get(jsRoutes.controllers.commons.api.States.list().url,  {params: {objectTypeCode:"ReadSet"}}).success(function(data) {
-				for (var i=0; i<data.length; i++) {
-					if (data[i].code == "N") {
-						data.splice(i,1);
-						break;
-					}
-				}
-				for (var i=0; i<data.length; i++) {
-					if (data[i].code == "F") {
-						data.splice(i,1);
-						break;
-					}
-				}
-				$scope.states = data;	
+			$http.get(jsRoutes.controllers.commons.api.StatesHierarchy.list().url,  {params: {objectTypeCode:"ReadSet"}}).success(function(data) {
+				$scope.statesHierarchy = data;	
 			});	
 		});
 	};

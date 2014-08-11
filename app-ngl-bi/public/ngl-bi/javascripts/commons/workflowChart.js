@@ -2,6 +2,8 @@
 
 angular.module('biWorkflowChartServices', []).
 	directive('workflowChart', ['$compile', '$http', '$q', '$filter', 'lists', function ($compile, $http, $q, $filter, lists) {
+		
+		//new version based on the hierarchy defined in the database (instead of the position)
     		
 	    var modalTemplate = "<div id='{{modalId}}' class='modal'  tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true' style='left:100px; top:100px;overflow:hidden'>"+
 	    										"<div class='modal-content' style='width:{{modalContentWidth}}px; height:{{modalContentHeight}}px; border:0px'>"+
@@ -53,10 +55,10 @@ angular.module('biWorkflowChartServices', []).
 			
 			
 			function drawLabel(ren, data, offsetXText, offsetYText, globalParam) {
-				ren.label(data.name, offsetXText, offsetYText)
+				ren.label(data.childStateName, offsetXText, offsetYText)
                 .attr({
-                    fill: getFillColor(data.code, scope.modalCurrentCode),
-                    stroke: getBorderColor(data.code, scope.modalCurrentCode, data.specificColor),
+                    fill: getFillColor(data.childStateCode, scope.modalCurrentCode),
+                    stroke: getBorderColor(data.childStateCode, scope.modalCurrentCode, data.specificColor),
                     'stroke-width': 2,
                     padding: 5,
                     width: globalParam.boxWidth,
@@ -64,7 +66,7 @@ angular.module('biWorkflowChartServices', []).
                     r: 5
                 })
                 .css({
-                    color: getFontColor(data.code, scope.modalCurrentCode, data.specificColor),
+                    color: getFontColor(data.childStateCode, scope.modalCurrentCode, data.specificColor),
                     fontStyle: '10px',
                     fontWeight: 'normal',
                     fontFamily: 'arial'
@@ -82,7 +84,7 @@ angular.module('biWorkflowChartServices', []).
 					if (data.comment.type == 'datetime') {
 						lbl = $filter('date')(data.comment.label, Messages("datetime.format"))
 					}
-					if (data.comment.type == 'datetime') {
+					if (data.comment.type == 'date') {
 						lbl = $filter('date')(data.comment.label, Messages("date.format"))
 					}
     				ren.label(lbl, offsetXText + globalParam.boxWidth+15, offsetYText)
@@ -142,7 +144,8 @@ angular.module('biWorkflowChartServices', []).
 
 				for (var i=0; i<data.length; i++) {	
 					if (i > 0) {
-						if (data[i].position != data[i-1].position) {
+						if (data[i].parentStateCode == data[i-1].childStateCode) {
+							//increase offsetYText2 (vertical moving)
 							offsetYText2 += globalParam.spaceVbetween2box + globalParam.boxHeight;
 							
 							if ((data[i].functionnalGroup != undefined) && (data[i].functionnalGroup != null) && (data[i].functionnalGroup != data[i-1].functionnalGroup)) {
@@ -154,9 +157,26 @@ angular.module('biWorkflowChartServices', []).
 							drawArrow(renderer, offsetXText, offsetXText2, offsetYText, offsetYText2, globalParam);
 						}
 						else {
-							offsetXText2 = offsetXText + (globalParam.spaceHbetween2box + globalParam.boxWidth);
-							
-							drawArrow(renderer, offsetXText, offsetXText2, offsetYText -  globalParam.spaceVbetween2box - globalParam.boxHeight , offsetYText2, globalParam);
+							if (data[i].parentStateCode == data[i-1].parentStateCode) {
+								//increase offsetXText2 (horizontal moving)
+								offsetXText2 = offsetXText + (globalParam.spaceHbetween2box + globalParam.boxWidth);
+								
+								drawArrow(renderer, offsetXText, offsetXText2, offsetYText -  globalParam.spaceVbetween2box - globalParam.boxHeight , offsetYText2, globalParam);
+							}
+							else {
+								var x=1;
+								while (data[i].parentStateCode != data[i-x].childStateCode) {
+									x++;	
+								}
+								x--;
+								
+								offsetXText = offsetXText - x*(globalParam.spaceHbetween2box + globalParam.boxWidth);
+								offsetXText2 = offsetXText;
+								
+								offsetYText2 += globalParam.spaceVbetween2box + globalParam.boxHeight;
+								
+								drawArrow(renderer, offsetXText, offsetXText2, offsetYText, offsetYText2, globalParam);
+							}
 						}	
 					}
 					drawLabel(renderer, data[i], offsetXText2, offsetYText2, globalParam); 
@@ -168,9 +188,9 @@ angular.module('biWorkflowChartServices', []).
 			
 			
 			function populateChart(chart) {	
-				 scope.$watch('modalData', function() { 
+				 scope.$watch('modalData', function() {  
 					
-					var data = sortData(scope.modalData); 
+					var data = orderData(scope.modalData); 
     	            
     	        	if (scope.modalHistoricalData != undefined && scope.modalHistoricalData != null && scope.modalHistoricalData.length > 0) {
 	    	        	data = updateDataWithComment(data, scope.modalHistoricalData);
@@ -188,9 +208,55 @@ angular.module('biWorkflowChartServices', []).
 			};
 			
 			
-			function sortData(data) {
-				data.sort(function(a, b){return a.position-b.position});
-				return data;
+			
+			function orderByDescent(newData, data, d) {
+				var bChildExists = false;
+				for (var i=1; i<data.length; i++) {
+					if (data[i].parentStateCode == d.childStateCode) {
+						bChildExists = true; //node
+						data[i].level = d.level + 1;
+						newData.push(data[i]);
+						orderByDescent(newData, data, data[i]); 
+					}
+				}
+				if (!bChildExists) {
+					if (newData.indexOf(d) == -1) {
+						newData.push(d); //leaf
+					}
+				}
+				return newData;
+			}
+			
+			
+			function orderData(data) {
+				//make the root the first data 
+				var rootData;
+				var bRootData = false;
+				for (var i=0; i<data.length; i++) {
+					if (data[i].childStateCode == data[i].parentStateCode) {
+						rootData = data[i];
+						bRootData = true;
+						data.splice(i,1);
+						break;
+					}
+				}
+				data.splice(0,0,rootData);
+				
+				var newData = [];
+				rootData.level = 0;
+				newData.push(rootData);
+				
+				//sort data by the descent
+				newData = orderByDescent(newData, data, rootData); 
+				
+				//sort data by level
+				newData.sort(function(a, b) {return a.level - b.level});
+				
+				//error alert 
+				if (!bRootData) {
+					alert("Missing a root for the data : could not find a starting point to render the workflow");
+				} 
+				return newData;
 			};
 			
 	    	
@@ -210,7 +276,7 @@ angular.module('biWorkflowChartServices', []).
 			function updateDataWithComment(data, historical) {
 				for (var i=0; i<data.length; i++) {
 					for (var j=0; j<historical.length; j++) {
-						if (data[i].code == historical[j].code) {
+						if (data[i].childStateCode == historical[j].code) {
 							data[i].comment = {label:historical[j].date,type:'datetime'};	
 							break;
 						} 

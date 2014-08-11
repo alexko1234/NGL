@@ -179,6 +179,7 @@ GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
 
 #Common
 GET		/api/commons/states							controllers.commons.api.States.list()
+GET		/api/commons/states-hierarchy				controllers.commons.api.StatesHierarchy.list()
 GET		/api/commons/states/:code					controllers.commons.api.States.get(code: java.lang.String)
 GET		/api/commons/users							controllers.commons.api.Users.list()
 

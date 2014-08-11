@@ -338,28 +338,15 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 					$scope.readSetsDT.setData(data, data.length);	
 				});
 				
-				$http.get(jsRoutes.controllers.commons.api.States.list().url,  {params: {objectTypeCode:"Run"}}).success(function(data) {
-					//customization
-					for (var i=0; i<data.length; i++) {
-						if (data[i].code == "N") {
-							data.splice(i,1);
-							break;
-						}
-					}
-					for (var i=0; i<data.length; i++) {
-						if (data[i].code == "F") {
-							data.splice(i,1);
-							break;
-						}
-					}
+				
+				$http.get(jsRoutes.controllers.commons.api.StatesHierarchy.list().url,  {params: {objectTypeCode:"Run"}}).success(function(data) { 
 					for (var i=0; i<data.length; i++) {
 						if (data[i].code == "FE-S") {
 							data[i].specificColor = true;
 							break;
 						}
 					}
-					
-					$scope.states = data;	
+					$scope.statesHierarchy = data;	
 				});	
 			}
 		});
