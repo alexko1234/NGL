@@ -2,14 +2,9 @@ package validation.common.instance;
 
 import static validation.utils.ValidationHelper.required;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
-import play.Logger;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
@@ -22,14 +17,26 @@ import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
+
+import org.drools.runtime.StatefulKnowledgeSession;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+
+import rules.services.RulesException;
+import rules.services.RulesServices;
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
+
+import com.typesafe.config.ConfigFactory;
+
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
 public class CommonValidationHelper {
+	private static final String nameRules="validations";
+
 	public static final String FIELD_CODE = "code";
 	public static final String FIELD_TYPE_CODE = "typeCode";
 	/**
@@ -477,6 +484,36 @@ public class CommonValidationHelper {
 		
 	}
 	
+	public static void validateRules(List<Object> objects,ContextValidation contextValidation){
+		
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.addAll(objects);
+		ContextValidation validationRules=new ContextValidation();
+		facts.add(validationRules);
 	
+		RulesServices rulesServices = new RulesServices();
+		StatefulKnowledgeSession kSession;
+		List<Object> factsAfterRules;
+		try {
+			kSession = rulesServices.getKnowledgeBase().newStatefulKnowledgeSession();
+			factsAfterRules = rulesServices.callRules(ConfigFactory.load().getString("rules.key"), nameRules, facts, kSession);
+			kSession.dispose();
+		} catch (RulesException e) {
+			throw new RuntimeException();
+		}
+		
+		for(Object obj:factsAfterRules){
+			if(ContextValidation.class.isInstance(obj)){
+				contextValidation.errors.putAll(((ContextValidation) obj).errors);
+			}
+		}
+
+	}
+	
+	public static void validateRules(Object object,ContextValidation contextValidation){
+		List<Object> list=new ArrayList<Object>();
+		list.add(object);
+		validateRules(list,contextValidation);
+	}
 
 }

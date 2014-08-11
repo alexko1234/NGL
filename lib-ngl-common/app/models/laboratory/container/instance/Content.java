@@ -26,6 +26,8 @@ public class Content implements IValidation{
 	// Reference SampleCategory code
 	public String sampleCategoryCode;
 	
+	public Float percentage;
+	
 	public Map<String,PropertyValue> properties;
 	public Content(){
 		properties=new HashMap<String, PropertyValue>();
