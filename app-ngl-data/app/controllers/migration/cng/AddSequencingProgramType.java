@@ -1,4 +1,4 @@
-package controllers.migration;
+package controllers.migration.cng;
 
 import controllers.CommonController;
 
@@ -149,8 +149,7 @@ public class AddSequencingProgramType  extends CommonController {
 				if(StringUtils.isNotEmpty(r.getError())){
 					Logger.error("Set property sequencingProgramType : "+oldContainerSupport.code+" / "+r.getError());
 				}
-				 */
-				
+				 */				
 				//global update of the object to have the _type (json subtype) like in the import 
 				MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, oldContainerSupport);
 				

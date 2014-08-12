@@ -77,8 +77,10 @@ public class AddSequencingProgramTypeToRun  extends CommonController {
 					
 					run.properties.put("sequencingProgramType", hm.get(run.containerSupportCode));
 					
+					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, ContainerSupport.class, DBQuery.is("code", run.code),   
+							DBUpdate.set("properties", run.properties));
 					//global update of the object to have the _type (json subtype) like in the import 
-					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);
+					//MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);
 				}
 			}
 			catch(DAOException e) {

@@ -1,4 +1,4 @@
-package controllers.migration;
+package controllers.migration.cns;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
