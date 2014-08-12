@@ -2,8 +2,6 @@
 
 angular.module('biWorkflowChartServices', []).
 	directive('workflowChart', ['$compile', '$http', '$q', '$filter', 'lists', function ($compile, $http, $q, $filter, lists) {
-		
-		//new version based on the hierarchy defined in the database (instead of the position)
     		
 	    var modalTemplate = "<div id='{{modalId}}' class='modal'  tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true' style='left:100px; top:100px;overflow:hidden'>"+
 	    										"<div class='modal-content' style='width:{{modalContentWidth}}px; height:{{modalContentHeight}}px; border:0px'>"+
@@ -175,6 +173,13 @@ angular.module('biWorkflowChartServices', []).
 								
 								offsetYText2 += globalParam.spaceVbetween2box + globalParam.boxHeight;
 								
+								if ((data[i].functionnalGroup != undefined) && (data[i].functionnalGroup != null) && (data[i].functionnalGroup != data[i-1].functionnalGroup)) {
+									
+									drawSeparatorLine(renderer, offsetYText2 - globalParam.spaceVbetween2box/4, globalParam); 
+									
+									offsetYText2 += globalParam.spaceVbetween2box / 2;
+								}
+								
 								drawArrow(renderer, offsetXText, offsetXText2, offsetYText, offsetYText2, globalParam);
 							}
 						}	
@@ -229,7 +234,7 @@ angular.module('biWorkflowChartServices', []).
 			
 			
 			function orderData(data) {
-				//make the root the first data 
+				//find root and make it the first data 
 				var rootData, bRootData = false;
 				var newData = [];
 				for (var i=0; i<data.length; i++) {
@@ -243,6 +248,7 @@ angular.module('biWorkflowChartServices', []).
 				data.splice(0,0,rootData);
 				rootData.level = 0;
 				newData.push(rootData);
+				//order data
 				newData = orderByDescent(newData, data, rootData); 
 				newData.sort(function(a, b) {
 								var aCat = a.level + a.position;
