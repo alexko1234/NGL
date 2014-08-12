@@ -249,13 +249,9 @@ angular.module('biWorkflowChartServices', []).
 				rootData.level = 0;
 				newData.push(rootData);
 				//order data
-				newData = orderByDescent(newData, data, rootData); 
-				newData.sort(function(a, b) {
-								var aCat = a.level + a.position;
-								var bCat = b.level + b.position;
-								return (aCat > bCat ? 1 : aCat < bCat ? -1 : 0);
-							});
-				
+				newData = orderByDescent(newData, data, rootData);
+				//re-order by position for data at the same hierarchical level
+				newData.sort(function(a, b) { return (a.level > b.level ? 1 : (a.level < b.level ? -1 : (a.position > b.position ? 1 : -1))); });
 				//error alert 
 				if (!bRootData) {
 					alert("Missing a root for the data : could not find a starting point to render the workflow");
