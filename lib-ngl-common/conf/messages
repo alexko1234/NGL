@@ -22,7 +22,7 @@ error.badstate = L''object {0} n'est pas dans le bon etat.
 
 error.validationexp.percentperoutputcontainer= "Le pourcentage total à déposer sur la piste est différent de 100% (il vaut  {0}%)."
 error.validationexp.emptyoutputcontainer="La lane ne possède aucun content."
-error.validationexp.manytagCategory="Plusieurs catégories d’index sont présentes ({0} et {1})"
+error.validationexp.manytagCategory="Plusieurs catégories d’index sont présentes"
 error.validationexp.sametag="L’index {0} n’est pas unique (containers concernés : {1},{2})"
 
 #directive messages

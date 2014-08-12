@@ -10,7 +10,7 @@ declare ContentInfo
 	sampleCode : String
 end
 
-rule "Init ContentInfo in WM"
+rule "Init objects ContentInfo in WM"
 		@nglSQ( validations )
 	dialect "java"
 	salience 600
@@ -21,13 +21,13 @@ rule "Init ContentInfo in WM"
 	$content : Content() from $contents	 
     then
    
-    String tag=null;
-    String tagCategory=null;
+    String tag="VIDE";
+    String tagCategory="VIDE";
     if( $content.properties.containsKey("tag")) tag=$content.properties.get("tag").value.toString();
     if( $content.properties.containsKey("tagCategory")) tagCategory=$content.properties.get("tagCategory").value.toString();
 
 	ContentInfo contentInfo= new ContentInfo($atomicTransfert.position,$container.code,tag,tagCategory,$content.sampleCode);
-	//Logger.debug("Content Info Position : "+$atomicTransfert.position+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag+", tagCategory :"+tagCategory);
+	Logger.debug("Content Info Position : "+$atomicTransfert.position+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag+", tagCategory :"+tagCategory);
     
 	insert(contentInfo);
 	
@@ -74,7 +74,6 @@ rule "Tag identique sur la meme position"
     	   $contentInfo1 : ContentInfo($tag :tag,$sampleCode :sampleCode,$position:position,$containerCode1:containerCode)
            $contentInfo2 : ContentInfo(this != $contentInfo1, tag == $tag, position==$position, sampleCode!=$sampleCode,$containerCode2:containerCode)
            $contextValidation:ContextValidation()
-       //    not ValidationError(arguments contains $tag, arguments contains $containerCode1, arguments contains $containerCode2) from $errors.get("lane["+$position+"]")
     then
     	//Logger.debug("Tag error "+$contentInfo1 + " position "+$position);
     	$contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.sametag", $tag,$containerCode1,$containerCode2);    	
@@ -83,14 +82,18 @@ rule "Tag identique sur la meme position"
 rule "Many TagCategory on same position"
 	@nglSQ (validations )
 	dialect "java"
-	salience 400
+	salience 300
 	no-loop
-    when
-    	   $contentInfo1 : ContentInfo($tagCategory :tag,$position:position)
-           $contentInfo2 : ContentInfo(this != $contentInfo1, $tagCategory2:tagCategory,tagCategory != $tagCategory, position==$position)
-           $contextValidation:ContextValidation()
-    then
-    //	Logger.debug("TagCategory error "+$contentInfo1);
-    //	$contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", $tagCategory,$tagCategory2);
-    	
-    end
+when
+	 ContentInfo($position:position)
+     $set : HashSet ( ) from  accumulate ( ContentInfo ( $tagCategory : tagCategory,$position==position),
+                              init ( HashSet uniqueIds = new HashSet<String>(); ),
+                              action ( uniqueIds.add($tagCategory); ),
+                              reverse ( uniqueIds.remove($tagCategory); ),
+                              result ( uniqueIds ) )
+     $contextValidation:ContextValidation()
+     HashSet ( this == $set, size > 1 )
+then
+	Logger.debug("TagCategory error "+ $set.size());
+    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", null);
+end

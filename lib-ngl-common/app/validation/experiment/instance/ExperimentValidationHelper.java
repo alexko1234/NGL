@@ -2,6 +2,7 @@ package validation.experiment.instance;
 
 import static validation.utils.ValidationHelper.required;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.reagent.instance.ReagentUsed;
@@ -116,6 +118,18 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 				contextValidation.removeKeyFromRootKeyName("instrumentUsed");
 			}}
 		
+	}
+	
+	public static void validateRules(Experiment exp,ContextValidation contextValidation){
+		ArrayList<Object> validationfacts = new ArrayList<Object>();
+		validationfacts.add(exp);
+		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
+				ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get(i);
+				validationfacts.add(atomic);
+			}
+		}
+		ExperimentValidationHelper.validateRules(validationfacts, contextValidation);
 	}
 
 	
