@@ -44,8 +44,8 @@ public class StateHierarchyMappingQuery extends MappingSqlQuery<StateHierarchy>{
 		stateHierarchy.childStateCode=state.code;
 		
 		stateHierarchy.childStateName = state.name;
-		
 		stateHierarchy.position = state.position;
+		stateHierarchy.functionnalGroup = state.functionnalGroup;
 		
 		id = rs.getLong("fk_parent_state");
 		state = null;
