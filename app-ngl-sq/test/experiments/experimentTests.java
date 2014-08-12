@@ -125,11 +125,7 @@ public class experimentTests extends AbstractTests{
 		
 		Experiments.doCalculations(exp);
 		
-		MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, exp.code);
-		
 		ManytoOneContainer atomicTransfertResult = (ManytoOneContainer)exp.atomicTransfertMethods.get(0);
-		
-		MongoDBDAO.deleteByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, "TESTYANNEXP");
 		
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1")).isNotNull();
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1").value).isInstanceOf(Double.class);
