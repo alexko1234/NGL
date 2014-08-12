@@ -233,32 +233,7 @@ public class Experiments extends CommonController{
 		
 		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
 
-		ArrayList<Object> facts = new ArrayList<Object>();
-		facts.add(exp);
-		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get((i-1)))){
-				ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get((i-1));
-				facts.add(atomic);
-			}
-		}
-		
-		RulesServices rulesServices = new RulesServices();
-        StatefulKnowledgeSession kSession;
-        List<Object> factsAfterRules = null;
-        try {
-            kSession = rulesServices.getKnowledgeBase().newStatefulKnowledgeSession();
-            factsAfterRules = rulesServices.callRules(ConfigFactory.load().getString("rules.key"), calculationsRules, facts, kSession);
-            kSession.dispose();
-        } catch (RulesException e) {
-            throw new RuntimeException();
-        }
-
-        for(Object obj:factsAfterRules){
-            if(ManytoOneContainer.class.isInstance(obj)){
-              exp.atomicTransfertMethods.remove(((ManytoOneContainer)obj).position);
-              exp.atomicTransfertMethods.put(((ManytoOneContainer)obj).position,(ManytoOneContainer) obj);
-            }
-        }
+		doCalculations(exp);
 		
 		if (!experimentFilledForm.hasErrors()) {
 		
@@ -317,6 +292,8 @@ public class Experiments extends CommonController{
 		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
 		
 		Logger.info(Json.toJson(exp).toString());
+		
+		doCalculations(exp);
 		
 		Form<Experiment> experimentFilledForm = experimentForm.fill(exp);
 		
@@ -448,5 +425,35 @@ public class Experiments extends CommonController{
 		}
 
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+	}
+	
+	public static void doCalculations(Experiment exp){
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.add(exp);
+		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
+				ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get(i);
+				facts.add(atomic);
+			}
+		}
+		
+		RulesServices rulesServices = new RulesServices();
+        StatefulKnowledgeSession kSession;
+        List<Object> factsAfterRules = null;
+        try {
+            kSession = rulesServices.getKnowledgeBase().newStatefulKnowledgeSession();
+            factsAfterRules = rulesServices.callRules(ConfigFactory.load().getString("rules.key"), calculationsRules, facts, kSession);
+            kSession.dispose();
+        } catch (RulesException e) {
+            throw new RuntimeException();
+        }
+
+        for(Object obj:factsAfterRules){
+            if(ManytoOneContainer.class.isInstance(obj)){
+              exp.atomicTransfertMethods.remove(((ManytoOneContainer)obj).position-1);
+              exp.atomicTransfertMethods.put(((ManytoOneContainer)obj).position-1,(ManytoOneContainer) obj);
+            }
+        }
+		
 	}
 }

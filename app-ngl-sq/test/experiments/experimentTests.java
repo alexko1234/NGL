@@ -2,6 +2,7 @@ package experiments;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,32 +10,34 @@ import java.util.Map.Entry;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.property.PropertyImgValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
+import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
+
+import org.junit.Test;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import org.junit.Test;
-
-import fr.cea.ig.MongoDBDAO;
+import controllers.experiments.api.Experiments;
 
 import play.data.validation.ValidationError;
-import play.libs.Json;
-
 import utils.AbstractTests;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
+import fr.cea.ig.MongoDBDAO;
 
 public class experimentTests extends AbstractTests{
-
-	@Test
+	
+	
+	//@Test
 	public void validatePropertiesFileImgErr() {
-		Experiment exp = new Experiment();
-		exp.code = "TESTYANNEXP";
-		exp.instrument = new InstrumentUsed();
+		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		
 		PropertyImgValue pImgValue = new  PropertyImgValue();
 		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
@@ -58,15 +61,11 @@ public class experimentTests extends AbstractTests{
 		
 		pImgValue.validate(cv);
 		
-		
-		exp.instrumentProperties = new HashMap<String, PropertyValue>();
 		exp.instrumentProperties.put("enzymeChooser", pImgValue);
 		
 		showErrors(cv);
 		
 		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
-		
-		System.out.println("save");
 		
 		Experiment expBase = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, "TESTYANNEXP");
 		
@@ -79,19 +78,71 @@ public class experimentTests extends AbstractTests{
 		expBase.instrumentProperties.clear();
 		expBase.instrumentProperties.put("enzymeChooser", pImgValue);
 		
-		//System.out.println(Json.toJson(expBase).toString());
-		
 		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
 				DBQuery.is("code", expBase.code),
 				DBUpdate.set("instrumentProperties",expBase.instrumentProperties));
 		
-		System.out.println("update");
+		Experiment expBase2 = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, ExperimentTestHelper.EXP_CODE);
 		
-		Experiment expBase2 = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, "TESTYANNEXP");
+		MongoDBDAO.deleteByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, "TESTYANNEXP");
 		
 		assertThat(expBase2.instrumentProperties.get("enzymeChooser").value);
 		
+	}
+	
+	@Test
+	public void validateFlowCellCalculations() {
+		Experiment exp = ExperimentTestHelper.getFakeExperiment();
+		exp.state.code = "IP";
+		ManytoOneContainer atomicTransfert = ExperimentTestHelper.getManytoOneContainer();
+		
+		ContainerUsed containerIn1 = ExperimentTestHelper.getContainerUsed("containerUsedIn1");
+		containerIn1.percentage = (float) 12;
+		containerIn1.concentration = new PropertySingleValue(new Double(3)); 
+		containerIn1.experimentProperties.put("NaOHVolume", new PropertySingleValue(new Double(1)));
+		containerIn1.experimentProperties.put("NaOHConcentration", new PropertySingleValue(new Double(20)));
+		containerIn1.experimentProperties.put("finalConcentration1", new PropertySingleValue(new Double(50)));
+		containerIn1.experimentProperties.put("finalVolume1", new PropertySingleValue(new Double(30)));
+		containerIn1.experimentProperties.put("phixConcentration", new PropertySingleValue(new Double(10)));
+		containerIn1.experimentProperties.put("finalConcentration2", new PropertySingleValue(new Double(10)));
+		containerIn1.experimentProperties.put("finalVolume2", new PropertySingleValue(new Double(10)));
+		
+		ContainerUsed containerOut1 = ExperimentTestHelper.getContainerUsed("containerUsedOut1");
+		containerOut1.experimentProperties.put("phixPercent", new PropertySingleValue(new Double(60)));
+		containerOut1.experimentProperties.put("finalVolume", new PropertySingleValue(new Double(5)));
+		
+		atomicTransfert.inputContainerUseds.add(containerIn1);
+		atomicTransfert.outputContainerUsed = containerOut1;
+		
+		exp.atomicTransfertMethods.put(0, atomicTransfert);
+		
+		ContextValidation contextValidation = new ContextValidation();
+		contextValidation.setUpdateMode();
+		contextValidation.putObject("stateCode", exp.state.code);
+		contextValidation.putObject("typeCode", exp.typeCode);
+		
+		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
+		
+		Experiments.doCalculations(exp);
+		
+		MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, exp.code);
+		
+		ManytoOneContainer atomicTransfertResult = (ManytoOneContainer)exp.atomicTransfertMethods.get(0);
+		
 		MongoDBDAO.deleteByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, "TESTYANNEXP");
+		
+		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1")).isNotNull();
+		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1").value).isInstanceOf(Double.class);
+		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("NaOHConcentration")).isNotNull();
+		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("NaOHConcentration").value).isInstanceOf(Double.class);
+		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("EBVolume")).isNotNull();
+		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("EBVolume").value).isInstanceOf(Double.class);
+		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume2")).isNotNull();
+		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume2").value).isInstanceOf(Double.class);
+		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("HT1Volume")).isNotNull();
+		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("HT1Volume").value).isInstanceOf(Double.class);
+		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("phixVolume")).isNotNull();
+		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("phixVolume").value).isInstanceOf(Double.class);
 	}
 	
 	public PropertyDefinition getPropertyImgDefinition() {
@@ -112,5 +163,4 @@ public class experimentTests extends AbstractTests{
 			}
 		}
 	}
-	
 }

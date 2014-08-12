@@ -25,7 +25,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							$q.all(promises).then(function (res) {
 								fn(containers);
 								$scope.doPurifOrQc($scope.experiment.value.typeCode);
-								$scope.getInstruments();
+								//$scope.getInstruments();
 								if(!$scope.experiment.editMode) {
 									$scope.init_experiment(containers, $scope.experimentType.atomicTransfertMethod);
 								}else{
@@ -167,22 +167,24 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							}else if(inputType === "dragndrop"){
 								if($scope.datatable.displayResult != undefined){
 									for(var i=0;i<$scope.datatable.displayResult.length;i++){
-										$scope.datatable.displayResult[i].data.percentage = $scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputY-1)].percentage;
-										if($scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputY-1)].instrumentProperties != undefined){
-											 $scope.datatable.displayResult[i].data.inputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputY-1)].instrumentProperties;
+										$scope.datatable.displayResult[i].data.percentage = $scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputPositionY-1)].percentage;
+										if($scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputPositionY-1)].instrumentProperties != undefined){
+											 var positions = this.searchContainer($scope.datatable.displayResult[i].data.inputCode, $scope.datatable.displayResult[i].data.outputPositionX, $scope.datatable.displayResult[i].data.outputPositionY);
+											 $scope.datatable.displayResult[i].data.inputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[positions.x].inputContainerUseds[positions.y].instrumentProperties;
 										}
-										if($scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputY-1)].experimentProperties != undefined){
-											 $scope.datatable.displayResult[i].data.inputExperimentProperties =	$scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputY-1)].experimentProperties;
+										if($scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputPositionY-1)].experimentProperties != undefined){
+											 var positions = this.searchContainer($scope.datatable.displayResult[i].data.inputCode, $scope.datatable.displayResult[i].data.outputPositionX, $scope.datatable.displayResult[i].data.outputPositionY);
+											 $scope.datatable.displayResult[i].data.inputExperimentProperties =	$scope.experiment.value.atomicTransfertMethods[positions.x].inputContainerUseds[positions.y].experimentProperties;
 										}
 									}
 								}
 							}
 						},
-						searchContainer : function(code){
+						searchContainer : function(code, x, y){
 							var i = 0;
 							while($scope.experiment.value.atomicTransfertMethods[i] != undefined){
 								for(var j=0;j<$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length;j++){
-									if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].code == code){
+									if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].code == code && $scope.experiment.value.atomicTransfertMethods[i].line == x && $scope.experiment.value.atomicTransfertMethods[i].column == y){
 										return {"x":i,"y":j};
 									}
 								}
@@ -201,12 +203,14 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 								}
 							}else if(inputType === "dragndrop"){
 								for(var i=0;i<$scope.datatable.displayResult.length;i++){
-									//$scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputY-1)].percentage = $scope.datatable.displayResult[i].data.percentage;
+									//$scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputPositionY-1)].percentage = $scope.datatable.displayResult[i].data.percentage;
 									if($scope.datatable.displayResult[i].data.inputInstrumentProperties != undefined){
-										$scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputY-1)].instrumentProperties = $scope.datatable.displayResult[i].data.inputInstrumentProperties;
+										var positions = this.searchContainer($scope.datatable.displayResult[i].data.inputCode, $scope.datatable.displayResult[i].data.outputPositionX, $scope.datatable.displayResult[i].data.outputPositionY);
+										$scope.experiment.value.atomicTransfertMethods[positions.x].inputContainerUseds[positions.y].instrumentProperties = $scope.datatable.displayResult[i].data.inputInstrumentProperties;
 									}
 									if($scope.datatable.displayResult[i].data.inputExperimentProperties != undefined){
-										$scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputY-1)].experimentProperties = $scope.datatable.displayResult[i].data.inputExperimentProperties;
+										var positions = this.searchContainer($scope.datatable.displayResult[i].data.inputCode, $scope.datatable.displayResult[i].data.outputPositionX, $scope.datatable.displayResult[i].data.outputPositionY);
+										$scope.experiment.value.atomicTransfertMethods[positions.x].inputContainerUseds[position.y].experimentProperties = $scope.datatable.displayResult[i].data.inputExperimentProperties;
 									}
 								}
 							}
@@ -260,11 +264,11 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 						}else if(outputType === "datatable"){
 							if($scope.datatable.displayResult != undefined){
 								for(var i=0;i<$scope.datatable.displayResult.length;i++){
-									if($scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].outputContainerUsed != undefined){
-										$scope.datatable.displayResult[i].data.outputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].outputContainerUsed.instrumentProperties;
+									if($scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].outputContainerUsed != undefined){
+										$scope.datatable.displayResult[i].data.outputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].outputContainerUsed.instrumentProperties;
 									}
-									if($scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].outputContainerUsed != undefined){
-										$scope.datatable.displayResult[i].data.outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].outputContainerUsed.experimentProperties;	
+									if($scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].outputContainerUsed != undefined){
+										$scope.datatable.displayResult[i].data.outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].outputContainerUsed.experimentProperties;	
 									}
 								}
 							}
@@ -281,10 +285,10 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 						}else if(outputType === "datatable"){
 							for(var i=0;i<$scope.datatable.displayResult.length;i++){
 								if($scope.datatable.displayResult[i].data.outputInstrumentProperties != undefined){
-									$scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].outputContainerUsed.instrumentProperties = $scope.datatable.displayResult[i].data.outputInstrumentProperties;
+									$scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].outputContainerUsed.instrumentProperties = $scope.datatable.displayResult[i].data.outputInstrumentProperties;
 								}
 								if($scope.datatable.displayResult[i].data.outputExperimentProperties!= undefined){
-									$scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputX-1)].outputContainerUsed.experimentProperties = $scope.datatable.displayResult[i].data.outputExperimentProperties;	
+									$scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].outputContainerUsed.experimentProperties = $scope.datatable.displayResult[i].data.outputExperimentProperties;	
 								}
 							}
 						}
@@ -584,8 +588,8 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 									var container = {"inputCode":containerIn.code,"inputSupportCode":containerIn.support.code,
 											"inputX":containerIn.support.line, "inputTags":tags,"inputSampleTypes":sampleTypes, "inputLibProcessTypeCodes":libProcessTypeCodes, "inputState":containerIn.state,
 														"inputY":containerIn.support.column, "experimentProperties":containerIn.experimentProperties,
-														"instrumentProperties":containerIn.instrumentProperties, "outputX":i+1,
-														"outputY":1};//Fake container
+														"instrumentProperties":containerIn.instrumentProperties, "outputPositionX":i+1,
+														"outputPositionY":1};//Fake container
 									containers.push(container);
 								}
 								i++;

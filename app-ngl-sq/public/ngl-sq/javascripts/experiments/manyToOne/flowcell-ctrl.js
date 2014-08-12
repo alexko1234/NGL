@@ -9,14 +9,14 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					},
 					{
 						"header":Messages("containers.table.support.column"),
-						"property":"outputX",
+						"property":"outputPositionX",
 						"order":true,
 						"type":"text",
 						"extraHeaders":{"0":"Outputs"}
 					},
 					{
 						"header":Messages("containers.table.support.line"),
-						"property":"outputY",
+						"property":"outputPositionY",
 						"order":true,
 						"type":"text",
 						"extraHeaders":{"0":"Outputs"}
@@ -75,15 +75,6 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			},
 			remove:{
 				active:false,
-			},
-			save:{
-				active:true,
-				mode:'local',
-				callback:function(){
-					if($scope.experiment.value.code != undefined && $scope.experiment.value.code != ""){
-						$scope.saveContainers();
-					}
-				}
 			},
 			hide:{
 				active:true
@@ -298,8 +289,8 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		
 		var match = model.match(array_regexp);
 		if(match){
-			$scope.experiment.value.atomicTransfertMethods[match[1]].line = parseInt(match[1])+1;
-			$scope.experiment.value.atomicTransfertMethods[match[1]].column = 1;
+			//$scope.experiment.value.atomicTransfertMethods[match[1]].line = parseInt(match[1])+1;
+			//$scope.experiment.value.atomicTransfertMethods[match[1]].column = 1;
 		}
 		
 		return data;

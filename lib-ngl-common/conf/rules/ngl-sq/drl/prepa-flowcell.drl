@@ -7,6 +7,7 @@ rule "volume stock engaged in denat"
 	dialect "java"
 	salience 1000
 	no-loop
+	lock-on-active true
     when
     	 $experiment:Experiment($stateCode : state.code, $stateCode=="IP")
     	 $atomicTransfert: ManytoOneContainer( )
@@ -22,12 +23,42 @@ rule "volume stock engaged in denat"
    		}
 
    		$experimentProperties.put("requiredVolume1",value);
+   		
+   		update($experiment);
    	end
-   	
-rule "volume EB"
+   
+rule "volume PhiX"
 	@nglSQ( calculations )
 	dialect "java"
 	salience 900
+	no-loop
+	lock-on-active true
+	when
+		 $experiment:Experiment($stateCode : state.code, $stateCode=="IP")
+		 $atomicTransfert: ManytoOneContainer( )
+		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainers
+		 ContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUsed
+		 $phixPercent : PropertyValue() from $experimentPropertiesOut.get("phixPercent")
+		 $finalConcentration2 : PropertyValue() from $experimentProperties.get("finalConcentration2")
+		 $finalVolume2 : PropertyValue() from $experimentProperties.get("finalVolume2")
+		 $phixConcentration : PropertyValue() from $experimentProperties.get("phixConcentration")
+		 eval($phixPercent.value != null && $finalVolume2.value != null && $phixConcentration.value != null)
+	then
+		Logger.debug("Calculation Test  5: "+ $experiment.code+ " "+ $atomicTransfert.position);
+		PropertySingleValue value = new PropertySingleValue((Double)$phixPercent.value*(Double)$finalConcentration2.value*(Double)$finalVolume2.value-(Double)$phixConcentration.value);
+		if($experimentProperties.get("phixVolume") != null){
+			$experimentProperties.remove("phixVolume");
+		}
+		
+		$experimentProperties.put("phixVolume",value);
+		
+		update($experiment);
+	end   
+	
+rule "volume EB"
+	@nglSQ( calculations )
+	dialect "java"
+	salience 800
 	no-loop
     when
     	 $experiment:Experiment($stateCode : state.code, $stateCode=="IP")
@@ -38,15 +69,15 @@ rule "volume EB"
     	 $requiredVolume1 : PropertyValue() from $experimentProperties.get("requiredVolume1")
     	 eval($requiredVolume1.value != null && $finalVolume1.value != null && $naohVolume.value != null)
    	then
-   		Logger.debug("Calculation Test  2: "+ $experiment.code+ " "+ $atomicTransfert.position+" "+$requiredVolume1.value);
+   		Logger.debug("Calculation Test  2: "+ $experiment.code+ " "+ $atomicTransfert.position);
    		PropertySingleValue value = new PropertySingleValue((Double)$finalVolume1.value-(Double)$requiredVolume1.value-(Double)$naohVolume.value);
    		if($experimentProperties.get("EBVolume") != null){
    			$experimentProperties.remove("EBVolume");
    		}
    		
-   		$experimentProperties.put("EBVolume",value);
-   	end
-   	
+   		$experimentProperties.put("EBVolume", value);
+   	end  
+   	 	
 rule "volume engaged in dilution"
 	@nglSQ( calculations )
 	dialect "java"
@@ -81,40 +112,16 @@ rule "volume HT1"
 		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainers
 		 $phixVolume : PropertyValue() from $experimentProperties.get("phixVolume")
 		 $finalVolume2 : PropertyValue() from $experimentProperties.get("finalVolume2")
-		 $requiredVolume1 : PropertyValue() from $experimentProperties.get("requiredVolume1")
-		 eval($phixVolume.value != null && $finalVolume2.value != null && $requiredVolume1.value != null)
+		 //$requiredVolume1 : PropertyValue() from $experimentProperties.get("requiredVolume1")
+		 //eval($phixVolume.value != null && $finalVolume2.value != null && $requiredVolume1.value != null)
 	then
 		Logger.debug("Calculation Test  4: "+ $experiment.code+ " "+ $atomicTransfert.position);
-		PropertySingleValue value = new PropertySingleValue((Double)$finalVolume2.value-(Double)$requiredVolume1.value-(Double)$phixVolume.value);
+		/*PropertySingleValue value = new PropertySingleValue((Double)$finalVolume2.value-(Double)$requiredVolume1.value-(Double)$phixVolume.value);
 		if($experimentProperties.get("HT1Volume") != null){
 			$experimentProperties.remove("HT1Volume");
-		}
+		}*/
 		
-		$experimentProperties.put("HT1Volume",value);
-	end
-	
-rule "volume PhiX"
-	@nglSQ( calculations )
-	dialect "java"
-	salience 800
-	no-loop
-	when
-		 $experiment:Experiment($stateCode : state.code, $stateCode=="IP")
-		 $atomicTransfert: ManytoOneContainer( )
-		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainers
-		 $phixPercent : PropertyValue() from $experimentProperties.get("phixPercent")
-		 $finalConcentration2 : PropertyValue() from $experimentProperties.get("finalConcentration2")
-		 $finalVolume2 : PropertyValue() from $experimentProperties.get("finalVolume2")
-		 $phixConcentration : PropertyValue() from $experimentProperties.get("phixConcentration")
-		 eval($phixPercent.value != null && $finalVolume2.value != null && $phixConcentration.value != null)
-	then
-		Logger.debug("Calculation Test  5: "+ $experiment.code+ " "+ $atomicTransfert.position);
-		PropertySingleValue value = new PropertySingleValue((Double)$phixPercent.value*(Double)$finalConcentration2.value*(Double)$finalVolume2.value-(Double)$phixConcentration.value);
-		if($experimentProperties.get("phixVolume") != null){
-			$experimentProperties.remove("phixVolume");
-		}
-		
-		$experimentProperties.put("phixVolume",value);
+		$experimentProperties.put("HT1Volume",0);
 	end
 	
 rule "Volume dilution on track"

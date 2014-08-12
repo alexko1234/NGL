@@ -60,7 +60,7 @@ public class SampleLoadTest extends AbstractTests {
 		Helpers.stop(app);
 	}
 	
-	@Test
+	//@Test
 	public void updaLoadDataFromCSVFileNotFound(){
 
 		Map<String, String> data = new HashMap<String, String>();
@@ -75,7 +75,7 @@ public class SampleLoadTest extends AbstractTests {
 	}
 
 
-	@Test
+	//@Test
 	public void importTypeNotFound(){
 
 		Map<String, String> data = new HashMap<String, String>();
@@ -91,7 +91,7 @@ public class SampleLoadTest extends AbstractTests {
 
 
 
-	@Test
+	//@Test
 	public void sampleTypeNotFound(){
 
 		Map<String, String> data = new HashMap<String, String>();
@@ -108,7 +108,7 @@ public class SampleLoadTest extends AbstractTests {
 	}
 
 
-	@Test
+	//@Test
 	public void createTemplateCSV(){
 
 		Map<String, String> data = new HashMap<String, String>();
@@ -130,7 +130,7 @@ public class SampleLoadTest extends AbstractTests {
 		
 	}
 
-	@Test
+	//@Test
 	public void uploadDataFromCSVFile() throws IOException{
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("sampleType", sampleType.code);

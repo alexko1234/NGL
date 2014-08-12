@@ -447,6 +447,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	
 	$scope.getInstrumentsTrigger = function(){
 		if($scope.experiment.value.instrument != undefined && $scope.experiment.value.instrument.typeCode != null){
+			$scope.experiment.value.instrument.outContainerSupportCategoryCode = undefined;
+			$scope.experiment.inputTemplate = undefined; //reset the template
 			$scope.getInstruments(false);
 			$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,false);
 		}

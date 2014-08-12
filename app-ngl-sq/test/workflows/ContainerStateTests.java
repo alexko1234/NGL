@@ -20,7 +20,7 @@ public class ContainerStateTests extends AbstractTests {
 	public static String CONTAINER_DATA="ContainerDataCNS";
 	
 	
-	@Test
+	//@Test
 	public void setContainerStateCode(){
 		Container container=MongoDBDAO.find(CONTAINER_DATA, Container.class,DBQuery.is("state.code", "A")).toList().get(0);
 		MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class,container.code);
@@ -38,7 +38,7 @@ public class ContainerStateTests extends AbstractTests {
 				
 	}
 	
-	@Test
+	//@Test
 	public void setContainerStateCodeError(){
 		Container container=MongoDBDAO.find(CONTAINER_DATA, Container.class,DBQuery.is("state.code", "A")).toList().get(0);
 		MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class,container.code);
