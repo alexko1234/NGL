@@ -78,7 +78,7 @@ public class MigrationContent extends CommonController {
 	public static List<Container> findContainerToCreate(final ContextValidation contextError) throws DAOException {
 
 
-		List<Container> results = jdbcTemplate.query("select * from v_flowcell_tongl_reprise where isavailable = true order by code, project, code_sample, tag",new Object[]{} 
+		List<Container> results = jdbcTemplate.query("select * from v_flowcell_tongl_reprise order by code, project, code_sample, tag",new Object[]{} 
 		,new RowMapper<Container>() {
 
 			@SuppressWarnings("rawtypes")
