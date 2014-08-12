@@ -26,7 +26,7 @@ public class StatesHierarchy extends CommonController {
 		List<StateHierarchy> values = new ArrayList<StateHierarchy>(0);
 
 		if (null != statesHierarchySearch.objectTypeCode) 
-		    values = StateHierarchy.find.findByObjectTypeCodeWithNames(ObjectType.CODE.valueOf(statesHierarchySearch.objectTypeCode));
+		    values = StateHierarchy.find.findByObjectTypeCode(ObjectType.CODE.valueOf(statesHierarchySearch.objectTypeCode));
 		else 
 			return notFound();
 		

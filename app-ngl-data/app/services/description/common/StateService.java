@@ -49,7 +49,7 @@ public class StateService {
 		List<State> l = new ArrayList<State>();
 
 		l.add(newState("Disponible", "A", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()), true, "F"));
-		l.add(newState("Indisponible", "UA", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()), true, "F"));
+		l.add(newState("Indisponible", "UA", true, 1001, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()), true, "F"));
 		l.add(newState("Terminé", "F", true, 1000, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name()), true, "F"));		
 		
 		
@@ -70,7 +70,7 @@ public class StateService {
 		l.add(newState("Disponible purif", "A-PF", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
 		
 		l.add(newState("Séquençage en cours", "IP-S", true, 150, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Run.name()), true, "S"));		
-		l.add(newState("Séquençage en échec", "FE-S", true, 190, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name()), true, "S"));
+		l.add(newState("Séquençage en échec", "FE-S", true, 200, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name()), true, "S"));
 		l.add(newState("Séquençage terminé", "F-S", true, 199, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name()), false, "S"));	
 		
 		l.add(newState("Read generation en attente", "IW-RG", true, 200, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Run.name()), true, "RG"));

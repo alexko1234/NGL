@@ -230,8 +230,8 @@ angular.module('biWorkflowChartServices', []).
 			
 			function orderData(data) {
 				//make the root the first data 
-				var rootData;
-				var bRootData = false;
+				var rootData, bRootData = false;
+				var newData = [];
 				for (var i=0; i<data.length; i++) {
 					if (data[i].childStateCode == data[i].parentStateCode) {
 						rootData = data[i];
@@ -241,16 +241,14 @@ angular.module('biWorkflowChartServices', []).
 					}
 				}
 				data.splice(0,0,rootData);
-				
-				var newData = [];
 				rootData.level = 0;
 				newData.push(rootData);
-				
-				//sort data by the descent
 				newData = orderByDescent(newData, data, rootData); 
-				
-				//sort data by level
-				newData.sort(function(a, b) {return a.level - b.level});
+				newData.sort(function(a, b) {
+								var aCat = a.level + a.position;
+								var bCat = b.level + b.position;
+								return (aCat > bCat ? 1 : aCat < bCat ? -1 : 0);
+							});
 				
 				//error alert 
 				if (!bRootData) {

@@ -15,6 +15,7 @@ public class StateHierarchy extends Model<StateHierarchy> {
     public String childStateName;
     public String parentStateCode;
     public String objectTypeCode;
+    public Integer position;
 
     public StateHierarchy(){
     	super(StateHierarchyDAO.class.getName());
@@ -29,8 +30,8 @@ public class StateHierarchy extends Model<StateHierarchy> {
 		    super(StateHierarchyDAO.class.getName());
 		}
 		
-		public List<StateHierarchy> findByObjectTypeCodeWithNames(CODE objectTypeCode) throws DAOException {
-		    return ((StateHierarchyDAO) getInstance()).findByObjectTypeCodeWithNames(objectTypeCode);
+		public List<StateHierarchy> findByObjectTypeCode(CODE objectTypeCode) throws DAOException {
+		    return ((StateHierarchyDAO) getInstance()).findByObjectTypeCode(objectTypeCode);
 		}
 	
     }

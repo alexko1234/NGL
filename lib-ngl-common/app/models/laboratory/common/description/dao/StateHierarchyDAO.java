@@ -10,7 +10,6 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateHierarchy;
-import models.utils.dao.AbstractDAODefault;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
@@ -19,8 +18,6 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
 import play.Logger;
-
-import com.avaje.ebean.enhance.asm.Type;
 
 @Repository
 public class StateHierarchyDAO extends AbstractDAOMapping<StateHierarchy> {
@@ -52,7 +49,7 @@ public class StateHierarchyDAO extends AbstractDAOMapping<StateHierarchy> {
 		
 	}
 
-	public List<StateHierarchy> findByObjectTypeCodeWithNames(CODE objectTypeCode) throws DataAccessException, DAOException {
+	public List<StateHierarchy> findByObjectTypeCode(CODE objectTypeCode) throws DataAccessException, DAOException {
 		String sql = sqlCommon + 
 					"JOIN object_type o ON o.id = t.fk_object_type " +
 					"WHERE o.code = ?";
