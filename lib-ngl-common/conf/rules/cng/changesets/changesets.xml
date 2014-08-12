@@ -2,7 +2,7 @@
 
 <change-set xmlns='http://drools.org/drools-5.0/change-set'
 	xmlns:xs='http://www.w3.org/2001/XMLSchema-instance'
-	xs:schemaLocation='change-set-1.0.0.xsd'>
+	xs:schemaLocation='classpath:rules/common/change-set-1.0.0.xsd'>
 
 	<add>
 		<resource source='classpath:rules/cng/drl/import.drl' type='DRL' />
