@@ -240,15 +240,7 @@ public class Experiments extends CommonController{
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
 			ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
-			ArrayList<Object> validationfacts = new ArrayList<Object>();
-			validationfacts.add(exp);
-			for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-				if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
-					ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get(i);
-					validationfacts.add(atomic);
-				}
-			}
-			ExperimentValidationHelper.validateRules(validationfacts, ctxValidation);
+			ExperimentValidationHelper.validateRules(exp, ctxValidation);
 			if(!ctxValidation.hasErrors()){
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 				return ok(Json.toJson(exp));
@@ -322,6 +314,7 @@ public class Experiments extends CommonController{
 			
 			exp.code = CodeHelper.generateExperiementCode(exp);
 			exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
+			ExperimentValidationHelper.validateRules(exp, ctxValidation);
 			
 			if (!experimentFilledForm.hasErrors()) {
 				exp = MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
