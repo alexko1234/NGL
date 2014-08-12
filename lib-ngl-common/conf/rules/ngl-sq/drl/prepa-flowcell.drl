@@ -112,16 +112,16 @@ rule "volume HT1"
 		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainers
 		 $phixVolume : PropertyValue() from $experimentProperties.get("phixVolume")
 		 $finalVolume2 : PropertyValue() from $experimentProperties.get("finalVolume2")
-		 //$requiredVolume1 : PropertyValue() from $experimentProperties.get("requiredVolume1")
-		 //eval($phixVolume.value != null && $finalVolume2.value != null && $requiredVolume1.value != null)
+		 $requiredVolume1 : PropertyValue() from $experimentProperties.get("requiredVolume1")
+		 eval($phixVolume.value != null && $finalVolume2.value != null && $requiredVolume1.value != null)
 	then
 		Logger.debug("Calculation Test  4: "+ $experiment.code+ " "+ $atomicTransfert.position);
-		/*PropertySingleValue value = new PropertySingleValue((Double)$finalVolume2.value-(Double)$requiredVolume1.value-(Double)$phixVolume.value);
+		PropertySingleValue value = new PropertySingleValue((Double)$finalVolume2.value-(Double)$requiredVolume1.value-(Double)$phixVolume.value);
 		if($experimentProperties.get("HT1Volume") != null){
 			$experimentProperties.remove("HT1Volume");
-		}*/
+		}
 		
-		$experimentProperties.put("HT1Volume",0);
+		$experimentProperties.put("HT1Volume",value);
 	end
 	
 rule "Volume dilution on track"
