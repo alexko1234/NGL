@@ -3,10 +3,22 @@ package validation;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Valuation;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.Content;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.reagent.instance.Reagent;
 import models.laboratory.sample.instance.Sample;
@@ -18,6 +30,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import play.Logger;
+import play.data.validation.ValidationError;
 
 import utils.AbstractTests;
 import validation.common.instance.CommonValidationHelper;
@@ -37,6 +50,8 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	static Stock stock;
 	
 	static Container container;
+	
+	static ContainerSupport containerSupport;
 
 	static Reagent reagentInstance;
 	
@@ -69,6 +84,8 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		stock=saveDBOject(Stock.class,InstanceConstants.STOCK_COLL_NAME,"stock" + randomInt);
 		
 		container=saveDBOject(Container.class,InstanceConstants.CONTAINER_COLL_NAME,"container" + randomInt);
+				
+		containerSupport=saveDBOject(ContainerSupport.class, InstanceConstants.SUPPORT_COLL_NAME, "containerSupport" + randomInt);
 		
 		reagentInstance=saveDBOject(Reagent.class, InstanceConstants.REAGENT_INSTANCE_COLL_NAME, "reagent" + randomInt);
 
@@ -87,6 +104,8 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		MongoDBDAO.delete(InstanceConstants.STOCK_COLL_NAME, stock);
 		
 		MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
+		
+		MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME, containerSupport);
 		
 		MongoDBDAO.delete(InstanceConstants.REAGENT_INSTANCE_COLL_NAME,reagentInstance);
 	}
@@ -261,9 +280,146 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		InstanceValidationHelper.validationReagentInstanceCode("notexist",contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
+	
+	@Test
+	public  void validationContainerContentsTestInUpdateMode(){
+		ContextValidation contextValidation=new ContextValidation();
+		contextValidation.setUpdateMode();
+		
+		//to get _id
+		Container c = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code);
+		
+		c.categoryCode = "lane";
+		
+		List<String> lp = new ArrayList<String>(); 
+		lp.add(project.code);
+		c.projectCodes = lp;
+		
+		Map<String, PropertyValue> m = new HashMap<String, PropertyValue>();
+		m.put("limsCode", new PropertySingleValue(3805));
+		c.properties = m;
+		
+		List<String> ls = new ArrayList<String>(); 
+		ls.add(sample.code);
+		c.sampleCodes = ls;
+		
+		State state = new State();
+		state.code = "A";
+		state.date = new Date();
+		state.user = "ngl";
+		c.state = state;
+		
+		LocationOnContainerSupport loc = new LocationOnContainerSupport();
+		loc.categoryCode = "flowcell-8";
+		loc.code = containerSupport.code; 
+		loc.column = "1";
+		loc.line = "7";
+		c.support = loc;
+		
+		TraceInformation tc = new TraceInformation(); 
+		tc.setTraceInformation("ngl");
+		tc.modifyUser = "ngl";
+		tc.modifyDate = new Date();
+		c.traceInformation = tc;
+		
+		Valuation v = new Valuation(); 
+		v.valid = TBoolean.UNSET;
+		c.valuation = v;
+		
+		ArrayList<Content> alc = new ArrayList<Content>();
+		c.contents = alc;
+				
+		c.validate(contextValidation);
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
+		
 
+		for (String s : contextValidation.errors.keySet()) {
+			assertThat(s).isEqualTo("contents");
+			for (ValidationError ve : contextValidation.errors.get(s)) {
+				assertThat(ve.toString()).contains("error.required");
+			}
+		}
+		
+		c.contents = null;
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
+		
+		for (String s : contextValidation.errors.keySet()) {
+			assertThat(s).isEqualTo("contents");
+			for (ValidationError ve : contextValidation.errors.get(s)) {
+				assertThat(ve.toString()).contains("error.required");
+			}
+		}
+	}
 	
 	
-	
+	@Test
+	public  void validationContainerContentsTestInCreationMode(){
+		ContextValidation contextValidation=new ContextValidation();
+		contextValidation.setCreationMode();
+		
+		 Random randomGenerator = new Random();
+		 int randomInt = randomGenerator.nextInt(10000);
+		
+		Container c = new Container();
+		c.code = "container" + randomInt; 
+		c.categoryCode = "lane";
+		
+		List<String> lp = new ArrayList<String>(); 
+		lp.add(project.code);
+		c.projectCodes = lp;
+		
+		Map<String, PropertyValue> m = new HashMap<String, PropertyValue>();
+		m.put("limsCode", new PropertySingleValue(3805));
+		c.properties = m;
+		
+		List<String> ls = new ArrayList<String>(); 
+		ls.add(sample.code);
+		c.sampleCodes = ls;
+		
+		State state = new State();
+		state.code = "A";
+		state.date = new Date();
+		state.user = "ngl";
+		c.state = state;
+		
+		LocationOnContainerSupport loc = new LocationOnContainerSupport();
+		loc.categoryCode = "flowcell-8";
+		loc.code = containerSupport.code; 
+		loc.column = "1";
+		loc.line = "7";
+		c.support = loc;
+		
+		TraceInformation tc = new TraceInformation(); 
+		tc.createUser = "ngl";
+		tc.creationDate = new Date();
+		c.traceInformation = tc;
+		
+		Valuation v = new Valuation(); 
+		v.valid = TBoolean.UNSET;
+		c.valuation = v;
+		
+		ArrayList<Content> alc = new ArrayList<Content>();
+		c.contents = alc;
+				
+		c.validate(contextValidation);
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
+		
+		for (String s : contextValidation.errors.keySet()) {
+			assertThat(s).isEqualTo("contents");
+			for (ValidationError ve : contextValidation.errors.get(s)) {
+				assertThat(ve.toString()).contains("error.required");
+			}
+		}
+		
+		c.contents = null;
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
+
+		for (String s : contextValidation.errors.keySet()) {
+			assertThat(s).isEqualTo("contents");
+			for (ValidationError ve : contextValidation.errors.get(s)) {
+				assertThat(ve.toString()).contains("error.required");
+			}
+		}
+	}
 	
 }
