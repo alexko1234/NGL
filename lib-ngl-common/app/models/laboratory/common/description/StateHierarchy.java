@@ -16,6 +16,7 @@ public class StateHierarchy extends Model<StateHierarchy> {
     public String parentStateCode;
     public String objectTypeCode;
     public Integer position;
+    public String functionnalGroup; 
 
     public StateHierarchy(){
     	super(StateHierarchyDAO.class.getName());
