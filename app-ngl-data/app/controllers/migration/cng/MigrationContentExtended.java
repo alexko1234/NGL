@@ -46,20 +46,19 @@ import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
 /**
- * Update contents in the Container (add missing contents, update properties)
- * This migration replaces MigrationTag (scope larger)
+ * Corrective migration : 
+ * Update contents on Containers & sampleOnContainer on ReadSets (for those who don't have these properties)
+ * This migration replaces MigrationContent and MigrationUpdateSampleOnContainer
  * 
  * @author dnoisett
- * 04/04/2014
+ * 13/08/2014
  */
 @Repository
 public class MigrationContentExtended extends CommonController {
 	
 	private static final String CONTAINER_COLL_NAME_BCK = InstanceConstants.CONTAINER_COLL_NAME + "_BCKmigrationContent2";
 	private static final String READSET_ILLUMINA_BCK = InstanceConstants.READSET_ILLUMINA_COLL_NAME + "_BCKmigrationContent2";
-	
 	private static JdbcTemplate jdbcTemplate;
-	
 	private static final String CONTAINER_CATEGORY_CODE= "lane";
 	private static final String CONTAINER_STATE_CODE="A";
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
@@ -72,14 +71,13 @@ public class MigrationContentExtended extends CommonController {
 	
 	@Autowired
 	@Qualifier("lims")
-	public void setDataSource(DataSource dataSource) {
+	private void setDataSource(DataSource dataSource) {
 		MigrationContentExtended.jdbcTemplate = new JdbcTemplate(dataSource);              
 	}
 	
 	
 	
-	public static List<Container> findContainerToCreate(final ContextValidation contextError) throws DAOException {
-
+	private static List<Container> findContainerToCreate() throws DAOException {
 
 		List<Container> results = jdbcTemplate.query("select * from v_flowcell_tongl_reprise order by code, project, code_sample, tag",new Object[]{} 
 		,new RowMapper<Container>() {
@@ -259,14 +257,22 @@ public class MigrationContentExtended extends CommonController {
 		int n1 =0, n2=0;
 		
 		JacksonDBCollection<Container, String> containersCollBck = MongoDBDAO.getCollection(CONTAINER_COLL_NAME_BCK, Container.class);
-		JacksonDBCollection<ReadSet, String> containersCollBck2 = MongoDBDAO.getCollection(READSET_ILLUMINA_BCK, ReadSet.class);
-		if (containersCollBck.count() == 0 && containersCollBck2.count() == 0) {
+		if (containersCollBck.count() == 0) {
 	
 			backUpContainer();
 			
 			Logger.info("Migration container starts");
 			
 			n1 = migreContainer();
+									
+		} else {
+			Logger.info("Migration already executed !");
+		}
+		
+		Logger.info("Migration container end : " + n1 + " contents of containers updated !");
+		
+		JacksonDBCollection<ReadSet, String> containersCollBck2 = MongoDBDAO.getCollection(READSET_ILLUMINA_BCK, ReadSet.class);
+		if (containersCollBck2.count() == 0) {
 			
 			backupReadSet();
 			
@@ -277,8 +283,7 @@ public class MigrationContentExtended extends CommonController {
 		} else {
 			Logger.info("Migration already executed !");
 		}
-		
-		Logger.info("Migration container end : " + n1 + " contents of containers updated !");
+				
 		Logger.info("Migration readSet end : " + n2 + " sampleOnContainers of readSet updated !");
 		
 		return ok("Migration Finish");
@@ -297,38 +302,25 @@ public class MigrationContentExtended extends CommonController {
 	}
 	
 	
-	public static int migreContainer() {
+	private static int migreContainer() {
+		
 		//find collection up to date
-		ContextValidation contextError = new ContextValidation();
 		List<Container> newContainers = null;
 		try {
-			newContainers = findContainerToCreate(contextError);
+			newContainers = findContainerToCreate();
 		} catch (DAOException e) {
 			Logger.debug("ERROR in findContainerToCreate():" + e.getMessage());
 		}
 		
-		//find current collection
-		List<Container> oldContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
-
-		//delete all contents
-		for (Container oldContainer : oldContainers) {
-			WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
-					DBUpdate.unset("contents"));
-				
-			if(StringUtils.isNotEmpty(r.getError())){
-				Logger.error("Unset contents : "+oldContainer.code+" / "+r.getError());
-			}				
-		}
-		
-		Logger.info("Remove old contents OK");
+		//find containers with no contents (bugs) 
+		List<Container> oldContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.notExists("contents")).toList();
+		Logger.debug("Expected to migrate "+oldContainers.size()+" containers");
 		
 		int n=0;
-
 		//iteration over current collection
 		for (Container oldContainer : oldContainers) {
 			
-			for (Container newContainer : newContainers) {
-				
+			for (Container newContainer : newContainers) {				
 				if (oldContainer.code.equals(newContainer.code)) {	
 					oldContainer.contents = newContainer.contents;
 				 
@@ -346,35 +338,32 @@ public class MigrationContentExtended extends CommonController {
 				}
 			}
 			
-		}	//end for containers
-		
+		}	
 		return n;
 
 	}
 	
 	
-	public static int migreReadSet() {
+	private static int migreReadSet() {
 		
-		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.notExists("sampleOnContainer")).toList();
-				
-		Logger.debug("migre "+readSets.size()+" readSets");
+		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.notExists("sampleOnContainer")).toList();			
+		Logger.debug("Expected to migrate "+readSets.size()+" readSets");
 		
-		int n = 0;
-		
-		for(ReadSet readSet : readSets){
+		int n = 0;		
+		for (ReadSet readSet : readSets) {
 			
 			SampleOnContainer sampleOnContainer = InstanceHelpers.getSampleOnContainer(readSet);
 			if(null != sampleOnContainer){
 				WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 						DBQuery.is("code", readSet.code), DBUpdate.set("sampleOnContainer", sampleOnContainer));
 				
-				if(StringUtils.isNotEmpty(r.getError())){
+				if (StringUtils.isNotEmpty(r.getError())) {
 					Logger.error("Set sampleOnContainer : "+readSet.code+" / "+r.getError());
 				}
 				else {
 					n++;
 				}
-			}else{
+			} else {
 				Logger.error("sampleOnContainer null for "+readSet.code);
 			}
 		}
