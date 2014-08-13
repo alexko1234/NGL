@@ -32,6 +32,8 @@ GET		/cns/update-readset					    controllers.migration.cns.UpdateSampleTypeCodeT
 GET		/cng/migration-sequencing				controllers.migration.cng.AddSequencingProgramType.migration()
 GET		/migration-sequencing-run				controllers.migration.AddSequencingProgramTypeToRun.migration()
 
+GET		/cng/migration-content-extended			controllers.migration.cng.MigrationContentExtended.migration()
+
 #GET 	/update/readsetfile/:code				controllers.migration.cns.MigrationReadSetFileCNS.updateFileReadSet(code: java.lang.String)
 
 # Map static resources from the /public folder to the /assets URL path
