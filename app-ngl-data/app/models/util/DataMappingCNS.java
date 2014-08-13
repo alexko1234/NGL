@@ -463,12 +463,21 @@ public class DataMappingCNS {
 		else if(etatPrepaLimsCode==3 || etatPrepaLimsCode==4 || etatPrepaLimsCode==5 || etatPrepaLimsCode==6) { return "UA"; }
 		return null;
 	}
+	
+	public static String getStateFromStateSolutionStock(int etatPrepaLimsCode){
+		if(etatPrepaLimsCode==0 || etatPrepaLimsCode==1 ||  etatPrepaLimsCode==10   ){ return "IU"; } 
+		else if(etatPrepaLimsCode==2 || etatPrepaLimsCode==9 ) { return "A"; }
+		else if(etatPrepaLimsCode==3 || etatPrepaLimsCode==4 || etatPrepaLimsCode==5 || etatPrepaLimsCode==6 || etatPrepaLimsCode==7) { return "UA"; }	
+		return null;
+	}
 
-	public static String getState(String containerCategoryCode, int etatLims) {
-		if(containerCategoryCode.equals("tube")){
+	public static String getState(String containerCategoryCode, int etatLims,String experimentTypeCode) {
+		if(containerCategoryCode.equals("tube") && experimentTypeCode==null){
 			return getStateFromStateTubeLims(etatLims);
 		}else if(containerCategoryCode.equals("lane")){
 			return getStateFromStatePrepaflowcellLims(etatLims);
+		}else if(experimentTypeCode.equals("solution-stock")){
+			return getStateFromStateSolutionStock(etatLims);
 		}
 		return null;
 	}

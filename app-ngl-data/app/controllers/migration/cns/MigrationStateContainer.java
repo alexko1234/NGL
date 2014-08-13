@@ -148,7 +148,7 @@ public class MigrationStateContainer   extends CommonController{
 		ContextValidation contextValidation =new ContextValidation();
 
 		for(StateContainerSupport stateContainerSupport:results){
-			String newStateCode=DataMappingCNS.getState(stateContainerSupport.containerCategoryCode, stateContainerSupport.stateCode);
+			String newStateCode=DataMappingCNS.getState(stateContainerSupport.containerCategoryCode, stateContainerSupport.stateCode,null);
 			Logger.debug("New state "+newStateCode+" for ContainerSupport "+stateContainerSupport.containerSupportCode);
 			ContainerValidationHelper.validateStateCode(newStateCode, contextValidation);
 

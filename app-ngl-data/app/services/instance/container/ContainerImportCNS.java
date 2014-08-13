@@ -134,7 +134,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		ContainerHelper.createSupportFromContainers(containers,propertiesContainerSupports, contextError);
 	
 		List<Container> newContainers=new ArrayList<Container>();
-	
+		
 		for(Container container:containers){
 			//Logger.debug("Container :"+container.code+ "nb sample code"+container.sampleCodes.size());
 			rootKeyName="container["+container.code+"]";
@@ -184,12 +184,12 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		container.comments.add(new Comment(rs.getString("comment")));
 		
 		container.state = new State(); 
-		container.state.code=DataMappingCNS.getState(containerCategoryCode,rs.getInt("etatLims"));
+		container.state.code=DataMappingCNS.getState(containerCategoryCode,rs.getInt("etatLims"),experimentTypeCode);
 		container.state.user = InstanceHelpers.getUser();
 		container.state.date = new Date();
 
 		
-		container.valuation = new Valuation(); 
+		container.valuation = new Valuation();
 		container.valuation.valid=TBoolean.UNSET; // instead of valid=null;
 
 		//TODO 
@@ -197,7 +197,8 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 
 		container.properties= new HashMap<String, PropertyValue>();
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("limsCode")));
-		container.properties.put("sequencingProgramType", new PropertySingleValue(rs.getString("sequencingProgramType")));
+		if(rs.getString("sequencingProgramType")!=null)
+			container.properties.put("sequencingProgramType", new PropertySingleValue(rs.getString("sequencingProgramType")));
 		
 		if(rs.getString("receptionDate")!=null){
 			container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));
