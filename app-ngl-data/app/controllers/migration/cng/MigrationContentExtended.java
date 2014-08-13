@@ -83,34 +83,8 @@ public class MigrationContentExtended extends CommonController {
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Container container = new Container();
-				
-				container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 				container.code=rs.getString("code");
-				container.categoryCode=CONTAINER_CATEGORY_CODE;
-				
-				if (rs.getString("comment") != null) {
-					container.comments=new ArrayList<Comment>();	
-					//just one comment for one lane (container)
-					container.comments.add(new Comment(rs.getString("comment")));
-				}
-				
-				container.state = new State(); 
-				container.state.code=CONTAINER_STATE_CODE;
-				container.state.user = InstanceHelpers.getUser();
-				container.state.date = new Date(); 
-				
-				container.valuation = new Valuation(); 
-				container.valuation.valid= TBoolean.UNSET;
-				
-				try {
-					container.support=ContainerSupportHelper.getContainerSupport("lane", rs.getInt("nb_container"),rs.getString("code_support"),"1",rs.getString("column")); 
-				}
-				catch(DAOException e) {
-					Logger.error("Can't get container support !"); 
-				}
-				
-				container.properties= new HashMap<String, PropertyValue>();
-				container.properties.put("limsCode",new PropertySingleValue(rs.getInt("lims_code")));
+
 								
 				if (rs.getString("project")!=null) {
 					container.projectCodes=new ArrayList<String>();
@@ -119,23 +93,9 @@ public class MigrationContentExtended extends CommonController {
 				
 				if (rs.getString("code_sample")!=null) {
 					Content content=new Content();
-					content.sampleCode=rs.getString("code_sample");
-					
-					String sampleTypeCode = SAMPLE_USED_TYPE_CODE;
-					SampleType sampleType=null;
-					try {
-						sampleType = SampleType.find.findByCode(sampleTypeCode);
-					} catch (DAOException e) {
-						Logger.error("",e);
-						return null;
-					}
-					if( sampleType==null ){
-						Logger.error("Sample is null for sampleTypeCode : " + sampleTypeCode);
-						return null;
-					}		
-					
-					content.sampleTypeCode = sampleType.code;
-					content.sampleCategoryCode = sampleType.category.code;
+					content.sampleCode=rs.getString("code_sample");	
+					content.sampleTypeCode = SAMPLE_USED_TYPE_CODE;
+					content.sampleCategoryCode = "default";
 					
 					content.properties = new HashMap<String, PropertyValue>();
 					
@@ -152,10 +112,7 @@ public class MigrationContentExtended extends CommonController {
 					
 					container.sampleCodes=new ArrayList<String>();
 					container.sampleCodes.add(rs.getString("code_sample"));
-				}
-
-				container.fromPurifingCode = null;				
-
+				}	
 				return container;
 			}
 		});       
@@ -216,10 +173,8 @@ public class MigrationContentExtended extends CommonController {
 		Content content=new Content();
 		content.sampleCode= results.get(posNext).sampleCodes.get(0);
 		
-		SampleType sampleType=null;
-		sampleType = SampleType.find.findByCode(SAMPLE_USED_TYPE_CODE);	
-		content.sampleTypeCode = sampleType.code;
-		content.sampleCategoryCode = sampleType.category.code;
+		content.sampleTypeCode = SAMPLE_USED_TYPE_CODE;
+		content.sampleCategoryCode = "default";
 		
 		content.properties = new HashMap<String, PropertyValue>();
 		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
