@@ -41,8 +41,6 @@ public class Projects extends DocumentController<Project> {
 	
 	final static Form<ProjectsSearchForm> searchForm = form(ProjectsSearchForm.class); 
 	final static Form<Project> projectForm = form(Project.class);
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final static List<String> authorizedUpdateFields = Arrays.asList("keep");
 	
 	public Projects() {
 		super(InstanceConstants.PROJECT_COLL_NAME, Project.class);		
@@ -137,10 +135,8 @@ public class Projects extends DocumentController<Project> {
 		} else {
 			return badRequest("use PUT method to update the project");
 		}
+		//TODO insert in project umbrella
 		
-		//synchronization of the 2 lists of projects (projectCodes & projectUmbrellaCodes)
-		synchronizeProjectCodes(projectInput);		
-
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
 		ctxVal.setCreationMode();
 		projectInput.validate(ctxVal);
@@ -159,61 +155,29 @@ public class Projects extends DocumentController<Project> {
 		if (project == null) {
 			return badRequest("Project with code "+code+" not exist");
 		}
-
-		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
-		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		Form<Project> filledForm = getMainFilledForm();
 		Project projectInput = filledForm.get();
 		
-		//synchronization of the 2 lists of projects (projectCodes & projectUmbrellaCodes)
-		synchronizeProjectCodes(projectInput);		
-		
-		if(queryFieldsForm.fields == null){
-			if (code.equals(projectInput.code)) {
-				if(null != projectInput.traceInformation){
-					projectInput.traceInformation.setTraceInformation(getCurrentUser());
-				}else{
-					Logger.error("traceInformation is null !!");
-				}
-				
-				ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 	
-				ctxVal.setUpdateMode();
-				projectInput.validate(ctxVal);
-				if (!ctxVal.hasErrors()) {
-					updateObject(projectInput);
-					return ok(Json.toJson(projectInput));
-				}else {
-					return badRequest(filledForm.errorsAsJson());
-				}
-				
+		if (code.equals(projectInput.code)) {
+			if(null != projectInput.traceInformation){
+				projectInput.traceInformation.setTraceInformation(getCurrentUser());
 			}else{
-				return badRequest("Project codes are not the same");
-			}	
-		}else{
-			//warning no validation !!!
+				Logger.error("traceInformation is null !!");
+			}
+			
 			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 	
 			ctxVal.setUpdateMode();
-			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
-			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			if(!filledForm.hasErrors()){
-				updateObject( DBQuery.and(DBQuery.is("code", code)), 
-						getBuilder(projectInput, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(project.traceInformation)));
-				return ok(Json.toJson(getObject(code)));
-			}else{
+			projectInput.validate(ctxVal);
+			if (!ctxVal.hasErrors()) {
+				updateObject(projectInput);
+				return ok(Json.toJson(projectInput));
+			}else {
 				return badRequest(filledForm.errorsAsJson());
-			}			
-		}
-	}
-
-	
-	public void synchronizeProjectCodes(Project project) {
-		for (String code : project.umbrellaProjectCodes) {
-			if (!isObjectExist(DBQuery.and(DBQuery.is("code", code), DBQuery.in("projectCodes", project.code)))) {
-				//add the value in the other list 
-				updateObject(DBQuery.is("code", code), DBUpdate.push("projectCodes", project.code));
 			}
+			
+		}else{
+			return badRequest("Project codes are not the same");
 		}
 	}
-
 
 }
