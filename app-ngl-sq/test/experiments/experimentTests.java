@@ -98,7 +98,7 @@ public class experimentTests extends AbstractTests{
 		
 		ContainerUsed containerIn1 = ExperimentTestHelper.getContainerUsed("containerUsedIn1");
 		containerIn1.percentage = (float) 12;
-		containerIn1.concentration = new PropertySingleValue(new Double(3)); 
+		containerIn1.concentration = new PropertySingleValue(new Integer(3)); 
 		containerIn1.experimentProperties.put("NaOHVolume", new PropertySingleValue(new Double(1)));
 		containerIn1.experimentProperties.put("NaOHConcentration", new PropertySingleValue(new Double(20)));
 		containerIn1.experimentProperties.put("finalConcentration1", new PropertySingleValue(new Double(50)));
