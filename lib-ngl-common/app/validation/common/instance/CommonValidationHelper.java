@@ -341,12 +341,14 @@ public class CommonValidationHelper {
 	}
 	
 	public static void validateStateCode(String stateCode,ContextValidation contextValidation){
+		contextValidation.addKeyToRootKeyName("state");
 		if(contextValidation.getContextObjects().containsKey(FIELD_TYPE_CODE)){
 			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
 			validateStateCode(typeCode, stateCode, contextValidation);
 		}else{
 			validateRequiredDescriptionCode(contextValidation, stateCode,"code", models.laboratory.common.description.State.find);
 		}
+		contextValidation.removeKeyFromRootKeyName("state");
 	}
 	
 	
