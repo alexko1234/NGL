@@ -65,7 +65,7 @@ public class ReportingCNS extends AbstractReporting {
 		    String content = reportingCNS.render(subHeaders2, nbResults, listResults).body();
 		    		    
 		    //Send mail using global parameters and content
-		    mailService.sendMail(expediteur, destinataires, subject, content);
+		    mailService.sendMail(expediteur, destinataires, subject, new String(content.getBytes(), "iso-8859-1"));
 		    
 		} catch (MailServiceException e) {
 			e.printStackTrace();
