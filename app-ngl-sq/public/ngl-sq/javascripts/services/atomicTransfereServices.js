@@ -210,7 +210,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 									}
 									if($scope.datatable.displayResult[i].data.inputExperimentProperties != undefined){
 										var positions = this.searchContainer($scope.datatable.displayResult[i].data.inputCode, $scope.datatable.displayResult[i].data.outputPositionX, $scope.datatable.displayResult[i].data.outputPositionY);
-										$scope.experiment.value.atomicTransfertMethods[positions.x].inputContainerUseds[position.y].experimentProperties = $scope.datatable.displayResult[i].data.inputExperimentProperties;
+										$scope.experiment.value.atomicTransfertMethods[positions.x].inputContainerUseds[positions.y].experimentProperties = $scope.datatable.displayResult[i].data.inputExperimentProperties;
 									}
 								}
 							}

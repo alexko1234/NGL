@@ -259,7 +259,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	};
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
-		$scope.experiment.value.atomicTransfertMethods = [];
+		console.log("atomic: "+$scope.laneCount);
 		for(var i=0;i<$scope.laneCount;i++){
 			$scope.experiment.value.atomicTransfertMethods[i] = {class:atomicTransfertMethod, line:(i+1), column:1, position:(i+1),inputContainerUseds:[],outputContainerUsed:{experimentProperties:{}}};
 		}
@@ -316,15 +316,18 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	};
 	
 	$scope.init_flowcell = function(laneCount){
-		console.log("la");
 		$scope.laneCount = laneCount;
-		//init flowcells
-		console.log($scope.laneCount);
-		for(var i=0;i<$scope.laneCount;i++){
-			$scope.flowcells[i] = [];
-			$scope.rows[i] = true;
+		if(!$scope.experiment.editMode){
+			//init flowcells
+			console.log($scope.laneCount);
+			for(var i=0;i<$scope.laneCount;i++){
+				$scope.flowcells[i] = [];
+			}
 		}
 		
+		for(var i=0;i<$scope.laneCount;i++){
+			$scope.rows[i] = true;
+		}
 		console.log($scope.flowcells);
 	};
 	
@@ -336,7 +339,6 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	$scope.flowcells = [];
 	$scope.rows = [];
 	$scope.laneCount = 0;
-	console.log("ici");
 	
 	if($scope.experiment.editMode){
 		$scope.atomicTransfere.loadExperiment();

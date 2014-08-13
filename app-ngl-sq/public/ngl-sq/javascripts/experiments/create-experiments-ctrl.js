@@ -113,7 +113,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	
 	$scope.getTemplate = function(){
-		console.log("GET TEMPLATE");
+		console.log("GET TEMPLATE "+$scope.experiment.inputTemplate);
+		if($scope.experiment.inputTemplate != undefined){
+			$scope.experiment.value.atomicTransfertMethods = [];
+		}
+		
 		if($scope.experiment.value.instrument.outContainerSupportCategoryCode){
 			$scope.experiment.inputTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getTemplate($scope.experimentType.atomicTransfertMethod, $scope.experiment.value.instrument.inContainerSupportCategoryCode,$scope.experiment.value.instrument.outContainerSupportCategoryCode).url;
 		}else if($scope.experiment.outputVoid){
@@ -455,7 +459,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	
 	$scope.getInstruments = function(loaded){
-		$scope.experiment.value.instrument.outContainerSupportCategoryCode = "";
+		//$scope.experiment.value.instrument.outContainerSupportCategoryCode = "";
 		if($scope.experiment.value.instrument.typeCode === null){
 			$scope.experiment.instrumentProperties.inputs = [];
 			$scope.experiment.instrumentInformation.instrumentCategorys.inputs = [];
@@ -467,7 +471,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		
 		if(loaded == false){
 			$scope.experiment.value.instrumentProperties = {};
-			$scope.experiment.value.instrument.outContainerSupportCategoryCode = "";
+			//$scope.experiment.value.instrument.outContainerSupportCategoryCode = "";
 			if($scope.experimentType.atomicTransfertMethod == "ManyToOne"){				
 				for(var i=0;i< $scope.experiment.value.atomicTransfertMethods.length;i++){
 					for(var j=0;j<$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length;j++){
