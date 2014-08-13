@@ -14,10 +14,10 @@ rule "volume stock engaged in denat"
     	 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainers
     	 $finalConcentration1 : PropertyValue() from $experimentProperties.get("finalConcentration1")
     	 $finalVolume1 : PropertyValue() from $experimentProperties.get("finalVolume1")
-    	 eval($finalVolume1.value != null && $finalConcentration1.value != null && (Integer)$concentrationIN.value != 0)
+    	 eval($finalVolume1.value != null && Double.class.isInstance($finalVolume1.value) && $finalConcentration1.value != null && Double.class.isInstance($finalConcentration1.value) && Double.parseDouble($concentrationIN.value.toString()) != 0)
    	then
    		Logger.debug("Calculation Test  1: "+ $experiment.code+ " "+ $atomicTransfert.position+" "+ $finalConcentration1.value+"  "+$concentrationIN.value);
-   		PropertySingleValue value = new PropertySingleValue(((Double)$finalConcentration1.value*(Double)$finalVolume1.value/(Integer)$concentrationIN.value));
+   		PropertySingleValue value = new PropertySingleValue((Double)$finalConcentration1.value*(Double)$finalVolume1.value/Double.parseDouble($concentrationIN.value.toString()));
    		if($experimentProperties.get("requiredVolume1") != null){
    			$experimentProperties.remove("requiredVolume1");
    		}
@@ -42,7 +42,7 @@ rule "volume PhiX"
 		 $finalConcentration2 : PropertyValue() from $experimentProperties.get("finalConcentration2")
 		 $finalVolume2 : PropertyValue() from $experimentProperties.get("finalVolume2")
 		 $phixConcentration : PropertyValue() from $experimentProperties.get("phixConcentration")
-		 eval($phixPercent.value != null && $finalVolume2.value != null && $phixConcentration.value != null)
+		 eval($phixPercent.value != null &&  Double.class.isInstance($phixPercent.value) && $finalVolume2.value != null && Double.class.isInstance($finalVolume2.value) && $phixConcentration.value != null && Double.class.isInstance($phixConcentration.value))
 	then
 		Logger.debug("Calculation Test  5: "+ $experiment.code+ " "+ $atomicTransfert.position);
 		PropertySingleValue value = new PropertySingleValue((Double)$phixPercent.value*(Double)$finalConcentration2.value*(Double)$finalVolume2.value-(Double)$phixConcentration.value);
@@ -67,7 +67,7 @@ rule "volume EB"
     	 $naohVolume : PropertyValue() from $experimentProperties.get("NaOHVolume")
     	 $finalVolume1 : PropertyValue() from $experimentProperties.get("finalVolume1")
     	 $requiredVolume1 : PropertyValue() from $experimentProperties.get("requiredVolume1")
-    	 eval($requiredVolume1.value != null && $finalVolume1.value != null && $naohVolume.value != null)
+    	 eval($requiredVolume1.value != null && Double.class.isInstance($requiredVolume1.value) && $finalVolume1.value != null && Double.class.isInstance($finalVolume1.value) && $naohVolume.value != null && Double.class.isInstance($naohVolume.value))
    	then
    		Logger.debug("Calculation Test  2: "+ $experiment.code+ " "+ $atomicTransfert.position);
    		PropertySingleValue value = new PropertySingleValue((Double)$finalVolume1.value-(Double)$requiredVolume1.value-(Double)$naohVolume.value);
@@ -90,7 +90,7 @@ rule "volume engaged in dilution"
     	 $finalConcentration2 : PropertyValue() from $experimentProperties.get("finalConcentration2")
     	 $finalVolume2 : PropertyValue() from $experimentProperties.get("finalVolume2")
     	 $finalConcentration1 : PropertyValue() from $experimentProperties.get("finalConcentration1")
-    	 eval($finalConcentration2.value != null && $finalVolume2.value != null && $finalConcentration1.value != null && (Double)$finalConcentration1.value !=0)
+    	 eval($finalConcentration2.value != null && Double.class.isInstance($finalConcentration2.value) && $finalVolume2.value != null && Double.class.isInstance($finalVolume2.value) && $finalConcentration1.value != null && Double.class.isInstance($finalConcentration1.value) && (Double)$finalConcentration1.value !=0)
    	then
    		Logger.debug("Calculation Test  3: "+ $experiment.code+ " "+ $atomicTransfert.position);
    		PropertySingleValue value = new PropertySingleValue((Double)$finalConcentration2.value*(Double)$finalVolume2.value/(Double)$finalConcentration1.value);
@@ -113,7 +113,7 @@ rule "volume HT1"
 		 $phixVolume : PropertyValue() from $experimentProperties.get("phixVolume")
 		 $finalVolume2 : PropertyValue() from $experimentProperties.get("finalVolume2")
 		 $requiredVolume1 : PropertyValue() from $experimentProperties.get("requiredVolume1")
-		 eval($phixVolume.value != null && $finalVolume2.value != null && $requiredVolume1.value != null)
+		 eval($phixVolume.value != null && Double.class.isInstance($phixVolume.value) && $finalVolume2.value != null && Double.class.isInstance($finalVolume2.value) && $requiredVolume1.value != null && Double.class.isInstance($requiredVolume1.value))
 	then
 		Logger.debug("Calculation Test  4: "+ $experiment.code+ " "+ $atomicTransfert.position);
 		PropertySingleValue value = new PropertySingleValue((Double)$finalVolume2.value-(Double)$requiredVolume1.value-(Double)$phixVolume.value);
@@ -135,7 +135,7 @@ rule "Volume dilution on track"
 		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $percentPerLane:percentage) from $atomicTransfert.inputContainers
 		 ContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUsed
 		 $finalVolume : PropertyValue() from $experimentPropertiesOut.get("finalVolume")
-		 eval($finalVolume.value != null && $percentPerLane != null)
+		 eval($finalVolume.value != null && Double.class.isInstance($finalVolume.value) && $percentPerLane != null && Float.class.isInstance($percentPerLane))
 	then
 		Logger.debug("Calculation Test  6: "+ $experiment.code+ " "+ $atomicTransfert.position);
 		PropertySingleValue value = new PropertySingleValue($percentPerLane*(Double)$finalVolume.value);

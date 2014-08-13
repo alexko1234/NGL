@@ -237,7 +237,8 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.refreshView = function(){
-		
+		$scope.atomicTransfere.experimentToInput();
+		$scope.atomicTransfere.experimentToOutput();
 	};
 	
 	$scope.$on('refresh', function(e) {
