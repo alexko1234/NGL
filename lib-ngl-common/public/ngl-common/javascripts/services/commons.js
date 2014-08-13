@@ -698,7 +698,7 @@ angular.module('commonsServices', []).
     	    };
     	}]).filter('codes', function(){
     		return function(input, key){
-    			if(input !== undefined) return Messages(Codes(key+"."+input));
+    			if(input !== undefined && null != input) return Messages(Codes(key+"."+input));
     			return undefined;
     		}
     	}).filter('messages', function(){
