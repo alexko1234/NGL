@@ -16,7 +16,7 @@ public class Column implements IValidation{
 	public String render; //angular expression
 	public String filter; //angular expression
 	
-	public String choiceInList;
+	public Boolean choiceInList;
 	public String listStyle;
 	public String possibleValues;
 	public String tdClass;
