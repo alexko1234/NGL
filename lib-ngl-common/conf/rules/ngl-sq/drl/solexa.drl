@@ -55,8 +55,8 @@ rule "Sum % percentage per piste = 100 % "
 	no-loop
     when
     $atomics:AtomicTransfertMethod($inputContainers : getInputContainers())
-    $total : Double() from accumulate( ContainerUsed($n:percentage) from $inputContainers, sum( $n ) )
-    eval($total!=100)
+    $total : Double() from accumulate( ContainerUsed($n:percentage, percentage!=null) from $inputContainers, sum( $n ) )
+    eval($total!=100 && $total!=0)
     $contextValidation:ContextValidation()
    	then
    		//Logger.debug("Regles de validation solexa "+$total +' '+$atomics.position);
