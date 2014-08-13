@@ -37,11 +37,11 @@ search.placeholder.umbrellaProject = Sélect. un projet maître
 
 #projects
 projects.menu = Projets
-projects.menu.search = Recherche / Mise à jour
-projects.menu.add = Ajout
-umbrellaProjects.menu = Projets maîtres
-umbrellaProjects.menu.search = Recherche / Mise à jour
-umbrellaProjects.menu.add = Ajout
+projects.menu.search = Recherche
+projects.menu.add = Création
+umbrellaProjects.menu = Projets Maîtres
+umbrellaProjects.menu.search = Recherche
+umbrellaProjects.menu.add = Création
 
 projects.page.title = Projets
 projects.page.tab.validate = Projets à évaluer
@@ -59,7 +59,9 @@ projects.state.code = Etat
 projects.state.updatedAt = Mis à jour le: 
 projects.state.by = par:
 projects.projectCodes = Projets
-projects.umbrellaProjectCodes = Projets maîtres  
+projects.umbrellaProjectCodes = Projets maîtres
+projects.description = Description
+  
 umbrellaProjects.code = Code
 umbrellaProjects.name = Nom
 projects.projectCodesSelected = Projets rattachés

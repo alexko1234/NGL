@@ -1,29 +1,9 @@
 @()
 
-@column(size:Int)(value: Html) = {
-	<div class="col-md-@size col-lg-@size">
+@column()(value: Html) = {
+	<div class="col-md-4 col-lg-4">
 		@value
 	</div>
-}
-
-@columnLabelValue(label:String)(value: Html) = {
-	<div class="form-group">
-	    <label class="col-md-2 col-lg-2 control-label">@label</label>
-	    <div class="col-md-10 col-lg-10">
-	      @value
-	    </div>
-	</div>
-}
-
-@dataState()() = {
-	<p>
-		@Messages("symbol.delimiter.parenthesis.open")
-		<label>@Messages("projects.state.updatedAt")</label> <time>{{project.state.date  | date:'@Messages("date.format")'}}</time>
-	</p>
-	<p>
-		<label>@Messages("projects.state.by")</label> {{project.state.user}}
-		@Messages("symbol.delimiter.parenthesis.close")
-	</p> 				
 }
 
 
@@ -35,14 +15,11 @@
 			 <button class="btn btn-default" ng-if="mainService.isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
 			 <button class="btn btn-default" ng-if="!mainService.isEditMode()" ng-click="startEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
 		</div>
-	 	<h1 ng-switch on="project.state.code">	
-		 	<span ng-switch-when="IP" class="text-danger">{{project.code}}</span> 
-		 	<span ng-switch-default class="text-success">{{project.code}}</span> 
-			<!-- 
-			<small>   
-				<span ng-model="project.state.code" codes="state"/>
-			</small>
-			 -->
+	 	<h1>	
+		 	{{project.code}} 
+			<small>		 		
+		 		<span ng-bind="project.state.code|codes:'state'"></span>
+		 	</small>
 		 </h1>
 	</div>
 </div>
@@ -55,59 +32,61 @@
 	<div class="col-md-12 col-lg-12">
 		<form class="form-horizontal">
 			<div class="row">
-				@column(6){
-					@columnLabelValue(Messages("projects.code")){
+				@column(){
+					@views.html.helper.columnLabelValue(Messages("projects.code")){
 						<p class="form-control-static">{{project.code}}</p>
 					}
 					
-					@columnLabelValue(Messages("projects.name")){
+					@views.html.helper.columnLabelValue(Messages("projects.name")){
 						<div ng-switch on="mainService.isEditMode()">
 							<p class="form-control-static" ng-switch-when="false">{{project.name}}</p>
 							<input type="text" class="form-control" ng-switch-when="true" ng-model="project.name">
 						</div>
 					}
 	
-					@columnLabelValue(Messages("projects.state.code")){
+					@views.html.helper.columnLabelValue(Messages("projects.state.code")){
 						<div ng-switch on="mainService.isEditMode()">
 							<div ng-switch-when="false">
-								<p class="form-control-static">{{project.state.code | codes:'state'}}</p>	
-								@dataState()
+								<p class="form-control-static">{{project.state.code | codes:'state'}}</p>									
 							</div>
 							<div bt-select class="form-control" ng-model="project.state.code" ng-switch-when="true" bt-options="state.code as state.name for state in lists.getStates()"></div>
 						</div>				
 					}
 						
-					@columnLabelValue(Messages("projects.traceInformation.creationDate")){
-						<p class="form-control-static">{{project.traceInformation.creationDate | date:'@Messages("date.format")'}}</p>	
-					}
-	
-					@columnLabelValue(Messages("projects.traceInformation.createUser")){
-						<p class="form-control-static">{{project.traceInformation.createUser}}</p>	
-					}
-					
-					@columnLabelValue(Messages("projects.comments")){
-						<div ng-switch on="mainService.isEditMode()">
-							<p class="form-control-static" ng-switch-when="false">{{project.comments[0].comment}}</p>
-							<textarea class="form-control" ng-switch-when="true" ng-model="project.comments[0].comment"></textarea>
-						</div>	
-					}	
-				}
-				
-				@column(4){
-					@columnLabelValue(Messages("projects.type")){
+						
+					@views.html.helper.columnLabelValue(Messages("projects.type")){
 						<div ng-switch on="mainService.isEditMode()">
 							<p class="form-control-static" ng-switch-when="false">{{project.typeCode | codes:'type'}}</p>
 							<div bt-select class="form-control" ng-switch-when="true" ng-model="project.typeCode" bt-options="type.code as type.name for type in lists.getProjectTypes()"></div>
 						</div>
 					}
 					
-					@columnLabelValue(Messages("projects.category.type")){
+					@views.html.helper.columnLabelValue(Messages("projects.category.type")){
 						<div ng-switch on="mainService.isEditMode()">
 							<p class="form-control-static" ng-switch-when="false">{{project.categoryCode | codes:'project_cat'}}</p>
 							<div bt-select class="form-control" ng-switch-when="true" ng-model="project.categoryCode" bt-options="category.code as category.name for category in lists.getProjectCategories()"></div>
 						</div>	
 					}
-					@columnLabelValue(Messages("projects.bioinformaticanalysis")){
+					
+					
+					@views.html.helper.columnLabelValue(Messages("projects.description")){
+						<div ng-switch on="mainService.isEditMode()">
+							<p class="form-control-static" ng-switch-when="false">{{project.description}}</p>
+							<textarea class="form-control" ng-switch-when="true" ng-model="project.description"></textarea>
+						</div>	
+					}	
+				}
+				
+				@column(){
+					@views.html.helper.columnLabelValue(Messages("projects.traceInformation.creationDate")){
+						<p class="form-control-static">{{project.traceInformation.creationDate | date:'@Messages("date.format")'}}</p>	
+					}
+	
+					@views.html.helper.columnLabelValue(Messages("projects.traceInformation.createUser")){
+						<p class="form-control-static">{{project.traceInformation.createUser}}</p>	
+					}
+					
+					@views.html.helper.columnLabelValue(Messages("projects.bioinformaticanalysis")){
 						<div class="checkbox" ng-if="mainService.isEditMode()">
 		 					<label>
 							<input type="checkbox"  ng-model="project.bioinformaticAnalysis">	
@@ -121,42 +100,6 @@
 				}				
 			</div>
 			
-			<div class="row">
-				@column(6){			
-					@columnLabelValue(Messages("projects.umbrellaProjectCodes")){
-						<div ng-switch on="mainService.isEditMode()">
-							<div ng-switch-when="false"> 
-								<ul ng-repeat="p in lists.getUmbrellaProjects() | filterByCodesInStringArray:project.umbrellaProjectCodes">
-									<li>{{p.code + ":" + p.name}}</li>
-								</ul>
-							</div>
-							<div ng-switch-when="true"> 						
-								<select size="30" name="allProjects" ng-model="form.allProjects" multiple="true" ng-options="p.code as (p.code + ':' + p.name) for p in lists.getUmbrellaProjects()">
-								</select>
-							</div>
-						</div>
-						
-					}							
-				}
-				
-				@column(1){
-					<div ng-switch on="mainService.isEditMode()">
-						<div ng-switch-when="true">
-							<button type="button" class="btn btn-default btn-block" ng-click="addItem()"><i class="fa fa-forward"></i></button> 
-							<button type="button" class="btn btn-default btn-block" ng-click="removeItem()"><i class="fa fa-backward"></i></button>
-						</div>
-					</div>
-				}
-				
-				@column(3){				
-					<div ng-switch on="mainService.isEditMode()">
-						<div ng-switch-when="true"> 
-							<select size="30" name="selectedProjects" ng-model="project.umbrellaProjectCodes" multiple="true" ng-options="code for code in form.selectedProjects">
-							</select>
-						</div>
-					</div>
-				}			
-			</div>
 		</form>
 	</div>
 </div>
