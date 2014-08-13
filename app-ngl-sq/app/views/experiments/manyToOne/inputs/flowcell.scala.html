@@ -1,6 +1,7 @@
 @(laneCount:java.lang.Integer)
 
-<div class="row" ng-controller="FlowcellCtrl">
+<div class="row" ng-controller="FlowcellCtrl" ng-init="init_flowcell(@laneCount)">
+	@laneCount
 	<div class="col-md-12 col-lg-12" style="margin-right:auto;margin-left:auto">
 		<div ng-model="inputContainers" droppable class="col-md-6 col-lg-6" style="margin-bottom:10px;border-width:1px;border-style:dashed;border-color:black;">
 			<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p>
