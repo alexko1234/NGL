@@ -5,6 +5,8 @@
 # Home page
 GET     /                           			controllers.Application.index()
 
+GET		/cng/migration-content-extended			controllers.migration.cng.MigrationContentExtended.migration()
+
 GET		/api/description/all					controllers.description.All.save()
 GET		/api/description/commons/states			controllers.description.commons.States.save()
 GET		/api/description/commons/measures		controllers.description.commons.Measures.save()
@@ -25,14 +27,12 @@ GET		/api/description/treatments				controllers.description.runs.Treatments.save
 
 GET		/api/instance/resolutions				controllers.instance.Resolutions.save()
 
+
 GET		/cns/migration						    controllers.migration.cns.MigrationReadSetFileCNS.migration()
 GET		/cns/update-content-sample			    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationContainer()
 GET		/cns/update-readset					    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationReadset()
-
 GET		/cng/migration-sequencing				controllers.migration.cng.AddSequencingProgramType.migration()
 GET		/migration-sequencing-run				controllers.migration.AddSequencingProgramTypeToRun.migration()
-
-GET		/cng/migration-content-extended			controllers.migration.cng.MigrationContentExtended.migration()
 
 #GET 	/update/readsetfile/:code				controllers.migration.cns.MigrationReadSetFileCNS.updateFileReadSet(code: java.lang.String)
 

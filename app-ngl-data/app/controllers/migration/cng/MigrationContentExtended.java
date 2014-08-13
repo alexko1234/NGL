@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.DataSource;
-
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -41,7 +39,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
 import play.mvc.Result;
-import validation.ContextValidation;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
@@ -56,8 +53,8 @@ import fr.cea.ig.MongoDBDAO;
 @Repository
 public class MigrationContentExtended extends CommonController {
 	
-	private static final String CONTAINER_COLL_NAME_BCK = InstanceConstants.CONTAINER_COLL_NAME + "_BCKmigrationContent2";
-	private static final String READSET_ILLUMINA_BCK = InstanceConstants.READSET_ILLUMINA_COLL_NAME + "_BCKmigrationContent2";
+	private static final String CONTAINER_COLL_NAME_BCK = InstanceConstants.CONTAINER_COLL_NAME + "_BCKmigrationContentEx_20140813";
+	private static final String READSET_ILLUMINA_BCK = InstanceConstants.READSET_ILLUMINA_COLL_NAME + "_BCKmigrationContentEx_20140813";
 	private static JdbcTemplate jdbcTemplate;
 	private static final String CONTAINER_CATEGORY_CODE= "lane";
 	private static final String CONTAINER_STATE_CODE="A";
@@ -71,7 +68,7 @@ public class MigrationContentExtended extends CommonController {
 	
 	@Autowired
 	@Qualifier("lims")
-	private void setDataSource(DataSource dataSource) {
+	private  void setDataSource(DataSource dataSource) {
 		MigrationContentExtended.jdbcTemplate = new JdbcTemplate(dataSource);              
 	}
 	
@@ -88,10 +85,7 @@ public class MigrationContentExtended extends CommonController {
 				Container container = new Container();
 				
 				container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
-				
 				container.code=rs.getString("code");
-				Logger.debug("Container code :"+container.code);
-				
 				container.categoryCode=CONTAINER_CATEGORY_CODE;
 				
 				if (rs.getString("comment") != null) {
@@ -108,7 +102,6 @@ public class MigrationContentExtended extends CommonController {
 				container.valuation = new Valuation(); 
 				container.valuation.valid= TBoolean.UNSET;
 				
-				// define container support attributes
 				try {
 					container.support=ContainerSupportHelper.getContainerSupport("lane", rs.getInt("nb_container"),rs.getString("code_support"),"1",rs.getString("column")); 
 				}
@@ -118,8 +111,7 @@ public class MigrationContentExtended extends CommonController {
 				
 				container.properties= new HashMap<String, PropertyValue>();
 				container.properties.put("limsCode",new PropertySingleValue(rs.getInt("lims_code")));
-				
-				
+								
 				if (rs.getString("project")!=null) {
 					container.projectCodes=new ArrayList<String>();
 					container.projectCodes.add(rs.getString("project"));
@@ -138,7 +130,7 @@ public class MigrationContentExtended extends CommonController {
 						return null;
 					}
 					if( sampleType==null ){
-						contextError.addErrors("code", "error.codeNotExist", sampleTypeCode, content.sampleCode);
+						Logger.error("Sample is null for sampleTypeCode : " + sampleTypeCode);
 						return null;
 					}		
 					
@@ -161,9 +153,7 @@ public class MigrationContentExtended extends CommonController {
 					container.sampleCodes=new ArrayList<String>();
 					container.sampleCodes.add(rs.getString("code_sample"));
 				}
-				
 
-			
 				container.fromPurifingCode = null;				
 
 				return container;
@@ -194,10 +184,8 @@ public class MigrationContentExtended extends CommonController {
 						results.get(pos).sampleCodes.add( results.get(pos+x).sampleCodes.get(0) );
 					}
 				}
-				
-				
+								
 				createContent(results, pos, pos+x);
-				
 								
 				// all the difference have been reported on the first sample found (at the position pos)
 				// so we can delete the sample at the position (posNext)
@@ -223,16 +211,8 @@ public class MigrationContentExtended extends CommonController {
 		return results;
 	}
 	
-	/**
-	 * 
-	 * @param results
-	 * @param posCurrent
-	 * @param posNext
-	 * @return
-	 * @throws DAOException
-	 */
-	private static List<Container>  createContent(List<Container> results, int posCurrent, int posNext) throws DAOException{
 
+	private static List<Container>  createContent(List<Container> results, int posCurrent, int posNext) throws DAOException{
 		Content content=new Content();
 		content.sampleCode= results.get(posNext).sampleCodes.get(0);
 		
@@ -252,8 +232,7 @@ public class MigrationContentExtended extends CommonController {
 
 	
 	
-	public static Result migration() {
-		
+	public static Result migration() {	
 		int n1 =0, n2=0;
 		
 		JacksonDBCollection<Container, String> containersCollBck = MongoDBDAO.getCollection(CONTAINER_COLL_NAME_BCK, Container.class);
@@ -266,9 +245,8 @@ public class MigrationContentExtended extends CommonController {
 			n1 = migreContainer();
 									
 		} else {
-			Logger.info("Migration already executed !");
-		}
-		
+			Logger.info("Migration container already executed !");
+		}		
 		Logger.info("Migration container end : " + n1 + " contents of containers updated !");
 		
 		JacksonDBCollection<ReadSet, String> containersCollBck2 = MongoDBDAO.getCollection(READSET_ILLUMINA_BCK, ReadSet.class);
@@ -281,19 +259,20 @@ public class MigrationContentExtended extends CommonController {
 			n2 = migreReadSet(); 
 						
 		} else {
-			Logger.info("Migration already executed !");
-		}
-				
+			Logger.info("Migration readSet already executed !");
+		}		
 		Logger.info("Migration readSet end : " + n2 + " sampleOnContainers of readSet updated !");
 		
 		return ok("Migration Finish");
 	}
 
+	
 	private static void backUpContainer() {
 		Logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" starts");
 		MongoDBDAO.save(CONTAINER_COLL_NAME_BCK, MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList());
 		Logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" ended");
 	}
+	
 	
 	private static void backupReadSet() {
 		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" start");		
@@ -313,7 +292,7 @@ public class MigrationContentExtended extends CommonController {
 		}
 		
 		//find containers with no contents (bugs) 
-		List<Container> oldContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.notExists("contents")).toList();
+		List<Container> oldContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 		Logger.debug("Expected to migrate "+oldContainers.size()+" containers");
 		
 		int n=0;
@@ -323,7 +302,7 @@ public class MigrationContentExtended extends CommonController {
 			for (Container newContainer : newContainers) {				
 				if (oldContainer.code.equals(newContainer.code)) {	
 					oldContainer.contents = newContainer.contents;
-				 
+
 					WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
 							DBUpdate.set("contents", oldContainer.contents));
 						
@@ -344,8 +323,7 @@ public class MigrationContentExtended extends CommonController {
 	}
 	
 	
-	private static int migreReadSet() {
-		
+	private static int migreReadSet() {		
 		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.notExists("sampleOnContainer")).toList();			
 		Logger.debug("Expected to migrate "+readSets.size()+" readSets");
 		
@@ -367,8 +345,7 @@ public class MigrationContentExtended extends CommonController {
 				Logger.error("sampleOnContainer null for "+readSet.code);
 			}
 		}
-		return n;
-		
+		return n;	
 	}
 	
 
