@@ -1,5 +1,10 @@
 @(subHeaders2 : Array[java.lang.String], nbResults : Array[java.lang.Integer], listResults : java.util.ArrayList[java.util.ArrayList[java.lang.String]])
 
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	</head>
+<body>
 
 @import java.lang.Integer; val nbQueries=5
 @import java.lang.String; val subHeader1 = "Nombre de résultats : "; val subHeader2 = "Détails : "; val lineReturn = "<br>"; val separatorLine = "------------------------------------------";
@@ -30,3 +35,6 @@
 	@(lineReturn)
 
 }
+
+</body>
+</html>
