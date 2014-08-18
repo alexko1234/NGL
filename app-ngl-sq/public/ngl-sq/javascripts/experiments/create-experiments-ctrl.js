@@ -112,6 +112,39 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	
 	};
 	
+	$scope.getSampleTypeCodes = function(contents){
+		var sampleTypeCodes = [];
+		for(var i=0;i<contents.length;i++){
+			if(contents[i].sampleTypeCode != undefined){
+				sampleTypeCodes.push(contents[i].sampleTypeCode);
+			}
+		}
+		
+		return sampleTypeCodes;
+	};
+	
+	$scope.getTags = function(contents){
+		var tags = [];
+		for(var i=0;i<contents.length;i++){
+			if(contents[i].properties.tag != undefined){
+				tags.push(contents[i].properties.tag.value);
+			}
+		}
+		
+		return tags;
+	};
+	
+	$scope.getLibProcessTypeCodes = function(contents){
+		var libProcessTypeCodes = [];
+		for(var i=0;i<contents.length;i++){
+			if(contents[i].properties.libProcessTypeCode != undefined){
+				libProcessTypeCodes.push(contents[i].properties.libProcessTypeCode.value);
+			}
+		}
+		
+		return libProcessTypeCodes;
+	};
+	
 	$scope.getTemplate = function(){
 		console.log("GET TEMPLATE "+$scope.experiment.inputTemplate);
 		if($scope.experiment.inputTemplate != undefined){
