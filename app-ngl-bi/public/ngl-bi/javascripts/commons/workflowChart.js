@@ -15,7 +15,7 @@ angular.module('biWorkflowChartServices', []).
 	    										"</div>"+
 	    									"</div>";
 	    
-	    var linkTemplate = "<a href='#{{modalId}}' id='linkTo{{modalId}}' role='button' data-toggle='modal' class='btn small_link_button'>{{modalCurrentCode | codes:'state'}}</a>";
+	    var linkTemplate = "<div><p class='form-control-static'><a href='#{{modalId}}' id='linkTo{{modalId}}' role='button' data-toggle='modal'>{{modalCurrentCode | codes:'state'}}</a></p></div>";
 	    
 	    var linker = function (scope, element, attrs) {
 	    	
@@ -139,8 +139,10 @@ angular.module('biWorkflowChartServices', []).
 				var offsetXText = globalParam.offsetXText;
 				var offsetYText = globalParam.offsetYText;				
 				var offsetXText2 = offsetXText, offsetYText2 = offsetYText;    	
+				var bSeparator, bOldSeparator = false;
 
 				for (var i=0; i<data.length; i++) {	
+					bSeparator = false;
 					if (i > 0) {
 						if (data[i].parentStateCode == data[i-1].childStateCode) {
 							//increase offsetYText2 (vertical moving)
@@ -151,6 +153,7 @@ angular.module('biWorkflowChartServices', []).
 								drawSeparatorLine(renderer, offsetYText2 - globalParam.spaceVbetween2box/4, globalParam); 
 								
 								offsetYText2 += globalParam.spaceVbetween2box / 2;
+								bSeparator = true;
 							}
 							drawArrow(renderer, offsetXText, offsetXText2, offsetYText, offsetYText2, globalParam);
 						}
@@ -159,7 +162,13 @@ angular.module('biWorkflowChartServices', []).
 								//increase offsetXText2 (horizontal moving)
 								offsetXText2 = offsetXText + (globalParam.spaceHbetween2box + globalParam.boxWidth);
 								
-								drawArrow(renderer, offsetXText, offsetXText2, offsetYText -  globalParam.spaceVbetween2box - globalParam.boxHeight , offsetYText2, globalParam);
+								offsetYText = offsetYText -  globalParam.spaceVbetween2box - globalParam.boxHeight;
+								
+								if (bOldSeparator) {
+									offsetYText -=  globalParam.spaceVbetween2box / 2;
+								}
+								
+								drawArrow(renderer, offsetXText, offsetXText2, offsetYText, offsetYText2, globalParam);
 							}
 							else {
 								var x=1;
@@ -178,6 +187,7 @@ angular.module('biWorkflowChartServices', []).
 									drawSeparatorLine(renderer, offsetYText2 - globalParam.spaceVbetween2box/4, globalParam); 
 									
 									offsetYText2 += globalParam.spaceVbetween2box / 2;
+									bSeparator = true;
 								}
 								
 								drawArrow(renderer, offsetXText, offsetXText2, offsetYText, offsetYText2, globalParam);
@@ -185,6 +195,7 @@ angular.module('biWorkflowChartServices', []).
 						}	
 					}
 					drawLabel(renderer, data[i], offsetXText2, offsetYText2, globalParam); 
+					bOldSeparator = bSeparator;
 					
 					offsetXText = offsetXText2;
 					offsetYText = offsetYText2;
