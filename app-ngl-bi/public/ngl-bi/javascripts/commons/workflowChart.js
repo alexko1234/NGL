@@ -15,7 +15,7 @@ angular.module('biWorkflowChartServices', []).
 	    										"</div>"+
 	    									"</div>";
 	    
-	    var linkTemplate = "<div><p class='form-control-static'><a href='#{{modalId}}' id='linkTo{{modalId}}' role='button' data-toggle='modal'>{{modalCurrentCode | codes:'state'}}</a></p></div>";
+	    var linkTemplate = "<p class='form-control-static'><a href='#{{modalId}}' id='linkTo{{modalId}}' role='button' data-toggle='modal'>{{modalCurrentCode | codes:'state'}}</a></p>";
 	    
 	    var linker = function (scope, element, attrs) {
 	    	
