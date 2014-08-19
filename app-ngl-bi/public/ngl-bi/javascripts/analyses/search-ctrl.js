@@ -98,9 +98,7 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 	
 	$scope.valuationService = valuationService();
 	
-	if($scope.searchService.isRouteParam){
-		$scope.search();
-	}
+	$scope.search();
 	
 }]);
 
