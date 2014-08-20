@@ -11,7 +11,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	/* buttons section */
 	$scope.update = function(){
 		var objProj = angular.copy($scope.umbrellaProject);
-		objProj.projectCodes = $scope.form.selectedProjects;
 		
 		$http.put(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.update($routeParams.code).url, objProj).success(function(data) {
 			$scope.messages.setSuccess("save");
@@ -30,24 +29,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		});
 	};
 	
-	
-	$scope.addItem = function() {
-		for (var i=0; i<$scope.form.allProjects.length; i++) {
-			$scope.form.selectedProjects.push($scope.form.allProjects[i]);
-		}
-		
-	};
-	
-	$scope.removeItem = function() {
-		var itemSelected, idxItemSelected;
-		for (var i=0; i<$scope.umbrellaProject.projectCodes.length; i++) {
-			itemSelected = $scope.umbrellaProject.projectCodes[i];
-			idxItemSelected = $scope.form.selectedProjects.indexOf(itemSelected);
-			$scope.form.selectedProjects.splice(idxItemSelected,1);
-		}
-	};
-	
-		
 	/* main section  */
 	var init = function() {
 		$scope.messages = messages();
@@ -59,17 +40,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 
 		$http.get(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.get($routeParams.code).url).success(function(data) {
 			$scope.umbrellaProject = data;		
-			
-			$scope.form.allProjects = lists.getProjects(); 		
-			if ($scope.umbrellaProject.projectCodes != null) {
-				$scope.form.selectedProjects = angular.copy($scope.umbrellaProject.projectCodes);
-			}
-			else {
-				$scope.form.selectedProjects = [];
-			}
-			if ($scope.form.allProjects == undefined) {
-				$scope.form.allProjects = [];
-			}
 		
 			if(tabService.getTabs().length == 0){
 				tabService.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.home("search").url, remove:true});
@@ -81,6 +51,34 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		
 	};
 	
-	init();
+	init();	
+}]);
+
+
+
+angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams', 'messages', 'lists', 'mainService', 
+  function($scope, $http, $routeParams, messages, lists, mainService) {
 	
+	$scope.form = {		
+	}
+	
+	$scope.save = function(){
+		var objUmbrellaProj = angular.copy($scope.form);
+		
+		$http.post(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.save().url, objUmbrellaProj).success(function(data) {
+			$scope.messages.setSuccess("save");
+		});
+	};	
+		
+	var init = function(){
+		$scope.messages = messages();
+		$scope.lists = lists;
+		$scope.lists.refresh.projects();
+		
+		if(angular.isUndefined(mainService.getHomePage())){
+			mainService.setHomePage('add');
+		}
+	};
+	
+	init();
 }]);

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.project.instance.Project;
 import models.laboratory.project.instance.UmbrellaProject;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
@@ -28,6 +29,7 @@ import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
+import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 /**
  * Controller around Project object
@@ -181,11 +183,12 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 	}
 
 	
-	public void synchronizeUmbrellaProjectCodes(UmbrellaProject umbrellaProject) {
-		for (String code : umbrellaProject.projectCodes) {
-			if (!isObjectExist(DBQuery.and(DBQuery.is("code", code), DBQuery.in("umbrellaProjectCodes", umbrellaProject.code)))) {
-				//add the value in the other list : the child project needs to be linked to his father! 
-				updateObject(DBQuery.is("code", code), DBUpdate.push("umbrellaProjectCodes", umbrellaProject.code));
+	private void synchronizeUmbrellaProjectCodes(UmbrellaProject umbrellaProject) {
+		if (umbrellaProject.projectCodes != null) {
+			for (String code : umbrellaProject.projectCodes) {
+				if (!MongoDBDAO.checkObjectExist(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.and(DBQuery.is("code", code), DBQuery.is("umbrellaProjectCode", umbrellaProject.code)))) {
+					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", code), DBUpdate.set("umbrellaProjectCode", umbrellaProject.code));
+				}
 			}
 		}
 	}

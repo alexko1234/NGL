@@ -9,7 +9,6 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.TransientState;
-import models.laboratory.container.instance.Container;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.File;
@@ -24,7 +23,6 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.WriteResult;
 import play.Logger;
-import play.api.modules.spring.Spring;
 import play.libs.Akka;
 import rules.services.RulesActor;
 import rules.services.RulesMessage;
@@ -34,14 +32,8 @@ import validation.run.instance.RunValidationHelper;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 
-
-
-
-import com.mongodb.BasicDBObject;
 import com.typesafe.config.ConfigFactory;
-
 import controllers.CommonController;
-
 import fr.cea.ig.MongoDBDAO;
 
 public class Workflows {
@@ -244,7 +236,7 @@ public class Workflows {
 	
 	private static boolean isHasBA(ReadSet readSet){
 		Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
-		if(p.bioinformaticAnalysis){
+		if(p.bioinformaticParameters.bioinformaticAnalysis){
 			return readSet.code.matches("^.+_.+F_.+_.+$"); //TODO matche PE of type F
 		}
 		return false;

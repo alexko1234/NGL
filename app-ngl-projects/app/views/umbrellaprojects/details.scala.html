@@ -1,20 +1,12 @@
-@()
+@(typeForm: String)
 
-@column(size:Int)(value: Html) = {
-	<div class="col-md-@size col-lg-@size">
+@column()(value: Html) = {
+	<div class="col-md-4 col-lg-4">
 		@value
 	</div>
 }
 
-@columnLabelValue(label:String)(value: Html) = {
-	<div class="form-group">
-	    <label class="col-md-2 col-lg-2 control-label">@label</label>
-	    <div class="col-md-10 col-lg-10">
-	      @value
-	    </div>
-	</div>
-}
-
+@if(typeForm == "update") {
 <div class="row">
 	<div class="col-md-12 col-lg-12 ">
 	<div class="page-header" ng-init="init()">
@@ -37,61 +29,83 @@
 	<div class="col-md-12 col-lg-12">
 		<form class="form-horizontal">
 			<div class="row">
-				@column(6){
-					@columnLabelValue(Messages("umbrellaProjects.code")){
+				@column(){
+					@views.html.helper.columnLabelValue(Messages("umbrellaProjects.code")){
 						<p class="form-control-static">{{umbrellaProject.code}}</p>
 					}
 					
-					@columnLabelValue(Messages("umbrellaProjects.name")){
+					@views.html.helper.columnLabelValue(Messages("umbrellaProjects.name")){
 						<div ng-switch on="mainService.isEditMode()">
 							<p class="form-control-static" ng-switch-when="false">{{umbrellaProject.name}}</p>
 							<input type="text" class="form-control" ng-switch-when="true" ng-model="umbrellaProject.name">
 						</div>
 					}
-				}
-			</div>
-				
-			<div class="row">
-				@column(6){	
-					@columnLabelValue(Messages("projects.projectCodes")){
-						<div ng-switch on="mainService.isEditMode()">
-						
+					
+					@views.html.helper.columnLabelValue(Messages("projects.projectCodes")){
+						<div ng-switch on="mainService.isEditMode()">	
 							<div ng-switch-when="false"> 
 								<ul ng-repeat="p in lists.getProjects()  | filterByCodesInStringArray:umbrellaProject.projectCodes">
 									<li>{{p.code + ":" + p.name}}</li>
 								</ul>
 							</div>
 							
-							<div ng-switch-when="true"> 
-								<select size="30" name="allProjects" ng-model="form.allProjects" multiple="true" ng-options="p.code as (p.code + ':' + p.name) for p in lists.getProjects()">
-								</select>
-							</div>
-																	
+							<div bt-select class="form-control" ng-switch-when="true" multiple="true" ng-model="umbrellaProject.projectCodes" bt-options="project.code as project.name for project in lists.getProjects()"></div>	
 						</div>
+
 					}
-					
-				}	
-				
-				@column(1){
-					<div ng-switch on="mainService.isEditMode()">
-						<div ng-switch-when="true">
-							<button type="button" class="btn btn-default btn-block" ng-click="addItem()"><i class="fa fa-forward"></i></button> 
-							<button type="button" class="btn btn-default btn-block" ng-click="removeItem()"><i class="fa fa-backward"></i></button>
-						</div>
-					</div>
 				}
-				
-				@column(3){				
-					<div ng-switch on="mainService.isEditMode()">
-						<div ng-switch-when="true"> 
-							<select size="30" name="selectedProjects" ng-model="umbrellaProject.projectCodes" multiple="true" ng-options="code for code in form.selectedProjects">
-							</select>
-						</div>
-					</div>
-				}	
 			</div>
+				
+
 		</form>
 	</div>
 </div>
+}
 
+
+@if(typeForm == "add") {
+<div class="row">
+	<div class="col-md-12 col-lg-12 ">
+	<div class="page-header" ng-init="init()">
+		<div class="btn-toolbar pull-right">
+			 <button class="btn btn-default" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+		</div>
+		<h1>
+			@Messages("add.title.name")
+		</h1>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12 col-lg-12"  messages="messages"></div>
+</div>
+
+<div class="row margin-bottom-7">
+	<div class="col-md-12 col-lg-12">
+		<form class="form-horizontal">
+			<div class="row">
+				@column(){
+					@views.html.helper.columnLabelValue(Messages("projects.code")){
+						<div>
+							<input type="text" class="form-control" ng-model="form.code">
+						</div>
+					}
+									
+					@views.html.helper.columnLabelValue(Messages("projects.name")){
+						<div>
+							<input type="text" class="form-control" ng-model="form.name">
+						</div>
+					}
+					
+					@views.html.helper.columnLabelValue(Messages("projects.projectCodes")){
+						<div bt-select class="form-control" multiple="true" ng-model="form.projectCodes" bt-options="project.code as project.name for project in lists.getProjects()"></div>
+					}
+					
+				}
+			</div>
+			
+		</form>
+	</div>
+</div>
+}
        

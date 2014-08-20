@@ -59,16 +59,22 @@ projects.state.code = Etat
 projects.state.updatedAt = Mis à jour le: 
 projects.state.by = par:
 projects.projectCodes = Projets
-projects.umbrellaProjectCodes = Projets maîtres
+projects.umbrellaProjectCode = Projet maître
 projects.description = Description
+projects.bioinformaticParameters.regexBA = Exp regulière BA
+projects.bioinformaticParameters.mappingReference = Reference mapping
   
 umbrellaProjects.code = Code
 umbrellaProjects.name = Nom
 projects.projectCodesSelected = Projets rattachés
-projects.bioinformaticanalysis = Analyse bio-informatique
+projects.bioinformaticParameters.bioinformaticanalysis = Analyse bio-informatique
 
 
 #button
 button.validate = Sauvegarder
 button.cancel = Annuler
 button.edit = Editer
+
+#tab
+projects.details.general = Général
+projects.details.bioinformaticParameters = Paramètres bio-informatique

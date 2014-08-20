@@ -1,17 +1,8 @@
 @()
 
-@column(size:Int)(value: Html) = {
-	<div class="col-md-@size col-lg-@size">
+@column()(value: Html) = {
+	<div class="col-md-4 col-lg-4">
 		@value
-	</div>
-}
-
-@columnLabelValue(label:String)(value: Html) = {
-	<div class="form-group">
-	    <label class="col-md-2 col-lg-2 control-label">@label</label>
-	    <div class="col-md-10 col-lg-10">
-	      @value
-	    </div>
 	</div>
 }
 
@@ -35,39 +26,26 @@
 	<div class="col-md-12 col-lg-12">
 		<form class="form-horizontal">
 			<div class="row">
-				@column(6){
-					@columnLabelValue(Messages("projects.code")){
+				@column(){
+					@views.html.helper.columnLabelValue(Messages("projects.code")){
 						<div>
 							<input type="text" class="form-control" ng-model="form.code">
 						</div>
 					}
 									
-					@columnLabelValue(Messages("projects.name")){
+					@views.html.helper.columnLabelValue(Messages("projects.name")){
 						<div>
 							<input type="text" class="form-control" ng-model="form.name">
 						</div>
 					}
+					
+					@views.html.helper.columnLabelValue(Messages("projects.projectCodes")){
+						<div bt-select class="form-control" multiple="true" ng-model="form.projectCodes" bt-options="project.code as project.name for project in lists.getProjects()"></div>
+					}
+					
 				}
 			</div>
 			
-			<div class="row">
-				@column(6){	
-					@columnLabelValue(Messages("projects.projectCodes")){
-						<select size="30" name="allProjects" ng-model="form.allProjects" multiple="true" ng-options="p.code as (p.code + ':' + p.name) for p in lists.getProjects()">
-						</select>
-					}
-				}
-				
-				@column(1){
-					<button type="button" class="btn btn-default btn-block" ng-click="addItem()"><i class="fa fa-forward"></i></button> 
-					<button type="button" class="btn btn-default btn-block" ng-click="removeItem()"><i class="fa fa-backward"></i></button>
-				}
-				
-				@column(3){				
-					<select size="30" name="selectedProjects" ng-model="umbrellaProject.projectCodes" multiple="true" ng-options="code for code in form.selectedProjects">
-					</select>
-				}
-			</div>
 		</form>
 	</div>
 </div>

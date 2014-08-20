@@ -1,16 +1,8 @@
 package controllers.projects.tpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import controllers.CommonController;
 import play.Routes;
-import play.i18n.Messages;
-import play.mvc.Controller;
 import play.mvc.Result;
-import views.components.datatable.DatatableColumn;
-import views.components.datatable.DatatableConfig;
-import views.components.datatable.DatatableHelpers;
 import views.html.projects.*;
 
 /**
@@ -29,15 +21,7 @@ public class Projects extends CommonController {
 	}
 	
 	public static Result search(String type) {
-		if(!"add".equals(type)){
-			return ok(search.render(Boolean.TRUE));
-		}else{
-			return ok(search.render(Boolean.FALSE));
-		}
-	}
-	
-	public static Result add() {
-		return ok(add.render()); 
+		return ok(search.render(Boolean.TRUE));
 	}
 
 	
@@ -53,7 +37,6 @@ public class Projects extends CommonController {
   	        // Routes
   	    		controllers.projects.tpl.routes.javascript.Projects.home(),  
   	    		controllers.projects.tpl.routes.javascript.Projects.get(), 
-  	    		controllers.projects.tpl.routes.javascript.Projects.add(),
   	    		controllers.projects.tpl.routes.javascript.Projects.search(),
   	    		controllers.projects.api.routes.javascript.Projects.get(),
   	    		controllers.projects.api.routes.javascript.Projects.update(),

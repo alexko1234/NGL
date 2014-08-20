@@ -6,11 +6,12 @@ angular.module('home', ['ngRoute','datatableServices','commonsServices','ui.boot
 		controller : 'SearchCtrl'
 	});
 	$routeProvider.when('/umbrellaprojects/:code', {
-		templateUrl : '/tpl/umbrellaprojects/details',
+		templateUrl : '/tpl/umbrellaprojects/details/update',
 		controller : 'DetailsCtrl'
 	});
 	$routeProvider.when('/umbrellaprojects/add/home', {
-		templateUrl : '/tpl/umbrellaprojects/add',
+		//templateUrl : '/tpl/umbrellaprojects/add',
+		templateUrl : '/tpl/umbrellaprojects/details/add',
 		controller : 'AddCtrl'
 	});
 
@@ -20,3 +21,4 @@ angular.module('home', ['ngRoute','datatableServices','commonsServices','ui.boot
 	$locationProvider.html5Mode(true);
 }
 );
+

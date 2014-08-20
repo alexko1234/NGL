@@ -631,6 +631,7 @@ public class DescriptionFactory {
 		iut.inContainerSupportCategories = inContainerSupportCategories;
 		iut.outContainerSupportCategories = outContainerSupportCategories;
 		iut.institutes = institutes;
+		iut.states = State.find.findByObjectTypeCode(ObjectType.CODE.Instrument);
 		return iut; 
 	}
 
@@ -684,6 +685,7 @@ public class DescriptionFactory {
 		st.objectType = ObjectType.find.findByCode(ObjectType.CODE.Sample.name());
 		st.propertiesDefinitions = propertiesDefinitions;
 		st.institutes = institutes;
+		st.states = State.find.findByObjectTypeCode(ObjectType.CODE.Sample); 
 		return st;
 	}
 	
@@ -705,6 +707,7 @@ public class DescriptionFactory {
 		it.objectType = ObjectType.find.findByCode(ObjectType.CODE.Import.name());
 		it.propertiesDefinitions = propertiesDefinitions;
 		it.institutes = institutes;
+		it.states = State.find.findByObjectTypeCode(ObjectType.CODE.Sample); 
 		return it;
 	}
 	
@@ -726,6 +729,7 @@ public class DescriptionFactory {
 		pt.objectType = ObjectType.find.findByCode(ObjectType.CODE.Project.name());
 		pt.propertiesDefinitions = propertiesDefinitions;
 		pt.institutes = institutes;
+		pt.states = State.find.findByObjectTypeCode(ObjectType.CODE.Project);
 		return pt;
 	}
 	

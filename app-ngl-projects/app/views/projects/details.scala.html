@@ -28,80 +28,136 @@
 	<div class="col-md-12 col-lg-12"  messages="messages"></div>
 </div>
 
-<div class="row margin-bottom-7">
-	<div class="col-md-12 col-lg-12">
-		<form class="form-horizontal">
-			<div class="row">
-				@column(){
-					@views.html.helper.columnLabelValue(Messages("projects.code")){
-						<p class="form-control-static">{{project.code}}</p>
-					}
-					
-					@views.html.helper.columnLabelValue(Messages("projects.name")){
-						<div ng-switch on="mainService.isEditMode()">
-							<p class="form-control-static" ng-switch-when="false">{{project.name}}</p>
-							<input type="text" class="form-control" ng-switch-when="true" ng-model="project.name">
-						</div>
-					}
+
+<div class="row">
+
+   <ul class="nav nav-tabs margin-bottom-5">
+   	<li class="active"><a href="#" data-target="#general" data-toggle="tab">@Messages("projects.details.general")</a></li>
+   	<li ><a href="#" data-target="#bioinformaticParameters" data-toggle="tab">@Messages("projects.details.bioinformaticParameters")</a></li>    	
+   </ul>
+   
+   <form class="form-horizontal">
+
+	<div class="tab-content">
 	
-					@views.html.helper.columnLabelValue(Messages("projects.state.code")){
-						<div ng-switch on="mainService.isEditMode()">
-							<div ng-switch-when="false">
-								<p class="form-control-static">{{project.state.code | codes:'state'}}</p>									
-							</div>
-							<div bt-select class="form-control" ng-model="project.state.code" ng-switch-when="true" bt-options="state.code as state.name for state in lists.getStates()"></div>
-						</div>				
-					}
-						
-						
-					@views.html.helper.columnLabelValue(Messages("projects.type")){
-						<div ng-switch on="mainService.isEditMode()">
-							<p class="form-control-static" ng-switch-when="false">{{project.typeCode | codes:'type'}}</p>
-							<div bt-select class="form-control" ng-switch-when="true" ng-model="project.typeCode" bt-options="type.code as type.name for type in lists.getProjectTypes()"></div>
-						</div>
-					}
-					
-					@views.html.helper.columnLabelValue(Messages("projects.category.type")){
-						<div ng-switch on="mainService.isEditMode()">
-							<p class="form-control-static" ng-switch-when="false">{{project.categoryCode | codes:'project_cat'}}</p>
-							<div bt-select class="form-control" ng-switch-when="true" ng-model="project.categoryCode" bt-options="category.code as category.name for category in lists.getProjectCategories()"></div>
-						</div>	
-					}
-					
-					
-					@views.html.helper.columnLabelValue(Messages("projects.description")){
-						<div ng-switch on="mainService.isEditMode()">
-							<p class="form-control-static" ng-switch-when="false">{{project.description}}</p>
-							<textarea class="form-control" ng-switch-when="true" ng-model="project.description"></textarea>
-						</div>	
-					}	
-				}
+		<div class="tab-pane active" id="general">
+
+			<div class="row margin-bottom-7">
+				<div class="col-md-12 col-lg-12">
+						<div class="row">
+							@column(){
+								@views.html.helper.columnLabelValue(Messages("projects.code")){
+									<p class="form-control-static">{{project.code}}</p>
+								}
+								
+								@views.html.helper.columnLabelValue(Messages("projects.name")){
+									<div ng-switch on="mainService.isEditMode()">
+										<p class="form-control-static" ng-switch-when="false">{{project.name}}</p>
+										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.name">
+									</div>
+								}
 				
-				@column(){
-					@views.html.helper.columnLabelValue(Messages("projects.traceInformation.creationDate")){
-						<p class="form-control-static">{{project.traceInformation.creationDate | date:'@Messages("date.format")'}}</p>	
-					}
-	
-					@views.html.helper.columnLabelValue(Messages("projects.traceInformation.createUser")){
-						<p class="form-control-static">{{project.traceInformation.createUser}}</p>	
-					}
-					
-					@views.html.helper.columnLabelValue(Messages("projects.bioinformaticanalysis")){
-						<div class="checkbox" ng-if="mainService.isEditMode()">
-		 					<label>
-							<input type="checkbox"  ng-model="project.bioinformaticAnalysis">	
-							</label>
-						</div>				
-						<p class="form-control-static" ng-switch on="project.bioinformaticAnalysis" ng-if="!mainService.isEditMode()">
-							<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
-							<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
-						</p>					
-					}
-				}				
+								@views.html.helper.columnLabelValue(Messages("projects.state.code")){
+									<div ng-switch on="mainService.isEditMode()">
+										<div ng-switch-when="false">
+											<p class="form-control-static">{{project.state.code | codes:'state'}}</p>									
+										</div>
+										<div bt-select class="form-control" ng-switch-when="true" ng-model="project.state.code" bt-options="state.code as state.name for state in lists.getStates()"></div>
+									</div>				
+								}
+									
+									
+								@views.html.helper.columnLabelValue(Messages("projects.type")){
+									<div ng-switch on="mainService.isEditMode()">
+										<p class="form-control-static" ng-switch-when="false">{{project.typeCode | codes:'type'}}</p>
+										<div bt-select class="form-control" ng-switch-when="true" ng-model="project.typeCode" bt-options="type.code as type.name for type in lists.getProjectTypes()"></div>
+									</div>
+								}
+								
+								@views.html.helper.columnLabelValue(Messages("projects.category.type")){
+									<div ng-switch on="mainService.isEditMode()">
+										<p class="form-control-static" ng-switch-when="false">{{project.categoryCode | codes:'project_cat'}}</p>
+										<div bt-select class="form-control" ng-switch-when="true" ng-model="project.categoryCode" bt-options="category.code as category.name for category in lists.getProjectCategories()"></div>
+									</div>	
+								}
+								
+								
+								@views.html.helper.columnLabelValue(Messages("projects.description")){
+									<div ng-switch on="mainService.isEditMode()">
+										<p class="form-control-static" ng-switch-when="false">{{project.description}}</p>
+										<textarea class="form-control" ng-switch-when="true" ng-model="project.description"></textarea>
+									</div>	
+								}	
+								
+								@views.html.helper.columnLabelValue(Messages("projects.umbrellaProjectCode")){
+									<div ng-switch on="mainService.isEditMode()">
+										<p class="form-control-static" ng-switch-when="false">{{project.umbrellaProjectCode}}</p>
+										<div bt-select class="form-control" ng-switch-when="true" ng-model="project.umbrellaProjectCode" bt-options="project.code as project.name for project in lists.getUmbrellaProjects()"></div>
+									</div>	
+								}	
+							}
+							
+							
+							@column(){
+								@views.html.helper.columnLabelValue(Messages("projects.traceInformation.creationDate")){
+									<p class="form-control-static">{{project.traceInformation.creationDate | date:'@Messages("date.format")'}}</p>	
+								}
+				
+								@views.html.helper.columnLabelValue(Messages("projects.traceInformation.createUser")){
+									<p class="form-control-static">{{project.traceInformation.createUser}}</p>	
+								}
+							}				
+						</div>
+						
+				</div>
 			</div>
 			
-		</form>
+		</div>
+		
+		<div class="tab-pane" id="bioinformaticParameters">
+		
+			<div class="row margin-bottom-7">
+				<div class="col-md-12 col-lg-12">
+						<div class="row">
+							@column(){
+								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.bioinformaticanalysis")){
+									<div class="checkbox" ng-if="mainService.isEditMode()">
+					 					<label>
+											<input type="checkbox"  ng-model="project.bioinformaticParameters.bioinformaticAnalysis">	
+										</label>
+									</div>				
+									<p class="form-control-static" ng-if="!mainService.isEditMode()" ng-switch on="project.bioinformaticParameters.bioinformaticAnalysis">
+										<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
+										<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
+									</p>					
+								}
+								
+								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.regexBA")){
+									<div ng-switch on="mainService.isEditMode() && project.bioinformaticParameters.bioinformaticAnalysis">
+										<p class="form-control-static" ng-switch-when="false">{{project.bioinformaticParameters.regexBA}}</p>
+										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.bioinformaticParameters.regexBA">										
+									</div>
+								}
+								
+								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.mappingReference")){
+									<div ng-switch on="mainService.isEditMode()">
+										<p class="form-control-static" ng-switch-when="false">{{project.bioinformaticParameters.mappingReference}}</p>
+										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.bioinformaticParameters.mappingReference">										
+									</div>
+								}								
+							}
+						</div>
+						
+				</div>
+			</div>
+
+		
+		</div>
 	</div>
+	
+	</form>
 </div>
+		
+		
 
        

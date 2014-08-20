@@ -1,16 +1,8 @@
 package controllers.umbrellaprojects.tpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import controllers.CommonController;
 import play.Routes;
-import play.i18n.Messages;
-import play.mvc.Controller;
 import play.mvc.Result;
-import views.components.datatable.DatatableColumn;
-import views.components.datatable.DatatableConfig;
-import views.components.datatable.DatatableHelpers;
 import views.html.umbrellaprojects.*;
 
 /**
@@ -35,14 +27,10 @@ public class UmbrellaProjects extends CommonController {
 			return ok(search.render(Boolean.FALSE));
 		}
 	}
-	
-	public static Result add() {
-		return ok(add.render()); 
-	}
 
 	
-	public static Result details() {
-		return ok(details.render());
+	public static Result details(String typeForm) {
+		return ok(details.render(typeForm));
 	}
 	
 	
@@ -53,7 +41,6 @@ public class UmbrellaProjects extends CommonController {
   	        // Routes
   	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.home(),  
   	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.get(), 
-  	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.add(),
   	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.search(),
   	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.details(),
   	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.get(),

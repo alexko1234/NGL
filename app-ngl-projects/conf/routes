@@ -12,7 +12,6 @@ GET	   	/projects/:code									controllers.projects.tpl.Projects.get(code: java
 
 GET		/tpl/projects/details							controllers.projects.tpl.Projects.details()
 GET		/tpl/projects/search/:type						controllers.projects.tpl.Projects.search(type: java.lang.String)
-GET	   	/tpl/projects/add								controllers.projects.tpl.Projects.add()
 
 GET		/tpl/projects/js-routes							controllers.projects.tpl.Projects.javascriptRoutes()
 
@@ -22,9 +21,8 @@ GET		/tpl/projects/js-routes							controllers.projects.tpl.Projects.javascriptR
 GET	   	/umbrellaprojects/:homecode/home				controllers.umbrellaprojects.tpl.UmbrellaProjects.home(homecode: java.lang.String)
 GET	   	/umbrellaprojects/:code							controllers.umbrellaprojects.tpl.UmbrellaProjects.get(code: java.lang.String)
 
-GET		/tpl/umbrellaprojects/details					controllers.umbrellaprojects.tpl.UmbrellaProjects.details()
+GET		/tpl/umbrellaprojects/details/:typeForm			controllers.umbrellaprojects.tpl.UmbrellaProjects.details(typeForm: java.lang.String)
 GET		/tpl/umbrellaprojects/search/:type				controllers.umbrellaprojects.tpl.UmbrellaProjects.search(type: java.lang.String)
-GET	   	/tpl/umbrellaprojects/add						controllers.umbrellaprojects.tpl.UmbrellaProjects.add()
 
 GET		/tpl/umbrellaprojects/js-routes					controllers.umbrellaprojects.tpl.UmbrellaProjects.javascriptRoutes()
 
@@ -58,6 +56,7 @@ PUT   	/api/umbrellaprojects/:code 					@controllers.umbrellaprojects.api.Umbrel
 #migration
 GET		/migration										controllers.migration.Migration.migration()
 GET		/migration2										controllers.migration.Migration2.migration()
+GET		/addBioinformaticParameters						controllers.migration.AddBioinformaticParameters.migration()
 
 ->  /authentication authentication.Routes
 
