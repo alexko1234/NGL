@@ -185,9 +185,17 @@ public class Projects extends DocumentController<Project> {
 	}
 	
 	private void synchronizeProjectCodes(Project projectInput) {
-		if ((projectInput.umbrellaProjectCode != null) && !MongoDBDAO.checkObjectExist(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.and(DBQuery.is("code", projectInput.umbrellaProjectCode), DBQuery.in("projectCodes", projectInput.code)))) {
-			MongoDBDAO.update(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.is("code", projectInput.umbrellaProjectCode), DBUpdate.push("projectCodes", projectInput.code));
-		}		
+		if (projectInput.umbrellaProjectCode != null) { 
+			if (!MongoDBDAO.checkObjectExist(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.and(DBQuery.is("code", projectInput.umbrellaProjectCode), DBQuery.in("projectCodes", projectInput.code)))) {
+				MongoDBDAO.update(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.is("code", projectInput.umbrellaProjectCode), DBUpdate.push("projectCodes", projectInput.code));
+			}
+		}	
+		else {
+			UmbrellaProject umbrellaProject = MongoDBDAO.findOne(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.in("projectCodes", projectInput.code));
+			if (umbrellaProject != null) {
+				MongoDBDAO.update(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.is("code", umbrellaProject.code), DBUpdate.pull("projectCodes", projectInput.code));
+			}
+		}
 	}
 
 }

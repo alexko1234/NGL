@@ -54,8 +54,12 @@ public class AddBioinformaticParameters extends CommonController {
 		BioinformaticParameters bip = new BioinformaticParameters(project.bioinformaticAnalysis); 
 		
 		String descr = null;
+		String umbrellaProjectCode = null;
 		if (project.comments != null && project.comments.size() > 0) {
 			descr = project.comments.get(0).comment;
+		}
+		if (project.umbrellaProjectCodes != null && project.umbrellaProjectCodes.size() > 0) {
+			umbrellaProjectCode = project.umbrellaProjectCodes.get(0);
 		}
 		
 		if (descr != null) {
@@ -67,6 +71,12 @@ public class AddBioinformaticParameters extends CommonController {
 			MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, 
 					DBQuery.is("code", project.code), 
 					DBUpdate.unset("comments").unset("umbrellaProjectCodes").unset("bioinformaticAnalysis").set("bioinformaticParameters", bip));			
+		}
+		
+		if (umbrellaProjectCode != null) {
+			MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, 
+					DBQuery.is("code", project.code), 
+					DBUpdate.set("umbrellaProjectCode", umbrellaProjectCode));						
 		}
 	}
 

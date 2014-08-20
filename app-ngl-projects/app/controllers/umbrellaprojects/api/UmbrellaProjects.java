@@ -190,6 +190,13 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", code), DBUpdate.set("umbrellaProjectCode", umbrellaProject.code));
 				}
 			}
+			List<Project> projects = MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("umbrellaProjectCode", umbrellaProject.code)).toList();
+			for (Project project : projects) {
+				if (!umbrellaProject.projectCodes.contains(project.code)) {
+					//this project code has been deleted!
+					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", project.code), DBUpdate.unset("umbrellaProjectCode"));
+				}
+			}
 		}
 	}
 
