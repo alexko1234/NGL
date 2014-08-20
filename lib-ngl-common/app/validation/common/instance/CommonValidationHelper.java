@@ -22,6 +22,8 @@ import org.drools.runtime.StatefulKnowledgeSession;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
+import play.Logger;
+
 import rules.services.RulesException;
 import rules.services.RulesServices;
 import validation.ContextValidation;
@@ -365,6 +367,7 @@ public class CommonValidationHelper {
 	public static void validateStateCode(String typeCode, String stateCode, ContextValidation contextValidation){
 		try{
 			if(required(contextValidation, stateCode, "code")){
+				Logger.debug("stateCode=" + stateCode + ", typeCode=" + typeCode); 
 				if(!models.laboratory.common.description.State.find.isCodeExistForTypeCode(stateCode, typeCode)){
 					contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, stateCode);
 				}

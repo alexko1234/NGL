@@ -36,22 +36,34 @@ public class Project extends DBObject implements IValidation{
 	public String categoryCode;
 	public String name;
 	public State state;
+    public String description;
 	public TraceInformation traceInformation;
 	public Map<String, PropertyValue> properties;
-	public List<Comment> comments;
-	public Boolean bioinformaticAnalysis = Boolean.FALSE;
+	public String umbrellaProjectCode;
 	
-	public List<String> umbrellaProjectCodes;
+	public BioinformaticParameters bioinformaticParameters;
+	
+	//for old compatibility
+	public List<Comment> comments; //replace by description
+	public Boolean bioinformaticAnalysis = Boolean.FALSE; //move now under bioinformaticParameters
+	public List<String> umbrellaProjectCodes; //replace by umbrellaProjectCode (because a project have 0 or 1 umbrella project)
+	
 	
 	
 	public Project(){
 		traceInformation=new TraceInformation();
+		if (bioinformaticAnalysis != null) {
+			bioinformaticParameters = new BioinformaticParameters(bioinformaticAnalysis);
+		}
 	}
 	
 	public Project(String code, String name){
 		this.code=code;
 		this.name=name;
 		traceInformation=new TraceInformation();
+		if (bioinformaticAnalysis != null) {
+			bioinformaticParameters = new BioinformaticParameters(bioinformaticAnalysis);
+		}
 	}
 	
 	@JsonIgnore
@@ -73,7 +85,7 @@ public class Project extends DBObject implements IValidation{
 		ProjectValidationHelper.validateCode(this, InstanceConstants.PROJECT_COLL_NAME, contextValidation);
 		ProjectValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		ProjectValidationHelper.validateProjectCategoryCode(categoryCode,contextValidation);
-		//ProjectValidationHelper.validateStateCode(typeCode,stateCode, contextValidation);
+		ProjectValidationHelper.validateState(typeCode,state, contextValidation);
 		ProjectValidationHelper.validateProjectType(typeCode,properties, contextValidation);
 	}
 

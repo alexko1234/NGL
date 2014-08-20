@@ -10,6 +10,7 @@ import java.util.List;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
+import models.laboratory.project.instance.UmbrellaProject;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import org.mongojack.DBQuery;
@@ -135,7 +136,8 @@ public class Projects extends DocumentController<Project> {
 		} else {
 			return badRequest("use PUT method to update the project");
 		}
-		//TODO insert in project umbrella
+
+		synchronizeProjectCodes(projectInput);
 		
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
 		ctxVal.setCreationMode();
@@ -165,6 +167,8 @@ public class Projects extends DocumentController<Project> {
 				Logger.error("traceInformation is null !!");
 			}
 			
+			synchronizeProjectCodes(projectInput);
+			
 			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 	
 			ctxVal.setUpdateMode();
 			projectInput.validate(ctxVal);
@@ -178,6 +182,12 @@ public class Projects extends DocumentController<Project> {
 		}else{
 			return badRequest("Project codes are not the same");
 		}
+	}
+	
+	private void synchronizeProjectCodes(Project projectInput) {
+		if ((projectInput.umbrellaProjectCode != null) && !MongoDBDAO.checkObjectExist(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.and(DBQuery.is("code", projectInput.umbrellaProjectCode), DBQuery.in("projectCodes", projectInput.code)))) {
+			MongoDBDAO.update(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.is("code", projectInput.umbrellaProjectCode), DBUpdate.push("projectCodes", projectInput.code));
+		}		
 	}
 
 }
