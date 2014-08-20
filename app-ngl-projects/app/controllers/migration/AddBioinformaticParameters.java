@@ -51,11 +51,13 @@ public class AddBioinformaticParameters extends CommonController {
 	
 	private static void migreProject(ProjectOld5 project) {	
 		
-		BioinformaticParameters bip = new BioinformaticParameters(); 
+		BioinformaticParameters bip = new BioinformaticParameters(project.bioinformaticAnalysis); 
+		
+		String descr = project.comments.get(0).comment;
 		
 		MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, 
 				DBQuery.is("code", project.code), 
-				DBUpdate.unset("comments").unset("umbrellaProjectCodes").unset("bioinformaticAnalysis").set("bioinformaticParameters", bip));
+				DBUpdate.unset("comments").unset("umbrellaProjectCodes").unset("bioinformaticAnalysis").set("bioinformaticParameters", bip).set("description", descr));
 	}
 
 	private static void backupProject() {
