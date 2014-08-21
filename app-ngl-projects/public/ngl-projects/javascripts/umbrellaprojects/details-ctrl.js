@@ -32,8 +32,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	/* main section  */
 	var init = function() {
 		$scope.messages = messages();
-		$scope.lists = lists;
-		$scope.lists.refresh.projects();
 		
 		$scope.mainService = mainService;
 		$scope.mainService.stopEditMode();
@@ -72,8 +70,6 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 		
 	var init = function(){
 		$scope.messages = messages();
-		$scope.lists = lists;
-		$scope.lists.refresh.projects();
 		
 		if(angular.isUndefined(mainService.getHomePage())){
 			mainService.setHomePage('add');

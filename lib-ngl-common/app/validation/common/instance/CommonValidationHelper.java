@@ -342,12 +342,12 @@ public class CommonValidationHelper {
 		}		
 	}
 	
-	public static void validateStateCode(String stateCode,ContextValidation contextValidation){
+	public static void validateStateCode(String stateCode,ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("state");
-		if(contextValidation.getContextObjects().containsKey(FIELD_TYPE_CODE)){
+		if (contextValidation.getContextObjects().containsKey(FIELD_TYPE_CODE)) {
 			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
 			validateStateCode(typeCode, stateCode, contextValidation);
-		}else{
+		} else {
 			validateRequiredDescriptionCode(contextValidation, stateCode,"code", models.laboratory.common.description.State.find);
 		}
 		contextValidation.removeKeyFromRootKeyName("state");
@@ -355,7 +355,7 @@ public class CommonValidationHelper {
 	
 	
 	public static void validateState(String typeCode, State state, ContextValidation contextValidation) {
-		if(ValidationHelper.required(contextValidation, state, "state")){
+		if (ValidationHelper.required(contextValidation, state, "state")) {
 			contextValidation.putObject(FIELD_TYPE_CODE, typeCode);
 			contextValidation.addKeyToRootKeyName("state");
 			state.validate(contextValidation);
@@ -365,22 +365,21 @@ public class CommonValidationHelper {
 	}
 	
 	public static void validateStateCode(String typeCode, String stateCode, ContextValidation contextValidation){
-		try{
-			if(required(contextValidation, stateCode, "code")){
-				Logger.debug("stateCode=" + stateCode + ", typeCode=" + typeCode); 
-				if(!models.laboratory.common.description.State.find.isCodeExistForTypeCode(stateCode, typeCode)){
+		try {
+			if (required(contextValidation, stateCode, "code")) {
+				if (!models.laboratory.common.description.State.find.isCodeExistForTypeCode(stateCode, typeCode)) {
 					contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, stateCode);
 				}
 			}
-		}catch(DAOException e){
+		} catch(DAOException e) {
 			throw new RuntimeException(e);
 		}
 		
 	}
 	
 	public static void validateResolutionCodes(List<String> resoCodes,ContextValidation contextValidation){
-			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
-			validateResolutionCodes(typeCode, resoCodes, contextValidation);
+		String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
+		validateResolutionCodes(typeCode, resoCodes, contextValidation);
 	}
 	
 	public static void validateResolutionCodes(String typeCode, List<String> resoCodes, ContextValidation contextValidation){

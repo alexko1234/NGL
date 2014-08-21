@@ -7,12 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.project.instance.Project;
 import models.laboratory.project.instance.UmbrellaProject;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 import org.mongojack.DBQuery.Query;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -29,8 +27,8 @@ import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
-import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+
 /**
  * Controller around Project object
  *
@@ -96,12 +94,10 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 		} else if(StringUtils.isNotBlank(form.projectCode)) {
 			queries.add(DBQuery.is("code", form.projectCode));
 		}
-		
-		
+				
 		if (queries.size() > 0) {
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
-
 		return query;
 	}
 
@@ -116,8 +112,6 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 		} else {
 			return badRequest("use PUT method to update the project");
 		}
-		
-		synchronizeUmbrellaProjectCodes(projectInput);
 
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
 		ctxVal.setCreationMode();
@@ -142,8 +136,6 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		Form<UmbrellaProject> filledForm = getMainFilledForm();
 		UmbrellaProject projectInput = filledForm.get();
-		
-		synchronizeUmbrellaProjectCodes(projectInput);		
 		
 		if(queryFieldsForm.fields == null){
 			if (code.equals(projectInput.code)) {
@@ -182,23 +174,6 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 		}
 	}
 
-	
-	private void synchronizeUmbrellaProjectCodes(UmbrellaProject umbrellaProject) {
-		if (umbrellaProject.projectCodes != null) {
-			for (String code : umbrellaProject.projectCodes) {
-				if (!MongoDBDAO.checkObjectExist(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.and(DBQuery.is("code", code), DBQuery.is("umbrellaProjectCode", umbrellaProject.code)))) {
-					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", code), DBUpdate.set("umbrellaProjectCode", umbrellaProject.code));
-				}
-			}
-			List<Project> projects = MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("umbrellaProjectCode", umbrellaProject.code)).toList();
-			for (Project project : projects) {
-				if (!umbrellaProject.projectCodes.contains(project.code)) {
-					//this project code has been deleted!
-					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", project.code), DBUpdate.unset("umbrellaProjectCode"));
-				}
-			}
-		}
-	}
 
 }
 

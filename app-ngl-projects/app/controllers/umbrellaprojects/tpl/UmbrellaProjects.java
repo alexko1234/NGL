@@ -46,8 +46,7 @@ public class UmbrellaProjects extends CommonController {
   	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.get(),
   	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.update(),
   	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.list(),
-  	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.save(),
-  	    		controllers.projects.api.routes.javascript.Projects.list()
+  	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.save()
   	    		//,controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.delete()
   	    	)	  	      
   	    );

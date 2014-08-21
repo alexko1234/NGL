@@ -3,18 +3,15 @@ package controllers.projects.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
-import models.laboratory.project.instance.UmbrellaProject;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 import org.mongojack.DBQuery.Query;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -30,8 +27,6 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
 import controllers.DocumentController;
-import controllers.QueryFieldsForm;
-import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 /**
  * Controller around Project object
@@ -136,8 +131,6 @@ public class Projects extends DocumentController<Project> {
 		} else {
 			return badRequest("use PUT method to update the project");
 		}
-
-		synchronizeProjectCodes(projectInput);
 		
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
 		ctxVal.setCreationMode();
@@ -167,8 +160,6 @@ public class Projects extends DocumentController<Project> {
 				Logger.error("traceInformation is null !!");
 			}
 			
-			synchronizeProjectCodes(projectInput);
-			
 			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 	
 			ctxVal.setUpdateMode();
 			projectInput.validate(ctxVal);
@@ -181,20 +172,6 @@ public class Projects extends DocumentController<Project> {
 			
 		}else{
 			return badRequest("Project codes are not the same");
-		}
-	}
-	
-	private void synchronizeProjectCodes(Project projectInput) {
-		if (projectInput.umbrellaProjectCode != null) { 
-			if (!MongoDBDAO.checkObjectExist(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.and(DBQuery.is("code", projectInput.umbrellaProjectCode), DBQuery.in("projectCodes", projectInput.code)))) {
-				MongoDBDAO.update(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.is("code", projectInput.umbrellaProjectCode), DBUpdate.push("projectCodes", projectInput.code));
-			}
-		}	
-		else {
-			UmbrellaProject umbrellaProject = MongoDBDAO.findOne(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.in("projectCodes", projectInput.code));
-			if (umbrellaProject != null) {
-				MongoDBDAO.update(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class, DBQuery.is("code", umbrellaProject.code), DBUpdate.pull("projectCodes", projectInput.code));
-			}
 		}
 	}
 

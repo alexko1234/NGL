@@ -32,39 +32,20 @@ import fr.cea.ig.DBObject;
 @MongoCollection(name="Project")
 public class Project extends DBObject implements IValidation{
 
+	public String name;
 	public String typeCode;
 	public String categoryCode;
-	public String name;
 	public State state;
     public String description;
+    public List<Comment> comments;
 	public TraceInformation traceInformation;
 	public Map<String, PropertyValue> properties;
 	public String umbrellaProjectCode;
-	
 	public BioinformaticParameters bioinformaticParameters;
 	
 	//for old compatibility
-	public List<Comment> comments; //replace by description
-	public Boolean bioinformaticAnalysis = Boolean.FALSE; //move now under bioinformaticParameters
-	public List<String> umbrellaProjectCodes; //replace by umbrellaProjectCode (because a project have 0 or 1 umbrella project)
+	public Boolean bioinformaticAnalysis = Boolean.FALSE; //move now under bioinformaticParameters	
 	
-	
-	
-	public Project(){
-		traceInformation=new TraceInformation();
-		if (bioinformaticAnalysis != null) {
-			bioinformaticParameters = new BioinformaticParameters(bioinformaticAnalysis);
-		}
-	}
-	
-	public Project(String code, String name){
-		this.code=code;
-		this.name=name;
-		traceInformation=new TraceInformation();
-		if (bioinformaticAnalysis != null) {
-			bioinformaticParameters = new BioinformaticParameters(bioinformaticAnalysis);
-		}
-	}
 	
 	@JsonIgnore
 	public ProjectType getProjectType(){
@@ -79,14 +60,14 @@ public class Project extends DBObject implements IValidation{
 
 	@Override
 	@JsonIgnore
-	public void validate(ContextValidation contextValidation) {
-				
+	public void validate(ContextValidation contextValidation) {				
 		ProjectValidationHelper.validateId(this, contextValidation);
 		ProjectValidationHelper.validateCode(this, InstanceConstants.PROJECT_COLL_NAME, contextValidation);
 		ProjectValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+		ProjectValidationHelper.validateProjectType(typeCode,properties, contextValidation);
 		ProjectValidationHelper.validateProjectCategoryCode(categoryCode,contextValidation);
 		ProjectValidationHelper.validateState(typeCode,state, contextValidation);
-		ProjectValidationHelper.validateProjectType(typeCode,properties, contextValidation);
+		ProjectValidationHelper.validateUmbrellaProjectCode(umbrellaProjectCode, contextValidation);
 	}
 
 }

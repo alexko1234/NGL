@@ -2,14 +2,21 @@ package validation.project.instance;
 
 import java.util.Map;
 
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
+
 import play.Logger;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
+import models.laboratory.project.instance.Project;
+import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
+import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 
 public class ProjectValidationHelper extends CommonValidationHelper {
@@ -28,6 +35,15 @@ public class ProjectValidationHelper extends CommonValidationHelper {
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ProjectCategory.find);
 	
+	}
+	
+
+	public static void validateUmbrellaProjectCode (String umbrellaProjectCode, ContextValidation contextValidation) {		
+		if (ValidationHelper.required(contextValidation, umbrellaProjectCode, "umbrellaProjectCode")) {
+			if (! MongoDBDAO.checkObjectExist(InstanceConstants.PROJECT_COLL_NAME, Project.class,  DBQuery.is("code", umbrellaProjectCode))) {
+				contextValidation.addErrors("umbrellaProjectCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, umbrellaProjectCode);
+			}
+		}		 
 	}
 	
 
