@@ -70,7 +70,9 @@ public class LimsCNGDAO {
 	 * @throws SQLException
 	 */
 	public Project commonProjectMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException { 
-		Project project = new Project(rs.getString("code"), rs.getString("name").trim());
+		Project project = new Project();
+		project.code = rs.getString("code");
+		project.name = rs.getString("name").trim();
 		//Logger.debug("Project code :"+project.code);
 		
 		project.typeCode=PROJECT_TYPE_CODE_DEFAULT;

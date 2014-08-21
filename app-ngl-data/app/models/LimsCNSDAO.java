@@ -228,7 +228,9 @@ public class LimsCNSDAO{
 			public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 
-				Project project = new Project(rs.getString(2).trim(),rs.getString(1));
+				Project project = new Project();
+				project.code = rs.getString(2).trim();
+				project.name = rs.getString(1);
 				String fgGroupe=rs.getString("groupefg");
 				if(fgGroupe==null){
 					project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
