@@ -14,19 +14,18 @@
 					mode:'local'
 				},
 				columns : [
-							{
-								   property:"column.header",
-								   header: "stats.property",
-								   type :"text",
-								   order:true
-							},
-					           {	
-					        	   property:"typeCode",
-					        	   header: "stats.typeCode",
-					        	   type :"text",		    	  	
-					        	   order:true
-					           }
-				           
+					{
+						   property:"column.header",
+						   header: "stats.property",
+						   type :"text",
+						   order:true
+					},
+			           {	
+			        	   property:"typeCode",
+			        	   header: "stats.typeCode",
+			        	   type :"text",		    	  	
+			        	   order:true
+			           }
 				]
 		};
 		
@@ -272,7 +271,12 @@
 			queriesConfigs =  queriesConfigReadSetsService.queries;
 			var properties = ["default"];
 			for(var i = 0; i < statsConfigs.length; i++){
-				properties.push(statsConfigs[i].column.property.replace('.value',''));
+				//remove .value if present to manage correctly properties (single, list, etc.)
+				if(statsConfigs[i].column.queryIncludeKeys && statsConfigs[i].column.queryIncludeKeys.length > 0){
+					properties = properties.concat(statsConfigs[i].column.queryIncludeKeys);
+				}else{
+					properties.push(statsConfigs[i].column.property.replace('.value',''));	
+				}				
 			}
 			
 			var promises = [];
