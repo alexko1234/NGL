@@ -103,6 +103,11 @@ public class LimsCNGDAO {
 			project.comments = new ArrayList<Comment>(); 
 			InstanceHelpers.addComment(rs.getString("comments"), project.comments);
 		}
+		
+		//specific to CNG
+		project.bioinformaticAnalysis = Boolean.TRUE;
+		project.bioinformaticParameters.bioinformaticAnalysis = Boolean.TRUE; 
+		
 		return project;
 	}
 
