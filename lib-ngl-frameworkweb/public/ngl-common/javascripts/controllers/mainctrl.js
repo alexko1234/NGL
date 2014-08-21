@@ -357,7 +357,7 @@ angular.module('home').factory('tabService', ['$location', function($location){
 			 * "public" function to backup the current tabs
 			 */
 			backupTabs : function(){
-				this.bcktabs = angular.copy(tabs);
+				this.bcktabs = angular.copy(this.tabs);
 			},
 			
 			/**
