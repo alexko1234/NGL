@@ -678,7 +678,6 @@ angular.module('commonsServices', []).
     		          return equals(el, member);
     		        });
     		      }
-
     		    }
     	}).filter('sum', ['$parse',function($parse) {
     	    return function(array, key) {
