@@ -298,9 +298,10 @@ angular.module('datatableServices', []).
 		    			 * set the order column name
 		    			 * @param orderColumnName : column name
 		    			 */
-		    			setGroupColumn : function(columnPropertyName, columnId){
+		    			setGroupColumn : function(column){
 		    				if(this.config.group.active){
-		    					
+		    					var columnPropertyName = column.property;
+		    					var columnId = column.id;
 		    					if(this.config.group.by != columnPropertyName){
 		    						this.config.group.by = columnPropertyName;		    						
 		    						for(var i = 0; i < this.config.columns.length; i++){
@@ -523,8 +524,11 @@ angular.module('datatableServices', []).
 		    			 * set the order column name
 		    			 * @param orderColumnName : column name
 		    			 */
-		    			setOrderColumn : function(columnPropertyName, columnId){
+		    			setOrderColumn : function(column){
 		    				if(this.config.order.active){
+		    					var columnPropertyName = column.property;
+		    					var columnId  = column.id;
+		    					
 		    					if(this.config.order.by != columnPropertyName){
 		    						this.config.order.by = columnPropertyName;
 		    						this.config.order.reverse = false;
@@ -595,8 +599,9 @@ angular.module('datatableServices', []).
 		    			 * set the hide column
 		    			 * @param hideColumnName : column name
 		    			 */
-		    			setHideColumn : function(columnId){	
+		    			setHideColumn : function(column){	
 		    				if(this.config.hide.active){
+		    					var columnId = column.id;
 			    				if(!this.config.hide.columns[columnId]){
 			    					this.config.hide.columns[columnId]=true;
 			    				}else {
@@ -626,7 +631,7 @@ angular.module('datatableServices', []).
 		    			 * set Edit all column or just one
 		    			 * @param editColumnName : column name
 		    			 */
-		    			setEdit : function(columnId){	
+		    			setEdit : function(column){	
 		    				if(this.config.edit.active){
 		    					this.config.edit.columns = {};
 			    				var find = false;
@@ -641,8 +646,9 @@ angular.module('datatableServices', []).
 			    				}
 			    				this.selectAll(false);
 			    				if(find){
-			    					this.config.edit.start = true;			
-			    					if(columnId){
+			    					this.config.edit.start = true;
+			    					if(column){
+			    						var columnId = column.id
 			    						if(angular.isUndefined(this.config.edit.columns[columnId])){
 			    							this.config.edit.columns[columnId] = {};
 			    						}
@@ -1388,12 +1394,17 @@ angular.module('datatableServices', []).
 			    				}
 		    				}
 		    			},
+		    			
+		    			/*
+		    			
 		    			getNgModel : function(col, header){
 		    				if(header){
         			    		return  "dtTable.config.edit.columns."+col.id+".value";
         			    	}else if(angular.isFunction(col.property)){
         			    		return "dtTable.config.columns[$index].property(value.data)";
-        			    	}else{
+        			    	}else if(col.type === "compute"){
+        			    		return col.property;
+							}else{
         			    		return "value.data."+col.property;        			    		
         			    	}		    				
 				    	},
@@ -1452,10 +1463,6 @@ angular.module('datatableServices', []).
 		    					
 		    			},
 		    			
-		    			getHeader : function(value){
-		    				return Messages(value);
-		    			},
-		    			
 		    			getDateTimestamp : function(colType){
 		    				if(colType==="date"){
 		    					return 'date-timestamp';
@@ -1463,6 +1470,13 @@ angular.module('datatableServices', []).
 		    				
 		    				return '';
 		    			},
+		    			
+		    			
+		    			getHeader : function(value){
+		    				return Messages(value);
+		    			},
+		    			
+		    			
 		    			
 		    			getEditElement : function(col, header){
 		    				var editElement = '';
@@ -1498,6 +1512,7 @@ angular.module('datatableServices', []).
 		    				}		    						    				
 		    				return '<div class="form-group">'+editElement+'</div>';
 		    			}
+		    			*/
     			};
 				
 				if(arguments.length == 2){
@@ -1536,7 +1551,11 @@ angular.module('datatableServices', []).
 		            });
   		    		
   		    		scope.dtTable = $parse(attr.datatable)(scope);
-  		    		scope.messagesDatatable = function(message,arg){
+  		    		
+  		    		if(!scope.dtTableFunctions){scope.dtTableFunctions = {};}
+  		    		
+  		    		
+  		    		scope.dtTableFunctions.messagesDatatable = function(message,arg){
 			    		if(typeof Messages == 'function'){
 			    			if(arg==null || arg==undefined){
 			    				return Messages(message);
@@ -1547,9 +1566,9 @@ angular.module('datatableServices', []).
 			    		
 			    		return message;
 			    	};
-			    	scope.dtTableAsync = {};
+			    	
 		    		
-			    	scope.dtTableAsync.cancel = function(elt){
+			    	scope.dtTableFunctions.cancel = function(elt){
 		    			scope.dtTable.setSpinner(true);
 		    			$timeout(function(){scope.dtTable.cancel()}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
@@ -1558,7 +1577,7 @@ angular.module('datatableServices', []).
 		    					    			
 		    		};
 			    	
-		    		scope.dtTableAsync.setNumberRecordsPerPage = function(elt){
+		    		scope.dtTableFunctions.setNumberRecordsPerPage = function(elt){
 		    			scope.dtTable.setSpinner(true);
 		    			$timeout(function(){scope.dtTable.setNumberRecordsPerPage(elt)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
@@ -1567,38 +1586,38 @@ angular.module('datatableServices', []).
 		    				    			
 		    		};
 		    		
-		    		scope.dtTableAsync.setPageNumber = function(page){
+		    		scope.dtTableFunctions.setPageNumber = function(page){
 		    			scope.dtTable.setSpinner(true);
 		    			$timeout(function(){scope.dtTable.setPageNumber(page)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
 		    			});  		    				    			    		
 		    		};
 		    		
-		    		scope.dtTableAsync.setEdit = function(columnId){
+		    		scope.dtTableFunctions.setEdit = function(column){
 		    			scope.dtTable.setSpinner(true);
-		    			$timeout(function(){scope.dtTable.setEdit(columnId)}).then(function(){
+		    			$timeout(function(){scope.dtTable.setEdit(column)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
 		    			});		    			
 		    		};
 		    		
-		    		scope.dtTableAsync.setOrderColumn = function(columnProperty, columnId){
+		    		scope.dtTableFunctions.setOrderColumn = function(column){
 		    			scope.dtTable.setSpinner(true);
-		    			$timeout(function(){scope.dtTable.setOrderColumn(columnProperty, columnId)}).then(function(){
+		    			$timeout(function(){scope.dtTable.setOrderColumn(column)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
 		    			});	
 		    			
 		    		};
 		    		
-		    		scope.dtTableAsync.setHideColumn = function(columnId){
+		    		scope.dtTableFunctions.setHideColumn = function(column){
 		    			scope.dtTable.setSpinner(true);
-		    			$timeout(function(){scope.dtTable.setHideColumn(columnId)}).then(function(){
+		    			$timeout(function(){scope.dtTable.setHideColumn(column)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
 		    			});
 		    		};
 		    		
-		    		scope.dtTableAsync.setGroupColumn = function(columnProperty, columnId){
+		    		scope.dtTableFunctions.setGroupColumn = function(column){
 		    			scope.dtTable.setSpinner(true);
-		    			$timeout(function(){scope.dtTable.setGroupColumn(columnProperty, columnId)}).then(function(){
+		    			$timeout(function(){scope.dtTable.setGroupColumn(column)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
 		    			});
 		    		};			    	
@@ -1622,65 +1641,65 @@ angular.module('datatableServices', []).
   		    	template:'<div name="dt-toolbar" class="row margin-bottom-3"><div class="col-md-12 col-lg-12">'
   		    		+'<div class="btn-toolbar pull-left" name="dt-toolbar-buttons" ng-if="dtTable.isShowToolbarButtons()">'
   		    		+'<div class="btn-group"  ng-switch on="dtTable.config.select.isSelectAll">'
-  		    		+	'<button class="btn btn-default" ng-click="dtTable.selectAll(true)" ng-show="dtTable.isShowButton(\'select\')" ng-switch-when="false" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.selectall\')}}">'
+  		    		+	'<button class="btn btn-default" ng-click="dtTable.selectAll(true)" ng-show="dtTable.isShowButton(\'select\')" ng-switch-when="false" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.selectall\')}}">'
   		    		+		'<i class="fa fa-check-square"></i>'
-  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{messagesDatatable(\'datatable.button.selectall\')}}</span>'
+  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.selectall\')}}</span>'
   		    		+	'</button>'
-  		    		+	'<button class="btn btn-default" ng-click="dtTable.selectAll(false)" ng-show="dtTable.isShowButton(\'select\')" ng-switch-when="true" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.unselectall\')}}">'
+  		    		+	'<button class="btn btn-default" ng-click="dtTable.selectAll(false)" ng-show="dtTable.isShowButton(\'select\')" ng-switch-when="true" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.unselectall\')}}">'
   		    		+		'<i class="fa fa-square"></i>'
-    				+		'<span ng-if="!dtTable.isCompactMode()"> {{messagesDatatable(\'datatable.button.unselectall\')}}</span>'
+    				+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.unselectall\')}}</span>'
   		    		+	'</button>'
-  		    		+	'<button class="btn btn-default" ng-click="dtTableAsync.cancel()"  ng-if="dtTable.isShowButton(\'cancel\')" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.cancel\')}}">'
+  		    		+	'<button class="btn btn-default" ng-click="dtTableFunctions.cancel()"  ng-if="dtTable.isShowButton(\'cancel\')" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.cancel\')}}">'
   		    		+		'<i class="fa fa-undo"></i>'
-  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{messagesDatatable(\'datatable.button.cancel\')}}</span>'
+  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.cancel\')}}</span>'
   		    		+	'</button>'
-  		    		+	'<button class="btn btn-default" ng-click="dtTable.show()" ng-disabled="!dtTable.isSelect()" ng-if="dtTable.isShowButton(\'show\')" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.show\')}}">'
+  		    		+	'<button class="btn btn-default" ng-click="dtTable.show()" ng-disabled="!dtTable.isSelect()" ng-if="dtTable.isShowButton(\'show\')" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.show\')}}">'
   		    		+		'<i class="fa fa-thumb-tack"></i>'
-  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{messagesDatatable(\'datatable.button.show\')}}</span>'
+  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.show\')}}</span>'
   		    		+	'</button>'  		    		
   		    		+'</div>'
   		    		+'<div class="btn-group" ng-if="dtTable.isShowCRUDButtons()">'
-  		    		+	'<button class="btn btn-default" ng-click="dtTableAsync.setEdit()" ng-disabled="!dtTable.canEdit()"  ng-if="dtTable.isShowButton(\'edit\')" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.edit\')}}">'
+  		    		+	'<button class="btn btn-default" ng-click="dtTableFunctions.setEdit()" ng-disabled="!dtTable.canEdit()"  ng-if="dtTable.isShowButton(\'edit\')" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.edit\')}}">'
   		    		+		'<i class="fa fa-edit"></i>'
-  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{messagesDatatable(\'datatable.button.edit\')}}</span>'
+  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.edit\')}}</span>'
   		    		+	'</button>'	
-  		    		+	'<button class="btn btn-default" ng-click="dtTable.save()" ng-disabled="!dtTable.canSave()" ng-if="dtTable.isShowButton(\'save\')"  data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.save\')}}" >'
+  		    		+	'<button class="btn btn-default" ng-click="dtTable.save()" ng-disabled="!dtTable.canSave()" ng-if="dtTable.isShowButton(\'save\')"  data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.save\')}}" >'
   		    		+		'<i class="fa fa-save"></i>'
-  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{messagesDatatable(\'datatable.button.save\')}}</span>'
+  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.save\')}}</span>'
   		    		+	'</button>'	
-  		    		+	'<button class="btn btn-default" ng-click="dtTable.remove()" ng-disabled="!dtTable.canRemove()" ng-if="dtTable.isShowButton(\'remove\')"  data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.remove\')}}">'
+  		    		+	'<button class="btn btn-default" ng-click="dtTable.remove()" ng-disabled="!dtTable.canRemove()" ng-if="dtTable.isShowButton(\'remove\')"  data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.remove\')}}">'
   		    		+		'<i class="fa fa-trash-o"></i>'
-  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{messagesDatatable(\'datatable.button.remove\')}}</span>'
+  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.remove\')}}</span>'
   		    		+	'</button>'
   		    		+'</div>'
   		    		+'<div class="btn-group" ng-if="dtTable.isShowHideButtons()">' //todo bt-select
-  		    		+	'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.hide\')}}">'
+  		    		+	'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.hide\')}}">'
   		    		+		'<i class="fa fa-eye-slash fa-lg"></i> '
-  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{messagesDatatable(\'datatable.button.hide\')}} </span>'
+  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.hide\')}} </span>'
   		    		+		'<span class="caret"></span>'  		    		
   		    		+	'</button>'
   		    		+	'<ul class="dropdown-menu">'
   		    		+		'<li ng-repeat="column in dtTable.getHideColumns()">'
-  		    		+		'<a href="#" ng-click="dtTableAsync.setHideColumn(column.id)" ng-switch on="dtTable.isHide(column.id)"><i class="fa fa-eye" ng-switch-when="true"></i><i class="fa fa-eye-slash" ng-switch-when="false"></i> <span ng-bind="dtTable.getHeader(column.header)"/></a>'
+  		    		+		'<a href="#" ng-click="dtTableFunctions.setHideColumn(column)" ng-switch on="dtTable.isHide(column.id)"><i class="fa fa-eye" ng-switch-when="true"></i><i class="fa fa-eye-slash" ng-switch-when="false"></i> <span ng-bind="dtTableFunctions.messagesDatatable(column.header)"/></a>'
   		    		+		'</li>'
   		    		+	'</ul>'
   		    		+'</div>'  		    		
   		    		+'<div class="btn-group" ng-if="dtTable.isShowOtherButtons()" dt-compile="dtTable.config.otherButtons.template"></div>'
   		    		+'</div>'
   		    		+'<div class="btn-toolbar pull-right" name="dt-toolbar-results"  ng-if="dtTable.isShowToolbarResults()">'
-  		    		+	'<button class="btn btn-info" disabled="disabled" ng-if="dtTable.config.showTotalNumberRecords">{{messagesDatatable(\'datatable.totalNumberRecords\', dtTable.totalNumberRecords)}}</button>'
+  		    		+	'<button class="btn btn-info" disabled="disabled" ng-if="dtTable.config.showTotalNumberRecords">{{dtTableFunctions.messagesDatatable(\'datatable.totalNumberRecords\', dtTable.totalNumberRecords)}}</button>'
   		    		+'</div>'
   		    		+'<div class="btn-toolbar pull-right" name="dt-toolbar-pagination"  ng-if="dtTable.isShowToolbarPagination()">'
   		    		+	'<div class="btn-group" ng-if="dtTable.isShowPagination()">'
-  		    		+		'<ul class="pagination"><li ng-repeat="page in dtTable.config.pagination.pageList" ng-class="page.clazz"><a href="#" ng-click="dtTableAsync.setPageNumber(page)" ng-bind="page.label"></a></li></ul>'
+  		    		+		'<ul class="pagination"><li ng-repeat="page in dtTable.config.pagination.pageList" ng-class="page.clazz"><a href="#" ng-click="dtTableFunctions.setPageNumber(page)" ng-bind="page.label"></a></li></ul>'
   		    		+	'</div>'
   		    		+	'<div class="btn-group">'
   		    		+		'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">'
-  		    		+		'{{messagesDatatable(\'datatable.button.length\', dtTable.config.pagination.numberRecordsPerPage)}} <span class="caret"></span>'
+  		    		+		'{{dtTableFunctions.messagesDatatable(\'datatable.button.length\', dtTable.config.pagination.numberRecordsPerPage)}} <span class="caret"></span>'
   		    		+		'</button>'
   		    		+		'<ul class="dropdown-menu">'
   		    		+			'<li ng-repeat="elt in dtTable.config.pagination.numberRecordsPerPageList" class={{elt.clazz}}>'
-  		    		+				'<a href="#" ng-click="dtTableAsync.setNumberRecordsPerPage(elt)">{{elt.number}}</a>' 
+  		    		+				'<a href="#" ng-click="dtTableFunctions.setNumberRecordsPerPage(elt)">{{elt.number}}</a>' 
   		    		+			'</li>'
   		    		+		'</ul>'
   		    		+	'</div>'
@@ -1718,16 +1737,16 @@ angular.module('datatableServices', []).
   		    		+'<table class="table table-condensed table-hover table-bordered">'
   		    		+'<thead>'
   		    		+'<tr ng-repeat="(key,headers) in dtTable.getExtraHeaderConfig()">'
-  		    		+	'<th colspan="{{header.colspan}}" ng-repeat="header in headers"><span ng-bind="dtTable.getHeader(header.label)"/></th>'
+  		    		+	'<th colspan="{{header.colspan}}" ng-repeat="header in headers"><span ng-bind="dtTableFunctions.messagesDatatable(header.label)"/></th>'
   		    		+'</tr>'
   		    		+'<tr>'
   		    		+	'<th id="{{column.id}}" ng-repeat="column in dtTable.getColumnsConfig()" ng-if="!dtTable.isHide(column.id)">'
-  		    		+	'<span ng-bind="dtTable.getHeader(column.header)"/>'
+  		    		+	'<span ng-bind="dtTableFunctions.messagesDatatable(column.header)"/>'
   		    		+	'<div class="btn-group pull-right">'
-  		    		+	'<button class="btn btn-xs" ng-click="dtTableAsync.setEdit(column.id)" ng-if="dtTable.isShowButton(\'edit\', column)" ng-disabled="!dtTable.canEdit()" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'
-  		    		+	'<button class="btn btn-xs" ng-click="dtTableAsync.setOrderColumn(column.property, column.id)" ng-if="dtTable.isShowButton(\'order\', column)" ng-disabled="!dtTable.canOrder()" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.sort\')}}"><i ng-class="dtTable.getOrderColumnClass(column.id)"></i></button>'
-  		    		+	'<button class="btn btn-xs" ng-click="dtTableAsync.setHideColumn(column.id)" ng-if="dtTable.isShowButton(\'hide\', column)" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.hide\')}}"><i class="fa fa-eye-slash"></i></button>'
-  		    		+	'<button class="btn btn-xs" ng-click="dtTableAsync.setGroupColumn(column.property, column.id)" ng-if="dtTable.isShowButton(\'group\', column)" data-toggle="tooltip" title="{{messagesDatatable(\'datatable.button.group\')}}"><i ng-class="dtTable.getGroupColumnClass(column.id)"></i></button>'  		    		
+  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setEdit(column)" ng-if="dtTable.isShowButton(\'edit\', column)" ng-disabled="!dtTable.canEdit()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'
+  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setOrderColumn(column)" ng-if="dtTable.isShowButton(\'order\', column)" ng-disabled="!dtTable.canOrder()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.sort\')}}"><i ng-class="dtTable.getOrderColumnClass(column.id)"></i></button>'
+  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setHideColumn(column)" ng-if="dtTable.isShowButton(\'hide\', column)" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.hide\')}}"><i class="fa fa-eye-slash"></i></button>'
+  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setGroupColumn(column)" ng-if="dtTable.isShowButton(\'group\', column)" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}"><i ng-class="dtTable.getGroupColumnClass(column.id)"></i></button>'  		    		
   		    		+	'</div>'
   		    		+	'</th>'
   		    		+'</tr>'
@@ -1738,8 +1757,8 @@ angular.module('datatableServices', []).
   		    		+			'<div dt-cell-header/>'
   		    		+		'</td>'
   		    		+	'</tr>'
-  		    		+	'<tr ng-repeat="value in dtTable.displayResult" ng-click="select(value.line)" ng-class="getTrClass(value.data, value.line, this)">'
-  		    		+		'<td ng-repeat="col in dtTable.config.columns" rowspan="{{col.cells[$parent.$index].rowSpan}}" ng-if="!dtTable.isHide(col.id)" ng-class="getTdClass(value.data, col, this)">'
+  		    		+	'<tr ng-repeat="value in dtTable.displayResult" ng-click="dtTableFunctions.select(value.line)" ng-class="dtTableFunctions.getTrClass(value.data, value.line, this)">'
+  		    		+		'<td ng-repeat="col in dtTable.config.columns" rowspan="{{col.cells[$parent.$index].rowSpan}}" ng-if="!dtTable.isHide(col.id)" ng-class="dtTableFunctions.getTdClass(value.data, col, this)">'
   		    		+		'<div dt-cell/>'
   		    		+		'</td>'
   		    		+	'</tr>'
@@ -1748,35 +1767,38 @@ angular.module('datatableServices', []).
   		    		+'</form>'
   		    		+'</div></div>',
   		    	link: function(scope, element, attr) {
-  		    		scope.getTrClass = function(data, line){
-  		    			var dtTable = this.dtTable;
+  		    		if(!scope.dtTableFunctions){scope.dtTableFunctions = {};}
+  		    		
+  		    		scope.dtTableFunctions.getTrClass = function(data, line, currentScope){
+  		    			var dtTable = scope.dtTable;
 	    				if(line.trClass){
 	    					return line.trClass; 
 	    				} else if(angular.isFunction(dtTable.config.lines.trClass)){
 	    					return dtTable.config.lines.trClass(data, line);
 	    				} else if(angular.isString(dtTable.config.lines.trClass)){
-	    					return this.$eval(dtTable.config.lines.trClass) || dtTable.config.lines.trClass;
+	    					return currentScope.$eval(dtTable.config.lines.trClass) || dtTable.config.lines.trClass;
 	    				} else if(line.group){
 	    					return "active";
 	    				} else{
 	    					return '';
 	    				}		    				
 	    			};
-	    			scope.getTdClass = function(data, col){
+	    			scope.dtTableFunctions.getTdClass = function(data, col, currentScope){
 	    				if(angular.isFunction(col.tdClass)){
 	    					return col.tdClass(data);
 	    				} else if(angular.isString(col.tdClass)){
 	    					//we try to evaluation the string against the scope
-	    					return this.$eval(col.tdClass) || col.tdClass;
+	    					return currentScope.$eval(col.tdClass) || col.tdClass;
 	    				}else{
 	    					return '';
 	    				}
 	    			};
+	    		
 	    			/**
 					 * Select all the table line or just one
 					 */
-					scope.select = function(line){
-						var dtTable = this.dtTable;
+					scope.dtTableFunctions.select = function(line){
+						var dtTable = scope.dtTable;
 						if(dtTable.config.select.active){
 		    				if(line){
 		    					if(!line.selected  && !line.group){
@@ -1804,7 +1826,98 @@ angular.module('datatableServices', []).
 	  		    		+'<div ng-if="!col.edit" dt-cell-read></div>'		    		
   		    		+'</div>',
 	    		link: function(scope, element, attr) {
-  		    		//console.log("dtCell");  		    		
+  		    		//console.log("dtCell");
+	    			if(!scope.dtTableFunctions){scope.dtTableFunctions = {};}
+	    			
+	    			scope.dtTableFunctions.getEditElement = function(col, header){
+	    				var editElement = '';
+	    				var ngChange = '"';
+    			    	if(header){
+    			    		ngChange = '" ng-change="dtTable.updateColumn(col.property, col.id)"';	    			    		
+    			    	}
+	    						    				
+	    				if(col.type === "boolean"){
+	    					editElement = '<input class="form-control" dt-html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+'/>';
+	    				}else if(!col.choiceInList){
+	    					editElement = '<input class="form-control" dt-html-filter="{{col.type}}" type="'+col.type+'" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+this.getDateTimestamp(col.type)+'/>';
+	    				}else if(col.choiceInList){
+	    					switch (col.listStyle) { 
+	    						case "radio":
+	    							editElement = '<label ng-repeat="opt in col.possibleValues"  for="radio{{col.id}}"><input id="radio{{col.id}}" dt-html-filter="{{col.type}}" type="radio" ng-model="'+this.getEditProperty(col,hearder)+ngChange+' value="{{opt.name}}">{{opt.name}}<br></label>';
+	    							break;		    						
+	    						case "multiselect":
+	    							editElement = '<select class="form-control" multiple="true" ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></select>';
+		    						break;
+	    						case "bt-select":
+	    							editElement = '<div class="form-control" bt-select placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
+	    							break;
+	    						case "bt-select-multiple":
+	    							editElement = '<div class="form-control" bt-select multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
+	    							break;
+	    						default:
+	    							editElement = '<select class="form-control" ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></select>';
+		    						break;
+		  	    			}		    					
+	    				}else{
+	    					editElement = "Edit Not Defined for col.type !";
+	    				}		    						    				
+	    				return '<div class="form-group">'+editElement+'</div>';
+	    			};
+	    			
+	    			
+	    			scope.dtTableFunctions.getEditProperty = function(col, header){
+	    				if(header){
+    			    		return  "dtTable.config.edit.columns."+col.id+".value";
+    			    	} else if(angular.isString(col.property)){
+    			    		return "value.data."+col.property;        			    		
+    			    	} else {
+    			    		throw "Error property is not editable !";
+    			    	}		    				
+			    	};
+	    			
+			    	scope.dtTableFunctions.getFormatter = function(col){
+	    				var format = "";
+	    				if(col.type === "date"){
+	    					format += " | date:'"+(col.format?col.format:Messages("date.format"))+"'";
+	    				}else if(col.type === "datetime"){
+	    					format += " | date:'"+(col.format?col.format:Messages("datetime.format"))+"'";
+	    				}else if(col.type === "number"){
+							format += " | number"+(col.format?':'+col.format:'');
+						}	    				
+	    				return format;
+	    			};
+	    			
+	    			scope.dtTableFunctions.getFilter = function(col){
+	    				if(col.filter){
+	    					return '|'+col.filter;
+	    				}
+	    				return '';
+	    			};
+	    			
+	    			scope.dtTableFunctions.getOptions = function(col){
+	    				if(angular.isString(col.possibleValues)){
+	    					return col.possibleValues;
+	    				}else{ //function
+	    					return 'col.possibleValues';
+	    				}
+	    			};
+	    			
+	    			scope.dtTableFunctions.getGroupBy = function(col){
+	    				if(angular.isString(col.groupBy)){
+	    					return 'group by opt.'+col.groupBy;
+	    				}else{
+	    					return '';
+	    				}
+	    					
+	    			};
+	    			
+	    			scope.dtTableFunctions.getDateTimestamp = function(colType){
+	    				if(colType==="date"){
+	    					return 'date-timestamp';
+	    				}
+	    				
+	    				return '';
+	    			};
   		    	}
     		};
     	}).directive("dtEditableCell", function(){
@@ -1828,17 +1941,19 @@ angular.module('datatableServices', []).
   		    	replace:true,
   		    	template:	
   		    		'<div ng-if="col.edit" ng-switch on="dtTable.isEdit(col.id)">'  		    			
-  		    		+	'<div ng-switch-when="true" dt-compile="dtTable.getEditElement(col, true)"></div><div ng-switch-default></div>'
+  		    		+	'<div ng-switch-when="true" dt-compile="dtTableFunctions.getEditElement(col, true)"></div><div ng-switch-default></div>'
   		    		+'</div>',
   		    	link: function(scope, element, attr) {
-  	  		    	//console.log("dtCellHeader");  		    		
+  	  		    	//console.log("dtCellHeader");  	
+  		    		
+  		    		
   	  		    }
     		};
     	}).directive("dtCellEdit", function($compile){
     		return {
     			restrict: 'A',
   		    	replace:true,
-  		    	template:'<div dt-compile="dtTable.getEditElement(col)"></div>', 
+  		    	template:'<div dt-compile="dtTableFunctions.getEditElement(col)"></div>', 
   		    	link: function(scope, element, attr) {
   		    		//console.log("dtCellEdit")  		    		
   		    	}
@@ -1848,10 +1963,42 @@ angular.module('datatableServices', []).
     		return {
     			restrict: 'A',
   		    	replace:true,
-  		    	template:'<div dt-compile="dtTable.getValueElement(col)"></div>'  ,
+  		    	template:'<div dt-compile="dtTableFunctions.getDisplayElement(col)"></div>'  ,
   		    	link: function(scope, element, attr) {
   		    		//console.log("dtCellRead");
-  		    		//element.append($compile(scope.dtTable.getValueElement(scope.col))(scope));  		    		
+  		    		if(!scope.dtTableFunctions){scope.dtTableFunctions = {};}
+  		    		
+  		    		scope.dtTableFunctions.getDisplayElement = function(col){
+	    				if(angular.isDefined(col.render) && col.render !== null){
+    						if(angular.isFunction(col.render)){
+    							return '<span dt-compile="dtTable.config.columns[$index].render(value.data, value.line)"></span>';
+    						}else if(angular.isString(col.render)){
+    							return '<span dt-compile="dtTable.config.columns[$index].render"></span>';
+    						}
+	    				}else{
+	    					if(col.type === "boolean"){
+	    						return '<div ng-switch on="'+this.getDisplayFunction(col)+'"><i ng-switch-when="true" class="fa fa-check-square-o"></i><i ng-switch-default class="fa fa-square-o"></i></div>';	    						
+	    					}else if(col.type === "img" || col.type === "image"){
+	    						if(!col.format)console.log("missing format for img !!");
+	    						return '<img ng-src="data:image/'+col.format+';base64,{{'+this.getDisplayFunction(col)+'}}" style="max-width:{{col.width}}"/>';		    					    
+	    					} else{
+	    						return '<span ng-bind="'+this.getDisplayFunction(col)+this.getFilter(col)+this.getFormatter(col)+'"></span>';
+	    					}
+	    				}	  
+	    			};
+	    			
+	    			scope.dtTableFunctions.getDisplayFunction = function(col){
+	    				if(angular.isFunction(col.property)){
+    			    		return "dtTable.config.columns[$index].property(value.data)";
+    			    	}else{
+    			    		return "dtTableFunctions.getDisplayValue(col, value.data, this)";        			    		
+    			    	}		    				
+			    	};
+	    			
+			    	scope.dtTableFunctions.getDisplayValue = function(column, object, currentScope){
+	    				return currentScope.$eval(column.property, object);
+	    			}
+			    	  		    		
   		    	}
     		};
     	}).directive('dtCompile', function($compile) {
