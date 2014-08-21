@@ -5,6 +5,7 @@
 		
 		var getColumns = function(){
 			var columns = [];
+			
 			columns.push({	property:"code",
 				    	  	header: "readsets.code",
 				    	  	type :"text",		    	  	
@@ -268,7 +269,7 @@
 					}
 					
 					for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
-						//remove .value if present to manage correctly properties
+						//remove .value if present to manage correctly properties (single, list, etc.)
 						
 						this.form.includes.push(this.selectedAddColumns[i].property.replace('.value',''));
 					}

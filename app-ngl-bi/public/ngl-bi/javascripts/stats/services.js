@@ -272,7 +272,7 @@
 			queriesConfigs =  queriesConfigReadSetsService.queries;
 			var properties = ["default"];
 			for(var i = 0; i < statsConfigs.length; i++){
-				properties.push(statsConfigs[i].column.property);
+				properties.push(statsConfigs[i].column.property.replace('.value',''));
 			}
 			
 			var promises = [];
@@ -344,10 +344,11 @@
 	var getZScoreChart = function(statsConfig){
 		var property = getProperty(statsConfig.column);
 		var data = readsetDatatable.getData();
-		var statData = data.map(function(value){return $parse(property)(value)});
+		var getter = $parse(property);
+		var statData = data.map(function(value){return getter(value)});
 		var mean = ss.mean(statData);
 		var stdDev = ss.standard_deviation(statData);
-		var zscodeData = data.map(function(x){return {name:x.code,  y:ss.z_score($parse(property)(x), mean, stdDev), _value:$parse(property)(x)};});
+		var zscodeData = data.map(function(x){return {name:x.code,  y:ss.z_score(getter(x), mean, stdDev), _value:getter(x)};});
 		
 		var chart = {
 		        chart: {
@@ -407,7 +408,8 @@
 	var getSimpleValueChart = function(statsConfig){
 		var property = getProperty(statsConfig.column);
 		var data = readsetDatatable.getData();
-		var statData = data.map(function(x){return {name:x.code,  y:$parse(property)(x)};});
+		var getter = $parse(property);
+		var statData = data.map(function(x){return {name:x.code,  y:getter(x)};});
 		
 		var chart = {
 		        chart: {
