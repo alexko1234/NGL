@@ -28,7 +28,9 @@ angular.module('datatableServices', []).
 													"format" : null, //number format or date format or datetime format
 													"extraHeaders":{"0":"Inputs"}, //the extraHeaders list
 													"tdClass : function with data and property as parameter than return css class or just the css class",
-													"position": position of the column
+													"position": position of the column,
+													"group": false //if column can be used to group data
+													"groupMethod": sum, average, distinct
 													"
 												  }*/
 							columnsUrl:undefined, //Load columns config
@@ -247,7 +249,7 @@ angular.module('datatableServices', []).
 		    			 */
 		    			computeGroup: function(){
 		    				if(this.config.group.active && this.config.group.by){
-		    						var groupGetter = $parse(this.config.group.by);
+		    						var groupGetter = $parse(this.config.group.by.property);
 			    					var groupValues = this.allResult.reduce(function(array, value){
 			    						var groupValue = groupGetter(value);
 				    					if(!array[groupValue]){
@@ -261,28 +263,35 @@ angular.module('datatableServices', []).
 				    					var group = {};
 				    					var groupData = groupValues[key];
 				    					
-				    					groupGetter.assign(group, key);
-				    					var numberColumns = this.getColumnsConfig().filter(function(column){
-					    					return (column.type === 'number');
+				    					$parse("group."+this.config.group.by.id).assign(group, key);
+				    					var groupMethodColumns = this.getColumnsConfig().filter(function(column){
+					    					return (column.groupMethod !== undefined && column.groupMethod !== null);
 					    				});
 				    					//compute for each number column the sum
-				    					numberColumns.forEach(function(column){
+				    					groupMethodColumns.forEach(function(column){
 				    						var propertyGetter = column.property;
 				    						propertyGetter += (column.filter)?'|'+column.filter:'';
-				    						
-				    						var propertySetter = column.property.split('|',2)[0];
-				    						
-				    						var columnSetter = $parse(propertySetter);
 				    						var columnGetter = $parse(propertyGetter);
-				    						var result = groupData.reduce(function(value, element){
-				    							return value += columnGetter(element);
-				    						}, 0);		
-				    						if(!isNaN(result)){
-				    							try{
-				    								columnSetter.assign(group, result);
-				    							}catch(e){
-				    								console.log("computeGroup Error : "+e);
-				    							}
+				    						var columnSetter = $parse("group."+column.id);
+				    						
+				    						if('sum' === column.groupMethod || 'average' ===  column.groupMethod){
+					    						var result = groupData.reduce(function(value, element){
+					    							return value += columnGetter(element);
+					    						}, 0);	
+					    						
+					    						if('average' ===  column.groupMethod)result = result / groupData.length;
+					    						
+					    						if(!isNaN(result)){
+					    							try{
+					    								columnSetter.assign(group, result);
+					    							}catch(e){
+					    								console.log("computeGroup Error : "+e);
+					    							}
+					    						}
+				    						/*}else if('distinct' === column.groupMethod){
+				    							var result = $filter('unique')(groupData, column.property);
+				    						*/}else{
+				    							console.error("groupMethod is not managed "+column.groupMethod)
 				    						}
 				    					});
 				    					groups[key] = group;
@@ -300,10 +309,9 @@ angular.module('datatableServices', []).
 		    			 */
 		    			setGroupColumn : function(column){
 		    				if(this.config.group.active){
-		    					var columnPropertyName = column.property;
 		    					var columnId = column.id;
-		    					if(this.config.group.by != columnPropertyName){
-		    						this.config.group.by = columnPropertyName;		    						
+		    					if(this.config.group.by === undefined || (this.config.group.by.id != column.id)){
+		    						this.config.group.by = column;		    						
 		    						for(var i = 0; i < this.config.columns.length; i++){
 			    						if(this.config.columns[i].id === columnId){
 			    							this.config.group.columns[this.config.columns[i].id] = true;
@@ -346,7 +354,7 @@ angular.module('datatableServices', []).
 		    			},
 		    			addGroup : function(displayResultTmp){
 		    				var displayResult = [];
-	    					var groupGetter = $parse(this.config.group.by);
+	    					var groupGetter = $parse(this.config.group.by.property);
 	    					var groupConfig = this.config.group;
 	    					displayResultTmp.forEach(function(element, index, array){
 	    						/* previous mode */
@@ -514,7 +522,7 @@ angular.module('datatableServices', []).
 		    				if(this.config.order.active && !this.isRemoteMode(this.config.order.mode)){
 		    					if(this.config.group.active && this.config.group.by ){
 		    						var orderSense = (this.config.order.reverse)?'-':'+';
-		    						this.allResult = $filter('orderBy')(this.allResult,[this.config.group.by, orderSense+this.config.order.by]);		    						
+		    						this.allResult = $filter('orderBy')(this.allResult,[this.config.group.by.property, orderSense+this.config.order.by]);		    						
 		    					}else{
 		    						this.allResult = $filter('orderBy')(this.allResult,this.config.order.by,this.config.order.reverse);	
 		    					}		    					    					
@@ -1196,7 +1204,8 @@ angular.module('datatableServices', []).
 			    					
 			    					columns[i].cells = [];//Init
 			    					
-			    					if(this.config.group.active && (columns[i].property === this.config.group.by)){
+			    					if(this.config.group.active && angular.isDefined(this.config.group.by) && (columns[i].property === this.config.group.by || columns[i].property === this.config.group.by.property)){
+			    						this.config.group.by = columns[i];
 			    						this.config.group.columns[columns[i].id] = true;
 			    						columns[i].group = true;
 			    					}else{
@@ -1980,23 +1989,32 @@ angular.module('datatableServices', []).
 	    						return '<div ng-switch on="'+this.getDisplayFunction(col)+'"><i ng-switch-when="true" class="fa fa-check-square-o"></i><i ng-switch-default class="fa fa-square-o"></i></div>';	    						
 	    					}else if(col.type === "img" || col.type === "image"){
 	    						if(!col.format)console.log("missing format for img !!");
-	    						return '<img ng-src="data:image/'+col.format+';base64,{{'+this.getDisplayFunction(col)+'}}" style="max-width:{{col.width}}"/>';		    					    
+	    						return '<img ng-src="data:image/'+col.format+';base64,{{'+this.getDisplayFunction(col, true)+'}}" style="max-width:{{col.width}}"/>';		    					    
 	    					} else{
-	    						return '<span ng-bind="'+this.getDisplayFunction(col)+this.getFilter(col)+this.getFormatter(col)+'"></span>';
+	    						return '<span ng-bind="'+this.getDisplayFunction(col, false)+'"></span>';
 	    					}
 	    				}	  
 	    			};
 	    			
-	    			scope.dtTableFunctions.getDisplayFunction = function(col){
+	    			scope.dtTableFunctions.getDisplayFunction = function(col, onlyProperty){
 	    				if(angular.isFunction(col.property)){
     			    		return "dtTable.config.columns[$index].property(value.data)";
     			    	}else{
-    			    		return "dtTableFunctions.getDisplayValue(col, value.data, this)";        			    		
+    			    		return "dtTableFunctions.getDisplayValue(col, value, "+onlyProperty+", this)";        			    		
     			    	}		    				
 			    	};
 	    			
-			    	scope.dtTableFunctions.getDisplayValue = function(column, object, currentScope){
-	    				return currentScope.$eval(column.property, object);
+			    	scope.dtTableFunctions.getDisplayValue = function(column, value, onlyProperty, currentScope){
+			    		if(onlyProperty){
+			    			return currentScope.$eval(column.property, value.data);
+			    		}else{
+			    			if(!value.line.group){
+			    				return currentScope.$eval(column.property+this.getFilter(column)+this.getFormatter(column), value.data);
+			    			}else{
+			    				return currentScope.$eval("group."+column.id+this.getFilter(column)+this.getFormatter(column), value.data);
+			    			}
+			    		}
+	    				
 	    			}
 			    	  		    		
   		    	}
