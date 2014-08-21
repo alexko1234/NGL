@@ -86,9 +86,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				},
 				{	property:"valuation.resolutionCodes",
 					header: "runs.lane.valuation.resolutions",
-					render:function(value){						
-						return '<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ng-edit="false"></div>';
-					},
+					render:"<div bt-select ng-model='value.data.valuation.resolutionCodes' bt-options='valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()' ng-edit='false'></div>",
 					type :"String",
 			    	edit:true,
 					order:false,
