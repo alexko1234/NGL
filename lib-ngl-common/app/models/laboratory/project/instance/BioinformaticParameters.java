@@ -1,10 +1,10 @@
 package models.laboratory.project.instance;
 
 /**
- * subset of project
+ * subset of project with bio-informatic data
  * @author dnoisett
- *
  */
+
 public class BioinformaticParameters {
 	
 	public Boolean bioinformaticAnalysis = Boolean.FALSE;	
@@ -31,6 +31,7 @@ public class BioinformaticParameters {
 				+ ", regexBA=" + regexBA 
 				+ ", mappingReference=" + mappingReference + "]";
 	}
+	
 	
 	
 }
