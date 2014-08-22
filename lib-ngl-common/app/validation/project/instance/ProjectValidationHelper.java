@@ -37,11 +37,11 @@ public class ProjectValidationHelper extends CommonValidationHelper {
 
 	public static void validateUmbrellaProjectCode (String umbrellaProjectCode, ContextValidation contextValidation) {		
 		//TODO : temporary unset if
-		//if (ValidationHelper.required(contextValidation, umbrellaProjectCode, "umbrellaProjectCode")) {
+		if (ValidationHelper.required(contextValidation, umbrellaProjectCode, "umbrellaProjectCode")) {
 			if ((umbrellaProjectCode != null) && !MongoDBDAO.checkObjectExist(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class,  DBQuery.is("code", umbrellaProjectCode))) {
 				contextValidation.addErrors("umbrellaProjectCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, umbrellaProjectCode);
 			}
-		//}		 
+		}		 
 	}
 	
 
