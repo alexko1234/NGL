@@ -19,9 +19,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		$http.put(jsRoutes.controllers.projects.api.Projects.update($routeParams.code).url, objProj).success(function(data) {
 			$scope.message.clazz="alert alert-success";
 			$scope.message.text=Messages('projects.msg.save.sucess');
-			//return tab
 			$scope.setTab(1,{label:$scope.project.code,href:jsRoutes.controllers.projects.tpl.Projects.get($scope.project.code).url,remove:false});
 			$scope.activeTab(1);
+			mainService.stopEditMode();
 		}).error(function(data, status, headers, config){
 			$scope.message.clazz="alert alert-danger";
 			$scope.message.text=Messages('projects.msg.save.error');
