@@ -2080,5 +2080,5 @@ angular.module('datatableServices', []).
 					    	  return convertedData;
 					    });   
 					  }
-					}
+					};
 			});
