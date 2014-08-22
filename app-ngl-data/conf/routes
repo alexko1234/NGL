@@ -33,6 +33,7 @@ GET		/cns/update-content-sample			    controllers.migration.cns.UpdateSampleType
 GET		/cns/update-readset					    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationReadset()
 GET		/cng/migration-sequencing				controllers.migration.cng.AddSequencingProgramType.migration()
 GET		/migration-sequencing-run				controllers.migration.AddSequencingProgramTypeToRun.migration()
+GET		/migration-vcc							controllers.migration.ValuationCriteriaCodes.migration()
 
 #GET 	/update/readsetfile/:code				controllers.migration.cns.MigrationReadSetFileCNS.updateFileReadSet(code: java.lang.String)
 
