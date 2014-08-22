@@ -125,7 +125,7 @@ angular.module('datatableServices', []).
 							},
 							messages:{
 								active:false,
-								errorClass:'alert alert-danger,
+								errorClass:'alert alert-danger',
 								successClass: 'alert alert-success',
 								errorKey:{save:'datatable.msg.error.save',remove:'datatable.msg.error.remove'},
 								successKey:{save:'datatable.msg.success.save',remove:'datatable.msg.success.remove'},
