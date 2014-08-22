@@ -14,6 +14,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		
 		$http.put(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.update($routeParams.code).url, objProj).success(function(data) {
 			$scope.messages.setSuccess("save");
+			mainService.stopEditMode();
+		}).error(function(data, status, headers, config){
+			$scope.messages.setError("save");
 		});
 	};
 	
@@ -31,8 +34,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	
 	/* main section  */
 	var init = function() {
-		$scope.messages = messages();
-		
+		$scope.messages = messages();	
 		$scope.mainService = mainService;
 		$scope.mainService.stopEditMode();
 
