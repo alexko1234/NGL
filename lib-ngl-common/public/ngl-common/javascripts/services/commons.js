@@ -689,11 +689,23 @@ angular.module('commonsServices', []).
     	    	
     	    	var params = {sum:0, key:key};
     	    	angular.forEach(array, function(value, index){
-    	    		if(params.key && angular.isObject(value))params.sum = params.sum + value[params.key];
+    	    		if(params.key && angular.isObject(value))params.sum = params.sum + $parse(params.key)(value);
     	    		else if(!params.key && angular.isObject(value))throw "missing key !";
     	    		else params.sum = params.sum + value;
     	    	}, params);
     	    	return params.sum;
+    	    };
+    	}]).filter('get', ['$parse',function($parse) {
+    	    return function(object, key) {
+    	    	if(!object)return undefined;
+    	    	if(angular.isArray(object) && object.length === 1) object = object[0];
+    	    	else if(angular.isArray(object) && object.length > 1){
+    	    		object = object[0];
+    	    		console.log("input contains several values take the first !");
+    	    	}
+    	    	if(!angular.isObject(object))return object;
+    	    	if(key && !angular.isString(key))throw "key is not valid, only string is authorized";
+    	    	return $parse(key)(object);
     	    };
     	}]).filter('codes', function(){
     		return function(input, key){
