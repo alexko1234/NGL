@@ -139,9 +139,17 @@
 					@views.html.helper.columnLabelValue(Messages("readsets.runType")){
 						<p class="form-control-static" >{{readset.runTypeCode}}</p>
 					}
-					
 					@views.html.helper.columnLabelValue(Messages("readsets.nbCycles")){
 						<p class="form-control-static" >{{runNGSRG["default"].nbCycle.value}}</p>
+					}
+					@views.html.helper.columnLabelValue(Messages("runs.sequencingStartDate")){
+						<p class="form-control-static">{{readset.runSequencingStartDate|date:'@Messages("date.format")'}}</p>
+					}
+					@views.html.helper.columnLabelValue(Messages("readsets.endOfRG")){
+						<p class="form-control-static">{{readset.state.historical|filter:'F-RG'|get:'date'|date:'@Messages("datetime.format")'}}</p>
+					}
+					@views.html.helper.columnLabelValue(Messages("readsets.endOfQC")){
+						<p class="form-control-static">{{readset.state.historical|filter:'F-QC'|get:'date'|date:'@Messages("datetime.format")'}}</p>
 					}
 				}
 				</div>

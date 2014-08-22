@@ -152,6 +152,12 @@
 			@views.html.helper.columnLabelValue(Messages("runs.intrumentTypeCode")){
 				<p class="form-control-static">{{run.instrumentUsed.typeCode}}</p>
 			}
+			@views.html.helper.columnLabelValue(Messages("runs.sequencingStartDate")){
+				<p class="form-control-static">{{run.sequencingStartDate|date:'@Messages("date.format")'}}</p>
+			}
+			@views.html.helper.columnLabelValue(Messages("runs.endOfRG")){
+				<p class="form-control-static">{{run.state.historical|filter:'F-RG'|get:'date'|date:'@Messages("datetime.format")'}}</p>
+			}
 		}
 		</div>	
 		

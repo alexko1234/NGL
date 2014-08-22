@@ -21,6 +21,11 @@
 										type :"Date",
 								    	order:true
 									},
+									{	property:"state.historical|filter:'F-RG'|get:'date'",
+										header: "runs.endOfRG",
+										type :"datetime",
+								    	order:true
+									},
 									{	property:"state.code",
 										filter:"codes:'state'",					
 										header: "runs.stateCode",

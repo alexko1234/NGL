@@ -143,6 +143,7 @@ runs.nbBase=Nb Bases (total)
 #runs - main
 runs.creationdate=Date de Création
 runs.sequencingStartDate = Date Run
+runs.endOfRG = Date fin RG
 
 # a vérifier
 runs.dispatch=Dispatch
@@ -248,6 +249,9 @@ readsets.properties.isSentCCRT = Envoyé CCRT ?
 readsets.properties.isSentCollaborator = Envoyé Collaborateur ?
 
 readsets.sampleOnContainer.percentPerLane = % déposé
+
+readsets.endOfRG = Date fin RG
+readsets.endOfQC = Date fin QC
 
 #treatments properties
 readsets.treatments.contamination.read1_2 = Read 1 + Read 2
