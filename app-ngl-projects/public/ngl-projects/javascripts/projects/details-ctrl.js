@@ -11,16 +11,12 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	$scope.update = function(){
 		var objProj = angular.copy($scope.project);
 		
-		$http.put(jsRoutes.controllers.projects.api.Projects.update($routeParams.code).url, objProj).success(function(data) {
-			$scope.messages.isDetails = false;
-			$scope.messages.showDetails=false;
+		$http.put(jsRoutes.controllers.projects.api.Projects.update($routeParams.code).url, objProj).success(function(data) {	
 			$scope.messages.setSuccess("save");
 			mainService.stopEditMode();
 		}).error(function(data, status, headers, config){
 			$scope.messages.setError("save");
-			$scope.messages.details = data;
-			$scope.messages.isDetails = true;
-			$scope.messages.showDetails=false;
+			$scope.messages.setDetails(data);
 		});
 	};
 	
