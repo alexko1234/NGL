@@ -14,16 +14,16 @@ error.badtype = Mauvais type : {0} / {1}
 error.notactive = Propriété non active 
 error.notdefined = Propriété non définie
 error.required = Propriété obligatoire
-error.codenotunique = Le code {0} n'est pas unique.
-error.notunique = la valeur {0} de la propriété {1} n'est pas unique.
-error.codeNotFound= L''objet {0} de type {1} n'a pas ete trouvé
-error.codenotexists= Le code {0} du type {1} n'existe pas
-error.badstate = L''object {0} n'est pas dans le bon etat.
+error.codenotunique = Le code {0} n''est pas unique.
+error.notunique = la valeur {0} de la propriété {1} n''est pas unique.
+error.codeNotFound= L''objet {0} de type {1} n''a pas été trouvé
+error.codenotexists= Le code {0} du type {1} n''existe pas
+error.badstate = L''object {0} n'est pas dans le bon état.
 
 error.validationexp.percentperoutputcontainer= "Le pourcentage total à déposer sur la piste est différent de 100% (il vaut  {0}%)."
 error.validationexp.emptyoutputcontainer="La lane ne possède aucun content."
-error.validationexp.manytagCategory="Plusieurs catégories d’index sont présentes"
-error.validationexp.sametag="L’index {0} n’est pas unique (containers concernés : {1},{2})"
+error.validationexp.manytagCategory="Plusieurs catégories d''index sont présentes"
+error.validationexp.sametag="L''index {0} n’est pas unique (containers concernés : {1},{2})"
 
 #directive messages
 msg.details = [détails]

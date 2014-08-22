@@ -7,18 +7,32 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	$scope.form = {				
 	}
 	
+	$scope.clearMessages  = function(){
+		$scope.message = {clazz : undefined, text : undefined, showDetails : false, isDetails : false, details : []};
+	};
+	
 	
 	/* buttons section */
 	$scope.update = function(){
 		var objProj = angular.copy($scope.project);
 		
 		$http.put(jsRoutes.controllers.projects.api.Projects.update($routeParams.code).url, objProj).success(function(data) {
-			$scope.messages.setSuccess("save");
+			$scope.message.clazz="alert alert-success";
+			$scope.message.text=Messages('projects.msg.save.sucess');
+			//return tab
+			$scope.setTab(1,{label:$scope.project.code,href:jsRoutes.controllers.projects.tpl.Projects.get($scope.project.code).url,remove:false});
+			$scope.activeTab(1);
+		}).error(function(data, status, headers, config){
+			$scope.message.clazz="alert alert-danger";
+			$scope.message.text=Messages('projects.msg.save.error');
+			$scope.message.details = data;
+			$scope.message.isDetails = true;
+			$scope.message.showDetails=false;
 		});
 	};
 	
 	$scope.cancel = function(){
-		$scope.messages.clear();
+		$scope.clearMessages();	
 		updateData(true);				
 	};
 	
@@ -33,7 +47,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	/* main section  */
 	var init = function(){
 		
-		$scope.messages = messages();
+		$scope.clearMessages();		
 		$scope.lists = lists;
 		$scope.lists.refresh.states({objectTypeCode:"Project"});
 		$scope.lists.refresh.projectTypes();
@@ -62,3 +76,4 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	
 	
 }]);
+

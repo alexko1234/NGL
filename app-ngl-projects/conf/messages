@@ -78,3 +78,8 @@ button.edit = Editer
 #tab
 projects.details.general = Général
 projects.details.bioinformaticParameters = Paramètres bio-informatique
+
+#msg
+projects.msg.save.sucess = Sauvegarde réussie
+projects.msg.save.error = Sauvegarde échouée
+projects.msg.details = [détails]

@@ -25,7 +25,13 @@
 </div>
 
 <div class="row">
-	<div class="col-md-12 col-lg-12"  messages="messages"></div>
+	<div class="col-md-12 col-lg-12">
+		<div ng-class="message.clazz" ng-show="message.text !== undefined">
+			<button class="close" data-dismiss="alert" type="button">×</button>
+			<strong>{{message.text}}</strong><button class="btn btn-link" ng-click="message.showDetails=!message.showDetails" ng-show="message.isDetails">@(Messages("projects.msg.details"))</button>
+			<div ng-show="message.showDetails"> {{message.details}}</div>
+		</div>
+	</div>
 </div>
 
 
