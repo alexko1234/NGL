@@ -6,7 +6,7 @@ angular.module('commonsServices', []).
 				var messages = {
 						
 						configDefault : {
-							errorClass:'alert alert-error',
+							errorClass:'alert alert-danger',
 							successClass: 'alert alert-success',							
 							errorKey:{save:'msg.error.save',remove:'msg.error.remove'},
 							successKey:{save:'msg.success.save',remove:'msg.success.remove'}

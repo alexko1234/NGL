@@ -4,12 +4,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
                                                   
   function($scope, $http, $routeParams, messages, lists, mainService, tabService) {
 		
-	$scope.form = {				
-	}
-	
-	$scope.clearMessages  = function(){
-		$scope.message = {clazz : undefined, text : undefined, showDetails : false, isDetails : false, details : []};
-	};
+	$scope.form = {	}
 	
 	
 	/* buttons section */
@@ -17,22 +12,20 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		var objProj = angular.copy($scope.project);
 		
 		$http.put(jsRoutes.controllers.projects.api.Projects.update($routeParams.code).url, objProj).success(function(data) {
-			$scope.message.clazz="alert alert-success";
-			$scope.message.text=Messages('projects.msg.save.sucess');
-			$scope.setTab(1,{label:$scope.project.code,href:jsRoutes.controllers.projects.tpl.Projects.get($scope.project.code).url,remove:false});
-			$scope.activeTab(1);
+			$scope.messages.isDetails = false;
+			$scope.messages.showDetails=false;
+			$scope.messages.setSuccess("save");
 			mainService.stopEditMode();
 		}).error(function(data, status, headers, config){
-			$scope.message.clazz="alert alert-danger";
-			$scope.message.text=Messages('projects.msg.save.error');
-			$scope.message.details = data;
-			$scope.message.isDetails = true;
-			$scope.message.showDetails=false;
+			$scope.messages.setError("save");
+			$scope.messages.details = data;
+			$scope.messages.isDetails = true;
+			$scope.messages.showDetails=false;
 		});
 	};
 	
 	$scope.cancel = function(){
-		$scope.clearMessages();	
+		$scope.messages.clear();
 		updateData(true);				
 	};
 	
@@ -46,8 +39,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 
 	/* main section  */
 	var init = function(){
-		
-		$scope.clearMessages();		
+		$scope.messages = messages();	
 		$scope.lists = lists;
 		$scope.lists.refresh.states({objectTypeCode:"Project"});
 		$scope.lists.refresh.projectTypes();
@@ -56,10 +48,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		
 		$scope.mainService = mainService;
 		$scope.mainService.stopEditMode();
-
 		
 		$http.get(jsRoutes.controllers.projects.api.Projects.get($routeParams.code).url).success(function(data) {
-
 			$scope.project = data;	
 			
 			if(tabService.getTabs().length == 0){
