@@ -114,7 +114,7 @@
 			$scope.lists.refresh.states({objectTypeCode:"ReadSet"});
 			
 			if(angular.isDefined($scope.readset.treatments)){				
-				$scope.treatments.init($scope.readset.treatments, jsRoutes.controllers.readsets.tpl.ReadSets.treatments, {global:true});				
+				$scope.treatments.init($scope.readset.treatments, jsRoutes.controllers.readsets.tpl.ReadSets.treatments, 'readsets', {global:true});				
 			}
 			
 			$http.get(jsRoutes.controllers.runs.api.Lanes.get($scope.readset.runCode, $scope.readset.laneNumber).url).success(function(data) {

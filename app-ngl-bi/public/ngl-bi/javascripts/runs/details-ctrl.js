@@ -96,7 +96,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			    	groupBy:'category.name'
 				}
 			]				
-	}
+	};
 	
 	
 	var readSetsDTConfig = {
@@ -223,7 +223,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		
 		
 		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.home('search').url+'?runCode='+$scope.run.code+laneNumbers.value, 'readsets');
-	}
+	};
 	
 	$scope.valuateReadSets = function(){
 		var laneNumbers={value:''};
@@ -233,11 +233,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		
 		
 		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.home('valuation').url+'?runCode='+$scope.run.code+laneNumbers.value, 'readsets');
-	}
+	};
 	
 	$scope.showReadSet = function(readSetCode){
 		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(readSetCode).url, 'readsets');
-	}
+	};
 	
 	/* main section  */
 	var updateData = function(isCancel){
@@ -256,11 +256,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			}
 			*/			
 		});
-	}
+	};
 	
 	var isValuationMode = function(){
 		return ($scope.mainService.isHomePage('valuation') || $routeParams.page === 'valuation');
-	}
+	};
 	
 	$scope.highLight = function(prop){
 			if (lists.getValuationCriterias() && $scope.run && $scope.run.valuation) {
@@ -326,7 +326,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				}
 				
 				if(angular.isDefined($scope.run.lanes[0].treatments)){
-					$scope.treatments.init($scope.run.lanes[0].treatments, jsRoutes.controllers.runs.tpl.Runs.laneTreatments);				
+					$scope.treatments.init($scope.run.lanes[0].treatments, jsRoutes.controllers.runs.tpl.Runs.laneTreatments, 'runs');				
 				}
 				
 				$scope.laneOptions = $filter('orderBy')($scope.run.lanes, 'number');

@@ -101,12 +101,13 @@ PUT     /api/readsets/:code/files/:fullname							controllers.readsets.api.Files
 DELETE  /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
 DELETE	/api/runs/:code/files										controllers.readsets.api.Files.deleteByRunCode(code: java.lang.String)
 
-#analyses
+#analyzes
 GET	   	/analyses/:homecode/home					controllers.analyses.tpl.Analyses.home(homecode: java.lang.String)
 GET	   	/analyses/:code								controllers.analyses.tpl.Analyses.get(code: java.lang.String)
 GET	   	/analyses/:code/valuation					controllers.analyses.tpl.Analyses.valuation(code: java.lang.String)
 GET		/tpl/analyses/search/:type					controllers.analyses.tpl.Analyses.search(type: java.lang.String)
 GET		/tpl/analyses/details						controllers.analyses.tpl.Analyses.details()
+GET		/tpl/analyses/treatments/:code				controllers.analyses.tpl.Analyses.treatments(code: java.lang.String)
 GET		/tpl/analyses/js-routes						controllers.analyses.tpl.Analyses.javascriptRoutes()
 
 GET    	/api/analyses	                 			@controllers.analyses.api.Analyses.list()
@@ -130,7 +131,7 @@ POST	/api/analyses/:code/treatments				@controllers.analyses.api.AnalysisTreatme
 PUT		/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.update(code: java.lang.String, trCode: java.lang.String)
 DELETE	/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.delete(code: java.lang.String, trCode: java.lang.String)
 
-#readset file
+#analyzes file
 GET     /api/analyses/:code/files					@controllers.analyses.api.Files.list(code: java.lang.String)
 GET     /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.get(code: java.lang.String, fullname: java.lang.String)
 HEAD    /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.head(code: java.lang.String, fullname: java.lang.String)

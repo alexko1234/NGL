@@ -6,36 +6,36 @@
 		var getColumns = function(){
 			var columns = [];
 			columns.push({	property:"code",
-				    	  	header: "analyses.code",
+				    	  	header: "analyzes.code",
 				    	  	type :"text",		    	  	
 				    	  	order:true});
 			columns.push({	property:"typeCode",
 							filter:"codes:'type'",
-							header: "analyses.typeCode",
+							header: "analyzes.typeCode",
 							type :"text",
 							order:true});
 			columns.push({	property:"masterReadSetCodes",
-							header: "analyses.masterReadSetCodes",
+							header: "analyzes.masterReadSetCodes",
 							type :"text",
 							});					
 			columns.push({	property:"projectCodes",
-							header: "analyses.projectCodes",
+							header: "analyzes.projectCodes",
 							type :"text",
 							});
 			columns.push({	property:"sampleCodes",
-							header: "analyses.sampleCodes",
+							header: "analyzes.sampleCodes",
 							type :"text",
 							});
 			if(!mainService.isHomePage('state')){
 				columns.push({	property:"state.code",
 								filter:"codes:'state'",
-								header: "analyses.stateCode",
+								header: "analyzes.state.code",
 								type :"text",
 								order:true});
 			}else{
 				columns.push({	property:"state.code",
 								filter:"codes:'state'",
-								header: "analyses.stateCode",
+								header: "analyzes.state.code",
 								type :"text",
 								edit:true,
 								order:true,
@@ -46,18 +46,18 @@
 			if(!mainService.isHomePage('valuation')){
 				columns.push({	property:"valuation.valid",
 								filter:"codes:'valuation'",
-								header: "analyses.valuation.valid",
+								header: "analyzes.valuation.valid",
 								type :"text",
 						    	order:true});
 				columns.push({	property:"valuation.resolutionCodes",
-								header: "analyses.valuation.resolutions",
+								header: "analyzes.valuation.resolutions",
 								render:'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
 								type :"text",
 								hide:true});
 			}else{
 				columns.push({	property:"valuation.valid",
 								filter:"codes:'valuation'",
-								header: "analyses.valuation.valid",
+								header: "analyzes.valuation.valid",
 								type :"text",
 						    	order:true,
 						    	edit:true,
@@ -66,14 +66,14 @@
 						    	possibleValues:'searchService.lists.getValuations()'});
 				columns.push({	property:"valuation.criteriaCode",
 								filter:"codes:'valuation_criteria'",
-								header: "analyses.valuation.criteria",
+								header: "analyzes.valuation.criteria",
 								type :"text",
 						    	edit:true,
 						    	choiceInList:true,
 						    	listStyle:'bt-select',
 						    	possibleValues:'searchService.lists.getValuationCriterias()'});
 				columns.push({	property:"valuation.resolutionCodes",
-								header: "analyses.valuation.resolutions",
+								header: "analyzes.valuation.resolutions",
 								render:'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
 								type :"text",
 						    	edit:true,

@@ -191,6 +191,9 @@ runs.readsets.title = Readsets
 
 runs.modal.header.text = Run status flow
 
+runs.treatments.sav = SAV
+runs.treatments.ngsrg = NGS-RG
+
 #search
 sequencingProgramType.value.PE = Pair End
 sequencingProgramType.value.SR = Single Read
@@ -394,7 +397,6 @@ readsets.treatments.trimming.trimStored = Trim. Stored
  
 #treatments names
 readsets.treatments.global = Global
-readsets.treatments.sav = SAV
 readsets.treatments.ngsrg = NGS-RG
 readsets.treatments.duplicatesRaw = Duplicates (vs RAW)
 readsets.treatments.duplicatesClean = Duplicates (vs CLEAN)
@@ -430,29 +432,114 @@ readsets.modal.header.text = ReadSet status flow
 
 ############
 #
-# Analyses
+# analyzes
 #
 ############
-analyses.page.title=Analyses
-analyses.menu = Analyses
-analyses.menu.search = Recherche
-analyses.menu.state = Changement d''Etat
-analyses.menu.valuation = Evaluation
+analyzes.page.title=Analyses
+analyzes.menu = Analyses
+analyzes.menu.search = Recherche
+analyzes.menu.state = Changement d''Etat
+analyzes.menu.valuation = Evaluation
 
-analyse.page.tab.validate = Analyses à Evaluer
+analyzes.page.tab.validate = Analyses à Evaluer
 
 
-analyses.code = Code
-analyses.typeCode = Type
-analyses.masterReadSetCodes = Code ReadSets Maitre
-analyses.readSetCodes = Code ReadSets 
-analyses.projectCodes = Projects
-analyses.sampleCodes = Echantillons
-analyses.stateCode = Etat
-analyses.valuation.valid = Valid ?
-analyses.valuation.resolutions = Comptes Rendus
-analyses.valuation.criteria = Critères éval.
+analyzes.code = Code
+analyzes.typeCode = Type
+analyzes.masterReadSetCodes = Code ReadSets Maitres
+analyzes.readSetCodes = Code ReadSets 
+analyzes.projectCodes = Projects
+analyzes.sampleCodes = Echantillons
+analyzes.state.code = Etat
+analyzes.valuation.valid = Valid ?
+analyzes.valuation.resolutions = Comptes Rendus
+analyzes.valuation.criteria = Critères éval.
 
+
+analyzes.tabs.general = Général
+analyzes.tabs.advanced = Avancé
+
+analyzes.valuation.user = Evalué par
+analyzes.valuation.comment = Commentaire
+analyzes.treatments.mergingBA = Merging (BA)
+analyzes.treatments.assemblyBA = Assembly
+analyzes.treatments.contigFilterBA = Contig Filter
+analyzes.treatments.scaffoldingBA = Scaffolding
+analyzes.treatments.gapClosingBA = Gap Closing
+analyzes.files.path  = Chemin
+analyzes.files.fullname= Nom du fichier
+analyzes.files.typeCode	= Type de fichier
+analyzes.files.usable	= Utilisable
+analyzes.files.properties.label	= Label
+analyzes.files.properties.asciiEncoding	= Encodage ASCII
+analyzes.files.properties.md5= Clé codage md5
+
+
+analyzes.treatments.merging_ba.readsInput = Reads input (pairs)
+analyzes.treatments.merging_ba.mergedReads = Merged reads
+analyzes.treatments.merging_ba.mergedReadsPercent = % merged reads
+analyzes.treatments.merging_ba.medianeSize = Mediane size (bases)
+analyzes.treatments.merging_ba.avgSize = Average size (bases)
+analyzes.treatments.merging_ba.minSize = Min size (bases)
+analyzes.treatments.merging_ba.maxSize = Max size (bases)
+
+
+analyzes.treatments.assembly_ba.N50Contig = N50 
+analyzes.treatments.assembly_ba.N80Contig = N80 
+analyzes.treatments.assembly_ba.N90Contig = N90 
+analyzes.treatments.assembly_ba.NXContigNb = Number of contigs
+analyzes.treatments.assembly_ba.NXContigSize = Size
+analyzes.treatments.assembly_ba.assemblyContigSize = Assembly size
+analyzes.treatments.assembly_ba.assemblyContigNb = Number of contigs
+analyzes.treatments.assembly_ba.minContigSize = Smallest contig size
+analyzes.treatments.assembly_ba.maxContigSize = Largest contig size
+analyzes.treatments.assembly_ba.averageContigSize = Average contig size
+analyzes.treatments.assembly_ba.GCpercent = % GC	
+analyzes.treatments.assembly_ba.readsAssembledPercent = Percentage of assembled reads
+analyzes.treatments.assembly_ba.expectedPoolSizePercent = % expected pool size 
+analyzes.treatments.assembly_ba.contigSizeRepartition.size = Size
+analyzes.treatments.assembly_ba.contigSizeRepartition.contigNumber = Number of contigs
+analyzes.treatments.assembly_ba.contigSizeRepartition.contigPercent = Percentage of contigs
+analyzes.treatments.assembly_ba.contigSizeRepartition.cumulativeSize = Cumulative Size
+analyzes.treatments.assembly_ba.contigSizeRepartition.cumulativeSizePercent = Percentage of assembly size
+
+analyzes.treatments.contigFilter_ba.storedBases = Nb bases conservées
+analyzes.treatments.contigFilter_ba.lostBasesPercent = % bases perdues
+
+
+analyzes.treatments.scaffolding_ba.N50Scaffold = N50 
+analyzes.treatments.scaffolding_ba.N80Scaffold = N80 
+analyzes.treatments.scaffolding_ba.N90Scaffold = N90 
+analyzes.treatments.scaffolding_ba.NXScaffoldNb = Number of scaffolds
+analyzes.treatments.scaffolding_ba.NXScaffoldSize = Size
+analyzes.treatments.scaffolding_ba.assemblyScaffoldSize = Assembly size
+analyzes.treatments.scaffolding_ba.assemblyScaffoldNb = Number of scaffolds
+analyzes.treatments.scaffolding_ba.minScaffoldSize = Smallest scaffold size
+analyzes.treatments.scaffolding_ba.maxScaffoldSize = Largest scaffold size
+analyzes.treatments.scaffolding_ba.averageScaffoldSize = Average scaffold size
+analyzes.treatments.scaffolding_ba.GCpercent = % GC	
+analyzes.treatments.scaffolding_ba.readsAssembledPercent = Percentage of assembled reads
+analyzes.treatments.scaffolding_ba.expectedPoolSizePercent = % expected pool size 
+analyzes.treatments.scaffolding_ba.scaffoldSizeRepartition.size = Size
+analyzes.treatments.scaffolding_ba.scaffoldSizeRepartition.scaffoldNumber = Number of scaffolds
+analyzes.treatments.scaffolding_ba.scaffoldSizeRepartition.scaffoldPercent = Percentage of scaffolds
+analyzes.treatments.scaffolding_ba.scaffoldSizeRepartition.cumulativeSize = Cumulative Size
+analyzes.treatments.scaffolding_ba.scaffoldSizeRepartition.cumulativeSizePercent = Percentage of assembly size
+
+analyzes.treatments.scaffolding_ba.numberOfN = Nombre de N
+analyzes.treatments.scaffolding_ba.nbPairedSatisfied = Nb Paires satisfaisantes
+analyzes.treatments.scaffolding_ba.nbPairedUnsatisfied = Nb Paires non satisfaisantes
+analyzes.treatments.scaffolding_ba.nbMappedPairs = Nb paires mappées
+analyzes.treatments.scaffolding_ba.nbMappedSequences = Nb séquences mappées 
+analyzes.treatments.scaffolding_ba.medianInsertSize = Taille d'insert médiane
+
+analyzes.treatments.gapClosing_ba.actualGapSum = Actual Gap Sum 
+analyzes.treatments.gapClosing_ba.extendGapSum = Extend Gap Sum
+analyzes.treatments.gapClosing_ba.actualGapCount = Actual Gap Count
+analyzes.treatments.gapClosing_ba.finishGapCount = Finish Gap Count
+analyzes.treatments.gapClosing_ba.GCpercent = % GC
+analyzes.treatments.gapClosing_ba.numberOfN = Nombre de N
+analyzes.treatments.gapClosing_ba.percentOfN = % N
 
 ############
 #

@@ -47,7 +47,7 @@ angular.module('biCommonsServices', []).
 				activeLastTreatment();	
     		};
     		
-    		function init(treatments, url, excludes){
+    		function init(treatments, url, msgkey, excludes){
     			_treatment = {};
     			_treatments = [];
     			var queries = [];
@@ -70,7 +70,7 @@ angular.module('biCommonsServices', []).
     				$q.all(queries).then(function(results){
     					for(var i = 0; i  < results.length; i++){
     						var result = results[i];
-    						_allTreatments[result.config.key]={code:result.config.key, name:Messages("readsets.treatments."+result.config.key), url:url(result.data.code).url, order:displayOrder(result, key), show:true};
+    						_allTreatments[result.config.key]={code:result.config.key, name:Messages(msgkey+".treatments."+result.config.key), url:url(result.data.code).url, order:displayOrder(result, key), show:true};
     					}
     					prepareCurrentTreatments();    					
     				});
