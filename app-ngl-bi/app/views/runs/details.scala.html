@@ -138,14 +138,15 @@
 			@views.html.helper.columnLabelValue(Messages("runs.flowcellPosition")){
 				<p class="form-control-static">{{run.treatments.ngsrg["default"].flowcellPosition.value}}</p>
 			}
-		}
-		@column(){
 			@views.html.helper.columnLabelValue(Messages("runs.rtaVersion")){
 				<p class="form-control-static">{{run.treatments.ngsrg["default"].rtaVersion.value}}</p>
 			}
 			@views.html.helper.columnLabelValue(Messages("runs.flowcellVersion")){
 				<p class="form-control-static">{{run.treatments.ngsrg["default"].flowcellVersion.value}}</p>
 			}
+		}
+		@column(){
+			
 			@views.html.helper.columnLabelValue(Messages("runs.intrumentCode")){
 				<p class="form-control-static">{{run.instrumentUsed.code}}</p>
 			}

@@ -23,7 +23,7 @@
 									},
 									{	property:"state.historical|filter:'F-RG'|get:'date'",
 										header: "runs.endOfRG",
-										type :"datetime",
+										type :"date",
 								    	order:true
 									},
 									{	property:"state.code",
