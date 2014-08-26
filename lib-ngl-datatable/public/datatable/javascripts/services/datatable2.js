@@ -288,9 +288,17 @@ angular.module('datatableServices', []).
 					    								console.log("computeGroup Error : "+e);
 					    							}
 					    						}
-				    						/*}else if('distinct' === column.groupMethod){
+				    						}else if('unique' === column.groupMethod){
 				    							var result = $filter('unique')(groupData, column.property);
-				    						*/}else{
+				    							if(result.length > 1){
+				    								result = '#MULTI';
+				    							}else if(result.length === 1){
+				    								result = columnGetter(result[0]);
+				    							}else{
+				    								result = undefined;
+				    							}
+				    							columnSetter.assign(group, result);				    							
+				    						}else{
 				    							console.error("groupMethod is not managed "+column.groupMethod)
 				    						}
 				    					});
