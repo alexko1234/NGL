@@ -461,7 +461,7 @@ analyzes.tabs.advanced = Avancé
 
 analyzes.valuation.user = Evalué par
 analyzes.valuation.comment = Commentaire
-analyzes.treatments.mergingBA = Merging (BA)
+analyzes.treatments.mergingBA = Merging
 analyzes.treatments.assemblyBA = Assembly
 analyzes.treatments.contigFilterBA = Contig Filter
 analyzes.treatments.scaffoldingBA = Scaffolding
