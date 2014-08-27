@@ -9,14 +9,12 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-
-import com.typesafe.config.ConfigFactory;
-
 import play.Logger;
+import play.Play;
 
 public class MailServices {
 
-	private static final String mailSmtpHost = ConfigFactory.load().getString("mail.smtp.host");
+	private static final String mailSmtpHost = Play.application().configuration().getString("mail.smtp.host");
 	
 	public void sendMail(String from, Set<String> to, String subject, String message) throws MailServiceException {
 

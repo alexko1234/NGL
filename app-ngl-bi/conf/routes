@@ -117,6 +117,7 @@ PUT		/api/analyzes/batch/valuation		 		@controllers.analyzes.api.Analyzes.valuat
 PUT		/api/analyzes/:code/valuation		 		@controllers.analyzes.api.Analyzes.valuation(code:java.lang.String)
 PUT     /api/analyzes/batch/properties				@controllers.analyzes.api.Analyzes.propertiesBatch()
 PUT     /api/analyzes/:code/properties				@controllers.analyzes.api.Analyzes.properties(code: java.lang.String)
+PUT		/api/analyzes/:code/apply-rules/:codeRules	@controllers.analyzes.api.Analyzes.applyRules(code: java.lang.String, codeRules: java.lang.String)
 
 GET		/api/analyzes/:code/treatments				@controllers.analyzes.api.AnalysisTreatments.list(code: java.lang.String)
 GET		/api/analyzes/:code/treatments/:trCode		@controllers.analyzes.api.AnalysisTreatments.get(code: java.lang.String, trCode: java.lang.String)
@@ -237,6 +238,7 @@ PUT		/api/analyses/batch/valuation		 		@controllers.analyses.api.AnalysesOld.val
 PUT		/api/analyses/:code/valuation		 		@controllers.analyses.api.AnalysesOld.valuation(code:java.lang.String)
 PUT     /api/analyses/batch/properties				@controllers.analyses.api.AnalysesOld.propertiesBatch()
 PUT     /api/analyses/:code/properties				@controllers.analyses.api.AnalysesOld.properties(code: java.lang.String)
+PUT		/api/analyses/:code/apply-rules/:codeRules	@controllers.analyses.api.AnalysesOld.applyRules(code: java.lang.String, codeRules: java.lang.String)
 
 GET		/api/analyses/:code/treatments				@controllers.analyses.api.AnalysisTreatmentsOld.list(code: java.lang.String)
 GET		/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatmentsOld.get(code: java.lang.String, trCode: java.lang.String)

@@ -1,8 +1,6 @@
 package workflows;
 
 import static org.fest.assertions.Assertions.assertThat;
-
-import fr.cea.ig.authentication.Authenticate;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.fakeRequest;
@@ -12,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
-
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -23,16 +20,16 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import org.mongojack.DBQuery;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mongojack.DBQuery;
 
 import play.mvc.Result;
-import fr.cea.ig.MongoDBDAO;
 import utils.AbstractTests;
 import utils.RunMockHelper;
+import fr.cea.ig.MongoDBDAO;
 
 
 public class StatesTests extends  AbstractTests {	

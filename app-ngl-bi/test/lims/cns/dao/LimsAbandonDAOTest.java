@@ -1,8 +1,9 @@
 package lims.cns.dao;
 
-import java.util.List;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
+import java.util.List;
 
 import lims.models.runs.EtatTacheHD;
 import lims.models.runs.TacheHD;

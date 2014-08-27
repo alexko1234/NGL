@@ -5,6 +5,7 @@ import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.status;
+import static utils.RunMockHelper.getState;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,12 +15,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
@@ -32,15 +33,12 @@ import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import org.mongojack.DBQuery;
-
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mongojack.DBQuery;
 
-import play.Logger;
-import play.Play;
 import play.data.validation.ValidationError;
 import play.mvc.Result;
 import utils.AbstractTests;
@@ -49,7 +47,6 @@ import validation.ContextValidation;
 import validation.run.instance.LaneValidationHelper;
 import validation.utils.ValidationConstants;
 import fr.cea.ig.MongoDBDAO;
-import static utils.RunMockHelper.*;
 
 public class RunValidationTest extends AbstractTests {
 	

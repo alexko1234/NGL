@@ -26,14 +26,21 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 
 import play.Logger;
+import play.Play;
 import play.data.Form;
+import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
+import rules.services.RulesActor;
+import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
+
+import akka.actor.ActorRef;
+import akka.actor.Props;
 
 import com.mongodb.BasicDBObject;
 
@@ -50,6 +57,8 @@ public class AnalysesOld extends DocumentController<Analysis>{
 	final static Form<AnalysesBatchElementOld> batchElementForm = form(AnalysesBatchElementOld.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("code","masterReadSetCodes","readSetCodes");
+	
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
 	
 	public AnalysesOld() {
 		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		
@@ -374,5 +383,19 @@ public class AnalysesOld extends DocumentController<Analysis>{
 			
 		}		
 		return ok(Json.toJson(response));
+	}
+	
+	public Result applyRules(String code, String rulesCode)
+	{
+		Analysis objectInDB = getObject(code);
+		if(objectInDB == null) {
+			return notFound();
+		}
+		//Send analysis fact
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.add(objectInDB);
+		// Outside of an actor and if no reply is needed the second argument can be null
+		rulesActor.tell(new RulesMessage(facts,Play.application().configuration().getString("rules.key"),rulesCode),null);
+		return ok();
 	}
 }

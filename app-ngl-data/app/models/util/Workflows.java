@@ -23,6 +23,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.WriteResult;
 import play.Logger;
+import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor;
 import rules.services.RulesMessage;
@@ -32,7 +33,6 @@ import validation.run.instance.RunValidationHelper;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 
-import com.typesafe.config.ConfigFactory;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
@@ -121,7 +121,7 @@ public class Workflows {
 			
 			ArrayList<Object> facts = new ArrayList<Object>();
 			facts.add(run);		
-			rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("rules.key"),ruleStatRG),null);
+			rulesActor.tell(new RulesMessage(facts,Play.application().configuration().getString("rules.key"),ruleStatRG),null);
 		}else if("F-V".equals(run.state.code)){
 			//Spring.getBeanOfType(ILimsRunServices.class).valuationRun(run);
 		}

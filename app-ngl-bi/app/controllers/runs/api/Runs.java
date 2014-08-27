@@ -4,53 +4,30 @@ import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
-import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.project.instance.Project;
-import models.laboratory.run.instance.File;
-import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
-import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
-
 import models.utils.ListObject;
-import  org.mongojack.DBUpdate.Builder;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.mongojack.WriteResult;
-import org.mongojack.DBQuery.Query;
-
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 import org.apache.commons.collections.CollectionUtils;
-
 import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
 
-
-import com.mongodb.BasicDBObject;
-
-import com.typesafe.config.ConfigFactory;
-
-import akka.actor.ActorRef;
-import akka.actor.Props;
 import play.Logger;
-import play.data.DynamicForm;
+import play.Play;
 import play.data.Form;
-import play.data.validation.ValidationError;
 import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
@@ -58,15 +35,16 @@ import rules.services.RulesActor;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
-import views.components.datatable.DatatableHelpers;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
-import controllers.CommonController;
+import akka.actor.ActorRef;
+import akka.actor.Props;
+
+import com.mongodb.BasicDBObject;
+
 import controllers.QueryFieldsForm;
-import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.MongoDBResult.Sort;
 /**
  * Controller around Run object
  *
@@ -363,7 +341,7 @@ public class Runs extends RunsController {
 			ArrayList<Object> facts = new ArrayList<Object>();
 			facts.add(run);
 			// Outside of an actor and if no reply is needed the second argument can be null
-			rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("rules.key"),rulesCode),null);
+			rulesActor.tell(new RulesMessage(facts,Play.application().configuration().getString("rules.key"),rulesCode),null);
 		}else
 			return badRequest();
 		

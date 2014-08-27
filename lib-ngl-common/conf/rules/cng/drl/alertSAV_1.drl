@@ -2,7 +2,7 @@
 #Rules for SAV alerting
 package rules
 
-rule "Insert AlertSAVInfo"
+rule "Insert AlertSAVInfo for each run"
 	@nglBI( sav_1 )
 	dialect "java"
 	salience 700
@@ -86,8 +86,8 @@ rule "Send alert info"
     when
         $alertSAVInfo : AlertSAVInfo(allResults.size()>0)
     then
-	   String alertMailExp = ConfigFactory.load().getString("alert.sav.mail.exp"); 
-	   String alertMailDest = ConfigFactory.load().getString("alert.sav.mail.dest");    	
+	   String alertMailExp = Play.application().configuration().getString("alert.sav.mail.exp"); 
+	   String alertMailDest = Play.application().configuration().getString("alert.sav.mail.dest");    	
        MailServices mailService = new MailServices();
        Set<String> destinataires = new HashSet<String>();
        destinataires.addAll(Arrays.asList(alertMailDest.split(",")));

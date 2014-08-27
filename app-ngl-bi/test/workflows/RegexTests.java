@@ -2,14 +2,7 @@ package workflows;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import models.laboratory.project.instance.Project;
-import models.utils.InstanceConstants;
-
 import org.junit.Test;
-
-import play.Logger;
-
-import fr.cea.ig.MongoDBDAO;
 
 public class RegexTests {
 	@Test

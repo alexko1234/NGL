@@ -22,12 +22,12 @@ import models.utils.instance.StateHelper;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.drools.runtime.StatefulKnowledgeSession;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
 
 import play.Logger;
+import play.Play;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
@@ -42,7 +42,6 @@ import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 
 import com.mongodb.BasicDBObject;
-import com.typesafe.config.ConfigFactory;
 
 import controllers.CodeHelper;
 import controllers.CommonController;
@@ -431,12 +430,9 @@ public class Experiments extends CommonController{
 		}
 		
 		RulesServices rulesServices = new RulesServices();
-        StatefulKnowledgeSession kSession;
         List<Object> factsAfterRules = null;
         try {
-            kSession = rulesServices.getKnowledgeBase().newStatefulKnowledgeSession();
-            factsAfterRules = rulesServices.callRules(ConfigFactory.load().getString("rules.key"), calculationsRules, facts, kSession);
-            kSession.dispose();
+            factsAfterRules = rulesServices.callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), calculationsRules, facts);
         } catch (RulesException e) {
             throw new RuntimeException();
         }

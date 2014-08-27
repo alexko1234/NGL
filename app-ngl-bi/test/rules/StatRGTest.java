@@ -1,6 +1,5 @@
 package rules;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,17 +12,15 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
-import org.mongojack.DBQuery;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mongojack.DBQuery;
 
+import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
 import utils.AbstractTests;
-
-import com.typesafe.config.ConfigFactory;
-
 import fr.cea.ig.MongoDBDAO;
 
 public class StatRGTest extends AbstractTests{
@@ -64,7 +61,7 @@ public class StatRGTest extends AbstractTests{
 		List<Object> facts = new ArrayList<Object>();
 		facts.add(runData);
 		
-		rulesServices.callRules(ConfigFactory.load().getString("rules.key"), "rg_1", facts);
+		rulesServices.callRules(Play.application().configuration().getString("rules.key"), "rg_1", facts);
 		
 		runData = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", "121107_HISEQ1_D094VACXX"));
 		
@@ -96,11 +93,7 @@ public class StatRGTest extends AbstractTests{
 		
 	}
 	
-	private Double roundValue(double value) throws ParseException
-	{
-		DecimalFormat df=new DecimalFormat("0.00");
-		return (Double)df.parse(df.format(value)).doubleValue();
-	}
+	
 	
 	
 }

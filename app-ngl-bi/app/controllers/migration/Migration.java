@@ -9,25 +9,25 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
 
-import akka.actor.ActorRef;
-import akka.actor.Props;
-
-import com.typesafe.config.ConfigFactory;
-
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TransientState;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.JacksonDBCollection;
+
 import play.Logger;
+import play.Play;
 import play.libs.Akka;
 import play.mvc.Result;
 import rules.services.RulesActor;
 import rules.services.RulesMessage;
+import akka.actor.ActorRef;
+import akka.actor.Props;
 import controllers.CommonController;
 import controllers.migration.models.FileOld;
 import controllers.migration.models.LaneOld;
@@ -196,7 +196,7 @@ public class Migration extends CommonController {
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.add(run);
 		// Outside of an actor and if no reply is needed the second argument can be null
-		rulesActor.tell(new RulesMessage(facts,ConfigFactory.load().getString("rules.key"),ruleStatRG),null);
+		rulesActor.tell(new RulesMessage(facts,Play.application().configuration().getString("rules.key"),ruleStatRG),null);
 	}
 
 	

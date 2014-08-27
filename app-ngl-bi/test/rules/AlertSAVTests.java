@@ -1,7 +1,6 @@
 package rules;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -12,23 +11,20 @@ import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
-import org.mongojack.DBQuery;
 
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mongojack.DBQuery;
 
 import play.Logger;
+import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
 import utils.AbstractTests;
-
 import alert.AlertSAVInfo;
-
-import com.typesafe.config.ConfigFactory;
-
 import fr.cea.ig.MongoDBDAO;
 
 public class AlertSAVTests extends AbstractTests{
@@ -135,9 +131,7 @@ public class AlertSAVTests extends AbstractTests{
 
 		RulesServices rulesServices = new RulesServices();
 
-		StatefulKnowledgeSession kSession = rulesServices.getKnowledgeBase().newStatefulKnowledgeSession();
-		List<Object> factsAfterRules = rulesServices.callRules(ConfigFactory.load().getString("rules.key"), "sav_1", facts, kSession);
-		kSession.dispose();
+		List<Object> factsAfterRules = rulesServices.callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), "sav_1", facts);
 
 		//Get AlertInfo to send mail after rules alert done
 		for(Object object : factsAfterRules){

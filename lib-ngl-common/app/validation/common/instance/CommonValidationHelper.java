@@ -18,11 +18,11 @@ import models.utils.InstanceConstants;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 
-import org.drools.runtime.StatefulKnowledgeSession;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import play.Logger;
+import play.Play;
 
 import rules.services.RulesException;
 import rules.services.RulesServices;
@@ -30,8 +30,6 @@ import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
-
-import com.typesafe.config.ConfigFactory;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
@@ -496,12 +494,9 @@ public class CommonValidationHelper {
 		facts.add(validationRules);
 	
 		RulesServices rulesServices = new RulesServices();
-		StatefulKnowledgeSession kSession;
 		List<Object> factsAfterRules;
 		try {
-			kSession = rulesServices.getKnowledgeBase().newStatefulKnowledgeSession();
-			factsAfterRules = rulesServices.callRules(ConfigFactory.load().getString("rules.key"), nameRules, facts, kSession);
-			kSession.dispose();
+			factsAfterRules = rulesServices.callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), nameRules, facts);
 		} catch (RulesException e) {
 			throw new RuntimeException();
 		}

@@ -1,0 +1,35 @@
+#created on: Nov 21, 2013
+package rules
+
+#analysis.treatments.contigFilterBA.pairs.lostBasesPercent=
+# ((analysis.treatments.assemblyBA.pairs.assemblyContigSize - analysis.treatments.contigFilterBA.pairs.storedBases) 
+# / analysis.treatments.assemblyBA.pairs.assemblyContigSize) * 100
+
+rule "Calculate lostBasesPercent for contigFilterBA treatment"
+	@nglBI( BPA_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$analysis : Analysis ( $treatmentCFBA : treatments["contigFilterBA"], $treatmentCFBA != null, $treatmentABA : treatments["assemblyBA"], $treatmentABA != null)
+		$mapValueCFBA : Map() from $treatmentCFBA.results["pairs"]
+		$mapValueABA : Map() from $treatmentABA.results["pairs"]
+		$assemblyContigSize : Entry(key=="assemblyContigSize") from $mapValueABA.entrySet()
+		$storedBases : Entry(key=="storedBases") from $mapValueCFBA.entrySet()
+	then
+		Logger.debug("Calculate lostBasesPercent for analysis "+$analysis.getCode());
+		Long storedBases = (Long)((PropertyValue)$storedBases.getValue()).getValue();
+		Long assemblyContigSize = (Long)((PropertyValue)$assemblyContigSize.getValue()).getValue();
+		Double lostBasesPercent = roundValue((double)(assemblyContigSize - storedBases)/assemblyContigSize*100);
+		//Create new PropertyValue
+		PropertySingleValue propertylostBasesPercent = new PropertySingleValue(lostBasesPercent);
+		$mapValueCFBA.put("lostBasesPercent", propertylostBasesPercent);
+		//Update analysis
+		MongoDBDAO.updateSet(InstanceConstants.ANALYSIS_COLL_NAME, $analysis, "treatments."+$treatmentCFBA.getCode(), $treatmentCFBA);
+end
+
+function Double roundValue(double value)
+{
+	DecimalFormat df=new DecimalFormat("0.00");
+	return (Double)df.parse(df.format(value)).doubleValue();
+}

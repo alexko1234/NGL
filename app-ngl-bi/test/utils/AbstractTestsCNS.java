@@ -4,18 +4,21 @@ package utils;
 
 import static play.test.Helpers.fakeApplication;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
+import play.Logger;
 import play.test.FakeApplication;
 import play.test.Helpers;
 
 
 
-public abstract class AbstractTestsSave {
+public abstract class AbstractTestsCNS {
 	
 	protected static FakeApplication app;
 	@BeforeClass
@@ -24,8 +27,9 @@ public abstract class AbstractTestsSave {
 		 Helpers.start(app);
 	}
 	
+	
 	@AfterClass
-	public static void stop(){
+	public static void stopApp(){
 		Helpers.stop(app);
 	}
 	
@@ -88,12 +92,17 @@ public abstract class AbstractTestsSave {
 	    
 	    config.put("institute", "CNS");
 	    config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
-	    config.put("rules.key", "nglBI");
-	    config.put("rules.changesets", "rules/cng/changesets/changesets.xml");
 	    config.put("play.spring.context-path", "cns-application-context.xml");
+	    config.put("rules.key", "nglBI");
+	    config.put("rules.changesets", "rules/cns/changesets/changesets.xml");
 		return config;
 		
 	}
 	
 	
+	protected Double roundValue(double value) throws ParseException
+	{
+		DecimalFormat df=new DecimalFormat("0.00");
+		return (Double)df.parse(df.format(value)).doubleValue();
+	}
 }

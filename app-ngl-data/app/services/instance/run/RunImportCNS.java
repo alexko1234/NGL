@@ -20,6 +20,7 @@ import models.utils.dao.DAOException;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import play.Logger;
+import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
 import scala.concurrent.duration.FiniteDuration;
@@ -28,7 +29,6 @@ import validation.ContextValidation;
 import validation.run.instance.LaneValidationHelper;
 
 import com.mongodb.MongoException;
-import com.typesafe.config.ConfigFactory;
 
 import fr.cea.ig.MongoDBDAO;
 
@@ -114,7 +114,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 				list.add(newRun);
 				try{
 					Logger.debug("Run Rules from Run "+run.code);
-					new RulesServices().callRules(ConfigFactory.load().getString("rules.key"),"rg_1",list);
+					new RulesServices().callRules(Play.application().configuration().getString("rules.key"),"rg_1",list);
 				}catch (Exception e) {
 					contextValidation.addErrors("rules", e.toString()+ "runCode :"+run.code, run.code);
 				}

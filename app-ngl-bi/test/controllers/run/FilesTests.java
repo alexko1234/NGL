@@ -5,9 +5,7 @@ import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.charset;
 import static play.test.Helpers.contentType;
-import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.fakeRequest;
-import static play.test.Helpers.running;
 import static play.test.Helpers.status;
 
 import java.util.ArrayList;
@@ -23,14 +21,13 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
-import play.Logger;
 import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;

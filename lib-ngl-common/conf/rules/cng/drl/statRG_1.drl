@@ -17,6 +17,8 @@ declare LaneInfo
 	nbClusterLane : Long
 end
 
+#run.treatments.ngsrg.default.percentClusterIlluminaFilter=
+#(run.treatments.ngsrg.default.nbClusterIlluminaFilter/run.treatments.ngsrg.default.nbClusterTotal)*100
 rule "Calculate average percentClusterFilter for run"
 	@nglBI( rg_1 )
 	dialect "java"
@@ -41,6 +43,12 @@ rule "Calculate average percentClusterFilter for run"
 		MongoDBDAO.updateSet(InstanceConstants.RUN_ILLUMINA_COLL_NAME, $run, "treatments."+$treatment.getCode(), $treatment);
 end 
 
+#Create LaneInfo for each lane of a run :
+#run : Run
+#lane : Lane
+#sizeReadSets : run.lanes.readSet.size
+#readSets : list of ReadSetInfo
+#nbClusterLane : run.lanes.treatments.ngsrg.default.nbClusterInternalAndIlluminaFilter
 rule "Initialize LaneInfo"
 	@nglBI( rg_1 )
 	dialect "java"
@@ -58,6 +66,11 @@ rule "Initialize LaneInfo"
 	
 end
 
+#Create ReadSetInfo for each ReadSet of a Lane
+#lane : Lane
+#nbClusterLane : LaneInfo.nbClusterLane (=lane.treatments.ngsrg.default.nbClusterInternalAndIlluminaFilter)
+#readSet : ReadSet
+#validSeqpercent : null
 rule "Get all readSet"
 	@nglBI( rg_1 )
 	dialect "java"
@@ -78,7 +91,8 @@ rule "Get all readSet"
     	update($laneInfo);
 end
 
-
+#readSet.treatments.ngsrg.default.validSeqPercent=
+#(readSet.treatments.ngsrg.default.nbCluster/lane.treatments.ngsrg.default.nbClusterInternalAndIlluminaFilter)*100
 rule "Calculate seqPercent readSet"
 	@nglBI( rg_1 )
 	dialect "java"
@@ -102,6 +116,8 @@ rule "Calculate seqPercent readSet"
 		update($readSetInfo);
 end
 
+#run.lane.treatments.ngsrg.default.seqLossPercent=
+#(100-SOMME(readset.treatments.ngsrg.default.validSeqPercent))
 rule "Calculate seqLossPercent Lane"
 	@nglBI( rg_1 )
 	dialect "java"

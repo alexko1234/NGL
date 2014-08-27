@@ -17,13 +17,12 @@ import org.drools.builder.ResourceType;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 
-import com.typesafe.config.ConfigFactory;
-
 import play.Logger;
+import play.Play;
 
 public class RulesServices 
 {
-	private static final String pathChangesets = ConfigFactory.load().getString("rules.changesets");
+	private static final String pathChangesets = Play.application().configuration().getString("rules.changesets");
 	private static KnowledgeBase knowledgeBase;
 	
 	public RulesServices() {
@@ -86,22 +85,26 @@ public class RulesServices
 	}
 	
 	/**
-	 * Call rules with outside session management
+	 * Call rules
 	 * @param keyRules
 	 * @param ruleAnnotationName
 	 * @param factsToInsert
-	 * @param kSession
 	 * @return facts in rules session after calling rules
 	 * @throws RulesException
 	 */
-	public List<Object> callRules(String keyRules, String ruleAnnotationName,List<Object> factsToInsert, StatefulKnowledgeSession kSession) throws RulesException {
+	public List<Object> callRulesWithGettingFacts(String keyRules, String ruleAnnotationName,List<Object> factsToInsert) throws RulesException {
 		
+		//Create new session
+		StatefulKnowledgeSession kSession = getKnowledgeBase().newStatefulKnowledgeSession();
+				
 		for (Object fact : factsToInsert) {
 			kSession.insert(fact);
 		}
 		kSession.fireAllRules(RulesAgendaFilter.getInstance(keyRules, ruleAnnotationName));
-		
-		return new ArrayList<Object>(kSession.getObjects());
+		List<Object> factsAfterRules = new ArrayList<Object>(kSession.getObjects());
+		//Close session
+		kSession.dispose();
+		return factsAfterRules;
 		
 	}
 	

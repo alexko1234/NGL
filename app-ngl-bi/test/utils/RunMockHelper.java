@@ -10,18 +10,16 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.project.instance.Project;
-import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.File;
+import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.instance.Sample;
+import play.libs.Json;
 
 import com.fasterxml.jackson.databind.JsonNode;
-
-import play.Play;
-import play.libs.Json;
 
 public class RunMockHelper {
 	

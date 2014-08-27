@@ -3,27 +3,27 @@ package models.instances.validation;
 import static org.fest.assertions.Assertions.assertThat;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.callAction;
-import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.fakeRequest;
-import static play.test.Helpers.running;
 import static play.test.Helpers.status;
-import static play.test.Helpers.contentAsString;
+import static validation.utils.ValidationConstants.ERROR_BADTYPE_MSG;
+import static validation.utils.ValidationConstants.ERROR_CODE_NOTEXISTS_MSG;
+import static validation.utils.ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG;
+import static validation.utils.ValidationConstants.ERROR_NOTDEFINED_MSG;
+import static validation.utils.ValidationConstants.ERROR_REQUIRED_MSG;
+import static validation.utils.ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG;
 
-import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Level;
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertyImgValue;
 import models.laboratory.common.instance.property.PropertyObjectListValue;
 import models.laboratory.common.instance.property.PropertyObjectValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
@@ -34,22 +34,18 @@ import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import org.mongojack.DBQuery;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.mongojack.DBQuery;
 
-import play.Logger;
 import play.Play;
 import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
-import static validation.utils.ValidationConstants.*;
 
 
 public class TreatmentValidationTest extends AbstractTests {	
