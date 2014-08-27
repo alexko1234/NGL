@@ -1,7 +1,7 @@
  "use strict";
 
- angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$sce', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 
-                                                   function($scope, $http, $q, $routeParams, $sce, mainService, tabService, datatable, messages, lists, treatments, $window) {
+ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$sce', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 'valuationService', 
+                                                   function($scope, $http, $q, $routeParams, $sce, mainService, tabService, datatable, messages, lists, treatments, $window, valuationService) {
 	
 	$scope.goToRun=function(){
 		$window.open(jsRoutes.controllers.runs.tpl.Runs.get($scope.readset.runCode).url, 'runs');
@@ -85,11 +85,20 @@
 		}
     };
 	
-	
+    $scope.highLight = function(prop){
+		if (lists.getValuationCriterias() && $scope.readset && $scope.readset.productionValuation) {
+			return "bg-" + $scope.valuationService.valuationCriteriaClass($scope.readset, $scope.readset.productionValuation.criteriaCode, prop);
+		}
+		else {
+			return undefined;
+		}
+    };
+    
 	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
 		$scope.treatments = treatments;
+		$scope.valuationService = valuationService();
 		mainService.stopEditMode();
 		if(isValuationMode()){
 			mainService.startEditMode();			
@@ -139,68 +148,6 @@
 	
 }]);
 
- angular.module('home').controller('NGSRGCtrl', ['$scope', 'datatable', function($scope, datatable) {
-	
-	var NGSRGConfig = {
-			name:'NGSRG',
-			order :{active:false},
-			search:{active:false},
-			pagination:{active:false},
-			select:{active:false},
-			showTotalNumberRecords:false,
-			cancel : {active:false},						
-			columns : [
-				{  	property:"sampleOnContainer.properties.percentPerLane.value",
-					header: "readsets.sampleOnContainer.percentPerLane",
-					type :"Number",
-					format:2,
-					order:false
-				},
-			   	{  	property:"ngsrg.validSeqPercent.value",
-			    	header: "readsets.treatments.ngsrg_illumina.validSeqPercent",
-			    	type :"Number",
-			    	format:2,
-			    	order:false
-				},
-				{  	property:"ngsrg.nbCluster.value",
-			    	header: "readsets.treatments.ngsrg_illumina.nbCluster",
-			    	type :"Number",
-			    	order:false
-				},
-				{  	property:"ngsrg.nbBases.value",
-			    	header: "readsets.treatments.ngsrg_illumina.nbBases",
-			    	type :"Number",
-			    	order:false
-				},
-				{  	property:"ngsrg.Q30.value",
-			    	header: "readsets.treatments.ngsrg_illumina.Q30",
-			    	type :"Number",
-			    	order:false
-				},
-				{  	property:"ngsrg.qualityScore.value",
-			    	header: "readsets.treatments.ngsrg_illumina.qualityScore",
-			    	type :"Number",
-			    	order:false
-				}
-								
-			]				
-	};
-		
-	var init = function(){
-		$scope.$watch('readset', function() {
-			if(angular.isDefined($scope.readset)){
-				$scope.NGSRG = datatable(NGSRGConfig);
-				var data = {};
-				data.ngsrg = $scope.readset.treatments.ngsrg['default'];
-				data.sampleOnContainer = $scope.readset.sampleOnContainer;
-				$scope.NGSRG.setData([data], 1);
-			}
-		}); 		
-	};
-	
-	init();
-	
-}]);
 
 
  angular.module('home').controller('TaxonomyCtrl', ['$scope', function($scope) {

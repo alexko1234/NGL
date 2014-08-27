@@ -68,7 +68,7 @@
 			else {
 				return undefined;
 			}
-	};
+	    };
 	    
 	    $scope.showReadSet = function(readSetCode){
 			$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(readSetCode).url, 'readsets');
