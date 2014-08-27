@@ -248,7 +248,7 @@ public class LimsCNSDAO{
 				project.state.user = InstanceHelpers.getUser();
 				project.state.date = new Date();
 
-
+				project.traceInformation=new TraceInformation();
 				InstanceHelpers.updateTraceInformation(project.traceInformation);
 				return project;
 			}
@@ -288,17 +288,17 @@ public class LimsCNSDAO{
 			contextError.addKeyToRootKeyName(rootKeyName);
 			limsCode=container.properties.get(LIMS_CODE).value.toString();
 
-			if(container.properties==null || limsCode==null)
+			if(container.properties==null || limsCode==null )
 			{
 				contextError.addErrors("limsCode","error.PropertyNotExist",LIMS_CODE,container.support.code);
 
 			}else {
 				try{
-
-					String sql="pm_MaterielmanipInNGL @matmaco=?";
-					Logger.debug(sql+limsCode);
-					this.jdbcTemplate.update(sql, Integer.parseInt(limsCode));
-
+					if(!limsCode.equals("0")){
+						String sql="pm_MaterielmanipInNGL @matmaco=?";
+						Logger.debug(sql+limsCode);
+						this.jdbcTemplate.update(sql, Integer.parseInt(limsCode));
+					}
 				} catch(DataAccessException e){
 
 					contextError.addErrors("",e.getMessage(), container.support.code);
@@ -312,34 +312,34 @@ public class LimsCNSDAO{
 
 		contextError.removeKeyFromRootKeyName("updateMaterielmanipLims");
 	}
-	
-	
+
+
 	public void updateMaterielLims(Sample sample,ContextValidation contextError) throws SQLException{
 
 		String rootKeyName=null;
 
-			contextError.addKeyToRootKeyName("updateMaterielLims");
-			rootKeyName="container["+sample.code+"]";
-			contextError.addKeyToRootKeyName(rootKeyName);
+		contextError.addKeyToRootKeyName("updateMaterielLims");
+		rootKeyName="container["+sample.code+"]";
+		contextError.addKeyToRootKeyName(rootKeyName);
 
-			if(sample.code==null)
-			{
-				contextError.addErrors("code","error.NotExist",sample.code);
+		if(sample.code==null)
+		{
+			contextError.addErrors("code","error.NotExist",sample.code);
 
-			}else {
-				try{
+		}else {
+			try{
 
-					String sql="pm_SampleInNGL @code=?";
-					Logger.debug(sql+sample.code);
-					this.jdbcTemplate.update(sql, sample.code);
+				String sql="pm_SampleInNGL @code=?";
+				Logger.debug(sql+sample.code);
+				this.jdbcTemplate.update(sql, sample.code);
 
-				} catch(DataAccessException e){
+			} catch(DataAccessException e){
 
-					contextError.addErrors("",e.getMessage(), sample.code);
-				}
+				contextError.addErrors("",e.getMessage(), sample.code);
 			}
+		}
 
-			contextError.removeKeyFromRootKeyName(rootKeyName);
+		contextError.removeKeyFromRootKeyName(rootKeyName);
 
 		contextError.removeKeyFromRootKeyName("updateMaterielLims");
 	}
@@ -430,6 +430,9 @@ public class LimsCNSDAO{
 				run.treatments.put(NGSRG_CODE,newTreatment(contextValidation,rs, Level.CODE.Run,NGSRG_CODE,NGSRG_CODE,RUN_TYPE_CODE));
 				contextValidation.removeKeyFromRootKeyName("run["+run.code+"]");
 
+				if(rs.getString("sequencingProgramType")!=null){
+					run.properties.put("sequencingProgramType",new PropertySingleValue(rs.getString("sequencingProgramType")));
+				}
 
 				if(contextValidation.hasErrors()){
 					contextError.errors.putAll(contextValidation.errors);
@@ -574,8 +577,8 @@ public class LimsCNSDAO{
 		});
 		return results;
 	}
-	
-	
+
+
 	public ReadSet findReadSetToUpdate(final ReadSet readSet,
 			final ContextValidation contextError) throws SQLException{
 		ReadSet results = this.jdbcTemplate.queryForObject("pl_ReadSetUnRunToNGL @readSetCode=?",new Object[]{readSet.code} 
@@ -725,7 +728,7 @@ public class LimsCNSDAO{
 				,new RowMapper<String>() {
 
 			public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-				
+
 				return rs.getString("code");
 			}
 
