@@ -1,6 +1,32 @@
 @()
 <div class="row">
 <div class="col-md-10 col-lg-10">
- <div ng-controller="NGSRGCtrl" ng-init="init()" datatable="NGSRG"></div>
+<table class="table table-condensed table-hover table-bordered">
+ 		<thead>
+			<tr>
+				<th>@Messages("readsets.sampleOnContainer.percentPerLane")</th>
+				<th>@Messages("readsets.treatments.ngsrg_illumina.validSeqPercent")</th>
+				<th>@Messages("readsets.treatments.ngsrg_illumina.nbCluster")</th>
+				<th>@Messages("readsets.treatments.ngsrg_illumina.nbBases")</th>
+				<th>@Messages("readsets.treatments.ngsrg_illumina.Q30")</th>
+				<th>@Messages("readsets.treatments.ngsrg_illumina.qualityScore")</th>
+						
+ 			</tr>
+ 		</thead>
+ 		<tbody>
+ 			<tr>
+ 				<td ng-bind="readset.sampleOnContainer.properties.percentPerLane.value|number:2"></td>
+				<td ng-bind="readset.treatments[treatments.getTreatment().code].default.validSeqPercent.value|number:2"></td>
+				<td ng-bind="readset.treatments[treatments.getTreatment().code].default.nbCluster.value|number"></td>
+				<td ng-bind="readset.treatments[treatments.getTreatment().code].default.nbBases.value|number"></td>
+				<td ng-class="highLight('treatments.'+treatments.getTreatment().code+'.default.Q30.value')" 
+					ng-bind="readset.treatments[treatments.getTreatment().code].default.Q30.value|number"></td>
+				<td ng-class="highLight('treatments.'+treatments.getTreatment().code+'.default.qualityScore.value')"
+					ng-bind="readset.treatments[treatments.getTreatment().code].default.qualityScore.value|number"></td>
+				
+				</tr>
+ 			
+ 		</tbody>
+ 	</table>
 </div>
 </div>

@@ -17,7 +17,8 @@
 			<td>{{readset.treatments[treatments.getTreatment().code].pairs.readsInput.value | number}}</td>
 			<td>{{readset.treatments[treatments.getTreatment().code].pairs.removedReads.value | number}}</td>
 			<td>{{readset.treatments[treatments.getTreatment().code].pairs.remainingReads.value | number}}</td>
-			<td>{{readset.treatments[treatments.getTreatment().code].pairs.removedReadsPercent.value | number:2}} @Messages("unit.percent")</td>
+			<td ng-class="highLight('treatments.'+treatments.getTreatment().code+'.pairs.removedReadsPercent.value')">
+			{{readset.treatments[treatments.getTreatment().code].pairs.removedReadsPercent.value | number:2}} @Messages("unit.percent")</td>
 		</tr>						
 		<tr>
 			<th>@Messages("readsets.treatments.contamination.single")</th>

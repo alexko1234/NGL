@@ -29,7 +29,7 @@
 					<h4 id="myModalLabel">{{modalTitle}}</h4>
 				</div>
 				<div class="modal-body" style="padding:0px">
-					<img src="data:image/png;base64,{{modalImage}}" style="width:{{modalWidth}}px; height:{{modalHeight}}px;" />
+					<img ng-src="data:image/png;base64,{{modalImage}}" style="width:{{modalWidth}}px; height:{{modalHeight}}px;" />
 				</div>
 				<div class="modal-footer">
 				</div>
@@ -108,7 +108,9 @@
 				}
 				@column(){
 					@views.html.helper.columnLabelValue(Messages("readsets.treatments.global.usefulSequences")){
-						<p class="form-control-static" >{{readset.treatments.global["default"].usefulSequences.value |	number}}</p>
+						<p class="form-control-static" ng-class="highLight('treatments.global.default.usefulSequences.value')">
+							{{readset.treatments.global["default"].usefulSequences.value |	number}}
+						</p>
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.treatments.global.usefulBases")){
 						<p class="form-control-static" >{{readset.treatments.global["default"].usefulBases.value | number}}</p>

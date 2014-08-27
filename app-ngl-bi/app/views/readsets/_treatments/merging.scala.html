@@ -16,7 +16,7 @@
 	   <tbody>
 		<tr>
 			<td>{{readset.treatments[treatments.getTreatment().code].pairs.sampleInput.value | number}}</td>
-			<td>
+			<td ng-class="highLight('treatments.'+treatments.getTreatment().code+'.pairs.mergedReadsPercent.value')">
 				{{readset.treatments[treatments.getTreatment().code].pairs.mergedReads.value | number}} 
 				({{readset.treatments[treatments.getTreatment().code].pairs.mergedReadsPercent.value | number:2}} @Messages("unit.percent"))
 			</td>
