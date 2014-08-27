@@ -281,13 +281,15 @@ angular.module('datatableServices', []).
 					    						
 					    						if('average' ===  column.groupMethod)result = result / groupData.length;
 					    						
-					    						if(!isNaN(result)){
-					    							try{
-					    								columnSetter.assign(group, result);
-					    							}catch(e){
-					    								console.log("computeGroup Error : "+e);
-					    							}
+					    						if(isNaN(result)){
+					    							result = "#ERROR";
 					    						}
+
+					    						try{
+				    								columnSetter.assign(group, result);
+				    							}catch(e){
+				    								console.log("computeGroup Error : "+e);
+				    							}
 				    						}else if('unique' === column.groupMethod){
 				    							var result = $filter('unique')(groupData, column.property);
 				    							if(result.length > 1){
@@ -527,12 +529,15 @@ angular.module('datatableServices', []).
 		    			 * Sort all result
 		    			 */
 		    			sortAllResult : function(){
-		    				if(this.config.order.active && !this.isRemoteMode(this.config.order.mode)){
+		    				if(this.config.order.active && !this.isRemoteMode(this.config.order.mode) && angular.isDefined(this.config.order.by)){
+		    					var orderProperty = this.config.order.by.property;
+		    					orderProperty += (this.config.order.by.filter)?'|'+this.config.order.by.filter:'';
+		    					
 		    					if(this.config.group.active && this.config.group.by ){
 		    						var orderSense = (this.config.order.reverse)?'-':'+';
-		    						this.allResult = $filter('orderBy')(this.allResult,[this.config.group.by.property, orderSense+this.config.order.by]);		    						
+		    						this.allResult = $filter('orderBy')(this.allResult,[this.config.group.by.property, orderSense+orderProperty]);		    						
 		    					}else{
-		    						this.allResult = $filter('orderBy')(this.allResult,this.config.order.by,this.config.order.reverse);	
+		    						this.allResult = $filter('orderBy')(this.allResult,orderProperty,this.config.order.reverse);	
 		    					}		    					    					
 		    				}
 		    			},	
@@ -545,8 +550,8 @@ angular.module('datatableServices', []).
 		    					var columnPropertyName = column.property;
 		    					var columnId  = column.id;
 		    					
-		    					if(this.config.order.by != columnPropertyName){
-		    						this.config.order.by = columnPropertyName;
+		    					if(!angular.isDefined(this.config.order.by) || this.config.order.by.property != columnPropertyName){
+		    						this.config.order.by = column;
 		    						this.config.order.reverse = false;
 		    					}else{
 		    						this.config.order.reverse = !this.config.order.reverse;
@@ -1130,8 +1135,8 @@ angular.module('datatableServices', []).
 		    					}
 		    				}
 		    				
-		    				if(this.config.order.active && this.isRemoteMode(this.config.order.mode)){
-		    					params.orderBy = this.config.order.by;
+		    				if(this.config.order.active && this.isRemoteMode(this.config.order.mode) && angular.isDefined(this.config.order.by)){
+		    					params.orderBy = this.config.order.by.property;
 		    					params.orderSense = (this.config.order.reverse)?"-1":"1";
 		    				}
 		    				return params;
@@ -1219,7 +1224,8 @@ angular.module('datatableServices', []).
 			    					}else{
 			    						this.config.group.columns[columns[i].id] = false;
 			    					}
-			    					if(this.config.order.active && (columns[i].property === this.config.order.by)){
+			    					if(this.config.order.active && angular.isDefined(this.config.order.by) && (columns[i].property === this.config.order.by || columns[i].property === this.config.order.by.property)){
+			    						this.config.order.by = columns[i];
 			    						this.config.order.columns[columns[i].id] = true;
 			    						columns[i].order = true;
 			    					}else{
@@ -1762,8 +1768,8 @@ angular.module('datatableServices', []).
   		    		+	'<div class="btn-group pull-right">'
   		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setEdit(column)" ng-if="dtTable.isShowButton(\'edit\', column)" ng-disabled="!dtTable.canEdit()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'
   		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setOrderColumn(column)" ng-if="dtTable.isShowButton(\'order\', column)" ng-disabled="!dtTable.canOrder()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.sort\')}}"><i ng-class="dtTable.getOrderColumnClass(column.id)"></i></button>'
+  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setGroupColumn(column)" ng-if="dtTable.isShowButton(\'group\', column)" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}"><i ng-class="dtTable.getGroupColumnClass(column.id)"></i></button>'  		    		  		    		
   		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setHideColumn(column)" ng-if="dtTable.isShowButton(\'hide\', column)" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.hide\')}}"><i class="fa fa-eye-slash"></i></button>'
-  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setGroupColumn(column)" ng-if="dtTable.isShowButton(\'group\', column)" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}"><i ng-class="dtTable.getGroupColumnClass(column.id)"></i></button>'  		    		
   		    		+	'</div>'
   		    		+	'</th>'
   		    		+'</tr>'
@@ -2019,7 +2025,15 @@ angular.module('datatableServices', []).
 			    			if(!value.line.group){
 			    				return currentScope.$eval(column.property+this.getFilter(column)+this.getFormatter(column), value.data);
 			    			}else{
-			    				return currentScope.$eval("group."+column.id+this.getFilter(column)+this.getFormatter(column), value.data);
+			    				var v = currentScope.$eval("group."+column.id, value.data);
+			    				//if error in group function
+			    				if(angular.isDefined(v) && v.charAt(0) === "#"){
+			    					return v;
+			    				}else if(angular.isDefined(v)){
+			    					return currentScope.$eval("group."+column.id+this.getFilter(column)+this.getFormatter(column), value.data);
+			    				}else{
+			    					return undefined;
+			    				}			    							    				
 			    			}
 			    		}
 	    				
