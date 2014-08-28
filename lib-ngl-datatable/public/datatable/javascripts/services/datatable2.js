@@ -2027,7 +2027,7 @@ angular.module('datatableServices', []).
 			    			}else{
 			    				var v = currentScope.$eval("group."+column.id, value.data);
 			    				//if error in group function
-			    				if(angular.isDefined(v) && v.charAt(0) === "#"){
+			    				if(angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#"){
 			    					return v;
 			    				}else if(angular.isDefined(v)){
 			    					return currentScope.$eval("group."+column.id+this.getFilter(column)+this.getFormatter(column), value.data);
