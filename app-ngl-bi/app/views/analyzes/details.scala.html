@@ -88,19 +88,15 @@
 					}
 					
 					@views.html.helper.columnLabelValue(Messages("analyzes.masterReadSetCodes")){
-						<p class="form-control-static">
-							<ul class="list-unstyled">
-	  							<li ng-repeat="code in analysis.masterReadSetCodes"><a href="#" ng-click="showReadSet(code)">{{code}}</a></li>
-							</ul>					
-						</p>
+						<ul class="form-control-static list-unstyled">
+	  						<li ng-repeat="code in analysis.masterReadSetCodes"><a href="#" ng-click="showReadSet(code)">{{code}}</a></li>
+						</ul>						
 					}
 					
-					@views.html.helper.columnLabelValue(Messages("analyzes.readSetCodes")){
-						<p class="form-control-static">
-							<ul class="list-unstyled">
+					@views.html.helper.columnLabelValue(Messages("analyzes.readSetCodes")){						
+							<ul class="form-control-static list-unstyled">
 	  							<li ng-repeat="code in analysis.readSetCodes"><a href="#" ng-click="showReadSet(code)">{{code}}</a></li>
-							</ul>					
-						</p>					
+							</ul>																
 					}
 					
 				}
