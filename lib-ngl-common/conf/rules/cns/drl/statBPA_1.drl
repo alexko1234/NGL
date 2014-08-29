@@ -6,7 +6,7 @@ package rules
 # / analysis.treatments.assemblyBA.pairs.assemblyContigSize) * 100
 
 rule "Calculate lostBasesPercent for contigFilterBA treatment"
-	@nglBI( BPA_1 )
+	@nglBI( BPA_ContigFilter_1 )
 	dialect "java"
 	salience 600
 	no-loop
