@@ -143,10 +143,7 @@
 						<tr>
 							<th>@Messages("analyzes.files.fullname")</th>
 							<th>@Messages("analyzes.files.typeCode")</th>
-							<th>@Messages("analyzes.files.usable")</th>
-							<th>@Messages("analyzes.files.properties.label")</th>
-							<th>@Messages("analyzes.files.properties.asciiEncoding")</th>
-							<th>@Messages("analyzes.files.properties.md5")</th>
+							<th>@Messages("analyzes.files.usable")</th>							
 						</tr>
 					</thead>
 					<tbody>
@@ -154,10 +151,7 @@
 							<td>{{file.fullname}}</td>
 							<td>{{file.typeCode}}</td>
 							<td ng-if="file.usable == true">@Messages("analyzes.files.isUsable")</td>
-							<td ng-if="file.usable == false">@Messages("analyzes.files.isNotUsable")</td>
-							<td>{{file.properties.label.value}}</td>
-							<td>{{file.properties.asciiEncoding.value}}</td>
-							<td>{{file.properties.md5.value}}</td>
+							<td ng-if="file.usable == false">@Messages("analyzes.files.isNotUsable")</td>							
 						</tr>
 					</tbody>
 				</table>
