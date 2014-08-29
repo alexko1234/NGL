@@ -80,7 +80,7 @@ public class StatBPATest extends AbstractTestsCNS
 		List<Object> facts = new ArrayList<Object>();
 		facts.add(analysis);
 		
-		rulesServices.callRules(Play.application().configuration().getString("rules.key"), "BPA_1", facts);
+		rulesServices.callRules(Play.application().configuration().getString("rules.key"), "BPA_ContigFilter_1", facts);
 		
 		//Get object after rules
 		analysis = MongoDBDAO.findOne(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, DBQuery.is("code", codeAnalysis));
@@ -104,11 +104,11 @@ public class StatBPATest extends AbstractTestsCNS
 	public void shouldStatBPAActionOk()
 	{
 		//With Analyzes URL
-		Result result = callAction(controllers.analyzes.api.routes.ref.Analyzes.applyRules(codeAnalysis,"BPA_1"),fakeRequest());
+		Result result = callAction(controllers.analyzes.api.routes.ref.Analyzes.applyRules(codeAnalysis,"BPA_ContigFilter_1"),fakeRequest());
         assertThat(status(result)).isEqualTo(OK);
         
         //With deprecated Analyses URL
-        result = callAction(controllers.analyses.api.routes.ref.AnalysesOld.applyRules(codeAnalysis,"BPA_1"),fakeRequest());
+        result = callAction(controllers.analyses.api.routes.ref.AnalysesOld.applyRules(codeAnalysis,"BPA_ContigFilter_1"),fakeRequest());
         assertThat(status(result)).isEqualTo(OK);
 	}
 }
