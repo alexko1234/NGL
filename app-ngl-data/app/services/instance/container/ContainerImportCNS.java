@@ -126,8 +126,9 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		
 		Map<String,PropertyValue<String>> propertiesContainerSupports=new HashMap<String, PropertyValue<String>>();
 		for(Container container : containers){
-			if(!propertiesContainerSupports.containsKey(container.support.code)){
+			if(!propertiesContainerSupports.containsKey(container.support.code) && container.properties.get("sequencingProgramType")!=null){
 				propertiesContainerSupports.put(container.support.code, container.properties.get("sequencingProgramType"));
+				container.properties.remove("sequencingProgramType");
 			}
 		}
 		
@@ -192,7 +193,6 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		container.valuation = new Valuation();
 		container.valuation.valid=TBoolean.UNSET; // instead of valid=null;
 
-		//TODO 
 		container.support=ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nbContainer"), rs.getString("codeSupport"), rs.getString("column"), rs.getString("line"));
 
 		container.properties= new HashMap<String, PropertyValue>();

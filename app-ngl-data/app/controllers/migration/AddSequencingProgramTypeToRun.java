@@ -1,30 +1,22 @@
 package controllers.migration;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.State;
-import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.container.instance.Content;
-import models.laboratory.run.description.RunCategory;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.springframework.stereotype.Repository;
 
 import play.Logger;
-import controllers.CommonController;
-import controllers.migration.models.container.ContainerOld;
-import controllers.migration.models.container.ContentOld;
-import fr.cea.ig.MongoDBDAO;
 import play.mvc.Result;
+import controllers.CommonController;
+import fr.cea.ig.MongoDBDAO;
 
 
 public class AddSequencingProgramTypeToRun  extends CommonController {
@@ -56,9 +48,12 @@ public class AddSequencingProgramTypeToRun  extends CommonController {
 		//set hashMap hm
 		HashMap<String, PropertyValue> hm = new HashMap<String, PropertyValue>();
 		
-		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).toList();
+		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("categoryCode", Arrays.asList("flowcell-1", "flowcell-2", "flowcell-8"))).toList();
 		for (ContainerSupport containerSupport : containerSupports) {
-			hm.put(containerSupport.code, containerSupport.properties.get("sequencingProgramType")); 
+			//Logger.debug("ContainerSupport "+containerSupport.code);
+			if(containerSupport.properties!=null && containerSupport.properties.containsKey("sequencingProgramType")){
+				hm.put(containerSupport.code, containerSupport.properties.get("sequencingProgramType"));
+			}
 		}
 
 		//use hm to retrieve sequencingProgramType with the containerSupportCode and affect it to runs
