@@ -249,7 +249,8 @@ angular.module('datatableServices', []).
 		    			 */
 		    			computeGroup: function(){
 		    				if(this.config.group.active && this.config.group.by){
-		    						var groupGetter = $parse(this.config.group.by.property);
+		    						var propertyGroupGetter = this.config.group.by.property;
+		    						var groupGetter = $parse(propertyGroupGetter);
 			    					var groupValues = this.allResult.reduce(function(array, value){
 			    						var groupValue = groupGetter(value);
 				    					if(!array[groupValue]){
@@ -262,7 +263,6 @@ angular.module('datatableServices', []).
 				    				for(var key in groupValues){
 				    					var group = {};
 				    					var groupData = groupValues[key];
-				    					
 				    					$parse("group."+this.config.group.by.id).assign(group, key);
 				    					var groupMethodColumns = this.getColumnsConfig().filter(function(column){
 					    					return (column.groupMethod !== undefined && column.groupMethod !== null);
@@ -2029,7 +2029,10 @@ angular.module('datatableServices', []).
 			    				//if error in group function
 			    				if(angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#"){
 			    					return v;
-			    				}else if(angular.isDefined(v)){
+			    				}else if(angular.isDefined(v) && !scope.dtTable.config.group.columns[column.id]){
+			    					//not filtered properties because used during the compute
+			    					return currentScope.$eval("group."+column.id+this.getFormatter(column), value.data);
+			    				}else if(angular.isDefined(v) && scope.dtTable.config.group.columns[column.id]){
 			    					return currentScope.$eval("group."+column.id+this.getFilter(column)+this.getFormatter(column), value.data);
 			    				}else{
 			    					return undefined;
