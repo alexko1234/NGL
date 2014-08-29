@@ -27,7 +27,7 @@ GET		/api/description/treatments				controllers.description.runs.Treatments.save
 
 GET		/api/instance/resolutions				controllers.instance.Resolutions.save()
 
-
+GET		/sequencingProgramType					controllers.migration.MigrationDataCNS.updateSequencingProgramType()
 GET		/cns/migration						    controllers.migration.cns.MigrationReadSetFileCNS.migration()
 GET		/cns/update-content-sample			    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationContainer()
 GET		/cns/update-readset					    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationReadset()
