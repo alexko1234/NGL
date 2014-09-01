@@ -4,10 +4,12 @@ import java.util.concurrent.TimeUnit;
 
 import scala.concurrent.duration.Duration;
 import services.instance.container.PrepaflowcellImportCNS;
+import services.instance.container.SolutionStockImportCN;
 import services.instance.container.TubeImportCNS;
 import services.instance.container.UpdateTaraPropertiesCNS;
 import services.instance.parameter.IndexImportCNS;
 import services.instance.project.ProjectImportCNS;
+import services.instance.run.RunExtImportCNS;
 import services.instance.run.RunImportCNS;
 import services.instance.run.UpdateReadSetCNS;
 import services.instance.sample.UpdateSampleCNS;
@@ -33,6 +35,10 @@ public class ImportDataCNS{
 	    
 	    new UpdateSampleCNS(Duration.create(3,TimeUnit.MINUTES)
 				,Duration.create(1,TimeUnit.HOURS));
+		
+		new RunExtImportCNS(Duration.create(10,TimeUnit.MINUTES),Duration.create(12,TimeUnit.HOURS));
+		
+//		new SolutionStockImportCN(Duration.create(4,TimeUnit.SECONDS),Duration.create(15,TimeUnit.MINUTES));
 	}
 
 }
