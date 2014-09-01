@@ -213,7 +213,7 @@ angular.module('biWorkflowChartServices', []).
 	    	        }
     	        	
     	            var globalParam = { spaceVbetween2box:20, 
-					    	            spaceHbetween2box:100,
+					    	            spaceHbetween2box:160,
 					    	            boxWidth:160,
 					    	            boxHeight:25,
 					    				offsetXText:100,
