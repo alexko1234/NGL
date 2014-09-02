@@ -41,12 +41,11 @@ public class StateHierarchyMappingQuery extends MappingSqlQuery<StateHierarchy>{
 		} catch (DAOException e) {
 			throw new SQLException(e);
 		}
-		if (state != null) {
-			stateHierarchy.childStateCode=state.code;
-			stateHierarchy.childStateName = state.name;
-			stateHierarchy.position = state.position;
-			stateHierarchy.functionnalGroup = state.functionnalGroup;
-		}
+		stateHierarchy.childStateCode=state.code;
+		
+		stateHierarchy.childStateName = state.name;
+		stateHierarchy.position = state.position;
+		stateHierarchy.functionnalGroup = state.functionnalGroup;
 		
 		id = rs.getLong("fk_parent_state");
 		state = null;
@@ -55,9 +54,7 @@ public class StateHierarchyMappingQuery extends MappingSqlQuery<StateHierarchy>{
 		} catch (DAOException e) {
 			throw new SQLException(e);
 		}
-		if (state != null) {
-			stateHierarchy.parentStateCode=state.code;
-		}
+		stateHierarchy.parentStateCode=state.code;
 
 		id = rs.getLong("fk_object_type");
 		ObjectType ot = null;
@@ -66,9 +63,10 @@ public class StateHierarchyMappingQuery extends MappingSqlQuery<StateHierarchy>{
 		} catch (DAOException e) {
 			throw new SQLException(e);
 		}
-		if (ot != null) {
-			stateHierarchy.objectTypeCode=ot.code;
-		}
+		stateHierarchy.objectTypeCode=ot.code;
+		
+		
+		
 		
 		return stateHierarchy;
 	}
