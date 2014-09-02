@@ -254,15 +254,14 @@
 							this.form.stateCodes = ["IW-VQC", "IP-VQC", "IW-VBA"];
 						}		
 					}
-					
-					if(this.reportingConfiguration && this.reportingConfiguration.queryConfiguration){
-						var queryParams = this.reportingConfiguration.queryConfiguration;
-						if(queryParams && queryParams.includeKeys && queryParams.includeKeys.length > 0){
-							this.form.includes = queryParams.includeKeys;
-						}else if(queryParams && queryParams.excludeKeys && queryParams.excludeKeys.length > 0){
-							this.form.excludes = queryParams.excludeKeys;
-						}else{
-							this.form.includes = ["default"];
+					this.form.includes = [];
+					if(this.reportingConfiguration){
+						for(var i = 0 ; i < this.reportingConfiguration.columns.length ; i++){
+							if(this.reportingConfiguration.columns[i].queryIncludeKeys && this.reportingConfiguration.columns[i].queryIncludeKeys.length > 0){
+								this.form.includes = this.form.includes.concat(this.reportingConfiguration.columns[i].queryIncludeKeys);
+							}else{
+								this.form.includes.push(this.reportingConfiguration.columns[i].property.replace('.value',''));	
+							}
 						}
 					}else{
 						this.form.includes = ["default"];
