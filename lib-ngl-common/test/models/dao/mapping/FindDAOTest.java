@@ -13,6 +13,7 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
+import models.laboratory.common.description.ValuationCriteria;
 import models.laboratory.common.description.dao.InstituteDAO;
 import models.laboratory.common.description.dao.PropertyDefinitionDAO;
 import models.laboratory.common.description.dao.ResolutionDAO;
@@ -42,7 +43,6 @@ import models.utils.dao.DAOException;
 import org.junit.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import play.Logger;
 import play.api.modules.spring.Spring;
 
 import utils.AbstractTests;
@@ -306,7 +306,7 @@ public class FindDAOTest extends AbstractTests {
 		Protocol cTypeId = Protocol.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(Protocol.find.isCodeExist(""));
-		ExperimentType experimentType=ExperimentType.find.findByCode("opgen-depot");
+		ExperimentType experimentType=ExperimentType.find.findAll().get(0);
 		Protocol protocol = Protocol.find.findByExperimentTypeCode(experimentType.code).get(0);
 		Boolean exist=Protocol.find.isCodeExistForTypeCode(protocol.code, experimentType.code);
 		Assert.assertTrue(exist);
