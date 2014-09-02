@@ -49,6 +49,7 @@ import controllers.CommonController;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 
@@ -75,8 +76,7 @@ public class ReadSets extends ReadSetsController{
 		
 		if(form.datatable){			
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
-			List<ReadSet> readSets = results.toList();
-			return ok(Json.toJson(new DatatableResponse<ReadSet>(readSets, results.count())));
+			return ok(new MongoDBDatatableResponseChunks<ReadSet>(results)).as("application/json");			
 		}else if(form.count){
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
 			int count = results.count();
@@ -84,8 +84,9 @@ public class ReadSets extends ReadSetsController{
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		}else {
-			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
+			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);	
 			List<ReadSet> readSets = results.toList();
+			
 			return ok(Json.toJson(readSets));
 		}
 	}
