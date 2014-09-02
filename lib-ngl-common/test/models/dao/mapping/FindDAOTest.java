@@ -307,8 +307,9 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(Protocol.find.isCodeExist(""));
 		ExperimentType experimentType=ExperimentType.find.findAll().get(0);
-		Protocol protocol = Protocol.find.findByExperimentTypeCode(experimentType.code).get(0);
-		Boolean exist=Protocol.find.isCodeExistForTypeCode(protocol.code, experimentType.code);
+		Assert.assertNotNull(experimentType.code);
+		Protocol protocol = Protocol.find.findByExperimentTypeCode("opgen-depot").get(0);
+		Boolean exist=Protocol.find.isCodeExistForTypeCode(protocol.code, "opgen-depot");
 		Assert.assertTrue(exist);
 		exist=Protocol.find.isCodeExistForTypeCode(protocol.code, "test");
 		Assert.assertFalse(exist);

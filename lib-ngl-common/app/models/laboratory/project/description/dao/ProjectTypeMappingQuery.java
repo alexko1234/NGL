@@ -40,7 +40,9 @@ public class ProjectTypeMappingQuery extends MappingSqlQuery<ProjectType>{
 			//Get commonInfoType
 			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 			CommonInfoType commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
-			projectType.setCommonInfoType(commonInfoType);
+			if (commonInfoType != null) {
+				projectType.setCommonInfoType(commonInfoType);
+			}
 			//Get category
 			ProjectCategoryDAO projectCategoryDAO = Spring.getBeanOfType(ProjectCategoryDAO.class);
 			ProjectCategory projectCategory=null;

@@ -46,7 +46,9 @@ public class RunTypeMappingQuery extends MappingSqlQuery<RunType>{
 				throw new SQLException(e);
 			}
 			//Set commonInfoType
-			runType.setCommonInfoType(commonInfoType);
+			if (commonInfoType != null) {
+				runType.setCommonInfoType(commonInfoType);
+			}
 			//Get category
 			RunCategoryDAO runCategoryDAO = Spring.getBeanOfType(RunCategoryDAO.class);
 			RunCategory runCategory=null;

@@ -46,8 +46,9 @@ public class InstrumentUsedTypeMappingQuery extends MappingSqlQuery<InstrumentUs
 			//Get commonInfoType
 			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 			CommonInfoType commonInfoType=commonInfoTypeDAO.findById(idCommonInfoType);
-
-			instrumentUsedType.setCommonInfoType(commonInfoType);
+			if (commonInfoType != null) {
+				instrumentUsedType.setCommonInfoType(commonInfoType);
+			}
 			//Get instrument category
 			InstrumentCategoryDAO instrumentCategoryDAO = Spring.getBeanOfType(InstrumentCategoryDAO.class);
 			InstrumentCategory instrumentCategory=instrumentCategoryDAO.findById(idInstrumentCategory);

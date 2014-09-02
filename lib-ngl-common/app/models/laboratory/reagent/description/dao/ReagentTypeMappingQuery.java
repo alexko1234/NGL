@@ -43,7 +43,9 @@ public class ReagentTypeMappingQuery extends MappingSqlQuery<ReagentType>{
 		} catch (DAOException e) {
 			throw new SQLException(e);
 		}
-		reagentType.setCommonInfoType(commonInfoType);
+		if (commonInfoType != null) {
+			reagentType.setCommonInfoType(commonInfoType);
+		}
 		return reagentType;
 	}
 

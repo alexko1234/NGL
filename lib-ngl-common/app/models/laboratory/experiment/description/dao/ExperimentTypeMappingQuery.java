@@ -38,7 +38,7 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 	protected ExperimentType mapRow(ResultSet rs, int rowNumber)
 			throws SQLException {
 		ExperimentType experimentType = new ExperimentType();
-		//play.Logger.debug("Experiment type "+experimentType);
+
 		experimentType.id = rs.getLong("id");
 		experimentType.atomicTransfertMethod=rs.getString("atomic_transfert_method");
 		long idExperimentCategory = rs.getLong("fk_experiment_category");
@@ -51,7 +51,9 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 		} catch (DAOException e1) {
 			throw new SQLException(e1);
 		}
-		experimentType.setCommonInfoType(commonInfoType);
+		if (commonInfoType != null) {
+			experimentType.setCommonInfoType(commonInfoType);
+		}
 		
 		//Get List protocols by common info type
 		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
