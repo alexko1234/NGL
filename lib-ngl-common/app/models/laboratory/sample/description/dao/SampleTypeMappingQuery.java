@@ -14,7 +14,6 @@ import models.utils.dao.DAOException;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
 
-import play.Logger;
 import play.api.modules.spring.Spring;
 
 public class SampleTypeMappingQuery extends MappingSqlQuery<SampleType>{
@@ -33,33 +32,28 @@ public class SampleTypeMappingQuery extends MappingSqlQuery<SampleType>{
 
 	@Override
 	protected SampleType mapRow(ResultSet rs, int rowNum) throws SQLException {
-		SampleType sampleType = new SampleType();
-		
-		sampleType.id = rs.getLong("id");
-		long idCommonInfoType = rs.getLong("fk_common_info_type");
-		long idSampleCategory = rs.getLong("fk_sample_category");
-		//Get commonInfoType
-		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType commonInfoType = null;
 		try {
-			 commonInfoType = (CommonInfoType) commonInfoTypeDAO.findById(idCommonInfoType);
-		} catch (DAOException e) {
-			throw new SQLException(e);
-		}
-		//Set commonInfoType
-		if (commonInfoType != null) {
+			SampleType sampleType = new SampleType();
+			sampleType.id = rs.getLong("id");
+			long idCommonInfoType = rs.getLong("fk_common_info_type");
+			long idSampleCategory = rs.getLong("fk_sample_category");
+			//Get commonInfoType
+			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+			CommonInfoType commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
 			sampleType.setCommonInfoType(commonInfoType);
-		}
-		//Get sampleCategory
-		SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
-		SampleCategory sampleCategory=null;
-		try {
-			sampleCategory = (SampleCategory) sampleCategoryDAO.findById(idSampleCategory);
+			//Get sampleCategory
+			SampleCategoryDAO sampleCategoryDAO = Spring.getBeanOfType(SampleCategoryDAO.class);
+			SampleCategory sampleCategory=null;
+			try {
+				sampleCategory = (SampleCategory) sampleCategoryDAO.findById(idSampleCategory);
+			} catch (DAOException e) {
+				throw new SQLException(e);
+			}
+			sampleType.category = sampleCategory;
+			return sampleType;
 		} catch (DAOException e) {
 			throw new SQLException(e);
 		}
-		sampleType.category = sampleCategory;
-		return sampleType;
 	}
 
 }

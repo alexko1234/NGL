@@ -45,9 +45,7 @@ public class ReadSetTypeMappingQuery extends MappingSqlQuery<ReadSetType>{
 				throw new SQLException(e);
 			}
 			//Set commonInfoType
-			if (commonInfoType != null) {
-				readSetType.setCommonInfoType(commonInfoType);
-			}
+			readSetType.setCommonInfoType(commonInfoType);
 			//Get category
 			/*
 			ReadSetCategoryDAO readSetCategoryDAO = Spring.getBeanOfType(ReadSetCategoryDAO.class);

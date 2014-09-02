@@ -33,24 +33,22 @@ public class AnalysisTypeMappingQuery extends MappingSqlQuery<AnalysisType>{
 			
 		analysisType.id = rs.getLong("id");
 			
-		long idCommonInfoType = rs.getLong("fk_common_info_type");
-		//long idReadSetCategory = rs.getLong("fk_readset_category");
-		
-		//Get commonInfoType
-		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
-		CommonInfoType commonInfoType = null;
-		try {
-			 commonInfoType = (CommonInfoType) commonInfoTypeDAO.findById(idCommonInfoType);
-		} catch (DAOException e) {
-			throw new SQLException(e);
-		}
-		//Set commonInfoType
-		if (commonInfoType != null) {
+			long idCommonInfoType = rs.getLong("fk_common_info_type");
+			//long idReadSetCategory = rs.getLong("fk_readset_category");
+			
+			//Get commonInfoType
+			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
+			CommonInfoType commonInfoType = null;
+			try {
+				 commonInfoType = (CommonInfoType) commonInfoTypeDAO.findById(idCommonInfoType);
+			} catch (DAOException e) {
+				throw new SQLException(e);
+			}
+			//Set commonInfoType
 			analysisType.setCommonInfoType(commonInfoType);
-		}
-		//Get category
-		
-		return analysisType;
+			//Get category
+			
+			return analysisType;
 	}
 
 }

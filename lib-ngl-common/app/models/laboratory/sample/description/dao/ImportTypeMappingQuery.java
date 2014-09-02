@@ -40,9 +40,7 @@ public class ImportTypeMappingQuery extends MappingSqlQuery<ImportType>{
 			//Get commonInfoType
 			CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 			CommonInfoType commonInfoType = commonInfoTypeDAO.findById(idCommonInfoType);
-			if (commonInfoType != null) {
-				importType.setCommonInfoType(commonInfoType);
-			}
+			importType.setCommonInfoType(commonInfoType);
 			//Get sampleCategory
 			ImportCategoryDAO importCategoryDAO = Spring.getBeanOfType(ImportCategoryDAO.class);
 			ImportCategory importCategory=null;
