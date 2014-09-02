@@ -63,6 +63,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 				
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		ctxVal.putObject("analysis", objectInDB);
+		ctxVal.putObject("objectClass", objectInDB.getClass());
 		ctxVal.setCreationMode();
 		inputFile.validate(ctxVal);
 		
@@ -92,6 +93,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 			if (fullname.equals(fileInput.fullname)) {			
 				ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 				ctxVal.putObject("analysis", objectInDB);
+				ctxVal.putObject("objectClass", objectInDB.getClass());
 				ctxVal.setUpdateMode();
 				fileInput.validate(ctxVal);
 				
@@ -109,6 +111,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 		}else{ //update only some authorized properties
 			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
 			ctxVal.putObject("analysis", objectInDB);
+			ctxVal.putObject("objectClass", objectInDB.getClass());
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);

@@ -77,6 +77,7 @@ public class Files extends ReadSetsController {
 				
 		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 		ctxVal.putObject("readSet", readSet);
+		ctxVal.putObject("objectClass", readSet.getClass());
 		ctxVal.setCreationMode();
 		file.validate(ctxVal);
 		
@@ -105,6 +106,7 @@ public class Files extends ReadSetsController {
 			if (fullname.equals(fileInput.fullname)) {			
 				ContextValidation ctxVal = new ContextValidation(filledForm.errors());
 				ctxVal.putObject("readSet", readSet);
+				ctxVal.putObject("objectClass", readSet.getClass());
 				ctxVal.setUpdateMode();
 				fileInput.validate(ctxVal);
 				
@@ -123,6 +125,7 @@ public class Files extends ReadSetsController {
 		}else{ //update only some authorized properties
 			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
 			ctxVal.putObject("readSet", readSet);
+			ctxVal.putObject("objectClass", readSet.getClass());
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
