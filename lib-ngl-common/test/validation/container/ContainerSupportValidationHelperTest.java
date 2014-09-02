@@ -50,18 +50,19 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 	public void validateUniqueSupportCodePositionCode() {
 		ContextValidation contextValidation=new ContextValidation();
 		contextValidation.setCreationMode();
-		container=MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
+		//Container n'a pas encore ete serialize
 		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(container.support, contextValidation);
-		assertThat(contextValidation.errors.size()).isEqualTo(1);
-		MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME,container);
+		container=MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
+		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
 	@Test
 	public void validateUniqueSupportCodePositionCodeExist() {
 		ContextValidation contextValidation=new ContextValidation();
 		contextValidation.setCreationMode();
+		//Container est dans la base
 		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(container.support, contextValidation);
-		assertThat(contextValidation.errors.size()).isEqualTo(0);
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
 	
 	@Test
