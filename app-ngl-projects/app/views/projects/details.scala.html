@@ -137,7 +137,7 @@
 								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.bioinformaticanalysis")){
 									<div class="checkbox" ng-if="mainService.isEditMode()">
 					 					<label>
-											<input type="checkbox"  ng-model="project.bioinformaticParameters.bioinformaticAnalysis">	
+											<input type="checkbox"  ng-model="project.bioinformaticParameters.bioinformaticAnalysis">&nbsp;	
 										</label>
 									</div>				
 									<p class="form-control-static" ng-if="!mainService.isEditMode()" ng-switch on="project.bioinformaticParameters.bioinformaticAnalysis">
