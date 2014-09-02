@@ -96,10 +96,8 @@ public class StatBPATest extends AbstractTestsCNS
 		//Check formula
 		double lostBasesPercentExpected = roundValue((double)(assemblyContigSize-storedBases)/assemblyContigSize*100);
 		Logger.debug("Value calculated "+lostBasesPercentExpected);
-		if (analysis.treatments.get("contigFilterBA").results.get("pairs").get("lostBasesPercent") != null) {
-			double lostBasesPercentDB = ((PropertyValue<Double>)analysis.treatments.get("contigFilterBA").results.get("pairs").get("lostBasesPercent")).value;
-			Assert.assertEquals(lostBasesPercentExpected, lostBasesPercentDB);
-		}
+		double lostBasesPercentDB = ((PropertyValue<Double>)analysis.treatments.get("contigFilterBA").results.get("pairs").get("lostBasesPercent")).value;
+		Assert.assertEquals(lostBasesPercentExpected, lostBasesPercentDB);
 	}
 	
 	@Test
