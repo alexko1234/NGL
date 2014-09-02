@@ -474,7 +474,8 @@ analyzes.files.usable	= Utilisable
 analyzes.files.properties.label	= Label
 analyzes.files.properties.asciiEncoding	= Encodage ASCII
 analyzes.files.properties.md5= Clé codage md5
-
+analyzes.files.isUsable = Oui
+analyzes.files.isNotUsable = Non
 
 analyzes.treatments.merging_ba.readsInput = Reads input (pairs)
 analyzes.treatments.merging_ba.mergedReads = Merged reads
