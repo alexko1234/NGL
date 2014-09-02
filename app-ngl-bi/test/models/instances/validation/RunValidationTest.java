@@ -1049,11 +1049,11 @@ public class RunValidationTest extends AbstractTests {
 			File file = RunMockHelper.newFile("xxE410_FA_B00FPMH_3_2_C17GFACXX.IND6.fastq");
 			files.add(file);
 
-			ReadSet r = RunMockHelper.newReadSet("test1");
-			r.files = files;
+			ReadSet readSet = RunMockHelper.newReadSet("test1");
+			readSet.files = files;
 			
 			ArrayList<String> a = new ArrayList<String>();
-			a.add(r.code);
+			a.add(readSet.code);
 			lane.readSetCodes = a;
 			Lane lane2 = RunMockHelper.newLane(2);
 			List<Lane> lanes = new ArrayList<Lane>();
@@ -1062,7 +1062,8 @@ public class RunValidationTest extends AbstractTests {
 			run.lanes = lanes;
 			
 			ContextValidation ctxVal = new ContextValidation();
-			ctxVal.putObject("readSet", r);
+			ctxVal.putObject("readSet", readSet);
+			ctxVal.putObject("objectClass", readSet.getClass());  
 			ctxVal.setCreationMode();
 			file.validate(ctxVal);
 			 
@@ -1105,10 +1106,10 @@ public class RunValidationTest extends AbstractTests {
 		// AGAIN FOR ERROR
 		files.add(file);
 
-		ReadSet r = RunMockHelper.newReadSet("test1");
-		r.files = files;
-		r.runCode = run.code;
-		r.laneNumber = 1;
+		ReadSet readSet = RunMockHelper.newReadSet("test1");
+		readSet.files = files;
+		readSet.runCode = run.code;
+		readSet.laneNumber = 1;
 		
 		 ArrayList<String> a = new ArrayList<String>();
 		 //a.add(r.code);
@@ -1120,7 +1121,8 @@ public class RunValidationTest extends AbstractTests {
 		run.lanes = lanes;	
 		
 		 ContextValidation ctxVal = new ContextValidation();
-		 ctxVal.putObject("readSet", r);
+		 ctxVal.putObject("readSet", readSet);
+		 ctxVal.putObject("objectClass", readSet.getClass());  
 		 ctxVal.setCreationMode();
 		 file.validate(ctxVal);
 		 assertThat(ctxVal.errors).hasSize(0);
@@ -1130,7 +1132,7 @@ public class RunValidationTest extends AbstractTests {
 		 
 		 ctxVal = new ContextValidation();
 		 ctxVal.setCreationMode();
-		 r.validate(ctxVal);
+		 readSet.validate(ctxVal);
 		 
 		 assertThat(ctxVal.errors).hasSize(1);
 		 assertThat(ctxVal.errors.toString()).contains("files[1].fullname");
