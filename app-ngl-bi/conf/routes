@@ -169,10 +169,6 @@ GET    	/api/alerts			               			controllers.alerts.api.Alerts.list()
 GET    	/api/alerts/:code               			controllers.alerts.api.Alerts.get(code: java.lang.String)
 HEAD	/api/alerts/:code               			controllers.alerts.api.Alerts.head(code: java.lang.String)
 
-#migration
-GET		/migration									controllers.migration.MigrationUpdateSampleOnContainer.migration()
-GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
-
 #Common
 GET		/api/commons/states							controllers.commons.api.States.list()
 GET		/api/commons/states-hierarchy				controllers.commons.api.StatesHierarchy.list()
@@ -223,6 +219,10 @@ GET     /assets/*file               				controllers.Assets.at(path="/public", fi
 GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
 
+
+#migration
+GET		/migration									controllers.migration.MigrationUpdateSampleOnContainer.migration()
+GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
 
 #DEPRECATED
 GET    	/api/analyses	                 			@controllers.analyses.api.AnalysesOld.list()
