@@ -97,6 +97,7 @@ public class ReadSet extends DBObject implements IValidation{
 		
 		ValidationHelper.required(contextValidation, this.path, "path");
 		contextValidation.putObject("readSet", this);
+		contextValidation.putObject("objectClass", this.getClass());
 		contextValidation.putObject("level", Level.CODE.ReadSet);
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);
 		FileValidationHelper.validationFiles(this.files, contextValidation);

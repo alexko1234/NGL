@@ -54,6 +54,7 @@ public class Analysis extends DBObject implements IValidation{
 		
 		ValidationHelper.required(contextValidation, this.path, "path");
 		contextValidation.putObject("analysis", this);
+		contextValidation.putObject("objectClass", this.getClass());
 		contextValidation.putObject("level", Level.CODE.Analysis);
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);
 		FileValidationHelper.validationFiles(this.files, contextValidation);

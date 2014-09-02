@@ -32,7 +32,9 @@ public abstract class SubDocumentController<T extends DBObject, V> extends Mongo
 	public Result list(String parentCode){
 		T objectInDB = getObject(parentCode);
 		if (objectInDB != null) {
-			return ok(Json.toJson(getSubObjects(objectInDB)));
+			Object subObjectInDB = getSubObjects(objectInDB);
+			if(null != subObjectInDB)return ok(Json.toJson(subObjectInDB));
+			else return ok();
 		} else{
 			return notFound();
 		}		
