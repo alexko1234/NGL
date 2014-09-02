@@ -111,7 +111,7 @@
 			@views.html.helper.columnLabelValue(Messages("runs.keep")){
 				<div class="checkbox" ng-if="mainService.isEditMode()">
  					<label>
-						<input type="checkbox"  ng-model="run.keep" ng-disabled="run.deleted">	
+						<input type="checkbox"  ng-model="run.keep" ng-disabled="run.deleted">&nbsp;	
 					</label>
 				</div>								
 				<p class="form-control-static" ng-switch on="run.keep" ng-if="!mainService.isEditMode()">
