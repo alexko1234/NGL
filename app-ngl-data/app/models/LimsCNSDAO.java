@@ -552,8 +552,9 @@ public class LimsCNSDAO{
 				readSet.state.user="lims";
 
 				readSet.state.historical=new ArrayList<TransientState>();		
-				readSet.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",1));
-				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",2));	
+				readSet.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",0));
+				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",1));
+				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"IW-QC",2));
 
 				readSet.traceInformation=new TraceInformation();
 				readSet.traceInformation.setTraceInformation("lims");
@@ -602,8 +603,9 @@ public class LimsCNSDAO{
 				readSet.state.user="lims";
 
 				readSet.state.historical=new ArrayList<TransientState>();		
-				readSet.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",1));
-				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",2));	
+				readSet.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",0));
+				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",1));
+				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"IW-QC",2));
 
 				readSet.traceInformation=new TraceInformation();
 				readSet.traceInformation.setTraceInformation("lims");
