@@ -134,22 +134,22 @@
 				<div class="col-md-12 col-lg-12">
 						<div class="row">
 							@column(){
-								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.bioinformaticanalysis")){
+								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.biologicalAnalysis")){
 									<div class="checkbox" ng-if="mainService.isEditMode()">
 					 					<label>
-											<input type="checkbox"  ng-model="project.bioinformaticParameters.bioinformaticAnalysis">&nbsp;	
+											<input type="checkbox"  ng-model="project.bioinformaticParameters.biologicalAnalysis">&nbsp;	
 										</label>
 									</div>				
-									<p class="form-control-static" ng-if="!mainService.isEditMode()" ng-switch on="project.bioinformaticParameters.bioinformaticAnalysis">
+									<p class="form-control-static" ng-if="!mainService.isEditMode()" ng-switch on="project.bioinformaticParameters.biologicalAnalysis">
 										<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
 										<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
 									</p>					
 								}
 								
-								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.regexBA")){
-									<div ng-switch on="mainService.isEditMode() && project.bioinformaticParameters.bioinformaticAnalysis">
-										<p class="form-control-static" ng-switch-when="false">{{project.bioinformaticParameters.regexBA}}</p>
-										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.bioinformaticParameters.regexBA">										
+								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.regexBiologicalAnalysis")){
+									<div ng-switch on="mainService.isEditMode() && project.bioinformaticParameters.biologicalAnalysis">
+										<p class="form-control-static" ng-switch-when="false">{{project.bioinformaticParameters.regexBiologicalAnalysis}}</p>
+										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.bioinformaticParameters.regexBiologicalAnalysis">										
 									</div>
 								}
 								

@@ -54,8 +54,6 @@ PUT   	/api/umbrellaprojects/:code 					@controllers.umbrellaprojects.api.Umbrel
 
 
 #migration
-GET		/migration										controllers.migration.Migration.migration()
-GET		/migration2										controllers.migration.Migration2.migration()
 GET		/addBioinformaticParameters						controllers.migration.AddBioinformaticParameters.migration()
 
 ->  /authentication authentication.Routes

@@ -61,13 +61,13 @@ projects.state.by = par:
 projects.projectCodes = Projets
 projects.umbrellaProjectCode = Projet maître
 projects.description = Description
-projects.bioinformaticParameters.regexBA = Expression régulière BA
+projects.bioinformaticParameters.regexBiologicalAnalysis = Expression régulière pour BA
 projects.bioinformaticParameters.mappingReference = Référence mapping
   
 umbrellaProjects.code = Code
 umbrellaProjects.name = Nom
 projects.projectCodesSelected = Projets rattachés
-projects.bioinformaticParameters.bioinformaticanalysis = Analyse bio-informatique
+projects.bioinformaticParameters.biologicalAnalysis = Analyse biologique ?
 
 
 #button
