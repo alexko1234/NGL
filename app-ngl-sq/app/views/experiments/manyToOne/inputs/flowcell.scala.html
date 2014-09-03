@@ -26,13 +26,13 @@
 				</tr>
 				<tr ng-model="container" ng-repeat="container in inputContainers" draggable>
 					<td>
-						<button ng-click="deleteInput(container)"><i class="fa fa-trash-o"></i></button>
+						<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInput(container)"><i class="fa fa-trash-o"></i></button>
 					</td>
 					<td>
 						{{container.code}}
 					</td>
 					<td>
-						<input class="form-control" type="text" placeholder="" class="input-small" ng-model="container.percentage" />
+						<input class="form-control" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-model="container.percentage" />
 					</td>
 					<td  title="{{getTags(container.contents) | unique}}">
 						<div ng-repeat="content in container.contents | unique:'properties.tag.value' |  limitTo:12">
@@ -118,7 +118,7 @@
 							{{flowcell.code}}
 						</td>
 						<td>
-							<input class="form-control " type="text" placeholder="" class="input-small" ng-model="flowcell.percentage" />
+							<input class="form-control " type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-model="flowcell.percentage" />
 						</td>
 						<td  title="{{getTags(flowcell.contents) | unique}}">
 						<div ng-repeat="content in flowcell.contents | unique:'properties.tag.value' |  limitTo:12">
@@ -136,7 +136,7 @@
 						</div>
 					</td>
 					<td>
-							<button ng-click="deleteInputOnAtomic(@i,container)"><i class="fa fa-trash-o"></i></button>
+							<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInputOnAtomic(@i,container)"><i class="fa fa-trash-o"></i></button>
 				    </td>
 					</tr>
 				</table>

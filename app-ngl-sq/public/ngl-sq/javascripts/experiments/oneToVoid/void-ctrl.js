@@ -1,4 +1,4 @@
-angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToVoid', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToVoid) {
+angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToVoid','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToVoid,mainService,tabService) {
 	$scope.datatableConfig = {
 			columnsUrl : jsRoutes.controllers.experiments.tpl.Experiments.getEditExperimentColumns().url,
 			compact:false,
@@ -133,6 +133,7 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);
+	
 	$scope.atomicTransfere = oneToVoid($scope,"datatable");
 	
 	if($scope.experiment.editMode){

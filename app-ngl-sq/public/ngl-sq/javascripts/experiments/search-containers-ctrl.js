@@ -1,6 +1,6 @@
 "use strict";
 
-angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams', '$filter','datatable','basket','lists','$http', function ($scope,$routeParams, $filter, datatable,basket, lists, $http) {
+angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams', '$filter','datatable','basket','lists','$http','mainService','tabService', function ($scope,$routeParams, $filter, datatable,basket, lists, $http,mainService,tabService) {
 	$scope.lists = lists;
 	
 	$scope.datatableConfig = {
@@ -75,8 +75,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.changeExperimentType = function(){
-		$scope.removeTab(2);
-		$scope.removeTab(1);
+		tabService.removeTab(2);
+		tabService.removeTab(1);
 
 		$scope.basket.reset();
 		$scope.form.containerSupportCategory = undefined;
@@ -171,6 +171,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate, Messages("date.format").toUpperCase()).valueOf();
 			
+			mainService.setForm($scope.form);
+			
 			$scope.datatable.search(jsonSearch);
 		}else{
 			if(!$scope.form.experimentType){
@@ -188,8 +190,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			this.basket.add(containers[i]);
 		}
 		
-		if(($scope.form.experimentType) && this.basket.length() > 0 && $scope.getTabs().length === 1){
-			$scope.addTabs({label:$scope.form.experimentType,href:"/experiments/new/"+$scope.form.experimentType,remove:false});
+		if(($scope.form.experimentType) && this.basket.length() > 0 && tabService.getTabs().length === 1){
+			tabService.addTabs({label:$scope.form.experimentType,href:"/experiments/new/"+$scope.form.experimentType,remove:false});
 		}
 	};
 	
@@ -198,40 +200,43 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url).success(function(data, status, headers, config) {
 		$scope.experimentTypeList=data;    				
 	});
-	if(angular.isUndefined($scope.getDatatable())){
+	if(angular.isUndefined(mainService.getDatatable())){
 		$scope.datatable = datatable($scope.datatableConfig);
-		$scope.setDatatable($scope.datatable);	
+		mainService.setDatatable($scope.datatable);	
 	} else {
-		$scope.datatable = $scope.getDatatable();
+		$scope.datatable = mainService.getDatatable();
 	}
 	if($routeParams.newExperiment === undefined){
 		$scope.newExperiment = "new";
 	}
 	
 	if(angular.isUndefined($scope.getHomePage())){
-		$scope.setHomePage('new');
-		$scope.addTabs({label:Messages('experiments.tabs.create'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("new").url,remove:false});
-		$scope.activeTab(0);
+		mainService.setHomePage('new');
+		tabService.addTabs({label:Messages('experiments.tabs.create'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("new").url,remove:false});
+		tabService.activeTab(0);
 	}
 	
 	if(angular.isUndefined($scope.getBasket())){
 		$scope.basket = basket();			
-		$scope.setBasket($scope.basket);
+		mainService.setBasket($scope.basket);
 	} else {
-		$scope.basket = $scope.getBasket();
+		$scope.basket = mainService.getBasket();
 	}
 	
-	if(angular.isUndefined($scope.getForm())){
+	$scope.lists.refresh.projects();
+	$scope.lists.refresh.types({objectTypeCode:"Process"}, true);
+	$scope.lists.refresh.processCategories();
+	$scope.lists.refresh.experimentCategories();
+	$scope.lists.refresh.users();
+	
+	if(angular.isUndefined(mainService.getForm())){
 		$scope.form = {experimentCategory:{}};
-		$scope.setForm($scope.form);
-		$scope.lists.refresh.projects();
-		$scope.lists.refresh.types({objectTypeCode:"Process"}, true);
-		$scope.lists.refresh.processCategories();
-		$scope.lists.refresh.experimentCategories();
-		$scope.lists.refresh.users();
+		mainService.setForm($scope.form);
 		$scope.loadExperimentTypesLists();
 		
 	} else {
-		$scope.form = $scope.getForm();		
+		$scope.form = mainService.getForm();
+		$scope.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.form.experimentType});
+		$scope.search();
 	}
 }]);

@@ -1,4 +1,4 @@
-angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne) {
+angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne,mainService,tabService) {
 	$scope.datatableConfig = {
 			columnsUrl : jsRoutes.controllers.experiments.tpl.Experiments.getEditExperimentColumns().url,
 			compact:false,
@@ -177,6 +177,7 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);
+	
 	$scope.atomicTransfere = oneToOne($scope,"datatable", "none");
 	
 	$scope.experiment.outputGenerated = $scope.isOutputGenerated();

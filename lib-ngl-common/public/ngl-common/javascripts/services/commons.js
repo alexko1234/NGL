@@ -268,7 +268,7 @@ angular.module('commonsServices', []).
 						var model = $parse(match[7]);
 						scope.$watch(model, function(value){
 							if(value){
-				                if(value.length === 1){
+				                if(value.length === 1 && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
 									ngModel.$setViewValue(value[0].code);
 									ngModel.$render();
 								}

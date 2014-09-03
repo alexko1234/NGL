@@ -33,18 +33,20 @@ public class UserDAO extends AbstractDAODefault<User> implements IAuthenticate{
 	}
 
 	public boolean isUserAccessApplication(String login, String application){
-		if(getUserId(login) != 0){
+		if(!login.equals("") && getUserId(login) != 0){
 			applicationAccess(login, application);
 			
 			String sql = "SELECT a.label "+
 					"FROM user u, application a, user_application ua WHERE u.login='"+login+"' AND a.code='"+application+"' AND ua.user_id=u.id and ua.application_id=a.id";
 			BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<User>(User.class);
 			return this.jdbcTemplate.query(sql, mapper).size()>0;
-		}else{
+		}else if(!login.equals("")){
 			createUser(login);
 			applicationAccess(login, application);
 			return true;
 		}
+		
+		return false;
 	}
 	
 	public void setDefaultRole(String login, String role){

@@ -1,4 +1,4 @@
-angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne) {
+angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne,mainService,tabService) {
 	$scope.datatableConfig = {
 			columns:[{
 						"header":Messages("containers.table.supportCode"),
@@ -286,14 +286,14 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	};
 	
 	$scope.beforeDropData = function(e, data, ngModel){
-		var array_regexp = /^experiment.value.atomicTransfertMethods\[([0-9]+)\].+/;
+		/*var array_regexp = /^experiment.value.atomicTransfertMethods\[([0-9]+)\].+/;
 		var model = ngModel;
 		
 		var match = model.match(array_regexp);
 		if(match){
 			//$scope.experiment.value.atomicTransfertMethods[match[1]].line = parseInt(match[1])+1;
 			//$scope.experiment.value.atomicTransfertMethods[match[1]].column = 1;
-		}
+		}*/
 		
 		return data;
 	};
@@ -343,6 +343,23 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	
 	if($scope.experiment.editMode){
 		$scope.atomicTransfere.loadExperiment();
+		if(!angular.isUndefined(mainService.getBasket())){
+			$scope.basket = mainService.getBasket().get();
+			angular.forEach($scope.basket, function(basket){
+			  $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{supportCode:basket.code}})
+				.success(function(data, status, headers, config) {
+					$scope.clearMessages();
+					if(data!=null){
+						angular.forEach(data, function(container){
+							$scope.inputContainers.push(container);
+						});
+					}
+				})
+				.error(function(data, status, headers, config) {
+					alert("error");
+				});
+			});
+		}
 	}else{
 		$scope.atomicTransfere.newExperiment();
 	}

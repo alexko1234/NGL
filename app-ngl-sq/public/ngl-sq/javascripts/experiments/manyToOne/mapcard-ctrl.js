@@ -1,4 +1,4 @@
-angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne) {
+angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne,mainService,tabService) {
 	$scope.datatableConfig = {
 			columnsUrl : jsRoutes.controllers.experiments.tpl.Experiments.getEditExperimentColumns().url,
 			compact:false,

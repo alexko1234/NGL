@@ -1,4 +1,4 @@
-angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','lists','$parse','$q','$position','$routeParams','$location', function($scope,$window, $http,lists,$parse,$q,$position,$routeParams,$location) {
+angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','lists','$parse','$q','$position','$routeParams','$location','mainService','tabService', function($scope,$window, $http,lists,$parse,$q,$position,$routeParams,$location,mainService,tabService) {
 	$scope.experiment = {
 		outputGenerated:false,
 		containerOutProperties:[],
@@ -111,6 +111,76 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		return false;
 	
 	};
+	
+	/**
+	 * Configure edit and remote on datatable
+	 */
+	$scope.setEditConfig = function(value){
+		$scope.editMode = value;
+		//var config = $scope.datatable.getConfig();
+		//config.edit.active=value;		
+		//config.remove.active=value;
+		//config.save.active=value;
+		//$scope.datatable.setConfig(config);
+		if(value){
+			$scope.startEditMode();								
+		}else{
+			$scope.stopEditMode();
+		}						
+	};
+	/**
+	 * Pass in edit mode
+	 */
+	$scope.edit = function(){
+		$scope.setEditConfig(true);
+		$scope.experiment.experimentProperties.enabled = true;
+		$scope.experiment.experimentInformation.enabled = true;
+		$scope.experiment.instrumentProperties.enabled = true;
+		$scope.experiment.instrumentInformation.enabled = true;
+		if(mainService.isHomePage('search') && !tabService.isBackupTabs()){
+			tabService.backupTabs();
+			tabService.resetTabs();
+			//$scope.addTabs({label:Messages('plates.tabs.searchmanips'),href:jsRoutes.controllers.plates.tpl.Plates.home("new").url,remove:false});
+			tabService.addTabs({label:Messages('experiments.tabs.create'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("new").url,remove:false});
+			tabService.addTabs({label:$scope.form.experimentType,href:"/experiments/new/"+$scope.form.experimentType,remove:false});
+			tabService.addTabs({label:$scope.experiment.value.code,href:"/experiments/edit/"+$scope.experiment.value.code,remove:true});
+			//$scope.addTabs({label:$scope.plate.code,href:jsRoutes.controllers.plates.tpl.Plates.get($scope.plate.code).url,remove:false});
+			tabService.activeTab(2);
+			//reinit datatable and form
+			mainService.setDatatable(undefined);	
+			//mainService.setForm(undefined);			
+		}
+	};
+	
+	/**
+	 * Remove all change
+	 */
+	$scope.unedit = function(){
+		$scope.experiment.experimentProperties.enabled = false;
+		$scope.experiment.experimentInformation.enabled = false;
+		$scope.experiment.instrumentProperties.enabled = false;
+		$scope.experiment.instrumentInformation.enabled = false;
+		
+		$scope.clearMessages();
+		$scope.setEditConfig(false);
+		//$scope.datatable.cancel();
+		
+		if(mainService.isHomePage('search') && tabService.isBackupTabs()){
+			tabService.restoreBackupTabs();
+			tabService.activeTab(1);
+			mainService.setDatatable(undefined);	
+			//mainService.setForm(undefined);			
+		}		
+	}
+	
+	$scope.addSearchTabs = function(){
+		if(tabService.getTabs().length < 1){
+			mainService.setHomePage('search');
+			tabService.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:false});
+			tabService.addTabs({label:experiment.code,href:"/experiments/edit/"+experiment.code,remove:true});
+			tabService.activeTab(1);
+		}
+	}
 	
 	$scope.getSampleTypeCodes = function(contents){
 		var sampleTypeCodes = [];
@@ -330,6 +400,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		}else{
 			$scope.$broadcast('inputToExperiment', $scope.experimentType.atomicTransfertMethod);
 			//$scope.$broadcast('outputToExperiment', $scope.experimentType.atomicTransfertMethod);
+			mainService.setBasket(undefined);
+			tabService.resetTabs();
 			promises.push($scope.save());
 		}
 		
@@ -472,7 +544,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	$scope.init_experiment = function(containers,atomicTransfertMethod){
 		if($scope.form != undefined && $scope.form.experiment != undefined){
 			$scope.form.experiment = $scope.experiment;
-			$scope.setForm($scope.form);
+			mainService.setForm($scope.form);
 		}
 		$scope.experiment.value.categoryCode = $scope.experimentType.category.code;
 		$scope.experiment.value.atomicTransfertMethods = {};
@@ -639,7 +711,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		}
 		return false;
 	};
-	
+	if($scope.isEditMode() != undefined){
+		$scope.editMode = $scope.isEditMode();
+	}else{
+		$scope.editMode = false;
+	}
 	$scope.experimentType =  {};
 	var promise = $q.when($scope.experimentType);
 	var experiment = {
@@ -717,12 +793,19 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
 				
 				if(!$routeParams.experimentCode){
-					$scope.form = $scope.getForm();
+					$scope.form = mainService.getForm();
 					experiment.instrument.inContainerSupportCategoryCode = $scope.form.containerSupportCategory;
 					$scope.experiment.editMode=false;
 					$scope.experiment.value = experiment;
 				}else{
 					$scope.experiment.editMode=true;
+					$scope.experiment.experimentProperties.enabled = false;
+					$scope.experiment.experimentInformation.enabled = false;
+					$scope.experiment.instrumentProperties.enabled = false;
+					$scope.experiment.instrumentInformation.enabled = false;
+					$scope.form = {"experimentType":experiment.typeCode, "containerSupportCategory":experiment.instrument.inContainerSupportCategoryCode};
+					mainService.setForm($scope.form);
+					$scope.addSearchTabs();
 					$scope.experiment.value.instrument.outContainerSupportCategoryCode = experiment.instrument.outContainerSupportCategoryCode;
 					$scope.experiment.value = experiment;
 					if($scope.experiment.value.state.code === "F"){

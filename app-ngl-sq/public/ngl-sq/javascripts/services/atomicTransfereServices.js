@@ -1,11 +1,11 @@
-angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions', ['$rootScope','$http', '$parse', '$q',  function($rootScope, $http, $parse, $q){
+angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions', ['$rootScope','$http', '$parse', '$q','mainService',  function($rootScope, $http, $parse, $q, mainService){
 	
 			var constructor = function($scope){
 				var common = {
 						newExperiment: function(fn){
 							var containers = [];
 							var promises = [];
-							$scope.basket = $scope.getBasket().get();
+							$scope.basket = mainService.getBasket().get();
 							angular.forEach($scope.basket, function(basket){
 								var promise = $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{supportCode:basket.code}})
 								.success(function(data, status, headers, config) {
@@ -351,7 +351,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 				return xToOne;
 			};
 		return constructor;
-	}]).factory('oneToOne', ['$rootScope','oneToX','xToOne', '$http', '$parse', '$q', 'experimentCommonFunctions', function($rootScope, oneToX, xToOne, $http, $parse, $q, experimentCommonFunctions){
+	}]).factory('oneToOne', ['$rootScope','oneToX','xToOne', '$http', '$parse', '$q', 'experimentCommonFunctions','mainService', function($rootScope, oneToX, xToOne, $http, $parse, $q, experimentCommonFunctions,mainService){
     		
 				var constructor = function($scope, inputType, outputType){
 					var inputType = inputType;
@@ -426,7 +426,34 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 								$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,true);
 								$scope.atomicTransfere.experimentToInput();
 								$scope.atomicTransfere.experimentToOutput();
-
+								
+								if(!angular.isUndefined(mainService.getBasket())){
+									var containers = [];
+									promises = [];
+									$scope.basket = mainService.getBasket().get();
+									angular.forEach($scope.basket, function(basket){
+										var promise = $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{supportCode:basket.code}})
+										.success(function(data, status, headers, config) {
+											$scope.clearMessages();
+											if(data!=null){
+												angular.forEach(data, function(container){
+													containers.push(container);
+												});
+											}
+										})
+										.error(function(data, status, headers, config) {
+											alert("error");
+										});
+										promises.push(promise);
+									});
+									
+									$q.all(promises).then(function (res) {
+										var containersDatatable = $scope.datatable.getData();
+										containersDatatable = containersDatatable.concat(containers);
+										$scope.datatable.setData(containersDatatable,containersDatatable.length);
+									});
+								}
+								
 								if($scope.isOutputGenerated()){
 									$scope.addOutputColumns();
 									$scope.addExperimentPropertiesOutputsColumns();
@@ -482,7 +509,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 					return oneToMany;
 				};
 			return constructor;
-    	}]).factory('manyToOne',['$rootScope','manyToX','xToOne','$http', '$parse', '$q', 'experimentCommonFunctions',  function($rootScope, manyToX, xToOne, $http, $parse, $q, experimentCommonFunctions){
+    	}]).factory('manyToOne',['$rootScope','manyToX','xToOne','$http', '$parse', '$q', 'experimentCommonFunctions','mainService',  function($rootScope, manyToX, xToOne, $http, $parse, $q, experimentCommonFunctions,mainService){
     		
 			var constructor = function($scope, inputType, outputType){
 				var inputType = inputType;
@@ -610,7 +637,6 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							promises = promises.concat(resultOutput.promises);
 						}
 						
-						
 						$q.all(promises).then(function (res) {
 							if ('undefined' !== typeof fn) {
 								fn(resultInput, resultOutput);
@@ -631,11 +657,31 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 						if(inputType === "datatable"){
 							this.loadExperimentCommon(function(resultInput, resultOutput){
 								$scope.datatable.setData(resultInput.containers,resultInput.containers.length);
+								var allData = $scope.datatable.getData();
 								if($scope.experiment.outputGenerated == true){
-									var allData = $scope.datatable.getData();
 									angular.forEach(allData, function(data){
 										data.outputContainerUsed = resultOutput.containers[0][0];
 									});
+								}
+								if(!angular.isUndefined(mainService.getBasket())){
+									$scope.basket = mainService.getBasket().get();
+									angular.forEach($scope.basket, function(basket){
+									  $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{supportCode:basket.code}})
+										.success(function(data, status, headers, config) {
+											$scope.clearMessages();
+											if(data!=null){
+												angular.forEach(data, function(container){
+													allData.push(container);
+													$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state});
+												});
+												$scope.datatable.setData(allData,allData.length);
+											}
+										})
+										.error(function(data, status, headers, config) {
+											alert("error");
+										});
+									});
+								}else{
 									$scope.datatable.setData(allData,allData.length);
 								}
 							});

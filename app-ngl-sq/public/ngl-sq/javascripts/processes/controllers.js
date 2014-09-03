@@ -1,7 +1,7 @@
 "use strict";
 
 
-angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable','basket','lists','$filter', function($scope, datatable,basket, lists,$filter) {
+angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable','basket','lists','$filter','mainService','tabService', function($scope, datatable,basket, lists,$filter,mainService, tabService) {
 	$scope.lists = lists; 
 	
 	$scope.datatableConfig = {
@@ -150,7 +150,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				jsonSearch.supportCode = $scope.form.containerSupportCode;
 			}
 			
-			$scope.datatable.search(jsonSearch);						
+			$scope.datatable.search(jsonSearch);
+			mainService.setForm($scope.form);
 		}
 	};
 	
@@ -172,7 +173,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 					this.basket.add(processus);
 				}
 			}
-			$scope.addTabs({label:$scope.form.processType,href:$scope.form.processType,remove:false});
+			tabService.addTabs({label:$scope.form.processType,href:$scope.form.processType,remove:false});
 		}else{
 			if(!$scope.form.processCategory){
 				$scope.errors.processCategory = "alert-danger";
@@ -186,28 +187,28 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	$scope.errors = {};
 	if(angular.isUndefined($scope.getDatatable())){
 		$scope.datatable = datatable($scope.datatableConfig);			
-		$scope.setDatatable($scope.datatable);	
+		mainService.setDatatable($scope.datatable);	
 	}else{
-		$scope.datatable = $scope.getDatatable();
+		$scope.datatable = mainService.getDatatable();
 	}
 	
 	if(angular.isUndefined($scope.getHomePage())){
-		$scope.setHomePage('new');
-		$scope.addTabs({label:Messages('processes.tabs.create'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
-		$scope.activeTab(0);
+		mainService.setHomePage('new');
+		tabService.addTabs({label:Messages('processes.tabs.create'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
+		tabService.activeTab(0);
 	}
 	
 	if(angular.isUndefined($scope.getBasket())){
 		$scope.basket = basket();			
-		$scope.setBasket($scope.basket);
+		mainService.setBasket($scope.basket);
 	}else{
-		$scope.basket = $scope.getBasket();
+		$scope.basket = mainService.getBasket();
 	}
 	
 	
-	if(angular.isUndefined($scope.getForm())){
+	if(angular.isUndefined(mainService.getForm())){
 		$scope.form = {};
-		$scope.setForm($scope.form);
+		mainService.setForm($scope.form);
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.processCategories();
 		$scope.lists.refresh.supports();
@@ -215,14 +216,14 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		$scope.lists.refresh.experimentTypes({"categoryCode":"transformation"});
 		
 	}else{
-		$scope.form = $scope.getForm();			
+		$scope.form = mainService.getForm();			
 	}
 }]);
 
-angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http', function($scope, datatable,$http) {
+angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','mainService', function($scope, datatable,$http,mainService) {
 
 	$scope.datatableConfig = {
-			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns($scope.getForm().processType).url,
+			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns(mainService.getForm().processType).url,
 			pagination:{
 				active:false
 			},		
@@ -280,9 +281,9 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	
 	
 	//init
-	$scope.form = $scope.getForm();
+	$scope.form = mainService.getForm();
 	$scope.datatable = datatable($scope, $scope.datatableConfig);
-	$scope.basket = $scope.getBasket();
+	$scope.basket = mainService.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);		
 	$scope.datatable.selectAll(true);
 }]);

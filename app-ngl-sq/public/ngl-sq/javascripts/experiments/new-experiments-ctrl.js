@@ -1,4 +1,4 @@
-angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable',function ($scope, datatable) {
+angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainService','tabService',function ($scope, datatable,mainService,tabService) {
 	
 	$scope.datatableConfig = {
 			columns:[{
@@ -51,7 +51,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable',function
 	
 	$scope.newExperiment = function(){
 		if(this.basket.length() > 0 && $scope.getTabs().length === 2){
-			$scope.addTabs({label:$scope.form.experimentType+" config",href:"/experiments/create/"+$scope.getForm().experimentType,remove:false});
+			tabService.addTabs({label:mainService.getForm().experimentType+" config",href:"/experiments/create/"+mainService.getForm().experimentType,remove:false});
 		}
 	};
 	
@@ -59,5 +59,5 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable',function
 	$scope.datatable = datatable($scope.datatableConfig);
 	$scope.basket = $scope.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
-	$scope.form = $scope.getForm();
+	$scope.form = mainService.getForm();
 }]);

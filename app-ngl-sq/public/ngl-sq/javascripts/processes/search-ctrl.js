@@ -1,8 +1,5 @@
 "use strict"
-angular.module('home').controller('SearchCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http', function($scope,$location,$routeParams, datatable, lists,$filter,$http) {
-
-	$scope.lists = lists;
-	
+angular.module('home').controller('SearchCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http','mainService','tabService','processesSearchService', function($scope,$location,$routeParams, datatable, lists,$filter,$http,mainService,tabService,processesSearchService) {
 	$scope.datatableConfig = {
 			search:{
 				url:jsRoutes.controllers.processes.api.Processes.list()
@@ -23,120 +20,36 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				method:'put',
 			}
 	};
-	
-	$scope.changeProcessTypeCode = function(){
-		if($scope.form.processCategory){
-			$scope.getColumns();
-			$scope.search();
-		}else{
-			$scope.form.processType = undefined;	
-		}
-	};
 
 	$scope.reset = function(){
-		$scope.form = {};
-		$scope.getColumns();
-	};
-	
-	$scope.refreshSamples = function(){
-		if($scope.form.projectCodes && $scope.form.projectCodes.length>0 ){
-			lists.refresh.samples({projectCodes:$scope.form.projectCodes});
-		}
-	};
-	
-	$scope.changeProcessCategory = function(){
-		$scope.lists.clear("processTypes");
-		if($scope.form.processCategory){
-			$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory});
-		}
+		$scope.searchService.resetForm();
+		$scope.searchService.getColumn();
 	};
 	
 	$scope.search = function(){	
-		if($scope.form.projectCodes || $scope.form.sampleCodes || $scope.form.processType 
-				|| $scope.form.processCategory || $scope.form.processesSupportCode || $scope.form.state || $scope.form.user
-				|| $scope.form.fromDate || $scope.form.toDate){
-			var jsonSearch = {};
-			if($scope.form.projectCodes){
-				jsonSearch.projectCodes = $scope.form.projectCodes;
-			}			
-			
-			if($scope.form.sampleCodes){
-				jsonSearch.sampleCodes = $scope.form.sampleCodes;
-			}				
-			
-			if($scope.form.processType){
-				jsonSearch.typeCode = $scope.form.processType;
-			}
-			
-			if($scope.form.processCategory){
-				jsonSearch.categoryCode = $scope.form.processCategory;
-			}
-			
-			if($scope.form.processesSupportCode){
-				jsonSearch.supportCode = $scope.form.processesSupportCode;
-			}
-			
-			if($scope.form.state){
-				jsonSearch.stateCode = $scope.form.state;
-			}
-			
-			if($scope.form.user){
-				jsonSearch.users = $scope.form.user;
-			}
-			
-			if($scope.form.containerSupportCategory){
-				jsonSearch.containerSupportCategory = $scope.form.containerSupportCategory;
-			}
-			
-			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
-			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate, Messages("date.format").toUpperCase()).valueOf();
-			
-			
-			$scope.datatable.search(jsonSearch);						
-		}else{
-			$scope.datatable.setData({},0);
-		}
-	};
-	
-	$scope.getColumns = function(){
-		var typeCode = "";
-		if($scope.form.processType){
-			typeCode = $scope.form.processType;
-		}
-		
-		$http.get(jsRoutes.controllers.processes.tpl.Processes.searchColumns().url,{params:{"typeCode":typeCode}})
-		.success(function(data, status, headers, config) {
-			if(data!=null){
-				$scope.datatable.setColumnsConfig(data);
-			}
-		})
-		.error(function(data, status, headers, config) {
-		
-		});
+		$scope.searchService.search();
 	};
 	
 	//init
 	if(angular.isUndefined($scope.getHomePage())){
-		$scope.setHomePage('new');
-		$scope.addTabs({label:Messages('processes.tabs.search'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
-		$scope.activeTab(0);
+		mainService.setHomePage('new');
+		tabService.addTabs({label:Messages('processes.tabs.search'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
+		tabService.activeTab(0);
 	}
 	
 	if(angular.isUndefined($scope.getForm())){
 		$scope.form = {};
-		$scope.setForm($scope.form);
-		$scope.lists.refresh.containerSupportCategories();
-		$scope.lists.refresh.projects();
-		$scope.lists.refresh.processCategories();
-		$scope.lists.refresh.supports();
-		$scope.lists.refresh.users();
-		$scope.lists.refresh.states({objectTypeCode:"Process"});
+		mainService.setForm($scope.form);
 	}else{
-		$scope.form = $scope.getForm();			
+		$scope.form = mainService.getForm();			
 	}
 	
-	$scope.datatable = datatable($scope.datatableConfig);
+	$scope.searchService = processesSearchService;
+	$scope.searchService.init($routeParams, $scope.datatableConfig)
+	
 	if($scope.form.project || $scope.form.type){
 		$scope.search();
 	}
+	
+	
 }]);
