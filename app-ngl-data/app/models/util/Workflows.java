@@ -238,8 +238,8 @@ public class Workflows {
 	
 	private static boolean isHasBA(ReadSet readSet){
 		Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
-		if(p.bioinformaticParameters.bioinformaticAnalysis){
-			return (StringUtils.isNotBlank(p.bioinformaticParameters.regexBA))?readSet.code.matches(p.bioinformaticParameters.regexBA):p.bioinformaticParameters.bioinformaticAnalysis; //TODO matche PE of type F
+		if(p.bioinformaticParameters.biologicalAnalysis){
+			return (StringUtils.isNotBlank(p.bioinformaticParameters.regexBiologicalAnalysis))?readSet.code.matches(p.bioinformaticParameters.regexBiologicalAnalysis):p.bioinformaticParameters.biologicalAnalysis; //TODO matche PE of type F
 			
 		}
 		return false;

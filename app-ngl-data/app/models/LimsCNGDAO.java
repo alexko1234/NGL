@@ -106,7 +106,7 @@ public class LimsCNGDAO {
 		
 		//specific to CNG
 		//project.bioinformaticAnalysis = Boolean.TRUE;
-		project.bioinformaticParameters.bioinformaticAnalysis = Boolean.TRUE; 
+		project.bioinformaticParameters.biologicalAnalysis = Boolean.TRUE; 
 		
 		return project;
 	}
