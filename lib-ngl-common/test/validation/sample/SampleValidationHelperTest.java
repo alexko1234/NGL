@@ -1,11 +1,16 @@
 package validation.sample;
 
 import static org.fest.assertions.Assertions.assertThat;
+
+import java.util.Map;
+
 import models.laboratory.sample.description.SampleCategory;
+import models.utils.DescriptionHelper;
 import models.utils.dao.DAOException;
 
 import org.junit.Test;
 
+import play.Logger;
 import play.Play;
 import utils.AbstractTests;
 import validation.ContextValidation;
@@ -71,19 +76,33 @@ public class SampleValidationHelperTest extends AbstractTests {
 		ContextValidation contextValidation=new ContextValidation();
 		SampleValidationHelper.validateSampleType("BAC","default-import",null, contextValidation);
 		
-		if (Play.application().configuration().getString("institute").equals("CNS")) {
-			// the sampleType and the importType are defined in the db
-			assertThat(contextValidation.errors.size()).isEqualTo(3);
-			assertThat(contextValidation.errors.toString()).contains("isAdapters");
-			assertThat(contextValidation.errors.toString()).contains("isFragmented");
-			assertThat(contextValidation.errors.toString()).contains("taxonSize");
-		}
-		else {
-			//only the import type exists so the sample type generate a error 
-			assertThat(contextValidation.errors.size()).isEqualTo(1);
-			assertThat(contextValidation.errors.toString()).contains("codenotexists");
-			assertThat(contextValidation.errors.toString()).contains("BAC");
-		}
+		Map<String,String> config = AbstractTests.fakeConfiguration();
+		config.remove("institute");
+		config.put("institute","CNS");	
+		DescriptionHelper.initInstitute();
+		
+		// the sampleType and the importType are defined in the db
+		assertThat(contextValidation.errors.size()).isEqualTo(3);
+		assertThat(contextValidation.errors.toString()).contains("isAdapters");
+		assertThat(contextValidation.errors.toString()).contains("isFragmented");
+		assertThat(contextValidation.errors.toString()).contains("taxonSize");
+		
+		config = AbstractTests.fakeConfiguration();
+		config.remove("institute");
+		config.put("institute","CNG");
+		DescriptionHelper.initInstitute();
+		
+		//only the import type exists so the sample type generate a error 
+		assertThat(contextValidation.errors.size()).isEqualTo(3);
+		assertThat(contextValidation.errors.toString()).contains("isAdapters");
+		assertThat(contextValidation.errors.toString()).contains("isFragmented");
+		assertThat(contextValidation.errors.toString()).contains("taxonSize");
+
+		
+		config = AbstractTests.fakeConfiguration();
+		config.remove("institute");
+		config.put("institute","CNS,CNG");
+		DescriptionHelper.initInstitute();
 	}
 	
 	

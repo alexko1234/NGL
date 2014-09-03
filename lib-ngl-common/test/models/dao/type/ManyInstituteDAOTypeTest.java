@@ -20,7 +20,7 @@ import play.test.FakeApplication;
 import play.test.Helpers;
 import utils.AbstractTests;
 
-public class ManyInstituteDAOTypeTest extends AbstractTypeDAOTest {
+public class ManyInstituteDAOTypeTest extends AbstractTests {
 
 	protected static FakeApplication app;
 
@@ -35,6 +35,7 @@ public class ManyInstituteDAOTypeTest extends AbstractTypeDAOTest {
 	public  static void endTest() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 		app = getFakeApplication();
 		Helpers.stop(app);
+		DescriptionHelper.initInstitute();
 	}
 	
 	public static FakeApplication getFakeApplication(){

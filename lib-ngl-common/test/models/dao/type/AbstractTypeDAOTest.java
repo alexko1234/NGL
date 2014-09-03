@@ -1,5 +1,9 @@
 package models.dao.type;
 
+import static play.test.Helpers.fakeApplication;
+
+import java.util.Map;
+
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
@@ -8,12 +12,20 @@ import models.laboratory.reagent.description.ReagentType;
 import models.laboratory.run.description.TreatmentType;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
+import models.utils.DescriptionHelper;
 import models.utils.dao.DAOException;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-public abstract class AbstractTypeDAOTest {
+import play.test.FakeApplication;
+import play.test.Helpers;
+
+import utils.AbstractTests;
+
+public class AbstractTypeDAOTest extends AbstractTests{
 
 
 	@Test

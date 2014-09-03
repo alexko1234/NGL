@@ -30,7 +30,7 @@ import validation.utils.ValidationHelper;
 public class ValidationHelperTests extends AbstractTests {
 
 	
-	public PropertyDefinition getPropertyFileDefinition() {
+	private PropertyDefinition getPropertyFileDefinition() {
 		PropertyDefinition pDef = new PropertyDefinition();
 		pDef.code = "krona";
 		pDef.name = "krona";		
@@ -41,7 +41,7 @@ public class ValidationHelperTests extends AbstractTests {
 		return pDef;
 	}
 
-	public PropertyDefinition getPropertyImgDefinition() {
+	private PropertyDefinition getPropertyImgDefinition() {
 		PropertyDefinition pDef = new PropertyDefinition();
 		pDef.code = "phylogeneticTree2";
 		pDef.name = "phylogeneticTree2";		

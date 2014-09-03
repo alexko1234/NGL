@@ -27,8 +27,8 @@ public class CommonValidationHelperTest extends AbstractTests {
 
 	@AfterClass
 	public static  void deleteData() {
-			Logger.debug("Delete collection "+COLLECTION_NAME);
-			MongoDBDAO.getCollection(COLLECTION_NAME, Sample.class).drop();
+		Logger.debug("Delete collection "+COLLECTION_NAME);
+		MongoDBDAO.getCollection(COLLECTION_NAME, Sample.class).drop();
 	}
 	
 	

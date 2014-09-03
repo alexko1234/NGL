@@ -19,7 +19,7 @@ import play.test.FakeApplication;
 import play.test.Helpers;
 import utils.AbstractTests;
 
-public class NoInstituteDAOTypeTest extends AbstractTypeDAOTest{
+public class NoInstituteDAOTypeTest extends AbstractTests {
 	
 	protected static FakeApplication app;
 	
@@ -32,8 +32,9 @@ public class NoInstituteDAOTypeTest extends AbstractTypeDAOTest{
 
 	@AfterClass
 	public  static void endTest() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-		app = getFakeApplication();
+		app = getDefaultFakeApplication();
 		Helpers.stop(app);
+		DescriptionHelper.initInstitute();
 	}
 	
 	public static FakeApplication getFakeApplication(){
@@ -45,6 +46,19 @@ public class NoInstituteDAOTypeTest extends AbstractTypeDAOTest{
 		Map<String,String> config = AbstractTests.fakeConfiguration();
 		config.remove("institute");
 		config.put("institute","");
+		return config;
+
+	}
+	
+	public static FakeApplication getDefaultFakeApplication(){
+		return fakeApplication(fakeDefaultConfiguration());
+	}
+	
+	
+	public static Map<String,String> fakeDefaultConfiguration(){
+		Map<String,String> config = AbstractTests.fakeConfiguration();
+		config.remove("institute");
+		config.put("institute","CNS,CNG");
 		return config;
 
 	}

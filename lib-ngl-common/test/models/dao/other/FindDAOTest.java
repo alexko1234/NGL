@@ -45,6 +45,7 @@ import models.utils.dao.DAOException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import play.Logger;
 import play.api.modules.spring.Spring;
 import utils.AbstractTests;
 
@@ -182,7 +183,7 @@ public class FindDAOTest extends AbstractTests {
 	public void instrumentFindTest() throws DAOException {
 		Instrument type = Instrument.find.findAll().get(0);
 		Assert.assertNotNull(type);
-		Instrument cType = Instrument.find.findByCode(type.code);
+		Instrument cType = Instrument.find.findByCode("MELISSE"); // not MISEQ1 because in double
 		Assert.assertNotNull(cType);
 		Instrument cTypeId = Instrument.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);

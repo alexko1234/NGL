@@ -6,6 +6,7 @@ import static play.test.Helpers.fakeApplication;
 import java.util.HashMap;
 import java.util.Map;
 
+import models.utils.DescriptionHelper;
 import models.utils.dao.DAOException;
 
 import org.hibernate.validator.internal.util.privilegedactions.GetClassLoader;
@@ -26,12 +27,14 @@ public abstract class AbstractTests {
 	public  static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
 		app = getFakeApplication();
 		Helpers.start(app);
+		DescriptionHelper.initInstitute();
 	}
 
 	@AfterClass
 	public  static void endTest() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 		app = getFakeApplication();
 		Helpers.stop(app);
+		DescriptionHelper.initInstitute();
 	}
 
 	
@@ -71,7 +74,7 @@ public abstract class AbstractTests {
 		
 		config.put("mongodb.defaultWriteConcern", "SAFE");
 		
-		config.put("institute", "CNS");
+		config.put("institute", "CNS,CNG");
 	
 		return config;
 		
