@@ -21,6 +21,7 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.WriteResult;
@@ -283,8 +284,8 @@ public class Workflows {
 	
 	private static boolean isHasBA(ReadSet readSet){
 		Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
-		if(p.bioinformaticAnalysis){
-			return readSet.code.matches("^.+_.+F_.+_.+$"); //TODO matche PE of type F
+		if(p.bioinformaticParameters.bioinformaticAnalysis){//"^.+_.+F_.+_.+$" pour BFY
+			return (StringUtils.isNotBlank(p.bioinformaticParameters.regexBA))?readSet.code.matches(p.bioinformaticParameters.regexBA):p.bioinformaticParameters.bioinformaticAnalysis; //TODO matche PE of type F
 		}
 		return false;
 	}
