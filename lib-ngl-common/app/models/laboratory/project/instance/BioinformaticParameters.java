@@ -7,15 +7,15 @@ package models.laboratory.project.instance;
 
 public class BioinformaticParameters {
 	
-	public Boolean bioinformaticAnalysis = Boolean.FALSE;	
-	public String regexBA;
+	public Boolean biologicalAnalysis = Boolean.FALSE;	
+	public String regexBiologicalAnalysis;
 	public String mappingReference;
 	
 	
 	@Override
 	public String toString() {
-		return "BioinformaticParameters [bioinformaticAnalysis=" + bioinformaticAnalysis
-				+ ", regexBA=" + regexBA 
+		return "BioinformaticParameters [biologicalAnalysis=" + biologicalAnalysis
+				+ ", regexBiologicalAnalysis=" + regexBiologicalAnalysis 
 				+ ", mappingReference=" + mappingReference + "]";
 	}
 	

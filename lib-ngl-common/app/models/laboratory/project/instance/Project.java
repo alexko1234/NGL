@@ -43,9 +43,6 @@ public class Project extends DBObject implements IValidation{
 	public String umbrellaProjectCode;
 	public BioinformaticParameters bioinformaticParameters;
 	
-	//for old compatibility
-	public Boolean bioinformaticAnalysis = Boolean.FALSE; //move now under bioinformaticParameters	
-	
 	
 	@JsonIgnore
 	public ProjectType getProjectType(){
