@@ -8,7 +8,7 @@ import lims.models.Manip;
 import org.junit.Test;
 
 import play.api.modules.spring.Spring;
-import util.AbstractTests;
+import utils.AbstractTests;
 
 
 public class LimsPlaqueTest extends AbstractTests {
