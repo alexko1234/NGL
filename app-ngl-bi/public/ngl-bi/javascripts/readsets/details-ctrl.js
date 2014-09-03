@@ -134,10 +134,6 @@
 				$scope.runNGSRG = data;	
 			});	
 			
-			$http.get(jsRoutes.controllers.projects.api.Projects.get($scope.readset.projectCode).url).success(function(data) {
-				$scope.bioinformaticAnalysis = data.bioinformaticAnalysis;	
-			});	
-			
 			$http.get(jsRoutes.controllers.commons.api.StatesHierarchy.list().url,  {params: {objectTypeCode:"ReadSet"}}).success(function(data) {
 				$scope.statesHierarchy = data;	
 			});	
