@@ -12,6 +12,12 @@ object ApplicationBuild extends Build {
 
    val appName = "ngl"
    val appVersion = "1.0-SNAPSHOT"
+     
+   val sqVersion = "1.0-SNAPSHOT"  
+   val biVersion = "1.1-SNAPSHOT"
+   val projectsVersion = "1.0-SNAPSHOT"  
+   val subVersion = "1.0-SNAPSHOT"  
+     
    val libDatatableVersion = "1.1-SNAPSHOT"
    val libFrameworkWebVersion = "1.1-SNAPSHOT"
    
@@ -158,7 +164,7 @@ object ApplicationBuild extends Build {
     
    val nglbi = Project(appName + "-bi", file("app-ngl-bi"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
        // Add your own project settings here      
-       version := appVersion,
+       version := biVersion,
 		libraryDependencies ++= nglbiDependencies,
 	   resolvers := Seq(nexusig),
        publishArtifact in makePom := false,
@@ -176,7 +182,7 @@ object ApplicationBuild extends Build {
     
 	val nglsq = Project(appName + "-sq", file("app-ngl-sq"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
           // Add your own project settings here      
-		  version := appVersion,
+		  version := sqVersion,
 		libraryDependencies ++= nglsqDependencies,		
           resolvers := Seq(nexusig),
           publishArtifact in makePom := false,
@@ -185,7 +191,7 @@ object ApplicationBuild extends Build {
 	
     val nglsub = Project(appName + "-sub", file("app-ngl-sub"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
         // Add your own project settings here    
-		version := appVersion,
+		version := subVersion,
 		libraryDependencies ++= nglsubDependencies,			
           resolvers := Seq(nexusig),
           publishArtifact in makePom := false,
@@ -231,7 +237,7 @@ object ApplicationBuild extends Build {
 
    val nglprojects = Project(appName + "-projects", file("app-ngl-projects"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
        // Add your own project settings here   
-		version := appVersion,
+		version := projectsVersion,
 		libraryDependencies ++= nglprojectsDependencies,   
        resolvers := Seq(nexusig),
        publishArtifact in makePom := false,
