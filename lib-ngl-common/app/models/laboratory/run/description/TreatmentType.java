@@ -35,7 +35,9 @@ public class TreatmentType extends CommonInfoType {
 			 return ((TreatmentTypeDAO)getInstance()).findByLevels(levels);			 
 		}
 		
-			
+		public List<TreatmentType> findByTreatmentCategoryNames(String...categoryNames) throws DAOException{
+			 return ((TreatmentTypeDAO)getInstance()).findByTreatmentCategoryNames(categoryNames);			 
+		}	
 	}
 	
 }

@@ -106,10 +106,18 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 	
 	public List<TreatmentType> findByTreatmentContextId(long id) {
 		String sql = sqlCommon+
-				" JOIN treatment_type_context as ttc ON ttc.fk_treatment_type=c.id "+
+				" inner join treatment_type_context as ttc ON ttc.fk_treatment_type=c.id "+
 				"WHERE fk_treatment_context = ? ";
 		TreatmentTypeMappingQuery treatmentTypeMappingQuery=new TreatmentTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return treatmentTypeMappingQuery.execute(id);
+	}
+	
+	
+	public List<TreatmentType> findByTreatmentCategoryNames(String...categoryNames) throws DataAccessException, DAOException {
+		String sql = sqlCommon+
+				" inner join treatment_category cat on cat.id = c.fk_treatment_category where cat.name in ("+listToParameters(Arrays.asList(categoryNames))+")";;				
+		
+		return initializeMapping(sql, listToSqlParameters(Arrays.asList(categoryNames),"cat.name", Types.VARCHAR)).execute((Object[])categoryNames);
 	}
 	
 	public List<TreatmentType> findByLevels(Level.CODE...levels) throws DAOException{
