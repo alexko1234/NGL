@@ -40,6 +40,7 @@ public class AbstractTypeDAOTest extends AbstractTests{
 		Assert.assertNotNull(ExperimentType.find.findAllForList());	
 		Assert.assertNotNull(ExperimentType.find.findVoidProcessExperimentTypeCode(ProcessType.find.findAll().get(0).code));
 		Assert.assertNotNull(ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(experimentType.code));
+		Assert.assertNotNull(ExperimentType.find.findNextExperimentTypeForAnExperimentTypeCode(experimentType.code));
 		Assert.assertNotNull(ExperimentType.find.findByCategoryCode(""));
 	}
 
