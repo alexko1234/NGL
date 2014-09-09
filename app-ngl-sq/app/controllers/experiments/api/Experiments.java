@@ -231,19 +231,18 @@ public class Experiments extends CommonController{
 		contextValidation.putObject("typeCode", exp.typeCode);
 		
 		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
-
-		doCalculations(exp);
+		ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
+		ExperimentValidationHelper.validateRules(exp, ctxValidation);
 		
-		if (!experimentFilledForm.hasErrors()) {
-		
-			Builder builder = new DBUpdate.Builder();
-			builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
-			ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
-			ExperimentValidationHelper.validateRules(exp, ctxValidation);
-			if(!ctxValidation.hasErrors()){
+		if(!ctxValidation.hasErrors()){
+				
+				doCalculations(exp);
+				
+				Builder builder = new DBUpdate.Builder();
+				builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+				
 				return ok(Json.toJson(exp));
-			}
 		}
 
 		return badRequest(experimentFilledForm.errorsAsJson());
