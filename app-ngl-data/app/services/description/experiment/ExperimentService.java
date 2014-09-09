@@ -147,21 +147,26 @@ public class ExperimentService {
 
 		newExperimentTypeNode("void-opgen-depot", getExperimentTypes("void-opgen-depot").get(0), false, false, null, null, null).save();
 		newExperimentTypeNode("void-illumina-depot", getExperimentTypes("void-illumina-depot").get(0), false, false, null, null, null).save();
-		newExperimentTypeNode("void-qpcr", getExperimentTypes("void-qpcr").get(0), false, false, null, null, null).save();
-		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false,false,getExperimentTypeNodes("void-qpcr"),null,null).save();
-		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("void-illumina-depot","solution-stock"),null,null).save();
-		newExperimentTypeNode("opgen-depot",getExperimentTypes("opgen-depot").get(0),false,false,getExperimentTypeNodes("void-opgen-depot","prepa-flowcell"),null,null).save();
+		if(ConfigFactory.load().getString("ngl.env").equals("PROD")){
+			newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("void-illumina-depot"),null,null).save();
+		}
+		newExperimentTypeNode("opgen-depot",getExperimentTypes("opgen-depot").get(0),false,false,getExperimentTypeNodes("void-opgen-depot"),null,null).save();
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 
 			newExperimentTypeNode("void-banque", getExperimentTypes("void-banque").get(0), false, false, null, null, null).save();
-
+			newExperimentTypeNode("void-qpcr", getExperimentTypes("void-qpcr").get(0), false, false, null, null, null).save();
+			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false,false,getExperimentTypeNodes("void-qpcr"),null,null).save();
+			newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("void-illumina-depot","solution-stock"),null,null).save();
+			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),null,null).save();				
 			newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("void-banque"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
 			newExperimentTypeNode("librairie-indexing", getExperimentTypes("librairie-indexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
 			newExperimentTypeNode("librairie-dualindexing", getExperimentTypes("librairie-dualindexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
 			newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie-indexing","librairie-dualindexing"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
-			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),null,null).save();
 		}
+		
+
+
 	}
 
 	private static List<Protocol> getProtocols(String...codes) throws DAOException {
