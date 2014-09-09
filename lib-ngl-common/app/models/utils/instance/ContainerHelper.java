@@ -67,11 +67,24 @@ public class ContainerHelper {
 
 	}
 
-
+	public static void calculPercentageContent(List<Content> contents, Float percentage){
+		if(percentage!=null){
+			for(Content cc:contents){
+				
+				cc.percentage= cc.percentage == null ? percentage : cc.percentage*percentage/100;
+			}
+		}
+	}
+	
 	public static void addContent(Container inputContainer, Container outputContainer , Experiment experiment) throws DAOException {
-		
+		addContent(inputContainer, outputContainer , experiment,null);
+	}
+	
+	public static void addContent(Container inputContainer, Container outputContainer , Experiment experiment, Float inputContainerPercentage) throws DAOException {
+		List<Content> contents = new ArrayList<Content>(inputContainer.contents);
+		calculPercentageContent(contents,inputContainerPercentage);
 		//Copy all properties
-		outputContainer.contents.addAll(inputContainer.contents);
+		outputContainer.contents.addAll(contents);
 		outputContainer.projectCodes=InstanceHelpers.addCodesList(inputContainer.projectCodes,outputContainer.projectCodes);
 		outputContainer.sampleCodes=InstanceHelpers.addCodesList(inputContainer.sampleCodes,outputContainer.sampleCodes);
 		outputContainer.categoryCode = ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode).containerCategory.code;
@@ -83,6 +96,7 @@ public class ContainerHelper {
 		}else{
 			outputContainer.fromExperimentTypeCodes=InstanceHelpers.addCodesList(inputContainer.fromExperimentTypeCodes,outputContainer.fromExperimentTypeCodes);
 		}
+		
 	
 	}
 
@@ -146,7 +160,7 @@ public class ContainerHelper {
 				ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
 				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
 				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);							
-
+				newSupport.fromExperimentTypeCodes = new  ArrayList<String>(container.fromExperimentTypeCodes);
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
 				}
@@ -154,6 +168,7 @@ public class ContainerHelper {
 					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
 					InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
 					InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
+					InstanceHelpers.addCodesList(newSupport.fromExperimentTypeCodes, oldSupport.fromExperimentTypeCodes);
 				}
 				
 			}
@@ -173,7 +188,6 @@ public class ContainerHelper {
 				ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
 				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
 				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);							
-
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
 				}

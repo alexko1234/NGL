@@ -118,19 +118,22 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 				outputContainer.traceInformation.setTraceInformation(experiment.traceInformation.modifyUser);
 				outputContainer.categoryCode=this.outputContainerUsed.categoryCode;
 
+				//Add contents to container
 				List<String> containerCodes=new ArrayList<String>();
-				for(ContainerUsed containerUsed:inputContainerUseds){
-					containerCodes.add(containerUsed.code);
+				for(ContainerUsed inputContainerUsed:inputContainerUseds){
+					
+					containerCodes.add(inputContainerUsed.code);
+					List<Container> inputContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code",containerCodes)).toList();
+					
+					for(Container inputContainer:inputContainers){
+						Logger.debug("Add content "+inputContainer.code);
+						ContainerHelper.addContent(inputContainer, outputContainer, experiment,inputContainerUsed.percentage);
+						support.projectCodes=InstanceHelpers.addCodesList(inputContainer.projectCodes, support.projectCodes);
+						support.sampleCodes=InstanceHelpers.addCodesList(inputContainer.sampleCodes, support.sampleCodes);
+						support.fromExperimentTypeCodes=InstanceHelpers.addCodesList(inputContainer.fromExperimentTypeCodes, support.fromExperimentTypeCodes);
+					}
 				}
-
-				List<Container> inputContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code",containerCodes)).toList();
-				//Add content
-				for(Container inputContainer:inputContainers){
-					Logger.debug("Add content "+inputContainer.code);
-					ContainerHelper.addContent(inputContainer, outputContainer, experiment);
-					support.projectCodes=InstanceHelpers.addCodesList(inputContainer.projectCodes, support.projectCodes);
-					support.sampleCodes=InstanceHelpers.addCodesList(inputContainer.sampleCodes, support.sampleCodes);
-				}
+				
 				//Add localisation
 				outputContainer.support=outputContainerUsed.locationOnContainerSupport;
 				outputContainer.state=new State("N",experiment.traceInformation.modifyUser);

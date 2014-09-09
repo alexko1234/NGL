@@ -111,7 +111,8 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 			support.projectCodes=new ArrayList<String>(inputContainer.projectCodes);
 			support.sampleCodes=new ArrayList<String>(inputContainer.sampleCodes);
-
+			support.fromExperimentTypeCodes=new ArrayList<String>(inputContainer.fromExperimentTypeCodes);
+			
 			contextValidation.setCreationMode();
 			contextValidation.addKeyToRootKeyName("support["+support.code+"]");
 			InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME,support, contextValidation);
