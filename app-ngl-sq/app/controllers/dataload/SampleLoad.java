@@ -13,6 +13,7 @@ import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
+import models.utils.dao.DAOException;
 import play.Logger;
 import play.data.Form;
 import play.mvc.Result;
@@ -35,7 +36,7 @@ public class SampleLoad extends CommonController{
 		return ok(sampleload.render(datatableForm, inputLoadData));
 	}
 
-	public static Result createTemplateFile() throws IOException {
+	public static Result createTemplateFile() throws IOException, DAOException {
 
 		Form<InputLoadData> filledForm = inputLoadData.bindFromRequest();
 		InputLoadData inputLoadDatas = filledForm.get();
@@ -44,8 +45,8 @@ public class SampleLoad extends CommonController{
 		String fileName=inputLoadDatas.fileName;
 		FileWriter fileWriter=null;	
 
-		SampleType sampleType= new HelperObjects<SampleType>().getObject(SampleType.class,sampleTypeCode);
-		ImportType importType= new HelperObjects<ImportType>().getObject(ImportType.class, experimentTypeCode);
+		SampleType sampleType= SampleType.find.findByCode(sampleTypeCode);
+		ImportType importType= ImportType.find.findByCode(experimentTypeCode); 
 
 		try{
 			fileWriter=new FileWriter(fileName);
@@ -95,9 +96,9 @@ public class SampleLoad extends CommonController{
 			CSVReader reader = new CSVReader(fileReader,LoadDataHelper.SEPARATOR);
 			String [] nextLine;
 
-			SampleType sampleType= new HelperObjects<SampleType>().getObject(SampleType.class, sampleTypeCode);
+			SampleType sampleType= SampleType.find.findByCode(sampleTypeCode);
 
-			ImportType importType= new HelperObjects<ImportType>().getObject(ImportType.class, importTypeCode);
+			ImportType importType= ImportType.find.findByCode(importTypeCode);
 
 			if(filledForm.hasErrors())
 			{

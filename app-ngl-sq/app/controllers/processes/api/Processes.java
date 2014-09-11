@@ -9,6 +9,8 @@ import java.util.List;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.processes.description.ProcessType;
+import models.laboratory.processes.description.dao.ProcessTypeDAO;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -70,7 +72,14 @@ public class Processes extends CommonController{
 				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, value.containerInputCode);
 				if(container.fromExperimentTypeCodes == null || container.fromExperimentTypeCodes.size() == 0){
 					container.fromExperimentTypeCodes = new ArrayList<String>();
-					container.fromExperimentTypeCodes.add(value.getProcessType().voidExperimentType.code);
+					ProcessType processType;
+					try {
+						processType = ProcessType.find.findByCode(value.typeCode);
+						container.fromExperimentTypeCodes.add(processType.voidExperimentType.code);
+
+					} catch (DAOException e) {
+						throw new RuntimeException();
+					}
 				}
 				container.processTypeCode = value.typeCode;
 				container.inputProcessCodes=InstanceHelpers.addCode(value.code, container.inputProcessCodes);

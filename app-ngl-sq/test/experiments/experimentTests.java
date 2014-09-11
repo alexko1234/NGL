@@ -36,7 +36,7 @@ public class experimentTests extends AbstractTests{
 	protected static ALogger logger=Logger.of("ExperimentTest");
 
 	
-	//@Test
+	@Test
 	public void validatePropertiesFileImgErr() {
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		
@@ -91,7 +91,7 @@ public class experimentTests extends AbstractTests{
 		
 	}
 	
-	//@Test
+	@Test
 	public void validateFlowCellCalculations() {
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		exp.state.code = "IP";
@@ -142,7 +142,7 @@ public class experimentTests extends AbstractTests{
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("phixVolume").value).isInstanceOf(Double.class);
 	}
 	
-	//@Test
+	@Test
 	public void validateExperimentPrepaflowcell() {
 		ContextValidation contextValidation = new ContextValidation();
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
@@ -152,7 +152,7 @@ public class experimentTests extends AbstractTests{
 				
 	}
 	
-	//@Test
+	@Test
 	public void validateExperimentSameTagInPosition() {
 		ContextValidation contextValidation = new ContextValidation();
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
