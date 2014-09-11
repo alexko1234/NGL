@@ -86,14 +86,12 @@ rule "Many TagCategory on same position"
 	no-loop
 when
 	 ContentInfo($position:position)
-     $set : HashSet ( ) from  accumulate ( ContentInfo ( $tagCategory : tagCategory,$position==position),
-                              init ( HashSet uniqueIds = new HashSet<String>(); ),
-                              action ( uniqueIds.add($tagCategory); ),
-                              reverse ( uniqueIds.remove($tagCategory); ),
-                              result ( uniqueIds ) )
-     $contextValidation:ContextValidation()
-     HashSet ( this == $set, size > 1 )
+     $tagCategories : Set(empty==false, size > 1) from accumulate( ContentInfo ( $tagCategory : tagCategory,$position==position),
+                        collectSet( $tagCategory) )
+	  $contextValidation:ContextValidation($errors : errors)
+//	  not ($entry: Map.Entry(empty==true) from $errors.entrySet() 
+//	   ValidationError(key=="",message=="") from $entry.getValue() )
 then
-	Logger.debug("TagCategory error "+ $set.size());
-    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", null);
+	Logger.debug("TagCategory error "+ $tagCategories.size());
+    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", "");
 end

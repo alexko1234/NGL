@@ -50,6 +50,7 @@ public class ContainerUsed implements IValidation{
 	public ContainerUsed(Container container) {
 		this.code = container.code;
 		this.volume = container.mesuredVolume;
+		this.contents=container.contents;
 	}
 
 	@JsonIgnore
