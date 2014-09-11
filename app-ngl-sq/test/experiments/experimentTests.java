@@ -2,7 +2,6 @@ package experiments;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,30 +9,32 @@ import java.util.Map.Entry;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.property.PropertyImgValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.experiment.instance.AtomicTransfertMethod;
+import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
-import models.laboratory.instrument.instance.InstrumentUsed;
 import models.utils.InstanceConstants;
 
 import org.junit.Test;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import controllers.experiments.api.Experiments;
-
+import play.Logger;
+import play.Logger.ALogger;
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
+import controllers.experiments.api.Experiments;
 import fr.cea.ig.MongoDBDAO;
 
 public class experimentTests extends AbstractTests{
 	
+	protected static ALogger logger=Logger.of("ExperimentTest");
+
 	
 	//@Test
 	public void validatePropertiesFileImgErr() {
@@ -90,7 +91,7 @@ public class experimentTests extends AbstractTests{
 		
 	}
 	
-	@Test
+	//@Test
 	public void validateFlowCellCalculations() {
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		exp.state.code = "IP";
@@ -140,6 +141,96 @@ public class experimentTests extends AbstractTests{
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("phixVolume")).isNotNull();
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("phixVolume").value).isInstanceOf(Double.class);
 	}
+	
+	//@Test
+	public void validateExperimentPrepaflowcell() {
+		ContextValidation contextValidation = new ContextValidation();
+		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
+		ExperimentValidationHelper.validateRules(exp, contextValidation);
+		contextValidation.displayErrors(logger);
+		assertThat(contextValidation.hasErrors()).isFalse();
+				
+	}
+	
+	//@Test
+	public void validateExperimentSameTagInPosition() {
+		ContextValidation contextValidation = new ContextValidation();
+		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
+		Container container =new Container();
+		Content content=new Content("CONTENT3", "TYPE", "CATEG");
+		content.properties=new HashMap<String, PropertyValue>();
+		content.properties.put("tag", new PropertySingleValue("IND1"));
+		content.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
+		container.contents.add(content);
+		
+		ContainerUsed containerUsed=new ContainerUsed(container);
+		containerUsed.percentage=(float) 0;
+		exp.atomicTransfertMethods.get(0).getInputContainers().add(containerUsed);
+		
+		ExperimentValidationHelper.validateRules(exp, contextValidation);
+		contextValidation.displayErrors(logger);
+		assertThat(contextValidation.hasErrors()).isTrue();
+		assertThat(contextValidation.errors.size()).isEqualTo(2);
+				
+	}
+	
+	
+	@Test
+	public void validateExperimentManyTagCategory() {
+		ContextValidation contextValidation = new ContextValidation();
+		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
+		Container container =new Container();
+		Content content=new Content("CONTENT3", "TYPE", "CATEG");
+		content.properties=new HashMap<String, PropertyValue>();
+		content.properties.put("tag", new PropertySingleValue("IND11"));
+		content.properties.put("tagCategory", new PropertySingleValue("OTHERCATEGORIE"));
+		container.contents.add(content);
+		
+		ContainerUsed containerUsed=new ContainerUsed(container);
+		containerUsed.percentage=(float) 0;
+		exp.atomicTransfertMethods.get(0).getInputContainers().add(containerUsed);
+		
+		ExperimentValidationHelper.validateRules(exp, contextValidation);
+		contextValidation.displayErrors(logger);
+		assertThat(contextValidation.hasErrors()).isTrue();
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
+				
+	}
+	
+	@Test
+	public void validateExperimentSumPercentInPutContainer() {
+		ContextValidation contextValidation = new ContextValidation();
+		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
+		Container container =new Container();
+		Content content=new Content("CONTENT3", "TYPE", "CATEG");
+		content.properties=new HashMap<String, PropertyValue>();
+		content.properties.put("tag", new PropertySingleValue("IND11"));
+		content.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
+		container.contents.add(content);
+		
+		ContainerUsed containerUsed=new ContainerUsed(container);
+		containerUsed.percentage=(float) 10;
+		exp.atomicTransfertMethods.get(0).getInputContainers().add(containerUsed);
+		
+		ExperimentValidationHelper.validateRules(exp, contextValidation);
+		contextValidation.displayErrors(logger);
+		assertThat(contextValidation.hasErrors()).isTrue();
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
+				
+	}
+	
+	@Test
+	public void validateExperimentPrepaflowcellLaneNotNull() {
+		ContextValidation contextValidation = new ContextValidation();
+		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
+		exp.atomicTransfertMethods.get(0).getInputContainers().clear();
+		ExperimentValidationHelper.validateRules(exp, contextValidation);
+		contextValidation.displayErrors(logger);
+		assertThat(contextValidation.hasErrors()).isTrue();
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
+				
+	}
+	
 	
 	public PropertyDefinition getPropertyImgDefinition() {
 		PropertyDefinition pDef = new PropertyDefinition();
