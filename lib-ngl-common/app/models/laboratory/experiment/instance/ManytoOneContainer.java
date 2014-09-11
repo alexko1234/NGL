@@ -99,11 +99,12 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 	@Override
 	public ContextValidation saveOutputContainers(Experiment experiment) throws DAOException {
+		
 		ContextValidation contextValidation = new ContextValidation();
 		if(this.inputContainerUseds.size()!=0){
 
 			if(outputContainerUsed.code!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, this.outputContainerUsed.code)){
-				// ContainerSupport
+				// Output ContainerSupport
 				ContainerSupport support =MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME,ContainerSupport.class, this.outputContainerUsed.locationOnContainerSupport.code);
 				if(support==null){
 					support=ContainerSupportHelper.createSupport(this.outputContainerUsed.locationOnContainerSupport.code, null,
@@ -111,14 +112,20 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 				}
 
 
-				// Container
+				// Output Container
 				Container outputContainer = new Container();
 				outputContainer.code=this.outputContainerUsed.code;
 				outputContainer.traceInformation = new TraceInformation();
 				outputContainer.traceInformation.setTraceInformation(experiment.traceInformation.modifyUser);
 				outputContainer.categoryCode=this.outputContainerUsed.categoryCode;
+				//Add localisation
+				outputContainer.support=outputContainerUsed.locationOnContainerSupport;
+				outputContainer.state=new State("N",experiment.traceInformation.modifyUser);
+				outputContainer.valuation=new Valuation();
+				//TODO volume, proportion
 
-				//Add contents to container
+
+				//Add contents to container and data projets, sample ... in containersupport
 				List<String> containerCodes=new ArrayList<String>();
 				for(ContainerUsed inputContainerUsed:inputContainerUseds){
 					
@@ -126,31 +133,19 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 					List<Container> inputContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code",containerCodes)).toList();
 					
 					for(Container inputContainer:inputContainers){
-						Logger.debug("Add content "+inputContainer.code);
 						ContainerHelper.addContent(inputContainer, outputContainer, experiment,inputContainerUsed.percentage);
-						support.projectCodes=InstanceHelpers.addCodesList(inputContainer.projectCodes, support.projectCodes);
-						support.sampleCodes=InstanceHelpers.addCodesList(inputContainer.sampleCodes, support.sampleCodes);
-						support.fromExperimentTypeCodes=InstanceHelpers.addCodesList(inputContainer.fromExperimentTypeCodes, support.fromExperimentTypeCodes);
+						ContainerSupportHelper.updateData(inputContainer,support);
 					}
 				}
 				
-				//Add localisation
-				outputContainer.support=outputContainerUsed.locationOnContainerSupport;
-				outputContainer.state=new State("N",experiment.traceInformation.modifyUser);
-				outputContainer.valuation=new Valuation();
-				//TODO volume, proportion
 
-				contextValidation.addKeyToRootKeyName("support["+support.code+"]");
-				if(support._id!=null){contextValidation.setUpdateMode();}else {contextValidation.setCreationMode();}
-				InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME,support, contextValidation);			
-				contextValidation.removeKeyFromRootKeyName("support["+support.code+"]");
+				ContainerSupportHelper.save(support,contextValidation);
+				
 				Logger.debug("Errors "+contextValidation.hasErrors());
+				
 				if(!contextValidation.hasErrors()){
-					contextValidation.addKeyToRootKeyName("container["+outputContainer.code+"]");
-					contextValidation.setCreationMode();
-					Logger.debug("Save container : "+outputContainer.code);
-					InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,outputContainer, contextValidation);
-					contextValidation.removeKeyFromRootKeyName("container["+outputContainer.code+"]");
+					
+					ContainerHelper.save(outputContainer,contextValidation);
 
 				}
 

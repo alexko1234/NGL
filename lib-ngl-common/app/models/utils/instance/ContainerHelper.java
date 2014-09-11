@@ -218,7 +218,6 @@ public class ContainerHelper {
 			}
 		}
 	
-		
 	
 	}
 	
@@ -231,6 +230,14 @@ public class ContainerHelper {
 			}
 		}
 		return contentsFind;
+	}
+
+	public static void save(Container outputContainer,
+			ContextValidation contextValidation) {
+		contextValidation.addKeyToRootKeyName("container["+outputContainer.code+"]");
+		contextValidation.setCreationMode();
+		InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,outputContainer, contextValidation);
+		contextValidation.removeKeyFromRootKeyName("container["+outputContainer.code+"]");
 	}
 
 }

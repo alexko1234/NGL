@@ -1,6 +1,5 @@
 package models.utils.instance;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,10 @@ import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
+import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+import validation.ContextValidation;
 
 public class ContainerSupportHelper {
 
@@ -74,6 +76,24 @@ public class ContainerSupportHelper {
 		}
 
 		return s;
+	}
+
+	public static void save(ContainerSupport support,
+			ContextValidation contextValidation) {
+		
+		contextValidation.addKeyToRootKeyName("support["+support.code+"]");
+		if(support._id!=null){contextValidation.setUpdateMode();}else {contextValidation.setCreationMode();}
+		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME,support, contextValidation);			
+		contextValidation.removeKeyFromRootKeyName("support["+support.code+"]");	
+	}
+
+	
+	public static void updateData(Container container,
+			ContainerSupport support) {
+		support.projectCodes=InstanceHelpers.addCodesList(container.projectCodes, support.projectCodes);
+		support.sampleCodes=InstanceHelpers.addCodesList(container.sampleCodes, support.sampleCodes);
+		support.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, support.fromExperimentTypeCodes);
+		
 	}
 
 }
