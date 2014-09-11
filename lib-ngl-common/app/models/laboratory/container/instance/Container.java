@@ -104,28 +104,6 @@ public class Container extends DBObject implements IValidation {
 		properties=new HashMap<String, PropertyValue>();
 	}
 
-
-	@JsonIgnore
-	public ContainerCategory getContainerCategory(){
-		return new HelperObjects<ContainerCategory>().getObject(ContainerCategory.class, categoryCode);
-
-	}
-
-	@JsonIgnore
-	public List<Project> getProjects() {
-		return new HelperObjects<Project>().getObjects(Project.class, projectCodes);
-
-	}
-
-	@JsonIgnore
-	public List<Sample> getSamples() {
-		return new HelperObjects<Sample>().getObjects(Sample.class, sampleCodes);
-	}
-
-	@JsonIgnore
-	public List<ExperimentType> getFromExperimentTypes() {
-		return new HelperObjects<ExperimentType>().getObjects(ExperimentType.class, fromExperimentTypeCodes);
-	}
 	
 	@JsonIgnore
 	public List<Process> getCurrentProcesses() {

@@ -23,15 +23,6 @@ public class InstrumentUsed implements IValidation {
 	public String outContainerSupportCategoryCode;
 	public String typeCode;
 
-	@JsonIgnore
-	public Instrument getInstrument(){
-		return new HelperObjects<Instrument>().getObject(Instrument.class, code);
-	}
-
-	@JsonIgnore
-	public InstrumentCategory getInstrumentCategory(){
-		return new HelperObjects<InstrumentCategory>().getObject(InstrumentCategory.class, categoryCode);
-	}
 
 	@JsonIgnore
 	@Override

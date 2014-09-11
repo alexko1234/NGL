@@ -43,24 +43,6 @@ public class Content implements IValidation{
 		
 	}
 
-	@JsonIgnore
-	public Sample getSample(){
-		return new HelperObjects<Sample>().getObject(Sample.class, sampleCode);
-		
-	}
-	
-	@JsonIgnore
-	public SampleType getSampleType(){
-		return new HelperObjects<SampleType>().getObject(SampleType.class, sampleTypeCode);
-
-	}
-	
-	@JsonIgnore
-	public SampleCategory getSampleCategory(){
-		return new HelperObjects<SampleCategory>().getObject(SampleCategory.class, sampleCategoryCode);
-
-		
-	}
 
 	@JsonIgnore
 	@Override

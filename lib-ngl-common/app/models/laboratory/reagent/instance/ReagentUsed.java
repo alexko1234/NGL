@@ -23,16 +23,10 @@ public class ReagentUsed implements IValidation {
 	// to complete with Map properties or attribut or Values class
 	//public Map<String,PropertyValue> properties;
 	
-	@JsonIgnore
-	public ReagentType getReagentType() {
-		return new HelperObjects<ReagentType>().getObject(ReagentType.class, typeCode);
-	}
-
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		
 		DescriptionValidationHelper.validationReagentTypeCode(typeCode,contextValidation);
-		InstanceValidationHelper.validationReagentInstanceCode(code,contextValidation);
 
 	}
 	 

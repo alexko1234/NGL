@@ -23,25 +23,7 @@ public class RelationshipContainer extends DBObject implements IValidation {
 	public String processCode;
 	// containers ref
 	public List<String> childContainerCodes;
-	
-	
-	@JsonIgnore
-	public ContainerCategory getContainerCategory(){
-		return new HelperObjects<ContainerCategory>().getObject(ContainerCategory.class, currentContainerCode);
 
-	}
-	
-	@JsonIgnore
-	public List<Container> getChildContainers(){
-		return new HelperObjects<Container>().getObjects(Container.class,childContainerCodes);
-	}
-	
-	
-	@JsonIgnore
-	public Process getProcess(){
-		return new HelperObjects<Process>().getObject(Process.class, processCode);
-
-	}
 
 	@JsonIgnore
 	@Override

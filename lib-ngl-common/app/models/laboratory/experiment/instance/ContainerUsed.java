@@ -53,11 +53,6 @@ public class ContainerUsed implements IValidation{
 		this.contents=container.contents;
 	}
 
-	@JsonIgnore
-	public Container getContainer(){
-		return new HelperObjects<Container>().getObject(Container.class, code);
-		
-	}
 
 	@JsonIgnore
 	@Override

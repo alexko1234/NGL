@@ -66,22 +66,6 @@ public class Sample extends DBObject implements IValidation{
 
 
 	@JsonIgnore
-	public SampleType getSampleType(){
-		return new HelperObjects<SampleType>().getObject(SampleType.class, typeCode);
-	}
-
-	@JsonIgnore
-	public SampleCategory getSampleCategory(){
-		return new HelperObjects<SampleCategory>().getObject(SampleCategory.class, categoryCode);
-	}
-
-	@JsonIgnore
-	public List<Project> getProjects(){
-		return new HelperObjects<Project>().getObjects(Project.class, projectCodes);
-	}
-
-
-	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
 

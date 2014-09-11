@@ -28,10 +28,7 @@ import validation.container.instance.ContainerSupportValidationHelper;
  */
 public class LocationOnContainerSupport implements IValidation {
 	
-	// ContainerSupport name
-//	public String name;
-//	public String barCode;
-// Replace name and barCode
+
 	public String code;
 		
 	public String categoryCode;
@@ -42,18 +39,7 @@ public class LocationOnContainerSupport implements IValidation {
 	public String column;
 	public String line;
 	
-	@JsonIgnore
-	public ContainerSupportCategory getContainerSupportCategory(){
-		return new HelperObjects<ContainerSupportCategory>().getObject(ContainerSupportCategory.class, categoryCode);
 
-	}
-	
-
-	@JsonIgnore
-	public Stock getStock(){
-		return new HelperObjects<Stock>().getObject(Stock.class, stockCode);
-
-	}
 
 	@JsonIgnore
 	@Override

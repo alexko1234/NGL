@@ -43,17 +43,6 @@ public class Project extends DBObject implements IValidation{
 	public String umbrellaProjectCode;
 	public BioinformaticParameters bioinformaticParameters;
 	
-	
-	@JsonIgnore
-	public ProjectType getProjectType(){
-			return new HelperObjects<ProjectType>().getObject(ProjectType.class, typeCode);
-	}
-	
-	@JsonIgnore
-	public ProjectCategory getProjectCategory(){
-			return new HelperObjects<ProjectCategory>().getObject(ProjectCategory.class, categoryCode);
-	}
-
 
 	@Override
 	@JsonIgnore
