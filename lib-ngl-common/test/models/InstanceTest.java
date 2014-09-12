@@ -88,7 +88,7 @@ public class InstanceTest extends AbstractTests{
 
 
 	//@Test
-	public void updateProject(){
+	public void updateProject() throws DAOException{
 
 		Project project=findObject(Project.class);
 
@@ -113,10 +113,10 @@ public class InstanceTest extends AbstractTests{
 		assertThat(project.code).isEqualTo("ProjectCode");
 		assertThat(project.name).isEqualTo("projectName");
 
-		ProjectCategory projectCategory=project.getProjectCategory();
+		ProjectCategory projectCategory=ProjectCategory.find.findByCode(project.categoryCode);
 		assertThat(projectCategory).isNotNull();
 
-		ProjectType projectType=project.getProjectType();
+		ProjectType projectType=ProjectType.find.findByCode(project.typeCode);
 		assertThat(projectType).isNotNull();
 
 		assertThat(project.state).isNotNull();

@@ -3,7 +3,11 @@ package models.utils.instance;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import fr.cea.ig.MongoDBDAO;
+
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -13,10 +17,15 @@ import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
+import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.instance.ContainerUsed;
+import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import validation.ContextValidation;
+import validation.utils.BusinessValidationHelper;
 
 public class ContainerSupportHelper {
 
@@ -68,7 +77,7 @@ public class ContainerSupportHelper {
 		s.valuation = new Valuation();
 
 		s.valuation.valid = TBoolean.UNSET;
-		
+
 		if (sequencingProgramType != null) {
 			HashMap<String, PropertyValue> prop = new HashMap<String, PropertyValue>();
 			prop.put("sequencingProgramType", sequencingProgramType);
@@ -80,20 +89,44 @@ public class ContainerSupportHelper {
 
 	public static void save(ContainerSupport support,
 			ContextValidation contextValidation) {
-		
+
 		contextValidation.addKeyToRootKeyName("support["+support.code+"]");
 		if(support._id!=null){contextValidation.setUpdateMode();}else {contextValidation.setCreationMode();}
 		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME,support, contextValidation);			
 		contextValidation.removeKeyFromRootKeyName("support["+support.code+"]");	
 	}
 
-	
-	public static void updateData(Container container,
-			ContainerSupport support) {
-		support.projectCodes=InstanceHelpers.addCodesList(container.projectCodes, support.projectCodes);
-		support.sampleCodes=InstanceHelpers.addCodesList(container.sampleCodes, support.sampleCodes);
-		support.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, support.fromExperimentTypeCodes);
+
+	public static void updateData(ContainerSupport support,List<ContainerUsed> inputContainerUseds, Experiment experiment, Map<String, PropertyValue> properties) {
+
+		for(ContainerUsed inputContainerUsed:inputContainerUseds){
+
+			Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.code);
+			support.projectCodes=InstanceHelpers.addCodesList(container.projectCodes, support.projectCodes);
+			support.sampleCodes=InstanceHelpers.addCodesList(container.sampleCodes, support.sampleCodes);
+			support.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, support.fromExperimentTypeCodes);
+
+		}
 		
+		ExperimentType experimentType =BusinessValidationHelper.validateExistDescriptionCode(null, experiment.typeCode, "typeCode", ExperimentType.find,true);
+		if(experimentType !=null){
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(experimentType.getPropertyDefinitionByLevel(Level.CODE.Container), properties,support.properties);
+		}
+
+		InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateExistDescriptionCode(null, experiment.instrument.typeCode, "typeCode", InstrumentUsedType.find,true);
+		if(instrumentUsedType !=null){
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(instrumentUsedType.getPropertyDefinitionByLevel(Level.CODE.Container), properties,support.properties);
+		}
 	}
 
+
+	public static void updateData(List<Container> containers, Experiment experiment, ContainerSupport support) {
+		for(Container container : containers){
+			support.projectCodes=InstanceHelpers.addCodesList(container.projectCodes, support.projectCodes);
+			support.sampleCodes=InstanceHelpers.addCodesList(container.sampleCodes, support.sampleCodes);
+			support.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, support.fromExperimentTypeCodes);
+		}
+
+
+	}
 }

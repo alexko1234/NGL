@@ -3,6 +3,7 @@ package models.laboratory.experiment.instance;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,6 +28,7 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
+import models.utils.instance.ExperimentHelper;
 
 
 import play.Logger;
@@ -91,36 +93,28 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			ContainerSupport support=ContainerSupportHelper.createSupport(this.outputContainerUsed.locationOnContainerSupport.code, null, 
 					this.outputContainerUsed.locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);
 
-
 			// Container
 			Container outputContainer = new Container();
 			outputContainer.code=this.outputContainerUsed.code;
 			outputContainer.traceInformation = new TraceInformation();
 			outputContainer.traceInformation.setTraceInformation(experiment.traceInformation.modifyUser);
 			outputContainer.categoryCode=this.outputContainerUsed.categoryCode;
-
-			Container inputContainer=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,inputContainerUsed.code);
-			//Add content
-			ContainerHelper.addContent(inputContainer, outputContainer, experiment);
 			//Add localisation
 			outputContainer.support=outputContainerUsed.locationOnContainerSupport;
 			outputContainer.state=new State("N",experiment.traceInformation.modifyUser);
 			outputContainer.valuation=new Valuation();
 
 			//TODO volume, proportion
-
-			support.projectCodes=new ArrayList<String>(inputContainer.projectCodes);
-			support.sampleCodes=new ArrayList<String>(inputContainer.sampleCodes);
-			support.fromExperimentTypeCodes=new ArrayList<String>(inputContainer.fromExperimentTypeCodes);
 			
+			Map<String,PropertyValue> properties=ExperimentHelper.getAllPropertiesFromAtomicTransfertMethod(this,experiment);
+			ContainerHelper.addContent(outputContainer, this.getInputContainers(), experiment, properties);
+			ContainerSupportHelper.updateData(support, this.getInputContainers(), experiment, properties);
+		
 			contextValidation.setCreationMode();
-			contextValidation.addKeyToRootKeyName("support["+support.code+"]");
-			InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME,support, contextValidation);
-			contextValidation.removeKeyFromRootKeyName("support["+support.code+"]");
+			ContainerSupportHelper.save(support, contextValidation);
+
 			if(!contextValidation.hasErrors()){
-				contextValidation.addKeyToRootKeyName("container["+outputContainer.code+"]");
-				InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,outputContainer, contextValidation);
-				contextValidation.removeKeyFromRootKeyName("container["+outputContainer.code+"]");
+				ContainerHelper.save(outputContainer, contextValidation);
 			}
 
 

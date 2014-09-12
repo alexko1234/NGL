@@ -1,20 +1,24 @@
 package models.utils.instance;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import play.Logger;
-import validation.ContextValidation;
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.Content;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-import controllers.authorisation.PermissionHelper;
+import play.Logger;
+import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentHelper {
@@ -89,5 +93,27 @@ public class ExperimentHelper {
 		return exp;
 	}
 
+	
+	public static Map<String,PropertyValue> getAllPropertiesFromAtomicTransfertMethod(AtomicTransfertMethod atomicTransfertMethod,Experiment experiment){
+		List<ContainerUsed> inputContainerUseds=atomicTransfertMethod.getInputContainers();
+
+		Map<String,PropertyValue> properties=new HashMap<String, PropertyValue>();
+		properties.putAll(experiment.experimentProperties);
+		properties.putAll(experiment.instrumentProperties);
+		
+		for(ContainerUsed inputContainerUsed:inputContainerUseds){
+
+			properties.putAll(inputContainerUsed.experimentProperties);
+			properties.putAll(inputContainerUsed.instrumentProperties);
+		}		
+		
+		List<ContainerUsed> outputContainerUseds=atomicTransfertMethod.getOutputContainers();
+		for(ContainerUsed outputContainerUsed:outputContainerUseds){
+			properties.putAll(outputContainerUsed.experimentProperties);
+			properties.putAll(outputContainerUsed.instrumentProperties);
+		}
+		
+		return properties;
+	}
 
 }

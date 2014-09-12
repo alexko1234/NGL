@@ -2,7 +2,9 @@ package models.laboratory.experiment.instance;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
@@ -11,10 +13,10 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
+import models.utils.instance.ExperimentHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -126,27 +128,14 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 
 				//Add contents to container and data projets, sample ... in containersupport
-				List<String> containerCodes=new ArrayList<String>();
-				for(ContainerUsed inputContainerUsed:inputContainerUseds){
-					
-					containerCodes.add(inputContainerUsed.code);
-					List<Container> inputContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code",containerCodes)).toList();
-					
-					for(Container inputContainer:inputContainers){
-						ContainerHelper.addContent(inputContainer, outputContainer, experiment,inputContainerUsed.percentage);
-						ContainerSupportHelper.updateData(inputContainer,support);
-					}
-				}
-				
-
+				Map<String,PropertyValue> properties=ExperimentHelper.getAllPropertiesFromAtomicTransfertMethod(this,experiment);
+				ContainerHelper.addContent(outputContainer, this.getInputContainers(), experiment, properties);
+				ContainerSupportHelper.updateData(support, this.getInputContainers(), experiment, properties);
+			
 				ContainerSupportHelper.save(support,contextValidation);
 				
-				Logger.debug("Errors "+contextValidation.hasErrors());
-				
 				if(!contextValidation.hasErrors()){
-					
 					ContainerHelper.save(outputContainer,contextValidation);
-
 				}
 
 			} else {
