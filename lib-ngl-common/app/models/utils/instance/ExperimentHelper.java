@@ -98,19 +98,26 @@ public class ExperimentHelper {
 		List<ContainerUsed> inputContainerUseds=atomicTransfertMethod.getInputContainers();
 
 		Map<String,PropertyValue> properties=new HashMap<String, PropertyValue>();
-		properties.putAll(experiment.experimentProperties);
-		properties.putAll(experiment.instrumentProperties);
-		
+		if(experiment.experimentProperties!=null){
+			properties.putAll(experiment.experimentProperties);
+		}	
+		if(experiment.instrumentProperties!=null){
+			properties.putAll(experiment.instrumentProperties);
+		}
 		for(ContainerUsed inputContainerUsed:inputContainerUseds){
 
-			properties.putAll(inputContainerUsed.experimentProperties);
-			properties.putAll(inputContainerUsed.instrumentProperties);
+			if(inputContainerUsed.experimentProperties!=null)
+				properties.putAll(inputContainerUsed.experimentProperties);
+			if(inputContainerUsed.instrumentProperties!=null)
+				properties.putAll(inputContainerUsed.instrumentProperties);
 		}		
 		
 		List<ContainerUsed> outputContainerUseds=atomicTransfertMethod.getOutputContainers();
 		for(ContainerUsed outputContainerUsed:outputContainerUseds){
-			properties.putAll(outputContainerUsed.experimentProperties);
-			properties.putAll(outputContainerUsed.instrumentProperties);
+			if(outputContainerUsed.experimentProperties!=null)
+				properties.putAll(outputContainerUsed.experimentProperties);
+			if(outputContainerUsed.instrumentProperties!=null)
+				properties.putAll(outputContainerUsed.instrumentProperties);
 		}
 		
 		return properties;
