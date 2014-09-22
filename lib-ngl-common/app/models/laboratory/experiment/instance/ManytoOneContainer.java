@@ -147,7 +147,8 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		outputContainerUsed.validate(contextValidation);
+		if(outputContainerUsed!=null)
+			outputContainerUsed.validate(contextValidation);
 		for(ContainerUsed containerUsed:inputContainerUseds){
 			containerUsed.validate(contextValidation);
 		}
