@@ -158,8 +158,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 				"JOIN common_info_type_state cs ON cs.fk_state=t.id "+
 				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
 				  DAOHelpers.getCommonInfoTypeSQLForInstitute("c")+
-				" where t.code=? and c.code=?";
-		Logger.error(sql);
+				" where t.code=? and c.code=?";		
 		return( initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR),
 				 new SqlParameter("c.code", Types.VARCHAR)).findObject(code, typeCode) != null )? true : false;	
 	}
