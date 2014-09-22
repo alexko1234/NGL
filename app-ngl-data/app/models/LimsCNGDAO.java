@@ -13,6 +13,7 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -74,7 +75,7 @@ public class LimsCNGDAO {
 		project.code = rs.getString("code");
 		project.name = rs.getString("name").trim();
 		//Logger.debug("Project code :"+project.code);
-		
+		project.traceInformation = new TraceInformation();
 		project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
 		
 		ProjectType projectType=null;
