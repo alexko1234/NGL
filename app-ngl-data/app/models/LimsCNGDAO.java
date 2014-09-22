@@ -20,6 +20,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.project.description.ProjectType;
+import models.laboratory.project.instance.BioinformaticParameters;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
@@ -107,6 +108,7 @@ public class LimsCNGDAO {
 		
 		//specific to CNG
 		//project.bioinformaticAnalysis = Boolean.TRUE;
+		project.bioinformaticParameters = new BioinformaticParameters();
 		project.bioinformaticParameters.biologicalAnalysis = Boolean.TRUE; 
 		
 		return project;
