@@ -138,8 +138,10 @@ public class ContainerHelper {
 			if (container.support != null) {
 				ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
 				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
-				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);							
-				newSupport.fromExperimentTypeCodes = new  ArrayList<String>(container.fromExperimentTypeCodes);
+				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);
+				if(null != container.fromExperimentTypeCodes){
+					newSupport.fromExperimentTypeCodes = new  ArrayList<String>(container.fromExperimentTypeCodes);
+				}
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
 				}
