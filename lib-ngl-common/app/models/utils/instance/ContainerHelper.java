@@ -139,7 +139,7 @@ public class ContainerHelper {
 				ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
 				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
 				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);
-				if(null != container.fromExperimentTypeCodes){
+				if(null != container.fromExperimentTypeCodes){//TODO Must be manage for CNG
 					newSupport.fromExperimentTypeCodes = new  ArrayList<String>(container.fromExperimentTypeCodes);
 				}
 				if (!mapSupports.containsKey(newSupport.code)) {
@@ -149,7 +149,9 @@ public class ContainerHelper {
 					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
 					InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
 					InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
-					InstanceHelpers.addCodesList(newSupport.fromExperimentTypeCodes, oldSupport.fromExperimentTypeCodes);
+					if(null != newSupport.fromExperimentTypeCodes && null != oldSupport.fromExperimentTypeCodes){//TODO Must be manage for CNG
+						InstanceHelpers.addCodesList(newSupport.fromExperimentTypeCodes, oldSupport.fromExperimentTypeCodes);
+					}
 				}
 
 			}
