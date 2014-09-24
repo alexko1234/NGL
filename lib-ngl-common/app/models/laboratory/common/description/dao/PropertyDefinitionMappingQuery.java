@@ -51,6 +51,7 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 		propertyDefinition.displayOrder = rs.getInt("display_order");
 		propertyDefinition.defaultValue = rs.getString("default_value");
 		propertyDefinition.propertyValueType = rs.getString("property_value_type");
+		propertyDefinition.editable=rs.getBoolean("editable");
 		//Add measure category
 		try{
 			//Add levels

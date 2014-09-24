@@ -22,7 +22,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 	protected PropertyDefinitionDAO() {
 		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.class,
-				"SELECT id,code,name,required,active,type,display_format,display_order,default_value,description,"
+				"SELECT id,code,name,required,editable,active,type,display_format,display_order,default_value,description,"
 						+ "choice_in_list,fk_measure_category, property_value_type,fk_save_measure_unit,fk_display_measure_unit,fk_common_info_type "
 				+" FROM property_definition as t",true);
 	}
@@ -57,6 +57,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		parameters.put("name", propertyDefinition.name);
 		parameters.put("description", propertyDefinition.description);
 		parameters.put("required", propertyDefinition.required);
+		parameters.put("editable", propertyDefinition.editable);
 		parameters.put("active", propertyDefinition.active);
 		parameters.put("choice_in_list", propertyDefinition.choiceInList);
 		parameters.put("type", propertyDefinition.valueType);
@@ -100,11 +101,11 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 	public void update(PropertyDefinition propertyDefinition) throws DAOException
 	{
-		String sql = "UPDATE property_definition SET name=?, description=?, required=?, " +
+		String sql = "UPDATE property_definition SET name=?, description=?, required=?, editable=?, " +
 				"active=?,choice_in_list=?, type=?, display_format=?, " +
 				"display_order=?, default_value=?,  property_value_type=?" +
 				" WHERE id=?";
-		jdbcTemplate.update(sql, propertyDefinition.name, propertyDefinition.description, propertyDefinition.required,
+		jdbcTemplate.update(sql, propertyDefinition.name, propertyDefinition.description, propertyDefinition.required,propertyDefinition.editable,
 				propertyDefinition.active, propertyDefinition.choiceInList, propertyDefinition.valueType, propertyDefinition.displayFormat,
 				propertyDefinition.displayOrder, propertyDefinition.defaultValue, propertyDefinition.propertyValueType,
 				propertyDefinition.id);
