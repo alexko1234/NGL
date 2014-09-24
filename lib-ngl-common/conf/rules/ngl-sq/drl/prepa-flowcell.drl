@@ -45,7 +45,7 @@ rule "volume PhiX"
 		 eval($phixPercent.value != null &&  Double.class.isInstance($phixPercent.value) && $finalVolume2.value != null && Double.class.isInstance($finalVolume2.value) && $phixConcentration.value != null && Double.class.isInstance($phixConcentration.value))
 	then
 		Logger.debug("Calculation Test  5: "+ $experiment.code+ " "+ $atomicTransfert.position);
-		PropertySingleValue value = new PropertySingleValue((Double)$phixPercent.value*(Double)$finalConcentration2.value*(Double)$finalVolume2.value-(Double)$phixConcentration.value);
+		PropertySingleValue value = new PropertySingleValue(((Double)$phixPercent.value*(Double)$finalConcentration2.value*(Double)$finalVolume2.value/(Double)$phixConcentration.value)/100);
 		if($experimentProperties.get("phixVolume") != null){
 			$experimentProperties.remove("phixVolume");
 		}
@@ -81,7 +81,8 @@ rule "volume EB"
 rule "volume engaged in dilution"
 	@nglSQ( calculations )
 	dialect "java"
-	salience 800
+	salience 850
+	lock-on-active true
 	no-loop
     when
     	 $experiment:Experiment($stateCode : state.code, $stateCode=="IP")
@@ -99,6 +100,7 @@ rule "volume engaged in dilution"
    		}
    		
    		$experimentProperties.put("requiredVolume2",value);
+   		update($experiment);
    	end
 
 rule "volume HT1"
@@ -112,11 +114,11 @@ rule "volume HT1"
 		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainers
 		 $phixVolume : PropertyValue() from $experimentProperties.get("phixVolume")
 		 $finalVolume2 : PropertyValue() from $experimentProperties.get("finalVolume2")
-		 $requiredVolume1 : PropertyValue() from $experimentProperties.get("requiredVolume1")
-		 eval($phixVolume.value != null && Double.class.isInstance($phixVolume.value) && $finalVolume2.value != null && Double.class.isInstance($finalVolume2.value) && $requiredVolume1.value != null && Double.class.isInstance($requiredVolume1.value))
+		 $requiredVolume2 : PropertyValue() from $experimentProperties.get("requiredVolume2")
+		 eval($phixVolume.value != null && Double.class.isInstance($phixVolume.value) && $finalVolume2.value != null && Double.class.isInstance($finalVolume2.value) && $requiredVolume2.value != null && Double.class.isInstance($requiredVolume2.value))
 	then
 		Logger.debug("Calculation Test  4: "+ $experiment.code+ " "+ $atomicTransfert.position);
-		PropertySingleValue value = new PropertySingleValue((Double)$finalVolume2.value-(Double)$requiredVolume1.value-(Double)$phixVolume.value);
+		PropertySingleValue value = new PropertySingleValue((Double)$finalVolume2.value-(Double)$requiredVolume2.value-(Double)$phixVolume.value);
 		if($experimentProperties.get("HT1Volume") != null){
 			$experimentProperties.remove("HT1Volume");
 		}
@@ -138,7 +140,7 @@ rule "Volume dilution on track"
 		 eval($finalVolume.value != null && Double.class.isInstance($finalVolume.value) && $percentPerLane != null && Float.class.isInstance($percentPerLane))
 	then
 		Logger.debug("Calculation Test  6: "+ $experiment.code+ " "+ $atomicTransfert.position);
-		PropertySingleValue value = new PropertySingleValue($percentPerLane*(Double)$finalVolume.value);
+		PropertySingleValue value = new PropertySingleValue($percentPerLane*(Double)$finalVolume.value/100);
 		if($experimentProperties.get("requiredVolume3") != null){
 			$experimentProperties.remove("requiredVolume3");
 		}
