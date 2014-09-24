@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Declaration xmlns="http://www.genoscope.cns.fr/specification"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.genoscope.cns.fr/specification H:\birdsAdmin.xsd">
+
+	<!-- ResourceType -->
+
+	<ResourceType name="submission">
+		<RequiredProperty propertyName="code" keyProperty="true" />
+		<RequiredProperty propertyName="directory" />
+	</ResourceType>
+
+	<ResourceType name="rawData">
+		<RequiredProperty propertyName="path" keyProperty="true" />
+		<RequiredProperty propertyName="relatifName"
+			keyProperty="true" />
+		<RequiredProperty propertyName="md5" />
+	</ResourceType>
+	
+	
+
+	<!-- Referential -->
+
+	<Referential name="nglSubRef" device="jsonDevice">
+		<ResourceType name="submission" />
+		<ResourceType name="rawData" />
+	</Referential>
+	
+	<Referential name="internalRefSubmission" device="birdsDevice" readOnly="false">
+		<ResourceType name="submission" />
+		<ResourceType name="rawData" />
+	</Referential>
+	
+	<Referential name="internalRefRawData" device="birdsDevice" readOnly="false">
+		<ResourceType name="rawData" />
+	</Referential>
+	
+	<!-- Referential Device -->
+	<ReferentialDevice name="jsonDevice" class="fr.genoscope.lis.devsi.birds.api.device.JSONDevice" />
+	<ReferentialDevice name="birdsDevice" class="fr.genoscope.lis.devsi.birds.api.device.InternalReferentialDevice" />
+	
+	<!-- Project by submission type -->
+	<Project name="SRA" workspace="/env/cns/submit_traces/SRA/SNTS_output_xml/autoFtp/log" />
+</Declaration>

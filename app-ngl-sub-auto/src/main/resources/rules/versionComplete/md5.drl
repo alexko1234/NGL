@@ -1,0 +1,36 @@
+#created on: Jul 7, 2014
+package birds
+
+rule "Define variable lineParmeter for md5 specification"
+	@BirdsRule(fsRule)
+	dialect 'java'
+	salience 300
+	no-loop
+    when
+       $treatSpec : TreatmentSpecification(name=="md5", project.name=="SRA")
+       $job : Job()
+    then
+       Logger log = Logger.getLogger("ngl.sub.rules");
+       log.debug("Set parameter for spec md5");
+       $job.setParameterValue("fileNameToMd5",$job.getUniqueJobResource("zipDataFile").getProperty("fileZiped"));
+       $job.setParameterValue("md5File",$job.getUniqueJobResource("zipDataFile").getProperty("md5File"));
+end
+
+
+rule "Syntax order command line for md5 specification"
+	@BirdsRule(unixSyntaxRule)
+	dialect 'java'
+	salience 200
+	when
+		$strategy : UnixCommandSyntaxStrategy ( name == "md5Syntax" , commandLine == null)
+	then
+		Logger log = Logger.getLogger("ngl.sub.rules");
+		log.debug("Syntax md5 : md5sum fileZiped > md5File");
+		String parameterLine = $strategy.getParameterValue().get("fileNameToMd5") + " >> " +$strategy.getParameterValue().get("md5File");
+		$strategy.setCommandLine($strategy.getExecutableName() + " " + parameterLine);
+		log.debug("command line : " + $strategy.getCommandLine());
+		
+		modify($strategy) {}
+end
+
+

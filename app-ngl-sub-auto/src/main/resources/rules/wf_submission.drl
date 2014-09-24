@@ -1,0 +1,37 @@
+#created on: Jul 15, 2014
+package birds
+
+import  fr.genoscope.lis.devsi.birds.impl.factory.ResourcesReferentialServiceFactory;
+import fr.cea.ig.auto.submission.SubmissionServicesFactory;
+
+#TODO
+#Select resource for workflow submission
+
+#Transfert ressources to internal referential
+rule "add resources submission to internal referential internalRefSubmission for first step of submission workflown"
+    @BirdsRule( ExecutionService )
+    salience 200
+	dialect 'java'
+	no-loop 
+	when
+	    $executionService : ExecutionService( status == ExecutionService.JOB_PROCESSING_STATUS, caught==false )
+	    $j : Job( treatmentSpecification.name =="WF_Submission" , treatmentSpecification.specificationGroup == true )
+	then
+	    Logger log = Logger.getLogger("ngl.sub.rules");
+	    log.debug("get internal referential to add resources : internalRefSubmission");
+	  	$j.groupTransferInputResourcesToInternalReferential("subData", "internalRefSubmission",$j.getId());
+	  	//TODO update field state of Submission to IN PROGRESS
+end
+
+rule "POST DONE EXECUTION of workflow submission : Update Submission (ac number, state...)"
+	@BirdsRule( ExecutionService )
+	dialect 'java'
+	salience 200
+	when
+		$executionService : ExecutionService( status == ExecutionService.POST_JOB_EXECUTION_STATUS)
+		$job : Job( treatmentSpecification!=null, treatmentSpecification.name == "WF_Submission", treatmentSpecification.project.name == "SRA", executionState == Job.DONE_STATUS )
+	then
+		//TODO Update field AC_Number of Submission (by NGL Service or BIRDS?)
+		//TODO Update field State of Submission to FINISH 
+		//TODO send mail when submission finished
+end

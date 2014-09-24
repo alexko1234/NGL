@@ -1,0 +1,39 @@
+#created on: Jul 3, 2014
+package birds
+
+rule "Define variable lineParmeter for fileName to ZIP"
+	@BirdsRule(fsRule)
+	dialect 'java'
+	salience 300
+	no-loop
+    when
+       $treatSpec : TreatmentSpecification(name=="zip", project.name=="SRA")
+       $job : Job()
+    then
+       Logger log = Logger.getLogger("ngl.sub.rules");
+       log.debug("Set parameter for spec zip");
+       String fileNameToZip = $job.getUniqueJobResource("rawDataFile").getProperty("path")+File.separator+$job.getUniqueJobResource("rawDataFile").getProperty("relatifName");
+       String fileNameZiped = fileNameToZip+".gz";
+       $job.setParameterValue("fileNameToZip",fileNameToZip);
+       $job.setParameterValue("fileNameZiped",fileNameZiped);
+end
+
+
+rule "Syntax order command line for zip specification"
+	@BirdsRule(unixSyntaxRule)
+	dialect 'java'
+	salience 200
+	when
+		$strategy : UnixCommandSyntaxStrategy ( name == "zipSyntax" , commandLine == null)
+	then
+		Logger log = Logger.getLogger("ngl.sub.rules");
+		log.debug("Syntax zip : gzip -c fileToZip > fileZiped");
+		String parameterLine = $strategy.getParameterValue().get("tostdout") + " " +
+							   $strategy.getParameterValue().get("fileNameToZip") + " > "+ $strategy.getParameterValue().get("fileNameZiped");
+		$strategy.setCommandLine($strategy.getExecutableName() + " " + parameterLine);
+		log.debug("command line : " + $strategy.getCommandLine());
+		
+		modify($strategy) {}
+end
+
+

@@ -1,0 +1,66 @@
+#created on: Jul 7, 2014
+package birds
+
+rule "Define variable lineParmeter for sendXML specification"
+	@BirdsRule(fsRule)
+	dialect 'java'
+	salience 300
+	no-loop
+    when
+       $treatSpec : TreatmentSpecification(name=="sendXML", project.name=="SRA")
+       $job : Job()
+    then
+       Logger log = Logger.getLogger("ngl.sub.rules");
+       log.debug("Set parameter for spec sendXML");
+       updateParameterXML("submissionXML",$job);
+       updateParameterXML("studyXML",$job);
+       updateParameterXML("sampleXML",$job);
+       updateParameterXML("experimentXML",$job);
+       updateParameterXML("runXML",$job);
+       $job.setParameterValue("listAC",$job.getParameterValue("listAC").getValue().replace("%submissionDate%",$job.getUniqueJobResource("subToSend").getProperty("submissionDate")));
+	
+end
+
+rule "Syntax order command line for sendXML specification"
+	@BirdsRule(unixSyntaxRule)
+	dialect 'java'
+	salience 200
+	when
+		$strategy : UnixCommandSyntaxStrategy ( name == "sendXMLSyntax" , commandLine == null)
+	then
+		Logger log = Logger.getLogger("ngl.sub.rules");
+		log.debug("Syntax sendXML : curl https://www.ebi.ac.uk/ena/submit/drop-box/submit/?auth=ERA%20era-drop-9%20N7mo%2B8F4aHH%2BrCjLTuMo59xwfFo%3D -k -F \"SAMPLE=@sampleXml\" -F \"RUN=@runXml\" -F \"SUBMISSION=@submissionXML\" -F \"STUDY=@studyXML\" -F \"EXPERIMENT=@experimentXML\" ");
+		String parameterLine = $strategy.getParameterValue().get("optK")+" ";
+		for (String key : $strategy.getParameterValue().keySet()) {
+			if(!key.equals("optK") && !key.equals("listAC") && !$strategy.getParameterValue().get(key).equals("-F null"))
+	         parameterLine += $strategy.getParameterValue().get(key) + " ";
+	    }
+		//Add redirect to AC file
+		$strategy.setCommandLine($strategy.getExecutableName() + " " + parameterLine +" > "+$strategy.getParameterValue().get("listAC"));
+		log.debug("command line : " + $strategy.getCommandLine());
+		
+		modify($strategy) {}
+end
+
+rule "POST DONE EXECUTION of sendXML : File AC results operation"
+	@BirdsRule( ExecutionService )
+	dialect 'java'
+	salience 200
+	when
+		$executionService : ExecutionService( status == ExecutionService.POST_JOB_EXECUTION_STATUS)
+		$job : Job( treatmentSpecification!=null, treatmentSpecification.name == "sendXMLSyntax", treatmentSpecification.project.name == "SRA", executionState == Job.DONE_STATUS )
+	then
+		//TODO Check AC files results 
+		//TODO if errors set status JOB EXITED and send mail error
+		//TODO if no errors update field fileResultAC in submission
+end
+
+#create function to replace value in parameter with evaluate null value
+
+function void updateParameterXML(String valueParam, Job job)
+{
+	if(job.getUniqueJobResource("subToSend").getProperty(valueParam)!=null)
+		job.setParameterValue(valueParam,job.getParameterValue(valueParam).getValue().replace("%"+valueParam+"%",job.getUniqueJobResource("subToSend").getProperty(valueParam)));
+	else
+		job.setParameterValue(valueParam,null);
+}
