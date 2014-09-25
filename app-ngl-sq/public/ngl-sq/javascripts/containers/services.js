@@ -47,7 +47,7 @@
 				"type":"text",
 				"edit":true,
 				"choiceInList": true,
-				"possibleValues":'lists.getStates()',
+				"possibleValues":"searchService.lists.getStates()", //Modification 25_09_2014: correction de la liste de sélection 
 				"filter":"codes:'state'"
 			});
 			columns.push({
