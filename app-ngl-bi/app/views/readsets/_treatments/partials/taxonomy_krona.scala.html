@@ -1,0 +1,11 @@
+@()
+
+
+<div class="hidden-print" ng-if="!isPrint">
+	<iframe id="kronaId" class="col-md-12 col-lg-12" ng-bind-src="getKrona(treament.code!=undefined?treament.code:treatments.getTreatment().code)" style="border:0;height:1500px" />
+</div>
+
+<div class="visible-print"  ng-if="treament!=undefined">
+	<iframe id="kronaId" class="col-md-12 col-lg-12" ng-bind-src="getKrona(treament.code!=undefined?treament.code:treatments.getTreatment().code)" style="border:1;height:660px;width:660px" /> 
+</div>
+

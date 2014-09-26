@@ -1,0 +1,124 @@
+@(read: String)
+
+@camelCase(text: String) = @{
+  text.replace('r','R')
+}
+
+
+<div class="thumbnail">
+	<img id='@(read+"_qualScore")' ng-src='@("data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".qualScore.value}}")' />
+	<p>@Messages("readsets.treatments.read_quality.nuclDistribution")</p>  
+</div>
+
+<div class="row page-break">
+
+	<div class="col-xs-6">
+	
+		<div class="thumbnail">
+		    <img id='@(read+"_nuclDistribution")' ng-src='@("data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".nuclDistribution.value}}")' />
+		    <p>@Messages("readsets.treatments.read_quality.nuclDistribution")</p>
+		</div>
+		
+		<div class="thumbnail">
+		    <img id='@(read+"_readSizeDistribution")'  ng-src='@("data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".readSizeDistribution.value}}")' />
+		    <p>@Messages("readsets.treatments.read_quality.readSizeDistribution")</p>
+		</div>
+		
+	</div>
+	<div class="col-xs-6">
+	
+		<div class="thumbnail">
+		    <img id='@(read+"_readWithNpercent")' ng-src='@("data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".readWithNpercent.value}}")' />
+		    <p>@Messages("readsets.treatments.read_quality.readWithNpercent")</p>
+		</div>
+		
+		<div class="thumbnail">
+		    <img id='@(read+"_positionN")' ng-src='@("data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".positionN.value}}")' />
+		    <p>@Messages("readsets.treatments.read_quality.positionN")</p>
+		</div>
+		
+	</div>
+	
+</div>
+
+<div class="thumbnail page-break" >
+    <img id='@(read+"_adapterContamination")' ng-src='@("data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".adapterContamination.value}}")' />
+    <p>@Messages("readsets.treatments.read_quality.adapterContamination")</p>
+</div>
+
+<div class="panel panel-default page-break" ng-if='showAdapters("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'>
+	<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.adapters")</strong></div>
+	<div class="panel-body">
+		<ul>
+			<li ng-repeat='strValue in @("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".adapters.value")'>
+				{{strValue}}
+			</li>
+		</ul>
+	</div>	
+</div>
+
+<div class="panel panel-default" ng-if='showMaxSizeReads("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'>
+  	<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.maxSizeReads") <span ng-bind='@("lane.treatments.ngsrg['default'].nbCycle" + camelCase(read) + ".value")'></span> :</strong></div>
+  	<div class="panel-body">
+		{{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".maxSizeReads.value") | number}} 
+			({{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".maxSizeReadsPercent.value") | number:2}} @Messages("unit.percent"))	
+	 </div>
+</div>	
+										
+
+<div class="thumbnail page-break">
+    <img id='@(read+"_GCDistribution")' ng-src='@("data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".GCDistribution.value}}")' />
+    <p>@Messages("readsets.treatments.read_quality.GCDistribution")</p>
+</div>
+
+
+
+<div class="row page-break" ng-if='showSuspectedKmers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code) || showSuspectedPrimers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'>
+
+	<div class="col-xs-12">
+		<div class="panel panel-default" ng-if='showSuspectedKmers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'>
+			<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.suspectedKmers")</strong>
+		  	({{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedKmers.value.length")}})
+			</div>
+		  	<div class="panel-body">
+		  		<table class="table table-condensed table-small-cell page-break" ng-repeat='pageArray in getCascadedArray(@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedKmers.value"), 4, 60) track by $index'>
+		  			<tbody>
+			  			<tr>
+				  			<td ng-repeat="colArray in pageArray track by $index">
+				  				<ul>
+				  					<li ng-repeat="data in colArray track by $index">
+				  						{{data.Kmer}} ({{data.nbOccurences | number}})
+				  					</li>
+				  				</ul>	
+				  			</td>
+			  			</tr>	
+		  			</tbody>	  				
+		  		</table>
+			 </div>																
+		</div>
+	</div>
+	
+	<div class="col-xs-12">
+		<div class="panel panel-default" ng-if='showSuspectedPrimers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'> 
+		  	<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.suspectedPrimers")</strong>
+		  	({{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedPrimers.value.length")}})
+		  	</div>
+		  	<div class="panel-body">
+				<table class="table table-condensed table-small-cell page-break" ng-repeat='pageArray in getCascadedArray(@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedPrimers.value"), 4, 60) track by $index'>
+		  			<tbody>
+			  			<tr>
+				  			<td ng-repeat="colArray in pageArray track by $index">
+				  				<ul>
+				  					<li ng-repeat="data in colArray track by $index">
+				  						{{data}}
+				  					</li>
+				  				</ul>	
+				  			</td>
+			  			</tr>	
+		  			</tbody>	  				
+		  		</table>
+			 </div>
+		</div>  
+	</div>
+	
+</div>

@@ -1,148 +1,64 @@
 @()
-<div class="row" ng-controller="MappingCtrl">
-<div class="col-md-11 col-lg-11">
-<ul class="nav nav-tabs margin-bottom-5">
-	<li ng-show="isDataExistsForRead1()"><a href="#" data-target="#read1" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read1")</a></li>
-	<li ng-show="isDataExistsForRead2()"><a href="#" data-target="#read2" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read2")</a></li>
-	<li class="active"><a href="#" data-target="#pairs" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.pairs")</a></li>
-	<li><a href="#" data-target="#ref" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.ref")</a></li>    	
-</ul>
-
-<div class="tab-content">
-
- <div class="tab-pane active" id="pairs">
-
-	<div class="row"> 
-		<div class="col-md-12 col-lg-12">
-		 <table class="table table-condensed table-hover table-bordered">
-			<thead>
-				<tr>
-					<th></th>
-					<th>@Messages("readsets.treatments.mapping.sampleInput")</th>
-					<th>@Messages("readsets.treatments.mapping.nonChimericAlignedReads")</th>
-					<th>@Messages("readsets.treatments.mapping.FRAlignedReads")</th>
-					<th>@Messages("readsets.treatments.mapping.RFAlignedReads")</th>
-					<th>@Messages("readsets.treatments.mapping.FFAlignedReads")</th>
-					<th>@Messages("readsets.treatments.mapping.RRAlignedReads")</th>
-					<th>@Messages("readsets.treatments.mapping.transAlignedReads")</th>
-					<th>@Messages("readsets.treatments.mapping.singleAlignedReads")</th>				
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<th>@Messages("readsets.treatments.mapping.number")</th>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.sampleInput.value | number}}</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.nonChimericAlignedReads.value | number}}</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.FRAlignedReads.value | number}}</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.RFAlignedReads.value | number}}</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.FFAlignedReads.value | number}}</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.RRAlignedReads.value | number}}</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.transAlignedReads.value | number}}</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.singleAlignedReads.value | number}}</td>
-				</tr>
-				<tr>
-					<th>@Messages("readsets.treatments.mapping.totalReadsPercent")</th>
-					<td>@Messages("readsets.treatments.mapping.100percent")</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.nonChimericAlignedReadsPercent.value | number:2}} @Messages("unit.percent")</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.FRAlignedReadsPercent.value | number:2}} @Messages("unit.percent")</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.RFAlignedReadsPercent.value | number:2}} @Messages("unit.percent")</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.FFAlignedReadsPercent.value | number:2}} @Messages("unit.percent")</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.RRAlignedReadsPercent.value | number:2}} @Messages("unit.percent")</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.transAlignedReadsPercent.value | number:2}} @Messages("unit.percent")</td>
-					<td>{{readset.treatments[treatments.getTreatment().code].pairs.singleAlignedReadsPercent.value | number:2}} @Messages("unit.percent")</td>
-				</tr>					
-			</tbody>
-		</table>
-		</div>	
+<div class="row hidden-print" ng-controller="MappingCtrl">
+	<div class="col-md-11 col-lg-11">
+		<ul class="nav nav-tabs margin-bottom-5">
+			<li ng-show="isDataExistsForRead1()"><a href="#" data-target="#read1" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read1")</a></li>
+			<li ng-show="isDataExistsForRead2()"><a href="#" data-target="#read2" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read2")</a></li>
+			<li class="active"><a href="#" data-target="#pairs" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.pairs")</a></li>
+			<li><a href="#" data-target="#ref" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.ref")</a></li>    	
+		</ul>
+		
+		<div class="tab-content">
+		
+		 <div class="tab-pane active" id="pairs">
+			@partials.mapping_pairs()
+		 </div>
+		 
+		 <div class="tab-pane" id="ref">
+			@partials.mapping_ref()
+		 </div> 
+		 
+		 
+		  <div class="tab-pane" id="read1" ng-show="isDataExistsForRead1()">
+			@partials.mapping_read1()
+		 </div> 
+		 
+		  <div class="tab-pane" id="read2" ng-show="isDataExistsForRead2()">
+			@partials.mapping_read2()
+		 </div> 
+		 
+		</div> 
 	</div>
-	
-	<div class="row">
-	    <div class="col-md-4 col-lg-4">
-		    <div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
-			ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.value,'PEReadDistanceSeparation','','mapping',
-			readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.width,
-			readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.height)">
-			 <a href="#">
-			    <img id="pairs.PEReadDistanceSeparation" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].pairs.PEReadDistanceSeparation.value}}" />
-			 </a> 
-		    </div>
-	    </div>
-	    <div class="col-md-4 col-lg-4">
-		    <div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
-			ng-click="setImage(readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.value,'MPReadDistanceSeparation','','mapping',
-			readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.width,
-			readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.height)">
-			 <a href="#">
-			    <img id="pairs.MPReadDistanceSeparation" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].pairs.MPReadDistanceSeparation.value}}" />
-			 </a>   
-		    </div>
-	    </div>
-	</div>
-	
-	<div class="row">
-		<div class="col-md-4 col-lg-4">
-			<div class="panel panel-default text-center" ng-if="readset.treatments[treatments.getTreatment().code].pairs.estimatedPEInsertSize != null">
-				<div class="panel-heading">
-					<strong>@Messages("readsets.treatments.mapping.estimatedPEInsertSize") : </strong>
-				</div>
-				<div class="panel-body">
-					{{readset.treatments[treatments.getTreatment().code].pairs.estimatedPEInsertSize.value | number}}
-				</div>
-			</div>
-		</div>
-		<div class="col-md-4 col-lg-4">
-			<div class="panel panel-default text-center" ng-if="readset.treatments[treatments.getTreatment().code].pairs.estimatedMPInsertSize.value != null">
-				<div class="panel-heading">
-					<strong>@Messages("readsets.treatments.mapping.estimatedMPInsertSize") : </strong>
-				</div>
-				<div class="panel-body">
-					{{readset.treatments[treatments.getTreatment().code].pairs.estimatedMPInsertSize.value | number}}
-				</div>
-			</div>
-		</div>
-	</div>
-	
- </div>
- 
- <div class="tab-pane" id="ref">
-	<div class="row"> 
-		<div class="col-md-10 col-lg-10">
-			<pre>{{readset.treatments[treatments.getTreatment().code].default.reference.value}}</pre>
-		</div>
-	</div>
- </div> 
- 
- 
-  <div class="tab-pane" id="read1" ng-show="isDataExistsForRead1()">
-	<div class="row"> 
-		<div class="col-md-8 col-lg-8">
-			<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
-			ng-click="setImage(readset.treatments[treatments.getTreatment().code].read1.errorPosition.value,'readPosition','Read1','mapping',
-			readset.treatments[treatments.getTreatment().code].read1.errorPosition.width,
-			readset.treatments[treatments.getTreatment().code].read1.errorPosition.height)">
-			 <a href="#">
-			    <img id="read1.errorPosition" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read1.errorPosition.value}}" />
-			 </a>   
-		    </div>
-		</div>
-	</div>
- </div> 
- 
-  <div class="tab-pane" id="read2" ng-show="isDataExistsForRead2()">
-	<div class="row"> 
-		<div class="col-md-8 col-lg-8">
-			<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal"  
-			ng-click="setImage(readset.treatments[treatments.getTreatment().code].read2.errorPosition.value,'readPosition','Read2','mapping',
-			readset.treatments[treatments.getTreatment().code].read2.errorPosition.width,
-			readset.treatments[treatments.getTreatment().code].read2.errorPosition.height)">
-			 <a href="#">
-			    <img id="read2.errorPosition" ng-src="data:image/png;base64,{{readset.treatments[treatments.getTreatment().code].read2.errorPosition.value}}" />
-			 </a>   
-		    </div>
-		</div>
-	</div>
- </div> 
- 
-</div> 
 </div>
+
+
+
+<div class="visible-print" ng-controller="MappingCtrl">
+	<div class="page-header">
+		@Messages("readsets.treatments.mapping.tabs.pairs")
+	</div>
+	
+	<div id="pairs">
+		@partials.mapping_pairs()
+	</div>
+	
+	<div id="ref">
+		@partials.mapping_ref()
+	</div>
+
+	
+	<div ng-show="isDataExistsForRead1()">
+		<div class="page-header" >
+			@Messages("readsets.treatments.mapping.tabs.read1")
+		</div>
+		<div id="read1">@partials.mapping_read1()</div>
+	</div>
+	
+	<div ng-show="isDataExistsForRead2()">
+		<div class="page-header">
+			@Messages("readsets.treatments.mapping.tabs.read2")
+		</div>
+		<div id="read2">@partials.mapping_read2()</div>
+	</div>
 </div>
+

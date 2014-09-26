@@ -1,9 +1,32 @@
  "use strict";
 
- angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$sce', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 'valuationService', 
-                                                   function($scope, $http, $q, $routeParams, $sce, mainService, tabService, datatable, messages, lists, treatments, $window, valuationService) {
+ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$sce', '$document', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 'valuationService', 'matchmedia',
+                                                   function($scope, $http, $q, $routeParams, $sce, $document, mainService, tabService, datatable, messages, lists, treatments, $window, valuationService, matchmedia) {
 	
-	$scope.goToRun=function(){
+
+	 
+	 //set boolean isPrint when the print event is on ! 
+	 var unregister = matchmedia.onPrint( function(mediaQueryList){
+		 $scope.isPrint = mediaQueryList.matches; 
+		 
+		 addEventListener('load', load, false);
+		 
+		 function load(){ 
+			var e = $document.getElementById("kronaId");
+			e.focus();
+			var timeout = setTimeout(function() {
+				 e.contentWindow.printPage();
+			}, 1000);
+        }
+   
+	});
+	 
+
+
+	 
+	 
+	 
+	 $scope.goToRun=function(){
 		$window.open(jsRoutes.controllers.runs.tpl.Runs.get($scope.readset.runCode).url, 'runs');
 	}
 	
@@ -94,7 +117,134 @@
 		}
     };
     
+	$scope.showSuspectedKmers = function(read, treatmentCode) {
+		if (read == 'read1') {
+			if ($scope.readset.treatments!=undefined) {
+				return (
+						$scope.readset.treatments[treatmentCode].read1.suspectedKmers != undefined 
+						&& $scope.readset.treatments[treatmentCode].read1.suspectedKmers != null 
+						&& $scope.readset.treatments[treatmentCode].read1.suspectedKmers.value.length > 0);
+			}
+		}
+		if (read == 'read2') {
+			if ($scope.readset.treatments!=undefined) {
+				return ( 
+						$scope.readset.treatments[treatmentCode].read2.suspectedKmers != undefined 
+						&& $scope.readset.treatments[treatmentCode].read2.suspectedKmers != null 
+						&& $scope.readset.treatments[treatmentCode].read2.suspectedKmers.value.length > 0);
+			}
+		}
+		return false;
+	}
+	
+	$scope.showSuspectedPrimers = function(read, treatmentCode) {
+		if (read == 'read1') {
+			if ($scope.readset.treatments!=undefined)  {
+				return ( $scope.readset.treatments[treatmentCode].read1.suspectedPrimers != undefined  
+						&& $scope.readset.treatments[treatmentCode].read1.suspectedPrimers != null 
+						&& $scope.readset.treatments[treatmentCode].read1.suspectedPrimers.value.length > 0);
+			}
+		}
+		if (read == 'read2') {
+			if ($scope.readset.treatments!=undefined)  {
+				return ( $scope.readset.treatments[treatmentCode].read2.suspectedPrimers != undefined  
+						&& $scope.readset.treatments[treatmentCode].read2.suspectedPrimers != null 
+						&& $scope.readset.treatments[treatmentCode].read2.suspectedPrimers.value.length > 0);
+			}
+		}
+		return false;
+	}
+	
+	$scope.showMaxSizeReads = function(read, treatmentCode) {
+		if (read == 'read1') {
+			if ($scope.readset.treatments!=undefined)  {
+				return ( $scope.readset.treatments[treatmentCode].read1.maxSizeReads != undefined  
+						&& $scope.readset.treatments[treatmentCode].read1.maxSizeReads != null );
+			}
+		}
+		if (read == 'read2') {
+			if ($scope.readset.treatments!=undefined)  {
+				return ( $scope.readset.treatments[treatmentCode].read2.maxSizeReads != undefined  
+						&& $scope.readset.treatments[treatmentCode].read2.maxSizeReads != null );
+			}
+		}
+		return false;
+	}
+	
+	$scope.showAdapters = function(read, treatmentCode) {
+		if (read == 'read1') {
+			if ($scope.readset.treatments!=undefined)  {
+				return ( $scope.readset.treatments[treatmentCode].read1.adapters != undefined  
+						&& $scope.readset.treatments[treatmentCode].read1.adapters != null 
+						&& $scope.readset.treatments[treatmentCode].read1.adapters.value.length > 0);
+			}
+		}
+		if (read == 'read2') {
+			if ($scope.readset.treatments!=undefined)  {
+				return ( $scope.readset.treatments[treatmentCode].read2.adapters != undefined  
+						&& $scope.readset.treatments[treatmentCode].read2.adapters != null 
+						&& $scope.readset.treatments[treatmentCode].read2.adapters.value.length > 0);
+			}
+		}
+		return false;
+	}
+    
+	$scope.getCascadedArray = function(array, numberOfColumnsPerPage, numberOfElementsByColumn) {
+		array.sort(function(a, b){return b.nbOccurences-a.nbOccurences});
+		
+		var totalNumberOfColumns = Math.floor(array.length / numberOfElementsByColumn) + 1; 		
+		var myPageArray = new Array(Math.floor(totalNumberOfColumns/numberOfColumnsPerPage) +1);
+		var limit = Math.min(array.length, numberOfElementsByColumn);
+		var exit = false;
+			
+		for (var p=0; p<myPageArray.length; p++) {			
+			for (var c=0; c<numberOfColumnsPerPage; c++) {
+				for (var d=0; d<limit; d++) {
+					if (d==0) {var myDataArray = new Array();}
+					
+					var idx = p*numberOfColumnsPerPage*limit + c*limit + d;
+					if (idx < array.length) {
+						myDataArray.push(array[idx]);
+					}
+					else {
+						exit = true;
+						break;
+					}
+				}
+				if (c==0) {var myColArray = new Array();}
+				myColArray.push(myDataArray);
+				
+				if (exit) {break;}
+			}
+			myPageArray[p] = myColArray;
+		}	
+		return myPageArray;
+	}
+	
+	
+	$scope.isDataExistsForPhylogeneticTree = function(trtCode) {
+		var b = true;
+		if (angular.isDefined($scope.readset.treatments) && (trtCode != undefined)) {
+			var treatments = $scope.readset.treatments;
+			if (!angular.isDefined(treatments[trtCode].read1.phylogeneticTree) ||
+					( angular.isDefined(treatments[trtCode].read1.phylogeneticTree.value) && (treatments[trtCode].read1.phylogeneticTree.value == null) ) ) {
+				b = false;
+			}
+		}
+		return b;
+	}
+	
+	
+	$scope.getKrona = function(trtCode) {
+		if (angular.isDefined($scope.readset.treatments)  && (trtCode != undefined)) {
+			return "data:text/html;base64,"+$scope.readset.treatments["taxonomy"].read1.krona.value;
+		}
+	}
+
+	
+	
 	var init = function(){
+		$scope.isPrint = false;
 		$scope.messages = messages();
 		$scope.lists = lists;
 		$scope.treatments = treatments;
@@ -137,7 +287,11 @@
 			$http.get(jsRoutes.controllers.commons.api.StatesHierarchy.list().url,  {params: {objectTypeCode:"ReadSet"}}).success(function(data) {
 				$scope.statesHierarchy = data;	
 			});	
+						
 		});
+		
+		$scope.ncbiUrl = Messages("readsets.treatments.taxonomy.beginNcbiUrl");
+
 	};
 	
 	init();
@@ -145,7 +299,7 @@
 }]);
 
 
-
+/*
  angular.module('home').controller('TaxonomyCtrl', ['$scope', function($scope) {
 	 
 		$scope.isDataExistsForPhylogeneticTree = function() {
@@ -159,10 +313,16 @@
 			}
 			return b;
 		}
+		
+		$scope.getKrona = function(treatmentCode) {
+			if (angular.isDefined($scope.readset.treatments)) {
+				return "data:text/html;base64,"+$scope.readset.treatments["taxonomy"].read1.krona.value;
+			}
+		}
 			
 		var init = function() {		
 			$scope.$watch('readset', function() { 
-				if (angular.isDefined($scope.readset)) {				
+				if (angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.treatments.getTreatment().code)) {				
 					$scope.krona = "data:text/html;base64,"+$scope.readset.treatments[$scope.treatments.getTreatment().code].read1.krona.value;
 					
 					$scope.ncbiUrl = Messages("readsets.treatments.taxonomy.beginNcbiUrl");
@@ -172,7 +332,7 @@
 		
 		init();
 }]);
- 
+*/ 
  
  
  angular.module('home').controller('MappingCtrl', ['$scope', function($scope) {

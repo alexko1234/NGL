@@ -1,0 +1,15 @@
+@()
+
+
+<div class="thumbnail hidden-print" ng-if="!isPrint" data-target="#myImageModal" role="button" data-toggle="modal" 
+ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.phylogeneticTree.value,'phylogeneticTree','',treament.code!=undefined?treament.code:treatments.getTreatment().code, 
+readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.phylogeneticTree.width,
+readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.phylogeneticTree.height)">
+	<a href="#">
+    	<img id="phylogeneticTree" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.phylogeneticTree.value}}" />	 
+	</a>
+</div>  
+
+<div class="visible-print" ng-if="treament!=undefined">
+    <img id="phylogeneticTree" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.phylogeneticTree.value}}" />	 
+</div>

@@ -3,14 +3,88 @@
 }
 
 @media print {
-  .visible-print {
-    display: inherit !important;
-  }
-  .hidden-print {
-    display: none !important;
-  }
+	.visible-print {
+	  display: inherit !important;
+	}
+	.hidden-print {
+	  display: none !important;
+	}
   
-  .accordion-group .accordion-body.collapse {
-        height: auto;
-  }
+	.accordion-group .accordion-body.collapse {
+	      height: auto;
+	}
+	
+	@page {
+	  size: A4 landscape;
+	  margin-left: 0.5cm;
+	  margin-right: 0.5cm;
+	}
+	
+	body {
+		padding-top:0px;
+	}
+	
+	img {
+		float: none !important;
+		max-height: 90% !important;
+	}
+	
+	.page-break {page-break-before: always;}  
+  	
+  	a[href] {
+    	content: none;
+  	}
+  	
+  	#kronaLink:after {
+  		content: " (" attr(href) ")"; /* show Url link */
+  	}
+  	
+  	#pairs_overlapDistrib {
+  		max-height: 70% !important;
+  	}
+  	
+  	#read1_adapterContamination, #read2_adapterContamination {
+  		max-height: 60% !important;
+  	}
+  	
+  	#read1_nuclDistribution, #read1_readSizeDistribution, #read1_readWithNpercent, #read1_positionN,
+  	#read2_nuclDistribution, #read2_readSizeDistribution, #read2_readWithNpercent, #read2_positionN {
+  		max-height: 40% !important;
+  	}
+  	
+  	#pairs_PEReadDistanceSeparation, #pairs_MPReadDistanceSeparation {
+  		max-height: 45% !important;
+  	}
+  	
+  	.table {
+  		font-size: 10px;
+  	}
+  	
+  	.table-small-cell {
+  		font-size: 8px;
+  	}
+
+  	.vertical-center {
+  		vertical-align:middle;
+  	} 
+  	
+  	.no-border {
+  		border-top: 0px; 
+  	}
+  	.no-border th {
+  		width:20%;
+  		padding: 10px;	
+  	}
+  	
+  	#border_box {
+  		box-sizing: border-box;
+  	}
+  	 	
 }
+
+
+
+
+    
+    
+
