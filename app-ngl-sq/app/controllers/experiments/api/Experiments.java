@@ -5,10 +5,14 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map.Entry;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
+import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
+import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -223,7 +227,7 @@ public class Experiments extends CommonController{
 		Experiment exp = experimentFilledForm.get();
 		
 		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
-		exp= ExperimentHelper.setProjetAndSamples(exp);
+		exp= ExperimentHelper.updateData(exp);
 	
 		ContextValidation contextValidation = new ContextValidation();
 		contextValidation.setUpdateMode();
@@ -240,6 +244,7 @@ public class Experiments extends CommonController{
 				
 				Builder builder = new DBUpdate.Builder();
 				builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
+				builder=builder.set("projectCodes",exp.projectCodes).set("sampleCodes",exp.sampleCodes);
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 				
 				return ok(Json.toJson(exp));
@@ -361,6 +366,50 @@ public class Experiments extends CommonController{
 		}
 	}
 
+	public static Result updateContainerSupportCode(String experimentCode,String containerSupportCode){
+		
+		Experiment experiment= MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
+		
+		if(experiment!=null){
+			String containerSupportCodeOld;
+			
+			//Experiment
+			for(Entry<Integer, AtomicTransfertMethod> atomicTransfertMethods:experiment.atomicTransfertMethods.entrySet()){
+				for(ContainerUsed containerUsed:atomicTransfertMethods.getValue().getOutputContainers()){
+					containerSupportCodeOld=containerUsed.locationOnContainerSupport.code;
+					//Remplace ancien code par le nouveau dans le nom du container
+					containerUsed.code=containerUsed.code.replace(containerSupportCodeOld, containerSupportCode);
+					containerUsed.locationOnContainerSupport.code=containerSupportCode;
+					
+					MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME,ContainerSupport.class,DBQuery.is("code",containerSupportCodeOld),DBUpdate.set("code",containerSupportCode));
+					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code",containerSupportCodeOld),DBUpdate.set("support.code", containerSupportCode).set("code",containerUsed.code ));
+					
+				}
+			}
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", experimentCode), DBUpdate.set("atomicTransfertMethods", experiment.atomicTransfertMethods));
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", experimentCode).notEquals("instrumentProperties.containerSupportCode", containerSupportCode), DBUpdate.set("instrumentProperties.containerSupportCode", containerSupportCode));			
+			
+			return ok(Json.toJson(experiment));
+		}
+		else  {
+			return notFound();
+		}
+	}
+		
+		public static Result updateData(String experimentCode){
+			Experiment experiment= MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
+			if(experiment!=null){
+				ExperimentHelper.updateData(experiment);
+				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class,DBQuery.is("code",experimentCode)
+					,DBUpdate.set("projectCodes",experiment.projectCodes).set("sampleCodes",experiment.sampleCodes));
+				return ok(Json.toJson(experiment));
+			}else {
+				return notFound();
+			}
+
+		}
+
+	
 	/**
 	 * Construct the experiment query
 	 * @param experimentSearch
