@@ -80,15 +80,15 @@ public class ExperimentHelper {
 		return exp;	
 	}
 
-	public static Experiment setProjetAndSamples(Experiment exp) {
+	public static Experiment updateData(Experiment exp) {
 		exp.sampleCodes = new ArrayList<String>();
 		exp.projectCodes  = new ArrayList<String>();
 
 		for(int i=0;i<exp.atomicTransfertMethods.size();i++)
 			for(ContainerUsed c:exp.atomicTransfertMethods.get(i).getInputContainers()){
 				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, c.code);
-				exp.sampleCodes = InstanceHelpers.addCodesList(exp.sampleCodes, container.sampleCodes);
-				exp.projectCodes = InstanceHelpers.addCodesList(exp.projectCodes, container.projectCodes);
+				exp.sampleCodes = InstanceHelpers.addCodesList(container.sampleCodes,exp.sampleCodes);
+				exp.projectCodes = InstanceHelpers.addCodesList(container.projectCodes,exp.projectCodes);
 			}	
 		return exp;
 	}
