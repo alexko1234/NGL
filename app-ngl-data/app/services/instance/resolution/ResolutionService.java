@@ -53,6 +53,7 @@ public class ResolutionService {
 				saveResolutionsCNG(ctx);
 			}
 			if (play.Play.application().configuration().getString("institute").equals("CNS")) {
+				
 				saveResolutionsCNS(ctx);
 			}
 		}
@@ -134,6 +135,7 @@ public class ResolutionService {
 		createReadSetResolutionCNS(ctx); 
 		createAnalysisResolutionCNS(ctx); 
 		createExperimentResolutionCNS(ctx); 
+		createOpgenDepotResolutionCNS(ctx);
 	}
 	
 	
@@ -448,8 +450,7 @@ public class ResolutionService {
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
 		ArrayList<String> al = new ArrayList<String>();
-		al.add("void-opgen-depot");
-		al.add("opgen-depot");
+		
 		al.add("void-illumina-depot");
 		al.add("prepa-flowcell");
 		al.add("fragmentation");
@@ -471,6 +472,30 @@ public class ResolutionService {
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, "experimentReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
+	
+	public static void createOpgenDepotResolutionCNS(ContextValidation ctx) {
+		
+		List<Resolution> l = new ArrayList<Resolution>();
+		
+		l.add(newResolution("déroulement correct",	"correct", resolutionCategories.get("Default"), (short) 1));
+		l.add(newResolution("échec expérience", "echec-experience", resolutionCategories.get("Default"), (short) 2));
+		l.add(newResolution("Nombre molécules insuffisant pour assemblage correct", "echec-assemblage", resolutionCategories.get("Default"), (short) 3));
+		l.add(newResolution("surface cassée", "echec-surface", resolutionCategories.get("Default"), (short) 4));	
+		l.add(newResolution("problème digestion", "echec-digestion", resolutionCategories.get("Default"), (short) 5));	
+		
+		ResolutionConfigurations r = new ResolutionConfigurations();
+		r.code = "expODReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Experiment";
+		ArrayList<String> al = new ArrayList<String>();
+		al.add("void-opgen-depot");
+		al.add("opgen-depot");		
+		r.typeCodes = al;
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, "expODReso");
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
+	}
+	
 	
 
 }
