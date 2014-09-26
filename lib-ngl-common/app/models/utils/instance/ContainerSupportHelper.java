@@ -104,7 +104,7 @@ public class ContainerSupportHelper {
 			Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.code);
 			support.projectCodes=InstanceHelpers.addCodesList(container.projectCodes, support.projectCodes);
 			support.sampleCodes=InstanceHelpers.addCodesList(container.sampleCodes, support.sampleCodes);
-			support.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, support.fromExperimentTypeCodes);
+			support.fromExperimentTypeCodes=InstanceHelpers.addCode(experiment.typeCode, support.fromExperimentTypeCodes);
 
 		}
 		
