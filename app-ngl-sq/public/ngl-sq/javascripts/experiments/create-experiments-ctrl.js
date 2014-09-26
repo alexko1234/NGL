@@ -789,7 +789,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				
 				$scope.lists.refresh.instrumentUsedTypes({"experimentTypeCode":experiment.typeCode});
 				$scope.lists.refresh.protocols({"experimentTypeCode":experiment.typeCode});
-				$scope.lists.refresh.resolutions({"objectTypeCode":"Experiment"});
+				$scope.lists.refresh.resolutions({"typeCode":experiment.typeCode});
 				$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
 				
 				if(!$routeParams.experimentCode){
