@@ -18,6 +18,9 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'main
 			},
 			hide:{
 				active:true
+			},
+			exportCSV:{
+				active:true
 			}
 	};
 

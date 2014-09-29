@@ -10,6 +10,7 @@ datatable.button.save=Sauvegarder
 datatable.button.remove=Supprimer
 datatable.button.length=Taille ({0})
 datatable.totalNumberRecords = {0} Résultat(s)
+datatable.button.exportCSV = Export CSV
 
 datatable.msg.success.save = Toutes les sauvegardes ont réussi.
 datatable.msg.error.save = Il y a {0} sauvegarde(s) en erreur.
