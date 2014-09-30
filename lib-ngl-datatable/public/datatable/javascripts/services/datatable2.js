@@ -1469,15 +1469,13 @@ angular.module('datatableServices', []).
 		    					for (var i=0; i<results.length; i++) {
 		    						for (var j=0; j<visibleCols.length; j++) { 		    							
 		    							col = visibleCols[j];
-		    							convertedData = null;
 		    							
 		    							if (col.property) {
 		    								if (col.property.indexOf(".") == -1) {
 		    									convertedData = results[i][col.property];
 		    								}
 		    								else {
-		    									var pos = 0, cpt = 0;
-		    									var arr = [];
+		    									var pos = 0;
 		    									var str = "results[" + i + "]";
 		    									while (col.property.indexOf(".", pos) > 0){
 		    										str += "[\"" + col.property.substring(pos, col.property.indexOf(".")) + "\"]";
@@ -1490,21 +1488,14 @@ angular.module('datatableServices', []).
 		    							}		    							
 		    							convertedData = this.convertData(convertedData, col);
 		    							
-		    							txt += convertedData + delimiter;
-		    							
+		    							txt += convertedData + delimiter;		    							
 		    						}
 		    						txt += "\n"; 
 		    					}
 
-		    					var document = window.document;
-		    					var get_blob = function() {return Blob;}
-		    					var text_options_form = document.getElementById("text-options");
+		    					var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
 		    					var text_filename = this.config.name || this.configDefault.name;
-		    					var BB = get_blob();
-		    					
-		    					saveAs(
-		    						new BB([txt], {type: "text/plain;charset="+document.characterSet}), 
-		    						text_filename + ".csv");
+		    					saveAs(blob, text_filename + ".csv");
 		    					
 		    					this.config.exportCSV.startSpinner = false;
 		    				}
