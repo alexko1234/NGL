@@ -81,7 +81,7 @@
 
 <div class="visible-print">
 	<div id="border_box">
-		<li ng-repeat="treament in treatments.getTreatments() | orderBy:treatmentList()">
+		<li ng-repeat="treament in treatments.getTreatments()">
 			<div class="page-break">
 				<h3>{{treament.name}}</h3>
 				<div ng-include="treament.url"></div>

@@ -20,11 +20,11 @@
 		 
 		 
 		  <div class="tab-pane" id="read1" ng-show="isDataExistsForRead1()">
-			@partials.mapping_read1()
+			@partials.mapping("read1")
 		 </div> 
 		 
 		  <div class="tab-pane" id="read2" ng-show="isDataExistsForRead2()">
-			@partials.mapping_read2()
+			@partials.mapping("read2")
 		 </div> 
 		 
 		</div> 
@@ -51,14 +51,14 @@
 		<div class="page-header" >
 			@Messages("readsets.treatments.mapping.tabs.read1")
 		</div>
-		<div id="read1">@partials.mapping_read1()</div>
+		<div id="read1">@partials.mapping("read1")</div>
 	</div>
 	
 	<div ng-show="isDataExistsForRead2()">
 		<div class="page-header">
 			@Messages("readsets.treatments.mapping.tabs.read2")
 		</div>
-		<div id="read2">@partials.mapping_read2()</div>
+		<div id="read2">@partials.mapping("read2")</div>
 	</div>
 </div>
 

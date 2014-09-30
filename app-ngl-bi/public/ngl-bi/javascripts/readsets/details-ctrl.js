@@ -1,23 +1,15 @@
  "use strict";
 
- angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$sce', '$document', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 'valuationService', 'matchmedia',
-                                                   function($scope, $http, $q, $routeParams, $sce, $document, mainService, tabService, datatable, messages, lists, treatments, $window, valuationService, matchmedia) {
+ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$sce', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 'valuationService', 'matchmedia',
+                                                   function($scope, $http, $q, $routeParams, $sce, mainService, tabService, datatable, messages, lists, treatments, $window, valuationService, matchmedia) {
 	
 
 	 
 	 //set boolean isPrint when the print event is on ! 
 	 var unregister = matchmedia.onPrint( function(mediaQueryList){
-		 $scope.isPrint = mediaQueryList.matches; 
-		 
-		 addEventListener('load', load, false);
-		 
-		 function load(){ 
-			var e = $document.getElementById("kronaId");
-			e.focus();
-			var timeout = setTimeout(function() {
-				 e.contentWindow.printPage();
-			}, 1000);
-        }
+			
+			 $scope.isPrint = mediaQueryList.matches; 
+		
    
 	});
 	 
