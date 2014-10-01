@@ -146,12 +146,7 @@ angular.module('datatableServices', []).
 								columns:{}
 							},
 							showTotalNumberRecords:true,
-							compact:true, //mode compact pour le nom des bouttons
-							exportCSV:{
-								active:false,
-								startSpinner:false,
-								delimiter:";"
-							}
+							compact:true //mode compact pour le nom des bouttons
 						},
 						config:undefined,
     					configMaster:undefined,
@@ -1123,8 +1118,7 @@ angular.module('datatableServices', []).
 		    				}else{
 		    					return (this.config[configParam].active && this.config[configParam].showButton);
 		    				}
-		    			},
-		    			
+		    			},		    			
 		    			/**
 		    			 * Add pagination parameters if needed
 		    			 */
@@ -1423,112 +1417,7 @@ angular.module('datatableServices', []).
 			    				}
 		    				}
 		    			},
-		    			
-		    			//dnoisett
-		    			exportCSV : function() {
-		    				this.config.exportCSV.startSpinner = true;
-		    				var url = this.getUrlFunction(this.config.search.url);
-		    				var bUserSearch = false;
-		    				//analyse params
-		    				for (var param in this.lastSearchParams) {
-		    					if (param != "datatable" && param != "excludes" && param != "orderBy" && param != "orderSense") {
-		    						bUserSearch = true;
-		    					}
-		    				}
-		    				//get data
-		    				if(url){
-		    					if (bUserSearch)
-		    						$http.get(url(), {params:this.lastSearchParams}).success(function(data) {
-		    							datatable.generateCSV(data.data);
-		    						});
-		    					else
-		    						$http.get(url()).success(function(data) {
-		    							datatable.generateCSV(data);
-		    						});
-		    				}
-		    				else {
-		    					//console.log("No url defined");
-		    				}
-		    			},
-		    			
-		    			generateCSV : function(results) {
-		    				var txt = "", delimiter = this.config.exportCSV.delimiter, col, convertedData;
-		    				
-		    				if (results) {
-		    					var visibleCols = [];
-		    					for (var j=0; j<this.config.columns.length; j++) {
-		    						if (!this.config.columns[j].hide) 
-		    							visibleCols.push(this.config.columns[j])
-		    					}
-		    					//columns header with visible columns
-		    					for (var j=0; j<visibleCols.length; j++) { 
-		    						txt += visibleCols[j].property + delimiter;
-		    					}
-		    					txt += "\n";
-		    					//data of these visible columns
-		    					for (var i=0; i<results.length; i++) {
-		    						for (var j=0; j<visibleCols.length; j++) { 		    							
-		    							col = visibleCols[j];
-		    							
-		    							if (col.property) {
-		    								if (col.property.indexOf(".") == -1) {
-		    									convertedData = results[i][col.property];
-		    								}
-		    								else {
-		    									var pos = 0;
-		    									var str = "results[" + i + "]";
-		    									while (col.property.indexOf(".", pos) > 0){
-		    										str += "[\"" + col.property.substring(pos, col.property.indexOf(".")) + "\"]";
-		    										pos = col.property.indexOf(".")+1;	
-		    									}
-		    									str += "[\"" + col.property.substring(pos) + "\"]"; 
-		    									
-		    									convertedData = eval(str);
-		    								}
-		    							}		    							
-		    							convertedData = this.convertData(convertedData, col);
-		    							
-		    							txt += convertedData + delimiter;		    							
-		    						}
-		    						txt += "\n"; 
-		    					}
-
-		    					var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
-		    					var text_filename = this.config.name || this.configDefault.name;
-		    					saveAs(blob, text_filename + ".csv");
-		    					
-		    					this.config.exportCSV.startSpinner = false;
-		    				}
-		    				else {
-		    					//console.log("No results returned!");
-		    				}
-		    			},
-
-		    			//sub-function use by generateCSV()
-		    			convertData : function(convertedData, col) {
-		    				var field;
-		    				if (convertedData != "") {
-		    					if (col.type == "datetime") {
-		    					   convertedData = $filter('date')(convertedData, Messages("datetime.format"));
-		    					} else if(col.type == "date") {
-		    					   convertedData = $filter('date')(convertedData, Messages("date.format"));
-		    					} else if(col.type == "number") {
-		    					   convertedData = $filter('number')(convertedData);
-		    					}
-		    					if (col.filter) {
-		    					   if ((col.filter).indexOf("codes") !=-1) {
-		    						   field = col.filter.substring(col.filter.indexOf(":")+2,col.filter.length-1);
-		    						   convertedData = $filter('codes')(convertedData, field);
-		    					   }
-		    					}
-		    				}
-		    				return convertedData;
-		    			},
-
-		    			isShowExportCSV: function(){
-		    				return this.config.exportCSV.active;
-		    			}
-		    			
+		    					    					    			
 		    			/*
 		    			
 		    			getNgModel : function(col, header){
@@ -1804,17 +1693,8 @@ angular.module('datatableServices', []).
   		    		+	'<button class="btn btn-default" ng-click="dtTable.remove()" ng-disabled="!dtTable.canRemove()" ng-if="dtTable.isShowButton(\'remove\')"  data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.remove\')}}">'
   		    		+		'<i class="fa fa-trash-o"></i>'
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.remove\')}}</span>'
-  		    		+	'</button>'  		    	
-  		    		+'</div>'
-  		    		
-  		    		+'<div class="btn-group" ng-if="dtTable.isShowExportCSV()">'
-    				+	'<button class="btn btn-default" ng-click="dtTable.exportCSV()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}">' 
-		    		+		'<i class="fa fa-file-text-o"></i>'
-		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}</span>' 
-		    		+	'</button>' 
-		    		+	'<div class="inProgress" ng-if="dtTable.config.exportCSV.startSpinner"><button class="btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-2x"></i></button></div>'
-		    		+'</div>'  				
-    				
+  		    		+	'</button>'
+  		    		+'</div>'    				
   		    		+'<div class="btn-group" ng-if="dtTable.isShowHideButtons()">' //todo bt-select
   		    		+	'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.hide\')}}">'
   		    		+		'<i class="fa fa-eye-slash fa-lg"></i> '
