@@ -147,8 +147,8 @@
 							jsonSearch.typeCode = _form.experimentType;
 						}
 						
-						if(_form.fromDate)jsonSearch.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
-						if(_form.toDate)jsonSearch.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();
+						if(_form.fromDate)jsonSearch.fromDate = this.useMoment(_form.fromDate, Messages("date.format").toUpperCase());
+						if(_form.toDate)jsonSearch.toDate = this.useMoment(_form.fromDate, Messages("date.format").toUpperCase());
 						
 						return jsonSearch;	
 					}
@@ -175,7 +175,17 @@
 				changeTypeCode : function(){
 					this.search();
 				},
-				
+				useMoment: function(date, format){
+					//ex: 2014-10-02
+					var patt = /[0-9]{4}-[0-9]{2}-[0-9]{2}/;
+					
+					//chrome browser always return input with type=date value as AAAA-MM-DD
+					if(date.search(patt) != -1){
+						return moment(date).valueOf();
+					}
+					//fifox browser return the specified format
+					return moment(date, Messages("date.format").toUpperCase()).valueOf();
+				},
 				changeExperimentType : function(){
 					this.search();
 				},

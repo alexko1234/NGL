@@ -34,6 +34,22 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 						"property":"inputState.code",
 						"order":true,
 						"type":"text",
+						"edit":false,
+						"extraHeaders":{"0":"Inputs"}
+					},{
+						"header":Messages("containers.table.volume"),
+						"property":"inputVolume",
+						"order":true,
+						"type":"text",
+						"edit":false,
+						"extraHeaders":{"0":"Inputs"}
+					},
+					{
+						"header":Messages("containers.table.concentration"),
+						"property":"inputConcentration",
+						"order":true,
+						"type":"text",
+						"edit":false,
 						"extraHeaders":{"0":"Inputs"}
 					},
 					{

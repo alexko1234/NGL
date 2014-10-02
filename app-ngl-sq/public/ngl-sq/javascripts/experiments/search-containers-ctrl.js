@@ -176,9 +176,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			$scope.datatable.search(jsonSearch);
 		}else{
 			if(!$scope.form.experimentType){
-				$scope.errors.experimentType = "alert-danger";
+				$scope.errors.experimentType = "alert alert-danger";
 			}else{
-				$scope.errors.containerSupportCategory = "alert-danger";
+				$scope.errors.containerSupportCategory = "alert alert-danger";
 			}
 			$scope.datatable.setData({},0);
 			$scope.basket.reset();

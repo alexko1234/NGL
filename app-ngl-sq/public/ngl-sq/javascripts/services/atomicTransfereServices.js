@@ -616,7 +616,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 											"inputX":containerIn.support.line, "inputTags":tags,"inputSampleTypes":sampleTypes, "inputLibProcessTypeCodes":libProcessTypeCodes, "inputState":containerIn.state,
 														"inputY":containerIn.support.column, "experimentProperties":containerIn.experimentProperties,
 														"instrumentProperties":containerIn.instrumentProperties, "outputPositionX":i+1,
-														"outputPositionY":1};//Fake container
+														"outputPositionY":1,"inputConcentration":containerIn.mesuredConcentration.value,"inputVolume":containerIn.mesuredVolume.value};//Fake container
 									containers.push(container);
 								}
 								i++;
