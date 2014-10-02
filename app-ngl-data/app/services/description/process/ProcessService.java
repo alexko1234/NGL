@@ -99,7 +99,6 @@ public class ProcessService {
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Robot à utiliser","autoVsManuel", LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("MAN","ROBOT"), "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Quantité à engager", "objInputProcess", LevelService.getLevels(Level.CODE.Process),Double.class, true, DescriptionFactory.newValues("250","500"), "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Objectif fragmentation", "objFragm", LevelService.getLevels(Level.CODE.Process),String.class,false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Ojectif Taille de banque finale", "objSize", LevelService.getLevels(Level.CODE.Process),String.class,true,DescriptionFactory.newValues("300-600","300-800"),"300-600", "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Catégorie Imputation", "imputationCat", LevelService.getLevels(Level.CODE.Process),String.class,true,DescriptionFactory.newValues("PRODUCTION","DEVELOPPEMENT"), "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Date limite", "dateLimite", LevelService.getLevels(Level.CODE.Process),Date.class,false, "single"));
