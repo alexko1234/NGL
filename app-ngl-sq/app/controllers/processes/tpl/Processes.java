@@ -3,26 +3,23 @@ package controllers.processes.tpl;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.ListObject;
+import models.utils.ListObjectInt;
 import models.utils.dao.DAOException;
 
 import org.apache.commons.lang3.StringUtils;
-import com.fasterxml.jackson.databind.JsonNode;
 
-import play.Logger;
 import play.Routes;
 import play.data.Form;
 import play.i18n.Messages;
 import play.libs.Json;
 import play.mvc.Result;
 import views.components.datatable.DatatableColumn;
-import views.components.datatable.DatatableConfig;
 import views.components.datatable.DatatableHelpers;
 import views.html.processes.home;
 import views.html.processes.newProcesses;
@@ -100,7 +97,6 @@ public class Processes extends CommonController{
 					List<PropertyDefinition> propertyDefinition = processType.propertiesDefinitions;
 					for(PropertyDefinition p : propertyDefinition) {
 						DatatableColumn c = null;
-						Logger.info(p.valueType);
 						if(!p.valueType.equals("java.util.Date")){
 							c = DatatableHelpers.getColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false);
 						}else{
@@ -112,8 +108,13 @@ public class Processes extends CommonController{
 							if(p.possibleValues != null){
 								c.possibleValues = new ArrayList<Object>();
 								for(Value v: p.possibleValues){
-									ListObject l = new ListObject(v.value,v.value);
-									c.possibleValues.add(l);
+									if(p.valueType.equals("java.lang.String")){
+										ListObject l = new ListObject(v.value,v.value);
+										c.possibleValues.add(l);
+									}else{
+										ListObjectInt l = new ListObjectInt(Integer.parseInt(v.value),v.value);
+										c.possibleValues.add(l);
+									}
 								}
 							}
 						}
