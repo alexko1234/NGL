@@ -121,6 +121,9 @@ public class Supports extends CommonController {
 			cs.processTypeCode = supportsSearch.processTypeCode;
 			cs.stateCode = supportsSearch.stateCode;
 			cs.fromExperimentTypeCodes = supportsSearch.fromExperimentTypeCodes;
+			if(supportsSearch.valuations != null){
+				cs.valuations = supportsSearch.valuations;
+			}
 			
 			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList();
 			Logger.debug("Containers "+containers.size());

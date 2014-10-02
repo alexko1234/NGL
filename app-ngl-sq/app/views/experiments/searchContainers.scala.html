@@ -51,6 +51,12 @@
 				<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="form.processCategory"  bt-options="processCategory.code as processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
 				</div>
 			}
+			@formGroup{
+			
+			<div class="form-control" bt-select ng-model="form.valuations" multiple="true" placeholder="@Messages("search.placeholder.valuation")" 
+				bt-options="valuation.code as valuation.name for valuation in lists.getValuations()">
+			</div>	
+		}
 						
 		}
 		@columnSearchForm{
@@ -63,6 +69,11 @@
 				<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-model="form.processType" bt-options="processType.code as processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
 				</div>		
 			}
+			@formGroup{
+			<div class="form-control" bt-select ng-model="form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromExperimentTypeCodes")" 
+				bt-options="expType.code as expType.name for expType in lists.getExperimentTypes()">
+			</div>
+		}
 		}
 }
 

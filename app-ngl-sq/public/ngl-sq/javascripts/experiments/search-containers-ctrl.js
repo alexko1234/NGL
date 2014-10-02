@@ -167,6 +167,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 				jsonSearch.code = $scope.form.supportCode;
 			}
 			
+			if($scope.form.valuations){
+				jsonSearch.valuations = $scope.form.valuations;
+			}
 			
 			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate, Messages("date.format").toUpperCase()).valueOf();
@@ -225,9 +228,11 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	
 	$scope.lists.refresh.projects();
 	$scope.lists.refresh.types({objectTypeCode:"Process"}, true);
+	$scope.lists.refresh.experimentTypes({"categoryCode":"transformation"});
 	$scope.lists.refresh.processCategories();
 	$scope.lists.refresh.experimentCategories();
 	$scope.lists.refresh.users();
+	$scope.lists.refresh.states({objectTypeCode:"Container"});
 	
 	if(angular.isUndefined(mainService.getForm())){
 		$scope.form = {experimentCategory:{}};

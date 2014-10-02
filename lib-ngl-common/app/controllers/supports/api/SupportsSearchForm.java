@@ -15,6 +15,7 @@ public class SupportsSearchForm extends ListForm {
 	public List<String> sampleCodes;
 	public List<String> fromExperimentTypeCodes;
 	
+	public List<String> valuations;
 	public Date fromDate;
 	public Date toDate;
 	public List<String> users;
