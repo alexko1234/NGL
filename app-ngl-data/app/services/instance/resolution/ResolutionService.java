@@ -479,7 +479,7 @@ public class ResolutionService {
 		
 		l.add(newResolution("déroulement correct",	"correct", resolutionCategories.get("Default"), (short) 1));
 		l.add(newResolution("échec expérience", "echec-experience", resolutionCategories.get("Default"), (short) 2));
-		l.add(newResolution("Nombre molécules insuffisant pour assemblage correct", "echec-assemblage", resolutionCategories.get("Default"), (short) 3));
+		l.add(newResolution("nombre molécules insuffisant pour assemblage correct", "echec-nbMoleculesInsuf", resolutionCategories.get("Default"), (short) 3));
 		l.add(newResolution("surface cassée", "echec-surface", resolutionCategories.get("Default"), (short) 4));	
 		l.add(newResolution("problème digestion", "echec-digestion", resolutionCategories.get("Default"), (short) 5));	
 		
