@@ -191,6 +191,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	$scope.addToBasket = function(containers){
 		for(var i = 0; i < containers.length; i++){
 			this.basket.add(containers[i]);
+			console.log(containers[i]);
 		}
 		
 		if(($scope.form.experimentType) && this.basket.length() > 0 && tabService.getTabs().length === 1){

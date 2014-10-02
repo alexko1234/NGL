@@ -8,7 +8,7 @@
 			}
 			<hr>
 			@formGroup{		
-				<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.user")'>
+				<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("containers.placeholder.user")'>
 			}
 			@formGroup{
 				<div class="form-control" bt-select ng-model="form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in lists.getProjects()"></div>

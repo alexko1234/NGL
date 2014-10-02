@@ -18,6 +18,12 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainSer
 				"property":"sampleCodes",
 				"order":true,
 				"type":"text"
+			},
+			{
+				"header":Messages("experiments.table.volume"),
+				"property":"volume",
+				"order":true,
+				"type":"text"
 			}
 			],
 			pagination:{
