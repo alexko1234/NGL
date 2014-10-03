@@ -340,11 +340,14 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			console.log($scope.laneCount);
 			for(var i=0;i<$scope.laneCount;i++){
 				$scope.flowcells[i] = [];
+				$scope.rows[i] = true;
 			}
-		}
+		}else{
 		
 		for(var i=0;i<$scope.laneCount;i++){
-			$scope.rows[i] = true;
+						
+			$scope.rows[i] = false;
+		}
 		}
 		console.log($scope.flowcells);
 	};
