@@ -55,15 +55,15 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
                                                           function($scope, $routeParams, $parse, mainService, tabService, readSetsSearchService, valuationService) {
 	var datatableConfig = {
 			pagination:{mode:'local'},
-			order :{mode:'local', by:'runSequencingStartDate', reverse : true},
+			order:{mode:'local', by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
 			},
-			edit : {
+			edit:{
 				active:true,
 				columnMode:true		    	
 			},			
-			save : {
+			save:{
 				active:true,
 				url: jsRoutes.controllers.readsets.api.ReadSets.valuationBatch().url,				
 				batch:true,
@@ -79,7 +79,8 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 			hide:{
 				active:true
 			},
-			messages : {active:true}
+			messages:{active:true},
+			exportCSV:{active:true}
 	};
 	
 	$scope.search = function(){

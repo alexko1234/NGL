@@ -146,7 +146,11 @@ angular.module('datatableServices', []).
 								columns:{}
 							},
 							showTotalNumberRecords:true,
-							compact:true //mode compact pour le nom des bouttons
+							compact:true, //mode compact pour le nom des bouttons
+							exportCSV:{
+								active:false,
+								delimiter:";"
+							}
 						},
 						config:undefined,
     					configMaster:undefined,
@@ -1085,7 +1089,8 @@ angular.module('datatableServices', []).
 		    			
 		    			isShowToolbarButtons: function(){
 		    				return ( this.isShowCRUDButtons()
-		    						|| this.isShowHideButtons()  || (this.config.show.active && this.config.show.showButton) 
+		    						|| this.isShowHideButtons()  || (this.config.show.active && this.config.show.showButton)  
+		    						|| this.isShowExportCSV()
 		    						|| this.isShowOtherButtons());
 		    			},
 		    			isShowCRUDButtons: function(){
@@ -1119,6 +1124,7 @@ angular.module('datatableServices', []).
 		    					return (this.config[configParam].active && this.config[configParam].showButton);
 		    				}
 		    			},		    			
+		    			
 		    			/**
 		    			 * Add pagination parameters if needed
 		    			 */
@@ -1418,6 +1424,85 @@ angular.module('datatableServices', []).
 		    				}
 		    			},
 		    					    					    			
+
+		    			/**
+		    			 * Function to export data in a CSV file
+		    			 */
+		    			exportCSV : function(results) {
+		    				var txt = "", delimiter = this.config.exportCSV.delimiter;
+		    				var colValues, lineValue = "", that = this, results = this.allResult; 
+		    				
+		    				if (results) {		    					
+		    					var columnsToPrint = this.config.columns;
+		    					
+		    					//header
+		    					columnsToPrint.forEach(function(column) {
+		    						lineValue = lineValue + Messages(column.header) + delimiter;
+		    					}); 
+		    					lineValue += "\n";
+		    					
+		    					//data
+		    					results.forEach(function(result) {		    						
+		    						columnsToPrint.forEach(function(column) {
+		    							
+			    						var property = column.property;
+			    						property += (column.filter)?'|'+column.filter:'';
+			    						property += that.getFormatter(column); 
+			    						var propertyGetter = $parse(property);
+			    						var colValue = propertyGetter(result);
+			    						
+			    						lineValue = lineValue + ((colValue!=null)&&(colValue)?colValue:"") + delimiter;
+		    						});
+		    						lineValue = lineValue + "\n";
+		    					});
+		    					
+		    					//fix for the accents in Excel : add BOM (byte-order-mark)
+		    					var fixedstring = "\ufeff" + lineValue;		    							    					
+		    					
+		    					//save
+		    					var blob = new Blob([fixedstring], {type: "text/plain;charset=utf-8"}); //old : utf-8
+		    					var text_filename = this.config.name || this.configDefault.name;
+		    					saveAs(blob, text_filename + ".csv");
+		    				}
+		    				else {
+		    					alert("No data to print. Select the data you need");
+		    				}			    					
+		    			},
+		    			
+		    			/**
+		    			 * Sub-function use by exportCSV() 
+		    			 */
+	  		    		getFormatter : function(col){
+		    				var format = "";
+		    				if (col && col.type)
+			    				if(col.type === "date"){
+			    					format += " | date:'"+(col.format?col.format:Messages("date.format"))+"'";
+			    				}else if(col.type === "datetime"){
+			    					format += " | date:'"+(col.format?col.format:Messages("datetime.format"))+"'";
+			    				}else if(col.type === "number"){
+									format += " | number"+(col.format?':'+col.format:'');
+								}	    				
+		    				return format;
+		    			},
+		    			
+		    			/**
+		    			 * Function to show (or not) the "CSV Export" button
+		    			 */ 
+		    			isShowExportCSV: function(){
+		    				return this.config.exportCSV.active;
+		    			},
+		    			
+		    			/**
+		    			 * Function to enable/disable the "CSV Export" button 
+		    			 */
+		    			canExportCSV: function(){
+		    				if(this.config.edit.active && this.config.edit.start) 
+		    					return false;
+		    				else
+		    					return true;
+		    			},
+		    			
+		    			
 		    			/*
 		    			
 		    			getNgModel : function(col, header){
@@ -1643,7 +1728,14 @@ angular.module('datatableServices', []).
 		    			$timeout(function(){scope.dtTable.setGroupColumn(column)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
 		    			});
-		    		};			    	
+		    		};			
+		    		
+		    		scope.dtTableFunctions.exportCSV = function(){
+		    			scope.dtTable.setSpinner(true);
+		    			$timeout(function(){scope.dtTable.exportCSV()}).then(function(){
+		    				scope.dtTable.setSpinner(false);  		    				
+		    			});
+		    		};	
        		    } 		    		
     		};
     	}]).directive('dtForm', function(){
@@ -1693,8 +1785,16 @@ angular.module('datatableServices', []).
   		    		+	'<button class="btn btn-default" ng-click="dtTable.remove()" ng-disabled="!dtTable.canRemove()" ng-if="dtTable.isShowButton(\'remove\')"  data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.remove\')}}">'
   		    		+		'<i class="fa fa-trash-o"></i>'
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.remove\')}}</span>'
-  		    		+	'</button>'
+  		    		+	'</button>'  		    	
   		    		+'</div>'    				
+  		    		
+  		    		+'<div class="btn-group" ng-if="dtTable.isShowExportCSV()">'
+    				+	'<button class="btn btn-default" ng-click="dtTableFunctions.exportCSV()" ng-disabled="!dtTable.canExportCSV()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}">' 
+		    		+		'<i class="fa fa-file-text-o"></i>'
+		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}</span>' 
+		    		+	'</button>' 
+		    		+'</div>'  				
+    				
   		    		+'<div class="btn-group" ng-if="dtTable.isShowHideButtons()">' //todo bt-select
   		    		+	'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.hide\')}}">'
   		    		+		'<i class="fa fa-eye-slash fa-lg"></i> '
