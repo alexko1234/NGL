@@ -10,10 +10,12 @@ import models.laboratory.common.description.Value;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.ListObject;
 import models.utils.ListObjectInt;
+import models.utils.ListObjectValue;
 import models.utils.dao.DAOException;
 
 import org.apache.commons.lang3.StringUtils;
 
+import play.Logger;
 import play.Routes;
 import play.data.Form;
 import play.i18n.Messages;
@@ -107,14 +109,25 @@ public class Processes extends CommonController{
 							c.choiceInList = p.choiceInList;
 							if(p.possibleValues != null){
 								c.possibleValues = new ArrayList<Object>();
-								for(Value v: p.possibleValues){
+								for(Value v: p.possibleValues){										
+									ListObjectValue l = null;
 									if(p.valueType.equals("java.lang.String")){
-										ListObject l = new ListObject(v.value,v.value);
-										c.possibleValues.add(l);
-									}else{
-										ListObjectInt l = new ListObjectInt(Integer.parseInt(v.value),v.value);
-										c.possibleValues.add(l);
+										l = new ListObjectValue<String>(v.value,v.value);									
 									}
+									else if(p.valueType.equals("java.lang.Double")){
+										l = new ListObjectValue<Double>(Double.parseDouble(v.value),v.value);										
+									}
+									else if(p.valueType.equals("java.lang.Float")){
+										l = new ListObjectValue<Float>(Float.parseFloat(v.value),v.value);										
+									}
+									else if(p.valueType.equals("java.lang.Integer")){
+										l = new ListObjectValue<Integer>(Integer.parseInt(v.value),v.value);										
+									}
+									else{										
+										Logger.debug("Not implemented :"+ p.valueType);									
+									}
+									c.possibleValues.add(l);
+									
 								}
 							}
 						}
