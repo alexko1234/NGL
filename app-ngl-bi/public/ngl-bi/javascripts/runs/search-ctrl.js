@@ -16,7 +16,10 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 					tabService.addTabs({label:line.code,href:jsRoutes.controllers.runs.tpl.Runs.get(line.code).url,remove:true});
 				}
 			},
-			hide:{active:true}
+			hide:{active:true},
+			exportCSV:{
+				active:true
+			}
 	};
 	
 	$scope.search = function(){

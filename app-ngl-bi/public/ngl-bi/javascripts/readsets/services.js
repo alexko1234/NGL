@@ -26,8 +26,8 @@
 							header: "readsets.projectCode",
 							type :"text",
 							order:true,
-							group:true,
-				    	  	position:4});
+							group:true,							
+				    	  	position:4});			
 			columns.push({	property:"sampleCode",
 							header: "readsets.sampleCode",
 							type :"text",

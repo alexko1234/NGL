@@ -79,8 +79,7 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 			hide:{
 				active:true
 			},
-			messages:{active:true},
-			exportCSV:{active:true}
+			messages:{active:true}
 	};
 	
 	$scope.search = function(){
