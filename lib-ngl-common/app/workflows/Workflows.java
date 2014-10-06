@@ -70,13 +70,13 @@ public class Workflows {
 				}
 
 			}
-			
+
 			if(!ctxValidation.hasErrors()){
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,  Experiment.class, 
 						DBQuery.is("code", experiment.code),
 						DBUpdate.set("state", experiment.state).set("traceInformation",experiment.traceInformation));
 			}
-			
+
 			if(!ctxValidation.hasErrors()){
 				nextInputContainerState(experiment, ctxValidation);
 			}
@@ -142,10 +142,10 @@ public class Workflows {
 						nextState.code="IW-P";
 					}
 				}else {
-				nextState.code="A";
+					nextState.code="A";
 				}
 			}
-			
+
 			if(experiment.categoryCode.equals("purification") || experiment.categoryCode.equals("transfert")){
 				if(experiment.state.code.equals("F")){
 					nextState.code="IW-V";
@@ -194,7 +194,7 @@ public class Workflows {
 		}
 	}
 
-	
+
 	private static boolean doQC(Experiment experiment) {
 		try{
 			ExperimentTypeNode experimentTypeNode=ExperimentTypeNode.find.findByCode(experiment.typeCode);
@@ -211,21 +211,21 @@ public class Workflows {
 		state.date=new Date();
 		state.user=InstanceHelpers.getUser();
 
-		for(Process process:container.getCurrentProcesses()){
-			if(container.state.code.equals("IU") && checkProcessState("N",container.inputProcessCodes)){
-				state.code="IP";
-			}else if(container.state.code.equals("UA") && checkProcessState("IP",container.inputProcessCodes)){
-				state.code="F";
-			}
+		if(container.state.code.equals("IU") && checkProcessState("N",container.inputProcessCodes)){
+			state.code="IP";
+		}else if(container.state.code.equals("UA") && checkProcessState("IP",container.inputProcessCodes)){
+			state.code="F";
 		}
 
 		/*if(container.state.code.equals("IW-E")){//?
 			state.code= "IP";
 		} */
-		
-		//TODO mettre en fin de process les processus
+
 		if(state.code != null){
 			setProcessState(container.inputProcessCodes,state,contextValidation);
+			if(state.code.equals("F")){
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code),DBUpdate.unset("inputProcessCodes"));
+			}
 		}
 	}
 
@@ -258,7 +258,7 @@ public class Workflows {
 				TraceInformation traceInformation=new TraceInformation();
 				InstanceHelpers.updateTraceInformation(traceInformation);
 				StateHelper.updateHistoricalNextState(process.state,nextState);
-				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,  Container.class, 
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,  Process.class, 
 						DBQuery.is("code", process.code),
 						DBUpdate.set("state", nextState).set("traceInformation",traceInformation));
 			}	
