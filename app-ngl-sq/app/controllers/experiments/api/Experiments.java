@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
@@ -387,7 +388,10 @@ public class Experiments extends CommonController{
 				}
 			}
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", experimentCode), DBUpdate.set("atomicTransfertMethods", experiment.atomicTransfertMethods));
-			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", experimentCode).notEquals("instrumentProperties.containerSupportCode", containerSupportCode), DBUpdate.set("instrumentProperties.containerSupportCode", containerSupportCode));			
+			
+			PropertySingleValue containserSupportCodeProperty=(PropertySingleValue) experiment.instrumentProperties.get("containerSupportCode");
+			containserSupportCodeProperty.value=containerSupportCode;
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", experimentCode).notEquals("instrumentProperties.containerSupportCode", containerSupportCode), DBUpdate.set("instrumentProperties.containerSupportCode", containserSupportCodeProperty));			
 			
 			return ok(Json.toJson(experiment));
 		}
@@ -395,8 +399,8 @@ public class Experiments extends CommonController{
 			return notFound();
 		}
 	}
-		
-		public static Result updateData(String experimentCode){
+	
+	public static Result updateData(String experimentCode){
 			Experiment experiment= MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
 			if(experiment!=null){
 				ExperimentHelper.updateData(experiment);
