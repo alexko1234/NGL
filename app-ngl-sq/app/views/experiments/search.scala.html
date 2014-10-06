@@ -39,7 +39,7 @@
 			}
 			@formGroup{		
 				<input class="form-control" type="text" ng-model="searchService.form.containerSupportCode" placeholder='@Messages("search.placeholder.support")'>
-			}
+			}			
 		}
 		@columnSearchForm{
 			@formGroup{	
@@ -49,6 +49,9 @@
 			@formGroup{	
 				<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("experiment.placeholder.toDate")'>
 			}
+			@formGroup{
+			<input class="form-control" type="text" ng-model="searchService.form.code" typeahead="experiment.code as experiment.name for experiment in searchService.lists.getExperiments() | filter:$viewValue | limitTo:20" placeholder='@Messages("experiment.placeholder.code")'>
+			}
 		}
 		@columnSearchForm{
 			@formGroup{		
@@ -57,7 +60,7 @@
 			@formGroup{
 			<div bt-select placeholder="@Messages("experiments.select.state")" class="form-control" ng-model="searchService.form.state" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" ng-change="search()" auto-select>
 			</div>
-			}	
+			}				
 		}
 }
 

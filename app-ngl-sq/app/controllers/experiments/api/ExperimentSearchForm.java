@@ -7,6 +7,7 @@ import controllers.ListForm;
 
 public class ExperimentSearchForm extends ListForm{
 	public String code;
+	public List<String> codes;
 	public String typeCode;
 	public String processTypeCode;
 	public String categoryCode;
@@ -22,7 +23,7 @@ public class ExperimentSearchForm extends ListForm{
 	
 	@Override
 	public String toString() {
-		return "ExperimentSearchForm [typeCode=" + typeCode
+		return "ExperimentSearchForm [code="+code+", codes="+ codes +", typeCode=" + typeCode
 				+ ", processTypeCode=" + processTypeCode + ", categoryCode="
 				+ categoryCode + ", projectCodes=" + projectCodes
 				+ ", sampleCodes=" + sampleCodes + ", fromDate=" + fromDate

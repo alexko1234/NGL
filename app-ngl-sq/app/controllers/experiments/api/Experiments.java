@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
@@ -21,14 +22,17 @@ import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
+import models.utils.ListObjectValue;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
 import models.utils.instance.StateHelper;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate.Builder;
 
 import play.Logger;
@@ -342,16 +346,19 @@ public class Experiments extends CommonController{
 	public static Result list(){
 		Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
 		ExperimentSearchForm experimentsSearch = experimentFilledForm.get();
-
+		BasicDBObject keys = getKeys(experimentsSearch);
 		DBQuery.Query query = getQuery(experimentsSearch);
+		
 		if(experimentsSearch.datatable){
 			MongoDBResult<Experiment> results =  mongoDBFinder(InstanceConstants.EXPERIMENT_COLL_NAME, experimentsSearch, Experiment.class, query);
 			List<Experiment> experiments = results.toList();
 			return ok(Json.toJson(new DatatableResponse<Experiment>(experiments, results.count())));
 		}else if (experimentsSearch.list){
-			BasicDBObject keys = new BasicDBObject();
+			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
+			if(null == experimentsSearch.orderBy)experimentsSearch.orderBy = "code";
+			if(null == experimentsSearch.orderSense)experimentsSearch.orderSense = 0;
 			MongoDBResult<Experiment> results = mongoDBFinder(InstanceConstants.EXPERIMENT_COLL_NAME, experimentsSearch, Experiment.class, query, keys);
 			List<Experiment> experiments = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
@@ -361,11 +368,14 @@ public class Experiments extends CommonController{
 
 			return Results.ok(Json.toJson(los));
 		}else{
+			if(null == experimentsSearch.orderBy)experimentsSearch.orderBy = "code";
+			if(null == experimentsSearch.orderSense)experimentsSearch.orderSense = 0;
 			MongoDBResult<Experiment> results = mongoDBFinder(InstanceConstants.EXPERIMENT_COLL_NAME, experimentsSearch, Experiment.class, query);
 			List<Experiment> experiments = results.toList();
 			return ok(Json.toJson(experiments));
 		}
-	}
+	}	
+	
 
 	public static Result updateContainerSupportCode(String experimentCode,String containerSupportCode){
 		
@@ -421,11 +431,18 @@ public class Experiments extends CommonController{
 	 */
 	private static DBQuery.Query getQuery(ExperimentSearchForm experimentSearch) {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		Query query=null;
 
 		Logger.info("Experiment Query : "+experimentSearch);
 
 		if(StringUtils.isNotEmpty(experimentSearch.code)){
 			queryElts.add(DBQuery.is("code", experimentSearch.code));
+		}
+		
+		if(CollectionUtils.isNotEmpty(experimentSearch.codes)){
+			queryElts.add(DBQuery.in("code", experimentSearch.codes));
+		}else if(StringUtils.isNotBlank(experimentSearch.code)){
+			queryElts.add(DBQuery.regex("code", Pattern.compile(experimentSearch.code)));
 		}
 		
 		if(StringUtils.isNotEmpty(experimentSearch.typeCode)){
@@ -468,7 +485,12 @@ public class Experiments extends CommonController{
 			queryElts.add(DBQuery.in("state.code", experimentSearch.stateCode));
 		}
 
-		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+		if(queryElts.size() > 0){
+			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+		}
+
+		return query;
+	
 	}
 	
 	public static void doCalculations(Experiment exp){

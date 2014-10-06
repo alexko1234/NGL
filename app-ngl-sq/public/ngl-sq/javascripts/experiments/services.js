@@ -83,6 +83,7 @@
 				lists.refresh.experimentCategories();
 				lists.refresh.projects();
 				lists.refresh.users();
+				lists.refresh.experiments();
 				lists.refresh.states({objectTypeCode:"Experiment"});
 				lists.refresh.experimentTypes({categoryCode:"purification"}, "purifications");
 				lists.refresh.experimentTypes({categoryCode:"qualitycontrol"}, "qualitycontrols");
@@ -114,7 +115,7 @@
 				},
 				convertForm : function(){
 					var _form = angular.copy(this.form);
-					if(_form.processType || _form.experimentType || _form.projectCodes || _form.sampleCodes || _form.type || _form.fromDate || _form.toDate || _form.state || _form.user || _form.containerSupportCode){
+					if(_form.processType || _form.experimentType || _form.projectCodes || _form.sampleCodes || _form.type || _form.fromDate || _form.toDate || _form.state || _form.user || _form.code || _form.containerSupportCode){
 						var jsonSearch = {};			
 
 						if(_form.projectCodes){
@@ -141,6 +142,10 @@
 
 						if(_form.user){
 							jsonSearch.users = _form.user;
+						}
+						
+						if(_form.code){
+							jsonSearch.code = _form.code;
 						}
 						
 						if(_form.experimentType){
