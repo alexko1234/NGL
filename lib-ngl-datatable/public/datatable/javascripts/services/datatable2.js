@@ -149,7 +149,9 @@ angular.module('datatableServices', []).
 							compact:true, //mode compact pour le nom des bouttons
 							exportCSV:{
 								active:false,
-								delimiter:";"
+								showButton:true,
+								delimiter:";",
+								start:false
 							}
 						},
 						config:undefined,
@@ -157,6 +159,7 @@ angular.module('datatableServices', []).
     					allResult:undefined,
     					displayResult:undefined,
     					totalNumberRecords:0,
+    					urlCache:{}, //used to cache data load from column with url attribut
     					lastSearchParams : undefined, //used with pagination when length or page change
     					inc:0, //used for unique column ids
     					configColumnDefault:{
@@ -340,7 +343,6 @@ angular.module('datatableServices', []).
 		    						}
 		    					}
 		    					
-		    					
 		    					if(this.config.edit.active && this.config.edit.start){
     								//TODO add a warning popup
     								console.log("edit is active, you lost all modification !!");
@@ -419,11 +421,46 @@ angular.module('datatableServices', []).
 		    					this.displayResult = displayResultTmp;
 		    				}
 		    				
+		    				this.loadUrlColumnProperty();
+		    				
 		    				if(this.config.edit.byDefault){
 		    					this.config.edit.withoutSelect = true;
 		    					this.setEdit();
 		    				}		    						    				    				
 		    			},
+		    			
+		    			loadUrlColumnProperty :function(){
+		    				var urlColumns = this.getColumnsConfig().filter(function(column){
+		    					return (column.url !== undefined);
+		    				});
+		    				
+		    				var displayResult = this.displayResult;
+		    				var urlQueries = [];
+		    				var urlCache = this.urlCache;
+		    				
+		    				urlColumns.forEach(function(column){
+		    					displayResult.forEach(function(value){
+		    						var url = $parse(column.url)(value.data);
+		    						if(!angular.isDefined(urlCache[url])){
+		    							urlCache[url] = "in waiting data";
+		    							urlQueries.push($http.get(url, {url:url}));
+		    						}
+		    					
+		    					});
+		    				});
+		    				
+		    				$q.all(urlQueries).then(function(results){
+								angular.forEach(results, function(result, key){
+									if(result.status !== 200){
+										console.log("Error for load column property : "+result.config.url);
+									}else{
+										urlCache[result.config.url] = result.data;
+									}
+																									
+								});
+							});	
+		    			},
+		    			
 		    			//pagination functions
 		    			/**
 		    			 * compute the pagination item list
@@ -1123,7 +1160,7 @@ angular.module('datatableServices', []).
 		    				}else{
 		    					return (this.config[configParam].active && this.config[configParam].showButton);
 		    				}
-		    			},		    			
+		    			},
 		    			
 		    			/**
 		    			 * Add pagination parameters if needed
@@ -1423,12 +1460,13 @@ angular.module('datatableServices', []).
 			    				}
 		    				}
 		    			},
-		    					    					    			
+		    			
 
 		    			/**
 		    			 * Function to export data in a CSV file
 		    			 */
 		    			exportCSV : function(results) {
+		    				this.config.exportCSV.start=true;
 		    				var txt = "", delimiter = this.config.exportCSV.delimiter;
 		    				var colValues, lineValue = "", that = this, results = this.allResult; 
 		    				
@@ -1466,7 +1504,8 @@ angular.module('datatableServices', []).
 		    				}
 		    				else {
 		    					alert("No data to print. Select the data you need");
-		    				}			    					
+		    				}	
+		    				this.config.exportCSV.start=false;
 		    			},
 		    			
 		    			/**
@@ -1488,18 +1527,23 @@ angular.module('datatableServices', []).
 		    			/**
 		    			 * Function to show (or not) the "CSV Export" button
 		    			 */ 
-		    			isShowExportCSV: function(){
-		    				return this.config.exportCSV.active;
+		    			isShowExportCSVButton: function(){
+		    				return (this.config.exportCSV.active && this.config.exportCSV.showButton);
 		    			},
 		    			
 		    			/**
 		    			 * Function to enable/disable the "CSV Export" button 
 		    			 */
 		    			canExportCSV: function(){
-		    				if(this.config.edit.active && this.config.edit.start) 
+		    				if(this.config.exportCSV.active && !this.config.exportCSV.start){
+		    					if(this.config.edit.active && this.config.edit.start){
+		    						return false;
+		    					}else{
+		    						return true;
+		    					}
+		    				} else {
 		    					return false;
-		    				else
-		    					return true;
+		    				}
 		    			},
 		    			
 		    			
@@ -1786,9 +1830,9 @@ angular.module('datatableServices', []).
   		    		+		'<i class="fa fa-trash-o"></i>'
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.remove\')}}</span>'
   		    		+	'</button>'  		    	
-  		    		+'</div>'    				
+  		    		+'</div>'
   		    		
-  		    		+'<div class="btn-group" ng-if="dtTable.isShowExportCSV()">'
+  		    		+'<div class="btn-group" ng-if="dtTable.isShowExportCSVButton()">'
     				+	'<button class="btn btn-default" ng-click="dtTableFunctions.exportCSV()" ng-disabled="!dtTable.canExportCSV()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}">' 
 		    		+		'<i class="fa fa-file-text-o"></i>'
 		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}</span>' 
@@ -1998,17 +2042,7 @@ angular.module('datatableServices', []).
     			    	}		    				
 			    	};
 	    			
-			    	scope.dtTableFunctions.getFormatter = function(col){
-	    				var format = "";
-	    				if(col.type === "date"){
-	    					format += " | date:'"+(col.format?col.format:Messages("date.format"))+"'";
-	    				}else if(col.type === "datetime"){
-	    					format += " | date:'"+(col.format?col.format:Messages("datetime.format"))+"'";
-	    				}else if(col.type === "number"){
-							format += " | number"+(col.format?':'+col.format:'');
-						}	    				
-	    				return format;
-	    			};
+			    	scope.dtTableFunctions.getFormatter = scope.dtTable.getFormatter;
 	    			
 	    			scope.dtTableFunctions.getFilter = function(col){
 	    				if(col.filter){
@@ -2072,7 +2106,7 @@ angular.module('datatableServices', []).
   		    		
   	  		    }
     		};
-    	}).directive("dtCellEdit", function($compile){
+    	}).directive("dtCellEdit", function(){
     		return {
     			restrict: 'A',
   		    	replace:true,
@@ -2082,7 +2116,7 @@ angular.module('datatableServices', []).
   		    	}
   		    	
     		};
-    	}).directive("dtCellRead", function($compile){
+    	}).directive("dtCellRead", function($http){
     		return {
     			restrict: 'A',
   		    	replace:true,
@@ -2122,9 +2156,9 @@ angular.module('datatableServices', []).
 			    		if(onlyProperty){
 			    			return currentScope.$eval(column.property, value.data);
 			    		}else{
-			    			if(!value.line.group){
+			    			if(!value.line.group && !angular.isDefined(column.url)){
 			    				return currentScope.$eval(column.property+this.getFilter(column)+this.getFormatter(column), value.data);
-			    			}else{
+			    			}else if(value.line.group){
 			    				var v = currentScope.$eval("group."+column.id, value.data);
 			    				//if error in group function
 			    				if(angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#"){
@@ -2137,6 +2171,9 @@ angular.module('datatableServices', []).
 			    				}else{
 			    					return undefined;
 			    				}			    							    				
+			    			}else if(!value.line.group && angular.isDefined(column.url)){
+			    				var url = currentScope.$eval(column.url, value.data);
+			    				return currentScope.$eval(column.property+this.getFilter(column)+this.getFormatter(column), scope.dtTable.urlCache[url]);
 			    			}
 			    		}
 	    				
