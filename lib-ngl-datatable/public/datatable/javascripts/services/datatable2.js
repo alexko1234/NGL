@@ -1498,8 +1498,9 @@ angular.module('datatableServices', []).
 		    					var fixedstring = "\ufeff" + lineValue;		    							    					
 		    					
 		    					//save
-		    					var blob = new Blob([fixedstring], {type: "text/plain;charset=utf-8"}); //old : utf-8
-		    					var text_filename = this.config.name || this.configDefault.name;
+		    					var blob = new Blob([fixedstring], {type: "text/plain;charset=utf-8"}); 
+		    					var currdate = $filter('date')(new Date(), 'yyyyMMdd');
+		    					var text_filename = (this.config.name || this.configDefault.name) + "_" + currdate;		    					
 		    					saveAs(blob, text_filename + ".csv");
 		    				}
 		    				else {
@@ -2243,4 +2244,4 @@ angular.module('datatableServices', []).
 					    });   
 					  }
 					};
-			});
+			}); 
