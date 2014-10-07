@@ -23,7 +23,7 @@ containers.table.volume = Volume
 containers.table.createUser = Créé par
 containers.table.valid = Valide container
 containers.table.supportCode = Support container
-containers.table.support.categoryCode = Categorie support
+containers.table.support.categoryCode = Catégorie support
 containers.table.support.line = Y
 containers.table.support.column = X
 containers.table.percentage = % à déposer
@@ -33,7 +33,7 @@ containers.table.libProcessTypeCodes = Type librairie
 
 containers.placeholder.fromDate = Création container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Création container jusqu''au (jj/mm/aaaa)
-containers.placeholder.user = Container crée par
+containers.placeholder.user = Container créé par
 
 containers.select.state =  Sélect. un état container
 containers.select.categoryCode =  Sélect. catégorie container
@@ -63,7 +63,7 @@ processes.menu.creation = Création
 processes.menu.search = Rechercher
 processes.tabs.search = Recherche Processus
 processes.tabs.create = Création Processus
-processes.create = Crée un processus
+processes.create = Créé un processus
 processes.save = Sauvegarder
 
 processes.table.code = Processus
@@ -98,7 +98,7 @@ processes.table.line = X
 processes.table.columns = Y
 
 processes.select.processType = Sélect. un type de processus
-processes.select.processCategory = Sélect. une categorie de processus
+processes.select.processCategory = Sélect. une catégorie de processus
 processes.select.project = Sélect. un projet
 processes.select.sample = Sélect. un échantillon
 processes.select.state = Sélect. un état processus
@@ -109,8 +109,8 @@ processes.placeholder.user = Process. Créé par
 
 
 #experiments
-experiments.title = Experiences
-experiments.menu = Experiences
+experiments.title = Expériences
+experiments.menu = Expériences
 experiments.tabs.search = Recherche Expérience
 experiments.tabs.create = Création Expérience
 experiments.menu.creation = Création
@@ -132,14 +132,14 @@ experiments.state = Etat
 experiments.intrument = Instrument
 experiments.status = Statut
 experiments.intrumentUsedType = Type d''instrument
-experiments.generateOutput = Generer tube sortie
+experiments.generateOutput = Générer tube sortie
 experiment.noComments = Pas de commentaire
 experiment.leaveComment = Laissez votre commentaire
 experiment.addComment = Ajouter un commentaire
 experiment.seeComments = Voir les commentaires
 experiment.sendComment = Envoyer
 experiment.cancelComment = Annuler
-experiments.begin_progress = Demarrer la progression
+experiments.begin_progress = Démarrer la progression
 experiments.sampleSheet = Feuille de route
 experiments.finish  = Terminer
 experiments.finished  = Terminé

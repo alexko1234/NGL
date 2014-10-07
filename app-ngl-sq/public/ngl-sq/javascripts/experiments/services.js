@@ -154,7 +154,7 @@
 						}
 						
 						if(_form.fromDate)jsonSearch.fromDate = this.useMoment(_form.fromDate, Messages("date.format").toUpperCase());
-						if(_form.toDate)jsonSearch.toDate = this.useMoment(_form.fromDate, Messages("date.format").toUpperCase());
+						if(_form.toDate)jsonSearch.toDate = this.useMoment(_form.toDate, Messages("date.format").toUpperCase());
 						
 						return jsonSearch;	
 					}

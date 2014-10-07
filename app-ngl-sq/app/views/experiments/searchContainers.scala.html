@@ -22,7 +22,7 @@
 			}
 			<hr>
 			@formGroup{		
-				<input class="form-control" type="date" ng-model="form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")'>
+				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")'>
 			}
 			@formGroup{		
 				<div class="form-control" bt-select ng-model="form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in lists.getSamples()" ng-focus="refreshSamples()"></div>			
@@ -35,7 +35,7 @@
 			}
 			<hr>
 			@formGroup{		
-				<input class="form-control" type="date" ng-model="form.toDate" placeholder='@Messages("containers.placeholder.toDate")'>
+				<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("containers.placeholder.toDate")'>
 			}
 			@formGroup{		
 				<input class="form-control" type="text" ng-model="form.supportCode" placeholder='@Messages("search.placeholder.support")'>
