@@ -76,6 +76,7 @@
 		
 		var isInit = false;
 		
+		
 		var initListService = function(){
 			if(!isInit){
 				lists.refresh.types({objectTypeCode:"Process"}, true);
@@ -161,8 +162,8 @@
 					return undefined;
 				},
 				
-				resetForm : function(){
-					this.form = {};									
+				resetForm : function(){					
+					this.form = {};					
 				},
 				search : function(){
 					this.updateForm();
@@ -241,7 +242,9 @@
 					
 					if(angular.isDefined($routeParams)){
 						this.setRouteParams($routeParams);
-					}
+					}					
+					
+					
 				}
 		};
 		

@@ -24,6 +24,10 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		$scope.searchService.search();
 	};
 	
+	$scope.reset = function(){
+		$scope.searchService.resetForm();		
+	};
+	
 	//init
 	if(angular.isUndefined($scope.getHomePage())){
 		mainService.setHomePage('search');

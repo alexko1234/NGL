@@ -25,6 +25,10 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		$scope.searchService.search();
 	};
 	
+	$scope.reset = function(){
+		$scope.searchService.resetForm();		
+	};
+	
 	//init
 	$scope.datatable = datatable($scope.datatableConfig);		
 	if(angular.isUndefined($scope.getHomePage())){

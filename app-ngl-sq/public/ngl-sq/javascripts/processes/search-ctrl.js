@@ -23,7 +23,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 
 	$scope.reset = function(){
 		$scope.searchService.resetForm();
-		$scope.searchService.getColumn();
+		//$scope.searchService.getColumn();
 	};
 	
 	$scope.search = function(){	
