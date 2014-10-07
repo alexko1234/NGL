@@ -19,7 +19,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 			hide:{active:true},
 			exportCSV:{
 				active:true
-			}
+			},
+			name:"runs"
 	};
 	
 	$scope.search = function(){
