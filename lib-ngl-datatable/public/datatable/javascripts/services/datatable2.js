@@ -1127,7 +1127,7 @@ angular.module('datatableServices', []).
 		    			isShowToolbarButtons: function(){
 		    				return ( this.isShowCRUDButtons()
 		    						|| this.isShowHideButtons()  || (this.config.show.active && this.config.show.showButton)  
-		    						|| this.isShowExportCSV()
+		    						|| this.isShowExportCSVButton()
 		    						|| this.isShowOtherButtons());
 		    			},
 		    			isShowCRUDButtons: function(){
@@ -1499,8 +1499,8 @@ angular.module('datatableServices', []).
 		    					
 		    					//save
 		    					var blob = new Blob([fixedstring], {type: "text/plain;charset=utf-8"}); 
-		    					var currdate = $filter('date')(new Date(), 'yyyyMMdd');
-		    					var text_filename = (this.config.name || this.configDefault.name) + "_" + currdate;		    					
+		    					var currdatetime = $filter('date')(new Date(), 'yyyyMMdd_HHmmss');
+		    					var text_filename = (this.config.name || this.configDefault.name) + "_" + currdatetime;		    					
 		    					saveAs(blob, text_filename + ".csv");
 		    				}
 		    				else {
