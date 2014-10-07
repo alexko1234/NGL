@@ -10,15 +10,17 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.SampleOnContainer;
-import org.mongojack.DBQuery;
 
+import org.mongojack.DBQuery;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
 
@@ -29,6 +31,7 @@ import validation.IValidation;
 
 import com.mongodb.BasicDBObject;
 
+import controllers.CommonController;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -45,6 +48,7 @@ public class InstanceHelpers {
 		});
 	}
 
+	@Deprecated
 	public static String getUser(){
 		String user;
 		try{
@@ -65,19 +69,20 @@ public class InstanceHelpers {
 		}
 
 		Comment newComment=new Comment(comment);
-		newComment.createUser=InstanceHelpers.getUser();
+		newComment.createUser=CommonController.getCurrentUser();
 
 		comments.add(newComment);
 		return comments;
 	}
 
 
+	@Deprecated
 	public static void updateTraceInformation(TraceInformation traceInformation){
 		
 		if (traceInformation.createUser==null){
-			traceInformation.createUser=InstanceHelpers.getUser();
+			traceInformation.createUser=CommonController.getCurrentUser();
 		}else {
-			traceInformation.modifyUser=InstanceHelpers.getUser();
+			traceInformation.modifyUser=CommonController.getCurrentUser();
 		}
 
 		if(traceInformation.creationDate==null){
@@ -86,6 +91,24 @@ public class InstanceHelpers {
 			traceInformation.modifyDate=new Date();
 		}
 
+	}
+	
+	public static TraceInformation updateTraceInformation(
+			TraceInformation traceInformation, State nextState) {		
+		traceInformation.modifyDate = nextState.date;
+		traceInformation.modifyUser = nextState.user;		
+		return traceInformation;
+	}
+	
+	public static TraceInformation getUpdateTraceInformation(TraceInformation traceInformation) {
+		TraceInformation ti=null;
+		if(traceInformation==null){
+			ti=new TraceInformation();
+		}else {
+			ti = traceInformation;
+		}
+		ti.setTraceInformation(CommonController.getCurrentUser());
+		return ti;
 	}
 
 	// Add unique code to list

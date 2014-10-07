@@ -117,8 +117,7 @@ public class Processes extends CommonController{
 		Form<Process> filledForm = getFilledForm(processForm, Process.class);
 		Process processInput = filledForm.get();
 		if (processInput.code.equals(code)) {
-			processInput.traceInformation.modifyDate = new Date();
-			processInput.traceInformation.modifyUser = getCurrentUser();
+			processInput.traceInformation.setTraceInformation(getCurrentUser());
 			
 			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
 			ctxVal.setUpdateMode();

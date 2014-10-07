@@ -19,8 +19,11 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
 import models.utils.instance.StateHelper;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+
+import controllers.CommonController;
 import play.Logger;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
@@ -44,7 +47,7 @@ public class Workflows {
 
 		if(!ctxValidation.hasErrors() && !nextState.code.equals(experiment.state)){
 
-			InstanceHelpers.updateTraceInformation(experiment.traceInformation);  
+			experiment.traceInformation=StateHelper.getUpdateTraceInformation(experiment.traceInformation);  
 			experiment.state = StateHelper.updateHistoricalNextState(experiment.state, nextState);
 			experiment.state=nextState;
 
@@ -100,7 +103,7 @@ public class Workflows {
 	public static void nextInputContainerState(Experiment experiment,ContextValidation contextValidation){
 		State state=new State();
 		state.date=new Date();
-		state.user=InstanceHelpers.getUser();
+		state.user=CommonController.getCurrentUser();
 
 		if(experiment.state.code.equals("N")){
 			state.code= "IW-E"; 
@@ -209,7 +212,7 @@ public class Workflows {
 	public static void nextProcessState(Container container,ContextValidation contextValidation){
 		State state=new State();
 		state.date=new Date();
-		state.user=InstanceHelpers.getUser();
+		state.user=CommonController.getCurrentUser();
 
 		if(container.state.code.equals("IU") && checkProcessState("N",container.inputProcessCodes)){
 			state.code="IP";
@@ -255,12 +258,13 @@ public class Workflows {
 			ContainerValidationHelper.validateStateCode(nextState.code, contextValidation);
 			if(!contextValidation.hasErrors() && !nextState.code.equals(process.state)){
 
-				TraceInformation traceInformation=new TraceInformation();
-				InstanceHelpers.updateTraceInformation(traceInformation);
-				StateHelper.updateHistoricalNextState(process.state,nextState);
+				
+				process.state=StateHelper.updateHistoricalNextState(process.state,nextState);
+				process.traceInformation=StateHelper.updateTraceInformation(process.traceInformation, nextState);
+				
 				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,  Process.class, 
 						DBQuery.is("code", process.code),
-						DBUpdate.set("state", nextState).set("traceInformation",traceInformation));
+						DBUpdate.set("state", process.state).set("traceInformation",process.traceInformation));
 			}	
 
 		}
@@ -280,12 +284,12 @@ public class Workflows {
 			/*if(nextState.code.equals("IW-P")){
 				container.inputProcessCodes=null;
 			}*/
-			TraceInformation traceInformation=new TraceInformation();
-			InstanceHelpers.updateTraceInformation(traceInformation);
-			StateHelper.updateHistoricalNextState(container.state,nextState);
+			
+			container.state=StateHelper.updateHistoricalNextState(container.state,nextState);
+			container.traceInformation=StateHelper.updateTraceInformation(container.traceInformation, nextState);
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,  Container.class, 
 					DBQuery.is("code", container.code),
-					DBUpdate.set("state", nextState).set("traceInformation",traceInformation));
+					DBUpdate.set("state", container.state).set("traceInformation",container.traceInformation));
 		}	
 		container.state=nextState;
 		nextContainerSupportState(container,contextValidation);
@@ -309,12 +313,12 @@ public class Workflows {
 
 		if(!contextValidation.hasErrors() && !nextState.code.equals(containerSupport.state.code)){
 
-			TraceInformation traceInformation=new TraceInformation();
-			InstanceHelpers.updateTraceInformation(traceInformation);
-			StateHelper.updateHistoricalNextState(containerSupport.state,nextState);
+			containerSupport.state=StateHelper.updateHistoricalNextState(containerSupport.state,nextState);
+			containerSupport.traceInformation=StateHelper.updateTraceInformation(containerSupport.traceInformation, nextState);
+			
 			MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME,  Container.class, 
 					DBQuery.is("code", containerSupport.code),
-					DBUpdate.set("state", nextState).set("traceInformation",traceInformation));
+					DBUpdate.set("state", containerSupport.state).set("traceInformation",containerSupport.traceInformation));
 		}	
 
 

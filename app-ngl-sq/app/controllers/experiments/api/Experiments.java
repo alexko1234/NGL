@@ -71,15 +71,14 @@ public class Experiments extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
-		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
-
 		if (!experimentFilledForm.hasErrors()) {
 
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("typeCode",exp.typeCode);
 			builder=builder.set("protocolCode",exp.protocolCode);
 			builder=builder.set("state.resolutionCodes",exp.state.resolutionCodes);
-
+			builder=builder.set("traceInformation", ExperimentHelper.getUpdateTraceInformation(exp.traceInformation));
+			
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
 		}
@@ -127,14 +126,13 @@ public class Experiments extends CommonController{
 
 		ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
 		
-		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
-
 		exp.instrument.validate(ctxValidation);
 		
 		if (!experimentFilledForm.hasErrors()) {
 
 			Builder builder = new DBUpdate.Builder();
 			builder = builder.set("instrument",exp.instrument);
+			builder = builder.set("traceInformation", ExperimentHelper.getUpdateTraceInformation(exp.traceInformation));
 			exp=ExperimentHelper.updateInstrumentCategory(exp);
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			return ok(Json.toJson(exp));
@@ -147,12 +145,12 @@ public class Experiments extends CommonController{
 	public static Result updateExperimentProperties(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
-		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 
 		if (!experimentFilledForm.hasErrors()) {
 			if(exp.experimentProperties != null){
 				Builder builder = new DBUpdate.Builder();
 				builder = builder.set("experimentProperties",exp.experimentProperties);
+				builder = builder.set("traceInformation", ExperimentHelper.getUpdateTraceInformation(exp.traceInformation));
 
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 			}
@@ -175,7 +173,6 @@ public class Experiments extends CommonController{
 		
 		ExperimentValidationHelper.validateInstrumentUsed(exp.instrument,exp.instrumentProperties,ctxValidation);
 		
-		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 		try {
 			exp= ExperimentHelper.updateInstrumentCategory(exp);
 		} catch (DAOException e) {
@@ -186,7 +183,7 @@ public class Experiments extends CommonController{
 			if(exp.instrumentProperties != null){
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
 						DBQuery.is("code", exp.code),
-						DBUpdate.set("instrumentProperties",exp.instrumentProperties).set("instrument",exp.instrument));
+						DBUpdate.set("instrumentProperties",exp.instrumentProperties).set("instrument",exp.instrument).set("traceInformation", ExperimentHelper.getUpdateTraceInformation(exp.traceInformation)));
 			}
 			return ok(Json.toJson(exp));
 		}
@@ -231,7 +228,6 @@ public class Experiments extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 		
-		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
 		exp= ExperimentHelper.updateData(exp);
 	
 		ContextValidation contextValidation = new ContextValidation();
@@ -250,6 +246,8 @@ public class Experiments extends CommonController{
 				Builder builder = new DBUpdate.Builder();
 				builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
 				builder=builder.set("projectCodes",exp.projectCodes).set("sampleCodes",exp.sampleCodes);
+				builder = builder.set("traceInformation", ExperimentHelper.getUpdateTraceInformation(exp.traceInformation));
+
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
 				
 				return ok(Json.toJson(exp));
@@ -321,7 +319,7 @@ public class Experiments extends CommonController{
 			ContextValidation ctxValidation = new ContextValidation(experimentFilledForm.errors());
 			
 			exp.code = CodeHelper.generateExperiementCode(exp);
-			exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
+			exp.traceInformation = ExperimentHelper.getUpdateTraceInformation(null);
 			ExperimentValidationHelper.validateRules(exp, ctxValidation);
 			
 			if (!experimentFilledForm.hasErrors()) {

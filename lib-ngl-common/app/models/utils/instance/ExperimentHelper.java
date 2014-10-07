@@ -21,7 +21,7 @@ import play.Logger;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 
-public class ExperimentHelper {
+public class ExperimentHelper extends InstanceHelpers {
 
 
 	public static void generateOutputContainerUsed(Experiment exp, ContextValidation contextValidation) throws DAOException{
@@ -57,7 +57,7 @@ public class ExperimentHelper {
 	 * @param exp: the Experiment object
 	 * @return the new experiment object with traces
 	 */
-	public static Experiment traceInformation(Experiment exp,String user){
+	/*public static Experiment traceInformation(Experiment exp,String user){
 		if (null == exp._id) {
 			//init
 			exp.traceInformation = new TraceInformation();
@@ -67,7 +67,7 @@ public class ExperimentHelper {
 		}
 
 		return exp;
-	}
+	}*/
 
 
 	public static Experiment updateInstrumentCategory(Experiment exp) throws DAOException{

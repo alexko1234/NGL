@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TransientState;
+import models.utils.InstanceHelpers;
 
-public class StateHelper {
+public class StateHelper extends InstanceHelpers {
 
 	
 	public static State updateHistoricalNextState(State previousState, State nextState) {
