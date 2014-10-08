@@ -138,6 +138,16 @@ public class InstrumentService {
 				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
+		l.add(newInstrumentUsedType("ARGUS", "ARGUS", InstrumentCategory.find.findByCode("opt-map-opgen"), getArgusProperties(), 
+				getInstrumentOpgen(),
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"mapcard"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));	
+		
+		l.add(newInstrumentUsedType("EXTSOLEXA", "EXTSOLEXA", InstrumentCategory.find.findByCode("extseq"), null, 
+				getInstrumentExtSolexa(),
+				getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1","flowcell-8"}),null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
 		//CNG et CNS
 		l.add(newInstrumentUsedType("GAIIx", "GAIIx", InstrumentCategory.find.findByCode("seq-illumina"), null, 
 				getInstrumentGAII(),
@@ -155,14 +165,13 @@ public class InstrumentService {
 				getInstrumentHiseq2500(),
 				getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("ARGUS", "ARGUS", InstrumentCategory.find.findByCode("opt-map-opgen"), getArgusProperties(), 
-				getInstrumentOpgen(),
-				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"mapcard"}), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));	
-		l.add(newInstrumentUsedType("EXTSOLEXA", "EXTSOLEXA", InstrumentCategory.find.findByCode("extseq"), null, 
-				getInstrumentExtSolexa(),
-				getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1","flowcell-8"}),null, 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		//CNG
+		l.add(newInstrumentUsedType("NEXTSEQ500", "NEXTSEQ500", InstrumentCategory.find.findByCode("seq-illumina"), getNEXTSEQ500Properties(), 
+				getInstrumentNEXTSEQ500(),
+				getContainerSupportCategories(new String[]{"flowcell-4"}), null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));		
+
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
@@ -216,6 +225,16 @@ public class InstrumentService {
         return propertyDefinitions;
 	}
 	
+	private static List<PropertyDefinition> getNEXTSEQ500Properties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Type lecture", "readType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single"));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single"));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single"));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single"));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single"));
+        return propertyDefinitions;
+	}
+	
 	private static List<PropertyDefinition> getArgusProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Type de MapCard", "mapcardType", LevelService.getLevels(Level.CODE.Instrument),String.class, true, newValues("standard","HD"), "single"));
@@ -248,6 +267,13 @@ public class InstrumentService {
 		instruments.add(createInstrument("MISEQ1", "MISEQ1", true, "/env/atelier/solexa_MISEQ1/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
 		return instruments;
 	}
+	
+	private static List<Instrument> getInstrumentNEXTSEQ500() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("NEXTSEQ1", "NEXTSEQ1", true, "/env/atelier/solexa_NEXTSEQ1", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		return instruments;
+	}
+
 
 	public static List<Instrument> getInstrumentHiseq2000() throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();

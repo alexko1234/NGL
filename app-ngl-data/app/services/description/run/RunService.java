@@ -68,6 +68,7 @@ public class RunService {
 		l.add(DescriptionFactory.newRunType("RGAIIx","RGAIIx", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null,  DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newRunType("RARGUS","RARGUS", 1, RunCategory.find.findByCode("opgen"), null, null,  DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
+		l.add(DescriptionFactory.newRunType("RNEXTSEQ500","RNEXTSEQ500", 4, RunCategory.find.findByCode("illumina"), getNextSeq500PropertyDefinitions(), null,  DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		DAOHelpers.saveModels(RunType.class, l, errors);
 	}
 	
@@ -82,6 +83,13 @@ public class RunService {
 	}
 	
 	private static List<PropertyDefinition> getRunIlluminaPropertyDefinitions() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
+	        		, LevelService.getLevels(Level.CODE.Run),String.class, false, DescriptionFactory.newValues("SR","PE"),"single"));
+	    return propertyDefinitions;
+	}
+	
+	private static List<PropertyDefinition> getNextSeq500PropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
 	        		, LevelService.getLevels(Level.CODE.Run),String.class, false, DescriptionFactory.newValues("SR","PE"),"single"));
