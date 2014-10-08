@@ -121,7 +121,7 @@
 		<tbody>
 			<tr ng-repeat="obj in readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.taxonBilan.value">
 				<td>									
-					 <a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}" target="_blank">{{obj.taxon}}</a>									
+					 {{obj.taxon}}<a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}"></a>									
 				</td>
 				<td>
 					 {{obj.nbSeq | number}}													

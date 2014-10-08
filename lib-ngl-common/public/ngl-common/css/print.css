@@ -32,19 +32,16 @@
 	.page-break {page-break-before: always;}  
   	
   	a[href] {
-    	content: none;
-  	}
-  	
-  	#kronaLink:after {
-  		content: " (" attr(href) ")"; /* show Url link */
-  	}
+    	color: blue !important;
+  	}	
+
   	
   	#pairs_overlapDistrib {
   		max-height: 70% !important;
   	}
   	
   	#read1_adapterContamination, #read2_adapterContamination {
-  		max-height: 60% !important;
+  		max-height: 50% !important;
   	}
   	
   	#read1_nuclDistribution, #read1_readSizeDistribution, #read1_readWithNpercent, #read1_positionN,
@@ -54,6 +51,10 @@
   	
   	#pairs_PEReadDistanceSeparation, #pairs_MPReadDistanceSeparation {
   		max-height: 45% !important;
+  	}
+  	
+  	#read1_GCDistribution, #read2_GCDistribution {
+  		max-height: 50% !important;
   	}
   	
   	.table {
