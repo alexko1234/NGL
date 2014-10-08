@@ -210,7 +210,7 @@ public class Processes extends CommonController{
 			queryElts.add(DBQuery.is("state.code", processesSearch.stateCode));
 		}
 		if(processesSearch.users != null){
-			queryElts.add(DBQuery.in("traceInformation.createUser", processesSearch.stateCode));
+			queryElts.add(DBQuery.in("traceInformation.createUser", processesSearch.users));
 		}
 		
 		if(null != processesSearch.fromDate){
