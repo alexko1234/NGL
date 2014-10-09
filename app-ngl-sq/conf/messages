@@ -196,6 +196,9 @@ button.newexperiment = Créer une expérience
 baskets = Panier
 baskets.new = Créer un panier
 baskets.add = Ajouter au panier
+baskets.switchView = Changer de vue
+backet.view.supports = Vue supports
+backet.view.containers = Vue containers
 
 error.codeNotExist=Le code {0} n''existe pas
 error.propertyNotExist=La propriété {0} n''existe pas pour {1}

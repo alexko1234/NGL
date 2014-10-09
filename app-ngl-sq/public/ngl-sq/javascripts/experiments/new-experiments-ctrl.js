@@ -1,4 +1,8 @@
-angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainService','tabService',function ($scope, datatable,mainService,tabService) {
+angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainService','tabService','$q','$http',function ($scope, datatable,mainService,tabService,$q,$http) {
+	
+	$scope.loadView = false;
+	$scope.supportView = true;
+	$scope.supports = [];
 	
 	$scope.datatableConfig = {
 			columns:[{
@@ -41,8 +45,18 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainSer
 				active:true,
 				mode:'local',
 				callback : function(datatable){
-					$scope.basket.reset();
-					$scope.basket.add(datatable.allResult);
+					/*if(!$scope.supportView)
+					{
+						$scope.setBasket($scope.containers);
+					}else{
+						$scope.loadView = true;
+						var promises = $scope.loadContainersPromises();
+						$q.all(promises).then(function (res) {
+							$scope.setBasket($scope.containers);
+							$scope.loadView = false;
+						});
+					}*/
+					$scope.setBasket(datatable.allResults);
 				}
 			},
 			messages:{
@@ -51,7 +65,10 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainSer
 			otherButtons:{
 				active:true,
 				template:'<button class="btn btn-info" ng-disabled="basket.length()==0" ng-click="newExperiment();" data-toggle="tooltip" title="">'
-						+'{{form.experimentType}}</button>'
+						+'{{form.experimentType}}</button><button ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
+						'<br><b ng-switch-when="true">'+
+						Messages("backet.view.supports")+'</b>'+
+						'<b ng-switch-when="false">'+Messages("backet.view.containers")+'</b></button>'
 			}
 	};
 	
@@ -61,9 +78,71 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainSer
 		}
 	};
 	
+	$scope.swithView = function(){
+		if($scope.supportView){
+			$scope.supportView = false;
+			$scope.swithToContainerView();
+		}else{
+			$scope.supportView = true;
+			$scope.swithToSupportView()
+		}
+	};
+	
+	
+	$scope.swithToContainerView = function(){
+		$scope.containers = [];
+		$scope.loadView = true;
+		//the promises fill up $scope.containers
+		var promises = $scope.loadContainersPromises();
+		$q.all(promises).then(function (res) {
+			$scope.datatable.setData($scope.containers, $scope.containers.length);
+			//$scope.setBasket($scope.containers);
+			$scope.loadView = false;
+			$scope.datatable.config.remove.active = false;
+		});
+	};
+	
+	
+	$scope.swithToSupportView = function(){
+			$scope.datatable.setData($scope.supports, $scope.supports.length);
+			$scope.datatable.config.remove.active = true;
+	};
+	
+	
+	$scope.loadContainersPromises = function(){
+		var promises = [];
+		angular.forEach($scope.supports,function(support){
+			var promise = $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{"supportCode":support.code}})
+			.success(function(data, status, headers, config) {
+				console.log(data);
+				if(data != null){
+					angular.forEach(data,function(d){
+						$scope.containers.push(d);
+					});
+				}
+			})
+			.error(function(data, status, headers, config) {
+				alert("error");
+			});
+			
+			promises.push(promise);
+		});
+		
+		return promises;
+	};
+	
+	/*$scope.supportToContainers = function(){
+		var promises = 	$scope.loadContainersPromises;
+		$q.all(promises).then(function (res) {
+			$scope.setBasket($scope.containers);
+		});
+	};*/
+	
 	//init
 	$scope.datatable = datatable($scope.datatableConfig);
 	$scope.basket = $scope.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
+	$scope.supports = $scope.basket.get();
+	//$scope.supportToContainers();
 	$scope.form = mainService.getForm();
 }]);
