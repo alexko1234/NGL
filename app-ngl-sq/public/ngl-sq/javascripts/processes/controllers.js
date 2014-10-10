@@ -169,7 +169,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 							typeCode:$scope.form.processType,
 							categoryCode:$scope.form.processCategory,
 							properties:{}
-					};			
+					};		
+					console.log(processus);
 					this.basket.add(processus);
 				}
 			}
@@ -222,6 +223,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 
 angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','mainService', function($scope, datatable,$http,mainService) {
 
+	$scope.supportView = false;
+	$scope.containers = [];
+	
 	$scope.datatableConfig = {
 			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns(mainService.getForm().processType).url,
 			pagination:{
@@ -242,12 +246,20 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			save:{
 				active:true,
 				withoutEdit:true,
-				url:jsRoutes.controllers.processes.api.Processes.save(),
+				url:function(value){if($scope.supportView){
+										return jsRoutes.controllers.processes.api.Processes.saveSupport(value.support.code).url;
+									}
+										return jsRoutes.controllers.processes.api.Processes.save().url;
+					},
 				callback : function(datatable){
 					$scope.basket.reset();
 					$scope.getColumns();
 				},
-				value:function(line){var val=line; val.support=undefined; return val;}
+				value:function(line){
+						var val=line; 
+						val.support=undefined; 
+						return val;
+					  }
 			},
 			remove:{
 				active:true,
@@ -259,7 +271,46 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			},
 			messages:{
 				active:true
+			},
+			otherButtons :{
+				active:true,
+				template:'<button ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
+							'<br><b ng-switch-when="true">'+
+							Messages("backet.view.supports")+'</b>'+
+							'<b ng-switch-when="false">'+Messages("backet.view.containers")+'</b></button>'
 			}
+	};
+	
+	$scope.swithView = function(){
+		if($scope.supportView){
+			$scope.supportView = false;
+			$scope.swithToContainerView();
+		}else{
+			$scope.supportView = true;
+			$scope.swithToSupportView()
+		}
+	};
+	
+	$scope.swithToContainerView = function(){
+		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
+	};
+	
+	$scope.swithToSupportView = function(){
+		var processes =  mainService.getBasket().basket;
+		$scope.processesSupports = [];
+		angular.forEach(processes,function(process){
+			var alreadyExist = false;
+			angular.forEach($scope.processesSupports,function(processesSupport){
+				if(processesSupport.support.code == process.support.code){
+					alreadyExist = true;
+				}
+			});
+			if(!alreadyExist){
+				//processesSupports.push({"process":process, "supportCode":process.support.code});
+				$scope.processesSupports.push(process);
+			}
+		});
+		$scope.datatable.setData($scope.processesSupports,$scope.processesSupports.length);
 	};
 	
 	$scope.getColumns = function(){

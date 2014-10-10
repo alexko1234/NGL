@@ -65,7 +65,8 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainSer
 			otherButtons:{
 				active:true,
 				template:'<button class="btn btn-info" ng-disabled="basket.length()==0" ng-click="newExperiment();" data-toggle="tooltip" title="">'
-						+'{{form.experimentType}}</button><button ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
+						+'{{form.experimentType}}</button>'+
+						'<button ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
 						'<br><b ng-switch-when="true">'+
 						Messages("backet.view.supports")+'</b>'+
 						'<b ng-switch-when="false">'+Messages("backet.view.containers")+'</b></button>'

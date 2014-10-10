@@ -70,21 +70,7 @@ public class Processes extends CommonController{
 				value.code = CodeHelper.generateProcessCode(value);
 				
 				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, value.containerInputCode);
-				if(container.fromExperimentTypeCodes == null || container.fromExperimentTypeCodes.size() == 0){
-					container.fromExperimentTypeCodes = new ArrayList<String>();
-					ProcessType processType;
-					try {
-						processType = ProcessType.find.findByCode(value.typeCode);
-						container.fromExperimentTypeCodes.add(processType.voidExperimentType.code);
-
-					} catch (DAOException e) {
-						throw new RuntimeException();
-					}
-				}
-				container.processTypeCode = value.typeCode;
-				container.inputProcessCodes=InstanceHelpers.addCode(value.code, container.inputProcessCodes);
-				MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
-
+				updateContainer(container,value.typeCode, value.code);
 				
 				Logger.info("New process code : "+value.code);
 			} else {
@@ -95,6 +81,59 @@ public class Processes extends CommonController{
 				ContextValidation contextValidation=new ContextValidation(filledForm.errors());
 				contextValidation.setCreationMode();
 				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
+				if(!contextValidation.hasErrors()){
+					Workflows.nextContainerState(value,new ContextValidation(filledForm.errors()));
+				}
+			}
+		}
+		if (!filledForm.hasErrors()) {
+			filledForm = filledForm.fill(value);
+			return ok(Json.toJson(filledForm.get()));
+		} else {
+			return badRequest(filledForm.errorsAsJson());
+		}			
+	}
+	
+	public static Result saveSupport(String supportCode){
+		Form<Process> filledForm = getFilledForm(processForm,Process.class);
+		Process value = null;
+		if (!filledForm.hasErrors()) {
+			value = filledForm.get();
+			//value = ps.process;
+			ContextValidation contextValidation=new ContextValidation(filledForm.errors());
+			if (null == value._id) {
+				//init state
+				//the trace
+				value.traceInformation = new TraceInformation();
+
+				value.traceInformation.setTraceInformation(getCurrentUser());
+				//the default status
+				value.state = new State("N", getCurrentUser());
+				//code and name generation
+				value.code = CodeHelper.generateProcessCode(value);
+				
+				List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode)).toList();
+				for(Container container:containers){
+					updateContainer(container,value.typeCode, value.code);
+					value.containerInputCode = container.code;
+					for(String s:container.sampleCodes){
+						//ContextValidation contextValidation=new ContextValidation(filledForm.errors());
+						contextValidation.setCreationMode();
+						value.sampleCode = s;
+						InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
+						value.code = CodeHelper.generateProcessCode(value);
+					}
+				}
+				
+				Logger.info("New process code : "+value.code);
+			} else {
+				value.traceInformation.setTraceInformation(getCurrentUser());
+			}
+
+			if (!filledForm.hasErrors()) {
+				/*ContextValidation contextValidation=new ContextValidation(filledForm.errors());
+				contextValidation.setCreationMode();
+				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);*/
 				if(!contextValidation.hasErrors()){
 					Workflows.nextContainerState(value,new ContextValidation(filledForm.errors()));
 				}
@@ -175,6 +214,23 @@ public class Processes extends CommonController{
 		}
 	}
 
+	private static void updateContainer(Container container, String typeCode, String code){
+		if(container.fromExperimentTypeCodes == null || container.fromExperimentTypeCodes.size() == 0){
+			container.fromExperimentTypeCodes = new ArrayList<String>();
+			ProcessType processType;
+			try {
+				processType = ProcessType.find.findByCode(typeCode);
+				container.fromExperimentTypeCodes.add(processType.voidExperimentType.code);
+
+			} catch (DAOException e) {
+				throw new RuntimeException();
+			}
+		}
+		container.processTypeCode = typeCode;
+		container.inputProcessCodes=InstanceHelpers.addCode(code, container.inputProcessCodes);
+		MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
+	}
+	
 	/**
 	 * Construct the process query
 	 * @param processesSearch

@@ -154,6 +154,7 @@ public class Processes extends CommonController{
 						controllers.processes.tpl.routes.javascript.Processes.searchColumns(),  
 						controllers.processes.tpl.routes.javascript.Processes.newProcessesColumns(),  
 						controllers.processes.api.routes.javascript.Processes.save(),
+						controllers.processes.api.routes.javascript.Processes.saveSupport(),
 						controllers.processes.api.routes.javascript.ProcessTypes.list(),
 						controllers.containers.api.routes.javascript.Containers.list(),
 						controllers.processes.api.routes.javascript.Processes.list(),
