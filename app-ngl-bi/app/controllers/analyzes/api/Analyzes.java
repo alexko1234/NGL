@@ -118,6 +118,10 @@ public class Analyzes extends DocumentController<Analysis>{
 			queries.add(DBQuery.regex("code", Pattern.compile(form.regexCode)));
 		}
 		
+		if (StringUtils.isNotBlank(form.analyseValuationUser)) {
+			queries.add(DBQuery.is("valuation.user", form.analyseValuationUser));
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}

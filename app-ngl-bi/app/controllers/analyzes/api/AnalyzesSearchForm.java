@@ -25,6 +25,8 @@ public class AnalyzesSearchForm extends ListForm{
 		
 	public String regexCode;
 	public String regexSampleCode;
+	
+	public String analyseValuationUser;
     
    
 	 

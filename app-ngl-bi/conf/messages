@@ -90,6 +90,7 @@ search.placeholder.property = Sélect. une propriété
 search.placeholder.isSentCCRT = Envoyé CCRT ?
 search.placeholder.isSentCollaborator = Envoyé Collaborateur ?
 search.placeholder.sequencingProgramTypes = Type de lectures
+search.placeholder.analyseValuationUser = Analyse évaluée par : 
 
 button.search = Rechercher
 button.reset = Réinitialiser

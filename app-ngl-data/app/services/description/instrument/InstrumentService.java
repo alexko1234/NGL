@@ -270,7 +270,7 @@ public class InstrumentService {
 	
 	private static List<Instrument> getInstrumentNEXTSEQ500() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("NEXTSEQ1", "NEXTSEQ1", true, "/env/atelier/solexa_NEXTSEQ1", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("NEXTSEQ1", "NEXTSEQ1", true, "/env/atelier/solexa_NEXTSEQ1", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
 		return instruments;
 	}
 

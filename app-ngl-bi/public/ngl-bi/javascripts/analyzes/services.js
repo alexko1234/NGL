@@ -99,6 +99,7 @@
 				lists.refresh.valuationCriterias({objectTypeCode:"Analysis"});
 				
 				searchService.lists.refresh.reportConfigs({pageCodes:["analysis"+"-"+mainService.getHomePage()]});
+				searchService.lists.refresh.users();
 				isInit=true;
 			}
 		};
