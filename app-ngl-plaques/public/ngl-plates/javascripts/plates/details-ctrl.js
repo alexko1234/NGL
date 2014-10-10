@@ -1,6 +1,6 @@
 "use strict";
 
-function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $window) {
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routeParams','datatable', 'basket', 'lists', '$window', function($scope, $http, $routeParams, datatable, basket, lists, $window) {
 	
 	var datatableConfig = {
 			pagination:{
@@ -315,5 +315,4 @@ function DetailsCtrl($scope, $http, $routeParams, datatable, basket, lists, $win
 		}
         return "";
      }
-};
-DetailsCtrl.$inject = ['$scope', '$http', '$routeParams','datatable', 'basket', 'lists', '$window'];
+}]);

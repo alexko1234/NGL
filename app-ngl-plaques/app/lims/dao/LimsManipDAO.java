@@ -82,7 +82,7 @@ public class LimsManipDAO {
 	        	plate.validQC = getTBoolean(rs.getInt("valqc"));
 	        	plate.validRun = getTBoolean(rs.getInt("valrun"));
 	        	plate.comment = rs.getString("plaquecom");
-	        	
+	        	plate.creationDate=rs.getDate("plaquedc");
 	            return plate;
 	        }
 

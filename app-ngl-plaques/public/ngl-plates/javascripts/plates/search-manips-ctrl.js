@@ -1,6 +1,6 @@
 "use strict";
 
-function SearchManipsCtrl($scope, $http, datatable, basket) {
+angular.module('home').controller('SearchManipsCtrl', ['$scope', '$http','datatable','basket', function($scope, $http, datatable, basket) {
 
 	var datatableConfig = {
 			order :{by:'matmanom', mode:'local'},
@@ -121,7 +121,6 @@ function SearchManipsCtrl($scope, $http, datatable, basket) {
 		
 	};
 		
-};
-SearchManipsCtrl.$inject = ['$scope', '$http','datatable','basket'];
+}]);
 
 

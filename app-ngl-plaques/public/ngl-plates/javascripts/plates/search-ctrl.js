@@ -1,9 +1,8 @@
 "use strict";
 
-function SearchCtrl($scope, $http,datatable) {
-
+angular.module('home').controller('SearchCtrl', ['$scope', '$http','datatable', function($scope, $http,datatable) {
 	var datatableConfig = {
-			order :{by:'code', mode:'local'},
+			order :{by:'creationDate', mode:'local', reverse:true},
 			search:{
 				url:jsRoutes.controllers.plates.api.Plates.list()
 			},
@@ -30,6 +29,11 @@ function SearchCtrl($scope, $http,datatable) {
 					    {  	property:"code",
 					    	header: Messages("plates.table.code"),
 					    	type :"String",
+					    	order:true
+						},
+						{	property:"creationDate",
+							header: Messages("plates.table.creationDate"),
+							type :"Date",
 					    	order:true
 						},
 						{	property:"typeName",
@@ -96,6 +100,4 @@ function SearchCtrl($scope, $http,datatable) {
 		}
 		$scope.datatable.search(jsonSearch);
 	};
-};
-
-SearchCtrl.$inject = ['$scope', '$http','datatable'];
+}]);

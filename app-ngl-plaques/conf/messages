@@ -37,7 +37,7 @@ plates.table.well.y = Y
 plates.table.nbWells = Nombre de Puits Utilisés
 plates.table.typeName = Type de Manips
 plates.table.typeMaterial = Type de Materiel
-
+plates.table.creationDate = Date création
 plates.select.etapemanips = -- sélectionner une étape --
 plates.select.etatmanips = -- sélectionner un état --
 plates.select.project = -- sélectionner un projet --

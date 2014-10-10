@@ -1,8 +1,7 @@
 package lims.models;
 
 import java.util.Arrays;
-
-import javax.validation.Valid;
+import java.util.Date;
 
 import models.laboratory.common.instance.TBoolean;
 
@@ -18,6 +17,8 @@ public class Plate {
 	public TBoolean validQC = TBoolean.UNSET;
 	public TBoolean validRun = TBoolean.UNSET;
 	public String comment;
+	public Date creationDate;
+	
 	@Override
 	public String toString() {
 	    return "Plate [code=" + code + ", typeCode=" + typeCode
