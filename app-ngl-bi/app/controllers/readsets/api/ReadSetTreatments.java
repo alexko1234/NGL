@@ -103,7 +103,7 @@ public class ReadSetTreatments extends ReadSetsController{
 			ctxVal.putObject("readSet", readSet);
 			treatment.validate(ctxVal);
 			if(!ctxVal.hasErrors()){
-				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, Run.class, 
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 						DBQuery.is("code", readSetCode),
 						DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(readSet)));				
 			}
