@@ -141,7 +141,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
 		if($scope.experiment.containerOutProperties.indexOf(data) == -1){
 			$scope.experiment.containerOutProperties.push(data);
-			$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",false, true,true,"String",data.choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"}));
+			$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"}));
 		}
 	});
 	
@@ -272,8 +272,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		$scope.atomicTransfere.experimentToOutput();
 	});
 	
-	$scope.duplicateContainer = function(container){
-		$scope.inputContainers.push(angular.copy(container));
+	$scope.duplicateContainer = function(container,position){
+		//$scope.inputContainers.push(angular.copy(container));
+		$scope.inputContainers.splice(position+1,0,angular.copy(container));
 	};
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
@@ -350,6 +351,10 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		}
 		}
 		console.log($scope.flowcells);
+	};
+	
+	$scope.setPersentages = function(){
+		
 	};
 	
 	//Init

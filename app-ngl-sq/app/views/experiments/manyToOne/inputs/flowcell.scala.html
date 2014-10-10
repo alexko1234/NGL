@@ -50,7 +50,7 @@
 						</div>
 					</td>
 					<td>
-					<button ng-click="duplicateContainer(container)"><i class="fa fa-plus-square"></i></button>
+					<button ng-click="duplicateContainer(container,$index)"><i class="fa fa-plus-square"></i></button>
 					</td>
 				</tr>
 			</table>
@@ -65,6 +65,59 @@
 			</td>
 			<td>
 				<b>@(i+1)</b>
+			</td>
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable style="width:200px;height:20px">
+				<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && rows[@i]" class="table">
+				<tr>
+					<th>
+						@Messages("containers.table.code")
+					</th>
+					<th>
+						@Messages("containers.table.percentage")
+					</th>
+					<th>
+						@Messages("containers.table.sampleCode_tags")
+					</th>
+					<th>
+						@Messages("containers.table.tags")
+					</th>
+					<th>
+						@Messages("containers.table.sampleTypes")
+					</th>
+					<th>
+						@Messages("containers.table.libProcessTypeCodes")
+					</th>
+				</tr>
+					<tr ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds"  ng-model="flowcell"  draggable>
+						<td>
+							{{flowcell.code}}
+						</td>
+						<td>
+							<input class="form-control " type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-model="flowcell.percentage" />
+						</td>
+						<td>
+							{{flowcell.sampleCode_tag}}
+						</td>
+						<td  title="{{getTags(flowcell.contents) | unique}}">
+						<div ng-repeat="content in flowcell.contents | unique:'properties.tag.value' |  limitTo:12">
+								{{content.properties.tag.value}}
+							</div>
+						</td>
+						<td title="{{getSampleTypeCodes(flowcell.contents) | unique}}">
+							<div ng-repeat="content in flowcell.contents | unique:'sampleTypeCode' |  limitTo:12">
+								{{content.sampleTypeCode}}
+							</div>
+						</td>
+						<td title="{{getLibProcessTypeCodes(flowcell.contents) | unique}}">
+							<div ng-repeat="content in flowcell.contents | unique:'properties.libProcessTypeCode.value'">
+								{{content.properties.libProcessTypeCode.value}}
+							</div>
+						</td>
+						<!--<td>
+								<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInputOnAtomic(@i,container)"><i class="fa fa-trash-o"></i></button>
+					    </td>  -->
+					</tr>
+				</table>
 			</td>
 			<td ng-show="rows[@i]">
 			<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="table">
@@ -93,53 +146,6 @@
 					</td>
 			</tr>
 			</table>
-			</td>
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable style="width:200px;height:20px">
-				<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && rows[@i]" class="table">
-				<tr>
-					<th>
-						@Messages("containers.table.code")
-					</th>
-					<th>
-						@Messages("containers.table.percentage")
-					</th>
-					<th>
-						@Messages("containers.table.tags")
-					</th>
-					<th>
-						@Messages("containers.table.sampleTypes")
-					</th>
-					<th>
-						@Messages("containers.table.libProcessTypeCodes")
-					</th>
-				</tr>
-					<tr ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds"  ng-model="flowcell"  draggable>
-						<td>
-							{{flowcell.code}}
-						</td>
-						<td>
-							<input class="form-control " type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-model="flowcell.percentage" />
-						</td>
-						<td  title="{{getTags(flowcell.contents) | unique}}">
-						<div ng-repeat="content in flowcell.contents | unique:'properties.tag.value' |  limitTo:12">
-								{{content.properties.tag.value}}
-							</div>
-					</td>
-					<td title="{{getSampleTypeCodes(flowcell.contents) | unique}}">
-						<div ng-repeat="content in flowcell.contents | unique:'sampleTypeCode' |  limitTo:12">
-							{{content.sampleTypeCode}}
-						</div>
-					</td>
-					<td title="{{getLibProcessTypeCodes(flowcell.contents) | unique}}">
-						<div ng-repeat="content in flowcell.contents | unique:'properties.libProcessTypeCode.value'">
-							{{content.properties.libProcessTypeCode.value}}
-						</div>
-					</td>
-					<td>
-							<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInputOnAtomic(@i,container)"><i class="fa fa-trash-o"></i></button>
-				    </td>
-					</tr>
-				</table>
 			</td>
 		</tr>
 		}
