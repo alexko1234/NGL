@@ -58,6 +58,9 @@ public class SampleService {
 		l.add(newSampleType("Small RNA", "sRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNS)));
 		l.add(newSampleType("ARN déplété", "depletedRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNS)));
 		l.add(newSampleType("cDNA", "cDNA", SampleCategory.find.findByCode("cDNA"), getPropertyDefinitionscDNA(), getInstitutes(Institute.CODE.CNS)));
+		l.add(newSampleType("cDNA", "cDNA", SampleCategory.find.findByCode("cDNA"), getPropertyDefinitionscDNA(), getInstitutes(Institute.CODE.CNS)));
+		l.add(newSampleType("aARN", "aRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNS)));
+
 		l.add(newSampleType("ChIP", "chIP", SampleCategory.find.findByCode("IP-sample"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
 		l.add(newSampleType("ClIP", "clIP", SampleCategory.find.findByCode("IP-sample"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
 		//default values

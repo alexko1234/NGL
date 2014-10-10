@@ -52,6 +52,8 @@ public class DataMappingCNS {
 													else
 														if(tadnco.equals("20")) return "depletedRNA";
 														else
+															if(tadnco.equals("21")) return "aRNA";
+															else
 															if(tadnco.equals("9") || tadnco.equals("14")) return "default-sample-cns";
 		//Logger.debug("Erreur mapping Type materiel ("+tadnco+")/Type projet ("+tprco+") et Sample Type");
 		return null;
