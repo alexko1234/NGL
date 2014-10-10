@@ -32,17 +32,6 @@ public class Main extends CommonController {
    final static JsMessages messages = JsMessages.create(play.Play.application());	
 	
    public static Result home() {
-	   
-	   ReadSet readSetInput= new ReadSet();
-	   readSetInput.projectCode = "projetttt";
-	   readSetInput.sampleCode = "sampleeee";
-	   readSetInput.code = "THECODE";
-	   
-		//To avoid "double" values
-		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-				DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("projectCodes", readSetInput.projectCode)), 
-				DBUpdate.push("projectCodes", readSetInput.projectCode));
-	   
 	   return ok(home.render());
         
     }
