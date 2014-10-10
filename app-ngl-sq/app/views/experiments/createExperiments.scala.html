@@ -47,9 +47,9 @@
 
 
 <div class="row">
-<div class="col-md-12 col-lg-12 ">
+<div class="col-md-10 col-lg-10 " style="position:fixed;background-color:white;z-index:100;top: 30px;">
 	<div class="page-header">
-	<div class="btn-toolbar pull-right">
+	<div class="btn-toolbar" style="float:right;width:600px">
 			<button class="btn btn-default" ng-click="edit()" ng-show="editMode==false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="fa fa-edit"></i></button>
 			<button class="btn btn-default" ng-click="unedit()" ng-show="editMode==true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="fa fa-undo"></i></button>	
 				  			
@@ -75,7 +75,7 @@
 	</div>
 </div>
 <div class="row">
-<div class="col-md-12 col-lg-12">
+<div class="col-md-12 col-lg-12" style="margin-top: 100px;">
 <div ng-class="message.clazz" ng-show="message.text !== undefined">
 	<strong>{{message.text}}</strong><button class="btn btn-link" ng-click="message.showDetails=!message.showDetails" ng-show="message.isDetails">@(Messages("experiments.msg.details"))</button>
 	<div ng-show="message.showDetails">
