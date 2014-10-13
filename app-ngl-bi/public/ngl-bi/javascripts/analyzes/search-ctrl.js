@@ -20,7 +20,8 @@ angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datat
 			},
 			exportCSV:{
 				active:true
-			}
+			},
+			name:"Analyzes"
 	};
 
 	$scope.search = function(){
