@@ -89,26 +89,30 @@
 </div>
 
 
-<div class="page-break" ng-if='showSuspectedKmers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code) || showSuspectedPrimers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'>
+<div class="page-break" 
+	ng-if='showSuspectedKmers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'
+	ng-repeat='pageArray in getCascadedArray(@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedKmers.value"), 4, 50) track by $index'>
 	
 	<div class="page-header">
   		<h4> <small>@("{{treament.name}}" + " ") @Messages("readsets.treatments.read_quality.tabs." + read)</small></h4>
 	</div>
 
 	<div class="col-xs-12">
-		<div class="panel panel-default" ng-if='showSuspectedKmers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'>
-			<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.suspectedKmers")</strong>
+		<div class="panel panel-default">
+			<div class="panel-heading" ng-if="$index==0"><strong>@Messages("readsets.treatments.read_quality.suspectedKmers")</strong>
 		  	({{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedKmers.value.length")}})
 			</div>
+			<div class="panel-heading" ng-if="$index>0"><strong>@Messages("readsets.treatments.read_quality.suspectedKmers") (suite)</strong></div>
 		  	<div class="panel-body">
-		  		<table class="table table-condensed table-small-cell page-break" ng-repeat='pageArray in getCascadedArray(@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedKmers.value"), 4, 60) track by $index'>
+		  		<table class="table table-condensed table-small-cell">
+		  			<thead></thead>
 		  			<tbody>
 			  			<tr>
 				  			<td ng-repeat="colArray in pageArray track by $index">
 				  				<ul>
-				  					<li ng-repeat="data in colArray track by $index">
-				  						{{data.Kmer}} ({{data.nbOccurences | number}})
-				  					</li>
+					  				<li ng-repeat="data in colArray track by $index">
+					  						{{data.Kmer}} ({{data.nbOccurences | number}})
+					  				</li>
 				  				</ul>	
 				  			</td>
 			  			</tr>	
@@ -117,14 +121,25 @@
 			 </div>																
 		</div>
 	</div>
+</div>
+
+<div class="page-break" 
+	ng-if='showSuspectedPrimers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'
+	ng-repeat='pageArray in getCascadedArray(@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedPrimers.value"), 4, 50) track by $index'>
+
+	<div class="page-header">
+  		<h4> <small>@("{{treament.name}}" + " ") @Messages("readsets.treatments.read_quality.tabs." + read)</small></h4>
+	</div>
 	
 	<div class="col-xs-12">
-		<div class="panel panel-default" ng-if='showSuspectedPrimers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'> 
-		  	<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.suspectedPrimers")</strong>
+		<div class="panel panel-default"> 
+		  	<div class="panel-heading" ng-if="$index==0"><strong>@Messages("readsets.treatments.read_quality.suspectedPrimers")</strong>
 		  	({{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedPrimers.value.length")}})
 		  	</div>
+		  	<div class="panel-heading" ng-if="$index>0"><strong>@Messages("readsets.treatments.read_quality.suspectedPrimers") (suite)</strong></div>
 		  	<div class="panel-body">
-				<table class="table table-condensed table-small-cell page-break" ng-repeat='pageArray in getCascadedArray(@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedPrimers.value"), 4, 60) track by $index'>
+				<table class="table table-condensed table-small-cell">
+					<thead></thead>
 		  			<tbody>
 			  			<tr>
 				  			<td ng-repeat="colArray in pageArray track by $index">

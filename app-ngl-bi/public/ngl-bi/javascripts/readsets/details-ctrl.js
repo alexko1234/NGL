@@ -182,21 +182,21 @@
 	}
     
 	$scope.getCascadedArray = function(array, numberOfColumnsPerPage, numberOfElementsByColumn) {
-		array.sort(function(a, b){return b.nbOccurences-a.nbOccurences});
+		var tmpArray = array.slice(0);
+		tmpArray.sort(function(a, b){return b.nbOccurences-a.nbOccurences});
 		
-		var totalNumberOfColumns = Math.floor(array.length / numberOfElementsByColumn) + 1; 		
-		var myPageArray = new Array(Math.floor(totalNumberOfColumns/numberOfColumnsPerPage) +1);
-		var limit = Math.min(array.length, numberOfElementsByColumn);
+		var totalNumberOfColumns = Math.ceil(tmpArray.length / numberOfElementsByColumn); 	
+		var myPageArray = new Array(Math.ceil(totalNumberOfColumns/numberOfColumnsPerPage));
 		var exit = false;
 			
 		for (var p=0; p<myPageArray.length; p++) {			
 			for (var c=0; c<numberOfColumnsPerPage; c++) {
-				for (var d=0; d<limit; d++) {
+				for (var d=0; d<numberOfElementsByColumn; d++) {
 					if (d==0) {var myDataArray = new Array();}
 					
-					var idx = p*numberOfColumnsPerPage*limit + c*limit + d;
-					if (idx < array.length) {
-						myDataArray.push(array[idx]);
+					var idx = p*numberOfColumnsPerPage*numberOfElementsByColumn + c*numberOfElementsByColumn + d;
+					if (idx < tmpArray.length) {
+						myDataArray.push(tmpArray[idx]);
 					}
 					else {
 						exit = true;

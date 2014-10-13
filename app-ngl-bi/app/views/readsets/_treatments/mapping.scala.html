@@ -34,19 +34,6 @@
 
 
 <div class="visible-print" ng-controller="MappingCtrl">
-	<div class="page-header">
-		@Messages("readsets.treatments.mapping.tabs.pairs")
-	</div>
-	
-	<div id="pairs">
-		@partials.mapping_pairs()
-	</div>
-	
-	<div id="ref">
-		@partials.mapping_ref()
-	</div>
-
-	
 	<div ng-show="isDataExistsForRead1()">
 		<div class="page-header" >
 			@Messages("readsets.treatments.mapping.tabs.read1")
@@ -60,5 +47,20 @@
 		</div>
 		<div id="read2">@partials.mapping("read2")</div>
 	</div>
+
+	<div class="page-header">
+		@Messages("readsets.treatments.mapping.tabs.pairs")
+	</div>
+	
+	<div id="pairs page-break">
+		@partials.mapping_pairs()
+	</div>
+	
+	<div id="ref">
+		@partials.mapping_ref()
+	</div>
+
+	
+
 </div>
 
