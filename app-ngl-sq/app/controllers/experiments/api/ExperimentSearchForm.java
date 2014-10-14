@@ -19,7 +19,8 @@ public class ExperimentSearchForm extends ListForm{
 	public Date toDate;
 	public String stateCode;
 	public List<String> users;
-	public String containerSupportCode;
+	public String containerSupportCode;	
+	public String atomicTransfertMethods;
 	
 	@Override
 	public String toString() {
@@ -28,6 +29,7 @@ public class ExperimentSearchForm extends ListForm{
 				+ categoryCode + ", projectCodes=" + projectCodes
 				+ ", sampleCodes=" + sampleCodes + ", fromDate=" + fromDate
 				+ ", toDate=" + toDate + ", stateCode=" + stateCode
-				+ ", users=" + users + "]";
+				+ ", users=" + users +", containerSupportCode=" + containerSupportCode 
+				+ ", atomicTransfertMethods="+ atomicTransfertMethods + "]";
 	}
 }

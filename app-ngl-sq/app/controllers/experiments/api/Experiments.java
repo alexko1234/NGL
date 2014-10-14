@@ -467,8 +467,29 @@ public class Experiments extends CommonController{
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCodes));
 		}
 		
-		if(experimentSearch.containerSupportCode != null){
-			queryElts.add(DBQuery.is("instrumentProperties.containerSupportCode.value", experimentSearch.containerSupportCode));
+		if(StringUtils.isNotBlank(experimentSearch.containerSupportCode)){			
+			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();				
+			Boolean branch = MongoDBDAO.checkObjectExist(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class, DBQuery.exists("atomicTransfertMethods.0")) ;
+				
+				for(int i=0; branch; i++){					
+					qs.add(DBQuery.is("atomicTransfertMethods."+ i +".outputContainerUsed.code", experimentSearch.containerSupportCode));
+					qs.add(DBQuery.is("atomicTransfertMethods."+ i +".outputContainerUsed.locationOnContainerSupport.code", experimentSearch.containerSupportCode));				
+					
+					Boolean fruit = MongoDBDAO.checkObjectExist(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class, DBQuery.exists("atomicTransfertMethods."+ i +".inputContainerUseds.0.code")) ;
+					
+					for(int j=0; fruit ; j++){
+						qs.add(DBQuery.is("atomicTransfertMethods."+ i +".inputContainerUseds."+j+".code", experimentSearch.containerSupportCode));
+						Logger.info("Req2 - fruit "+j+"= "+ fruit +" : "+queryElts.toString());						
+						fruit = MongoDBDAO.checkObjectExist(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class, DBQuery.exists("atomicTransfertMethods."+ i +".inputContainerUseds."+(j+1)+".code"));
+						
+					}
+						
+						branch = MongoDBDAO.checkObjectExist(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class, DBQuery.exists("atomicTransfertMethods."+ (i+1))) ;
+						
+				}
+				
+				queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
+		
 		}
 		
 		if(experimentSearch.sampleCode != null){
@@ -489,6 +510,16 @@ public class Experiments extends CommonController{
 
 		return query;
 	
+	}
+	
+	private static String findRegExpFromStringList(List<String> searchList) {
+		String regex = ".*("; 
+		for (String itemList : searchList) {
+			regex += itemList + "|"; 
+		}
+		regex = regex.substring(0,regex.length()-1);
+		regex +=  ").*";
+		return regex;
 	}
 	
 	public static void doCalculations(Experiment exp){

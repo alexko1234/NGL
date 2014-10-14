@@ -28,6 +28,12 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		$scope.searchService.resetForm();		
 	};
 	
+	$scope.changeCode = function(){
+		$scope.searchService.changeContainerSupportCode();		
+	};
+	
+	
+	
 	//init
 	if(angular.isUndefined($scope.getHomePage())){
 		mainService.setHomePage('search');
@@ -42,7 +48,9 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	}
 	
 	$scope.searchService = experimentsSearchService;
-	$scope.searchService.init($routeParams, $scope.datatableConfig)
+	$scope.searchService.init($routeParams, $scope.datatableConfig);
+	
+	console.log($scope.searchService.supports);
 	
 	if($scope.form.experimentType){
 		$scope.search();

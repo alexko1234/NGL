@@ -99,6 +99,7 @@
 				datatable:undefined,
 				isRouteParam:false,
 				lists : lists,
+				supports : [],
 				setRouteParams:function($routeParams){
 					var count = 0;
 					for(var p in $routeParams){
@@ -218,6 +219,23 @@
 						lists.refresh.experimentTypes({categoryCode:this.form.experimentCategory});
 					}
 				},
+				changeContainerSupportCode: function(){
+					var that = this;
+					this.supports = [];
+					var supportCode = this.form.containerSupportCode;
+					var codeLength = supportCode.length;
+					if(codeLength>=2){
+					return $http.get(jsRoutes.controllers.supports.api.Supports.list().url,{params:{"codeRegex":"^" + supportCode}}).success(function(data, status, headers, config) {
+						console.log(data);
+						return that.supports = data;				
+	    			});
+					}
+				},
+				/*
+				getSupportsList: function(){
+					return this.supports;
+				},
+				*/
 				/**
 				 * initialise the service
 				 */

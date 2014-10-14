@@ -155,6 +155,7 @@ angular.module('commonsServices', []).
     				reportConfigs : function(params, key){
     					load(jsRoutes.controllers.reporting.api.ReportingConfigurations.list().url,params,(key)?key:'reportConfigs');    				
     				},
+    				
     				all : function(params){
     					this.resolutions(params);
     					this.containerCategories(params);
@@ -167,7 +168,7 @@ angular.module('commonsServices', []).
     					this.users(params);
     					this.experiments(params);
     					this.runs(params);
-    					this.protocols(params);
+    					this.protocols(params);    					
     				}
     		};
     		

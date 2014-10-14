@@ -1,11 +1,11 @@
 package controllers.supports.api;
 
 import static play.data.Form.form;
-
 import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
@@ -13,8 +13,8 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import org.mongojack.DBQuery;
 
+import org.mongojack.DBQuery;
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
@@ -150,6 +150,10 @@ public class Supports extends CommonController {
 		
 		if(null != supportsSearch.toDate){
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", supportsSearch.toDate));
+		}
+		
+		if(supportsSearch.codeRegex != null){
+			queryElts.add(DBQuery.regex("code", Pattern.compile(supportsSearch.codeRegex)));
 		}
 		
 		if(null != supportsSearch.users){

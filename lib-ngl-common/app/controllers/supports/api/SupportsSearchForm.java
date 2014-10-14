@@ -7,6 +7,8 @@ import controllers.ListForm;
 
 public class SupportsSearchForm extends ListForm {
 	public String code;
+	public String codeRegex;
+	
 	public String categoryCode;
 	public String stateCode;
 	public String experimentTypeCode;
