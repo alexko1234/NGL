@@ -91,7 +91,7 @@
 
 <div class="page-break" 
 	ng-if='showSuspectedKmers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'
-	ng-repeat='pageArray in getCascadedArray(@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedKmers.value"), 4, 50) track by $index'>
+	ng-repeat='pageArray in getArray(@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedKmers.value"), treament.code!=undefined?treament.code:treatments.getTreatment().code, "@read", "suspectedKmers") track by pageArray.id'>
 	
 	<div class="page-header">
   		<h4> <small>@("{{treament.name}}" + " ") @Messages("readsets.treatments.read_quality.tabs." + read)</small></h4>
@@ -108,10 +108,10 @@
 		  			<thead></thead>
 		  			<tbody>
 			  			<tr>
-				  			<td ng-repeat="colArray in pageArray track by $index">
+				  			<td ng-repeat="colArray in pageArray.data track by colArray.id">
 				  				<ul>
-					  				<li ng-repeat="data in colArray track by $index">
-					  						{{data.Kmer}} ({{data.nbOccurences | number}})
+					  				<li ng-repeat="data in colArray.data track by data.id">
+					  						{{data.data.data.Kmer}}  ({{data.data.data.nbOccurences | number}})
 					  				</li>
 				  				</ul>	
 				  			</td>
@@ -125,35 +125,34 @@
 
 <div class="page-break" 
 	ng-if='showSuspectedPrimers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'
-	ng-repeat='pageArray in getCascadedArray(@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedPrimers.value"), 4, 50) track by $index'>
-
+	ng-repeat='pageArray in getArray(@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedPrimers.value"), treament.code!=undefined?treament.code:treatments.getTreatment().code, "@read", "suspectedPrimers") track by pageArray.id'>
+	
 	<div class="page-header">
   		<h4> <small>@("{{treament.name}}" + " ") @Messages("readsets.treatments.read_quality.tabs." + read)</small></h4>
 	</div>
-	
+
 	<div class="col-xs-12">
-		<div class="panel panel-default"> 
-		  	<div class="panel-heading" ng-if="$index==0"><strong>@Messages("readsets.treatments.read_quality.suspectedPrimers")</strong>
+		<div class="panel panel-default">
+			<div class="panel-heading" ng-if="$index==0"><strong>@Messages("readsets.treatments.read_quality.suspectedPrimers")</strong>
 		  	({{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedPrimers.value.length")}})
-		  	</div>
-		  	<div class="panel-heading" ng-if="$index>0"><strong>@Messages("readsets.treatments.read_quality.suspectedPrimers") (suite)</strong></div>
+			</div>
+			<div class="panel-heading" ng-if="$index>0"><strong>@Messages("readsets.treatments.read_quality.suspectedPrimers") (suite)</strong></div>
 		  	<div class="panel-body">
-				<table class="table table-condensed table-small-cell">
-					<thead></thead>
+		  		<table class="table table-condensed table-small-cell">
+		  			<thead></thead>
 		  			<tbody>
 			  			<tr>
-				  			<td ng-repeat="colArray in pageArray track by $index">
+				  			<td ng-repeat="colArray in pageArray.data track by colArray.id">
 				  				<ul>
-				  					<li ng-repeat="data in colArray track by $index">
-				  						{{data}}
-				  					</li>
+					  				<li ng-repeat="data in colArray.data track by data.id">
+					  						{{data.data.data}}
+					  				</li>
 				  				</ul>	
 				  			</td>
 			  			</tr>	
 		  			</tbody>	  				
 		  		</table>
-			 </div>
-		</div>  
+			 </div>																
+		</div>
 	</div>
-	
 </div>

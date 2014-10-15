@@ -4,19 +4,10 @@
                                                    function($scope, $http, $q, $routeParams, $sce, mainService, tabService, datatable, messages, lists, treatments, $window, valuationService, matchmedia) {
 	
 
-	 
 	 //set boolean isPrint when the print event is on ! 
-	 var unregister = matchmedia.onPrint( function(mediaQueryList){
-			
+	 var unregister = matchmedia.onPrint( function(mediaQueryList){		
 			 $scope.isPrint = mediaQueryList.matches; 
-		
-   
 	});
-	 
-
-
-	 
-	 
 	 
 	 $scope.goToRun=function(){
 		$window.open(jsRoutes.controllers.runs.tpl.Runs.get($scope.readset.runCode).url, 'runs');
@@ -180,38 +171,105 @@
 		}
 		return false;
 	}
+	
+	$scope.getArray = function(property, treatmentCode, read, type) {
+		if ($scope.readset.treatments[treatmentCode] != undefined) {
+			var numberOfColumnsPerPage = 4;
+			var numberOfElementsByColumn = 50;	 
+			if (treatmentCode == "readQualityRaw")
+				if (read == "read1")
+					if (type == "suspectedKmers") {
+						if ($scope.array1.length == 0) {
+							$scope.array1 = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+						}
+						return $scope.array1;
+					}
+					else {
+						if ($scope.array2.length == 0) {
+							$scope.array2 = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+						}
+						return $scope.array2;
+					}
+				else
+					if (type == "suspectedKmers") {
+						if ($scope.array3.length == 0) {
+							$scope.array3 = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+						}
+						return $scope.array3;
+					}
+					else {
+						if ($scope.array4.length == 0) {
+							$scope.array4 = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+						}
+						return $scope.array4;
+					}
+			else
+				if (read == "read1")
+					if (type == "suspectedKmers") {
+						if ($scope.array5.length == 0) {
+							$scope.array5 = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+						}
+						return $scope.array5;
+					}
+					else {
+						if ($scope.array6.length == 0) {
+							$scope.array6 = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+						}
+						return $scope.array6;
+					}
+				else
+					if (type == "suspectedKmers") {
+						if ($scope.array7.length == 0) {
+							$scope.array7 = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+						}
+						return $scope.array7;
+					}
+						
+					else {
+						if ($scope.array8.length == 0) {
+							$scope.array8 = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+						}
+						return $scope.array8;
+					}
+		}
+		return;
+	}
     
-	$scope.getCascadedArray = function(array, numberOfColumnsPerPage, numberOfElementsByColumn) {
-		if (array != undefined) {
-			var tmpArray = array.slice(0);
+	var getCascadedArray = function(propertyArray, numberOfColumnsPerPage, numberOfElementsByColumn) {
+		if (propertyArray != undefined) {
+			var tmpArray = propertyArray.slice(0);
 			tmpArray.sort(function(a, b){return b.nbOccurences-a.nbOccurences});
 			
+			for (var i=0, len=tmpArray.length; i<len; i++) {
+				tmpArray[i] = {"id":i, "data":tmpArray[i]};
+			}
+			
 			var totalNumberOfColumns = Math.ceil(tmpArray.length / numberOfElementsByColumn); 	
-			var myPageArray = new Array(Math.ceil(totalNumberOfColumns/numberOfColumnsPerPage));
+			var pageArray = new Array(Math.ceil(totalNumberOfColumns/numberOfColumnsPerPage));
 			var exit = false;
 				
-			for (var p=0; p<myPageArray.length; p++) {			
+			for (var p=0, len=pageArray.length; p<len; p++) {			
 				for (var c=0; c<numberOfColumnsPerPage; c++) {
 					for (var d=0; d<numberOfElementsByColumn; d++) {
-						if (d==0) {var myDataArray = new Array();}
+						if (d==0) {var dataArray = new Array();}
 						
 						var idx = p*numberOfColumnsPerPage*numberOfElementsByColumn + c*numberOfElementsByColumn + d;
 						if (idx < tmpArray.length) {
-							myDataArray.push(tmpArray[idx]);
+							dataArray.push({"id":d, "data":tmpArray[idx]});
 						}
 						else {
 							exit = true;
 							break;
 						}
 					}
-					if (c==0) {var myColArray = new Array();}
-					myColArray.push(myDataArray);
+					if (c==0) {var colArray = new Array();}
+					colArray.push({"id":c, "data":dataArray});
 					
 					if (exit) {break;}
 				}
-				myPageArray[p] = myColArray;
+				pageArray[p] = {"id":p, "data":colArray};
 			}	
-			return myPageArray;
+			return pageArray;
 		}
 	}
 	
@@ -247,6 +305,15 @@
 		if(isValuationMode()){
 			mainService.startEditMode();			
 		}
+		
+		$scope.array1 = [];
+		$scope.array2 = [];
+		$scope.array3 = [];
+		$scope.array4 = [];
+		$scope.array5 = [];
+		$scope.array6 = [];
+		$scope.array7 = [];
+		$scope.array8 = [];
 		
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.get($routeParams.code).url).success(function(data) {
 			$scope.readset = data;	

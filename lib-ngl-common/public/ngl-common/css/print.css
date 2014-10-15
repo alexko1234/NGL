@@ -50,11 +50,15 @@
   	}
   	
   	#pairs_PEReadDistanceSeparation, #pairs_MPReadDistanceSeparation {
-  		max-height: 45% !important;
+  		max-height: 35% !important;
   	}
   	
-  	#read1_GCDistribution, #read2_GCDistribution {
+  	#read1_GCDistribution, #read2_GCDistribution, #pairs_overlapDistrib {
   		max-height: 50% !important;
+  	}
+  	
+  	#read1_errorPosition, #read2_errorPosition {
+  		max-height: 35% !important;
   	}
   	
   	.table {
@@ -79,6 +83,10 @@
   	
   	#border_box {
   		box-sizing: border-box;
+  	}
+  	
+  	#panel_PEMPSize {
+  		font-size: 10px;
   	}
   	 	
 }
