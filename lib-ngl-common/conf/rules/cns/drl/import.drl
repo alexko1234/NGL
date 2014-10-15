@@ -3,6 +3,8 @@ package rules
 
 #list any import classes here.
 import models.laboratory.run.instance.Analysis;
+import models.laboratory.run.instance.ReadSetProperties;
+import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import models.laboratory.common.instance.PropertyValue;
@@ -14,3 +16,4 @@ import java.util.Map.Entry;
 import java.text.DecimalFormat;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import com.mongodb.BasicDBObject;

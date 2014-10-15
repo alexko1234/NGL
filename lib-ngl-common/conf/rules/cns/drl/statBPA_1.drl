@@ -28,6 +28,38 @@ rule "Calculate lostBasesPercent for contigFilterBA treatment"
 		MongoDBDAO.updateSet(InstanceConstants.ANALYSIS_COLL_NAME, $analysis, "treatments."+$treatmentCFBA.getCode(), $treatmentCFBA);
 end
 
+
+rule "Set ReadSet properties to Analysis"
+	@nglBI( BPA_SetReadSetProperties_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$analysis : Analysis ( $masterReadSetCode : masterReadSetCodes.get(0) )		
+	then
+		Logger.debug("Set ReadSet properties to Analysis "+$analysis.getCode());
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("sampleOnContainer.properties.taxonSize", 1);
+		keys.put("treatments.global.default.usefulBases", 1);
+		keys.put("treatments.contaminationColi.pairs.removedReadsPercent", 1);
+		keys.put("treatments.duplicatesRaw.pairs.estimateDuplicatedReadsPercent", 1);
+		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", $masterReadSetCode), keys);
+		if(null != readSet){
+			ReadSetProperties readSetProperties = new ReadSetProperties();
+			readSetProperties.code = $masterReadSetCode;
+			readSetProperties.properties.put("sampleOnContainerTaxonSize", readSet.sampleOnContainer.properties.get("taxonSize"));
+			readSetProperties.properties.put("globalDefaultUsefulBases", readSet.treatments.get("global").results.get("default").get("usefulBases"));
+			readSetProperties.properties.put("contaminationColiPairsRemovedReadsPercent", readSet.treatments.get("contaminationColi").results.get("pairs").get("removedReadsPercent"));
+			readSetProperties.properties.put("duplicatesRawPairsEstimateDuplicatedReadsPercent", readSet.treatments.get("duplicatesRaw").results.get("pairs").get("estimateDuplicatedReadsPercent"));
+		
+			MongoDBDAO.update(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, DBQuery.is("code", $analysis.code),  DBUpdate.set("masterReadSetProperties", java.util.Arrays.asList(readSetProperties)));
+		}else{
+			Logger.error("ReadSet Does not exist: "+$masterReadSetCode);
+		}		
+end
+
+
+
 function Double roundValue(double value)
 {
 	DecimalFormat df=new DecimalFormat("0.00");
