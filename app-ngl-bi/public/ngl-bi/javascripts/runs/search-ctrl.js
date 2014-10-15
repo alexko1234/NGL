@@ -20,7 +20,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 			exportCSV:{
 				active:true
 			},
-			name:"runs"
+			name:"Runs"
 	};
 	
 	$scope.search = function(){
