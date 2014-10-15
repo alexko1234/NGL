@@ -111,7 +111,7 @@
     
 	$scope.showSuspectedKmers = function(read, treatmentCode) {
 		if (read == 'read1') {
-			if ($scope.readset.treatments!=undefined) {
+			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined) {
 				return (
 						$scope.readset.treatments[treatmentCode].read1.suspectedKmers != undefined 
 						&& $scope.readset.treatments[treatmentCode].read1.suspectedKmers != null 
@@ -119,7 +119,7 @@
 			}
 		}
 		if (read == 'read2') {
-			if ($scope.readset.treatments!=undefined) {
+			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined) {
 				return ( 
 						$scope.readset.treatments[treatmentCode].read2.suspectedKmers != undefined 
 						&& $scope.readset.treatments[treatmentCode].read2.suspectedKmers != null 
@@ -131,14 +131,14 @@
 	
 	$scope.showSuspectedPrimers = function(read, treatmentCode) {
 		if (read == 'read1') {
-			if ($scope.readset.treatments!=undefined)  {
+			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined)  {
 				return ( $scope.readset.treatments[treatmentCode].read1.suspectedPrimers != undefined  
 						&& $scope.readset.treatments[treatmentCode].read1.suspectedPrimers != null 
 						&& $scope.readset.treatments[treatmentCode].read1.suspectedPrimers.value.length > 0);
 			}
 		}
 		if (read == 'read2') {
-			if ($scope.readset.treatments!=undefined)  {
+			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined)  {
 				return ( $scope.readset.treatments[treatmentCode].read2.suspectedPrimers != undefined  
 						&& $scope.readset.treatments[treatmentCode].read2.suspectedPrimers != null 
 						&& $scope.readset.treatments[treatmentCode].read2.suspectedPrimers.value.length > 0);
@@ -149,13 +149,13 @@
 	
 	$scope.showMaxSizeReads = function(read, treatmentCode) {
 		if (read == 'read1') {
-			if ($scope.readset.treatments!=undefined)  {
+			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined)  {
 				return ( $scope.readset.treatments[treatmentCode].read1.maxSizeReads != undefined  
 						&& $scope.readset.treatments[treatmentCode].read1.maxSizeReads != null );
 			}
 		}
 		if (read == 'read2') {
-			if ($scope.readset.treatments!=undefined)  {
+			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined)  {
 				return ( $scope.readset.treatments[treatmentCode].read2.maxSizeReads != undefined  
 						&& $scope.readset.treatments[treatmentCode].read2.maxSizeReads != null );
 			}
@@ -165,14 +165,14 @@
 	
 	$scope.showAdapters = function(read, treatmentCode) {
 		if (read == 'read1') {
-			if ($scope.readset.treatments!=undefined)  {
+			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined)  {
 				return ( $scope.readset.treatments[treatmentCode].read1.adapters != undefined  
 						&& $scope.readset.treatments[treatmentCode].read1.adapters != null 
 						&& $scope.readset.treatments[treatmentCode].read1.adapters.value.length > 0);
 			}
 		}
 		if (read == 'read2') {
-			if ($scope.readset.treatments!=undefined)  {
+			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined)  {
 				return ( $scope.readset.treatments[treatmentCode].read2.adapters != undefined  
 						&& $scope.readset.treatments[treatmentCode].read2.adapters != null 
 						&& $scope.readset.treatments[treatmentCode].read2.adapters.value.length > 0);
@@ -182,35 +182,37 @@
 	}
     
 	$scope.getCascadedArray = function(array, numberOfColumnsPerPage, numberOfElementsByColumn) {
-		var tmpArray = array.slice(0);
-		tmpArray.sort(function(a, b){return b.nbOccurences-a.nbOccurences});
-		
-		var totalNumberOfColumns = Math.ceil(tmpArray.length / numberOfElementsByColumn); 	
-		var myPageArray = new Array(Math.ceil(totalNumberOfColumns/numberOfColumnsPerPage));
-		var exit = false;
+		if (array != undefined) {
+			var tmpArray = array.slice(0);
+			tmpArray.sort(function(a, b){return b.nbOccurences-a.nbOccurences});
 			
-		for (var p=0; p<myPageArray.length; p++) {			
-			for (var c=0; c<numberOfColumnsPerPage; c++) {
-				for (var d=0; d<numberOfElementsByColumn; d++) {
-					if (d==0) {var myDataArray = new Array();}
-					
-					var idx = p*numberOfColumnsPerPage*numberOfElementsByColumn + c*numberOfElementsByColumn + d;
-					if (idx < tmpArray.length) {
-						myDataArray.push(tmpArray[idx]);
-					}
-					else {
-						exit = true;
-						break;
-					}
-				}
-				if (c==0) {var myColArray = new Array();}
-				myColArray.push(myDataArray);
+			var totalNumberOfColumns = Math.ceil(tmpArray.length / numberOfElementsByColumn); 	
+			var myPageArray = new Array(Math.ceil(totalNumberOfColumns/numberOfColumnsPerPage));
+			var exit = false;
 				
-				if (exit) {break;}
-			}
-			myPageArray[p] = myColArray;
-		}	
-		return myPageArray;
+			for (var p=0; p<myPageArray.length; p++) {			
+				for (var c=0; c<numberOfColumnsPerPage; c++) {
+					for (var d=0; d<numberOfElementsByColumn; d++) {
+						if (d==0) {var myDataArray = new Array();}
+						
+						var idx = p*numberOfColumnsPerPage*numberOfElementsByColumn + c*numberOfElementsByColumn + d;
+						if (idx < tmpArray.length) {
+							myDataArray.push(tmpArray[idx]);
+						}
+						else {
+							exit = true;
+							break;
+						}
+					}
+					if (c==0) {var myColArray = new Array();}
+					myColArray.push(myDataArray);
+					
+					if (exit) {break;}
+				}
+				myPageArray[p] = myColArray;
+			}	
+			return myPageArray;
+		}
 	}
 	
 	
