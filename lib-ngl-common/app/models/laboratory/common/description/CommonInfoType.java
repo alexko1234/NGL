@@ -75,6 +75,11 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		this.criterias=commonInfoType.criterias;
 	}
 
+	/**
+	 * Return the PropertyDefinition that's contain all levels
+	 * @param levels
+	 * @return
+	 */
 	public List<PropertyDefinition> getPropertyDefinitionByLevel(Level.CODE...levels){
 
 		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
