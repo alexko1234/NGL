@@ -221,8 +221,10 @@ GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
 
 
 #migration
-GET		/migration									controllers.migration.MigrationUpdateSampleOnContainer.migration()
+GET		/migrationSampleOnContainer					controllers.migration.MigrationUpdateSampleOnContainer.migration()
 GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
+#GET		/deleteTreatments							controllers.migration.DeleteReadSetTreatements.migration()
+GET		/migrationWheat								controllers.migration.UpdateBABle.migration()
 
 #DEPRECATED
 GET    	/api/analyses	                 			@controllers.analyses.api.AnalysesOld.list()
