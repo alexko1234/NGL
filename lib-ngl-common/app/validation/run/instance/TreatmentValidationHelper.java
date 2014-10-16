@@ -114,7 +114,7 @@ public class TreatmentValidationHelper extends CommonValidationHelper {
 				if(results.containsKey(context.code)){
 					Map<String, PropertyValue> props = results.get(context.code);
 					contextValidation.addKeyToRootKeyName(context.code);					
-					ValidationHelper.validateProperties(contextValidation, props, treatmentType.getPropertyDefinitionByLevel(Level.CODE.Analysis, Level.CODE.valueOf(context.name), levelCode));
+					ValidationHelper.validateProperties(contextValidation, props, treatmentType.getPropertyDefinitionByLevel(Level.CODE.valueOf(context.name), levelCode));
 					contextValidation.removeKeyFromRootKeyName(context.code);
 				}else if(context.required){
 					contextValidation.addErrors(context.code,ValidationConstants.ERROR_REQUIRED_MSG, context.code);
