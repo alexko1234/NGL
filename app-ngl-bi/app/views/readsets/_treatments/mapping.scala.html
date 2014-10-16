@@ -1,5 +1,5 @@
 @()
-<div class="row hidden-print" ng-controller="MappingCtrl">
+<div class="row hidden-print" ng-controller="MappingCtrl" ng-if="!isPrint">
 	<div class="col-md-11 col-lg-11">
 		<ul class="nav nav-tabs margin-bottom-5">
 			<li ng-show="isDataExistsForRead1()"><a href="#" data-target="#read1" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read1")</a></li>
@@ -33,7 +33,7 @@
 
 
 
-<div class="visible-print" ng-controller="MappingCtrl">
+<div class="visible-print" ng-controller="MappingCtrl" ng-if="isPrint">
 	<div ng-show="isDataExistsForRead1()">
 		<div class="page-header" >
 			@Messages("readsets.treatments.mapping.tabs.read1")
@@ -52,15 +52,16 @@
 		@Messages("readsets.treatments.mapping.tabs.pairs")
 	</div>
 	
-	<div id="pairs page-break">
+	<div id="pairs">
 		@partials.mapping_pairs()
 	</div>
+	
+	<div class="page-header page-break">
+		@Messages("readsets.treatments.mapping.tabs.ref")
+	</div>	
 	
 	<div id="ref">
 		@partials.mapping_ref()
 	</div>
-
-	
-
 </div>
 

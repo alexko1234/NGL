@@ -28,7 +28,7 @@
 
 
 
-<div class="visible-print" ng-if="treament!=undefined">
+<div class="visible-print" ng-if="isPrint">
 			
 	<div class="page-header">
 		@Messages("readsets.treatments.taxonomy.tabs.bilan")
@@ -36,7 +36,7 @@
 	
 	<div id="main">@partials.taxonomy_main_print()</div>
 	
-	<div class="page-break" id="krona">@partials.taxonomy_krona()</div>
+	<!--  no krona -->
 	
 	<div id="phylogeneticTree" class="page-break" ng-show="isDataExistsForPhylogeneticTree(treament.code!=undefined?treament.code:treatments.getTreatment().code)">
  		@partials.taxonomy_phylogenetic()

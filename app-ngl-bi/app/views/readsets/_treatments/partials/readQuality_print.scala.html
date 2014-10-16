@@ -108,10 +108,10 @@
 		  			<thead></thead>
 		  			<tbody>
 			  			<tr>
-				  			<td ng-repeat="colArray in pageArray.data track by colArray.id">
+				  			<td ng-repeat="colArray in pageArray.pages track by colArray.id">
 				  				<ul>
-					  				<li ng-repeat="data in colArray.data track by data.id">
-					  						{{data.data.data.Kmer}}  ({{data.data.data.nbOccurences | number}})
+					  				<li ng-repeat="column in colArray.columns track by column.id">
+					  						{{column.line.data.Kmer}}  ({{column.line.data.nbOccurences | number}})
 					  				</li>
 				  				</ul>	
 				  			</td>
@@ -142,10 +142,10 @@
 		  			<thead></thead>
 		  			<tbody>
 			  			<tr>
-				  			<td ng-repeat="colArray in pageArray.data track by colArray.id">
+				  			<td ng-repeat="colArray in pageArray.pages track by colArray.id">
 				  				<ul>
-					  				<li ng-repeat="data in colArray.data track by data.id">
-					  						{{data.data.data}}
+					  				<li ng-repeat="column in colArray.columns track by column.id">
+					  						{{column.line.data}}
 					  				</li>
 				  				</ul>	
 				  			</td>

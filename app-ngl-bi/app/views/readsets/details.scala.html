@@ -2,7 +2,7 @@
 
 <!-- ----------------------------------------------------------------------------- -->
 <!-- Modal to display image in full size -->
-	<div id="myImageModal" class="modal fade hidden-print"  tabindex="-1" role="dialog"
+	<div id="myImageModal" ng-if="!isPrint" class="modal fade hidden-print"  tabindex="-1" role="dialog"
 		aria-labelledby="myModalLabel" aria-hidden="true" style="left:{{modalLeft}}px; top:{{modalTop}}px;position:fixed;width:100%">
 		
     		<div class="modal-content" style="width:{{modalWidth}}px; border:0px">
@@ -42,11 +42,11 @@
 	</div>
 </div>
 
-<div class="row hidden-print">
+<div class="row hidden-print" ng-if="!isPrint">
 	<div class="col-md-12 col-lg-12"  messages="messages"></div>
 </div>
 
-<div class="row margin-bottom-7 hidden-print">
+<div class="row margin-bottom-7 hidden-print" ng-if="!isPrint">
 	<div class="col-md-12 col-lg-12">
 		<ul class="nav nav-tabs margin-bottom-5">
 			<li class="active"><a href="#" data-target="#general" data-toggle="tab">@Messages("readsets.tabs.general")</a></li>
@@ -64,7 +64,7 @@
 	</div>
 </div>
 	
-<div class="visible-print">
+<div class="visible-print" ng-if="isPrint">
 	@partials.details_print()
 	@partials.details_file()
 </div>
@@ -73,14 +73,14 @@
 	 
 
 
-<div class="row hidden-print">	
+<div class="row hidden-print" ng-if="!isPrint">	
 	<div class="col-md-12 col-lg-12 hidden-print">
 		@views.html.commons.treatments()  
 	</div>
 </div>	
 
 
-<div class="visible-print">
+<div class="visible-print" ng-if="isPrint">
 	<div id="border_box">
 		<li ng-repeat="treament in treatments.getTreatments()">
 			<div class="page-break">
