@@ -357,6 +357,11 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		
 	};
 	
+	$scope.changeView = function(view){
+		console.log(view);
+		$scope.view = view;
+	};
+	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);
 	$scope.experiment.outputGenerated = true;
@@ -365,6 +370,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	$scope.flowcells = [];
 	$scope.rows = [];
 	$scope.laneCount = 0;
+	$scope.view = 1;
 	
 	if($scope.experiment.editMode){
 		$scope.atomicTransfere.loadExperiment();

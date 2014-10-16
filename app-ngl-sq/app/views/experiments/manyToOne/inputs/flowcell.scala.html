@@ -1,7 +1,11 @@
 @(laneCount:java.lang.Integer)
-
-<div class="row" ng-controller="FlowcellCtrl" ng-init="init_flowcell(@laneCount)">
-	<div class="col-md-12 col-lg-12" style="margin-right:auto;margin-left:auto">
+<ul class="nav nav-tabs" role="tablist">
+  <li class="active"><a href="" role="tab" data-target="#flowcell" data-toggle="tab">@Messages("experiments.flowcell.design")</a></li>
+  <li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab">@Messages("experiments.flowcell.roadMap")</a></li>
+</ul>
+{{tab}}
+<div class="row tab-content" ng-controller="FlowcellCtrl" ng-init="init_flowcell(@laneCount)">
+	<div class="col-md-12 col-lg-12 tab-pane active" style="margin-right:auto;margin-left:auto" id="flowcell">
 		<div ng-model="inputContainers" droppable class="col-md-4 col-lg-4" style="margin-bottom:10px;border-width:1px;border-style:dashed;border-color:black;">
 			<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p>
 			<table ng-show="inputContainers.length>0" class="table">
@@ -67,6 +71,11 @@
 				<b>@(i+1)</b>
 			</td>
 			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable style="width:200px;height:20px">
+				<div ng-hide="rows[@i]" style="width:300px">
+					<span  ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds">
+						{{flowcell.code}},{{flowcell.percentage}}%,{{experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties.phixPercent.value || "nr"}}%;
+					</span>
+				</div>
 				<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && rows[@i]" class="table">
 				<tr>
 					<th>
@@ -152,5 +161,7 @@
 		</table>
 		</div>
 	</div>
-	<div class="col-md-12 col-lg-12" datatable="datatable"></div>
+	<div class="tab-pane" id="roadmap">
+		<div class="col-md-12 col-lg-12" datatable="datatable"></div>
+	</div>
 </div>

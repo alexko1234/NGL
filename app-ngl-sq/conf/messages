@@ -30,6 +30,7 @@ containers.table.percentage = % à déposer
 containers.table.tags = Index
 containers.table.sampleTypes = Type samples
 containers.table.libProcessTypeCodes = Type librairie
+containers.table.sampleCode_tags = SampleType_Tag
 
 containers.placeholder.fromDate = Création container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Création container jusqu''au (jj/mm/aaaa)
@@ -152,6 +153,7 @@ experiments.modifyDate = Date de modification
 experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
 experiments.flowcell.design = Composition flowcell
+experiments.flowcell.roadMap = Feuille de route
 
 experiment.placeholder.fromDate = Expérience depuis le (jj/mm/aaaa)
 experiment.placeholder.toDate = Expérience jusqu''au (jj/mm/aaaa)

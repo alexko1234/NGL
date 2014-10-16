@@ -29,7 +29,8 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	};
 	
 	$scope.changeCode = function(){
-		$scope.searchService.changeContainerSupportCode();		
+		$scope.searchService.changeContainerSupportCode();
+		//$('#supportCode').typeahead();
 	};
 	
 	
