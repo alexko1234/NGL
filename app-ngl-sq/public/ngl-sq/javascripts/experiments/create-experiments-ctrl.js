@@ -440,7 +440,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				$scope.message.text=Messages('experiments.msg.save.sucess')
 				$scope.experiment.value = data;
 				$scope.saveInProgress = false;
-				$location.path(jsRoutes.controllers.experiments.tpl.Experiments.edit(data.code).url);
+/*   */				$location.path(jsRoutes.controllers.experiments.tpl.Experiments.edit(data.code).url);
 			}
 		})
 		.error(function(data, status, headers, config) {

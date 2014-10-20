@@ -6,9 +6,10 @@
 {{tab}}
 <div class="row tab-content" ng-controller="FlowcellCtrl" ng-init="init_flowcell(@laneCount)">
 	<div class="col-md-12 col-lg-12 tab-pane active" style="margin-right:auto;margin-left:auto" id="flowcell">
-		<div ng-model="inputContainers" droppable class="col-md-4 col-lg-4" style="margin-bottom:10px;border-width:1px;border-style:dashed;border-color:black;">
+		<div ng-model="inputContainers" droppable class="col-md-4 col-lg-4 inputContainerGroup">
 			<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p>
-			<table ng-show="inputContainers.length>0" class="table">
+			<table ng-show="inputContainers.length>0" class="table" >
+			<thead>
 				<tr>
 					<th>
 					</th>
@@ -28,25 +29,31 @@
 						@Messages("containers.table.libProcessTypeCodes")
 					</th>
 				</tr>
+				</thead>				
 				<tr ng-model="container" ng-repeat="container in inputContainers" draggable>
 					<td>
-						<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInput(container)"><i class="fa fa-trash-o"></i></button>
+						<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInput(container)" class="litte-icone"><i class="fa fa-trash-o"></i></button>
 					</td>
 					<td>
 						{{container.code}}
 					</td>
 					<td class="col-sm-1">
 						<input class="form-control input-small" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" ng-model="container.percentage" />
-					</td>
-					<td  title="{{getTags(container.contents) | unique}}">
-						<div ng-repeat="content in container.contents | unique:'properties.tag.value' |  limitTo:12">
+					</td>					
+					<td  title="{{getTags(container.contents) | unique}}" ng-init="nbItem = 5">					
+						<div ng-repeat="content in container.contents | unique:'properties.tag.value' |  limitTo:nbItem">
 								{{content.properties.tag.value}}
-							</div>
+						</div>
+						
+						<button ng-show="nbItem==5 && container.contents.length>5" ng-click="nbItem=container.contents.length" class="small-litte-icone"> <i>...</i> </button>
+						<button ng-show="nbItem>5 && container.contents.length>5" ng-click="nbItem=5" class="small-litte-icone"> <i>---</i> </button>
+												
 					</td>
 					<td title="{{getSampleTypeCodes(container.contents) | unique}}">
-						<div ng-repeat="content in container.contents | unique:'sampleTypeCode' |  limitTo:12">
+						<div ng-repeat="content in container.contents | unique:'sampleTypeCode'  | limitTo: 12">
 							{{content.sampleTypeCode}}
 						</div>
+						
 					</td>
 					<td title="{{getLibProcessTypeCodes(container.contents) | unique}}">
 						<div ng-repeat="content in container.contents | unique:'properties.libProcessTypeCode.value'">
@@ -56,10 +63,10 @@
 					<td>
 					<button ng-click="duplicateContainer(container,$index)"><i class="fa fa-plus-square"></i></button>
 					</td>
-				</tr>
+				</tr>				
 			</table>
 		</div>
-		<div class="col-md-5 col-lg-5">
+		<div class="col-md-5 col-lg-5 compoFlowcel">
 		<h2>@Messages("experiments.flowcell.design") :</h2>
 		<table class="table" style="width:200px;">
 		@for(i <- 0 to laneCount-1) {

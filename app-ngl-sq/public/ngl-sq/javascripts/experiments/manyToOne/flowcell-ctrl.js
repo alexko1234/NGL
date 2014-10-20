@@ -14,13 +14,14 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 						"type":"text",
 						"extraHeaders":{"0":"Outputs"}
 					},
-					{
+				/*	{
 						"header":Messages("containers.table.support.line"),
 						"property":"outputPositionY",
 						"order":true,
 						"type":"text",
 						"extraHeaders":{"0":"Outputs"}
-					},{
+					},*/
+					{
 						"header":Messages("containers.table.volume"),
 						"property":"inputVolume",
 						"order":true,
