@@ -85,7 +85,7 @@
 						@Messages("containers.table.percentage")
 					</th>
 					<th>
-						@Messages("containers.table.sampleCode_tags")
+						@Messages("containers.table.sampleCodeAndTags")
 					</th>
 					<th>
 						@Messages("containers.table.tags")
@@ -105,7 +105,9 @@
 							<input class="form-control " type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-model="flowcell.percentage" />
 						</td>
 						<td>
-							{{flowcell.sampleCode_tag}}
+							<div title="{{getSampleAndTags(flowcell) | unique}}" ng-repeat="sampleAndTag in getSampleAndTags(flowcell) | unique | limitTo:12">
+								{{sampleAndTag}}<br>
+							</div>
 						</td>
 						<td  title="{{getTags(flowcell.contents) | unique}}">
 						<div ng-repeat="content in flowcell.contents | unique:'properties.tag.value' |  limitTo:12">

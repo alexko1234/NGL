@@ -30,7 +30,7 @@ containers.table.percentage = % à déposer
 containers.table.tags = Index
 containers.table.sampleTypes = Type samples
 containers.table.libProcessTypeCodes = Type librairie
-containers.table.sampleCode_tags = SampleType_Tag
+containers.table.sampleCodeAndTags = SampleType Tag
 
 containers.placeholder.fromDate = Création container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Création container jusqu''au (jj/mm/aaaa)

@@ -61,15 +61,15 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							});*/
 							
 							//concat sampleCode_tag
-							var sampleCodeTags = [];
+							var sampleCodeAndTags = [];
 							angular.forEach(container.contents, function(content){
 								if(content.properties.tag != undefined && content.sampleCode != undefined){
-									sampleCodeTags.push(content.sampleCode+"_"+content.properties.tag.value);
+									sampleCodeAndTags.push(content.sampleCode+" "+content.properties.tag.value);
 								}
 							});
 							containerUseds.push({"code":container.code,"state":container.state,"instrumentProperties":{},"experimentProperties":{},
 								"percentage":100,"categoryCode":container.categoryCode,"volume":container.mesuredVolume,
-								"concentration":container.mesuredConcentration,"contents":container.contents,"sampleCode_tag":sampleCodeTags/*,"contentsInput":{"tags":tags,"sampleTypes":sampleTypes,"libProcessTypeCodes":libProcessTypeCodes}*/,"locationOnContainerSupport":container.support});
+								"concentration":container.mesuredConcentration,"contents":container.contents,"sampleCodeAndtags":sampleCodeAndTags/*,"contentsInput":{"tags":tags,"sampleTypes":sampleTypes,"libProcessTypeCodes":libProcessTypeCodes}*/,"locationOnContainerSupport":container.support});
 						});
 						
 						return containerUseds;
@@ -608,6 +608,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 									var tags  = [];
 									var sampleTypes = [];
 									var libProcessTypeCodes = [];
+									var sampleCodeAndTags = [];
 									angular.forEach(containerIn.contents, function(content){
 										if(content.properties.tag != undefined && content.properties.tag != undefined && tags.indexOf(content.properties.tag.value) == -1){
 											tags.push(content.properties.tag.value);
@@ -618,13 +619,17 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 										if(content.properties.libProcessTypeCode != undefined && libProcessTypeCodes.indexOf(content.properties.libProcessTypeCode.value) == -1){
 											libProcessTypeCodes.push(content.properties.libProcessTypeCode.value);
 										}
+										if(content.properties.tag != undefined && content.sampleCode != undefined){
+											sampleCodeAndTags.push(content.sampleCode+" "+content.properties.tag.value);
+										}
 									});
+									
 									
 									var container = {"inputCode":containerIn.code,"inputSupportCode":containerIn.support.code,
 											"inputX":containerIn.support.line, "inputTags":tags,"inputSampleTypes":sampleTypes, "inputLibProcessTypeCodes":libProcessTypeCodes, "inputState":containerIn.state,
 														"inputY":containerIn.support.column, "experimentProperties":containerIn.experimentProperties,
 														"instrumentProperties":containerIn.instrumentProperties, "outputPositionX":i+1,
-														"outputPositionY":1,"inputConcentration":containerIn.mesuredConcentration.value,"inputVolume":containerIn.mesuredVolume.value};//Fake container
+														"outputPositionY":1,"inputConcentration":containerIn.mesuredConcentration.value,"sampleCodeAndTags":sampleCodeAndTags,"inputVolume":containerIn.mesuredVolume.value};//Fake container
 									containers.push(container);
 								}
 								i++;

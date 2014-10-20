@@ -88,7 +88,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		otherButtons :{
 			active:true,
 			template:'<button class="btn" ng-disabled="!datatable.isSelect()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'">'
-					+'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})</button>'
+					+'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})'
 		}
 	};
 	
@@ -159,20 +159,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		$scope.errors.processType = {};
 		$scope.errors.processCategory = {};
 		if($scope.form.processType){
-			for(var i = 0; i < containers.length; i++){
-				for(var j = 0; j < containers[i].sampleCodes.length; j++){ //one process by sample
-					var processus = {
-							projectCode: containers[i].projectCodes[0],
-							sampleCode: containers[i].sampleCodes[j],
-							containerInputCode: containers[i].code,
-							support: containers[i].support,
-							typeCode:$scope.form.processType,
-							categoryCode:$scope.form.processCategory,
-							properties:{}
-					};		
-					console.log(processus);
-					this.basket.add(processus);
-				}
+			for(var i=0;i<containers.length;i++){
+				this.basket.add(containers[i]);
 			}
 			tabService.addTabs({label:$scope.form.processType,href:$scope.form.processType,remove:false});
 		}else{
@@ -221,7 +209,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	}
 }]);
 
-angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','mainService', function($scope, datatable,$http,mainService) {
+angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','mainService','$q', function($scope, datatable,$http,mainService,$q) {
 
 	$scope.supportView = false;
 	$scope.containers = [];
@@ -246,20 +234,18 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			save:{
 				active:true,
 				withoutEdit:true,
-				url:function(value){if($scope.supportView){
-										return jsRoutes.controllers.processes.api.Processes.saveSupport(value.support.code).url;
-									}
-										return jsRoutes.controllers.processes.api.Processes.save().url;
+				showButton : false,
+				url:function(value){ return jsRoutes.controllers.processes.api.Processes.saveSupport(value.support.code).url;
 					},
 				callback : function(datatable){
 					$scope.basket.reset();
 					$scope.getColumns();
 				},
 				value:function(line){
-						var val=line; 
+						var val=line;
 						val.support=undefined; 
 						return val;
-					  }
+				}
 			},
 			remove:{
 				active:true,
@@ -274,10 +260,10 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			},
 			otherButtons :{
 				active:true,
-				template:'<button ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
+				template:'<button  class="btn" ng-click="save()"><i class="fa fa-save"></i></button><button ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
 							'<br><b ng-switch-when="true">'+
 							Messages("backet.view.supports")+'</b>'+
-							'<b ng-switch-when="false">'+Messages("backet.view.containers")+'</b></button>'
+							'<b ng-switch-when="false">'+Messages("backet.view.containers")+'</b></button></button>'
 			}
 	};
 	
@@ -293,6 +279,63 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	
 	$scope.swithToContainerView = function(){
 		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
+	};
+	
+	$scope.save = function (){
+		console.log($scope.datatable.displayResult);
+		var data = $scope.datatable.displayResult;
+		var url = "";
+		if($scope.supportView){
+			url = jsRoutes.controllers.processes.api.Processes.saveSupport(value.support.code).url;
+		}else{
+			url =  jsRoutes.controllers.processes.api.Processes.save().url;
+		}
+		if(!$scope.supportView){
+			$scope.processes = [];
+			$scope.promises = [];
+			for(var i=0;i<data.length;i++){
+				console.log(data[i]);
+				for(var j = 0; j < data[i].data.sampleCodes.length; j++){ //one process by sample
+					var processData = data[i].data;
+					processData.properties.limsCode = undefined;
+					processData.properties.receptionDate = undefined;
+					var process = {
+							projectCode: processData.projectCodes[0],
+							sampleCode: processData.sampleCodes[j],
+							containerInputCode: processData.code,
+							typeCode:$scope.form.processType,
+							categoryCode:$scope.form.processCategory,
+							properties:processData.properties
+					};		
+					console.log(process);
+					var promise = $http.post(url, process)
+					.success(function(data, status, headers, config) {
+						if(data!=null){
+							$scope.message.clazz="alert alert-success";
+							$scope.message.text=Messages('experiments.msg.save.sucess');
+							
+							$scope.processes.push(data);
+						}
+					})
+					.error(function(data, status, headers, config) {
+						$scope.message.clazz = "alert alert-danger";
+						$scope.message.text = Messages('experiments.msg.save.error');
+		
+						$scope.message.details = data;
+						$scope.message.isDetails = true;
+						alert("error");
+					});
+					$scope.promises.push(promise);
+				}
+			}
+			$q.all($scope.promises).then(function (res) {
+				$scope.basket.reset();
+				$scope.getColumns();
+				$scope.datatable.setData($scope.processes);
+			});
+		}else{
+			$scope.datatable.save();
+		}
 	};
 	
 	$scope.swithToSupportView = function(){
@@ -333,6 +376,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	
 	//init
 	$scope.form = mainService.getForm();
+	$scope.message = {};
 	$scope.datatable = datatable($scope, $scope.datatableConfig);
 	$scope.basket = mainService.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);		

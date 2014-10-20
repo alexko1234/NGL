@@ -353,8 +353,14 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		console.log($scope.flowcells);
 	};
 	
-	$scope.setPersentages = function(){
-		
+	$scope.getSampleAndTags = function(container){
+			var sampleCodeAndTags = [];
+			angular.forEach(container.contents, function(content){
+				if(content.properties.tag != undefined && content.sampleCode != undefined){
+					sampleCodeAndTags.push(content.sampleCode+" "+content.properties.tag.value);
+				}
+			});
+			return sampleCodeAndTags;
 	};
 	
 	$scope.changeView = function(view){
