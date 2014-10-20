@@ -38,7 +38,7 @@
 				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("experiment.placeholder.fromDate")'>
 			}
 			@formGroup{		
-				<input class="form-control" type="text" ng-model="searchService.form.containerSupportCode" typeahead="containerSupportCode.code for containerSupportCode in searchService.supports | filter:$viewValue | limitTo:20 " ng-change="changeCode()" placeholder='@Messages("search.placeholder.support")'>
+				<input class="form-control" type="text" ng-model="searchService.form.containerSupportCode" typeahead="containerSupportCode.code for containerSupportCode in changeContainerSupportCode($viewValue) | limitTo:20 " typeahead-min-length="3" placeholder='@Messages("search.placeholder.support")'>
 			}			
 		}
 		@columnSearchForm{

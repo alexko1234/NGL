@@ -28,11 +28,12 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		$scope.searchService.resetForm();		
 	};
 	
-	$scope.changeCode = function(){
-		$scope.searchService.changeContainerSupportCode();
-		//$('#supportCode').typeahead();
-	};
-	
+
+	$scope.changeContainerSupportCode = function(val){
+		console.log(val);
+		return $scope.searchService.changeContainerSupportCode(val);		 
+	}
+
 	
 	
 	//init
@@ -49,9 +50,8 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	}
 	
 	$scope.searchService = experimentsSearchService;
-	$scope.searchService.init($routeParams, $scope.datatableConfig);
+	$scope.searchService.init($routeParams, $scope.datatableConfig);	
 	
-	console.log($scope.searchService.supports);
 	
 	if($scope.form.experimentType){
 		$scope.search();
