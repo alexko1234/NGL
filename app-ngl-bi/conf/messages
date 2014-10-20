@@ -100,6 +100,7 @@ button.readsets.show = Voir Readsets
 button.readsets.valuation = Evaluer Readsets
 button.edit = Editer
 button.add = Ajouter
+button.print = Imprimer
 
 ############
 #

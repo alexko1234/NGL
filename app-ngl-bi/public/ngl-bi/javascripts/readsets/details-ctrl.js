@@ -1,13 +1,8 @@
  "use strict";
 
- angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$sce', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 'valuationService', 'matchmedia',
-                                                   function($scope, $http, $q, $routeParams, $sce, mainService, tabService, datatable, messages, lists, treatments, $window, valuationService, matchmedia) {
-	
+ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$sce', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 'valuationService', 
+                                                   function($scope, $http, $q, $routeParams, $sce, mainService, tabService, datatable, messages, lists, treatments, $window, valuationService) {
 
-	 //set boolean isPrint when the print event is on ! 
-	 var unregister = matchmedia.onPrint( function(mediaQueryList){		
-			 $scope.isPrint = mediaQueryList.matches; 
-	});
 	 
 	 $scope.goToRun=function(){
 		$window.open(jsRoutes.controllers.runs.tpl.Runs.get($scope.readset.runCode).url, 'runs');
@@ -101,16 +96,16 @@
     };
     
 	$scope.showSuspectedKmers = function(read, treatmentCode) {
-		if (read == 'read1') {
-			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined) {
+		if (read === 'read1') {
+			if (angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode])) {
 				return (
-						$scope.readset.treatments[treatmentCode].read1.suspectedKmers != undefined 
+						angular.isDefined($scope.readset.treatments[treatmentCode].read1.suspectedKmers) 
 						&& $scope.readset.treatments[treatmentCode].read1.suspectedKmers != null 
 						&& $scope.readset.treatments[treatmentCode].read1.suspectedKmers.value.length > 0);
 			}
 		}
-		if (read == 'read2') {
-			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined) {
+		if (read === 'read2') {
+			if (angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode])) {
 				return ( 
 						$scope.readset.treatments[treatmentCode].read2.suspectedKmers != undefined 
 						&& $scope.readset.treatments[treatmentCode].read2.suspectedKmers != null 
@@ -121,16 +116,16 @@
 	}
 	
 	$scope.showSuspectedPrimers = function(read, treatmentCode) {
-		if (read == 'read1') {
-			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined)  {
-				return ( $scope.readset.treatments[treatmentCode].read1.suspectedPrimers != undefined  
+		if (read === 'read1') {
+			if (angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode]))  {
+				return ( angular.isDefined($scope.readset.treatments[treatmentCode].read1.suspectedPrimers)  
 						&& $scope.readset.treatments[treatmentCode].read1.suspectedPrimers != null 
 						&& $scope.readset.treatments[treatmentCode].read1.suspectedPrimers.value.length > 0);
 			}
 		}
-		if (read == 'read2') {
-			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined)  {
-				return ( $scope.readset.treatments[treatmentCode].read2.suspectedPrimers != undefined  
+		if (read === 'read2') {
+			if (angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode]))  {
+				return ( angular.isDefined($scope.readset.treatments[treatmentCode].read2.suspectedPrimers)  
 						&& $scope.readset.treatments[treatmentCode].read2.suspectedPrimers != null 
 						&& $scope.readset.treatments[treatmentCode].read2.suspectedPrimers.value.length > 0);
 			}
@@ -139,15 +134,15 @@
 	}
 	
 	$scope.showMaxSizeReads = function(read, treatmentCode) {
-		if (read == 'read1') {
-			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined)  {
-				return ( $scope.readset.treatments[treatmentCode].read1.maxSizeReads != undefined  
+		if (read === 'read1') {
+			if (angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode]))  {
+				return ( angular.isDefined($scope.readset.treatments[treatmentCode].read1.maxSizeReads)  
 						&& $scope.readset.treatments[treatmentCode].read1.maxSizeReads != null );
 			}
 		}
-		if (read == 'read2') {
-			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined)  {
-				return ( $scope.readset.treatments[treatmentCode].read2.maxSizeReads != undefined  
+		if (read === 'read2') {
+			if (angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode]))  {
+				return ( angular.isDefined($scope.readset.treatments[treatmentCode].read2.maxSizeReads)  
 						&& $scope.readset.treatments[treatmentCode].read2.maxSizeReads != null );
 			}
 		}
@@ -155,16 +150,16 @@
 	}
 	
 	$scope.showAdapters = function(read, treatmentCode) {
-		if (read == 'read1') {
-			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined)  {
-				return ( $scope.readset.treatments[treatmentCode].read1.adapters != undefined  
+		if (read === 'read1') {
+			if (angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode]))  {
+				return ( angular.isDefined($scope.readset.treatments[treatmentCode].read1.adapters)   
 						&& $scope.readset.treatments[treatmentCode].read1.adapters != null 
 						&& $scope.readset.treatments[treatmentCode].read1.adapters.value.length > 0);
 			}
 		}
-		if (read == 'read2') {
-			if ($scope.readset.treatments!=undefined && $scope.readset.treatments[treatmentCode] != undefined)  {
-				return ( $scope.readset.treatments[treatmentCode].read2.adapters != undefined  
+		if (read === 'read2') {
+			if (angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode]))  {
+				return ( angular.isDefined($scope.readset.treatments[treatmentCode].read2.adapters)   
 						&& $scope.readset.treatments[treatmentCode].read2.adapters != null 
 						&& $scope.readset.treatments[treatmentCode].read2.adapters.value.length > 0);
 			}
@@ -174,32 +169,32 @@
 	
 	//function to call just one time the sub-function getCascadedArray
 	$scope.getArray = function(property, treatmentCode, read, type) {
-		if ($scope.readset.treatments[treatmentCode] != undefined) {
+		if (angular.isDefined($scope.readset.treatments[treatmentCode])) {
 			var numberOfColumnsPerPage = 4;
 			var numberOfElementsByColumn = 50;	 
 			if (treatmentCode === "readQualityRaw")
 				if (read === "read1")
 					if (type === "suspectedKmers") {
-						if ($scope.readQualityRawRead1Kmers.length == 0) {
+						if (angular.isDefined($scope.readQualityRawRead1Kmers) && $scope.readQualityRawRead1Kmers.length == 0) {
 							$scope.readQualityRawRead1Kmers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
 						}
 						return $scope.readQualityRawRead1Kmers;
 					}
 					else {
-						if ($scope.readQualityRawRead1Primers.length == 0) {
+						if (angular.isDefined($scope.readQualityRawRead1Primers) && $scope.readQualityRawRead1Primers.length == 0) {
 							$scope.readQualityRawRead1Primers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
 						}
 						return $scope.readQualityRawRead1Primers;
 					}
 				else
 					if (type === "suspectedKmers") {
-						if ($scope.readQualityRawRead2Kmers.length == 0) {
+						if (angular.isDefined($scope.readQualityRawRead2Kmers) && $scope.readQualityRawRead2Kmers.length == 0) {
 							$scope.readQualityRawRead2Kmers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
 						}
 						return $scope.readQualityRawRead2Kmers;
 					}
 					else {
-						if ($scope.readQualityRawRead2Primers.length == 0) {
+						if (angular.isDefined($scope.readQualityRawRead2Primers) && $scope.readQualityRawRead2Primers.length == 0) {
 							$scope.readQualityRawRead2Primers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
 						}
 						return $scope.readQualityRawRead2Primers;
@@ -207,27 +202,27 @@
 			else
 				if (read === "read1")
 					if (type === "suspectedKmers") {
-						if ($scope.readQualityCleanRead1Kmers.length == 0) {
+						if (angular.isDefined($scope.readQualityCleanRead1Kmers) && $scope.readQualityCleanRead1Kmers.length == 0) {
 							$scope.readQualityCleanRead1Kmers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
 						}
 						return $scope.readQualityCleanRead1Kmers;
 					}
 					else {
-						if ($scope.readQualityCleanRead1Primers.length == 0) {
+						if (angular.isDefined($scope.readQualityCleanRead1Primers) && $scope.readQualityCleanRead1Primers.length == 0) {
 							$scope.readQualityCleanRead1Primers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
 						}
 						return $scope.readQualityCleanRead1Primers;
 					}
 				else
 					if (type === "suspectedKmers") {
-						if ($scope.readQualityCleanRead2Kmers.length == 0) {
+						if (angular.isDefined($scope.readQualityCleanRead2Kmers) && $scope.readQualityCleanRead2Kmers.length == 0) {
 							$scope.readQualityCleanRead2Kmers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
 						}
 						return $scope.readQualityCleanRead2Kmers;
 					}
 						
 					else {
-						if ($scope.readQualityCleanRead2Primers.length == 0) {
+						if (angular.isDefined($scope.readQualityCleanRead2Primers) && $scope.readQualityCleanRead2Primers.length == 0) {
 							$scope.readQualityCleanRead2Primers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
 						}
 						return $scope.readQualityCleanRead2Primers;
@@ -239,7 +234,7 @@
 	//function to make the "pagination" of the suspectedKmers & suspectedPrimers
 	//output: an array of pages. each of them contains arrays of columns. each of them contains the data ! 
 	var getCascadedArray = function(propertyArray, numberOfColumnsPerPage, numberOfElementsByColumn) {
-		if (propertyArray != undefined) {
+		if (angular.isDefined(propertyArray)) {
 			var tmpArray = propertyArray.slice(0);
 			tmpArray.sort(function(a, b){return b.nbOccurences-a.nbOccurences});
 			
@@ -310,7 +305,6 @@
 	
 	
 	var init = function(){
-		$scope.isPrint = false;
 		$scope.messages = messages();
 		$scope.lists = lists;
 		$scope.treatments = treatments;
