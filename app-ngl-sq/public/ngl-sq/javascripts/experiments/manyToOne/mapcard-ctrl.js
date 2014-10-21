@@ -35,6 +35,12 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 				number:2,
 				dynamic:true,
 			},
+			exportCSV:{
+				active:true,
+				showButton:true,
+				delimiter:";",
+				start:false
+			},
 			otherButton:{
 				active:true,
 				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'

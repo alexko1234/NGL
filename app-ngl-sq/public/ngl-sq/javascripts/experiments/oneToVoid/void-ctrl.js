@@ -31,6 +31,12 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 				active:false,
 				columnMode:true
 			},
+			exportCSV:{
+				active:true,
+				showButton:true,
+				delimiter:";",
+				start:false
+			},
 			extraHeaders:{
 				number:2,
 				dynamic:true,
