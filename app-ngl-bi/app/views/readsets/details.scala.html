@@ -23,23 +23,15 @@
 		
 		<div class="row">
 			<div class="col-md-12 col-lg-12">
-			<div class="page-header">	
-				<div class="btn-toolbar pull-right hidden-print">
+				<div class="page-header">	
+					<div class="btn-toolbar pull-right hidden-print">
 					 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
 					 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
 				 		<button class="btn btn-default" ng-if="!isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
-						<button class="btn btn-default" ng-click="activePrintMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-print"></i> @Messages("button.print")</button>
+						<button class="btn btn-default" ng-click="activePrintMode(readset.code)" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-print"></i> @Messages("button.print")</button>
 					</div>
-				 <h1 ng-switch on="readset.productionValuation.valid">		
-		
-				 	<span ng-switch-when="FALSE" class="text-danger">{{readset.code}}</span> 
-				 	<span ng-switch-when="TRUE" class="text-success">{{readset.code}}</span> 
-				 	<span ng-switch-default>{{readset.code}}</span> 
-				 	<small>   
-				 	<span ng-bind="readset.state.code|codes:'state'"></span>
-				 	</small>
-				 </h1>		 
-			</div>
+					@partials.details_header()		 
+				</div>
 			</div>
 		</div>
 		
@@ -72,19 +64,5 @@
 		</div>	
 
 
-		<div class="visible-print">
-			@partials.details_print()
-			@partials.details_file()
-		</div>
-		
-		<div class="visible-print">
-			<div id="border_box">
-				<li ng-repeat="treament in treatments.getTreatments()">
-					<div class="page-break">
-						<h3>{{treament.name}}</h3>
-						<div ng-include="treament.url"></div>
-					</div>				
-				</li>
-			</div>
-		</div>	
+
 

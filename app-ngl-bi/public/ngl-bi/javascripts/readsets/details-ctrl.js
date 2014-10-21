@@ -44,6 +44,10 @@
 		mainService.startEditMode();			
 	};
 	
+	$scope.activePrintMode = function(code){
+		$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.getPrint(code).url, 'print');		
+	};
+	
 	$scope.setImage = function(imageData, imageName, treatmentContext, treatmentCode, imageFullSizeWidth, imageFullSizeHeight) {
 		$scope.modalImage = imageData;
 	
@@ -167,109 +171,7 @@
 		return false;
 	}
 	
-	//function to call just one time the sub-function getCascadedArray
-	$scope.getArray = function(property, treatmentCode, read, type) {
-		if (angular.isDefined($scope.readset.treatments[treatmentCode])) {
-			var numberOfColumnsPerPage = 4;
-			var numberOfElementsByColumn = 50;	 
-			if (treatmentCode === "readQualityRaw")
-				if (read === "read1")
-					if (type === "suspectedKmers") {
-						if (angular.isDefined($scope.readQualityRawRead1Kmers) && $scope.readQualityRawRead1Kmers.length == 0) {
-							$scope.readQualityRawRead1Kmers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
-						}
-						return $scope.readQualityRawRead1Kmers;
-					}
-					else {
-						if (angular.isDefined($scope.readQualityRawRead1Primers) && $scope.readQualityRawRead1Primers.length == 0) {
-							$scope.readQualityRawRead1Primers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
-						}
-						return $scope.readQualityRawRead1Primers;
-					}
-				else
-					if (type === "suspectedKmers") {
-						if (angular.isDefined($scope.readQualityRawRead2Kmers) && $scope.readQualityRawRead2Kmers.length == 0) {
-							$scope.readQualityRawRead2Kmers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
-						}
-						return $scope.readQualityRawRead2Kmers;
-					}
-					else {
-						if (angular.isDefined($scope.readQualityRawRead2Primers) && $scope.readQualityRawRead2Primers.length == 0) {
-							$scope.readQualityRawRead2Primers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
-						}
-						return $scope.readQualityRawRead2Primers;
-					}
-			else
-				if (read === "read1")
-					if (type === "suspectedKmers") {
-						if (angular.isDefined($scope.readQualityCleanRead1Kmers) && $scope.readQualityCleanRead1Kmers.length == 0) {
-							$scope.readQualityCleanRead1Kmers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
-						}
-						return $scope.readQualityCleanRead1Kmers;
-					}
-					else {
-						if (angular.isDefined($scope.readQualityCleanRead1Primers) && $scope.readQualityCleanRead1Primers.length == 0) {
-							$scope.readQualityCleanRead1Primers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
-						}
-						return $scope.readQualityCleanRead1Primers;
-					}
-				else
-					if (type === "suspectedKmers") {
-						if (angular.isDefined($scope.readQualityCleanRead2Kmers) && $scope.readQualityCleanRead2Kmers.length == 0) {
-							$scope.readQualityCleanRead2Kmers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
-						}
-						return $scope.readQualityCleanRead2Kmers;
-					}
-						
-					else {
-						if (angular.isDefined($scope.readQualityCleanRead2Primers) && $scope.readQualityCleanRead2Primers.length == 0) {
-							$scope.readQualityCleanRead2Primers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
-						}
-						return $scope.readQualityCleanRead2Primers;
-					}
-		}
-		return;
-	}
-    
-	//function to make the "pagination" of the suspectedKmers & suspectedPrimers
-	//output: an array of pages. each of them contains arrays of columns. each of them contains the data ! 
-	var getCascadedArray = function(propertyArray, numberOfColumnsPerPage, numberOfElementsByColumn) {
-		if (angular.isDefined(propertyArray)) {
-			var tmpArray = propertyArray.slice(0);
-			tmpArray.sort(function(a, b){return b.nbOccurences-a.nbOccurences});
-			
-			for (var i=0, len=tmpArray.length; i<len; i++) {
-				tmpArray[i] = {"id":i, "data":tmpArray[i]};
-			}
-			
-			var totalNumberOfColumns = Math.ceil(tmpArray.length / numberOfElementsByColumn); 	
-			var pageArray = new Array(Math.ceil(totalNumberOfColumns/numberOfColumnsPerPage));
-			var exit = false;
-				
-			for (var p=0, len=pageArray.length; p<len; p++) {			
-				for (var c=0; c<numberOfColumnsPerPage; c++) {
-					for (var d=0; d<numberOfElementsByColumn; d++) {
-						if (d===0) {var dataArray = new Array();}
-						
-						var idx = p*numberOfColumnsPerPage*numberOfElementsByColumn + c*numberOfElementsByColumn + d;
-						if (idx < tmpArray.length) {
-							dataArray.push({"id":d, "line":tmpArray[idx]});
-						}
-						else {
-							exit = true;
-							break;
-						}
-					}
-					if (c===0) {var colArray = new Array();}
-					colArray.push({"id":c, "columns":dataArray});
-					
-					if (exit) {break;}
-				}
-				pageArray[p] = {"id":p, "pages":colArray};
-			}	
-			return pageArray;
-		}
-	}
+
 	
 	
 	$scope.isDataExistsForPhylogeneticTree = function(trtCode) {
@@ -290,20 +192,8 @@
 			return "data:text/html;base64,"+$scope.readset.treatments["taxonomy"].read1.krona.value;
 		}
 	}
+	
 
-	var initArraysOfSuspectedContaminations = function(){
-		$scope.readQualityRawRead1Kmers = [];
-		$scope.readQualityRawRead1Primers = [];
-		$scope.readQualityRawRead2Kmers = [];
-		$scope.readQualityRawRead2Primers = [];
-		$scope.readQualityCleanRead1Kmers = [];
-		$scope.readQualityCleanRead1Primers = [];
-		$scope.readQualityCleanRead2Kmers = [];
-		$scope.readQualityCleanRead2Primers = [];
-	}
-	
-	
-	
 	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
@@ -313,8 +203,6 @@
 		if(isValuationMode()){
 			mainService.startEditMode();			
 		}
-		initArraysOfSuspectedContaminations(); 
-		
 		
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.get($routeParams.code).url).success(function(data) {
 			$scope.readset = data;	
@@ -359,8 +247,141 @@
 	init();
 	
 }]);
+ 
+ 
+ 
+ 
 
+ angular.module('home').controller('DetailsPrintCtrl', ['$scope', '$http', '$sce', '$routeParams',  'mainService', 'tabService', 'treatments', 
+    function($scope,  $http, $sce, $routeParams,  mainService, tabService, treatments ) {
+	 
+		//function to call just one time the sub-function getCascadedArray
+		$scope.getArray = function(property, treatmentCode, read, type) {
+			if (angular.isDefined($scope.readset.treatments[treatmentCode])) {
+				var numberOfColumnsPerPage = 4;
+				var numberOfElementsByColumn = 50;	 
+				if (treatmentCode === "readQualityRaw")
+					if (read === "read1")
+						if (type === "suspectedKmers") {
+							if (angular.isDefined($scope.readQualityRawRead1Kmers) && $scope.readQualityRawRead1Kmers.length == 0) {
+								$scope.readQualityRawRead1Kmers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+							}
+							return $scope.readQualityRawRead1Kmers;
+						}
+						else {
+							if (angular.isDefined($scope.readQualityRawRead1Primers) && $scope.readQualityRawRead1Primers.length == 0) {
+								$scope.readQualityRawRead1Primers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+							}
+							return $scope.readQualityRawRead1Primers;
+						}
+					else
+						if (type === "suspectedKmers") {
+							if (angular.isDefined($scope.readQualityRawRead2Kmers) && $scope.readQualityRawRead2Kmers.length == 0) {
+								$scope.readQualityRawRead2Kmers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+							}
+							return $scope.readQualityRawRead2Kmers;
+						}
+						else {
+							if (angular.isDefined($scope.readQualityRawRead2Primers) && $scope.readQualityRawRead2Primers.length == 0) {
+								$scope.readQualityRawRead2Primers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+							}
+							return $scope.readQualityRawRead2Primers;
+						}
+				else
+					if (read === "read1")
+						if (type === "suspectedKmers") {
+							if (angular.isDefined($scope.readQualityCleanRead1Kmers) && $scope.readQualityCleanRead1Kmers.length == 0) {
+								$scope.readQualityCleanRead1Kmers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+							}
+							return $scope.readQualityCleanRead1Kmers;
+						}
+						else {
+							if (angular.isDefined($scope.readQualityCleanRead1Primers) && $scope.readQualityCleanRead1Primers.length == 0) {
+								$scope.readQualityCleanRead1Primers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+							}
+							return $scope.readQualityCleanRead1Primers;
+						}
+					else
+						if (type === "suspectedKmers") {
+							if (angular.isDefined($scope.readQualityCleanRead2Kmers) && $scope.readQualityCleanRead2Kmers.length == 0) {
+								$scope.readQualityCleanRead2Kmers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+							}
+							return $scope.readQualityCleanRead2Kmers;
+						}
+							
+						else {
+							if (angular.isDefined($scope.readQualityCleanRead2Primers) && $scope.readQualityCleanRead2Primers.length == 0) {
+								$scope.readQualityCleanRead2Primers = getCascadedArray(property, numberOfColumnsPerPage, numberOfElementsByColumn);;
+							}
+							return $scope.readQualityCleanRead2Primers;
+						}
+			}
+			return;
+		}
+	    
+		//function to make the "pagination" of the suspectedKmers & suspectedPrimers
+		//output: an array of pages. each of them contains arrays of columns. each of them contains the data ! 
+		var getCascadedArray = function(propertyArray, numberOfColumnsPerPage, numberOfElementsByColumn) {
+			if (angular.isDefined(propertyArray)) {
+				var tmpArray = propertyArray.slice(0);
+				tmpArray.sort(function(a, b){return b.nbOccurences-a.nbOccurences});
+				
+				for (var i=0, len=tmpArray.length; i<len; i++) {
+					tmpArray[i] = {"id":i, "data":tmpArray[i]};
+				}
+				
+				var totalNumberOfColumns = Math.ceil(tmpArray.length / numberOfElementsByColumn); 	
+				var pageArray = new Array(Math.ceil(totalNumberOfColumns/numberOfColumnsPerPage));
+				var exit = false;
+					
+				for (var p=0, len=pageArray.length; p<len; p++) {			
+					for (var c=0; c<numberOfColumnsPerPage; c++) {
+						for (var d=0; d<numberOfElementsByColumn; d++) {
+							if (d===0) {var dataArray = new Array();}
+							
+							var idx = p*numberOfColumnsPerPage*numberOfElementsByColumn + c*numberOfElementsByColumn + d;
+							if (idx < tmpArray.length) {
+								dataArray.push({"id":d, "line":tmpArray[idx]});
+							}
+							else {
+								exit = true;
+								break;
+							}
+						}
+						if (c===0) {var colArray = new Array();}
+						colArray.push({"id":c, "columns":dataArray});
+						
+						if (exit) {break;}
+					}
+					pageArray[p] = {"id":p, "pages":colArray};
+				}	
+				return pageArray;
+			}
+		}
 
+		
+	 
+		var initArraysOfSuspectedContaminations = function(){
+			$scope.readQualityRawRead1Kmers = [];
+			$scope.readQualityRawRead1Primers = [];
+			$scope.readQualityRawRead2Kmers = [];
+			$scope.readQualityRawRead2Primers = [];
+			$scope.readQualityCleanRead1Kmers = [];
+			$scope.readQualityCleanRead1Primers = [];
+			$scope.readQualityCleanRead2Kmers = [];
+			$scope.readQualityCleanRead2Primers = [];
+		}
+	 
+		var init = function(){
+			initArraysOfSuspectedContaminations(); 
+		};
+		
+		init();
+ }]);
+
+ 
+ 
+ 
 /*
  angular.module('home').controller('TaxonomyCtrl', ['$scope', function($scope) {
 	 

@@ -3,6 +3,7 @@ package controllers.readsets.tpl;
 import play.Routes;
 import play.mvc.Result;
 import views.html.readsets.details;
+import views.html.readsets.print;
 import views.html.readsets.home;
 import views.html.readsets.search;
 import views.html.readsets.treatments;
@@ -35,6 +36,14 @@ public class ReadSets extends CommonController {
 		return ok(details.render());
 	}
 	
+	public static Result getPrint(String code) {
+		return ok(home.render("print")); 
+	}
+	
+	public static Result print() {
+		return ok(print.render());
+	}
+	
 	public static Result treatments(String code) {
 		return ok(treatments.render(code));
 	}
@@ -46,6 +55,7 @@ public class ReadSets extends CommonController {
   	        // Routes
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.home(),  
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.get(), 
+  	    		controllers.readsets.tpl.routes.javascript.ReadSets.getPrint(), 
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.valuation(),
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.treatments(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.get(),

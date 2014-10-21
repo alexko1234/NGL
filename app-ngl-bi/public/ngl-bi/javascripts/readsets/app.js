@@ -1,5 +1,12 @@
 "use strict";
-angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biCommonsServices', 'biWorkflowChartServices', 'ui.bootstrap','ngl-bi.ReadSetsServices'], function($routeProvider, $locationProvider) {
+angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biCommonsServices', 'biWorkflowChartServices', 'ui.bootstrap','ngl-bi.ReadSetsServices'], 
+	function($routeProvider, $locationProvider) {
+	
+	
+	$routeProvider.when('/readsets/:code/print', {
+		templateUrl : '/tpl/readsets/print',
+		controller : 'DetailsCtrl'
+	});
 	
 	$routeProvider.when('/readsets/search/home', {
 		templateUrl : '/tpl/readsets/search',
@@ -20,7 +27,7 @@ angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biComm
 		templateUrl : '/tpl/readsets/search',
 		controller : 'SearchBatchCtrl'
 	});
-	
+
 	$routeProvider.when('/readsets/:code', {
 		templateUrl : '/tpl/readsets/details',
 		controller : 'DetailsCtrl'
@@ -29,6 +36,8 @@ angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biComm
 		templateUrl : '/tpl/readsets/details',
 		controller : 'DetailsCtrl'
 	});
+	
+
 	
 	$routeProvider.otherwise({redirectTo: '/readsets/search/home'});
 
