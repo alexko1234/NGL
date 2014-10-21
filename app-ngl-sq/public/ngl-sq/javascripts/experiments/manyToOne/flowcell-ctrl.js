@@ -191,8 +191,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 				for(var j=0; j<data.length;j++){
 					if($scope.getLevel( data[j].levels, "ContainerOut")){
 						var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
-						if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
-							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value);
+						var k = $scope.datatable.displayResult[i].data.inputX;
+						if($scope.experiment.value.atomicTransfertMethods[k].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[k].outputContainerUsed.experimentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[k].outputContainerUsed.experimentProperties[data[j].code].value);
 						}else{
 							getter.assign($scope,"");
 						}
