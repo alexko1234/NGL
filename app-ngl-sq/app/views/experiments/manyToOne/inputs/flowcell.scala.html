@@ -4,7 +4,7 @@
   <li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab">@Messages("experiments.flowcell.roadMap")</a></li>
 </ul>
 {{tab}}
-<div class="row tab-content" ng-controller="FlowcellCtrl" ng-init="init_flowcell(@laneCount)">
+<div class="row tab-content tabPaneTable" ng-controller="FlowcellCtrl" ng-init="init_flowcell(@laneCount)">
 	<div class="col-md-12 col-lg-12 tab-pane active" style="margin-right:auto;margin-left:auto" id="flowcell">
 		<div ng-model="inputContainers" droppable class="col-md-4 col-lg-4 inputContainerGroup">
 			<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p>
@@ -28,6 +28,8 @@
 					<th>
 						@Messages("containers.table.libProcessTypeCodes")
 					</th>
+					<th>
+					</th>
 				</tr>
 				</thead>				
 				<tr ng-model="container" ng-repeat="container in inputContainers" draggable>
@@ -38,7 +40,7 @@
 						{{container.code}}
 					</td>
 					<td class="col-sm-1">
-						<input class="form-control input-small" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" ng-model="container.percentage" />
+						<input class="form-control input-small valueInput" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" ng-model="container.percentage" />
 					</td>					
 					<td  title="{{getTags(container.contents) | unique}}" ng-init="nbItem = 5">					
 						<div ng-repeat="content in container.contents | unique:'properties.tag.value' |  limitTo:nbItem">
@@ -71,21 +73,21 @@
 		<table class="table" style="width:200px;">
 		@for(i <- 0 to laneCount-1) {
 		<tr class="flowCellLane">
-			<td>
-				<button ng-click="hideRow(@i)"><i ng-show="rows[@i]" class="fa fa-eye-slash"></i><i  ng-show="!rows[@i]" class="fa fa-eye"></i></button>
-			</td>
-			<td>
+			<th>
+				<button ng-click="hideRow(@i)" class="litte-icone"><i ng-show="rows[@i]" class="fa fa-eye-slash"></i><i  ng-show="!rows[@i]" class="fa fa-eye"></i></button>
+			</th>
+			<th>
 				<b class="numberLane">@(i+1)</b>
-			</td>
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable style="width:200px;height:20px">
+			</th>
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable>
 				<div ng-hide="rows[@i]" style="width:300px">
-					<span  ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds">
-						{{flowcell.code}},{{flowcell.percentage}}%,{{experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties.phixPercent.value || "nr"}}%;
+					<span  ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds" class="LaneData">
+						{{flowcell.code}}/ {{flowcell.percentage}}%/ PhiX:{{experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties.phixPercent.value || "nr"}}%;<br/>
 					</span>
 				</div>
 				<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && rows[@i]" class="table">
 				<tr>
-					<th>
+					<th class="LaneData">
 						@Messages("containers.table.code")
 					</th>
 					<th>
@@ -105,11 +107,11 @@
 					</th>
 				</tr>
 					<tr ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds"  ng-model="flowcell"  draggable>
-						<td>
+						<td class="LaneData">							
 							{{flowcell.code}}
 						</td>
 						<td>
-							<input class="form-control " type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-model="flowcell.percentage" />
+							<input class="form-control valueInput" type="text" placeholder='@Messages("containers.table.percentage")' title='@Messages("containers.table.percentage")' ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-model="flowcell.percentage" />
 						</td>
 						<td>
 							<div title="{{getSampleAndTags(flowcell) | unique}}" ng-repeat="sampleAndTag in getSampleAndTags(flowcell) | unique | limitTo:5">
@@ -147,7 +149,7 @@
 			    <tr>
 					<td style="min-width:70px" ng-repeat="property in experiment.containerOutProperties">
 								<div ng-switch on="property.choiceInList">
-								<input class="form-control" type="text" ng-switch-when="false" 
+								<input class="form-control valueInput" type="text" ng-switch-when="false" 
 									ng-readonly="!experiment.experimentProperties.enabled"
 									
 									ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties[property.code].value"

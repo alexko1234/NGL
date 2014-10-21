@@ -365,7 +365,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			var sampleCodeAndTags = [];
 			angular.forEach(container.contents, function(content){
 				if(content.properties.tag != undefined && content.sampleCode != undefined){
-					sampleCodeAndTags.push(content.sampleCode+" "+content.properties.tag.value);
+					sampleCodeAndTags.push(content.sampleCode+"/ "+content.properties.tag.value);
 				}
 			});
 			return sampleCodeAndTags;

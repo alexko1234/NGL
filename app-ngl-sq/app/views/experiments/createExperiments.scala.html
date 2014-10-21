@@ -194,7 +194,7 @@
 											</select>
 			     }
 			     
- <!-- Déplacement du contenant sortie le 24/09/2014  -->
+ <!-- Dï¿½placement du contenant sortie le 24/09/2014  -->
 				<div class="form-group" ng-hide="!experiment.value.instrument.typeCode || experiment.outputVoid">
 					<label class="col-md-6 col-lg-6 control-label">@Messages("experiments.intrumentCategory")</label>
 					<div class="col-md-6 col-lg-6">
@@ -231,7 +231,7 @@
 						</div>
 						<div ng-if="instp.valueType != 'java.awt.Image'">
 							<div class="col-md-6 col-lg-6" ng-switch on="instp.choiceInList">
-								<input class="form-control" type="text" ng-switch-when="false" class="input-small"
+								<input class="form-control" type="text" title='{{instp.name}}' ng-switch-when="false" class="input-small"
 									ng-readonly="!experiment.instrumentInformation.enabled"
 									ng-model="experiment.value.instrumentProperties[instp.code].value"
 									ng-disabled="!experiment.instrumentInformation.enabled"/>
