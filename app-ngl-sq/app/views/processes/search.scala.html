@@ -9,7 +9,7 @@
 			</div>
 		}
 		@formGroup{			
-				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("processes.placeholder.fromDate")'>
+				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("processes.placeholder.fromDate")' title='@Messages("processes.placeholder.fromDate")' >
 		}	
 	
 	}
@@ -20,7 +20,7 @@
 			</div>
 		}
 		@formGroup{	
-				<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("processes.placeholder.toDate")'>
+				<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("processes.placeholder.toDate")' title='@Messages("processes.placeholder.toDate")' >
 		}
 	}
 	
@@ -36,7 +36,7 @@
 	}
 	@columnSearchForm{
 			@formGroup{		
-			<input class="form-control" type="text" ng-model="searchService.form.user" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.user")'>
+			<input class="form-control" type="text" ng-model="searchService.form.user" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.user")' title='@Messages("search.placeholder.user")'>
 			}
 				@formGroup{	
 			<div class="form-control" bt-select ng-model="searchService.form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in searchService.lists.getSamples()" ng-focus="searchService.refreshSamples()"></div>			
@@ -49,7 +49,7 @@
 			</div>
 			}
 			@formGroup{	
-			<input class="form-control" type="text" ng-model="searchService.form.processesSupportCode"  typeahead="support.code as support.name for support in searchService.lists.getSupports() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.support")' >
+			<input class="form-control" type="text" ng-model="searchService.form.processesSupportCode"  typeahead="support.code as support.name for support in searchService.lists.getSupports() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.support")' title='@Messages("search.placeholder.support")'>
 			}
 	}
 }

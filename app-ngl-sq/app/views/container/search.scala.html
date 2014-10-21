@@ -11,7 +11,7 @@
 			</div>
 		}	
 		@formGroup{			
-				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")'>
+				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")' title='@Messages("containers.placeholder.fromDate")'>
 			}
 	}
 	@columnSearchForm{
@@ -25,7 +25,7 @@
 			</div>	
 		}
 		@formGroup{		
-				<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("containers.placeholder.toDate")'>
+				<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("containers.placeholder.toDate")' title='@Messages("containers.placeholder.toDate")'>
 			}
 	}
 	@columnSearchForm{
@@ -41,7 +41,7 @@
 	}
 	@columnSearchForm{
 		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.containerSupportCode"  typeahead="support.code as support.name for support in searchService.lists.getSupports() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.support")'>			
+			<input class="form-control" type="text" ng-model="searchService.form.containerSupportCode"  typeahead="support.code as support.name for support in searchService.lists.getSupports() | filter:$viewValue | limitTo:20" placeholder='@Messages("search.placeholder.support")' title='@Messages("search.placeholder.support")'>			
 		}
 		@formGroup{	
 			<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-model="searchService.form.processType" bt-options="processType.name for processType in searchService.lists.getProcessTypes()" ng-change="searchService.changeProcessType()" auto-select>

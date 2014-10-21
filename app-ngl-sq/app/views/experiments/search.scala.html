@@ -35,10 +35,10 @@
 				</div>
 			}
 			@formGroup{			
-				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("experiment.placeholder.fromDate")'>
+				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("experiment.placeholder.fromDate")' title='@Messages("experiment.placeholder.fromDate")'>
 			}
 			@formGroup{		
-				<input class="form-control" type="text" ng-model="searchService.form.containerSupportCode" typeahead="containerSupportCode.code for containerSupportCode in changeContainerSupportCode($viewValue) | limitTo:20 " typeahead-min-length="3" placeholder='@Messages("search.placeholder.support")'>
+				<input class="form-control" type="text" ng-model="searchService.form.containerSupportCode" typeahead="containerSupportCode.code for containerSupportCode in changeContainerSupportCode($viewValue) | limitTo:20 " typeahead-min-length="3" placeholder='@Messages("search.placeholder.support")' title='@Messages("search.placeholder.support")'>
 			}			
 		}
 		@columnSearchForm{
@@ -47,15 +47,15 @@
 				</div>
 			}
 			@formGroup{	
-				<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("experiment.placeholder.toDate")'>
+				<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("experiment.placeholder.toDate")' title='@Messages("experiment.placeholder.toDate")'>
 			}
 			@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.code" typeahead="experiment.code as experiment.name for experiment in searchService.lists.getExperiments() | filter:$viewValue | limitTo:20" placeholder='@Messages("experiment.placeholder.code")'>
+			<input class="form-control" type="text" ng-model="searchService.form.code" typeahead="experiment.code as experiment.name for experiment in searchService.lists.getExperiments() | filter:$viewValue | limitTo:20" placeholder='@Messages("experiment.placeholder.code")' title='@Messages("experiment.placeholder.code")'>
 			}
 		}
 		@columnSearchForm{
 			@formGroup{		
-			<input class="form-control" type="text" ng-model="searchService.form.user" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("experiment.placeholder.user")'>
+			<input class="form-control" type="text" ng-model="searchService.form.user" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("experiment.placeholder.user")' title='@Messages("experiment.placeholder.user")'>
 			}
 			@formGroup{
 			<div bt-select placeholder="@Messages("experiments.select.state")" class="form-control" ng-model="searchService.form.state" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" ng-change="search()" auto-select>
