@@ -70,12 +70,12 @@
 		<h2>@Messages("experiments.flowcell.design") :</h2>
 		<table class="table" style="width:200px;">
 		@for(i <- 0 to laneCount-1) {
-		<tr>
+		<tr class="flowCellLane">
 			<td>
 				<button ng-click="hideRow(@i)"><i ng-show="rows[@i]" class="fa fa-eye-slash"></i><i  ng-show="!rows[@i]" class="fa fa-eye"></i></button>
 			</td>
 			<td>
-				<b>@(i+1)</b>
+				<b class="numberLane">@(i+1)</b>
 			</td>
 			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable style="width:200px;height:20px">
 				<div ng-hide="rows[@i]" style="width:300px">
