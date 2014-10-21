@@ -61,15 +61,15 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							});*/
 							
 							//concat sampleCode_tag
-							var sampleCodeAndTags = [];
+							/*var sampleCodeAndTags = [];
 							angular.forEach(container.contents, function(content){
 								if(content.properties.tag != undefined && content.sampleCode != undefined){
 									sampleCodeAndTags.push(content.sampleCode+" "+content.properties.tag.value);
 								}
-							});
+							});*/
 							containerUseds.push({"code":container.code,"state":container.state,"instrumentProperties":{},"experimentProperties":{},
 								"percentage":100,"categoryCode":container.categoryCode,"volume":container.mesuredVolume,
-								"concentration":container.mesuredConcentration,"contents":container.contents,"sampleCodeAndtags":sampleCodeAndTags/*,"contentsInput":{"tags":tags,"sampleTypes":sampleTypes,"libProcessTypeCodes":libProcessTypeCodes}*/,"locationOnContainerSupport":container.support});
+								"concentration":container.mesuredConcentration,"contents":container.contents/*,"contentsInput":{"tags":tags,"sampleTypes":sampleTypes,"libProcessTypeCodes":libProcessTypeCodes}*/,"locationOnContainerSupport":container.support});
 						});
 						
 						return containerUseds;
