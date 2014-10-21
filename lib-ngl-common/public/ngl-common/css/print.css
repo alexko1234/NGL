@@ -26,7 +26,6 @@
 	
 	img {
 		float: none !important;
-		max-height: 90% !important;
 	}
 	
 	.page-break {page-break-before: always;}  
@@ -37,29 +36,20 @@
 
   	
   	#pairs_overlapDistrib {
-  		max-height: 70% !important;
+  		max-width: 70% !important;
   	}
   	
-  	#read1_adapterContamination, #read2_adapterContamination {
-  		max-height: 50% !important;
-  	}
-  	
+  	#read1_adapterContamination, #read2_adapterContamination,
   	#read1_nuclDistribution, #read1_readSizeDistribution, #read1_readWithNpercent, #read1_positionN,
-  	#read2_nuclDistribution, #read2_readSizeDistribution, #read2_readWithNpercent, #read2_positionN {
-  		max-height: 40% !important;
-  	}
-  	
+  	#read2_nuclDistribution, #read2_readSizeDistribution, #read2_readWithNpercent, #read2_positionN,
+  	#read1_GCDistribution, #read2_GCDistribution, #pairs_overlapDistrib,
   	#pairs_PEReadDistanceSeparation, #pairs_MPReadDistanceSeparation {
-  		max-height: 35% !important;
+  		max-width: 50% !important;
   	}
-  	
-  	#read1_GCDistribution, #read2_GCDistribution, #pairs_overlapDistrib {
-  		max-height: 50% !important;
-  	}
-  	
+
   	#read1_errorPosition, #read2_errorPosition {
-  		max-height: 35% !important;
-  	}
+  		max-width: 32% !important;
+  	}  	
   	
   	.table {
   		font-size: 10px;
