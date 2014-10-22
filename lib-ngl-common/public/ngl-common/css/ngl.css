@@ -98,6 +98,22 @@ input[type="checkbox"] {
 	
 }
 
+.compoFlowcel>table>tbody>tr>td{
+	line-height: 1.33333333;
+	vertical-align: top;
+	border-top: 1px solid #ddd;
+	width: 200px;
+	height: 20px;
+	padding-top: 0;
+	padding-bottom: 0px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+.compoFlowcel>table>tbody>tr>th{
+  border: none;
+  }
+
 .litte-icone {
 	padding-top: 1px;
 	padding-bottom: 1px;
@@ -129,11 +145,23 @@ input[type="checkbox"] {
 	width: 600px;
 }
 
+.inputContainerGroup>p {
+margin: 8px 0 8px;
+}
+
 .flowCellLane {
-	border-top: 3px solid #C0C0C0;
+	border-top: 2px outset #C0C0C0;
 	font-size: 10px;
 	padding-top: 0px;
 }
+
+.flowCellLane>th {
+	border-top:none;
+	font-size: 10px;
+	padding-top: 0px;
+}
+
+
 
 .numberLane {
 	border: 1px solid gray;
@@ -143,22 +171,30 @@ input[type="checkbox"] {
 }
 
 .valueInput{
-	padding: 3px 5px;
+	padding: 3px 3px 3px;
+	margin: 0px;
+	width: 52px;
+	height: 22px;
+	text-align: end;
 }
 
 .LaneData{
 	font-size: 12px;
+	
 }
 
-.compoFlowcel>table>tbody>tr>td{
-	line-height: 1.33333333;
-	vertical-align: top;
-	border-top: 1px solid #ddd;
-	width: 200px;
-	height: 20px;
-	padding-top: 0;
-	padding-bottom: 0px;
-	padding-left: 8px;
-	padding-right: 8px;
+.LaneSummary{
+	font-size: 12px;
+	padding: 3px 3px 3px;
+	margin: 3px 1px 3px;
+	width:300px;
+	
 }
+
+.LaneOutput{
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
 }
+
+
+
