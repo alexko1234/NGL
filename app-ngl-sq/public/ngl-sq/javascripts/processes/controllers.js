@@ -210,9 +210,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 }]);
 
 angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','mainService','$q', function($scope, datatable,$http,mainService,$q) {
-
-	$scope.supportView = false;
-	$scope.containers = [];
 	
 	$scope.datatableConfig = {
 			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns(mainService.getForm().processType).url,
@@ -354,7 +351,6 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 				}
 			});
 			if(!alreadyExist){
-				//processesSupports.push({"process":process, "supportCode":process.support.code});
 				$scope.processesSupports.push(process);
 			}
 		});
@@ -382,8 +378,11 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	//init
 	$scope.form = mainService.getForm();
 	$scope.message = {};
+	$scope.supportView = false;
+	$scope.containers = [];
 	$scope.datatable = datatable($scope, $scope.datatableConfig);
 	$scope.basket = mainService.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);		
 	$scope.datatable.selectAll(true);
+	$scope.swithView();
 }]);
