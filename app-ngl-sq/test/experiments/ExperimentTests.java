@@ -31,7 +31,7 @@ import validation.experiment.instance.ExperimentValidationHelper;
 import controllers.experiments.api.Experiments;
 import fr.cea.ig.MongoDBDAO;
 
-public class experimentTests extends AbstractTests{
+public class ExperimentTests extends AbstractTests{
 	
 	protected static ALogger logger=Logger.of("ExperimentTest");
 
