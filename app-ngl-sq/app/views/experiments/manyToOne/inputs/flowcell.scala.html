@@ -77,6 +77,11 @@
 				<b class="numberLane">@(i+1)</b>
 			</th>
 			
+				<th ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0">
+					<button ng-click="hideRow(@i)"  ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="litte-eye"><i ng-show="rows[@i]" class="fa fa-eye-slash"></i><i  ng-show="!rows[@i]" class="fa fa-eye"></i></button>
+				</th>
+			
+			
 			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable >
 			
 				<div ng-hide="rows[@i]" class="LaneSummary">
@@ -141,7 +146,7 @@
 			</div>
 			</td>
 		
-			<td ng-show="rows[@i]">
+			<td ng-if="rows[@i]" >
 			
 			<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="table">
 				<tr>
@@ -170,10 +175,7 @@
 			</tr>
 			</table>
 			
-			</td>
-			<th>
-				<button ng-click="hideRow(@i)"  ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="litte-eye"><i ng-show="rows[@i]" class="fa fa-eye-slash"></i><i  ng-show="!rows[@i]" class="fa fa-eye"></i></button>
-			</th>
+			</td>			
 		</tr>
 		}
 		</table>

@@ -95,6 +95,7 @@ input[type="checkbox"] {
 
 .compoFlowcel {	
     margin-left: 60px;
+    width: 400px;
 	
 }
 
@@ -115,15 +116,7 @@ input[type="checkbox"] {
   padding: 8px;
   line-height: 1.33333333;
   vertical-align: top;
-  }
-  
-/* .compoFlowcel>table>tbody>tr>td{
-  border: none;
-  padding: 8px;
-  line-height: 1.33333333;
-  vertical-align: top;
-  border-top: 1px solid #ddd;
-  } */
+  }  
 
 .litte-icone {
 	padding-top: 1px;
@@ -194,7 +187,7 @@ margin: 8px 0 8px;
 .flowCellLane .table>tbody>tr>th {
 	border-top:none;	
 	padding-top: 5px;
-	text-align: center;
+	text-align: left;
 	vertical-align: middle;
 }
 
@@ -212,7 +205,7 @@ margin: 8px 0 8px;
 
 .tagCell{
 	width: 150px;
-	text-align: center;
+	text-align: left;
 }
 
 .numberLane {
@@ -227,7 +220,7 @@ margin: 8px 0 8px;
 	margin: 0px;
 	width: 52px;
 	height: 22px;
-	text-align: end;
+	text-align: left;
 }
 
 .LaneData{
@@ -247,23 +240,20 @@ margin: 8px 0 8px;
 	border-right: 1px solid #ddd;
 }
 
-.LaneOutput {	
-	
-}
 
 .roadmap .datatable .form-group input.form-control:not([type="checkbox"]){
 	padding: 3px 3px 3px;
 	margin: 0px;
 	width: 52px;
 	height: 22px;
-	text-align: end;
+	text-align: left;
 }
 
 .roadmap .datatable .table>tbody>tr>td{
 	border: 1px solid #ddd;
 	max-width: 240px;
 	overflow-wrap: break-word;
-	text-align: center;
+	text-align: left;
 	vertical-align: middle;
 }
 
