@@ -47,8 +47,8 @@
 								{{content.properties.tag.value}}
 						</div>
 						
-						<button ng-show="nbItem==5 && container.contents.length>5" ng-click="nbItem=container.contents.length" class="small-litte-icone"> <i>...</i> </button>
-						<button ng-show="nbItem>5 && container.contents.length>5" ng-click="nbItem=5" class="small-litte-icone"> <i class="fa fa-minus-square-o"></i> </button>
+						<button ng-show="nbItem==5 && container.contents.length>5" ng-click="nbItem=container.contents.length" class="small-litte-icone-transparent"> <i><b>...</b></i> </button>
+						<button ng-show="nbItem>5 && container.contents.length>5" ng-click="nbItem=5" class="small-litte-icone-transparent "> <i class="fa fa-minus-square-o"></i> </button>
 												
 					</td>
 					<td title="{{getSampleTypeCodes(container.contents) | unique}}">
@@ -70,7 +70,7 @@
 		</div>
 		<div class="col-md-5 col-lg-5 compoFlowcel">
 		<h2>@Messages("experiments.flowcell.design") :</h2>
-		<table class="table" style="width:200px;">
+		<table class="table" >
 		@for(i <- 0 to laneCount-1) {
 		<tr class="flowCellLane">			
 			<th>
@@ -93,7 +93,7 @@
 					<th>
 						@Messages("containers.table.percentage")
 					</th>
-					<th>
+					<th class="tagCell">
 						@Messages("containers.table.sampleCodeAndTags")
 					</th>
 					<th>
@@ -114,7 +114,7 @@
 							<input class="form-control valueInput" type="text" placeholder='@Messages("containers.table.percentage")' title='@Messages("containers.table.percentage")' ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-model="flowcell.percentage" />
 						</td>
 						<td>
-							<div title="{{getSampleAndTags(flowcell) | unique}}" ng-repeat="sampleAndTag in getSampleAndTags(flowcell) | unique | limitTo:5">
+							<div class="tagCell" title="{{getSampleAndTags(flowcell) | unique}}" ng-repeat="sampleAndTag in getSampleAndTags(flowcell) | unique | limitTo:5">
 								{{sampleAndTag}}<br>
 							</div>
 						</td>
@@ -172,14 +172,14 @@
 			
 			</td>
 			<th>
-				<button ng-click="hideRow(@i)"  ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="litte-icone"><i ng-show="rows[@i]" class="fa fa-eye-slash"></i><i  ng-show="!rows[@i]" class="fa fa-eye"></i></button>
+				<button ng-click="hideRow(@i)"  ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="litte-eye"><i ng-show="rows[@i]" class="fa fa-eye-slash"></i><i  ng-show="!rows[@i]" class="fa fa-eye"></i></button>
 			</th>
 		</tr>
 		}
 		</table>
 		</div>
 	</div>
-	<div class="tab-pane" id="roadmap">
-		<div class="col-md-12 col-lg-12" datatable="datatable"></div>
+	<div class="tab-pane roadmap" id="roadmap">
+		<div class="col-md-12 col-lg-12 table-raodmap" datatable="datatable"></div>
 	</div>
 </div>

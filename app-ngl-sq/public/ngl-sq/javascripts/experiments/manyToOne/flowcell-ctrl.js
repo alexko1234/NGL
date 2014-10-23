@@ -78,7 +78,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 						"extraHeaders":{"0":"Inputs"}
 					}
 					],
-			compact:false,
+			compact:true,
 			pagination:{
 				active:false
 			},		
