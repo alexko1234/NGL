@@ -620,7 +620,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 											libProcessTypeCodes.push(content.properties.libProcessTypeCode.value);
 										}
 										if(content.properties.tag != undefined && content.sampleCode != undefined){
-											sampleCodeAndTags.push(content.sampleCode+" "+content.properties.tag.value);
+											sampleCodeAndTags.push(content.sampleCode+"/"+content.properties.tag.value);
 										}
 									});
 									
