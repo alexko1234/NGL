@@ -243,8 +243,15 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 				},
 				value:function(line){
 						var val=line;
-						val.support=undefined; 
-						return val;
+						val.properties.limsCode = undefined;
+						val.properties.receptionDate = undefined;
+						var process = {
+								projectCode: val.projectCodes[0],
+								typeCode:$scope.form.processType,
+								categoryCode:$scope.form.processCategory,
+								properties:val.properties
+						};
+						return process;
 				}
 			},
 			remove:{
@@ -285,14 +292,11 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		console.log($scope.datatable.displayResult);
 		var data = $scope.datatable.displayResult;
 		var url = "";
-		if($scope.supportView){
-			url = jsRoutes.controllers.processes.api.Processes.saveSupport(value.support.code).url;
-		}else{
-			url =  jsRoutes.controllers.processes.api.Processes.save().url;
-		}
 		if(!$scope.supportView){
+			url =  jsRoutes.controllers.processes.api.Processes.save().url;
 			$scope.processes = [];
 			$scope.promises = [];
+			$scope.datatable.config.spinner.start = true;
 			for(var i=0;i<data.length;i++){
 				console.log(data[i]);
 				for(var j = 0; j < data[i].data.sampleCodes.length; j++){ //one process by sample
@@ -332,6 +336,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 				$scope.basket.reset();
 				$scope.getColumns();
 				$scope.datatable.setData($scope.processes);
+				$scope.datatable.config.spinner.start = false;
 			});
 		}else{
 			$scope.datatable.save();
