@@ -174,8 +174,14 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 								}
 							}else if(inputType === "dragndrop"){
 								if($scope.datatable.displayResult != undefined){
+									var currentIndex = {};
 									for(var i=0;i<$scope.datatable.displayResult.length;i++){
-										$scope.datatable.displayResult[i].data.percentage = $scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputPositionY-1)].percentage;
+										if(currentIndex[($scope.datatable.displayResult[i].data.outputPositionX-1)] == undefined){
+											currentIndex[($scope.datatable.displayResult[i].data.outputPositionX-1)] = 0;
+										}else{
+											currentIndex[($scope.datatable.displayResult[i].data.outputPositionX-1)]++;
+										}
+										$scope.datatable.displayResult[i].data.percentage = $scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].inputContainerUseds[currentIndex[($scope.datatable.displayResult[i].data.outputPositionX-1)]].percentage;
 										if($scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputPositionY-1)].instrumentProperties != undefined){
 											 var positions = this.searchContainer($scope.datatable.displayResult[i].data.inputCode, $scope.datatable.displayResult[i].data.outputPositionX, $scope.datatable.displayResult[i].data.outputPositionY);
 											 $scope.datatable.displayResult[i].data.inputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[positions.x].inputContainerUseds[positions.y].instrumentProperties;
