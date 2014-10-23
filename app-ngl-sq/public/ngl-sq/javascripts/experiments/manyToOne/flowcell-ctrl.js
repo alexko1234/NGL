@@ -100,6 +100,11 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 				active:true,
 				columnMode:true
 			},
+			save:{
+				active:true,
+				showButton:false,
+				mode:'local'
+			},
 			messages:{
 				active:false,
 				columnMode:true

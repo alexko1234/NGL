@@ -53,20 +53,20 @@
 			<button class="btn btn-default" ng-click="edit()" ng-show="editMode==false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="fa fa-edit"></i></button>
 			<button class="btn btn-default" ng-click="unedit()" ng-show="editMode==true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="fa fa-undo"></i></button>	
 				  			
-			<button class="btn btn-default" ng-show="experiment.value.state.code == 'N'" ng-disabled="experiment.value._id == null || !experiment.experimentInformation.enabled" ng-click="saveAllAndChangeState()" >@Messages("experiments.begin_progress")</button>
-			<button  class="btn btn-default"  ng-show="experiment.value.state.code == 'IP'" ng-disabled="experiment.value._id == null || !experiment.experimentInformation.enabled" ng-click="saveAllAndChangeState()" >@Messages("experiments.finish")</button>
+			<button class="btn btn-default" ng-show="experiment.value.state.code == 'N'" ng-disabled="experiment.value._id == null" ng-click="saveAllAndChangeState()" >@Messages("experiments.begin_progress")</button>
+			<button  class="btn btn-default"  ng-show="experiment.value.state.code == 'IP'" ng-disabled="experiment.value._id == null" ng-click="saveAllAndChangeState()" >@Messages("experiments.finish")</button>
 		<div class="btn-group " id="experiment_action">
 			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown"> Actions <span
 				class="caret"></span>
 			</a>
 			<ul class="dropdown-menu dropdown-menu-right">
-				<li><a href="#" ng-disabled="experiment.value.stateCode != 'IP' || !experiment.experimentInformation.enabled"  ng-click="generateSampleSheet()" >@Messages("experiments.sampleSheet")</a></li>
+				<li><a href="#" ng-disabled="experiment.value.stateCode != 'IP'"  ng-click="generateSampleSheet()" >@Messages("experiments.sampleSheet")</a></li>
 			</ul>
 		</div>
-		<button class="btn btn-primary" ng-disabled="saveInProgress == true || !experiment.experimentProperties.enabled" ng-click="saveAllPromise();" data-toggle="tooltip"  title="@Messages("experiments.save_all")">
+		<button class="btn btn-primary" ng-disabled="saveInProgress == true" ng-click="saveAllPromise();" data-toggle="tooltip"  title="@Messages("experiments.save_all")">
 			<i class="fa fa-save"></i>
 		</button>
-		<button class="btn btn-default"  ng-disabled="experiment.value._id == null || !experiment.experimentInformation.enabled"  data-toggle="modal" data-target="#myModal">@Messages("experiment.addComment")</button>
+		<button class="btn btn-default"  ng-disabled="experiment.value._id == null"  data-toggle="modal" data-target="#myModal">@Messages("experiment.addComment")</button>
 		
 										
 	</div>
