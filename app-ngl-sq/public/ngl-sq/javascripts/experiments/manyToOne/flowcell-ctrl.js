@@ -88,7 +88,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:'ContainerInputCode'
+				by:'outputPositionX'
 			},
 			remove:{
 				active:false,
