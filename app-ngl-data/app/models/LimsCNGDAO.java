@@ -13,7 +13,6 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
-import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -34,6 +33,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import controllers.CommonController;
+
 import play.Logger;
 import validation.ContextValidation;
 
@@ -46,7 +47,6 @@ public class LimsCNGDAO {
 
 	private JdbcTemplate jdbcTemplate;
 
-	private static final String CONTAINER_CATEGORY_CODE= "lane";
 	private static final String CONTAINER_STATE_CODE="A";
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
 	protected static final String PROJECT_STATE_CODE_DEFAULT = "IP";
@@ -58,7 +58,7 @@ public class LimsCNGDAO {
 	
 	@Autowired
 	@Qualifier("lims")
-	public void setDataSource(DataSource dataSource) {
+	private void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);              
 	}
 	
@@ -71,12 +71,11 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws SQLException
 	 */
-	public Project commonProjectMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException { 
+	private Project commonProjectMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException { 
 		Project project = new Project();
 		project.code = rs.getString("code");
 		project.name = rs.getString("name").trim();
-		//Logger.debug("Project code :"+project.code);
-		project.traceInformation = new TraceInformation();
+		
 		project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
 		
 		ProjectType projectType=null;
@@ -95,10 +94,10 @@ public class LimsCNGDAO {
 		
 		project.state = new State(); 
 		project.state.code=PROJECT_STATE_CODE_DEFAULT;
-		project.state.user = InstanceHelpers.getUser();
+		project.state.user = CommonController.getCurrentUser();
 		project.state.date = new Date();
 		
-		InstanceHelpers.updateTraceInformation(project.traceInformation);
+		InstanceHelpers.getUpdateTraceInformation(project.traceInformation);
 	
 		// just one comment for one project
 		if (rs.getString("comments") != null ) {
@@ -107,7 +106,6 @@ public class LimsCNGDAO {
 		}
 		
 		//specific to CNG
-		//project.bioinformaticAnalysis = Boolean.TRUE;
 		project.bioinformaticParameters = new BioinformaticParameters();
 		project.bioinformaticParameters.biologicalAnalysis = Boolean.TRUE; 
 		
@@ -122,25 +120,17 @@ public class LimsCNGDAO {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
-	public List<Project> findProjectToCreate(final ContextValidation contextError) throws SQLException, DAOException {
-		
+	public List<Project> findProjectToCreate(final ContextValidation contextError) throws SQLException, DAOException {		
 		List<Project> results = this.jdbcTemplate.query("select * from v_project_tongl", new Object[]{}, 
 			new RowMapper<Project>() {
-
-				@SuppressWarnings("rawtypes")
-				public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
-										
+				public Project mapRow(ResultSet rs, int rowNum) throws SQLException {								
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					@SuppressWarnings("rawtypes")
 					Project p =  commonProjectMapRow(rs0, rowNum0, ctxErr); 
 					return p;
-	
 				}	
-
 		});
-
 		return results;
 	}
 	
@@ -152,25 +142,17 @@ public class LimsCNGDAO {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
-	public List<Project> findProjectToModify(final ContextValidation contextError) throws SQLException, DAOException {
-		
+	public List<Project> findProjectToModify(final ContextValidation contextError) throws SQLException, DAOException {	
 		List<Project> results = this.jdbcTemplate.query("select * from v_project_updated_tongl", new Object[]{}, 
 			new RowMapper<Project>() {
-
-				@SuppressWarnings("rawtypes")
 				public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
-										
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					@SuppressWarnings("rawtypes")
 					Project p =  commonProjectMapRow(rs0, rowNum0, ctxErr); 
 					return p;
-	
 				}	
-
 		});
-
 		return results;
 	}
 	
@@ -184,10 +166,11 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws SQLException
 	 */
-	public Sample commonSampleMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
+	private Sample commonSampleMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
 			
 			Sample sample = new Sample();
-			sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
+
+			InstanceHelpers.getUpdateTraceInformation(sample.traceInformation);
 
 			sample.code=rs.getString("code");
 			Logger.debug("Sample code :"+sample.code);
@@ -307,19 +290,16 @@ public class LimsCNGDAO {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
-	public List<Sample> findSampleToModify(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {
-		
+	public List<Sample> findSampleToModify(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {		
 		List<Sample> results = null;
 		
 		if (sampleCode != null) { 
 			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl where code=? order by code, project, comments", new Object[]{sampleCode}
 			,new RowMapper<Sample>() {
-				@SuppressWarnings("rawtypes")
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					@SuppressWarnings("rawtypes")
 					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
 					return s;
 				}
@@ -329,19 +309,16 @@ public class LimsCNGDAO {
 			Logger.debug("call v_sample_updated_tongl");
 			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl order by code, project, comments",new Object[]{}
 			,new RowMapper<Sample>() {
-				@SuppressWarnings("rawtypes")
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					@SuppressWarnings("rawtypes")
 					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
 					return s;
 				}
 			});			
 		}		
 		return demultiplexSample(results);	
-		
 	}
 	
 	
@@ -366,19 +343,16 @@ public class LimsCNGDAO {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
-	public List<Sample> findSampleToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {
-		
+	public List<Sample> findSampleToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {		
 		List<Sample> results = null;
 		
 		if (sampleCode != null) { 
 			results = this.jdbcTemplate.query("select * from v_sample_tongl where code=? order by code, project, comments", new Object[]{sampleCode}
 			,new RowMapper<Sample>() {
-				@SuppressWarnings("rawtypes")
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					@SuppressWarnings("rawtypes")
 					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
 					return s;
 				}
@@ -388,12 +362,10 @@ public class LimsCNGDAO {
 			Logger.debug("call v_sample_tongl");
 			results = this.jdbcTemplate.query("select * from v_sample_tongl order by code, project, comments",new Object[]{}
 			,new RowMapper<Sample>() {
-				@SuppressWarnings("rawtypes")
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					@SuppressWarnings("rawtypes")
 					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
 					return s;
 				}
@@ -412,15 +384,15 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws SQLException
 	 */
-	public Container commonContainerMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
+	private Container commonContainerMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr, String containerCategoryCode) throws SQLException {
 		Container container = new Container();
 		
-		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
+		InstanceHelpers.getUpdateTraceInformation(container.traceInformation);
 		
 		container.code=rs.getString("code");
 		Logger.debug("Container code :"+container.code);
 		
-		container.categoryCode=CONTAINER_CATEGORY_CODE;
+		container.categoryCode=containerCategoryCode; //lane or tube
 		
 		if (rs.getString("comment") != null) {
 			container.comments=new ArrayList<Comment>();	
@@ -429,8 +401,8 @@ public class LimsCNGDAO {
 		}
 		
 		container.state = new State(); 
-		container.state.code=CONTAINER_STATE_CODE;
-		container.state.user = InstanceHelpers.getUser();
+		container.state.code=CONTAINER_STATE_CODE; 
+		container.state.user = CommonController.getCurrentUser();
 		container.state.date = new Date(); 
 		
 		container.valuation = new Valuation(); 
@@ -438,7 +410,7 @@ public class LimsCNGDAO {
 		
 		// define container support attributes
 		try {
-			container.support=ContainerSupportHelper.getContainerSupport("lane", rs.getInt("nb_container"),rs.getString("code_support"),"1",rs.getString("column")); 
+			container.support=ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nb_container"),rs.getString("code_support"),"1",rs.getString("column")); 
 		}
 		catch(DAOException e) {
 			Logger.error("Can't get container support !"); 
@@ -456,7 +428,7 @@ public class LimsCNGDAO {
 			Content content=new Content();
 			content.sampleCode=rs.getString("code_sample");
 			
-			String sampleTypeCode = SAMPLE_USED_TYPE_CODE;
+			String sampleTypeCode = SAMPLE_USED_TYPE_CODE;  //TODO : to manage with Julie !
 			SampleType sampleType=null;
 			try {
 				sampleType = SampleType.find.findByCode(sampleTypeCode);
@@ -469,20 +441,28 @@ public class LimsCNGDAO {
 				return null;
 			}		
 			
+			//TODO : manage fromExperimentTypeCodes for import lib_b* & lane/flowcell --> mapping Julie
+			
 			content.sampleTypeCode = sampleType.code;
 			content.sampleCategoryCode = sampleType.category.code;
 			
 			content.properties = new HashMap<String, PropertyValue>();
 			
 			if(rs.getString("tag")!=null) { 
-				content.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
-				content.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagcategory")));
+				content.properties.put("tag", new PropertySingleValue(rs.getString("tag")));
+				content.properties.put("tagCategory", new PropertySingleValue(rs.getString("tagcategory")));
 			}
 			else {
 				content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppress it at the end of the function...
 				content.properties.put("tagCategory",new PropertySingleValue("-1"));
-			}					
+			}						
 
+			if(rs.getString("exp_short_name")!=null) {
+				content.properties.put("libProcessTypeCode", new PropertySingleValue(rs.getString("exp_short_name")));
+			}
+			else {
+				content.properties.put("libProcessTypeCode", new PropertySingleValue("-1"));
+			}
 			container.contents.add(content);			
 			
 			container.sampleCodes=new ArrayList<String>();
@@ -495,8 +475,13 @@ public class LimsCNGDAO {
 	}
 	
 	
-	
-	public List<Container> demultiplexContainer(List<Container> results) throws DAOException {
+	/**
+	 * 
+	 * @param results
+	 * @return
+	 * @throws DAOException
+	 */
+	public static List<Container> demultiplexContainer(List<Container> results) throws DAOException {
 		//affect all the project codes /samples /tags to the same container (for having unique codes of containers) 
 		/// required to have an ordered list (see ORDER BY clause in the sql of the view)
 		int pos = 0;
@@ -508,14 +493,14 @@ public class LimsCNGDAO {
 			
 			while ( (pos < listSize-1) && (results.get(pos).code.equals(results.get(pos+x).code)) ) {
 				
-				// difference between the two projectCode
+				// difference between two consecutive projectCodes
 				if (! results.get(pos).projectCodes.get(0).equals(results.get(pos+x).projectCodes.get(0))) {
 					if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.get(0))) {
 						
 						results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.get(0) ); 
 					}
 				}
-				// difference between the two sampleCode
+				// difference between two consecutive sampleCodes
 				if (! results.get(pos).sampleCodes.get(0).equals(results.get(pos+x).sampleCodes.get(0))) {
 					if (! results.get(pos).sampleCodes.contains(results.get(pos+x).sampleCodes.get(0))) {
 							
@@ -527,9 +512,11 @@ public class LimsCNGDAO {
 				//just to be sure that we don't create content in double
 				for (Content content : results.get(pos).contents) {
 					if ( (content.sampleCode.equals(results.get(pos+x).contents.get(0).sampleCode))  
-								&& (content.properties.get("tag").value.equals(results.get(pos+x).contents.get(0).properties.get("tag").value)) ) {
+								&& (content.properties.get("tag").value.equals(results.get(pos+x).contents.get(0).properties.get("tag").value)) 
+								&& (content.properties.get("libProcessTypeCode").value.equals(results.get(pos+x).contents.get(0).properties.get("libProcessTypeCode").value))  ) {
 						findContent = true;
-						Logger.debug("content already created !");
+						//Logger.debug("content already created !");
+						break;
 					}
 				}				
 				
@@ -538,7 +525,6 @@ public class LimsCNGDAO {
 				// all the difference have been reported on the first sample found (at the position pos)
 				// so we can delete the sample at the position (posNext)
 				results.remove(pos+x);
-				//ajust list size
 				listSize--;
 			}
 			pos++;
@@ -553,9 +539,11 @@ public class LimsCNGDAO {
 				if (r.contents.get(i).properties.get("tagCategory").value.equals("-1")) {
 					r.contents.get(i).properties.remove("tagCategory");
 				}
+				if (r.contents.get(i).properties.get("libProcessTypeCode").value.equals("-1")) {
+					r.contents.get(i).properties.remove("libProcessTypeCode");
+				}
 			}
-		}
-		
+		}		
 		return results;
 	}
 	
@@ -568,7 +556,7 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws DAOException
 	 */
-	private List<Container>  createContent(List<Container> results, int posCurrent, int posNext) throws DAOException{
+	public static List<Container>  createContent(List<Container> results, int posCurrent, int posNext) throws DAOException{
 		Content content=new Content();
 		content.sampleCode= results.get(posNext).sampleCodes.get(0);
 		
@@ -578,8 +566,9 @@ public class LimsCNGDAO {
 		content.sampleCategoryCode = sampleType.category.code;
 		
 		content.properties = new HashMap<String, PropertyValue>();
-		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
-		content.properties.put("tagCategory",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tagCategory").value  ));
+		content.properties.put("tag", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("tag").value));
+		content.properties.put("tagCategory", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("tagCategory").value));
+		content.properties.put("libProcessTypeCode", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("libProcessTypeCode").value));
 		
 		results.get(posCurrent).contents.add(content); 
 		
@@ -587,16 +576,15 @@ public class LimsCNGDAO {
 	}
 	
 	/**
-	 * set sequencingProgramType to containerSupport
+	 * common mapping for containerSupport
 	 * @param rs
 	 * @param rowNum
 	 * @param ctxErr
 	 * @return
 	 * @throws SQLException
 	 */
-	public ContainerSupport commonContainerSupportMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
-		ContainerSupport containerSupport = new ContainerSupport();
-		
+	private ContainerSupport commonContainerSupportMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
+		ContainerSupport containerSupport = new ContainerSupport();		
 		containerSupport.code = rs.getString("code_support");
 		
 		if (rs.getString("seq_program_type").equals("PE") || rs.getString("seq_program_type").equals("SR")) {
@@ -606,7 +594,6 @@ public class LimsCNGDAO {
 		else {
 			Logger.error("Wrong value of seq_program_type : " + rs.getString("seq_program_type") + "! (expected SE ou PR) for code : " + rs.getString("code_support")); 
 		}
-
 		return containerSupport;
 	}	
 
@@ -619,51 +606,79 @@ public class LimsCNGDAO {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
-	public List<Container> findContainerToCreate(final ContextValidation contextError) throws SQLException, DAOException {
-		return findContainerToCreate(contextError, null);
+	public List<Container> findContainerToCreate(final ContextValidation contextError, String containerCategoryCode) throws SQLException, DAOException {
+		return findContainerToCreate(contextError, null, containerCategoryCode);
 	}
 	
 	/**
-	 * To get a particular new container
+	 * To get a new container
 	 * method for mass loading
 	 * @param contextError
 	 * @return
 	 * @throws DAOException 
 	 */
-	public List<Container> findContainerToCreate(final ContextValidation contextError, String containerCode) throws DAOException {
-
+	public List<Container> findContainerToCreate(final ContextValidation contextError, String containerCode, String containerCategoryCode) throws DAOException {
+		final String _containerCategoryCode = containerCategoryCode;
+		String sqlView;
+		
+		if (containerCategoryCode.equals("lane")) {
+			sqlView = "v_flowcell_tongl";
+		}
+		else {
+			sqlView = "v_tube_tongl";
+		}
+		
 		List<Container> results = null;
 		if (containerCode != null) {
-			results = this.jdbcTemplate.query("select * from v_flowcell_tongl where code = ? and isavailable = true order by code, project, code_sample, tag", new Object[]{containerCode} 
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? and isavailable = true order by code, project, code_sample, tag", new Object[]{containerCode} 
 			,new RowMapper<Container>() {
-				@SuppressWarnings("rawtypes")
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					@SuppressWarnings("rawtypes")
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr); 
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode); 
 					return c;
 				}
 			});
 		}
 		else {
 			Logger.debug("call v_flowcell_tongl ");
-			results = this.jdbcTemplate.query("select * from v_flowcell_tongl where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
 			,new RowMapper<Container>() {
-				@SuppressWarnings("rawtypes")
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					@SuppressWarnings("rawtypes")
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr); 
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode); 
 					return c;
 				}
 			});
 		}
 		return demultiplexContainer(results);			
 	}
+	
+	
+	
+	//reprise
+	public List<Container> findContainerToCreateForFirstTime(final ContextValidation contextError, String containerCode, String containerCategoryCode) throws DAOException {
+		final String _containerCategoryCode = containerCategoryCode;
+		String sqlView = "v_tube_tongl_reprise";
+		
+		Logger.debug("call v_tube_tongl_reprise !!!!!!!!!!!!!");
+		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
+		,new RowMapper<Container>() {
+			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
+				ResultSet rs0 = rs;
+				int rowNum0 = rowNum;
+				ContextValidation ctxErr = contextError; 
+				Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode); 
+				return c;
+			}
+		});
+		
+		return demultiplexContainer(results);			
+	}
+	
 	
 
 	/**
@@ -673,8 +688,8 @@ public class LimsCNGDAO {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
-	public List<Container> findContainerToModify(final ContextValidation contextError) throws SQLException, DAOException {
-		return findContainerToModify(contextError, null);
+	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCategoryCode) throws SQLException, DAOException {
+		return findContainerToModify(contextError, null, containerCategoryCode);
 	}
 
 	
@@ -685,34 +700,39 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws DAOException 
 	 */
-	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCode) throws DAOException {
-
-		List<Container> results = null;
+	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCode, String containerCategoryCode) throws DAOException {		
+		final String _containerCategoryCode = containerCategoryCode;
+		String sqlView;
+		
+		if (containerCategoryCode.equals("lane")) {
+			sqlView = "v_flowcell_updated_tongl";
+		}
+		else {
+			sqlView = "v_tube_updated_tongl";
+		}
+		
+		List<Container> results = null;		
 		if (containerCode != null) {
-			results = this.jdbcTemplate.query("select * from v_flowcell_updated_tongl where code = ? and isavailable = true order by code, project, code_sample, tag", new Object[]{containerCode} 
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? and isavailable = true order by code, project, code_sample, tag", new Object[]{containerCode} 
 			,new RowMapper<Container>() {
-				@SuppressWarnings("rawtypes")
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
-					ContextValidation ctxErr = contextError; 
-					@SuppressWarnings("rawtypes")
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr); 
+					ContextValidation ctxErr = contextError;
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode); 
 					return c;
 				}
 			});
 		}
 		else {
 			Logger.debug("call v_flowcell_updated_tongl ");
-			results = this.jdbcTemplate.query("select * from v_flowcell_updated_tongl where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
 			,new RowMapper<Container>() {
-				@SuppressWarnings("rawtypes")
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					@SuppressWarnings("rawtypes")
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr); 
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode); 
 					return c;
 				}
 			});
@@ -720,24 +740,30 @@ public class LimsCNGDAO {
 		return demultiplexContainer(results);			
 	}
 	
-	
+	/**
+	 * Set sequencingProgramType
+	 * @param contextError
+	 * @param mode
+	 * @return
+	 * @throws DAOException
+	 */
 	public HashMap<String, PropertyValue<String>>  setSequencingProgramTypeToContainerSupport(final ContextValidation contextError, String mode)  throws DAOException {
-		List<ContainerSupport> results = null;
-		String sqlVw;
+		String sqlView;
+		
 		if (mode.equals("creation")) {
-			sqlVw = "v_flowcell_tongl"; 
+			sqlView = "v_flowcell_tongl"; 
 		}
 		else {
-			sqlVw = "v_flowcell_updated_tongl";
+			sqlView = "v_flowcell_updated_tongl";
 		}
-		results = this.jdbcTemplate.query("select code_support, seq_program_type from " + sqlVw + " where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
+		
+		List<ContainerSupport> results = null;
+		results = this.jdbcTemplate.query("select code_support, seq_program_type from " + sqlView + " where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
 		,new RowMapper<ContainerSupport>() {
-			@SuppressWarnings("rawtypes")
 			public ContainerSupport mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
 				int rowNum0 = rowNum;
 				ContextValidation ctxErr = contextError; 
-				@SuppressWarnings("rawtypes")
 				ContainerSupport c=  commonContainerSupportMapRow(rs0, rowNum0, ctxErr); 
 				return c;
 			}
@@ -748,9 +774,7 @@ public class LimsCNGDAO {
 			if (!mapCodeSupportSequencing.containsKey(result.code)) {
 				mapCodeSupportSequencing.put(result.code, result.properties.get("sequencingProgramType"));
 			}
-		}
-		
-		
+		}	
 		return mapCodeSupportSequencing;
 	}
 
@@ -827,12 +851,12 @@ public class LimsCNGDAO {
 
 	
 	/**
-	 * UPDATE containers import/update dates 
+	 * UPDATE lane containers import/update dates 
 	 * @param containers
 	 * @param contextError
 	 * @throws DAOException
 	 */
-	public void updateLimsContainers(List<Container> containers, ContextValidation contextError, String mode) throws DAOException {
+	public void updateLimsLanes(List<Container> containers, ContextValidation contextError, String mode) throws DAOException {
 
 		String key, column;
 		if (mode.equals("creation")) {
@@ -853,14 +877,43 @@ public class LimsCNGDAO {
 		}
 		this.jdbcTemplate.batchUpdate(sql, parameters);  
 		
-		//new 
 		sql = "UPDATE t_sample_lane SET " + column + " = ? WHERE lane_id = ?";
 		parameters = new ArrayList<Object[]>();
 		for (Container container : containers) {
 	        parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
 		}
 		this.jdbcTemplate.batchUpdate(sql, parameters);   
+				
+		contextError.removeKeyFromRootKeyName(key);
+	}
+	
+	/**
+	 * UPDATE tube containers import/update dates 
+	 * @param containers
+	 * @param contextError
+	 * @param mode
+	 * @throws DAOException
+	 */
+	public void updateLimsTubes(List<Container> containers, ContextValidation contextError, String mode) throws DAOException {
+
+		String key, column;
+		if (mode.equals("creation")) {
+			key = "update_ImportDate";
+			column = "nglimport_date";
+		}
+		else {
+			key = "update_UpdateDate";
+			column = "ngl_update_date";			
+		}
 		
+		contextError.addKeyToRootKeyName(key);
+		
+		String sql = "UPDATE t_tube SET " + column + " = ? WHERE id = ?";
+		List<Object[]> parameters = new ArrayList<Object[]>();
+		for (Container container : containers) {
+	        parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
+		}
+		this.jdbcTemplate.batchUpdate(sql, parameters);  		
 		
 		contextError.removeKeyFromRootKeyName(key);
 	}
