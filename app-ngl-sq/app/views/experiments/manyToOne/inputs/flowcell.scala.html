@@ -82,8 +82,9 @@
 				</th>
 			
 			
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable >
-			
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" colspan="3">			
+		<!-- <td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && !rows[@i]" colspan="3">  -->
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0">
 				<div ng-hide="rows[@i]" class="LaneSummary">
 					<span  ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds">
 						{{flowcell.code}} / {{flowcell.percentage}}% / PhiX:{{experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties.phixPercent.value || "nr"}}%;<br/>
@@ -144,11 +145,10 @@
 					</tr>
 				</table>
 			</div>
-			</td>
-		
-			<td ng-if="rows[@i]" >
+			</td>			
+			<td ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && rows[@i]">
 			
-			<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="table">
+			<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && rows[@i]" class="table">
 				<tr>
 					<th ng-repeat="property in experiment.containerOutProperties">
 						{{property.name}}
