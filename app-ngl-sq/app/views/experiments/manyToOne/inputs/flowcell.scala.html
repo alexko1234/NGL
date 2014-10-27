@@ -40,7 +40,7 @@
 						{{container.code}}
 					</td>
 					<td class="col-sm-1">
-						<input class="form-control input-small valueInput" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" ng-model="container.percentage" />
+						<input class="form-control input-small valueInput" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" ng-model="container.percentage" title='@Messages("containers.table.percentage")'/>
 					</td>					
 					<td  title="{{getTags(container.contents) | unique}}" ng-init="nbItem = 5">					
 						<div ng-repeat="content in container.contents | unique:'properties.tag.value' |  limitTo:nbItem">
@@ -125,9 +125,9 @@
 							</div>
 						</td>
 						<td  title="{{getTags(flowcell.contents) | unique}}">
-						<div ng-repeat="content in flowcell.contents | unique:'properties.tag.value' |  limitTo:12">
+						<custom-list item="content" datalist="flowcell.contents" filter="unique:'properties.tag.value'" minimal="5">
 								{{content.properties.tag.value}}
-							</div>
+							</custom-list>
 						</td>
 						<td title="{{getSampleTypeCodes(flowcell.contents) | unique}}">
 							<div ng-repeat="content in flowcell.contents | unique:'sampleTypeCode' |  limitTo:12">
