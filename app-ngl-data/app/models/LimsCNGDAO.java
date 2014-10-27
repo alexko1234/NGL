@@ -94,10 +94,10 @@ public class LimsCNGDAO {
 		
 		project.state = new State(); 
 		project.state.code=PROJECT_STATE_CODE_DEFAULT;
-		project.state.user = CommonController.getCurrentUser();
+		project.state.user = InstanceHelpers.getUser();
 		project.state.date = new Date();
 		
-		InstanceHelpers.getUpdateTraceInformation(project.traceInformation);
+		project.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 	
 		// just one comment for one project
 		if (rs.getString("comments") != null ) {
@@ -169,8 +169,7 @@ public class LimsCNGDAO {
 	private Sample commonSampleMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
 			
 			Sample sample = new Sample();
-
-			InstanceHelpers.getUpdateTraceInformation(sample.traceInformation);
+			sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 
 			sample.code=rs.getString("code");
 			Logger.debug("Sample code :"+sample.code);
@@ -387,7 +386,7 @@ public class LimsCNGDAO {
 	private Container commonContainerMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr, String containerCategoryCode) throws SQLException {
 		Container container = new Container();
 		
-		InstanceHelpers.getUpdateTraceInformation(container.traceInformation);
+		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 		
 		container.code=rs.getString("code");
 		Logger.debug("Container code :"+container.code);
@@ -402,7 +401,7 @@ public class LimsCNGDAO {
 		
 		container.state = new State(); 
 		container.state.code=CONTAINER_STATE_CODE; 
-		container.state.user = CommonController.getCurrentUser();
+		container.state.user = InstanceHelpers.getUser();
 		container.state.date = new Date(); 
 		
 		container.valuation = new Valuation(); 

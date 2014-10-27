@@ -36,7 +36,7 @@
 	
 	<div id="main">@partials.taxonomy_main_print()</div>
 	
-	<!--  no krona because of bug with backgounds colors & images -->
+	<div class="page-break" id="krona">@partials.taxonomy_krona()</div>
 		
 	<div id="phylogeneticTree" class="page-break" ng-show="isDataExistsForPhylogeneticTree(treament.code!=undefined?treament.code:treatments.getTreatment().code)">
  		@partials.taxonomy_phylogenetic()
