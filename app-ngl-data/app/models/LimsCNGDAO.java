@@ -13,6 +13,7 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -74,6 +75,7 @@ public class LimsCNGDAO {
 	private Project commonProjectMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException { 
 		Project project = new Project();
 		project.code = rs.getString("code");
+		Logger.debug("project.code=" + project.code);
 		project.name = rs.getString("name").trim();
 		
 		project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
@@ -97,6 +99,7 @@ public class LimsCNGDAO {
 		project.state.user = InstanceHelpers.getUser();
 		project.state.date = new Date();
 		
+		project.traceInformation = new TraceInformation(); 
 		project.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 	
 		// just one comment for one project
@@ -169,6 +172,8 @@ public class LimsCNGDAO {
 	private Sample commonSampleMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
 			
 			Sample sample = new Sample();
+			
+			sample.traceInformation = new TraceInformation();
 			sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 
 			sample.code=rs.getString("code");
@@ -386,6 +391,7 @@ public class LimsCNGDAO {
 	private Container commonContainerMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr, String containerCategoryCode) throws SQLException {
 		Container container = new Container();
 		
+		container.traceInformation = new TraceInformation();
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 		
 		container.code=rs.getString("code");
