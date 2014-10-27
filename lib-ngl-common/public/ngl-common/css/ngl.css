@@ -183,12 +183,13 @@ margin: 8px 0 8px;
 .flowCellLane {
 	
 	font-size: 10px;	 
-	padding-top: 0px;	
-	outline-color: #C0C0C0;
+	padding-top: 0px;
+	border-top: 2px outset #C0C0C0;
+	border-bottom: 2px outset #C0C0C0;	
+	/*outline-color: #C0C0C0;
 	outline-style: double;
-	outline-width: 1px;
-	/*border-top: 2px outset #C0C0C0;
-	border-bottom: 2px outset #C0C0C0;*/
+	outline-width: 1px;*/
+	
 }
 
 .flowCellLane .table>tbody{
@@ -206,7 +207,7 @@ margin: 8px 0 8px;
 	padding: 8px;
 	line-height: 1.33333333;
 	vertical-align: top;
-	text-align: center;
+	text-align: left;
 	/* border-top: 1px solid #ddd; */
 }
 

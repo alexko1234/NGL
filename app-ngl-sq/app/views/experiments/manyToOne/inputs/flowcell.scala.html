@@ -157,9 +157,8 @@
 			    <tr>
 					<td style="min-width:70px" ng-repeat="property in experiment.containerOutProperties">
 								<div ng-switch on="property.choiceInList">
-								<input class="form-control valueInput" type="text" ng-switch-when="false" 
+								<input class="form-control valueInput" type="text" ng-switch-when="false" title="{{property.name}}"
 									ng-readonly="!experiment.experimentProperties.enabled"
-									
 									ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties[property.code].value"
 								/>
 									
@@ -171,6 +170,7 @@
 										auto-select>
 									<option ng-repeat="opt in property.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
 								   </select>
+								   </div>
 					</td>
 			</tr>
 			</table>
