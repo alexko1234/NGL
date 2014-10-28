@@ -235,9 +235,10 @@ public class InstanceHelpers {
 		Container container = getContainer(readSet, containerSupportCode);
 		if(null != container){
 			Content content = getContent(container, readSet);
-			SampleOnContainer sampleContainer = convertToSampleOnContainer(readSet, containerSupportCode, container, content);
-		//Logger.info(sampleContainer.toString());
-			return sampleContainer;
+			if(null != content){
+				SampleOnContainer sampleContainer = convertToSampleOnContainer(readSet, containerSupportCode, container, content);
+				return sampleContainer;
+			}			
 		}
 		return null;
 	}
@@ -258,9 +259,16 @@ public class InstanceHelpers {
 
 
 	private static Content getContent(Container container, ReadSet readSet) {
+		String tag = getTag(readSet);
 		for(Content sampleUsed : container.contents){
-			if(sampleUsed.sampleCode.equals(readSet.sampleCode)){
-				return sampleUsed;
+			try {
+				if((null == tag && sampleUsed.sampleCode.equals(readSet.sampleCode))
+						|| (null != tag && null != sampleUsed.properties.get("tag") && tag.equals(sampleUsed.properties.get("tag").value) 
+								&& sampleUsed.sampleCode.equals(readSet.sampleCode))){
+					return sampleUsed;
+				}
+			}catch(Exception e){
+				Logger.error("Problem with "+readSet.code+" / "+readSet.sampleCode +" : "+e.getMessage());
 			}
 		}
 		Logger.warn("Not found Content for "+readSet.code+" / "+readSet.sampleCode);
@@ -268,6 +276,11 @@ public class InstanceHelpers {
 	}
 
 
+
+	private static String getTag(ReadSet readSet) {
+		String[] codeParts = readSet.code.split("\\.",2);
+		return (codeParts.length == 2)?codeParts[1]:null;
+	}
 
 	private static Container getContainer(ReadSet readSet, String containerSupportCode) {
 		MongoDBResult<Container> cl = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
