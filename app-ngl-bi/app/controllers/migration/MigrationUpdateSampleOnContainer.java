@@ -1,5 +1,6 @@
 package controllers.migration;		
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import models.laboratory.run.instance.ReadSet;
@@ -9,6 +10,9 @@ import models.utils.InstanceHelpers;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.JacksonDBCollection;
+
+import com.mongodb.BasicDBObject;
+
 import play.Logger;
 import play.mvc.Result;
 import controllers.CommonController;
@@ -20,30 +24,20 @@ import fr.cea.ig.MongoDBDAO;
  *
  */
 public class MigrationUpdateSampleOnContainer extends CommonController {
-	
-	private static final String READSET_ILLUMINA_BCK = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK4";
-	
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
 	
 	public static Result migration(){
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("treatments", 0);
 		
-		Logger.info("Migration start");
-		
-		JacksonDBCollection<ReadSet, String> readSetsCollBck = MongoDBDAO.getCollection(READSET_ILLUMINA_BCK, ReadSet.class);
-		if(readSetsCollBck.count() == 0){
-			Logger.info("Migration readset start");
-			backupReadSet();
-			List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class).toList();
-			Logger.debug("migre "+readSets.size()+" readSets");
-			for(ReadSet readSet : readSets){
-				migreReadSet(readSet);				
-			}
-			Logger.info("Migration readset end");
-						
-		}else{
-			Logger.info("Migration readset already execute !");
+		Logger.info("Migration sample on container start");
+		backupReadSet();
+		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.exists("code"), keys).toList();
+		Logger.debug("migre "+readSets.size()+" readSets");
+		for(ReadSet readSet : readSets){
+			migreReadSet(readSet);				
 		}
-		
-		Logger.info("Migration finish");
+		Logger.info("Migration sample on container finish");
 		return ok("Migration Finish");
 
 	}
@@ -61,9 +55,12 @@ public class MigrationUpdateSampleOnContainer extends CommonController {
 	}
 	
 	private static void backupReadSet() {
-		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" start");		
-		MongoDBDAO.save(READSET_ILLUMINA_BCK, MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class).toList());
-		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" end");
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("treatments", 0);
+		String backupName = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK_SOC_"+sdf.format(new java.util.Date());
+		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" to "+backupName+" start");		
+		MongoDBDAO.save(backupName, MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.exists("code"), keys).toList());
+		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" to "+backupName+" end");
 		
 	}
 
