@@ -7,9 +7,6 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 					tabService.addTabs({label:line.code,href:"/experiments/edit/"+line.code,remove:true});
 				}
 			},
-			pagination:{
-				mode:'local'
-			},
 			search:{
 				url:jsRoutes.controllers.experiments.api.Experiments.list()
 				

@@ -2,7 +2,7 @@
 
 /* GENERAL*/
 
-/*.preconfigTable .datatable .table>tbody>tr>td{	
+.preconfigTable .datatable .table>tbody>tr>td{	
 	max-width: 300px;
 	overflow-wrap: break-word;	
-}*/
+}

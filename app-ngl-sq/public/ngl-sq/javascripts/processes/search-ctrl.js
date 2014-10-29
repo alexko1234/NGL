@@ -8,9 +8,6 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			order:{
 				by:'code'
 			},
-			pagination:{
-				mode:'local'
-			},
 			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.searchColumns().url,
 			edit:{
 				active:true,

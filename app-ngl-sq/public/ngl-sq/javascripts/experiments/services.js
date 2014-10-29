@@ -97,8 +97,8 @@
 		var searchService = {
 				getColumns:getColumns,
 				datatable:undefined,
-				isRouteParam:false,				
-				lists : lists,								
+				isRouteParam:false,
+				lists : lists,
 				setRouteParams:function($routeParams){
 					var count = 0;
 					for(var p in $routeParams){
