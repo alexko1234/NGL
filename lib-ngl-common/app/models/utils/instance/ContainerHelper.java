@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import play.Logger;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -136,7 +138,13 @@ public class ContainerHelper {
 
 		for (Container container : containers) {
 			if (container.support != null) {
-				ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
+				ContainerSupport newSupport = null;
+				if (mapSupportsCodeSeq != null) {
+					newSupport = ContainerSupportHelper.createSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
+				}
+				else {
+					newSupport = ContainerSupportHelper.createSupport(container.support.code, null, container.support.categoryCode,"ngl");
+				}
 				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
 				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);
 				if(null != container.fromExperimentTypeCodes){//TODO Must be manage for CNG

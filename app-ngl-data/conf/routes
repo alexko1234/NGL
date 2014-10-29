@@ -34,7 +34,7 @@ GET		/cns/update-readset					    controllers.migration.cns.UpdateSampleTypeCodeT
 GET		/cng/migration-sequencing				controllers.migration.cng.AddSequencingProgramType.migration()
 GET		/cng/migration-content-extended			controllers.migration.cng.MigrationContentExtended.migration()
 GET		/cng/migration-libprocess				controllers.migration.cng.AddLibProcessTypeCode.migration()
-#GET	/cng/migration-reprisetube				controllers.migration.cng.RepriseTube.migration()
+GET	/cng/migration-tube-import				controllers.migration.cng.TubeImport.migration()
 
 #GET 	/update/readsetfile/:code				controllers.migration.cns.MigrationReadSetFileCNS.updateFileReadSet(code: java.lang.String)
 

@@ -310,7 +310,6 @@ public class LimsCNGDAO {
 			});
 		}
 		else { // mass loading
-			Logger.debug("call v_sample_updated_tongl");
 			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl order by code, project, comments",new Object[]{}
 			,new RowMapper<Sample>() {
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -363,7 +362,6 @@ public class LimsCNGDAO {
 			});
 		}
 		else { // mass loading
-			Logger.debug("call v_sample_tongl");
 			results = this.jdbcTemplate.query("select * from v_sample_tongl order by code, project, comments",new Object[]{}
 			,new RowMapper<Sample>() {
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -427,7 +425,7 @@ public class LimsCNGDAO {
 		if (rs.getString("project")!=null) {
 			container.projectCodes=new ArrayList<String>();
 			container.projectCodes.add(rs.getString("project"));
-		}
+		}		
 		
 		if (rs.getString("code_sample")!=null) {
 			Content content=new Content();
@@ -460,7 +458,7 @@ public class LimsCNGDAO {
 			else {
 				content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppress it at the end of the function...
 				content.properties.put("tagCategory",new PropertySingleValue("-1"));
-			}						
+			}				
 
 			if(rs.getString("exp_short_name")!=null) {
 				content.properties.put("libProcessTypeCode", new PropertySingleValue(rs.getString("exp_short_name")));
@@ -647,7 +645,6 @@ public class LimsCNGDAO {
 			});
 		}
 		else {
-			Logger.debug("call v_flowcell_tongl ");
 			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -669,7 +666,6 @@ public class LimsCNGDAO {
 		final String _containerCategoryCode = containerCategoryCode;
 		String sqlView = "v_tube_tongl_reprise";
 		
-		Logger.debug("call v_tube_tongl_reprise !!!!!!!!!!!!!");
 		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
 		,new RowMapper<Container>() {
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -730,7 +726,6 @@ public class LimsCNGDAO {
 			});
 		}
 		else {
-			Logger.debug("call v_flowcell_updated_tongl ");
 			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -918,7 +913,12 @@ public class LimsCNGDAO {
 		for (Container container : containers) {
 	        parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
 		}
-		this.jdbcTemplate.batchUpdate(sql, parameters);  		
+		try {
+			this.jdbcTemplate.batchUpdate(sql, parameters);
+		}
+		catch(Exception e) {
+			Logger.debug(e.getMessage());
+		}
 		
 		contextError.removeKeyFromRootKeyName(key);
 	}
