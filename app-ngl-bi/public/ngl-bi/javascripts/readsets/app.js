@@ -3,10 +3,7 @@ angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biComm
 	function($routeProvider, $locationProvider) {
 	
 	
-	$routeProvider.when('/readsets/:code/print', {
-		templateUrl : '/tpl/readsets/print',
-		controller : 'DetailsCtrl'
-	});
+	
 	
 	$routeProvider.when('/readsets/search/home', {
 		templateUrl : '/tpl/readsets/search',
@@ -32,6 +29,13 @@ angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biComm
 		templateUrl : '/tpl/readsets/details',
 		controller : 'DetailsCtrl'
 	});
+	
+	
+	$routeProvider.when('/readsets/:code/print-view', {
+		templateUrl : '/tpl/readsets/details-print-view',
+		controller : 'DetailsCtrl'
+	});
+	
 	$routeProvider.when('/readsets/:code/:page', {
 		templateUrl : '/tpl/readsets/details',
 		controller : 'DetailsCtrl'

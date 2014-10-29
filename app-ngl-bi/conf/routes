@@ -59,11 +59,13 @@ DELETE	/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.ap
 GET	   	/readsets/:homecode/home				controllers.readsets.tpl.ReadSets.home(homecode: java.lang.String)
 GET	   	/readsets/:code							controllers.readsets.tpl.ReadSets.get(code: java.lang.String)
 GET	   	/readsets/:code/valuation				controllers.readsets.tpl.ReadSets.valuation(code: java.lang.String)
-GET	   	/readsets/:code/print					controllers.readsets.tpl.ReadSets.getPrint(code: java.lang.String)
+GET	   	/readsets/:code/*other					controllers.readsets.tpl.ReadSets.other(code: java.lang.String, other: java.lang.String)
 GET		/tpl/readsets/search					controllers.readsets.tpl.ReadSets.search()
 GET		/tpl/readsets/details					controllers.readsets.tpl.ReadSets.details()
-GET		/tpl/readsets/print						controllers.readsets.tpl.ReadSets.print()
-GET		/tpl/readsets/treatments/:code			controllers.readsets.tpl.ReadSets.treatments(code: java.lang.String)
+GET		/tpl/readsets/details-print-view		controllers.readsets.tpl.ReadSets.detailsPrintView()
+
+GET		/tpl/readsets/treatments/:code			controllers.readsets.tpl.ReadSets.treatments(code: java.lang.String, media: java.lang.String ?= "screen")
+
 GET		/tpl/readsets/js-routes					controllers.readsets.tpl.ReadSets.javascriptRoutes()
 
 GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list()

@@ -1,0 +1,15 @@
+@()
+
+<div>		
+	<div class="page-header">
+		@Messages("readsets.treatments.taxonomy.tabs.bilan")
+	</div>
+	
+	<div id="main">@partials.taxonomy_main_print()</div>
+	
+	<div id="krona" class="page-break">@partials.taxonomy_krona_print()</div>
+		
+	<div id="phylogeneticTree" class="page-break" ng-show="isDataExistsForPhylogeneticTree(treament.code!=undefined?treament.code:treatments.getTreatment().code)">
+ 		@partials.taxonomy_phylogenetic()
+	</div>
+</div>

@@ -1,68 +1,64 @@
 @()
 
-		<!-- ----------------------------------------------------------------------------- -->
-		<!-- Modal to display image in full size -->
-			<div id="myImageModal" class="modal fade hidden-print"  tabindex="-1" role="dialog"
-				aria-labelledby="myModalLabel" aria-hidden="true" style="left:{{modalLeft}}px; top:{{modalTop}}px;position:fixed;width:100%">
-				
-		    		<div class="modal-content" style="width:{{modalWidth}}px; border:0px">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-							<h3 class="modal-title">{{readset.code}}</h3>	
-							<h4 id="myModalLabel">{{modalTitle}}</h4>
-						</div>
-						<div class="modal-body" style="padding:0px">
-							<img ng-src="data:image/png;base64,{{modalImage}}" style="width:{{modalWidth}}px; height:{{modalHeight}}px;" />
-						</div>
-						<div class="modal-footer">
-						</div>
-					</div>
-				
-			</div>
-		<!-- -------------------------------------------------------------------------------- -->
+<!-- ----------------------------------------------------------------------------- -->
+<!-- Modal to display image in full size -->
+	<div id="myImageModal" class="modal fade"  tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true" style="left:{{modalLeft}}px; top:{{modalTop}}px;position:fixed;width:100%">
 		
-		<div class="row">
-			<div class="col-md-12 col-lg-12">
-				<div class="page-header">	
-					<div class="btn-toolbar pull-right hidden-print">
-					 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
-					 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
-				 		<button class="btn btn-default" ng-if="!isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
-						<button class="btn btn-default" ng-click="activePrintMode(readset.code)" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-print"></i> @Messages("button.print")</button>
-					</div>
-					@partials.details_header()		 
+    		<div class="modal-content" style="width:{{modalWidth}}px; border:0px">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h3 class="modal-title">{{readset.code}}</h3>	
+					<h4 id="myModalLabel">{{modalTitle}}</h4>
+				</div>
+				<div class="modal-body" style="padding:0px">
+					<img ng-src="data:image/png;base64,{{modalImage}}" style="width:{{modalWidth}}px; height:{{modalHeight}}px;" />
+				</div>
+				<div class="modal-footer">
 				</div>
 			</div>
-		</div>
 		
-		<div class="row hidden-print">
-			<div class="col-md-12 col-lg-12"  messages="messages"></div>
-		</div>
-		
-		<div class="row margin-bottom-7 hidden-print">
-			<div class="col-md-12 col-lg-12">
-				<ul class="nav nav-tabs margin-bottom-5">
-					<li class="active"><a href="#" data-target="#general" data-toggle="tab">@Messages("readsets.tabs.general")</a></li>
-					<li><a href="#" data-target="#advanced" data-toggle="tab">@Messages("readsets.tabs.advanced")</a></li>    
-				</ul>
-				<div class="tab-content">
-					<div class="tab-pane active" id="general">		
-						@partials.details_general()
-					</div>			
-					<div class="tab-pane" id="advanced">
-						@partials.details_advanced()
-						@partials.details_file()	
-					</div>
-				</div>
+	</div>
+<!-- -------------------------------------------------------------------------------- -->
+
+<div class="row">
+	<div class="col-md-12 col-lg-12">
+		<div class="page-header">	
+			<div class="btn-toolbar pull-right">
+			 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+			 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
+		 		<button class="btn btn-default" ng-if="!isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
+				<button class="btn btn-default" ng-click="activePrintMode(readset.code)" data-toggle="tooltip" title="@Messages("button.printMode")" ><i class="fa fa-print"></i> @Messages("button.printMode")</button>
 			</div>
-		</div>		
-		
-		<div class="row hidden-print">	
-			<div class="col-md-12 col-lg-12"> 
-				@views.html.commons.treatments()  
+			@partials.details_header()		 
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12 col-lg-12"  messages="messages"></div>
+</div>
+
+<div class="row margin-bottom-7">
+	<div class="col-md-12 col-lg-12">
+		<ul class="nav nav-tabs margin-bottom-5">
+			<li class="active"><a href="#" data-target="#general" data-toggle="tab">@Messages("readsets.tabs.general")</a></li>
+			<li><a href="#" data-target="#advanced" data-toggle="tab">@Messages("readsets.tabs.advanced")</a></li>    
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="general">		
+				@partials.details_general()
+			</div>			
+			<div class="tab-pane" id="advanced">
+				@partials.details_advanced()
+				@partials.details_file()	
 			</div>
-		</div>	
-
-
-
-
+		</div>
+	</div>
+</div>		
+		
+<div class="row">	
+	<div class="col-md-12 col-lg-12"> 
+		@views.html.commons.treatments()  
+	</div>
+</div>	

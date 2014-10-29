@@ -1,4 +1,4 @@
-@(code: String)
+@(code: String, media: String)
 
 	
 @if(code == "ngsrg-illumina") {
@@ -8,7 +8,6 @@
 
 @if(code == "duplicates") {
 	@_treatments.duplicates()	
-
 }
 
 
@@ -29,20 +28,34 @@
 
 @if(code == "sorting-ribo") {
 	@_treatments.sortingRibo()
-
 }
 
 
 @if(code == "mapping") {
-	@_treatments.mapping() 
+	@if(media == "screen") {
+		@_treatments.mapping()
+	}
+	@if(media == "print")  {
+		@_treatments.mapping_print()
+	} 
 }
 
 
 @if(code == "read-quality") {
-	@_treatments.readQuality() 
+	@if(media == "screen") {
+		@_treatments.readQuality()
+	}
+	@if(media == "print")  {
+		@_treatments.readQuality_print()
+	} 
 }
 
 @if(code == "taxonomy") {
-	@_treatments.taxonomy() 
+	@if(media == "screen") {
+		@_treatments.taxonomy()
+	}
+	@if(media == "print")  {
+		@_treatments.taxonomy_print()
+	}
 }
 

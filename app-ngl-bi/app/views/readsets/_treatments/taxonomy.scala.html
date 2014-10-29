@@ -1,5 +1,6 @@
 @()
-<div class="row hidden-print">
+
+<div class="row">
 	<div class="col-md-12 col-lg-12">
 	   <ul class="nav nav-tabs margin-bottom-5">
 	   	<li class="active"><a href="#" data-target="#main" data-toggle="tab">@Messages("readsets.treatments.taxonomy.tabs.bilan")</a></li>
@@ -24,22 +25,4 @@
 		</div>
 				
 	</div>
-</div>
-
-
-
-<div class="visible-print">
-			
-	<div class="page-header">
-		@Messages("readsets.treatments.taxonomy.tabs.bilan")
-	</div>
-	
-	<div id="main">@partials.taxonomy_main_print()</div>
-	
-	<div class="page-break" id="krona">@partials.taxonomy_krona()</div>
-		
-	<div id="phylogeneticTree" class="page-break" ng-show="isDataExistsForPhylogeneticTree(treament.code!=undefined?treament.code:treatments.getTreatment().code)">
- 		@partials.taxonomy_phylogenetic()
-	</div>
-
 </div>
