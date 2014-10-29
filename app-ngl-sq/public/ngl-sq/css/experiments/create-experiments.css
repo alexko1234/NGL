@@ -1,0 +1,8 @@
+/*custom bootrap for creating experiments*/
+
+/* GENERAL*/
+
+.selectSupportsTable .datatable .table>tbody>tr>td{	
+	max-width: 300px;
+	overflow-wrap: break-word;	
+}

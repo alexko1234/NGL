@@ -16,4 +16,9 @@
 	<script src="@controllers.processes.tpl.routes.Processes.javascriptRoutes" type="text/javascript" charset="utf-8"></script>   
 }
 
-@views.html.main("processes.title", menu("processes."+code), scripts)(views.html.contents.lefttabs())
+@css() = {
+<link rel="stylesheet" href="@routes.Assets.at("ngl-sq/css/commons/commons.css")">
+<link rel="stylesheet" href="@routes.Assets.at("ngl-sq/css/processes/create-processes.css")">
+}
+
+@views.html.main("processes.title", menu("processes."+code), scripts, css)(views.html.contents.lefttabs())
