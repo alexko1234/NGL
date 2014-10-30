@@ -32,11 +32,6 @@ input[type="checkbox"] {
   white-space: nowrap;
 }
 
-.treatmentOverflow {
-	max-height:340px;
-	overflow:auto;	
-}
-
 .plates > .alert {
 	margin-bottom:0px;
 }
