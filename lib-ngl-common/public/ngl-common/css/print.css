@@ -16,8 +16,6 @@
 	
 	@page {
 	  size: A4 landscape;
-	  margin-left: 0.5cm;
-	  margin-right: 0.5cm;
 	}
 	
 	body {
@@ -48,7 +46,7 @@
   	}
 
   	#read1_errorPosition, #read2_errorPosition {
-  		max-width: 32% !important;
+  		max-width: 30% !important;
   	}  	
   	
   	.table {
@@ -66,13 +64,10 @@
   	.no-border {
   		border-top: 0px; 
   	}
+  	
   	.no-border th {
   		width:20%;
   		padding: 10px;	
-  	}
-  	
-  	#border_box {
-  		box-sizing: border-box;
   	}
   	
   	#panel_PEMPSize {

@@ -1,15 +1,22 @@
 @()
 
-<div>
-	<div class="page-header">
-		@Messages("readsets.treatments.read_quality.tabs.read1")
+<div class="row">
+	<div class="col-xs-12">
+		<div class="page-header">
+			@Messages("readsets.treatments.read_quality.tabs.read1")
+		</div>
 	</div>
+</div>
+
+@partials.readQuality_print("read1")
+
 	
-	<div id="read1">@partials.readQuality_print("read1")</div>
-	
-	<div class="page-header page-break">
-		@Messages("readsets.treatments.read_quality.tabs.read2")
+<div class="row page-break">
+	<div class="col-xs-12">
+		<div class="page-header">
+			@Messages("readsets.treatments.read_quality.tabs.read2")
+		</div>
 	</div>
+</div>
 		
-	<div id="read2">@partials.readQuality_print("read2")</div>
-</div>	
+@partials.readQuality_print("read2")
