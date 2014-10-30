@@ -9,9 +9,6 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			by:'traceInformation.creationDate',
 			reverse:true
 		},
-		pagination:{
-			mode:'local'
-		},
 		edit:{
 			active:true,
 			columnMode:true
