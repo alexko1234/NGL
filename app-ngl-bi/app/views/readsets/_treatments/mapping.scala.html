@@ -2,8 +2,8 @@
 <div class="row" ng-controller="MappingCtrl">
 	<div class="col-md-11 col-lg-11">
 		<ul class="nav nav-tabs margin-bottom-5">
-			<li ng-show="isDataExistsForRead1()"><a href="#" data-target="#read1" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read1")</a></li>
-			<li ng-show="isDataExistsForRead2()"><a href="#" data-target="#read2" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read2")</a></li>
+			<li ng-show="isDataExistsForRead('read1')"><a href="#" data-target="#read1" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read1")</a></li>
+			<li ng-show="isDataExistsForRead2('read2')"><a href="#" data-target="#read2" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read2")</a></li>
 			<li class="active"><a href="#" data-target="#pairs" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.pairs")</a></li>
 			<li><a href="#" data-target="#ref" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.ref")</a></li>    	
 		</ul>

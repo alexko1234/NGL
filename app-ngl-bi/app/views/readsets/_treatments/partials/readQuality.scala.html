@@ -88,7 +88,7 @@
 	    </div>
     </div>	
     
-	<div class="col-md-3 col-lg-3" ng-if='showAdapters("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'>
+	<div class="col-md-3 col-lg-3" ng-if='showPropertyData("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code,"adapters")'>
 		<div class="panel panel-default">
 			<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.adapters")</strong></div>
 			<div class="panel-body">
@@ -101,7 +101,7 @@
 		</div>					
 	</div>
 	
-    <div class="col-md-3 col-lg-3" ng-if='showMaxSizeReads("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'>
+    <div class="col-md-3 col-lg-3" ng-if='showPropertyData("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code,"maxSizeReads")'>
 		<div class="panel panel-default" >
 			<div class="panel-heading">
 				<strong>@(Messages("readsets.treatments.read_quality.maxSizeReads") + " ")<span ng-bind='@("lane.treatments.ngsrg['default'].nbCycle"+camelCase(read)+".value")'></span> :</strong>
@@ -125,7 +125,7 @@
 	    </div>
     </div>
        
-    <div class="col-md-3 col-lg-3" ng-if='showSuspectedKmers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'>
+    <div class="col-md-3 col-lg-3" ng-if='showPropertyData("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code,"suspectedKmers")'>
     	<div class="panel panel-default">
 			<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.suspectedKmers")</strong>
 			({{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedKmers.value.length")}})
@@ -140,7 +140,7 @@
 		</div>
 	</div>
 		
-	<div class="col-md-3 col-lg-3" ng-if='showSuspectedPrimers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'>
+	<div class="col-md-3 col-lg-3" ng-if='showPropertyData("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code,"suspectedPrimers")'>
 		<div class="panel panel-default" >
 			<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.suspectedPrimers")</strong>
 			({{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedPrimers.value.length")}})

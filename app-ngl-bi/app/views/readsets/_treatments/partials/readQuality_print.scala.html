@@ -60,7 +60,7 @@
 				    <img id='@(read+"_adapterContamination")' ng-src='@("data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".adapterContamination.value}}")' />
 				    <p>@Messages("readsets.treatments.read_quality.adapterContamination")</p>
 				    
-				    <div class="panel panel-default" ng-if='showAdapters("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'>
+				    <div class="panel panel-default" ng-if='showPropertyData("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code,"adapters")'>
 						<div class="panel-heading"><strong>@Messages("readsets.treatments.read_quality.adapters")</strong></div>
 						<div class="panel-body">
 							<ul>
@@ -85,7 +85,7 @@
 			
 		<div class="row">
 			<div class="col-xs-12">	
-				<div class="panel panel-default" ng-if='showMaxSizeReads("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'>		
+				<div class="panel panel-default" ng-if='showPropertyData("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code,"maxSizeReads")'>		
 				  	<div class="panel-heading"><strong>@(Messages("readsets.treatments.read_quality.maxSizeReads")+" ")<span ng-bind='@("lane.treatments.ngsrg['default'].nbCycle" + camelCase(read) + ".value")'></span> :</strong></div>
 				  	<div class="panel-body">
 						{{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".maxSizeReads.value") | number}} 
@@ -108,7 +108,7 @@
 		<div ng-controller="DetailsPrintCtrl">
 		
 
-			<div ng-if='showSuspectedKmers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'
+			<div ng-if='showPropertyData("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code,"suspectedKmers")'
 				ng-repeat='pageArray in getArray(@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedKmers.value"), treament.code!=undefined?treament.code:treatments.getTreatment().code, "@read", "suspectedKmers") track by pageArray.id'>
 				
 				<div class="row page-break">
@@ -147,7 +147,7 @@
 				</div>
 			</div>
 			
-			<div ng-if='showSuspectedPrimers("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code)'
+			<div ng-if='showPropertyData("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code,"suspectedPrimers")'
 				ng-repeat='pageArray in getArray(@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".suspectedPrimers.value"), treament.code!=undefined?treament.code:treatments.getTreatment().code, "@read", "suspectedPrimers") track by pageArray.id'>
 				
 				<div class="row page-break">

@@ -1,7 +1,7 @@
  "use strict";
 
- angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$sce', '$location', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 'valuationService', 
-     function($scope, $http, $q, $routeParams, $sce, $location, mainService, tabService, datatable, messages, lists, treatments, $window, valuationService) {
+ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$parse', '$q', '$routeParams', '$sce', '$location', 'mainService', 'tabService', 'datatable', 'messages', 'lists', 'treatments', '$window', 'valuationService', 
+     function($scope, $http, $parse, $q, $routeParams, $sce, $location, mainService, tabService, datatable, messages, lists, treatments, $window, valuationService) {
 
 	 
 	 $scope.goToRun=function(){
@@ -99,80 +99,15 @@
 		}
     };
     
-	$scope.showSuspectedKmers = function(read, treatmentCode) {
-		if (read === 'read1') {
-			if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode])) {
-				return (
-						angular.isDefined($scope.readset.treatments[treatmentCode].read1.suspectedKmers) 
-						&& $scope.readset.treatments[treatmentCode].read1.suspectedKmers != null 
-						&& $scope.readset.treatments[treatmentCode].read1.suspectedKmers.value.length > 0);
-			}
-		}
-		if (read === 'read2') {
-			if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode])) {
-				return ( 
-						$scope.readset.treatments[treatmentCode].read2.suspectedKmers != undefined 
-						&& $scope.readset.treatments[treatmentCode].read2.suspectedKmers != null 
-						&& $scope.readset.treatments[treatmentCode].read2.suspectedKmers.value.length > 0);
-			}
+	$scope.showPropertyData = function(read, treatmentCode, property) {
+		if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode])) {
+			var currentTreatment = $scope.readset.treatments[treatmentCode];
+			return (angular.isDefined($parse(read + "." + property)(currentTreatment)) 
+					&& ($parse(read + "." + property)(currentTreatment) !== null)  
+					&& ($parse(read + "." + property + ".value.length")(currentTreatment) > 0));
 		}
 		return false;
 	}
-	
-	$scope.showSuspectedPrimers = function(read, treatmentCode) {
-		if (read === 'read1') {
-			if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode]))  {
-				return ( angular.isDefined($scope.readset.treatments[treatmentCode].read1.suspectedPrimers)  
-						&& $scope.readset.treatments[treatmentCode].read1.suspectedPrimers != null 
-						&& $scope.readset.treatments[treatmentCode].read1.suspectedPrimers.value.length > 0);
-			}
-		}
-		if (read === 'read2') {
-			if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode]))  {
-				return ( angular.isDefined($scope.readset.treatments[treatmentCode].read2.suspectedPrimers)  
-						&& $scope.readset.treatments[treatmentCode].read2.suspectedPrimers != null 
-						&& $scope.readset.treatments[treatmentCode].read2.suspectedPrimers.value.length > 0);
-			}
-		}
-		return false;
-	}
-	
-	$scope.showMaxSizeReads = function(read, treatmentCode) {
-		if (read === 'read1') {
-			if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode]))  {
-				return ( angular.isDefined($scope.readset.treatments[treatmentCode].read1.maxSizeReads)  
-						&& $scope.readset.treatments[treatmentCode].read1.maxSizeReads != null );
-			}
-		}
-		if (read === 'read2') {
-			if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode]))  {
-				return ( angular.isDefined($scope.readset.treatments[treatmentCode].read2.maxSizeReads)  
-						&& $scope.readset.treatments[treatmentCode].read2.maxSizeReads != null );
-			}
-		}
-		return false;
-	}
-	
-	$scope.showAdapters = function(read, treatmentCode) {
-		if (read === 'read1') {
-			if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode]))  {
-				return ( angular.isDefined($scope.readset.treatments[treatmentCode].read1.adapters)   
-						&& $scope.readset.treatments[treatmentCode].read1.adapters != null 
-						&& $scope.readset.treatments[treatmentCode].read1.adapters.value.length > 0);
-			}
-		}
-		if (read === 'read2') {
-			if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode]))  {
-				return ( angular.isDefined($scope.readset.treatments[treatmentCode].read2.adapters)   
-						&& $scope.readset.treatments[treatmentCode].read2.adapters != null 
-						&& $scope.readset.treatments[treatmentCode].read2.adapters.value.length > 0);
-			}
-		}
-		return false;
-	}
-	
-
-	
 	
 	$scope.isDataExistsForPhylogeneticTree = function(trtCode) {
 		var b = true;
@@ -391,33 +326,20 @@
  
  angular.module('home').controller('MappingCtrl', ['$scope', function($scope) {
 	 
-		$scope.isDataExistsForRead1 = function() {
+		$scope.isDataExistsForRead = function(read) {
 			var b = true;
 			if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments)) {
 				var treatments = $scope.readset.treatments;
-				if (((!angular.isDefined(treatments["mapping"].read1)) || (!angular.isDefined(treatments["mapping"].read1.errorPosition.value))) ||
-						( angular.isDefined(treatments["mapping"].read1.errorPosition.value) && (treatments["mapping"].read1.errorPosition.value == null) ))  {
+				if (((!angular.isDefined("treatments['mapping']." + read)) || (!angular.isDefined("treatments['mapping']." + read + ".errorPosition.value"))) ||
+						( angular.isDefined("treatments['mapping']."+read+".errorPosition.value") && ("treatments['mapping']." + read + ".errorPosition.value" === null) ))  {
 					b = false;
 				}
 			}
 			return b;
 		}
 		
-		var isDEFR1 = $scope.isDataExistsForRead1;
-		
-		$scope.isDataExistsForRead2 = function() {
-			var b = true;
-			if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments)) {
-				var treatments = $scope.readset.treatments;
-				if (((!angular.isDefined(treatments["mapping"].read2)) || (!angular.isDefined(treatments["mapping"].read2.errorPosition.value))) ||
-						( angular.isDefined(treatments["mapping"].read2.errorPosition.value) && (treatments["mapping"].read2.errorPosition.value == null) ))  {
-					b = false;
-				}
-			}
-			return b;
-		}
-		
-		var isDEFR2 = $scope.isDataExistsForRead2;
+		var isDEFR1 = $scope.isDataExistsForRead("read1");
+		var isDEFR2 = $scope.isDataExistsForRead("read2");
 
 	 	$scope.titleForRead = function() {
 	 		var title = "";
