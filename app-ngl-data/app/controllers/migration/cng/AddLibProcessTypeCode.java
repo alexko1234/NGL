@@ -83,45 +83,46 @@ public class AddLibProcessTypeCode extends CommonController {
 	}
 	
 	
-	private static int migreContainer() {
-		
-		//find collection up to date
-		List<Container> newContainers = null;
+	private static int migreContainer() {		
+		int n=0;
 		try {
+			//find collection up to date
+			List<Container> newContainers = null;
 			newContainers = findSmallContainerToCreate();
 			newContainers = LimsCNGDAO.demultiplexContainer(newContainers); 
-		} catch (DAOException e) {
-			Logger.debug("ERROR in findContainerToCreate():" + e.getMessage());
-		}
-		
-		//find current containers
-		List<Container> oldContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
-		Logger.debug("Expected to migrate "+oldContainers.size()+" containers");
-		
-		int n=0;
-		for (Container oldContainer : oldContainers) {
-			
-			for (Container newContainer : newContainers) {				
-				if (oldContainer.code.equals(newContainer.code)) {	
-					oldContainer.contents = newContainer.contents;
 
-					WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
-							DBUpdate.set("contents", oldContainer.contents));
+			//find current containers
+			List<Container> oldContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
+			Logger.debug("Expected to migrate "+oldContainers.size()+" containers");
 						
-					if(StringUtils.isNotEmpty(r.getError())){
-						Logger.error("Set contents : "+oldContainer.code+" / "+r.getError());
-					}
-					else {
-						n++;
+			for (Container oldContainer : oldContainers) {
+				
+				for (Container newContainer : newContainers) {		
+					
+					if (oldContainer.code.equals(newContainer.code)) {	
+						oldContainer.contents = newContainer.contents;
+	
+						WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
+								DBUpdate.set("contents", oldContainer.contents));
+							
+						if(StringUtils.isNotEmpty(r.getError())){
+							Logger.error("Set contents : "+oldContainer.code+" / "+r.getError());
+						}
+						else {
+							n++;
+						}
+						
+						break;
 					}
 					
-					break;
-				}
-			}
-			
-		}	
+				}	
+				
+			}	
+		} catch (DAOException e) {
+			Logger.error("ERROR in findContainerToCreate():" + e.getMessage());
+		}
+		
 		return n;
-
 	}
 	
 	

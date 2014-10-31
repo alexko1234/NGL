@@ -542,7 +542,7 @@ public class LimsCNGDAO {
 				if (r.contents.get(i).properties.get("tagCategory").value.equals("-1")) {
 					r.contents.get(i).properties.remove("tagCategory");
 				}
-				if (r.contents.get(i).properties.get("libProcessTypeCode").value.equals("-1")) {
+				if ((r.contents.get(i).properties.get("libProcessTypeCode") != null) && (r.contents.get(i).properties.get("libProcessTypeCode").value.equals("-1"))) {
 					r.contents.get(i).properties.remove("libProcessTypeCode");
 				}
 			}
@@ -571,7 +571,13 @@ public class LimsCNGDAO {
 		content.properties = new HashMap<String, PropertyValue>();
 		content.properties.put("tag", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("tag").value));
 		content.properties.put("tagCategory", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("tagCategory").value));
-		content.properties.put("libProcessTypeCode", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("libProcessTypeCode").value));
+		
+		if (results.get(posNext).contents.get(0).properties.get("libProcessTypeCode") == null) {
+			Logger.debug("content.sampleCode =" + content.sampleCode + " : libProcessTypeCode == null");
+		}
+		else {
+			content.properties.put("libProcessTypeCode", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("libProcessTypeCode").value));
+		}
 		
 		results.get(posCurrent).contents.add(content); 
 		
@@ -633,7 +639,7 @@ public class LimsCNGDAO {
 		
 		List<Container> results = null;
 		if (containerCode != null) {
-			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? and isavailable = true order by code, project, code_sample, tag", new Object[]{containerCode} 
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? and isavailable = true order by code, project, code_sample, tag, exp_short_name", new Object[]{containerCode} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -645,7 +651,7 @@ public class LimsCNGDAO {
 			});
 		}
 		else {
-			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag, exp_short_name", new Object[]{} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -666,7 +672,7 @@ public class LimsCNGDAO {
 		final String _containerCategoryCode = containerCategoryCode;
 		String sqlView = "v_tube_tongl_reprise";
 		
-		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
+		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag, exp_short_name", new Object[]{} 
 		,new RowMapper<Container>() {
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
@@ -714,7 +720,7 @@ public class LimsCNGDAO {
 		
 		List<Container> results = null;		
 		if (containerCode != null) {
-			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? and isavailable = true order by code, project, code_sample, tag", new Object[]{containerCode} 
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? and isavailable = true order by code, project, code_sample, tag, exp_short_name", new Object[]{containerCode} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -726,7 +732,7 @@ public class LimsCNGDAO {
 			});
 		}
 		else {
-			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag, exp_short_name", new Object[]{} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -758,7 +764,7 @@ public class LimsCNGDAO {
 		}
 		
 		List<ContainerSupport> results = null;
-		results = this.jdbcTemplate.query("select code_support, seq_program_type from " + sqlView + " where isavailable = true order by code, project, code_sample, tag", new Object[]{} 
+		results = this.jdbcTemplate.query("select code_support, seq_program_type from " + sqlView + " where isavailable = true order by code, project, code_sample, tag, exp_short_name", new Object[]{} 
 		,new RowMapper<ContainerSupport>() {
 			public ContainerSupport mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
