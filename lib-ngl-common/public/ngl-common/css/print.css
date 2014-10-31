@@ -31,8 +31,7 @@
   	a[href] {
     	color: blue !important;
   	}	
-
-  	
+ 	
   	#pairs_overlapDistrib {
   		max-width: 70% !important;
   	}
@@ -44,10 +43,6 @@
   	#pairs_PEReadDistanceSeparation, #pairs_MPReadDistanceSeparation {
   		max-width: 50% !important;
   	}
-
-  	#read1_errorPosition, #read2_errorPosition {
-  		max-width: 30% !important;
-  	}  	
   	
   	.table {
   		font-size: 10px;

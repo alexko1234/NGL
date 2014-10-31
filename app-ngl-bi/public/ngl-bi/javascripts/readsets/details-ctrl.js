@@ -403,6 +403,8 @@
 			return b;
 		}
 		
+		var isDEFR1 = $scope.isDataExistsForRead1;
+		
 		$scope.isDataExistsForRead2 = function() {
 			var b = true;
 			if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments)) {
@@ -414,5 +416,22 @@
 			}
 			return b;
 		}
+		
+		var isDEFR2 = $scope.isDataExistsForRead2;
 
+	 	$scope.titleForRead = function() {
+	 		var title = "";
+	 		if (isDEFR1) {
+	 			title += Messages("readsets.treatments.mapping.tabs.read1");
+		 		if (isDEFR2) {
+		 			title += " / " + Messages("readsets.treatments.mapping.tabs.read2");
+		 		}
+	 		}
+	 		else {
+		 		if (isDEFR2) {
+		 			title += Messages("readsets.treatments.mapping.tabs.read2");
+		 		}
+	 		}
+	 		return title;
+	 	}
 }]);
