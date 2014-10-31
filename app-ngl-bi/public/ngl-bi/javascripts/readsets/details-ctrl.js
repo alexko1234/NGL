@@ -324,14 +324,14 @@
  }]);
  
  
- angular.module('home').controller('MappingCtrl', ['$scope', function($scope) {
+ angular.module('home').controller('MappingCtrl', ['$scope', '$parse', function($scope, $parse) {
 	 
 		$scope.isDataExistsForRead = function(read) {
 			var b = true;
 			if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments)) {
-				var treatments = $scope.readset.treatments;
-				if (((!angular.isDefined("treatments['mapping']." + read)) || (!angular.isDefined("treatments['mapping']." + read + ".errorPosition.value"))) ||
-						( angular.isDefined("treatments['mapping']."+read+".errorPosition.value") && ("treatments['mapping']." + read + ".errorPosition.value" === null) ))  {
+				var treatment = $scope.readset.treatments["mapping"];
+				if ( (!angular.isDefined($parse(read)(treatment))) || (!angular.isDefined($parse(read + ".errorPosition.value")(treatment))) ||
+						( angular.isDefined($parse(read + ".errorPosition.value")(treatment)) && ($parse(read + ".errorPosition.value")(treatment) === null) ))  {
 					b = false;
 				}
 			}
