@@ -24,3 +24,11 @@
 	border-radius: 4px;
 	-webkit-user-select: none;
 }
+
+.valueInput{
+	padding: 3px 3px 3px;
+	margin: 0px;
+	width: 52px;
+	height: 22px;
+	text-align: left;
+}
