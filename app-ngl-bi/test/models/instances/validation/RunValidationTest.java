@@ -42,6 +42,7 @@ import org.mongojack.DBQuery;
 import play.data.validation.ValidationError;
 import play.mvc.Result;
 import utils.AbstractTests;
+import utils.Constants;
 import utils.RunMockHelper;
 import validation.ContextValidation;
 import validation.run.instance.LaneValidationHelper;
@@ -173,7 +174,7 @@ public class RunValidationTest extends AbstractTests {
 			 al.add(l);
 			 run.lanes = al;
 			 
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal); 
 			 
@@ -185,7 +186,7 @@ public class RunValidationTest extends AbstractTests {
 			 
 			 System.out.println("-------------------------------------------------------");
 			 
-			 ctxVal = new ContextValidation(); 
+			 ctxVal = new ContextValidation(Constants.TEST_USER); 
 			 ctxVal.setCreationMode();
 			 r.validate(ctxVal); 
 			 
@@ -202,7 +203,7 @@ public class RunValidationTest extends AbstractTests {
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 			}	   
 			 Run run = getFullRun();
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 
@@ -234,7 +235,7 @@ public class RunValidationTest extends AbstractTests {
 			 al.add(lane1);
 			 run.lanes = al;
 			 
-			 ContextValidation ctxVal2 = new ContextValidation();
+			 ContextValidation ctxVal2 = new ContextValidation(Constants.TEST_USER);
 			 ctxVal2.setCreationMode();
 			 
 			 run.validate(ctxVal2);			 
@@ -246,7 +247,7 @@ public class RunValidationTest extends AbstractTests {
 			ReadSet readset = RunMockHelper.newReadSet("rdCode");
 			readset.runCode = getFullRunWithGoodProjectCode().code;
 			
-			ContextValidation ctxVal = new ContextValidation();
+			ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			ctxVal.setCreationMode();
 			
 			readset.validate(ctxVal);
@@ -261,7 +262,7 @@ public class RunValidationTest extends AbstractTests {
 			run.traceInformation.modifyUser = "test";
 			run.traceInformation.modifyDate = new Date();
 
-	        ContextValidation ctxVal3 = new ContextValidation();
+	        ContextValidation ctxVal3 = new ContextValidation(Constants.TEST_USER);
 	        ctxVal3.setUpdateMode();
 			 
 	        run.validate(ctxVal3);
@@ -287,7 +288,7 @@ public class RunValidationTest extends AbstractTests {
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 			}	   
 			 Run run = getFullRunWithBadProjectCode();
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 
@@ -304,7 +305,7 @@ public class RunValidationTest extends AbstractTests {
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 			}	   
 			 Run run = getFullRun();
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			
@@ -317,7 +318,7 @@ public class RunValidationTest extends AbstractTests {
 			run.traceInformation.modifyDate = new Date();
 			run.traceInformation.modifyUser = "dnoisett";
 			
-			ctxVal = new ContextValidation();
+			ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setUpdateMode();
 			 run.validate(ctxVal);
 			 
@@ -332,7 +333,7 @@ public class RunValidationTest extends AbstractTests {
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 			}	   
 			 Run run = getFullRun();
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			
@@ -345,7 +346,7 @@ public class RunValidationTest extends AbstractTests {
 			run.traceInformation.modifyDate = new Date();
 			run.traceInformation.modifyUser = "dnoisett";
 			
-			ctxVal = new ContextValidation();
+			ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setUpdateMode();
 			 run.validate(ctxVal);
 			 
@@ -362,7 +363,7 @@ public class RunValidationTest extends AbstractTests {
 			}	   
 			 Run run = getFullRun();
 			 run.typeCode = "2500";
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 
@@ -401,7 +402,7 @@ public class RunValidationTest extends AbstractTests {
 			 mT.put("ngsrg", t1);
 			 run.treatments = mT;
 			
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 
@@ -445,7 +446,7 @@ public class RunValidationTest extends AbstractTests {
 			 mT.put("sav", t2);
 			 run.treatments = mT;
 			
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 
@@ -507,7 +508,7 @@ public class RunValidationTest extends AbstractTests {
 			 System.out.println(""+mT.size()); 
 			 System.out.println(""); 
 			
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 
@@ -524,7 +525,7 @@ public class RunValidationTest extends AbstractTests {
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 			}	   
 			 Run run = getFullRun();
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			
@@ -538,7 +539,7 @@ public class RunValidationTest extends AbstractTests {
 			run.traceInformation.modifyUser = "dnoisett";
 			run.typeCode = "RHS3000";
 			
-			ctxVal = new ContextValidation();
+			ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setUpdateMode();
 			 run.validate(ctxVal);
 			 
@@ -557,7 +558,7 @@ public class RunValidationTest extends AbstractTests {
 				MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
 			}	   
 			 Run run = getEmptyRun();
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 
@@ -584,7 +585,7 @@ public class RunValidationTest extends AbstractTests {
 			 lane = getLane2();
 			 l.add(lane);
 			 run.lanes = l;
-			 ContextValidation ctxVal = new ContextValidation(); 
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 			 ctxVal.putObject("run", run);
 			 ctxVal.setCreationMode();
 			 LaneValidationHelper.validationLanes(run.lanes, ctxVal);
@@ -602,7 +603,7 @@ public class RunValidationTest extends AbstractTests {
 			 Lane lane = getLane();
 			 l.add(lane);
 			 run.lanes = l;		 
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.putObject("run", run);	 
 			 ctxVal.setCreationMode();
 			 run.lanes.get(0).validate(ctxVal);
@@ -623,7 +624,7 @@ public class RunValidationTest extends AbstractTests {
 			 lane = getLane();
 			 l.add(lane); // adding again the same lane ! 
 			 run.lanes = l;
-			 ContextValidation ctxVal = new ContextValidation(); 
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 			 ctxVal.putObject("run", run);
 			 ctxVal.setCreationMode();
 			 LaneValidationHelper.validationLanes(run.lanes, ctxVal);
@@ -676,7 +677,7 @@ public class RunValidationTest extends AbstractTests {
 			lanes.add(lane2);
 			run.lanes = lanes;
 			
-			ContextValidation ctxVal = new ContextValidation(); 
+			ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 			 ctxVal.putObject("run", run);
 			 ctxVal.setCreationMode();
 			 LaneValidationHelper.validationLanes(run.lanes, ctxVal);
@@ -694,7 +695,7 @@ public class RunValidationTest extends AbstractTests {
 			 result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readSet)));
 			 assertThat(status(result)).isEqualTo(OK);
 			 //lane.state = getState("F-RG");
-			 ctxVal = new ContextValidation(); 
+			 ctxVal = new ContextValidation(Constants.TEST_USER); 
 			 ctxVal.putObject("run", run);
 			  ctxVal.setUpdateMode();
 			  LaneValidationHelper.validationLanes(run.lanes, ctxVal);
@@ -728,7 +729,7 @@ public class RunValidationTest extends AbstractTests {
 			 lanes.add(lane3); // adding again a lane with number 2
 			 run.lanes = lanes;
 			 
-			 ContextValidation ctxVal = new ContextValidation(); 
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 			 ctxVal.putObject("run", run);
 			 ctxVal.setCreationMode();
 			 lane3.validate(ctxVal);
@@ -737,7 +738,7 @@ public class RunValidationTest extends AbstractTests {
 			 assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_NOTUNIQUE_MSG); 
 			 
 			 lane3.number = 3;
-			 ctxVal = new ContextValidation(); 
+			 ctxVal = new ContextValidation(Constants.TEST_USER); 
 			 ctxVal.putObject("run", run);
 			 ctxVal.setUpdateMode();
 			 lane3.validate(ctxVal);
@@ -785,7 +786,7 @@ public class RunValidationTest extends AbstractTests {
 			 l.add(lane);
 			 run.lanes = l;
 			 
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 assertThat(ctxVal.errors).hasSize(0);
@@ -799,7 +800,7 @@ public class RunValidationTest extends AbstractTests {
 			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 			assertThat(status(result)).isEqualTo(OK);
 			
-			 ctxVal = new ContextValidation();
+			 ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 r.validate(ctxVal);
 			 assertThat(ctxVal.errors).hasSize(0);
@@ -810,7 +811,7 @@ public class RunValidationTest extends AbstractTests {
 			 a.add(r.code);
 			 run.lanes.get(0).readSetCodes = a;
 			 
-			 ctxVal = new ContextValidation();
+			 ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.putObject("run", run);
 			 ctxVal.setUpdateMode();
 			 run.lanes.get(0).validate(ctxVal);
@@ -856,7 +857,7 @@ public class RunValidationTest extends AbstractTests {
 			 l.add(lane);
 			 run.lanes = l;
 
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 assertThat(ctxVal.errors).hasSize(0);
@@ -871,7 +872,7 @@ public class RunValidationTest extends AbstractTests {
 			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 			assertThat(status(result)).isEqualTo(OK);
 				 
-			 ctxVal = new ContextValidation();
+			 ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 r.validate(ctxVal);
 			 assertThat(ctxVal.errors).hasSize(0);
@@ -883,7 +884,7 @@ public class RunValidationTest extends AbstractTests {
 			 a.add("toto");
 			 run.lanes.get(0).readSetCodes = a;
 			 
-			 ctxVal = new ContextValidation();
+			 ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.putObject("run", run);
 			 ctxVal.setUpdateMode();
 			 run.lanes.get(0).validate(ctxVal);
@@ -934,7 +935,7 @@ public class RunValidationTest extends AbstractTests {
 			 l.add(lane);
 			 run.lanes = l;
 
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 assertThat(ctxVal.errors).hasSize(0);	 
@@ -949,7 +950,7 @@ public class RunValidationTest extends AbstractTests {
 			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 			assertThat(status(result)).isEqualTo(OK);
 			 
-			 ctxVal = new ContextValidation();
+			 ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 r.validate(ctxVal);
 			 assertThat(ctxVal.errors).hasSize(2);
@@ -995,7 +996,7 @@ public class RunValidationTest extends AbstractTests {
 			 l.add(lane);
 			 run.lanes = l;
 
-			 ContextValidation ctxVal = new ContextValidation();
+			 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 run.validate(ctxVal);
 			 assertThat(ctxVal.errors).hasSize(0);
@@ -1009,7 +1010,7 @@ public class RunValidationTest extends AbstractTests {
 			Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 			assertThat(status(result)).isEqualTo(OK);
 				 
-			 ctxVal = new ContextValidation();
+			 ctxVal = new ContextValidation(Constants.TEST_USER);
 			 ctxVal.setCreationMode();
 			 r.validate(ctxVal);
 			 assertThat(ctxVal.errors).hasSize(0);			 
@@ -1061,7 +1062,7 @@ public class RunValidationTest extends AbstractTests {
 			lanes.add(lane2);
 			run.lanes = lanes;
 			
-			ContextValidation ctxVal = new ContextValidation();
+			ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 			ctxVal.putObject("readSet", readSet);
 			ctxVal.putObject("objectClass", readSet.getClass());  
 			ctxVal.setCreationMode();
@@ -1120,7 +1121,7 @@ public class RunValidationTest extends AbstractTests {
 		lanes.add(lane2);
 		run.lanes = lanes;	
 		
-		 ContextValidation ctxVal = new ContextValidation();
+		 ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 		 ctxVal.putObject("readSet", readSet);
 		 ctxVal.putObject("objectClass", readSet.getClass());  
 		 ctxVal.setCreationMode();
@@ -1130,7 +1131,7 @@ public class RunValidationTest extends AbstractTests {
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 		assertThat(status(result)).isEqualTo(OK);
 		 
-		 ctxVal = new ContextValidation();
+		 ctxVal = new ContextValidation(Constants.TEST_USER);
 		 ctxVal.setCreationMode();
 		 readSet.validate(ctxVal);
 		 
@@ -1151,7 +1152,7 @@ public class RunValidationTest extends AbstractTests {
 		v.resolutionCodes = null;
 		v.user = "dnoisett";
 
-    	ContextValidation ctxVal = new ContextValidation();
+    	ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
     	ctxVal.putObject("typeCode", run.typeCode ); 
     	ctxVal.setCreationMode();
 

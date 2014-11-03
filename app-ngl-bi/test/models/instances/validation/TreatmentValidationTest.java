@@ -43,6 +43,7 @@ import org.mongojack.DBQuery;
 import play.Play;
 import play.mvc.Result;
 import utils.AbstractTests;
+import utils.Constants;
 import utils.RunMockHelper;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
@@ -420,7 +421,7 @@ public class TreatmentValidationTest extends AbstractTests {
 			t = getNewTreatmentSampleControlOK();
 		}
 		
-		ContextValidation ctxVal = new ContextValidation(); 
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 		
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
@@ -443,7 +444,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		if (Play.application().configuration().getString("institute").toUpperCase().equals("CNS")) {
 			Treatment t = getNewTreatmentTaxonomyBad();
 			
-			ContextValidation ctxVal = new ContextValidation(); 			
+			ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 			
 			Level.CODE levelCode = Level.CODE.ReadSet; 
 			ctxVal.putObject("level", levelCode);
 			ReadSet readset = RunMockHelper.newReadSet("rdCode");
@@ -464,7 +465,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	 public void testValidateTreatmentCreationOK() {
 			Treatment t = getNewTreatmentForReadSet();
 					
-			ContextValidation ctxVal = new ContextValidation(); 
+			ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 			Level.CODE levelCode = Level.CODE.ReadSet; 
 			ctxVal.putObject("level", levelCode);
 			ReadSet readset = RunMockHelper.newReadSet("rdCode");
@@ -484,7 +485,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		createSameTrt();
 				
-		ContextValidation ctxVal = new ContextValidation(); 
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 		
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
@@ -514,7 +515,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		Treatment t = getNewTreatmentForReadSet();
 				
-		ContextValidation ctxVal = new ContextValidation(); 
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
 		ctxVal.putObject("readSet", readset);		
 		ctxVal.setCreationMode();
@@ -541,7 +542,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		Treatment t = getNewTreatmentForReadSet();
 		t.code =  null;	// NO CODE!	
 				
-		ContextValidation ctxVal = new ContextValidation(); 
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
@@ -562,7 +563,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		Treatment t = getNewTreatmentForReadSet();
 		t.code =  ""; //empty!		
 		
-		ContextValidation ctxVal = new ContextValidation(); 
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
@@ -585,7 +586,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		Treatment t = getNewTreatmentForReadSet();	
 		t.typeCode = ""; //vide!
 				
-		ContextValidation ctxVal = new ContextValidation(); 
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
@@ -608,7 +609,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		Treatment t = getNewTreatmentForReadSet();
 		t.categoryCode = ""; //vide!
 				
-		ContextValidation ctxVal = new ContextValidation(); 
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
@@ -630,7 +631,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		createSameTrt();
 				
-		ContextValidation ctxVal = new ContextValidation(); 
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
@@ -721,7 +722,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		// create treatment
 		deleteRdCode();
 				
-		ContextValidation ctxVal = new ContextValidation(); 
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 		Level.CODE levelCode = Level.CODE.ReadSet; 
 		ctxVal.putObject("level", levelCode);
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
@@ -750,7 +751,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 			t.results().get("default").put("bad", new PropertySingleValue("Ouh la la"));
 								
-			ContextValidation ctxVal = new ContextValidation(); 
+			ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 			Level.CODE levelCode = Level.CODE.ReadSet; 
 			ctxVal.putObject("level", levelCode);
 			ReadSet readset = RunMockHelper.newReadSet("rdCode");
@@ -769,7 +770,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	 @Test
 	 public void testValidateTreatmentErrorBadTypeValue() {
 	    	Treatment t = null; 
-    		ContextValidation ctxVal = new ContextValidation();  
+    		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);  
     		Level.CODE levelCode = Level.CODE.ReadSet; 
     		ctxVal.putObject("level", levelCode);
     		ReadSet readset = RunMockHelper.newReadSet("rdCode");
@@ -805,7 +806,7 @@ public class TreatmentValidationTest extends AbstractTests {
 	
 			t.set("read3", m3);
 			
-			ContextValidation ctxVal = new ContextValidation(); 
+			ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
 			Level.CODE levelCode = Level.CODE.ReadSet; 
 			ctxVal.putObject("level", levelCode);
 			ReadSet readset = RunMockHelper.newReadSet("rdCode");
@@ -824,7 +825,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		public void testValidatePropertyDetailsOK() {
 			Treatment t = getNewTreatmentPropertyDetailsOK();
 						
-			ContextValidation ctxVal = new ContextValidation(); 			
+			ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 			
 			Level.CODE levelCode = Level.CODE.ReadSet; 
 			ctxVal.putObject("level", levelCode);
 			ReadSet readset = RunMockHelper.newReadSet("rdCode");
