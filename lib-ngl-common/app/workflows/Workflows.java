@@ -47,7 +47,7 @@ public class Workflows {
 
 		if(!ctxValidation.hasErrors() && !nextState.code.equals(experiment.state)){
 
-			experiment.traceInformation=StateHelper.getUpdateTraceInformation(experiment.traceInformation);  
+			experiment.traceInformation=StateHelper.getUpdateTraceInformation(experiment.traceInformation, ctxValidation.getUser());  
 			experiment.state = StateHelper.updateHistoricalNextState(experiment.state, nextState);
 			experiment.state=nextState;
 

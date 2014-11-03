@@ -8,6 +8,7 @@ import models.utils.dao.DAOException;
 import org.junit.Test;
 
 import utils.AbstractTests;
+import utils.Constants;
 import validation.ContextValidation;
 import validation.container.instance.SampleUsedValidationHelper;
 import validation.sample.instance.SampleValidationHelper;
@@ -22,21 +23,21 @@ public class SampleUsedValidationHelperTest extends AbstractTests{
 	 */
 	@Test
 	public void validateSampleCategoryCode() throws DAOException {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		SampleValidationHelper.validateSampleCategoryCode(SampleCategory.find.findAll().get(0).code,contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
 	@Test
 	public void validateSampleCategoryCodeRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		SampleValidationHelper.validateSampleCategoryCode(null,contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
 
 	@Test
 	public void validateSampleCategoryNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		SampleValidationHelper.validateSampleCategoryCode("notexist",contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}	
@@ -49,21 +50,21 @@ public class SampleUsedValidationHelperTest extends AbstractTests{
 	 */
 	@Test
 	public void validateSampleTypeCode() throws DAOException {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		SampleUsedValidationHelper.validateSampleTypeCode(SampleType.find.findAll().get(0).code,contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
 	@Test
 	public void validateSampleTypeCodeRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		SampleUsedValidationHelper.validateSampleTypeCode(null,contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
 
 	@Test
 	public void validateSampleTypeNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		SampleUsedValidationHelper.validateSampleTypeCode("notexist",contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}	

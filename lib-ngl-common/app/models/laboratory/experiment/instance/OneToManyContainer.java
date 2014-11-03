@@ -27,8 +27,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	}
 	
 	@Override
-	public ContextValidation saveOutputContainers(Experiment experiment) {
-		ContextValidation contextValidation=new ContextValidation();
+	public ContextValidation saveOutputContainers(Experiment experiment, ContextValidation contextValidation) {
 		contextValidation.addErrors("locationOnContainerSupport",ValidationConstants.ERROR_NOTDEFINED_MSG);
 		Logger.error("Not implemented");
 		return contextValidation;

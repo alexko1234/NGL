@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import play.Logger;
 import utils.AbstractTests;
+import utils.Constants;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import fr.cea.ig.MongoDBDAO;
@@ -40,7 +41,7 @@ public class CommonValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validateIdCreationMode() throws DAOException {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.setCreationMode();
 		Sample sample=new Sample();
     	CommonValidationHelper.validateId(sample, contextValidation);
@@ -49,7 +50,7 @@ public class CommonValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validateIdCreationModeError() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.setCreationMode();
 		Sample sample=saveDBOject(Sample.class, COLLECTION_NAME, "validateIdCreationModeError");
     	CommonValidationHelper.validateId(sample, contextValidation);
@@ -58,7 +59,7 @@ public class CommonValidationHelperTest extends AbstractTests {
 
 	@Test
 	public void validateIdUpdateMode() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.setUpdateMode();
 		Sample sample=saveDBOject(Sample.class, COLLECTION_NAME, "validateIdUpdateMode");
     	CommonValidationHelper.validateId(sample, contextValidation);
@@ -67,7 +68,7 @@ public class CommonValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validateIdUpdateModeError() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.setUpdateMode();
 		Sample sample=new Sample();
     	CommonValidationHelper.validateId(sample, contextValidation);
@@ -80,7 +81,7 @@ public class CommonValidationHelperTest extends AbstractTests {
 	 */
 	@Test
 	public void validateCodeRequired(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		Sample sample=new Sample();
     	CommonValidationHelper.validateCode(sample, COLLECTION_NAME, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
@@ -88,7 +89,7 @@ public class CommonValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validateUniqueCode() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.setCreationMode();
 		Sample sample=saveDBOject(Sample.class,COLLECTION_NAME, "validateUniqueCode");
     	CommonValidationHelper.validateCode(sample, COLLECTION_NAME, contextValidation);
@@ -98,7 +99,7 @@ public class CommonValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validateExistCode() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.setUpdateMode();
 		Sample sample=new Sample();
 		sample.code="validateExistCode";
@@ -120,21 +121,21 @@ public class CommonValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validationStateCode() throws DAOException {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		CommonValidationHelper.validateStateCode(State.find.findAll().get(0).code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationStateRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		CommonValidationHelper.validateStateCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public void validationStateNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		CommonValidationHelper.validateStateCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}

@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
+import utils.Constants;
 import validation.utils.ValidationHelper;
 
 public class ValidationHelperTests extends AbstractTests {
@@ -63,7 +64,7 @@ public class ValidationHelperTests extends AbstractTests {
 		pFileValue.fullname = "krona.html";
 		pFileValue.extension = "html";
 		
-		ContextValidation cv = new ContextValidation();
+		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
 		
 		PropertyDefinition pDef = getPropertyFileDefinition();
 				
@@ -90,7 +91,7 @@ public class ValidationHelperTests extends AbstractTests {
 		pFileValue.fullname = "krona.html";
 		pFileValue.extension = "";
 		
-		ContextValidation cv = new ContextValidation(); 
+		ContextValidation cv = new ContextValidation(Constants.TEST_USER); 
 
 		PropertyDefinition pDef = getPropertyFileDefinition();
 		
@@ -118,7 +119,7 @@ public class ValidationHelperTests extends AbstractTests {
 		pFileValue.fullname = "";
 		pFileValue.extension = "";
 		
-		ContextValidation cv = new ContextValidation(); 
+		ContextValidation cv = new ContextValidation(Constants.TEST_USER); 
 
 		PropertyDefinition pDef = getPropertyFileDefinition();
 		
@@ -149,7 +150,7 @@ public class ValidationHelperTests extends AbstractTests {
 		pImgValue.width = 4;
 		pImgValue.height = 4;
 		
-		ContextValidation cv = new ContextValidation(); 
+		ContextValidation cv = new ContextValidation(Constants.TEST_USER); 
 
 		PropertyDefinition pDef = getPropertyImgDefinition();
 		
@@ -176,7 +177,7 @@ public class ValidationHelperTests extends AbstractTests {
 		pImgValue.fullname = "phylogeneticTree2.jpg";
 		pImgValue.extension = "jpg";
 		
-		ContextValidation cv = new ContextValidation(); 
+		ContextValidation cv = new ContextValidation(Constants.TEST_USER); 
 
 		PropertyDefinition pDef = getPropertyImgDefinition();
 		
@@ -197,7 +198,7 @@ public class ValidationHelperTests extends AbstractTests {
 	
 	@Test
 	public void validatePropertiesRequired() {
-		ContextValidation cv = new ContextValidation();
+		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
 		ValidationHelper.validateProperties(cv, getPropertiesRequired(), getPropertyDefinitionsRequired());
 		
 		showErrors(cv);
@@ -279,7 +280,7 @@ public class ValidationHelperTests extends AbstractTests {
 	
 	@Test
 	public void validatePropertiesOne() {
-		ContextValidation cv = new ContextValidation();
+		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
 		ValidationHelper.validateProperties(cv, getPropertiesSingle(), getPropertyDefinitionsSingle());
 		
 		showErrors(cv);
@@ -302,7 +303,7 @@ public class ValidationHelperTests extends AbstractTests {
 	
 	@Test
 	public void validatePropertiesSingleString() {
-		ContextValidation cv = new ContextValidation();
+		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
 		ValidationHelper.validateProperties(cv, getPropertiesSingleString(), getPropertyDefinitionsSingle());
 		
 		showErrors(cv);
@@ -349,7 +350,7 @@ public class ValidationHelperTests extends AbstractTests {
 	
 	@Test
 	public void validatePropertiesListString() {
-		ContextValidation cv = new ContextValidation();
+		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
 		ValidationHelper.validateProperties(cv, getPropertiesListString(), getPropertyDefinitionsList());
 		
 		showErrors(cv);
@@ -384,7 +385,7 @@ public class ValidationHelperTests extends AbstractTests {
 	
 	@Test
 	public void validatePropertiesMapString() {
-		ContextValidation cv = new ContextValidation();
+		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
 		ValidationHelper.validateProperties(cv, getPropertiesMapString(), getPropertyDefinitionsMap());
 		showErrors(cv);
 		assertThat(cv.errors.size()).isEqualTo(0);
@@ -429,7 +430,7 @@ public class ValidationHelperTests extends AbstractTests {
 	
 	@Test
 	public void validatePropertiesObjectOK() {
-		ContextValidation cv = new ContextValidation();
+		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
 		ValidationHelper.validateProperties(cv, getPropertiesObjectString(), getPropertyDefinitionsObject());
 		showErrors(cv);
 		assertThat(cv.errors.size()).isEqualTo(0);

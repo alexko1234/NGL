@@ -490,7 +490,7 @@ public class CommonValidationHelper {
 		
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.addAll(objects);
-		ContextValidation validationRules=new ContextValidation();
+		ContextValidation validationRules=new ContextValidation(contextValidation.getUser());
 		facts.add(validationRules);
 	
 		RulesServices rulesServices = new RulesServices();

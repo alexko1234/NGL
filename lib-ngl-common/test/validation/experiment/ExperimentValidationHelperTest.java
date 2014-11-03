@@ -26,6 +26,7 @@ import org.junit.Test;
 import fr.cea.ig.MongoDBDAO;
 
 import utils.AbstractTests;
+import utils.Constants;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
 
@@ -66,7 +67,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validationProtocolFinishTest() throws DAOException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "F");
 		ExperimentValidationHelper.validationProtocol(experimentType.code,protocol.code, contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==0);
@@ -74,7 +75,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validationProtocolNullFinishTest() throws DAOException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "F");
 		ExperimentValidationHelper.validationProtocol(experimentType.code,null, contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==1);
@@ -82,7 +83,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validationProtocolNotExperimentTypeFinishTest() throws DAOException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "F");
 		ExperimentValidationHelper.validationProtocol("test",protocol.code, contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==1);
@@ -90,7 +91,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 
 	@Test
 	public void validationProtocolNewTest() throws DAOException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "N");
 		ExperimentValidationHelper.validationProtocol(experimentType.code,null, contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==0);
@@ -99,7 +100,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validationResolutionFinishTest() throws DAOException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "F");
 		ExperimentValidationHelper.validateResolutionCodes(experimentType.code,resolutionList, contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==0);
@@ -107,7 +108,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validationResolutionNullFinishTest() throws DAOException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "F");
 		ExperimentValidationHelper.validateResolutionCodes(experimentType.code,null, contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==1);
@@ -115,7 +116,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validationResolutionNotExperimentTypeFinishTest() throws DAOException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "F");
 		ExperimentValidationHelper.validateResolutionCodes("test",resolutionList, contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==resolutionList.size());
@@ -123,7 +124,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 
 	@Test
 	public void validationResolutionNewTest() throws DAOException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "N");
 		ExperimentValidationHelper.validateResolutionCodes(experimentType.code,null, contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==0);
@@ -131,7 +132,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 			
 	//@Test
 	public void validationInstrumentUsedFinishTest() throws DAOException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "F");
 		Assert.assertTrue(contextValidation.errors.size()==0);
 	}

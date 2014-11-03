@@ -15,6 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import utils.AbstractTests;
+import utils.Constants;
 import validation.ContextValidation;
 import validation.container.instance.ContainerSupportValidationHelper;
 import fr.cea.ig.MongoDBDAO;
@@ -48,7 +49,7 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validateUniqueSupportCodePositionCode() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.setCreationMode();
 		//Container is not yet serialized
 		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(container.support, contextValidation);
@@ -57,7 +58,7 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 
 	@Test
 	public void validateUniqueSupportCodePositionCodeExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.setCreationMode();
 		container=MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
 		//Container is in the database
@@ -69,7 +70,7 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validateUniqueSupportCodePositionCodeNotCreationMode() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.setUpdateMode();
 		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(container.support, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
@@ -87,21 +88,21 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 
 	@Test
 	public void validateContainerSupportCategoryCode() throws DAOException {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(ContainerSupportCategory.find.findAll().get(0).code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
 	@Test
 	public void validateContainerSupportCategoryCodeRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
 
 	@Test
 	public void validateContainerSupportCategoryCodeNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}	
@@ -112,21 +113,21 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 
 	@Test
 	public void validateStockCode() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ContainerSupportValidationHelper.validateStockCode(stock.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
 	@Test
 	public void validateStockCodeNotRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ContainerSupportValidationHelper.validateStockCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
 	@Test
 	public void validateStockCodeNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ContainerSupportValidationHelper.validateStockCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}		

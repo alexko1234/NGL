@@ -20,6 +20,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import utils.AbstractTests;
+import utils.Constants;
 import validation.container.instance.ContainerValidationHelper;
 import validation.processes.instance.ProcessValidationHelper;
 import validation.project.instance.ProjectValidationHelper;
@@ -74,21 +75,21 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 
 	/*@Test
 	public void validationProtocol() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationProtocol(proto.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
 	@Test
 	public void validationProtocolNotRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationProtocol(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationProtocolNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationProtocol("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}*/
@@ -99,21 +100,21 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	
 	@Test
 	public void validationInstrumentUsedTypeCode() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationInstrumentUsedTypeCode(instrumentUsedType.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationInstrumentUsedTypeRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationInstrumentUsedTypeCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public void validationInstrumentUsedTypeNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationInstrumentUsedTypeCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
@@ -124,21 +125,21 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	 */
 	/*@Test
 	public void validationExperimentTypeCode() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationExperimentTypeCode(experimentType.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationExperimentTypeRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationExperimentTypeCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public void validationExperimentTypeNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationExperimentTypeCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
@@ -149,21 +150,21 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	/*
 	@Test
 	public void validationExperimentCategoryCode() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationExperimentCategoryCode(experimentCategory.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationExperimentCategoryRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationExperimentCategoryCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public void validationExperimentCategoryNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationExperimentCategoryCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
@@ -175,21 +176,21 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 
 	@Test
 	public void validationInstrumentCode() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationInstrumentCode(instrument.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationInstrumentRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationInstrumentCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public void validationInstrumentNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationInstrumentCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
@@ -200,21 +201,21 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 
 	@Test
 	public void validationInstrumentCategoryCode() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationInstrumentCategoryCode(instrumentCategory.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationInstrumentCategoryRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationInstrumentCategoryCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public void validationInstrumentCategoryNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationInstrumentCategoryCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
@@ -225,21 +226,21 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	
 	@Test
 	public void validationProcessTypeCode() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ContainerValidationHelper.validateProcessTypeCode(processType.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationProcessTypeNotRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ContainerValidationHelper.validateProcessTypeCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationProcessTypeNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ContainerValidationHelper.validateProcessTypeCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
@@ -251,21 +252,21 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	
 	@Test
 	public void validationProjectCategoryCode() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ProjectValidationHelper.validateProjectCategoryCode(projectCategory.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationProjectCategoryRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ProjectValidationHelper.validateProjectCategoryCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public void validationProjectCategoryNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ProjectValidationHelper.validateProjectCategoryCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
@@ -276,21 +277,21 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 
 	//@Test
 	public void validationReagentTypeCode() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationReagentTypeCode(reagentType.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	//@Test
 	public void validationReagentTypeRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationReagentTypeCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	//@Test
 	public void validationReagentTypeNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationReagentTypeCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
@@ -301,21 +302,21 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	 */
 	@Test
 	public void validationSampleCategoryCode() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		SampleValidationHelper.validateSampleCategoryCode(sampleCategory.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationSampleCategoryRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		SampleValidationHelper.validateSampleCategoryCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public void validationSampleCategoryNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		SampleValidationHelper.validateSampleCategoryCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}	
@@ -330,21 +331,21 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	 */
 	@Test
 	public void validationResolutionCode() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationResolutionCode(resolution.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationResolutionNotRequired() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationResolutionCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void validationResolutionNotExist() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		DescriptionValidationHelper.validationResolutionCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}	
@@ -352,13 +353,13 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	
 	//TODO
 	public void validationProjectTest() {
-		//ContextValidation contextValidation=new ContextValidation();
+		//ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		//DescriptionValidationHelper.validationProcess(null, null, contextValidation);
 	}
 
 	//TODO
 	public void validationProcessTest() {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ProcessValidationHelper.validateProcessType(null, null, contextValidation);		
 	}
 	

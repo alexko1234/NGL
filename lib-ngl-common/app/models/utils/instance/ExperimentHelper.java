@@ -42,7 +42,7 @@ public class ExperimentHelper extends InstanceHelpers {
 
 		if (!contextValidation.hasErrors()) {
 			for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-				contextValidation.errors.putAll(exp.atomicTransfertMethods.get(i).saveOutputContainers(exp).errors);
+				contextValidation.errors.putAll(exp.atomicTransfertMethods.get(i).saveOutputContainers(exp, contextValidation).errors);
 			}
 
 

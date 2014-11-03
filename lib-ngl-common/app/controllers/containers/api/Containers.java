@@ -76,7 +76,7 @@ public class Containers extends CommonController {
 				State state = element.data.state;
 				state.date = new Date();
 				state.user = getCurrentUser();
-				ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 				Workflows.setContainerState(container.code, state, ctxVal);
 				if (!ctxVal.hasErrors()) {
 					response.add(new DatatableBatchResponseElement(OK,  findContainer(element.data.code), element.index));

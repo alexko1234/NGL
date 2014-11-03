@@ -63,13 +63,13 @@ public class InstanceHelpers {
 
 	}
 
-	public static List<Comment> addComment(String comment,List<Comment> comments){
+	public static List<Comment> addComment(String comment,List<Comment> comments, String user){
 		if(comments==null){
 			comments=new ArrayList<Comment>();
 		}
 
 		Comment newComment=new Comment(comment);
-		newComment.createUser=CommonController.getCurrentUser();
+		newComment.createUser=user;
 
 		comments.add(newComment);
 		return comments;
@@ -77,12 +77,12 @@ public class InstanceHelpers {
 
 
 	@Deprecated
-	public static void updateTraceInformation(TraceInformation traceInformation){
+	public static void updateTraceInformation(TraceInformation traceInformation, String user){
 		
 		if (traceInformation.createUser==null){
-			traceInformation.createUser=CommonController.getCurrentUser();
+			traceInformation.createUser=user;
 		}else {
-			traceInformation.modifyUser=CommonController.getCurrentUser();
+			traceInformation.modifyUser=user;
 		}
 
 		if(traceInformation.creationDate==null){
@@ -100,14 +100,14 @@ public class InstanceHelpers {
 		return traceInformation;
 	}
 	
-	public static TraceInformation getUpdateTraceInformation(TraceInformation traceInformation) {
+	public static TraceInformation getUpdateTraceInformation(TraceInformation traceInformation, String user) {
 		TraceInformation ti=null;
 		if(traceInformation==null){
 			ti=new TraceInformation();
 		}else {
 			ti = traceInformation;
 		}
-		ti.setTraceInformation(CommonController.getCurrentUser());
+		ti.setTraceInformation(user);
 		return ti;
 	}
 
@@ -169,7 +169,7 @@ public class InstanceHelpers {
 	}
 
 	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError,Boolean keepRootKeyName) {
-		ContextValidation localContextError=new ContextValidation();
+		ContextValidation localContextError=new ContextValidation(contextError.getUser());
 		localContextError.setMode(contextError.getMode());
 		if(keepRootKeyName){
 			localContextError.addKeyToRootKeyName(contextError.getRootKeyName());

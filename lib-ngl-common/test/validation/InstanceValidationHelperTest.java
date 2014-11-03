@@ -33,6 +33,7 @@ import play.Logger;
 import play.data.validation.ValidationError;
 
 import utils.AbstractTests;
+import utils.Constants;
 import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
 import fr.cea.ig.MongoDBDAO;
@@ -113,7 +114,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 
 	@Test
 	public void validationProjectCodesTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		List<String> projects=new ArrayList<String>();
 		projects.add(project.code);
 		projects.add(project1.code);
@@ -123,7 +124,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public  void validationProjectCodesRequiredTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		List<String> projects=new ArrayList<String>();
 		CommonValidationHelper.validateProjectCodes(projects,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
@@ -131,7 +132,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public  void validationProjectCodesNotExistTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		List<String> projects=new ArrayList<String>();
 		projects.add("notexist");
 		CommonValidationHelper.validateProjectCodes(projects,contextValidation );
@@ -141,21 +142,21 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public  void validationProjectCodeTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		CommonValidationHelper.validateProjectCode(project.code,contextValidation );
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public  void validationProjectCodeRequiredTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		CommonValidationHelper.validateProjectCode(null,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public  void validationProjectCodeNotExistTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		CommonValidationHelper.validateProjectCode("notexist",contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
@@ -163,7 +164,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public  void validationSampleCodesTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		List<String> samples=new ArrayList<String>();
 		samples.add(sample.code);
 		samples.add(sample1.code);
@@ -173,7 +174,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public  void validationSampleCodesRequiredTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		List<String> samples=new ArrayList<String>();
 		CommonValidationHelper.validateSampleCodes(samples,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
@@ -181,7 +182,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public  void validationSampleCodesNotExistTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		List<String> samples=new ArrayList<String>();
 		samples.add("notexist");
 		CommonValidationHelper.validateSampleCodes(samples,contextValidation );
@@ -191,7 +192,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 
 	@Test
 	public  void validationSampleCodeTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		CommonValidationHelper.validateSampleCode(sample2.code, sample2.projectCodes.get(0), contextValidation );
 		Logger.debug(contextValidation.errors.toString());
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
@@ -199,14 +200,14 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public  void validationSampleCodeNotRequiredTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		CommonValidationHelper.validateSampleCode(null,null, contextValidation );
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
 	
 	@Test
 	public  void validationSampleCodeNotExistTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		CommonValidationHelper.validateSampleCode("notexist","notexist", contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
@@ -216,7 +217,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public  void validationStockCodeTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ContainerSupportValidationHelper.validateStockCode(stock.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
@@ -224,14 +225,14 @@ public class InstanceValidationHelperTest extends AbstractTests {
 
 	@Test
 	public  void validationStockNotRequiredCodeTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ContainerSupportValidationHelper.validateStockCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public  void validationStockNotExistCodeTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ContainerSupportValidationHelper.validateStockCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
@@ -239,21 +240,21 @@ public class InstanceValidationHelperTest extends AbstractTests {
 
 	@Test
 	public  void validationContainerCodeTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		CommonValidationHelper.validateContainerCode(container.code,contextValidation );
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public  void validationContainerCodeRequiredTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		CommonValidationHelper.validateContainerCode(null,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public  void validationContainerCodeNotExistTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		CommonValidationHelper.validateContainerCode("notexist",contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
@@ -262,28 +263,28 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public  void validationReagentInstanceCodeTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		InstanceValidationHelper.validationReagentInstanceCode(reagentInstance.code,contextValidation );
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public  void validationReagentInstanceCodeRequiredTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		InstanceValidationHelper.validationReagentInstanceCode(null,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public  void validationReagentCodeNotExistTest(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		InstanceValidationHelper.validationReagentInstanceCode("notexist",contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public  void validationContainerContentsTestInUpdateMode(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.setUpdateMode();
 		
 		//to get _id
@@ -354,7 +355,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public  void validationContainerContentsTestInCreationMode(){
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.setCreationMode();
 		
 		 Random randomGenerator = new Random();

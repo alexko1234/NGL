@@ -33,8 +33,8 @@ public class OneToVoidContainer extends AtomicTransfertMethod {
 	}
 
 	@Override
-	public ContextValidation saveOutputContainers(Experiment experiment) {
-		return new ContextValidation();
+	public ContextValidation saveOutputContainers(Experiment experiment, ContextValidation contextValidation) {
+		return contextValidation;
 	}
 
 }
