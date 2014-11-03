@@ -1,5 +1,5 @@
 package controllers.history;
-import controllers.CommonController;
+
 import play.Logger;
 import play.Play;
 import play.libs.Json;
@@ -33,7 +33,7 @@ public class UserHistory extends Action.Simple{
 			String action = "";
 			String login = "";
 			
-			login = CommonController.getCurrentUser();
+			login = context.request().username();
 			
 			String body = "{}";
 			RequestBody rb = context.request().body();

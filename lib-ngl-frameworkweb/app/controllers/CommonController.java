@@ -110,7 +110,7 @@ public abstract class CommonController extends Controller{
 		return true;
 	}
 
-	public static String getCurrentUser(){
+	protected static String getCurrentUser(){
 		return Context.current().request().username();
 	}
 	
