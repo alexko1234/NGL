@@ -113,7 +113,7 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 			return badRequest("use PUT method to update the project");
 		}
 
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 		ctxVal.setCreationMode();
 		projectInput.validate(ctxVal);
 
@@ -145,7 +145,7 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 					Logger.error("traceInformation is null !!");
 				}
 				
-				ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 	
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 				ctxVal.setUpdateMode();
 				projectInput.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
@@ -160,7 +160,7 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 			}	
 		}else{
 			//warning no validation !!!
-			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
