@@ -46,6 +46,7 @@ import org.junit.Test;
 import play.Logger;
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
+import utils.Constants;
 import controllers.CommonController;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
@@ -178,14 +179,14 @@ public class InstanceTest extends AbstractTests{
 
 		container.state = new State(); 
 		container.state.code="Etatcontainer";
-		container.state.user = CommonController.getCurrentUser();
+		container.state.user = Constants.TEST_USER;
 		container.state.date = new Date();
 
 		
 		
 		container.valuation = new Valuation();
 		container.valuation.valid = TBoolean.FALSE;
-		container.valuation.user = CommonController.getCurrentUser();
+		container.valuation.user = Constants.TEST_USER;
 		container.valuation.date = new Date(); 
 		
 		container.contents.add(new Content("SampleCode", "sampleType", "sampleCategory"));
