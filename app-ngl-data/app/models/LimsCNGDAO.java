@@ -105,7 +105,7 @@ public class LimsCNGDAO {
 		// just one comment for one project
 		if (rs.getString("comments") != null ) {
 			project.comments = new ArrayList<Comment>(); 
-			InstanceHelpers.addComment(rs.getString("comments"), project.comments);
+			InstanceHelpers.addComment(rs.getString("comments"), project.comments, "ngl-data");
 		}
 		
 		//specific to CNG

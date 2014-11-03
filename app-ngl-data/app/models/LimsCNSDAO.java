@@ -123,7 +123,7 @@ public class LimsCNSDAO{
 			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Sample sample = new Sample();
-				InstanceHelpers.updateTraceInformation(sample.traceInformation);
+				InstanceHelpers.updateTraceInformation(sample.traceInformation, "ngl-data");
 				String tadco = rs.getString("tadco");
 				String tprco = rs.getString("tprco");
 				sample.code=rs.getString("code");
@@ -249,7 +249,7 @@ public class LimsCNSDAO{
 				project.state.date = new Date();
 
 				project.traceInformation=new TraceInformation();
-				InstanceHelpers.updateTraceInformation(project.traceInformation);
+				InstanceHelpers.updateTraceInformation(project.traceInformation, "ngl-data");
 				return project;
 			}
 		});
@@ -384,7 +384,7 @@ public class LimsCNSDAO{
 			public Run mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Logger.debug("Begin findRunsToCreate");
 
-				ContextValidation contextValidation=new ContextValidation();
+				ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 				contextValidation.addKeyToRootKeyName(contextError.getRootKeyName());
 
 				Run run= MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, rs.getString("code"));
@@ -704,7 +704,7 @@ public class LimsCNSDAO{
 						index.sequence=rs.getString("tagseq");
 						index.illuminaName=rs.getString("tagnamefour");
 						index.traceInformation=new TraceInformation();
-						InstanceHelpers.updateTraceInformation(index.traceInformation);
+						InstanceHelpers.updateTraceInformation(index.traceInformation, "ngl-data");
 						return index;
 					}
 				});

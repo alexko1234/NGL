@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 
+import models.Constants;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -263,7 +264,7 @@ public class MigrationContent extends CommonController {
 			Logger.info("Migration container starts");
 		
 			//find collection up to date
-			ContextValidation contextError = new ContextValidation();
+			ContextValidation contextError = new ContextValidation(Constants.NGL_DATA_USER);
 			List<Container> newContainers = null;
 			try {
 				newContainers = findContainerToCreate(contextError);

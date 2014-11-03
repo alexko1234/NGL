@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import models.Constants;
 import models.laboratory.common.description.Level;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
@@ -56,7 +57,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 		for(Run run:runs){
 			if(run!=null) {
 				rootKeyName="run["+run.code+"]";
-				ContextValidation ctx=new ContextValidation();
+				ContextValidation ctx=new ContextValidation(Constants.NGL_DATA_USER);
 				ctx.addKeyToRootKeyName(rootKeyName);
 
 				//Save Run du Lims si n'existe pas ou n'est pas transféré dans NGL
@@ -104,7 +105,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 		List<Run> updateRuns=new ArrayList<Run>();
 
 		for(Run run:newRuns){
-			ContextValidation contextValidation=new ContextValidation();
+			ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 			Logger.debug("Create ReadSet from Run "+run.code);
 			createReadSetFromRun(run, contextValidation);
 
@@ -138,7 +139,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 		Logger.debug("Create Lanes from Run "+newRun.code);
 		List<Lane> lanes=limsServices.findLanesToCreateFromRun(newRun, contextError);
 		//Save TreatmentLane
-		ContextValidation contextErrorValidation = new ContextValidation();
+		ContextValidation contextErrorValidation = new ContextValidation(Constants.NGL_DATA_USER);
 		contextErrorValidation.addKeyToRootKeyName(contextError.getRootKeyName());
 		contextErrorValidation.putObject("run",newRun);
 

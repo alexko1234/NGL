@@ -15,6 +15,7 @@ import fr.cea.ig.MongoDBDAO;
 import play.Logger;
 import play.mvc.Result;
 import validation.ContextValidation;
+import models.Constants;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -117,7 +118,7 @@ public class AddSequencingProgramType  extends CommonController {
 			
 			backupContainerSupport();
 
-			ContextValidation contextError = new ContextValidation();
+			ContextValidation contextError = new ContextValidation(Constants.NGL_DATA_USER);
 			
 			//create new HashMap
 			HashMap<String,PropertySingleValue> mapCodeSupportSeq = new HashMap<String,PropertySingleValue>() ;

@@ -7,6 +7,8 @@ import java.util.Map;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.JacksonDBCollection;
+
+import models.Constants;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.ContainerSupport;
@@ -102,7 +104,7 @@ public class MigrationSupport extends CommonController{
 
 	
 	public static Result updateBD(Map<String,ContainerSupport>  mapSupport) {
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		contextValidation.setCreationMode();
 		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, new ArrayList<ContainerSupport>(mapSupport.values()),contextValidation);
 		if(contextValidation.hasErrors()){

@@ -2,6 +2,7 @@ package services.instance;
 
 import java.sql.SQLException;
 
+import models.Constants;
 import models.utils.dao.DAOException;
 
 import org.slf4j.MDC;
@@ -24,7 +25,7 @@ public abstract class AbstractImportData implements Runnable{
 	public abstract void runImport() throws SQLException, DAOException, MongoException, RulesException;
 
 	public AbstractImportData(String name,FiniteDuration durationFromStart, FiniteDuration durationFromNextIteration){
-		this.contextError=new ContextValidation();
+		this.contextError=new ContextValidation(Constants.NGL_DATA_USER);
 		this.name=name;
 		logger=Logger.of(this.getClass().getName());
 		Akka.system().scheduler().schedule(durationFromStart,durationFromNextIteration

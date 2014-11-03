@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -34,7 +35,7 @@ public class MigrationReadSetArchiveId  extends CommonController {
 
 	public static Result migration(){
 
-		ContextValidation contextError=new ContextValidation();
+		ContextValidation contextError=new ContextValidation(Constants.NGL_DATA_USER);
 		
 		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
 				DBQuery.and(DBQuery.is("dispatch", true), DBQuery.is("archiveId", null))).toList();

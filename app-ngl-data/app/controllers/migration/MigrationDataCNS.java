@@ -3,6 +3,7 @@ package controllers.migration;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -73,7 +74,7 @@ public static Result updateFromExperimentTypeCodesContainerSupport() throws DAOE
 
 		
 		Logger.info(">>>>>>>>>>> Migration fromExperimentTypeCodes ContainerSupport starts");
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		
 		//backupCollection(InstanceConstants.SUPPORT_COLL_NAME,InstanceConstants.SUPPORT_COLL_NAME+"_BCK_20150905" , ContainerSupport.class);
 		

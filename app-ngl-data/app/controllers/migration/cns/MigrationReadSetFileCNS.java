@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -74,7 +75,7 @@ public class MigrationReadSetFileCNS  extends CommonController {
 
 	public static Result migration(){
 
-		ContextValidation ctxVal=new ContextValidation();
+		ContextValidation ctxVal=new ContextValidation(Constants.NGL_DATA_USER);
 		List<Run> containersCollBck = MongoDBDAO.find(RUN_COLL_NAME_BCK, Run.class).toList();
 		if(containersCollBck.size() == 0){
 

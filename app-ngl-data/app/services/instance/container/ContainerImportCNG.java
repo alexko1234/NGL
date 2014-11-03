@@ -58,7 +58,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		for (Sample sample : samples) {
 			Sample oldSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
 			
-			sample.traceInformation = InstanceHelpers.getUpdateTraceInformation(oldSample.traceInformation);
+			sample.traceInformation = InstanceHelpers.getUpdateTraceInformation(oldSample.traceInformation, "ngl-data");
 			
 			MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
 		}
@@ -107,7 +107,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		for (Container container : containers) {
 			Container oldContainer = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code);
 			
-			container.traceInformation = InstanceHelpers.getUpdateTraceInformation(oldContainer.traceInformation);
+			container.traceInformation = InstanceHelpers.getUpdateTraceInformation(oldContainer.traceInformation, "ngl-data");
 			
 			MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code);
 		}

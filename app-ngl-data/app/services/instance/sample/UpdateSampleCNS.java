@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.Constants;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.sample.description.ImportType;
@@ -46,7 +47,7 @@ public class UpdateSampleCNS extends AbstractImportDataCNS{
 
 		for(String sampleCode:results){
 			Sample sample=limsServices.findSampleToCreate(contextError, sampleCode);
-			ContextValidation contextValidation = new ContextValidation();
+			ContextValidation contextValidation = new ContextValidation(Constants.NGL_DATA_USER);
 			MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
 			Sample newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextValidation,true);
 			if(!contextValidation.hasErrors()){

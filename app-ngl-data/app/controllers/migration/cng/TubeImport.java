@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import models.Constants;
 import models.LimsCNGDAO;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
@@ -77,7 +78,7 @@ public class TubeImport extends CommonController {
 	}
 	
 	private static void migreContainer()  throws SQLException, DAOException {
-		ContextValidation contextError=new ContextValidation();
+		ContextValidation contextError=new ContextValidation(Constants.NGL_DATA_USER);
 		List<Container> containers = limsServices.findContainerToCreateForFirstTime(contextError, null, "tube");
 		ContainerHelper.createSupportFromContainers(containers, null, contextError);
 		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError, true);

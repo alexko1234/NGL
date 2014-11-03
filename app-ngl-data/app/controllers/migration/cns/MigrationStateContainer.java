@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.container.instance.Container;
@@ -145,7 +146,7 @@ public class MigrationStateContainer   extends CommonController{
 			}
 		});
 
-		ContextValidation contextValidation =new ContextValidation();
+		ContextValidation contextValidation =new ContextValidation(Constants.NGL_DATA_USER);
 
 		for(StateContainerSupport stateContainerSupport:results){
 			String newStateCode=DataMappingCNS.getState(stateContainerSupport.containerCategoryCode, stateContainerSupport.stateCode,null);
