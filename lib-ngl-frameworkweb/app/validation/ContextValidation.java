@@ -21,6 +21,8 @@ public class ContextValidation {
 		CREATION, UPDATE, DELETE, NOT_DEFINED;
 	}
 
+	private String user = null;
+
 	private Mode mode = Mode.NOT_DEFINED;
 	
 	
@@ -28,17 +30,23 @@ public class ContextValidation {
 	public Map<String,List<ValidationError>> errors;
 	private Map<String,Object> contextObjects;
 
-	public ContextValidation(){
+	public ContextValidation(String user){
 		errors= new TreeMap<String, List<ValidationError>>();
 		contextObjects= new TreeMap<String, Object>();
+		this.user = user;
 	}
 
-	public ContextValidation(Map<String,List<ValidationError>> errors){
+	public ContextValidation(String user, Map<String,List<ValidationError>> errors){
 		this.errors= errors;
 		contextObjects= new TreeMap<String, Object>();
+		this.user = user;
 	}
 
 	
+	public String getUser() {
+		return user;
+	}
+
 	/**
 	 *
 	 * @param key
