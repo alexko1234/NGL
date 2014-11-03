@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.Constants;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.run.instance.Run;
@@ -52,7 +53,7 @@ public class RunExterieurTests extends AbstractTests {
 	
 	@Test
 	public void importProject() throws SQLException, DAOException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		ProjectImportCNS.createProjet(contextValidation);
 		Assert.assertEquals(contextValidation.errors.size(),0);
 	}
@@ -61,7 +62,7 @@ public class RunExterieurTests extends AbstractTests {
 	@Test 
 	public void importPrepaflowcellTest() throws SQLException, DAOException{
 
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		String sql="pl_PrepaflowcellExtToNGL @runhnoms=\'"+StringUtils.join(runCodes,",")+"\'";
 		ContainerImportCNS.createContainers(contextValidation,sql,"lane","F","prepa-flowcell",null);
 		Assert.assertEquals(contextValidation.errors.size(),0);
@@ -80,7 +81,7 @@ public class RunExterieurTests extends AbstractTests {
 		MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,DBQuery.in("code", runCodes));
 		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, Run.class,DBQuery.in("runCode", runCodes));
 
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		String sql="pl_RunExtToNGL @runhnoms= \'"+StringUtils.join(runCodes,",")+"\'";
 		Logger.debug("SQL runs to create :"+sql);
 		RunImportCNS.createRuns(sql,contextValidation);

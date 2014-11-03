@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
@@ -101,7 +102,7 @@ public class RunIlluminaTests extends AbstractTests{
 
 	@Test
 	public void importProject() throws SQLException, DAOException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		ProjectImportCNS.createProjet(contextValidation);
 		Assert.assertEquals(contextValidation.errors.size(),0);
 	}
@@ -110,7 +111,7 @@ public class RunIlluminaTests extends AbstractTests{
 	@Test 
 	public void importPrepaflowcellTest() throws SQLException, DAOException{
 
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		String sql="pl_PrepaflowcellToNGL @flowcellNoms=\'"+StringUtils.join(prepaCodes,",")+"\'";
 		ContainerImportCNS.createContainers(contextValidation,sql,"lane","F","prepa-flowcell","pl_BanquesolexaUneLane @nom_lane=?");
 		Assert.assertEquals(contextValidation.errors.size(),0);
@@ -133,7 +134,7 @@ public class RunIlluminaTests extends AbstractTests{
 		MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,DBQuery.in("code", runDelete));
 		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, Run.class,DBQuery.in("runCode", runCodes));
 		createRun();
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		String sql="pl_RunToNGL @runhnoms= \'"+StringUtils.join(runCodes,",")+"\'";
 		Logger.debug("SQL runs to create :"+sql);
 		RunImportCNS.createRuns(sql,contextValidation);
@@ -237,7 +238,7 @@ public class RunIlluminaTests extends AbstractTests{
 			DBUpdate.set("properties.taraStation",new PropertySingleValue(23)),true);
 
 
-	ContextValidation contextValidation=new ContextValidation();
+	ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 	UpdateTaraPropertiesCNS.updateSampleFromTara(contextValidation, new ArrayList<String>(taraSampleCodes.values()));
 
 	List<ReadSet> readSetsAfter=MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class
@@ -298,7 +299,7 @@ public class RunIlluminaTests extends AbstractTests{
 			DBUpdate.set("properties.taxonSize",new PropertySingleValue(23)),true);
 
 
-	ContextValidation contextValidation=new ContextValidation();
+	ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 	UpdateSampleCNS.updateSampleFromTara(contextValidation, sampleCodes);
 	List<Sample> samples=MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.in("code",sampleCodes)).toList();
 

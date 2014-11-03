@@ -2,6 +2,7 @@ package importcns;
 
 import java.sql.SQLException;
 
+import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.parameter.Index;
 import models.utils.InstanceConstants;
@@ -36,7 +37,7 @@ public class IndexIlluminaTests extends AbstractTests{
 
 	@Test
 	public void importIndex() throws SQLException, DAOException{
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		IndexImportCNS.createIndex(limsServices,contextValidation);
 		Assert.assertEquals(contextValidation.errors.size(),0);
 	}
