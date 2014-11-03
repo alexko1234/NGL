@@ -422,6 +422,10 @@ public class LimsCNGDAO {
 		container.properties= new HashMap<String, PropertyValue>();
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("lims_code")));
 		
+		if (containerCategoryCode.equals("tube")) {
+			container.mesuredConcentration=new PropertySingleValue(rs.getFloat("concentration"), "ng/µl");
+		}
+		
 		if (rs.getString("project")!=null) {
 			container.projectCodes=new ArrayList<String>();
 			container.projectCodes.add(rs.getString("project"));
