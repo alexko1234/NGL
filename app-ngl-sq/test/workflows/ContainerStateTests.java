@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import utils.AbstractTests;
+import utils.Constants;
 import validation.ContextValidation;
 import workflows.Workflows;
 import fr.cea.ig.MongoDBDAO;
@@ -29,7 +30,7 @@ public class ContainerStateTests extends AbstractTests {
 		state.code="IW-E";
 		state.user="test";
 		state.date=new Date();
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		Workflows.setContainerState(container.code,state,contextValidation);
 		
 		Container containerUpdate=MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code));
@@ -47,7 +48,7 @@ public class ContainerStateTests extends AbstractTests {
 		state.code="TEST";
 		state.user="test";
 		state.date=new Date();
-		ContextValidation contextValidation=new ContextValidation();
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		Workflows.setContainerState(container.code,state,contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==1);
 	

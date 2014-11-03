@@ -105,7 +105,7 @@ public class LoadDataHelper {
 	
 	
 	public static Container containerFromCSVLine(String[] firstLine,
-			String[] nextLine,Sample sample,Map<String,PropertyDefinition> propertiesDefinition) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, DAOException {
+			String[] nextLine,Sample sample,Map<String,PropertyDefinition> propertiesDefinition, String user) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, DAOException {
 
 		Container container = new Container();
 		ContainerHelper.addContent(container, sample);
@@ -131,7 +131,7 @@ public class LoadDataHelper {
 			else if(firstLine[i].startsWith(rootPrefix)) {
 
 				if(firstLine[i].endsWith(".comments")){
-					container.comments=InstanceHelpers.addComment(nextLine[i],container.comments);
+					container.comments=InstanceHelpers.addComment(nextLine[i],container.comments, user);
 				}
 				else	{
 
@@ -150,7 +150,7 @@ public class LoadDataHelper {
 	
 	
 
-	public static Sample sampleFromCSVLine(String[] firstLine, String[] nextLine,Map<String,PropertyDefinition> propertiesDefinition) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+	public static Sample sampleFromCSVLine(String[] firstLine, String[] nextLine,Map<String,PropertyDefinition> propertiesDefinition, String user) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 
 		Class aClass=Sample.class;
 		Sample sample = new Sample();
@@ -172,7 +172,7 @@ public class LoadDataHelper {
 			else if(firstLine[i].startsWith(rootPrefix)) {
 
 				if(firstLine[i].endsWith(".comments")){					
-					sample.comments=InstanceHelpers.addComment(nextLine[i],sample.comments);
+					sample.comments=InstanceHelpers.addComment(nextLine[i],sample.comments, user);
 				}
 				else if(firstLine[i].endsWith(".projectCodes")){					
 					sample.projectCodes=InstanceHelpers.addCode(nextLine[i],sample.projectCodes);

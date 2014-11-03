@@ -123,16 +123,16 @@ public class SampleLoad extends CommonController{
 			while ((nextLine = reader.readNext()) != null && ((j<5 && ALL==Boolean.FALSE) || ALL==Boolean.TRUE)) {
 
 				j++;
-				Sample sample =LoadDataHelper.sampleFromCSVLine(firstLine,nextLine,sampleType.getMapPropertyDefinition());
+				Sample sample =LoadDataHelper.sampleFromCSVLine(firstLine,nextLine,sampleType.getMapPropertyDefinition(), getCurrentUser());
 				sample.categoryCode=sampleType.category.code;
 				sample.typeCode=sampleType.code;
 
-				Container container= LoadDataHelper.containerFromCSVLine(firstLine,nextLine,sample,importType.getMapPropertyDefinition());
+				Container container= LoadDataHelper.containerFromCSVLine(firstLine,nextLine,sample,importType.getMapPropertyDefinition(), getCurrentUser());
 
-				ValidationHelper.validateProperties(new ContextValidation(filledForm.errors()), sample.properties, sampleType.propertiesDefinitions,null );
+				ValidationHelper.validateProperties(new ContextValidation(getCurrentUser(), filledForm.errors()), sample.properties, sampleType.propertiesDefinitions,null );
 
 				if(container.contents.get(0).properties!=null)
-					ValidationHelper.validateProperties(new ContextValidation(filledForm.errors()), container.contents.get(0).properties, importType.propertiesDefinitions,null );
+					ValidationHelper.validateProperties(new ContextValidation(getCurrentUser(), filledForm.errors()), container.contents.get(0).properties, importType.propertiesDefinitions,null );
 
 				samples.add(sample);
 				containers.add(container);

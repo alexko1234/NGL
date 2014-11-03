@@ -78,11 +78,11 @@ public class Processes extends CommonController{
 			}
 
 			if (!filledForm.hasErrors()) {
-				ContextValidation contextValidation=new ContextValidation(filledForm.errors());
+				ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
 				contextValidation.setCreationMode();
 				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
 				if(!contextValidation.hasErrors()){
-					Workflows.nextContainerState(value,new ContextValidation(filledForm.errors()));
+					Workflows.nextContainerState(value,new ContextValidation(getCurrentUser(), filledForm.errors()));
 				}
 			}
 		}
@@ -100,7 +100,7 @@ public class Processes extends CommonController{
 		if (!filledForm.hasErrors()) {
 			value = filledForm.get();
 			//value = ps.process;
-			ContextValidation contextValidation=new ContextValidation(filledForm.errors());
+			ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
 			if (null == value._id) {
 				//init state
 				//the trace
@@ -117,7 +117,7 @@ public class Processes extends CommonController{
 					updateContainer(container,value.typeCode, value.code);
 					value.containerInputCode = container.code;
 					for(String s:container.sampleCodes){
-						//ContextValidation contextValidation=new ContextValidation(filledForm.errors());
+						//ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
 						contextValidation.setCreationMode();
 						value.sampleCode = s;
 						InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
@@ -131,11 +131,11 @@ public class Processes extends CommonController{
 			}
 
 			if (!filledForm.hasErrors()) {
-				/*ContextValidation contextValidation=new ContextValidation(filledForm.errors());
+				/*ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
 				contextValidation.setCreationMode();
 				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);*/
 				if(!contextValidation.hasErrors()){
-					Workflows.nextContainerState(value,new ContextValidation(filledForm.errors()));
+					Workflows.nextContainerState(value,new ContextValidation(getCurrentUser(), filledForm.errors()));
 				}
 			}
 		}
@@ -158,7 +158,7 @@ public class Processes extends CommonController{
 		if (processInput.code.equals(code)) {
 			processInput.traceInformation.setTraceInformation(getCurrentUser());
 			
-			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 			ctxVal.setUpdateMode();
 			processInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {

@@ -26,6 +26,7 @@ import play.Logger;
 import play.Logger.ALogger;
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
+import utils.Constants;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
 import controllers.experiments.api.Experiments;
@@ -50,7 +51,7 @@ public class ExperimentTests extends AbstractTests{
 		pImgValue.width = 250;
 		pImgValue.height = 250;
 		
-		ContextValidation cv = new ContextValidation(); 
+		ContextValidation cv = new ContextValidation(Constants.TEST_USER); 
 		cv.putObject("stateCode", "IP");
 		
 		PropertyDefinition pDef = getPropertyImgDefinition();
@@ -117,7 +118,7 @@ public class ExperimentTests extends AbstractTests{
 		
 		exp.atomicTransfertMethods.put(0, atomicTransfert);
 		
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		contextValidation.setUpdateMode();
 		contextValidation.putObject("stateCode", exp.state.code);
 		contextValidation.putObject("typeCode", exp.typeCode);
@@ -153,7 +154,7 @@ public class ExperimentTests extends AbstractTests{
 	
 	//@Test
 	public void validateExperimentPrepaflowcell() {
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 		contextValidation.displayErrors(logger);
@@ -163,7 +164,7 @@ public class ExperimentTests extends AbstractTests{
 	
 	//@Test
 	public void validateExperimentSameTagInPosition() {
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
 		Container container =new Container();
 		Content content=new Content("CONTENT3", "TYPE", "CATEG");
@@ -186,7 +187,7 @@ public class ExperimentTests extends AbstractTests{
 	
 	//@Test
 	public void validateExperimentManyTagCategory() {
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
 		Container container =new Container();
 		Content content=new Content("CONTENT3", "TYPE", "CATEG");
@@ -208,7 +209,7 @@ public class ExperimentTests extends AbstractTests{
 	
 	//@Test
 	public void validateExperimentSumPercentInPutContainer() {
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
 		Container container =new Container();
 		Content content=new Content("CONTENT3", "TYPE", "CATEG");
@@ -230,7 +231,7 @@ public class ExperimentTests extends AbstractTests{
 	
 	//@Test
 	public void validateExperimentPrepaflowcellLaneNotNull() {
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
 		exp.atomicTransfertMethods.get(0).getInputContainers().clear();
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
