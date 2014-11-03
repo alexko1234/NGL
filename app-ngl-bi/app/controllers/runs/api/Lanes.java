@@ -76,7 +76,7 @@ public class Lanes extends RunsController{
 		Form<Lane> filledForm = getFilledForm(laneForm, Lane.class);			
 		Lane laneValue = filledForm.get();
 		
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.putObject("run", run);
 		ctxVal.setCreationMode();
 		laneValue.validate(ctxVal);
@@ -102,7 +102,7 @@ public class Lanes extends RunsController{
 		Form<Lane> filledForm = getFilledForm(laneForm, Lane.class);			
 		Lane laneValue = filledForm.get();
 		if (laneNumber.equals(laneValue.number)) {				
-			ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 			ctxVal.putObject("run", run);
 			ctxVal.setUpdateMode();
 			laneValue.validate(ctxVal);
@@ -154,7 +154,7 @@ public class Lanes extends RunsController{
 		Valuation valuation = filledForm.get();
 		valuation.date = new Date();
 		valuation.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.putObject("run", run);
 		ctxVal.setUpdateMode();
 		RunValidationHelper.validateValuation(run.typeCode, valuation, ctxVal);			

@@ -47,7 +47,7 @@ public class AnalysisTreatmentsOld extends SubDocumentController<Analysis, Treat
 		}
 		
 		Form<Treatment> filledForm = getSubFilledForm();
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 		
 		Treatment inputTreatment = filledForm.get();
 		ctxVal.setCreationMode();
@@ -73,7 +73,7 @@ public class AnalysisTreatmentsOld extends SubDocumentController<Analysis, Treat
 		}	
 		
 		Form<Treatment> filledForm = getSubFilledForm();
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 		
 		Treatment inputTreatment = filledForm.get();
 		if (code.equals(inputTreatment.code)) {

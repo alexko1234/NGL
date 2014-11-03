@@ -59,7 +59,7 @@ public class RunTreatments extends RunsController{
 		}	
 		
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 		
 		Treatment treatment = filledForm.get();
 		ctxVal.setCreationMode();
@@ -88,7 +88,7 @@ public class RunTreatments extends RunsController{
 		
 		
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 		
 		Treatment treatment = filledForm.get();
 		if (treatmentCode.equals(treatment.code)) {

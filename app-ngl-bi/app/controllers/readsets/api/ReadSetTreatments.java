@@ -64,7 +64,7 @@ public class ReadSetTreatments extends ReadSetsController{
 		
 		
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 		
 		Treatment treatment = filledForm.get();
 		ctxVal.setCreationMode();
@@ -94,7 +94,7 @@ public class ReadSetTreatments extends ReadSetsController{
 		}	
 		
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 		
 		Treatment treatment = filledForm.get();
 		if (treatmentCode.equals(treatment.code)) {

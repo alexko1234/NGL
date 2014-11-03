@@ -152,7 +152,7 @@ public class Analyzes extends DocumentController<Analysis>{
 			updateAnalysis(input);			
 		}
 		
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.setCreationMode();
 		input.validate(ctxVal);	
 		
@@ -197,7 +197,7 @@ public class Analyzes extends DocumentController<Analysis>{
 					return badRequest("you cannot change the state code. Please used the state url ! ");
 				}
 				
-				ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 				ctxVal.setUpdateMode();
 				input.validate(ctxVal);
 				
@@ -212,7 +212,7 @@ public class Analyzes extends DocumentController<Analysis>{
 				return badRequest("readset code are not the same");
 			}
 		}else{ //update only some authorized properties
-			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 	
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
@@ -247,7 +247,7 @@ public class Analyzes extends DocumentController<Analysis>{
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		Workflows.setAnalysisState(ctxVal, objectInDB, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
@@ -267,7 +267,7 @@ public class Analyzes extends DocumentController<Analysis>{
 				State state = element.data.state;
 				state.date = new Date();
 				state.user = getCurrentUser();
-				ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 				Workflows.setAnalysisState(ctxVal, objectInDB, state);
 				if (!ctxVal.hasErrors()) {
 					response.add(new DatatableBatchResponseElement(OK, getObject(objectInDB.code), element.index));
@@ -289,7 +289,7 @@ public class Analyzes extends DocumentController<Analysis>{
 		}
 		Form<Valuation> filledForm =  getFilledForm(valuationForm, Valuation.class);
 		Valuation input = filledForm.get();
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.setUpdateMode();
 		input.date = new Date();
 		input.user = getCurrentUser();
@@ -315,7 +315,7 @@ public class Analyzes extends DocumentController<Analysis>{
 			AnalyzesBatchElement element = filledForm.get();
 			Analysis objectInDB = getObject(element.data.code);
 			if(null != objectInDB){
-				ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 				ctxVal.setUpdateMode();
 				element.data.valuation.date = new Date();
 				element.data.valuation.user = getCurrentUser();
@@ -347,7 +347,7 @@ public class Analyzes extends DocumentController<Analysis>{
 		Form<Analysis> filledForm = getMainFilledForm();
 		Map<String, PropertyValue> properties = filledForm.get().properties;
 		
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 		ctxVal.setUpdateMode();
 		//TODO AnalysisValidationHelper.validateAnalysisType(objectInDB.typeCode, properties, ctxVal);
 		
@@ -369,7 +369,7 @@ public class Analyzes extends DocumentController<Analysis>{
 			AnalyzesBatchElement element = filledForm.get();
 			Analysis objectInDB = getObject(element.data.code);
 			if(null != objectInDB){
-				ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 				Map<String, PropertyValue> properties = element.data.properties;
 				ctxVal.setUpdateMode();
 				//TODO AnalysisValidationHelper.validateAnalysisType(objectInDB.typeCode, properties, ctxVal);

@@ -100,7 +100,7 @@ public class ValuationCriterias extends CommonController {
 			return badRequest("use PUT method to update the run");
 		}
 
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.setCreationMode();
 		objectInput.validate(ctxVal);
 		if (!ctxVal.hasErrors()) {
@@ -126,7 +126,7 @@ public class ValuationCriterias extends CommonController {
 				Logger.error("traceInformation is null !!");
 			}
 			
-			ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 			ctxVal.setCreationMode();
 			objectFromDB.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {

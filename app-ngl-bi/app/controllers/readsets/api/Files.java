@@ -75,7 +75,7 @@ public class Files extends ReadSetsController {
 		Form<File> filledForm = getFilledForm(fileForm, File.class);
 		File file = filledForm.get();
 				
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.putObject("readSet", readSet);
 		ctxVal.putObject("objectClass", readSet.getClass());
 		ctxVal.setCreationMode();
@@ -104,7 +104,7 @@ public class Files extends ReadSetsController {
 		File fileInput = filledForm.get();
 		if(queryFieldsForm.fields == null){
 			if (fullname.equals(fileInput.fullname)) {			
-				ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 				ctxVal.putObject("readSet", readSet);
 				ctxVal.putObject("objectClass", readSet.getClass());
 				ctxVal.setUpdateMode();
@@ -123,7 +123,7 @@ public class Files extends ReadSetsController {
 				return badRequest("fullname are not the same");
 			}
 		}else{ //update only some authorized properties
-			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 			ctxVal.putObject("readSet", readSet);
 			ctxVal.putObject("objectClass", readSet.getClass());
 			ctxVal.setUpdateMode();

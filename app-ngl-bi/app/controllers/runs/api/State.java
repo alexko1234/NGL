@@ -44,7 +44,7 @@ public class State extends RunsController {
 		models.laboratory.common.instance.State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		Workflows.setRunState(ctxVal, run, state);
 		if (!ctxVal.hasErrors()) {
 		    return ok(Json.toJson(getRun(code)));
@@ -64,7 +64,7 @@ public class State extends RunsController {
 				models.laboratory.common.instance.State state = element.data.state;
 				state.date = new Date();
 				state.user = getCurrentUser();
-				ContextValidation ctxVal = new ContextValidation(filledForm.errors());
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 				Workflows.setRunState(ctxVal, run, state);
 				if (!ctxVal.hasErrors()) {
 					response.add(new DatatableBatchResponseElement(OK, getRun(run.code), element.index));

@@ -75,7 +75,7 @@ public class LaneTreatments extends RunsController{
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
 		Treatment treatment = filledForm.get();
 		
-		ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 		ctxVal.setCreationMode();
 		ctxVal.putObject("level", Level.CODE.Lane);
 		ctxVal.putObject("run", run);
@@ -110,7 +110,7 @@ public class LaneTreatments extends RunsController{
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
 		Treatment treatment = filledForm.get();
 		if (treatmentCode.equals(treatment.code)) {
-			ContextValidation ctxVal = new ContextValidation(filledForm.errors()); 
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 			ctxVal.setUpdateMode();
 			ctxVal.putObject("level", Level.CODE.Lane);
 			ctxVal.putObject("run", run);
