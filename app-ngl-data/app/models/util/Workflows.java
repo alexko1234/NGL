@@ -334,10 +334,10 @@ public class Workflows {
 				if(TBoolean.TRUE.equals(analysis.valuation.valid)){
 					readSet.bioinformaticValuation.valid = TBoolean.TRUE;
 					readSet.bioinformaticValuation.date = new Date();
-					readSet.bioinformaticValuation.user = CommonController.getCurrentUser();
+					readSet.bioinformaticValuation.user = contextValidation.getUser();
 					
 					readSet.traceInformation.modifyDate = new Date();
-					readSet.traceInformation.modifyUser = CommonController.getCurrentUser();
+					readSet.traceInformation.modifyUser = contextValidation.getUser();
 					
 					
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
