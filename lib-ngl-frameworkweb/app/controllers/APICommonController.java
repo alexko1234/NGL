@@ -111,7 +111,7 @@ public abstract class APICommonController<T> extends Controller{
 		return true;
 	}
 
-	public String getCurrentUser(){
+	protected String getCurrentUser(){
 		return Context.current().request().username();
 	}
 	
