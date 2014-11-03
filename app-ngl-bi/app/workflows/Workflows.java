@@ -72,7 +72,7 @@ public class Workflows {
 
 	
 	public static void nextRunState(ContextValidation contextValidation, Run run) {
-		State nextStep = cloneState(run.state);
+		State nextStep = cloneState(run.state, contextValidation.getUser());
 		if("F-RG".equals(run.state.code)){
 			nextStep.code = "IW-V";
 		}else if("F-S".equals(run.state.code)){
@@ -121,7 +121,7 @@ public class Workflows {
 			
 			List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code), getReadSetKeys()).toList();
 			for(ReadSet readSet: readSets){
-				State nextReadSetState = cloneState(run.state);
+				State nextReadSetState = cloneState(run.state, contextValidation.getUser());
 				setReadSetState(contextValidation, readSet, nextReadSetState);
 			}
 			
@@ -141,12 +141,12 @@ public class Workflows {
 						if(TBoolean.UNSET.equals(readSet.productionValuation.valid)){
 							readSet.productionValuation.valid = TBoolean.FALSE;
 							readSet.productionValuation.date = new Date();
-							readSet.productionValuation.user = CommonController.getCurrentUser();
+							readSet.productionValuation.user = contextValidation.getUser();
 							if(null == readSet.productionValuation.resolutionCodes)readSet.productionValuation.resolutionCodes = new ArrayList<String>(1);
 							readSet.productionValuation.resolutionCodes.add("Run-abandonLane");
 							
 							readSet.traceInformation.modifyDate = new Date();
-							readSet.traceInformation.modifyUser = CommonController.getCurrentUser();
+							readSet.traceInformation.modifyUser = contextValidation.getUser();
 								
 							MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 									DBQuery.is("code", readSet.code), DBUpdate.set("productionValuation", readSet.productionValuation).set("traceInformation", readSet.traceInformation));
@@ -215,7 +215,7 @@ public class Workflows {
 					DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation.valid", readSet.bioinformaticValuation.valid));
 		} else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code))	{
 			//met les fichiers dipo ou non dès que le read set est valider
-			State state = cloneState(readSet.state);
+			State state = cloneState(readSet.state, contextValidation.getUser());
 			if (null != readSet.files) {
 				for(File f : readSet.files){
 					WriteResult<ReadSet, String> r = MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
@@ -234,7 +234,7 @@ public class Workflows {
 
 
 	public static void nextReadSetState(ContextValidation contextValidation, ReadSet readSet) {
-		State nextStep = cloneState(readSet.state);
+		State nextStep = cloneState(readSet.state, contextValidation.getUser());
 		if("F-RG".equals(readSet.state.code)){
 			nextStep.code = "IW-QC";
 		}else if("F-QC".equals(readSet.state.code)){
@@ -333,11 +333,11 @@ public class Workflows {
 	 * @param state
 	 * @return
 	 */
-	private static State cloneState(State state) {
+	private static State cloneState(State state, String user) {
 		State nextState = new State();
 		nextState.code = state.code;
 		nextState.date = new Date();
-		nextState.user = CommonController.getCurrentUser();
+		nextState.user = user;
 		return nextState;
 	}
 
@@ -368,7 +368,7 @@ public class Workflows {
 		if("IP-BA".equals(analysis.state.code)){
 			for(String rsCode : analysis.masterReadSetCodes){
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode, getReadSetKeys());
-				State nextStep = cloneState(readSet.state);
+				State nextStep = cloneState(readSet.state, contextValidation.getUser());
 				nextStep.code = "IP-BA";
 				setReadSetState(contextValidation, readSet, nextStep);
 			}
@@ -376,7 +376,7 @@ public class Workflows {
 			//update readset if necessary
 			for(String rsCode : analysis.masterReadSetCodes){
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode, getReadSetKeys());
-				State nextStep = cloneState(readSet.state);
+				State nextStep = cloneState(readSet.state, contextValidation.getUser());
 				nextStep.code = "F-BA";
 				setReadSetState(contextValidation, readSet, nextStep);				
 			}							
@@ -390,13 +390,13 @@ public class Workflows {
 					readSet.bioinformaticValuation.user = null;
 					
 					readSet.traceInformation.modifyDate = new Date();
-					readSet.traceInformation.modifyUser = CommonController.getCurrentUser();
+					readSet.traceInformation.modifyUser = contextValidation.getUser();
 						
 						
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 							DBQuery.is("code", rsCode), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation).set("traceInformation", readSet.traceInformation));
 					
-					State nextStep = cloneState(readSet.state);
+					State nextStep = cloneState(readSet.state, contextValidation.getUser());
 					nextStep.code = "IW-VBA";
 					setReadSetState(contextValidation, readSet, nextStep);
 				}
@@ -407,16 +407,16 @@ public class Workflows {
 				if(TBoolean.TRUE.equals(analysis.valuation.valid)){
 					readSet.bioinformaticValuation.valid = TBoolean.TRUE;
 					readSet.bioinformaticValuation.date = new Date();
-					readSet.bioinformaticValuation.user = CommonController.getCurrentUser();
+					readSet.bioinformaticValuation.user = contextValidation.getUser();
 					
 					readSet.traceInformation.modifyDate = new Date();
-					readSet.traceInformation.modifyUser = CommonController.getCurrentUser();
+					readSet.traceInformation.modifyUser = contextValidation.getUser();
 					
 					
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 							DBQuery.is("code", rsCode), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation).set("traceInformation", readSet.traceInformation));
 					
-					State nextStep = cloneState(readSet.state);
+					State nextStep = cloneState(readSet.state, contextValidation.getUser());
 					nextStep.code = "F-VBA";
 					setReadSetState(contextValidation, readSet, nextStep);
 				}								
@@ -426,7 +426,7 @@ public class Workflows {
 
 
 	public static void nextAnalysisState(ContextValidation contextValidation, Analysis analysis) {
-		State nextStep = cloneState(analysis.state);
+		State nextStep = cloneState(analysis.state, contextValidation.getUser());
 		
 		if("F-BA".equals(analysis.state.code)){
 			nextStep.code = "IW-V";
