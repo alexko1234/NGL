@@ -484,11 +484,18 @@ public class ReadSets extends ReadSetsController{
 		ctxVal.setUpdateMode();
 		manageValidation(readSet, valuations.productionValuation, valuations.bioinformaticValuation, ctxVal);
 		if(!ctxVal.hasErrors()) {
-			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-					DBQuery.and(DBQuery.is("code", code)),
-					DBUpdate.set("productionValuation", valuations.productionValuation)
-					.set("bioinformaticValuation", valuations.bioinformaticValuation)
-					.set("traceInformation", getUpdateTraceInformation(readSet)));								
+			if (valuations.productionValuation.valid != readSet.productionValuation.valid) {
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+						DBQuery.and(DBQuery.is("code", code)),
+						DBUpdate.set("productionValuation", valuations.productionValuation)
+						.set("traceInformation", getUpdateTraceInformation(readSet)));			
+			}
+			else {
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+						DBQuery.and(DBQuery.is("code", code)),
+						DBUpdate.set("bioinformaticValuation", valuations.bioinformaticValuation)
+						.set("traceInformation", getUpdateTraceInformation(readSet)));					
+			}
 			readSet = getReadSet(code);
 			Workflows.nextReadSetState(ctxVal, readSet);
 			return ok(Json.toJson(readSet));
@@ -511,11 +518,18 @@ public class ReadSets extends ReadSetsController{
 				manageValidation(readSet, element.data.productionValuation, element.data.bioinformaticValuation, ctxVal);
 				
 				if (!ctxVal.hasErrors()) {
-					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-							DBQuery.and(DBQuery.is("code", readSet.code)),
-							DBUpdate.set("productionValuation", element.data.productionValuation)
-							.set("bioinformaticValuation", element.data.bioinformaticValuation)
-							.set("traceInformation", getUpdateTraceInformation(readSet)));								
+					if (element.data.productionValuation.valid != readSet.productionValuation.valid) {
+						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+								DBQuery.and(DBQuery.is("code", readSet.code)),
+								DBUpdate.set("productionValuation", element.data.productionValuation)
+								.set("traceInformation", getUpdateTraceInformation(readSet)));							
+					}
+					else {
+						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+								DBQuery.and(DBQuery.is("code", readSet.code)),
+								DBUpdate.set("bioinformaticValuation", element.data.bioinformaticValuation)
+								.set("traceInformation", getUpdateTraceInformation(readSet)));						
+					}					
 					readSet = getReadSet(readSet.code);
 					Workflows.nextReadSetState(ctxVal, readSet);
 					response.add(new DatatableBatchResponseElement(OK, readSet, element.index));
@@ -590,13 +604,16 @@ public class ReadSets extends ReadSetsController{
 	
 	
 	private static void manageValidation(ReadSet readSet, Valuation productionVal, Valuation bioinfoVal, ContextValidation ctxVal) {
-		productionVal.date = new Date();
-		productionVal.user = getCurrentUser();
-		bioinfoVal.date = new Date();
-		bioinfoVal.user = getCurrentUser();
-		
-		ReadSetValidationHelper.validateValuation(readSet.typeCode, productionVal, ctxVal);
-		ReadSetValidationHelper.validateValuation(readSet.typeCode, bioinfoVal, ctxVal);		
+		if (productionVal.valid != readSet.productionValuation.valid) {
+			productionVal.date = new Date();
+			productionVal.user = getCurrentUser();
+			ReadSetValidationHelper.validateValuation(readSet.typeCode, productionVal, ctxVal);
+		}
+		else {
+			bioinfoVal.date = new Date();
+			bioinfoVal.user = getCurrentUser();
+			ReadSetValidationHelper.validateValuation(readSet.typeCode, bioinfoVal, ctxVal);		
+		}
 	}
 
 	
