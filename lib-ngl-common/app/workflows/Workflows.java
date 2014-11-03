@@ -103,7 +103,7 @@ public class Workflows {
 	public static void nextInputContainerState(Experiment experiment,ContextValidation contextValidation){
 		State state=new State();
 		state.date=new Date();
-		state.user=CommonController.getCurrentUser();
+		state.user=contextValidation.getUser();
 
 		if(experiment.state.code.equals("N")){
 			state.code= "IW-E"; 
@@ -212,7 +212,7 @@ public class Workflows {
 	public static void nextProcessState(Container container,ContextValidation contextValidation){
 		State state=new State();
 		state.date=new Date();
-		state.user=CommonController.getCurrentUser();
+		state.user=contextValidation.getUser();
 
 		if(container.state.code.equals("IU") && checkProcessState("N",container.inputProcessCodes)){
 			state.code="IP";
