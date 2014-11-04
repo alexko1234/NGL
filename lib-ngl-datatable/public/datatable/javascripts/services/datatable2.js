@@ -1781,6 +1781,7 @@ angular.module('datatableServices', []).
 		    			});
 		    		};			
 		    		
+		    		
 		    		scope.dtTableFunctions.exportCSV = function(){
 		    			scope.dtTable.setSpinner(true);
 		    			$timeout(function(){scope.dtTable.exportCSV()}).then(function(){
