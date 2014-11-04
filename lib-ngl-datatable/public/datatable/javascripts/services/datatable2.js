@@ -1733,7 +1733,9 @@ angular.module('datatableServices', []).
 		    		scope.dtTableFunctions.setNumberRecordsPerPage = function(elt){
 		    			scope.dtTable.setSpinner(true);
 		    			$timeout(function(){scope.dtTable.setNumberRecordsPerPage(elt)}).then(function(){
-		    				scope.dtTable.setSpinner(false);  		    				
+		    				if(!scope.dtTable.isRemoteMode(scope.dtTable.config.pagination.mode)){
+		    					scope.dtTable.setSpinner(false);  		    				
+		    				}
 		    			});
 		    			
 		    				    			
@@ -1742,7 +1744,9 @@ angular.module('datatableServices', []).
 		    		scope.dtTableFunctions.setPageNumber = function(page){
 		    			scope.dtTable.setSpinner(true);
 		    			$timeout(function(){scope.dtTable.setPageNumber(page)}).then(function(){
-		    				scope.dtTable.setSpinner(false);  		    				
+		    				if(!scope.dtTable.isRemoteMode(scope.dtTable.config.pagination.mode)){
+		    					scope.dtTable.setSpinner(false);  		    				
+		    				}	    				
 		    			});  		    				    			    		
 		    		};
 		    		
@@ -1756,7 +1760,9 @@ angular.module('datatableServices', []).
 		    		scope.dtTableFunctions.setOrderColumn = function(column){
 		    			scope.dtTable.setSpinner(true);
 		    			$timeout(function(){scope.dtTable.setOrderColumn(column)}).then(function(){
-		    				scope.dtTable.setSpinner(false);  		    				
+		    				if(!scope.dtTable.isRemoteMode(scope.dtTable.config.search.mode)){
+		    					scope.dtTable.setSpinner(false);  		    				
+		    				} 		    				
 		    			});	
 		    			
 		    		};
