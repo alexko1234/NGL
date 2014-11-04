@@ -9,6 +9,7 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.project.instance.BioinformaticParameters;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.InstrumentUsed;
@@ -128,6 +129,9 @@ public class RunMockHelper {
 		TraceInformation ti = new TraceInformation(); 
 		ti.setTraceInformation("dnoisett");
 		p.traceInformation = ti;
+		//new
+		p.bioinformaticParameters = new BioinformaticParameters();
+		p.bioinformaticParameters.biologicalAnalysis = Boolean.FALSE; 
 		
 		return p;
 	}

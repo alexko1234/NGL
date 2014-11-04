@@ -417,7 +417,7 @@ public class StatesTests extends  AbstractTests {
 		readset.state.code = "IW-VQC";
 		readset.state.user = "test";
 		
-		readset.productionValuation.valid = TBoolean.FALSE;
+		readset.productionValuation.valid = TBoolean.FALSE;//TRUE
 
 		r1 = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readset.code), fakeRequest().withJsonBody(RunMockHelper.getJsonState(readset.state)));
 		assertThat(status(r1)).isEqualTo(OK);
@@ -451,7 +451,7 @@ public class StatesTests extends  AbstractTests {
 		readset.state.code = "IP-VQC";
 		readset.state.user = "test";
 
-		readset.productionValuation.valid = TBoolean.FALSE;
+		readset.productionValuation.valid = TBoolean.FALSE; //TRUE
 		
 		r1 = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readset.code), fakeRequest().withJsonBody(RunMockHelper.getJsonState(readset.state)));
 		assertThat(status(r1)).isEqualTo(OK);
