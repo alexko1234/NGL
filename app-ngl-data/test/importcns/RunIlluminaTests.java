@@ -16,6 +16,7 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.TransientState;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -29,9 +30,9 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-
 import org.apache.commons.lang3.StringUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -306,7 +307,64 @@ public class RunIlluminaTests extends AbstractTests{
 	assertThat(samples.size()).isEqualTo(sampleCodes.size());
 
 
-}
+	}
+	
+	@Test
+	public void fusionStateTest(){
+		State s1 = new State();
+		s1.historical = new ArrayList<TransientState>();
+		
+		TransientState ts1 = new TransientState();
+		ts1.code = "IP-RG";
+		ts1.date = new Date(1414710000000000L);
+		ts1.index = 0;
+		ts1.user = "ngsrg";
+		s1.historical.add(ts1);
+		
+		TransientState ts2 = new TransientState();
+		ts2.code = "F-RG";
+		ts2.date = new Date(1414710000000000L);
+		ts2.index = 1;
+		ts2.user = "ngsrg";
+		s1.historical.add(ts2);
+		
+		State s2 = new State();
+		s2.historical = new ArrayList<TransientState>();
+		
+		TransientState ts3 = new TransientState();
+		ts3.code = "N";
+		ts3.date = new Date(814710000000000L);
+		ts3.index = 0;
+		ts3.user = "ngsrg";
+		s2.historical.add(ts3);
+		
+		TransientState ts4 = new TransientState();
+		ts4.code = "IP-S";
+		ts4.date = new Date(1014710000000000L);
+		ts4.index = 1;
+		ts4.user = "ngsrg";
+		s2.historical.add(ts4);
+	
+		
+		s1 = RunImportCNS.fusionRunStateHistorical(s1,s2);
+		
+		assertThat(s1.historical.size()).isEqualTo(4);
+		
+		assertThat(s1.historical.get(0).index).isEqualTo(0);
+		assertThat(s1.historical.get(0).code).isEqualTo("N");
+		
+		assertThat(s1.historical.get(1).index).isEqualTo(1);
+		assertThat(s1.historical.get(1).code).isEqualTo("IP-S");
+		
+		assertThat(s1.historical.get(2).index).isEqualTo(2);
+		assertThat(s1.historical.get(2).code).isEqualTo("IP-RG");
+		
+		assertThat(s1.historical.get(3).index).isEqualTo(3);
+		assertThat(s1.historical.get(3).code).isEqualTo("F-RG");
+		
+		
+	}
+	
 //@Test
 /*public void rulesRunCNSTest() throws RulesException{
 		List<Object> list=new ArrayList<Object>();

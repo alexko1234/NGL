@@ -2,11 +2,15 @@ package services.instance.run;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 import models.Constants;
 import models.laboratory.common.description.Level;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TransientState;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -18,8 +22,10 @@ import models.util.Workflows;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+
 import play.Logger;
 import play.Play;
 import rules.services.RulesException;
@@ -74,7 +80,9 @@ public class RunImportCNS extends AbstractImportDataCNS{
 					run.treatments.get("ngsrg").validate(ctx);
 
 					if(!ctx.hasErrors()){
-
+						
+						run.state = fusionRunStateHistorical(run.state, newRun.state);
+						
 						MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 								DBQuery.is("code", run.code),
 								DBUpdate.set("treatments.ngsrg",run.treatments.get("ngsrg"))
@@ -134,6 +142,27 @@ public class RunImportCNS extends AbstractImportDataCNS{
 		limsServices.updateRunLims(updateRuns,contextError);
 	}
 
+
+	public static State fusionRunStateHistorical(State newState, State oldState) {
+		if(null != newState && null != oldState && null != newState.historical && null != oldState.historical){
+			newState.historical.addAll(oldState.historical);
+			//sort by date
+			Collections.sort(newState.historical, new Comparator<TransientState>(){
+				@Override
+				public int compare(TransientState state1, TransientState state2) {
+					return state1.date.compareTo(state2.date);
+				}				
+			});
+			
+			//re-compute index
+			int index = 0;
+			for(TransientState ts : newState.historical){
+				ts.index = index++;
+			}
+		}
+		
+		return newState;
+	}
 
 	public static Run createLaneFromRun(Run newRun,ContextValidation contextError) throws SQLException{
 		Logger.debug("Create Lanes from Run "+newRun.code);
