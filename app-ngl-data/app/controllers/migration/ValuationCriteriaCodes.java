@@ -21,7 +21,7 @@ import fr.cea.ig.MongoDBDAO;
 import play.mvc.Result;
 
 /**
- * Replace old codes of ValuationCriteria
+ * Replace old codes of ValuationCriteria (NGL-277)
  * @author dnoisett
  * 05-11-2014
  */
@@ -185,7 +185,7 @@ public class ValuationCriteriaCodes  extends CommonController {
 	
 	
 	private static void backupVCCollection() {
-		String backupName = InstanceConstants.VALUATION_CRITERIA_COLL_NAME+"_BCK_SOC_"+sdf.format(new java.util.Date());
+		String backupName = InstanceConstants.VALUATION_CRITERIA_COLL_NAME+"_BCK_VCC_"+sdf.format(new java.util.Date());
 		Logger.info("\tCopie "+InstanceConstants.VALUATION_CRITERIA_COLL_NAME+" to "+backupName+" start");		
 		MongoDBDAO.save(backupName, MongoDBDAO.find(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class, DBQuery.exists("code")).toList());
 		Logger.info("\tCopie "+InstanceConstants.VALUATION_CRITERIA_COLL_NAME+" to "+backupName+" end");
@@ -193,7 +193,7 @@ public class ValuationCriteriaCodes  extends CommonController {
 	
 	
 	private static void backupRunCollection() {
-		String backupName = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_BCK_SOC_"+sdf.format(new java.util.Date());
+		String backupName = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_BCK_VCC_"+sdf.format(new java.util.Date());
 		Logger.info("\tCopie "+InstanceConstants.RUN_ILLUMINA_COLL_NAME+" to "+backupName+" start");		
 		MongoDBDAO.save(backupName, MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.exists("valuation.criteriaCode")).toList());
 		Logger.info("\tCopie "+InstanceConstants.RUN_ILLUMINA_COLL_NAME+" to "+backupName+" end");
@@ -201,7 +201,7 @@ public class ValuationCriteriaCodes  extends CommonController {
 	
 	
 	private static void backupReadSetCollection(BasicDBObject keys) {
-		String backupName = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK_SOC_"+sdf.format(new java.util.Date());
+		String backupName = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK_VCC_"+sdf.format(new java.util.Date());
 		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" to "+backupName+" start");		
 		MongoDBDAO.save(backupName, MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.or(DBQuery.exists("bioinformaticValuation.criteriaCode"), DBQuery.exists("productionValuation.criteriaCode")), keys).toList());
@@ -210,7 +210,7 @@ public class ValuationCriteriaCodes  extends CommonController {
 	
 	
 	private static void backupAnalysisCollection() {
-		String backupName = InstanceConstants.ANALYSIS_COLL_NAME+"_BCK_SOC_"+sdf.format(new java.util.Date());
+		String backupName = InstanceConstants.ANALYSIS_COLL_NAME+"_BCK_VCC_"+sdf.format(new java.util.Date());
 		Logger.info("\tCopie "+InstanceConstants.ANALYSIS_COLL_NAME+" to "+backupName+" start");		
 		MongoDBDAO.save(backupName, MongoDBDAO.find(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, DBQuery.exists("valuation.criteriaCode")).toList());
 		Logger.info("\tCopie "+InstanceConstants.ANALYSIS_COLL_NAME+" to "+backupName+" end");
