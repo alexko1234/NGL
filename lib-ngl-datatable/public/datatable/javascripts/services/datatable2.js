@@ -1760,7 +1760,7 @@ angular.module('datatableServices', []).
 		    		scope.dtTableFunctions.setOrderColumn = function(column){
 		    			scope.dtTable.setSpinner(true);
 		    			$timeout(function(){scope.dtTable.setOrderColumn(column)}).then(function(){
-		    				if(!scope.dtTable.isRemoteMode(scope.dtTable.config.search.mode)){
+		    				if(!scope.dtTable.isRemoteMode(scope.dtTable.config.order.mode)){
 		    					scope.dtTable.setSpinner(false);  		    				
 		    				} 		    				
 		    			});	
