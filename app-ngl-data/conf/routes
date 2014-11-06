@@ -29,6 +29,7 @@ GET		/migration-container-support			controllers.migration.MigrationDataCNS.updat
 GET		/migration-sequencing-run				controllers.migration.AddSequencingProgramTypeToRun.migration()
 GET		/migration-vcc							controllers.migration.ValuationCriteriaCodes.migration()
 GET		/cns/migration						    controllers.migration.cns.MigrationReadSetFileCNS.migration()
+GET		/cns/libprocesstype-ext					controllers.migration.cns.MigrationLibProcessTypeRunExt.migration()
 GET		/cns/update-content-sample			    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationContainer()
 GET		/cns/update-readset					    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationReadset()
 GET		/cng/migration-sequencing				controllers.migration.cng.AddSequencingProgramType.migration()

@@ -237,6 +237,10 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 				sampleUsed.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
 				sampleUsed.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagCategory")));
 			}
+			
+			if(rs.getString("libProcessTypeCode")!=null){
+				sampleUsed.properties.put("libProcessTypeCode",new PropertySingleValue(rs.getString("libProcessTypeCode")));
+			}
 			container.contents.add(sampleUsed);
 
 		}

@@ -103,7 +103,7 @@ public class UpdateSampleTypeCodeToContainer  extends CommonController {
 	}
 	
 	
-	private static void migreReadSet(ReadSet readSet) {
+	public static void migreReadSet(ReadSet readSet) {
 		SampleOnContainer sampleOnContainer = InstanceHelpers.getSampleOnContainer(readSet);
 		if(null != sampleOnContainer){
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
