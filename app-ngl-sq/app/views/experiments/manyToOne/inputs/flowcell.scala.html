@@ -84,7 +84,8 @@
 			
 			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" colspan="3">			
 		<!-- <td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && !rows[@i]" colspan="3">  -->
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0">
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length == 0">
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0">
 				<div ng-hide="rows[@i]" class="LaneSummary">
 					<span  ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds">
 						{{flowcell.code}} / {{flowcell.percentage}}% / PhiX:{{experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties.phixPercent.value || "nr"}}%;<br/>
@@ -151,6 +152,7 @@
 								<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInputOnAtomic(@i,container)"><i class="fa fa-trash-o"></i></button>
 					    </td>  -->
 					</tr>
+					<tr ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable><td colspan=6> </td></tr>
 				</table>
 			</div>
 			</td>			

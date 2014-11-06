@@ -1,5 +1,6 @@
 angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne,mainService,tabService) {
 	$scope.datatableConfig = {
+			name:"FDR_prepaFC",
 			columns:[
 					{
 						"header":Messages("containers.table.support.column"),
@@ -106,7 +107,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	$scope.$on('experimentToInput', function(e, atomicTransfertMethod) {
 		$scope.atomicTransfere.experimentToInput();
 	});
-	
+
 	$scope.$on('deleteInstrumentPropertiesInputs', function(e, header) {
 		for(var i=0;i<$scope.datatable.config.columns.length;i++){
 				if($scope.datatable.config.columns[i].extraHeaders != undefined && $scope.datatable.config.columns[i].extraHeaders[1] == header){

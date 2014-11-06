@@ -100,7 +100,14 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							alert("error");
 						});
 						return results;
+					},
+					displayResultToAllResult : function(){
+						$scope.datatable.allResult = [];
+						for(var i=0;i<$scope.datatable.displayResult.length;i++){
+							$scope.datatable.allResult.push($scope.datatable.displayResult[i].data);
+						}
 					}
+					
 				};
 				return common;
 			};
@@ -123,6 +130,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 									$scope.datatable.displayResult[i].data.inputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties;
 									$scope.datatable.displayResult[i].data.inputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties;
 								}
+								varExperimentCommonFunctions.displayResultToAllResult();
 							}
 						},
 						inputToExperiment : function(){
@@ -171,6 +179,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 											i++;
 										}
 									}
+									varExperimentCommonFunctions.displayResultToAllResult();
 								}
 							}else if(inputType === "dragndrop"){
 								if($scope.datatable.displayResult != undefined){
@@ -191,6 +200,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 											 $scope.datatable.displayResult[i].data.inputExperimentProperties =	$scope.experiment.value.atomicTransfertMethods[positions.x].inputContainerUseds[positions.y].experimentProperties;
 										}
 									}
+									varExperimentCommonFunctions.displayResultToAllResult();
 								}
 							}
 						},
@@ -215,6 +225,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 										i++;
 									}
 								}
+								varExperimentCommonFunctions.displayResultToAllResult();
 							}else if(inputType === "dragndrop"){
 								for(var i=0;i<$scope.datatable.displayResult.length;i++){
 									//$scope.experiment.value.atomicTransfertMethods[($scope.datatable.displayResult[i].data.outputPositionX-1)].inputContainerUseds[($scope.datatable.displayResult[i].data.outputPositionY-1)].percentage = $scope.datatable.displayResult[i].data.percentage;
@@ -274,6 +285,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 										$scope.datatable.displayResult[i].data.outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.experimentProperties;
 									}
 								}
+								varExperimentCommonFunctions.displayResultToAllResult();
 							}
 						}else if(outputType === "datatable"){
 							if($scope.datatable.displayResult != undefined){
