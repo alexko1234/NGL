@@ -1,18 +1,24 @@
 angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne,mainService,tabService) {
 	$scope.datatableConfig = {
-			columns:[{
-						"header":Messages("containers.table.supportCode"),
-						"property":"inputSupportCode",
-						"order":true,
-						"type":"text",
-						"extraHeaders":{"0":"Inputs"}
-					},
+			columns:[
 					{
 						"header":Messages("containers.table.support.column"),
 						"property":"outputPositionX",
 						"order":true,
+						"type":"text"
+					},
+					{
+						"header":Messages("containers.table.supportCode"),
+						"property":"inputSupportCode",
+						"order":true,
+						"type":"text"
+					},
+					{
+						"header":Messages("containers.table.tags"),
+						"property":"inputTags",
+						"order":true,
 						"type":"text",
-						"extraHeaders":{"0":"Outputs"}
+						"edit":false
 					},
 				/*	{
 						"header":Messages("containers.table.support.line"),
@@ -22,60 +28,32 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 						"extraHeaders":{"0":"Outputs"}
 					},*/
 					{
-						"header":Messages("containers.table.volume"),
-						"property":"inputVolume",
-						"order":true,
-						"type":"text",
-						"edit":false,
-						"extraHeaders":{"0":"Inputs"}
-					},
-					{
 						"header":Messages("containers.table.concentration"),
 						"property":"inputConcentration",
 						"order":true,
 						"type":"text",
-						"edit":false,
-						"extraHeaders":{"0":"Inputs"}
+						"edit":false
 					},
 					{
-						"header":Messages("containers.table.percentage"),
-						"property":"percentage",
+						"header":Messages("containers.table.volume"),
+						"property":"inputVolume",
 						"order":true,
 						"type":"text",
-						"edit":false,
-						"extraHeaders":{"0":"Inputs"}
+						"edit":false
 					},
 					{
 						"header":Messages("containers.table.state.code"),
 						"property":"inputState.code",
 						"order":true,
 						"type":"text",
-						"edit":false,
-						"extraHeaders":{"0":"Inputs"}
+						"edit":false
 					},
 					{
-						"header":Messages("containers.table.tags"),
-						"property":"inputTags",
+						"header":Messages("containers.table.percentage"),
+						"property":"percentage",
 						"order":true,
 						"type":"text",
-						"edit":false,
-						"extraHeaders":{"0":"Inputs"}
-					},
-					{
-						"header":Messages("containers.table.sampleTypes"),
-						"property":"inputSampleTypes",
-						"order":true,
-						"type":"text",
-						"edit":false,
-						"extraHeaders":{"0":"Inputs"}
-					},
-					{
-						"header":Messages("containers.table.libProcessTypeCodes"),
-						"property":"inputLibProcessTypeCodes",
-						"order":true,
-						"type":"text",
-						"edit":false,
-						"extraHeaders":{"0":"Inputs"}
+						"edit":false
 					}
 					],
 			compact:true,
@@ -144,7 +122,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	
 	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
 		// Modification du 25_09_2014: introduction du paramétre éditable des colonnes pour les propriétés d'expérience
-		var column = $scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
+		var column = $scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{});
 		//column.position = data.displayOrder;
 		//console.log(data.name+" - "+data.displayOrder);
 		$scope.datatable.addColumn(data.displayOrder+5 ,column);
@@ -153,12 +131,12 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
 		if($scope.experiment.containerOutProperties.indexOf(data) == -1){
 			$scope.experiment.containerOutProperties.push(data);
-			$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"}));
+			$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{}));
 		}
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutput', function(e, data, possibleValues) {
-		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data.name,"outputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Outputs","1":"Instruments"}));
+		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data.name,"outputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{}));
 	});
 	
 	$scope.addOutputColumns = function(){
