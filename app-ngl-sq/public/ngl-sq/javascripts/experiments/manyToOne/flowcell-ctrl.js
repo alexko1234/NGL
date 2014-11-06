@@ -123,8 +123,6 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
 		// Modification du 25_09_2014: introduction du paramétre éditable des colonnes pour les propriétés d'expérience
 		var column = $scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{});
-		//column.position = data.displayOrder;
-		//console.log(data.name+" - "+data.displayOrder);
 		$scope.datatable.addColumn(data.displayOrder+5 ,column);
 	});
 	
