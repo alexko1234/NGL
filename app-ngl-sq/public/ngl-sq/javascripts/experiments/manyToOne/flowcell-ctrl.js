@@ -105,9 +105,13 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	};
 	
 	$scope.$on('experimentToInput', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.experimentToInput();
+		$scope.atomicTransfere.experimentToInput($scope.datatable);
 	});
 
+	$scope.changeValueInFlowcellCompo = function(){
+		$scope.atomicTransfere.experimentToInput($scope.datatable);
+	};
+	
 	$scope.$on('deleteInstrumentPropertiesInputs', function(e, header) {
 		for(var i=0;i<$scope.datatable.config.columns.length;i++){
 				if($scope.datatable.config.columns[i].extraHeaders != undefined && $scope.datatable.config.columns[i].extraHeaders[1] == header){
@@ -146,7 +150,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('inputToExperiment', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.inputToExperiment();
+		$scope.atomicTransfere.inputToExperiment($scope.datatable);
 	});
 	
 	$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
@@ -244,8 +248,8 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.refreshView = function(){
-		$scope.atomicTransfere.experimentToInput();
-		$scope.atomicTransfere.experimentToOutput();
+		$scope.atomicTransfere.experimentToInput($scope.datatable);
+		$scope.atomicTransfere.experimentToOutput($scope.datatable);
 	};
 	
 	$scope.$on('refresh', function(e) {
@@ -255,11 +259,11 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.outputToExperiment();
+		$scope.atomicTransfere.outputToExperiment($scope.datatable);
 	});
 	
 	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.experimentToOutput();
+		$scope.atomicTransfere.experimentToOutput($scope.datatable);
 	});
 	
 	$scope.duplicateContainer = function(container,position){
@@ -289,7 +293,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			$scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.splice($scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.indexOf(data), 1);
 		}
 		
-		$scope.atomicTransfere.reloadContainerDragNDrop();
+		$scope.atomicTransfere.reloadContainerDragNDrop(undefined, undefined, $scope.datatable);
 	};
 	
 	$scope.beforeDropData = function(e, data, ngModel){
@@ -359,7 +363,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	$scope.view = 1;
 	
 	if($scope.experiment.editMode){
-		$scope.atomicTransfere.loadExperiment();
+		$scope.atomicTransfere.loadExperiment($scope.datatable);
 		if(!angular.isUndefined(mainService.getBasket())){
 			$scope.basket = mainService.getBasket().get();
 			angular.forEach($scope.basket, function(basket){
@@ -378,7 +382,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			});
 		}
 	}else{
-		$scope.atomicTransfere.newExperiment();
+		$scope.atomicTransfere.newExperiment($scope.datatable);
 	}
 	
 }]);

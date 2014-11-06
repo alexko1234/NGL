@@ -48,7 +48,7 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 	};
 	
 	$scope.$on('experimentToInput', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.experimentToInput();
+		$scope.atomicTransfere.experimentToInput($scope.datatable);
 	});
 	
 	$
@@ -86,7 +86,7 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 	});
 	
 	$scope.$on('inputToExperiment', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.inputToExperiment();
+		$scope.atomicTransfere.inputToExperiment($scope.datatable);
 	});
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
@@ -177,7 +177,7 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 	});
 	
 	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.outputToExperiment();
+		$scope.atomicTransfere.outputToExperiment($scope.datatable);
 	});
 	
 	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {
@@ -191,9 +191,9 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 	$scope.experiment.outputGenerated = $scope.isOutputGenerated();
 	
 	if($scope.experiment.editMode){
-		$scope.atomicTransfere.loadExperiment();
+		$scope.atomicTransfere.loadExperiment($scope.datatable);
 	}else{
-		$scope.atomicTransfere.newExperiment();
+		$scope.atomicTransfere.newExperiment($scope.datatable);
 	}
 	
 }]);

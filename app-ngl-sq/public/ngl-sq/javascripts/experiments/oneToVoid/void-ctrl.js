@@ -48,7 +48,7 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 	};
 	
 	$scope.$on('experimentToInput', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.experimentToInput();
+		$scope.atomicTransfere.experimentToInput($scope.datatable);
 	});
 	
 	$scope.$on('deleteInstrumentPropertiesInputs', function(e, header) {
@@ -69,7 +69,7 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 	});
 	
 	$scope.$on('inputToExperiment', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.inputToExperiment();
+		$scope.atomicTransfere.inputToExperiment($scope.datatable);
 	});
 	
 	$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
@@ -143,9 +143,9 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 	$scope.atomicTransfere = oneToVoid($scope,"datatable");
 	
 	if($scope.experiment.editMode){
-		$scope.atomicTransfere.loadExperiment();
+		$scope.atomicTransfere.loadExperiment($scope.datatable);
 	}else{
-		$scope.atomicTransfere.newExperiment();
+		$scope.atomicTransfere.newExperiment($scope.datatable);
 	}
 	
 }]);

@@ -170,13 +170,14 @@
 								<input class="form-control valueInput" type="text" ng-switch-when="false" title="{{property.name}}"
 									ng-readonly="!experiment.experimentProperties.enabled"
 									ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties[property.code].value"
-								/>
+								ng-change="changeValueInFlowcellCompo()"/>
 									
 								<select class="form-control"  
 										ng-readonly="!experiment.experimentInformation.enabled" 
 										ng-disabled="!experiment.experimentInformation.enabled" 
 										ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties[property.code].value"
 										ng-switch-when="true" 
+										ng-change="changeValueInFlowcellCompo()"
 										auto-select>
 									<option ng-repeat="opt in property.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
 								   </select>
