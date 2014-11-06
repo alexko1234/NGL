@@ -264,7 +264,6 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.duplicateContainer = function(container,position){
-		//$scope.inputContainers.push(angular.copy(container));
 		$scope.inputContainers.splice(position+1,0,angular.copy(container));
 	};
 	
@@ -295,15 +294,6 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	};
 	
 	$scope.beforeDropData = function(e, data, ngModel){
-		/*var array_regexp = /^experiment.value.atomicTransfertMethods\[([0-9]+)\].+/;
-		var model = ngModel;
-		
-		var match = model.match(array_regexp);
-		if(match){
-			//$scope.experiment.value.atomicTransfertMethods[match[1]].line = parseInt(match[1])+1;
-			//$scope.experiment.value.atomicTransfertMethods[match[1]].column = 1;
-		}*/
-		
 		return data;
 	};
 	

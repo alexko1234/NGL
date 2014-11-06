@@ -283,6 +283,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	
 	$scope.swithToContainerView = function(){
 		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
+		$scope.datatable.config.columns[0].header = "containers.table.code";
 	};
 	
 	$scope.save = function (){
@@ -355,6 +356,9 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			}
 		});
 		$scope.datatable.setData($scope.processesSupports,$scope.processesSupports.length);
+		console.log($scope.datatable.config);
+		if($scope.datatable.config.columns.length>0)
+			$scope.datatable.config.columns[0].header = "containers.table.supportCode";
 	};
 	
 	$scope.getColumns = function(){
