@@ -300,6 +300,32 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
+	
+	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
+			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder, Boolean editable,String defaultValue) throws DAOException{
+		PropertyDefinition pd = new PropertyDefinition();		
+		pd.name = name;
+		pd.code = code;
+		pd.active = true;
+		pd.levels = levels;
+		pd.valueType = type.getName();
+		pd.required = required;
+		pd.choiceInList = false;
+		if(values!=null){ 
+			pd.choiceInList=true;
+			pd.possibleValues = values;
+		}
+		pd.measureCategory = measureCategory;
+		pd.displayMeasureValue = displayMeasureUnit;
+		pd.saveMeasureValue = saveMeasureUnit;	
+		pd.propertyValueType = propertyValueType;
+		pd.displayOrder=displayOrder;
+		pd.editable=editable;
+		pd.defaultValue=defaultValue;
+		pd.displayOrder=displayOrder;
+		return pd;
+	}
+	
 
 	/**
 	 * 
