@@ -5,7 +5,8 @@
 /*SUPPORT AND CONTAINER TABLE*/
 
 .SelectContainerProcess .datatable .btn-toolbar>.btn-group>.btn:last-child:not(:first-child)[ng-click="swithView()"]{
-	margin-left: 3px;	
+	margin-left: 5px;
+	width: 130px;	
 }
 
 .SelectContainerProcess .datatable .btn-toolbar>.btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle)[ng-click="save()"]{

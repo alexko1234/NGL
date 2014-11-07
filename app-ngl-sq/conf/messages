@@ -198,7 +198,9 @@ button.newexperiment = Créer une expérience
 baskets = Panier
 baskets.new = Créer un panier
 baskets.add = Ajouter au panier
-baskets.switchView = Changer de vue
+baskets.switchView = Voir
+baskets.switchView.containers = les containers
+baskets.switchView.supports = les supports
 backet.view.supports = Vue supports
 backet.view.containers = Vue containers
 
