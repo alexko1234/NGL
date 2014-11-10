@@ -16,12 +16,13 @@
 	 		<tbody>
 	 			<tr>
 	 				<td ng-bind="readset.sampleOnContainer.properties.percentPerLane.value|number:2"></td>
-					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.validSeqPercent.value|number:2"></td>
+					<td ng-class="highLight('treatments.' + treatments.getTreatment().code + '.default.validSeqPercent.value')" 
+						ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.validSeqPercent.value|number:2"></td>
 					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbCluster.value|number"></td>
 					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbBases.value|number"></td>
-					<td ng-class="highLight('treatments.ngsrg.default.Q30.value')" 
+					<td ng-class="highLight('treatments.' + treatments.getTreatment().code + '.default.Q30.value')" 
 						ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.Q30.value|number"></td>
-					<td ng-class="highLight('treatments.ngsrg.default.qualityScore.value')"
+					<td ng-class="highLight('treatments.' + treatments.getTreatment().code + '.default.qualityScore.value')"
 						ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.qualityScore.value|number"></td>
 				</tr>
 	 		</tbody>
