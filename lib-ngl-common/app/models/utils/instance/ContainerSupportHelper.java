@@ -108,6 +108,10 @@ public class ContainerSupportHelper {
 
 		}
 		
+		if(support.properties==null){
+			support.properties=new HashMap<String, PropertyValue>();
+		}
+		
 		ExperimentType experimentType =BusinessValidationHelper.validateExistDescriptionCode(null, experiment.typeCode, "typeCode", ExperimentType.find,true);
 		if(experimentType !=null){
 			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(experimentType.getPropertyDefinitionByLevel(Level.CODE.ContainerSupport), properties,support.properties);

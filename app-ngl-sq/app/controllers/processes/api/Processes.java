@@ -9,13 +9,13 @@ import java.util.List;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
-import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.description.dao.ProcessTypeDAO;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import models.utils.instance.ProcessHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -70,8 +70,8 @@ public class Processes extends CommonController{
 				value.code = CodeHelper.generateProcessCode(value);
 				
 				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, value.containerInputCode);
-				updateContainer(container,value.typeCode, value.code);
-				
+				ProcessHelper.updateContainer(container,value.typeCode, value.code);
+				ProcessHelper.updateContainerSupportFromContainer(container);
 				Logger.info("New process code : "+value.code);
 			} else {
 				value.traceInformation.setTraceInformation(getCurrentUser());
@@ -114,7 +114,8 @@ public class Processes extends CommonController{
 				
 				List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode)).toList();
 				for(Container container:containers){
-					updateContainer(container,value.typeCode, value.code);
+					ProcessHelper.updateContainer(container,value.typeCode, value.code);
+					ProcessHelper.updateContainerSupportFromContainer(container);
 					value.containerInputCode = container.code;
 					for(String s:container.sampleCodes){
 						//ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
@@ -214,23 +215,6 @@ public class Processes extends CommonController{
 		}
 	}
 
-	private static void updateContainer(Container container, String typeCode, String code){
-		if(container.fromExperimentTypeCodes == null || container.fromExperimentTypeCodes.size() == 0){
-			container.fromExperimentTypeCodes = new ArrayList<String>();
-			ProcessType processType;
-			try {
-				processType = ProcessType.find.findByCode(typeCode);
-				container.fromExperimentTypeCodes.add(processType.voidExperimentType.code);
-
-			} catch (DAOException e) {
-				throw new RuntimeException();
-			}
-		}
-		container.processTypeCode = typeCode;
-		container.inputProcessCodes=InstanceHelpers.addCode(code, container.inputProcessCodes);
-		MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
-	}
-	
 	/**
 	 * Construct the process query
 	 * @param processesSearch
