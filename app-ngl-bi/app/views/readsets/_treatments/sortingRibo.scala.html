@@ -18,7 +18,9 @@
 						<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.readsInput.value | number}}</td>
 						<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.no_rRNA.value | number}}</td>
 						<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.rRNA.value | number}}</td>
-						<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.rRNAPercent.value | number:2}} @Messages("unit.percent")</td>
+						<td ng-class="highLight('treatments.' + treatments.getTreatment().code + '.read1.rRNAPercent.value')">
+							{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.rRNAPercent.value | number:2}} @Messages("unit.percent")
+						</td>
 					</tr>		
 					<tr>
 						<th>@Messages("readsets.treatments.sorting_ribo.read2")</th>

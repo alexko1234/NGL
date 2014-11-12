@@ -97,7 +97,10 @@
 					<td>
 						 {{obj.nbSeq | number}}												
 					</td>
-					<td>
+					<td ng-if="obj.division!=='Bacteria'">
+						 {{ obj.percent | number:2}} @Messages("unit.percent")												
+					</td>
+					<td ng-if="obj.division==='Bacteria'" ng-class="highLight('treatments.' + treatments.getTreatment().code + '.read1.divisionBilan.value', {'division':'Bacteria'}, 'percent')">
 						 {{ obj.percent | number:2}} @Messages("unit.percent")												
 					</td>
 				</tr>

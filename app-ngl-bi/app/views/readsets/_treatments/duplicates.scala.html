@@ -58,7 +58,9 @@
 					</td>
 					<td>
 						{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.estimateDuplicatedReads.value | number}} &nbsp;				
-						({{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.estimateDuplicatedReadsPercent.value | number:2}} @Messages("unit.percent"))
+						<nobr ng-class="highLight('treatments.' + treatments.getTreatment().code + '.pairs.estimateDuplicatedReadsPercent.value')">
+							({{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.estimateDuplicatedReadsPercent.value | number:2}} @Messages("unit.percent"))
+						</nobr>
 						<ul class="list-unstyled">									 
 						    <li ng-repeat="obj in readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.estimateDuplicatedReadsNTimes.value">
 						    	{{obj.percent  | number:3}} @Messages("unit.percent") @Messages("readsets.treatments.duplicates.observed") 

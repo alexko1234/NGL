@@ -64,15 +64,13 @@
 		$scope.modalHeight = imageFullSizeHeight * zoom; //in order to conserve image ratio
 		$scope.modalLeft = (document.body.clientWidth - $scope.modalWidth)/2;
 	
-		$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;
-	
+		$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;	
 		$scope.modalTop = $scope.modalTop - 50; //height of header and footer
 	}
 	
 	var updateData = function(){
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.get($routeParams.code).url).success(function(data) {
-			$scope.readset = data;	
-			
+			$scope.readset = data;				
 		});
 	}
 	
@@ -85,18 +83,14 @@
 		if ($scope.readset && $scope.readset.productionValuation.comment && $scope.readset.productionValuation.comment != null) {
 			return $sce.trustAsHtml($scope.readset.productionValuation.comment.trim().replace(/\n/g, "<br>"));
 		}
-		else {
-			return "";
-		}
+		return "";
     };
-	
-    $scope.highLight = function(prop){
+
+    $scope.highLight = function(propName, propFilterObj, propValue){
 		if (lists.getValuationCriterias() && $scope.readset && $scope.readset.productionValuation) {
-			return "bg-" + $scope.valuationService.valuationCriteriaClass($scope.readset, $scope.readset.productionValuation.criteriaCode, prop);
+			return "bg-" + $scope.valuationService.valuationCriteriaClass($scope.readset, $scope.readset.productionValuation.criteriaCode, propName, propFilterObj, propValue);
 		}
-		else {
-			return undefined;
-		}
+		return undefined;
     };
     
 	$scope.showPropertyData = function(read, treatmentCode, property) {
