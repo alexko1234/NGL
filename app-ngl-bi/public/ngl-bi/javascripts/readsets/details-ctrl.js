@@ -86,9 +86,9 @@
 		return "";
     };
 
-    $scope.highLight = function(propName, propFilterObj, propValue){
+    $scope.highLight = function(expression){
 		if (lists.getValuationCriterias() && $scope.readset && $scope.readset.productionValuation) {
-			return "bg-" + $scope.valuationService.valuationCriteriaClass($scope.readset, $scope.readset.productionValuation.criteriaCode, propName, propFilterObj, propValue);
+			return "bg-" + $scope.valuationService.valuationCriteriaClass($scope.readset, $scope.readset.productionValuation.criteriaCode, expression);
 		}
 		return undefined;
     };

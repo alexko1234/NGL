@@ -117,7 +117,7 @@ angular.module('biCommonsServices', []).
     		};
     	}]).factory('valuationService',['$parse', '$filter', 'lists', function($parse, $filter, lists){
     		var criterias = undefined;
-    		var valuationCriteriaClass = function(value, criteriaCode, propertyName, propertyFilterObject, propertyReturnValue){
+    		var valuationCriteriaClass = function(value, criteriaCode, expressionToParse){
     			//init criterias
     			if((!criterias || !criterias[criteriaCode]) && lists.getValuationCriterias() && lists.getValuationCriterias().length > 0 ){
     				var values = lists.getValuationCriterias();
@@ -131,7 +131,7 @@ angular.module('biCommonsServices', []).
     				var criteria = criterias[criteriaCode];
     				var property;
     				for(var i = 0; i < criteria.properties.length; i++){
-    					if(criteria.properties[i].name === propertyName){
+    					if(criteria.properties[i].name === expressionToParse){
     						property = criteria.properties[i];
     						break;
     					}
@@ -139,12 +139,7 @@ angular.module('biCommonsServices', []).
     				if(property){
     					for(var i = 0; i  < property.expressions.length; i++){
     						var expression = property.expressions[i];
-    						var x = $parse(propertyName)(value);
-    						if (angular.isArray(x)) {
-    							x = $filter('filter')(x, propertyFilterObject);
-    							x = $parse(propertyReturnValue)(x[0]); 
-     						}
-	    					if($parse(expression.rule)({context:value, pValue : x})){
+	    					if($parse(expression.rule)({context:value, pValue : $parse(expressionToParse)(value)})){
 	    						return expression.result;
 	    					}
     					}
