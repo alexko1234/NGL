@@ -171,14 +171,15 @@ public class ValuationCriteriaCodes  extends CommonController {
 		
 		boolean error = false;
 		for (String key : hCriteriaCode.keySet()) {
-			if (hCriteriaCode.get(key) == Boolean.TRUE) {
+			if (hCriteriaCode.get(key)) {
 				Logger.debug("ERROR : real key : " + hCriteriaCode.get(key) + "not found in Reference List keys (mappingVCCodes)");
 				error = true;
 			}
 		}
 		
-		if (error)
-			Logger.error("ERROR : Database has orphelin(s) criteriaCode(s). Bad integrity."); 
+		if (error){
+			Logger.error("ERROR : Database has orphelin(s) criteriaCode(s). Bad integrity.");
+		}
 	}
 	
 	
