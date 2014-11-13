@@ -83,6 +83,13 @@ public class AbstractTests {
 		config.put("rules.key","nglBI" );
 		config.put("rules.changesets","rules/cng/changesets/changesets.xml");
 		
+		config.put("auth.cas.urlvalidator", "https://cas.genoscope.cns.fr:8443/cas/serviceValidate");
+		config.put("auth.cas.urllogin", "https://cas.genoscope.cns.fr:8443/cas/login");
+		config.put("auth.cas.renew", "false");
+	    config.put("auth.mode", "debug");
+	    config.put("auth.method", "cas");
+	    config.put("auth.application", "ngl-bi");
+		
 		return config;
 
 	}
