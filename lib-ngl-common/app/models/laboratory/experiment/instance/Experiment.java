@@ -11,13 +11,14 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
+
 import org.mongojack.MongoCollection;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.common.instance.CommonValidationHelper;
 import validation.experiment.instance.ExperimentValidationHelper;
 import fr.cea.ig.DBObject;
 
@@ -99,7 +100,9 @@ public class Experiment extends DBObject implements IValidation {
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-				
+
+		contextValidation.putObject(CommonValidationHelper.FIELD_TYPE_CODE , typeCode);
+		contextValidation.putObject(CommonValidationHelper.STATE_CODE , state.code);
 		ExperimentValidationHelper.validateCode(this, InstanceConstants.EXPERIMENT_COLL_NAME, contextValidation);
 //		ExperimentValidationHelper.validateState(this.typeCode, this.state, contextValidation);
 		ExperimentValidationHelper.validationExperimentType(typeCode, experimentProperties, contextValidation);

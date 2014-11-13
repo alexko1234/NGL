@@ -29,7 +29,8 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 
 	public static void validationProtocol(String typeCode,String protocolCode,
 			 ContextValidation contextValidation)  {
-		if(contextValidation.getObject("stateCode")!="N" && contextValidation.getObject("stateCode")!=null){
+		String stateCode = getObjectFromContext(STATE_CODE, String.class, contextValidation);
+		if(!stateCode.equals("N")){
 					if(required(contextValidation, protocolCode, "protocol")){
 						try {
 							if(!Protocol.find.isCodeExistForTypeCode(protocolCode, typeCode) ){
@@ -43,7 +44,8 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	}
 	
 	public static void validateResolutionCodes(String typeCode,List<String> resoCodes,ContextValidation contextValidation){
-		if(contextValidation.getObject("stateCode")!=null && contextValidation.getObject("stateCode").equals("F")){
+		String stateCode= getObjectFromContext(STATE_CODE, String.class, contextValidation);
+		if(stateCode.equals("F")){
 			if(required(contextValidation, resoCodes, "resolution")){
 				CommonValidationHelper.validateResolutionCodes(typeCode,resoCodes,contextValidation);
 			}
@@ -53,7 +55,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	}
 	
 	public static void validateState(String typeCode, State state, ContextValidation contextValidation){
-		if(contextValidation.getObject("stateCode")!=null){
+		if(contextValidation.getObject(STATE_CODE)!=null){
 			CommonValidationHelper.validateState(typeCode, state, contextValidation);
 		}
 	}
@@ -62,9 +64,14 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
 		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,true);
 		if(exType!=null){
-			contextValidation.addKeyToRootKeyName("properties");
-			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), true);
-			contextValidation.removeKeyFromRootKeyName("properties");
+			String stateCode=getObjectFromContext(STATE_CODE, String.class, contextValidation);
+			Logger.debug("State code "+stateCode);
+
+			if(!stateCode.equals("N")){
+				contextValidation.addKeyToRootKeyName("properties");
+				ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), true);
+				contextValidation.removeKeyFromRootKeyName("properties");
+			}
 		}
 	}
 	
@@ -103,23 +110,23 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	}
 
 	public static void validateInstrumentUsed(InstrumentUsed instrumentUsed,Map<String,PropertyValue> properties, ContextValidation contextValidation) {
-		Logger.debug("Put statecode"+contextValidation.getObject("stateCode"));
-		if(!contextValidation.getObject("stateCode").equals("N") && contextValidation.getObject("stateCode")!=null){
+		String stateCode = getObjectFromContext(STATE_CODE, String.class, contextValidation);
 			if(ValidationHelper.required(contextValidation, instrumentUsed, "instrumentUsed")){
 				InstrumentUsedType instrumentUsedType =BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsed.typeCode, "typeCode", InstrumentUsedType.find,true);
 				if(instrumentUsedType!=null){
-					contextValidation.addKeyToRootKeyName("properties");
-					ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel(), false);
-					contextValidation.removeKeyFromRootKeyName("properties");
+					if(!stateCode.equals("N")){
+						contextValidation.addKeyToRootKeyName("properties");
+						ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel(), false);
+						contextValidation.removeKeyFromRootKeyName("properties");
+					}
 				}
 				
 				contextValidation.addKeyToRootKeyName("instrumentUsed");
 				instrumentUsed.validate(contextValidation); 
 				contextValidation.removeKeyFromRootKeyName("instrumentUsed");
-			}}
-		
+			}
 	}
-	
+		
 	public static void validateRules(Experiment exp,ContextValidation contextValidation){
 		ArrayList<Object> validationfacts = new ArrayList<Object>();
 		validationfacts.add(exp);

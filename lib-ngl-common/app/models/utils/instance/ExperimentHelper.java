@@ -6,10 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
@@ -17,6 +14,9 @@ import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+
+import org.mongojack.DBQuery;
+
 import play.Logger;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
@@ -50,24 +50,6 @@ public class ExperimentHelper extends InstanceHelpers {
 
 
 	}
-
-
-	/**
-	 * Add/Create trace informations to the experiment object
-	 * @param exp: the Experiment object
-	 * @return the new experiment object with traces
-	 */
-	/*public static Experiment traceInformation(Experiment exp,String user){
-		if (null == exp._id) {
-			//init
-			exp.traceInformation = new TraceInformation();
-			exp.traceInformation.setTraceInformation(user);
-		} else {
-			exp.traceInformation.setTraceInformation(user);
-		}
-
-		return exp;
-	}*/
 
 
 	public static Experiment updateInstrumentCategory(Experiment exp) throws DAOException{
@@ -121,6 +103,23 @@ public class ExperimentHelper extends InstanceHelpers {
 		}
 		
 		return properties;
+	}
+	
+	public static List<String> getAllProcessCodesFromExperiment(Experiment exp){
+		
+		List<String> containerCodes=new ArrayList<String>();
+		List<String> processCodes=new ArrayList<String>();
+		for(ContainerUsed containerUsed:exp.getAllInPutContainer()){
+			containerCodes.add(containerUsed.code);
+		}
+		
+		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("code",containerCodes)).toList();
+		
+		for(Container container:containers){
+			processCodes.addAll(container.inputProcessCodes);
+		}
+		return processCodes;
+		
 	}
 
 }

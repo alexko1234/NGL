@@ -23,14 +23,12 @@ import org.mongojack.DBQuery.Query;
 
 import play.Logger;
 import play.Play;
-
 import rules.services.RulesException;
 import rules.services.RulesServices;
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
-
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
@@ -39,6 +37,8 @@ public class CommonValidationHelper {
 
 	public static final String FIELD_CODE = "code";
 	public static final String FIELD_TYPE_CODE = "typeCode";
+	public static final String STATE_CODE = "stateCode";
+
 	/**
 	 * Validate if code is unique in MongoDB collection
 	 * Unique code is validate if key "_id" not in map contextObjects or if value of key "_id" is null else no code validation

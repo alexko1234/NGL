@@ -57,13 +57,14 @@ public class ContainerUsed implements IValidation{
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
+
 		if(contextValidation.getObject("stateCode").equals("IP")){
 			CommonValidationHelper.validateUniqueInstanceCode(contextValidation, code, Container.class, InstanceConstants.CONTAINER_COLL_NAME);
 		}
-		else {
+		else if(contextValidation.getObject("stateCode").equals("F")) {
 			CommonValidationHelper.validateContainerCode(code, contextValidation);
 		} 
-		if(contextValidation.getObject("typeCode")!=null){
+		if(contextValidation.getObject("typeCode")!=null && !contextValidation.getObject("stateCode").equals("N")){
 			ContainerUsedValidation.validateExperimentProperties(contextValidation.getObject("typeCode").toString(),experimentProperties,contextValidation);
 		}
 	}

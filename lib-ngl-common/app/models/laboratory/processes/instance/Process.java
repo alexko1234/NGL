@@ -40,12 +40,6 @@ public class Process extends DBObject implements IValidation{
 
 	public Map<String,PropertyValue> properties;
 	
-	// Creating one process create many process instance there are sample on container selected
-	// public String aggregationKey; //? used containerInputCode as aggregationKey
-	
-	// User or Equipe
-	//public List<String> equipeCode;
-	
 	// Projects ref
 	public String projectCode;
 	// Samples ref
@@ -63,11 +57,13 @@ public class Process extends DBObject implements IValidation{
 		ProcessValidationHelper.validateId(this, contextValidation);
 		ProcessValidationHelper.validateCode(this, InstanceConstants.PROCESS_COLL_NAME, contextValidation);
 		ProcessValidationHelper.validateProcessType(typeCode,properties,contextValidation);
+		ProcessValidationHelper.validateProcessCategory(categoryCode,contextValidation);
 		ProcessValidationHelper.validateState(typeCode,state, contextValidation);
 		ProcessValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		ProcessValidationHelper.validateContainerCode(containerInputCode, contextValidation);
 		ProcessValidationHelper.validateProjectCode(projectCode, contextValidation);
 		ProcessValidationHelper.validateSampleCode(sampleCode, projectCode, contextValidation);
+		ProcessValidationHelper.validateCurrentExperimentTypeCode(currentExperimentTypeCode,contextValidation);
 	}
 	
 }
