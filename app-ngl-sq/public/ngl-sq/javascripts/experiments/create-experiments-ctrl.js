@@ -387,6 +387,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		$scope.experiment.experimentInformation.enabled = false;
 		$scope.experiment.instrumentProperties.enabled = false;
 		$scope.experiment.instrumentInformation.enabled = false;
+		$scope.setEditConfig(false);
 		if($scope.experiment.value._id != undefined){
 			promises.push($scope.experiment.instrumentProperties.save());
 	
@@ -416,10 +417,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				$scope.message.clazz="alert alert-success";
 				$scope.message.text=Messages('experiments.msg.save.sucess');
 			}
-			$scope.experiment.experimentProperties.enabled = true;
-			$scope.experiment.experimentInformation.enabled = true;
-			$scope.experiment.instrumentProperties.enabled = true;
-			$scope.experiment.instrumentInformation.enabled = true;
+			$scope.experiment.experimentProperties.enabled = false;
+			$scope.experiment.experimentInformation.enabled = false;
+			$scope.experiment.instrumentProperties.enabled = false;
+			$scope.experiment.instrumentInformation.enabled = false;
+			$scope.setEditConfig(false);
 			$scope.$broadcast('refresh');
 			$scope.saveInProgress = false;
 		},function(reason) {
@@ -427,6 +429,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			$scope.experiment.experimentInformation.enabled = true;
 			$scope.experiment.instrumentProperties.enabled = true;
 			$scope.experiment.instrumentInformation.enabled = true;
+			$scope.setEditConfig(true);
 			$scope.$broadcast('refresh');
 			$scope.saveInProgress = false;
 		  });
@@ -436,8 +439,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		return $http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment.value)
 		.success(function(data, status, headers, config) {
 			if(data!=null){
-				$scope.message.clazz="alert alert-success";
-				$scope.message.text=Messages('experiments.msg.save.sucess')
+				$scope.message.clazz = "alert alert-success";
+				$scope.message.text= Messages('experiments.msg.save.sucess');
 				$scope.experiment.value = data;
 				$scope.saveInProgress = false;
 /*   */				$location.path(jsRoutes.controllers.experiments.tpl.Experiments.edit(data.code).url);
@@ -462,10 +465,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	
 	$scope.changeState = function(promises){
 		$q.all(promises).then(function (res) {
-			$scope.experiment.experimentProperties.enabled = true;
-			$scope.experiment.experimentInformation.enabled = true;
-			$scope.experiment.instrumentProperties.enabled = true;
-			$scope.experiment.instrumentInformation.enabled = true;
+			$scope.experiment.experimentProperties.enabled = false;
+			$scope.experiment.experimentInformation.enabled = false;
+			$scope.experiment.instrumentProperties.enabled = false;
+			$scope.experiment.instrumentInformation.enabled = false;
+			$scope.setEditConfig(false);
+			
 			$scope.clearMessages();
 			var promise = $http.put(jsRoutes.controllers.experiments.api.Experiments.nextState($scope.experiment.value.code).url)
 			.success(function(data, status, headers, config) {
@@ -480,7 +485,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 						$scope.$broadcast('experimentToOutput', $scope.experimentType.atomicTransfertMethod);
 						$scope.saveInProgress = false;
 					}
-					$scope.$broadcast('refreshView');
+					$scope.$broadcast('refresh');
 				}
 			})
 			.error(function(data, status, headers, config) {
@@ -501,10 +506,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				$scope.saveInProgress = false;
 			});
 		}, function(reason){
-			$scope.experiment.experimentProperties.enabled = true;
+			$scope.experiment.experimentProperties.enabled =  true;
 			$scope.experiment.experimentInformation.enabled = true;
 			$scope.experiment.instrumentProperties.enabled = true;
 			$scope.experiment.instrumentInformation.enabled = true;
+			$scope.setEditConfig(true);
 			$scope.saveInProgress = false;
 		});
 	};
