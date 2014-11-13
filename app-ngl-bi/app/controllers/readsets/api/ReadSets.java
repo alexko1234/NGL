@@ -173,7 +173,7 @@ public class ReadSets extends ReadSetsController{
 		}
 		
 		if(null != form.productionValuationUser){
-			queries.add(DBQuery.is("bioinformaticValuation.user", form.productionValuationUser));
+			queries.add(DBQuery.is("productionValuation.user", form.productionValuationUser));
 		}
 		
 		if (StringUtils.isNotBlank(form.isSentCCRT)) {
