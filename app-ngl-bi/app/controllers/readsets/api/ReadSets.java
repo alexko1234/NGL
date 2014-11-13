@@ -594,7 +594,7 @@ public class ReadSets extends ReadSetsController{
 			productionVal.user = getCurrentUser();
 			ReadSetValidationHelper.validateValuation(readSet.typeCode, productionVal, ctxVal);
 		}
-		else if (bioinfoVal.valid != readSet.bioinformaticValuation.valid) {
+		if (bioinfoVal.valid != readSet.bioinformaticValuation.valid) {
 			bioinfoVal.date = new Date();
 			bioinfoVal.user = getCurrentUser();
 			ReadSetValidationHelper.validateValuation(readSet.typeCode, bioinfoVal, ctxVal);
