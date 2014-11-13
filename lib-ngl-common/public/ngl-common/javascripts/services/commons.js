@@ -285,6 +285,33 @@ angular.module('commonsServices', []).
 					}
     			}
     		};
+    	}]).directive('defaultValue',['$parse', function($parse) {
+    		var OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?(?:\s+group\s+by\s+(.*))?\s+for\s+(?:([\$\w][\$\w\d]*)|(?:\(\s*([\$\w][\$\w\d]*)\s*,\s*([\$\w][\$\w\d]*)\s*\)))\s+in\s+(.*)$/;
+    		return {
+    			require: 'ngModel',
+    			link: function(scope, element, attrs, ngModel) {
+    				var valmodel = undefined;
+    				var defaultValue = attrs.defaultValue;
+    				
+				    valmodel = attrs.ngModel;
+					
+					var model = undefined;
+					if(valmodel != undefined){
+						model = $parse(valmodel);
+					}
+					
+					if(model != undefined){
+						scope.$watch(model, function(value){
+			                if(ngModel.$modelValue == undefined || ngModel.$modelValue == ""){
+								ngModel.$setViewValue(defaultValue);
+								ngModel.$render();
+							}
+				        });
+					}else{
+						console.log("ng-model required");
+					}
+    			}
+    		};
     	//Return the timestamp of the date in an input
     	//EXAMPLE: <input type="date" ng-model="x" date-timestamp/> the value of x in the scope will be a timestamp
     	}]).directive('dateTimestamp', function() {

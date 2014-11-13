@@ -66,7 +66,7 @@ public class Experiments extends CommonController{
 	
 	public static Result createOrEditExperiment(){
 	
-		return ok(createExperiments.render());
+		return ok(createExperiments.render(getCurrentUser()));
 	}
 
 	
@@ -127,6 +127,8 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.api.routes.javascript.Experiments.updateInstrumentProperties(),
   	    		controllers.experiments.api.routes.javascript.Experiments.getInstrumentProperties(),
   	    		controllers.experiments.api.routes.javascript.Experiments.addComment(),
+  	    		controllers.experiments.api.routes.javascript.Experiments.updateComment(),
+  	    		controllers.experiments.api.routes.javascript.Experiments.deleteComment(),
   	    		controllers.experiments.api.routes.javascript.Experiments.nextState(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.edit(),
   	    		controllers.instruments.api.routes.javascript.Instruments.list(),

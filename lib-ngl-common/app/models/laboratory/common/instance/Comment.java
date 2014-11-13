@@ -2,9 +2,6 @@ package models.laboratory.common.instance;
 
 import java.util.Date;
 
-import models.administration.authorisation.User;
-import models.utils.HelperObjects;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
@@ -18,7 +15,7 @@ import validation.IValidation;
  */
 public class Comment implements IValidation {
 
-	
+	public String code;
 	public String comment;
 	public String createUser;
 	public Date creationDate;

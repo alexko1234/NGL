@@ -209,9 +209,11 @@ public class Experiments extends CommonController{
 	public static Result addComment(String code){
 		Form<Comment> commentFilledForm = getFilledForm(commentForm,Comment.class);
 		Comment com = commentFilledForm.get();
-
+		
 		com.createUser = getCurrentUser();
-
+		com.creationDate = new Date();
+		com.code = CodeHelper.generateExperimentCommentCode(com);
+		
 		if (!commentFilledForm.hasErrors()) {
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.push("comments",com);
@@ -222,6 +224,43 @@ public class Experiments extends CommonController{
 		}
 
 		return badRequest(commentFilledForm.errorsAsJson());
+	}
+	
+	public static Result deleteComment(String code, String commentCode){
+			Experiment exp = MongoDBDAO.findOne(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code));
+			Comment com = null;
+			for(Comment c : exp.comments){
+				if(c.code.equals(commentCode)){
+					com = c;
+				}
+			}
+			if(getCurrentUser().equals(com.createUser)){
+				Builder builder = new DBUpdate.Builder();
+				builder=builder.pull("comments",com);
+	
+				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code).and(DBQuery.is("comments.code", commentCode)),builder);
+				
+				return ok();
+			}
+			return forbidden();
+	}
+	
+	public static Result updateComment(String code){
+		Form<Comment> commentFilledForm = getFilledForm(commentForm,Comment.class);
+		Comment comment = commentFilledForm.get();
+		if(getCurrentUser().equals(comment.createUser)){
+			if (!commentFilledForm.hasErrors()) {
+				Builder builder = new DBUpdate.Builder();
+				builder=builder.set("comments.$",comment);
+	
+				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code).and(DBQuery.is("comments.code", comment.code)),builder);
+				
+				return ok(Json.toJson(comment));
+			}
+	
+			return badRequest(commentFilledForm.errorsAsJson());
+		}
+		return forbidden();
 	}
 
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)

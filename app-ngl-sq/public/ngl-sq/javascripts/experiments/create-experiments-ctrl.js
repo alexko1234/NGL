@@ -4,6 +4,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		containerOutProperties:[],
 		outputVoid:false,
 		doPurif:false,
+		comment:{},
 		doQc:false,
 		value: {
 			code:"",
@@ -49,9 +50,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	
 	$scope.experiment.comments = {
 			save:function(){
+				if($scope.experiment.comment.code == undefined){
 				$scope.clearMessages();
 				//$scope.experiment.value.comments.push({"comment":$scope.experiment.comment});
-				$http.put(jsRoutes.controllers.experiments.api.Experiments.addComment($scope.experiment.value.code).url, {"comment":$scope.experiment.comment})
+				$http.post(jsRoutes.controllers.experiments.api.Experiments.addComment($scope.experiment.value.code).url, {"comment":$scope.experiment.comment.comment})
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						$scope.message.clazz="alert alert-success";
@@ -67,6 +69,53 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					$scope.message.details = data;
 					$scope.message.isDetails = true;
 				});
+				}else{
+					this.update($scope.experiment.comment);
+				}
+			},
+			update:function(com){
+				$scope.clearMessages();
+				//$scope.experiment.value.comments.push({"comment":$scope.experiment.comment});
+				$http.put(jsRoutes.controllers.experiments.api.Experiments.updateComment($scope.experiment.value.code).url, com)
+				.success(function(data, status, headers, config) {
+					if(data!=null){
+						$scope.message.clazz="alert alert-success";
+						$scope.message.text=Messages('experiments.msg.save.sucess');
+						$scope.experiment.comment = {};
+					}
+				})
+				.error(function(data, status, headers, config) {
+					$scope.message.clazz = "alert alert-danger";
+					$scope.message.text = Messages('experiments.msg.save.error');
+
+					$scope.message.details = data;
+					$scope.message.isDetails = true;
+				});
+			},
+			delete:function(com){
+					$scope.clearMessages();
+					//$scope.experiment.value.comments.push({"comment":$scope.experiment.comment});
+					console.log(com);
+					$http.delete(jsRoutes.controllers.experiments.api.Experiments.deleteComment($scope.experiment.value.code, com.code).url)
+					.success(function(data, status, headers, config) {
+						if(data!=null){
+							$scope.message.clazz="alert alert-success";
+							$scope.message.text=Messages('experiments.msg.save.sucess');
+							//$scope.experiment.value.comments.pull(com);
+							for(var i=0;$scope.experiment.value.comments.length;i++){
+								if($scope.experiment.value.comments[i].code == com.code){
+									$scope.experiment.value.comments.splice(i, 1);
+								}
+							}
+						}
+					})
+					.error(function(data, status, headers, config) {
+						$scope.message.clazz = "alert alert-danger";
+						$scope.message.text = Messages('experiments.msg.save.error');
+
+						$scope.message.details = data;
+						$scope.message.isDetails = true;
+					});
 			}
 	};
 	

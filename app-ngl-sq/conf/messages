@@ -137,6 +137,7 @@ experiments.generateOutput = Générer tube sortie
 experiment.noComments = Pas de commentaire
 experiment.leaveComment = Laissez votre commentaire
 experiment.addComment = Ajouter un commentaire
+experiment.comment.update = Mettre à jour
 experiment.seeComments = Voir les commentaires
 experiment.sendComment = Envoyer
 experiment.cancelComment = Annuler

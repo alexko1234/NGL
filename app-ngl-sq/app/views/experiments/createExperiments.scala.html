@@ -1,4 +1,4 @@
-@()
+@(currentUser:java.lang.String)
 
 @import views.html.helper._
 
@@ -13,13 +13,15 @@
       <div class="modal-body">
       	<form>
         	<label>@Messages("experiment.leaveComment")</label>
-			<textarea  class="form-control" ng-model="experiment.comment" ></textarea>
+			<textarea  class="form-control" ng-model="experiment.comment.comment" ></textarea>
 		
 		</form>
       </div>
       <div class="modal-footer">
         <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">@Messages("experiment.cancelComment")</button>
-		<button data-dismiss="modal" class="btn btn-primary" ng-disabled="!experiment.experimentInformation.enabled" ng-click="experiment.comments.save();">@Messages("experiment.sendComment")</button>
+		<button data-dismiss="modal" class="btn btn-primary" ng-if="experiment.comment.code == undefined"  ng-click="experiment.comments.save();">@Messages("experiment.sendComment")</button>
+      	<button data-dismiss="modal" class="btn btn-primary" ng-if="experiment.comment.code != undefined" ng-click="experiment.comments.update(experiment.comment);">@Messages("experiment.comment.update")</button>
+      
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -66,7 +68,7 @@
 		<button class="btn btn-primary" ng-disabled="saveInProgress == true" ng-click="saveAllPromise();" data-toggle="tooltip"  title="@Messages("experiments.save_all")">
 			<i class="fa fa-save"></i>
 		</button>
-		<button class="btn btn-default"  ng-disabled="experiment.value._id == null"  data-toggle="modal" data-target="#myModal">@Messages("experiment.addComment")</button>
+		<button class="btn btn-default"  ng-disabled="experiment.value._id == null"  ng-click="experiment.comment = {}" data-toggle="modal" data-target="#myModal">@Messages("experiment.addComment")</button>
 		
 										
 	</div>
@@ -306,6 +308,9 @@
    	</div>
     <div class="col-lg-8">
      	{{com.comment}}
+    </div>
+    <button class="btn btn-danger pull-right" ng-show="com.createUser == '@currentUser'" ng-click="experiment.comments.delete(com)"><i class="fa fa-trash-o"></i></button>
+    <button class="btn btn-primary pull-right" ng-show="com.createUser == '@currentUser'" data-toggle="modal" data-target="#myModal" ng-click="experiment.comment = com"><i class="fa fa-edit"></i></button>
     </div>
    </li>   
   </ul>
