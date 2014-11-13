@@ -180,7 +180,7 @@ public class ExperimentTests extends AbstractTests{
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.hasErrors()).isTrue();
-		assertThat(contextValidation.errors.size()).isEqualTo(2);
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
 				
 	}
 	
