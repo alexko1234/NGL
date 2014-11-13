@@ -37,7 +37,7 @@ public class ExperimentTests extends AbstractTests{
 	protected static ALogger logger=Logger.of("ExperimentTest");
 
 	
-	//@Test
+	@Test
 	public void validatePropertiesFileImgErr() {
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		
@@ -152,7 +152,7 @@ public class ExperimentTests extends AbstractTests{
 		
 	}
 	
-	//@Test
+	@Test
 	public void validateExperimentPrepaflowcell() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
@@ -162,7 +162,7 @@ public class ExperimentTests extends AbstractTests{
 				
 	}
 	
-	//@Test
+	@Test
 	public void validateExperimentSameTagInPosition() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
@@ -185,7 +185,7 @@ public class ExperimentTests extends AbstractTests{
 	}
 	
 	
-	//@Test
+	@Test
 	public void validateExperimentManyTagCategory() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
@@ -207,7 +207,7 @@ public class ExperimentTests extends AbstractTests{
 				
 	}
 	
-	//@Test
+	@Test
 	public void validateExperimentSumPercentInPutContainer() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
@@ -229,7 +229,7 @@ public class ExperimentTests extends AbstractTests{
 				
 	}
 	
-	//@Test
+	@Test
 	public void validateExperimentPrepaflowcellLaneNotNull() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
