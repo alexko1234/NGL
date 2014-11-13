@@ -54,6 +54,7 @@ import com.mongodb.BasicDBObject;
 
 import controllers.CodeHelper;
 import controllers.CommonController;
+import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -240,7 +241,6 @@ public class Experiments extends CommonController{
 		ExperimentValidationHelper.validateRules(exp, ctxValidation);
 
 		if(!ctxValidation.hasErrors()){
-
 			doCalculations(exp);
 
 			Builder builder = new DBUpdate.Builder();
@@ -324,7 +324,9 @@ public class Experiments extends CommonController{
 
 			if (!ctxValidation.hasErrors()) {
 				ctxValidation.setCreationMode();
-				exp = (Experiment) InstanceHelpers.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp,ctxValidation);
+				exp.validate(ctxValidation);
+				doCalculations(exp);
+				MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME,exp);
 
 				if(!ctxValidation.hasErrors()){
 					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,Process.class,

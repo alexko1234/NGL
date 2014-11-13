@@ -64,8 +64,8 @@ public class ContainerUsed implements IValidation{
 		else if(contextValidation.getObject("stateCode").equals("F")) {
 			CommonValidationHelper.validateContainerCode(code, contextValidation);
 		} 
-		if(contextValidation.getObject("typeCode")!=null && !contextValidation.getObject("stateCode").equals("N")){
-			ContainerUsedValidation.validateExperimentProperties(contextValidation.getObject("typeCode").toString(),experimentProperties,contextValidation);
+		if(contextValidation.getObject("typeCode")!=null){
+			ContainerUsedValidation.validateExperimentProperties(contextValidation.getObject("typeCode").toString(),experimentProperties,contextValidation,true);
 		}
 	}
 
