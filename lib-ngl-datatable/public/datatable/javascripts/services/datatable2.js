@@ -159,7 +159,6 @@ angular.module('datatableServices', []).
     					configMaster:undefined,
     					allResult:undefined,
     					displayResult:undefined,
-    					displayCSVResult:undefined,
     					totalNumberRecords:0,
     					urlCache:{}, //used to cache data load from column with url attribut
     					lastSearchParams : undefined, //used with pagination when length or page change
@@ -397,13 +396,13 @@ angular.module('datatableServices', []).
 		    			 * Selected only the records will be displayed.
 		    			 * Based on pagination configuration
 		    			 */
-		    			computeDisplayResult: function(context){
+		    			computeDisplayResult: function(){
 		    				//to manage local pagination
 		    				var configPagination = this.config.pagination;
 		    				
 		    				var _displayResult = [];
 		    				
-		    				if(configPagination.active && !this.isRemoteMode(configPagination.mode) && context!=="exportCSV"){
+		    				if(configPagination.active && !this.isRemoteMode(configPagination.mode)){
 		    					_displayResult = angular.copy(this.allResult.slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
 		    							(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage)));
 		    				}else{ //to manage all records or server pagination
@@ -417,41 +416,26 @@ angular.module('datatableServices', []).
 	    					}, displayResultTmp);
 		    				
 		    				//group function
-		    				if (context!=="exportCSV"){
-			    				if(this.config.group.active && this.config.group.data){
-			    					this.displayResult = this.addGroup(displayResultTmp);					
-			    				}else{
-			    					this.displayResult = displayResultTmp;
-			    				}
+		    				if(this.config.group.active && this.config.group.data){
+		    					this.displayResult = this.addGroup(displayResultTmp);					
+		    				}else{
+		    					this.displayResult = displayResultTmp;
 		    				}
-		    				else {
-			    				if(this.config.group.active && this.config.group.data){
-			    					this.displayCSVResult = this.addGroup(displayResultTmp);					
-			    				}else{
-			    					this.displayCSVResult = displayResultTmp;
-			    				}		    					
-		    				}
-
-		    				this.loadUrlColumnProperty(context);
+		    				
+		    				this.loadUrlColumnProperty();
 		    				
 		    				if(this.config.edit.byDefault){
 		    					this.config.edit.withoutSelect = true;
 		    					this.setEdit();
 		    				}		    						    				    				
 		    			},
-
 		    			
-		    			loadUrlColumnProperty :function(context){
+		    			loadUrlColumnProperty :function(){
 		    				var urlColumns = this.getColumnsConfig().filter(function(column){
 		    					return (column.url !== undefined);
 		    				});
 		    				
-		    				if (context!=="exportCSV"){
-		    					var displayResult = this.displayResult;
-		    				}
-		    				else {
-		    					var displayResult = this.displayCSVResult;
-		    				}
+		    				var displayResult = this.displayResult;
 		    				var urlQueries = [];
 		    				var urlCache = this.urlCache;
 		    				
@@ -1483,13 +1467,24 @@ angular.module('datatableServices', []).
 		    			 * Function to export data in a CSV file
 		    			 */
 		    			exportCSV : function() {
-		    				var txt = "", delimiter = this.config.exportCSV.delimiter;
-		    				var colValues, lineValue = "", that = this; 
+		    				var delimiter = this.config.exportCSV.delimiter, lineValue = "", that = this; 		    				
 		    				
-		    				this.computeDisplayResult("exportCSV"); //redefined the result 
-		    				var results = this.displayCSVResult;
+		    				//calcule results ( code extracted from method computeDisplayResult() )
+		    				var displayResultTmp = [], _displayResult = [];
+		    				_displayResult = angular.copy(this.allResult);		    					
+		    				angular.forEach(_displayResult, function(value, key){
+		    					 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false};
+	    						 this.push({data:value, line:line});
+	    					}, displayResultTmp);
+		    				_displayResult = [];
+		    				if(this.config.group.active && this.config.group.data){
+		    					displayResultTmp = this.addGroup(displayResultTmp);					
+		    				}
+		    				this.loadUrlColumnProperty();
 		    				
-		    				if (results) {		    					
+		    				
+		    				//manage results
+		    				if (displayResultTmp) {		    					
 		    					var columnsToPrint = this.config.columns;
 		    					
 		    					//header
@@ -1499,28 +1494,31 @@ angular.module('datatableServices', []).
 		    					lineValue += "\n";
 		    					
 		    					//data
-		    					results.forEach(function(result) {
+		    					displayResultTmp.forEach(function(result) {
 		    						columnsToPrint.forEach(function(column) {	    							
-			    						if (result.data.group) {
-			    							//var colValue = $parse(column.id)(result.data.group);
-			    							var property = column.id;
-				    						property += (column.filter)?'|'+column.filter:'';
-				    						property += that.getFormatter(column); 
-				    						var propertyGetter = $parse(property);
-			    							var colValue = propertyGetter(result.data.group);
-			    							
-			    						}
-			    						else {
+			    						if (!result.data.group) {
 				    						var property = column.property;
 				    						property += (column.filter)?'|'+column.filter:'';
 				    						property += that.getFormatter(column); 
 				    						var propertyGetter = $parse(property);
-			    							var colValue = propertyGetter(result.data);
+			    							var colValue = propertyGetter(result.data);			    							
+			    						}
+			    						else {
+			    							var property = column.id;
+				    						property += (column.filter)?'|'+column.filter:'';
+				    						property += that.getFormatter(column); 
+				    						try {
+				    							var colValue = $parse(property)(result.data.group);
+				    						}
+				    						catch(e) {
+				    							var colValue = $parse(column.id)(result.data.group);
+				    						}
 			    						}
 			    						lineValue = lineValue + ((colValue!=null)&&(colValue)?colValue:"") + delimiter;
 		    						});
 		    						lineValue = lineValue + "\n";
 		    					});
+		    					displayResultTmp = [];
 		    					
 		    					//fix for the accents in Excel : add BOM (byte-order-mark)
 		    					var fixedstring = "\ufeff" + lineValue;		    							    					
