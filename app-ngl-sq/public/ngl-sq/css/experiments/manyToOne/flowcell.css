@@ -58,6 +58,12 @@
 
 
 /* COMPO FLOWCELL INPUTS*/
+
+.headButtonEye{
+	float: left;
+	margin: 1px 0px 1px 20px;
+}
+
 .compoFlowcel {	
     margin-left: 60px;
     width: 400px;

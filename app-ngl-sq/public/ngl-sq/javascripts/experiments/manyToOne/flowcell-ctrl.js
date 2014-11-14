@@ -328,6 +328,29 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		$scope.rows[index] = !$scope.rows[index];
 	};
 	
+	$scope.hideRowAll = function(){
+	    for (var i=0; i<$scope.laneCount;i++){	
+		$scope.rows[i] = false;
+	    }	    
+	    $scope.isAllOpen = false;
+	};
+	
+	$scope.showRowAll = function(){
+	    for (var i=0; i<$scope.laneCount;i++){	
+		$scope.rows[i] = true;
+	    }	    
+	    $scope.isAllOpen = true;
+	};
+	
+	$scope.isFilled = function(){
+	    for (var i=0; i<$scope.laneCount;i++){
+		if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length >0){
+		    return true;
+		}
+	    }
+	    return false;
+	};
+	
 	$scope.init_flowcell = function(laneCount){
 		$scope.laneCount = laneCount;
 		if(!$scope.experiment.editMode){
@@ -371,6 +394,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	$scope.rows = [];
 	$scope.laneCount = 0;
 	$scope.view = 1;
+	$scope.isAllOpen = true;
 	
 	if($scope.experiment.editMode){
 		$scope.atomicTransfere.loadExperiment($scope.datatable);

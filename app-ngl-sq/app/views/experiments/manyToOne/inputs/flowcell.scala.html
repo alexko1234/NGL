@@ -42,13 +42,13 @@
 					<td class="col-sm-1">
 						<input class="form-control input-small valueInput" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" ng-model="container.percentage" title='@Messages("containers.table.percentage")'/>
 					</td>					
-					<td  title="{{getTags(container.contents) | unique}}" ng-init="nbItem = 5">					
-						<div ng-repeat="content in container.contents | unique:'properties.tag.value' |  limitTo:nbItem">
+					<td  title="{{getTags(container.contents) | unique}}" ng-init="nbItem.data = 3">					
+						<div ng-repeat="content in container.contents | unique:'properties.tag.value' |  limitTo:nbItem.data" bt-resize>
 								{{content.properties.tag.value}}
+								<bt-resize-buttons ng-if="$last"></bt-resize-buttons>
 						</div>
 						
-						<button ng-show="nbItem==5 && container.contents.length>5" ng-click="nbItem=container.contents.length" class="small-litte-icone-transparent"> <i><b>...</b></i> </button>
-						<button ng-show="nbItem>5 && container.contents.length>5" ng-click="nbItem=5" class="small-litte-icone-transparent "> <i class="fa fa-minus-square-o"></i> </button>
+						
 												
 					</td>
 					<td title="{{getSampleTypeCodes(container.contents) | unique}}">
@@ -69,9 +69,16 @@
 			</table>
 		</div>
 		<div class="col-md-5 col-lg-5 compoFlowcel">
-		<h2>@Messages("experiments.flowcell.design") :</h2>
+		<h2>@Messages("experiments.flowcell.design") :</h2> 
+			
 		<table class="table" >
-		@for(i <- 0 to laneCount-1) {
+		<tr>
+		<th>
+		<button ng-click="hideRowAll()"  ng-if="isFilled() && isAllOpen" class="litte-eye headButtonEye"><i class="fa fa-eye-slash"></i></button>
+		<button ng-click="showRowAll()"  ng-if="isFilled() && !isAllOpen" class="litte-eye headButtonEye"><i class="fa fa-eye"></i></button>	
+		</th>
+		</tr>
+		@for(i <- 0 to laneCount-1) {			
 		<tr class="flowCellLane">			
 			<th>
 				<b class="numberLane">@(i+1)</b>
@@ -82,10 +89,10 @@
 				</th>
 			
 			
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" colspan="3">			
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" colspan="5">			
 		<!-- <td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && !rows[@i]" colspan="3">  -->
 			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length == 0">
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0">
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0">
 				<div ng-hide="rows[@i]" class="LaneSummary">
 					<span  ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds">
 						{{flowcell.code}} / {{flowcell.percentage}}% / PhiX:{{experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties.phixPercent.value || "nr"}}%;<br/>
@@ -120,23 +127,25 @@
 						<td>
 							<input class="form-control valueInput" type="text" placeholder='@Messages("containers.table.percentage")' title='@Messages("containers.table.percentage")' ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-model="flowcell.percentage" />
 						</td>
-						<td ng-init="nbItem = 5">
-							<div class="tagCell" title="{{getSampleAndTags(flowcell) | unique}}" ng-repeat="sampleAndTag in getSampleAndTags(flowcell) | unique | limitTo:nbItem">
-								{{sampleAndTag}}<br>
-							</div>
-								
-						<button ng-show="nbItem==5 && getSampleAndTags(flowcell).length>5" ng-click="nbItem=getSampleAndTags(flowcell).length" class="small-litte-icone-transparent"> <i><b>...</b></i> </button>
-						<button ng-show="nbItem>5 && getSampleAndTags(flowcell).length>5" ng-click="nbItem=5" class="small-litte-icone-transparent "> <i class="fa fa-minus-square-o"></i> </button>
+						<td>
+							<div ng-init="resize2.value=5">
+								<div class="tagCell" title="{{getSampleAndTags(flowcell) | unique}}" ng-repeat="sampleAndTag in getSampleAndTags(flowcell) | unique | limitTo:resize2.value" bt-resize>
+									{{sampleAndTag}}<br/>
+									<bt-resize-buttons ng-if="$last"></bt-resize-buttons>
+								</div>
+							</div>						
 							
 							
 						</td>
-						<td  title="{{getTags(flowcell.contents) | unique}}" ng-init="nbItem2 = 5">
-						<div ng-repeat="content in flowcell.contents | unique:'properties.tag.value' |  limitTo:nbItem2">
+						<td  title="{{getTags(flowcell.contents) | unique}}">
+						<div ng-init="resize3.value=5">
+							<div ng-repeat="content in flowcell.contents | unique:'properties.tag.value' | limitTo:resize3.value" bt-resize>
 								{{content.properties.tag.value}}
-							</div>							
+								<bt-resize-buttons ng-if="$last"></bt-resize-buttons>		
+							</div>
+						</div>														
 							
-						<button ng-show="nbItem2==5 && flowcell.contents.length>5" ng-click="nbItem2=flowcell.contents.length" class="small-litte-icone-transparent"> <i><b>...</b></i> </button>
-						<button ng-show="nbItem2>5 && flowcell.contents.length>5" ng-click="nbItem2=5" class="small-litte-icone-transparent "> <i class="fa fa-minus-square-o"></i> </button>
+													
 						</td>
 						<td title="{{getSampleTypeCodes(flowcell.contents) | unique}}">
 							<div ng-repeat="content in flowcell.contents | unique:'sampleTypeCode' |  limitTo:12">
@@ -152,7 +161,7 @@
 								<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInputOnAtomic(@i,container)"><i class="fa fa-trash-o"></i></button>
 					    </td>  -->
 					</tr>
-					<tr ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable><td colspan=6> </td></tr>
+				<!-- 	<tr ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable><td colspan=6> </td></tr>  -->
 				</table>
 			</div>
 			</td>			
