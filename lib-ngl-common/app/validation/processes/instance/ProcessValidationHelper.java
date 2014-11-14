@@ -30,7 +30,7 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 
 	public static void validateCurrentExperimentTypeCode(String currentExperimentTypeCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, currentExperimentTypeCode, "currentExperimentTypeCode", ExperimentType.find,false);
+		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, currentExperimentTypeCode, "currentExperimentTypeCode", ExperimentType.find,false);
 	}
 
 }
