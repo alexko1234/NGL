@@ -35,7 +35,7 @@ public class ProjectImportCNG extends AbstractImportDataCNG{
 		projects = limsServices.findProjectToModify(contextError);
 		//delete old projects
 		for (Project project : projects) {
-			MongoDBDAO.deleteByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.name);
+			MongoDBDAO.deleteByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, project.code);
 		}
 		//save updated projects
 		projs=InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError, true);
