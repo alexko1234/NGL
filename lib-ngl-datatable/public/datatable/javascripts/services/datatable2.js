@@ -159,6 +159,7 @@ angular.module('datatableServices', []).
     					configMaster:undefined,
     					allResult:undefined,
     					displayResult:undefined,
+    					displayCSVResult:undefined,
     					totalNumberRecords:0,
     					urlCache:{}, //used to cache data load from column with url attribut
     					lastSearchParams : undefined, //used with pagination when length or page change
@@ -396,13 +397,13 @@ angular.module('datatableServices', []).
 		    			 * Selected only the records will be displayed.
 		    			 * Based on pagination configuration
 		    			 */
-		    			computeDisplayResult: function(){
+		    			computeDisplayResult: function(context){
 		    				//to manage local pagination
 		    				var configPagination = this.config.pagination;
 		    				
 		    				var _displayResult = [];
 		    				
-		    				if(configPagination.active && !this.isRemoteMode(configPagination.mode)){
+		    				if(configPagination.active && !this.isRemoteMode(configPagination.mode) && context!=="exportCSV"){
 		    					_displayResult = angular.copy(this.allResult.slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
 		    							(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage)));
 		    				}else{ //to manage all records or server pagination
@@ -416,26 +417,41 @@ angular.module('datatableServices', []).
 	    					}, displayResultTmp);
 		    				
 		    				//group function
-		    				if(this.config.group.active && this.config.group.data){
-		    					this.displayResult = this.addGroup(displayResultTmp);					
-		    				}else{
-		    					this.displayResult = displayResultTmp;
+		    				if (context!=="exportCSV"){
+			    				if(this.config.group.active && this.config.group.data){
+			    					this.displayResult = this.addGroup(displayResultTmp);					
+			    				}else{
+			    					this.displayResult = displayResultTmp;
+			    				}
 		    				}
-		    				
-		    				this.loadUrlColumnProperty();
+		    				else {
+			    				if(this.config.group.active && this.config.group.data){
+			    					this.displayCSVResult = this.addGroup(displayResultTmp);					
+			    				}else{
+			    					this.displayCSVResult = displayResultTmp;
+			    				}		    					
+		    				}
+
+		    				this.loadUrlColumnProperty(context);
 		    				
 		    				if(this.config.edit.byDefault){
 		    					this.config.edit.withoutSelect = true;
 		    					this.setEdit();
 		    				}		    						    				    				
 		    			},
+
 		    			
-		    			loadUrlColumnProperty :function(){
+		    			loadUrlColumnProperty :function(context){
 		    				var urlColumns = this.getColumnsConfig().filter(function(column){
 		    					return (column.url !== undefined);
 		    				});
 		    				
-		    				var displayResult = this.displayResult;
+		    				if (context!=="exportCSV"){
+		    					var displayResult = this.displayResult;
+		    				}
+		    				else {
+		    					var displayResult = this.displayCSVResult;
+		    				}
 		    				var urlQueries = [];
 		    				var urlCache = this.urlCache;
 		    				
@@ -1466,10 +1482,12 @@ angular.module('datatableServices', []).
 		    			/**
 		    			 * Function to export data in a CSV file
 		    			 */
-		    			exportCSV : function(results) {
-		    				this.config.exportCSV.start=true;
+		    			exportCSV : function() {
 		    				var txt = "", delimiter = this.config.exportCSV.delimiter;
-		    				var colValues, lineValue = "", that = this, results = this.allResult; 
+		    				var colValues, lineValue = "", that = this; 
+		    				
+		    				this.computeDisplayResult("exportCSV"); //redefined the result 
+		    				var results = this.displayCSVResult;
 		    				
 		    				if (results) {		    					
 		    					var columnsToPrint = this.config.columns;
@@ -1481,15 +1499,24 @@ angular.module('datatableServices', []).
 		    					lineValue += "\n";
 		    					
 		    					//data
-		    					results.forEach(function(result) {		    						
-		    						columnsToPrint.forEach(function(column) {
-		    							
-			    						var property = column.property;
-			    						property += (column.filter)?'|'+column.filter:'';
-			    						property += that.getFormatter(column); 
-			    						var propertyGetter = $parse(property);
-			    						var colValue = propertyGetter(result);
-			    						
+		    					results.forEach(function(result) {
+		    						columnsToPrint.forEach(function(column) {	    							
+			    						if (result.data.group) {
+			    							//var colValue = $parse(column.id)(result.data.group);
+			    							var property = column.id;
+				    						property += (column.filter)?'|'+column.filter:'';
+				    						property += that.getFormatter(column); 
+				    						var propertyGetter = $parse(property);
+			    							var colValue = propertyGetter(result.data.group);
+			    							
+			    						}
+			    						else {
+				    						var property = column.property;
+				    						property += (column.filter)?'|'+column.filter:'';
+				    						property += that.getFormatter(column); 
+				    						var propertyGetter = $parse(property);
+			    							var colValue = propertyGetter(result.data);
+			    						}
 			    						lineValue = lineValue + ((colValue!=null)&&(colValue)?colValue:"") + delimiter;
 		    						});
 		    						lineValue = lineValue + "\n";
@@ -1507,7 +1534,6 @@ angular.module('datatableServices', []).
 		    				else {
 		    					alert("No data to print. Select the data you need");
 		    				}	
-		    				this.config.exportCSV.start=false;
 		    			},
 		    			
 		    			/**
