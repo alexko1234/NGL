@@ -204,6 +204,9 @@ public class Workflows {
 			Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet, true);	
 			if(TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
 				readSet.bioinformaticValuation.valid = readSet.productionValuation.valid;
+				readSet.bioinformaticValuation.user = readSet.productionValuation.user;
+				readSet.bioinformaticValuation.date = readSet.productionValuation.date;
+				
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 						DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation.valid", readSet.bioinformaticValuation.valid));
 			}
