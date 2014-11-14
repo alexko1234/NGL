@@ -138,11 +138,11 @@ margin: 8px 0 8px;
 }
 
 .flowCellLane .table{
-	margin-bottom: 20px;
+	margin-bottom: 0px;
 }
 
 .tagCell{
-	width: 150px;
+	width: 112px;
 	text-align: left;
 }
 
@@ -166,9 +166,22 @@ margin: 8px 0 8px;
 	
 }
 
+.dropZone{
+	border: 0;
+}
+
+.flowCellLane .table>tbody>tr>th:last-child:not([ng-repeat="property in experiment.containerOutProperties"]),
+.flowCellLane .table>tbody>tr>td:last-child:not([ng-repeat="property in experiment.containerOutProperties"]):not(.dropZone){
+	border-right: 1px solid #ddd;
+}
+
+
+
+/*
 .LaneOutput{	
 	border-right: 1px solid #ddd;
 }
+*/
 
 /* EXPERIMENT ROADMAP*/
 

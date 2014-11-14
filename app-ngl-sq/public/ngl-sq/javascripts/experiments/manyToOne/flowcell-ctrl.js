@@ -128,8 +128,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
-		console.log(data);
-		// Modification du 25_09_2014: introduction du paramétre éditable des colonnes pour les propriétés d'expérience
+		console.log(data);		
 		var unit = "";
 		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{});
@@ -344,7 +343,8 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	
 	$scope.isFilled = function(){
 	    for (var i=0; i<$scope.laneCount;i++){
-		if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length >0){
+		if(angular.isDefined($scope.experiment.value.atomicTransfertMethods[i])
+			&& $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length >0){
 		    return true;
 		}
 	    }
