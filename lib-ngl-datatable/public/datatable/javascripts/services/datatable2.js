@@ -1467,7 +1467,7 @@ angular.module('datatableServices', []).
 		    			 * Function to export data in a CSV file
 		    			 */
 		    			exportCSV : function() {
-		    				var delimiter = this.config.exportCSV.delimiter, lineValue = "", that = this; 		    				
+		    				var delimiter = this.config.exportCSV.delimiter, lineValue = "", colValue, that = this; 		    				
 		    				
 		    				//calcule results ( code extracted from method computeDisplayResult() )
 		    				var displayResultTmp = [], _displayResult = [];
@@ -1476,49 +1476,52 @@ angular.module('datatableServices', []).
 		    					 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false};
 	    						 this.push({data:value, line:line});
 	    					}, displayResultTmp);
-		    				_displayResult = [];
+		    				_displayResult = undefined;
 		    				if(this.config.group.active && this.config.group.data){
 		    					displayResultTmp = this.addGroup(displayResultTmp);					
 		    				}
-		    				this.loadUrlColumnProperty();
-		    				
 		    				
 		    				//manage results
 		    				if (displayResultTmp) {		    					
-		    					var columnsToPrint = this.config.columns;
-		    					
+		    					var columnsToPrint = this.config.columns;	    					
 		    					//header
 		    					columnsToPrint.forEach(function(column) {
 		    						lineValue = lineValue + Messages(column.header) + delimiter;
 		    					}); 
 		    					lineValue += "\n";
-		    					
 		    					//data
 		    					displayResultTmp.forEach(function(result) {
-		    						columnsToPrint.forEach(function(column) {	    							
-			    						if (!result.data.group) {
-				    						var property = column.property;
-				    						property += (column.filter)?'|'+column.filter:'';
+		    						columnsToPrint.forEach(function(column) {	
+		    							//algo to set colValue (value of the column)
+		    			    			if (!result.line.group && !angular.isDefined(column.url)) {
+		    			    				var property = column.property;
+		    			    				property += (column.filter)?'|'+column.filter:'';
 				    						property += that.getFormatter(column); 
-				    						var propertyGetter = $parse(property);
-			    							var colValue = propertyGetter(result.data);			    							
-			    						}
-			    						else {
-			    							var property = column.id;
-				    						property += (column.filter)?'|'+column.filter:'';
-				    						property += that.getFormatter(column); 
-				    						try {
-				    							var colValue = $parse(property)(result.data.group);
-				    						}
-				    						catch(e) {
-				    							var colValue = $parse(column.id)(result.data.group);
-				    						}
-			    						}
+			    							colValue = $parse(property)(result.data);
+		    			    			} else if(result.line.group) {
+		    			    				var v = $parse("group."+column.id)(result.data);
+		    			    				//if error in group function
+		    			    				if (angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#") {
+		    			    					colValue = v;
+		    			    				} else if(angular.isDefined(v) && !that.config.group.columns[column.id]) {
+		    			    					//not filtered properties because used during the compute
+		    			    					colValue = $parse("group."+column.id+that.getFormatter(column))(result.data);
+		    			    				} else if(angular.isDefined(v) && that.config.group.columns[column.id]) {
+		    			    					var expression = column.id;
+		    			    					expression += (column.filter)?'|'+column.filter:'';
+		    			    					colValue = $parse("group."+expression+that.getFormatter(column))(result.data);
+		    			    				} else {
+		    			    					colValue =  undefined;
+		    			    				}			    							    				
+		    			    			} else if(!result.line.group && angular.isDefined(column.url)) {
+		    			    				alert("Url column is not yet implemented !");
+		    			    			}
+		    			    			
 			    						lineValue = lineValue + ((colValue!=null)&&(colValue)?colValue:"") + delimiter;
 		    						});
 		    						lineValue = lineValue + "\n";
 		    					});
-		    					displayResultTmp = [];
+		    					displayResultTmp = undefined;
 		    					
 		    					//fix for the accents in Excel : add BOM (byte-order-mark)
 		    					var fixedstring = "\ufeff" + lineValue;		    							    					
