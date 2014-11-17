@@ -208,14 +208,14 @@ public class Workflows {
 				readSet.bioinformaticValuation.date = readSet.productionValuation.date;
 				
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
-						DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation.valid", readSet.bioinformaticValuation.valid));
+						DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation));
 			}
 		} else if("IW-BA".equals(readSet.state.code)){
 			readSet.bioinformaticValuation.valid = TBoolean.UNSET;
 			readSet.bioinformaticValuation.date = null;
 			readSet.bioinformaticValuation.user = null;
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
-					DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation.valid", readSet.bioinformaticValuation.valid));
+					DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation));
 		} else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code))	{
 			//met les fichiers dipo ou non dès que le read set est valider
 			State state = cloneState(readSet.state, contextValidation.getUser());
