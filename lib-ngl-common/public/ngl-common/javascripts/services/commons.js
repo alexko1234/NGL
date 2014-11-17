@@ -294,23 +294,12 @@ angular.module('commonsServices', []).
     				var valmodel = undefined;
     				var defaultValue = attrs.defaultValue;
     				
-				    valmodel = attrs.ngModel;
-					
-					var model = undefined;
-					if(valmodel != undefined){
-						model = $parse(valmodel);
-					}
-					
-					if(model != undefined){
-						scope.$watch(model, function(value){
+					scope.$watch(ngModel, function(value){
 			                if(ngModel.$modelValue == undefined || ngModel.$modelValue == ""){
 								ngModel.$setViewValue(defaultValue);
 								ngModel.$render();
 							}
-				        });
-					}else{
-						console.log("ng-model required");
-					}
+				    });
     			}
     		};
     	//Return the timestamp of the date in an input
