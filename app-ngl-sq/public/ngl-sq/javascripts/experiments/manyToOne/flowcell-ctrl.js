@@ -397,6 +397,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	$scope.isAllOpen = true;
 	
 	if($scope.experiment.editMode){
+		$scope.isAllOpen = false;
 		$scope.atomicTransfere.loadExperiment($scope.datatable);
 		if(!angular.isUndefined(mainService.getBasket())){
 			$scope.basket = mainService.getBasket().get();
