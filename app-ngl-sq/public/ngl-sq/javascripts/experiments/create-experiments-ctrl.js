@@ -823,7 +823,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				$scope.experimentType.atomicTransfertMethod = data.atomicTransfertMethod;
 				if($scope.experimentType.atomicTransfertMethod == "OneToVoid"){
 					$scope.experiment.outputVoid = true;
-					$scope.getTemplate();
 				}
 				$scope.experiment.experimentProperties.inputs = data.propertiesDefinitions;
 				experiment.typeCode =  data.code;
@@ -873,7 +872,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					}
 					$scope.getInstruments();
 					$scope.getTemplate();
-
+					console.log($scope.experiment.value);
 				}
 			});
 	  });
