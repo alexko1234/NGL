@@ -872,7 +872,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					}
 					$scope.getInstruments();
 					$scope.getTemplate();
-					console.log($scope.experiment.value);
 				}
 			});
 	  });
