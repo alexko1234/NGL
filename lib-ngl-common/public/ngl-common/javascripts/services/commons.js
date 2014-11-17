@@ -292,10 +292,15 @@ angular.module('commonsServices', []).
     			require: 'ngModel',
     			link: function(scope, element, attrs, ngModel) {
     				var valmodel = undefined;
-    				var defaultValue = attrs.defaultValue;
+    				var defaultValue = null;
+    				scope.$watch(attrs.defaultValue, function(col){
+    					if(col.defaultValues != undefined){
+    						defaultValue = col.defaultValues;
+    					}
+    				});
     				
 					scope.$watch(ngModel, function(value){
-			                if(ngModel.$modelValue == undefined || ngModel.$modelValue == ""){
+			                if(defaultValue!= null && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
 								ngModel.$setViewValue(defaultValue);
 								ngModel.$render();
 							}

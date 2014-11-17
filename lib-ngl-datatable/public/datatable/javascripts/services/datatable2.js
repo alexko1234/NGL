@@ -2039,7 +2039,7 @@ angular.module('datatableServices', []).
     			    	if(header){
     			    		ngChange = '" ng-change="dtTable.updateColumn(col.property, col.id)"';	    			    		
     			    	}else{
-    			    		defaultValueDirective = 'default-value="{{col.defaultValues}}"';
+    			    		defaultValueDirective = 'default-value="col"';
     			    	}
 	    						    				
 	    				if(col.type === "boolean"){
