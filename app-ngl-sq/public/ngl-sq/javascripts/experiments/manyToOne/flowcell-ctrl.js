@@ -6,20 +6,23 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 						"header":Messages("containers.table.support.column"),
 						"property":"outputPositionX",
 						"order":true,
-						"type":"text"
+						"type":"text",
+						"extraHeaders":{0:"solution stock"}
 					},
 					{
 						"header":Messages("containers.table.supportCode"),
 						"property":"inputSupportCode",
 						"order":true,
-						"type":"text"
+						"type":"text",
+						"extraHeaders":{0:"solution stock"}
 					},
 					{
 						"header":Messages("containers.table.tags"),
 						"property":"inputTags",
 						"order":true,
 						"type":"text",
-						"edit":false
+						"edit":false,
+						"extraHeaders":{0:"solution stock"}
 					},
 				/*	{
 						"header":Messages("containers.table.support.line"),
@@ -33,28 +36,32 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 						"property":"inputConcentration",
 						"order":true,
 						"type":"text",
-						"edit":false
+						"edit":false,
+						"extraHeaders":{0:"solution stock"}
 					},
 					{
 						"header":Messages("containers.table.volume"),
 						"property":"inputVolume",
 						"order":true,
 						"type":"text",
-						"edit":false
+						"edit":false,
+						"extraHeaders":{0:"solution stock"}
 					},
 					{
 						"header":Messages("containers.table.state.code"),
 						"property":"inputState.code",
 						"order":true,
 						"type":"text",
-						"edit":false
+						"edit":false,
+						"extraHeaders":{0:"solution stock"}
 					},
 					{
 						"header":Messages("containers.table.percentage"),
 						"property":"percentage",
 						"order":true,
 						"type":"text",
-						"edit":false
+						"edit":false,
+						"extraHeaders":{0:"prep FC"}
 					}
 					],
 			compact:true,
@@ -122,7 +129,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 	
 	$scope.$on('addInstrumentPropertiesInput', function(e, data, possibleValues) {
-		var column = $scope.datatable.newColumn(data.name,"inputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
+		var unit = "";
+		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
+		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
 		$scope.datatable.addColumn(data.displayOrder+5,column);
 	});
@@ -133,20 +142,33 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{});
 		column.defaultValues = data.defaultValue;
+		if(data.name == "Conc. solution NaOH"){
+			column.extraHeaders = {0:"solution stock"};
+		}else if(data.code == "requiredVolume1" || data.code == "NaOHVolume" || data.code == "NaOHConcentration" || data.code == "EBVolume" || data.code == "finalConcentration1" || data.code == "finalVolume1"){
+			column.extraHeaders = {0:"denaturation"};
+		}else if(data.code == "requiredVolume2" || data.code == "HT1Volume" || data.code == "phixVolume" || data.code == "phixConcentration" || data.code == "finalConcentration2" || data.code == "finalVolume2"){
+			column.extraHeaders = {0:"dilution"};
+		}else if(data.code == "requiredVolume3"){
+			column.extraHeaders = {0:"prep FC"};
+		}
 		$scope.datatable.addColumn(data.displayOrder+5 ,column);
 	});
 	
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
 		if($scope.experiment.containerOutProperties.indexOf(data) == -1){
+			if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 			$scope.experiment.containerOutProperties.push(data);
-			var column = $scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{});
+			var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputExperimentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{});
 			column.defaultValues = data.defaultValue;
+			column.extraHeaders = {0:"prep FC"};
 			$scope.datatable.addColumn(-1,column);
 		}
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutput', function(e, data, possibleValues) {
-		var column = $scope.datatable.newColumn(data.name,"outputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{});
+		var unit = "";
+		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
+		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{});
 		column.defaultValues = data.defaultValue;
 		$scope.datatable.addColumn(-1,column);
 	});
