@@ -60,19 +60,27 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 	});
 	
 	$scope.$on('addInstrumentPropertiesInput', function(e, data, possibleValues) {
-		$scope.datatable.addColumn(2,$scope.datatable.newColumn(data.name,"inputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"}));
+		var column = $scope.datatable.newColumn(data.name,"inputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
+		column.defaultValues = data.defaultValue;
+		$scope.datatable.addColumn(2,column);
 	});
 	
 	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
-		$scope.datatable.addColumn(2,$scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"}));
+		var column = $scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
+		column.defaultValues = data.defaultValue;
+		$scope.datatable.addColumn(2,column);
 	});
 	
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
-		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"}));
+		var column = $scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"});
+		column.defaultValues = data.defaultValue;
+		$scope.datatable.addColumn(-1,column);
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutput', function(e, data, possibleValues) {
-		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(data.name,"outputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Outputs","1":"Instruments"}));
+		var column = $scope.datatable.newColumn(data.name,"outputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Outputs","1":"Instruments"});
+		column.defaultValues = data.defaultValue;
+		$scope.datatable.addColumn(-1,column);
 	});
 	
 	$scope.addOutputColumns = function(){
