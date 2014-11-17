@@ -2,6 +2,11 @@
 #Rules for validation
 package rules
 
+declare LaneInfo
+	position : Integer
+	contentInfos : List 
+end
+
 declare ContentInfo
 	position : Integer
 	containerCode : String 
@@ -10,15 +15,34 @@ declare ContentInfo
 	sampleCode : String
 end
 
+
+rule "Init object LaneInfo in WM"
+	@nglSQ( validations )
+	dialect "java"
+	salience 700
+	no-loop
+    when
+    $atomicTransfert: AtomicTransfertMethod($position : position)
+    not LaneInfo($position==position)
+    then
+    
+    LaneInfo laneInfo = new LaneInfo($position,new ArrayList());
+    Logger.debug("Lane Info Position :"+$position);
+    insert(laneInfo);
+    
+	end
+
+
 rule "Init objects ContentInfo in WM"
 		@nglSQ( validations )
 	dialect "java"
 	salience 600
 	no-loop
     when
-    $atomicTransfert: AtomicTransfertMethod($inputContainers : getInputContainers(), $inputContainers.size()!=0)
+    $atomicTransfert: AtomicTransfertMethod($position:position,$inputContainers : getInputContainers(), $inputContainers.size()!=0)
 	$container : ContainerUsed( $contents : contents,$contents!=null) from $atomicTransfert.inputContainers
 	$content : Content() from $contents	 
+	$laneInfo : LaneInfo($position==position)
     then
    
     String tag="VIDE";
@@ -28,10 +52,12 @@ rule "Init objects ContentInfo in WM"
 
 	ContentInfo contentInfo= new ContentInfo($atomicTransfert.position,$container.code,tag,tagCategory,$content.sampleCode);
 	Logger.debug("Content Info Position : "+$atomicTransfert.position+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag+", tagCategory :"+tagCategory);
-    
+    $laneInfo.getContentInfos().add(contentInfo);
 	insert(contentInfo);
 	
     end
+
+
 
 rule "Input not null for Experiment Type Prepa-flowcell"
 	@nglSQ( validations )
@@ -45,7 +71,7 @@ rule "Input not null for Experiment Type Prepa-flowcell"
     	eval($inputContainers.size()==0)
     then
     	//Logger.debug("Erreur position "+$atomics.position);
-    	$contextValidation.addErrors("lane["+$atomics.position+"]",	"error.validationexp.emptyoutputcontainer");
+    	$contextValidation.addErrors("lane["+$atomics.position+"]",	"error.validationexp.emptyoutputcontainer",$atomics.position);
     end
 
 rule "Sum % percentage per piste = 100 % "
@@ -60,7 +86,7 @@ rule "Sum % percentage per piste = 100 % "
     $contextValidation:ContextValidation()
    	then
    		//Logger.debug("Regles de validation solexa "+$total +' '+$atomics.position);
-   		$contextValidation.addErrors("lane["+$atomics.position+"]",	"error.validationexp.percentperoutputcontainer", $total);
+   		$contextValidation.addErrors("lane["+$atomics.position+"]",	"error.validationexp.percentperoutputcontainer", $total,$atomics.position);
    	end
    	
 
@@ -85,13 +111,11 @@ rule "Many TagCategory on same position"
 	salience 300
 	no-loop
 when
-	 ContentInfo($position:position)
+	 LaneInfo($position:position)
      $tagCategories : Set(empty==false, size > 1) from accumulate( ContentInfo ( $tagCategory : tagCategory,$position==position),
                         collectSet( $tagCategory) )
 	  $contextValidation:ContextValidation($errors : errors)
-//	  not ($entry: Map.Entry(empty==true) from $errors.entrySet() 
-//	   ValidationError(key=="",message=="") from $entry.getValue() )
 then
-	Logger.debug("TagCategory error "+ $tagCategories.size());
-    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", "");
+	Logger.debug("TagCategory error "+ $tagCategories.size()+" position "+$position);
+    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", $position);
 end
