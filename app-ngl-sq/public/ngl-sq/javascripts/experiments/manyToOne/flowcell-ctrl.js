@@ -357,8 +357,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	    for (var i=0; i<$scope.laneCount;i++){	
 		$scope.rows[i] = false;
 	    }	    
-	    $scope.isAllOpen = false;
-	    $scope.isFewOpen = false;
+	    $scope.isAllOpen = false;	    
 	};
 	
 	$scope.showRowAll = function(){
@@ -368,49 +367,30 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	    $scope.isAllOpen = true;
 	};
 	
-	$scope.scanOpenedAll = function(){
-	    var OpenAllStatus = undefined;
-	    var ClosedAllStatus = undefined;
-	    for (var i=0; i<$scope.laneCount;i++){	
-		if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length > 0){
-		    if ($scope.rows[i] == true){
-			OpenAllStatus = true;		    
-		    }else{
-			OpenAllStatus = false;
-			i = $scope.laneCount +1;
-		    }	
+	$scope.scanOpenedAll = function(){	   	    
+	 
+	    if ($scope.isAllOpen == false){		
+		for(var i=0; i<$scope.laneCount;i++){
+		    if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length > 0){
+			 if ($scope.rows[i] == true){
+			     $scope.isAllOpen = true;			    
+			 }
+		    }
 		}
-	    }
-
-	    for (var j=0; j<$scope.laneCount;j++){	
-		if($scope.experiment.value.atomicTransfertMethods[j].inputContainerUseds.length > 0){
-		    if ($scope.rows[j] == false){
-			ClosedAllStatus = true;		    
-		    }else{
-			ClosedAllStatus = false;
-			j = $scope.laneCount +1;
-		    }	
+		
+	    }else{
+		for(var i=0; i<$scope.laneCount;i++){
+		    if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length > 0){
+			 if ($scope.rows[i] == false){
+			     $scope.isAllOpen = false;			     
+			 }else{
+			     $scope.isAllOpen = true;
+			     i = $scope.laneCount +1;
+			 }
+		    }
 		}
-	    }
-
-
-
-	    if (OpenAllStatus == true && ClosedAllStatus == false && $scope.isAllOpen == false){
-		$scope.isAllOpen = true;		
-	    }
-
-	    if (OpenAllStatus == false && ClosedAllStatus == true && $scope.isAllOpen == true){
-		$scope.isAllOpen = false;
-		$scope.isFewOpen = false;
-	    }
-	    
-	    if (OpenAllStatus == false && ClosedAllStatus == false && $scope.isAllOpen == false){
-		$scope.isFewOpen = true;
-	    }
-
-
-	    console.log("$scope.isAllOpen= "+$scope.isAllOpen+"=> OpenAllStatus= "+OpenAllStatus );
-
+	    }   
+	   
 	};
 	
 	$scope.isFilled = function(){	    
