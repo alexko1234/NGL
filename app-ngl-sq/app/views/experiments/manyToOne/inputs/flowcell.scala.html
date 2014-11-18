@@ -77,6 +77,14 @@
 		<button ng-click="hideRowAll()"  ng-if="isFilled() && isAllOpen" class="litte-eye headButtonEye"><i class="fa fa-eye-slash"></i></button>
 		<button ng-click="showRowAll()"  ng-if="isFilled() && !isAllOpen" class="litte-eye headButtonEye"><i class="fa fa-eye"></i></button>	
 		</th>
+		<th> </th>	
+		<th> </th>					
+		<th ng-if="isFilled() && isAllOpen">
+		<div class="insertHeadFC" ng-repeat="property in experiment.containerOutProperties">
+		<input class="form-control valueInput" ng-if="isFilled()" type="text"  ng-readonly="!experiment.experimentProperties.enabled" 
+				 ng-change="updateColumnPropertyCodeValues(property.code)" ng-model="experiment.value.atomicTransfertMethods.AllOutputContainersUsed[property.code].value" />		
+		</div>
+		</th>
 		</tr>
 		@for(i <- 0 to laneCount-1) {			
 		<tr class="flowCellLane">			
@@ -159,7 +167,7 @@
 								<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInputOnAtomic(@i,container)"><i class="fa fa-trash-o"></i></button>
 					    </td>  -->
 					</tr>
-					<tr ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable><td colspan=6 class="dropZone"> </td></tr>
+					<tr ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable><td colspan=6 id="dropZone"> </td></tr>
 				</table>
 			</div>
 			</td>			

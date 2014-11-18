@@ -32,7 +32,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 						"extraHeaders":{"0":"Outputs"}
 					},*/
 					{
-						"header":Messages("containers.table.concentration"),
+						"header":function(){
+						    return Messages("containers.table.concentration") +" (nM)";
+						},
 						"property":"inputConcentration",
 						"order":true,
 						"type":"text",
@@ -40,7 +42,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 						"extraHeaders":{0:"solution stock"}
 					},
 					{
-						"header":Messages("containers.table.volume"),
+						"header":function(){
+						    return Messages("containers.table.volume") +" (µl)";
+						},
 						"property":"inputVolume",
 						"order":true,
 						"type":"text",
@@ -156,6 +160,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
 		if($scope.experiment.containerOutProperties.indexOf(data) == -1){
+		    	var unit = "";
 			if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 			$scope.experiment.containerOutProperties.push(data);
 			var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputExperimentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{});
@@ -347,6 +352,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	
 	$scope.hideRow = function(index){
 		$scope.rows[index] = !$scope.rows[index];
+		$scope.scanOpenedAll();
 	};
 	
 	$scope.hideRowAll = function(){
@@ -363,15 +369,66 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	    $scope.isAllOpen = true;
 	};
 	
-	$scope.isFilled = function(){
+	$scope.scanOpenedAll = function(){
+	    var OpenAllStatus = undefined;
+	    for (var i=0; i<$scope.laneCount;i++){	
+		if ($scope.rows[i] == true){
+		    OpenAllStatus = true;		    
+		}else{
+		    for (var j=0; j<$scope.laneCount;j++){
+			if ($scope.rows[j] == false){
+			    OpenAllStatus = false;
+			}else{
+			    OpenAllStatus = null;
+			    j = $scope.laneCount + 1;
+			}
+			i = $scope.laneCount + 1;		    
+		    }
+		}
+	    }
+
+	    if (OpenAllStatus != null){
+
+		if (OpenAllStatus == true &&  $scope.isAllOpen == false){
+		    $scope.isAllOpen = true;
+		}
+
+		if (OpenAllStatus == false && $scope.isAllOpen == true){
+		    $scope.isAllOpen = false;
+		}
+	    }
+
+	    console.log("$scope.isAllOpen= "+$scope.isAllOpen+"=> OpenAllStatus= "+OpenAllStatus );
+
+	};
+	
+	$scope.isFilled = function(){	    
 	    for (var i=0; i<$scope.laneCount;i++){
 		if(angular.isDefined($scope.experiment.value.atomicTransfertMethods[i])
 			&& $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length >0){
+		    i = $scope.laneCount +1;
 		    return true;
+		}else{
+		    return false;
 		}
 	    }
-	    return false;
 	};
+	
+	$scope.updateColumnPropertyCodeValues = function(codeValue){
+	    var data = $scope.experiment.experimentProperties.inputs;    
+	    
+	    for(var i=0;i<$scope.laneCount;i++){
+		for(var j=0; j<data.length;j++ ){
+		   if(codeValue == data[j].code){
+		       $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value = $scope.experiment.value.atomicTransfertMethods.AllOutputContainersUsed[data[j].code].value;
+		   }
+			
+		    
+		    
+		}
+		
+	}
+	}
 	
 	$scope.init_flowcell = function(laneCount){
 		$scope.laneCount = laneCount;
@@ -417,6 +474,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	$scope.laneCount = 0;
 	$scope.view = 1;
 	$scope.isAllOpen = true;
+	
 	
 	if($scope.experiment.editMode){
 		$scope.isAllOpen = false;

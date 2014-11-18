@@ -129,7 +129,7 @@ margin: 8px 0 8px;
 	vertical-align: middle;
 }
 
-.flowCellLane .table>tbody>tr>td {
+.flowCellLane .table>tbody>tr>td:not(.dropZone) {
 	padding: 8px;
 	line-height: 1.33333333;
 	vertical-align: top;
@@ -166,7 +166,7 @@ margin: 8px 0 8px;
 	
 }
 
-.dropZone{
+#dropZone{
 	border: 0;
 }
 
@@ -176,6 +176,11 @@ margin: 8px 0 8px;
 }
 
 
+.insertHeadFC{
+	float: right;
+	width: 50px;
+	margin: 0px 13px 0px 4px;
+}
 
 /*
 .LaneOutput{	
