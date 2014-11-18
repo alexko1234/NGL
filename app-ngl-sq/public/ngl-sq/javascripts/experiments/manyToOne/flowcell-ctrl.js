@@ -360,6 +360,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		$scope.rows[i] = false;
 	    }	    
 	    $scope.isAllOpen = false;
+	    $scope.isFewOpen = false;
 	};
 	
 	$scope.showRowAll = function(){
@@ -371,32 +372,44 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	
 	$scope.scanOpenedAll = function(){
 	    var OpenAllStatus = undefined;
+	    var ClosedAllStatus = undefined;
 	    for (var i=0; i<$scope.laneCount;i++){	
-		if ($scope.rows[i] == true){
-		    OpenAllStatus = true;		    
-		}else{
-		    for (var j=0; j<$scope.laneCount;j++){
-			if ($scope.rows[j] == false){
-			    OpenAllStatus = false;
-			}else{
-			    OpenAllStatus = null;
-			    j = $scope.laneCount + 1;
-			}
-			i = $scope.laneCount + 1;		    
-		    }
+		if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length > 0){
+		    if ($scope.rows[i] == true){
+			OpenAllStatus = true;		    
+		    }else{
+			OpenAllStatus = false;
+			i = $scope.laneCount +1;
+		    }	
 		}
 	    }
 
-	    if (OpenAllStatus != null){
-
-		if (OpenAllStatus == true &&  $scope.isAllOpen == false){
-		    $scope.isAllOpen = true;
-		}
-
-		if (OpenAllStatus == false && $scope.isAllOpen == true){
-		    $scope.isAllOpen = false;
+	    for (var j=0; j<$scope.laneCount;j++){	
+		if($scope.experiment.value.atomicTransfertMethods[j].inputContainerUseds.length > 0){
+		    if ($scope.rows[j] == false){
+			ClosedAllStatus = true;		    
+		    }else{
+			ClosedAllStatus = false;
+			j = $scope.laneCount +1;
+		    }	
 		}
 	    }
+
+
+
+	    if (OpenAllStatus == true && ClosedAllStatus == false && $scope.isAllOpen == false){
+		$scope.isAllOpen = true;		
+	    }
+
+	    if (OpenAllStatus == false && ClosedAllStatus == true && $scope.isAllOpen == true){
+		$scope.isAllOpen = false;
+		$scope.isFewOpen = false;
+	    }
+	    
+	    if (OpenAllStatus == false && ClosedAllStatus == false && $scope.isAllOpen == false){
+		$scope.isFewOpen = true;
+	    }
+
 
 	    console.log("$scope.isAllOpen= "+$scope.isAllOpen+"=> OpenAllStatus= "+OpenAllStatus );
 

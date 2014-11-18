@@ -79,7 +79,7 @@
 		</th>
 		<th> </th>	
 		<th> </th>					
-		<th ng-if="isFilled() && isAllOpen">
+		<th ng-if="isFilled() && isAllOpen || isFewOpen">
 		<div class="insertHeadFC" ng-repeat="property in experiment.containerOutProperties">
 		<input class="form-control valueInput" ng-if="isFilled()" type="text"  ng-readonly="!experiment.experimentProperties.enabled" 
 				 ng-change="updateColumnPropertyCodeValues(property.code)" ng-model="experiment.value.atomicTransfertMethods.AllOutputContainersUsed[property.code].value" />		
