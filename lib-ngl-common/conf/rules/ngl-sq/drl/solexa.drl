@@ -62,7 +62,7 @@ rule "Init objects ContentInfo in WM"
 rule "Input not null for Experiment Type Prepa-flowcell"
 	@nglSQ( validations )
 	dialect "java"
-	salience 500
+	salience 510
 	no-loop
     when
     	$experiment:Experiment($typeCode : typeCode, $typeCode=="prepa-flowcell")
@@ -73,11 +73,34 @@ rule "Input not null for Experiment Type Prepa-flowcell"
     	//Logger.debug("Erreur position "+$atomics.position);
     	$contextValidation.addErrors("lane["+$atomics.position+"]",	"error.validationexp.emptyoutputcontainer",$atomics.position);
     end
+    
+    
+rule "Container duplicate in Lane"
+	@nglSQ( validations )
+	dialect "java"
+	salience 500
+	no-loop
+    when
+    	  LaneInfo($position:position)
+    	  AtomicTransfertMethod($position==position,$inputContainers : getInputContainers())
+    	  $containerCodes : Set(empty==false, size >= 1) from accumulate( ContainerUsed($containerCode:code) from $inputContainers,
+	                         init( HashSet result = new HashSet(); HashSet containers=new HashSet(); ),
+                              action( if(!containers.contains($containerCode)){ containers.add($containerCode); } 
+                              				else if(!result.contains($containerCode)) { result.add($containerCode);} ),
+                             reverse( result.remove($containerCode); ),
+                              result( result) )
+		 $containerDuplicate : String() from $containerCodes
+		 $contextValidation:ContextValidation()
+    then
+    	//Logger.debug("Erreur containers "+$containerDuplicate);
+ 		$contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.duplicateinputcontainers",$containerDuplicate, $position);
+    end
+
 
 rule "Sum % percentage per piste = 100 % "
 	@nglSQ( validations )
 	dialect "java"
-	salience 510
+	salience 580
 	no-loop
     when
     $atomics:AtomicTransfertMethod($inputContainers : getInputContainers())

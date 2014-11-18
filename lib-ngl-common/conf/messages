@@ -24,6 +24,7 @@ error.validationexp.percentperoutputcontainer= "Le pourcentage total à déposer
 error.validationexp.emptyoutputcontainer="La lane {0} ne possède aucun content."
 error.validationexp.manytagCategory="Plusieurs catégories d''index sont présentes sur la piste {0}"
 error.validationexp.sametag="L''index {0} n’est pas unique (containers concernés : {1},{2})"
+error.validationexp.duplicateinputcontainers="Le container {0} a été déposé plusieurs fois sur la piste {1}"
 
 #directive messages
 msg.details = [détails]

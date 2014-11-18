@@ -2,6 +2,7 @@ package experiments;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -241,6 +242,31 @@ public class ExperimentTests extends AbstractTests{
 				
 	}
 	
+	
+	@Test
+	public void validateExperimentDuplicateContainerInLane() {
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
+		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
+		
+		ContainerUsed container1_1=ExperimentTestHelper.getContainerUsed("CONTAINER1_1");
+		container1_1.percentage=(float) 0;
+		Content content1_1=new Content("CONTENT1_1","TYPE","CATEGORIE");
+		container1_1.contents=new ArrayList<Content>();
+		content1_1.properties=new HashMap<String, PropertyValue>();
+		content1_1.properties.put("tag", new PropertySingleValue("IND1"));
+		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
+		content1_1.properties.put("tag", new PropertySingleValue("IND2"));
+		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
+		container1_1.contents.add(content1_1);
+		
+		exp.atomicTransfertMethods.get(0).getInputContainers().add(container1_1);
+		
+		ExperimentValidationHelper.validateRules(exp, contextValidation);
+		contextValidation.displayErrors(logger);
+		assertThat(contextValidation.hasErrors()).isTrue();
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
+				
+	}
 	
 	public PropertyDefinition getPropertyImgDefinition() {
 		PropertyDefinition pDef = new PropertyDefinition();
