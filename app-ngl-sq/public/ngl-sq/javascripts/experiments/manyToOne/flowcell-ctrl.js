@@ -146,9 +146,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{});
 		column.defaultValues = data.defaultValue;
-		if(data.name == "Conc. solution NaOH"){
-			column.extraHeaders = {0:"solution stock"};
-		}else if(data.code == "requiredVolume1" || data.code == "NaOHVolume" || data.code == "NaOHConcentration" || data.code == "EBVolume" || data.code == "finalConcentration1" || data.code == "finalVolume1"){
+		if(data.code == "requiredVolume1" || data.code == "NaOHVolume" || data.code == "NaOHConcentration" || data.code == "EBVolume" || data.code == "finalConcentration1" || data.code == "finalVolume1"){
 			column.extraHeaders = {0:"denaturation"};
 		}else if(data.code == "requiredVolume2" || data.code == "HT1Volume" || data.code == "phixVolume" || data.code == "phixConcentration" || data.code == "finalConcentration2" || data.code == "finalVolume2"){
 			column.extraHeaders = {0:"dilution"};
