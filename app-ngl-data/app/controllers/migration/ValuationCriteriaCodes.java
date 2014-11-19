@@ -39,41 +39,40 @@ public class ValuationCriteriaCodes  extends CommonController {
 		//verify criteriaCodes
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("treatments", 0);
-		verifyIntegrity(mappingVCCodes, keys);
-		
-		
-		//Only if OK...
-		Logger.info("1/4 Migration ValuationCriteria starts");
-
-		backupVCCollection();
-		migrateVCCodes(mappingVCCodes);
-		
-		Logger.info("1/4 Migration ValuationCriteria end");
-		
-		//Migrate Runs
-		Logger.info("2/4 Migration Run starts");
-
-		backupRunCollection();
-		migrateRunVCCodes(mappingVCCodes);
-		
-		Logger.info("2/4 Migration Run end");
-		
-		//Migrate Analysis...
-		Logger.info("3/4 Migration Analysis starts");
-
-		backupAnalysisCollection();
-		migrateAnalysisVCCodes(mappingVCCodes);
-		
-		Logger.info("3/4 Migration Analysis end");
-		
-		//Migrate ReadSets...		
-		Logger.info("4/4 Migration ReadSet starts");
-
-		backupReadSetCollection(keys);
-		migrateReadSetVCCodes(mappingVCCodes, keys);
-		
-		Logger.info("4/4 Migration ReadSet end");
- 		
+		if(verifyIntegrity(mappingVCCodes, keys)){
+			//Only if OK...
+			Logger.info("1/4 Migration ValuationCriteria starts");
+	
+			backupVCCollection();
+			migrateVCCodes(mappingVCCodes);
+			
+			Logger.info("1/4 Migration ValuationCriteria end");
+			
+			//Migrate Runs
+			Logger.info("2/4 Migration Run starts");
+	
+			backupRunCollection();
+			migrateRunVCCodes(mappingVCCodes);
+			
+			Logger.info("2/4 Migration Run end");
+			
+			//Migrate Analysis...
+			Logger.info("3/4 Migration Analysis starts");
+	
+			backupAnalysisCollection();
+			migrateAnalysisVCCodes(mappingVCCodes);
+			
+			Logger.info("3/4 Migration Analysis end");
+			
+			//Migrate ReadSets...		
+			Logger.info("4/4 Migration ReadSet starts");
+	
+			backupReadSetCollection(keys);
+			migrateReadSetVCCodes(mappingVCCodes, keys);
+			
+			Logger.info("4/4 Migration ReadSet end");
+	 		
+		}
 		return ok("Migrations finish");
 	}
 
@@ -119,7 +118,7 @@ public class ValuationCriteriaCodes  extends CommonController {
 	}
 	
 	
-	private static void verifyIntegrity(HashMap<String, String> mappingVCCodes, BasicDBObject keys) {	
+	private static boolean verifyIntegrity(HashMap<String, String> mappingVCCodes, BasicDBObject keys) {	
 		HashMap<String, Boolean> hCriteriaCode = new HashMap<String, Boolean>(); 	
 		//valuation criteria control
 		List<ValuationCriteria> valuationCriterias = MongoDBDAO.find(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class, DBQuery.exists("code")).toList();
@@ -172,7 +171,7 @@ public class ValuationCriteriaCodes  extends CommonController {
 		boolean error = false;
 		for (String key : hCriteriaCode.keySet()) {
 			if (hCriteriaCode.get(key)) {
-				Logger.debug("ERROR : real key : " + hCriteriaCode.get(key) + "not found in Reference List keys (mappingVCCodes)");
+				Logger.error("ERROR : real key : " + key + "not found in Reference List keys (mappingVCCodes)");
 				error = true;
 			}
 		}
@@ -180,6 +179,7 @@ public class ValuationCriteriaCodes  extends CommonController {
 		if (error){
 			Logger.error("ERROR : Database has orphelin(s) criteriaCode(s). Bad integrity.");
 		}
+		return !error;
 	}
 	
 	
