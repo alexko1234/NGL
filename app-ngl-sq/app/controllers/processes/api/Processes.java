@@ -109,8 +109,6 @@ public class Processes extends CommonController{
 				value.traceInformation.setTraceInformation(getCurrentUser());
 				//the default status
 				value.state = new State("N", getCurrentUser());
-				//code and name generation
-				value.code = CodeHelper.generateProcessCode(value);
 				
 				List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode)).toList();
 				for(Container container:containers){
@@ -121,6 +119,8 @@ public class Processes extends CommonController{
 						//ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
 						contextValidation.setCreationMode();
 						value.sampleCode = s;
+						//code and name generation
+						value.code = CodeHelper.generateProcessCode(value);
 						InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
 						value.code = CodeHelper.generateProcessCode(value);
 					}
