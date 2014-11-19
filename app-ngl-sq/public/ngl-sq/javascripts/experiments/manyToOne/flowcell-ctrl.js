@@ -322,8 +322,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 
 	var match = model.match(array_regexp);
 	if(!match){
-	    $scope[model].splice($scope[model].indexOf(data), 1);
-	    $scope.rows[$scope[model].indexOf(data)]= true;
+	    $scope[model].splice($scope[model].indexOf(data), 1);	   
 	}else{
 	    $scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.splice($scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.indexOf(data), 1);
 	}
@@ -333,6 +332,13 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
     };
 
     $scope.beforeDropData = function(e, data, ngModel){
+	var array_regexp = /^experiment.value.atomicTransfertMethods\[([0-9]+)\].+/;
+	var match = ngModel.match(array_regexp);
+	if(match){
+	    $scope.rows[match[1]]= true;
+	    $scope.scanOpenedAll();
+	}	
+	
 	return data;
     };
 

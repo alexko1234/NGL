@@ -498,6 +498,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		.error(function(data, status, headers, config) {
 			$scope.message.clazz = "alert alert-danger";
 			$scope.message.text = Messages('experiments.msg.save.error');
+			
+			$scope.experiment.experimentProperties.enabled = true;
+			$scope.experiment.experimentInformation.enabled = true;
+			$scope.experiment.instrumentProperties.enabled = true;
+			$scope.experiment.instrumentInformation.enabled = true;
+			$scope.setEditConfig(true);
 
 			$scope.message.details = data;
 			$scope.message.isDetails = true;
@@ -540,6 +546,13 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			.error(function(data, status, headers, config) {
 				$scope.message.clazz = "alert alert-danger";
 				$scope.message.text = Messages('experiments.msg.save.error');
+				
+				$scope.experiment.experimentProperties.enabled = true;
+				$scope.experiment.experimentInformation.enabled = true;
+				$scope.experiment.instrumentProperties.enabled = true;
+				$scope.experiment.instrumentInformation.enabled = true;
+				$scope.setEditConfig(true);
+				
 				$scope.message.details = data;
 				$scope.message.isDetails = true;
 				$scope.saveInProgress = false;
@@ -551,8 +564,14 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					$scope.message.text=Messages('experiments.msg.save.sucess');
 					$scope.saveInProgress = false;
 				}
-			}, function(reason){
-				$scope.saveInProgress = false;
+			}, function(reason){			    
+			    $scope.experiment.experimentProperties.enabled = true;
+			    $scope.experiment.experimentInformation.enabled = true;
+			    $scope.experiment.instrumentProperties.enabled = true;
+			    $scope.experiment.instrumentInformation.enabled = true;
+			    $scope.setEditConfig(true);
+			    $scope.saveInProgress = false;
+				
 			});
 		}, function(reason){
 			$scope.experiment.experimentProperties.enabled =  true;

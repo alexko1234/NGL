@@ -74,7 +74,7 @@
 	line-height: 1.33333333;
 	vertical-align: top;
 	border: none;
-	width: 200px;
+	width: 380px;
 	height: 20px;
 	padding-top: 0;
 	padding-bottom: 0px;
@@ -153,6 +153,11 @@ margin: 8px 0 8px;
 
 }
 
+#numberLane{
+	max-width: 2px;
+	padding-right: 0px
+}
+
 .LaneData{
 	font-size: 12px;
 	width: 400px;
@@ -168,6 +173,7 @@ margin: 8px 0 8px;
 
 #dropZone{
 	border: 0;
+	height: 34px;
 }
 
 .flowCellLane .table>tbody>tr>th:last-child:not([ng-repeat="property in experiment.containerOutProperties"]),
@@ -190,6 +196,9 @@ margin: 8px 0 8px;
 
 /* EXPERIMENT ROADMAP*/
 
+.roadmap .datatable .table>thead:first-child>tr:first-child>th{
+	text-align: center;
+}
 
 .roadmap .datatable .form-group input.form-control:not([type="checkbox"]){
 	padding: 3px 3px 3px;
@@ -206,3 +215,4 @@ margin: 8px 0 8px;
 	text-align: left;
 	vertical-align: middle;
 }
+
