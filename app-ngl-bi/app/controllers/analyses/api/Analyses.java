@@ -17,12 +17,12 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-import org.mongojack.DBUpdate;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
 import org.springframework.stereotype.Controller;
 
 import play.Logger;
@@ -38,7 +38,6 @@ import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
-
 import akka.actor.ActorRef;
 import akka.actor.Props;
 
@@ -49,25 +48,25 @@ import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 @Controller
-public class AnalysesOld extends DocumentController<Analysis>{
+public class Analyses extends DocumentController<Analysis>{
 
-	final static Form<AnalysesSearchFormOld> searchForm = form(AnalysesSearchFormOld.class);
+	final static Form<AnalysesSearchForm> searchForm = form(AnalysesSearchForm.class);
 	final static Form<Valuation> valuationForm = form(Valuation.class);
 	final static Form<State> stateForm = form(State.class);
-	final static Form<AnalysesBatchElementOld> batchElementForm = form(AnalysesBatchElementOld.class);
+	final static Form<AnalysesBatchElement> batchElementForm = form(AnalysesBatchElement.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("code","masterReadSetCodes","readSetCodes");
 	
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
 	
-	public AnalysesOld() {
+	public Analyses() {
 		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		
 	}
 	
 	//@Permission(value={"reading"})
 	public Result list() {
-		Form<AnalysesSearchFormOld> filledForm = filledFormQueryString(searchForm, AnalysesSearchFormOld.class);
-		AnalysesSearchFormOld form = filledForm.get();
+		Form<AnalysesSearchForm> filledForm = filledFormQueryString(searchForm, AnalysesSearchForm.class);
+		AnalysesSearchForm form = filledForm.get();
 		
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
@@ -82,7 +81,7 @@ public class AnalysesOld extends DocumentController<Analysis>{
 		}
 	}
 	
-	private Query getQuery(AnalysesSearchFormOld form) {
+	private Query getQuery(AnalysesSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
 		
@@ -117,6 +116,10 @@ public class AnalysesOld extends DocumentController<Analysis>{
 				
 		if (StringUtils.isNotBlank(form.regexCode)) { //all
 			queries.add(DBQuery.regex("code", Pattern.compile(form.regexCode)));
+		}
+		
+		if (StringUtils.isNotBlank(form.analyseValuationUser)) {
+			queries.add(DBQuery.is("valuation.user", form.analyseValuationUser));
 		}
 		
 		if(queries.size() > 0){
@@ -254,11 +257,11 @@ public class AnalysesOld extends DocumentController<Analysis>{
 	}
 	
 	public Result stateBatch(){
-		List<Form<AnalysesBatchElementOld>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElementOld.class);
+		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
 		
-		for(Form<AnalysesBatchElementOld> filledForm: filledForms){
-			AnalysesBatchElementOld element = filledForm.get();
+		for(Form<AnalysesBatchElement> filledForm: filledForms){
+			AnalysesBatchElement element = filledForm.get();
 			Analysis objectInDB = getObject(element.data.code);
 			if(null != objectInDB){
 				State state = element.data.state;
@@ -305,11 +308,11 @@ public class AnalysesOld extends DocumentController<Analysis>{
 	}
 
 	public Result valuationBatch(){
-		List<Form<AnalysesBatchElementOld>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElementOld.class);
+		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
 		
-		for(Form<AnalysesBatchElementOld> filledForm: filledForms){
-			AnalysesBatchElementOld element = filledForm.get();
+		for(Form<AnalysesBatchElement> filledForm: filledForms){
+			AnalysesBatchElement element = filledForm.get();
 			Analysis objectInDB = getObject(element.data.code);
 			if(null != objectInDB){
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
@@ -359,11 +362,11 @@ public class AnalysesOld extends DocumentController<Analysis>{
 	}
 	
 	public Result propertiesBatch(){
-		List<Form<AnalysesBatchElementOld>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElementOld.class);
+		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
 		
-		for(Form<AnalysesBatchElementOld> filledForm: filledForms){
-			AnalysesBatchElementOld element = filledForm.get();
+		for(Form<AnalysesBatchElement> filledForm: filledForms){
+			AnalysesBatchElement element = filledForm.get();
 			Analysis objectInDB = getObject(element.data.code);
 			if(null != objectInDB){
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 

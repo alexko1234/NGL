@@ -1,20 +1,21 @@
-package controllers.analyzes.tpl;
+package controllers.analyses.tpl;
 
 import play.Routes;
 import play.mvc.Result;
-import views.html.analyzes.details;
-import views.html.analyzes.home;
-import views.html.analyzes.search;
-import views.html.analyzes.treatments;
+import views.html.analyses.details;
+import views.html.analyses.home;
+import views.html.analyses.search;
+import views.html.analyses.treatments;
 import controllers.CommonController;
 import controllers.APICommonController;
+import controllers.analyses.tpl.routes.javascript;
 
 /**
  * Controller around Run object
  * @author galbini
  *
  */
-public class Analyzes extends CommonController {
+public class Analyses extends CommonController {
 	
 	public static Result home(String homecode) {
 		return ok(home.render(homecode));
@@ -45,19 +46,19 @@ public class Analyzes extends CommonController {
   	    return ok(  	    		
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
-  	    		controllers.analyzes.tpl.routes.javascript.Analyzes.home(),  
-  	    		controllers.analyzes.tpl.routes.javascript.Analyzes.get(), 
-  	    		controllers.analyzes.tpl.routes.javascript.Analyzes.valuation(),
-  	    		controllers.analyzes.tpl.routes.javascript.Analyzes.treatments(),
-  	    		controllers.analyzes.api.routes.javascript.Analyzes.get(),
-  	    		controllers.analyzes.api.routes.javascript.Analyzes.list(),
-  	    		controllers.analyzes.api.routes.javascript.Analyzes.list(),
-  	    		controllers.analyzes.api.routes.javascript.Analyzes.state(),
-  	    		controllers.analyzes.api.routes.javascript.Analyzes.stateBatch(),
-  	    		controllers.analyzes.api.routes.javascript.Analyzes.valuation(),
-  	    		controllers.analyzes.api.routes.javascript.Analyzes.valuationBatch(),
-  	    		controllers.analyzes.api.routes.javascript.Analyzes.properties(),
-  	    		controllers.analyzes.api.routes.javascript.Analyzes.propertiesBatch(),
+  	    		controllers.analyses.tpl.routes.javascript.Analyses.home(),  
+  	    		controllers.analyses.tpl.routes.javascript.Analyses.get(), 
+  	    		controllers.analyses.tpl.routes.javascript.Analyses.valuation(),
+  	    		controllers.analyses.tpl.routes.javascript.Analyses.treatments(),
+  	    		controllers.analyses.api.routes.javascript.Analyses.get(),
+  	    		controllers.analyses.api.routes.javascript.Analyses.list(),
+  	    		controllers.analyses.api.routes.javascript.Analyses.list(),
+  	    		controllers.analyses.api.routes.javascript.Analyses.state(),
+  	    		controllers.analyses.api.routes.javascript.Analyses.stateBatch(),
+  	    		controllers.analyses.api.routes.javascript.Analyses.valuation(),
+  	    		controllers.analyses.api.routes.javascript.Analyses.valuationBatch(),
+  	    		controllers.analyses.api.routes.javascript.Analyses.properties(),
+  	    		controllers.analyses.api.routes.javascript.Analyses.propertiesBatch(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.commons.api.routes.javascript.States.list(),
   	    		controllers.commons.api.routes.javascript.StatesHierarchy.list(),

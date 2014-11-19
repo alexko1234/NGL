@@ -35,9 +35,9 @@ public class UpdateBA extends CommonController {
 		//if(results.count() == 0){
 			Logger.info("Migration Analysis start");
 			//backup();
-			List<Analysis> analyzes = MongoDBDAO.find(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, DBQuery.is("state.code", "IP-BA")).sort("code").toList();
-			Logger.debug("migre "+analyzes.size()+" Analysis");
-			for(Analysis analysis : analyzes){
+			List<Analysis> analyses = MongoDBDAO.find(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, DBQuery.is("state.code", "IP-BA")).sort("code").toList();
+			Logger.debug("migre "+analyses.size()+" Analysis");
+			for(Analysis analysis : analyses){
 				migre(analysis);				
 			}
 			Logger.info("Migration Analysis end");

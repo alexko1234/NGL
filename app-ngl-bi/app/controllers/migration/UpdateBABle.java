@@ -33,16 +33,16 @@ public class UpdateBABle extends CommonController {
 	
 	public static Result migration(){
 		Logger.info("Migration Analysis start");
-		List<Analysis> analyzes = MongoDBDAO.find(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, DBQuery.notExists("treatments.contigFilterBA.pairs.lostBasesPercent")).sort("code").toList();
-		Logger.debug("migre "+analyzes.size()+" Analysis for LostBasePercent");
-		for(Analysis analysis : analyzes){
+		List<Analysis> analyses = MongoDBDAO.find(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, DBQuery.notExists("treatments.contigFilterBA.pairs.lostBasesPercent")).sort("code").toList();
+		Logger.debug("migre "+analyses.size()+" Analysis for LostBasePercent");
+		for(Analysis analysis : analyses){
 			migre(analysis,"BPA_ContigFilter_1");				
 		}
 		
 		
-		analyzes = MongoDBDAO.find(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, DBQuery.notExists("masterReadSetProperties")).sort("code").toList();
-		Logger.debug("migre "+analyzes.size()+" Analysis for ReadSetProperties");
-		for(Analysis analysis : analyzes){
+		analyses = MongoDBDAO.find(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, DBQuery.notExists("masterReadSetProperties")).sort("code").toList();
+		Logger.debug("migre "+analyses.size()+" Analysis for ReadSetProperties");
+		for(Analysis analysis : analyses){
 			migre(analysis,"BPA_SetReadSetProperties_1");				
 		}
 		

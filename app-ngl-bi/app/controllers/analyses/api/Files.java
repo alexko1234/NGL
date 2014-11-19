@@ -1,4 +1,4 @@
- package controllers.analyzes.api;
+ package controllers.analyses.api;
 
 import static play.data.Form.form;
 

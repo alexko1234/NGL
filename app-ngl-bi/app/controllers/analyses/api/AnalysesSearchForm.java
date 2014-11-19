@@ -1,4 +1,4 @@
-package controllers.analyzes.api;
+package controllers.analyses.api;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import controllers.ListForm;
 
 
 
-public class AnalyzesSearchForm extends ListForm{
+public class AnalysesSearchForm extends ListForm{
 	
 	public List<String> stateCodes;
 	public String stateCode;
