@@ -25,6 +25,8 @@ error.validationexp.emptyoutputcontainer="La lane {0} ne possède aucun content.
 error.validationexp.manytagCategory="Plusieurs catégories d''index sont présentes sur la piste {0}"
 error.validationexp.sametag="L''index {0} n’est pas unique (containers concernés : {1},{2})"
 error.validationexp.duplicateinputcontainers="Le container {0} a été déposé plusieurs fois sur la piste {1}"
+error.validationexp.badcontrolprepaflowcell="La piste contrôle {0} n’est pas cohérente avec le contenant sortie choisi {1}"
+error.validationexp.badoutputprepaflowcell="Le contenant sortie {0} n’est pas compatible avec l’instrument choisi {1}"
 
 #directive messages
 msg.details = [détails]
