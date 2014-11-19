@@ -99,45 +99,44 @@ PUT     /api/readsets/:code/files/:fullname							controllers.readsets.api.Files
 DELETE  /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
 DELETE	/api/runs/:code/files										controllers.readsets.api.Files.deleteByRunCode(code: java.lang.String)
 
-#analyzes
-GET	   	/analyzes/:homecode/home					controllers.analyzes.tpl.Analyzes.home(homecode: java.lang.String)
-GET	   	/analyzes/:code								controllers.analyzes.tpl.Analyzes.get(code: java.lang.String)
-GET	   	/analyzes/:code/valuation					controllers.analyzes.tpl.Analyzes.valuation(code: java.lang.String)
-GET		/tpl/analyzes/search/:type					controllers.analyzes.tpl.Analyzes.search(type: java.lang.String)
-GET		/tpl/analyzes/details						controllers.analyzes.tpl.Analyzes.details()
-GET		/tpl/analyzes/treatments/:code				controllers.analyzes.tpl.Analyzes.treatments(code: java.lang.String)
-GET		/tpl/analyzes/js-routes						controllers.analyzes.tpl.Analyzes.javascriptRoutes()
+#analyses
+GET	   	/analyses/:homecode/home					controllers.analyses.tpl.Analyses.home(homecode: java.lang.String)
+GET	   	/analyses/:code								controllers.analyses.tpl.Analyses.get(code: java.lang.String)
+GET	   	/analyses/:code/valuation					controllers.analyses.tpl.Analyses.valuation(code: java.lang.String)
+GET		/tpl/analyses/search/:type					controllers.analyses.tpl.Analyses.search(type: java.lang.String)
+GET		/tpl/analyses/details						controllers.analyses.tpl.Analyses.details()
+GET		/tpl/analyses/treatments/:code				controllers.analyses.tpl.Analyses.treatments(code: java.lang.String)
+GET		/tpl/analyses/js-routes						controllers.analyses.tpl.Analyses.javascriptRoutes()
 
-GET    	/api/analyzes	                 			@controllers.analyzes.api.Analyzes.list()
-GET	   	/api/analyzes/:code							@controllers.analyzes.api.Analyzes.get(code)
-HEAD   	/api/analyzes/:code							@controllers.analyzes.api.Analyzes.head(code)
-POST 	/api/analyzes								@controllers.analyzes.api.Analyzes.save()
-PUT    	/api/analyzes/:code							@controllers.analyzes.api.Analyzes.update(code)
-DELETE	/api/analyzes/:code							@controllers.analyzes.api.Analyzes.delete(code: java.lang.String)
+GET    	/api/analyses	                 			@controllers.analyses.api.Analyses.list()
+GET	   	/api/analyses/:code							@controllers.analyses.api.Analyses.get(code)
+HEAD   	/api/analyses/:code							@controllers.analyses.api.Analyses.head(code)
+POST 	/api/analyses								@controllers.analyses.api.Analyses.save()
+PUT    	/api/analyses/:code							@controllers.analyses.api.Analyses.update(code)
+DELETE	/api/analyses/:code							@controllers.analyses.api.Analyses.delete(code: java.lang.String)
 
-PUT		/api/analyzes/batch/state					@controllers.analyzes.api.Analyzes.stateBatch()
-PUT		/api/analyzes/:code/state					@controllers.analyzes.api.Analyzes.state(code:java.lang.String)
-PUT		/api/analyzes/batch/valuation		 		@controllers.analyzes.api.Analyzes.valuationBatch()
-PUT		/api/analyzes/:code/valuation		 		@controllers.analyzes.api.Analyzes.valuation(code:java.lang.String)
-PUT     /api/analyzes/batch/properties				@controllers.analyzes.api.Analyzes.propertiesBatch()
-PUT     /api/analyzes/:code/properties				@controllers.analyzes.api.Analyzes.properties(code: java.lang.String)
-PUT		/api/analyzes/:code/apply-rules/:codeRules	@controllers.analyzes.api.Analyzes.applyRules(code: java.lang.String, codeRules: java.lang.String)
+PUT		/api/analyses/batch/state					@controllers.analyses.api.Analyses.stateBatch()
+PUT		/api/analyses/:code/state					@controllers.analyses.api.Analyses.state(code:java.lang.String)
+PUT		/api/analyses/batch/valuation		 		@controllers.analyses.api.Analyses.valuationBatch()
+PUT		/api/analyses/:code/valuation		 		@controllers.analyses.api.Analyses.valuation(code:java.lang.String)
+PUT     /api/analyses/batch/properties				@controllers.analyses.api.Analyses.propertiesBatch()
+PUT     /api/analyses/:code/properties				@controllers.analyses.api.Analyses.properties(code: java.lang.String)
+PUT		/api/analyses/:code/apply-rules/:codeRules	@controllers.analyses.api.Analyses.applyRules(code: java.lang.String, codeRules: java.lang.String)
 
-GET		/api/analyzes/:code/treatments				@controllers.analyzes.api.AnalysisTreatments.list(code: java.lang.String)
-GET		/api/analyzes/:code/treatments/:trCode		@controllers.analyzes.api.AnalysisTreatments.get(code: java.lang.String, trCode: java.lang.String)
-HEAD	/api/analyzes/:code/treatments/:trCode		@controllers.analyzes.api.AnalysisTreatments.head(code: java.lang.String, trCode: java.lang.String)
-POST	/api/analyzes/:code/treatments				@controllers.analyzes.api.AnalysisTreatments.save(code: java.lang.String)
-PUT		/api/analyzes/:code/treatments/:trCode		@controllers.analyzes.api.AnalysisTreatments.update(code: java.lang.String, trCode: java.lang.String)
-DELETE	/api/analyzes/:code/treatments/:trCode		@controllers.analyzes.api.AnalysisTreatments.delete(code: java.lang.String, trCode: java.lang.String)
+GET		/api/analyses/:code/treatments				@controllers.analyses.api.AnalysisTreatments.list(code: java.lang.String)
+GET		/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.get(code: java.lang.String, trCode: java.lang.String)
+HEAD	/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.head(code: java.lang.String, trCode: java.lang.String)
+POST	/api/analyses/:code/treatments				@controllers.analyses.api.AnalysisTreatments.save(code: java.lang.String)
+PUT		/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.update(code: java.lang.String, trCode: java.lang.String)
+DELETE	/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.delete(code: java.lang.String, trCode: java.lang.String)
 
-#analyzes file
-GET     /api/analyzes/:code/files					@controllers.analyzes.api.Files.list(code: java.lang.String)
-GET     /api/analyzes/:code/files/:fullname			@controllers.analyzes.api.Files.get(code: java.lang.String, fullname: java.lang.String)
-HEAD    /api/analyzes/:code/files/:fullname			@controllers.analyzes.api.Files.head(code: java.lang.String, fullname: java.lang.String)
-POST  	/api/analyzes/:code/files					@controllers.analyzes.api.Files.save(code: java.lang.String)
-PUT     /api/analyzes/:code/files/:fullname			@controllers.analyzes.api.Files.update(code: java.lang.String, fullname: java.lang.String)
-DELETE  /api/analyzes/:code/files/:fullname			@controllers.analyzes.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
-
+#analyses file
+GET     /api/analyses/:code/files					@controllers.analyses.api.Files.list(code: java.lang.String)
+GET     /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.get(code: java.lang.String, fullname: java.lang.String)
+HEAD    /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.head(code: java.lang.String, fullname: java.lang.String)
+POST  	/api/analyses/:code/files					@controllers.analyses.api.Files.save(code: java.lang.String)
+PUT     /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.update(code: java.lang.String, fullname: java.lang.String)
+DELETE  /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
 
 #reporting configuration
 GET    	/api/reporting/configs    	           			controllers.reporting.api.ReportingConfigurations.list()
@@ -229,38 +228,6 @@ GET		/migrationSampleOnContainer					controllers.migration.MigrationUpdateSample
 GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
 #GET		/deleteTreatments							controllers.migration.DeleteReadSetTreatements.migration()
 GET		/migrationWheat								controllers.migration.UpdateBABle.migration()
-
-#DEPRECATED
-GET    	/api/analyses	                 			@controllers.analyses.api.AnalysesOld.list()
-GET	   	/api/analyses/:code							@controllers.analyses.api.AnalysesOld.get(code)
-HEAD   	/api/analyses/:code							@controllers.analyses.api.AnalysesOld.head(code)
-POST 	/api/analyses								@controllers.analyses.api.AnalysesOld.save()
-PUT    	/api/analyses/:code							@controllers.analyses.api.AnalysesOld.update(code)
-DELETE	/api/analyses/:code							@controllers.analyses.api.AnalysesOld.delete(code: java.lang.String)
-
-PUT		/api/analyses/batch/state					@controllers.analyses.api.AnalysesOld.stateBatch()
-PUT		/api/analyses/:code/state					@controllers.analyses.api.AnalysesOld.state(code:java.lang.String)
-PUT		/api/analyses/batch/valuation		 		@controllers.analyses.api.AnalysesOld.valuationBatch()
-PUT		/api/analyses/:code/valuation		 		@controllers.analyses.api.AnalysesOld.valuation(code:java.lang.String)
-PUT     /api/analyses/batch/properties				@controllers.analyses.api.AnalysesOld.propertiesBatch()
-PUT     /api/analyses/:code/properties				@controllers.analyses.api.AnalysesOld.properties(code: java.lang.String)
-PUT		/api/analyses/:code/apply-rules/:codeRules	@controllers.analyses.api.AnalysesOld.applyRules(code: java.lang.String, codeRules: java.lang.String)
-
-GET		/api/analyses/:code/treatments				@controllers.analyses.api.AnalysisTreatmentsOld.list(code: java.lang.String)
-GET		/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatmentsOld.get(code: java.lang.String, trCode: java.lang.String)
-HEAD	/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatmentsOld.head(code: java.lang.String, trCode: java.lang.String)
-POST	/api/analyses/:code/treatments				@controllers.analyses.api.AnalysisTreatmentsOld.save(code: java.lang.String)
-PUT		/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatmentsOld.update(code: java.lang.String, trCode: java.lang.String)
-DELETE	/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatmentsOld.delete(code: java.lang.String, trCode: java.lang.String)
-
-#analyzes file
-GET     /api/analyses/:code/files					@controllers.analyses.api.FilesOld.list(code: java.lang.String)
-GET     /api/analyses/:code/files/:fullname			@controllers.analyses.api.FilesOld.get(code: java.lang.String, fullname: java.lang.String)
-HEAD    /api/analyses/:code/files/:fullname			@controllers.analyses.api.FilesOld.head(code: java.lang.String, fullname: java.lang.String)
-POST  	/api/analyses/:code/files					@controllers.analyses.api.FilesOld.save(code: java.lang.String)
-PUT     /api/analyses/:code/files/:fullname			@controllers.analyses.api.FilesOld.update(code: java.lang.String, fullname: java.lang.String)
-DELETE  /api/analyses/:code/files/:fullname			@controllers.analyses.api.FilesOld.delete(code: java.lang.String, fullname: java.lang.String)
-
 
 #ngs-rg api
 GET		/api/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
