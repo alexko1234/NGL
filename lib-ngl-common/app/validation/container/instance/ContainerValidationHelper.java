@@ -54,8 +54,10 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 	}
 
 	public static void validateProcessCodes(List<String> inputProcessCodes, ContextValidation contextValidation) {
-		for(String s: inputProcessCodes){
-			BusinessValidationHelper.validateExistInstanceCode(contextValidation, s, Process.class, InstanceConstants.PROCESS_COLL_NAME); 
+		if(inputProcessCodes!=null){
+			for(String s: inputProcessCodes){
+				BusinessValidationHelper.validateExistInstanceCode(contextValidation, s, Process.class, InstanceConstants.PROCESS_COLL_NAME); 
+			}
 		}
 	}
 	
