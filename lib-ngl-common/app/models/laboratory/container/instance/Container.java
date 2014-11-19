@@ -17,6 +17,7 @@ import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import models.utils.InstanceConstants;
+
 import org.mongojack.MongoCollection;
 import org.mongojack.DBQuery;
 
@@ -24,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
@@ -122,23 +124,17 @@ public class Container extends DBObject implements IValidation {
 		
     	ContainerValidationHelper.validateId(this, contextValidation);
 		ContainerValidationHelper.validateCode(this, InstanceConstants.CONTAINER_COLL_NAME, contextValidation);
-		//TODO 
 		ContainerValidationHelper.validateStateCode(this.state.code, contextValidation);
 		ContainerValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
 		ContainerValidationHelper.validateContainerCategoryCode(categoryCode, contextValidation);
 		ContainerValidationHelper.validateProcessTypeCode(processTypeCode, contextValidation);
 		ContainerValidationHelper.validateProjectCodes(projectCodes, contextValidation);
 		ContainerValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
-		ContainerValidationHelper.validateExperimentTypeCodes(fromExperimentTypeCodes, contextValidation);
+		CommonValidationHelper.validateExperimentTypeCodes(fromExperimentTypeCodes, contextValidation);
 		ContainerValidationHelper.validateExperimentCode(fromPurifingCode, contextValidation);//bug here Yann
 		ContainerValidationHelper.validateContents(contents,contextValidation);
 		ContainerValidationHelper.validateContainerSupport(support,contextValidation);//bug here Yann
-		
-		//InstanceValidationHelper.validationComments(comments,contextValidation);
-		
-		//TODO validate properties
-		
-		
+		ContainerValidationHelper.validateProcessCodes(inputProcessCodes,contextValidation);
 		
 	}
 

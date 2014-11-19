@@ -10,6 +10,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.project.instance.Project;
 import models.laboratory.resolutions.instance.ResolutionConfigurations;
 import models.laboratory.sample.instance.Sample;
@@ -513,6 +514,16 @@ public class CommonValidationHelper {
 		List<Object> list=new ArrayList<Object>();
 		list.add(object);
 		validateRules(list,contextValidation);
+	}
+
+
+	public static void validateExperimentTypeCodes(
+			List<String> experimentTypeCodes, ContextValidation contextValidation) {
+		if(experimentTypeCodes!=null){
+			for(String s: experimentTypeCodes){
+				BusinessValidationHelper.validateExistDescriptionCode(contextValidation, s, "experimentTypeCode", ExperimentType.find);
+			}
+		}
 	}
 
 }

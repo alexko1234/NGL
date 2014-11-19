@@ -32,5 +32,8 @@ public class ContainerSupport extends DBObject implements IValidation{
 	public void validate(ContextValidation contextValidation) {
 		SupportValidationHelper.validateCode(this, InstanceConstants.SUPPORT_COLL_NAME, contextValidation);
 		SupportValidationHelper.validateSupportCategoryCode(categoryCode, contextValidation);
+		SupportValidationHelper.validateProjectCodes(projectCodes, contextValidation);
+		SupportValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
+		SupportValidationHelper.validateExperimentTypeCodes(fromExperimentTypeCodes, contextValidation);
 	}
 }

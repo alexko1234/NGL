@@ -365,9 +365,10 @@ public class Experiments extends CommonController{
 				ctxValidation.setCreationMode();
 				exp.validate(ctxValidation);
 				doCalculations(exp);
-				MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME,exp);
 
 				if(!ctxValidation.hasErrors()){
+					MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME,exp);
+
 					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,Process.class,
 							DBQuery.in("code", ExperimentHelper.getAllProcessCodesFromExperiment(exp))
 							,DBUpdate.set("currentExperimentTypeCode", exp.typeCode),true);

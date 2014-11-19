@@ -2,22 +2,11 @@ package validation.container.instance;
 
 import java.util.List;
 
-
-import org.mongojack.DBQuery;
-
-import fr.cea.ig.MongoDBDAO;
-
-import play.modules.mongojack.MongoDB;
-
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Valuation;
-
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
-import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.processes.instance.Process;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
@@ -37,15 +26,6 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, typeCode,"processTypeCode", ProcessType.find);
 
-	}
-
-	public static void validateExperimentTypeCodes(
-			List<String> experimentTypeCodes, ContextValidation contextValidation) {
-		if(experimentTypeCodes!=null){
-			for(String s: experimentTypeCodes){
-				BusinessValidationHelper.validateExistDescriptionCode(contextValidation, s, "experimentTypeCode", ExperimentType.find);
-			}
-		}
 	}
 
 	public static void validateExperimentCode(String experimentCode,
@@ -71,6 +51,12 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			support.validate(contextValidation);
 		}
 		contextValidation.removeKeyFromRootKeyName("containersupport");
+	}
+
+	public static void validateProcessCodes(List<String> inputProcessCodes, ContextValidation contextValidation) {
+		for(String s: inputProcessCodes){
+			BusinessValidationHelper.validateExistInstanceCode(contextValidation, s, Process.class, InstanceConstants.PROCESS_COLL_NAME); 
+		}
 	}
 	
 

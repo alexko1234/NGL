@@ -17,6 +17,7 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.instrument.instance.InstrumentUsed;
 import models.utils.InstanceConstants;
 
 import org.junit.Test;
@@ -267,6 +268,25 @@ public class ExperimentTests extends AbstractTests{
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 				
 	}
+	
+	@Test
+	public void validateExperimentPrepaflowcellInstrumentProperties() {
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
+		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
+		
+		exp.instrument=new InstrumentUsed();
+		exp.instrument.code="cBot Fluor A";
+		exp.instrument.outContainerSupportCategoryCode="flowcell-1";
+		exp.instrumentProperties=new HashMap<String, PropertyValue>();
+		exp.instrumentProperties.put("control", new PropertySingleValue("3"));
+			
+		ExperimentValidationHelper.validateRules(exp, contextValidation);
+		contextValidation.displayErrors(logger);
+		assertThat(contextValidation.hasErrors()).isTrue();
+		assertThat(contextValidation.errors.get("instrument").size()).isEqualTo(2);
+				
+	}
+	
 	
 	public PropertyDefinition getPropertyImgDefinition() {
 		PropertyDefinition pDef = new PropertyDefinition();

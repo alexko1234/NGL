@@ -24,6 +24,7 @@ import org.junit.Test;
 import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;
+import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
 import fr.cea.ig.MongoDBDAO;
@@ -127,15 +128,15 @@ public class ContainerValidationHelperTest extends AbstractTests {
 
 		listCodes.add(experimentType.code);
 		listCodes.add(experimentType1.code);
-		ContainerValidationHelper.validateExperimentTypeCodes(listCodes, contextValidation);
+		CommonValidationHelper.validateExperimentTypeCodes(listCodes, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
 	@Test
 	public void validateExperimentTypeCodesNotRequired() {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		ContainerValidationHelper.validateExperimentTypeCodes(null, contextValidation);
-		ContainerValidationHelper.validateExperimentTypeCodes(new ArrayList<String>(), contextValidation);
+		CommonValidationHelper.validateExperimentTypeCodes(null, contextValidation);
+		CommonValidationHelper.validateExperimentTypeCodes(new ArrayList<String>(), contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
@@ -148,7 +149,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		List<String> listCodes=new ArrayList<String>();
 		listCodes.add("notexist");
-		ContainerValidationHelper.validateExperimentTypeCodes(listCodes, contextValidation);
+		CommonValidationHelper.validateExperimentTypeCodes(listCodes, contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}	
 	

@@ -104,9 +104,10 @@ public class Experiment extends DBObject implements IValidation {
 		contextValidation.putObject(CommonValidationHelper.FIELD_TYPE_CODE , typeCode);
 		contextValidation.putObject(CommonValidationHelper.STATE_CODE , state.code);
 		ExperimentValidationHelper.validateCode(this, InstanceConstants.EXPERIMENT_COLL_NAME, contextValidation);
-//		ExperimentValidationHelper.validateState(this.typeCode, this.state, contextValidation);
+		//ExperimentValidationHelper.validateState(this.typeCode, this.state, contextValidation);
 		ExperimentValidationHelper.validationExperimentType(typeCode, experimentProperties, contextValidation);
 		ExperimentValidationHelper.validationExperimentCategoryCode(categoryCode, contextValidation);
+		contextValidation.putObject(CommonValidationHelper.FIELD_TYPE_CODE , typeCode);
 		ExperimentValidationHelper.validateResolutionCodes(state.resolutionCodes,contextValidation);
 		ExperimentValidationHelper.validationProtocol(typeCode,protocolCode,contextValidation);
 		ExperimentValidationHelper.validateInstrumentUsed(instrument,instrumentProperties,contextValidation);
