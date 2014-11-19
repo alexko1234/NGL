@@ -173,7 +173,7 @@ margin: 8px 0 8px;
 
 #dropZone{
 	border: 0;
-	height: 34px;
+	height: 18px;
 }
 
 .flowCellLane .table>tbody>tr>th:last-child:not([ng-repeat="property in experiment.containerOutProperties"]),

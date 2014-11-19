@@ -461,7 +461,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	});
 	
 	$scope.saveAll = function(promises){
-		$q.all(promises).then(function (res) {
+		
+	    $q.all(promises).then(function (res) {
 			if($scope.message.text != Messages('experiments.msg.save.error')){
 				$scope.message.clazz="alert alert-success";
 				$scope.message.text=Messages('experiments.msg.save.sucess');
