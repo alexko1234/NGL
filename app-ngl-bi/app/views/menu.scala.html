@@ -20,7 +20,7 @@
 					<ul class="dropdown-menu" role="menu" aria-labelledby="valuation">
 						<li class="@("active".when(nav == "runs.valuation"))"><a href="@controllers.runs.tpl.routes.Runs.home("valuation")">@Messages("valuation.menu.runs")</a></li>																				
 						<li class="@("active".when(nav == "readsets.valuation"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("valuation")">@Messages("valuation.menu.readsets")</a></li>
-						<li class="@("active".when(nav == "analyzes.valuation"))"><a href="@controllers.analyzes.tpl.routes.Analyzes.home("valuation")">@Messages("valuation.menu.analyzes")</a></li>	
+						<li class="@("active".when(nav == "analyses.valuation"))"><a href="@controllers.analyses.tpl.routes.Analyses.home("valuation")">@Messages("valuation.menu.analyses")</a></li>	
 												
 					</ul>
 				</li>
@@ -44,12 +44,12 @@
 					</ul>
 				</li>
 		
-				<li class="dropdown @("active".when(nav.startsWith("analyzes")))">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="readsets">@Messages("analyzes.menu")<b class="caret"></b></a>
+				<li class="dropdown @("active".when(nav.startsWith("analyses")))">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="readsets">@Messages("analyses.menu")<b class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="readsets">
-						<li class="@("active".when(nav == "analyzes.search"))"><a href="@controllers.analyzes.tpl.routes.Analyzes.home("search")">@Messages("analyzes.menu.search")</a></li>																				
-						<li class="@("active".when(nav == "analyzes.valuation"))"><a href="@controllers.analyzes.tpl.routes.Analyzes.home("valuation")">@Messages("analyzes.menu.valuation")</a></li>	
-						<li class="@("active".when(nav == "analyzes.state"))"><a href="@controllers.analyzes.tpl.routes.Analyzes.home("state")">@Messages("analyzes.menu.state")</a></li>
+						<li class="@("active".when(nav == "analyses.search"))"><a href="@controllers.analyses.tpl.routes.Analyses.home("search")">@Messages("analyses.menu.search")</a></li>																				
+						<li class="@("active".when(nav == "analyses.valuation"))"><a href="@controllers.analyses.tpl.routes.Analyses.home("valuation")">@Messages("analyses.menu.valuation")</a></li>	
+						<li class="@("active".when(nav == "analyses.state"))"><a href="@controllers.analyses.tpl.routes.Analyses.home("state")">@Messages("analyses.menu.state")</a></li>
 					</ul>
 				</li>
 				

@@ -43,57 +43,57 @@
 <div class="row margin-bottom-7">
 <div class="col-md-12 col-lg-12">
 	<ul class="nav nav-tabs margin-bottom-5">
-		<li class="active"><a href="#" data-target="#general" data-toggle="tab">@Messages("analyzes.tabs.general")</a></li>
-		<li><a href="#" data-target="#advanced" data-toggle="tab">@Messages("analyzes.tabs.advanced")</a></li>    
+		<li class="active"><a href="#" data-target="#general" data-toggle="tab">@Messages("analyses.tabs.general")</a></li>
+		<li><a href="#" data-target="#advanced" data-toggle="tab">@Messages("analyses.tabs.advanced")</a></li>    
 	</ul>
 	<div class="tab-content">
 	<div class="tab-pane active" id="general">		
 			<form class="form-horizontal">
 				<div class="row">
 				@column(){
-					@views.html.helper.columnLabelValue(Messages("analyzes.code")){
+					@views.html.helper.columnLabelValue(Messages("analyses.code")){
 						<p class="form-control-static">{{analysis.code}}</p>
 					}
-					@views.html.helper.columnLabelValue(Messages("analyzes.state.code")){
-						<!-- workflow-chart ng-attr-modal-bg-color="white" ng-attr-modal-width="700" ng-attr-modal-height="800" ng-attr-modal-header-text='@Messages("analyzes.modal.header.text")'
+					@views.html.helper.columnLabelValue(Messages("analyses.state.code")){
+						<!-- workflow-chart ng-attr-modal-bg-color="white" ng-attr-modal-width="700" ng-attr-modal-height="800" ng-attr-modal-header-text='@Messages("analyses.modal.header.text")'
 		        			ng-attr-modal-data="statesHierarchy" ng-attr-modal-historical-data="analysis.state.historical" ng-attr-modal-current-code="analysis.state.code">
 		        		</workflow-chart-->
 		        		
 		        		<p class="form-control-static" ng-bind="analysis.state.code|codes:'state'"></p>
 					}
 					
-					@views.html.helper.columnLabelValue(Messages("analyzes.valuation.valid")){
+					@views.html.helper.columnLabelValue(Messages("analyses.valuation.valid")){
 						<div ng-switch on="isEditMode()">
 							<p class="form-control-static" ng-switch-when="false" ng-bind="analysis.valuation.valid|codes:'valuation'"/>
 							<div ng-switch-when="true"><div bt-select class="form-control" ng-model="analysis.valuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div></div>
 						</div>
 					}				
-					@views.html.helper.columnLabelValue(Messages("analyzes.valuation.resolutions")){
+					@views.html.helper.columnLabelValue(Messages("analyses.valuation.resolutions")){
 							<div bt-select  class="form-control" ng-model="analysis.valuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ng-edit="isEditMode()"></div>							
 					}
-					@views.html.helper.columnLabelValue(Messages("analyzes.valuation.criteria")){
+					@views.html.helper.columnLabelValue(Messages("analyses.valuation.criteria")){
 						<div ng-switch on="isEditMode()">
 							<p class="form-control-static" ng-switch-when="false" ng-bind="analysis.valuation.criteriaCode|codes:'valuation_criteria'" />
 							<div ng-switch-when="true"><div bt-select class="form-control" ng-model="analysis.valuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></div></div>
 						</div>
 					}
-					@views.html.helper.columnLabelValue(Messages("analyzes.valuation.user")){
+					@views.html.helper.columnLabelValue(Messages("analyses.valuation.user")){
 						<p class="form-control-static" >{{analysis.valuation.user}} ({{analysis.valuation.date | date:'@Messages("date.format")'}})</p>
 					}
 				}
 				
 				@column(){
-					@views.html.helper.columnLabelValue(Messages("analyzes.typeCode")){
+					@views.html.helper.columnLabelValue(Messages("analyses.typeCode")){
 						<p class="form-control-static">{{analysis.typeCode|codes:'type'}}</p>
 					}
 					
-					@views.html.helper.columnLabelValue(Messages("analyzes.masterReadSetCodes")){
+					@views.html.helper.columnLabelValue(Messages("analyses.masterReadSetCodes")){
 						<ul class="form-control-static list-unstyled">
 	  						<li ng-repeat="code in analysis.masterReadSetCodes"><a href="#" ng-click="showReadSet(code)">{{code}}</a></li>
 						</ul>						
 					}
 					
-					@views.html.helper.columnLabelValue(Messages("analyzes.readSetCodes")){						
+					@views.html.helper.columnLabelValue(Messages("analyses.readSetCodes")){						
 							<ul class="form-control-static list-unstyled">
 	  							<li ng-repeat="code in analysis.readSetCodes"><a href="#" ng-click="showReadSet(code)">{{code}}</a></li>
 							</ul>																
@@ -106,7 +106,7 @@
 					<div ng-switch on="isEditMode()">
 						<div class="col-md-8 col-lg-8" ng-switch-when="false">
 							<div class="form-group">
-								<label class="col-md-3 col-lg-3 control-label">@Messages("analyzes.valuation.comment")</label>
+								<label class="col-md-3 col-lg-3 control-label">@Messages("analyses.valuation.comment")</label>
 								<div class="col-md-9 col-lg-9">
 									<p ng-bind-html="deliberatelyTrustHTMLComment()"></p>
 				   				</div>
@@ -114,7 +114,7 @@
 			   			</div>
 			   			<div class="col-md-8 col-lg-8" ng-switch-when="true">
 			   				<div class="form-group">
-								<label class="col-md-3 col-lg-3 control-label">@Messages("analyzes.valuation.comment")</label>
+								<label class="col-md-3 col-lg-3 control-label">@Messages("analyses.valuation.comment")</label>
 								<div class="col-md-9 col-lg-9">
 									<textarea class="form-control" ng-model="analysis.valuation.comment" rows="3"></textarea>
 								</div>
@@ -130,7 +130,7 @@
 	<div class="row">
 	<form class="form-horizontal">		
 			<div class="col-md-12 col-lg-12">				
-				@columnLabelValueAdv(Messages("analyzes.files.path")){
+				@columnLabelValueAdv(Messages("analyses.files.path")){
 					<p class="form-control-static">{{analysis.path}}</p>
 				}				
 			</div>					
@@ -141,17 +141,17 @@
 				<table class="table table-condensed table-hover table-bordered">
 					<thead>
 						<tr>
-							<th>@Messages("analyzes.files.fullname")</th>
-							<th>@Messages("analyzes.files.typeCode")</th>
-							<th>@Messages("analyzes.files.usable")</th>							
+							<th>@Messages("analyses.files.fullname")</th>
+							<th>@Messages("analyses.files.typeCode")</th>
+							<th>@Messages("analyses.files.usable")</th>							
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="file in analysis.files">
 							<td>{{file.fullname}}</td>
 							<td>{{file.typeCode}}</td>
-							<td ng-if="file.usable == true">@Messages("analyzes.files.isUsable")</td>
-							<td ng-if="file.usable == false">@Messages("analyzes.files.isNotUsable")</td>							
+							<td ng-if="file.usable == true">@Messages("analyses.files.isUsable")</td>
+							<td ng-if="file.usable == false">@Messages("analyses.files.isNotUsable")</td>							
 						</tr>
 					</tbody>
 				</table>

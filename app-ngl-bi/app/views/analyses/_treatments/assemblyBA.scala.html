@@ -6,25 +6,25 @@
  		<thead>
 			<tr>
 				<th></th>
-				<th>@Messages("analyzes.treatments.assembly_ba.NXContigSize")</th>
-				<th>@Messages("analyzes.treatments.assembly_ba.NXContigNb")</th>			
+				<th>@Messages("analyses.treatments.assembly_ba.NXContigSize")</th>
+				<th>@Messages("analyses.treatments.assembly_ba.NXContigNb")</th>			
  			</tr>
  		</thead>
  		<tbody>
  			<tr>
- 				<th>@Messages("analyzes.treatments.assembly_ba.N50Contig")</th>
+ 				<th>@Messages("analyses.treatments.assembly_ba.N50Contig")</th>
 				<td ng-class="highLight('treatments.'+treatments.getTreatment().code+'.pairs.N50ContigSize.value')">
 				{{analysis.treatments[treatments.getTreatment().code].pairs.N50ContigSize.value | number}}</td>
 				<td>{{analysis.treatments[treatments.getTreatment().code].pairs.N50ContigNb.value | number}}</td>
 				
 				</tr>
  			<tr>
- 				<th>@Messages("analyzes.treatments.assembly_ba.N80Contig")</th>
+ 				<th>@Messages("analyses.treatments.assembly_ba.N80Contig")</th>
 				<td>{{analysis.treatments[treatments.getTreatment().code].pairs.N80ContigSize.value | number}}</td>
 				<td>{{analysis.treatments[treatments.getTreatment().code].pairs.N80ContigNb.value | number}}</td>				
  			</tr>
  			<tr>
- 				<th>@Messages("analyzes.treatments.assembly_ba.N90Contig")</th>	
+ 				<th>@Messages("analyses.treatments.assembly_ba.N90Contig")</th>	
 				<td>{{analysis.treatments[treatments.getTreatment().code].pairs.N90ContigSize.value | number}}</td>
  				<td>{{analysis.treatments[treatments.getTreatment().code].pairs.N90ContigNb.value | number}}</td>
  			</tr>
@@ -37,11 +37,11 @@
  	<table class="table table-condensed table-hover table-bordered">
  		<thead>
 			<tr>
- 				<th>@Messages("analyzes.treatments.assembly_ba.contigSizeRepartition.size")</th>
-				<th>@Messages("analyzes.treatments.assembly_ba.contigSizeRepartition.contigNumber")</th>
-				<th>@Messages("analyzes.treatments.assembly_ba.contigSizeRepartition.contigPercent")</th>
-				<th>@Messages("analyzes.treatments.assembly_ba.contigSizeRepartition.cumulativeSize")</th>
-				<th>@Messages("analyzes.treatments.assembly_ba.contigSizeRepartition.cumulativeSizePercent")</th>
+ 				<th>@Messages("analyses.treatments.assembly_ba.contigSizeRepartition.size")</th>
+				<th>@Messages("analyses.treatments.assembly_ba.contigSizeRepartition.contigNumber")</th>
+				<th>@Messages("analyses.treatments.assembly_ba.contigSizeRepartition.contigPercent")</th>
+				<th>@Messages("analyses.treatments.assembly_ba.contigSizeRepartition.cumulativeSize")</th>
+				<th>@Messages("analyses.treatments.assembly_ba.contigSizeRepartition.cumulativeSizePercent")</th>
 			</tr>
  		</thead>
  		<tbody>
@@ -64,14 +64,14 @@
 	 <table class="table table-condensed table-hover table-bordered">
 		<thead>
 		<tr>
-			<th>@Messages("analyzes.treatments.assembly_ba.assemblyContigSize")</th>
-			<th>@Messages("analyzes.treatments.assembly_ba.GCpercent")</th>
-			<th>@Messages("analyzes.treatments.assembly_ba.readsAssembledPercent")</th>
-			<th>@Messages("analyzes.treatments.assembly_ba.expectedPoolSizePercent")</th>
-			<th>@Messages("analyzes.treatments.assembly_ba.assemblyContigNb")</th>
-			<th>@Messages("analyzes.treatments.assembly_ba.minContigSize")</th>
-			<th>@Messages("analyzes.treatments.assembly_ba.maxContigSize")</th>
-			<th>@Messages("analyzes.treatments.assembly_ba.averageContigSize")</th>
+			<th>@Messages("analyses.treatments.assembly_ba.assemblyContigSize")</th>
+			<th>@Messages("analyses.treatments.assembly_ba.GCpercent")</th>
+			<th>@Messages("analyses.treatments.assembly_ba.readsAssembledPercent")</th>
+			<th>@Messages("analyses.treatments.assembly_ba.expectedPoolSizePercent")</th>
+			<th>@Messages("analyses.treatments.assembly_ba.assemblyContigNb")</th>
+			<th>@Messages("analyses.treatments.assembly_ba.minContigSize")</th>
+			<th>@Messages("analyses.treatments.assembly_ba.maxContigSize")</th>
+			<th>@Messages("analyses.treatments.assembly_ba.averageContigSize")</th>
 			
 		</tr>
 		</thead>

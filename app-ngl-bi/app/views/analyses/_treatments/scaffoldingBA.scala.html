@@ -6,24 +6,24 @@
  		<thead>
 			<tr>
 				<th></th>
-				<th>@Messages("analyzes.treatments.scaffolding_ba.NXScaffoldSize")</th>
-				<th>@Messages("analyzes.treatments.scaffolding_ba.NXScaffoldNb")</th>							
+				<th>@Messages("analyses.treatments.scaffolding_ba.NXScaffoldSize")</th>
+				<th>@Messages("analyses.treatments.scaffolding_ba.NXScaffoldNb")</th>							
  			</tr>
  		</thead>
  		<tbody>
  			<tr>
- 				<th>@Messages("analyzes.treatments.scaffolding_ba.N50Scaffold")</th>
+ 				<th>@Messages("analyses.treatments.scaffolding_ba.N50Scaffold")</th>
 				<td ng-class="highLight('treatments.'+treatments.getTreatment().code+'.pairs.N50ScaffoldSize.value')">
 				{{analysis.treatments[treatments.getTreatment().code].pairs.N50ScaffoldSize.value | number}}</td>
 				<td>{{analysis.treatments[treatments.getTreatment().code].pairs.N50ScaffoldNb.value | number}}</td>
 			</tr>
  			<tr>
- 				<th>@Messages("analyzes.treatments.scaffolding_ba.N80Scaffold")</th>				
+ 				<th>@Messages("analyses.treatments.scaffolding_ba.N80Scaffold")</th>				
 				<td>{{analysis.treatments[treatments.getTreatment().code].pairs.N80ScaffoldSize.value | number}}</td>
 				<td>{{analysis.treatments[treatments.getTreatment().code].pairs.N80ScaffoldNb.value | number}}</td>
 			</tr>
  			<tr>
- 				<th>@Messages("analyzes.treatments.scaffolding_ba.N90Scaffold")</th>	
+ 				<th>@Messages("analyses.treatments.scaffolding_ba.N90Scaffold")</th>	
 				<td>{{analysis.treatments[treatments.getTreatment().code].pairs.N90ScaffoldSize.value | number}}</td>
 				<td>{{analysis.treatments[treatments.getTreatment().code].pairs.N90ScaffoldNb.value | number}}</td>
  			</tr>
@@ -36,11 +36,11 @@
  	<table class="table table-condensed table-hover table-bordered">
  		<thead>
 			<tr>
- 				<th>@Messages("analyzes.treatments.scaffolding_ba.scaffoldSizeRepartition.size")</th>
-				<th>@Messages("analyzes.treatments.scaffolding_ba.scaffoldSizeRepartition.scaffoldNumber")</th>
-				<th>@Messages("analyzes.treatments.scaffolding_ba.scaffoldSizeRepartition.scaffoldPercent")</th>
-				<th>@Messages("analyzes.treatments.scaffolding_ba.scaffoldSizeRepartition.cumulativeSize")</th>
-				<th>@Messages("analyzes.treatments.scaffolding_ba.scaffoldSizeRepartition.cumulativeSizePercent")</th>
+ 				<th>@Messages("analyses.treatments.scaffolding_ba.scaffoldSizeRepartition.size")</th>
+				<th>@Messages("analyses.treatments.scaffolding_ba.scaffoldSizeRepartition.scaffoldNumber")</th>
+				<th>@Messages("analyses.treatments.scaffolding_ba.scaffoldSizeRepartition.scaffoldPercent")</th>
+				<th>@Messages("analyses.treatments.scaffolding_ba.scaffoldSizeRepartition.cumulativeSize")</th>
+				<th>@Messages("analyses.treatments.scaffolding_ba.scaffoldSizeRepartition.cumulativeSizePercent")</th>
 			</tr>
  		</thead>
  		<tbody>
@@ -63,25 +63,25 @@
 	 <table class="table table-condensed table-hover table-bordered">
 		<thead>
 		<tr>
-			<th>@Messages("analyzes.treatments.scaffolding_ba.assemblyScaffoldSize")</th>
+			<th>@Messages("analyses.treatments.scaffolding_ba.assemblyScaffoldSize")</th>
 			
-			<th>@Messages("analyzes.treatments.scaffolding_ba.GCpercent")</th>
-			<th>@Messages("analyzes.treatments.scaffolding_ba.expectedPoolSizePercent")</th>
+			<th>@Messages("analyses.treatments.scaffolding_ba.GCpercent")</th>
+			<th>@Messages("analyses.treatments.scaffolding_ba.expectedPoolSizePercent")</th>
 			
 			
-			<th>@Messages("analyzes.treatments.scaffolding_ba.assemblyScaffoldNb")</th>
-			<th>@Messages("analyzes.treatments.scaffolding_ba.minScaffoldSize")</th>
-			<th>@Messages("analyzes.treatments.scaffolding_ba.maxScaffoldSize")</th>
-			<th>@Messages("analyzes.treatments.scaffolding_ba.averageScaffoldSize")</th>
+			<th>@Messages("analyses.treatments.scaffolding_ba.assemblyScaffoldNb")</th>
+			<th>@Messages("analyses.treatments.scaffolding_ba.minScaffoldSize")</th>
+			<th>@Messages("analyses.treatments.scaffolding_ba.maxScaffoldSize")</th>
+			<th>@Messages("analyses.treatments.scaffolding_ba.averageScaffoldSize")</th>
 			
-			<th>@Messages("analyzes.treatments.scaffolding_ba.nbMappedPairs")</th>
+			<th>@Messages("analyses.treatments.scaffolding_ba.nbMappedPairs")</th>
 			
-			<th>@Messages("analyzes.treatments.scaffolding_ba.nbPairedSatisfied")</th>
-			<th>@Messages("analyzes.treatments.scaffolding_ba.nbPairedUnsatisfied")</th>
-			<th>@Messages("analyzes.treatments.scaffolding_ba.nbMappedSequences")</th> 
-			<th>@Messages("analyzes.treatments.scaffolding_ba.medianInsertSize")</th>
+			<th>@Messages("analyses.treatments.scaffolding_ba.nbPairedSatisfied")</th>
+			<th>@Messages("analyses.treatments.scaffolding_ba.nbPairedUnsatisfied")</th>
+			<th>@Messages("analyses.treatments.scaffolding_ba.nbMappedSequences")</th> 
+			<th>@Messages("analyses.treatments.scaffolding_ba.medianInsertSize")</th>
 			
-			<th>@Messages("analyzes.treatments.scaffolding_ba.numberOfN")</th>
+			<th>@Messages("analyses.treatments.scaffolding_ba.numberOfN")</th>
 			
 		</tr>
 		</thead>
