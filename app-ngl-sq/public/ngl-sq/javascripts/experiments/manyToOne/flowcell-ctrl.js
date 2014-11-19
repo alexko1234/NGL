@@ -323,11 +323,13 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	var match = model.match(array_regexp);
 	if(!match){
 	    $scope[model].splice($scope[model].indexOf(data), 1);
+	    $scope.rows[$scope[model].indexOf(data)]= true;
 	}else{
 	    $scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.splice($scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.indexOf(data), 1);
 	}
 
 	$scope.atomicTransfere.reloadContainerDragNDrop(undefined, undefined, $scope.datatable);
+	$scope.scanOpenedAll();
     };
 
     $scope.beforeDropData = function(e, data, ngModel){
@@ -392,16 +394,15 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 
     };
 
-    $scope.isFilled = function(){	    
+    $scope.isFilled = function(){ 	
 	for (var i=0; i<$scope.laneCount;i++){
 	    if(angular.isDefined($scope.experiment.value.atomicTransfertMethods[i])
-		    && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length >0){
-		i = $scope.laneCount +1;
+		    && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.length >0){		
 		return true;
-	    }else{
-		return false;
 	    }
 	}
+	
+	
     };
 
     $scope.updateColumnPropertyCodeValues = function(codeValue){
