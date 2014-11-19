@@ -104,12 +104,9 @@ public class StatBPATest extends AbstractTestsCNS
 	@Test
 	public void shouldStatBPAActionOk()
 	{
-		//With Analyzes URL
-		Result result = callAction(controllers.analyzes.api.routes.ref.Analyzes.applyRules(codeAnalysis,"BPA_ContigFilter_1"),fakeRequest());
+		//With Analyses URL
+		Result result = callAction(controllers.analyses.api.routes.ref.Analyses.applyRules(codeAnalysis,"BPA_ContigFilter_1"),fakeRequest());
         assertThat(status(result)).isEqualTo(OK);
         
-        //With deprecated Analyses URL
-        result = callAction(controllers.analyses.api.routes.ref.AnalysesOld.applyRules(codeAnalysis,"BPA_ContigFilter_1"),fakeRequest());
-        assertThat(status(result)).isEqualTo(OK);
 	}
 }
