@@ -55,7 +55,7 @@ public class Content implements IValidation{
 		SampleValidationHelper.validateSampleCategoryCode(sampleCategoryCode,contextValidation);
 		SampleUsedValidationHelper.validateSampleTypeCode(sampleTypeCode,contextValidation);
 		
-		SampleUsedValidationHelper.validateProjectCode(projectCode, contextValidation);
+		//SampleUsedValidationHelper.validateProjectCode(projectCode, contextValidation);
 	}
 
 }
