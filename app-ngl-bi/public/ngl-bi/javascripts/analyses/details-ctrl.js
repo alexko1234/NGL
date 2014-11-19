@@ -6,9 +6,9 @@
 	 
 	 $scope.save = function(){
 			var queries = [];
-			queries.push($http.put(jsRoutes.controllers.analyzes.api.Analyzes.properties($scope.analysis.code).url,
+			queries.push($http.put(jsRoutes.controllers.analyses.api.Analyses.properties($scope.analysis.code).url,
 					{properties : $scope.analysis.properties}));
-			queries.push($http.put(jsRoutes.controllers.analyzes.api.Analyzes.valuation($scope.analysis.code).url, 
+			queries.push($http.put(jsRoutes.controllers.analyses.api.Analyses.valuation($scope.analysis.code).url, 
 					$scope.analysis.valuation));
 			
 			$q.all(queries).then(function(results){
@@ -42,7 +42,7 @@
 		};
 		
 		var updateData = function(){
-			$http.get(jsRoutes.controllers.analyzes.api.Analyzes.get($routeParams.code).url).success(function(data) {
+			$http.get(jsRoutes.controllers.analyses.api.Analyses.get($routeParams.code).url).success(function(data) {
 				$scope.analysis = data;	
 				
 			});
@@ -84,16 +84,16 @@
 				mainService.startEditMode();			
 			}
 			
-			$http.get(jsRoutes.controllers.analyzes.api.Analyzes.get($routeParams.code).url).success(function(data) {
+			$http.get(jsRoutes.controllers.analyses.api.Analyses.get($routeParams.code).url).success(function(data) {
 				$scope.analysis = data;	
 					
 				if(tabService.getTabs().length == 0){
 					if(isValuationMode()){ //valuation mode
-						tabService.addTabs({label:Messages('analyzes.page.tab.validate'),href:jsRoutes.controllers.analyzes.tpl.Analyzes.home("valuation").url,remove:true});
-						tabService.addTabs({label:$scope.analysis.code,href:jsRoutes.controllers.analyzes.tpl.Analyzes.valuation( $scope.analysis.code).url,remove:true})
+						tabService.addTabs({label:Messages('analyses.page.tab.validate'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("valuation").url,remove:true});
+						tabService.addTabs({label:$scope.analysis.code,href:jsRoutes.controllers.analyses.tpl.Analyses.valuation( $scope.analysis.code).url,remove:true})
 					}else{ //detail mode
-						tabService.addTabs({label:Messages('analyzes.menu.search'),href:jsRoutes.controllers.analyzes.tpl.Analyzes.home("search").url,remove:true});
-						tabService.addTabs({label:$scope.analysis.code,href:jsRoutes.controllers.analyzes.tpl.Analyzes.get($scope.analysis.code).url,remove:true})									
+						tabService.addTabs({label:Messages('analyses.menu.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("search").url,remove:true});
+						tabService.addTabs({label:$scope.analysis.code,href:jsRoutes.controllers.analyses.tpl.Analyses.get($scope.analysis.code).url,remove:true})									
 					}
 					tabService.activeTab($scope.getTabs(1));
 				}
@@ -105,7 +105,7 @@
 				$scope.lists.refresh.states({objectTypeCode:"Analysis"});
 				
 				if(angular.isDefined($scope.analysis.treatments)){				
-					$scope.treatments.init($scope.analysis.treatments, jsRoutes.controllers.analyzes.tpl.Analyzes.treatments, "analyzes");				
+					$scope.treatments.init($scope.analysis.treatments, jsRoutes.controllers.analyses.tpl.Analyses.treatments, "analyses");				
 				}
 				
 				$http.get(jsRoutes.controllers.commons.api.StatesHierarchy.list().url,  {params: {objectTypeCode:"Analysis"}}).success(function(data) {

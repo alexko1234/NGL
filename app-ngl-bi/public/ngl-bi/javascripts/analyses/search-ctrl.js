@@ -7,12 +7,12 @@ angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datat
 			pagination:{mode:'local'},			
 			order :{mode:'local', by:'code', reverse : true},
 			search:{
-				url:jsRoutes.controllers.analyzes.api.Analyzes.list()
+				url:jsRoutes.controllers.analyses.api.Analyses.list()
 			},
 			show:{
 				active:true,
 				add :function(line){
-					tabService.addTabs({label:line.code,href:jsRoutes.controllers.analyzes.tpl.Analyzes.get(line.code).url,remove:true});
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.analyses.tpl.Analyses.get(line.code).url,remove:true});
 				}
 			},
 			hide:{
@@ -21,7 +21,7 @@ angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datat
 			exportCSV:{
 				active:true
 			},
-			name:"Analyzes"
+			name:"Analyses"
 	};
 
 	$scope.search = function(){
@@ -34,7 +34,7 @@ angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datat
 		
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('search');
-		tabService.addTabs({label:Messages('analyzes.menu.search'),href:jsRoutes.controllers.analyzes.tpl.Analyzes.home("search").url,remove:true});
+		tabService.addTabs({label:Messages('analyses.menu.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("search").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
@@ -58,7 +58,7 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 			pagination:{mode:'local'},
 			order :{mode:'local', by:'code', reverse : true},
 			search:{
-				url:jsRoutes.controllers.analyzes.api.Analyzes.list()
+				url:jsRoutes.controllers.analyses.api.Analyses.list()
 			},
 			edit : {
 				active:true,
@@ -66,7 +66,7 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 			},			
 			save : {
 				active:true,
-				url: jsRoutes.controllers.analyzes.api.Analyzes.valuationBatch().url,				
+				url: jsRoutes.controllers.analyses.api.Analyses.valuationBatch().url,				
 				batch:true,
 				method:'put',
 				value:function(line){return {code:line.code,valuation:line.valuation};}				
@@ -74,7 +74,7 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 			show:{
 				active:true,
 				add :function(line){
-					tabService.addTabs({label:line.code,href:jsRoutes.controllers.analyzes.tpl.Analyzes.get(line.code).url,remove:true});
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.analyses.tpl.Analyses.get(line.code).url,remove:true});
 				}
 			},
 			hide:{
@@ -93,7 +93,7 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('valuation');
-		tabService.addTabs({label:Messages('analyzes.page.tab.validate'),href:jsRoutes.controllers.analyzes.tpl.Analyzes.home("valuation").url,remove:true});
+		tabService.addTabs({label:Messages('analyses.page.tab.validate'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("valuation").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
@@ -114,7 +114,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 			pagination:{mode:'local'},
 			order :{mode:'local', by:'code', reverse : true},
 			search:{
-				url:jsRoutes.controllers.analyzes.api.Analyzes.list()
+				url:jsRoutes.controllers.analyses.api.Analyses.list()
 			},
 			edit : {
 				active:true,
@@ -122,7 +122,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 			},			
 			save : {
 				active:true,
-				url: jsRoutes.controllers.analyzes.api.Analyzes.stateBatch().url,				
+				url: jsRoutes.controllers.analyses.api.Analyses.stateBatch().url,				
 				batch:true,
 				method:'put',
 				value:function(line){return {code:line.code,state:line.state};}				
@@ -130,7 +130,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 			show:{
 				active:true,
 				add :function(line){
-					tabService.addTabs({label:line.code,href:jsRoutes.controllers.analyzes.tpl.Analyzes.get(line.code).url,remove:true});
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.analyses.tpl.Analyses.get(line.code).url,remove:true});
 				}
 			},
 			hide:{
@@ -149,7 +149,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('state');
-		tabService.addTabs({label:Messages('analyzes.menu.search'),href:jsRoutes.controllers.analyzes.tpl.Analyzes.home("state").url,remove:true});
+		tabService.addTabs({label:Messages('analyses.menu.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("state").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 
