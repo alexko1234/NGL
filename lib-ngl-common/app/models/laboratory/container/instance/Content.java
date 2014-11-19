@@ -26,6 +26,9 @@ public class Content implements IValidation{
 	// Reference SampleCategory code
 	public String sampleCategoryCode;
 	
+	// Reference Project code
+	public String projectCode;
+	
 	public Float percentage;
 	
 	public Map<String,PropertyValue> properties;
@@ -51,6 +54,8 @@ public class Content implements IValidation{
 		SampleUsedValidationHelper.validateSampleCode(sampleCode, contextValidation);
 		SampleValidationHelper.validateSampleCategoryCode(sampleCategoryCode,contextValidation);
 		SampleUsedValidationHelper.validateSampleTypeCode(sampleTypeCode,contextValidation);
+		
+		SampleUsedValidationHelper.validateProjectCode(projectCode, contextValidation);
 	}
 
 }

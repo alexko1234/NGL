@@ -392,48 +392,49 @@ public class LimsCNGDAO {
 		container.traceInformation = new TraceInformation();
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 		
-		container.code=rs.getString("code");
+		container.code = rs.getString("code");
 		Logger.debug("Container code :"+container.code);
 		
-		container.categoryCode=containerCategoryCode; //lane or tube
+		container.categoryCode = containerCategoryCode; //lane or tube
 		
 		if (rs.getString("comment") != null) {
-			container.comments=new ArrayList<Comment>();	
+			container.comments = new ArrayList<Comment>();	
 			//just one comment for one lane (container)
 			container.comments.add(new Comment(rs.getString("comment")));
 		}
 		
 		container.state = new State(); 
-		container.state.code=CONTAINER_STATE_CODE; 
+		container.state.code = CONTAINER_STATE_CODE; 
 		container.state.user = InstanceHelpers.getUser();
 		container.state.date = new Date(); 
 		
 		container.valuation = new Valuation(); 
-		container.valuation.valid= TBoolean.UNSET;
+		container.valuation.valid = TBoolean.UNSET;
 		
 		// define container support attributes
 		try {
-			container.support=ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nb_container"),rs.getString("code_support"),"1",rs.getString("column")); 
+			container.support = ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nb_container"),rs.getString("code_support"),"1",rs.getString("column")); 
 		}
 		catch(DAOException e) {
 			Logger.error("Can't get container support !"); 
 		}
 		
-		container.properties= new HashMap<String, PropertyValue>();
+		container.properties = new HashMap<String, PropertyValue>();
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("lims_code")));
 		
 		if (containerCategoryCode.equals("tube")) {
-			container.mesuredConcentration=new PropertySingleValue(rs.getFloat("concentration"), "ng/µl");
+			container.mesuredConcentration = new PropertySingleValue(rs.getFloat("concentration"), "nM");
 		}
 		
 		if (rs.getString("project")!=null) {
-			container.projectCodes=new ArrayList<String>();
+			container.projectCodes = new ArrayList<String>();
 			container.projectCodes.add(rs.getString("project"));
 		}		
 		
 		if (rs.getString("code_sample")!=null) {
 			Content content=new Content();
-			content.sampleCode=rs.getString("code_sample");
+			content.sampleCode = rs.getString("code_sample");
+			content.projectCode = rs.getString("project");
 			
 			String sampleTypeCode = SAMPLE_USED_TYPE_CODE;  //TODO : to manage with Julie !
 			SampleType sampleType=null;
@@ -564,8 +565,9 @@ public class LimsCNGDAO {
 	 * @throws DAOException
 	 */
 	public static List<Container>  createContent(List<Container> results, int posCurrent, int posNext) throws DAOException{
-		Content content=new Content();
-		content.sampleCode= results.get(posNext).sampleCodes.get(0);
+		Content content = new Content();
+		content.sampleCode = results.get(posNext).sampleCodes.get(0);
+		content.projectCode = results.get(posNext).projectCodes.get(0);
 		
 		SampleType sampleType=null;
 		sampleType = SampleType.find.findByCode(SAMPLE_USED_TYPE_CODE);	
@@ -672,9 +674,16 @@ public class LimsCNGDAO {
 	
 	
 	//reprise
-	public List<Container> findContainerToCreateForFirstTime(final ContextValidation contextError, String containerCode, String containerCategoryCode) throws DAOException {
+	public List<Container> findAllContainer(final ContextValidation contextError, String containerCode, String containerCategoryCode) throws DAOException {
 		final String _containerCategoryCode = containerCategoryCode;
-		String sqlView = "v_tube_tongl_reprise";
+		String sqlView;
+		
+		if (containerCategoryCode.equals("lane")) {
+			sqlView = "v_flowcell_tongl_reprise";
+		}
+		else {
+			sqlView = "v_tube_tongl_reprise";
+		}
 		
 		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag, exp_short_name", new Object[]{} 
 		,new RowMapper<Container>() {
