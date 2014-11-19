@@ -94,7 +94,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 				else{
 					/* From sample, add content in container */
 					container.contents.remove(sampleUsed);
-					ContainerHelper.addContent(container,newSample,sampleUsed.properties);
+					ContainerHelper.addContent(container, newSample, sampleUsed);
 				}
 				contextError.removeKeyFromRootKeyName(rootKeyName);
 	
@@ -228,7 +228,10 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			
 			Content sampleUsed=new Content();
 			sampleUsed.sampleCode=rs.getString("sampleCode");
-			
+			if(rs.getString("project")!=null) {					
+				sampleUsed.projectCode = rs.getString("project");
+			}
+			//TODO add projectCode
 			//Todo replace by method in containerHelper who update sampleCodes from contents
 			container.sampleCodes.add(rs.getString("sampleCode"));
 

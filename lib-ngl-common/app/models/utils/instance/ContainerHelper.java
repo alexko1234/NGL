@@ -37,25 +37,26 @@ public class ContainerHelper {
 		addContent(container,sample,null);
 	}
 
-	public static void addContent(Container container,Sample sample,Map<String,PropertyValue> properties) throws DAOException{
+	public static void addContent(Container container,Sample sample, Content content) throws DAOException{
 
-		Content sampleUsed =new Content(sample.code, sample.typeCode, sample.categoryCode);
-
+		Content finalContent =new Content(sample.code, sample.typeCode, sample.categoryCode);
+		finalContent.projectCode = content.projectCode;
+		
 		SampleType sampleType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
 		ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
 
 		if(importType !=null){
 
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,sampleUsed.properties);
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,finalContent.properties);
 		}
 		if(sampleType !=null){
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,sampleUsed.properties);
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,finalContent.properties);
 		}
 
-		if(properties!=null)
-			sampleUsed.properties.putAll(properties);
+		if(content.properties!=null)
+			finalContent.properties.putAll(content.properties);
 
-		container.contents.add(sampleUsed);
+		container.contents.add(finalContent);
 
 		container.projectCodes=InstanceHelpers.addCodesList(sample.projectCodes,container.projectCodes);
 

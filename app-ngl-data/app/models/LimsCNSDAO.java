@@ -358,7 +358,8 @@ public class LimsCNSDAO{
 			public Content mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 				Content sampleUsed = new Content(rs.getString("sampleCode"),null,null);
-
+				sampleUsed.projectCode = rs.getString("project");
+				//TODO add projectCode
 				// Todo add properties from ExperimentType
 				sampleUsed.properties=new HashMap<String, PropertyValue>();
 				sampleUsed.properties.put("percentPerLane", new PropertySingleValue(rs.getFloat("percentPerLane")));
