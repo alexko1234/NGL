@@ -9,7 +9,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="@controllers.main.tpl.routes.Main.home()">@Messages("application.name")@helper.env()</a>
+			<a class="navbar-brand" href="@controllers.main.tpl.routes.Main.home()">@Messages("application.name")@helper.env() @helper.version()</a>
     	</div>
     	
     	<div class="collapse navbar-collapse">
@@ -62,7 +62,11 @@
 				
 				<li class="@("active".when(nav == "archives.search"))">
 					<a href="@controllers.archives.tpl.routes.ReadSets.home("search")">@Messages("archives.menu")</a>
-				</li>						
+				</li>	
+				
+				<li class="@("active".when(nav.startsWith("Aide")))">
+					<a href="@routes.Assets.at("ngl-bi/documentation/DOC_UTILISATEUR.pdf")" target="doc">@Messages("docs.menu")</a>
+				</li>				
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">

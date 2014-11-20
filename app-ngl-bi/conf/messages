@@ -5,7 +5,7 @@ unit.percent = %
 #application
 application.name=NGL-BI
 home.title.name=Bienvenue dans NGL-BI
-
+home.title.help.name=Aide NGL-BI
 
 #home page main
 home.h10.header=Bienvenue {0} sur NGL - Bio Informatique
@@ -27,8 +27,9 @@ title.archives=Archives
 
 #menu
 
-archives.menu=Archives
+archives.menu = Archives
 archives.menu.search = Rechercher
+docs.menu = Aide
 
 #page field value
 page.archives.fvalue.archive.0 = Tout
@@ -103,6 +104,7 @@ button.add = Ajouter
 button.printMode = Mode impression
 button.print = Impression
 button.return = Retour
+button.download.manual = Télécharger le manuel
 
 ############
 #
