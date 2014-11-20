@@ -1486,7 +1486,13 @@ angular.module('datatableServices', []).
 		    					var columnsToPrint = this.config.columns;	    					
 		    					//header
 		    					columnsToPrint.forEach(function(column) {
-		    						lineValue = lineValue + Messages(column.header) + delimiter;
+		    						var header = column.header;
+		    						if(typeof header == 'function'){
+		    							header = header();
+		    						}else{
+		    							header = Messages(column.header);
+		    						}
+		    						lineValue = lineValue + header + delimiter;
 		    					}); 
 		    					lineValue += "\n";
 		    					//data
