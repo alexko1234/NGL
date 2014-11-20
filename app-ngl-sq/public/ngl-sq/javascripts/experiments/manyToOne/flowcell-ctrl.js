@@ -161,7 +161,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			var unit = "";
 			if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 			$scope.experiment.containerOutProperties.push(data);
-			var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputExperimentProperties."+data.code+".value",true, true,true,"String",data.choiceInList,possibleValues,{});
+			var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputExperimentProperties."+data.code+".value",false, true,true,"String",data.choiceInList,possibleValues,{});
 			column.defaultValues = data.defaultValue;
 			column.extraHeaders = {0:"prep FC"};
 			$scope.datatable.addColumn(-1,column);
@@ -194,9 +194,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					if($scope.getLevel( data[j].levels, "ContainerIn")){
 						var getter = $parse("datatable.displayResult["+i+"].inputInstrumentProperties."+data[j].code+".value");
 						if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code]){
-							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code].value);
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code]);
 						}else{
-							getter.assign($scope,"");
+							getter.assign($scope,undefined);
 						}
 					}
 				}
@@ -213,9 +213,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 						var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
 						var k = $scope.datatable.displayResult[i].data.inputX;
 						if($scope.experiment.value.atomicTransfertMethods[k].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[k].outputContainerUsed.experimentProperties[data[j].code]){
-							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[k].outputContainerUsed.experimentProperties[data[j].code].value);
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[k].outputContainerUsed.experimentProperties[data[j].code]);
 						}else{
-							getter.assign($scope,"");
+							getter.assign($scope,undefined);
 						}
 					}
 				}
@@ -233,8 +233,8 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					}
 
 					if(!$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
-						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code] = {};
-						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value = "";
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code] = undefined;
+						//$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value = undefined;
 					}
 				}
 			}
@@ -249,9 +249,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					if($scope.getLevel( data[j].levels, "ContainerIn")){
 						var getter = $parse("datatable.displayResult["+i+"].inputExperimentProperties."+data[j].code+".value");
 						if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code]){
-							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code].value);
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code]);
 						}else{
-							getter.assign($scope,"");
+							getter.assign($scope,undefined);
 						}
 					}
 				}
@@ -266,9 +266,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					if($scope.getLevel( data[j].levels, "ContainerOut")){
 						var getter = $parse("datatable.displayResult["+i+"].outputInstrumentProperties."+data[j].code+".value");
 						if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]){
-							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code].value);
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]);
 						}else{
-							getter.assign($scope,"");
+							getter.assign($scope,undefined);
 						}
 					}
 				}
