@@ -32,7 +32,6 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateExistInstanceCode(contextValidation, experimentCode, "fromPurifingCode", Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME, false);
 	}
-
 	
 	public static void validateContents(List<Content> contents, ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, contents, "contents")){
@@ -46,21 +45,19 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 
 	public static void validateContainerSupport(LocationOnContainerSupport support,
 			ContextValidation contextValidation) {
-		contextValidation.addKeyToRootKeyName("containersupport");
-		if(ValidationHelper.required(contextValidation, support, "containersupport")) {
+		if(ValidationHelper.required(contextValidation, support, "support")) {
+			contextValidation.addKeyToRootKeyName("support");
 			support.validate(contextValidation);
-		}
-		contextValidation.removeKeyFromRootKeyName("containersupport");
+			contextValidation.removeKeyFromRootKeyName("support");
+		}		
 	}
 
 	public static void validateProcessCodes(List<String> inputProcessCodes, ContextValidation contextValidation) {
-		if(inputProcessCodes!=null){
-			for(String s: inputProcessCodes){
-				BusinessValidationHelper.validateExistInstanceCode(contextValidation, s, Process.class, InstanceConstants.PROCESS_COLL_NAME); 
+		if(inputProcessCodes!=null && inputProcessCodes.size() > 0){
+			for(int i = 0; i < inputProcessCodes.size(); i++){
+				BusinessValidationHelper.validateExistInstanceCode(contextValidation, inputProcessCodes.get(i), "inputProcessCodes."+i, Process.class, InstanceConstants.PROCESS_COLL_NAME); 
 			}
 		}
 	}
-	
-
 
 }
