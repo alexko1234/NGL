@@ -2051,7 +2051,7 @@ angular.module('datatableServices', []).
 	    				if(col.type === "boolean"){
 	    					editElement = '<input class="form-control"' +defaultValueDirective+' dt-html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+'/>';
 	    				}else if(!col.choiceInList){
-	    					editElement = '<input class="form-control" '+defaultValueDirective+' dt-html-filter="{{col.type}}" type="'+col.type+'" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+this.getDateTimestamp(col.type)+'/>';
+	    					editElement = '<input class="form-control" '+defaultValueDirective+' dt-html-filter="{{col.type}}" type="'+this.getInputType(col)+'" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+this.getDateTimestamp(col.type)+'/>';
 	    				}else if(col.choiceInList){
 	    					switch (col.listStyle) { 
 	    						case "radio":
@@ -2085,6 +2085,13 @@ angular.module('datatableServices', []).
     			    	} else {
     			    		throw "Error property is not editable !";
     			    	}		    				
+			    	};
+			    	
+			    	scope.dtTableFunctions.getInputType = function(col){
+	    				if(col.type === "date" || col.type === "datetime" || col.type === "datetime-local"){
+    			    		return "text";
+	    				}
+	    				return col.type
 			    	};
 	    			
 			    	scope.dtTableFunctions.getFormatter = scope.dtTable.getFormatter;
