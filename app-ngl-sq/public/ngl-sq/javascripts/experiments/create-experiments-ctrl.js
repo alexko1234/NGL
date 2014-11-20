@@ -421,10 +421,26 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	
 	$scope.saveAllPromise = function(){
-		if(!$scope.saveInProgress){
+	    $scope.clearMessages();
+	    if(!$scope.saveInProgress){
 			$scope.saveInProgress = true;
 			var promises = [];
 			$scope.$broadcast('save', promises, $scope.saveAll);
+			 if(promises.length<=0){
+				$scope.message.clazz = "alert alert-danger";
+				$scope.message.text = Messages('experiments.msg.empty.save.error');				
+				
+				$scope.experiment.experimentProperties.enabled = true;
+				$scope.experiment.experimentInformation.enabled = true;
+				$scope.experiment.instrumentProperties.enabled = true;
+				$scope.experiment.instrumentInformation.enabled = true;
+				$scope.setEditConfig(true);
+				
+				$scope.$broadcast('refresh');
+				$scope.saveInProgress = false;
+				
+			    }
+			
 		}
 	};
 	
@@ -460,8 +476,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		}
 	});
 	
-	$scope.saveAll = function(promises){
-		
+	$scope.saveAll = function(promises){    
+	   
 	    $q.all(promises).then(function (res) {
 			if($scope.message.text != Messages('experiments.msg.save.error')){
 				$scope.message.clazz="alert alert-success";
@@ -512,9 +528,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	
 	$scope.saveAllAndChangeState = function(){
-		if(!$scope.saveInProgress){
+	    $scope.clearMessages();
+	    if(!$scope.saveInProgress){
 			var promises = [];
 			$scope.$broadcast('save', promises, $scope.changeState);
+			$scope.$broadcast('refresh');
 			$scope.saveInProgress = true;
 		}
 	};
@@ -566,20 +584,32 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					$scope.saveInProgress = false;
 				}
 			}, function(reason){			    
-			    $scope.experiment.experimentProperties.enabled = true;
-			    $scope.experiment.experimentInformation.enabled = true;
-			    $scope.experiment.instrumentProperties.enabled = true;
-			    $scope.experiment.instrumentInformation.enabled = true;
-			    $scope.setEditConfig(true);
-			    $scope.saveInProgress = false;
+			    $scope.message.clazz = "alert alert-danger";
+				$scope.message.text = Messages('experiments.msg.save.error');
+				
+				$scope.experiment.experimentProperties.enabled = true;
+				$scope.experiment.experimentInformation.enabled = true;
+				$scope.experiment.instrumentProperties.enabled = true;
+				$scope.experiment.instrumentInformation.enabled = true;
+				$scope.setEditConfig(true);
+				
+				$scope.message.details = data;
+				$scope.message.isDetails = true;
+				$scope.saveInProgress = false;
 				
 			});
 		}, function(reason){
-			$scope.experiment.experimentProperties.enabled =  true;
+		    $scope.message.clazz = "alert alert-danger";
+			$scope.message.text = Messages('experiments.msg.save.error');
+			
+			$scope.experiment.experimentProperties.enabled = true;
 			$scope.experiment.experimentInformation.enabled = true;
 			$scope.experiment.instrumentProperties.enabled = true;
 			$scope.experiment.instrumentInformation.enabled = true;
 			$scope.setEditConfig(true);
+			
+			$scope.message.details = data;
+			$scope.message.isDetails = true;
 			$scope.saveInProgress = false;
 		});
 	};

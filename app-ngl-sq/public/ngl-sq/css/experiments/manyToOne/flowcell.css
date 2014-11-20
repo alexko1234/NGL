@@ -1,6 +1,6 @@
 /*custom bootrap for flowcell experiments*/
 
-/* GENERAL*/
+/* MAIN */
 
 .tabPaneTable{
 	padding-top: 20px;
@@ -160,7 +160,8 @@ margin: 8px 0 8px;
 
 .LaneData{
 	font-size: 12px;
-	width: 400px;
+	width: 112px;
+	max-width: 125px;
 }
 
 .LaneSummary{

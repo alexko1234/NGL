@@ -1,8 +1,25 @@
 /*custom bootrap for creating experiments*/
 
-/* GENERAL*/
+/* MAIN */
 
 .selectSupportsTable .datatable .table>tbody>tr>td{	
 	max-width: 300px;
 	overflow-wrap: break-word;	
 }
+
+/* ACTION BUTTON */
+
+#experiment_action{
+	margin-right: 3px;
+}
+
+/* EXPERIMENTS COMMENTS  */
+
+.commentsButtons{
+	background-color: #DDD;
+	color: #333;
+	height: 27px;
+	width: 27px;
+	padding: 1px 1px 1px 1px;
+	margin: 0px 5px 0px 0px;}
+
