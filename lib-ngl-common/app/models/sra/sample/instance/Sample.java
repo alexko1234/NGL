@@ -4,8 +4,10 @@ import java.util.Date;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.sra.SraValidationHelper;
 import fr.cea.ig.DBObject;
 
 public class Sample extends DBObject implements IValidation {
@@ -31,7 +33,9 @@ public class Sample extends DBObject implements IValidation {
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		// TODO Auto-generated method stub	
+		SraValidationHelper.validateCode(this, InstanceConstants.SRA_SAMPLE_COLL_NAME, contextValidation);
+		SraValidationHelper.validateId(this, contextValidation);
+		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 	}
 
 }

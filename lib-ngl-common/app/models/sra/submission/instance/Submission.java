@@ -32,8 +32,9 @@ public class Submission extends DBObject implements IValidation {
 	public String relatifXmlExperiment;
 	public String relatifXmlRun;
 	public String relatifXmlSubmission;
+	public String relatifResultSendXml; // Fichier resultat de la commande curl qui doit contenir les AC attribués par l'EBI
 
-	
+	public String userSubmission; // login du bioinfo qui a creer ticket.
 	public State state;// = new State(); // Reference sur "models.laboratory.common.instance.state" 
 		// pour gerer les differents etats de l'objet.
 		// Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 

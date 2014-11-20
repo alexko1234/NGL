@@ -10,7 +10,16 @@ public interface VariableSRA {
 	static final String centerName = "GSC";
 	static final String laboratoryName = "Genoscope - CEA";
 	
-
+	static final Map<String, String> mapCenterName =  new HashMap<String, String>() {
+		{
+			put("gsc", "GSC"); 
+		}
+	};
+	static final Map<String, String> mapLaboratoryName =  new HashMap<String, String>() {
+		{
+			put("genoscope - cea", "Genoscope - CEA"); 
+		}
+	};
 	static final Map<String, String> mapStrategySample =  new HashMap<String, String>() {
 		{
 			put("strategy_no_sample", "strategy_no_sample"); // Si pas de sample à creer parce que fournis par les collaborateurs
@@ -112,6 +121,44 @@ public interface VariableSRA {
 			put("unspecified", "unspecified");
 		}
 	};
+	
+	
+	static final Map<String, String> mapLibraryLayout = new HashMap<String, String>() {
+		{
+			put("single", "SINGLE"); 
+			put("paired", "PAIRED");
+		}
+	}; 
+	
+	static final Map<String, String> mapLibraryLayoutOrientation = new HashMap<String, String>() {
+		{
+			put("forward", "Forward"); 
+			put("forward-reverse", "Forward-Reverse");
+			put("reverse-forward", "Reverse-Forward");		
+		}
+	};  
+	
+	
+	static final Map<String, String> mapTypePlatform = new HashMap<String, String>() {
+		{
+			put("illumina", "ILLUMINA"); 
+		}
+	};  
+	static final Map<String, String> mapInstrumentModel = new HashMap<String, String>() {
+		{
+			put("454 gs 20", "454 GS 20"); 
+			put("454 gs flx", "454 GS FLX");
+			put("454 gs flx titanium", "454 GS FLX Titanium");
+			put("454 gs flx+", "454 GS FLX+");		
+			put("illumina genome analyzer", "Illumina Genome Analyzer");
+			put("illumina genome analyzer II", "Illumina Genome Analyzer II");
+			put("illumina genome analyzer IIx", "Illumina Genome Analyzer IIx");
+			put("illumina hiseq 2000", "Illumina HiSeq 2000");
+			put("illumina miseq", "Illumina MiSeq");
+			put("illumina hiseq 2500", "Illumina HiSeq 2500");
+		}
+	};  
+		
 }
 
 
