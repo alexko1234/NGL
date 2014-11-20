@@ -82,7 +82,7 @@
 		<th ng-if="isFilled() && isAllOpen">
 		<div class="insertHeadFC" ng-repeat="property in experiment.containerOutProperties track by $index">
 		<input class="form-control valueInput" ng-if="isFilled()" type="text"  ng-readonly="!experiment.experimentProperties.enabled" 
-				 ng-change="updateColumnPropertyCodeValues(property.code)" ng-model="allOutputContainersUsed[property.code].value" />		
+				 ng-change="updateColumnPropertyCodeValues(property.code)" ng-blur="changeValueInFlowcellCompo()" ng-model="allOutputContainersUsed[property.code].value" />		
 		</div>
 		</th>
 		</tr>
@@ -185,14 +185,14 @@
 								<input class="form-control valueInput" type="text" ng-switch-when="false" title="{{property.name}}"
 									ng-readonly="!experiment.experimentProperties.enabled"
 									ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties[property.code].value"
-								ng-change="changeValueInFlowcellCompo()"/>
+								    ng-blur="changeValueInFlowcellCompo()"/>
 									
 								<select class="form-control"  
 										ng-readonly="!experiment.experimentInformation.enabled" 
 										ng-disabled="!experiment.experimentInformation.enabled" 
 										ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties[property.code].value"
 										ng-switch-when="true" 
-										ng-change="changeValueInFlowcellCompo()"
+										ng-blur="changeValueInFlowcellCompo()"
 										auto-select>
 									<option ng-repeat="opt in property.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
 								   </select>
