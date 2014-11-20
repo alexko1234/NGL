@@ -1,12 +1,17 @@
 package services;
 
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
@@ -20,6 +25,7 @@ import models.sra.experiment.instance.Run;
 import models.sra.sample.instance.Sample;
 import models.sra.study.instance.Study;
 import models.sra.submission.instance.Submission;
+import models.sra.utils.SraException;
 import models.sra.utils.VariableSRA;
 import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
@@ -27,33 +33,39 @@ import fr.cea.ig.MongoDBDAO;
 
 public class SubmissionServices {
 
-	public void createNewSubmission(String projectCode, List<ReadSet> readSets, Study study, String acStudy, String strategySample) {
+	public String createNewSubmission(String projectCode, List<ReadSet> readSets, Study study, String strategySample) throws SraException {
+	//	public String doNewSubmission(String configurationCode, List<ReadSet> readSets) throws SraException {
 		// Pour une premiere soumission d'un readSet, on peut devoir utiliser un study ou un sample existant, deja soumis à l'EBI, ou non
 		// en revanche on ne doit pas utiliser un experiment ou un run existant
-		Submission submission = createSubmission(projectCode);
+		// Creation d'un nouvel objet submission avec code qui n'existe pas encore dans db.
+		Submission submission = createSubmissionEntity(projectCode);
 		submission.strategySample = strategySample;
-
-		System.out.println("strategySample :"+strategySample);
+		//System.out.println("strategySample :"+strategySample);
 		Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, projectCode);
 		// Soumission qui ne peut se faire que si study complet avec champs saisi par utilisateur
+		// study qui doit etre donné en parametre car doit etre completé par l'utilisateur, alors l'utiliser (de la forme 'study_AUP')
 
-		if (study == null) {
-			study = fetchStudy(projectCode);
+		// Si le study a ete validé par l'utilisateur, et qu'il n'a jamais été soumis, alors le charger
+		// dans l'objet submission pour envoie du xml à l'EBI.
+		// Si le study a ete soumis à l'ebi alors son statut est different de UserValidate.
+		if (study.state == null) {
+			// declencher exception, la soumission ne peut se faire sans un study validé par user ou
+			// study deja en cours de soumission voir soumis.
+			throw new SraException("Pour le study " + study.code + "status du study à null incompatible avec soumission");
 		}
-		// verifier que le study n'a jamais ete soumis et n'est pas dans une liste à soumettre 
-		// voir en fonction des etats :
-		//if (( study.state == null) || (study.state.equals("NewSubmission"))) {
+		if (study.state.equals("validate")) {
 			if (!submission.studyCodes.contains(study.code)){
 				submission.studyCodes.add(study.code);
-				//study.state.code = "In Waiting Submission";
 			}
-		//}
+		}
 		
+		DbUtil dbUtil = new DbUtil();
 		for(ReadSet readSet : readSets) {
 			System.out.println("readSet :" + readSet.code);
 			// Verifier que c'est une premiere soumission pour ce readSet
 			// Verifiez qu'il n'existe pas d'objet experiment referencant deja ce readSet
-			Boolean alreadySubmit = models.sra.utils.HelperSRA.checkCodeReadSetExistInExperimentCollection(readSet.code);
+			//Boolean alreadySubmit = services.SraDbServices.checkCodeReadSetExistInExperimentCollection(readSet.code);
+			Boolean alreadySubmit = MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "readSetCode", readSet.code);		
 			if ( alreadySubmit ) {
 				// signaler erreur et passer au readSet suivant
 				System.out.println("soumission existante pour :"+readSet.code);
@@ -61,10 +73,9 @@ public class SubmissionServices {
 			} 
 			// Verifier que ce readSet est bien valide avant soumission :
 			if (! readSet.bioinformaticValuation.valid.equals(TBoolean.TRUE)) {
-				System.out.println("soumission d'un readSet non valide pour la bioinformatique :"+readSet.code);
+				System.out.println("Pas de soumission pour le readset " + readSet.code + ", car non valide pour la bioinformatique :");
 				continue;
 			}
-
 
 			//String codeRun = "run_" + readSet.code;
 			//String codeExperiment = "exp_" + readSet.code;
@@ -76,15 +87,26 @@ public class SubmissionServices {
 			// Renseigner l'objet submission :
 			// Verifier que l'objet sample n'a jamais ete soumis et n'est pas en cours de soumission
 			//if (( sample.state == null) || (sample.state.equals("NewSubmission"))) {
+			
 				if(!submission.sampleCodes.contains(sample.code)){
 					submission.sampleCodes.add(sample.code);
 					//sample.state.code = "InWaitingSubmission";
 				}
+			
 			//}
-			Run run = createRun(readSet, projectCode);
-			System.out.println("bien sorti de createRun" );
+				
+			// stoquer le sample dans base si besoin mais peut avoir ete stoquee lors precedente soumission
+			//if (! services.SraDbServices.checkCodeSampleExistInSampleCollection(sample.code)) {
+			if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, "code", sample.code)){	
+				/////////MongoDBDAO.save(InstanceConstants.SRA_SAMPLE_COLL_NAME, sample);
+			}
+			System.out.println("apres insertion dans db du sample "+ sample.code);
 
-			Experiment experiment = createExperiment(readSet, projectCode);
+			Run run = createRunEntity(readSet, projectCode);
+			System.out.println("bien sorti de createRunEntity" );
+
+			Experiment experiment = createExperimentEntity(readSet, projectCode);
+
 			System.out.println("aliasStudy = " + study.code);
 			System.out.println("aliasSample = " + sample.code);
 			System.out.println("aliasExperiment = " + experiment.code);
@@ -93,24 +115,38 @@ public class SubmissionServices {
 			experiment.studyCode = study.code;
 			experiment.sampleCode = sample.code;
 			experiment.run = run;
+			
 			// Ajouter l'experiment à l'objet submission :
 			if(!submission.experimentCodes.contains(experiment.code)){
 				submission.experimentCodes.add(experiment.code);
 			}
-			//MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, experiment);
+			// stoquer experiment dans base si besoin, sinon declencher erreur	
+			////////dbUtil.save(experiment);
 		}
+		
+		// stoquer submission dans base si besoin mais sinon declencher erreur
+		/////////dbUtil.save(submission);
+
+		// stoquer study dans base si besoin, car peut avoir ete cree pour precedente soumission
+		//if (! services.SraDbServices.checkCodeStudyExistInStudyCollection(study.code)) {
+		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "code", study.code)){
+			//////////MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
+		} 
+		return submission.code;
+	}
 
 		//submission.projectCode=readSet.projectCode;
 		//submission.studyCodes=new ArrayList<String>();
-	}
+	
 
 	//todo : aucun champs rempli hormis le codeStudy
 	public Study fetchStudy(String projectCode) {
 		Study study = null;
 		String codeStudy = "study_" + projectCode;
 		// Si study existe, prendre l'existant, sinon en creer un nouveau
-		if (models.sra.utils.HelperSRA.checkCodeStudyExistInStudyCollection(codeStudy)) {
-			study = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.sra.study.instance.Study.class, codeStudy);			
+		//if (services.SraDbServices.checkCodeStudyExistInStudyCollection(codeStudy)) {
+		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "code", codeStudy)){
+			study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, codeStudy);			
 		} else {
 			study = new Study();
 			study.code = codeStudy;
@@ -118,15 +154,28 @@ public class SubmissionServices {
 		return study;
 	}
 
-	public Submission createSubmission(String projectCode){
-		Submission submission = new Submission();
-		submission.projectCode = projectCode;
+	/*
+	 * 
+	 */
+	public Submission createSubmissionEntity(String projectCode){
+		Submission submission = null;
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
 		String st_my_date = dateFormat.format(courantDate);	
-		String submissionCode = "cns" + "_" + projectCode + "_" + st_my_date;
-		submission.submissionDate = courantDate;
+		String headerSubmissionCode = "cns" + "_" + projectCode + "_" + st_my_date;
+		String submissionCode = headerSubmissionCode + "_" + "1";
+		// si submissionCode existe deja, alors en creer un nouveau :
+		int i = 1;
+		while (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code", submissionCode)) {
+			i++;
+			submissionCode = headerSubmissionCode + "_" + i;
+		}
+		
+		submission = new Submission();
+		submission.projectCode = projectCode;
 		submission.code = submissionCode;
+		submission.submissionDate = courantDate;
+		System.out.println("submissionCode="+ submissionCode);
 		return submission;
 	}
 
@@ -146,7 +195,7 @@ public class SubmissionServices {
 		if (strategySample.equalsIgnoreCase("STRATEGY_SAMPLE_CLONE")) {
 			codeSample = "sample_" + projectCode + "_" + taxonId + "_" + clone;
 		} else if (strategySample.equalsIgnoreCase("STRATEGY_SAMPLE_TAXON")) {
-			codeSample = "sample_" + projectCode + taxonId;
+			codeSample = "sample_" + projectCode + "_" + taxonId;
 		} else if (strategySample.equalsIgnoreCase("STRATEGY_NO_SAMPLE")) {
 			//envisager d'avoir des fichiers de correspondance 
 		} else {
@@ -157,7 +206,7 @@ public class SubmissionServices {
 
 
 
-	//todo : il reste scientificName, classification, comonName à renseigner sur la base de idTaxon, et description
+	//todo: il reste scientificName, classification, comonName à renseigner sur la base de idTaxon, et description
 	// voir si service web existant au NCBI (ou get_taxonId en interne ou encore base de AGC).
 	public Sample fetchSample(ReadSet readSet, String projectCode, String strategySample) {
 		// Recuperer pour chaque readSet les objets de laboratory qui existent forcemment dans mongoDB, 
@@ -175,9 +224,16 @@ public class SubmissionServices {
 		String codeSample = getSampleCode(readSet, projectCode, strategySample);
 		Sample sample = null;
 		// Si sample existe, prendre l'existant, sinon en creer un nouveau
-		if (models.sra.utils.HelperSRA.checkCodeSampleExistInSampleCollection(codeSample)) {
-			sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.sra.sample.instance.Sample.class, codeSample);			
+		//if (services.SraDbServices.checkCodeSampleExistInSampleCollection(codeSample)) {
+		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, "code", codeSample)){
+			System.out.println("Recuperation du sample "+ codeSample);
+			sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.sample.instance.Sample.class, codeSample);			
+			System.out.println(sample.clone);
+			System.out.println(sample.taxonId);
+			System.out.println(sample.title);
+
 		} else {
+			System.out.println("Creation du sample "+ codeSample);
 			// creation du sample :
 			sample = new Sample();
 			sample.code = codeSample;
@@ -185,7 +241,7 @@ public class SubmissionServices {
 			sample.clone = laboratorySample.referenceCollab;
 			sample.projectCode = projectCode;
 		}
-
+		
 		System.out.println("readSetCode = " + readSet.code);
 		System.out.println("laboratorySampleCode = " + laboratorySampleCode);
 		System.out.println("laboratorySampleName = " + laboratorySampleName);
@@ -193,15 +249,47 @@ public class SubmissionServices {
 		System.out.println("clone = " + clone);
 		return sample;
 	}
-
-	// manque la creation des read_spec mais depend de l'information single ou paired
-	public Experiment createExperiment(ReadSet readSet, String projectCode) {
+	/*
+	 * 
+	 */
+	public Experiment createExperimentEntity(ReadSet readSet, String projectCode) throws SraException {
 		// On cree l'experiment pour le readSet demandé.
 		// La validite du readSet doit avoir été testé avant.
 
 		Experiment experiment = new Experiment(); 
+		
 		experiment.code = "exp_" + readSet.code;
 		experiment.readSetCode = readSet.code;
+		//System.out.println("readSetCode =" + readSet.code);
+		
+		experiment.libraryLayoutNominalLength = null;
+		
+		// mettre la valeur calculée de libraryLayoutNominalLength
+		models.laboratory.run.instance.Treatment treatmentMapping = readSet.treatments.get("mapping");
+		if (treatmentMapping != null) {
+			Map <String, Map<String, PropertyValue>> resultsMapping = treatmentMapping.results();
+			if ( resultsMapping != null && (resultsMapping.containsKey("pairs"))){
+				Map<String, PropertyValue> pairs = resultsMapping.get("pairs");
+				if (pairs != null) {
+					Set <String> listKeysMapping = pairs.keySet();  // Obtenir la liste des clés
+					for(String k: listKeysMapping) {
+						System.out.print("coucou cle = '" + k+"'  => ");
+						PropertyValue propertyValue = pairs.get(k);
+						System.out.println(propertyValue.value);
+					}
+					if (pairs.containsKey("estimatedPEInsertSize")) {
+						PropertyValue estimatedInsertSize = pairs.get("estimatedPEInsertSize");
+						experiment.libraryLayoutNominalLength = (Integer) estimatedInsertSize.value;
+					} 
+					if (pairs.containsKey("estimatedMPInsertSize")) {
+						PropertyValue estimatedInsertSize = pairs.get("estimatedMPInsertSize");
+						experiment.libraryLayoutNominalLength = (Integer) estimatedInsertSize.value;
+					}	
+				}
+			}
+		}
+		// if (experiment.libraryLayoutNominalLength == null) {
+		// mettre valeur theorique de libraryLayoutNominalLength a prendre dans le futur dans container
 		
 		experiment.state.code = "N";
 		String laboratorySampleCode = readSet.sampleCode;
@@ -211,38 +299,76 @@ public class SubmissionServices {
 
 		String laboratoryRunCode = readSet.runCode;
 		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
-		//String machineName = laboratoryRun.instrumentUsed.code;
 		String technology = laboratoryRun.instrumentUsed.typeCode;
 		experiment.title = taxonName + technology + "typeBanqueAmplifiee?";
-		//String runTypeCode = readSet.runTypeCode;
-
-		models.laboratory.run.instance.Treatment treatment = (laboratoryRun.treatments.get("ngsrg"));
-		Map <String, Map<String, PropertyValue>> results = treatment.results();
-		Map<String, PropertyValue> ngsrg = results.get("default");
-		Set <String> listKeys = ngsrg.keySet();  // Obtenir la liste des clés
-
-		/*
-		for(String k: listKeys){
-			System.out.println("cle = " + k);
-			PropertyValue propertyValue = ngsrg.get(k);
-			System.out.println(propertyValue.toString());
-			System.out.println(propertyValue.value);
-		} 
-		*/
-		PropertyValue propertyNbCycle = ngsrg.get("nbCycle");
-		experiment.spotLength = (Long) propertyNbCycle.value;
-		//laboratoryRun.treatments.ngsrg.default.nbCycle.value 
-
+		
+		// Recuperer l'information spotLength, 
+		models.laboratory.run.instance.Treatment treatmentNgsrg = (laboratoryRun.treatments.get("ngsrg"));
+		if (treatmentNgsrg != null) {
+			Map <String, Map<String, PropertyValue>> resultsNgsrg = treatmentNgsrg.results();
+			if (resultsNgsrg != null && resultsNgsrg.containsKey("default")) {
+				Map<String, PropertyValue> ngsrg = resultsNgsrg.get("default");
+				Set <String> listKeys = ngsrg.keySet();  // Obtenir la liste des clés
+				/*for(String k: listKeys){
+					System.out.print("cle = " + k);
+					PropertyValue propertyValue = ngsrg.get(k);
+					//System.out.print(propertyValue.toString());
+					System.out.println(", value  => "+propertyValue.value);
+				} */
+				PropertyValue propertyNbCycle = ngsrg.get("nbCycle");
+				experiment.spotLength = (Long) propertyNbCycle.value;
+			}
+		}
 		// Ajouter les read_spec en fonction de l'information SINGLE ou PAIRED et forward-reverse et last_base_coord :
+		experiment.libraryLayout = null;
+		experiment.libraryLayoutOrientation = null;
 
-		String library_layout = "UNKNOWN";
-		String library_layout_orientation = "UNKNOWN";
+		if (laboratoryRun.properties.containsKey("sequencingProgramType")){	
+			String libraryLayout =  (String) laboratoryRun.properties.get("sequencingProgramType").value;
+			
+			if (libraryLayout != null) {
+				if (libraryLayout.equalsIgnoreCase("SR")){
+					experiment.libraryLayout = "SINGLE";
+					experiment.libraryLayoutOrientation = "forward";
+				} else if( libraryLayout.equalsIgnoreCase("PE") || libraryLayout.equalsIgnoreCase("MP")){
+					experiment.libraryLayout = "PAIRED";
+					Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
+					if (sampleOnContainerProperties != null) {
+						Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
+					
+						for(String k: listKeysSampleOnContainerProperties){
+							System.out.print("cle = " + k);
+							PropertyValue propertyValue = sampleOnContainerProperties.get(k);
+							//System.out.print(propertyValue.toString());
+							System.out.println(", value  => "+propertyValue.value);
+						} 
+						if (sampleOnContainerProperties.containsKey("libProcessTypeCode")) {					
+							PropertyValue libProcessTypeCode = sampleOnContainerProperties.get("libProcessTypeCode");
+							String libProcessTypeCodeValue = (String) libProcessTypeCode.value;
+							if(libProcessTypeCodeValue.equalsIgnoreCase("A")||libProcessTypeCodeValue.equalsIgnoreCase("C")||libProcessTypeCodeValue.equalsIgnoreCase("N")){
+								experiment.libraryLayoutOrientation = "forward-reverse";
+							} else if (libProcessTypeCodeValue.equalsIgnoreCase("W")||libProcessTypeCodeValue.equalsIgnoreCase("F")
+										||libProcessTypeCodeValue.equalsIgnoreCase("H")||libProcessTypeCodeValue.equalsIgnoreCase("L")
+										||libProcessTypeCodeValue.equalsIgnoreCase("Z")||libProcessTypeCodeValue.equalsIgnoreCase("M")
+										||libProcessTypeCodeValue.equalsIgnoreCase("I")||libProcessTypeCodeValue.equalsIgnoreCase("K")){
+								experiment.libraryLayoutOrientation = "reverse-forward";
+							} else {
+								throw new SraException("Pour le readSet " + readSet +  ", valeur de libProcessTypeCodeValue differente A,C,N, W, F, H, L ,Z, M, I, K => " + libProcessTypeCodeValue);
+							}
+						}
+					}
+				} else {
+					throw new SraException("Pour le laboratoryRun " + laboratoryRun.code + " valeur de properties.sequencingProgramType differente de SR ou PE => " + libraryLayout);
+				}
+			}
+			System.out.println("libraryLayout======"+libraryLayout);
+		}
+
 
 		// Renseigner l'objet experiment pour lastBaseCoord : Recuperer les lanes associées au
 		// run associé au readSet et recuperer le lane contenant le readSet.code. C'est dans les
 		// traitement de cette lane que se trouve l'information:
 		// Un readSet est sur une unique lane, mais une lane peut contenir plusieurs readSet
-
 		List<Lane> laboratoryLanes = laboratoryRun.lanes;
 		Integer last_base_coord = null;
 		for (Lane ll : laboratoryLanes) {
@@ -265,30 +391,29 @@ public class SubmissionServices {
 				}
 			}
 		}
-		if (readSet.code.equals("AUP_COSW_4_D09BTACXX.IND7")) {
-			library_layout = "SINGLE";
-		}
-		if (readSet.code.equals("AUP_NAOSW_5_C0UW4ACXX.IND10")) {
-			library_layout = "PAIRED";
-		}
 
+		System.out.println("'"+readSet.code+"'");
+		experiment.readSpecs = new ArrayList<ReadSpec>();
 		// IF ILLUMINA ET SINGLE
-		if (library_layout.equalsIgnoreCase("SINGLE") ) {
+		if (experiment.libraryLayout != null && experiment.libraryLayout.equalsIgnoreCase("SINGLE") ) {
 			ReadSpec readSpec_1 = new ReadSpec();
 			readSpec_1.readIndex = 0; 
 			readSpec_1.readClass = "Application Read";
 			readSpec_1.readType = "Forward";
 			readSpec_1.lastBaseCoord = (Integer) 1;
+			experiment.readSpecs.add(readSpec_1);
 		}
 
 		// IF ILLUMINA ET PAIRED ET "forward-reverse"
-		if (library_layout.equalsIgnoreCase("PAIRED") && library_layout_orientation.equalsIgnoreCase("forward-reverse") ) {
+		if (experiment.libraryLayout != null && experiment.libraryLayout.equalsIgnoreCase("PAIRED") 
+				&& experiment.libraryLayoutOrientation != null && experiment.libraryLayoutOrientation.equalsIgnoreCase("forward-reverse") ) {
 			ReadSpec readSpec_1 = new ReadSpec();
 			readSpec_1.readIndex = 0;
 			readSpec_1.readLabel = "F";
 			readSpec_1.readClass = "Application Read";
 			readSpec_1.readType = "Forward";
 			readSpec_1.lastBaseCoord = (Integer) 1;
+			experiment.readSpecs.add(readSpec_1);
 
 			ReadSpec readSpec_2 = new ReadSpec();
 			readSpec_2.readIndex = 1;
@@ -296,15 +421,19 @@ public class SubmissionServices {
 			readSpec_2.readClass = "Application Read";
 			readSpec_2.readType = "Reverse";
 			readSpec_2.lastBaseCoord = last_base_coord;	
-			// IF ILLUMINA ET PAIRED ET "reverse-forward"
+			experiment.readSpecs.add(readSpec_2);
+
 		}
-		if (library_layout.equalsIgnoreCase("PAIRED") && library_layout_orientation.equalsIgnoreCase("reverse-forward") ) {
+		// IF ILLUMINA ET PAIRED ET "reverse-forward"
+		if (experiment.libraryLayout!= null && experiment.libraryLayout.equalsIgnoreCase("PAIRED") 
+				&& experiment.libraryLayoutOrientation!= null && experiment.libraryLayoutOrientation.equalsIgnoreCase("reverse-forward") ) {
 			ReadSpec readSpec_1 = new ReadSpec();
 			readSpec_1.readIndex = 0;
 			readSpec_1.readLabel = "R";
 			readSpec_1.readClass = "Application Read";
 			readSpec_1.readType = "Reverse";
 			readSpec_1.lastBaseCoord = (Integer) 1;
+			experiment.readSpecs.add(readSpec_1);
 
 			ReadSpec readSpec_2 = new ReadSpec();
 			readSpec_2.readIndex = 1;
@@ -312,17 +441,20 @@ public class SubmissionServices {
 			readSpec_2.readClass = "Application Read";
 			readSpec_2.readType = "Forward";
 			readSpec_2.lastBaseCoord = last_base_coord;
+			experiment.readSpecs.add(readSpec_2);
 		}
 		return experiment;
 	}
 
 	
+	
+	
 	public String getTaxonName(String taxonId) {
 		return "taxonNameFor_" + taxonId;
 	}
 
-		//todo releaseDate ou bien ou laisse uniquement au niveau du study ????
-	public Run createRun(ReadSet readSet, String projectCode) {
+	//todo releaseDate uniquement au niveau du study ????
+	public Run createRunEntity(ReadSet readSet, String projectCode) {
 		// On cree le run pour le readSet demandé.
 		// La validite du readSet doit avoir été testé avant.
 
@@ -339,7 +471,7 @@ public class SubmissionServices {
 		run.code = "run_" + readSet.code;
 		run.runDate = runDate;
 		
-		run.projectCode = projectCode;
+		//run.projectCode = projectCode;
 		run.runCenter = VariableSRA.centerName;
 		// Renseigner le run pour ces fichiers sur la base des fichiers associes au readSet :
 		// chemin des fichiers pour ce readset :
@@ -368,6 +500,10 @@ public class SubmissionServices {
 		}
 		return run;
 	}
+
+
+	
+	
 }
 
 	

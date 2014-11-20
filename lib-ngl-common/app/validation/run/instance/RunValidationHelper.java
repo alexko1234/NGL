@@ -50,7 +50,6 @@ public class RunValidationHelper extends CommonValidationHelper {
 		}		
 	}
 	
-	
 	public static void validationLaneReadSetCodes(Integer number, List<String> readSetCodes, ContextValidation contextValidation) {
 		if(readSetCodes != null && readSetCodes.size() > 0){
 			List<String> readSetCodesTreat = new ArrayList<String>();
@@ -69,8 +68,6 @@ public class RunValidationHelper extends CommonValidationHelper {
 		
 		
 	}
-	
-	
 	
 	public static void validateRunProjectCodes(String runCode, Set<String> projectCodes, ContextValidation contextValidation) {
 		

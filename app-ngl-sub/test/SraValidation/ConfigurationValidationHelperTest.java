@@ -31,7 +31,7 @@ public class ConfigurationValidationHelperTest extends AbstractTestsSRA {
 		config.projectCode = "test";
 		config.strategySample = "strategy_sample_taxon";
 
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(userContext);
 		contextValidation.setCreationMode();
 		config.validate(contextValidation);
 		MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, config);
@@ -59,7 +59,7 @@ public class ConfigurationValidationHelperTest extends AbstractTestsSRA {
 		config.librarySource = "   ";
 		config.libraryStrategy = "libStrategy_vague";
 		config.userFileExperiments = "toto";
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(userContext);
 		contextValidation.setCreationMode();
 		config.validate(contextValidation);
 		MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, config);

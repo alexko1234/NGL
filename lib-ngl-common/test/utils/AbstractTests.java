@@ -22,7 +22,7 @@ import fr.cea.ig.MongoDBDAO;
 public abstract class AbstractTests {
 	
 	protected static FakeApplication app;
-	
+	protected static Map<String,String> config = new HashMap<String,String>();
 	@BeforeClass
 	public  static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
 		app = getFakeApplication();
@@ -44,7 +44,6 @@ public abstract class AbstractTests {
 	
 	
 	public static Map<String,String> fakeConfiguration(){
-		Map<String,String> config = new HashMap<String,String>();
 		
 		config.put("evolutionplugin", "disabled");
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");

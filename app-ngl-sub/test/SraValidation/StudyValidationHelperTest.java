@@ -11,7 +11,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import validation.ContextValidation;
-import SraValidation.OldSraValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 import utils.AbstractTestsSRA;
 
@@ -31,7 +30,7 @@ public class StudyValidationHelperTest extends AbstractTestsSRA {
 		study.centerProjectName = "test";
 		study.code = "study_test_1";
 		study.existingStudyType="Metagenomics";
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(userContext);
 		contextValidation.setCreationMode();
 		study.validate(contextValidation);
 		MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
@@ -56,7 +55,7 @@ public class StudyValidationHelperTest extends AbstractTestsSRA {
 		study.centerProjectName = "";
 		study.code = "study_test_2";
 		study.existingStudyType="MetagenomicsFarfelue";
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(userContext);
 		contextValidation.setCreationMode();
 		study.validate(contextValidation);
 		MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);

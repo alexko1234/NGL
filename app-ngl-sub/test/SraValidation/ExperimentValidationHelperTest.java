@@ -47,7 +47,7 @@ public class ExperimentValidationHelperTest extends AbstractTestsSRA {
 	
 	@Test
 	public void validationSraValidationHelperRequiredAndConstraintSuccess() throws IOException, SraException {
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(userContext);
 		contextValidation.addKeyToRootKeyName("experiment::");
 		String librarySelection = "random";
 		SraValidationHelper.requiredAndConstraint(contextValidation, librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
@@ -57,7 +57,7 @@ public class ExperimentValidationHelperTest extends AbstractTestsSRA {
 	
 	@Test
 	public void validationSraValidationHelperRequiredAndConstraintEchec() throws IOException, SraException {
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(userContext);
 		contextValidation.addKeyToRootKeyName("experiment::");
 		String librarySelection = "farfelue";
 		SraValidationHelper.requiredAndConstraint(contextValidation, librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
@@ -67,7 +67,7 @@ public class ExperimentValidationHelperTest extends AbstractTestsSRA {
 	
 	@Test
 	public void validationSraValidationHelperRequiredAndConstraintNull() throws IOException, SraException {
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(userContext);
 		contextValidation.addKeyToRootKeyName("experiment::");
 		String librarySelection = null;
 		SraValidationHelper.requiredAndConstraint(contextValidation, librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
@@ -90,7 +90,7 @@ public class ExperimentValidationHelperTest extends AbstractTestsSRA {
 		String librarySource = "";
 		SubmissionServices submissionServices = new SubmissionServices();
 		Experiment experiment = submissionServices.createExperimentEntity(readSet, projectCode);
-		ContextValidation contextValidation = new ContextValidation();
+		ContextValidation contextValidation = new ContextValidation(userContext);
 		contextValidation.setCreationMode();
 		contextValidation.addKeyToRootKeyName("experiment::");
 		experiment.validate(contextValidation);
