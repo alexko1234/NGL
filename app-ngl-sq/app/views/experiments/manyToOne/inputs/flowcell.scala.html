@@ -176,7 +176,7 @@
 			<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && rows[@i]" class="table">
 				<tr>
 					<th ng-repeat="property in experiment.containerOutProperties">
-						{{property.name}}
+						{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
 					</th>
 				</tr>
 			    <tr>
