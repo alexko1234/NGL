@@ -101,7 +101,7 @@ public class ExperimentTests extends AbstractTests{
 		ManytoOneContainer atomicTransfert = ExperimentTestHelper.getManytoOneContainer();
 		
 		ContainerUsed containerIn1 = ExperimentTestHelper.getContainerUsed("containerUsedIn1");
-		containerIn1.percentage = (float) 50;
+		containerIn1.percentage = 50.0;
 		containerIn1.concentration = new PropertySingleValue(new Integer(10)); 
 		containerIn1.experimentProperties.put("NaOHVolume", new PropertySingleValue(new Double(1)));
 		containerIn1.experimentProperties.put("NaOHConcentration", new PropertySingleValue(new Double(20)));
@@ -176,7 +176,7 @@ public class ExperimentTests extends AbstractTests{
 		container.contents.add(content);
 		
 		ContainerUsed containerUsed=new ContainerUsed(container);
-		containerUsed.percentage=(float) 0;
+		containerUsed.percentage= 0.0;
 		exp.atomicTransfertMethods.get(0).getInputContainers().add(containerUsed);
 		
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
@@ -199,7 +199,7 @@ public class ExperimentTests extends AbstractTests{
 		container.contents.add(content);
 		
 		ContainerUsed containerUsed=new ContainerUsed(container);
-		containerUsed.percentage=(float) 0;
+		containerUsed.percentage= 0.0;
 		exp.atomicTransfertMethods.get(0).getInputContainers().add(containerUsed);
 		
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
@@ -221,7 +221,7 @@ public class ExperimentTests extends AbstractTests{
 		container.contents.add(content);
 		
 		ContainerUsed containerUsed=new ContainerUsed(container);
-		containerUsed.percentage=(float) 10;
+		containerUsed.percentage= 10.0;
 		exp.atomicTransfertMethods.get(0).getInputContainers().add(containerUsed);
 		
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
@@ -250,7 +250,7 @@ public class ExperimentTests extends AbstractTests{
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
 		
 		ContainerUsed container1_1=ExperimentTestHelper.getContainerUsed("CONTAINER1_1");
-		container1_1.percentage=(float) 0;
+		container1_1.percentage=0.0;
 		Content content1_1=new Content("CONTENT1_1","TYPE","CATEGORIE");
 		container1_1.contents=new ArrayList<Content>();
 		content1_1.properties=new HashMap<String, PropertyValue>();

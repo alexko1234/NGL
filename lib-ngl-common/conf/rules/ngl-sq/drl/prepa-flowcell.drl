@@ -137,7 +137,7 @@ rule "Volume dilution on track"
 		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $percentPerLane:percentage) from $atomicTransfert.inputContainers
 		 ContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUsed
 		 $finalVolume : PropertyValue() from $experimentPropertiesOut.get("finalVolume")
-		 eval($finalVolume.value != null && Double.class.isInstance($finalVolume.value) && $percentPerLane != null && Float.class.isInstance($percentPerLane))
+		 eval($finalVolume.value != null && Double.class.isInstance($finalVolume.value) && $percentPerLane != null && Double.class.isInstance($percentPerLane))
 	then
 		Logger.debug("Calculation Test  6: "+ $experiment.code+ " "+ $atomicTransfert.position);
 		PropertySingleValue value = new PropertySingleValue(Math.round($percentPerLane*(Double)$finalVolume.value)/100.0);
