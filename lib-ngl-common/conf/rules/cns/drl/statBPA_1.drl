@@ -18,8 +18,8 @@ rule "Calculate lostBasesPercent for contigFilterBA treatment"
 		$storedBases : Entry(key=="storedBases") from $mapValueCFBA.entrySet()
 	then
 		Logger.debug("Calculate lostBasesPercent for analysis "+$analysis.getCode());
-		Long storedBases = (Long)((PropertyValue)$storedBases.getValue()).getValue();
-		Long assemblyContigSize = (Long)((PropertyValue)$assemblyContigSize.getValue()).getValue();
+		Integer storedBases = (Integer)((PropertyValue)$storedBases.getValue()).getValue();
+		Integer assemblyContigSize = (Integer)((PropertyValue)$assemblyContigSize.getValue()).getValue();
 		Double lostBasesPercent = roundValue((double)(assemblyContigSize - storedBases)/assemblyContigSize*100);
 		//Create new PropertyValue
 		PropertySingleValue propertylostBasesPercent = new PropertySingleValue(lostBasesPercent);
