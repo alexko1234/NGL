@@ -19,6 +19,11 @@ angular.module('datatableServices', []).
 													"render" : function() //render the column used to add style around value
 													"id":'', //the column id
 													"edit":false, //can be edited or not
+													"conversionValue":{
+														active:false, //True if the value have to be converted when displayed to the user
+														displayMeasureValue:"",//The unit display to the user, mandatory if active=true
+														saveMeasureValue:"" //The unit in database,  mandatory if active=true
+													},
 													"hide":true, //can be hidden or not
 													"order":true, //can be ordered or not
 													"type":"text"/"number"/"month"/"week"/"time"/"datetime"/"range"/"color"/"mail"/"tel"/"url"/"date", //the column type
@@ -31,7 +36,7 @@ angular.module('datatableServices', []).
 													"position": position of the column,
 													"group": false //if column can be used to group data
 													"groupMethod": sum, average, distinct,
-													"defaultValues"//If the value of the column is undefined or "" when the user edit, this value show up
+													"defaultValues":"" //If the value of the column is undefined or "" when the user edit, this value show up
 													"
 												  }*/
 							columnsUrl:undefined, //Load columns config
@@ -169,7 +174,10 @@ angular.module('datatableServices', []).
 								order:true, //can be ordered or not
 								type:"text", //the column type
 								choiceInList:false, //when the column is in edit mode, the edition is a list of choices or not
-								extraHeaders:{}
+								extraHeaders:{},
+								convertValue:{
+									active:false
+								}
     					},
     					/**
     					 * External search réinit pageNumber to 0
@@ -1280,6 +1288,10 @@ angular.module('datatableServices', []).
 			    					if(null === columns[i].position || undefined === columns[i].position){
 			    						columns[i].position = initPosition++;
 			    					}
+			    					
+			    					if(columns[i].convertValue !== undefined && columns[i].convertValue.active === true && (columns[i].convertValue.displayMeasureValue === undefined || columns[i].convertValue.saveMeasureValue === undefined)){
+			    						 throw "Columns config error: "+columns[i].property+" convertValue=active but convertValue.displayMeasureValue or convertValue.saveMeasureValue is missing";
+			    					}
 			    				}
 		    					
 		    					var settings = $.extend(true, [], this.configColumnDefault, columns);
@@ -2051,7 +2063,7 @@ angular.module('datatableServices', []).
 	    				if(col.type === "boolean"){
 	    					editElement = '<input class="form-control"' +defaultValueDirective+' dt-html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+'/>';
 	    				}else if(!col.choiceInList){
-	    					editElement = '<input class="form-control" '+defaultValueDirective+' dt-html-filter="{{col.type}}" type="'+this.getInputType(col)+'" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+this.getDateTimestamp(col.type)+'/>';
+	    					editElement = '<input class="form-control" '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' dt-html-filter="{{col.type}}" type="'+this.getInputType(col)+'" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+this.getDateTimestamp(col.type)+'/>';
 	    				}else if(col.choiceInList){
 	    					switch (col.listStyle) { 
 	    						case "radio":
@@ -2087,6 +2099,13 @@ angular.module('datatableServices', []).
     			    	}		    				
 			    	};
 			    	
+			    	scope.dtTableFunctions.getConvertDirective = function(col, header){
+			    		if(!header && col.convertValue != undefined && col.convertValue.active == true && col.convertValue.saveMeasureValue != col.convertValue.displayMeasureValue){
+			    			return 'convert-value="col.convertValue"';
+			    		}
+			    		return "";
+			    	}
+			    	
 			    	scope.dtTableFunctions.getInputType = function(col){
 	    				if(col.type === "date" || col.type === "datetime" || col.type === "datetime-local"){
     			    		return "text";
@@ -2097,10 +2116,14 @@ angular.module('datatableServices', []).
 			    	scope.dtTableFunctions.getFormatter = scope.dtTable.getFormatter;
 	    			
 	    			scope.dtTableFunctions.getFilter = function(col){
+	    				var filter = '';
+    					if(col.convertValue != undefined && col.convertValue.active == true && col.convertValue.saveMeasureValue != col.convertValue.displayMeasureValue){
+    						filter += '|convert:col.convertValue';
+    					}
 	    				if(col.filter){
-	    					return '|'+col.filter;
+	    					return filter+'|'+col.filter;
 	    				}
-	    				return '';
+	    				return filter;
 	    			};
 	    			
 	    			scope.dtTableFunctions.getOptions = function(col){

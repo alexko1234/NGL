@@ -137,6 +137,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
+		if(data.displayMeasureValue != undefined && data.displayMeasureValue != null){
+			column.convertValue = {"active":true, "displayMeasureValue":data.displayMeasureValue.value, "saveMeasureValue":data.saveMeasureValue.value};
+		}
 		$scope.datatable.addColumn(data.displayOrder+5,column);
 	});
 
@@ -153,6 +156,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		}else if(data.code == "requiredVolume3"){
 			column.extraHeaders = {0:"prep FC"};
 		}
+		if(data.displayMeasureValue != undefined && data.displayMeasureValue != null){
+			column.convertValue = {"active":true, "displayMeasureValue":data.displayMeasureValue.value, "saveMeasureValue":data.saveMeasureValue.value};
+		}
 		$scope.datatable.addColumn(data.displayOrder+5 ,column);
 	});
 
@@ -164,6 +170,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputExperimentProperties."+data.code+".value",false, true,true,"String",data.choiceInList,possibleValues,{});
 			column.defaultValues = data.defaultValue;
 			column.extraHeaders = {0:"prep FC"};
+			if(data.displayMeasureValue != undefined && data.displayMeasureValue != null){
+				column.convertValue = {"active":true, "displayMeasureValue":data.displayMeasureValue.value, "saveMeasureValue":data.saveMeasureValue.value};
+			}
 			$scope.datatable.addColumn(-1,column);
 		}
 	});
@@ -173,6 +182,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{});
 		column.defaultValues = data.defaultValue;
+		if(data.displayMeasureValue != undefined && data.displayMeasureValue != null){
+			column.convertValue = {"active":true, "displayMeasureValue":data.displayMeasureValue.value, "saveMeasureValue":data.saveMeasureValue.value};
+		}
 		$scope.datatable.addColumn(-1,column);
 	});
 

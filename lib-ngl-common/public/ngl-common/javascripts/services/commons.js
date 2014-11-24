@@ -221,6 +221,35 @@ angular.module('commonsServices', []).
     			
     		};
     		
+    	}]).factory('convertValueServices', [function() {
+    		var constructor = function($scope){
+				var convertValueServices = {
+				    //Convert the value in inputUnit to outputUnit if the units are different
+					convertValue : function(value, inputUnit, outputUnit){
+							if(inputUnit !== outputUnit && !isNaN(value)){
+								var convert = this.getConversion(inputUnit,outputUnit);
+								if(convert != undefined && !angular.isFunction(convert)){
+									value = value * convert;
+								}else if(convert == undefined){
+									throw "Error: Unknown Conversion "+inputUnit+" to "+outputUnit;
+									return undefined;
+								}
+							}
+							return value;
+					},
+					//Get the multiplier to convert the value
+					getConversion : function(inputUnit, outputUnit){
+						if((inputUnit === 'µg' && outputUnit === 'ng') || (inputUnit === 'ml' && outputUnit === 'µl') || (inputUnit === 'nM' && outputUnit === 'pM')){
+							return (1/1000);
+						}else if((inputUnit === 'ng' && outputUnit === 'µg') || (inputUnit === 'µl' && outputUnit === 'ml') || (inputUnit === 'pM' && outputUnit === 'nM')){
+							return 1000;
+						}
+						return undefined;
+					}
+				};
+				return convertValueServices;
+			};
+    		return constructor;
     	}]).directive('messages', function() {
     		return {
     			restrict: 'A',
@@ -228,7 +257,7 @@ angular.module('commonsServices', []).
     				  messages: '=messages'
     				},
     			template: '<div ng-class="messages.clazz" ng-show="messages.isOpen()">'+
-    				'<button class="close" ng-click="messages.close()" type="button">×</button>'+
+    				'<button class="close" ng-click="messages.close()" type="button">Ã—</button>'+
     				'<strong>{{messages.text}}</strong><button class="btn btn-link" ng-click="messages.showDetails=!messages.showDetails" ng-show="messages.isDetails">{{messages.transformKey("msg.details")}}</button>'+
     				'<div ng-show="messages.showDetails">'+
     				'    <ul>'+
@@ -307,9 +336,43 @@ angular.module('commonsServices', []).
 				    });
     			}
     		};
-    	//Return the timestamp of the date in an input
-    	//EXAMPLE: <input type="date" ng-model="x" date-timestamp/> the value of x in the scope will be a timestamp
-    	}]).directive('dateTimestamp', function() {
+    	//Convert the value in inputUnit to outputUnit if the units are different from view to model when the model is updated and model to view to show the displayUnit
+    	//EXAMPLE: <input type="text" ng-model="x" convert-value="theColumn"/> the value of x in the scope will be a timestamp
+    	}]).directive('convertValue',['convertValueServices', function(convertValueServices) {
+            return {
+                require: 'ngModel',
+                link: function(scope, ele, attr, ngModel) {
+                	//init service
+                	var convertValues = convertValueServices();
+                	var property = undefined;
+                	
+                	scope.$watch(attr.convertValue, function(value){
+    					if(value.saveMeasureValue != undefined && value.displayMeasureValue != undefined){
+    						property = value;
+    					}
+    				});
+                	
+                	//model to view
+                	scope.$watch(
+						function(){
+							return ngModel.$modelValue;
+						}, function(newValue, oldValue){
+							if(property != undefined){
+								ngModel.$setViewValue(convertValues.convertValue(newValue, property.saveMeasureValue, property.displayMeasureValue));
+								ngModel.$render();
+							}
+                	});
+                	
+                    //view to model
+                    ngModel.$parsers.push(function(value) {
+                    	if(property != undefined){
+	                    	value = convertValues.convertValue(value, property.displayMeasureValue, property.saveMeasureValue);
+                    	}
+                    	return value;
+                    });
+                }
+            };
+        }]).directive('dateTimestamp', function() {
             return {
                 require: 'ngModel',
                 link: function(scope, ele, attr, ngModel) {
@@ -740,7 +803,15 @@ angular.module('commonsServices', []).
     			if(input !== undefined && null != input) return Messages(Codes(key+"."+input));
     			return undefined;
     		}
-    	}).filter('messages', function(){
+    	}).filter('convert', ['convertValueServices', function(convertValueServices){
+    		return function(input, property){
+				var convertValues = convertValueServices();
+				if(property != undefined){
+					input = convertValues.convertValue(input, property.saveMeasureValue, property.displayMeasureValue);
+				}
+    			return input;
+    		}
+    	}]).filter('messages', function(){
     		return function(input){
     			return Messages(input);    			
     		}
