@@ -130,7 +130,7 @@ public class Container extends DBObject implements IValidation {
 		ContainerValidationHelper.validateProcessTypeCode(processTypeCode, contextValidation);
 		ContainerValidationHelper.validateProjectCodes(projectCodes, contextValidation);
 		ContainerValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
-		CommonValidationHelper.validateExperimentTypeCodes(fromExperimentTypeCodes, contextValidation);
+		ContainerValidationHelper.validateExperimentTypeCodes(fromExperimentTypeCodes, contextValidation);
 		ContainerValidationHelper.validateExperimentCode(fromPurifingCode, contextValidation);//bug here Yann
 		ContainerValidationHelper.validateContents(contents,contextValidation);
 		ContainerValidationHelper.validateContainerSupport(support,contextValidation);//bug here Yann

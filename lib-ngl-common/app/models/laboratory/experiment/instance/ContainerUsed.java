@@ -30,7 +30,7 @@ public class ContainerUsed implements IValidation{
 	
 	public List<Content> contents;
 	
-	public Float percentage;
+	public Double percentage;
 	// Proprietes a renseigner en fonction du type d'experiment ou d'instrument
 	public Map<String,PropertyValue> experimentProperties;
 	public Map<String,PropertyValue> instrumentProperties;

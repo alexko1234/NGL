@@ -112,7 +112,7 @@ public class ContainerHelper {
 		
 	}
 
-	public static void calculPercentageContent(List<Content> contents, Float percentage){
+	public static void calculPercentageContent(List<Content> contents, Double percentage){
 		if(percentage!=null){
 			for(Content cc:contents){
 
