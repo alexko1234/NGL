@@ -29,7 +29,7 @@ public class Content implements IValidation{
 	// Reference Project code
 	public String projectCode;
 	
-	public Float percentage;
+	public Double percentage;
 	
 	public Map<String,PropertyValue> properties;
 	public Content(){
