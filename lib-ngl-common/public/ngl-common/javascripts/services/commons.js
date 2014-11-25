@@ -239,9 +239,9 @@ angular.module('commonsServices', []).
 					},
 					//Get the multiplier to convert the value
 					getConversion : function(inputUnit, outputUnit){
-						if((inputUnit === 'µg' && outputUnit === 'ng') || (inputUnit === 'ml' && outputUnit === 'µl') || (inputUnit === 'nM' && outputUnit === 'pM')){
+						if((inputUnit === 'µg' && outputUnit === 'ng') || (inputUnit === 'ml' && outputUnit === 'µl') || (inputUnit === 'pM' && outputUnit === 'nM')){
 							return (1/1000);
-						}else if((inputUnit === 'ng' && outputUnit === 'µg') || (inputUnit === 'µl' && outputUnit === 'ml') || (inputUnit === 'pM' && outputUnit === 'nM')){
+						}else if((inputUnit === 'ng' && outputUnit === 'µg') || (inputUnit === 'µl' && outputUnit === 'ml') || (inputUnit === 'nM' && outputUnit === 'pM')){
 							return 1000;
 						}
 						return undefined;
