@@ -132,11 +132,11 @@ DELETE	/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.Analysi
 
 #analyses file
 GET     /api/analyses/:code/files					@controllers.analyses.api.Files.list(code: java.lang.String)
-GET     /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.get(code: java.lang.String, fullname: java.lang.String)
-HEAD    /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.head(code: java.lang.String, fullname: java.lang.String)
+GET     /api/analyses/:code/files/*fullname			@controllers.analyses.api.Files.get(code: java.lang.String, fullname: java.lang.String)
+HEAD    /api/analyses/:code/files/*fullname			@controllers.analyses.api.Files.head(code: java.lang.String, fullname: java.lang.String)
 POST  	/api/analyses/:code/files					@controllers.analyses.api.Files.save(code: java.lang.String)
-PUT     /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.update(code: java.lang.String, fullname: java.lang.String)
-DELETE  /api/analyses/:code/files/:fullname			@controllers.analyses.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
+PUT     /api/analyses/:code/files/*fullname			@controllers.analyses.api.Files.update(code: java.lang.String, fullname: java.lang.String)
+DELETE  /api/analyses/:code/files/*fullname			@controllers.analyses.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
 
 #reporting configuration
 GET    	/api/reporting/configs    	           			controllers.reporting.api.ReportingConfigurations.list()
