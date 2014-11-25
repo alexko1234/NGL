@@ -428,6 +428,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		for(var i=0;i<$scope.laneCount;i++){
 			for(var j=0; j<data.length;j++ ){
 				if(codeValue == data[j].code){		      
+					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code] === undefined){
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code] = {};
+					}
 					$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value = $scope.allOutputContainersUsed[data[j].code].value;			 
 				}
 
