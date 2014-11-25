@@ -819,4 +819,34 @@ angular.module('commonsServices', []).
     		return function(input){
     			return String(input);    			
     		}
-    	});
+    	}).filter('countDistinct', ['$parse',function($parse) {
+    	    return function(array, key) {
+    	    	if (!array)return undefined;
+    	    	if (!angular.isArray(array) && (angular.isObject(array) || angular.isNumber(array) || angular.isString(array) || angular.isDate(array))) array = [array];
+    	    	else if(!angular.isArray(array)) throw "input is not an array, object, number or string !";
+    	    	
+    	    	if(key && !angular.isString(key))throw "key is not valid, only string is authorized";
+    	    	
+    	    	var params = {countDistinct:0, key:key};
+    	    	var oldValue = undefined;
+    	    	var allValues = new Array(); 
+    	    	angular.forEach(array, function(value, index){
+    	    		if (params.key && angular.isObject(value)) {
+    	    			if ((oldValue === undefined) || ($parse(params.key)(value) !== $parse(params.key)(oldValue))) {
+    	    				allValues.push($parse(params.key)(value)); 
+    	    			}
+    	    		}
+    	    		else if (!params.key && angular.isObject(value)) throw "missing key !";
+    	    		else if (value !== oldValue) allValues.push(value); 
+    	    		oldValue = value;
+    	    	}, params);
+    	    	
+    	    	//reduce array to unique values
+    	    	var uniqueValues = allValues.filter(function(item, pos, self) {
+    	    	    return self.indexOf(item) === pos;
+    	    	});
+    	    	params.countDistinct = uniqueValues.length;
+    	    	
+    	    	return params.countDistinct;
+    	    };
+    	}]);

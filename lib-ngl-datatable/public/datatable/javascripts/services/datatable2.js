@@ -315,7 +315,10 @@ angular.module('datatableServices', []).
 				    							}else{
 				    								result = undefined;
 				    							}
-				    							columnSetter.assign(group, result);				    							
+				    							columnSetter.assign(group, result);	
+				    						}else if('countDistinct' === column.groupMethod){
+				    							var result = $filter('countDistinct')(groupData, column.property); 
+				    							columnSetter.assign(group, result);
 				    						}else{
 				    							console.error("groupMethod is not managed "+column.groupMethod)
 				    						}
