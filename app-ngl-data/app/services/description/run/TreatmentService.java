@@ -92,6 +92,12 @@ public class TreatmentService {
 				getTreatmentTypeContext("single", Boolean.FALSE)), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG), "33,50"));
 		
+		l.add(DescriptionFactory.newTreatmentType("First Base Report", "firstBaseReport", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "firstBaseReport",
+				getFirstBaseReportPropertyDefinitions(),
+				Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE)),
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG), "5")
+				);
+		
 		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationColi,contaminationVector,contaminationPhiX", 
 				getContaminationPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), 
@@ -534,6 +540,29 @@ public class TreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Rejected pairs","rejectedPairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("stored singleton","storedSingleton",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Single), Long.class, true, "single"));
 		return propertyDefinitions;		
+	}
+	
+	public static List<PropertyDefinition> getFirstBaseReportPropertyDefinitions() throws DAOException{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cluster Density (K/mm²)", "clusterDensityTop",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("A Intensity", "intensityATop",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("C Intensity", "IntensityCTop",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("G Intensity", "IntensityGTop",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("T Intensity", "IntensityTTop",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("A Focus Score", "focusScoreATop",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("C Focus Score", "focusScoreCTop",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("G Focus Score", "focusScoreGTop",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("T Focus Score", "focusScoreTTop",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cluster Density (K/mm²)", "clusterDensityBottom",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("A Intensity", "intensityABottom",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("C Intensity", "IntensityCBottom",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("G Intensity", "IntensityGBottom",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("T Intensity", "IntensityTBottom",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("A Focus Score", "focusScoreABottom",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("C Focus Score", "focusScoreCBottom",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("G Focus Score", "focusScoreGBottom",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("T Focus Score", "focusScoreTBottom",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1), Float.class, true, "single"));
+		return propertyDefinitions;
 	}
 	
 	public static List<PropertyDefinition> getContaminationPropertyDefinitions() throws DAOException{
