@@ -10,7 +10,7 @@ import org.junit.Test;
 import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;
-import validation.container.instance.SampleUsedValidationHelper;
+import validation.container.instance.ContentValidationHelper;
 import validation.sample.instance.SampleValidationHelper;
 
 public class SampleUsedValidationHelperTest extends AbstractTests{
@@ -51,21 +51,21 @@ public class SampleUsedValidationHelperTest extends AbstractTests{
 	@Test
 	public void validateSampleTypeCode() throws DAOException {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		SampleUsedValidationHelper.validateSampleTypeCode(SampleType.find.findAll().get(0).code,contextValidation);
+		ContentValidationHelper.validateSampleTypeCode(SampleType.find.findAll().get(0).code,contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
 	@Test
 	public void validateSampleTypeCodeRequired() {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		SampleUsedValidationHelper.validateSampleTypeCode(null,contextValidation);
+		ContentValidationHelper.validateSampleTypeCode(null,contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
 
 	@Test
 	public void validateSampleTypeNotExist() {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		SampleUsedValidationHelper.validateSampleTypeCode("notexist",contextValidation);
+		ContentValidationHelper.validateSampleTypeCode("notexist",contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}	
 	

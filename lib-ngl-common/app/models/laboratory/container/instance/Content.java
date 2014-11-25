@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.container.instance.SampleUsedValidationHelper;
+import validation.container.instance.ContentValidationHelper;
 import validation.sample.instance.SampleValidationHelper;
 
 public class Content implements IValidation{
@@ -51,9 +51,10 @@ public class Content implements IValidation{
 	@Override
 	public void validate(ContextValidation contextValidation) {
 
-		SampleUsedValidationHelper.validateSampleCode(sampleCode, contextValidation);
+		ContentValidationHelper.validateSampleCode(sampleCode, contextValidation);
 		SampleValidationHelper.validateSampleCategoryCode(sampleCategoryCode,contextValidation);
-		SampleUsedValidationHelper.validateSampleTypeCode(sampleTypeCode,contextValidation);
+		ContentValidationHelper.validateSampleTypeCode(sampleTypeCode,contextValidation);
+		ContentValidationHelper.validatePercentageContent(percentage, contextValidation);
 		
 		//SampleUsedValidationHelper.validateProjectCode(projectCode, contextValidation);
 	}

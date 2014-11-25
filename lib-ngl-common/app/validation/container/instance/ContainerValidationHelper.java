@@ -12,6 +12,7 @@ import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
+import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 
 public class ContainerValidationHelper extends CommonValidationHelper{
@@ -34,11 +35,16 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 	}
 	
 	public static void validateContents(List<Content> contents, ContextValidation contextValidation) {
+		Double percentageSum = null;
 		if(ValidationHelper.required(contextValidation, contents, "contents")){
 			contextValidation.addKeyToRootKeyName("contents");
 			for(Content t:contents){
-					t.validate(contextValidation);					
+					t.validate(contextValidation);
+					percentageSum = percentageSum + t.percentage;				
 			}
+			if(percentageSum<100 || percentageSum>100){
+				contextValidation.addErrors("contents", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, "percentages");
+			}			
 			contextValidation.removeKeyFromRootKeyName("contents");
 		}
 	}

@@ -1,13 +1,12 @@
 package models.utils.instance;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import play.Logger;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -16,7 +15,6 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -111,12 +109,18 @@ public class ContainerHelper {
 		}
 		
 	}
-
+	
+//TODO
 	public static void calculPercentageContent(List<Content> contents, Double percentage){
 		if(percentage!=null){
 			for(Content cc:contents){
-
-				cc.percentage= cc.percentage == null ? percentage : cc.percentage*percentage/100;
+				BigDecimal bd=null;				
+				if(cc.percentage != null){
+					bd = (new BigDecimal((cc.percentage*percentage)/100.00)).setScale(2, BigDecimal.ROUND_HALF_UP);
+				}
+				cc.percentage= cc.percentage == null ? percentage : bd.doubleValue();
+					
+					
 			}
 		}
 	}
