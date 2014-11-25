@@ -118,6 +118,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	};
 	
 	$scope.search = function(){	
+		$scope.errors = {};
 		if($scope.form.projectCodes || $scope.form.sampleCodes || $scope.form.processType || $scope.form.containerSupportCode 
 				|| $scope.form.fromExperimentTypeCodes || $scope.form.containerSupportCategory  || $scope.form.valuations){
 			var jsonSearch = {};
@@ -152,6 +153,10 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			
 			$scope.datatable.search(jsonSearch);
 			mainService.setForm($scope.form);
+		}else{
+			if($scope.form.processCategory === undefined || $scope.form.processCategory === "" ){
+				$scope.errors.processCategory = "alert alert-danger";
+			}
 		}
 	};
 	
