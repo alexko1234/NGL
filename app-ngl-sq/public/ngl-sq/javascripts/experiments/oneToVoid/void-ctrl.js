@@ -61,12 +61,14 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 	});
 	
 	$scope.$on('addInstrumentPropertiesInput', function(e, data, possibleValues) {
+		console.log(data);
 		var column = $scope.datatable.newColumn(data.name,"inputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
 		$scope.datatable.addColumn(2,column);
 	});
 	
 	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
+		console.log(data);
 		var column = $scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
 		column.defaultValues = data.defaultValue;
 		$scope.datatable.addColumn(2,column);

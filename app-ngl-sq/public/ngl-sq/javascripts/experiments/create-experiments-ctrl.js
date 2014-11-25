@@ -903,6 +903,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					experiment.instrument.inContainerSupportCategoryCode = $scope.form.containerSupportCategory;
 					$scope.experiment.editMode=false;
 					$scope.experiment.value = experiment;
+					if($scope.experiment.outputVoid === true){
+						$scope.getTemplate();
+					}
 				}else{
 					$scope.experiment.editMode=true;
 					$scope.experiment.experimentProperties.enabled = false;

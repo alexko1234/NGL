@@ -184,7 +184,7 @@ search.placeholder.valuation = Sélect une évaluation
 
 experiments.table.code = Expérience
 experiments.table.projectCodes = Projet(s)
-experiments.table.volume.value = Quantité initiale (ng)
+experiments.table.volume.value = Quantité initiale
 experiments.table.sampleCodes = Echantillon(s)
 experiments.table.categoryCode = Catégorie
 experiments.table.typeCode = Type
