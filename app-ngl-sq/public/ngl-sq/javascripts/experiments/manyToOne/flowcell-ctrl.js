@@ -433,11 +433,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					}
 					$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value = $scope.allOutputContainersUsed[data[j].code].value;			 
 				}
-
-
-
 			}
-
 		}
 	}
 
