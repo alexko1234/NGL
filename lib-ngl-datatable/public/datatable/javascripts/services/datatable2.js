@@ -2100,7 +2100,7 @@ angular.module('datatableServices', []).
 			    	};
 			    	
 			    	scope.dtTableFunctions.getConvertDirective = function(col, header){
-			    		if(!header && col.convertValue != undefined && col.convertValue.active == true && col.convertValue.saveMeasureValue != col.convertValue.displayMeasureValue){
+			    		if(col.convertValue != undefined && col.convertValue.active == true && col.convertValue.saveMeasureValue != col.convertValue.displayMeasureValue){
 			    			return 'convert-value="col.convertValue"';
 			    		}
 			    		return "";
