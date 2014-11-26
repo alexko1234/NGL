@@ -12,6 +12,8 @@ datatable.button.group = Grouper / Dégrouper
 datatable.button.length=Taille ({0})
 datatable.totalNumberRecords = {0} Résultats
 datatable.button.exportCSV = CSV Export
+datatable.button.basicExportCSV = Exporter toutes les lignes
+datatable.button.groupedExportCSV = Exporter les lignes groupées
 
 datatable.msg.success.save = Toutes les sauvegardes ont réussi.
 datatable.msg.error.save = Il y a {0} sauvegarde(s) en erreur.
