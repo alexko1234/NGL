@@ -1481,8 +1481,8 @@ angular.module('datatableServices', []).
 		    			/**
 		    			 * Function to export data in a CSV file
 		    			 */
-		    			exportCSV : function() {
-		    				var delimiter = this.config.exportCSV.delimiter, lineValue = "", colValue, that = this; 		    				
+		    			exportCSV : function(exportType) {
+		    				var cas, delimiter = this.config.exportCSV.delimiter, lineValue = "", colValue, that = this; 		    				
 		    				
 		    				//calcule results ( code extracted from method computeDisplayResult() )
 		    				var displayResultTmp = [], _displayResult = [];
@@ -1512,14 +1512,17 @@ angular.module('datatableServices', []).
 		    					lineValue += "\n";
 		    					//data
 		    					displayResultTmp.forEach(function(result) {
+		    						
 		    						columnsToPrint.forEach(function(column) {	
 		    							//algo to set colValue (value of the column)
-		    			    			if (!result.line.group && !angular.isDefined(column.url)) {
+		    			    			if (!result.line.group && !angular.isDefined(column.url) && exportType!=='groupsOnly') {
 		    			    				var property = column.property;
 		    			    				property += (column.filter)?'|'+column.filter:'';
 				    						property += that.getFormatter(column); 
 			    							colValue = $parse(property)(result.data);
+			    							lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
 		    			    			} else if(result.line.group) {
+		    			    				
 		    			    				var v = $parse("group."+column.id)(result.data);
 		    			    				//if error in group function
 		    			    				if (angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#") {
@@ -1533,14 +1536,16 @@ angular.module('datatableServices', []).
 		    			    					colValue = $parse("group."+expression+that.getFormatter(column))(result.data);
 		    			    				} else {
 		    			    					colValue =  undefined;
-		    			    				}			    							    				
+		    			    				}
+		    			    				lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
 		    			    			} else if(!result.line.group && angular.isDefined(column.url)) {
+		    			    				colValue =  undefined;
 		    			    				alert("Url column is not yet implemented !");
 		    			    			}
-		    			    			
-			    						lineValue = lineValue + ((colValue!=null)&&(colValue)?colValue:"") + delimiter;
 		    						});
-		    						lineValue = lineValue + "\n";
+		    						if ((exportType==='all') || ((exportType==='groupsOnly') && result.line.group)) {
+		    							lineValue = lineValue + "\n";
+		    						}
 		    					});
 		    					displayResultTmp = undefined;
 		    					
@@ -1831,9 +1836,9 @@ angular.module('datatableServices', []).
 		    		};			
 		    		
 		    		
-		    		scope.dtTableFunctions.exportCSV = function(){
+		    		scope.dtTableFunctions.exportCSV = function(exportType){
 		    			scope.dtTable.setSpinner(true);
-		    			$timeout(function(){scope.dtTable.exportCSV()}).then(function(){
+		    			$timeout(function(){scope.dtTable.exportCSV(exportType)}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
 		    			});
 		    		};	
@@ -1888,14 +1893,21 @@ angular.module('datatableServices', []).
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.remove\')}}</span>'
   		    		+	'</button>'  		    	
   		    		+'</div>'
-  		    		
+
   		    		+'<div class="btn-group" ng-if="dtTable.isShowExportCSVButton()">'
-    				+	'<button class="btn btn-default" ng-click="dtTableFunctions.exportCSV()" ng-disabled="!dtTable.canExportCSV()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}">' 
-		    		+		'<i class="fa fa-file-text-o"></i>'
-		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}</span>' 
-		    		+	'</button>' 
-		    		+'</div>'  				
-    				
+  		    		+'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}">'
+  		    		+	'<i class="fa fa-file-text-o fa-lg"></i> '
+  		    		+	'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}</span>'
+  		    		+	'<span class="caret" />'
+  		    		+'</button>'
+  		    		+'<ul class="dropdown-menu">'
+  		    		/* Basic Export */
+  		    		+	'<li><a href="#" ng-click="dtTableFunctions.exportCSV(\'all\')" ng-disabled="!dtTable.canExportCSV()"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.basicExportCSV\')}}</a></li>'
+  		    		/* Grouped Export */
+  		    		+	'<li><a href="#" ng-click="dtTableFunctions.exportCSV(\'groupsOnly\')" ng-disabled="!dtTable.canExportCSV()"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.groupedExportCSV\')}}</a></li>'
+  		    		+'</ul>'
+  		    		+'</div>'
+		    		
   		    		+'<div class="btn-group" ng-if="dtTable.isShowHideButtons()">' //todo bt-select
   		    		+	'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.hide\')}}">'
   		    		+		'<i class="fa fa-eye-slash fa-lg"></i> '
@@ -1907,7 +1919,7 @@ angular.module('datatableServices', []).
   		    		+		'<a href="#" ng-click="dtTableFunctions.setHideColumn(column)" ng-switch on="dtTable.isHide(column.id)"><i class="fa fa-eye" ng-switch-when="true"></i><i class="fa fa-eye-slash" ng-switch-when="false"></i> <span ng-bind="dtTableFunctions.messagesDatatable(column.header)"/></a>'
   		    		+		'</li>'
   		    		+	'</ul>'
-  		    		+'</div>'  		    		
+  		    		+'</div>' 
   		    		+'<div class="btn-group" ng-if="dtTable.isShowOtherButtons()" dt-compile="dtTable.config.otherButtons.template"></div>'
   		    		+'</div>'
   		    		+'<div class="btn-toolbar pull-right" name="dt-toolbar-results"  ng-if="dtTable.isShowToolbarResults()">'
