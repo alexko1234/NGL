@@ -362,7 +362,7 @@ public class LimsCNSDAO{
 				//TODO add projectCode
 				// Todo add properties from ExperimentType
 				sampleUsed.properties=new HashMap<String, PropertyValue>();
-				sampleUsed.properties.put("percentPerLane", new PropertySingleValue(rs.getFloat("percentPerLane")));
+				sampleUsed.properties.put("percentPerLane", new PropertySingleValue(rs.getDouble("percentPerLane")));
 				sampleUsed.properties.put("libProcessTypeCode",new PropertySingleValue(rs.getString("libProcessTypeCode")));
 				if(rs.getString("tag")!=null){
 					sampleUsed.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
@@ -702,8 +702,10 @@ public class LimsCNSDAO{
 					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
 						Index index=new Index();
 						index.code=rs.getString("tagkeyseq");
+						index.categoryCode=rs.getString("categoryCode");
 						index.sequence=rs.getString("tagseq");
-						index.illuminaName=rs.getString("tagnamefour");
+						index.supplierName=new HashMap<String, String>();
+						index.supplierName.put("illumina",rs.getString("tagnamefour"));
 						index.traceInformation=new TraceInformation();
 						InstanceHelpers.updateTraceInformation(index.traceInformation, "ngl-data");
 						return index;
