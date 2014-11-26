@@ -204,9 +204,18 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));
 		}
 
-		container.mesuredConcentration=new PropertySingleValue(rs.getFloat("mesuredConcentration"), "ng/µl");
-		container.mesuredVolume=new PropertySingleValue(rs.getFloat("mesuredVolume"), "µl");
-		container.mesuredQuantity=new PropertySingleValue(rs.getFloat("mesuredQuantity"), "ng");
+		String mesuredConcentrationUnit="ng/µl";
+		try{
+			if(   rs.getString("measuredConcentrationUnit")!=null){
+				mesuredConcentrationUnit=rs.getString("measuredConcentrationUnit");
+			}
+		} catch(SQLException e){
+			
+		}
+		
+		container.mesuredConcentration=new PropertySingleValue(Math.round(rs.getFloat("mesuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);
+		container.mesuredVolume=new PropertySingleValue(Math.round(rs.getFloat("mesuredVolume")*100.0)/100.0, "µl");
+		container.mesuredQuantity=new PropertySingleValue(Math.round(rs.getFloat("mesuredQuantity")*100.0)/100.0, "ng");
 
 		container.fromExperimentTypeCodes=InstanceHelpers.addCode(experimentTypeCode, container.fromExperimentTypeCodes);
 
