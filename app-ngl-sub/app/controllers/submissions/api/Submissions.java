@@ -2,10 +2,13 @@ package controllers.submissions.api;
 
 import static play.data.Form.form;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.Run;
+import models.sra.experiment.instance.Experiment;
+import models.sra.experiment.instance.RawData;
 import models.sra.submission.instance.Submission;
 import models.utils.InstanceConstants;
 
@@ -21,7 +24,7 @@ import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
-public class Submissions extends CommonController{
+public class Submissions extends SubmissionsController{
 
 	final static Form<Submission> submissionForm = form(Submission.class);
 
@@ -35,7 +38,7 @@ public class Submissions extends CommonController{
 	public static Result update(String code)
 	{
 		//Get Submission from DB 
-		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
+		Submission submission = getSubmission(code);
 		if (submission == null) {
 			return badRequest("Submission with code "+code+" not exist");
 		}
@@ -55,5 +58,19 @@ public class Submissions extends CommonController{
 		}else{
 			return badRequest("submission code are not the same");
 		}	
+	}
+	
+	public static Result getRawDatas(String code)
+	{
+		List<RawData> allRawDatas = new ArrayList<RawData>();
+		//Get all experiments from submission
+		Submission submission = getSubmission(code);
+		for(String codeExperiment : submission.experimentCodes){
+			//Get List RawData from each experiment
+			Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, codeExperiment);
+			allRawDatas.addAll(experiment.run.listRawData);
+		}
+		return ok(Json.toJson(allRawDatas));
+		
 	}
 }

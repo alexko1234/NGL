@@ -9,7 +9,10 @@ import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.status;
 
 import java.io.IOException;
+import java.util.List;
 
+import models.sra.experiment.instance.Experiment;
+import models.sra.experiment.instance.RawData;
 import models.sra.submission.instance.Submission;
 import models.utils.InstanceConstants;
 
@@ -22,12 +25,17 @@ import play.Logger;
 import play.libs.Json;
 import play.mvc.Result;
 import utils.AbstractTestController;
-import utils.StateBuilder;
-import utils.SubmissionBuilder;
 import utils.SubmissionMockHelper;
+import builder.data.ExperimentBuilder;
+import builder.data.RawDataBuilder;
+import builder.data.RunBuilder;
+import builder.data.StateBuilder;
+import builder.data.SubmissionBuilder;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.cea.ig.MongoDBDAO;
 
@@ -37,18 +45,39 @@ public class SubmissionsTest extends AbstractTestController{
 	@BeforeClass
 	public static void initData()
 	{
+		//Create simple submission with state
 		//Submission submission = SubmissionMockHelper.newSubmission("code1");
 		Submission submission = new SubmissionBuilder()
 								.withCode("code1")
 								.withState(new StateBuilder().withCode("Scode1").build())
 								.build();
 		MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission);
+		
+		//Create submission withRawData
+		Submission submissionRD = new SubmissionBuilder()
+								.withCode("sub2")
+								.addExperimentCode("exp1")
+								.build();
+		MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submissionRD);
+		Experiment experiment = new ExperimentBuilder()
+								.withCode("exp1")
+								.withRun(new RunBuilder()
+											.withCode("run1")
+											.addRawData(new RawDataBuilder()
+														.withRelatifName("path1").build())
+											.addRawData(new RawDataBuilder()
+														.withRelatifName("path2").build())
+											.build())
+								.build();
+		MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, experiment);
 	}
 
 	@AfterClass
 	public static void deleteData()
 	{
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code1");
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "sub2");
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "exp1");
 	}
 
 	@Test
@@ -74,5 +103,23 @@ public class SubmissionsTest extends AbstractTestController{
 		Submission submissionUpdated = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code1");
 		Logger.info("submission updated "+submissionUpdated.state.code);
 		assertThat(submissionUpdated.state.code).isEqualTo("Scode1Update");
+	}
+	
+	@Test
+	public void shouldGetRawDatas() throws JsonParseException, JsonMappingException, IOException
+	{
+		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.getRawDatas("sub2"));
+		Logger.info(contentAsString(result));
+		assertThat(status(result)).isEqualTo(OK);
+		assertThat(contentType(result)).isEqualTo("application/json");
+		List object = new ObjectMapper().readValue(contentAsString(result), List.class);
+		assertThat(object.size()).isEqualTo(2);
+		for(Object o : object)
+		{
+			Logger.info(o.toString());
+			JsonNode jsonNode = Json.toJson(o);
+			assertThat(jsonNode.findValue("relatifName")).isNotNull();
+		}
+		
 	}
 }

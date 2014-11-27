@@ -1,4 +1,6 @@
-package utils;
+package builder.data;
+
+import java.util.ArrayList;
 
 import models.laboratory.common.instance.State;
 import models.sra.submission.instance.Submission;
@@ -9,13 +11,21 @@ public class SubmissionBuilder {
 	
 	public SubmissionBuilder withCode(String code)
 	{
-		this.submission.code=code;
+		submission.code=code;
 		return this;
 	}
 	
 	public SubmissionBuilder withState(State state)
 	{
-		this.submission.state=state;
+		submission.state=state;
+		return this;
+	}
+	
+	public SubmissionBuilder addExperimentCode(String code)
+	{
+		if(submission.experimentCodes==null)
+			submission.experimentCodes=new ArrayList<String>();
+		submission.experimentCodes.add(code);
 		return this;
 	}
 	

@@ -1,4 +1,4 @@
-package utils;
+package builder.data;
 
 import models.laboratory.common.instance.State;
 
@@ -8,7 +8,7 @@ public class StateBuilder {
 	
 	public StateBuilder withCode(String code)
 	{
-		this.state.code=code;
+		state.code=code;
 		return this;
 	}
 	
