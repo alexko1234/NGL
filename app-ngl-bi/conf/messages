@@ -284,6 +284,27 @@ readsets.treatments.duplicates.paired = Paired
 readsets.treatments.duplicates.sampleInput = Sample input
 readsets.treatments.duplicates.estimateDuplicatedReadsNTimes = Estimation de lectures dupliquées x+1 fois
 
+readsets.treatments.firstBaseReport.topSurface = Top Surface
+readsets.treatments.firstBaseReport.bottomSurface = Bottom Surface
+readsets.treatments.firstBaseReport.clusterDensityTop = Cluster Density (K/mm²)
+readsets.treatments.firstBaseReport.intensityATop = A intensity
+readsets.treatments.firstBaseReport.intensityCTop = C intensity
+readsets.treatments.firstBaseReport.intensityGTop = G intensity
+readsets.treatments.firstBaseReport.intensityTTop = T intensity
+readsets.treatments.firstBaseReport.focusScoreATop = A Focus Score
+readsets.treatments.firstBaseReport.focusScoreCTop = C Focus Score
+readsets.treatments.firstBaseReport.focusScoreGTop = G Focus Score
+readsets.treatments.firstBaseReport.focusScoreTTop = T Focus Score
+readsets.treatments.firstBaseReport.clusterDensityBottom = Cluster Density (K/mm²)
+readsets.treatments.firstBaseReport.intensityABottom = A intensity
+readsets.treatments.firstBaseReport.intensityCBottom = C intensity
+readsets.treatments.firstBaseReport.intensityGBottom = G intensity
+readsets.treatments.firstBaseReport.intensityTBottom = T intensity
+readsets.treatments.firstBaseReport.focusScoreABottom = A Focus Score
+readsets.treatments.firstBaseReport.focusScoreCBottom = C Focus Score
+readsets.treatments.firstBaseReport.focusScoreGBottom = G Focus Score
+readsets.treatments.firstBaseReport.focusScoreTBottom = T Focus Score
+
 readsets.treatments.global.usefulSequences = Nb Séquences utiles
 readsets.treatments.global.usefulBases = Nb Bases utiles
 
@@ -401,7 +422,8 @@ readsets.treatments.trimming.storedPairs = Stored Pairs
 readsets.treatments.trimming.storedSingleton = Stored Singleton
 readsets.treatments.trimming.rejectedPairs = Rejected Pairs
 readsets.treatments.trimming.trimStored = Trim. Stored
- 
+
+
 #treatments names
 readsets.treatments.global = Global
 readsets.treatments.ngsrg = NGS-RG
@@ -409,6 +431,7 @@ readsets.treatments.duplicatesRaw = Duplicates (vs RAW)
 readsets.treatments.duplicatesClean = Duplicates (vs CLEAN)
 readsets.treatments.trimmingStd = Trimming
 readsets.treatments.trimmingVector = Trimming Vecteur
+readsets.treatments.firstBaseReport = First Base Report
 readsets.treatments.merging = Merging
 readsets.treatments.readQualityRaw = Read Quality (vs RAW)
 readsets.treatments.readQualityClean = Read Quality (vs CLEAN)
@@ -497,6 +520,10 @@ analyses.treatments.assembly_ba.N80Contig = N80
 analyses.treatments.assembly_ba.N90Contig = N90 
 analyses.treatments.assembly_ba.NXContigNb = Number of contigs
 analyses.treatments.assembly_ba.NXContigSize = Size (bases)
+analyses.treatments.assembly_ba.readsUsed = Number of reads used for assembly
+analyses.treatments.assembly_ba.basesUsed = Number of bases used for assembly
+analyses.treatments.assembly_ba.coverageUsed = Coverage used for assembly
+analyses.treatments.assembly_ba.readsAssembled = Number of reads really assembled
 analyses.treatments.assembly_ba.assemblyContigSize = Assembly size (bases)
 analyses.treatments.assembly_ba.assemblyContigNb = Number of contigs
 analyses.treatments.assembly_ba.minContigSize = Smallest contig size (bases)
