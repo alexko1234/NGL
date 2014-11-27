@@ -287,6 +287,61 @@ public class ExperimentTests extends AbstractTests{
 				
 	}
 	
+	/*@Test
+	public void saveExperiment(){
+		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
+		
+		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.save(),fakeRequest().withJsonBody(Json.toJson(exp)));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+	}
+	
+	@Test
+	public void updateExperimentProperties(){
+		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
+		
+		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateExperimentProperties(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+	}
+	
+	@Test
+	public void updateExperimentInformations(){
+		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
+		
+		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateExperimentInformations(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+	}
+	
+	@Test
+	public void updateContainers(){
+		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
+		
+		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateContainers(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+	}
+	
+	@Test
+	public void updateInstrumentInformations(){
+		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
+		
+		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateInstrumentInformations(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+	}
+	
+	@Test
+	public void updateInstrumentProperties(){
+		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
+		
+		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateInstrumentProperties(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+	}
+	
+	@Test
+	public void nextState(){
+		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
+		
+		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.nextState(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+	}*/
 	
 	public PropertyDefinition getPropertyImgDefinition() {
 		PropertyDefinition pDef = new PropertyDefinition();
