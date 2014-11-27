@@ -2,6 +2,7 @@ package validation.container.instance;
 
 import java.util.List;
 
+import play.Logger;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
@@ -35,20 +36,38 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 	}
 	
 	public static void validateContents(List<Content> contents, ContextValidation contextValidation) {
-		Double percentageSum = null;
+		
 		if(ValidationHelper.required(contextValidation, contents, "contents")){
-			contextValidation.addKeyToRootKeyName("contents");
-			for(Content t:contents){
-					t.validate(contextValidation);
-					percentageSum = percentageSum + t.percentage;				
-			}
-			if(percentageSum<100 || percentageSum>100){
-				contextValidation.addErrors("contents", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, "percentages");
-			}			
-			contextValidation.removeKeyFromRootKeyName("contents");
+
+			for(int i=0;i<contents.size();i++){
+				    contextValidation.addKeyToRootKeyName("contents."+i);
+					contents.get(i).validate(contextValidation);
+					contextValidation.removeKeyFromRootKeyName("contents."+i);
+					Logger.debug("==> content." + i);
+			}		
+
+			//validateContentPercentageSum(contents, contextValidation);
 		}
 	}
-
+	/*
+	//Check the sum of percentage of contents is 100
+	public static boolean validateContentPercentageSum(List<Content> contents, ContextValidation contextValidation){
+		Double percentageSum = 0.00;
+		for(Content t:contents){			
+			if(t.percentage!=null){
+				percentageSum = percentageSum + t.percentage;
+			}							
+		}
+		if(!((100.00-percentageSum)>=0.00 && (100.00-percentageSum)<0.02)){
+			contextValidation.addKeyToRootKeyName("contents");
+			contextValidation.addErrors("percentageSum", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, "percentages");
+			contextValidation.addKeyToRootKeyName("contents");
+			return false;
+		}else{
+			return true;
+		}
+	}
+*/
 	public static void validateContainerSupport(LocationOnContainerSupport support,
 			ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, support, "support")) {

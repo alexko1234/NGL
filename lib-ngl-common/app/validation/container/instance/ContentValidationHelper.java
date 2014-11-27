@@ -1,5 +1,7 @@
 package validation.container.instance;
 
+import static validation.utils.ValidationHelper.required;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,21 +19,24 @@ public class ContentValidationHelper extends CommonValidationHelper {
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode",SampleType.find,false);
 	}
-	
+
 	public static void validateSampleCode(String sampleCode,
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, sampleCode, "sampleCode", Sample.class, InstanceConstants.SAMPLE_COLL_NAME, false);
 
 	}
-	
+/*
 	public static void validatePercentageContent(Double percentage, ContextValidation contextValidation){
-		Pattern ptn = Pattern.compile("\\d*\\.\\d\\d$");
-		Matcher mtr = ptn.matcher(String.valueOf(percentage));
-		//pecentage is mandatory
-		if(percentage<0.0 ||percentage>100.00 || !mtr.matches()){
-			contextValidation.addErrors("percentage", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, percentage);
+
+		if(required(contextValidation, percentage, "percentage")){
+			Pattern ptn = Pattern.compile("\\d*\\.\\d\\d?$");
+			Matcher mtr = ptn.matcher(String.valueOf(percentage));
+			//pecentage is mandatory
+			if(percentage<0.0 ||percentage>100.00 || !mtr.matches()){
+				contextValidation.addErrors("percentage", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, percentage);
+			}
 		}
 	}
-	
 
+*/
 }

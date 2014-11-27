@@ -19,7 +19,7 @@ public class ContainerTest extends AbstractTests {
 	
 	
 	
-	//protected static ALogger logger=Logger.of("ContainerTest");
+	protected static ALogger logger=Logger.of("ContainerTest");
 	
 	@Test
 	public void validateCalculPercentageContent() {

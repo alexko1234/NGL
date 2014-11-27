@@ -7,8 +7,8 @@ import java.util.List;
 
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
-import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.Content;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
@@ -21,6 +21,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import play.Logger;
 import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;
@@ -47,6 +48,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	
 	static Content sampleUsed;
 	static Content sampleUsed1;
+	static Content sampleUsed3; //use for percentage content test
 
 	static LocationOnContainerSupport containerSupport;
 
@@ -60,7 +62,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		processType=ProcessType.find.findAll().get(0);
 
 		sampleType=SampleType.find.findAll().get(0);
-		
+		Logger.debug("sampleType "+sampleType.category.name);
 		experimentType=ExperimentType.find.findAll().get(0);
 		experimentType1=ExperimentType.find.findAll().get(1);
 
@@ -76,7 +78,10 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		sample1.categoryCode=sampleType.category.code;
 				
 		sampleUsed=new Content(sample.code,sample.typeCode,sample.categoryCode);
+		sampleUsed.percentage=80.0;
 		sampleUsed1=new Content(sample1.code,sample1.typeCode, sample1.categoryCode);
+		sampleUsed1.percentage=20.0;
+		sampleUsed3 = new Content();
 		
 		containerSupport=new LocationOnContainerSupport();
 		containerSupport.code="test";
@@ -206,10 +211,79 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		List<Content> localContents=new ArrayList<Content>();
 		localContents.add(new Content("","",""));
+		localContents.get(0).percentage= 100.00;
 		ContainerValidationHelper.validateContents(localContents, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(3);
 	}
+	/*
+	@Test
+	public void validationPercentageContentsWithGoodValues(){
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
+		List<Content> localContents=new ArrayList<Content>();		
+		//Test with good values
+		sampleUsed.percentage=75.00;
+		sampleUsed1.percentage=25.00;		
+		localContents.add(sampleUsed);
+		localContents.add(sampleUsed1);
+		ContainerValidationHelper.validateContentPercentageSum(localContents, contextValidation);
+		assertThat(contextValidation.errors.size()).isEqualTo(0);		
+	}
 	
+	@Test
+	public void validationPercentageContentsWithEquiMolarValues(){
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
+		List<Content> localContents=new ArrayList<Content>();		
+		//Test with equimolar values
+		sampleUsed.percentage=33.33;
+		sampleUsed1.percentage=33.33;
+		sampleUsed3.percentage= 33.33;
+		localContents.add(sampleUsed);
+		localContents.add(sampleUsed1);
+		localContents.add(sampleUsed3);
+		ContainerValidationHelper.validateContentPercentageSum(localContents, contextValidation);
+		assertThat(contextValidation.errors.size()).isEqualTo(0);		
+	}
+	
+	@Test
+	public void validationPercentageContentsWithNegativeValue(){
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
+		List<Content> localContents=new ArrayList<Content>();						
+		//Test with a value less than 0				
+		sampleUsed.percentage=-50.00;
+		sampleUsed1.percentage= 100.00;		
+		localContents.add(sampleUsed);
+		localContents.add(sampleUsed1);
+		ContainerValidationHelper.validateContentPercentageSum(localContents, contextValidation);
+		assertThat(contextValidation.errors.size()).isEqualTo(1);		
+	}
+	
+	@Test
+	public void validationPercentageContentsWithHundred(){
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
+		List<Content> localContents=new ArrayList<Content>();
+		//Test with a sum of values different than 100			
+		sampleUsed.percentage=20.00;
+		sampleUsed1.percentage= 20.00;		
+		localContents.add(sampleUsed);
+		localContents.add(sampleUsed1);
+		ContainerValidationHelper.validateContentPercentageSum(localContents, contextValidation);
+		assertThat(contextValidation.errors.size()).isEqualTo(1);		
+	}
+	
+	@Test
+	public void validationPercentageContentsWithBigValue(){
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
+		List<Content> localContents=new ArrayList<Content>();		
+		//Test with a value greater than 100
+		sampleUsed.percentage=10.00;
+		sampleUsed1.percentage= 250.00;		
+		localContents.add(sampleUsed);
+		localContents.add(sampleUsed1);
+		ContainerValidationHelper.validateContentPercentageSum(localContents, contextValidation);
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
+	}
+	
+	*/
 
 	/**
 	 * 

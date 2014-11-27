@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import play.Logger;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.experiment.description.ExperimentType;
@@ -21,6 +22,7 @@ public class SampleValidationHelper extends CommonValidationHelper {
 
 	public static void validateSampleCategoryCode(String categoryCode,
 			ContextValidation contextValidation) {
+		Logger.debug("CategoryCode "+categoryCode);
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", SampleCategory.find,false);
 
 	}
