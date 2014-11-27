@@ -16,7 +16,7 @@ import utils.AbstractTestsSRA;
 
 
 // Pour les tests utilisant MongoDb mettre extents AbstractTests
-public class StudyValidationHelperTest extends AbstractTestsSRA {
+public class StudyValidationTest extends AbstractTestsSRA {
 	//@BeforeClass appelé 1! fois avant tests
 	//@Before appelee avant chaque test
 

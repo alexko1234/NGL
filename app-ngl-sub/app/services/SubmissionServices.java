@@ -1,5 +1,6 @@
 package services;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -101,11 +102,11 @@ public class SubmissionServices {
 				/////////MongoDBDAO.save(InstanceConstants.SRA_SAMPLE_COLL_NAME, sample);
 			}
 			System.out.println("apres insertion dans db du sample "+ sample.code);
-
+			//VariableSRA.submissionDirectory + File.separator + projectCode + File.separator + st_my_date;
+			Experiment experiment = createExperimentEntity(readSet, projectCode);
 			Run run = createRunEntity(readSet, projectCode);
 			System.out.println("bien sorti de createRunEntity" );
 
-			Experiment experiment = createExperimentEntity(readSet, projectCode);
 
 			System.out.println("aliasStudy = " + study.code);
 			System.out.println("aliasSample = " + sample.code);
@@ -260,6 +261,7 @@ public class SubmissionServices {
 		
 		experiment.code = "exp_" + readSet.code;
 		experiment.readSetCode = readSet.code;
+		experiment.projectCode = projectCode;
 		//System.out.println("readSetCode =" + readSet.code);
 		
 		experiment.libraryLayoutNominalLength = null;
@@ -288,10 +290,11 @@ public class SubmissionServices {
 				}
 			}
 		}
+		
 		// if (experiment.libraryLayoutNominalLength == null) {
 		// mettre valeur theorique de libraryLayoutNominalLength a prendre dans le futur dans container
 		
-		experiment.state.code = "N";
+		experiment.state.code = "N"; // ?????
 		String laboratorySampleCode = readSet.sampleCode;
 		models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
 		String taxonId = laboratorySample.taxonCode;
@@ -322,7 +325,7 @@ public class SubmissionServices {
 		// Ajouter les read_spec en fonction de l'information SINGLE ou PAIRED et forward-reverse et last_base_coord :
 		experiment.libraryLayout = null;
 		experiment.libraryLayoutOrientation = null;
-
+		experiment.libraryConstructionProtocol = VariableSRA.libraryConstructionProtocol;
 		if (laboratoryRun.properties.containsKey("sequencingProgramType")){	
 			String libraryLayout =  (String) laboratoryRun.properties.get("sequencingProgramType").value;
 			
@@ -362,6 +365,7 @@ public class SubmissionServices {
 				}
 			}
 			System.out.println("libraryLayout======"+libraryLayout);
+			experiment.run = createRunEntity(readSet, projectCode);
 		}
 
 
@@ -370,7 +374,6 @@ public class SubmissionServices {
 		// traitement de cette lane que se trouve l'information:
 		// Un readSet est sur une unique lane, mais une lane peut contenir plusieurs readSet
 		List<Lane> laboratoryLanes = laboratoryRun.lanes;
-		Integer last_base_coord = null;
 		for (Lane ll : laboratoryLanes) {
 			List<String> readSetCodes = ll.readSetCodes;
 			for (String rsc : readSetCodes){
@@ -386,12 +389,11 @@ public class SubmissionServices {
 						System.out.println(propertyValue.toString());
 						System.out.println(propertyValue.value);
 					}*/
-					last_base_coord =  (Integer) lanengsrg.get("nbCycleRead1").value + 1;
+					experiment.lastBaseCoord =  (Integer) lanengsrg.get("nbCycleRead1").value + 1;
 					break;
 				}
 			}
 		}
-
 		System.out.println("'"+readSet.code+"'");
 		experiment.readSpecs = new ArrayList<ReadSpec>();
 		// IF ILLUMINA ET SINGLE
@@ -420,7 +422,7 @@ public class SubmissionServices {
 			readSpec_2.readLabel = "R";
 			readSpec_2.readClass = "Application Read";
 			readSpec_2.readType = "Reverse";
-			readSpec_2.lastBaseCoord = last_base_coord;	
+			readSpec_2.lastBaseCoord = experiment.lastBaseCoord;
 			experiment.readSpecs.add(readSpec_2);
 
 		}
@@ -440,7 +442,7 @@ public class SubmissionServices {
 			readSpec_2.readLabel ="F";
 			readSpec_2.readClass = "Application Read";
 			readSpec_2.readType = "Forward";
-			readSpec_2.lastBaseCoord = last_base_coord;
+			readSpec_2.lastBaseCoord = experiment.lastBaseCoord;
 			experiment.readSpecs.add(readSpec_2);
 		}
 		return experiment;
@@ -453,21 +455,22 @@ public class SubmissionServices {
 		return "taxonNameFor_" + taxonId;
 	}
 
-	//todo releaseDate uniquement au niveau du study ????
+
 	public Run createRunEntity(ReadSet readSet, String projectCode) {
 		// On cree le run pour le readSet demandé.
 		// La validite du readSet doit avoir été testé avant.
 
 		// Recuperer pour le readSet la liste des fichiers associés:
-		String laboratoryRunCode = readSet.runCode;
+
+		//String laboratoryRunCode = readSet.runCode;
+		//models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
+
 		List <models.laboratory.run.instance.File> list_files =  readSet.files;
 		System.out.println("nbre de fichiers = " + list_files.size());
-		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 		
 		// Pour chaque readSet, creer un objet run 
-		Integer laneNumber = readSet.laneNumber;
 		Date runDate = readSet.runSequencingStartDate;
-		Run run = new Run(); // Pas à sauver
+		Run run = new Run();
 		run.code = "run_" + readSet.code;
 		run.runDate = runDate;
 		
@@ -478,7 +481,6 @@ public class SubmissionServices {
 		String dataDir = readSet.path;
 		for (models.laboratory.run.instance.File runInstanceFile: list_files) {
 			String runInstanceRelatifFileName = runInstanceFile.fullname;
-			String runInstanceFileName = dataDir + java.io.File.separator + runInstanceFile.fullname;
 			String runInstanceExtentionFileName = runInstanceFile.extension;
 			
 			// conditions qui doivent etre suffisantes puisque verification préalable que le readSet
@@ -486,23 +488,18 @@ public class SubmissionServices {
 			if (runInstanceFile.usable 
 					&& ! runInstanceExtentionFileName.equalsIgnoreCase("fna") && ! runInstanceExtentionFileName.equalsIgnoreCase("qual")
 					&& ! runInstanceExtentionFileName.equalsIgnoreCase("fna.gz") && ! runInstanceExtentionFileName.equalsIgnoreCase("qual.gz")) {
-					System.out.println("nom relatif du fichier : "+ runInstanceFile.fullname);
-					System.out.println("extention : " + runInstanceFile.extension);
-					System.out.println("usable : " + runInstanceFile.usable);
-					System.out.println("nom complet du fichier : " + runInstanceFileName);
-					// voir si integration des md5 
 					RawData rawData = new RawData();
-					rawData.extention = runInstanceExtentionFileName;
-					rawData.path = dataDir;
-					rawData.relatifName = runInstanceRelatifFileName;
+					rawData.extention = runInstanceFile.extension;
+					rawData.directory = dataDir;
+					rawData.relatifName = runInstanceFile.fullname;
 					run.listRawData.add(rawData);
+					if (runInstanceFile.properties != null && runInstanceFile.properties.containsKey("md5")) {
+						rawData.md5 = (String) runInstanceFile.properties.get("md5").value;
+					}					
 			}
 		}
 		return run;
 	}
-
-
-	
 	
 }
 

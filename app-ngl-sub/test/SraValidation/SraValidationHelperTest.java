@@ -7,6 +7,7 @@ import models.sra.utils.VariableSRA;
 
 import org.junit.Assert;
 import org.junit.Test;
+import play.Logger;
 
 import utils.AbstractTestsSRA;
 import validation.ContextValidation;
@@ -16,32 +17,39 @@ public class SraValidationHelperTest extends AbstractTestsSRA {
 	@Test
 	public void validationSraValidationHelperRequiredAndConstraintSuccess() throws IOException, SraException {
 		ContextValidation contextValidation = new ContextValidation(userContext);
-		contextValidation.addKeyToRootKeyName("experiment::");
 		String librarySelection = "random";
 		SraValidationHelper.requiredAndConstraint(contextValidation, librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
-		contextValidation.removeKeyFromRootKeyName("experiment::");
+		System.out.println("\n - displayErrors pour validationSraValidationHelperRequiredAndConstraintSuccess :");
+		contextValidation.displayErrors(Logger.of("SRA"));
 		Assert.assertTrue(contextValidation.errors.size()==0); // si aucune erreur
 	}
 	
 	@Test
 	public void validationSraValidationHelperRequiredAndConstraintEchec() throws IOException, SraException {
 		ContextValidation contextValidation = new ContextValidation(userContext);
-		contextValidation.addKeyToRootKeyName("experiment::");
 		String librarySelection = "farfelue";
 		SraValidationHelper.requiredAndConstraint(contextValidation, librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
-		contextValidation.removeKeyFromRootKeyName("experiment::");
+		System.out.println("\n - displayErrors pour validationSraValidationHelperRequiredAndConstraintEchec :");
+		contextValidation.displayErrors(Logger.of("SRA"));
 		Assert.assertTrue(contextValidation.errors.size()==1); // si une erreur
 	}
 	
 	@Test
 	public void validationSraValidationHelperRequiredAndConstraintNull() throws IOException, SraException {
 		ContextValidation contextValidation = new ContextValidation(userContext);
-		contextValidation.addKeyToRootKeyName("experiment::");
 		String librarySelection = null;
 		SraValidationHelper.requiredAndConstraint(contextValidation, librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
-		contextValidation.removeKeyFromRootKeyName("experiment::");
+		System.out.println("\n - displayErrors pour validationSraValidationHelperRequiredAndConstraintNull :");
+		contextValidation.displayErrors(Logger.of("SRA"));
 		Assert.assertTrue(contextValidation.errors.size()==1); // si une erreur
 	}
 	
-	
+	@Test
+	public void validationSraValidationHelperRequiredAndConstraintVoidString() throws IOException, SraException {
+		ContextValidation contextValidation = new ContextValidation(userContext);
+		String librarySelection = "";
+		SraValidationHelper.requiredAndConstraint(contextValidation, librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
+		System.out.println("\n - displayErrors pour validationSraValidationHelperRequiredAndConstraintVoidString :");
+		contextValidation.displayErrors(Logger.of("SRA"));		Assert.assertTrue(contextValidation.errors.size()==1); // si une erreur
+	}	
 }

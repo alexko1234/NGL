@@ -3,6 +3,10 @@ package models.sra.experiment.instance;
 import java.util.ArrayList;
 import java.util.List;
 
+import play.Logger;
+
+
+
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.utils.VariableSRA;
@@ -53,19 +57,17 @@ public class Experiment extends DBObject implements IValidation {
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		
+		contextValidation.addKeyToRootKeyName("experiment::");
 		// Verifer que projectCode est bien renseigné et qu'il existe bien dans lims :
 		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		ValidationHelper.required(contextValidation, this.title , "title");
-		// Verifer que librarySelection est bien renseigné avec bonne valeur :
-		System.out.println("librarySelection=" + this.librarySelection);
-		
+		// Verifer que librarySelection est bien renseigné avec bonne valeur :		
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayout, VariableSRA.mapLibraryLayout, "libraryLayout");
 		// Verifer que lastBaseCoord est bien renseigné ssi paired:
-		if (this.libraryLayout == null && libraryLayout.equalsIgnoreCase("paired")){
+		if (this.libraryLayout != null && libraryLayout.equalsIgnoreCase("paired")){
 			if (this.lastBaseCoord == null) {
 				contextValidation.addErrors("lastBaseCoord", " aucune valeur et donnée pairée");
 			}	
@@ -83,13 +85,14 @@ public class Experiment extends DBObject implements IValidation {
 
 		// Verifier les readSpec :
 		SraValidationHelper.validateReadSpecs(contextValidation, this);
-		
 		// Verifier le run :
 		this.run.validate(contextValidation);
 		// verifier que code est bien renseigné
 		SraValidationHelper.validateCode(this, InstanceConstants.SRA_EXPERIMENT_COLL_NAME, contextValidation);
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+		contextValidation.removeKeyFromRootKeyName("experiment::");
+
 	}
 
 	

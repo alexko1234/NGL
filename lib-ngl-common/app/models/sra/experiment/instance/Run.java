@@ -8,6 +8,7 @@ import models.sra.utils.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.sra.SraValidationHelper;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
@@ -21,18 +22,13 @@ public class Run implements IValidation {
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-
+		contextValidation.addKeyToRootKeyName("run::");
 		// Verifier que runDate est bien renseigné :
 		ValidationHelper.required(contextValidation, this.runDate , "runDate");
-		ValidationHelper.required(contextValidation, this.runCenter , "runCenter");
-		if (! VariableSRA.centerName.equalsIgnoreCase(runCenter)) {
-			contextValidation.addErrors("run.runCenter '"+ runCenter + "' n'appartient pas a la liste des valeurs autorisees :" , VariableSRA.centerName);
-		}
-			
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.runCenter, VariableSRA.mapCenterName, "runCenter");
 		for(RawData rawData : listRawData) {
 			rawData.validate(contextValidation);
 		}
-
 		// verifier que code est bien renseigné
 		if ((this.code == null) ||(this.code.matches("^\\s*$"))) {
 			contextValidation.addErrors("run.code", " aucune valeur");
@@ -50,6 +46,6 @@ public class Run implements IValidation {
 				}
 			}
 		}
+		contextValidation.removeKeyFromRootKeyName("run::");
 	}
-
 }

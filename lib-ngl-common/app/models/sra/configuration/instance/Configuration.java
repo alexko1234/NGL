@@ -4,7 +4,6 @@ import java.io.File;
 
 import validation.IValidation;
 import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.utils.VariableSRA;
@@ -12,7 +11,8 @@ import models.utils.InstanceConstants;
 import validation.ContextValidation;
 
 import validation.sra.SraValidationHelper;
-import validation.utils.ValidationHelper;
+
+import play.Logger;
 
 //Declaration d'une collection Configuration (herite de DBObject)
 public class Configuration  extends DBObject implements IValidation {
@@ -46,74 +46,31 @@ public class Configuration  extends DBObject implements IValidation {
 		public void validate(ContextValidation contextValidation) {
 			// Ajouter l'objet au contexte de validation seulement si objet ext
 			// pour ex pour validation de submission qui va avoir besoin d'ajouter des objets 
-			
-			
+						
 	    	//contextValidation.putObject("configuration", this);	   
-			VariableSRA variableSRA;
-			
-			// verifier que projectCode est bien renseigné :
-			if ((projectCode == null) ||(projectCode.matches("^\\s*$"))) {
-				contextValidation.addErrors("configuration.projectCode", " aucune valeur");
-				
-			}
-			// verifier que strategySample est bien renseigne avec valeur autorisee
-			if ( (strategySample == null) || (strategySample.matches("^\\s*$"))) {
-				contextValidation.addErrors("configuration.strategySample", " aucune valeur");
-			} else {
-				if (! VariableSRA.mapStrategySample.containsKey(strategySample.toLowerCase())) {
-					contextValidation.addErrors("configuration.strategySample n'appartient pas a la liste des valeurs autorisees :" , VariableSRA.mapStrategySample.keySet().toString());
-				}
-			}
-			// verifier si librarySelection renseigné alors c'est bien une valeur autorisee 
-			if (librarySelection != null) {					
-				if (! VariableSRA.mapLibrarySelection.containsKey(librarySelection.toLowerCase())) {
-					contextValidation.addErrors("configuration.librarySelection n'appartient pas a la liste des valeurs autorisees : ", VariableSRA.mapLibrarySelection.keySet().toString());
-				}
-			}
-			// verifier si librarySource renseigné alors c'est bien une valeur autorisee 
-			if (librarySource != null) {
-				if (! VariableSRA.mapLibrarySource.containsKey(librarySource.toLowerCase())) {
-						contextValidation.addErrors("configuration.librarySource n'appartient pas a la liste des valeurs autorisees :", VariableSRA.mapLibrarySource.keySet().toString());
-				}
-			}
-			// verifier si libraryStrategy renseigné alors c'est bien une valeur autorisee 
-			if (libraryStrategy != null) {
-				if (! VariableSRA.mapLibraryStrategy.containsKey(libraryStrategy.toLowerCase())) {
-						contextValidation.addErrors("configuration.libraryStrategy", this.libraryStrategy + " n'appartient pas a la liste des valeurs autorisees :" + VariableSRA.mapLibraryStrategy.keySet().toString());
-				}
-			}
+			contextValidation.addKeyToRootKeyName("configuration::");
+			// verifier que projectCode est bien renseigné et existe dans lims :
+			SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
+			// verifier que champs contraints presents avec valeurs autorisees:
+			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
+			SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
+			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
+			SraValidationHelper.requiredAndConstraint(contextValidation, this.strategySample, VariableSRA.mapStrategySample, "strategySample");
+
 			// Verifier que si User_Experiments est renseigné, la valeur correspond bien à un fichier present sur disque
 			if (userFileExperiments != null) {
 				if (! new File(userFileExperiments).isFile()){
-					contextValidation.addErrors("configuration.userFileExperiments", this.userFileExperiments + " n'est pas un fichier");
+					contextValidation.addErrors("userFileExperiments::", this.userFileExperiments + " n'est pas un fichier");
 				}
 				if (! new File(userFileExperiments).canRead()){
-					contextValidation.addErrors("configuration.userFileExperiments", this.userFileExperiments + " n'est pas un fichier lisible");
+					contextValidation.addErrors("userFileExperiments::", this.userFileExperiments + " n'est pas un fichier lisible");
 				}
 			}		
 			// verifier que code est bien renseigné
-			if ((this.code == null) ||(this.code.matches("^\\s*$"))) {
-				contextValidation.addErrors("configuration.code", " aucune valeur");
-			} else {
-				// Verifier si on est dans un contexte de creation d'objet, que configuration.code n'existe pas dans la database
-				if(contextValidation.isCreationMode()){
-					if(MongoDBDAO.checkObjectExist(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, "code", this.code)) {
-						contextValidation.addErrors("configuration.code ", this.code + " existe deja dans la base de données et MODE CREATION");
-					}	
-				}
-				// Verifier si on est dans un contexte d'UPDATE d'objet, que configuration.code existe bien dans la database
-				if(contextValidation.isUpdateMode() ){
-					if(! MongoDBDAO.checkObjectExist(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, "code", this.code)) {
-						contextValidation.addErrors("configuration.code",this.code + " n'existe pas dans la base de données et MODE UPDATE");
-					}
-			}
-				// Verifier si on est dans un contexte DELETE d'objet, que configuration.code existe bien dans la database
-				if(contextValidation.isDeleteMode() ){
-					if(! MongoDBDAO.checkObjectExist(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, "code", this.code)) {
-						contextValidation.addErrors("configuration.code",this.code + " n'existe pas dans la base de données et MODE DELETE");
-					}
-				}
-			}
+			SraValidationHelper.validateCode(this, InstanceConstants.SRA_CONFIGURATION_COLL_NAME, contextValidation);
+			SraValidationHelper.validateId(this, contextValidation);
+			SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+			contextValidation.removeKeyFromRootKeyName("configuration::");
 		}
 
 }

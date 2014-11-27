@@ -16,15 +16,15 @@ public class ReadSpec implements IValidation {
 	public String readLabel;
 	public List<String> expectedBaseCallTable;
 	
-	public TraceInformation traceInformation; // new TraceInformation .Reference sur "models.laboratory.common.instance.TraceInformation" 
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		contextValidation.addKeyToRootKeyName("readSpec::");
 		ValidationHelper.required(contextValidation, this.readIndex, "readIndex");
 		ValidationHelper.required(contextValidation, this.readClass, "readClass");
 		ValidationHelper.required(contextValidation, this.readType, "readType");
 		ValidationHelper.required(contextValidation, this.lastBaseCoord, "lastBaseCoord");
-		CommonValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+		contextValidation.removeKeyFromRootKeyName("readSpec::");
 	}
 
 
