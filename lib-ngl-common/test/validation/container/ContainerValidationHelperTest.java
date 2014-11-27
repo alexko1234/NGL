@@ -215,6 +215,12 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		ContainerValidationHelper.validateContents(localContents, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(3);
 	}
+	
+	/**
+	 * 
+	 * PercentageContents
+	 * 
+	 */	
 	/*
 	@Test
 	public void validationPercentageContentsWithGoodValues(){
@@ -355,7 +361,9 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		ContainerSupportValidationHelper.validateContainerSupportCategoryCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
-	}	
+	}
+	
+	
 
 
 }
