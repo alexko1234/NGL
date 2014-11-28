@@ -135,14 +135,7 @@
 						<td>
 							<input class="form-control valueInput" type="text" placeholder='@Messages("containers.table.percentage")' title='@Messages("containers.table.percentage")' ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-model="flowcell.percentage" />
 						</td>
-						<td>
-							<!-- <div class="tagCell" title="{{getSampleAndTags(flowcell) | unique}}" ng-repeat="sampleAndTag in getSampleAndTags(flowcell) | unique | limitTo:nbItem">
-								{{sampleAndTag}}<br>
-							</div>
-								
-						<button ng-show="nbItem==5 && getSampleAndTags(flowcell).length>5" ng-click="nbItem=getSampleAndTags(flowcell).length" class="small-litte-icone-transparent"> <i><b>...</b></i> </button>
-						<button ng-show="nbItem>5 && getSampleAndTags(flowcell).length>5" ng-click="nbItem=5" class="small-litte-icone-transparent "> <i class="fa fa-minus-square-o"></i> </button>
-							-->
+						<td>							
 							<div list-resize="sampleAndTag in getSampleAndTags(flowcell) | unique"></div>
 						</td>
 				@**		<td  title="{{getTags(flowcell.contents) | unique}}" ng-init="nbItem2 = 5">

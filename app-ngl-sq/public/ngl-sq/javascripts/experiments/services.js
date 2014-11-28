@@ -66,7 +66,8 @@
 							"property":"sampleCodes",
 							"order":true,
 							"hide":true,
-							"type":"text"
+							"type":"text",
+							"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 						}
 						];
 			

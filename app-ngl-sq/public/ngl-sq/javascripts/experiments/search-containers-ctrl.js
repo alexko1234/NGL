@@ -26,7 +26,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.sampleCodes"),
 			"property":"sampleCodes",
 			"order":true,
-			"type":"text"
+			"type":"text",
+			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 		},
 		{
 			"header":Messages("containers.table.projectCodes"),

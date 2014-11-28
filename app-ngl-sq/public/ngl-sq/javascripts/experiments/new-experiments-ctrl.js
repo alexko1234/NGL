@@ -21,7 +21,8 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainSer
 				"header":Messages("experiments.table.sampleCodes"),
 				"property":"sampleCodes",
 				"order":true,
-				"type":"text"
+				"type":"text",
+				"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 			},
 			{
 				"header":Messages("experiments.table.volume"),
