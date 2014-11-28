@@ -5,7 +5,7 @@
 //Example: <div list-resize="getSampleAndTags(flowcell)" list-resize-min-size="5"></div>
 angular.module('commonsServices').directive('listResize',['$parse', function($parse) {
 	return {
-		template:'<div ng-if="isArray"><span ng-repeat="v in listValue | limitTo:nbItem">{{v}}{{getSeparator($last)}}</span>'+
+		template:'<div ng-if="isArray"><span ng-repeat="v in listValue | limitTo:nbItem">{{v}}{{getSeparator($last)}}<br ng-if="vertical && !$last"><br ng-if="below && $last"></span>'+
 		'<button title="{{getFullList(listValue)}}" ng-show="!isDeployed && nbItemMax>nbItemMin" ng-click="switchDeploy()" class="small-litte-icone-transparent"> <i><b>...</b></i> </button>'+
 		'<button ng-show="isDeployed" ng-click="switchDeploy()" class="small-litte-icone-transparent "> <i class="fa fa-minus-square-o"></i> </button></div>'+
 		'<span ng-if="!isArray" ng-bind="listValue"></span>',
@@ -19,6 +19,9 @@ angular.module('commonsServices').directive('listResize',['$parse', function($pa
 			scope.isDeployed = false;//false: we display minValue of the values to the user, True we display all to the user
 			scope.isArray = false;//Indicate if the value is an Array, if not we just show the span
 			scope.listValue = [];//The full list of values or a single value if the model value is not an array
+			scope.vertical = false;//true: display values vertically
+			scope.below = false;//true: display the button below the value list
+			
 
 			//The user can add list-resize-min-size attribute with the directive to set a custom min size
 			//for the collapse list
@@ -35,6 +38,15 @@ angular.module('commonsServices').directive('listResize',['$parse', function($pa
 				if(match !== null && match !== undefined && match.length>1){
 					model = $parse(match[2]);
 				}
+				
+			//Attribut below	
+			if(attrs.below != undefined){
+				scope.below = true;
+			}
+			//Attribut vertical
+			if(attrs.vertical != undefined){
+				scope.vertical = true;
+			}
 
 				//We watch the model in order to extract the list/value
 				scope.$watch(model, function(newValue, oldValue){
@@ -61,6 +73,9 @@ angular.module('commonsServices').directive('listResize',['$parse', function($pa
 				scope.getSeparator = function(isLast){
 					if(!isLast){//Not deplayed when we show the last element
 						return ', ';
+					}
+					if(scope.isDeployed === true){
+						return '\u0020' ;
 					}
 					return '';
 				};

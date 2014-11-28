@@ -147,6 +147,11 @@ margin: 8px 0 8px;
 	text-align: left;
 }
 
+#SampleTagCell{
+	width: 125px;
+	max-width: 125px;
+}
+
 .typeLibrairy {
 	width: 20px;
 	max-width: 30px;
@@ -168,8 +173,8 @@ margin: 8px 0 8px;
 
 .LaneData{
 	font-size: 12px;
-	width: 112px;
-	max-width: 125px;
+	width: 200px;
+	max-width: 2000px;
 }
 
 .LaneSummary{
