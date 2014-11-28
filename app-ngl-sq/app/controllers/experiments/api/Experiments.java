@@ -359,6 +359,7 @@ public class Experiments extends CommonController{
 
 			exp.code = CodeHelper.generateExperiementCode(exp);
 			exp.traceInformation = ExperimentHelper.getUpdateTraceInformation(null, getCurrentUser());
+			exp.state.user=getCurrentUser();
 			ExperimentValidationHelper.validateRules(exp, ctxValidation);
 
 			if (!ctxValidation.hasErrors()) {
