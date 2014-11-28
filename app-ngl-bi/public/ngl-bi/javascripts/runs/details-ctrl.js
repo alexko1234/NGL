@@ -611,7 +611,11 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 					    	extraHeaders:{"0":Messages("runs.lane.sav.read1")}
 						},											
 						{  	property:function(value){
-							return $filter('number')(value.treatments.sav.read1.intensityCycle20Perc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read1.intensityCycle20PercStd.value,2);						
+								if(value.treatments.sav.read1.intensityCycle20Perc !== undefined){
+									return $filter('number')(value.treatments.sav.read1.intensityCycle20Perc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read1.intensityCycle20PercStd.value,2);
+								}else{
+									return null;
+								}
 							},
 					    	header: "runs.lane.sav.intensityCycle20Perc",
 					    	type :"String",
@@ -765,7 +769,11 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
 				},											
 				{  	property:function(value){
-					return $filter('number')(value.treatments.sav.read2.intensityCycle1.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.intensityCycle1Std.value,2);						
+						if(value.treatments.sav.read2.intensityCycle1 !== undefined){
+							return $filter('number')(value.treatments.sav.read2.intensityCycle1.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.intensityCycle1Std.value,2);
+						}else{
+							return null;
+						}
 					},
 			    	header: "runs.lane.sav.intensityCycle1",
 			    	type :"String",
