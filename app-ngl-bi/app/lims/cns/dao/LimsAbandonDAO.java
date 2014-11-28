@@ -6,7 +6,10 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import lims.cns.dao.LimsExperiment;
+import lims.cns.dao.LimsLibrary;
 import lims.models.LotSeqValuation;
+import lims.models.experiment.Experiment;
 import lims.models.runs.EtatTacheHD;
 import lims.models.runs.TacheHD;
 
@@ -70,6 +73,28 @@ public class LimsAbandonDAO {
     	Logger.info("pm_LotsequenceAbandonBI @lseqnom='"+lseqnom+"', @lseqabandonbi="+lseqabandonbi);
     	this.jdbcTemplate.update("pm_LotsequenceAbandonBI @lseqnom=?, @lseqabandonbi=?", new Object[]{lseqnom, lseqabandonbi});
     }
+
+
+	public List<LimsExperiment> getExperiments(Experiment experiment) {
+		BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<LimsExperiment>(LimsExperiment.class);
+    	
+		if(null != experiment.date){
+			Logger.info("pl_DepotsolexaUneFCtoNGL @flowcellid='"+experiment.containerSupportCode+"', @daterun="+experiment.date);
+			
+			return this.jdbcTemplate.query("pl_DepotsolexaUneFCtoNGL @flowcellid=?, @daterun=?", mapper, experiment.containerSupportCode, experiment.date);
+		}else{
+			Logger.info("pl_DepotsolexaUneFCtoNGL @flowcellid='"+experiment.containerSupportCode+"'");
+			
+			return this.jdbcTemplate.query("pl_DepotsolexaUneFCtoNGL @flowcellid=?", mapper, experiment.containerSupportCode);
+		}
+        
+	}
+
+
+	public List<LimsLibrary> geContainerSupport(String supportCode) {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
     
     

@@ -1,6 +1,7 @@
 package lims.cns.services;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,19 +14,24 @@ import org.springframework.stereotype.Service;
 
 import play.Logger;
 import play.Logger.ALogger;
-
+import lims.cns.dao.LimsExperiment;
+import lims.cns.dao.LimsLibrary;
 import lims.cns.dao.LimsAbandonDAO;
 import lims.models.LotSeqValuation;
 import lims.models.experiment.ContainerSupport;
 import lims.models.experiment.Experiment;
+import lims.models.experiment.illumina.Flowcell;
+import lims.models.experiment.illumina.Library;
 import lims.models.instrument.Instrument;
 import lims.models.runs.TacheHD;
 import lims.services.ILimsRunServices;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Lane;
+//import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.utils.dao.DAOException;
 
 
 @Service
@@ -76,12 +82,65 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 
 	@Override
 	public Experiment getExperiments(Experiment experiment) {
-		throw new RuntimeException("Not Implemented");
+		List<LimsExperiment> limsExps = dao.getExperiments(experiment);
+		if(limsExps.size() == 1){
+			LimsExperiment limsExp = limsExps.get(0);
+			Experiment exp = new Experiment();
+			exp.date = limsExp.date;
+			exp.containerSupportCode = experiment.containerSupportCode;
+			exp.instrument = new Instrument();
+			exp.instrument.code = limsExp.code;
+			exp.instrument.categoryCode = getInstrumentCategoryCode(exp);
+			exp.nbCycles = limsExp.nbCycles;
+			Logger.debug(limsExp.toString());		
+			return exp;
+		}else{
+			return null;
+		}
+	}
+
+	private String getInstrumentCategoryCode(Experiment exp) {
+		try {
+			return models.laboratory.instrument.description.Instrument.find.findByCode(exp.instrument.code).typeCode;
+		} catch (DAOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
 	public ContainerSupport getContainerSupport(String supportCode) {
-		throw new RuntimeException("Not Implemented");
+		List<LimsLibrary> limsReadSets = dao.geContainerSupport(supportCode);
+		Flowcell flowcell = null;
+		if (limsReadSets.size() > 0) {
+			flowcell = new Flowcell();
+			flowcell.containerSupportCode = supportCode;
+
+			Map<Integer, lims.models.experiment.illumina.Lane> lanes = new HashMap<Integer, lims.models.experiment.illumina.Lane>();
+
+			for (LimsLibrary lrs : limsReadSets) {
+				lims.models.experiment.illumina.Lane currentLane = lanes.get(lrs.laneNumber);
+				if (null == currentLane) {
+					currentLane = new lims.models.experiment.illumina.Lane();
+					currentLane.number = lrs.laneNumber;
+					currentLane.librairies = new ArrayList<Library>();
+					lanes.put(lrs.laneNumber, currentLane);
+				}
+
+				Library lib = new Library();
+				lib.sampleContainerCode = lrs.sampleBarCode;
+				lib.sampleCode = lrs.sampleCode;
+				lib.tagName = lrs.indexName;
+				lib.tagSequence = lrs.indexSequence;
+				lib.projectCode = lrs.projectCode;
+				lib.insertLength = lrs.insertLength;
+				lib.typeCode = lrs.experimentTypeCode;
+				if(null != lrs.indexName && lrs.indexTypeCode != 3)lib.isIndex = Boolean.TRUE;
+				else if(null != lrs.indexName)lib.isIndex = Boolean.FALSE;
+				currentLane.librairies.add(lib);
+			}
+			flowcell.lanes = lanes.values();
+		}
+		return flowcell;
 	}
 
 	@Override
