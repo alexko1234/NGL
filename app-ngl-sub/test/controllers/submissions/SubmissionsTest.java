@@ -90,7 +90,7 @@ public class SubmissionsTest extends AbstractTestController{
 	}
 	
 	@Test
-	public void shouldUpdateSubmissionState()
+	public void shouldUpdateSubmission()
 	{
 		//Change state of submission
 		//Get submission
@@ -103,6 +103,16 @@ public class SubmissionsTest extends AbstractTestController{
 		Submission submissionUpdated = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code1");
 		Logger.info("submission updated "+submissionUpdated.state.code);
 		assertThat(submissionUpdated.state.code).isEqualTo("Scode1Update");
+	}
+	
+	@Test
+	public void shouldUpdateSubmissionState()
+	{
+		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.updateState("code1","Scode1Update"));
+		assertThat(status(result)).isEqualTo(OK);
+		Submission submissionUpdateted = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code1");
+		Logger.info("submission updated "+submissionUpdateted.state.code);
+		assertThat(submissionUpdateted.state.code).isEqualTo("Scode1Update");
 	}
 	
 	@Test

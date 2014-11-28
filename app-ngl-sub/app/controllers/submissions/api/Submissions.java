@@ -3,7 +3,9 @@ package controllers.submissions.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.Run;
@@ -12,6 +14,7 @@ import models.sra.experiment.instance.RawData;
 import models.sra.submission.instance.Submission;
 import models.utils.InstanceConstants;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.mongojack.DBQuery;
 
 import play.Logger;
@@ -58,6 +61,17 @@ public class Submissions extends SubmissionsController{
 		}else{
 			return badRequest("submission code are not the same");
 		}	
+	}
+	
+	public static Result updateState(String code, String state)
+	{
+		Submission submission = getSubmission(code);
+		if(submission==null)
+			return badRequest("Submission with code "+code+" not exist");
+		Map<String, Object> mapKeyValue = new HashMap<String, Object>();
+		mapKeyValue.put("state.code", state);
+		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission, mapKeyValue);
+		return ok();
 	}
 	
 	public static Result getRawDatas(String code)

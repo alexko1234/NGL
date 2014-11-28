@@ -1,6 +1,7 @@
 package builder.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import models.laboratory.common.instance.State;
 import models.sra.submission.instance.Submission;
@@ -12,6 +13,18 @@ public class SubmissionBuilder {
 	public SubmissionBuilder withCode(String code)
 	{
 		submission.code=code;
+		return this;
+	}
+	
+	public SubmissionBuilder withSubmissionDirectory(String submissionDirectory)
+	{
+		submission.submissionDirectory=submissionDirectory;
+		return this;
+	}
+	
+	public SubmissionBuilder withSubmissionDate(Date submissionDate)
+	{
+		submission.submissionDate=submissionDate;
 		return this;
 	}
 	
