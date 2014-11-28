@@ -1477,6 +1477,9 @@ angular.module('datatableServices', []).
 		    				}
 		    			},
 		    			
+		    			
+		    			
+		    			
 
 		    			/**
 		    			 * Function to export data in a CSV file
@@ -1501,19 +1504,22 @@ angular.module('datatableServices', []).
 		    					var columnsToPrint = this.config.columns;	    					
 		    					//header
 		    					columnsToPrint.forEach(function(column) {
+		    						if(!that.config.hide.columns[column.id]){
 		    						var header = column.header;
-		    						if(typeof header == 'function'){
-		    							header = header();
-		    						}else{
-		    							header = Messages(column.header);
+		    							if(typeof header == 'function'){
+		    								header = header();
+		    							}else{
+		    								header = Messages(column.header);
+		    							}
+		    							lineValue = lineValue + header + delimiter;	
 		    						}
-		    						lineValue = lineValue + header + delimiter;
-		    					}); 
+		    						}); 
 		    					lineValue += "\n";
 		    					//data
 		    					displayResultTmp.forEach(function(result) {
 		    						
 		    						columnsToPrint.forEach(function(column) {	
+		    							if(!that.config.hide.columns[column.id]){
 		    							//algo to set colValue (value of the column)
 		    			    			if (!result.line.group && !angular.isDefined(column.url) && exportType!=='groupsOnly') {
 		    			    				var property = column.property;
@@ -1542,6 +1548,7 @@ angular.module('datatableServices', []).
 		    			    				colValue =  undefined;
 		    			    				alert("Url column is not yet implemented !");
 		    			    			}
+		    							}	
 		    						});
 		    						if ((exportType==='all') || ((exportType==='groupsOnly') && result.line.group)) {
 		    							lineValue = lineValue + "\n";
@@ -1877,7 +1884,11 @@ angular.module('datatableServices', []).
   		    		+	'<button class="btn btn-default" ng-click="dtTable.show()" ng-disabled="!dtTable.isSelect()" ng-if="dtTable.isShowButton(\'show\')" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.show\')}}">'
   		    		+		'<i class="fa fa-thumb-tack"></i>'
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.show\')}}</span>'
-  		    		+	'</button>'  		    		
+  		    		/*+	'</button>'
+  		    		+	'<button class="btn btn-default" ng-click="dtTable." ng-if="dtTable.isShowButton(\'group\')" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}">'
+  		    		+		'<i class="fa fa-bars"></i>'
+  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}</span>'
+  		    		+	'</button>'*/
   		    		+'</div>'
   		    		+'<div class="btn-group" ng-if="dtTable.isShowCRUDButtons()">'
   		    		+	'<button class="btn btn-default" ng-click="dtTableFunctions.setEdit()" ng-disabled="!dtTable.canEdit()"  ng-if="dtTable.isShowButton(\'edit\')" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.edit\')}}">'
