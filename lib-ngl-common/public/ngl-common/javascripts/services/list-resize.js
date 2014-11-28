@@ -7,6 +7,7 @@ angular.module('commonsServices').directive('listResize',['$parse', function($pa
 	return {
 		template:'<div ng-if="isArray"><span ng-repeat="v in listValue | limitTo:nbItem">{{v}}{{getSeparator($last)}}<br ng-if="vertical && !$last"><br ng-if="below && $last"></span>'+
 		'<button title="{{getFullList(listValue)}}" ng-show="!isDeployed && nbItemMax>nbItemMin" ng-click="switchDeploy()" class="small-litte-icone-transparent"> <i><b>...</b></i> </button>'+
+		'<br ng-if="belowOnlyDeployed">'+
 		'<button ng-show="isDeployed" ng-click="switchDeploy()" class="small-litte-icone-transparent "> <i class="fa fa-minus-square-o"></i> </button></div>'+
 		'<span ng-if="!isArray" ng-bind="listValue"></span>',
 		scope:true,
@@ -21,6 +22,7 @@ angular.module('commonsServices').directive('listResize',['$parse', function($pa
 			scope.listValue = [];//The full list of values or a single value if the model value is not an array
 			scope.vertical = false;//true: display values vertically
 			scope.below = false;//true: display the button below the value list
+			scope.belowOnlyDeployed = false;//true: display the undeploy-button only below the value list
 			
 
 			//The user can add list-resize-min-size attribute with the directive to set a custom min size
@@ -43,6 +45,12 @@ angular.module('commonsServices').directive('listResize',['$parse', function($pa
 			if(attrs.below != undefined){
 				scope.below = true;
 			}
+			
+			//Attribut below-only-deploy
+			if(attrs.belowOnlyDeploy != undefined){
+				scope.belowOnlyDeployed = true;
+			}
+			
 			//Attribut vertical
 			if(attrs.vertical != undefined){
 				scope.vertical = true;

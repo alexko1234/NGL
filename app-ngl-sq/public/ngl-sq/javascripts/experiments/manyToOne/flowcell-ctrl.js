@@ -22,7 +22,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 "order":true,
 			        	 "type":"text",
 			        	 "edit":false,
-			        	 "render":"<div list-resize='value.data.inputTags | unique'>",
+			        	 "render":"<div list-resize='value.data.inputTags | unique' below-only-deploy>",
 			        	 "extraHeaders":{0:"solution stock"}
 			         },
 			         /*	{
