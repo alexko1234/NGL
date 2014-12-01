@@ -28,6 +28,7 @@ GET		/api/instance/resolutions				controllers.instance.Resolutions.save()
 GET		/migration-container-support			controllers.migration.MigrationDataCNS.updateFromExperimentTypeCodesContainerSupport()
 GET		/migration-sequencing-run				controllers.migration.AddSequencingProgramTypeToRun.migration()
 GET		/migration-vcc							controllers.migration.ValuationCriteriaCodes.migration()
+GET		/migration-percentage-content			controllers.migration.AddPercentageContent.migration()
 GET		/cns/migration						    controllers.migration.cns.MigrationReadSetFileCNS.migration()
 GET		/cns/libprocesstype-ext					controllers.migration.cns.MigrationLibProcessTypeRunExt.migration()
 GET		/cns/update-content-sample			    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationContainer()
@@ -38,6 +39,7 @@ GET		/cng/migration-libprocess				controllers.migration.cng.AddLibProcessTypeCod
 GET		/cng/migration-projectcode				controllers.migration.cng.AddProjectCodeToContent.migration()
 GET		/cng/migration-tube-import				controllers.migration.cng.TubeImport.migration()
 GET		/cng/migration-concentration			controllers.migration.cng.UpdateConcentrationUnit.migration()
+
 
 #GET 	/update/readsetfile/:code				controllers.migration.cns.MigrationReadSetFileCNS.updateFileReadSet(code: java.lang.String)
 
