@@ -7,6 +7,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
+import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
@@ -21,8 +22,15 @@ public class InitDataHelper {
 		initSamples();
 		initSupports();
 		initProjects();
+		initProcesses();
 	}
 	
+	private static void initProcesses() {
+		List<Process> process = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME+INIT_MONGO_SUFFIX, Process.class).toList();
+		MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
+		
+	}
+
 	public static void initSamples(){
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME+INIT_MONGO_SUFFIX, Sample.class).toList();
 		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, samples);

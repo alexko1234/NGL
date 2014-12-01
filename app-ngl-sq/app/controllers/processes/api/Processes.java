@@ -28,6 +28,8 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
+import validation.utils.ValidationConstants;
+import validation.utils.ValidationHelper;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 
@@ -150,7 +152,7 @@ public class Processes extends CommonController{
 	public static Result update(String code){
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
 		if(process == null){
-			return badRequest("Process with code "+code+" does not exist");
+			return notFound("Process with code "+code+" does not exist");
 		}
 		
 		Form<Process> filledForm = getFilledForm(processForm, Process.class);
@@ -175,13 +177,25 @@ public class Processes extends CommonController{
 	
 	public static Result delete(String code){
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
+		ContextValidation contextValidation=new ContextValidation(getCurrentUser());
 		if(process == null){
-			return badRequest("Process with code "+code+" does not exist");
+			return notFound("Process with code "+code+" does not exist");
 		}
 		
-		MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, process);
-		
-		return ok();
+		List<String> processCode=new ArrayList<String>();
+		processCode.add(process.code);
+		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("inputProcessCodes", processCode)).toList();
+		for(Container container:containers){
+			if(!container.state.code.equals("A")){
+				contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
+			}
+		}
+		if(!contextValidation.hasErrors()){
+			MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, process);
+			return ok();
+		}else {
+			return badRequest();
+		}
 	}
 	
 	public static Result list() throws DAOException{
