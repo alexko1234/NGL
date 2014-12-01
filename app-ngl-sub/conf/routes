@@ -9,7 +9,7 @@
 GET		/submissions/search/:state					controllers.submissions.api.Submissions.search(state: java.lang.String)
 GET		/submissions/:code/experiments/rawDatas		controllers.submissions.api.Submissions.getRawDatas(code: java.lang.String)
 PUT		/submissions/:code 							controllers.submissions.api.Submissions.update(code: java.lang.String)
-PUT		/submissions/:code/state/:code				controllers.submissions.api.Submissions.updateState(code: java.lang.String, state: java.lang.String)
+PUT		/submissions/:code/state/:stateCode			controllers.submissions.api.Submissions.updateState(code: java.lang.String, stateCode: java.lang.String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

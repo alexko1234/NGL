@@ -63,13 +63,13 @@ public class Submissions extends SubmissionsController{
 		}	
 	}
 	
-	public static Result updateState(String code, String state)
+	public static Result updateState(String code, String stateCode)
 	{
 		Submission submission = getSubmission(code);
 		if(submission==null)
 			return badRequest("Submission with code "+code+" not exist");
 		Map<String, Object> mapKeyValue = new HashMap<String, Object>();
-		mapKeyValue.put("state.code", state);
+		mapKeyValue.put("state.code", stateCode);
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission, mapKeyValue);
 		return ok();
 	}
