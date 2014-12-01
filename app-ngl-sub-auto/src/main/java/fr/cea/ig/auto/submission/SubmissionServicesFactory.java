@@ -11,7 +11,9 @@ public class SubmissionServicesFactory {
 	public static ISubmissionServices getInstance() throws FatalException {
 		if (submissionServices == null){
 			if(ProjectProperties.isInTestContext())
-				submissionServices = new SubmissionServicesTest();
+				//TODO 
+				System.out.println("Test");
+				//submissionServices = new SubmissionServicesTest();
 			else
 				submissionServices = new SubmissionServices();
 		}

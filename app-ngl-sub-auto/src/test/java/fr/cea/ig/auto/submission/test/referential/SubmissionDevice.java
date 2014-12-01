@@ -25,7 +25,7 @@ public class SubmissionDevice extends AbstractHardCodedReferentialDevice{
 		ResourceProperties rp1 = new ResourceProperties();
 		rp1.setProperty("code","codeSub1");
 		rp1.setProperty("submissionDate","23_09_2014");
-		rp1.setProperty("submissionDirectory","/env/cns/submit_traces/SRA/SNTS_output_xml/autoFtpTest/testU/dataTest");
+		rp1.setProperty("submissionDirectory","/env/cns/home/ejacoby/testU/app-NGL-sub-auto/dataTest");
 		
 		Set<ResourceProperties> propertiesSet = new HashSet<ResourceProperties>();
 		propertiesSet.add(rp1);

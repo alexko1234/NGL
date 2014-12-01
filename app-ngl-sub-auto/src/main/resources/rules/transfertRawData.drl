@@ -3,7 +3,7 @@ package birds
 
 import fr.cea.ig.auto.submission.SRAFilesUtil;
 
-#règle mise à jour la valeur du parametre localDirectoryPath selon resource en entrée
+#règle mise à jour la valeur du parametre fileList selon resource en entrée et creation fichier WGS
 rule "update localDirectoryPath parameter"
 	@BirdsRule(fsRule)
 	dialect 'java'
@@ -14,18 +14,23 @@ rule "update localDirectoryPath parameter"
 			$job : Job()
 		then
 			Logger log = Logger.getLogger("ngl.sub.rules");
+			log.debug("Get rawData");
+			//Get rawData
+			JSONDevice jsonDevice = new JSONDevice();
+			Set<ResourceProperties> rps = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/submissions/"+$job.getUniqueJobResource("rawDataDir").getProperty("code")+"/experiments/rawDatas");
+			log.debug("Size of rawData : "+rps.size());
+			String directoryPath = $job.getUniqueJobResource("rawDataDir").getProperty("submissionDirectory");
+			String filePath = $job.getParameterValue("fileList").getValue().replace("%directoryPath%",directoryPath);
+			SRAFilesUtil.createWGSFile(filePath, rps);
 			log.debug("set parameter value");
 			//Get input resource
-			String valueLocalDirPath = $job.getUniqueJobResource("rawDataDir").getProperty("submissionDirectory");
-			log.debug("set value local dir path to "+valueLocalDirPath);
-			#Add extension in localDirectoryPath
-			#$job.setParameterValue("localDirectoryPath",valueLocalDirPath+"/*.fastq.gz "+valueLocalDirPath+"/*.sff "+valueLocalDirPath+"/*.srf");
-			String[] extensions = new String[] { "fastq.gz", "sff" , "srf" };
-			$job.setParameterValue("localDirectoryPath",SRAFilesUtil.getLocalDirectoryParameter(valueLocalDirPath,extensions));
+			$job.setParameterValue("fileList", filePath);
 end
 
-#Règle organisation syntaxe FTP selon ticket NGL-164
-#ncftpput -u login -p passWord -R -t 60 -V remoteHost remotePath localDirectoryPath
+#Règle organisation syntaxe Aspera selon ticket NGL-334
+#/env/cns/opt/aspera/bin/ascp -T -k2 -Q -m 300M -v 
+#		--file-list=/env/cns/submit_traces/SRA/SNTS_output_xml/AHX/list_aspera_WGS 
+#		--mode send --host fasp.ega.ebi.ac.uk --user era-drop-9 / | tee result
 rule "unix syntax ncftpput for EBI"
 	@BirdsRule(unixSyntaxRule)
 	dialect 'java'
@@ -36,16 +41,18 @@ rule "unix syntax ncftpput for EBI"
 		then
 			Logger log = Logger.getLogger("ngl.sub.rules");	    
 			//Organize order parameterLine
-			String parameterLine = $strategy.getParameterValue().get("userEBI") + " " + 
-									$strategy.getParameterValue().get("pwdEBI") + " " +
-									$strategy.getParameterValue().get("recursif") + " " +
-									$strategy.getParameterValue().get("timeOut") + " " +
-									$strategy.getParameterValue().get("remoteHost") + " " +
-									$strategy.getParameterValue().get("remotePath") + " " +	
-									$strategy.getParameterValue().get("localDirectoryPath");
-			$strategy.setCommandLine($strategy.getExecutableName() + " " + parameterLine);
+			String parameterLine = $strategy.getParameterValue().get("encryption") + " " + 
+									$strategy.getParameterValue().get("partialTransfert") + " " +
+									$strategy.getParameterValue().get("optionQ") + " " +
+									$strategy.getParameterValue().get("optionM") + " " +
+									$strategy.getParameterValue().get("optionV") + " " +
+									$strategy.getParameterValue().get("fileList") + " " +	
+									$strategy.getParameterValue().get("mode") + " "+
+									$strategy.getParameterValue().get("hostName") + " "+
+									$strategy.getParameterValue().get("userEBI") + " "+
+									$strategy.getParameterValue().get("localDirectory");
+			$strategy.setCommandLine($strategy.getExecutableName() + " " + parameterLine + " | tee result");
 			log.debug("command line : " + $strategy.getCommandLine());
-		
 			modify($strategy) {}
 end
 

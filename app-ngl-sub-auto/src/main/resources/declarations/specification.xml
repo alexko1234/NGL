@@ -23,18 +23,21 @@ H:\birdsSpec.xsd">
 	
 		<!-- TODO voir si on veut nommer les jobs spécifiquement -->
 		<ExecutableSpecification commandSyntaxStrategyName="ncftpputSyntax">
-			<Executable path="ncftpput"/>
-			<Lsf job="ftpJob" queue="big" />
+			<Executable path="/env/cns/opt/aspera/bin/ascp"/>
+			<Lsf job="ascpJob" queue="big" />
 		</ExecutableSpecification>
 		
 		<ParametersSpecification>
-			<KeyValueElement key="-u" value="era-drop-9" parameterName="userEBI"/>
-			<KeyValueElement key="-p" value="Axqw16nI" parameterName="pwdEBI"/>
-			<KeyValueElement key="-t" value="60" parameterName="timeOut"/>
-			<KeyValueElement key="-V" value="ftp.sra.ebi.ac.uk" parameterName="remoteHost"/>
-			<LineElement line="-R" parameterName="recursif"/>
-			<LineElement line="/" parameterName="remotePath"/>
-			<LineElement line="%directoryPath%" parameterName="localDirectoryPath"/>
+			<KeyValueElement key="-m" value="300M" parameterName="optionM"/>
+			<KeyValueElement key="--file" value="%directoryPath%/list_aspera_WGS" parameterName="fileList"/>
+			<KeyValueElement key="--mode" value="send" parameterName="mode"/>
+			<KeyValueElement key="--host" value="fasp.ega.ebi.ac.uk" parameterName="hostName"/>
+			<KeyValueElement key="--user" value="era-drop-9" parameterName="userEBI"/>
+			<LineElement line="-T" parameterName="encryption"/>
+			<LineElement line="-k2" parameterName="partialTransfert"/>
+			<LineElement line="-Q" parameterName="optionQ"/>
+			<LineElement line="-v" parameterName="optionV"/>
+			<LineElement line="/" parameterName="localDirectory"/>
 		</ParametersSpecification>
 		
 		<InputsSpecification>

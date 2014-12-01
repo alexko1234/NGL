@@ -25,7 +25,7 @@ public class CheckCommandLine extends GenericTest{
 
 	private final String urlProd = "http://appprod.genoscope.cns.fr:90??/";
 	private final String urlDev = "http://appdev.genoscope.cns.fr:90??/";
-	private final String workspace = "/env/cns/submit_traces/SRA/SNTS_output_xml/autoFtpTest/log";
+	private final String workspace = "/env/cns/home/ejacoby/testU/app-NGL-sub-auto";
 	@Before
 	public void addDeclaration() throws PersistenceException, BirdsException, FatalException
 	{

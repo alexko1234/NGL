@@ -1,12 +1,19 @@
 package fr.cea.ig.auto.submission;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+
+import fr.genoscope.lis.devsi.birds.api.entity.ResourceProperties;
 
 public class SRAFilesUtil {
 
@@ -31,6 +38,19 @@ public class SRAFilesUtil {
 		
 		return param;
 	}
+	
+	public static void createWGSFile(String fileName, Set<ResourceProperties> rps) throws IOException
+	{
+		//Create file 
+		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)));
+		//Write relatifPathName for each resource properties
+		for(ResourceProperties rp : rps)
+		{
+			out.write(rp.get("relatifName")+"\n");
+		}
+		out.close();
+	}
+	
 	
 	public static void main(String[] args)
 	{

@@ -12,26 +12,26 @@
 
   <nodes>
     <start id="1" name="Start" x="313" y="33" width="48" height="48" />
-    <end id="2" name="End" x="309" y="503" width="48" height="48" />
-    <actionNode id="3" name="CreateXML" x="392" y="205" width="128" height="48" >
+    <end id="2" name="End" x="331" y="578" width="48" height="48" />
+    <actionNode id="3" name="createXML" x="417" y="258" width="163" height="48" >
         <action type="expression" dialect="java" >Birds.generateJobs("createXML", "SRA", (org.drools.spi.ProcessContext)kcontext);</action>
     </actionNode>
-    <actionNode id="4" name="transfertRawData" x="122" y="235" width="154" height="48" >
+    <split id="4" name="Gateway" x="313" y="153" width="49" height="49" type="1" />
+    <actionNode id="5" name="transfertRawData" x="81" y="291" width="162" height="55" >
         <action type="expression" dialect="java" >Birds.generateJobs("transfertRawData", "SRA", (org.drools.spi.ProcessContext)kcontext);</action>
     </actionNode>
-    <split id="5" name="Gateway" x="315" y="113" width="49" height="49" type="1" />
-    <join id="6" name="Gateway" x="308" y="414" width="49" height="49" type="1" />
-    <actionNode id="7" name="SendXML" x="393" y="303" width="114" height="48" >
-        <action type="expression" dialect="java" >Birds.generateJobs("sendXML", "SRA", (org.drools.spi.ProcessContext)kcontext);</action>
+    <join id="6" name="Gateway" x="330" y="480" width="49" height="49" type="1" />
+    <actionNode id="7" name="sendXML" x="444" y="397" width="131" height="48" >
+        <action type="expression" dialect="java" >Birds.generateJobs("createXML", "SRA", (org.drools.spi.ProcessContext)kcontext);</action>
     </actionNode>
   </nodes>
 
   <connections>
     <connection from="6" to="2" />
-    <connection from="5" to="3" />
-    <connection from="5" to="4" />
-    <connection from="1" to="5" />
-    <connection from="4" to="6" />
+    <connection from="4" to="3" />
+    <connection from="1" to="4" />
+    <connection from="4" to="5" />
+    <connection from="5" to="6" />
     <connection from="7" to="6" />
     <connection from="3" to="7" />
   </connections>
