@@ -82,8 +82,8 @@ public class ProcessesTest extends AbstractTests{
 		assertThat(containerSupport.fromExperimentTypeCodes).isNotNull();
 		assertThat(container.inputProcessCodes.get(0)).isEqualTo(processResult.code);
 		
-		result = callAction(controllers.processes.api.routes.ref.Processes.update(processResult.code),fakeRequest().withJsonBody(Json.toJson(processResult)));
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		//result = callAction(controllers.processes.api.routes.ref.Processes.update(processResult.code),fakeRequest().withJsonBody(Json.toJson(processResult)));
+		//assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		result = callAction(controllers.processes.api.routes.ref.Processes.get(processResult.code),fakeRequest());
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
