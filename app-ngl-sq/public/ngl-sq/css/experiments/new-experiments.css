@@ -3,6 +3,6 @@
 /* MAIN */
 
 .preconfigTable .datatable .table>tbody>tr>td{	
-	max-width: 300px;
+	max-width: 80px;
 	overflow-wrap: break-word;	
 }
