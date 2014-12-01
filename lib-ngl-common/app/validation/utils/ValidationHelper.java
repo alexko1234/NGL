@@ -343,6 +343,8 @@ public class ValidationHelper {
 				newList.add(value);
 			}			
 			propertyValue.value = newList;
+			if(propertyDefinition.saveMeasureValue!=null){
+				propertyValue.unit=propertyDefinition.saveMeasureValue.value; }
 		}catch(Throwable e){
 			Logger.error(e.getMessage(),e);
 			contextValidation.addErrors(propertyDefinition.code, ERROR_BADTYPE_MSG, propertyDefinition.valueType, propertyValue.value);
