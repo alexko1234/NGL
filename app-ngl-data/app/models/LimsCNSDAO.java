@@ -363,6 +363,8 @@ public class LimsCNSDAO{
 				// Todo add properties from ExperimentType
 				sampleUsed.properties=new HashMap<String, PropertyValue>();
 				sampleUsed.properties.put("percentPerLane", new PropertySingleValue(rs.getDouble("percentPerLane")));
+				//Logger.debug("Percentage "+rs.getDouble("percentPerLane"));
+				sampleUsed.percentage=rs.getDouble("percentPerLane");
 				sampleUsed.properties.put("libProcessTypeCode",new PropertySingleValue(rs.getString("libProcessTypeCode")));
 				if(rs.getString("tag")!=null){
 					sampleUsed.properties.put("tag",new PropertySingleValue(rs.getString("tag")));

@@ -72,6 +72,7 @@ public class ContainerTests extends AbstractTests {
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", AllTests.prepaExtCodes)).toList();
 		for(Container container:containers){
 			assertThat(container.contents.get(0).properties.get("libProcessTypeCode")).isNotNull();
+			assertThat(container.contents.get(0).percentage).isNotNull();
 		}
 		Assert.assertTrue(containers.size()>0);
 		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", AllTests.prepaExtCodes)).toList();
@@ -93,6 +94,7 @@ public class ContainerTests extends AbstractTests {
 		for(Container container:containers){
 			assertThat(container.contents.get(0).properties.get("libProcessTypeCode")).isNotNull();
 			assertThat(((PropertySingleValue) container.mesuredConcentration).unit).isEqualTo("nM");
+			assertThat(container.contents.get(0).percentage).isNotNull();
 		}
 		Assert.assertTrue(containers.size()>0);
 		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", solutionStocks)).toList();

@@ -236,6 +236,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		if(rs.getString("sampleCode")!=null){
 			
 			Content sampleUsed=new Content();
+			sampleUsed.percentage=100.0;
 			sampleUsed.sampleCode=rs.getString("sampleCode");
 			if(rs.getString("project")!=null) {					
 				sampleUsed.projectCode = rs.getString("project");
