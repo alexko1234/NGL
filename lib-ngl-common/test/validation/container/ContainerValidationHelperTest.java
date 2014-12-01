@@ -7,10 +7,8 @@ import java.util.List;
 
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
-import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
-import models.laboratory.container.instance.RelationshipContainer;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
@@ -419,7 +417,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationProcessCodes(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);		
-		List<String> inputProcessCodes = new ArrayList<>();
+		List<String> inputProcessCodes = new ArrayList<String>();
 		inputProcessCodes.add(process1.code);
 		inputProcessCodes.add(process2.code);
 		inputProcessCodes.add(process3.code);
@@ -431,7 +429,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationProcessCodesNull(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<String> inputProcessCodes = new ArrayList<>();		
+		List<String> inputProcessCodes = new ArrayList<String>();		
 		inputProcessCodes.add("");
 		inputProcessCodes.add("");
 		inputProcessCodes.add("");
