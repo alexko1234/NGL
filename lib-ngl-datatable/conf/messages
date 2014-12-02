@@ -9,6 +9,7 @@ datatable.button.sort=Ordonner
 datatable.button.save=Sauver
 datatable.button.remove=Supprimer
 datatable.button.group = Grouper / Dégrouper
+datatable.button.generalGroup = Grouper toute la sélection
 datatable.button.length=Taille ({0})
 datatable.totalNumberRecords = {0} Résultats
 datatable.button.exportCSV = CSV Export
