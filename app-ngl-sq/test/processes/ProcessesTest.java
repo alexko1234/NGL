@@ -6,7 +6,6 @@ import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.status;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import models.laboratory.common.instance.PropertyValue;
@@ -23,21 +22,19 @@ import org.mongojack.DBQuery;
 
 import play.libs.Json;
 import play.mvc.Result;
-import scala.Array;
 import utils.AbstractTests;
 import utils.InitDataHelper;
+import views.components.datatable.DatatableResponse;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import controllers.processes.api.ProcessesSearchForm;
 import fr.cea.ig.MongoDBDAO;
 
 public class ProcessesTest extends AbstractTests{
-	
-	
-	static String processCode="";
-	
+		
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		InitDataHelper.initForProcessesTest();
@@ -85,6 +82,9 @@ public class ProcessesTest extends AbstractTests{
 		//result = callAction(controllers.processes.api.routes.ref.Processes.update(processResult.code),fakeRequest().withJsonBody(Json.toJson(processResult)));
 		//assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
+		result = callAction(controllers.processes.api.routes.ref.Processes.head(processResult.code),fakeRequest());
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
 		result = callAction(controllers.processes.api.routes.ref.Processes.get(processResult.code),fakeRequest());
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 
@@ -105,5 +105,18 @@ public class ProcessesTest extends AbstractTests{
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.NOT_FOUND);
 	}
 	
+	@Test
+	public void query() throws JsonParseException, JsonMappingException, IOException{
+		Result result = callAction(controllers.processes.api.routes.ref.Processes.list(),fakeRequest());
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		ProcessesSearchForm processesSearchForm=new ProcessesSearchForm();
+		processesSearchForm.projectCode="ADI";
+		processesSearchForm.datatable=Boolean.TRUE;
+		result = callAction(controllers.processes.api.routes.ref.Processes.list(),fakeRequest().withJsonBody(Json.toJson(processesSearchForm)));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+	/*	ObjectMapper mapper=new ObjectMapper();
+		DatatableResponse<Process> processes=mapper.readValue(play.test.Helpers.contentAsString(result), DatatableResponse.class);
+		assertThat(processes.data.size()).isEqualTo(1);*/
+	}
 	
 }

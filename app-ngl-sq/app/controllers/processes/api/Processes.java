@@ -3,13 +3,11 @@ package controllers.processes.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
-import models.laboratory.processes.description.dao.ProcessTypeDAO;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -29,7 +27,6 @@ import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
-import validation.utils.ValidationHelper;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 
@@ -47,6 +44,14 @@ public class Processes extends CommonController{
 	final static Form<Process> processForm = form(Process.class);
 	final static Form<ProcessesSearchForm> processesSearchForm = form(ProcessesSearchForm.class);
 
+	public static Result head(String processCode) {
+		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode)){			
+			return ok();					
+		}else{
+			return notFound();
+		}	
+	}
+	
 	public static Result get(String code){
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
 		if(process == null){

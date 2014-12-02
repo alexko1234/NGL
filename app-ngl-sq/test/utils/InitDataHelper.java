@@ -58,9 +58,11 @@ public class InitDataHelper {
 	
 	public static void endTest(){
 		 MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("code"));
-		 MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Container.class, DBQuery.exists("code"));
-		 MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Container.class, DBQuery.exists("code"));
-		 MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME, Container.class, DBQuery.exists("code"));
+		 MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.exists("code"));
+		 MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.exists("code"));
+		 MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.exists("code"));
+		 MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("code"));
+
 	}
 	
 	public static List<String> getContainerCodesInContext(){
