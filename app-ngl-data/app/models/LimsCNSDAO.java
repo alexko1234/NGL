@@ -22,6 +22,7 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.parameter.Index;
+import models.laboratory.project.instance.BioinformaticParameters;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.description.TreatmentType;
@@ -248,6 +249,8 @@ public class LimsCNSDAO{
 				project.state.user = InstanceHelpers.getUser();
 				project.state.date = new Date();
 
+				project.bioinformaticParameters = new BioinformaticParameters();
+				
 				project.traceInformation=new TraceInformation();
 				InstanceHelpers.updateTraceInformation(project.traceInformation, "ngl-data");
 				return project;

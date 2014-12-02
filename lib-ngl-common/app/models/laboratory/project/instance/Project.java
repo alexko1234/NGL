@@ -54,6 +54,7 @@ public class Project extends DBObject implements IValidation{
 		ProjectValidationHelper.validateProjectCategoryCode(categoryCode,contextValidation);
 		ProjectValidationHelper.validateState(typeCode,state, contextValidation);
 		ProjectValidationHelper.validateUmbrellaProjectCode(umbrellaProjectCode, contextValidation);
+		ProjectValidationHelper.validateBioformaticParameters(bioinformaticParameters,contextValidation);
 	}
 
 }

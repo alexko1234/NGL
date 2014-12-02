@@ -1,15 +1,18 @@
 package validation.project.instance;
 
+import static validation.utils.ValidationHelper.required;
+
 import java.util.Map;
 
 import org.mongojack.DBQuery;
+import org.springframework.beans.factory.annotation.Required;
+
 import fr.cea.ig.MongoDBDAO;
-
 import play.Logger;
-
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
+import models.laboratory.project.instance.BioinformaticParameters;
 import models.laboratory.project.instance.UmbrellaProject;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
@@ -42,6 +45,12 @@ public class ProjectValidationHelper extends CommonValidationHelper {
 				contextValidation.addErrors("umbrellaProjectCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, umbrellaProjectCode);
 			}
 		//}		 
+	}
+
+	public static void validateBioformaticParameters(BioinformaticParameters bioinformaticParameters,ContextValidation contextValidation) {
+		if(ValidationHelper.required(contextValidation, bioinformaticParameters, "bioinformaticParameters")){
+			bioinformaticParameters.validate(contextValidation);
+		}
 	}
 	
 
