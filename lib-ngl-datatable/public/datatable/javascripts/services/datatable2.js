@@ -1559,8 +1559,6 @@ angular.module('datatableServices', []).
 		    				if(this.config.group.active && this.config.group.data){
 		    					displayResultTmp = this.addGroup(displayResultTmp);					
 		    				}
-		    				
-		    				console.log(this.allResult);
 		    				//manage results
 		    				if (displayResultTmp) {
 		    						    					
