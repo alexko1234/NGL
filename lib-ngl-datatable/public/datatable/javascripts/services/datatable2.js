@@ -369,25 +369,6 @@ angular.module('datatableServices', []).
 		    						
 		    					}
 		    					
-		    					
-		    					
-		    				//Si on peut grouper
-		    					//On attribue à columnId l'id de la colonne a trier, entre p1 -> pXX et all
-		    					// Si on ne groupe avec rien ou si on groupe avec une autre colonne que celle passée en paramètre
-		    						//On attribue le groupement à cette colonne
-		    						//On passe a vrai le groupement sur cette colonne parmi toutes les colonnes
-		    						// Pour chaque colonne
-		    							//On regarde si l'id de la colonne est égal à l'id passé
-		    							// Si oui, on défini le groupement sur cette colonne a vrai
-		    							// Si non, on défini le groupement sur cette colonne a faux
-		    					
-		    					
-		    					// Sinon, 
-		    						// On inverse la propriété groupée sur la colonne passée en paramètre
-		    						// Si le groupement sur cette colonne est passé a faux
-		    							// On dit que le groupement est non défini
-		    							// On dit que le groupement par colonne sur cette colonne est non défini
-		    					
 		    					if(this.config.edit.active && this.config.edit.start){
     								//TODO add a warning popup
     								console.log("edit is active, you lost all modification !!");
