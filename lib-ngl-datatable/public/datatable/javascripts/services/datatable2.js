@@ -332,15 +332,27 @@ angular.module('datatableServices', []).
 		    				}
 		    				
 		    			},
+		    			
+		    			
+		    			
 		    			/**
 		    			 * set the order column name
 		    			 * @param orderColumnName : column name
 		    			 */
 		    			setGroupColumn : function(column){
 		    				if(this.config.group.active){
-		    					var columnId = column.id;
-		    					if(this.config.group.by === undefined || (this.config.group.by.id != column.id)){
-		    						this.config.group.by = column;		    						
+		    					var columnId;
+		    					column === 'all' ? columnId = 'all' : columnId = column.id;
+		    					if(this.config.group.by === undefined || this.config.group.by !== column){
+		    						if(columnId === "all"){
+		    							this.config.group.by = columnId;
+		    							this.config.group.columns['all'] = true;
+		    						}else{
+		    							this.config.group.by = column;
+		    							this.config.group.columns[columnId] = true;
+		    							if(this.config.group.columns["all"]) this.config.group.columns["all"] = false;
+		    						}
+		    						
 		    						for(var i = 0; i < this.config.columns.length; i++){
 			    						if(this.config.columns[i].id === columnId){
 			    							this.config.group.columns[this.config.columns[i].id] = true;
@@ -350,10 +362,31 @@ angular.module('datatableServices', []).
 			    					}
 		    					}else{
 		    						this.config.group.columns[columnId] = !this.config.group.columns[columnId];
-		    						if(!this.config.group.columns[columnId]){
+		    						if(!this.config.group.columns[columnId] || this.config.group.columns["all"]){
 		    							this.config.group.by = undefined;
+		    							this.config.group.columns["all"] = false;
 		    						}
+		    						
 		    					}
+		    					
+		    					
+		    					
+		    				//Si on peut grouper
+		    					//On attribue à columnId l'id de la colonne a trier, entre p1 -> pXX et all
+		    					// Si on ne groupe avec rien ou si on groupe avec une autre colonne que celle passée en paramètre
+		    						//On attribue le groupement à cette colonne
+		    						//On passe a vrai le groupement sur cette colonne parmi toutes les colonnes
+		    						// Pour chaque colonne
+		    							//On regarde si l'id de la colonne est égal à l'id passé
+		    							// Si oui, on défini le groupement sur cette colonne a vrai
+		    							// Si non, on défini le groupement sur cette colonne a faux
+		    					
+		    					
+		    					// Sinon, 
+		    						// On inverse la propriété groupée sur la colonne passée en paramètre
+		    						// Si le groupement sur cette colonne est passé a faux
+		    							// On dit que le groupement est non défini
+		    							// On dit que le groupement par colonne sur cette colonne est non défini
 		    					
 		    					if(this.config.edit.active && this.config.edit.start){
     								//TODO add a warning popup
@@ -687,6 +720,19 @@ angular.module('datatableServices', []).
 		    				}
 		    				
 		    			},
+		    			
+		    			/**
+		    			 * Test if a column must be grouped
+		    			 * @param columnId : column id
+		    			 */
+		    			isGroup : function(columnId){
+		    				if(this.config.group.active && this.config.group.columns[columnId]){
+		    					return this.config.group.columns[columnId];
+		    				}else{
+		    					return false;
+		    				}
+		    			},
+		    			
 		    			/**
 		    			 * Test if a column must be hide
 		    			 * @param columnId : column id 
@@ -1166,6 +1212,10 @@ angular.module('datatableServices', []).
 		    				return this.config.compact;
 		    			},
 		    			
+		    			isEmpty: function(){
+		    				return (this.allResult === undefined)
+		    			},
+		    			
 		    			isShowButton: function(configParam, column){
 		    				if(column){
 		    					return (this.config[configParam].active && this.config[configParam].showButton && column[configParam]);
@@ -1345,6 +1395,20 @@ angular.module('datatableServices', []).
 		    				}
 		    				return c;
 		    			},
+		    			
+		    			/**
+		    			 * Return column with group
+		    			 */
+		    			getGroupColumns: function(){
+		    				var c = [];
+		    				for(var i = 0; i < this.config.columns.length; i++){
+		    					if(this.config.columns[i].group){
+		    						c.push(this.config.columns[i]);
+		    					}
+		    				}
+		    				return c;
+		    			},
+		    			
 		    			/**
 		    			 * Return column with edit
 		    			 */
@@ -1477,9 +1541,6 @@ angular.module('datatableServices', []).
 		    				}
 		    			},
 		    			
-		    			
-		    			
-		    			
 
 		    			/**
 		    			 * Function to export data in a CSV file
@@ -1499,19 +1560,23 @@ angular.module('datatableServices', []).
 		    					displayResultTmp = this.addGroup(displayResultTmp);					
 		    				}
 		    				
+		    				console.log(this.allResult);
 		    				//manage results
-		    				if (displayResultTmp) {		    					
-		    					var columnsToPrint = this.config.columns;	    					
+		    				if (displayResultTmp) {
+		    						    					
+		    					var columnsToPrint = this.config.columns;
 		    					//header
 		    					columnsToPrint.forEach(function(column) {
 		    						if(!that.config.hide.columns[column.id]){
-		    						var header = column.header;
+		    							if(exportType === 'all' || (exportType === 'groupsOnly' && (column.type === 'number' || column.id === that.config.group.by.id))){
+		    							var header = column.header;
 		    							if(typeof header == 'function'){
 		    								header = header();
 		    							}else{
 		    								header = Messages(column.header);
 		    							}
 		    							lineValue = lineValue + header + delimiter;	
+		    							}
 		    						}
 		    						}); 
 		    					lineValue += "\n";
@@ -1520,6 +1585,8 @@ angular.module('datatableServices', []).
 		    						
 		    						columnsToPrint.forEach(function(column) {	
 		    							if(!that.config.hide.columns[column.id]){
+		    								if(exportType === 'all' || exportType==='groupsOnly' && (column.type==='number' || column.id === that.config.group.by.id)){
+		    							
 		    							//algo to set colValue (value of the column)
 		    			    			if (!result.line.group && !angular.isDefined(column.url) && exportType!=='groupsOnly') {
 		    			    				var property = column.property;
@@ -1544,10 +1611,11 @@ angular.module('datatableServices', []).
 		    			    					colValue =  undefined;
 		    			    				}
 		    			    				lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
-		    			    			} else if(!result.line.group && angular.isDefined(column.url)) {
+		    			    			}else if(!result.line.group && angular.isDefined(column.url)) {
 		    			    				colValue =  undefined;
 		    			    				alert("Url column is not yet implemented !");
 		    			    			}
+		    							}
 		    							}	
 		    						});
 		    						if ((exportType==='all') || ((exportType==='groupsOnly') && result.line.group)) {
@@ -1884,12 +1952,13 @@ angular.module('datatableServices', []).
   		    		+	'<button class="btn btn-default" ng-click="dtTable.show()" ng-disabled="!dtTable.isSelect()" ng-if="dtTable.isShowButton(\'show\')" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.show\')}}">'
   		    		+		'<i class="fa fa-thumb-tack"></i>'
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.show\')}}</span>'
-  		    		/*+	'</button>'
-  		    		+	'<button class="btn btn-default" ng-click="dtTable." ng-if="dtTable.isShowButton(\'group\')" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}">'
+  		    		+	'</button>'
+  		    		/*+	'<button class="btn btn-default" ng-click="dtTable.setGroupColumn(\'all\')" ng-disabled="dtTable.isEmpty()" ng-if="dtTable.isShowButton(\'group\')" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}">'
   		    		+		'<i class="fa fa-bars"></i>'
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}</span>'
   		    		+	'</button>'*/
   		    		+'</div>'
+  		    		
   		    		+'<div class="btn-group" ng-if="dtTable.isShowCRUDButtons()">'
   		    		+	'<button class="btn btn-default" ng-click="dtTableFunctions.setEdit()" ng-disabled="!dtTable.canEdit()"  ng-if="dtTable.isShowButton(\'edit\')" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.edit\')}}">'
   		    		+		'<i class="fa fa-edit"></i>'
@@ -1904,10 +1973,12 @@ angular.module('datatableServices', []).
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.remove\')}}</span>'
   		    		+	'</button>'  		    	
   		    		+'</div>'
+  		    		
+  		    		
 
   		    		+'<div class="btn-group" ng-if="dtTable.isShowExportCSVButton()">'
   		    		+'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}">'
-  		    		+	'<i class="fa fa-file-text-o fa-lg"></i> '
+  		    		+	'<i class="fa fa-file-text-o"></i> '
   		    		+	'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}</span>'
   		    		+	'<span class="caret" />'
   		    		+'</button>'
@@ -1918,10 +1989,27 @@ angular.module('datatableServices', []).
   		    		+	'<li><a href="#" ng-click="dtTableFunctions.exportCSV(\'groupsOnly\')" ng-disabled="!dtTable.canExportCSV()"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.groupedExportCSV\')}}</a></li>'
   		    		+'</ul>'
   		    		+'</div>'
+  		    		
+  		    		+'<div class="btn-group" ng-if="dtTable.isShowButton(\'group\')">'
+  		    		+	'<button data-togle="dropdown" ng-disabled="dtTable.isEmpty()" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}">'
+  		    		+		'<i class="fa fa-bars"></i> '
+  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}} </span>'
+  		    		+		'<span class="caret" />'
+  		    		+	'</button>'
+  		    		+	'<ul class="dropdown-menu">'
+  		    		+		'<li ng-repeat="column in dtTable.getGroupColumns()">'
+  		    		+			'<a href="#" ng-click="dtTableFunctions.setGroupColumn(column)" ng-switch on="!dtTable.isGroup(column.id)"><i class="fa fa-bars" ng-switch-when="true"></i><i class="fa fa-outdent" ng-switch-when="false"></i> <span ng-bind="dtTableFunctions.messagesDatatable(column.header)"/></a>' 
+  		    		+		'</li>'	
+  		    		+		'<li class="divider"></li>'
+  		    		+		'<li>'
+  		    		+			'<a href="#" ng-click="dtTable.setGroupColumn(\'all\')" ng-switch on="!dtTable.isGroup(\'all\')"><i class="fa fa-bars" ng-switch-when="true"></i><i class="fa fa-outdent" ng-switch-when="false"></i> <span ng-bind="dtTableFunctions.messagesDatatable(\'datatable.button.generalGroup\')"/></a>'
+  		    		+		'</li>'
+  		    		+	'</ul>'
+  		    		+'</div>'
 		    		
   		    		+'<div class="btn-group" ng-if="dtTable.isShowHideButtons()">' //todo bt-select
   		    		+	'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.hide\')}}">'
-  		    		+		'<i class="fa fa-eye-slash fa-lg"></i> '
+  		    		+		'<i class="fa fa-eye-slash"></i> '
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.hide\')}} </span>'
   		    		+		'<span class="caret"></span>'  		    		
   		    		+	'</button>'
@@ -1930,7 +2018,8 @@ angular.module('datatableServices', []).
   		    		+		'<a href="#" ng-click="dtTableFunctions.setHideColumn(column)" ng-switch on="dtTable.isHide(column.id)"><i class="fa fa-eye" ng-switch-when="true"></i><i class="fa fa-eye-slash" ng-switch-when="false"></i> <span ng-bind="dtTableFunctions.messagesDatatable(column.header)"/></a>'
   		    		+		'</li>'
   		    		+	'</ul>'
-  		    		+'</div>' 
+  		    		+'</div>'
+  		    		
   		    		+'<div class="btn-group" ng-if="dtTable.isShowOtherButtons()" dt-compile="dtTable.config.otherButtons.template"></div>'
   		    		+'</div>'
   		    		+'<div class="btn-toolbar pull-right" name="dt-toolbar-results"  ng-if="dtTable.isShowToolbarResults()">'
@@ -1992,7 +2081,7 @@ angular.module('datatableServices', []).
   		    		+	'<div class="btn-group pull-right">'
   		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setEdit(column)" ng-if="dtTable.isShowButton(\'edit\', column)" ng-disabled="!dtTable.canEdit()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'
   		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setOrderColumn(column)" ng-if="dtTable.isShowButton(\'order\', column)" ng-disabled="!dtTable.canOrder()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.sort\')}}"><i ng-class="dtTable.getOrderColumnClass(column.id)"></i></button>'
-  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setGroupColumn(column)" ng-if="dtTable.isShowButton(\'group\', column)" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}"><i ng-class="dtTable.getGroupColumnClass(column.id)"></i></button>'  		    		  		    		
+  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setGroupColumn(column)" ng-disabled="dtTable.isEmpty()" ng-if="dtTable.isShowButton(\'group\', column)" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}"><i ng-class="dtTable.getGroupColumnClass(column.id)"></i></button>'  		    		  		    		
   		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setHideColumn(column)" ng-if="dtTable.isShowButton(\'hide\', column)" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.hide\')}}"><i class="fa fa-eye-slash"></i></button>'
   		    		+	'</div>'
   		    		+	'</th>'
