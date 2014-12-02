@@ -1194,7 +1194,7 @@ angular.module('datatableServices', []).
 		    			},
 		    			
 		    			isEmpty: function(){
-		    				return (this.allResult === undefined)
+		    				return (this.allResult === undefined || this.allResult === null || this.allResult.length === 0);
 		    			},
 		    			
 		    			isShowButton: function(configParam, column){
@@ -1555,9 +1555,9 @@ angular.module('datatableServices', []).
 		    								header = Messages(column.header);
 		    							}
 		    							if(column.groupMethod === "sum"){
-		    								header = header + " (somme)"; 
+		    								header = header + Messages('datatable.export.sum'); 
 		    							}else if(column.groupMethod === "average"){
-		    								header = header + " (moyenne)";
+		    								header = header + Messages('datatable.export.average');
 		    							}
 		    							lineValue = lineValue + header + delimiter;
 		    							}
@@ -1937,10 +1937,6 @@ angular.module('datatableServices', []).
   		    		+		'<i class="fa fa-thumb-tack"></i>'
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.show\')}}</span>'
   		    		+	'</button>'
-  		    		/*+	'<button class="btn btn-default" ng-click="dtTable.setGroupColumn(\'all\')" ng-disabled="dtTable.isEmpty()" ng-if="dtTable.isShowButton(\'group\')" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}">'
-  		    		+		'<i class="fa fa-bars"></i>'
-  		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}</span>'
-  		    		+	'</button>'*/
   		    		+'</div>'
   		    		
   		    		+'<div class="btn-group" ng-if="dtTable.isShowCRUDButtons()">'
