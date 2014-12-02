@@ -1575,7 +1575,12 @@ angular.module('datatableServices', []).
 		    							}else{
 		    								header = Messages(column.header);
 		    							}
-		    							lineValue = lineValue + header + delimiter;	
+		    							if(column.groupMethod === "sum"){
+		    								header = header + " (somme)"; 
+		    							}else if(column.groupMethod === "average"){
+		    								header = header + " (moyenne)";
+		    							}
+		    							lineValue = lineValue + header + delimiter;
 		    							}
 		    						}
 		    						}); 
