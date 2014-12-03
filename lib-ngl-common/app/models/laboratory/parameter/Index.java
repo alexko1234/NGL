@@ -15,7 +15,7 @@ import fr.cea.ig.DBObject;
 
 public class Index extends DBObject implements IValidation{
 
-	public final String typeCode="indexIllumina"; 
+	public final String typeCode="indexIlluminaSequencing"; 
 	public String categoryCode;
 	public String sequence;
 	public Map<String,String> supplierName;
