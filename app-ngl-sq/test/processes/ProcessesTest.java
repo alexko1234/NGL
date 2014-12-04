@@ -97,6 +97,23 @@ public class ProcessesTest extends AbstractTests{
 	}
 	
 	@Test
+	public void saveOpgenRun(){
+		Process process = ProcessTestHelper.getFakeProcess("mapping", "opgen-run");
+		String supportCode = InitDataHelper.getSupportCodesInContext("tube").get(0);
+		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));
+		process.projectCode = cs.projectCodes.get(0);
+		process.sampleCode = cs.sampleCodes.get(0);
+		process.properties = new HashMap<String, PropertyValue>();
+		Result result = callAction(controllers.processes.api.routes.ref.Processes.saveSupport(supportCode),fakeRequest().withJsonBody(Json.toJson(process)));
+		List<Process> processResult = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("projectCode",  cs.projectCodes.get(0))).toList();
+		
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		assertThat(processResult).isNotNull();
+		assertThat(processResult).isNotEmpty();
+	}
+
+	
+	@Test
 	public void updateNotFound(){
 		Result result = callAction(controllers.processes.api.routes.ref.Processes.update("not_found"),fakeRequest());
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.NOT_FOUND);
@@ -133,5 +150,4 @@ public class ProcessesTest extends AbstractTests{
 		assertThat(datatableResponse.data.size()).isEqualTo(0);
 		
 	}
-	
 }
