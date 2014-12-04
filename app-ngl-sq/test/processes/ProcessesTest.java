@@ -97,7 +97,7 @@ public class ProcessesTest extends AbstractTests{
 	}
 	
 	@Test
-	public void saveOpgenRun(){
+	public void saveOpgenRun() throws JsonParseException, JsonMappingException, IOException{
 		Process process = ProcessTestHelper.getFakeProcess("mapping", "opgen-run");
 		String supportCode = InitDataHelper.getSupportCodesInContext("tube").get(0);
 		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));
@@ -105,11 +105,21 @@ public class ProcessesTest extends AbstractTests{
 		process.sampleCode = cs.sampleCodes.get(0);
 		process.properties = new HashMap<String, PropertyValue>();
 		Result result = callAction(controllers.processes.api.routes.ref.Processes.saveSupport(supportCode),fakeRequest().withJsonBody(Json.toJson(process)));
-		List<Process> processResult = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("projectCode",  cs.projectCodes.get(0))).toList();
+		ObjectMapper mapper = new ObjectMapper();
+		Process processResult = mapper.readValue(play.test.Helpers.contentAsString(result), Process.class);
+		//List<Process> processResult = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("projectCode",  cs.projectCodes.get(0))).toList();
 		
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		assertThat(processResult).isNotNull();
-		assertThat(processResult).isNotEmpty();
+		
+		result = callAction(controllers.processes.api.routes.ref.Processes.head(processResult.code),fakeRequest());
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		result = callAction(controllers.processes.api.routes.ref.Processes.get(processResult.code),fakeRequest());
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+
+		result = callAction(controllers.processes.api.routes.ref.Processes.delete(processResult.code),fakeRequest());
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 	}
 
 	
