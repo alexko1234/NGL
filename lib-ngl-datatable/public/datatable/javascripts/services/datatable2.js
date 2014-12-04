@@ -1547,7 +1547,7 @@ angular.module('datatableServices', []).
 		    					//header
 		    					columnsToPrint.forEach(function(column) {
 		    						if(!that.config.hide.columns[column.id]){
-		    							if(exportType === 'all' || (exportType === 'groupsOnly' && (column.type === 'number' || column.id === that.config.group.by.id))){
+		    							
 		    							var header = column.header;
 		    							if(typeof header == 'function'){
 		    								header = header();
@@ -1561,7 +1561,6 @@ angular.module('datatableServices', []).
 		    							}
 		    							lineValue = lineValue + header + delimiter;
 		    							}
-		    						}
 		    						}); 
 		    					lineValue += "\n";
 		    					//data
@@ -1569,8 +1568,6 @@ angular.module('datatableServices', []).
 		    						
 		    						columnsToPrint.forEach(function(column) {	
 		    							if(!that.config.hide.columns[column.id]){
-		    								if(exportType === 'all' || exportType==='groupsOnly' && (column.type==='number' || column.id === that.config.group.by.id)){
-		    							
 		    							//algo to set colValue (value of the column)
 		    			    			if (!result.line.group && !angular.isDefined(column.url) && exportType!=='groupsOnly') {
 		    			    				var property = column.property;
@@ -1599,7 +1596,6 @@ angular.module('datatableServices', []).
 		    			    				colValue =  undefined;
 		    			    				alert("Url column is not yet implemented !");
 		    			    			}
-		    							}
 		    							}	
 		    						});
 		    						if ((exportType==='all') || ((exportType==='groupsOnly') && result.line.group)) {
