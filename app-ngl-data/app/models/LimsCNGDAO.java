@@ -848,10 +848,9 @@ public class LimsCNGDAO {
 	/*************************************************************************************************************************************/
 	public List<Experiment> findAllIlluminaDepotExperimentToCreate(final ContextValidation contextError) throws DAOException {
 		/*****************************************************/
-		//JUST FOR DEV
-		//TODO : delete where clause !!!
+		//JUST FOR DEV : add WHERE code_exp < 'ILLUMINA-DEPOT_20141107_140602'
 		/*****************************************************/
-		List<Experiment> results = this.jdbcTemplate.query("SELECT * FROM v_depotfc_tongl_reprise WHERE code_exp < 'ILLUMINA-DEPOT_20141110_103914' ORDER BY 1", new Object[]{} 
+		List<Experiment> results = this.jdbcTemplate.query("SELECT * FROM v_depotfc_tongl_reprise ORDER BY 1", new Object[]{} 
 		,new RowMapper<Experiment>() {
 			public Experiment mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;

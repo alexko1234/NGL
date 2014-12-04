@@ -10,7 +10,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
@@ -120,30 +120,45 @@ public class ExperimentImport {
 		state.resolutionCodes = rCodes; 
 		experiment.state = state;	
 		
-		//define atomicTransfertMethod
-		OneToVoidContainer atomicTransfertMethod = new OneToVoidContainer();		
-		atomicTransfertMethod.position = 0;
-		atomicTransfertMethod.inputContainerUsed = new ContainerUsed();
-		atomicTransfertMethod.inputContainerUsed.code = rs.getString("code_flowcell");
-		atomicTransfertMethod.inputContainerUsed.state = new State(); 
-				
-		//find state of the container support (flowcell)
-		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code",rs.getString("code_flowcell")));
-		if (cs == null) {
-			Logger.error("-->> Flowcell=" + rs.getString("code_flowcell") + " non trouvée dans la base !");
-		}
 		
-		atomicTransfertMethod.inputContainerUsed.state.code = cs.state.code;
-		
+		//define atomicTransfertMethods
 		HashMap<Integer, AtomicTransfertMethod> hm = new HashMap<Integer, AtomicTransfertMethod>(); 
-		hm.put(0, atomicTransfertMethod);
-		experiment.atomicTransfertMethods =  hm; 
+
+		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code",rs.getString("code_flowcell"))).toList();
+		ArrayList<String> projectCodes = new ArrayList<String>();
+		ArrayList<String> sampleCodes = new ArrayList<String>();
+		
+		if (containers == null || containers.size() == 0) {
+			Logger.error("Containers with support.code =" + rs.getString("code_flowcell") + " non trouvés dans la base !");
+		}
+		else {
+			int i = 0;
+			for (Container c : containers) {			
+				//define one atomicTransfertMethod for each container
+				OneToVoidContainer atomicTransfertMethod = new OneToVoidContainer();		
+				atomicTransfertMethod.position = 0;
+				atomicTransfertMethod.inputContainerUsed = new ContainerUsed();				
+				atomicTransfertMethod.inputContainerUsed.code = c.code;
+				atomicTransfertMethod.inputContainerUsed.state = new State(); 		
+				atomicTransfertMethod.inputContainerUsed.state.code = c.state.code;
+								
+				hm.put(i, atomicTransfertMethod);
+				i++;
 				
+				if (!projectCodes.contains(c.projectCodes)) {
+					projectCodes.addAll(c.projectCodes);
+				}
+				if (!sampleCodes.contains(c.sampleCodes)) {
+					sampleCodes.addAll(c.sampleCodes);
+				}
+			}
+		}
+		experiment.atomicTransfertMethods =  hm; 
+		
 		
 		//projectCodes & sampleCodes from the container 
-		experiment.projectCodes = cs.projectCodes;
-		experiment.sampleCodes = cs.sampleCodes;	
-		
+		experiment.projectCodes = projectCodes;
+		experiment.sampleCodes = sampleCodes;	
 		
 		//TODO : add runStartDate
 

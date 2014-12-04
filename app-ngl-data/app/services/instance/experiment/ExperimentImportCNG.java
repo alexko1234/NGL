@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
@@ -32,7 +31,7 @@ public class ExperimentImportCNG extends AbstractImportDataCNG{
 	
 	
 	public void loadExperimentDepots() throws SQLException, DAOException {
-		Logger.debug("start loading experiments of type 'depôt'");
+		Logger.debug("start loading experiments of type 'depot'");
 		
 		List<Experiment> experiments = limsServices.findAllIlluminaDepotExperimentToCreate(contextError);
 		List<Experiment> exps=InstanceHelpers.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiments, contextError, true);
