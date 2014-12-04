@@ -36,7 +36,7 @@ public class ExperimentImportCNG extends AbstractImportDataCNG{
 		List<Experiment> experiments = limsServices.findAllIlluminaDepotExperimentToCreate(contextError);
 		List<Experiment> exps=InstanceHelpers.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiments, contextError, true);
 			
-		limsServices.updateLimsDepotExperiment(exps, contextError, "creation");
+		//limsServices.updateLimsDepotExperiment(exps, contextError, "creation");
 	}
 
 }
