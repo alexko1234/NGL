@@ -145,11 +145,15 @@ public class ExperimentImport {
 				hm.put(i, atomicTransfertMethod);
 				i++;
 				
-				if (!projectCodes.contains(c.projectCodes)) {
-					projectCodes.addAll(c.projectCodes);
+				for (String pc : c.projectCodes) {
+					if (!projectCodes.contains(pc)) {
+						projectCodes.add(pc);
+					}
 				}
-				if (!sampleCodes.contains(c.sampleCodes)) {
-					sampleCodes.addAll(c.sampleCodes);
+				for (String sc : c.sampleCodes) {
+					if (!sampleCodes.contains(sc)) {
+						sampleCodes.add(sc);
+					}
 				}
 			}
 		}
