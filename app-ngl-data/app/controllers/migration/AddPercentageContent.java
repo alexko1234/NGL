@@ -19,6 +19,7 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.utils.InstanceConstants;
+import models.utils.instance.ContainerHelper;
 import play.Logger;
 import play.mvc.Result;
 import fr.cea.ig.MongoDBDAO;
@@ -65,7 +66,7 @@ public class AddPercentageContent extends CommonController{
 			int contentsArraySize = container.contents.size();
 			Logger.info("Container: code="+container.code+", "+contentsArraySize+" contents");
 
-			Double equiPercent = getEquiPencentValue(contentsArraySize);
+			Double equiPercent = ContainerHelper.getEquiPercentValue(contentsArraySize);
 
 			for(int i=0;i<contentsArraySize;i++){ 
 
@@ -92,10 +93,7 @@ public class AddPercentageContent extends CommonController{
 		}
 	}
 
-	private static Double getEquiPencentValue(int size){
-		BigDecimal p = (new BigDecimal(100.00/size)).setScale(2, RoundingMode.HALF_UP);						
-		return p.doubleValue();
-	}
+
 
 
 	private static void backupContainerCollection() {

@@ -1,5 +1,6 @@
 package models;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
+import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.parameter.Index;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.project.instance.BioinformaticParameters;
 import models.laboratory.project.instance.Project;
@@ -26,6 +29,7 @@ import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +38,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import controllers.CommonController;
-
 import play.Logger;
+import services.instance.experiment.ExperimentImport;
 import validation.ContextValidation;
 
 /**
  * @author dnoisett
  * Import data from CNG's LIMS to NGL 
+ * Functions to get projects, samples & containers
+ * Sub-functions to map data (between Solexa and NGL)
+ * Sub-functions to update dates (in order to know what data has been imported)
  */
 @Repository
 public class LimsCNGDAO {
@@ -214,9 +220,6 @@ public class LimsCNGDAO {
 			if (rs.getString("comments") != null) {
 				sample.comments.add(new Comment(rs.getString("comments")));
 			}
-			else {
-				sample.comments.add(new Comment(" ")); 
-			}
 					
 			sample.properties=new HashMap<String, PropertyValue>();
 			sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("lims_code")));
@@ -226,7 +229,7 @@ public class LimsCNGDAO {
 
 	
 	/**
-	 * To set projectCodes and comments to samples
+	 * To set projectCodes to samples
 	 * @param results
 	 * @return
 	 */
@@ -244,12 +247,6 @@ public class LimsCNGDAO {
 						results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.get(0) ); 
 					}
 				}
-				// difference between the two comments
-				if (! results.get(pos).comments.get(0).equals(results.get(pos+x).comments.get(0))) {
-					if (! results.get(pos).comments.contains(results.get(pos+x).comments.get(0))) {
-						results.get(pos).comments.add( results.get(pos+x).comments.get(0) ); 
-					}
-				}
 				// all the difference have been reported on the first sample found (at the position pos)
 				// so we can delete the sample at the position (posNext)
 				results.remove(pos+x);
@@ -259,11 +256,6 @@ public class LimsCNGDAO {
 		}
 		//for remove null comment or project
 		for (Sample s : results) {
-			for (int i=0; i<s.comments.size(); i++) {
-				if (s.comments.get(i).equals(" ")) {
-					s.comments.remove(i);
-				}
-			}
 			for (int i=0; i<s.projectCodes.size(); i++) {
 				if (s.projectCodes.get(i).equals(" ")) {
 					s.projectCodes.remove(i);
@@ -275,7 +267,7 @@ public class LimsCNGDAO {
 
 
 	/**
-	 * To get samples updated in the CNG's LIMS (Solexa)
+	 * To get samples updated in the CNG's LIMS (Solexa database)
 	 * @param contextError
 	 * @return
 	 * @throws SQLException
@@ -287,7 +279,7 @@ public class LimsCNGDAO {
 	
 	
 	/**
-	 * To get a particular sample updated in the CNG's LIMS (Solexa)
+	 * To get a particular sample updated in the CNG's LIMS (Solexa database)
 	 * @param contextError
 	 * @param sampleCode
 	 * @return
@@ -298,7 +290,7 @@ public class LimsCNGDAO {
 		List<Sample> results = null;
 		
 		if (sampleCode != null) { 
-			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl where code=? order by code, project, comments", new Object[]{sampleCode}
+			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl where code=? order by code, project desc, comments", new Object[]{sampleCode}
 			,new RowMapper<Sample>() {
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -310,7 +302,7 @@ public class LimsCNGDAO {
 			});
 		}
 		else { // mass loading
-			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl order by code, project, comments",new Object[]{}
+			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl order by code, project desc, comments",new Object[]{}
 			,new RowMapper<Sample>() {
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -350,7 +342,7 @@ public class LimsCNGDAO {
 		List<Sample> results = null;
 		
 		if (sampleCode != null) { 
-			results = this.jdbcTemplate.query("select * from v_sample_tongl where code=? order by code, project, comments", new Object[]{sampleCode}
+			results = this.jdbcTemplate.query("select * from v_sample_tongl where code=? order by code, project desc, comments", new Object[]{sampleCode}
 			,new RowMapper<Sample>() {
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -362,7 +354,7 @@ public class LimsCNGDAO {
 			});
 		}
 		else { // mass loading
-			results = this.jdbcTemplate.query("select * from v_sample_tongl order by code, project, comments",new Object[]{}
+			results = this.jdbcTemplate.query("select * from v_sample_tongl order by code, project desc, comments",new Object[]{}
 			,new RowMapper<Sample>() {
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -374,6 +366,29 @@ public class LimsCNGDAO {
 			});			
 		}		
 		return demultiplexSample(results);	
+	}
+	
+	
+	/**
+	 * To get all the samples (first loading, migration) 
+	 * @param contextError
+	 * @return
+	 * @throws DAOException
+	 */
+	public List<Sample> findAllSample(final ContextValidation contextError) throws DAOException {
+		
+		List<Sample> results = this.jdbcTemplate.query("select * from v_sample_tongl_reprise order by code, project desc, comments", new Object[]{} 
+		,new RowMapper<Sample>() {
+			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
+				ResultSet rs0 = rs;
+				int rowNum0 = rowNum;
+				ContextValidation ctxErr = contextError; 
+				Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
+				return s;
+			}
+		});
+		
+		return demultiplexSample(results);			
 	}
 	
 	/****************************************************************************************************************************************/
@@ -423,7 +438,15 @@ public class LimsCNGDAO {
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("lims_code")));
 		
 		if (containerCategoryCode.equals("tube")) {
-			container.mesuredConcentration = new PropertySingleValue(rs.getFloat("concentration"), "nM");
+			//round concentration to 2 decimals using BigDecimal
+			Double concentration = null;
+			BigDecimal d = null;
+			if ((Float) rs.getFloat("concentration") != null) {
+				 d = new BigDecimal(rs.getFloat("concentration"));
+				 BigDecimal d2 = d.setScale(2, BigDecimal.ROUND_HALF_UP); 
+				 concentration = d2.doubleValue();
+			}
+			container.mesuredConcentration = new PropertySingleValue(concentration, "nM");
 		}
 		
 		if (rs.getString("project")!=null) {
@@ -484,7 +507,7 @@ public class LimsCNGDAO {
 	
 	
 	/**
-	 * 
+	 * To set projectCodes & sampleCodes
 	 * @param results
 	 * @return
 	 * @throws DAOException
@@ -501,13 +524,6 @@ public class LimsCNGDAO {
 			
 			while ( (pos < listSize-1) && (results.get(pos).code.equals(results.get(pos+x).code)) ) {
 				
-				// difference between two consecutive projectCodes
-				if (! results.get(pos).projectCodes.get(0).equals(results.get(pos+x).projectCodes.get(0))) {
-					if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.get(0))) {
-						
-						results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.get(0) ); 
-					}
-				}
 				// difference between two consecutive sampleCodes
 				if (! results.get(pos).sampleCodes.get(0).equals(results.get(pos+x).sampleCodes.get(0))) {
 					if (! results.get(pos).sampleCodes.contains(results.get(pos+x).sampleCodes.get(0))) {
@@ -538,9 +554,10 @@ public class LimsCNGDAO {
 			pos++;
 		}	
 		
-		//for remove null tags
+
 		for (Container r : results) {
 			for (int i=0; i<r.contents.size(); i++) {
+				//remove bad properties
 				if (r.contents.get(i).properties.get("tag").value.equals("-1")) {
 					r.contents.get(i).properties.remove("tag");
 				}
@@ -550,8 +567,32 @@ public class LimsCNGDAO {
 				if ((r.contents.get(i).properties.get("libProcessTypeCode") != null) && (r.contents.get(i).properties.get("libProcessTypeCode").value.equals("-1"))) {
 					r.contents.get(i).properties.remove("libProcessTypeCode");
 				}
+				
+				//set percentage
+				//TODO : to change when we have the real values of percentage
+				Double equiPercent = ContainerHelper.getEquiPercentValue(r.contents.size());
+				r.contents.get(i).percentage = equiPercent; 
 			}
-		}		
+		}	
+		
+		//NEW : define container projects from projects contents
+		defineContainerProjectCodes(results); 
+		
+		return results;
+	}
+	
+	
+	
+	public static List<Container> defineContainerProjectCodes(List<Container> results) throws DAOException {
+		for (Container r : results) {
+			ArrayList<String> projectCodes = new ArrayList<String>();
+			for (Content c : r.contents) {
+				if (!projectCodes.contains(c.projectCode)) {
+					projectCodes.add(c.projectCode);
+				}
+			}
+			r.projectCodes = projectCodes; 
+		}
 		return results;
 	}
 	
@@ -645,7 +686,7 @@ public class LimsCNGDAO {
 		
 		List<Container> results = null;
 		if (containerCode != null) {
-			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? and isavailable = true order by code, project, code_sample, tag, exp_short_name", new Object[]{containerCode} 
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? and isavailable = true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{containerCode} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -657,7 +698,7 @@ public class LimsCNGDAO {
 			});
 		}
 		else {
-			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag, exp_short_name", new Object[]{} 
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -673,8 +714,14 @@ public class LimsCNGDAO {
 	
 	
 	
-	//reprise
-	public List<Container> findAllContainer(final ContextValidation contextError, String containerCode, String containerCategoryCode) throws DAOException {
+	/**
+	 * To get all containers (for mass loading the first time or for migration)
+	 * @param contextError
+	 * @param containerCategoryCode
+	 * @return
+	 * @throws DAOException
+	 */
+	public List<Container> findAllContainer(final ContextValidation contextError, String containerCategoryCode) throws DAOException {
 		final String _containerCategoryCode = containerCategoryCode;
 		String sqlView;
 		
@@ -685,7 +732,7 @@ public class LimsCNGDAO {
 			sqlView = "v_tube_tongl_reprise";
 		}
 		
-		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag, exp_short_name", new Object[]{} 
+		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 		,new RowMapper<Container>() {
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
@@ -702,7 +749,7 @@ public class LimsCNGDAO {
 	
 
 	/**
-	 * To get containers updated
+	 * To get containers updated in CNG database (Solexa database)
 	 * @param contextError
 	 * @return
 	 * @throws SQLException
@@ -733,7 +780,7 @@ public class LimsCNGDAO {
 		
 		List<Container> results = null;		
 		if (containerCode != null) {
-			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? and isavailable = true order by code, project, code_sample, tag, exp_short_name", new Object[]{containerCode} 
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? and isavailable = true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{containerCode} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -745,7 +792,7 @@ public class LimsCNGDAO {
 			});
 		}
 		else {
-			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project, code_sample, tag, exp_short_name", new Object[]{} 
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -760,7 +807,7 @@ public class LimsCNGDAO {
 	}
 	
 	/**
-	 * Set sequencingProgramType
+	 * Sub-method to set the sequencingProgramType of a flowcell
 	 * @param contextError
 	 * @param mode
 	 * @return
@@ -777,7 +824,7 @@ public class LimsCNGDAO {
 		}
 		
 		List<ContainerSupport> results = null;
-		results = this.jdbcTemplate.query("select code_support, seq_program_type from " + sqlView + " where isavailable = true order by code, project, code_sample, tag, exp_short_name", new Object[]{} 
+		results = this.jdbcTemplate.query("select code_support, seq_program_type from " + sqlView + " where isavailable = true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 		,new RowMapper<ContainerSupport>() {
 			public ContainerSupport mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
@@ -796,18 +843,59 @@ public class LimsCNGDAO {
 		}	
 		return mapCodeSupportSequencing;
 	}
+	
+	
+	/*************************************************************************************************************************************/
+	public List<Experiment> findAllIlluminaDepotExperimentToCreate(final ContextValidation contextError) throws DAOException {
+		/*****************************************************/
+		//JUST FOR DEV
+		//TODO : delete where clause !!!
+		/*****************************************************/
+		List<Experiment> results = this.jdbcTemplate.query("SELECT * FROM v_depotfc_tongl_reprise WHERE code_exp < 'ILLUMINA-DEPOT_20141110_103914' ORDER BY 1", new Object[]{} 
+		,new RowMapper<Experiment>() {
+			public Experiment mapRow(ResultSet rs, int rowNum) throws SQLException {
+				ResultSet rs0 = rs;
+				int rowNum0 = rowNum;
+				ContextValidation ctxErr = contextError; 
+				Experiment e=  ExperimentImport.experimentDepotIlluminaMapRow(rs0, rowNum0, ctxErr); 
+				return e;
+			}
+		}); 
+		return results;
+	}
+	
+	/***********************************************************************************************************************************/
+	public List<Index> findIndexIlluminaToCreate(final ContextValidation contextError)throws SQLException {
+		//TODO : define view 
+		List<Index> results = this.jdbcTemplate.query("select distinct short_name as code,(CASE WHEN type = 1 THEN 'SINGLE-INDEX'::text WHEN type = 2 THEN 'DUAL-INDEX'::text WHEN type = 3 THEN 'MID'::text ELSE NULL::text END) AS code_category,sequence from t_index order by 1" 
+				,new RowMapper<Index>() {
+					@SuppressWarnings("rawtypes")
+					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
+						Index index=new Index();
+						index.code=rs.getString("code");
+						index.categoryCode=rs.getString("code_category");
+						index.sequence=rs.getString("sequence");
+						index.traceInformation=new TraceInformation();
+						InstanceHelpers.updateTraceInformation(index.traceInformation, "ngl-data");
+						return index;
+					}
+				});
+		return results;
+
+	}
+
+	
 
 	
 	/*************************************************************************************************************************************/
 	
 	/**
-	 * UPDATE projects import/update dates
+	 * UPDATE Solexa t_project import/update dates
 	 * @param projects
 	 * @param contextError
 	 * @throws DAOException
 	 */
 	public void updateLimsProjects(List<Project> projects, ContextValidation contextError, String mode) throws DAOException {
-		
 		String key, column;
 		if (mode.equals("creation")) {
 			key = "update_ImportDate";
@@ -831,13 +919,12 @@ public class LimsCNGDAO {
 
 	
 	/**
-	 * UPDATE samples import/update dates 
+	 * UPDATE Solexa tables t_sample & t_individual tables (import/update dates) 
 	 * @param samples
 	 * @param contextError
 	 * @throws DAOException
 	 */
 	public void updateLimsSamples(List<Sample> samples, ContextValidation contextError, String mode) throws DAOException {
-		
 		String key, column;
 		if (mode.equals("creation")) {
 			key = "update_ImportDate";
@@ -857,7 +944,6 @@ public class LimsCNGDAO {
 		}
 		this.jdbcTemplate.batchUpdate(sql, parameters);  
 		
-		//new
 		sql = "UPDATE t_individual SET " + column + " = ? WHERE id in (select individual_id from t_sample where stock_barcode = ?)";
 		parameters = new ArrayList<Object[]>();
 		for (Sample sample : samples) {
@@ -870,13 +956,12 @@ public class LimsCNGDAO {
 
 	
 	/**
-	 * UPDATE lane containers import/update dates 
+	 * UPDATE Solexa table t_lane (import/update dates) 
 	 * @param containers
 	 * @param contextError
 	 * @throws DAOException
 	 */
 	public void updateLimsLanes(List<Container> containers, ContextValidation contextError, String mode) throws DAOException {
-
 		String key, column;
 		if (mode.equals("creation")) {
 			key = "update_ImportDate";
@@ -914,7 +999,6 @@ public class LimsCNGDAO {
 	 * @throws DAOException
 	 */
 	public void updateLimsTubes(List<Container> containers, ContextValidation contextError, String mode) throws DAOException {
-
 		String key, column;
 		if (mode.equals("creation")) {
 			key = "update_ImportDate";
@@ -938,7 +1022,42 @@ public class LimsCNGDAO {
 		catch(Exception e) {
 			Logger.debug(e.getMessage());
 		}
+		contextError.removeKeyFromRootKeyName(key);
+	}
+	
+	
+	/**
+	 * UPDATE table witch contains "les depots" (t_workflow ?) in Solexa to keep trace of the imports (and not re-import data)
+	 * 
+	 * @param experiments
+	 * @param contextError
+	 * @param mode
+	 * @throws DAOException
+	 */
+	public void updateLimsDepotExperiment(List<Experiment> experiments, ContextValidation contextError, String mode) throws DAOException {
+		String key, column;
+		if (mode.equals("creation")) {
+			key = "update_ImportDate";
+			column = "nglimport_date";
+		}
+		else {
+			key = "update_UpdateDate";
+			column = "ngl_update_date";			
+		}
 		
+		contextError.addKeyToRootKeyName(key);
+		
+		String sql = "UPDATE t_workflow SET " + column + " = ? WHERE id = ?";
+		List<Object[]> parameters = new ArrayList<Object[]>();
+		for (Experiment experiment : experiments) {
+	        parameters.add(new Object[] {new Date(), experiment.code}); //TODO : a vérifier suivant le code. Peut-être nécessaire d'ajouter un limsCode (cf container) 
+		}
+		try {
+			this.jdbcTemplate.batchUpdate(sql, parameters);
+		}
+		catch(Exception e) {
+			Logger.debug(e.getMessage());
+		}
 		contextError.removeKeyFromRootKeyName(key);
 	}
 	

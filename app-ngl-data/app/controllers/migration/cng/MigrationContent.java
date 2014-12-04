@@ -293,7 +293,6 @@ public class MigrationContent extends CommonController {
 				for (Container newContainer : newContainers) {
 					
 					if (oldContainer.code.equals(newContainer.code)) {	
-						oldContainer.contents = newContainer.contents;
 					 
 						WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
 								DBUpdate.set("contents", oldContainer.contents));

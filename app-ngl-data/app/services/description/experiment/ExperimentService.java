@@ -130,8 +130,10 @@ public class ExperimentService {
 
 			
 			//Depot solexa
+			/******************************** JUST FOR DEV **************************************************************/
 			l.add(newExperimentType("Depot Illumina", "illumina-depot"
-					, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_illumina_ptr_1","depot_illumina_ptr_2","depot_illumina_ptr_3"), getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+					, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_illumina_ptr_1","depot_illumina_ptr_2","depot_illumina_ptr_3"), getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
+
 
 		}
 

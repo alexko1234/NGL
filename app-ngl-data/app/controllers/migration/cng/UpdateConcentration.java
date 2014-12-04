@@ -25,18 +25,18 @@ import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
 /**
- * Update contents in the Container (add missing attribute projectCode)
- * 
+ * Update concentration value and unit for tube
+ * Replace old migration "UpdateConcentrationUnit"
  * @author dnoisett
- * 19/11/2014
+ * 21/11/2014
  */
 
 @Repository
-public class AddProjectCodeToContent extends CommonController {
+public class UpdateConcentration extends CommonController {
 		
 	protected static LimsCNGDAO limsServices= Spring.getBeanOfType(LimsCNGDAO.class);	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
-	private static String backupName = InstanceConstants.CONTAINER_COLL_NAME+"_BCK_PC_"+sdf.format(new java.util.Date());	
+	private static String backupName = InstanceConstants.CONTAINER_COLL_NAME+"_BCK_C_"+sdf.format(new java.util.Date());	
 
 	
 	
@@ -49,55 +49,49 @@ public class AddProjectCodeToContent extends CommonController {
 	
 			backUpContainer();
 			
-			Logger.info("Migration contents of containers starts : add projectCode attribute");
+			Logger.info("Migration unit of concentration starts");
 		
 			//find collection up to date
 			ContextValidation contextError = new ContextValidation(Constants.NGL_DATA_USER);
 			List<Container> newContainers = null;
 			try {
-				newContainers = limsServices.findAllContainer(contextError, null, "lane");
+				newContainers = limsServices.findAllContainer(contextError, "tube");
 			} catch (DAOException e) {
 				Logger.debug("ERROR in findAllContainer():" + e.getMessage());
 			}
 			
 			//find current collection
-			List<Container> oldContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
+			List<Container> oldContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("categoryCode", "tube")).toList();
 
 			for (Container oldContainer : oldContainers) {
-				
-				//delete all contents
-				WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
-						DBUpdate.unset("contents"));
-					
-				if(StringUtils.isNotEmpty(r.getError())){
-					Logger.error("Unset contents : "+oldContainer.code+" / "+r.getError());
-				}	
-				
 				for (Container newContainer : newContainers) {
-					
-					if (oldContainer.code.equals(newContainer.code)) {	
-						//oldContainer.contents = newContainer.contents;
-					 
-						//set contents to the new ones
-						r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
-								DBUpdate.set("contents", newContainer.contents));
-							
+					if (newContainer.code.equals(oldContainer.code)) {
+
+						//update concentration unit and value
+						WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
+								DBUpdate.set("mesuredConcentration.unit","nM").set("mesuredConcentration.value", newContainer.mesuredConcentration.value));
+						
 						if(StringUtils.isNotEmpty(r.getError())){
-							Logger.error("Set contents : "+oldContainer.code+" / "+r.getError());
+							Logger.error("Unset contents : "+oldContainer.code+" / "+r.getError());
+						}
+						else {
+							n++;
 						}
 						
-						n++;
 						break;
 					}
 				}
+				
 			}
-
+			
+			//delete concentration < 2nM
+			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.lessThan("mesuredConcentration.value", 2));
 						
 		} else {
-			Logger.info("Migration contents of containers already executed !");
+			Logger.info("Migration of concentration already executed !");
 		}
 		
-		Logger.info("Migration contents of containers Finish : " + n + " contents of containers updated !");
+		Logger.info("Migration of concentration Finish : " + n + " containers updated !");
 		return ok("End");
 	}
 
@@ -107,5 +101,4 @@ public class AddProjectCodeToContent extends CommonController {
 		Logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" to "+backupName+" end");	
 	}
 	
-
 }

@@ -1,6 +1,7 @@
 package models.utils.instance;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -235,6 +236,11 @@ public class ContainerHelper {
 		contextValidation.setCreationMode();
 		InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME,outputContainer, contextValidation);
 		contextValidation.removeKeyFromRootKeyName("container["+outputContainer.code+"]");
+	}
+	
+	public static Double getEquiPercentValue(int size){
+		BigDecimal p = (new BigDecimal(100.00/size)).setScale(2, RoundingMode.HALF_UP);						
+		return p.doubleValue();
 	}
 
 }
