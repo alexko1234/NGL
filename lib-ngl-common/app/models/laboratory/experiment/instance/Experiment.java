@@ -60,6 +60,10 @@ public class Experiment extends DBObject implements IValidation {
 	
 	public List<String> sampleCodes;
 	
+	public List<String> inputContainerCodes;
+	
+	public List<String> outputContainerCodes;
+	
 	public Experiment(){
 		traceInformation=new TraceInformation();
 		state=new State();
