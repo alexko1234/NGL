@@ -60,7 +60,7 @@ public class LimsRunDAO {
     				+" JOIN t_workflow w on w.flowcell_id=f.id"
     				//+" JOIN t_stage s on w.stage_id=s.id and ( s.workflow='SEQ' and s.name='Read1')" après passage 2500
     				+" JOIN t_machine m on w.machine_id=m.id"
-    				+" JOIN t_machine_type mt on  ( m.type_id=mt.id AND mt.type IN ('GA','HS','H2','MS') )"
+    				+" JOIN t_machine_type mt on  ( m.type_id=mt.id AND mt.type IN ('GA','HS','H2','MS', 'NS') )"
     				+" WHERE f.barcode=?"
     				+" GROUP BY m.pc_name,  mt.name, f.nb_cycles";
     		BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<LimsExperiment>(LimsExperiment.class);
