@@ -32,7 +32,7 @@ angular.module('commonsServices').directive('listResize',['$parse', function($pa
 				scope.nbItem = scope.nbItemMin;//Refresh the current size
 			}
 
-			if(attrs.listResize != undefined && attrs.listResize != ""){
+			if(attrs.listResize !== undefined && attrs.listResize !== ""){
 				var model = attrs.listResize;
 
 				var match = model.match(REPEAT_REGEXP);
@@ -42,17 +42,17 @@ angular.module('commonsServices').directive('listResize',['$parse', function($pa
 				}
 				
 			//Attribut below	
-			if(attrs.below != undefined){
+			if(attrs.below !== undefined){
 				scope.below = true;
 			}
 			
 			//Attribut below-only-deploy
-			if(attrs.belowOnlyDeploy != undefined){
+			if(attrs.belowOnlyDeploy !== undefined){
 				scope.belowOnlyDeployed = true;
 			}
 			
 			//Attribut vertical
-			if(attrs.vertical != undefined){
+			if(attrs.vertical !== undefined){
 				scope.vertical = true;
 			}
 
