@@ -7,6 +7,10 @@ public class DatatableResponse<T> {
 	public List<T> data;
 	public Integer recordsNumber;
 	
+	public DatatableResponse(){
+		
+	}
+	
 	public DatatableResponse(List<T> data) {
 		super();
 		this.data = data;
