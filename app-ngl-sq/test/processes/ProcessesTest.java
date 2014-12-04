@@ -7,6 +7,8 @@ import static play.test.Helpers.status;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -27,7 +29,9 @@ import utils.InitDataHelper;
 import views.components.datatable.DatatableResponse;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import controllers.processes.api.ProcessesSearchForm;
@@ -107,16 +111,27 @@ public class ProcessesTest extends AbstractTests{
 	
 	@Test
 	public void query() throws JsonParseException, JsonMappingException, IOException{
-		Result result = callAction(controllers.processes.api.routes.ref.Processes.list(),fakeRequest());
+		Result result = null;
+		
+		result = callAction(controllers.processes.api.routes.ref.Processes.list(),fakeRequest());
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-		ProcessesSearchForm processesSearchForm=new ProcessesSearchForm();
-		processesSearchForm.projectCode="ADI";
-		processesSearchForm.datatable=Boolean.TRUE;
-		result = callAction(controllers.processes.api.routes.ref.Processes.list(),fakeRequest().withJsonBody(Json.toJson(processesSearchForm)));
+		
+		result = callAction(controllers.processes.api.routes.ref.Processes.list(),fakeRequest("GET","?projectCode=ADI"));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-	/*	ObjectMapper mapper=new ObjectMapper();
-		DatatableResponse<Process> processes=mapper.readValue(play.test.Helpers.contentAsString(result), DatatableResponse.class);
-		assertThat(processes.data.size()).isEqualTo(1);*/
+		
+		ObjectMapper mapper=new ObjectMapper();
+		List<Process> processes=mapper.readValue(play.test.Helpers.contentAsString(result),new TypeReference<List<Process>>(){});
+		
+		assertThat(processes.size()).isEqualTo(1);
+		assertThat(processes.get(0).projectCode).isEqualTo("ADI");
+		
+		result = callAction(controllers.processes.api.routes.ref.Processes.list(),fakeRequest("GET","?datatable=true&projectCode=XXX"));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		mapper=new ObjectMapper();
+		JsonNode jsonNode=Json.parse(play.test.Helpers.contentAsString(result));
+		DatatableResponse<Process> datatableResponse=mapper.convertValue(jsonNode,new TypeReference<DatatableResponse<Process>>(){});
+		assertThat(datatableResponse.data.size()).isEqualTo(0);
+		
 	}
 	
 }
