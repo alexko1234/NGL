@@ -468,8 +468,23 @@ angular.module('commonsServices', []).
   		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
   		    			+'<span class="caret"></span>'
   		    			+'</button>'
-  				        +'<ul class="dropdown-menu dropdown-menu-right"  role="menu">'
+  		    			+'<ul class="dropdown-menu dropdown-menu-right"  role="menu">'
   				        +'<li ng-if="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)"/></li>'
+
+
+  				        // Liste des items déja cochés
+		    	  		+'<li ng-repeat-start="item in getSelectedItems()" ng-if="groupBy(item, $index) && acceptsMultiple()"></li>'
+  				        +'<li class="dropdown-header" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></li>'
+  				        +'<li ng-repeat-end ng-if="item.selected" ng-click="selectItem(item, $event)">'
+  				        +'<a href="#">'
+		    	  		+'<i class="fa fa-check pull-right" ng-show="item.selected"></i>'
+		    	  		+'<span class="text" ng-bind="itemLabel(item)" style="margin-right:30px;"></span>'		    	  		
+		    	  		+'</a></li>'
+		    	  		+'<li ng-show="getSelectedItems().length > 0" class="divider pull-left" style="width: 100%;"></li>'
+		    	  		
+		    	  		
+
+  				        // Liste des items
   				        +'<li ng-repeat-start="item in getItems()" ng-if="groupBy(item, $index)" class="divider"></li>'
   				        +'<li class="dropdown-header" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></li>'
 		    	  		+'<li ng-repeat-end ng-click="selectItem(item, $event)">'
@@ -552,7 +567,22 @@ angular.module('commonsServices', []).
 	      		     scope.isEdit = function(){
 	      		    	 return (editMode)?editMode(scope):true;
 	      		     };
-	      		      
+	      		     
+	      		     scope.acceptsMultiple = function(){
+	      		    	 return attr.multiple;
+	      		     }
+	      		     
+	      		     scope.getSelectedItems = function(){
+	      		    	 var itemsList = items;
+	      		    	 var selectedItems = [];
+	      		    	 itemsList.forEach(function(s){
+	      		    		 if (s.selected){
+	      		    			 selectedItems.push(s);
+	      		    		 }
+	      		    	 });
+	      		    	return selectedItems;
+	      		     };
+	      		     
 	      		     scope.getItems = function(){
 	      		    	 if(scope.isEdit() && scope.filter){
 	      		    		var filter = {};
