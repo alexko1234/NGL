@@ -1,5 +1,58 @@
 /*custom bootrap for NGL-SQ*/
 
+/* MAIN */
+
+/* Little buttons */
+
+.litte-icone {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 2px;
+	padding-right: 2px;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-right-width: 1px;
+}
+
+.small-litte-icone {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+	border-right-width: 0px;
+	height: 14px;	
+}
+
+.small-litte-icone-transparent {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+	border-right-width: 0px;
+	height: 14px;
+	background: transparent
+}
+
+.litte-eye{
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 2px;
+	padding-right: 2px;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-right-width: 1px;
+	float: right;
+}
+
+
 /*Custom blue single button */
 .btn-group > .btn-configure, .btn-group>.dropdown-toggle:not(:first-child), .SelectContainerProcess .datatable .btn-toolbar>.btn-group>.btn:last-child:not(:first-child)[ng-click="swithView()"] {
 	margin-right: 5px;

@@ -7,6 +7,7 @@
      	<script src="@routes.Assets.at("datatable/javascripts/services/datatable2.js")" type="text/javascript" charset="utf-8"></script>    
 			<script src="@routes.Assets.at("ngl-sq/javascripts/containers/app.js")" type="text/javascript" charset="utf-8"></script>  	
 	<script src="@routes.Assets.at("ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script> 
+		<script src="@routes.Assets.at("ngl-common/javascripts/services/list-resize.js")" type="text/javascript" charset="utf-8"></script> 
       <script src="@routes.Assets.at("ngl-common/javascripts/controllers/mainctrl.js")" type="text/javascript" charset="utf-8"></script>
 	<script src="@routes.Assets.at("ngl-common/javascripts/services/basket.js")" type="text/javascript" charset="utf-8"></script>  
 	<script src="@routes.Assets.at("ngl-sq/javascripts/containers/services.js")" type="text/javascript" charset="utf-8"></script>
@@ -14,4 +15,9 @@
 	<script src="@controllers.containers.tpl.routes.Containers.javascriptRoutes" type="text/javascript" charset="utf-8"></script>   
 }
 
-@views.html.main("containers.title", menu("containers."+code), scripts)(views.html.contents.lefttabs())
+@css() = {
+<link rel="stylesheet" href="@routes.Assets.at("ngl-sq/css/commons/commons.css")">
+}
+
+
+@views.html.main("containers.title", menu("containers."+code), scripts,css)(views.html.contents.lefttabs())
