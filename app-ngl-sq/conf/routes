@@ -100,7 +100,8 @@ GET		/api/commons/resolutions  										@controllers.resolutions.api.Resolution
 GET		/api/commons/users  											controllers.commons.api.Users.list()
 
 #Parameter
-GET    /api/parameters/indexIlluminaSequencing							controllers.commons.api.Parameters.listIndexIlluminaSequencing()
+GET    /api/parameters/:typeCode										controllers.commons.api.Parameters.list(typeCode:java.lang.String)
+GET    /api/parameters/:typeCode/:code 									controllers.commons.api.Parameters.get(typeCode:java.lang.String,code:java.lang.String)
 
 # load data
 GET	   	   /loaddata/:homecode/home										controllers.dataload.SampleLoad.home(homecode:java.lang.String)

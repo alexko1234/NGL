@@ -15,11 +15,18 @@ import fr.cea.ig.MongoDBDAO;
 
 public class Parameters extends CommonController {
 
-	
-	public static Result listIndexIlluminaSequencing() throws DAOException {
-		
-		List<Index> index=MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", "indexIlluminaSequencing")).toList();
+	public static Result list(String typeCode) throws DAOException {
+		List<Index> index=MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", typeCode)).toList();
 		return ok(Json.toJson(index));
+
+    }
+	
+	public static Result get(String typeCode,String code) throws DAOException {
+		List<Index> index=MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", typeCode).is("code", code)).toList();
+		if(index.size()>0 && index!=null){
+			return ok(Json.toJson(index.get(0)));
+		}
+		else { return notFound(); }
 
     }
 }
