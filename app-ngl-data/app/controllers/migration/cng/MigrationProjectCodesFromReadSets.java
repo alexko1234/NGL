@@ -89,7 +89,8 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 			HashMap<String, String> hmSupportContainers = new HashMap<String, String>();
 			
 			//find run for this container support
-			List<Run> runs = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,  DBQuery.is("containerSupportCode", oldSupportContainer.code)).toList();
+			List<Run> runs = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,  
+					DBQuery.and(DBQuery.is("containerSupportCode", oldSupportContainer.code), DBQuery.notEquals("state.code", "FE-S"))).toList();
 			if (runs == null || runs.size() == 0) {
 				errorMsg = "ERROR 1 : No run found for container support " + oldSupportContainer.code;
 				if (!errorMsg.equals(oldErrorMsg)) {
@@ -106,7 +107,7 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 				//find readSets associated with this run
 				List<ReadSet> rds = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", runs.get(0).code)).toList();
 				if (rds == null || rds.size() == 0) {
-					errorMsg = "ERROR 3 : No readSet found for run " + runs.get(0).code;
+					errorMsg = "ERROR 3 : No readSet found for run " + runs.get(0).code + " (run.state.code = " + runs.get(0).state.code + ")";
 					if (!errorMsg.equals(oldErrorMsg)) {
 						Logger.error(errorMsg);
 					}
