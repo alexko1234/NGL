@@ -368,6 +368,8 @@ public class Experiments extends CommonController{
 				doCalculations(exp);
 
 				if(!ctxValidation.hasErrors()){
+					exp.inputContainerCodes = exp.getInputContainerCodes();
+					
 					MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME,exp);
 
 					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,Process.class,
@@ -515,6 +517,11 @@ public class Experiments extends CommonController{
 
 		if(experimentSearch.sampleCodes != null){
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCodes));
+		}
+		
+		
+		if(experimentSearch.codes != null){
+			queryElts.add(DBQuery.in("codes", experimentSearch.codes));
 		}
 
 		if(StringUtils.isNotBlank(experimentSearch.containerSupportCode)){			
