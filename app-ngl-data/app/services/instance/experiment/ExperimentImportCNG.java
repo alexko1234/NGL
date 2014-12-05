@@ -33,7 +33,7 @@ public class ExperimentImportCNG extends AbstractImportDataCNG{
 	public void loadExperimentDepots() throws SQLException, DAOException {
 		Logger.debug("start loading experiments of type 'depot'");
 		
-		List<Experiment> experiments = limsServices.findAllIlluminaDepotExperimentToCreate(contextError);
+		List<Experiment> experiments = limsServices.findAllIlluminaDepotExperimentToCreate(contextError, "sop_depot_1");
 		List<Experiment> exps=InstanceHelpers.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiments, contextError, true);
 			
 		//limsServices.updateLimsDepotExperiment(exps, contextError, "creation");

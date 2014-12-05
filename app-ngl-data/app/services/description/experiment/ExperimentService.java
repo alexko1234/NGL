@@ -69,6 +69,9 @@ public class ExperimentService {
 		l.add(newProtocol("Depot_Opgen_prt_1","depot_opgen_ptr_1","path7","1", ProtocolCategory.find.findByCode("production")));
 		l.add(newProtocol("PrepFC_CBot_ptr_sox139_1","prepfc_cbot_ptr_sox139_1","path7","1", ProtocolCategory.find.findByCode("production")));
 		l.add(newProtocol("Proto_QC_v1","proto_qc_v1","path7","1", ProtocolCategory.find.findByCode("production")));
+		
+		//for CNG
+		l.add(newProtocol("Sop_depot_1","sop_depot_1","path4","1", ProtocolCategory.find.findByCode("production")));
 
 		DAOHelpers.saveModels(Protocol.class, l, errors);
 
@@ -132,7 +135,7 @@ public class ExperimentService {
 			//Depot solexa
 			/******************************** JUST FOR DEV **************************************************************/
 			l.add(newExperimentType("Depot Illumina", "illumina-depot"
-					, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_illumina_ptr_1","depot_illumina_ptr_2","depot_illumina_ptr_3"), getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
+					, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(), getProtocols("depot_illumina_ptr_1","depot_illumina_ptr_2","depot_illumina_ptr_3","sop_depot_1"), getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 
 
 		}
@@ -221,7 +224,7 @@ public class ExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Volume Phix", "phixVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",9, false));
 
-		//A modifier un fois que l'unite d'affichage sera pris en compte : pM en affichage nM en stockage et valeur par default 0.020 nM 
+		//A modifier une fois que l'unite d'affichage sera pris en compte : pM en affichage nM en stockage et valeur par default 0.020 nM 
 		propertyDefinitions.add(newPropertiesDefinition("Conc. sol. mère Phix", "phixConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"),"single",10, true,"0.02"));
 
@@ -264,6 +267,12 @@ public class ExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Taille", "size", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb"), "single"));
 		// Voir avec Guillaume comment gérer les fichiers
 		propertyDefinitions.add(newPropertiesDefinition("Profil DNA HS", "fileResult", LevelService.getLevels(Level.CODE.ContainerOut),String.class, true, "single"));
+		return propertyDefinitions;
+	}
+	
+	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepot() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Sample),Integer.class, false, "single"));		
 		return propertyDefinitions;
 	}
 

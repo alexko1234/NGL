@@ -32,7 +32,7 @@ public class ExperimentImport {
 	
 	protected static final String  EXPERIMENT_TYPE_CODE_DEFAULT = "illumina-depot"; 
 	
-	public static Experiment experimentDepotIlluminaMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
+	public static Experiment experimentDepotIlluminaMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr, String protocoleCode) throws SQLException {
 		
 		//create new experiment (without any attribute)
 		Experiment experiment = new Experiment();
@@ -106,7 +106,7 @@ public class ExperimentImport {
 		experiment.instrument = instrumentUsed; 
 		
 		//define protocol
-		experiment.protocolCode = "depot_illumina_ptr_1"; //TODO : a changer en attente de la liste des protocoles du CNG 
+		experiment.protocolCode = protocoleCode;  
 		//Logger.warn("Protocol must be find dynamically !"); 
 
 		
@@ -115,9 +115,11 @@ public class ExperimentImport {
 		state.code = "F";   //TODO : mapping
 		state.date = rs.getDate("min_date"); 
 		state.user = "ngl";
-		List<String> rCodes = new ArrayList<String>();
-		rCodes.add("correct");
-		state.resolutionCodes = rCodes; 
+		
+		//List<String> rCodes = new ArrayList<String>();
+		//rCodes.add("correct");
+		//state.resolutionCodes = rCodes; 
+		
 		experiment.state = state;	
 		
 		

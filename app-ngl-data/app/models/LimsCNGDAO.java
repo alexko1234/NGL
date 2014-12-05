@@ -846,7 +846,7 @@ public class LimsCNGDAO {
 	
 	
 	/*************************************************************************************************************************************/
-	public List<Experiment> findAllIlluminaDepotExperimentToCreate(final ContextValidation contextError) throws DAOException {
+	public List<Experiment> findAllIlluminaDepotExperimentToCreate(final ContextValidation contextError, final String protocoleCode) throws DAOException {
 		/*****************************************************/
 		//JUST FOR DEV : add WHERE code_exp < 'ILLUMINA-DEPOT_20141107_140602'
 		/*****************************************************/
@@ -856,7 +856,7 @@ public class LimsCNGDAO {
 				ResultSet rs0 = rs;
 				int rowNum0 = rowNum;
 				ContextValidation ctxErr = contextError; 
-				Experiment e=  ExperimentImport.experimentDepotIlluminaMapRow(rs0, rowNum0, ctxErr); 
+				Experiment e = ExperimentImport.experimentDepotIlluminaMapRow(rs0, rowNum0, ctxErr, protocoleCode); 
 				return e;
 			}
 		}); 
@@ -1026,7 +1026,7 @@ public class LimsCNGDAO {
 	
 	
 	/**
-	 * UPDATE table witch contains "les depots" (t_workflow ?) in Solexa to keep trace of the imports (and not re-import data)
+	 * UPDATE main table witch contains experiments of type "depots" in Solexa to keep trace of the imports
 	 * 
 	 * @param experiments
 	 * @param contextError
@@ -1035,21 +1035,15 @@ public class LimsCNGDAO {
 	 */
 	public void updateLimsDepotExperiment(List<Experiment> experiments, ContextValidation contextError, String mode) throws DAOException {
 		String key, column;
-		if (mode.equals("creation")) {
-			key = "update_ImportDate";
-			column = "nglimport_date";
-		}
-		else {
-			key = "update_UpdateDate";
-			column = "ngl_update_date";			
-		}
+		key = "update_date";
+		column = "ngl_date";			
 		
 		contextError.addKeyToRootKeyName(key);
 		
 		String sql = "UPDATE t_workflow SET " + column + " = ? WHERE id = ?";
 		List<Object[]> parameters = new ArrayList<Object[]>();
 		for (Experiment experiment : experiments) {
-	        parameters.add(new Object[] {new Date(), experiment.code}); //TODO : a vérifier suivant le code. Peut-être nécessaire d'ajouter un limsCode (cf container) 
+	        parameters.add(new Object[] {new Date(), experiment.experimentProperties.get("limsCode").value}); 
 		}
 		try {
 			this.jdbcTemplate.batchUpdate(sql, parameters);
