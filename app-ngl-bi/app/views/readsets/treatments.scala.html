@@ -10,6 +10,9 @@
 	@_treatments.duplicates()	
 }
 
+@if(code == "firstBaseReport"){
+	@_treatments.firstBaseReport()
+}
 
 @if(code == "trimming") {
 	@_treatments.trimming()
