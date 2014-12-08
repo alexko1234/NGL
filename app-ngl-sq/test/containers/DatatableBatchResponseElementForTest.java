@@ -1,14 +1,14 @@
 package containers;
 
-public class DatatableBatchResponseElementForTest<T> {
+import views.components.datatable.DatatableBatchResponseElement;
+
+public class DatatableBatchResponseElementForTest<T> extends DatatableBatchResponseElement {
 	
-	public Integer status;
-	public T data;
-	public Integer index;
 	
 	public DatatableBatchResponseElementForTest(){
 		
 	}
+	
 	
 	public DatatableBatchResponseElementForTest(Integer status, T data, Integer index) {
 		super();
@@ -22,5 +22,6 @@ public class DatatableBatchResponseElementForTest<T> {
 		this.status = status;
 		this.index = index;
 	}
+	
 
 }

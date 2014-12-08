@@ -25,21 +25,15 @@ import play.Logger;
 import play.Logger.ALogger;
 import play.libs.Json;
 import play.mvc.Result;
-import play.test.FakeRequest;
 import utils.AbstractTests;
 import utils.Constants;
 import utils.ContainerBatchElementHelper;
 import utils.InitDataHelper;
 import utils.MapperHelper;
 import validation.ContextValidation;
-import views.components.datatable.DatatableResponse;
-import views.html.experiments.newExperiments;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import controllers.containers.api.ContainerBatchElement;
 import controllers.containers.api.Containers;
@@ -264,7 +258,7 @@ public class ContainerTest extends AbstractTests {
 		MapperHelper mh = new MapperHelper();
 		Container c = new Container();
 		List <Container> lc = new ArrayList<Container>();
-		DatatableResponse<Container> dr= new DatatableResponse<Container>();
+		DatatableResponseForTest<Container> dr= new DatatableResponseForTest<Container>();
 		
 		//Test with projectCode (good projectCode)
 		csf.datatable=true;
@@ -272,7 +266,7 @@ public class ContainerTest extends AbstractTests {
 		Result result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&projectCodes="+csf.projectCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 				
-		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponse<Container>>(){});		
+		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});		
 		lc = dr.data;
 		c = (Container) lc.get(0);
 		assertThat("ADI").isIn(c.projectCodes);			
@@ -282,7 +276,7 @@ public class ContainerTest extends AbstractTests {
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&projectCodes="+csf.projectCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
-		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponse<Container>>(){});		
+		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});		
 		lc = dr.data;		
 		assertThat(lc).isNullOrEmpty();
 		
@@ -296,7 +290,7 @@ public class ContainerTest extends AbstractTests {
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&projectCodes="+projectCode+"&sampleCodes="+s1.code+"&sampleCodes="+s2.code+"&sampleCodes="+s3.code));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
-		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponse<Container>>(){});		
+		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});		
 		lc = dr.data;
 		for(int i=0;i<lc.size();i++){
 			c = (Container) lc.get(i);
@@ -306,25 +300,42 @@ public class ContainerTest extends AbstractTests {
 			
 		}
 		
+		//Test with samples (bad request)
+		String projectBadCode = "validateListWithDatatableContainerBadprojectCode";
+		String st1="validateListWithDatatableContainerBadsampleCode1";
+		String st2="validateListWithDatatableContainerBadsampleCode2";
+		String st3="validateListWithDatatableContainerBadsampleCode3";
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&projectCodes="+projectBadCode+"&sampleCodes="+st1+"&sampleCodes="+st2+"&sampleCodes="+st3));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 
-		//Test with dates (good request)
+		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});		
+		lc = dr.data;
+		for(int i=0;i<lc.size();i++){
+			c = (Container) lc.get(i);
+			for(int j=0;j<c.sampleCodes.size();j++){
+				assertThat(c.sampleCodes.get(j)).doesNotMatch("validateListWithDatatable.*");
+			}
+
+		}		
+
+		//Test with dates (matched period)
 		csf.fromDate = new Date(114, 2, 20) ;
 		csf.toDate = new Date(114, 2, 20) ;		
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));		
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
-		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponse<Container>>(){});
+		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
 		lc = dr.data;		
 		c = (Container) lc.get(0);
 		assertThat(c.code).isEqualTo("ADI_RD1");		
 		
-		//Test with dates (bad request)
+		//Test with dates (unmatched period)
 		csf.fromDate = new Date(114, 0, 1) ;
 		csf.toDate = new Date(114, 2, 19) ;		
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));		
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
-		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponse<Container>>(){});
+		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
 		lc = dr.data;
 		Logger.info("");
 		for(int i=0;i<lc.size();i++){
